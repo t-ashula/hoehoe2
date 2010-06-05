@@ -247,6 +247,12 @@ Partial Class TweenMain
         Me.TimerRefreshIcon = New System.Windows.Forms.Timer(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.ToolStripContainer1.BottomToolStripPanel.SuspendLayout()
         Me.ToolStripContainer1.ContentPanel.SuspendLayout()
         Me.ToolStripContainer1.TopToolStripPanel.SuspendLayout()
@@ -258,6 +264,7 @@ Partial Class TweenMain
         Me.SplitContainer1.SuspendLayout()
         Me.TimelinePanel.SuspendLayout()
         Me.ContextMenuTabProperty.SuspendLayout()
+        Me.ImagePostPanel.SuspendLayout()
         Me.SplitContainer3.Panel1.SuspendLayout()
         Me.SplitContainer3.Panel2.SuspendLayout()
         Me.SplitContainer3.SuspendLayout()
@@ -394,8 +401,8 @@ Partial Class TweenMain
         '
         'SplitContainer1.Panel1
         '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.TimelinePanel)
         Me.SplitContainer1.Panel1.Controls.Add(Me.ImagePostPanel)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.TimelinePanel)
         '
         'SplitContainer1.Panel2
         '
@@ -499,6 +506,12 @@ Partial Class TweenMain
         'ImagePostPanel
         '
         resources.ApplyResources(Me.ImagePostPanel, "ImagePostPanel")
+        Me.ImagePostPanel.Controls.Add(Me.FlowLayoutPanel1)
+        Me.ImagePostPanel.Controls.Add(Me.ComboBox1)
+        Me.ImagePostPanel.Controls.Add(Me.Label2)
+        Me.ImagePostPanel.Controls.Add(Me.Button1)
+        Me.ImagePostPanel.Controls.Add(Me.TextBox1)
+        Me.ImagePostPanel.Controls.Add(Me.Label1)
         Me.ImagePostPanel.Name = "ImagePostPanel"
         '
         'SplitContainer3
@@ -1524,6 +1537,38 @@ Partial Class TweenMain
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
+        'Label1
+        '
+        resources.ApplyResources(Me.Label1, "Label1")
+        Me.Label1.Name = "Label1"
+        '
+        'TextBox1
+        '
+        resources.ApplyResources(Me.TextBox1, "TextBox1")
+        Me.TextBox1.Name = "TextBox1"
+        '
+        'Button1
+        '
+        resources.ApplyResources(Me.Button1, "Button1")
+        Me.Button1.Name = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
+        'Label2
+        '
+        resources.ApplyResources(Me.Label2, "Label2")
+        Me.Label2.Name = "Label2"
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.FormattingEnabled = True
+        resources.ApplyResources(Me.ComboBox1, "ComboBox1")
+        Me.ComboBox1.Name = "ComboBox1"
+        '
+        'FlowLayoutPanel1
+        '
+        resources.ApplyResources(Me.FlowLayoutPanel1, "FlowLayoutPanel1")
+        Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
+        '
         'TweenMain
         '
         Me.AllowDrop = True
@@ -1547,6 +1592,8 @@ Partial Class TweenMain
         Me.SplitContainer1.ResumeLayout(False)
         Me.TimelinePanel.ResumeLayout(False)
         Me.ContextMenuTabProperty.ResumeLayout(False)
+        Me.ImagePostPanel.ResumeLayout(False)
+        Me.ImagePostPanel.PerformLayout()
         Me.SplitContainer3.Panel1.ResumeLayout(False)
         Me.SplitContainer3.Panel2.ResumeLayout(False)
         Me.SplitContainer3.ResumeLayout(False)
@@ -1790,5 +1837,11 @@ Partial Class TweenMain
     Friend WithEvents SearchPostsDetailNameToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TimelinePanel As System.Windows.Forms.Panel
     Friend WithEvents ImagePostPanel As System.Windows.Forms.Panel
+    Friend WithEvents FlowLayoutPanel1 As System.Windows.Forms.FlowLayoutPanel
+    Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Friend WithEvents Label1 As System.Windows.Forms.Label
 
 End Class
