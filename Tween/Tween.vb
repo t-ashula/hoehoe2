@@ -8876,4 +8876,5 @@ RETRY:
             OpenUriAsync("http://twitter.com/" + NameLabel.Tag.ToString)
         End If
     End Sub
-End Class
+
+    End Class
