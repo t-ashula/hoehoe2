@@ -36,18 +36,21 @@ Partial Class TweenMain
         Me.ToolStripMenuItemUrlAutoShorten = New System.Windows.Forms.ToolStripMenuItem()
         Me.IdeographicSpaceToSpaceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MultiLineMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator35 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ImageSelectMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
         Me.HashToggleMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HashManageMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.ImageSelectionPanel = New System.Windows.Forms.Panel()
+        Me.ImageSelectedPicture = New System.Windows.Forms.PictureBox()
+        Me.ImagePathPanel = New System.Windows.Forms.Panel()
+        Me.ImagefilePathText = New System.Windows.Forms.TextBox()
+        Me.FilePickButton = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.ImageServiceCombo = New System.Windows.Forms.ComboBox()
+        Me.ImageCancelButton = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.TimelinePanel = New System.Windows.Forms.Panel()
         Me.ListTab = New System.Windows.Forms.TabControl()
         Me.ContextMenuTabProperty = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -263,9 +266,9 @@ Partial Class TweenMain
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
-        Me.Panel1.SuspendLayout()
-        Me.Panel2.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ImageSelectionPanel.SuspendLayout()
+        CType(Me.ImageSelectedPicture, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ImagePathPanel.SuspendLayout()
         Me.TimelinePanel.SuspendLayout()
         Me.ContextMenuTabProperty.SuspendLayout()
         Me.SplitContainer3.Panel1.SuspendLayout()
@@ -340,7 +343,7 @@ Partial Class TweenMain
         '
         'ContextMenuStripPostMode
         '
-        Me.ContextMenuStripPostMode.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemUrlMultibyteSplit, Me.ToolStripMenuItemApiCommandEvasion, Me.ToolStripMenuItemUrlAutoShorten, Me.IdeographicSpaceToSpaceToolStripMenuItem, Me.MultiLineMenuItem, Me.ToolStripSeparator8, Me.HashToggleMenuItem, Me.HashManageMenuItem})
+        Me.ContextMenuStripPostMode.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemUrlMultibyteSplit, Me.ToolStripMenuItemApiCommandEvasion, Me.ToolStripMenuItemUrlAutoShorten, Me.IdeographicSpaceToSpaceToolStripMenuItem, Me.MultiLineMenuItem, Me.ToolStripSeparator35, Me.ImageSelectMenuItem, Me.ToolStripSeparator8, Me.HashToggleMenuItem, Me.HashManageMenuItem})
         Me.ContextMenuStripPostMode.Name = "ContextMenuStripPostMode"
         Me.ContextMenuStripPostMode.OwnerItem = Me.HashStripSplitButton
         resources.ApplyResources(Me.ContextMenuStripPostMode, "ContextMenuStripPostMode")
@@ -379,6 +382,16 @@ Partial Class TweenMain
         Me.MultiLineMenuItem.Name = "MultiLineMenuItem"
         resources.ApplyResources(Me.MultiLineMenuItem, "MultiLineMenuItem")
         '
+        'ToolStripSeparator35
+        '
+        Me.ToolStripSeparator35.Name = "ToolStripSeparator35"
+        resources.ApplyResources(Me.ToolStripSeparator35, "ToolStripSeparator35")
+        '
+        'ImageSelectMenuItem
+        '
+        Me.ImageSelectMenuItem.Name = "ImageSelectMenuItem"
+        resources.ApplyResources(Me.ImageSelectMenuItem, "ImageSelectMenuItem")
+        '
         'ToolStripSeparator8
         '
         Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
@@ -404,7 +417,7 @@ Partial Class TweenMain
         '
         'SplitContainer1.Panel1
         '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Panel1)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.ImageSelectionPanel)
         Me.SplitContainer1.Panel1.Controls.Add(Me.TimelinePanel)
         '
         'SplitContainer1.Panel2
@@ -412,56 +425,65 @@ Partial Class TweenMain
         Me.SplitContainer1.Panel2.Controls.Add(Me.SplitContainer3)
         Me.SplitContainer1.TabStop = False
         '
-        'Label1
+        'ImageSelectionPanel
         '
-        resources.ApplyResources(Me.Label1, "Label1")
-        Me.Label1.Name = "Label1"
+        resources.ApplyResources(Me.ImageSelectionPanel, "ImageSelectionPanel")
+        Me.ImageSelectionPanel.Controls.Add(Me.ImageSelectedPicture)
+        Me.ImageSelectionPanel.Controls.Add(Me.ImagePathPanel)
+        Me.ImageSelectionPanel.Name = "ImageSelectionPanel"
+        '
+        'ImageSelectedPicture
+        '
+        resources.ApplyResources(Me.ImageSelectedPicture, "ImageSelectedPicture")
+        Me.ImageSelectedPicture.Name = "ImageSelectedPicture"
+        Me.ImageSelectedPicture.TabStop = False
+        '
+        'ImagePathPanel
+        '
+        Me.ImagePathPanel.Controls.Add(Me.ImagefilePathText)
+        Me.ImagePathPanel.Controls.Add(Me.FilePickButton)
+        Me.ImagePathPanel.Controls.Add(Me.Label2)
+        Me.ImagePathPanel.Controls.Add(Me.ImageServiceCombo)
+        Me.ImagePathPanel.Controls.Add(Me.ImageCancelButton)
+        Me.ImagePathPanel.Controls.Add(Me.Label1)
+        resources.ApplyResources(Me.ImagePathPanel, "ImagePathPanel")
+        Me.ImagePathPanel.Name = "ImagePathPanel"
+        '
+        'ImagefilePathText
+        '
+        resources.ApplyResources(Me.ImagefilePathText, "ImagefilePathText")
+        Me.ImagefilePathText.MaximumSize = New System.Drawing.Size(200, 20)
+        Me.ImagefilePathText.Name = "ImagefilePathText"
+        '
+        'FilePickButton
+        '
+        resources.ApplyResources(Me.FilePickButton, "FilePickButton")
+        Me.FilePickButton.Name = "FilePickButton"
+        Me.FilePickButton.UseVisualStyleBackColor = True
         '
         'Label2
         '
         resources.ApplyResources(Me.Label2, "Label2")
         Me.Label2.Name = "Label2"
         '
-        'TextBox1
+        'ImageServiceCombo
         '
-        resources.ApplyResources(Me.TextBox1, "TextBox1")
-        Me.TextBox1.MaximumSize = New System.Drawing.Size(200, 0)
-        Me.TextBox1.Name = "TextBox1"
+        resources.ApplyResources(Me.ImageServiceCombo, "ImageServiceCombo")
+        Me.ImageServiceCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ImageServiceCombo.FormattingEnabled = True
+        Me.ImageServiceCombo.Items.AddRange(New Object() {resources.GetString("ImageServiceCombo.Items"), resources.GetString("ImageServiceCombo.Items1")})
+        Me.ImageServiceCombo.Name = "ImageServiceCombo"
         '
-        'Button1
+        'ImageCancelButton
         '
-        resources.ApplyResources(Me.Button1, "Button1")
-        Me.Button1.Name = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
+        resources.ApplyResources(Me.ImageCancelButton, "ImageCancelButton")
+        Me.ImageCancelButton.Name = "ImageCancelButton"
+        Me.ImageCancelButton.UseVisualStyleBackColor = True
         '
-        'ComboBox1
+        'Label1
         '
-        resources.ApplyResources(Me.ComboBox1, "ComboBox1")
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Name = "ComboBox1"
-        '
-        'Panel1
-        '
-        resources.ApplyResources(Me.Panel1, "Panel1")
-        Me.Panel1.Controls.Add(Me.PictureBox1)
-        Me.Panel1.Controls.Add(Me.Panel2)
-        Me.Panel1.Name = "Panel1"
-        '
-        'Panel2
-        '
-        Me.Panel2.Controls.Add(Me.TextBox1)
-        Me.Panel2.Controls.Add(Me.Button1)
-        Me.Panel2.Controls.Add(Me.Label2)
-        Me.Panel2.Controls.Add(Me.ComboBox1)
-        Me.Panel2.Controls.Add(Me.Label1)
-        resources.ApplyResources(Me.Panel2, "Panel2")
-        Me.Panel2.Name = "Panel2"
-        '
-        'PictureBox1
-        '
-        resources.ApplyResources(Me.PictureBox1, "PictureBox1")
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.TabStop = False
+        resources.ApplyResources(Me.Label1, "Label1")
+        Me.Label1.Name = "Label1"
         '
         'TimelinePanel
         '
@@ -1601,10 +1623,10 @@ Partial Class TweenMain
         Me.SplitContainer1.Panel1.ResumeLayout(False)
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         Me.SplitContainer1.ResumeLayout(False)
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ImageSelectionPanel.ResumeLayout(False)
+        CType(Me.ImageSelectedPicture, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ImagePathPanel.ResumeLayout(False)
+        Me.ImagePathPanel.PerformLayout()
         Me.TimelinePanel.ResumeLayout(False)
         Me.ContextMenuTabProperty.ResumeLayout(False)
         Me.SplitContainer3.Panel1.ResumeLayout(False)
@@ -1850,12 +1872,15 @@ Partial Class TweenMain
     Friend WithEvents SearchPostsDetailNameToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TimelinePanel As System.Windows.Forms.Panel
     Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Friend WithEvents FilePickButton As System.Windows.Forms.Button
+    Friend WithEvents ImagefilePathText As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
-    Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents Panel2 As System.Windows.Forms.Panel
-    Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
+    Friend WithEvents ImageSelectedPicture As System.Windows.Forms.PictureBox
+    Friend WithEvents ImageSelectionPanel As System.Windows.Forms.Panel
+    Friend WithEvents ImagePathPanel As System.Windows.Forms.Panel
+    Friend WithEvents ImageServiceCombo As System.Windows.Forms.ComboBox
+    Friend WithEvents ImageCancelButton As System.Windows.Forms.Button
+    Friend WithEvents ImageSelectMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator35 As System.Windows.Forms.ToolStripSeparator
 
 End Class

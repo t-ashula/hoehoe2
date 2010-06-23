@@ -111,59 +111,6 @@ Public Class Twitter
             "http://flic.kr/" _
         }
 
-    Private Const _apiHost As String = "api."
-    Private Const _baseUrlStr As String = "twitter.com"
-    Private Const _DMDestroyPath As String = "/1/direct_messages/destroy/"
-    Private Const _StDestroyPath As String = "/1/statuses/destroy/"
-    Private Const _postRetweetPath As String = "/1/statuses/retweet/"
-    Private Const _uidHeader As String = "session[username_or_email]="
-    Private Const _pwdHeader As String = "session[password]="
-    Private Const _pageQry As String = "?page="
-    Private Const _cursorQry As String = "?cursor="
-    Private Const _statusHeader As String = "status="
-    Private Const _statusUpdatePathAPI As String = "/1/statuses/update.xml"
-    Private Const _postFavAddPath As String = "/1/favorites/create/"
-    Private Const _postFavRemovePath As String = "/1/favorites/destroy/"
-
-    Private Const _GetFollowers As String = "/1/statuses/followers.xml"
-    Private Const _ShowStatus As String = "/1/statuses/show/"
-    Private Const _rateLimitStatus As String = "/1/account/rate_limit_status.xml"
-    Private Const FOLLOWER_PATH As String = "/1/followers/ids.xml"
-    Private Const RECEIVE_PATH As String = "/1/direct_messages.xml"
-    Private Const SENT_PATH As String = "/1/direct_messages/sent.xml"
-    Private Const COUNT_QUERY As String = "count="
-    Private Const FAV_PATH As String = "/1/favorites.xml"
-    Private Const PATH_FRIENDSHIP As String = "/1/friendships/show.xml?source_screen_name="
-    Private Const QUERY_TARGET As String = "&target_screen_name="
-    Private Const FRIEND_PATH As String = "/1/statuses/home_timeline.xml"
-    Private Const REPLY_PATH As String = "/1/statuses/mentions.xml"
-    Private Const PATH_FOLLOW As String = "/1/friendships/create.xml?screen_name="
-    Private Const PATH_REMOVE As String = "/1/friendships/destroy.xml?screen_name="
-    Private Const PATH_SHOW As String = "/1/users/show/"
-
-
-
-    '''<summary>
-    '''OAuthのアクセストークン取得先URI
-    '''</summary>
-    Private Const AccessTokenUrl As String = "http://twitter.com/oauth/access_token"
-
-    '''<summary>
-    '''OAuthのリクエストトークン取得先URI
-    '''</summary>
-    Private Const RequestTokenUrl As String = "http://twitter.com/oauth/request_token"
-
-    '''<summary>
-    '''OAuthのユーザー認証用ページURI
-    '''</summary>
-    '''<remarks>
-    '''クエリ「oauth_token=リクエストトークン」を付加して、このURIをブラウザで開く。ユーザーが承認操作を行うとPINコードが表示される。
-    '''</remarks>
-    Private Const AuthorizeUrl As String = "http://twitter.com/oauth/authorize"
-
-    ''''Wedata対応
-    'Private Const wedataUrl As String = "http://wedata.net/databases/Tween/items.json"
-
     Private op As New Outputz
     'max_idで古い発言を取得するために保持（lists分は個別タブで管理）
     Private minHomeTimeline As Long = Long.MaxValue
@@ -179,6 +126,7 @@ Public Class Twitter
             Dim rslt As Boolean = twCon.AuthUserAndPass(username, password)
             If rslt Then
                 _uid = twCon.AuthenticatedUsername.ToLower
+                _UserIdNo = ""
             End If
             Return rslt
         Catch ex As Exception
@@ -188,18 +136,21 @@ Public Class Twitter
 
     Public Sub ClearAuthInfo()
         twCon.ClearAuthInfo()
+        _UserIdNo = ""
     End Sub
 
     Public Sub Initialize(ByVal token As String, ByVal tokenSecret As String, ByVal username As String)
         'xAuth認証
         twCon.Initialize(token, tokenSecret, username)
         _uid = username.ToLower
+        _UserIdNo = ""
     End Sub
 
     Public Sub Initialize(ByVal username As String, ByVal password As String)
         'BASIC認証
         twCon.Initialize(username, password)
         _uid = username.ToLower
+        _UserIdNo = ""
     End Sub
 
     Public Function PreProcessUrl(ByVal orgData As String) As String
@@ -507,6 +458,8 @@ Public Class Twitter
                     If xNode IsNot Nothing Then _location = xNode.Value
                     xNode = xd.SelectSingleNode("/status/user/description/text()")
                     If xNode IsNot Nothing Then _bio = xNode.Value
+                    xNode = xd.SelectSingleNode("/status/user/id/text()")
+                    If xNode IsNot Nothing Then _userIdNo = xNode.Value
                 Catch ex As Exception
                     Return ""
                 End Try
@@ -574,6 +527,8 @@ Public Class Twitter
                     If xNode IsNot Nothing Then _location = xNode.Value
                     xNode = xd.SelectSingleNode("/status/user/description/text()")
                     If xNode IsNot Nothing Then _bio = xNode.Value
+                    xNode = xd.SelectSingleNode("/status/user/id/text()")
+                    If xNode IsNot Nothing Then _userIdNo = xNode.Value
                 Catch ex As Exception
                     Return ""
                 End Try
@@ -700,7 +655,6 @@ Public Class Twitter
             post.Nickname = xRUentry.Item("name").InnerText
             post.ImageUrl = xRUentry.Item("profile_image_url").InnerText
             post.IsProtect = Boolean.Parse(xRUentry.Item("protected").InnerText)
-            'post.IsMe = post.Name.ToLower.Equals(_uid)
             post.IsMe = True
 
             'Retweetした人(自分のはず)
@@ -1585,6 +1539,7 @@ Public Class Twitter
                     post.ImageUrl = xRUentry.Item("profile_image_url").InnerText
                     post.IsProtect = Boolean.Parse(xRUentry.Item("protected").InnerText)
                     post.IsMe = post.Name.ToLower.Equals(_uid)
+                    If post.IsMe Then _userIdNo = post.Uid.ToString()
 
                     'Retweetした人
                     Dim xUentry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
@@ -1608,6 +1563,7 @@ Public Class Twitter
                     post.ImageUrl = xUentry.Item("profile_image_url").InnerText
                     post.IsProtect = Boolean.Parse(xUentry.Item("protected").InnerText)
                     post.IsMe = post.Name.ToLower.Equals(_uid)
+                    If post.IsMe Then _userIdNo = post.Uid.ToString()
                 End If
                 'HTMLに整形
                 post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
@@ -1990,6 +1946,7 @@ Public Class Twitter
                     post.ImageUrl = xRUentry.Item("profile_image_url").InnerText
                     post.IsProtect = Boolean.Parse(xRUentry.Item("protected").InnerText)
                     post.IsMe = post.Name.ToLower.Equals(_uid)
+                    If post.IsMe Then _userIdNo = post.Uid.ToString()
 
                     'Retweetした人
                     Dim xUentry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
@@ -2013,6 +1970,7 @@ Public Class Twitter
                     post.ImageUrl = xUentry.Item("profile_image_url").InnerText
                     post.IsProtect = Boolean.Parse(xUentry.Item("protected").InnerText)
                     post.IsMe = post.Name.ToLower.Equals(_uid)
+                    If post.IsMe Then _userIdNo = post.Uid.ToString()
                 End If
                 'HTMLに整形
                 post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
@@ -2373,5 +2331,7 @@ Public Class Twitter
             Return twCon.AccessTokenSecret
         End Get
     End Property
+
+    Public Property UserIdNo As String
 
 End Class

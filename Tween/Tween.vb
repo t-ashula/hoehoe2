@@ -85,7 +85,7 @@ Public Class TweenMain
     Private tw As New Twitter
 
     'サブ画面インスタンス
-    Private SettingDialog As New Setting       '設定画面インスタンス
+    Private SettingDialog As Setting = Setting.Instance       '設定画面インスタンス
     Private TabDialog As New TabsDialog        'タブ選択ダイアログインスタンス
     Private SearchDialog As New SearchWord     '検索画面インスタンス
     Private fDialog As New FilterDialog 'フィルター編集画面
@@ -244,6 +244,8 @@ Public Class TweenMain
         Public ids As List(Of Long)               'Fav追加・削除時のItemIndex
         Public sIds As List(Of Long)              'Fav追加・削除成功分のItemIndex
         Public tName As String = ""            'Fav追加・削除時のタブ名
+        Public imageService As String = ""      '画像投稿サービス名
+        Public imagePath As String = ""
     End Class
 
     '検索処理タイプ
@@ -1846,6 +1848,20 @@ Public Class TweenMain
 
         args.status.inReplyToId = _reply_to_id
         args.status.inReplyToName = _reply_to_name
+        If ImageSelectionPanel.Visible Then
+            '画像投稿
+            If ImageSelectedPicture.Image IsNot ImageSelectedPicture.InitialImage AndAlso _
+                ImageServiceCombo.SelectedIndex > -1 AndAlso _
+                ImagefilePathText.Text <> "" Then
+                args.imageService = ImageServiceCombo.Text
+                args.imagePath = ImagefilePathText.Text
+                ImageSelectionPanel.Visible = False
+                TimelinePanel.Visible = True
+            Else
+                MessageBox.Show("投稿する画像または投稿先サービスが選択されていません。", "画像投稿")
+                Exit Sub
+            End If
+        End If
 
         RunAsync(args)
 
@@ -2034,17 +2050,22 @@ Public Class TweenMain
                 rslt.sIds = args.sIds
             Case WORKERTYPE.PostMessage
                 bw.ReportProgress(200)
-                For i As Integer = 0 To 1
-                    ret = tw.PostStatus(args.status.status, args.status.inReplyToId)
-                    If ret = "" OrElse _
-                       ret.StartsWith("OK:") OrElse _
-                       ret.StartsWith("Outputz:") OrElse _
-                       ret = "Err:Status is a duplicate." OrElse _
-                       args.status.status.StartsWith("D", StringComparison.OrdinalIgnoreCase) OrElse _
-                       args.status.status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) Then
-                        Exit For
-                    End If
-                Next
+                If String.IsNullOrEmpty(args.imagePath) Then
+                    For i As Integer = 0 To 1
+                        ret = tw.PostStatus(args.status.status, args.status.inReplyToId)
+                        If ret = "" OrElse _
+                           ret.StartsWith("OK:") OrElse _
+                           ret.StartsWith("Outputz:") OrElse _
+                           ret = "Err:Status is a duplicate." OrElse _
+                           args.status.status.StartsWith("D", StringComparison.OrdinalIgnoreCase) OrElse _
+                           args.status.status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) Then
+                            Exit For
+                        End If
+                    Next
+                Else
+                    Dim picSvc As New PictureService(tw)
+                    ret = picSvc.Upload(args.imagePath, args.status.status, args.imageService)
+                End If
                 bw.ReportProgress(300)
                 rslt.status = args.status
             Case WORKERTYPE.Retweet
@@ -8876,5 +8897,50 @@ RETRY:
             OpenUriAsync("http://twitter.com/" + NameLabel.Tag.ToString)
         End If
     End Sub
+#Region "画像投稿"
+    Private Sub ImageSelectMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ImageSelectMenuItem.Click
+        If ImageSelectionPanel.Visible = True Then
+            ImageSelectionPanel.Visible = False
+            TimelinePanel.Visible = True
+        Else
+            ImageSelectionPanel.Visible = True
+            TimelinePanel.Visible = False
+            ImagefilePathText.Focus()
+        End If
+    End Sub
 
-    End Class
+    Private Sub FilePickButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles FilePickButton.Click
+        ''' ToDo: サービスによっては動画ファイルのアップロードも可能
+        OpenFileDialog1.Filter = "Image Files(*.gif;*.jpg;*.jpeg;*.png)|*.gif;*.jpg;*.jpeg;*.png|All Files(*.*)|*.*"
+        OpenFileDialog1.Title = "Select a image file for Upload"
+        OpenFileDialog1.FileName = ""
+        If OpenFileDialog1.ShowDialog() = Windows.Forms.DialogResult.Cancel Then Exit Sub
+        ImagefilePathText.Text = OpenFileDialog1.FileName
+        ImageFromSelectedFile()
+    End Sub
+
+    Private Sub ImagefilePathText_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles ImagefilePathText.Validating
+        ImagefilePathText.Text = Trim(ImagefilePathText.Text)
+        If ImagefilePathText.Text = "" Then
+            ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage
+        Else
+            ImageFromSelectedFile()
+        End If
+    End Sub
+
+    Private Sub ImageFromSelectedFile()
+        Try
+            ImageSelectedPicture.Image = _
+                Image.FromStream( _
+                    New FileStream(ImagefilePathText.Text, _
+                                   FileMode.Open, _
+                                   FileAccess.Read) _
+                               )
+        Catch ex As Exception
+            MessageBox.Show("The type of this file is not image.")
+            ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage
+            Exit Sub
+        End Try
+    End Sub
+#End Region
+End Class
