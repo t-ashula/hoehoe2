@@ -49,7 +49,6 @@ Partial Class TweenMain
         Me.FilePickButton = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ImageServiceCombo = New System.Windows.Forms.ComboBox()
-        Me.ImageCancelButton = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TimelinePanel = New System.Windows.Forms.Panel()
         Me.ListTab = New System.Windows.Forms.TabControl()
@@ -444,7 +443,6 @@ Partial Class TweenMain
         Me.ImagePathPanel.Controls.Add(Me.FilePickButton)
         Me.ImagePathPanel.Controls.Add(Me.Label2)
         Me.ImagePathPanel.Controls.Add(Me.ImageServiceCombo)
-        Me.ImagePathPanel.Controls.Add(Me.ImageCancelButton)
         Me.ImagePathPanel.Controls.Add(Me.Label1)
         resources.ApplyResources(Me.ImagePathPanel, "ImagePathPanel")
         Me.ImagePathPanel.Name = "ImagePathPanel"
@@ -452,7 +450,6 @@ Partial Class TweenMain
         'ImagefilePathText
         '
         resources.ApplyResources(Me.ImagefilePathText, "ImagefilePathText")
-        Me.ImagefilePathText.MaximumSize = New System.Drawing.Size(200, 20)
         Me.ImagefilePathText.Name = "ImagefilePathText"
         '
         'FilePickButton
@@ -473,12 +470,6 @@ Partial Class TweenMain
         Me.ImageServiceCombo.FormattingEnabled = True
         Me.ImageServiceCombo.Items.AddRange(New Object() {resources.GetString("ImageServiceCombo.Items"), resources.GetString("ImageServiceCombo.Items1")})
         Me.ImageServiceCombo.Name = "ImageServiceCombo"
-        '
-        'ImageCancelButton
-        '
-        resources.ApplyResources(Me.ImageCancelButton, "ImageCancelButton")
-        Me.ImageCancelButton.Name = "ImageCancelButton"
-        Me.ImageCancelButton.UseVisualStyleBackColor = True
         '
         'Label1
         '
@@ -1879,7 +1870,6 @@ Partial Class TweenMain
     Friend WithEvents ImageSelectionPanel As System.Windows.Forms.Panel
     Friend WithEvents ImagePathPanel As System.Windows.Forms.Panel
     Friend WithEvents ImageServiceCombo As System.Windows.Forms.ComboBox
-    Friend WithEvents ImageCancelButton As System.Windows.Forms.Button
     Friend WithEvents ImageSelectMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator35 As System.Windows.Forms.ToolStripSeparator
 

@@ -21,6 +21,7 @@ Public Class PictureService
     Private Function UpToTwitVideo(ByVal file As FileInfo, ByRef message As String) As String
         Dim content As String = ""
         Dim ret As HttpStatusCode
+        'TwitVideoへの投稿
         Dim svc As New TwitVideo
         Try
             ret = svc.Upload(file, message, "", tw.Username, tw.UserIdNo, content)
@@ -34,6 +35,7 @@ Public Class PictureService
                 xd.LoadXml(content)
                 Dim rslt As String = xd.SelectSingleNode("/rsp/@status").Value
                 If rslt = "ok" Then
+                    'URLの取得
                     url = xd.SelectSingleNode("/rsp/mediaurl").InnerText
                 Else
                     Return "Err:" + xd.SelectSingleNode("/rsp/err/@msg").Value
@@ -44,6 +46,8 @@ Public Class PictureService
         Else
             Return "Err:" + ret.ToString
         End If
+        'Twitterへの投稿
+        '投稿メッセージの再構成
         If message.Length + url.Length + 1 > 140 Then
             message = message.Substring(0, 140 - url.Length - 1) + " " + url
         Else
