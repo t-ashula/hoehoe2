@@ -539,6 +539,7 @@ Public Class TweenMain
         Regex.CacheSize = 100
 
         fileVersion = DirectCast(Assembly.GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyFileVersionAttribute), False)(0), AssemblyFileVersionAttribute).Version
+        ImageServiceCombo.SelectedIndex = 0
 
         LoadIcons() ' アイコン読み込み
 
@@ -3362,11 +3363,14 @@ Public Class TweenMain
         _listCustom.BackColor = _clListBackcolor
 
         _listCustom.GridLines = SettingDialog.ShowGrid
+        _listCustom.AllowDrop = True
 
         AddHandler _listCustom.SelectedIndexChanged, AddressOf MyList_SelectedIndexChanged
         AddHandler _listCustom.MouseDoubleClick, AddressOf MyList_MouseDoubleClick
         AddHandler _listCustom.ColumnClick, AddressOf MyList_ColumnClick
         AddHandler _listCustom.DrawColumnHeader, AddressOf MyList_DrawColumnHeader
+        AddHandler _listCustom.DragDrop, AddressOf TweenMain_DragDrop
+        AddHandler _listCustom.DragOver, AddressOf TweenMain_DragOver
 
         Select Case _iconSz
             Case 26, 48
@@ -3537,6 +3541,8 @@ Public Class TweenMain
         RemoveHandler _listCustom.MouseDoubleClick, AddressOf MyList_MouseDoubleClick
         RemoveHandler _listCustom.ColumnClick, AddressOf MyList_ColumnClick
         RemoveHandler _listCustom.DrawColumnHeader, AddressOf MyList_DrawColumnHeader
+        RemoveHandler _listCustom.DragDrop, AddressOf TweenMain_DragDrop
+        RemoveHandler _listCustom.DragOver, AddressOf TweenMain_DragOver
 
         Select Case _iconSz
             Case 26, 48
@@ -7111,19 +7117,30 @@ RETRY:
     End Sub
 
     Private Sub TweenMain_DragDrop(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles MyBase.DragDrop
-        Dim data As String = TryCast(e.Data.GetData(DataFormats.StringFormat, True), String)
-        If data IsNot Nothing Then
-            StatusText.Text += data
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            ImagefilePathText.Text = CType(e.Data.GetData(DataFormats.FileDrop, False), String())(0)
+            TimelinePanel.Visible = False
+            ImageSelectionPanel.Visible = True
+            ImageFromSelectedFile()
+        ElseIf e.Data.GetDataPresent(DataFormats.StringFormat) Then
+            Dim data As String = TryCast(e.Data.GetData(DataFormats.StringFormat, True), String)
+            If data IsNot Nothing Then StatusText.Text += data
         End If
     End Sub
 
     Private Sub TweenMain_DragOver(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles MyBase.DragOver
-        Dim data As String = TryCast(e.Data.GetData(DataFormats.StringFormat, True), String)
-        If data IsNot Nothing Then
+        If e.Data.GetDataPresent(DataFormats.FileDrop) OrElse _
+            e.Data.GetDataPresent(DataFormats.StringFormat) Then
             e.Effect = DragDropEffects.Copy
         Else
             e.Effect = DragDropEffects.None
         End If
+        'Dim data As String = TryCast(e.Data.GetData(DataFormats.StringFormat, True), String)
+        'If data IsNot Nothing Then
+        '    e.Effect = DragDropEffects.Copy
+        'Else
+        '    e.Effect = DragDropEffects.None
+        'End If
     End Sub
 
     Private Function IsNetworkAvailable() As Boolean
@@ -8929,6 +8946,18 @@ RETRY:
     End Sub
 
     Private Sub ImageFromSelectedFile()
+        Dim ext As String() = {".jpeg", ".jpg", ".gif", ".png"}
+        If String.IsNullOrEmpty(Trim(ImagefilePathText.Text)) Then
+            ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage
+            Exit Sub
+        End If
+
+        Dim fl As New FileInfo(Trim(ImagefilePathText.Text))
+        If Array.IndexOf(ext, fl.Extension.ToLower) = -1 Then
+            '画像以外の形式
+            ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage
+            Exit Sub
+        End If
         Try
             ImageSelectedPicture.Image = _
                 Image.FromStream( _
@@ -8943,4 +8972,14 @@ RETRY:
         End Try
     End Sub
 #End Region
+
+    Private Sub ImageSelection_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles _
+        ImagefilePathText.KeyDown, _
+        FilePickButton.KeyDown, _
+        ImageServiceCombo.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            ImageSelectionPanel.Visible = False
+            TimelinePanel.Visible = True
+        End If
+    End Sub
 End Class
