@@ -525,7 +525,7 @@ Public Class TweenMain
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         '''グローバルホットキーの登録。設定で変更可能にするかも
-        '''_hookGlobalHotkey.RegisterOriginalHotkey(Keys.T, HookGlobalHotkey.ModKeys.Ctrl Or HookGlobalHotkey.ModKeys.Alt)
+        _hookGlobalHotkey.RegisterOriginalHotkey(Keys.T, HookGlobalHotkey.ModKeys.Ctrl Or HookGlobalHotkey.ModKeys.Alt)
         _ignoreConfigSave = True
         Me.Visible = False
         SecurityManager = New InternetSecurityManager(PostBrowser)
@@ -1854,6 +1854,16 @@ Public Class TweenMain
             If ImageSelectedPicture.Image IsNot ImageSelectedPicture.InitialImage AndAlso _
                 ImageServiceCombo.SelectedIndex > -1 AndAlso _
                 ImagefilePathText.Text <> "" Then
+                If MessageBox.Show("画像を投稿します。よろしいですか？", _
+                                   "Post a Picture", _
+                                   MessageBoxButtons.OKCancel, _
+                                   MessageBoxIcon.Question, _
+                                   MessageBoxDefaultButton.Button1) _
+                               = Windows.Forms.DialogResult.Cancel Then
+                    ImageSelectionPanel.Visible = False
+                    TimelinePanel.Visible = True
+                    Exit Sub
+                End If
                 args.imageService = ImageServiceCombo.Text
                 args.imagePath = ImagefilePathText.Text
                 ImageSelectionPanel.Visible = False
