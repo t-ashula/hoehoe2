@@ -11,11 +11,44 @@ Public Class PictureService
         Dim st As Setting = Setting.Instance
         Select Case service
             Case "TwitPic"
-
+                Return UpToTwitPic(file, message)
             Case "TwitVideo"
                 Return UpToTwitVideo(file, message)
         End Select
         Return ""
+    End Function
+
+    Private Function UpToTwitPic(ByVal file As FileInfo, ByRef message As String) As String
+        Dim content As String = ""
+        Dim ret As HttpStatusCode
+        'TwitPicへの投稿
+        Dim svc As New TwitPic(tw.AccessToken, tw.AccessTokenSecret)
+        Try
+            ret = svc.Upload(file, message, content)
+        Catch ex As Exception
+            Return "Err:" + ex.Message
+        End Try
+        Dim url As String = ""
+        If ret = HttpStatusCode.OK Then
+            Dim xd As XmlDocument = New XmlDocument()
+            Try
+                xd.LoadXml(content)
+                'URLの取得
+                url = xd.SelectSingleNode("/image/url").InnerText
+            Catch ex As XmlException
+                Return "Err:" + ex.Message
+            End Try
+        Else
+            Return "Err:" + ret.ToString
+        End If
+        'Twitterへの投稿
+        '投稿メッセージの再構成
+        If message.Length + url.Length + 1 > 140 Then
+            message = message.Substring(0, 140 - url.Length - 1) + " " + url
+        Else
+            message += " " + url
+        End If
+        Return tw.PostStatus(message, 0)
     End Function
 
     Private Function UpToTwitVideo(ByVal file As FileInfo, ByRef message As String) As String
