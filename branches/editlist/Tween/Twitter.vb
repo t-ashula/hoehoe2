@@ -2437,48 +2437,6 @@ Public Class Twitter
         Return ""
     End Function
 
-    Public Function GiveMeName(ByVal user As String, ByVal hoge As IDictionary(Of ListElement, Boolean)) As String
-        Dim myList As List(Of ListElement) =
-            TabInformations.GetInstance().SubscribableLists.FindAll(
-                Function(list) list.Username = Me.Username)
-
-        For Each list As ListElement In myList
-            Dim content As String = ""
-            Dim res As HttpStatusCode
-
-            Try
-                res = twCon.GetListMembersID(Me.Username, list.Id.ToString(), user, content)
-            Catch ex As Exception
-                Return "Err:" + ex.Message
-            End Try
-
-            Select Case res
-                Case HttpStatusCode.NotFound
-                Case HttpStatusCode.OK
-                    Twitter.AccountState = ACCOUNT_STATE.Valid
-                Case HttpStatusCode.Unauthorized
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid
-                    Return "Check your Username/Password."
-                Case HttpStatusCode.BadRequest
-                    Return "Err:API Limits?"
-                Case Else
-                    Return "Err:" + res.ToString()
-            End Select
-
-            Dim xdoc As New XmlDocument
-
-            Try
-                xdoc.LoadXml(content)
-                hoge.Add(list, xdoc.DocumentElement.LocalName = "user")
-            Catch ex As Exception
-                TraceOut(content)
-                Return "Invalid XML!"
-            End Try
-        Next
-
-        Return ""
-    End Function
-
     Public Function AddUserToList(ByVal list_name As String, ByVal user As String) As String
         Dim content As String = ""
         Dim res As HttpStatusCode

@@ -8455,23 +8455,14 @@ RETRY:
         menuItem.DropDownItems.Clear()
         Dim m As Match = Regex.Match(Me._postBrowserStatusText, "^https?://twitter.com/(?<name>[a-zA-Z0-9_]+)$")
         If m.Success AndAlso IsTwitterId(m.Result("${name}")) Then
-            Dim dic As New Dictionary(Of ListElement, Boolean)
             Dim user As String = m.Result("${name}")
 
-            tw.GiveMeName(user, dic)
-            For Each list As ListElement In dic.Keys
+            For Each list As ListElement In TabInformations.GetInstance().SubscribableLists.FindAll(Function(l) l.Username = Me.tw.Username)
                 Dim item As New ToolStripMenuItem()
                 Dim listName As String = list.Id.ToString()
                 item.Text = list.Name
-                item.CheckOnClick = True
-                item.Checked = dic(list)
-                AddHandler item.CheckedChanged, Sub(sender_, e_)
-                                                    If item.Checked Then
-                                                        tw.AddUserToList(listName, user)
-                                                    Else
-                                                        tw.RemoveUserToList(listName, user)
-                                                    End If
-                                                End Sub
+
+                AddHandler item.Click, Sub(sender_, e_) tw.AddUserToList(listName, user)
                 menuItem.DropDownItems.Add(item)
             Next
         End If
