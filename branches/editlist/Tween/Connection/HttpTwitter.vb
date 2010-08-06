@@ -493,12 +493,11 @@ Public Class HttpTwitter
         If description IsNot Nothing Then param.Add("description", description)
 
         Return httpCon.GetContent(PostMethod, _
-                                  CreateTwitterUri("/1/" + user + "/lists/" + list_id + "xml"), _
+                                  CreateTwitterUri("/1/" + user + "/lists/" + list_id + ".xml"), _
                                   param, _
                                   content, _
                                   Nothing)
     End Function
-
 
 
     Public Function GetListsSubscriptions(ByVal user As String, ByVal cursor As Long, ByRef content As String) As HttpStatusCode

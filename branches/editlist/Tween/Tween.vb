@@ -9837,4 +9837,10 @@ RETRY:
         End If
     End Sub
 #End Region
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        tw.GetListsApi()
+        Dim form As New ListManage(tw)
+        form.Show()
+    End Sub
 End Class
