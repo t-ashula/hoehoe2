@@ -486,6 +486,21 @@ Public Class HttpTwitter
                             _remainCountApi)
     End Function
 
+    Public Function PostListID(ByVal user As String, ByVal list_id As String, ByVal name As String, ByVal mode As String, ByVal description As String, ByRef content As String) As HttpStatusCode
+        Dim param As New Dictionary(Of String, String)
+        If name IsNot Nothing Then param.Add("name", name)
+        If mode IsNot Nothing Then param.Add("mode", mode)
+        If description IsNot Nothing Then param.Add("description", description)
+
+        Return httpCon.GetContent(PostMethod, _
+                                  CreateTwitterUri("/1/" + user + "/lists/" + list_id + "xml"), _
+                                  param, _
+                                  content, _
+                                  Nothing)
+    End Function
+
+
+
     Public Function GetListsSubscriptions(ByVal user As String, ByVal cursor As Long, ByRef content As String) As HttpStatusCode
         Dim param As New Dictionary(Of String, String)
         param.Add("cursor", cursor.ToString)
