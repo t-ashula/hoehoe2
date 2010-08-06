@@ -27,8 +27,8 @@ Partial Class TweenMain
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TweenMain))
         Me.ToolStripContainer1 = New System.Windows.Forms.ToolStripContainer()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
-        Me.StatusLabelApi = New System.Windows.Forms.ToolStripStatusLabel()
         Me.StatusLabelUrl = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.StatusLabelApi = New System.Windows.Forms.ToolStripStatusLabel()
         Me.StatusLabel = New Tween.TweenCustomControl.ToolStripLabelHistory()
         Me.HashStripSplitButton = New System.Windows.Forms.ToolStripSplitButton()
         Me.ContextMenuStripPostMode = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -107,6 +107,8 @@ Partial Class TweenMain
         Me.SearchPostsDetailToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator32 = New System.Windows.Forms.ToolStripSeparator()
         Me.IdFilterAddMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.リストに追加LToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DummyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator33 = New System.Windows.Forms.ToolStripSeparator()
         Me.UseHashtagMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusText = New System.Windows.Forms.TextBox()
@@ -320,13 +322,6 @@ Partial Class TweenMain
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.ShowItemToolTips = True
         '
-        'StatusLabelApi
-        '
-        Me.StatusLabelApi.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right
-        Me.StatusLabelApi.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.StatusLabelApi.Name = "StatusLabelApi"
-        resources.ApplyResources(Me.StatusLabelApi, "StatusLabelApi")
-        '
         'StatusLabelUrl
         '
         resources.ApplyResources(Me.StatusLabelUrl, "StatusLabelUrl")
@@ -335,6 +330,13 @@ Partial Class TweenMain
         Me.StatusLabelUrl.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
         Me.StatusLabelUrl.Name = "StatusLabelUrl"
         Me.StatusLabelUrl.Spring = True
+        '
+        'StatusLabelApi
+        '
+        Me.StatusLabelApi.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right
+        Me.StatusLabelApi.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.StatusLabelApi.Name = "StatusLabelApi"
+        resources.ApplyResources(Me.StatusLabelApi, "StatusLabelApi")
         '
         'StatusLabel
         '
@@ -730,7 +732,7 @@ Partial Class TweenMain
         '
         'ContextMenuStrip4
         '
-        Me.ContextMenuStrip4.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem2, Me.ToolStripSeparator13, Me.ToolStripMenuItem3, Me.ToolStripMenuItem4, Me.ToolStripMenuItem5, Me.ToolStripSeparator5, Me.FollowContextMenuItem, Me.RemoveContextMenuItem, Me.FriendshipContextMenuItem, Me.FriendshipAllMenuItem, Me.ToolStripSeparator36, Me.ShowUserStatusContextMenuItem, Me.SearchPostsDetailToolStripMenuItem, Me.ToolStripSeparator32, Me.IdFilterAddMenuItem, Me.ToolStripSeparator33, Me.UseHashtagMenuItem})
+        Me.ContextMenuStrip4.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem2, Me.ToolStripSeparator13, Me.ToolStripMenuItem3, Me.ToolStripMenuItem4, Me.ToolStripMenuItem5, Me.ToolStripSeparator5, Me.FollowContextMenuItem, Me.RemoveContextMenuItem, Me.FriendshipContextMenuItem, Me.FriendshipAllMenuItem, Me.ToolStripSeparator36, Me.ShowUserStatusContextMenuItem, Me.SearchPostsDetailToolStripMenuItem, Me.ToolStripSeparator32, Me.IdFilterAddMenuItem, Me.リストに追加LToolStripMenuItem, Me.ToolStripSeparator33, Me.UseHashtagMenuItem})
         Me.ContextMenuStrip4.Name = "ContextMenuStrip4"
         resources.ApplyResources(Me.ContextMenuStrip4, "ContextMenuStrip4")
         '
@@ -834,6 +836,17 @@ Partial Class TweenMain
         '
         Me.IdFilterAddMenuItem.Name = "IdFilterAddMenuItem"
         resources.ApplyResources(Me.IdFilterAddMenuItem, "IdFilterAddMenuItem")
+        '
+        'リストに追加LToolStripMenuItem
+        '
+        Me.リストに追加LToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DummyToolStripMenuItem})
+        Me.リストに追加LToolStripMenuItem.Name = "リストに追加LToolStripMenuItem"
+        resources.ApplyResources(Me.リストに追加LToolStripMenuItem, "リストに追加LToolStripMenuItem")
+        '
+        'DummyToolStripMenuItem
+        '
+        Me.DummyToolStripMenuItem.Name = "DummyToolStripMenuItem"
+        resources.ApplyResources(Me.DummyToolStripMenuItem, "DummyToolStripMenuItem")
         '
         'ToolStripSeparator33
         '
@@ -1922,5 +1935,7 @@ Partial Class TweenMain
     Friend WithEvents UserStatusToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ImageCancelButton As System.Windows.Forms.Button
     Friend WithEvents StatusLabelApi As System.Windows.Forms.ToolStripStatusLabel
+    Friend WithEvents リストに追加LToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents DummyToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

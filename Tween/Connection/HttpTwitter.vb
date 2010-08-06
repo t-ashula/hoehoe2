@@ -516,6 +516,51 @@ Public Class HttpTwitter
                             _remainCountApi)
     End Function
 
+    Public Function PostLists(ByVal user As String, ByVal listname As String, ByVal isPrivate As Boolean, ByRef content As String) As HttpStatusCode
+        Dim mode As String = "public"
+        If isPrivate Then
+            mode = "private"
+        End If
+
+        Dim param As New Dictionary(Of String, String)
+        param.Add("name", listname)
+        param.Add("mode", mode)
+        Return httpCon.GetContent(PostMethod, _
+                            CreateTwitterUri("/1/" + user + "/lists.xml"), _
+                            param, _
+                            content, _
+                            Nothing)
+    End Function
+
+    Public Function PostListMembers(ByVal user As String, ByVal list_id As String, ByVal id As String, ByRef content As String) As HttpStatusCode
+        Dim param As New Dictionary(Of String, String)
+        param.Add("id", id)
+        Return httpCon.GetContent(PostMethod, _
+                            CreateTwitterUri("/1/" + user + "/" + list_id + "/members.xml"), _
+                            param, _
+                            content, _
+                            Nothing)
+    End Function
+
+    Public Function DeleteListMembers(ByVal user As String, ByVal list_id As String, ByVal id As String, ByRef content As String) As HttpStatusCode
+        Dim param As New Dictionary(Of String, String)
+        param.Add("id", id)
+        param.Add("_method", "DELETE")
+        Return httpCon.GetContent(PostMethod, _
+                            CreateTwitterUri("/1/" + user + "/" + list_id + "/members.xml"), _
+                            param, _
+                            content, _
+                            Nothing)
+    End Function
+
+    Public Function GetListMembersID(ByVal user As String, ByVal list_id As String, ByVal id As String, ByRef content As String) As HttpStatusCode
+        Return httpCon.GetContent(GetMethod, _
+                            CreateTwitterUri("/1/" + user + "/" + list_id + "/members/" + id + ".xml"), _
+                            Nothing, _
+                            content, _
+                            _remainCountApi)
+    End Function
+
     Public Function Statusid_retweeted_by_ids(ByVal statusid As Long, ByVal count As Integer, ByVal page As Integer, ByRef content As String) As HttpStatusCode
         Dim param As New Dictionary(Of String, String)
         If count > 0 Then

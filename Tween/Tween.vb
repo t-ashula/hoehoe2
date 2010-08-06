@@ -8450,6 +8450,34 @@ RETRY:
         End If
     End Sub
 
+    Private Sub ListAddMenuItem_DropDownOpening(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles リストに追加LToolStripMenuItem.DropDownOpening
+        Dim menuItem As ToolStripMenuItem = CType(sender, ToolStripMenuItem)
+        menuItem.DropDownItems.Clear()
+        Dim m As Match = Regex.Match(Me._postBrowserStatusText, "^https?://twitter.com/(?<name>[a-zA-Z0-9_]+)$")
+        If m.Success AndAlso IsTwitterId(m.Result("${name}")) Then
+            Dim dic As New Dictionary(Of ListElement, Boolean)
+            Dim user As String = m.Result("${name}")
+
+            tw.GiveMeName(user, dic)
+            For Each list As ListElement In dic.Keys
+                Dim item As New ToolStripMenuItem()
+                Dim listName As String = list.Id.ToString()
+                item.Text = list.Name
+                item.CheckOnClick = True
+                item.Checked = dic(list)
+                AddHandler item.CheckedChanged, Sub(sender_, e_)
+                                                    If item.Checked Then
+                                                        tw.AddUserToList(listName, user)
+                                                    Else
+                                                        tw.RemoveUserToList(listName, user)
+                                                    End If
+                                                End Sub
+                menuItem.DropDownItems.Add(item)
+            Next
+        End If
+
+    End Sub
+
     Private Sub SearchControls_Enter(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Dim pnl As Control = DirectCast(sender, Control)
         For Each ctl As Control In pnl.Controls
@@ -9818,5 +9846,4 @@ RETRY:
         End If
     End Sub
 #End Region
-
 End Class

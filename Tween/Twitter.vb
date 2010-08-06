@@ -2387,7 +2387,122 @@ Public Class Twitter
 
         TabInformations.GetInstance.SubscribableLists = lists
         Return ""
+    End Function
 
+    Public Function CreateListApi(ByVal listName As String, ByVal isPrivate As Boolean) As String
+        If Twitter.AccountState <> ACCOUNT_STATE.Valid Then Return ""
+
+        Dim res As HttpStatusCode
+        Dim content As String = ""
+
+        Try
+            res = twCon.PostLists(Me.Username, listName, isPrivate, content)
+        Catch ex As Exception
+            Return "Err:" + ex.Message
+        End Try
+
+        Select Case res
+            Case HttpStatusCode.OK
+                Twitter.AccountState = ACCOUNT_STATE.Valid
+            Case HttpStatusCode.Unauthorized
+                Twitter.AccountState = ACCOUNT_STATE.Invalid
+                Return "Check your Username/Password."
+            Case HttpStatusCode.BadRequest
+                Return "Err:API Limits?"
+            Case Else
+                Return "Err:" + res.ToString()
+        End Select
+
+        Dim xdoc As New XmlDocument
+        Try
+            xdoc.LoadXml(content)
+            Dim lst As New ListElement()
+            lst.Description = xdoc.Item("description").InnerText
+            lst.Id = Long.Parse(xdoc.Item("id").InnerText)
+            lst.IsPublic = xdoc.Item("mode").InnerText = "public"
+            lst.MemberCount = Integer.Parse(xdoc.Item("member_count").InnerText)
+            lst.Name = xdoc.Item("name").InnerText
+            lst.SubscriberCount = Integer.Parse(xdoc.Item("subscriber_count").InnerText)
+            lst.Slug = xdoc.Item("slug").InnerText
+            Dim xUserEntry As XmlElement = CType(xdoc.SelectSingleNode("./user"), XmlElement)
+            lst.Nickname = xUserEntry.Item("name").InnerText
+            lst.Username = xUserEntry.Item("screen_name").InnerText
+            lst.UserId = Long.Parse(xUserEntry.Item("id").InnerText)
+            TabInformations.GetInstance().SubscribableLists.Add(lst)
+        Catch ex As Exception
+            TraceOut(content)
+            Return "Invalid XML!"
+        End Try
+
+        Return ""
+    End Function
+
+    Public Function GiveMeName(ByVal user As String, ByVal hoge As IDictionary(Of ListElement, Boolean)) As String
+        Dim myList As List(Of ListElement) =
+            TabInformations.GetInstance().SubscribableLists.FindAll(
+                Function(list) list.Username = Me.Username)
+
+        For Each list As ListElement In myList
+            Dim content As String = ""
+            Dim res As HttpStatusCode
+
+            Try
+                res = twCon.GetListMembersID(Me.Username, list.Id.ToString(), user, content)
+            Catch ex As Exception
+                Return "Err:" + ex.Message
+            End Try
+
+            Select Case res
+                Case HttpStatusCode.NotFound
+                Case HttpStatusCode.OK
+                    Twitter.AccountState = ACCOUNT_STATE.Valid
+                Case HttpStatusCode.Unauthorized
+                    Twitter.AccountState = ACCOUNT_STATE.Invalid
+                    Return "Check your Username/Password."
+                Case HttpStatusCode.BadRequest
+                    Return "Err:API Limits?"
+                Case Else
+                    Return "Err:" + res.ToString()
+            End Select
+
+            Dim xdoc As New XmlDocument
+
+            Try
+                xdoc.LoadXml(content)
+                hoge.Add(list, xdoc.DocumentElement.LocalName = "user")
+            Catch ex As Exception
+                TraceOut(content)
+                Return "Invalid XML!"
+            End Try
+        Next
+
+        Return ""
+    End Function
+
+    Public Function AddUserToList(ByVal list_name As String, ByVal user As String) As String
+        Dim content As String = ""
+        Dim res As HttpStatusCode
+
+        Try
+            res = twCon.PostListMembers(Me.Username, list_name, user, content)
+        Catch ex As Exception
+            Return "Err:" + ex.Message
+        End Try
+
+        Return ""
+    End Function
+
+    Public Function RemoveUserToList(ByVal list_name As String, ByVal user As String) As String
+        Dim content As String = ""
+        Dim res As HttpStatusCode
+
+        Try
+            res = twCon.DeleteListMembers(Me.Username, list_name, user, content)
+        Catch ex As Exception
+            Return "Err:" + ex.Message
+        End Try
+
+        Return ""
     End Function
 
     Public Function CreateHtmlAnchor(ByVal Text As String, ByVal AtList As List(Of String)) As String
