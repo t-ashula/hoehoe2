@@ -2389,6 +2389,54 @@ Public Class Twitter
         Return ""
     End Function
 
+    Public Function EditList(ByVal list_id As String, ByVal new_name As String, ByVal isPrivate As Boolean, ByVal description As String, ByRef list As ListElement) As String
+        Dim res As HttpStatusCode
+        Dim content As String = ""
+        Dim modeString As String = "public"
+        If isPrivate Then
+            modeString = "private"
+        End If
+
+        Try
+            res = twCon.PostListID(Me.Username, list_id, new_name, modeString, description, content)
+        Catch ex As Exception
+            Return "Err:" + ex.Message
+        End Try
+
+        Select Case res
+            Case HttpStatusCode.OK
+                Twitter.AccountState = ACCOUNT_STATE.Valid
+            Case HttpStatusCode.Unauthorized
+                Twitter.AccountState = ACCOUNT_STATE.Invalid
+                Return "Check your Username/Password."
+            Case HttpStatusCode.BadRequest
+                Return "Err:API Limits?"
+            Case Else
+                Return "Err:" + res.ToString()
+        End Select
+
+        Dim xdoc As New XmlDocument
+        Try
+            xdoc.LoadXml(content)
+            list.Description = xdoc.DocumentElement.Item("description").InnerText
+            list.Id = Long.Parse(xdoc.DocumentElement.Item("id").InnerText)
+            list.IsPublic = xdoc.DocumentElement.Item("mode").InnerText = "public"
+            list.MemberCount = Integer.Parse(xdoc.DocumentElement.Item("member_count").InnerText)
+            list.Name = xdoc.DocumentElement.Item("name").InnerText
+            list.SubscriberCount = Integer.Parse(xdoc.DocumentElement.Item("subscriber_count").InnerText)
+            list.Slug = xdoc.DocumentElement.Item("slug").InnerText
+            Dim xUserEntry As XmlElement = CType(xdoc.DocumentElement.SelectSingleNode("./user"), XmlElement)
+            list.Nickname = xUserEntry.Item("name").InnerText
+            list.Username = xUserEntry.Item("screen_name").InnerText
+            list.UserId = Long.Parse(xUserEntry.Item("id").InnerText)
+        Catch ex As Exception
+            TraceOut(content)
+            Return "Invalid XML!"
+        End Try
+
+        Return ""
+    End Function
+
     Public Function CreateListApi(ByVal listName As String, ByVal isPrivate As Boolean) As String
         If Twitter.AccountState <> ACCOUNT_STATE.Valid Then Return ""
 
@@ -2417,17 +2465,18 @@ Public Class Twitter
         Try
             xdoc.LoadXml(content)
             Dim lst As New ListElement()
-            lst.Description = xdoc.Item("description").InnerText
-            lst.Id = Long.Parse(xdoc.Item("id").InnerText)
-            lst.IsPublic = xdoc.Item("mode").InnerText = "public"
-            lst.MemberCount = Integer.Parse(xdoc.Item("member_count").InnerText)
-            lst.Name = xdoc.Item("name").InnerText
-            lst.SubscriberCount = Integer.Parse(xdoc.Item("subscriber_count").InnerText)
-            lst.Slug = xdoc.Item("slug").InnerText
-            Dim xUserEntry As XmlElement = CType(xdoc.SelectSingleNode("./user"), XmlElement)
+            lst.Description = xdoc.DocumentElement.Item("description").InnerText
+            lst.Id = Long.Parse(xdoc.DocumentElement.Item("id").InnerText)
+            lst.IsPublic = xdoc.DocumentElement.Item("mode").InnerText = "public"
+            lst.MemberCount = Integer.Parse(xdoc.DocumentElement.Item("member_count").InnerText)
+            lst.Name = xdoc.DocumentElement.Item("name").InnerText
+            lst.SubscriberCount = Integer.Parse(xdoc.DocumentElement.Item("subscriber_count").InnerText)
+            lst.Slug = xdoc.DocumentElement.Item("slug").InnerText
+            Dim xUserEntry As XmlElement = CType(xdoc.DocumentElement.SelectSingleNode("./user"), XmlElement)
             lst.Nickname = xUserEntry.Item("name").InnerText
             lst.Username = xUserEntry.Item("screen_name").InnerText
             lst.UserId = Long.Parse(xUserEntry.Item("id").InnerText)
+
             TabInformations.GetInstance().SubscribableLists.Add(lst)
         Catch ex As Exception
             TraceOut(content)
