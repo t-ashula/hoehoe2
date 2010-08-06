@@ -2310,20 +2310,7 @@ Public Class Twitter
 
             Try
                 For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("/lists_list/lists/list")
-                    Dim xentry As XmlElement = CType(xentryNode, XmlElement)
-                    Dim lst As New ListElement
-                    lst.Description = xentry.Item("description").InnerText
-                    lst.Id = Long.Parse(xentry.Item("id").InnerText)
-                    lst.IsPublic = (xentry.Item("mode").InnerText = "public")
-                    lst.MemberCount = Integer.Parse(xentry.Item("member_count").InnerText)
-                    lst.Name = xentry.Item("name").InnerText
-                    lst.SubscriberCount = Integer.Parse(xentry.Item("subscriber_count").InnerText)
-                    lst.Slug = xentry.Item("slug").InnerText
-                    Dim xUserEntry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
-                    lst.Nickname = xUserEntry.Item("name").InnerText
-                    lst.Username = xUserEntry.Item("screen_name").InnerText
-                    lst.UserId = Long.Parse(xUserEntry.Item("id").InnerText)
-                    lists.Add(lst)
+                    lists.Add(New ListElement(xentryNode))
                 Next
                 cursor = Long.Parse(xdoc.DocumentElement.SelectSingleNode("/lists_list/next_cursor").InnerText)
             Catch ex As Exception
@@ -2363,20 +2350,7 @@ Public Class Twitter
 
             Try
                 For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("/lists_list/lists/list")
-                    Dim xentry As XmlElement = CType(xentryNode, XmlElement)
-                    Dim lst As New ListElement
-                    lst.Description = xentry.Item("description").InnerText
-                    lst.Id = Long.Parse(xentry.Item("id").InnerText)
-                    lst.IsPublic = (xentry.Item("mode").InnerText = "public")
-                    lst.MemberCount = Integer.Parse(xentry.Item("member_count").InnerText)
-                    lst.Name = xentry.Item("name").InnerText
-                    lst.SubscriberCount = Integer.Parse(xentry.Item("subscriber_count").InnerText)
-                    lst.Slug = xentry.Item("slug").InnerText
-                    Dim xUserEntry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
-                    lst.Nickname = xUserEntry.Item("name").InnerText
-                    lst.Username = xUserEntry.Item("screen_name").InnerText
-                    lst.UserId = Long.Parse(xUserEntry.Item("id").InnerText)
-                    lists.Add(lst)
+                    lists.Add(New ListElement(xentryNode))
                 Next
                 cursor = Long.Parse(xdoc.DocumentElement.SelectSingleNode("/lists_list/next_cursor").InnerText)
             Catch ex As Exception
@@ -2418,17 +2392,17 @@ Public Class Twitter
         Dim xdoc As New XmlDocument
         Try
             xdoc.LoadXml(content)
-            list.Description = xdoc.DocumentElement.Item("description").InnerText
-            list.Id = Long.Parse(xdoc.DocumentElement.Item("id").InnerText)
-            list.IsPublic = xdoc.DocumentElement.Item("mode").InnerText = "public"
-            list.MemberCount = Integer.Parse(xdoc.DocumentElement.Item("member_count").InnerText)
-            list.Name = xdoc.DocumentElement.Item("name").InnerText
-            list.SubscriberCount = Integer.Parse(xdoc.DocumentElement.Item("subscriber_count").InnerText)
-            list.Slug = xdoc.DocumentElement.Item("slug").InnerText
-            Dim xUserEntry As XmlElement = CType(xdoc.DocumentElement.SelectSingleNode("./user"), XmlElement)
-            list.Nickname = xUserEntry.Item("name").InnerText
-            list.Username = xUserEntry.Item("screen_name").InnerText
-            list.UserId = Long.Parse(xUserEntry.Item("id").InnerText)
+            Dim newList As New ListElement(xdoc.DocumentElement)
+            list.Description = newList.Description
+            list.Id = newList.Id
+            list.IsPublic = newList.IsPublic
+            list.MemberCount = newList.MemberCount
+            list.Name = newList.Name
+            list.SubscriberCount = newList.SubscriberCount
+            list.Slug = newList.Slug
+            list.Nickname = newList.Nickname
+            list.Username = newList.Username
+            list.UserId = newList.UserId
         Catch ex As Exception
             TraceOut(content)
             Return "Invalid XML!"
@@ -2464,20 +2438,8 @@ Public Class Twitter
         Dim xdoc As New XmlDocument
         Try
             xdoc.LoadXml(content)
-            Dim lst As New ListElement()
-            lst.Description = xdoc.DocumentElement.Item("description").InnerText
-            lst.Id = Long.Parse(xdoc.DocumentElement.Item("id").InnerText)
-            lst.IsPublic = xdoc.DocumentElement.Item("mode").InnerText = "public"
-            lst.MemberCount = Integer.Parse(xdoc.DocumentElement.Item("member_count").InnerText)
-            lst.Name = xdoc.DocumentElement.Item("name").InnerText
-            lst.SubscriberCount = Integer.Parse(xdoc.DocumentElement.Item("subscriber_count").InnerText)
-            lst.Slug = xdoc.DocumentElement.Item("slug").InnerText
-            Dim xUserEntry As XmlElement = CType(xdoc.DocumentElement.SelectSingleNode("./user"), XmlElement)
-            lst.Nickname = xUserEntry.Item("name").InnerText
-            lst.Username = xUserEntry.Item("screen_name").InnerText
-            lst.UserId = Long.Parse(xUserEntry.Item("id").InnerText)
 
-            TabInformations.GetInstance().SubscribableLists.Add(lst)
+            TabInformations.GetInstance().SubscribableLists.Add(New ListElement(xdoc.DocumentElement))
         Catch ex As Exception
             TraceOut(content)
             Return "Invalid XML!"
