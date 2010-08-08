@@ -499,6 +499,16 @@ Public Class HttpTwitter
                                   Nothing)
     End Function
 
+    Public Function DeleteListID(ByVal user As String, ByVal list_id As String, ByRef content As String) As HttpStatusCode
+        Dim param As New Dictionary(Of String, String)
+        param.Add("_method", "DELETE")
+
+        Return httpCon.GetContent(PostMethod, _
+                                  CreateTwitterUri("/1/" + user + "/lists/" + list_id + ".xml"), _
+                                  param, _
+                                  content, _
+                                  Nothing)
+    End Function
 
     Public Function GetListsSubscriptions(ByVal user As String, ByVal cursor As Long, ByRef content As String) As HttpStatusCode
         Dim param As New Dictionary(Of String, String)
