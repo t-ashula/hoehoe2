@@ -2363,6 +2363,31 @@ Public Class Twitter
         Return ""
     End Function
 
+    Public Function DeleteList(ByVal list_id As String) As String
+        Dim res As HttpStatusCode
+        Dim content As String = ""
+
+        Try
+            res = twCon.DeleteListID(Me.Username, list_id, content)
+        Catch ex As Exception
+            Return "Err:" + ex.Message
+        End Try
+
+        Select Case res
+            Case HttpStatusCode.OK
+                Twitter.AccountState = ACCOUNT_STATE.Valid
+            Case HttpStatusCode.Unauthorized
+                Twitter.AccountState = ACCOUNT_STATE.Invalid
+                Return "Check your Username/Password."
+            Case HttpStatusCode.BadRequest
+                Return "Err:API Limits?"
+            Case Else
+                Return "Err:" + res.ToString()
+        End Select
+
+        Return ""
+    End Function
+
     Public Function EditList(ByVal list_id As String, ByVal new_name As String, ByVal isPrivate As Boolean, ByVal description As String, ByRef list As ListElement) As String
         Dim res As HttpStatusCode
         Dim content As String = ""
