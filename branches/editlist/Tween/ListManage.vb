@@ -25,6 +25,11 @@
         Me.MemberCountTextBox.Text = list.MemberCount.ToString()
         Me.SubscriberCountTextBox.Text = list.SubscriberCount.ToString()
         Me.DescriptionText.Text = list.Description
+
+        Me.UserList.Items.Clear()
+        For Each user As UserInfo In list.Members
+            Me.UserList.Items.Add(user)
+        Next
     End Sub
 
     Private Sub EditCheckBox_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles EditCheckBox.CheckedChanged

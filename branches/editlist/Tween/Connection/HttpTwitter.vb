@@ -546,6 +546,16 @@ Public Class HttpTwitter
                             Nothing)
     End Function
 
+    Public Function GetListNembers(ByVal user As String, ByVal list_id As String, ByVal cursor As Long, ByRef content As String) As HttpStatusCode
+        Dim param As New Dictionary(Of String, String)
+        param.Add("cursor", cursor.ToString())
+        Return httpCon.GetContent(GetMethod, _
+                            CreateTwitterUri("/1/" + user + "/" + list_id + "/members.xml"), _
+                            param, _
+                            content, _
+                            _remainCountApi)
+    End Function
+
     Public Function PostListMembers(ByVal user As String, ByVal list_id As String, ByVal id As String, ByRef content As String) As HttpStatusCode
         Dim param As New Dictionary(Of String, String)
         param.Add("id", id)

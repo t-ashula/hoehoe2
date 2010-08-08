@@ -2310,7 +2310,7 @@ Public Class Twitter
 
             Try
                 For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("/lists_list/lists/list")
-                    lists.Add(New ListElement(xentryNode))
+                    lists.Add(New ListElement(xentryNode, Me))
                 Next
                 cursor = Long.Parse(xdoc.DocumentElement.SelectSingleNode("/lists_list/next_cursor").InnerText)
             Catch ex As Exception
@@ -2350,7 +2350,7 @@ Public Class Twitter
 
             Try
                 For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("/lists_list/lists/list")
-                    lists.Add(New ListElement(xentryNode))
+                    lists.Add(New ListElement(xentryNode, Me))
                 Next
                 cursor = Long.Parse(xdoc.DocumentElement.SelectSingleNode("/lists_list/next_cursor").InnerText)
             Catch ex As Exception
@@ -2392,7 +2392,7 @@ Public Class Twitter
         Dim xdoc As New XmlDocument
         Try
             xdoc.LoadXml(content)
-            Dim newList As New ListElement(xdoc.DocumentElement)
+            Dim newList As New ListElement(xdoc.DocumentElement, Me)
             list.Description = newList.Description
             list.Id = newList.Id
             list.IsPublic = newList.IsPublic
@@ -2407,6 +2407,54 @@ Public Class Twitter
             TraceOut(content)
             Return "Invalid XML!"
         End Try
+
+        Return ""
+    End Function
+
+    Public Function GetListNembers(ByVal list_id As String, ByVal lists As List(Of UserInfo)) As String
+        If Twitter.AccountState <> ACCOUNT_STATE.Valid Then Return ""
+
+        Dim res As HttpStatusCode
+        Dim content As String = ""
+        Dim cursor As Long = -1
+
+        Do
+            Try
+                res = twCon.GetListNembers(Me.Username, list_id, cursor, content)
+            Catch ex As Exception
+                Return "Err:" + ex.Message
+            End Try
+
+            Select Case res
+                Case HttpStatusCode.OK
+                    Twitter.AccountState = ACCOUNT_STATE.Valid
+                Case HttpStatusCode.Unauthorized
+                    Twitter.AccountState = ACCOUNT_STATE.Invalid
+                    Return "Check your Username/Password."
+                Case HttpStatusCode.BadRequest
+                    Return "Err:API Limits?"
+                Case Else
+                    Return "Err:" + res.ToString()
+            End Select
+
+            Dim xdoc As New XmlDocument
+            Try
+                xdoc.LoadXml(content)
+            Catch ex As Exception
+                TraceOut(content)
+                Return "Invalid XML!"
+            End Try
+
+            Try
+                For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("/users_list/users/user")
+                    lists.Add(New UserInfo(xentryNode))
+                Next
+                cursor = Long.Parse(xdoc.DocumentElement.SelectSingleNode("/users_list/next_cursor").InnerText)
+            Catch ex As Exception
+                TraceOut(content)
+                Return "Invalid XML!"
+            End Try
+        Loop While cursor <> 0
 
         Return ""
     End Function
@@ -2439,7 +2487,7 @@ Public Class Twitter
         Try
             xdoc.LoadXml(content)
 
-            TabInformations.GetInstance().SubscribableLists.Add(New ListElement(xdoc.DocumentElement))
+            TabInformations.GetInstance().SubscribableLists.Add(New ListElement(xdoc.DocumentElement, Me))
         Catch ex As Exception
             TraceOut(content)
             Return "Invalid XML!"
