@@ -108,7 +108,6 @@ Partial Class TweenMain
         Me.ToolStripSeparator32 = New System.Windows.Forms.ToolStripSeparator()
         Me.IdFilterAddMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.リストに追加LToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DummyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator33 = New System.Windows.Forms.ToolStripSeparator()
         Me.UseHashtagMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusText = New System.Windows.Forms.TextBox()
@@ -205,6 +204,7 @@ Partial Class TweenMain
         Me.HashToggleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HashManageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RtCountMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.リスト編集ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.MatomeMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator16 = New System.Windows.Forms.ToolStripSeparator()
@@ -264,7 +264,6 @@ Partial Class TweenMain
         Me.TimerRefreshIcon = New System.Windows.Forms.Timer(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.ToolStripContainer1.BottomToolStripPanel.SuspendLayout()
         Me.ToolStripContainer1.ContentPanel.SuspendLayout()
         Me.ToolStripContainer1.TopToolStripPanel.SuspendLayout()
@@ -840,14 +839,8 @@ Partial Class TweenMain
         '
         'リストに追加LToolStripMenuItem
         '
-        Me.リストに追加LToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DummyToolStripMenuItem})
         Me.リストに追加LToolStripMenuItem.Name = "リストに追加LToolStripMenuItem"
         resources.ApplyResources(Me.リストに追加LToolStripMenuItem, "リストに追加LToolStripMenuItem")
-        '
-        'DummyToolStripMenuItem
-        '
-        Me.DummyToolStripMenuItem.Name = "DummyToolStripMenuItem"
-        resources.ApplyResources(Me.DummyToolStripMenuItem, "DummyToolStripMenuItem")
         '
         'ToolStripSeparator33
         '
@@ -1241,7 +1234,7 @@ Partial Class TweenMain
         '
         'MenuItemCommand
         '
-        Me.MenuItemCommand.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TinyUrlConvertToolStripMenuItem, Me.UpdateFollowersMenuItem1, Me.ToolStripSeparator1, Me.FollowCommandMenuItem, Me.RemoveCommandMenuItem, Me.FriendshipMenuItem, Me.ToolStripSeparator3, Me.OwnStatusMenuItem, Me.UserStatusToolStripMenuItem, Me.ToolStripSeparator34, Me.HashToggleToolStripMenuItem, Me.HashManageToolStripMenuItem, Me.RtCountMenuItem})
+        Me.MenuItemCommand.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TinyUrlConvertToolStripMenuItem, Me.UpdateFollowersMenuItem1, Me.ToolStripSeparator1, Me.FollowCommandMenuItem, Me.RemoveCommandMenuItem, Me.FriendshipMenuItem, Me.ToolStripSeparator3, Me.OwnStatusMenuItem, Me.UserStatusToolStripMenuItem, Me.ToolStripSeparator34, Me.HashToggleToolStripMenuItem, Me.HashManageToolStripMenuItem, Me.RtCountMenuItem, Me.リスト編集ToolStripMenuItem})
         Me.MenuItemCommand.Name = "MenuItemCommand"
         resources.ApplyResources(Me.MenuItemCommand, "MenuItemCommand")
         '
@@ -1351,6 +1344,11 @@ Partial Class TweenMain
         '
         Me.RtCountMenuItem.Name = "RtCountMenuItem"
         resources.ApplyResources(Me.RtCountMenuItem, "RtCountMenuItem")
+        '
+        'リスト編集ToolStripMenuItem
+        '
+        Me.リスト編集ToolStripMenuItem.Name = "リスト編集ToolStripMenuItem"
+        resources.ApplyResources(Me.リスト編集ToolStripMenuItem, "リスト編集ToolStripMenuItem")
         '
         'MenuItemHelp
         '
@@ -1651,19 +1649,12 @@ Partial Class TweenMain
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
-        'Button1
-        '
-        resources.ApplyResources(Me.Button1, "Button1")
-        Me.Button1.Name = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'TweenMain
         '
         Me.AllowDrop = True
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
-        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.ToolStripContainer1)
         Me.Name = "TweenMain"
         Me.ToolStripContainer1.BottomToolStripPanel.ResumeLayout(False)
@@ -1944,7 +1935,6 @@ Partial Class TweenMain
     Friend WithEvents ImageCancelButton As System.Windows.Forms.Button
     Friend WithEvents StatusLabelApi As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents リストに追加LToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents DummyToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents リスト編集ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

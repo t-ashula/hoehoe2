@@ -8068,6 +8068,12 @@ RETRY:
         ShowFriendship(id)
     End Sub
 
+    Private Sub リスト編集ToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles リスト編集ToolStripMenuItem.Click
+        tw.GetListsApi()
+        Dim form As New ListManage(tw)
+        form.Show()
+    End Sub
+
     Private Class ShowFriendshipArgs
         Public tw As Tween.Twitter
         Public Class FriendshipInfo
@@ -8450,23 +8456,20 @@ RETRY:
         End If
     End Sub
 
-    Private Sub ListAddMenuItem_DropDownOpening(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles リストに追加LToolStripMenuItem.DropDownOpening
-        Dim menuItem As ToolStripMenuItem = CType(sender, ToolStripMenuItem)
-        menuItem.DropDownItems.Clear()
+    Private Sub リストに追加LToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles リストに追加LToolStripMenuItem.Click
         Dim m As Match = Regex.Match(Me._postBrowserStatusText, "^https?://twitter.com/(?<name>[a-zA-Z0-9_]+)$")
         If m.Success AndAlso IsTwitterId(m.Result("${name}")) Then
             Dim user As String = m.Result("${name}")
 
-            For Each list As ListElement In TabInformations.GetInstance().SubscribableLists.FindAll(Function(l) l.Username = Me.tw.Username)
-                Dim item As New ToolStripMenuItem()
-                Dim listName As String = list.Id.ToString()
-                item.Text = list.Name
-
-                AddHandler item.Click, Sub(sender_, e_) tw.AddUserToList(listName, user)
-                menuItem.DropDownItems.Add(item)
-            Next
+            Dim list As ListElement = Nothing
+            Me.tw.GetListsApi()
+            Using listAvail As New ListAvailable
+                If listAvail.ShowDialog(Me) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+                If listAvail.SelectedList Is Nothing Then Exit Sub
+                list = listAvail.SelectedList
+            End Using
+            Me.tw.AddUserToList(list.Id.ToString(), user)
         End If
-
     End Sub
 
     Private Sub SearchControls_Enter(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -9838,9 +9841,4 @@ RETRY:
     End Sub
 #End Region
 
-    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
-        tw.GetListsApi()
-        Dim form As New ListManage(tw)
-        form.Show()
-    End Sub
 End Class
