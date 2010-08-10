@@ -47,27 +47,23 @@
     Private Sub OKButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OKButton.Click
         If Me.ListsList.SelectedItem Is Nothing Then Return
         Dim listItem As ListElement = DirectCast(Me.ListsList.SelectedItem, ListElement)
-        Dim list_id As String = listItem.Id.ToString()
-        Dim newListElement As New ListElement()
 
-        If TypeOf listItem Is NewListElement Then
-            If Me.NameTextBox.Text = "" Then
-                MessageBox.Show("リスト名を入力して下さい。")
-                Return
-            End If
-            CType(listItem, NewListElement).Create(Me.NameTextBox.Text, Me.PublicRadioButton.Checked, Me.DescriptionText.Text)
-        Else
-            Dim rslt As String = tw.EditList(list_id, Me.NameTextBox.Text, Me.PrivateRadioButton.Checked, Me.DescriptionText.Text, newListElement)
+        If Me.NameTextBox.Text = "" Then
+            MessageBox.Show("リスト名を入力して下さい。")
+            Return
+        End If
 
-            If rslt <> "" Then
-                MessageBox.Show("通信エラー (" + rslt + ")")
-                Return
-            End If
+        listItem.Name = Me.NameTextBox.Text
+        listItem.IsPublic = Me.PublicRadioButton.Checked
+        listItem.Description = Me.DescriptionText.Text
 
-            Dim oldItem As ListElement = TabInformations.GetInstance().SubscribableLists.Find(Function(i) i.Id = listItem.Id)
-            oldItem.Name = newListElement.Name
-            oldItem.IsPublic = newListElement.IsPublic
-            oldItem.Description = newListElement.Description
+        Dim rslt As String = listItem.Refresh()
+
+        If rslt <> "" Then
+            MessageBox.Show("通信エラー (" + rslt + ")")
+            Me.ListsList.Items.Clear()
+            Me.ListManage_Load(Nothing, EventArgs.Empty)
+            Return
         End If
 
         Me.ListsList.Items.Clear()
@@ -158,13 +154,14 @@
             Me._tw = tw
         End Sub
 
-        Public Sub Create(ByVal name As String, ByVal isPublic As Boolean, ByVal description As String)
-            Dim rslt As String = Me._tw.CreateListApi(name, Not isPublic, description)
-
-            If rslt <> "" Then
-                MessageBox.Show("通信エラー (" + rslt + ")")
+        Public Overrides Function Refresh() As String
+            If Me.IsCreated Then
+                Return MyBase.Refresh()
+            Else
+                Me._isCreated = True
+                Return Me._tw.CreateListApi(Me.Name, Not Me.IsPublic, Me.Description)
             End If
-        End Sub
+        End Function
 
         Public ReadOnly Property IsCreated As Boolean
             Get

@@ -34,6 +34,10 @@ Public Class ListElement
         Me._tw = tw
     End Sub
 
+    Public Overridable Function Refresh() As String
+        Return _tw.EditList(Me.Id.ToString(), Name, Not Me.IsPublic, Me.Description, Me)
+    End Function
+
     Public ReadOnly Property Members As List(Of UserInfo)
         Get
             If Me._members Is Nothing Then
