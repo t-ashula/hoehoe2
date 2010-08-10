@@ -43,6 +43,8 @@ Partial Class ListManage
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.PrivateRadioButton = New System.Windows.Forms.RadioButton()
         Me.PublicRadioButton = New System.Windows.Forms.RadioButton()
+        Me.OKButton = New System.Windows.Forms.Button()
+        Me.CancelButton = New System.Windows.Forms.Button()
         Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -58,7 +60,7 @@ Partial Class ListManage
         '
         'DescriptionText
         '
-        Me.DescriptionText.Location = New System.Drawing.Point(28, 512)
+        Me.DescriptionText.Location = New System.Drawing.Point(28, 477)
         Me.DescriptionText.Multiline = True
         Me.DescriptionText.Name = "DescriptionText"
         Me.DescriptionText.ReadOnly = True
@@ -70,7 +72,7 @@ Partial Class ListManage
         '
         Me.Label12.AutoSize = True
         Me.Label12.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.Label12.Location = New System.Drawing.Point(12, 460)
+        Me.Label12.Location = New System.Drawing.Point(85, 423)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(53, 12)
         Me.Label12.TabIndex = 27
@@ -90,7 +92,7 @@ Partial Class ListManage
         '
         Me.Label6.AutoSize = True
         Me.Label6.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.Label6.Location = New System.Drawing.Point(12, 497)
+        Me.Label6.Location = New System.Drawing.Point(12, 462)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(29, 12)
         Me.Label6.TabIndex = 22
@@ -196,7 +198,7 @@ Partial Class ListManage
         '
         'SubscriberCountTextBox
         '
-        Me.SubscriberCountTextBox.Location = New System.Drawing.Point(28, 475)
+        Me.SubscriberCountTextBox.Location = New System.Drawing.Point(101, 438)
         Me.SubscriberCountTextBox.Name = "SubscriberCountTextBox"
         Me.SubscriberCountTextBox.ReadOnly = True
         Me.SubscriberCountTextBox.Size = New System.Drawing.Size(46, 19)
@@ -248,11 +250,33 @@ Partial Class ListManage
         Me.PublicRadioButton.Text = "Public"
         Me.PublicRadioButton.UseVisualStyleBackColor = True
         '
+        'OKButton
+        '
+        Me.OKButton.Enabled = False
+        Me.OKButton.Location = New System.Drawing.Point(208, 510)
+        Me.OKButton.Name = "OKButton"
+        Me.OKButton.Size = New System.Drawing.Size(75, 23)
+        Me.OKButton.TabIndex = 44
+        Me.OKButton.Text = "OK"
+        Me.OKButton.UseVisualStyleBackColor = True
+        '
+        'CancelButton
+        '
+        Me.CancelButton.Enabled = False
+        Me.CancelButton.Location = New System.Drawing.Point(291, 510)
+        Me.CancelButton.Name = "CancelButton"
+        Me.CancelButton.Size = New System.Drawing.Size(75, 23)
+        Me.CancelButton.TabIndex = 45
+        Me.CancelButton.Text = "Cancel"
+        Me.CancelButton.UseVisualStyleBackColor = True
+        '
         'ListManage
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(683, 576)
+        Me.ClientSize = New System.Drawing.Size(683, 538)
+        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.OKButton)
         Me.Controls.Add(Me.DeleteUserButton)
         Me.Controls.Add(Me.RefreshUsersButton)
         Me.Controls.Add(Me.DeleteListButton)
@@ -306,4 +330,6 @@ Partial Class ListManage
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents PrivateRadioButton As System.Windows.Forms.RadioButton
     Friend WithEvents PublicRadioButton As System.Windows.Forms.RadioButton
+    Friend WithEvents OKButton As System.Windows.Forms.Button
+    Friend WithEvents CancelButton As System.Windows.Forms.Button
 End Class

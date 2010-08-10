@@ -39,21 +39,69 @@
         Me.DescriptionText.ReadOnly = Not Me.EditCheckBox.Checked
         Me.ListsList.Enabled = Not Me.EditCheckBox.Checked
 
-        If Not Me.EditCheckBox.Checked Then
-            If Me.ListsList.SelectedItem Is Nothing Then Return
-            Dim listItem As ListElement = DirectCast(Me.ListsList.SelectedItem, ListElement)
-            Dim list_id As String = listItem.Id.ToString()
-            Dim newListElement As New ListElement()
-            tw.EditList(list_id, Me.NameTextBox.Text, Me.PrivateRadioButton.Checked, Me.DescriptionText.Text, newListElement)
+        Me.OKButton.Enabled = Me.EditCheckBox.Enabled
+        Me.CancelButton.Enabled = Me.EditCheckBox.Enabled
+        Me.EditCheckBox.AutoCheck = Not Me.EditCheckBox.Checked
 
-            Dim oldItem As ListElement = TabInformations.GetInstance().SubscribableLists.Find(Function(i) i.Id = listItem.Id)
-            oldItem.Name = newListElement.Name
-            oldItem.IsPublic = newListElement.IsPublic
-            oldItem.Description = newListElement.Description
+        'If Not Me.EditCheckBox.Checked Then
+        '    If Me.ListsList.SelectedItem Is Nothing Then Return
+        '    Dim listItem As ListElement = DirectCast(Me.ListsList.SelectedItem, ListElement)
+        '    Dim list_id As String = listItem.Id.ToString()
+        '    Dim newListElement As New ListElement()
 
-            Me.ListsList.Items.Clear()
-            Me.ListManage_Load(Nothing, EventArgs.Empty)
+        '    Dim rslt As String = tw.EditList(list_id, Me.NameTextBox.Text, Me.PrivateRadioButton.Checked, Me.DescriptionText.Text, newListElement)
+
+        '    If rslt <> "" Then
+        '        MessageBox.Show("通信エラー (" + rslt + ")")
+        '        Return
+        '    End If
+
+        '    Dim oldItem As ListElement = TabInformations.GetInstance().SubscribableLists.Find(Function(i) i.Id = listItem.Id)
+        '    oldItem.Name = newListElement.Name
+        '    oldItem.IsPublic = newListElement.IsPublic
+        '    oldItem.Description = newListElement.Description
+
+        '    Me.ListsList.Items.Clear()
+        '    Me.ListManage_Load(Nothing, EventArgs.Empty)
+        'End If
+    End Sub
+
+    Private Sub OKButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OKButton.Click
+        If Me.ListsList.SelectedItem Is Nothing Then Return
+        Dim listItem As ListElement = DirectCast(Me.ListsList.SelectedItem, ListElement)
+        Dim list_id As String = listItem.Id.ToString()
+        Dim newListElement As New ListElement()
+
+        Dim rslt As String = tw.EditList(list_id, Me.NameTextBox.Text, Me.PrivateRadioButton.Checked, Me.DescriptionText.Text, newListElement)
+
+        If rslt <> "" Then
+            MessageBox.Show("通信エラー (" + rslt + ")")
+            Return
         End If
+
+        Dim oldItem As ListElement = TabInformations.GetInstance().SubscribableLists.Find(Function(i) i.Id = listItem.Id)
+        oldItem.Name = newListElement.Name
+        oldItem.IsPublic = newListElement.IsPublic
+        oldItem.Description = newListElement.Description
+
+        Me.ListsList.Items.Clear()
+        Me.ListManage_Load(Nothing, EventArgs.Empty)
+
+        Me.EditCheckBox.AutoCheck = True
+        Me.EditCheckBox.Checked = False
+
+        Me.OKButton.Enabled = False
+        Me.CancelButton.Enabled = False
+    End Sub
+
+    Private Sub CancelButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CancelButton.Click
+        Me.EditCheckBox.AutoCheck = True
+        Me.EditCheckBox.Checked = False
+
+        Me.OKButton.Enabled = False
+        Me.CancelButton.Enabled = False
+
+        Me.ListsList_SelectedIndexChanged(Me.ListsList, EventArgs.Empty)
     End Sub
 
     Private Sub RefreshUsersButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RefreshUsersButton.Click
@@ -69,18 +117,41 @@
 
         Dim list As ListElement = CType(Me.ListsList.SelectedItem, ListElement)
         Dim user As UserInfo = CType(Me.UserList.SelectedItem, UserInfo)
+        If MessageBox.Show(list.Name + "から" + user.ScreenName + "を削除します。", "Tween", MessageBoxButtons.OKCancel) = DialogResult.OK Then
+            Dim rslt As String = Me.tw.RemoveUserToList(list.Id.ToString(), user.Id.ToString())
 
-        Me.tw.RemoveUserToList(list.Id.ToString(), user.Id.ToString())
-        Me.RefreshUsersButton.PerformClick()
+            If rslt <> "" Then
+                MessageBox.Show("通信エラー (" + rslt + ")")
+            End If
+
+            Me.RefreshUsersButton.PerformClick()
+
+        End If
     End Sub
 
     Private Sub DeleteListButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DeleteListButton.Click
         If Me.ListsList.SelectedItem Is Nothing Then Return
         Dim list As ListElement = CType(Me.ListsList.SelectedItem, ListElement)
 
-        Me.tw.DeleteList(list.Id.ToString())
-        Me.tw.GetListsApi()
-        Me.ListsList.Items.Clear()
-        Me.ListManage_Load(Me, EventArgs.Empty)
+        If MessageBox.Show(list.Name + "リストを削除します。", "Tween", MessageBoxButtons.OKCancel) = DialogResult.OK Then
+            Dim rslt As String = ""
+
+            rslt = Me.tw.DeleteList(list.Id.ToString())
+
+            If rslt <> "" Then
+                MessageBox.Show("通信エラー (" + rslt + ")")
+                Return
+            End If
+
+            rslt = Me.tw.GetListsApi()
+
+            If rslt <> "" Then
+                MessageBox.Show("通信エラー (" + rslt + ")")
+                Return
+            End If
+
+            Me.ListsList.Items.Clear()
+            Me.ListManage_Load(Me, EventArgs.Empty)
+        End If
     End Sub
 End Class

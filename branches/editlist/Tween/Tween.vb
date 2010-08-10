@@ -8069,7 +8069,11 @@ RETRY:
     End Sub
 
     Private Sub リスト編集ToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles リスト編集ToolStripMenuItem.Click
-        tw.GetListsApi()
+        Dim rslt As String = tw.GetListsApi()
+        If rslt <> "" Then
+            MessageBox.Show("Failed to get lists. (" + rslt + ")")
+        End If
+
         Dim form As New ListManage(tw)
         form.Show()
     End Sub
@@ -8462,13 +8466,25 @@ RETRY:
             Dim user As String = m.Result("${name}")
 
             Dim list As ListElement = Nothing
-            Me.tw.GetListsApi()
+            Dim res As String = Me.tw.GetListsApi()
+
+            If res <> "" Then
+                MessageBox.Show("Failed to get lists. (" + res + ")")
+                Return
+            End If
+
             Using listAvail As New ListAvailable
                 If listAvail.ShowDialog(Me) = Windows.Forms.DialogResult.Cancel Then Exit Sub
                 If listAvail.SelectedList Is Nothing Then Exit Sub
                 list = listAvail.SelectedList
             End Using
-            Me.tw.AddUserToList(list.Id.ToString(), user)
+
+            res = Me.tw.AddUserToList(list.Id.ToString(), user)
+
+            If res <> "" Then
+                MessageBox.Show("通信エラー (" + res + ")")
+                Return
+            End If
         End If
     End Sub
 
