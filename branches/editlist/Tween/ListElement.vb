@@ -10,7 +10,7 @@ Public Class ListElement
     Public Username As String = ""
     Public Nickname As String = ""
 
-    Private _tw As Twitter
+    Protected _tw As Twitter
 
     Private _members As List(Of UserInfo) = Nothing
 

@@ -42,28 +42,6 @@
         Me.OKButton.Enabled = Me.EditCheckBox.Enabled
         Me.CancelButton.Enabled = Me.EditCheckBox.Enabled
         Me.EditCheckBox.AutoCheck = Not Me.EditCheckBox.Checked
-
-        'If Not Me.EditCheckBox.Checked Then
-        '    If Me.ListsList.SelectedItem Is Nothing Then Return
-        '    Dim listItem As ListElement = DirectCast(Me.ListsList.SelectedItem, ListElement)
-        '    Dim list_id As String = listItem.Id.ToString()
-        '    Dim newListElement As New ListElement()
-
-        '    Dim rslt As String = tw.EditList(list_id, Me.NameTextBox.Text, Me.PrivateRadioButton.Checked, Me.DescriptionText.Text, newListElement)
-
-        '    If rslt <> "" Then
-        '        MessageBox.Show("通信エラー (" + rslt + ")")
-        '        Return
-        '    End If
-
-        '    Dim oldItem As ListElement = TabInformations.GetInstance().SubscribableLists.Find(Function(i) i.Id = listItem.Id)
-        '    oldItem.Name = newListElement.Name
-        '    oldItem.IsPublic = newListElement.IsPublic
-        '    oldItem.Description = newListElement.Description
-
-        '    Me.ListsList.Items.Clear()
-        '    Me.ListManage_Load(Nothing, EventArgs.Empty)
-        'End If
     End Sub
 
     Private Sub OKButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OKButton.Click
@@ -72,17 +50,25 @@
         Dim list_id As String = listItem.Id.ToString()
         Dim newListElement As New ListElement()
 
-        Dim rslt As String = tw.EditList(list_id, Me.NameTextBox.Text, Me.PrivateRadioButton.Checked, Me.DescriptionText.Text, newListElement)
+        If TypeOf listItem Is NewListElement Then
+            If Me.NameTextBox.Text = "" Then
+                MessageBox.Show("リスト名を入力して下さい。")
+                Return
+            End If
+            CType(listItem, NewListElement).Create(Me.NameTextBox.Text, Me.PublicRadioButton.Checked, Me.DescriptionText.Text)
+        Else
+            Dim rslt As String = tw.EditList(list_id, Me.NameTextBox.Text, Me.PrivateRadioButton.Checked, Me.DescriptionText.Text, newListElement)
 
-        If rslt <> "" Then
-            MessageBox.Show("通信エラー (" + rslt + ")")
-            Return
+            If rslt <> "" Then
+                MessageBox.Show("通信エラー (" + rslt + ")")
+                Return
+            End If
+
+            Dim oldItem As ListElement = TabInformations.GetInstance().SubscribableLists.Find(Function(i) i.Id = listItem.Id)
+            oldItem.Name = newListElement.Name
+            oldItem.IsPublic = newListElement.IsPublic
+            oldItem.Description = newListElement.Description
         End If
-
-        Dim oldItem As ListElement = TabInformations.GetInstance().SubscribableLists.Find(Function(i) i.Id = listItem.Id)
-        oldItem.Name = newListElement.Name
-        oldItem.IsPublic = newListElement.IsPublic
-        oldItem.Description = newListElement.Description
 
         Me.ListsList.Items.Clear()
         Me.ListManage_Load(Nothing, EventArgs.Empty)
@@ -154,4 +140,40 @@
             Me.ListManage_Load(Me, EventArgs.Empty)
         End If
     End Sub
+
+    Private Sub AddListButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AddListButton.Click
+        Dim newList As New NewListElement(Me.tw)
+        Me.ListsList.Items.Add(newList)
+        Me.ListsList.SelectedItem = newList
+        Me.EditCheckBox.Checked = True
+        Me.EditCheckBox_CheckedChanged(Me.EditCheckBox, EventArgs.Empty)
+    End Sub
+
+    Private Class NewListElement
+        Inherits ListElement
+
+        Private _isCreated As Boolean = False
+
+        Public Sub New(ByVal tw As Twitter)
+            Me._tw = tw
+        End Sub
+
+        Public Sub Create(ByVal name As String, ByVal isPublic As Boolean, ByVal description As String)
+            Dim rslt As String = Me._tw.CreateListApi(name, Not isPublic, description)
+
+            If rslt <> "" Then
+                MessageBox.Show("通信エラー (" + rslt + ")")
+            End If
+        End Sub
+
+        Public ReadOnly Property IsCreated As Boolean
+            Get
+                Return Me._isCreated
+            End Get
+        End Property
+
+        Public Overrides Function ToString() As String
+            Return "NewList"
+        End Function
+    End Class
 End Class

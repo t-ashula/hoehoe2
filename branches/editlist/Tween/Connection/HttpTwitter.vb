@@ -540,7 +540,7 @@ Public Class HttpTwitter
                             _remainCountApi)
     End Function
 
-    Public Function PostLists(ByVal user As String, ByVal listname As String, ByVal isPrivate As Boolean, ByRef content As String) As HttpStatusCode
+    Public Function PostLists(ByVal user As String, ByVal listname As String, ByVal isPrivate As Boolean, ByVal description As String, ByRef content As String) As HttpStatusCode
         Dim mode As String = "public"
         If isPrivate Then
             mode = "private"
@@ -549,6 +549,9 @@ Public Class HttpTwitter
         Dim param As New Dictionary(Of String, String)
         param.Add("name", listname)
         param.Add("mode", mode)
+        If Not String.IsNullOrEmpty(description) Then
+            param.Add("description", description)
+        End If
         Return httpCon.GetContent(PostMethod, _
                             CreateTwitterUri("/1/" + user + "/lists.xml"), _
                             param, _

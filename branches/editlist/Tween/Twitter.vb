@@ -2484,14 +2484,14 @@ Public Class Twitter
         Return ""
     End Function
 
-    Public Function CreateListApi(ByVal listName As String, ByVal isPrivate As Boolean) As String
+    Public Function CreateListApi(ByVal listName As String, ByVal isPrivate As Boolean, ByVal description As String) As String
         If Twitter.AccountState <> ACCOUNT_STATE.Valid Then Return ""
 
         Dim res As HttpStatusCode
         Dim content As String = ""
 
         Try
-            res = twCon.PostLists(Me.Username, listName, isPrivate, content)
+            res = twCon.PostLists(Me.Username, listName, isPrivate, description, content)
         Catch ex As Exception
             Return "Err:" + ex.Message
         End Try
