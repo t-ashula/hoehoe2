@@ -1799,9 +1799,9 @@ Public Class Setting
         CalcApiUsing()
     End Sub
 
-    Private Sub DisplayApiMaxCount(ByVal apiCount As Twitter.ApiInfo)
-        If apiCount.MaxCount > -1 Then
-            LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, apiCount.UsingCount, apiCount.MaxCount)
+    Private Sub DisplayApiMaxCount()
+        If ApiInformation.MaxCount > -1 Then
+            LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, ApiInformation.UsingCount, apiCount.MaxCount)
         Else
             LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, apiCount.UsingCount, "???")
         End If
