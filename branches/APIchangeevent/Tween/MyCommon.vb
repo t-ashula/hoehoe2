@@ -536,5 +536,4 @@ retry:
 
     Public fileVersion As String
 
-    Public WithEvents twitterApiinfo As New ApiInformation
 End Module
