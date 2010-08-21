@@ -267,8 +267,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/users/show.xml"), _
                             param, _
                             content, _
-                            Nothing, _
-                            Nothing)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
     Public Function CreateFriendships(ByVal screenName As String, ByRef content As String) As HttpStatusCode
         Dim param As New Dictionary(Of String, String)
