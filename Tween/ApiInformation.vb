@@ -1,55 +1,68 @@
 ﻿Public Class ApiInformationChangedEventArgs
     Inherits EventArgs
+
     Public Property MaxCount As Integer
         Get
-            Return ApiInformation.MaxCount
+            Return ApiInformation._MaxCount
         End Get
         Set(ByVal value As Integer)
-            ApiInformation.MaxCount = value
+            ApiInformation._MaxCount = value
         End Set
     End Property
     Public Property RemainCount As Integer
         Get
-            Return ApiInformation.RemainCount
+            Return ApiInformation._RemainCount
         End Get
         Set(ByVal value As Integer)
-            ApiInformation.RemainCount = value
+            ApiInformation._RemainCount = value
         End Set
     End Property
     Public Property ResetTime As DateTime
         Get
-            Return ApiInformation.ResetTime
+            Return ApiInformation._ResetTime
         End Get
         Set(ByVal value As DateTime)
-            ApiInformation.ResetTime = value
+            ApiInformation._ResetTime = value
         End Set
     End Property
 
     Public Property ResetTimeInSeconds As Integer
         Get
-            Return ApiInformation.ResetTimeInSeconds
+            Return ApiInformation._ResetTimeInSeconds
         End Get
         Set(ByVal value As Integer)
-            ApiInformation.ResetTimeInSeconds = value
+            ApiInformation._ResetTimeInSeconds = value
         End Set
     End Property
 
-    Public Shared ReadOnly Property UsingCount As Integer
+    Public Property UsingCount As Integer
         Get
-            Return ApiInformation.UsingCount
+            Return ApiInformation._UsingCount
         End Get
+        Set(ByVal value As Integer)
+            ApiInformation._UsingCount = value
+        End Set
     End Property
 End Class
 
 
+Public Class ApiInfo
+    Public MaxCount As Integer = -1
+    Public RemainCount As Integer = -1
+    Public ResetTime As New DateTime
+    Public ResetTimeInSeconds As Integer = -1
+    Public UsingCount As Integer = -1
+End Class
+
 Public Class ApiInformation
-    Private Shared _MaxCount As Integer = -1
-    Private Shared _RemainCount As Integer = -1
-    Private Shared _ResetTime As New DateTime
-    Private Shared _ResetTimeInSeconds As Integer = -1
-    Private Shared _UsingCount As Integer = -1
+    Friend Shared _MaxCount As Integer = -1
+    Friend Shared _RemainCount As Integer = -1
+    Friend Shared _ResetTime As New DateTime
+    Friend Shared _ResetTimeInSeconds As Integer = -1
+    Friend Shared _UsingCount As Integer = -1
 
     Private Shared _lockobj As Object
+    Public Shared WithEvents ApiInformation As Object = New ApiInformation
 
     Public Shared Sub Initialize()
         _MaxCount = -1
@@ -69,12 +82,23 @@ Public Class ApiInformation
 
     Public Shared Event Changed(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs)
 
+    Private Shared Sub Raise_Changed()
+        Dim arg As New ApiInformationChangedEventArgs
+        arg.MaxCount = MaxCount
+        arg.RemainCount = RemainCount
+        arg.ResetTime = ResetTime
+        arg.ResetTimeInSeconds = ResetTimeInSeconds
+        arg.UsingCount = UsingCount
+        RaiseEvent Changed(ApiInformation, arg)
+    End Sub
+
     Public Shared Property MaxCount As Integer
         Get
             Return _MaxCount
         End Get
         Set(ByVal value As Integer)
             _MaxCount = value
+            Raise_Changed()
         End Set
     End Property
 
@@ -84,6 +108,7 @@ Public Class ApiInformation
         End Get
         Set(ByVal value As Integer)
             _RemainCount = value
+            Raise_Changed()
         End Set
     End Property
 
@@ -93,6 +118,7 @@ Public Class ApiInformation
         End Get
         Set(ByVal value As DateTime)
             _ResetTime = value
+            Raise_Changed()
         End Set
     End Property
 
@@ -102,6 +128,7 @@ Public Class ApiInformation
         End Get
         Set(ByVal value As Integer)
             _ResetTimeInSeconds = value
+            Raise_Changed()
         End Set
     End Property
 
@@ -111,6 +138,7 @@ Public Class ApiInformation
         End Get
         Set(ByVal value As Integer)
             _UsingCount = value
+            Raise_Changed()
         End Set
     End Property
 End Class

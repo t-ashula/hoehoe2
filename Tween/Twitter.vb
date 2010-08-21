@@ -2416,7 +2416,7 @@ Public Class Twitter
         Return sb.ToString
     End Function
 
-    Public Function GetInfoApi() As Boolean
+    Public Function GetInfoApi(ByVal info As ApiInfo) As Boolean
         If Twitter.AccountState <> ACCOUNT_STATE.Valid Then Return True
 
         If _endingFlag Then Return True
@@ -2442,10 +2442,12 @@ Public Class Twitter
             arg.ResetTime = DateTime.Parse(xdoc.SelectSingleNode("/hash/reset-time").InnerText)
             arg.ResetTimeInSeconds = Integer.Parse(xdoc.SelectSingleNode("/hash/reset-time-in-seconds").InnerText)
 
-            _infoapi.MaxCount = info.MaxCount
-            _infoapi.RemainCount = info.RemainCount
-            _infoapi.ResetTime = info.ResetTime
-            _infoapi.ResetTimeInSeconds = info.ResetTimeInSeconds
+            info.MaxCount = arg.MaxCount
+            info.RemainCount = arg.RemainCount
+            info.ResetTime = arg.ResetTime
+            info.ResetTimeInSeconds = arg.ResetTimeInSeconds
+
+            RaiseEvent ApiInformationChanged(Me, arg)
             Return True
         Catch ex As Exception
             ApiInformation.Initialize()
@@ -2476,4 +2478,13 @@ Public Class Twitter
 
     Public Property UserIdNo As String
 
+    Public Event ApiInformationChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs)
+
+    Private Sub Twitter_ApiInformationChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs) Handles Me.ApiInformationChanged
+        ApiInformation.MaxCount = e.MaxCount
+        ApiInformation.RemainCount = e.RemainCount
+        ApiInformation.ResetTime = e.ResetTime
+        ApiInformation.ResetTimeInSeconds = e.ResetTimeInSeconds
+        ApiInformation.UsingCount = e.UsingCount
+    End Sub
 End Class
