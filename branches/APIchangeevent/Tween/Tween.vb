@@ -6471,23 +6471,23 @@ RETRY:
     Private Sub SetStatusLabelApi()
         Dim slbl As New StringBuilder(256)
 
-        If tw.RemainCountApi > -1 AndAlso tw.UpperCountApi > -1 Then
+        If ApiInformation.RemainCount > -1 AndAlso ApiInformation.MaxCount > -1 Then
             ' 正常
-            slbl.Append("API " + tw.RemainCountApi.ToString + "/" + tw.UpperCountApi.ToString)
-        ElseIf tw.RemainCountApi > -1 Then
+            slbl.Append("API " + ApiInformation.RemainCount.ToString + "/" + ApiInformation.MaxCount.ToString)
+        ElseIf ApiInformation.RemainCount > -1 Then
             ' uppercount不正
-            slbl.Append("API " + tw.RemainCountApi.ToString + "/???")
-        ElseIf tw.UpperCountApi > -1 Then
+            slbl.Append("API " + ApiInformation.RemainCount.ToString + "/???")
+        ElseIf ApiInformation.MaxCount > -1 Then
             ' remaincount不正
-            slbl.Append("API ???/" + tw.UpperCountApi.ToString)
+            slbl.Append("API ???/" + ApiInformation.MaxCount.ToString)
         Else
             '両方とも不正
             slbl.Append("API ???/???")
         End If
 
         StatusLabelApi.Text = slbl.ToString()
-        If tw.ResetTimeApi >= DateTime.Now Then
-            StatusLabelApi.ToolTipText = "ResetTime " + tw.ResetTimeApi.ToString
+        If ApiInformation.ResetTime >= DateTime.Now Then
+            StatusLabelApi.ToolTipText = "ResetTime " + ApiInformation.ResetTime.ToString
         Else
             StatusLabelApi.ToolTipText = "ResetTime ???"
         End If
@@ -7612,7 +7612,7 @@ RETRY:
 
     Private Class GetApiInfoArgs
         Public tw As Twitter
-        Public info As Twitter.ApiInfo
+        Public info As ApiInfo
     End Class
 
     Private Sub GetApiInfo_Dowork(ByVal sender As Object, ByVal e As DoWorkEventArgs)
@@ -7621,7 +7621,7 @@ RETRY:
     End Sub
 
     Private Sub ApiInfoMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ApiInfoMenuItem.Click
-        Dim info As New Twitter.ApiInfo
+        Dim info As New ApiInfo
         Dim tmp As String
         Dim args As New GetApiInfoArgs With {.tw = tw, .info = info}
 

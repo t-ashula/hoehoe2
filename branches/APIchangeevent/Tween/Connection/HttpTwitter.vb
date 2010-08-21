@@ -34,6 +34,8 @@ Public Class HttpTwitter
     End Enum
     Private connectionType As AuthMethod = AuthMethod.Basic
 
+    Public Event ApiInformationChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs)
+
     Public Sub New()
         InitializeCount()
     End Sub
@@ -56,6 +58,7 @@ Public Class HttpTwitter
         Else
             _remainCountApi.Add("X-RateLimit-Reset", "-1")
         End If
+        RaiseEvent ApiInformationChanged(Me, New ApiInformationChangedEventArgs)
     End Sub
 
     Public Sub Initialize(ByVal accessToken As String, _
@@ -166,7 +169,7 @@ Public Class HttpTwitter
         End Set
     End Property
 
-    Public ReadOnly Property RemainCountApi() As Integer
+    Private ReadOnly Property RemainCountApi() As Integer
         Get
             Dim result As Integer = 0
             If _remainCountApi("X-RateLimit-Remaining") = "" Then Return -1
@@ -177,7 +180,7 @@ Public Class HttpTwitter
         End Get
     End Property
 
-    Public ReadOnly Property UpperCountApi() As Integer
+    Private ReadOnly Property UpperCountApi() As Integer
         Get
             Dim result As Integer = 0
             If _remainCountApi("X-RateLimit-Limit") = "" Then Return -1
@@ -188,7 +191,7 @@ Public Class HttpTwitter
         End Get
     End Property
 
-    Public ReadOnly Property ResetTimeApi() As DateTime
+    Private ReadOnly Property ResetTimeApi() As DateTime
         Get
             Dim i As Integer
             If Integer.TryParse(_remainCountApi("X-RateLimit-Reset"), i) Then
@@ -213,12 +216,14 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/statuses/update.xml"), _
                             param, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
     Public Function DestroyStatus(ByVal id As Long) As HttpStatusCode
         Return httpCon.GetContent(PostMethod, _
                             CreateTwitterUri("/1/statuses/destroy/" + id.ToString + ".xml"), _
+                            Nothing, _
                             Nothing, _
                             Nothing, _
                             Nothing)
@@ -233,12 +238,14 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/direct_messages/new.xml"), _
                             param, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
     Public Function DestroyDirectMessage(ByVal id As Long) As HttpStatusCode
         Return httpCon.GetContent(PostMethod, _
                             CreateTwitterUri("/1/direct_messages/destroy/" + id.ToString + ".xml"), _
+                            Nothing, _
                             Nothing, _
                             Nothing, _
                             Nothing)
@@ -249,6 +256,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/statuses/retweet/" + id.ToString() + ".xml"), _
                             Nothing, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -259,6 +267,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/users/show.xml"), _
                             param, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
     Public Function CreateFriendships(ByVal screenName As String, ByRef content As String) As HttpStatusCode
@@ -269,6 +278,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/friendships/create.xml"), _
                             param, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -280,6 +290,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/friendships/destroy.xml"), _
                             param, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -291,6 +302,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/blocks/create.xml"), _
                             param, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -302,6 +314,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/blocks/destroy.xml"), _
                             param, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -313,6 +326,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/report_spam.xml"), _
                             param, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -325,7 +339,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/friendships/show.xml"), _
                             param, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function ShowStatuses(ByVal id As Long, ByRef content As String) As HttpStatusCode
@@ -333,7 +348,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/statuses/show/" + id.ToString() + ".xml"), _
                             Nothing, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function CreateFavorites(ByVal id As Long, ByRef content As String) As HttpStatusCode
@@ -341,6 +357,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/favorites/create/" + id.ToString() + ".xml"), _
                             Nothing, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -349,6 +366,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/favorites/destroy/" + id.ToString() + ".xml"), _
                             Nothing, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -368,7 +386,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/statuses/home_timeline.xml"), _
                             param, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function Mentions(ByVal count As Integer, ByVal max_id As Long, ByVal since_id As Long, ByRef content As String) As HttpStatusCode
@@ -387,7 +406,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/statuses/mentions.xml"), _
                             param, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function DirectMessages(ByVal count As Integer, ByVal max_id As Long, ByVal since_id As Long, ByRef content As String) As HttpStatusCode
@@ -406,7 +426,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/direct_messages.xml"), _
                             Nothing, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function DirectMessagesSent(ByVal count As Integer, ByVal max_id As Long, ByVal since_id As Long, ByRef content As String) As HttpStatusCode
@@ -425,7 +446,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/direct_messages/sent.xml"), _
                             Nothing, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function Favorites(ByVal count As Integer, ByRef content As String) As HttpStatusCode
@@ -436,7 +458,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/favorites.xml"), _
                             param, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function Search(ByVal words As String, ByVal lang As String, ByVal rpp As Integer, ByVal page As Integer, ByVal sinceId As Long, ByRef content As String) As HttpStatusCode
@@ -465,7 +488,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/followers/ids.xml"), _
                             param, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function RateLimitStatus(ByRef content As String) As HttpStatusCode
@@ -473,6 +497,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/account/rate_limit_status.xml"), _
                             Nothing, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -483,7 +508,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/" + user + "/lists.xml"), _
                             param, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function PostListID(ByVal user As String, ByVal list_id As String, ByVal name As String, ByVal mode As String, ByVal description As String, ByRef content As String) As HttpStatusCode
@@ -496,6 +522,7 @@ Public Class HttpTwitter
                                   CreateTwitterUri("/1/" + user + "/lists/" + list_id + ".xml"), _
                                   param, _
                                   content, _
+                                  Nothing, _
                                   Nothing)
     End Function
 
@@ -507,6 +534,7 @@ Public Class HttpTwitter
                                   CreateTwitterUri("/1/" + user + "/lists/" + list_id + ".xml"), _
                                   param, _
                                   content, _
+                                  Nothing, _
                                   Nothing)
     End Function
 
@@ -517,7 +545,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/" + user + "/lists/subscriptions.xml"), _
                             param, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function GetListsStatuses(ByVal user As String, ByVal list_id As String, ByVal per_page As Integer, ByVal max_id As Long, ByVal since_id As Long, ByRef content As String) As HttpStatusCode
@@ -537,7 +566,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/" + user + "/lists/" + list_id + "/statuses.xml"), _
                             param, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function PostLists(ByVal user As String, ByVal listname As String, ByVal isPrivate As Boolean, ByVal description As String, ByRef content As String) As HttpStatusCode
@@ -556,6 +586,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/" + user + "/lists.xml"), _
                             param, _
                             content, _
+                            Nothing,
                             Nothing)
     End Function
 
@@ -566,7 +597,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/" + user + "/" + list_id + "/members.xml"), _
                             param, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function PostListMembers(ByVal user As String, ByVal list_id As String, ByVal id As String, ByRef content As String) As HttpStatusCode
@@ -576,6 +608,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/" + user + "/" + list_id + "/members.xml"), _
                             param, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -587,6 +620,7 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/" + user + "/" + list_id + "/members.xml"), _
                             param, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -595,7 +629,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/" + user + "/" + list_id + "/members/" + id + ".xml"), _
                             Nothing, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function Statusid_retweeted_by_ids(ByVal statusid As Long, ByVal count As Integer, ByVal page As Integer, ByRef content As String) As HttpStatusCode
@@ -611,7 +646,8 @@ Public Class HttpTwitter
                             CreateTwitterUri("/1/statuses/" + statusid.ToString + "/retweeted_by/ids.xml"), _
                             param, _
                             content, _
-                            _remainCountApi)
+                            _remainCountApi, _
+                            AddressOf GetApiCallback)
     End Function
 
     Public Function UpdateProfile(ByVal name As String, ByVal url As String, ByVal location As String, ByVal description As String, ByRef content As String) As HttpStatusCode
@@ -626,6 +662,7 @@ Public Class HttpTwitter
                     CreateTwitterUri("/1/account/update_profile.xml"), _
                     param, _
                     content, _
+                    Nothing, _
                     Nothing)
     End Function
 
@@ -638,6 +675,7 @@ Public Class HttpTwitter
                             Nothing, _
                             binary, _
                             content, _
+                            Nothing, _
                             Nothing)
     End Function
 
@@ -668,5 +706,11 @@ Public Class HttpTwitter
         End Set
     End Property
 #End Region
+
+    Private Sub GetApiCallback()
+        ApiInformation.MaxCount = UpperCountApi
+        ApiInformation.RemainCount = RemainCountApi
+        ApiInformation.ResetTime = ResetTimeApi
+    End Sub
 
 End Class
