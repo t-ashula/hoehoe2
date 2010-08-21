@@ -6470,7 +6470,11 @@ RETRY:
     Delegate Sub SetStatusLabelApiDelegate()
 
     Private Sub SetStatusLabelApiHandler(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs)
-        Invoke(New SetStatusLabelApiDelegate(AddressOf SetStatusLabelApi))
+        If InvokeRequired Then
+            Invoke(New SetStatusLabelApiDelegate(AddressOf SetStatusLabelApi))
+        Else
+            SetStatusLabelApi()
+        End If
     End Sub
 
     Private Sub SetStatusLabelApi()
