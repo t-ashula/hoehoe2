@@ -79,7 +79,7 @@ Public Class Twitter
         Dim res As HttpStatusCode
         Dim content As String = ""
 
-        ApiInformation.Initialize()
+        TwitterApiInformation.Initialize()
         Try
             res = twCon.AuthUserAndPass(username, password)
         Catch ex As Exception
@@ -121,7 +121,7 @@ Public Class Twitter
         If String.IsNullOrEmpty(token) OrElse String.IsNullOrEmpty(tokenSecret) OrElse String.IsNullOrEmpty(username) Then
             Twitter.AccountState = ACCOUNT_STATE.Invalid
         End If
-        ApiInformation.Initialize()
+        TwitterApiInformation.Initialize()
         twCon.Initialize(token, tokenSecret, username)
         _uid = username.ToLower
         _UserIdNo = ""
@@ -132,7 +132,7 @@ Public Class Twitter
         If String.IsNullOrEmpty(username) OrElse String.IsNullOrEmpty(password) Then
             Twitter.AccountState = ACCOUNT_STATE.Invalid
         End If
-        ApiInformation.Initialize()
+        TwitterApiInformation.Initialize()
         twCon.Initialize(username, password)
         _uid = username.ToLower
         _UserIdNo = ""
@@ -2426,7 +2426,7 @@ Public Class Twitter
         Try
             res = twCon.RateLimitStatus(content)
         Catch ex As Exception
-            ApiInformation.Initialize()
+            TwitterApiInformation.Initialize()
             Return False
         End Try
 
@@ -2437,20 +2437,20 @@ Public Class Twitter
             xdoc.LoadXml(content)
             Dim arg As New ApiInformationChangedEventArgs
 
-            arg.MaxCount = Integer.Parse(xdoc.SelectSingleNode("/hash/hourly-limit").InnerText)
-            arg.RemainCount = Integer.Parse(xdoc.SelectSingleNode("/hash/remaining-hits").InnerText)
-            arg.ResetTime = DateTime.Parse(xdoc.SelectSingleNode("/hash/reset-time").InnerText)
-            arg.ResetTimeInSeconds = Integer.Parse(xdoc.SelectSingleNode("/hash/reset-time-in-seconds").InnerText)
+            arg.ApiInfo.MaxCount = Integer.Parse(xdoc.SelectSingleNode("/hash/hourly-limit").InnerText)
+            arg.ApiInfo.RemainCount = Integer.Parse(xdoc.SelectSingleNode("/hash/remaining-hits").InnerText)
+            arg.ApiInfo.ResetTime = DateTime.Parse(xdoc.SelectSingleNode("/hash/reset-time").InnerText)
+            arg.ApiInfo.ResetTimeInSeconds = Integer.Parse(xdoc.SelectSingleNode("/hash/reset-time-in-seconds").InnerText)
 
-            info.MaxCount = arg.MaxCount
-            info.RemainCount = arg.RemainCount
-            info.ResetTime = arg.ResetTime
-            info.ResetTimeInSeconds = arg.ResetTimeInSeconds
+            info.MaxCount = arg.ApiInfo.MaxCount
+            info.RemainCount = arg.ApiInfo.RemainCount
+            info.ResetTime = arg.ApiInfo.ResetTime
+            info.ResetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds
 
             RaiseEvent ApiInformationChanged(Me, arg)
             Return True
         Catch ex As Exception
-            ApiInformation.Initialize()
+            TwitterApiInformation.Initialize()
             Return False
         End Try
     End Function
@@ -2481,10 +2481,5 @@ Public Class Twitter
     Public Event ApiInformationChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs)
 
     Private Sub Twitter_ApiInformationChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs) Handles Me.ApiInformationChanged
-        ApiInformation.MaxCount = e.MaxCount
-        ApiInformation.RemainCount = e.RemainCount
-        ApiInformation.ResetTime = e.ResetTime
-        ApiInformation.ResetTimeInSeconds = e.ResetTimeInSeconds
-        ApiInformation.UsingCount = e.UsingCount
     End Sub
 End Class

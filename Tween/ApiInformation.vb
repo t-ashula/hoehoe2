@@ -1,31 +1,41 @@
-﻿Public Class ApiInformationChangedEventArgs
+﻿Imports System.ComponentModel
+
+Public Class ApiInformationChangedEventArgs
     Inherits EventArgs
-    Public MaxCount As Integer
-    Public RemainCount As Integer
-    Public ResetTime As New DateTime
-    Public ResetTimeInSeconds As Integer
-    Public UsingCount As Integer
+    Public ApiInfo As New ApiInfo
+End Class
+
+Public MustInherit Class ApiInfoBase
+    Protected Shared _MaxCount As Integer = -1
+    Protected Shared _RemainCount As Integer = -1
+    Protected Shared _ResetTime As New DateTime
+    Protected Shared _ResetTimeInSeconds As Integer = -1
+    Protected Shared _UsingCount As Integer = -1
 End Class
 
 Public Class ApiInfo
-    Public MaxCount As Integer = -1
-    Public RemainCount As Integer = -1
-    Public ResetTime As New DateTime
-    Public ResetTimeInSeconds As Integer = -1
-    Public UsingCount As Integer = -1
+    Inherits ApiInfoBase
+    Public MaxCount As Integer
+    Public RemainCount As Integer
+    Public ResetTime As DateTime
+    Public ResetTimeInSeconds As Integer
+    Public UsingCount As Integer
+
+    Public Sub New()
+        Me.MaxCount = _MaxCount
+        Me.RemainCount = _RemainCount
+        Me.ResetTime = _ResetTime
+        Me.ResetTimeInSeconds = _ResetTimeInSeconds
+        Me.UsingCount = _ResetTimeInSeconds
+    End Sub
 End Class
 
 Public Class ApiInformation
-    Private Shared _MaxCount As Integer = -1
-    Private Shared _RemainCount As Integer = -1
-    Private Shared _ResetTime As New DateTime
-    Private Shared _ResetTimeInSeconds As Integer = -1
-    Private Shared _UsingCount As Integer = -1
+    Inherits ApiInfoBase
 
-    Private Shared ReadOnly _lockobj As New Object
-    Public Shared WithEvents ApiInformation As Object = New ApiInformation
+    'Private ReadOnly _lockobj As New Object 更新時にロックが必要かどうかは様子見
 
-    Public Shared Sub Initialize()
+    Public Sub Initialize()
         _MaxCount = -1
         _RemainCount = -1
         _ResetTime = New DateTime
@@ -33,7 +43,7 @@ Public Class ApiInformation
         'UsingCountは初期化対象外
     End Sub
 
-    Public Shared Function ConvertResetTimeInSecondsToResetTime(ByVal seconds As Integer) As DateTime
+    Public Function ConvertResetTimeInSecondsToResetTime(ByVal seconds As Integer) As DateTime
         If seconds >= 0 Then
             Return System.TimeZone.CurrentTimeZone.ToLocalTime((New DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(seconds))
         Else
@@ -41,29 +51,19 @@ Public Class ApiInformation
         End If
     End Function
 
-    Public Shared Event Changed(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs)
-    Public Shared Event RateLimitStatusHeaderChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs)
+    Public Event Changed(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs)
 
-    Private Shared Sub Raise_Changed()
+    Private Sub Raise_Changed()
         Dim arg As New ApiInformationChangedEventArgs
-        SyncLock _lockobj
-            arg.MaxCount = MaxCount
-            arg.RemainCount = RemainCount
-            arg.ResetTime = ResetTime
-            arg.ResetTimeInSeconds = ResetTimeInSeconds
-            arg.UsingCount = UsingCount
-        End SyncLock
-        RaiseEvent Changed(ApiInformation, arg)
-        SyncLock _lockobj
-            _MaxCount = arg.MaxCount
-            _RemainCount = arg.RemainCount
-            _ResetTime = arg.ResetTime
-            _ResetTimeInSeconds = arg.ResetTimeInSeconds
-            _UsingCount = arg.UsingCount
-        End SyncLock
+        RaiseEvent Changed(Me, arg)
+        _MaxCount = arg.ApiInfo.MaxCount
+        _RemainCount = arg.ApiInfo.RemainCount
+        _ResetTime = arg.ApiInfo.ResetTime
+        _ResetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds
+        _UsingCount = arg.ApiInfo.UsingCount
     End Sub
 
-    Public Shared Property MaxCount As Integer
+    Public Property MaxCount As Integer
         Get
             Return _MaxCount
         End Get
@@ -75,7 +75,7 @@ Public Class ApiInformation
         End Set
     End Property
 
-    Public Shared Property RemainCount As Integer
+    Public Property RemainCount As Integer
         Get
             Return _RemainCount
         End Get
@@ -87,7 +87,7 @@ Public Class ApiInformation
         End Set
     End Property
 
-    Public Shared Property ResetTime As DateTime
+    Public Property ResetTime As DateTime
         Get
             Return _ResetTime
         End Get
@@ -99,7 +99,7 @@ Public Class ApiInformation
         End Set
     End Property
 
-    Public Shared Property ResetTimeInSeconds As Integer
+    Public Property ResetTimeInSeconds As Integer
         Get
             Return _ResetTimeInSeconds
         End Get
@@ -111,7 +111,7 @@ Public Class ApiInformation
         End Set
     End Property
 
-    Public Shared Property UsingCount As Integer
+    Public Property UsingCount As Integer
         Get
             Return _UsingCount
         End Get
@@ -123,3 +123,5 @@ Public Class ApiInformation
         End Set
     End Property
 End Class
+
+
