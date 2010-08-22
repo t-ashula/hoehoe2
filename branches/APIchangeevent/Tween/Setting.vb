@@ -1800,10 +1800,10 @@ Public Class Setting
     End Sub
 
     Private Sub DisplayApiMaxCount(ByVal info As ApiInfo)
-        If ApiInformation.MaxCount > -1 Then
-            LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, ApiInformation.UsingCount, ApiInformation.MaxCount)
+        If TwitterApiInformation.MaxCount > -1 Then
+            LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, TwitterApiInformation.UsingCount, TwitterApiInformation.MaxCount)
         Else
-            LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, ApiInformation.UsingCount, "???")
+            LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, TwitterApiInformation.UsingCount, "???")
         End If
     End Sub
 
@@ -1848,7 +1848,7 @@ Public Class Setting
         End If
 
         If tw IsNot Nothing Then
-            If ApiInformation.MaxCount = -1 Then
+            If TwitterApiInformation.MaxCount = -1 Then
                 If Twitter.AccountState = ACCOUNT_STATE.Valid Then
                     Dim info As New ApiInfo
                     info.UsingCount = UsingApi
@@ -1861,7 +1861,7 @@ Public Class Setting
                     LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, UsingApi, "???")
                 End If
             Else
-                LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, UsingApi, ApiInformation.MaxCount)
+                LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, UsingApi, TwitterApiInformation.MaxCount)
             End If
         End If
 

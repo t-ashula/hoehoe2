@@ -530,7 +530,7 @@ Public Class TweenMain
         Me.Visible = False
         SecurityManager = New InternetSecurityManager(PostBrowser)
 
-        AddHandler ApiInformation.Changed, AddressOf SetStatusLabelApiHandler
+        AddHandler TwitterApiInformation.Changed, AddressOf SetStatusLabelApiHandler
 
         VerUpMenuItem.Image = shield.Icon
         If Not My.Application.CommandLineArgs.Count = 0 AndAlso My.Application.CommandLineArgs.Contains("/d") Then TraceFlag = True
@@ -6463,7 +6463,6 @@ RETRY:
         Else
             slbl.Append((SettingDialog.TimelinePeriodInt - _homeCounterAdjuster).ToString() + My.Resources.SetStatusLabelText3)
         End If
-        'SetStatusLabelApi 
         Return slbl.ToString()
     End Function
 
@@ -6480,23 +6479,23 @@ RETRY:
     Private Sub SetStatusLabelApi()
         Dim slbl As New StringBuilder(256)
 
-        If ApiInformation.RemainCount > -1 AndAlso ApiInformation.MaxCount > -1 Then
+        If TwitterApiInformation.RemainCount > -1 AndAlso TwitterApiInformation.MaxCount > -1 Then
             ' 正常
-            slbl.Append("API " + ApiInformation.RemainCount.ToString + "/" + ApiInformation.MaxCount.ToString)
-        ElseIf ApiInformation.RemainCount > -1 Then
+            slbl.Append("API " + TwitterApiInformation.RemainCount.ToString + "/" + TwitterApiInformation.MaxCount.ToString)
+        ElseIf TwitterApiInformation.RemainCount > -1 Then
             ' uppercount不正
-            slbl.Append("API " + ApiInformation.RemainCount.ToString + "/???")
-        ElseIf ApiInformation.MaxCount > -1 Then
+            slbl.Append("API " + TwitterApiInformation.RemainCount.ToString + "/???")
+        ElseIf TwitterApiInformation.MaxCount > -1 Then
             ' remaincount不正
-            slbl.Append("API ???/" + ApiInformation.MaxCount.ToString)
+            slbl.Append("API ???/" + TwitterApiInformation.MaxCount.ToString)
         Else
             '両方とも不正
             slbl.Append("API ???/???")
         End If
 
         StatusLabelApi.Text = slbl.ToString()
-        If ApiInformation.ResetTime >= DateTime.Now Then
-            StatusLabelApi.ToolTipText = "ResetTime " + ApiInformation.ResetTime.ToString
+        If TwitterApiInformation.ResetTime >= DateTime.Now Then
+            StatusLabelApi.ToolTipText = "ResetTime " + TwitterApiInformation.ResetTime.ToString
         Else
             StatusLabelApi.ToolTipText = "ResetTime ???"
         End If
