@@ -708,9 +708,9 @@ Public Class HttpTwitter
 #End Region
 
     Private Sub GetApiCallback()
-        TwitterApiInformation.MaxCount = UpperCountApi
-        TwitterApiInformation.RemainCount = RemainCountApi
-        TwitterApiInformation.ResetTime = ResetTimeApi
+        TwitterApiInfo.MaxCount = UpperCountApi
+        TwitterApiInfo.RemainCount = RemainCountApi
+        TwitterApiInfo.ResetTime = ResetTimeApi
     End Sub
 
 End Class

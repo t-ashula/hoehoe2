@@ -79,7 +79,7 @@ Public Class Twitter
         Dim res As HttpStatusCode
         Dim content As String = ""
 
-        TwitterApiInformation.Initialize()
+        TwitterApiInfo.Initialize()
         Try
             res = twCon.AuthUserAndPass(username, password)
         Catch ex As Exception
@@ -121,7 +121,7 @@ Public Class Twitter
         If String.IsNullOrEmpty(token) OrElse String.IsNullOrEmpty(tokenSecret) OrElse String.IsNullOrEmpty(username) Then
             Twitter.AccountState = ACCOUNT_STATE.Invalid
         End If
-        TwitterApiInformation.Initialize()
+        TwitterApiInfo.Initialize()
         twCon.Initialize(token, tokenSecret, username)
         _uid = username.ToLower
         _UserIdNo = ""
@@ -132,7 +132,7 @@ Public Class Twitter
         If String.IsNullOrEmpty(username) OrElse String.IsNullOrEmpty(password) Then
             Twitter.AccountState = ACCOUNT_STATE.Invalid
         End If
-        TwitterApiInformation.Initialize()
+        TwitterApiInfo.Initialize()
         twCon.Initialize(username, password)
         _uid = username.ToLower
         _UserIdNo = ""
@@ -2426,7 +2426,7 @@ Public Class Twitter
         Try
             res = twCon.RateLimitStatus(content)
         Catch ex As Exception
-            TwitterApiInformation.Initialize()
+            TwitterApiInfo.Initialize()
             Return False
         End Try
 
@@ -2450,7 +2450,7 @@ Public Class Twitter
             RaiseEvent ApiInformationChanged(Me, arg)
             Return True
         Catch ex As Exception
-            TwitterApiInformation.Initialize()
+            TwitterApiInfo.Initialize()
             Return False
         End Try
     End Function
