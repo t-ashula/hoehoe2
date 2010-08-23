@@ -88,7 +88,7 @@ Public Class HttpConnectionOAuth
             code = GetResponse(webReq, content, headerInfo, False)
         End If
         If callback IsNot Nothing Then
-            callback()
+            callback(Me)
         End If
         Return code
     End Function
@@ -121,7 +121,7 @@ Public Class HttpConnectionOAuth
             code = GetResponse(webReq, content, headerInfo, False)
         End If
         If callback IsNot Nothing Then
-            callback()
+            callback(Me)
         End If
         Return code
     End Function
