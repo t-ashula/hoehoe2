@@ -35,12 +35,32 @@ Public Class ApiInformation
 
     'Private ReadOnly _lockobj As New Object 更新時にロックが必要かどうかは様子見
 
+    Public HttpHeaders As New Dictionary(Of String, String)(StringComparer.CurrentCultureIgnoreCase)
+
     Public Sub Initialize()
+        If HttpHeaders.ContainsKey("X-RateLimit-Remaining") Then
+            HttpHeaders.Item("X-RateLimit-Remaining") = "-1"
+        Else
+            HttpHeaders.Add("X-RateLimit-Remaining", "-1")
+        End If
+
+        If HttpHeaders.ContainsKey("X-RateLimit-Limit") Then
+            HttpHeaders.Item("X-RateLimit-Limit") = "-1"
+        Else
+            HttpHeaders.Add("X-RateLimit-Limit", "-1")
+        End If
+
+        If HttpHeaders.ContainsKey("X-RateLimit-Reset") Then
+            HttpHeaders.Item("X-RateLimit-Reset") = "-1"
+        Else
+            HttpHeaders.Add("X-RateLimit-Reset", "-1")
+        End If
         _MaxCount = -1
         _RemainCount = -1
         _ResetTime = New DateTime
         _ResetTimeInSeconds = -1
         'UsingCountは初期化対象外
+        RaiseEvent Changed(Me, New ApiInformationChangedEventArgs)
     End Sub
 
     Public Function ConvertResetTimeInSecondsToResetTime(ByVal seconds As Integer) As DateTime
@@ -122,6 +142,51 @@ Public Class ApiInformation
             End If
         End Set
     End Property
+
+
+    Private ReadOnly Property RemainCountFromHttpHeader() As Integer
+        Get
+            Dim result As Integer = 0
+            If HttpHeaders("X-RateLimit-Remaining") = "" Then Return -1
+            If Integer.TryParse(HttpHeaders("X-RateLimit-Remaining"), result) Then
+                Return result
+            End If
+            Return -1
+        End Get
+    End Property
+
+    Private ReadOnly Property MaxCountFromHttpHeader() As Integer
+        Get
+            Dim result As Integer = 0
+            If HttpHeaders("X-RateLimit-Limit") = "" Then Return -1
+            If Integer.TryParse(HttpHeaders("X-RateLimit-Limit"), result) Then
+                Return result
+            End If
+            Return -1
+        End Get
+    End Property
+
+    Private ReadOnly Property ResetTimeFromHttpHeader() As DateTime
+        Get
+            Dim i As Integer
+            If Integer.TryParse(HttpHeaders("X-RateLimit-Reset"), i) Then
+                If i >= 0 Then
+                    Return System.TimeZone.CurrentTimeZone.ToLocalTime((New DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i))
+                Else
+                    Return New DateTime
+                End If
+            Else
+                Return New DateTime
+            End If
+        End Get
+    End Property
+
+    Public Sub ParseHttpHeaders(ByVal headers As Dictionary(Of String, String))
+        _MaxCount = MaxCountFromHttpHeader
+        _RemainCount = RemainCountFromHttpHeader
+        _ResetTime = ResetTimeFromHttpHeader
+        Raise_Changed()
+    End Sub
 End Class
 
 
