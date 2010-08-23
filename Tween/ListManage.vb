@@ -96,8 +96,33 @@
 
     Private Sub RefreshUsersButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RefreshUsersButton.Click
         If Me.ListsList.SelectedItem Is Nothing Then Return
-        CType(Me.ListsList.SelectedItem, ListElement).RefreshMembers()
-        Me.ListsList_SelectedIndexChanged(Me.ListsList, EventArgs.Empty)
+        Me.UserList.Items.Clear()
+        Dim t As New Threading.Thread(New Threading.ThreadStart(AddressOf Me.RefreshMembers))
+    End Sub
+
+    Private Sub RefreshMembers()
+        Dim result As String = CType(Me.ListsList.SelectedItem, ListElement).RefreshMembers()
+        Dim a As New Action(Of String)(AddressOf GetListMembersCallback)
+        a.Invoke(result)
+    End Sub
+
+    Private Sub GetMoreUsersButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GetMoreUsersButton.Click
+        If Me.ListsList.SelectedItem Is Nothing Then Return
+        Dim t As New Threading.Thread(New Threading.ThreadStart(AddressOf Me.GetListMembers))
+    End Sub
+
+    Private Sub GetListMembers()
+        Dim result As String = CType(Me.ListsList.SelectedItem, ListElement).GetMoreMembers()
+        Dim a As New Action(Of String)(AddressOf GetListMembersCallback)
+        a.Invoke(result)
+    End Sub
+
+    Private Sub GetListMembersCallback(ByVal result As String)
+        If String.IsNullOrEmpty(result) Then
+            Me.ListsList_SelectedIndexChanged(Me.ListsList, EventArgs.Empty)
+        Else
+            MessageBox.Show(result)
+        End If
     End Sub
 
     Private Sub DeleteUserButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DeleteUserButton.Click
@@ -114,7 +139,7 @@
                 MessageBox.Show("通信エラー (" + rslt + ")")
             End If
 
-            Me.RefreshUsersButton.PerformClick()
+            Me.GetMoreUsersButton.PerformClick()
 
         End If
     End Sub
@@ -153,6 +178,12 @@
         Me.EditCheckBox_CheckedChanged(Me.EditCheckBox, EventArgs.Empty)
     End Sub
 
+    Private Sub UserList_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UserList.SelectedIndexChanged
+        If UserList.SelectedItem Is Nothing Then Exit Sub
+
+
+    End Sub
+
     Private Class NewListElement
         Inherits ListElement
 
@@ -186,4 +217,5 @@
             End If
         End Function
     End Class
+
 End Class

@@ -33,7 +33,7 @@ Partial Class ListManage
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.AddListButton = New System.Windows.Forms.Button()
         Me.DeleteListButton = New System.Windows.Forms.Button()
-        Me.RefreshUsersButton = New System.Windows.Forms.Button()
+        Me.GetMoreUsersButton = New System.Windows.Forms.Button()
         Me.DeleteUserButton = New System.Windows.Forms.Button()
         Me.NameTextBox = New System.Windows.Forms.TextBox()
         Me.UsernameTextBox = New System.Windows.Forms.TextBox()
@@ -46,6 +46,24 @@ Partial Class ListManage
         Me.OKEditButton = New System.Windows.Forms.Button()
         Me.CancelEditButton = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.RefreshUsersButton = New System.Windows.Forms.Button()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.SuspendLayout()
@@ -123,6 +141,7 @@ Partial Class ListManage
         'UserList
         '
         Me.UserList.FormattingEnabled = True
+        Me.UserList.HorizontalScrollbar = True
         Me.UserList.ItemHeight = 12
         Me.UserList.Location = New System.Drawing.Point(233, 12)
         Me.UserList.Name = "UserList"
@@ -131,9 +150,26 @@ Partial Class ListManage
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.Label19)
+        Me.GroupBox1.Controls.Add(Me.Label20)
+        Me.GroupBox1.Controls.Add(Me.DeleteUserButton)
+        Me.GroupBox1.Controls.Add(Me.Label18)
+        Me.GroupBox1.Controls.Add(Me.Label17)
+        Me.GroupBox1.Controls.Add(Me.Label16)
+        Me.GroupBox1.Controls.Add(Me.Label15)
+        Me.GroupBox1.Controls.Add(Me.Label14)
+        Me.GroupBox1.Controls.Add(Me.Label13)
+        Me.GroupBox1.Controls.Add(Me.Label11)
+        Me.GroupBox1.Controls.Add(Me.Label9)
+        Me.GroupBox1.Controls.Add(Me.LinkLabel1)
+        Me.GroupBox1.Controls.Add(Me.Label8)
+        Me.GroupBox1.Controls.Add(Me.Label7)
+        Me.GroupBox1.Controls.Add(Me.Label5)
+        Me.GroupBox1.Controls.Add(Me.Label3)
+        Me.GroupBox1.Controls.Add(Me.Label2)
         Me.GroupBox1.Location = New System.Drawing.Point(463, 12)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(200, 220)
+        Me.GroupBox1.Size = New System.Drawing.Size(208, 472)
         Me.GroupBox1.TabIndex = 31
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "選択したユーザー情報"
@@ -156,20 +192,20 @@ Partial Class ListManage
         Me.DeleteListButton.Text = "削除"
         Me.DeleteListButton.UseVisualStyleBackColor = True
         '
-        'RefreshUsersButton
+        'GetMoreUsersButton
         '
-        Me.RefreshUsersButton.Location = New System.Drawing.Point(233, 488)
-        Me.RefreshUsersButton.Name = "RefreshUsersButton"
-        Me.RefreshUsersButton.Size = New System.Drawing.Size(133, 23)
-        Me.RefreshUsersButton.TabIndex = 35
-        Me.RefreshUsersButton.Text = "ユーザー一覧更新"
-        Me.RefreshUsersButton.UseVisualStyleBackColor = True
+        Me.GetMoreUsersButton.Location = New System.Drawing.Point(304, 487)
+        Me.GetMoreUsersButton.Name = "GetMoreUsersButton"
+        Me.GetMoreUsersButton.Size = New System.Drawing.Size(153, 23)
+        Me.GetMoreUsersButton.TabIndex = 35
+        Me.GetMoreUsersButton.Text = "さらに取得"
+        Me.GetMoreUsersButton.UseVisualStyleBackColor = True
         '
         'DeleteUserButton
         '
-        Me.DeleteUserButton.Location = New System.Drawing.Point(463, 238)
+        Me.DeleteUserButton.Location = New System.Drawing.Point(9, 443)
         Me.DeleteUserButton.Name = "DeleteUserButton"
-        Me.DeleteUserButton.Size = New System.Drawing.Size(114, 23)
+        Me.DeleteUserButton.Size = New System.Drawing.Size(193, 23)
         Me.DeleteUserButton.TabIndex = 36
         Me.DeleteUserButton.Text = "リストから削除"
         Me.DeleteUserButton.UseVisualStyleBackColor = True
@@ -294,14 +330,168 @@ Partial Class ListManage
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "GroupBox3"
         '
+        'RefreshUsersButton
+        '
+        Me.RefreshUsersButton.Location = New System.Drawing.Point(233, 488)
+        Me.RefreshUsersButton.Name = "RefreshUsersButton"
+        Me.RefreshUsersButton.Size = New System.Drawing.Size(65, 23)
+        Me.RefreshUsersButton.TabIndex = 47
+        Me.RefreshUsersButton.Text = "再取得"
+        Me.RefreshUsersButton.UseVisualStyleBackColor = True
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(9, 19)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(45, 12)
+        Me.Label2.TabIndex = 0
+        Me.Label2.Text = "ユーザー"
+        '
+        'Label3
+        '
+        Me.Label3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.Label3.Location = New System.Drawing.Point(76, 18)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(126, 14)
+        Me.Label3.TabIndex = 1
+        Me.Label3.Text = "Label3"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(9, 33)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(41, 12)
+        Me.Label5.TabIndex = 2
+        Me.Label5.Text = "現在地"
+        '
+        'Label7
+        '
+        Me.Label7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.Label7.Location = New System.Drawing.Point(76, 32)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(126, 14)
+        Me.Label7.TabIndex = 3
+        Me.Label7.Text = "Label7"
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(9, 47)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(26, 12)
+        Me.Label8.TabIndex = 4
+        Me.Label8.Text = "Web"
+        '
+        'LinkLabel1
+        '
+        Me.LinkLabel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.LinkLabel1.Location = New System.Drawing.Point(76, 46)
+        Me.LinkLabel1.Name = "LinkLabel1"
+        Me.LinkLabel1.Size = New System.Drawing.Size(126, 14)
+        Me.LinkLabel1.TabIndex = 5
+        Me.LinkLabel1.TabStop = True
+        Me.LinkLabel1.Text = "LinkLabel1"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(9, 69)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(40, 12)
+        Me.Label9.TabIndex = 6
+        Me.Label9.Text = "フォロー"
+        '
+        'Label11
+        '
+        Me.Label11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.Label11.Location = New System.Drawing.Point(11, 85)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(50, 14)
+        Me.Label11.TabIndex = 7
+        Me.Label11.Text = "Label11"
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(74, 69)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(49, 12)
+        Me.Label13.TabIndex = 8
+        Me.Label13.Text = "フォロワー"
+        '
+        'Label14
+        '
+        Me.Label14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.Label14.Location = New System.Drawing.Point(76, 85)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(50, 14)
+        Me.Label14.TabIndex = 9
+        Me.Label14.Text = "Label14"
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(147, 69)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(29, 12)
+        Me.Label15.TabIndex = 10
+        Me.Label15.Text = "リスト"
+        '
+        'Label16
+        '
+        Me.Label16.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.Label16.Location = New System.Drawing.Point(149, 85)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(50, 14)
+        Me.Label16.TabIndex = 11
+        Me.Label16.Text = "Label16"
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(9, 110)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(53, 12)
+        Me.Label17.TabIndex = 12
+        Me.Label17.Text = "自己紹介"
+        '
+        'Label18
+        '
+        Me.Label18.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.Label18.Location = New System.Drawing.Point(11, 122)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(191, 162)
+        Me.Label18.TabIndex = 13
+        Me.Label18.Text = "Label18"
+        '
+        'Label19
+        '
+        Me.Label19.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.Label19.Location = New System.Drawing.Point(11, 296)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(191, 141)
+        Me.Label19.TabIndex = 15
+        Me.Label19.Text = "Label19"
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(9, 284)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(75, 12)
+        Me.Label20.TabIndex = 14
+        Me.Label20.Text = "最近のツイート"
+        '
         'ListManage
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(683, 522)
-        Me.Controls.Add(Me.GroupBox3)
-        Me.Controls.Add(Me.DeleteUserButton)
         Me.Controls.Add(Me.RefreshUsersButton)
+        Me.Controls.Add(Me.GroupBox3)
+        Me.Controls.Add(Me.GetMoreUsersButton)
         Me.Controls.Add(Me.DeleteListButton)
         Me.Controls.Add(Me.AddListButton)
         Me.Controls.Add(Me.GroupBox1)
@@ -315,6 +505,8 @@ Partial Class ListManage
         Me.ShowInTaskbar = False
         Me.Text = "ListManage"
         Me.TopMost = True
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         Me.GroupBox3.ResumeLayout(False)
@@ -333,7 +525,7 @@ Partial Class ListManage
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents AddListButton As System.Windows.Forms.Button
     Friend WithEvents DeleteListButton As System.Windows.Forms.Button
-    Friend WithEvents RefreshUsersButton As System.Windows.Forms.Button
+    Friend WithEvents GetMoreUsersButton As System.Windows.Forms.Button
     Friend WithEvents DeleteUserButton As System.Windows.Forms.Button
     Friend WithEvents NameTextBox As System.Windows.Forms.TextBox
     Friend WithEvents UsernameTextBox As System.Windows.Forms.TextBox
@@ -346,4 +538,21 @@ Partial Class ListManage
     Friend WithEvents OKEditButton As System.Windows.Forms.Button
     Friend WithEvents CancelEditButton As System.Windows.Forms.Button
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+    Friend WithEvents RefreshUsersButton As System.Windows.Forms.Button
+    Friend WithEvents Label19 As System.Windows.Forms.Label
+    Friend WithEvents Label20 As System.Windows.Forms.Label
+    Friend WithEvents Label18 As System.Windows.Forms.Label
+    Friend WithEvents Label17 As System.Windows.Forms.Label
+    Friend WithEvents Label16 As System.Windows.Forms.Label
+    Friend WithEvents Label15 As System.Windows.Forms.Label
+    Friend WithEvents Label14 As System.Windows.Forms.Label
+    Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
+    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents Label2 As System.Windows.Forms.Label
 End Class

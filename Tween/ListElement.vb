@@ -13,6 +13,7 @@ Public Class ListElement
     Protected _tw As Twitter
 
     Private _members As List(Of UserInfo) = Nothing
+    Private _cursor As Long = -1
 
     Public Sub New()
 
@@ -49,11 +50,17 @@ Public Class ListElement
         End Get
     End Property
 
-    Public Sub RefreshMembers()
+    Public Function RefreshMembers() As String
         Dim users As New List(Of UserInfo)()
-        Me._tw.GetListMembers(Me.Id.ToString(), users)
+        _cursor = -1
+        Dim result As String = Me._tw.GetListMembers(Me.Id.ToString(), users, _cursor)
         Me._members = users
-    End Sub
+        Return result
+    End Function
+
+    Public Function GetMoreMembers() As String
+        Return Me._tw.GetListMembers(Me.Id.ToString(), Me._members, _cursor)
+    End Function
 
     Public Overrides Function ToString() As String
         Return "@" + Username + "/" + Name + " [" + If(Me.IsPublic, "Public", "Protected") + "]"
