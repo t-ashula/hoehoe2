@@ -1,4 +1,6 @@
-﻿Public Class ListManage
+﻿Imports System.ComponentModel
+
+Public Class ListManage
     Private tw As Twitter
 
     Public Sub New(ByVal tw As Twitter)
@@ -9,9 +11,15 @@
 
 
     Private Sub ListManage_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Me.UserList_SelectedIndexChanged(Nothing, EventArgs.Empty)
+        If TabInformations.GetInstance().SubscribableLists.Count = 0 Then Me.RefreshLists()
         For Each listItem As ListElement In TabInformations.GetInstance().SubscribableLists.FindAll(Function(i) i.Username = Me.tw.Username)
             Me.ListsList.Items.Add(listItem)
         Next
+        If Me.ListsList.Items.Count > 0 Then
+            Me.ListsList.SelectedIndex = 0
+        End If
+        Me.ListsList.Focus()
     End Sub
 
     Private Sub ListsList_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListsList.SelectedIndexChanged
@@ -97,28 +105,22 @@
     Private Sub RefreshUsersButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RefreshUsersButton.Click
         If Me.ListsList.SelectedItem Is Nothing Then Return
         Me.UserList.Items.Clear()
-        Dim t As New Threading.Thread(New Threading.ThreadStart(AddressOf Me.RefreshMembers))
-    End Sub
-
-    Private Sub RefreshMembers()
-        Dim result As String = CType(Me.ListsList.SelectedItem, ListElement).RefreshMembers()
-        Dim a As New Action(Of String)(AddressOf GetListMembersCallback)
-        a.Invoke(result)
+        Dim dlgt As New Action(Of ListElement)(Sub(lElement)
+                                                   Me.Invoke(New Action(Of String)(AddressOf GetListMembersCallback), lElement.RefreshMembers())
+                                               End Sub)
+        dlgt.BeginInvoke(DirectCast(Me.ListsList.SelectedItem, ListElement), Nothing, Nothing)
     End Sub
 
     Private Sub GetMoreUsersButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GetMoreUsersButton.Click
         If Me.ListsList.SelectedItem Is Nothing Then Return
-        Dim t As New Threading.Thread(New Threading.ThreadStart(AddressOf Me.GetListMembers))
-    End Sub
-
-    Private Sub GetListMembers()
-        Dim result As String = CType(Me.ListsList.SelectedItem, ListElement).GetMoreMembers()
-        Dim a As New Action(Of String)(AddressOf GetListMembersCallback)
-        a.Invoke(result)
+        Dim dlgt As New Action(Of ListElement)(Sub(lElement)
+                                                   Me.Invoke(New Action(Of String)(AddressOf GetListMembersCallback), lElement.GetMoreMembers())
+                                               End Sub)
+        dlgt.BeginInvoke(DirectCast(Me.ListsList.SelectedItem, ListElement), Nothing, Nothing)
     End Sub
 
     Private Sub GetListMembersCallback(ByVal result As String)
-        If String.IsNullOrEmpty(result) Then
+        If result = Me.ListsList.SelectedItem.ToString Then
             Me.ListsList_SelectedIndexChanged(Me.ListsList, EventArgs.Empty)
         Else
             MessageBox.Show(result)
@@ -179,9 +181,67 @@
     End Sub
 
     Private Sub UserList_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UserList.SelectedIndexChanged
-        If UserList.SelectedItem Is Nothing Then Exit Sub
+        If UserList.SelectedItem Is Nothing Then
+            If Me.UserIcon.Image IsNot Nothing Then
+                Me.UserIcon.Image.Dispose()
+                Me.UserIcon.Image = Nothing
+            End If
+            Me.UserLocation.Text = ""
+            Me.UserWeb.Text = ""
+            Me.UserFollowNum.Text = "0"
+            Me.UserFollowerNum.Text = "0"
+            Me.UserPostsNum.Text = "0"
+            Me.UserProfile.Text = ""
+            Me.UserTweet.Text = ""
+            Me.DeleteUserButton.Enabled = False
+        Else
+            Dim user As UserInfo = DirectCast(Me.UserList.SelectedItem, UserInfo)
+            Me.UserLocation.Text = user.Location
+            Me.UserWeb.Text = user.Url
+            Me.UserFollowNum.Text = user.FriendsCount.ToString("#,###,##0")
+            Me.UserFollowerNum.Text = user.FollowersCount.ToString("#,###,##0")
+            Me.UserPostsNum.Text = user.StatusesCount.ToString("#,###,##0")
+            Me.UserProfile.Text = user.Description
+            Me.UserTweet.Text = user.RecentPost
+            Me.DeleteUserButton.Enabled = True
 
+            Dim a As New Action(Of Uri)(Sub(url)
+                                            Me.Invoke(New Action(Of Image)(AddressOf DisplayIcon), (New HttpVarious).GetImage(url))
+                                        End Sub)
+            a.BeginInvoke(user.ImageUrl, Nothing, Nothing)
+        End If
+    End Sub
 
+    Private Sub DisplayIcon(ByVal img As Image)
+        If img Is Nothing OrElse Me.UserList.SelectedItem Is Nothing Then Exit Sub
+        If DirectCast(Me.UserList.SelectedItem, UserInfo).ImageUrl.ToString = DirectCast(img.Tag, String) Then
+            Me.UserIcon.Image = img
+        End If
+    End Sub
+    Private Sub RefreshListsButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RefreshListsButton.Click
+        Me.RefreshLists()
+        Me.ListsList.Items.Clear()
+        Me.ListManage_Load(Nothing, EventArgs.Empty)
+    End Sub
+
+    Private Sub RefreshLists()
+        Using dlg As New FormInfo("Getting Lists...", AddressOf RefreshLists_Dowork)
+            dlg.ShowDialog()
+            If Not String.IsNullOrEmpty(DirectCast(dlg.Result, String)) Then
+                MessageBox.Show("Failed to get lists. (" + DirectCast(dlg.Result, String) + ")")
+                Exit Sub
+            End If
+        End Using
+    End Sub
+
+    Private Sub RefreshLists_Dowork(ByVal sender As Object, ByVal e As DoWorkEventArgs)
+        e.Result = tw.GetListsApi()
+    End Sub
+
+    Private Sub UserWeb_LinkClicked(ByVal sender As Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles UserWeb.LinkClicked
+        If Me.Owner IsNot Nothing Then
+            DirectCast(Me.Owner, TweenMain).OpenUriAsync(UserWeb.Text)
+        End If
     End Sub
 
     Private Class NewListElement
