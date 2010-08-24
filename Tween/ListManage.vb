@@ -9,6 +9,13 @@ Public Class ListManage
         Me.tw = tw
     End Sub
 
+    Private Sub ListManage_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
+        If e.KeyCode = Keys.Enter AndAlso
+            Me.EditCheckBox.Checked Then
+            Me.OKEditButton.PerformClick()
+        End If
+    End Sub
+
 
     Private Sub ListManage_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.UserList_SelectedIndexChanged(Nothing, EventArgs.Empty)
@@ -41,15 +48,23 @@ Public Class ListManage
     End Sub
 
     Private Sub EditCheckBox_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles EditCheckBox.CheckedChanged
+        Me.AddListButton.Enabled = Not Me.EditCheckBox.Checked
+        Me.EditCheckBox.Enabled = Not Me.EditCheckBox.Checked
+        Me.DeleteListButton.Enabled = Not Me.EditCheckBox.Checked
+
         Me.NameTextBox.ReadOnly = Not Me.EditCheckBox.Checked
         Me.PublicRadioButton.Enabled = Me.EditCheckBox.Checked
         Me.PrivateRadioButton.Enabled = Me.EditCheckBox.Checked
         Me.DescriptionText.ReadOnly = Not Me.EditCheckBox.Checked
         Me.ListsList.Enabled = Not Me.EditCheckBox.Checked
 
-        Me.OKEditButton.Enabled = Me.EditCheckBox.Enabled
-        Me.CancelEditButton.Enabled = Me.EditCheckBox.Enabled
+        Me.OKEditButton.Enabled = Me.EditCheckBox.Checked
+        Me.CancelEditButton.Enabled = Me.EditCheckBox.Checked
         Me.EditCheckBox.AutoCheck = Not Me.EditCheckBox.Checked
+
+        Me.MemberGroup.Enabled = Not Me.EditCheckBox.Checked
+        Me.UserGroup.Enabled = Not Me.EditCheckBox.Checked
+        Me.Close.Enabled = Not Me.EditCheckBox.Checked
     End Sub
 
     Private Sub OKButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OKEditButton.Click
@@ -80,20 +95,20 @@ Public Class ListManage
         Me.EditCheckBox.AutoCheck = True
         Me.EditCheckBox.Checked = False
 
-        Me.OKEditButton.Enabled = False
-        Me.CancelEditButton.Enabled = False
+        'Me.OKEditButton.Enabled = False
+        'Me.CancelEditButton.Enabled = False
 
-        Me.ListsList.Refresh()
+        'Me.ListsList.Refresh()
     End Sub
 
     Private Sub CancelButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CancelEditButton.Click
         Me.EditCheckBox.AutoCheck = True
         Me.EditCheckBox.Checked = False
 
-        Me.OKEditButton.Enabled = False
-        Me.CancelEditButton.Enabled = False
+        'Me.OKEditButton.Enabled = False
+        'Me.CancelEditButton.Enabled = False
 
-        For i As Integer = 0 To Me.ListsList.Items.Count - 1
+        For i As Integer = Me.ListsList.Items.Count - 1 To 0 Step -1
             If TypeOf Me.ListsList.Items(i) Is NewListElement Then
                 Me.ListsList.Items.RemoveAt(i)
             End If
@@ -134,15 +149,17 @@ Public Class ListManage
 
         Dim list As ListElement = CType(Me.ListsList.SelectedItem, ListElement)
         Dim user As UserInfo = CType(Me.UserList.SelectedItem, UserInfo)
-        If MessageBox.Show(list.Name + "から" + user.ScreenName + "を削除します。", "Tween", MessageBoxButtons.OKCancel) = DialogResult.OK Then
+        If MessageBox.Show("このユーザーをリストから削除してよろしいですか？", "Tween", MessageBoxButtons.OKCancel) = DialogResult.OK Then
             Dim rslt As String = Me.tw.RemoveUserToList(list.Id.ToString(), user.Id.ToString())
 
             If rslt <> "" Then
                 MessageBox.Show("通信エラー (" + rslt + ")")
+                Exit Sub
             End If
-
-            Me.GetMoreUsersButton.PerformClick()
-
+            Dim idx As Integer = ListsList.SelectedIndex
+            list.Members.Remove(user)
+            Me.ListsList_SelectedIndexChanged(Me.ListsList, EventArgs.Empty)
+            If idx < ListsList.Items.Count Then ListsList.SelectedIndex = idx
         End If
     End Sub
 
@@ -192,6 +209,7 @@ Public Class ListManage
             Me.UserFollowerNum.Text = "0"
             Me.UserPostsNum.Text = "0"
             Me.UserProfile.Text = ""
+            Me.UserTweetDateTime.Text = ""
             Me.UserTweet.Text = ""
             Me.DeleteUserButton.Enabled = False
         Else
@@ -202,7 +220,13 @@ Public Class ListManage
             Me.UserFollowerNum.Text = user.FollowersCount.ToString("#,###,##0")
             Me.UserPostsNum.Text = user.StatusesCount.ToString("#,###,##0")
             Me.UserProfile.Text = user.Description
-            Me.UserTweet.Text = user.RecentPost
+            If Not String.IsNullOrEmpty(user.RecentPost) Then
+                Me.UserTweetDateTime.Text = user.PostCreatedAt.ToString("yy/MM/dd HH:mm")
+                Me.UserTweet.Text = user.RecentPost
+            Else
+                Me.UserTweetDateTime.Text = ""
+                Me.UserTweet.Text = ""
+            End If
             Me.DeleteUserButton.Enabled = True
 
             Dim a As New Action(Of Uri)(Sub(url)
@@ -278,4 +302,10 @@ Public Class ListManage
         End Function
     End Class
 
+    Private Sub ListManage_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles Me.Validating
+        If Me.EditCheckBox.Checked Then
+            e.Cancel = True
+            Me.CancelButton.PerformClick()
+        End If
+    End Sub
 End Class
