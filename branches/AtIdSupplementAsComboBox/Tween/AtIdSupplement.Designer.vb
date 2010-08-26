@@ -25,8 +25,8 @@ Partial Class AtIdSupplement
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(AtIdSupplement))
         Me.ButtonOK = New System.Windows.Forms.Button()
         Me.ButtonCancel = New System.Windows.Forms.Button()
-        Me.TextId = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.IdComboBox = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'ButtonOK
@@ -45,17 +45,18 @@ Partial Class AtIdSupplement
         Me.ButtonCancel.TabStop = False
         Me.ButtonCancel.UseVisualStyleBackColor = True
         '
-        'TextId
-        '
-        Me.TextId.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-        Me.TextId.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource
-        resources.ApplyResources(Me.TextId, "TextId")
-        Me.TextId.Name = "TextId"
-        '
         'Label1
         '
         resources.ApplyResources(Me.Label1, "Label1")
         Me.Label1.Name = "Label1"
+        '
+        'IdComboBox
+        '
+        Me.IdComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.IdComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource
+        Me.IdComboBox.Cursor = System.Windows.Forms.Cursors.IBeam
+        resources.ApplyResources(Me.IdComboBox, "IdComboBox")
+        Me.IdComboBox.Name = "IdComboBox"
         '
         'AtIdSupplement
         '
@@ -63,8 +64,8 @@ Partial Class AtIdSupplement
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButtonCancel
+        Me.Controls.Add(Me.IdComboBox)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.TextId)
         Me.Controls.Add(Me.ButtonCancel)
         Me.Controls.Add(Me.ButtonOK)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
@@ -79,6 +80,6 @@ Partial Class AtIdSupplement
     End Sub
     Friend WithEvents ButtonOK As System.Windows.Forms.Button
     Friend WithEvents ButtonCancel As System.Windows.Forms.Button
-    Friend WithEvents TextId As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents IdComboBox As System.Windows.Forms.ComboBox
 End Class

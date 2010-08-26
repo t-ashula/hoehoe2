@@ -30,8 +30,8 @@ Public Class AtIdSupplement
     Private _StartsWith As String = ""
 
     Public Sub AddItem(ByVal id As String)
-        If Not Me.TextId.AutoCompleteCustomSource.Contains(id) Then
-            Me.TextId.AutoCompleteCustomSource.Add(id)
+        If Not Me.IdComboBox.AutoCompleteCustomSource.Contains(id) Then
+            Me.IdComboBox.AutoCompleteCustomSource.Add(id)
         End If
     End Sub
 
@@ -43,20 +43,20 @@ Public Class AtIdSupplement
 
     Public Function GetItemList() As List(Of String)
         Dim ids As New List(Of String)
-        For i As Integer = 0 To Me.TextId.AutoCompleteCustomSource.Count - 1
-            ids.Add(Me.TextId.AutoCompleteCustomSource(i))
+        For i As Integer = 0 To Me.IdComboBox.AutoCompleteCustomSource.Count - 1
+            ids.Add(Me.IdComboBox.AutoCompleteCustomSource(i))
         Next
         Return ids
     End Function
 
     Public ReadOnly Property ItemCount() As Integer
         Get
-            Return Me.TextId.AutoCompleteCustomSource.Count
+            Return Me.IdComboBox.AutoCompleteCustomSource.Count
         End Get
     End Property
 
     Private Sub ButtonOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click
-        inputText = Me.TextId.Text
+        inputText = Me.IdComboBox.Text
         isBack = False
     End Sub
 
@@ -65,39 +65,40 @@ Public Class AtIdSupplement
         isBack = False
     End Sub
 
-    Private Sub TextId_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles TextId.KeyDown
-        If e.KeyCode = Keys.Back AndAlso Me.TextId.Text = "" Then
+    Private Sub IdComboBox_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles IdComboBox.KeyDown
+        If e.KeyCode = Keys.Back AndAlso Me.IdComboBox.Text = "" Then
             inputText = ""
             isBack = True
             Me.Close()
         End If
         If e.KeyCode = Keys.Space OrElse e.KeyCode = Keys.Tab Then
-            inputText = Me.TextId.Text + " "
+            inputText = Me.IdComboBox.Text + " "
             isBack = False
             Me.Close()
         End If
         If e.Control AndAlso e.KeyCode = Keys.Delete Then
-            If Me.TextId.Text <> "" Then
-                Dim idx As Integer = Me.TextId.AutoCompleteCustomSource.IndexOf(Me.TextId.Text)
+            If Me.IdComboBox.Text <> "" Then
+                Dim idx As Integer = Me.IdComboBox.AutoCompleteCustomSource.IndexOf(Me.IdComboBox.Text)
                 If idx > -1 Then
-                    Me.TextId.Text = ""
-                    Me.TextId.AutoCompleteCustomSource.RemoveAt(idx)
+                    Me.IdComboBox.Text = ""
+                    Me.IdComboBox.AutoCompleteCustomSource.RemoveAt(idx)
                 End If
             End If
         End If
     End Sub
 
     Private Sub AtIdSupplement_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If startChar = "#" Then Me.ClientSize = New Size(Me.TextId.Width, Me.TextId.Height) 'プロパティで切り替えできるように
+        If startChar = "#" Then Me.ClientSize = New Size(Me.IdComboBox.Width, Me.IdComboBox.Height) 'プロパティで切り替えできるように
+        IdComboBox.Text = startChar
+        If Not String.IsNullOrEmpty(_StartsWith) Then
+            IdComboBox.Text += _StartsWith.Substring(0, _StartsWith.Length)
+        End If
     End Sub
 
     Private Sub AtIdSupplement_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
-        TextId.Text = startChar
-        If Not String.IsNullOrEmpty(_StartsWith) Then
-            TextId.Text += _StartsWith.Substring(0, _StartsWith.Length)
-        End If
-        TextId.SelectionStart = TextId.Text.Length
-        TextId.Focus()
+        IdComboBox.Focus()
+        IdComboBox.SelectionStart = IdComboBox.Text.Length
+        IdComboBox.SelectionLength = 0
     End Sub
 
     Public Sub New()
@@ -117,14 +118,15 @@ Public Class AtIdSupplement
         ' InitializeComponent() 呼び出しの後で初期化を追加します。
 
         For i As Integer = 0 To ItemList.Count - 1
-            Me.TextId.AutoCompleteCustomSource.Add(ItemList(i))
+            Me.IdComboBox.AutoCompleteCustomSource.Add(ItemList(i))
         Next
         startChar = startCharacter
     End Sub
 
-    Private Sub TextId_PreviewKeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.PreviewKeyDownEventArgs) Handles TextId.PreviewKeyDown
+    Private Sub IdComboBox_PreviewKeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.PreviewKeyDownEventArgs) Handles IdComboBox.PreviewKeyDown
+        System.Diagnostics.Debug.WriteLine(e.KeyCode.ToString)
         If e.KeyCode = Keys.Tab Then
-            inputText = Me.TextId.Text + " "
+            inputText = Me.IdComboBox.Text + " "
             isBack = False
             Me.Close()
         End If
