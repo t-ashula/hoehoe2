@@ -9447,4 +9447,13 @@ RETRY:
             form.ShowDialog(Me)
         End Using
     End Sub
+
+    Private Sub ConsoleToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ConsoleToolStripMenuItem.Click
+        Static Form As ApiConsole = Nothing
+
+        If Form Is Nothing Then
+            Form = New ApiConsole(tw)
+        End If
+        Form.Show()
+    End Sub
 End Class

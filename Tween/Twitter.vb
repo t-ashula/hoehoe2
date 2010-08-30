@@ -2497,4 +2497,16 @@ Public Class Twitter
 
     Private Sub Twitter_ApiInformationChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs) Handles Me.ApiInformationChanged
     End Sub
+
+    Public Function ApiCall(ByVal url As String, ByVal method As String, ByRef content As String) As String
+        Dim res As HttpStatusCode
+
+        Try
+            res = twCon.apiCall(url, method, content)
+        Catch ex As Exception
+            Return "Err:" + ex.Message
+        End Try
+
+        Return Convert.ToInt32(res).ToString + " " + res.ToString
+    End Function
 End Class

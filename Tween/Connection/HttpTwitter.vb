@@ -618,6 +618,15 @@ Public Class HttpTwitter
                             Nothing)
     End Function
 
+    Public Function apiCall(ByVal url As String, ByVal method As String, ByRef content As String) As HttpStatusCode
+        Return httpCon.GetContent(method, _
+                            New Uri(url), _
+                            Nothing, _
+                            content, _
+                            TwitterApiInfo.HttpHeaders, _
+                            AddressOf GetApiCallback)
+    End Function
+
 #Region "Proxy API"
     Private Shared _twitterUrl As String = "api.twitter.com"
     'Private TwitterUrl As String = "sorayukigtap.appspot.com/api"
