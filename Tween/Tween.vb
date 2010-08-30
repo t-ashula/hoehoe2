@@ -37,6 +37,8 @@ Imports System.ComponentModel
 Imports System.Diagnostics
 Imports Microsoft.Win32
 Imports System.Xml
+Imports System.Timers
+Imports System.Threading
 
 Public Class TweenMain
 
@@ -186,11 +188,11 @@ Public Class TweenMain
     Private shield As New ShieldIcon
     Private SecurityManager As InternetSecurityManager
 
+
     Private _homeCounter As Integer = 0
     Private _homeCounterAdjuster As Integer = 0
     Private _mentionCounter As Integer = 0
     Private _dmCounter As Integer = 0
-    'Private _favCounter As Integer = 0
     Private _pubSearchCounter As Integer = 0
     Private _listsCounter As Integer = 0
 
@@ -204,6 +206,8 @@ Public Class TweenMain
     Private _postBrowserStatusText As String = ""
 
     Private _colorize As Boolean = False
+
+    Private WithEvents TimerTimeline As System.Timers.Timer
 
     'URL短縮のUndo用
     Private Structure urlUndo
@@ -917,8 +921,12 @@ Public Class TweenMain
         End If
 
         'タイマー設定
+        TimerTimeline = New System.Timers.Timer()
+        TimerTimeline.AutoReset = True
+        TimerTimeline.SynchronizingObject = Me
         'Recent取得間隔
         TimerTimeline.Interval = 1000
+        TimerTimeline.Enabled = True
 
         '更新中アイコンアニメーション間隔
         TimerRefreshIcon.Interval = 200
@@ -1149,12 +1157,12 @@ Public Class TweenMain
         LoadOldConfig()
     End Sub
 
-    Private Sub TimerTimeline_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TimerTimeline.Tick
-        If _homeCounter > 0 Then _homeCounter -= 1
-        If _mentionCounter > 0 Then _mentionCounter -= 1
-        If _dmCounter > 0 Then _dmCounter -= 1
-        If _pubSearchCounter > 0 Then _pubSearchCounter -= 1
-        If _listsCounter > 0 Then _listsCounter -= 1
+    Private Sub TimerTimeline_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TimerTimeline.Elapsed
+        If _homeCounter > 0 Then Interlocked.Decrement(_homeCounter)
+        If _mentionCounter > 0 Then Interlocked.Decrement(_mentionCounter)
+        If _dmCounter > 0 Then Interlocked.Decrement(_dmCounter)
+        If _pubSearchCounter > 0 Then Interlocked.Decrement(_pubSearchCounter)
+        If _listsCounter > 0 Then Interlocked.Decrement(_listsCounter)
 
         If _homeCounter <= 0 AndAlso SettingDialog.TimelinePeriodInt > 0 Then
             GetTimeline(WORKERTYPE.Timeline, 1, 0, "")
@@ -2289,15 +2297,17 @@ Public Class TweenMain
 
     Private Sub GetTimeline(ByVal WkType As WORKERTYPE, ByVal fromPage As Integer, ByVal toPage As Integer, ByVal tabName As String)
         ''タイマー初期化
-        If WkType = WORKERTYPE.Timeline AndAlso SettingDialog.TimelinePeriodInt > 0 Then
-            _homeCounter = SettingDialog.TimelinePeriodInt - _homeCounterAdjuster
-        End If
-        If WkType = WORKERTYPE.Reply AndAlso SettingDialog.ReplyPeriodInt > 0 Then
-            _mentionCounter = SettingDialog.ReplyPeriodInt
-        End If
-        If WkType = WORKERTYPE.DirectMessegeRcv AndAlso SettingDialog.DMPeriodInt > 0 Then
-            _dmCounter = SettingDialog.DMPeriodInt
-        End If
+        SyncLock _syncObject
+            If WkType = WORKERTYPE.Timeline AndAlso SettingDialog.TimelinePeriodInt > 0 Then
+                _homeCounter = SettingDialog.TimelinePeriodInt - _homeCounterAdjuster
+            End If
+            If WkType = WORKERTYPE.Reply AndAlso SettingDialog.ReplyPeriodInt > 0 Then
+                _mentionCounter = SettingDialog.ReplyPeriodInt
+            End If
+            If WkType = WORKERTYPE.DirectMessegeRcv AndAlso SettingDialog.DMPeriodInt > 0 Then
+                _dmCounter = SettingDialog.DMPeriodInt
+            End If
+        End SyncLock
 
         If Not IsNetworkAvailable() Then Exit Sub
 
