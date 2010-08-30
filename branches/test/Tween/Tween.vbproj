@@ -106,6 +106,12 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiConsole.Designer.vb">
+      <DependentUpon>ApiConsole.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ApiConsole.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ApiInformation.vb" />
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="AtIdSupplement.Designer.vb">
@@ -260,6 +266,9 @@
     <Compile Include="Win32Api.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ApiConsole.resx">
+      <DependentUpon>ApiConsole.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AtIdSupplement.en.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AtIdSupplement.vb</DependentUpon>
