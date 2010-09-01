@@ -1785,7 +1785,7 @@ Public Class TweenMain
             _hookGlobalHotkey.UnregisterAllOriginalHotkey()
             _ignoreConfigSave = True
             _endingFlag = True
-            TimerTimeline.Enabled = False
+            If TimerTimeline IsNot Nothing AndAlso TimerTimeline.Enabled Then TimerTimeline.Enabled = False
             TimerRefreshIcon.Enabled = False
         End If
     End Sub
