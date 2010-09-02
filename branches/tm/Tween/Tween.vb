@@ -207,7 +207,7 @@ Public Class TweenMain
 
     Private _colorize As Boolean = False
 
-    Private WithEvents TimerTimeline As System.Timers.Timer
+    Private WithEvents TimerTimeline As New System.Timers.Timer
 
     'URL短縮のUndo用
     Private Structure urlUndo
@@ -921,7 +921,6 @@ Public Class TweenMain
         End If
 
         'タイマー設定
-        TimerTimeline = New System.Timers.Timer()
         TimerTimeline.AutoReset = True
         TimerTimeline.SynchronizingObject = Me
         'Recent取得間隔
@@ -1785,7 +1784,7 @@ Public Class TweenMain
             _hookGlobalHotkey.UnregisterAllOriginalHotkey()
             _ignoreConfigSave = True
             _endingFlag = True
-            If TimerTimeline IsNot Nothing AndAlso TimerTimeline.Enabled Then TimerTimeline.Enabled = False
+            TimerTimeline.Enabled = False
             TimerRefreshIcon.Enabled = False
         End If
     End Sub
