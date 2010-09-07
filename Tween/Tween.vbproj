@@ -114,6 +114,9 @@
     <Compile Include="AtIdSupplement.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FlexibleTabControl.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Connection\HttpConnectionOAuthEcho.vb" />
     <Compile Include="Connection\HttpOAuthApiProxy.vb" />
     <Compile Include="Connection\HttpConnection.vb" />

@@ -208,6 +208,8 @@ Public Class TweenMain
 
     Private WithEvents TimerTimeline As New System.Timers.Timer
 
+    Private _queryNest As New Stack(Of List(Of TabPage)) 'クエリ発行ネスト
+
     'URL短縮のUndo用
     Private Structure urlUndo
         Public Before As String
@@ -873,7 +875,7 @@ Public Class TweenMain
 
         '画像投稿サービス
         SetImageServiceCombo()
-        ImageSelectionPanel.Enabled = False
+        'ImageSelectionPanel.Enabled = False
 
         'ウィンドウ設定
         Me.ClientSize = _cfgLocal.FormSize
@@ -1584,7 +1586,7 @@ Public Class TweenMain
 
     Private Sub PostButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PostButton.Click
         If StatusText.Text.Trim.Length = 0 Then
-            If Not ImageSelectionPanel.Enabled Then
+            If Not ImageSelectionPanel.Visible Then
                 DoRefresh()
             End If
             Exit Sub
@@ -1722,9 +1724,9 @@ Public Class TweenMain
                                    MessageBoxDefaultButton.Button1) _
                                = Windows.Forms.DialogResult.Cancel Then
                     TimelinePanel.Visible = True
-                    TimelinePanel.Enabled = True
+                    'TimelinePanel.Enabled = True
                     ImageSelectionPanel.Visible = False
-                    ImageSelectionPanel.Enabled = False
+                    'ImageSelectionPanel.Enabled = False
                     If _curList IsNot Nothing Then
                         _curList.Focus()
                     End If
@@ -1735,9 +1737,9 @@ Public Class TweenMain
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage
                 ImagefilePathText.Text = ""
                 TimelinePanel.Visible = True
-                TimelinePanel.Enabled = True
+                'TimelinePanel.Enabled = True
                 ImageSelectionPanel.Visible = False
-                ImageSelectionPanel.Enabled = False
+                'ImageSelectionPanel.Enabled = False
                 If _curList IsNot Nothing Then
                     _curList.Focus()
                 End If
@@ -4006,7 +4008,7 @@ RETRY:
         Dim idx As Integer = -1
         Dim lst As DetailsListView = Nothing
 
-        If ImageSelectionPanel.Enabled Then
+        If ImageSelectionPanel.Visible Then
             Exit Sub
         End If
 
@@ -4395,6 +4397,11 @@ RETRY:
                 e.SuppressKeyPress = True
                 GetTimeline(WORKERTYPE.DirectMessegeRcv, 1, 0, "")
             End If
+            If e.KeyCode = Keys.Q Then
+                e.Handled = True
+                e.SuppressKeyPress = True
+                QueryPosts()
+            End If
         End If
         _anchorFlag = False
         If e.Control AndAlso Not e.Alt AndAlso Not e.Shift Then
@@ -4557,6 +4564,17 @@ RETRY:
                 e.SuppressKeyPress = True
                 CopyIdUri()
             End If
+        End If
+    End Sub
+
+    Private Sub QueryPosts()
+        If DirectCast(ListTab.SelectedTab.Tag, DetailsListView).SelectedIndices.Count > 0 Then
+            Dim tabList As New List(Of TabPage)
+            For Each tp As TabPage In ListTab.TabPages
+                If tp.ScrollStateHScrollVisible Then
+
+                End If
+            Next
         End If
     End Sub
 
@@ -7249,9 +7267,9 @@ RETRY:
     Private Sub TweenMain_DragDrop(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles MyBase.DragDrop
         If e.Data.GetDataPresent(DataFormats.FileDrop) Then
             ImageSelectionPanel.Visible = True
-            ImageSelectionPanel.Enabled = True
+            'ImageSelectionPanel.Enabled = True
             TimelinePanel.Visible = False
-            TimelinePanel.Enabled = False
+            'TimelinePanel.Enabled = False
             ImagefilePathText.Text = CType(e.Data.GetData(DataFormats.FileDrop, False), String())(0)
             ImageFromSelectedFile()
         ElseIf e.Data.GetDataPresent(DataFormats.StringFormat) Then
@@ -8560,16 +8578,16 @@ RETRY:
         If ImageSelectionPanel.Visible = True Then
             ImagefilePathText.CausesValidation = False
             TimelinePanel.Visible = True
-            TimelinePanel.Enabled = True
+            'TimelinePanel.Enabled = True
             ImageSelectionPanel.Visible = False
-            ImageSelectionPanel.Enabled = False
+            'ImageSelectionPanel.Enabled = False
             DirectCast(ListTab.SelectedTab.Tag, DetailsListView).Focus()
             ImagefilePathText.CausesValidation = True
         Else
             ImageSelectionPanel.Visible = True
-            ImageSelectionPanel.Enabled = True
+            'ImageSelectionPanel.Enabled = True
             TimelinePanel.Visible = False
-            TimelinePanel.Enabled = False
+            'TimelinePanel.Enabled = False
             ImagefilePathText.Focus()
         End If
     End Sub
@@ -8678,9 +8696,9 @@ RETRY:
             ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage
             ImageSelectedPicture.Tag = UploadFileType.Invalid
             TimelinePanel.Visible = True
-            TimelinePanel.Enabled = True
+            'TimelinePanel.Enabled = True
             ImageSelectionPanel.Visible = False
-            ImageSelectionPanel.Enabled = False
+            'ImageSelectionPanel.Enabled = False
             DirectCast(ListTab.SelectedTab.Tag, DetailsListView).Focus()
             ImagefilePathText.CausesValidation = True
         End If
@@ -8735,9 +8753,9 @@ RETRY:
     Private Sub ImageCancelButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ImageCancelButton.Click
         ImagefilePathText.CausesValidation = False
         TimelinePanel.Visible = True
-        TimelinePanel.Enabled = True
+        'TimelinePanel.Enabled = True
         ImageSelectionPanel.Visible = False
-        ImageSelectionPanel.Enabled = False
+        'ImageSelectionPanel.Enabled = False
         DirectCast(ListTab.SelectedTab.Tag, DetailsListView).Focus()
         ImagefilePathText.CausesValidation = True
     End Sub
