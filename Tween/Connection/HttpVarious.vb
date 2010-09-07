@@ -90,24 +90,31 @@ Public Class HttpVarious
     End Function
 
     Public Overloads Function GetData(ByVal Url As String, ByVal param As Dictionary(Of String, String), ByRef content As String) As Boolean
-        Try
-            Dim req As HttpWebRequest = CreateRequest(GetMethod, New Uri(Url), param, False)
-            Dim res As HttpStatusCode = Me.GetResponse(req, content, Nothing, False)
-            If res = HttpStatusCode.OK Then Return True
-            Return False
-        Catch ex As Exception
-            Return False
-        End Try
+        Return GetData(Url, param, content, 100000, Nothing)
     End Function
 
     Public Overloads Function GetData(ByVal Url As String, ByVal param As Dictionary(Of String, String), ByRef content As String, ByVal timeout As Integer) As Boolean
+        Return GetData(Url, param, content, 100000, Nothing)
+    End Function
+
+    Public Overloads Function GetData(ByVal Url As String, ByVal param As Dictionary(Of String, String), ByRef content As String, ByVal timeout As Integer, ByRef errmsg As String) As Boolean
         Try
             Dim req As HttpWebRequest = CreateRequest(GetMethod, New Uri(Url), param, False)
-            req.Timeout = timeout
+            If timeout < 3000 OrElse timeout > 30000 Then
+                req.Timeout = 10000
+            Else
+                req.Timeout = timeout
+            End If
             Dim res As HttpStatusCode = Me.GetResponse(req, content, Nothing, False)
             If res = HttpStatusCode.OK Then Return True
+            If errmsg IsNot Nothing Then
+                errmsg = res.ToString
+            End If
             Return False
         Catch ex As Exception
+            If errmsg IsNot Nothing Then
+                errmsg = ex.Message
+            End If
             Return False
         End Try
     End Function
