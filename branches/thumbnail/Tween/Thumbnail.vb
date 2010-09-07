@@ -14,9 +14,11 @@ Public Class Thumbnail
         Public urls As List(Of KeyValuePair(Of String, String))
         Public pics As New List(Of KeyValuePair(Of String, Image))
         Public tooltiptext As New List(Of KeyValuePair(Of String, String))
-        Public Sub New(ByVal id As Long, ByVal urlList As List(Of KeyValuePair(Of String, String)))
+        Public imageCreators As New List(Of KeyValuePair(Of String, ImageCreatorDelegate))
+        Public Sub New(ByVal id As Long, ByVal urlList As List(Of KeyValuePair(Of String, String)), ByVal imageCreatorList As List(Of KeyValuePair(Of String, ImageCreatorDelegate)))
             statusId = id
             urls = urlList
+            imageCreators = imageCreatorList
         End Sub
 
         Public IsError As Boolean
@@ -50,6 +52,32 @@ Public Class Thumbnail
 
     End Class
     Private Owner As TweenMain
+    Private Delegate Function UrlCreatorDelegate(ByVal args As GetUrlArgs) As Boolean
+    Private Delegate Function ImageCreatorDelegate(ByVal args As CreateImageArgs) As Boolean
+
+    Private Class GetUrlArgs
+        Public url As String
+        Public imglist As List(Of KeyValuePair(Of String, String))
+    End Class
+
+    Private Class CreateImageArgs
+        Public url As KeyValuePair(Of String, String)
+        Public pics As List(Of KeyValuePair(Of String, Image))
+        Public tooltiptext As List(Of KeyValuePair(Of String, String))
+        Public errmsg As String
+    End Class
+
+    Private Structure ThumbnailService
+        Public Name As String
+        Public urlCreator As UrlCreatorDelegate
+        Public imageCreator As ImageCreatorDelegate
+    End Structure
+
+    Private ThumbnailServices As ThumbnailService() = {
+        New ThumbnailService With {.Name = "ImgUr", .urlCreator = AddressOf ImgUr_GetUrl, .imageCreator = AddressOf ImgUr_CreateImage}, _
+        New ThumbnailService With {.Name = "DirectLink", .urlCreator = AddressOf DirectLink_GetUrl, .imageCreator = AddressOf DirectLink_CreateImage}
+        }
+
 
     Public Sub New(ByVal Owner As TweenMain)
         Me.Owner = Owner
@@ -94,21 +122,25 @@ Public Class Thumbnail
         End If
 
         Dim imglist As New List(Of KeyValuePair(Of String, String))
+        Dim dlg As New List(Of KeyValuePair(Of String, ImageCreatorDelegate))
 
         For Each url As String In links
-            'Dim re As Regex
+            For Each svc As ThumbnailService In ThumbnailServices
+                Dim args As New GetUrlArgs
+                args.url = url
+                args.imglist = imglist
+                If svc.urlCreator(args) Then
+                    ' URLに対応したサムネイル作成処理デリゲートをリストに登録
+                    dlg.Add(New KeyValuePair(Of String, ImageCreatorDelegate)(url, svc.imageCreator))
+                    Exit For
+                End If
+            Next
+        Next
+
+#If 0 Then
             Dim mc As Match
-            'imgur
-            mc = Regex.Match(url, "^http://imgur\.com/(\w+)\.jpg$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://i.imgur.com/${1}l.jpg")))
-                Continue For
-            End If
-            '画像拡張子で終わるURL（直リンク）
-            If IsDirectLink(url) Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, url))
-                Continue For
-            End If
+
+
             'twitpic
             mc = Regex.Match(url, "^http://(www\.)?twitpic\.com/(?<photoId>\w+)(/full/?)?$", RegexOptions.IgnoreCase)
             If mc.Success Then
@@ -259,6 +291,7 @@ Public Class Thumbnail
                 Continue For
             End If
         Next
+#End If
 
         If imglist.Count = 0 Then
             Owner.PreviewScrollBar.Maximum = 0
@@ -272,7 +305,7 @@ Public Class Thumbnail
         bgw = New BackgroundWorker()
         AddHandler bgw.DoWork, AddressOf bgw_DoWork
         AddHandler bgw.RunWorkerCompleted, AddressOf bgw_Completed
-        bgw.RunWorkerAsync(New PreviewData(id, imglist))
+        bgw.RunWorkerAsync(New PreviewData(id, imglist, dlg))
 
     End Sub
 
@@ -285,7 +318,7 @@ Public Class Thumbnail
             If String.IsNullOrEmpty(AddMsg) Then
                 Owner.SetStatusLabel("can't get Thumbnail.")
             Else
-                Owner.SetStatusLabel("can't get Thumbnail." + AddMsg)
+                Owner.SetStatusLabel("can't get Thumbnail.(" + AddMsg + ")")
             End If
         End If
     End Sub
@@ -298,8 +331,23 @@ Public Class Thumbnail
 
         ' pixiv,Flickr,piapro,フォト蔵,tumblrの解析もこちらでやる
         For Each url As KeyValuePair(Of String, String) In arg.urls
+            For Each svc As ThumbnailService In ThumbnailServices
+                Dim args As New CreateImageArgs
+                args.url = url
+                args.pics = arg.pics
+                args.tooltiptext = arg.tooltiptext
+                args.errmsg = ""
+                If arg.imageCreators.Item(arg.urls.IndexOf(url)).Value(args) Then
+                    Exit For
+                Else
+                    arg.AdditionalErrorMessage = args.errmsg
+                    arg.IsError = True
+                End If
+                Exit For
+            Next
+        Next
+#If 0 Then
             Dim http As New HttpVarious
-
             If IsDirectLink(url.Key) Then
                 ' 画像直リンク
                 Dim img As Image = http.GetImage(url.Value, url.Key)
@@ -673,6 +721,7 @@ Public Class Thumbnail
                 arg.tooltiptext.Add(New KeyValuePair(Of String, String)(url.Key, ""))
             End If
         Next
+#End If
         If arg.pics.Count = 0 Then
             arg.IsError = True
         Else
@@ -760,4 +809,132 @@ Public Class Thumbnail
             End If
         End If
     End Sub
+
+#Region "テンプレ"
+#If 0 Then
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function ServiceName_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://imgur\.com/(\w+)\.jpg$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://i.imgur.com/${1}l.jpg")))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function ServiceName_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+#End If
+#End Region
+
+#Region "ImgUr"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function ImgUr_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        Dim mc As Match = Regex.Match(args.url, "^http://imgur\.com/(\w+)\.jpg$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://i.imgur.com/${1}l.jpg")))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+
+    Private Function ImgUr_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+#End Region
+
+#Region "画像直リンク"
+    Private Function DirectLink_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        '画像拡張子で終わるURL（直リンク）
+        If IsDirectLink(args.url) Then
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, args.url))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+
+    Private Function DirectLink_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then Return False
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+#End Region
+
 End Class

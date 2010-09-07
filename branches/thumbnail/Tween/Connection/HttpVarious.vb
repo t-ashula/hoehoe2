@@ -26,22 +26,22 @@ Public Class HttpVarious
     End Function
 
     Public Overloads Function GetImage(ByVal url As Uri) As Image
-        Return GetImage(url.ToString, "", 10000)
+        Return GetImage(url.ToString, "", 10000, Nothing)
     End Function
 
     Public Overloads Function GetImage(ByVal url As String) As Image
-        Return GetImage(url, "", 10000)
+        Return GetImage(url, "", 10000, Nothing)
     End Function
 
     Public Overloads Function GetImage(ByVal url As String, ByVal timeout As Integer) As Image
-        Return GetImage(url, "", timeout)
+        Return GetImage(url, "", timeout, Nothing)
     End Function
 
     Public Overloads Function GetImage(ByVal url As String, ByVal referer As String) As Image
-        Return GetImage(url, referer, 10000)
+        Return GetImage(url, referer, 10000, Nothing)
     End Function
 
-    Public Overloads Function GetImage(ByVal url As String, ByVal referer As String, ByVal timeout As Integer) As Image
+    Public Overloads Function GetImage(ByVal url As String, ByVal referer As String, ByVal timeout As Integer, ByRef errmsg As String) As Image
         Try
             Dim req As HttpWebRequest = CreateRequest(GetMethod, New Uri(url), Nothing, False)
             If Not String.IsNullOrEmpty(referer) Then req.Referer = referer
@@ -52,6 +52,13 @@ Public Class HttpVarious
             End If
             Dim img As Bitmap = Nothing
             Dim ret As HttpStatusCode = GetResponse(req, img, Nothing, False)
+            If errmsg IsNot Nothing Then
+                If ret = HttpStatusCode.OK Then
+                    errmsg = ""
+                Else
+                    errmsg = ret.ToString
+                End If
+            End If
             If img IsNot Nothing Then img.Tag = url
             If ret = HttpStatusCode.OK Then Return CheckValidImage(img)
             Return Nothing
