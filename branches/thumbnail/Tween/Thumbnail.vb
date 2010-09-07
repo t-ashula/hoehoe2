@@ -75,8 +75,20 @@ Public Class Thumbnail
 
     Private ThumbnailServices As ThumbnailService() = {
         New ThumbnailService With {.Name = "ImgUr", .urlCreator = AddressOf ImgUr_GetUrl, .imageCreator = AddressOf ImgUr_CreateImage}, _
-        New ThumbnailService With {.Name = "DirectLink", .urlCreator = AddressOf DirectLink_GetUrl, .imageCreator = AddressOf DirectLink_CreateImage}
-        }
+        New ThumbnailService With {.Name = "DirectLink", .urlCreator = AddressOf DirectLink_GetUrl, .imageCreator = AddressOf DirectLink_CreateImage}, _
+        New ThumbnailService With {.Name = "TwitPic", .urlCreator = AddressOf TwitPic_GetUrl, .imageCreator = AddressOf TwitPic_CreateImage}, _
+        New ThumbnailService With {.Name = "yfrog", .urlCreator = AddressOf yfrog_GetUrl, .imageCreator = AddressOf yfrog_CreateImage}, _
+        New ThumbnailService With {.Name = "TweetPhoto", .urlCreator = AddressOf TweetPhoto_GetUrl, .imageCreator = AddressOf TweetPhoto_CreateImage}, _
+        New ThumbnailService With {.Name = "MobyPicture", .urlCreator = AddressOf MobyPicture_GetUrl, .imageCreator = AddressOf MobyPicture_CreateImage}, _
+        New ThumbnailService With {.Name = "携帯百景", .urlCreator = AddressOf MovaPic_GetUrl, .imageCreator = AddressOf MovaPic_CreateImage}, _
+        New ThumbnailService With {.Name = "はてなフォトライフ", .urlCreator = AddressOf Hatena_GetUrl, .imageCreator = AddressOf Hatena_CreateImage}, _
+        New ThumbnailService With {.Name = "PhotoShare/bctiny", .urlCreator = AddressOf PhotoShare_GetUrl, .imageCreator = AddressOf PhotoShare_CreateImage}, _
+        New ThumbnailService With {.Name = "img.ly", .urlCreator = AddressOf imgly_GetUrl, .imageCreator = AddressOf imgly_CreateImage}, _
+        New ThumbnailService With {.Name = "brightkite", .urlCreator = AddressOf brightkite_GetUrl, .imageCreator = AddressOf brightkite_CreateImage}, _
+        New ThumbnailService With {.Name = "Twitgoo", .urlCreator = AddressOf Twitgoo_GetUrl, .imageCreator = AddressOf Twitgoo_CreateImage}, _
+        New ThumbnailService With {.Name = "youtube", .urlCreator = AddressOf youtube_GetUrl, .imageCreator = AddressOf youtube_CreateImage}, _
+        New ThumbnailService With {.Name = "ニコニコ動画", .urlCreator = AddressOf nicovideo_GetUrl, .imageCreator = AddressOf nicovideo_CreateImage}
+    }
 
 
     Public Sub New(ByVal Owner As TweenMain)
@@ -142,48 +154,20 @@ Public Class Thumbnail
 
 
             'twitpic
-            mc = Regex.Match(url, "^http://(www\.)?twitpic\.com/(?<photoId>\w+)(/full/?)?$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://twitpic.com/show/thumb/${photoId}")))
-                Continue For
-            End If
+
             'yfrog
-            mc = Regex.Match(url, "^http://yfrog\.com/(\w+)$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, url + ".th.jpg"))
-                Continue For
-            End If
+
             'tweetphoto
-            Const comp As String = "http://TweetPhotoAPI.com/api/TPAPI.svc/imagefromurl?size=thumbnail&url="
-            If Regex.IsMatch(url, "^(http://tweetphoto\.com/[0-9]+|http://pic\.gd/[a-z0-9]+)$", RegexOptions.IgnoreCase) Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, comp + url))
-                Continue For
-            End If
+
             'Mobypicture
-            mc = Regex.Match(url, "^http://moby\.to/(\w+)$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://mobypicture.com/?${1}:small")))
-                Continue For
-            End If
+
             '携帯百景
-            mc = Regex.Match(url, "^http://movapic\.com/pic/(\w+)$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://image.movapic.com/pic/s_${1}.jpeg")))
-                Continue For
-            End If
+
             'はてなフォトライフ
-            mc = Regex.Match(url, "^http://f\.hatena\.ne\.jp/(([a-z])[a-z0-9_-]{1,30}[a-z0-9])/((\d{8})\d+)$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://img.f.hatena.ne.jp/images/fotolife/${2}/${1}/${4}/${3}_120.jpg")))
-                Continue For
-            End If
+
             'PhotoShare
-            mc = Regex.Match(url, "^http://(?:www\.)?bcphotoshare\.com/photos/\d+/(\d+)$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://images.bcphotoshare.com/storages/${1}/thumb180.jpg")))
-                Continue For
-            End If
-            'PhotoShare の短縮 URL
+
+            'PhotoShare の短縮 URL 動作未検証　あとで検証する
             mc = Regex.Match(url, "^http://bctiny\.com/p(\w+)$", RegexOptions.IgnoreCase)
             If mc.Success Then
                 Try
@@ -192,47 +176,19 @@ Public Class Thumbnail
                 Catch ex As ArgumentOutOfRangeException
                 End Try
             End If
+
             'img.ly
-            mc = Regex.Match(url, "^http://img\.ly/(\w+)$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://img.ly/show/thumb/${1}")))
-                Continue For
-            End If
+
             'brightkite
-            mc = Regex.Match(url, "^http://brightkite\.com/objects/((\w{2})(\w{2})\w+)$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://cdn.brightkite.com/${2}/${3}/${1}-feed.jpg")))
-                Continue For
-            End If
+ 
             'Twitgoo
-            mc = Regex.Match(url, "^http://twitgoo\.com/(\w+)$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://twitgoo.com/${1}/mini")))
-                Continue For
-            End If
-            'pic.im
-            mc = Regex.Match(url, "^http://pic\.im/(\w+)$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://pic.im/website/thumbnail/${1}")))
-                Continue For
-            End If
+
+            'pic.im  対応中止（ドメインがない?）
+
             'youtube
-            mc = Regex.Match(url, "^http://www\.youtube\.com/watch\?v=([\w\-]+)", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")))
-                Continue For
-            End If
-            mc = Regex.Match(url, "^http://youtu\.be/([\w\-]+)", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")))
-                Continue For
-            End If
+
             'ニコニコ
-            mc = Regex.Match(url, "^http://(?:(www|ext)\.nicovideo\.jp/watch|nico\.ms)/(?:sm|nm)?([0-9]+)(\?.+)?$", RegexOptions.IgnoreCase)
-            If mc.Success Then
-                imglist.Add(New KeyValuePair(Of String, String)(url, mc.Value))
-                Continue For
-            End If
+
             'pixiv
             '参考: http://tail.s68.xrea.com/blog/2009/02/pixivflash.html Pixivの画像をFlashとかで取得する方法など:しっぽのブログ
             'ユーザー向けの画像ページ http://www.pixiv.net/member_illust.php?mode=medium&illust_id=[ID番号]
@@ -349,11 +305,7 @@ Public Class Thumbnail
 #If 0 Then
             Dim http As New HttpVarious
             If IsDirectLink(url.Key) Then
-                ' 画像直リンク
-                Dim img As Image = http.GetImage(url.Value, url.Key)
-                If img Is Nothing Then Continue For
-                arg.pics.Add(New KeyValuePair(Of String, Image)(url.Key, img))
-                arg.tooltiptext.Add(New KeyValuePair(Of String, String)(url.Key, ""))
+
             ElseIf url.Key.StartsWith("http://www.pixiv.net/") Then
                 Dim src As String = ""
                 'illustIDをキャプチャ
@@ -935,6 +887,813 @@ Public Class Thumbnail
         args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
         Return True
     End Function
+#End Region
+
+#Region "TwitPic"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function TwitPic_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://(www\.)?twitpic\.com/(?<photoId>\w+)(/full/?)?$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://twitpic.com/show/thumb/${photoId}")))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function TwitPic_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "yfrog"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function yfrog_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://yfrog\.com/(\w+)$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, args.url + ".th.jpg"))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function yfrog_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "tweetphoto"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function TweetPhoto_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^(http://tweetphoto\.com/[0-9]+|http://pic\.gd/[a-z0-9]+)$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            Const comp As String = "http://TweetPhotoAPI.com/api/TPAPI.svc/imagefromurl?size=thumbnail&url="
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, comp + args.url))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function TweetPhoto_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "MobyPicture"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function MobyPicture_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://moby\.to/(\w+)$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://mobypicture.com/?${1}:small")))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function MobyPicture_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "携帯百景"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function MovaPic_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://movapic\.com/pic/(\w+)$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://image.movapic.com/pic/s_${1}.jpeg")))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function MovaPic_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "はてなフォトライフ"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function Hatena_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://f\.hatena\.ne\.jp/(([a-z])[a-z0-9_-]{1,30}[a-z0-9])/((\d{8})\d+)$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://img.f.hatena.ne.jp/images/fotolife/${2}/${1}/${4}/${3}_120.jpg")))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function Hatena_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "PhotoShare"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function PhotoShare_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://(?:www\.)?bcphotoshare\.com/photos/\d+/(\d+)$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://images.bcphotoshare.com/storages/${1}/thumb180.jpg")))
+            Return True
+        End If
+        ' 短縮URL
+        mc = Regex.Match(args.url, "^http://bctiny\.com/p(\w+)$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            Try
+                args.imglist.Add(New KeyValuePair(Of String, String)(args.url, "http://images.bcphotoshare.com/storages/" + RadixConvert.ToInt32(mc.Result("${1}"), 32).ToString + "/thumb180.jpg"))
+                Return True
+            Catch ex As ArgumentOutOfRangeException
+            End Try
+        End If
+        Return False
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function PhotoShare_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "img.ly"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function imgly_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://img\.ly/(\w+)$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://img.ly/show/thumb/${1}")))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function imgly_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "brightkite"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function brightkite_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://brightkite\.com/objects/((\w{2})(\w{2})\w+)$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://cdn.brightkite.com/${2}/${3}/${1}-feed.jpg")))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function brightkite_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "Twitgoo"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function Twitgoo_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://twitgoo\.com/(\w+)$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://twitgoo.com/${1}/mini")))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function Twitgoo_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "youtube"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function youtube_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://www\.youtube\.com/watch\?v=([\w\-]+)", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")))
+            Return True
+        End If
+        mc = Regex.Match(args.url, "^http://youtu\.be/([\w\-]+)", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")))
+            Return True
+        End If
+        Return False
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function youtube_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        ' 参考
+        ' http://code.google.com/intl/ja/apis/youtube/2.0/developers_guide_protocol_video_entries.html
+        ' デベロッパー ガイド: Data API プロトコル - 単独の動画情報の取得 - YouTube の API とツール - Google Code
+        ' http://code.google.com/intl/ja/apis/youtube/2.0/developers_guide_protocol_understanding_video_feeds.html#Understanding_Feeds_and_Entries 
+        ' デベロッパー ガイド: Data API プロトコル - 動画のフィードとエントリについて - YouTube の API とツール - Google Code
+        Dim http As New HttpVarious
+        Dim videourl As String = (New HttpVarious).GetRedirectTo(args.url.Key)
+        Dim mc As Match = Regex.Match(videourl, "^http://(?:(www\.youtube\.com)|(youtu\.be))/(watch\?v=)?(?<videoid>([\w\-]+))", RegexOptions.IgnoreCase)
+        If videourl.StartsWith("http://www.youtube.com/index?ytsession=") Then
+            videourl = args.url.Key
+            mc = Regex.Match(videourl, "^http://(?:(www\.youtube\.com)|(youtu\.be))/(watch\?v=)?(?<videoid>([\w\-]+))", RegexOptions.IgnoreCase)
+        End If
+        If mc.Success Then
+            Dim apiurl As String = "http://gdata.youtube.com/feeds/api/videos/" + mc.Groups("videoid").Value
+            Dim imgurl As String = args.url.Value
+            Dim src As String = ""
+            If (New HttpVarious).GetData(apiurl, Nothing, src, 5000) Then
+                Dim sb As New StringBuilder
+                Dim xdoc As New XmlDocument
+                Try
+                    xdoc.LoadXml(src)
+                    Dim nsmgr As New XmlNamespaceManager(xdoc.NameTable)
+                    nsmgr.AddNamespace("root", "http://www.w3.org/2005/Atom")
+                    nsmgr.AddNamespace("app", "http://purl.org/atom/app#")
+                    nsmgr.AddNamespace("media", "http://search.yahoo.com/mrss/")
+
+                    Dim xentryNode As XmlNode = xdoc.DocumentElement.SelectSingleNode("/root:entry/media:group", nsmgr)
+                    Dim xentry As XmlElement = CType(xentryNode, XmlElement)
+                    Dim tmp As String = ""
+                    Try
+                        tmp = xentry.Item("media:title").InnerText
+                        If Not String.IsNullOrEmpty(tmp) Then
+                            sb.Append("タイトル:")
+                            sb.Append(tmp)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+                    End Try
+
+                    Try
+                        Dim sec As Integer = 0
+                        If Integer.TryParse(xentry.Item("yt:duration").Attributes("seconds").Value, sec) Then
+                            sb.Append("再生時間:")
+                            sb.AppendFormat("{0:d}:{1:d2}", sec \ 60, sec Mod 60)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+                    End Try
+
+                    Try
+                        Dim tmpdate As New DateTime
+                        xentry = CType(xdoc.DocumentElement.SelectSingleNode("/root:entry", nsmgr), XmlElement)
+                        If DateTime.TryParse(xentry.Item("published").InnerText, tmpdate) Then
+                            sb.Append("投稿日時:")
+                            sb.Append(tmpdate)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+                    End Try
+
+                    Try
+                        Dim count As Integer = 0
+                        xentry = CType(xdoc.DocumentElement.SelectSingleNode("/root:entry", nsmgr), XmlElement)
+                        tmp = xentry.Item("yt:statistics").Attributes("viewCount").Value
+                        If Integer.TryParse(tmp, count) Then
+                            sb.Append("再生数:")
+                            sb.Append(tmp)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+                    End Try
+
+                    Try
+                        xentry = CType(xdoc.DocumentElement.SelectSingleNode("/root:entry/app:control", nsmgr), XmlElement)
+                        If xentry IsNot Nothing Then
+                            sb.Append(xentry.Item("yt:state").Attributes("name").Value)
+                            sb.Append(":")
+                            sb.Append(xentry.Item("yt:state").InnerText)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+                    End Try
+
+                    mc = Regex.Match(videourl, "^http://www\.youtube\.com/watch\?v=([\w\-]+)", RegexOptions.IgnoreCase)
+                    If mc.Success Then
+                        imgurl = mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")
+                    End If
+                    mc = Regex.Match(videourl, "^http://youtu\.be/([\w\-]+)", RegexOptions.IgnoreCase)
+                    If mc.Success Then
+                        imgurl = mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")
+                    End If
+
+                Catch ex As Exception
+
+                End Try
+
+                If Not String.IsNullOrEmpty(imgurl) Then
+                    Dim _img As Image = http.GetImage(imgurl, videourl, 10000, args.errmsg)
+                    If _img Is Nothing Then Return False
+                    args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, _img))
+                    args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, sb.ToString.Trim()))
+                End If
+            End If
+
+        End If
+        Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
+        If img Is Nothing Then
+            Return False
+        End If
+        ' 成功した場合はURLに対応する画像、ツールチップテキストを登録
+        args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, img))
+        args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
+        Return True
+    End Function
+
+#End Region
+
+#Region "ニコニコ動画"
+    ''' <summary>
+    ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class GetUrlArgs
+    '''                                 args.url        URL文字列
+    '''                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
+    ''' </param>
+    ''' <returns>成功した場合True,失敗の場合False</returns>
+    ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
+
+    Private Function nicovideo_GetUrl(ByVal args As GetUrlArgs) As Boolean
+        ' TODO URL判定処理を記述
+        Dim mc As Match = Regex.Match(args.url, "^http://(?:(www|ext)\.nicovideo\.jp/watch|nico\.ms)/(?:sm|nm)?([0-9]+)(\?.+)?$", RegexOptions.IgnoreCase)
+        If mc.Success Then
+            ' TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Value))
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
+    ''' </summary>
+    ''' <param name="args">Class CreateImageArgs
+    '''                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
+    '''                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
+    '''                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
+    '''                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
+    ''' </param>
+    ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
+    ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
+    ''' <remarks></remarks>
+    Private Function nicovideo_CreateImage(ByVal args As CreateImageArgs) As Boolean
+        ' TODO: サムネイル画像読み込み処理を記述します
+        Dim http As New HttpVarious
+        Dim mc As Match = Regex.Match(args.url.Value, "^http://(?:(www|ext)\.nicovideo\.jp/watch|nico\.ms)/(?<id>(?:sm|nm)?([0-9]+))(\?.+)?$", RegexOptions.IgnoreCase)
+        Dim apiurl As String = "http://www.nicovideo.jp/api/getthumbinfo/" + mc.Groups("id").Value
+        Dim src As String = ""
+        Dim imgurl As String = ""
+        Dim headers As New Dictionary(Of String, String)
+        headers.Add("User-Agent", "Tween/" + fileVersion)
+        If (New HttpVarious).GetData(apiurl, headers, src, 0, args.errmsg) Then
+            Dim sb As New StringBuilder
+            Dim xdoc As New XmlDocument
+            Try
+                xdoc.LoadXml(src)
+                Dim status As String = xdoc.SelectSingleNode("/nicovideo_thumb_response").Attributes("status").Value
+                If status = "ok" Then
+                    imgurl = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/thumbnail_url").InnerText
+
+                    'ツールチップに動画情報をセットする
+                    Dim tmp As String
+
+                    Try
+                        tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/title").InnerText
+                        If Not String.IsNullOrEmpty(tmp) Then
+                            sb.Append(My.Resources.NiconicoInfoText1)
+                            sb.Append(tmp)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+
+                    End Try
+
+                    Try
+                        tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/length").InnerText
+                        If Not String.IsNullOrEmpty(tmp) Then
+                            sb.Append(My.Resources.NiconicoInfoText2)
+                            sb.Append(tmp)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+
+                    End Try
+
+                    Try
+                        Dim tm As New DateTime
+                        tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/first_retrieve").InnerText
+                        If DateTime.TryParse(tmp, tm) Then
+                            sb.Append(My.Resources.NiconicoInfoText3)
+                            sb.Append(tm.ToString)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+
+                    End Try
+
+                    Try
+                        tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/view_counter").InnerText
+                        If Not String.IsNullOrEmpty(tmp) Then
+                            sb.Append(My.Resources.NiconicoInfoText4)
+                            sb.Append(tmp)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+
+                    End Try
+
+                    Try
+                        tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/comment_num").InnerText
+                        If Not String.IsNullOrEmpty(tmp) Then
+                            sb.Append(My.Resources.NiconicoInfoText5)
+                            sb.Append(tmp)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+
+                    End Try
+                    Try
+                        tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/mylist_counter").InnerText
+                        If Not String.IsNullOrEmpty(tmp) Then
+                            sb.Append(My.Resources.NiconicoInfoText6)
+                            sb.Append(tmp)
+                            sb.AppendLine()
+                        End If
+                    Catch ex As Exception
+
+                    End Try
+
+                ElseIf status = "fail" Then
+                    Dim errcode As String = xdoc.SelectSingleNode("/nicovideo_thumb_response/error/code").InnerText
+                    args.errmsg = errcode
+                    imgurl = ""
+                Else
+                    args.errmsg = "UnknownResponse"
+                    imgurl = ""
+                End If
+
+            Catch ex As Exception
+                imgurl = ""
+                args.errmsg = "Invalid XML"
+            End Try
+
+            If Not String.IsNullOrEmpty(imgurl) Then
+                Dim _img As Image = http.GetImage(imgurl, args.url.Key, 0, args.errmsg)
+                If _img Is Nothing Then Return False
+                args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, _img))
+                args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, sb.ToString.Trim()))
+                Return True
+            End If
+        End If
+        Return False
+    End Function
+
 #End Region
 
 End Class
