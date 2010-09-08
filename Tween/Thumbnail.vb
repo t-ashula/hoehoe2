@@ -75,15 +75,13 @@ Public Class Thumbnail
 
     ' TODO: 次の動作が未検証なので要検証
     ' bctiny.com(ShortUrl.vbのバグ修正が必要)
-    ' Pixiv R-18/R-18Gタグ画像
-    ' flickr フォト蔵 TwitVideo PiaPro ついっぷるフォト mypix/shamojiの各サービス
 
     Private ThumbnailServices As ThumbnailService() = {
         New ThumbnailService With {.Name = "ImgUr", .urlCreator = AddressOf ImgUr_GetUrl, .imageCreator = AddressOf ImgUr_CreateImage}, _
         New ThumbnailService With {.Name = "DirectLink", .urlCreator = AddressOf DirectLink_GetUrl, .imageCreator = AddressOf DirectLink_CreateImage}, _
         New ThumbnailService With {.Name = "TwitPic", .urlCreator = AddressOf TwitPic_GetUrl, .imageCreator = AddressOf TwitPic_CreateImage}, _
         New ThumbnailService With {.Name = "yfrog", .urlCreator = AddressOf yfrog_GetUrl, .imageCreator = AddressOf yfrog_CreateImage}, _
-        New ThumbnailService With {.Name = "TweetPhoto", .urlCreator = AddressOf TweetPhoto_GetUrl, .imageCreator = AddressOf TweetPhoto_CreateImage}, _
+        New ThumbnailService With {.Name = "Plixi(TweetPhoto)", .urlCreator = AddressOf Plixi_GetUrl, .imageCreator = AddressOf Plixi_CreateImage}, _
         New ThumbnailService With {.Name = "MobyPicture", .urlCreator = AddressOf MobyPicture_GetUrl, .imageCreator = AddressOf MobyPicture_CreateImage}, _
         New ThumbnailService With {.Name = "携帯百景", .urlCreator = AddressOf MovaPic_GetUrl, .imageCreator = AddressOf MovaPic_CreateImage}, _
         New ThumbnailService With {.Name = "はてなフォトライフ", .urlCreator = AddressOf Hatena_GetUrl, .imageCreator = AddressOf Hatena_CreateImage}, _
@@ -527,7 +525,7 @@ Public Class Thumbnail
 
 #End Region
 
-#Region "tweetphoto"
+#Region "Plixi(TweetPhoto)"
     ''' <summary>
     ''' URL解析部で呼び出されるサムネイル画像URL作成デリゲート
     ''' </summary>
@@ -538,12 +536,12 @@ Public Class Thumbnail
     ''' <returns>成功した場合True,失敗の場合False</returns>
     ''' <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-    Private Function TweetPhoto_GetUrl(ByVal args As GetUrlArgs) As Boolean
+    Private Function Plixi_GetUrl(ByVal args As GetUrlArgs) As Boolean
         ' TODO URL判定処理を記述
-        Dim mc As Match = Regex.Match(args.url, "^(http://tweetphoto\.com/[0-9]+|http://pic\.gd/[a-z0-9]+)$", RegexOptions.IgnoreCase)
+        Dim mc As Match = Regex.Match(args.url, "^(http://tweetphoto\.com/[0-9]+|http://pic\.gd/[a-z0-9]+|http://plixi\.com/p/[0-9]+)$", RegexOptions.IgnoreCase)
         If mc.Success Then
             ' TODO 成功時はサムネイルURLを作成しimglist.Addする
-            Const comp As String = "http://TweetPhotoAPI.com/api/TPAPI.svc/imagefromurl?size=thumbnail&url="
+            Const comp As String = "http://api.plixi.com/api/tpapi.svc/imagefromurl?size=thumbnail&url="
             args.imglist.Add(New KeyValuePair(Of String, String)(args.url, comp + args.url))
             Return True
         Else
@@ -563,7 +561,7 @@ Public Class Thumbnail
     ''' <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
     ''' なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
     ''' <remarks></remarks>
-    Private Function TweetPhoto_CreateImage(ByVal args As CreateImageArgs) As Boolean
+    Private Function Plixi_CreateImage(ByVal args As CreateImageArgs) As Boolean
         ' TODO: サムネイル画像読み込み処理を記述します
         Dim img As Image = (New HttpVarious).GetImage(args.url.Value, args.url.Key, 10000, args.errmsg)
         If img Is Nothing Then
@@ -1294,6 +1292,8 @@ Public Class Thumbnail
                     args.pics.Add(New KeyValuePair(Of String, Image)(args.url.Key, _img))
                     args.tooltiptext.Add(New KeyValuePair(Of String, String)(args.url.Key, ""))
                     Return True
+                ElseIf Regex.Match(src, "メール認証が必要です").Success Then
+                    args.errmsg = "NotSupported"
                 Else
                     args.errmsg = "Pattern NotFound"
                 End If
