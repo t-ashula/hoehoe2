@@ -981,7 +981,7 @@ Public Class TweenMain
         End If
 
         'アイコンリスト作成
-        TIconDic = New ImageCacheDictionary(1000)
+        TIconDic = New ImageDictionary(1000)
 
         tw.DetailIcon = TIconDic
 
@@ -3693,10 +3693,10 @@ Public Class TweenMain
         Dim itm As ImageListViewItem
         If Post.RetweetedId = 0 Then
             Dim sitem() As String = {"", Post.Nickname, Post.Data, Post.PDate.ToString(SettingDialog.DateTimeFormat), Post.Name, "", mk, Post.Source}
-            itm = New ImageListViewItem(sitem, DirectCast(Me.TIconDic, ImageCacheDictionary), Post.ImageUrl)
+            itm = New ImageListViewItem(sitem, DirectCast(Me.TIconDic, ImageDictionary), Post.ImageUrl)
         Else
             Dim sitem() As String = {"", Post.Nickname, Post.Data, Post.PDate.ToString(SettingDialog.DateTimeFormat), Post.Name + "(RT:" + Post.RetweetedBy + ")", "", mk, Post.Source}
-            itm = New ImageListViewItem(sitem, DirectCast(Me.TIconDic, ImageCacheDictionary), Post.ImageUrl)
+            itm = New ImageListViewItem(sitem, DirectCast(Me.TIconDic, ImageDictionary), Post.ImageUrl)
         End If
 
         Dim read As Boolean = Post.IsRead
