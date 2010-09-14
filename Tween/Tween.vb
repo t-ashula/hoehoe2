@@ -981,7 +981,7 @@ Public Class TweenMain
         End If
 
         'アイコンリスト作成
-        TIconDic = New ImageCacheDictionary(Path.Combine(Path.GetTempPath(), "Tween" + Environment.TickCount.ToString()), 3000)
+        TIconDic = New ImageCacheDictionary(500)
 
         tw.DetailIcon = TIconDic
 
@@ -3693,14 +3693,10 @@ Public Class TweenMain
         Dim itm As ImageListViewItem
         If Post.RetweetedId = 0 Then
             Dim sitem() As String = {"", Post.Nickname, Post.Data, Post.PDate.ToString(SettingDialog.DateTimeFormat), Post.Name, "", mk, Post.Source}
-            itm = New ImageListViewItem(sitem, Post.ImageUrl)
+            itm = New ImageListViewItem(sitem, DirectCast(Me.TIconDic, ImageCacheDictionary), Post.ImageUrl)
         Else
             Dim sitem() As String = {"", Post.Nickname, Post.Data, Post.PDate.ToString(SettingDialog.DateTimeFormat), Post.Name + "(RT:" + Post.RetweetedBy + ")", "", mk, Post.Source}
-            itm = New ImageListViewItem(sitem, Post.ImageUrl)
-        End If
-
-        If tw.DetailIcon.ContainsKey(Post.ImageUrl) Then
-            itm.Image = DirectCast(tw.DetailIcon, ImageCacheDictionary).GetItemCopy(Post.ImageUrl)
+            itm = New ImageListViewItem(sitem, DirectCast(Me.TIconDic, ImageCacheDictionary), Post.ImageUrl)
         End If
 
         Dim read As Boolean = Post.IsRead
@@ -7472,7 +7468,7 @@ RETRY:
             Dim i As Integer = 0
             Do While (_waitTimeline OrElse _waitReply OrElse _waitDm OrElse _waitFav OrElse _waitPubSearch OrElse _waitLists) AndAlso Not _endingFlag
                 System.Threading.Thread.Sleep(100)
-                My.Application.DoEvents()
+                'My.Application.DoEvents()
                 i += 1
                 If i > 50 Then
                     If _endingFlag Then
