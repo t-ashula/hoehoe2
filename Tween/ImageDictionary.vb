@@ -63,6 +63,7 @@ Public Class ImageDictionary
                                     Me.innerDictionary(key) = dlImage
                                     callBack(dlImage)
                                 End Sub
+                    imgDlProc.BeginInvoke(Nothing, Nothing)
                 End If
             End SyncLock
 
