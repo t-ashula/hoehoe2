@@ -4214,7 +4214,14 @@ RETRY:
             NameLabel.Text += " (RT:" + _curPost.RetweetedBy + ")"
         End If
         If Not String.IsNullOrEmpty(_curPost.ImageUrl) AndAlso TIconDic.ContainsKey(_curPost.ImageUrl) Then
-            UserPicture.Image = TIconDic(_curPost.ImageUrl)
+            Static img As Image = Nothing
+            Dim dummy As Image = DirectCast(TIconDic, ImageDictionary)(_curPost.ImageUrl, Sub(getImg)
+                                                                                              If img IsNot Nothing Then img.Dispose()
+                                                                                              img = New Bitmap(getImg)
+                                                                                              Me.Invoke(Sub()
+                                                                                                            Me.UserPicture.Image = img
+                                                                                                        End Sub)
+                                                                                          End Sub)
         Else
             UserPicture.Image = Nothing
         End If
