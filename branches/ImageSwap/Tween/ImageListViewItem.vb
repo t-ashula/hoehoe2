@@ -11,16 +11,11 @@
         MyBase.New(items, ImageKey)
 
         Dim dummy As Image = imageDictionary.Item(imageKey, Sub(getImg)
-                                                                Dim bmp As New Bitmap(getImg.Width, getImg.Height)
-                                                                Using g As Graphics = Graphics.FromImage(bmp)
-                                                                    g.InterpolationMode = Drawing2D.InterpolationMode.High
-                                                                    g.DrawImage(getImg, New Rectangle(0, 0, bmp.Width, bmp.Height))
-                                                                    Me.img = bmp
-
-                                                                    If Me.ListView IsNot Nothing Then Me.ListView.Invoke(Sub()
-                                                                                                                             Me.ListView.RedrawItems(Me.Index, Me.Index, False)
-                                                                                                                         End Sub)
-                                                                End Using
+                                                                If getImg Is Nothing Then Exit Sub
+                                                                Me.img = New Bitmap(getImg)
+                                                                If Me.ListView IsNot Nothing Then Me.ListView.Invoke(Sub()
+                                                                                                                         Me.ListView.RedrawItems(Me.Index, Me.Index, False)
+                                                                                                                     End Sub)
                                                             End Sub)
     End Sub
 

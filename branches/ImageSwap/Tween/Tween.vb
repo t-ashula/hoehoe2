@@ -981,7 +981,7 @@ Public Class TweenMain
         End If
 
         'アイコンリスト作成
-        TIconDic = New ImageCacheDictionary(500)
+        TIconDic = New ImageCacheDictionary(1000)
 
         tw.DetailIcon = TIconDic
 
