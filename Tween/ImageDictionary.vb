@@ -78,9 +78,9 @@ Public Class ImageDictionary
                 If Me.sortedKeyList.Count > Me.memoryCacheCount Then
                     Dim disposeKey As String = Me.sortedKeyList(Me.sortedKeyList.Count - Me.memoryCacheCount - 1)
                     Me.fileCacheProcList.Enqueue(Sub()
-                                                     If Me.innerDictionary(key) IsNot Nothing Then
-                                                         Me.innerDictionary(key).Dispose()
-                                                         Me.innerDictionary(key) = Nothing
+                                                     If Me.innerDictionary(disposeKey) IsNot Nothing Then
+                                                         Me.innerDictionary(disposeKey).Dispose()
+                                                         Me.innerDictionary(disposeKey) = Nothing
                                                      End If
                                                  End Sub)
                 End If
