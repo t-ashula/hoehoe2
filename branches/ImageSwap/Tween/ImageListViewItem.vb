@@ -17,9 +17,9 @@
                                                                     g.DrawImage(getImg, New Rectangle(0, 0, bmp.Width, bmp.Height))
                                                                     Me.img = bmp
 
-                                                                    Me.ListView.Invoke(Sub()
-                                                                                           Me.ListView.RedrawItems(Me.Index, Me.Index, False)
-                                                                                       End Sub)
+                                                                    If Me.ListView IsNot Nothing Then Me.ListView.Invoke(Sub()
+                                                                                                                             Me.ListView.RedrawItems(Me.Index, Me.Index, False)
+                                                                                                                         End Sub)
                                                                 End Using
                                                             End Sub)
     End Sub

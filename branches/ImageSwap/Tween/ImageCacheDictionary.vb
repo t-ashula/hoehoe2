@@ -206,23 +206,21 @@ Public Class ImageCacheDictionary
         End Sub
 
         Public Sub BeginGetImage(ByVal callBack As Action(Of Image))
-            Dim imgDlProc As Threading.ThreadStart = Nothing
             SyncLock Me.lockObject
                 If Me.Image IsNot Nothing Then
                     callBack(Me.Image)
                 Else
+                    Dim imgDlProc As Threading.ThreadStart = Nothing
                     imgDlProc = Sub()
-                                    SyncLock Me.lockObject
-                                        Dim hv As New HttpVarious()
-                                        Dim dlImage As Image = hv.GetImage(Me.imageUrl, 10000)
-                                        Me.Image = dlImage
-                                        callBack(dlImage)
-                                    End SyncLock
+                                    Dim hv As New HttpVarious()
+                                    Dim dlImage As Image = hv.GetImage(Me.imageUrl, 10000)
+                                    Me.Image = dlImage
+                                    callBack(dlImage)
                                 End Sub
 
+                    imgDlProc.BeginInvoke(Nothing, Nothing)
                 End If
             End SyncLock
-            imgDlProc.BeginInvoke(Nothing, Nothing)
         End Sub
 
         Public Sub Cache()
