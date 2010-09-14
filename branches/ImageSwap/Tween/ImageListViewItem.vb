@@ -7,8 +7,8 @@
 
     End Sub
 
-    Public Sub New(ByVal items() As String, ByVal imageDictionary As ImageCacheDictionary, ByVal imageKey As String)
-        MyBase.New(items, ImageKey)
+    Public Sub New(ByVal items() As String, ByVal imageDictionary As ImageDictionary, ByVal imageKey As String)
+        MyBase.New(items, imageKey)
 
         Dim dummy As Image = imageDictionary.Item(imageKey, Sub(getImg)
                                                                 If getImg Is Nothing Then Exit Sub
