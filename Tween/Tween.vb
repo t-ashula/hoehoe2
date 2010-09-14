@@ -356,7 +356,7 @@ Public Class TweenMain
         If _bwFollower IsNot Nothing Then
             _bwFollower.Dispose()
         End If
-        DirectCast(TIconDic, IDisposable).Dispose()
+        If TIconDic IsNot Nothing Then DirectCast(TIconDic, IDisposable).Dispose()
     End Sub
 
     Private Sub LoadIcon(ByRef IconInstance As Icon, ByVal FileName As String)
@@ -7468,7 +7468,7 @@ RETRY:
             Dim i As Integer = 0
             Do While (_waitTimeline OrElse _waitReply OrElse _waitDm OrElse _waitFav OrElse _waitPubSearch OrElse _waitLists) AndAlso Not _endingFlag
                 System.Threading.Thread.Sleep(100)
-                'My.Application.DoEvents()
+                My.Application.DoEvents()
                 i += 1
                 If i > 50 Then
                     If _endingFlag Then
