@@ -9,7 +9,6 @@ Public Class ImageDictionary
     Private memoryCacheCount As Integer
     Private innerDictionary As Dictionary(Of String, Image)
     Private sortedKeyList As List(Of String)    '古いもの順
-    Private fileCacheProcList As New Queue(Of Threading.ThreadStart)
 
     Public Sub New(ByVal memoryCacheCount As Integer)
         SyncLock Me.lockObject
@@ -27,14 +26,7 @@ Public Class ImageDictionary
         SyncLock Me.lockObject
             Me.innerDictionary.Add(key, value)
             Me.sortedKeyList.Add(key)
-
-            If Me.innerDictionary.Count > Me.memoryCacheCount Then
-                Me.DisposeImage(Me.sortedKeyList(Me.sortedKeyList.Count - Me.memoryCacheCount - 1))
-            End If
-
-            While Me.fileCacheProcList.Count > 0
-                Me.fileCacheProcList.Dequeue().Invoke()
-            End While
+            Me.DisposeImage()
         End SyncLock
     End Sub
 
@@ -53,6 +45,8 @@ Public Class ImageDictionary
     Default ReadOnly Property Item(ByVal key As String, ByVal callBack As Action(Of Image)) As Image
         Get
             SyncLock Me.lockObject
+                Me.sortedKeyList.Remove(key)
+                Me.sortedKeyList.Add(key)
                 If Me.innerDictionary(key) IsNot Nothing Then
                     callBack(Me.innerDictionary(key))
                 Else
@@ -65,9 +59,10 @@ Public Class ImageDictionary
                                 End Sub
                     imgDlProc.BeginInvoke(Nothing, Nothing)
                 End If
+                Me.DisposeImage()
             End SyncLock
 
-            Return Me.innerDictionary(key)
+            Return Nothing
         End Get
     End Property
 
@@ -76,15 +71,7 @@ Public Class ImageDictionary
             SyncLock Me.lockObject
                 Me.sortedKeyList.Remove(key)
                 Me.sortedKeyList.Add(key)
-                If Me.sortedKeyList.Count > Me.memoryCacheCount Then
-                    Dim disposeKey As String = Me.sortedKeyList(Me.sortedKeyList.Count - Me.memoryCacheCount - 1)
-                    Me.fileCacheProcList.Enqueue(Sub()
-                                                     If Me.innerDictionary(disposeKey) IsNot Nothing Then
-                                                         Me.innerDictionary(disposeKey).Dispose()
-                                                         Me.innerDictionary(disposeKey) = Nothing
-                                                     End If
-                                                 End Sub)
-                End If
+                Me.DisposeImage()
                 Return Me.innerDictionary(key)
             End SyncLock
         End Get
@@ -92,9 +79,7 @@ Public Class ImageDictionary
             SyncLock Me.lockObject
                 Me.sortedKeyList.Remove(key)
                 Me.sortedKeyList.Add(key)
-                If Me.sortedKeyList.Count > Me.memoryCacheCount Then
-                    Me.DisposeImage(Me.sortedKeyList(Me.sortedKeyList.Count - Me.memoryCacheCount - 1))
-                End If
+                Me.DisposeImage()
                 Me.innerDictionary(key).Dispose()
                 Me.innerDictionary(key) = value
             End SyncLock
@@ -199,10 +184,13 @@ Public Class ImageDictionary
         End SyncLock
     End Sub
 
-    Private Sub DisposeImage(ByVal key As String)
-        If Me.innerDictionary(key) IsNot Nothing Then
-            Me.innerDictionary(key).Dispose()
-            Me.innerDictionary(key) = Nothing
+    Private Sub DisposeImage()
+        If Me.sortedKeyList.Count > Me.memoryCacheCount Then
+            Dim key As String = Me.sortedKeyList(Me.sortedKeyList.Count - Me.memoryCacheCount - 1)
+            If Me.innerDictionary(key) IsNot Nothing Then
+                Me.innerDictionary(key).Dispose()
+                Me.innerDictionary(key) = Nothing
+            End If
         End If
     End Sub
 
