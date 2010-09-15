@@ -981,7 +981,7 @@ Public Class TweenMain
         End If
 
         'アイコンリスト作成
-        TIconDic = New ImageDictionary(1000)
+        TIconDic = New ImageDictionary(50)
 
         tw.DetailIcon = TIconDic
 
@@ -5816,6 +5816,16 @@ RETRY:
         Static blinkCnt As Integer = 0
         Static blink As Boolean = False
         Static idle As Boolean = False
+
+        Static iconDlCurTab As TabPage = Nothing
+        Static iconDlListTopItem As ListViewItem = Nothing
+        If iconDlCurTab Is ListTab.SelectedTab AndAlso DirectCast(ListTab.SelectedTab.Tag, ListView).TopItem Is iconDlListTopItem Then
+            DirectCast(Me.TIconDic, ImageDictionary).PauseGetImage = False
+        Else
+            DirectCast(Me.TIconDic, ImageDictionary).PauseGetImage = True
+        End If
+        iconDlCurTab = ListTab.SelectedTab
+        iconDlListTopItem = DirectCast(ListTab.SelectedTab.Tag, ListView).TopItem
 
         iconCnt += 1
         blinkCnt += 1
