@@ -9,12 +9,15 @@ Public Class ImageDictionary
     Private memoryCacheCount As Integer
     Private innerDictionary As Dictionary(Of String, Image)
     Private sortedKeyList As List(Of String)    '古いもの順
+    Private waitStack As Stack(Of KeyValuePair(Of String, Action(Of Image)))
 
     Public Sub New(ByVal memoryCacheCount As Integer)
         SyncLock Me.lockObject
             Me.innerDictionary = New Dictionary(Of String, Image)(memoryCacheCount + 1)
             Me.sortedKeyList = New List(Of String)(memoryCacheCount + 1)
             Me.memoryCacheCount = memoryCacheCount
+            Me.workingList = New List(Of String)
+            Me.waitStack = New Stack(Of KeyValuePair(Of String, Action(Of Image)))
         End SyncLock
     End Sub
 
@@ -26,7 +29,7 @@ Public Class ImageDictionary
         SyncLock Me.lockObject
             Me.innerDictionary.Add(key, value)
             Me.sortedKeyList.Add(key)
-            Me.DisposeImage()
+            Me.DisposeOldImage()
         End SyncLock
     End Sub
 
@@ -50,16 +53,18 @@ Public Class ImageDictionary
                 If Me.innerDictionary(key) IsNot Nothing Then
                     callBack(Me.innerDictionary(key))
                 Else
-                    Dim imgDlProc As Threading.ThreadStart = Nothing
-                    imgDlProc = Sub()
-                                    Dim hv As New HttpVarious()
-                                    Dim dlImage As Image = hv.GetImage(key, 10000)
-                                    Me.innerDictionary(key) = dlImage
-                                    callBack(dlImage)
-                                End Sub
-                    imgDlProc.BeginInvoke(Nothing, Nothing)
+                    Dim downloadAsyncInfo As New KeyValuePair(Of String, Action(Of Image))(key, callBack)
+                    If Me._pauseGetImage Then
+                        '取得一時停止の場合はスタックに積む
+                        Me.waitStack.Push(downloadAsyncInfo)
+                    Else
+                        Dim imgDlProc As New Action(Of KeyValuePair(Of String, Action(Of Image)))(Sub(kvp)
+                                                                                                      Me.GetImage(kvp)
+                                                                                                  End Sub)
+                        imgDlProc.BeginInvoke(downloadAsyncInfo, Nothing, Nothing)
+                    End If
                 End If
-                Me.DisposeImage()
+                Me.DisposeOldImage()
             End SyncLock
 
             Return Nothing
@@ -71,7 +76,7 @@ Public Class ImageDictionary
             SyncLock Me.lockObject
                 Me.sortedKeyList.Remove(key)
                 Me.sortedKeyList.Add(key)
-                Me.DisposeImage()
+                Me.DisposeOldImage()
                 Return Me.innerDictionary(key)
             End SyncLock
         End Get
@@ -79,7 +84,7 @@ Public Class ImageDictionary
             SyncLock Me.lockObject
                 Me.sortedKeyList.Remove(key)
                 Me.sortedKeyList.Add(key)
-                Me.DisposeImage()
+                Me.DisposeOldImage()
                 Me.innerDictionary(key).Dispose()
                 Me.innerDictionary(key) = value
             End SyncLock
@@ -184,7 +189,7 @@ Public Class ImageDictionary
         End SyncLock
     End Sub
 
-    Private Sub DisposeImage()
+    Private Sub DisposeOldImage()
         If Me.sortedKeyList.Count > Me.memoryCacheCount Then
             Dim key As String = Me.sortedKeyList(Me.sortedKeyList.Count - Me.memoryCacheCount - 1)
             If Me.innerDictionary(key) IsNot Nothing Then
@@ -194,4 +199,51 @@ Public Class ImageDictionary
         End If
     End Sub
 
+    '取得一時停止
+    Private _pauseGetImage As Boolean = False
+    Public Property PauseGetImage As Boolean
+        Get
+            Return Me._pauseGetImage
+        End Get
+        Set(ByVal value As Boolean)
+            Me._pauseGetImage = value
+            If Not value Then
+                '最新50件を処理し、残りは破棄
+                For i As Integer = 0 To 50
+                    If Me.waitStack.Count = 0 Then Exit Property
+                    Dim imgDlProc As New Action(Of KeyValuePair(Of String, Action(Of Image)))(Sub(kvp)
+                                                                                                  Me.GetImage(kvp)
+                                                                                              End Sub)
+                    imgDlProc.BeginInvoke(Me.waitStack.Pop, Nothing, Nothing)
+                Next
+                Me.waitStack.Clear()
+            End If
+        End Set
+    End Property
+
+    Private ReadOnly dlLockObject As New Object
+    Private workingList As List(Of String)
+    Private Sub GetImage(ByVal downloadAsyncInfo As KeyValuePair(Of String, Action(Of Image)))
+        Dim go As Boolean = False
+        SyncLock dlLockObject
+            '重複要求は通信1回で済ませる
+            If Not workingList.Contains(downloadAsyncInfo.Key) Then
+                workingList.Add(downloadAsyncInfo.Key)
+                go = True
+            End If
+        End SyncLock
+        If go Then
+            Dim hv As New HttpVarious()
+            Dim dlImage As Image = hv.GetImage(downloadAsyncInfo.Key, 10000)
+            Me.innerDictionary(downloadAsyncInfo.Key) = dlImage
+            SyncLock dlLockObject
+                workingList.Remove(downloadAsyncInfo.Key)
+            End SyncLock
+        Else
+            While workingList.Contains(downloadAsyncInfo.Key)
+                Threading.Thread.Sleep(100)
+            End While
+        End If
+        downloadAsyncInfo.Value.Invoke(Me.innerDictionary(downloadAsyncInfo.Key))
+    End Sub
 End Class
