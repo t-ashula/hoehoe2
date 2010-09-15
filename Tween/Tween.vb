@@ -4217,7 +4217,7 @@ RETRY:
             Static img As Image = Nothing
             Dim dummy As Image = DirectCast(TIconDic, ImageDictionary)(_curPost.ImageUrl, Sub(getImg)
                                                                                               If img IsNot Nothing Then img.Dispose()
-                                                                                              img = New Bitmap(getImg)
+                                                                                              img = DirectCast(getImg.Clone(), Image)
                                                                                               Me.Invoke(Sub()
                                                                                                             Me.UserPicture.Image = img
                                                                                                         End Sub)
