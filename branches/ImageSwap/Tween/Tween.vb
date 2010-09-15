@@ -981,7 +981,7 @@ Public Class TweenMain
         End If
 
         'アイコンリスト作成
-        TIconDic = New ImageDictionary(50)
+        TIconDic = New ImageDictionary(500)
 
         tw.DetailIcon = TIconDic
 
@@ -4217,6 +4217,7 @@ RETRY:
             Static img As Image = Nothing
             Dim dummy As Image = DirectCast(TIconDic, ImageDictionary)(_curPost.ImageUrl, Sub(getImg)
                                                                                               If img IsNot Nothing Then img.Dispose()
+                                                                                              If getImg Is Nothing Then Exit Sub
                                                                                               img = DirectCast(getImg.Clone(), Image)
                                                                                               Me.Invoke(Sub()
                                                                                                             Me.UserPicture.Image = img
