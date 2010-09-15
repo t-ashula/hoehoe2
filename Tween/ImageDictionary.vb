@@ -16,7 +16,6 @@ Public Class ImageDictionary
             Me.innerDictionary = New Dictionary(Of String, Image)(memoryCacheCount + 1)
             Me.sortedKeyList = New List(Of String)(memoryCacheCount + 1)
             Me.memoryCacheCount = memoryCacheCount
-            Me.workingList = New List(Of String)
             Me.waitStack = New Stack(Of KeyValuePair(Of String, Action(Of Image)))
         End SyncLock
     End Sub
@@ -53,16 +52,8 @@ Public Class ImageDictionary
                 If Me.innerDictionary(key) IsNot Nothing Then
                     callBack(Me.innerDictionary(key))
                 Else
-                    Dim downloadAsyncInfo As New KeyValuePair(Of String, Action(Of Image))(key, callBack)
-                    If Me._pauseGetImage Then
-                        '取得一時停止の場合はスタックに積む
-                        Me.waitStack.Push(downloadAsyncInfo)
-                    Else
-                        Dim imgDlProc As New Action(Of KeyValuePair(Of String, Action(Of Image)))(Sub(kvp)
-                                                                                                      Me.GetImage(kvp)
-                                                                                                  End Sub)
-                        imgDlProc.BeginInvoke(downloadAsyncInfo, Nothing, Nothing)
-                    End If
+                    'スタックに積む
+                    Me.waitStack.Push(New KeyValuePair(Of String, Action(Of Image))(key, callBack))
                 End If
                 Me.DisposeOldImage()
             End SyncLock
@@ -207,43 +198,29 @@ Public Class ImageDictionary
         End Get
         Set(ByVal value As Boolean)
             Me._pauseGetImage = value
-            If Not value Then
-                '最新50件を処理し、残りは破棄
-                For i As Integer = 0 To 50
-                    If Me.waitStack.Count = 0 Then Exit Property
-                    Dim imgDlProc As New Action(Of KeyValuePair(Of String, Action(Of Image)))(Sub(kvp)
-                                                                                                  Me.GetImage(kvp)
-                                                                                              End Sub)
-                    imgDlProc.BeginInvoke(Me.waitStack.Pop, Nothing, Nothing)
-                Next
-                Me.waitStack.Clear()
+
+            Static popping As Boolean = False
+
+            If Not Me._pauseGetImage AndAlso Not popping Then
+                popping = True
+                '最新から処理し
+                Dim imgDlProc As Threading.ThreadStart
+                imgDlProc = Sub()
+                                While Me.waitStack.Count > 0 AndAlso Not Me._pauseGetImage
+                                    Me.GetImage(Me.waitStack.Pop)
+                                    Threading.Thread.Sleep(10)
+                                End While
+                                popping = False
+                            End Sub
+                imgDlProc.BeginInvoke(Nothing, Nothing)
             End If
         End Set
     End Property
 
-    Private ReadOnly dlLockObject As New Object
-    Private workingList As List(Of String)
     Private Sub GetImage(ByVal downloadAsyncInfo As KeyValuePair(Of String, Action(Of Image)))
-        Dim go As Boolean = False
-        SyncLock dlLockObject
-            '重複要求は通信1回で済ませる
-            If Not workingList.Contains(downloadAsyncInfo.Key) Then
-                workingList.Add(downloadAsyncInfo.Key)
-                go = True
-            End If
-        End SyncLock
-        If go Then
-            Dim hv As New HttpVarious()
-            Dim dlImage As Image = hv.GetImage(downloadAsyncInfo.Key, 10000)
-            Me.innerDictionary(downloadAsyncInfo.Key) = dlImage
-            SyncLock dlLockObject
-                workingList.Remove(downloadAsyncInfo.Key)
-            End SyncLock
-        Else
-            While workingList.Contains(downloadAsyncInfo.Key)
-                Threading.Thread.Sleep(100)
-            End While
-        End If
+        Dim hv As New HttpVarious()
+        Dim dlImage As Image = hv.GetImage(downloadAsyncInfo.Key, 10000)
+        Me.innerDictionary(downloadAsyncInfo.Key) = dlImage
         downloadAsyncInfo.Value.Invoke(Me.innerDictionary(downloadAsyncInfo.Key))
     End Sub
 End Class
