@@ -26,8 +26,10 @@ Public Class ImageDictionary
 
     Public Sub Add(ByVal key As String, ByVal value As Image) Implements System.Collections.Generic.IDictionary(Of String, Image).Add
         SyncLock Me.lockObject
+            If Me.innerDictionary.ContainsKey(key) Then Exit Sub
             Me.innerDictionary.Add(key, value)
             Me.sortedKeyList.Add(key)
+            Me.waitStack.Push(New KeyValuePair(Of String, Action(Of Image))(key, Nothing))
             Me.DisposeOldImage()
         End SyncLock
     End Sub
@@ -201,14 +203,13 @@ Public Class ImageDictionary
 
             Static popping As Boolean = False
 
-            If Not Me._pauseGetImage AndAlso Not popping Then
+            If Not Me._pauseGetImage AndAlso Not popping AndAlso Me.waitStack.Count > 0 Then
                 popping = True
                 '最新から処理し
                 Dim imgDlProc As Threading.ThreadStart
                 imgDlProc = Sub()
                                 While Me.waitStack.Count > 0 AndAlso Not Me._pauseGetImage
                                     Me.GetImage(Me.waitStack.Pop)
-                                    Threading.Thread.Sleep(10)
                                 End While
                                 popping = False
                             End Sub
@@ -218,9 +219,15 @@ Public Class ImageDictionary
     End Property
 
     Private Sub GetImage(ByVal downloadAsyncInfo As KeyValuePair(Of String, Action(Of Image)))
+        If Me.innerDictionary(downloadAsyncInfo.Key) IsNot Nothing AndAlso downloadAsyncInfo.Value IsNot Nothing Then
+            downloadAsyncInfo.Value.Invoke(Me.innerDictionary(downloadAsyncInfo.Key))
+            Exit Sub
+        End If
         Dim hv As New HttpVarious()
         Dim dlImage As Image = hv.GetImage(downloadAsyncInfo.Key, 10000)
         Me.innerDictionary(downloadAsyncInfo.Key) = dlImage
-        downloadAsyncInfo.Value.Invoke(Me.innerDictionary(downloadAsyncInfo.Key))
+        If downloadAsyncInfo.Value IsNot Nothing Then
+            downloadAsyncInfo.Value.Invoke(Me.innerDictionary(downloadAsyncInfo.Key))
+        End If
     End Sub
 End Class
