@@ -4215,14 +4215,23 @@ RETRY:
         End If
         If Not String.IsNullOrEmpty(_curPost.ImageUrl) AndAlso TIconDic.ContainsKey(_curPost.ImageUrl) Then
             Static img As Image = Nothing
-            Dim dummy As Image = DirectCast(TIconDic, ImageDictionary)(_curPost.ImageUrl, Sub(getImg)
-                                                                                              If img IsNot Nothing Then img.Dispose()
-                                                                                              If getImg Is Nothing Then Exit Sub
-                                                                                              img = DirectCast(getImg.Clone(), Image)
-                                                                                              Me.Invoke(Sub()
-                                                                                                            Me.UserPicture.Image = img
-                                                                                                        End Sub)
-                                                                                          End Sub)
+            If img IsNot Nothing Then img.Dispose()
+            If TIconDic(_curPost.ImageUrl) Is Nothing Then
+                img = Nothing
+                UserPicture.Image = Nothing
+            Else
+                img = DirectCast(TIconDic(_curPost.ImageUrl).Clone, Image)
+                UserPicture.Image = img
+            End If
+
+            'Dim dummy As Image = DirectCast(TIconDic, ImageDictionary)(_curPost.ImageUrl, Sub(getImg)
+            '                                                                                  If img IsNot Nothing Then img.Dispose()
+            '                                                                                  If getImg Is Nothing Then Exit Sub
+            '                                                                                  img = DirectCast(getImg.Clone(), Image)
+            '                                                                                  Me.Invoke(Sub()
+            '                                                                                                Me.UserPicture.Image = img
+            '                                                                                            End Sub)
+            '                                                                              End Sub)
         Else
             UserPicture.Image = Nothing
         End If
@@ -5818,14 +5827,12 @@ RETRY:
         Static blink As Boolean = False
         Static idle As Boolean = False
 
-        Static iconDlCurTab As TabPage = Nothing
         Static iconDlListTopItem As ListViewItem = Nothing
-        If iconDlCurTab Is ListTab.SelectedTab AndAlso DirectCast(ListTab.SelectedTab.Tag, ListView).TopItem Is iconDlListTopItem Then
+        If DirectCast(ListTab.SelectedTab.Tag, ListView).TopItem Is iconDlListTopItem Then
             DirectCast(Me.TIconDic, ImageDictionary).PauseGetImage = False
         Else
             DirectCast(Me.TIconDic, ImageDictionary).PauseGetImage = True
         End If
-        iconDlCurTab = ListTab.SelectedTab
         iconDlListTopItem = DirectCast(ListTab.SelectedTab.Tag, ListView).TopItem
 
         iconCnt += 1
