@@ -1,5 +1,6 @@
 ﻿Imports System.Drawing
 Imports System.IO
+Imports System.Threading
 
 Public Class ImageDictionary
     Implements IDictionary(Of String, Image), IDisposable
@@ -52,7 +53,7 @@ Public Class ImageDictionary
                 Me.sortedKeyList.Remove(key)
                 Me.sortedKeyList.Add(key)
                 If Me.innerDictionary(key) IsNot Nothing Then
-                    callBack(Me.innerDictionary(key))
+                    callBack(New Bitmap(Me.innerDictionary(key)))
                 Else
                     'スタックに積む
                     Me.waitStack.Push(New KeyValuePair(Of String, Action(Of Image))(key, callBack))
@@ -70,7 +71,11 @@ Public Class ImageDictionary
                 Me.sortedKeyList.Remove(key)
                 Me.sortedKeyList.Add(key)
                 Me.DisposeOldImage()
-                Return Me.innerDictionary(key)
+                If Me.innerDictionary(key) IsNot Nothing Then
+                    Return New Bitmap(Me.innerDictionary(key))
+                Else
+                    Return Nothing
+                End If
             End SyncLock
         End Get
         Set(ByVal value As Image)
@@ -186,7 +191,7 @@ Public Class ImageDictionary
         If Me.sortedKeyList.Count > Me.memoryCacheCount Then
             Dim key As String = Me.sortedKeyList(Me.sortedKeyList.Count - Me.memoryCacheCount - 1)
             If Me.innerDictionary(key) IsNot Nothing Then
-                Me.innerDictionary(key).Dispose()
+                'Me.innerDictionary(key).Dispose()
                 Me.innerDictionary(key) = Nothing
             End If
         End If
@@ -206,10 +211,15 @@ Public Class ImageDictionary
             If Not Me._pauseGetImage AndAlso Not popping AndAlso Me.waitStack.Count > 0 Then
                 popping = True
                 '最新から処理し
-                Dim imgDlProc As Threading.ThreadStart
+                Dim imgDlProc As ThreadStart
                 imgDlProc = Sub()
                                 While Me.waitStack.Count > 0 AndAlso Not Me._pauseGetImage
-                                    Me.GetImage(Me.waitStack.Pop)
+                                    Dim req As KeyValuePair(Of String, Action(Of Image))
+                                    SyncLock lockObject
+                                        req = Me.waitStack.Pop
+                                    End SyncLock
+                                    Dim proc As New GetImageDelegate(AddressOf GetImage)
+                                    proc.BeginInvoke(req, Nothing, Nothing)
                                 End While
                                 popping = False
                             End Sub
@@ -217,17 +227,28 @@ Public Class ImageDictionary
             End If
         End Set
     End Property
-
+    Delegate Sub GetImageDelegate(ByVal arg1 As KeyValuePair(Of String, Action(Of Image)))
     Private Sub GetImage(ByVal downloadAsyncInfo As KeyValuePair(Of String, Action(Of Image)))
-        If Me.innerDictionary(downloadAsyncInfo.Key) IsNot Nothing AndAlso downloadAsyncInfo.Value IsNot Nothing Then
-            downloadAsyncInfo.Value.Invoke(Me.innerDictionary(downloadAsyncInfo.Key))
+        Dim callbackImage As Image = Nothing
+        SyncLock lockObject
+            If Me.innerDictionary(downloadAsyncInfo.Key) IsNot Nothing Then
+                callbackImage = New Bitmap(Me.innerDictionary(downloadAsyncInfo.Key))
+            End If
+        End SyncLock
+        If callbackImage IsNot Nothing Then
+            If downloadAsyncInfo.Value IsNot Nothing Then
+                downloadAsyncInfo.Value.Invoke(callbackImage)
+            End If
             Exit Sub
         End If
         Dim hv As New HttpVarious()
         Dim dlImage As Image = hv.GetImage(downloadAsyncInfo.Key, 10000)
-        Me.innerDictionary(downloadAsyncInfo.Key) = dlImage
+        SyncLock lockObject
+            If Me.innerDictionary(downloadAsyncInfo.Key) Is Nothing Then Me.innerDictionary(downloadAsyncInfo.Key) = dlImage
+            callbackImage = New Bitmap(dlImage)
+        End SyncLock
         If downloadAsyncInfo.Value IsNot Nothing Then
-            downloadAsyncInfo.Value.Invoke(Me.innerDictionary(downloadAsyncInfo.Key))
+            downloadAsyncInfo.Value.Invoke(callbackImage)
         End If
     End Sub
 End Class

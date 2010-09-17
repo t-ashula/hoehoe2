@@ -981,7 +981,7 @@ Public Class TweenMain
         End If
 
         'アイコンリスト作成
-        TIconDic = New ImageDictionary(500)
+        TIconDic = New ImageDictionary(3000)
 
         tw.DetailIcon = TIconDic
 
@@ -4213,16 +4213,9 @@ RETRY:
         If Not String.IsNullOrEmpty(_curPost.RetweetedBy) Then
             NameLabel.Text += " (RT:" + _curPost.RetweetedBy + ")"
         End If
+        If UserPicture.Image IsNot Nothing Then UserPicture.Image.Dispose()
         If Not String.IsNullOrEmpty(_curPost.ImageUrl) AndAlso TIconDic.ContainsKey(_curPost.ImageUrl) Then
-            Static img As Image = Nothing
-            If img IsNot Nothing Then img.Dispose()
-            If TIconDic(_curPost.ImageUrl) Is Nothing Then
-                img = Nothing
-                UserPicture.Image = Nothing
-            Else
-                img = DirectCast(TIconDic(_curPost.ImageUrl).Clone, Image)
-                UserPicture.Image = img
-            End If
+            UserPicture.Image = TIconDic(_curPost.ImageUrl)
 
             'Dim dummy As Image = DirectCast(TIconDic, ImageDictionary)(_curPost.ImageUrl, Sub(getImg)
             '                                                                                  If img IsNot Nothing Then img.Dispose()
