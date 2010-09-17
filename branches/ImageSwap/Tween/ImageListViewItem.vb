@@ -2,7 +2,6 @@
     Inherits ListViewItem
 
     Private img As Image = Nothing
-    Private Shared ReadOnly lockObject As New Object
 
     Public Sub New(ByVal items() As String, ByVal imageKey As String)
 
@@ -13,7 +12,7 @@
 
         Dim dummy As Image = imageDictionary.Item(imageKey, Sub(getImg)
                                                                 If getImg Is Nothing Then Exit Sub
-                                                                Me.img = New Bitmap(getImg)
+                                                                Me.img = getImg
                                                                 If Me.ListView IsNot Nothing Then Me.ListView.Invoke(Sub()
                                                                                                                          Me.ListView.RedrawItems(Me.Index, Me.Index, False)
                                                                                                                      End Sub)
