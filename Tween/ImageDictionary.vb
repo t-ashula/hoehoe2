@@ -1,23 +1,23 @@
 ﻿Imports System.Drawing
 Imports System.IO
 Imports System.Threading
+Imports System.Runtime.Caching
 
 Public Class ImageDictionary
     Implements IDictionary(Of String, Image), IDisposable
 
     Private ReadOnly lockObject As New Object()
 
-    Private memoryCacheCount As Integer
-    Private innerDictionary As Dictionary(Of String, Image)
-    Private sortedKeyList As List(Of String)    '古いもの順
+    Private innerDictionary As New MemoryCache("imageCache")
     Private waitStack As Stack(Of KeyValuePair(Of String, Action(Of Image)))
+    Private cachePolicy As New CacheItemPolicy()
 
     Public Sub New(ByVal memoryCacheCount As Integer)
         SyncLock Me.lockObject
-            Me.innerDictionary = New Dictionary(Of String, Image)(memoryCacheCount + 1)
-            Me.sortedKeyList = New List(Of String)(memoryCacheCount + 1)
-            Me.memoryCacheCount = memoryCacheCount
             Me.waitStack = New Stack(Of KeyValuePair(Of String, Action(Of Image)))
+            Me.cachePolicy.RemovedCallback = Sub(item)
+                                                 DirectCast(item.CacheItem.Value, Image).Dispose()
+                                             End Sub
         End SyncLock
     End Sub
 
@@ -27,11 +27,9 @@ Public Class ImageDictionary
 
     Public Sub Add(ByVal key As String, ByVal value As Image) Implements System.Collections.Generic.IDictionary(Of String, Image).Add
         SyncLock Me.lockObject
-            If Me.innerDictionary.ContainsKey(key) Then Exit Sub
-            Me.innerDictionary.Add(key, value)
-            Me.sortedKeyList.Add(key)
+            If Me.innerDictionary.Contains(key) OrElse value Is Nothing Then Exit Sub
+            Me.innerDictionary.Add(key, value, Me.cachePolicy)
             Me.waitStack.Push(New KeyValuePair(Of String, Action(Of Image))(key, Nothing))
-            Me.DisposeOldImage()
         End SyncLock
     End Sub
 
@@ -41,24 +39,19 @@ Public Class ImageDictionary
 
     Public Function Remove(ByVal key As String) As Boolean Implements System.Collections.Generic.IDictionary(Of String, Image).Remove
         SyncLock Me.lockObject
-            Me.sortedKeyList.Remove(key)
-            Me.innerDictionary(key).Dispose()
-            Return Me.innerDictionary.Remove(key)
+            DirectCast(Me.innerDictionary(key), Image).Dispose()
         End SyncLock
     End Function
 
     Default ReadOnly Property Item(ByVal key As String, ByVal callBack As Action(Of Image)) As Image
         Get
             SyncLock Me.lockObject
-                Me.sortedKeyList.Remove(key)
-                Me.sortedKeyList.Add(key)
                 If Me.innerDictionary(key) IsNot Nothing Then
-                    callBack(New Bitmap(Me.innerDictionary(key)))
+                    callBack(New Bitmap(DirectCast(Me.innerDictionary(key), Image)))
                 Else
                     'スタックに積む
                     Me.waitStack.Push(New KeyValuePair(Of String, Action(Of Image))(key, callBack))
                 End If
-                Me.DisposeOldImage()
             End SyncLock
 
             Return Nothing
@@ -68,11 +61,8 @@ Public Class ImageDictionary
     Default Public Property Item(ByVal key As String) As Image Implements System.Collections.Generic.IDictionary(Of String, Image).Item
         Get
             SyncLock Me.lockObject
-                Me.sortedKeyList.Remove(key)
-                Me.sortedKeyList.Add(key)
-                Me.DisposeOldImage()
                 If Me.innerDictionary(key) IsNot Nothing Then
-                    Return New Bitmap(Me.innerDictionary(key))
+                    Return New Bitmap(DirectCast(Me.innerDictionary(key), Image))
                 Else
                     Return Nothing
                 End If
@@ -80,10 +70,7 @@ Public Class ImageDictionary
         End Get
         Set(ByVal value As Image)
             SyncLock Me.lockObject
-                Me.sortedKeyList.Remove(key)
-                Me.sortedKeyList.Add(key)
-                Me.DisposeOldImage()
-                Me.innerDictionary(key).Dispose()
+                DirectCast(Me.innerDictionary(key), Image).Dispose()
                 Me.innerDictionary(key) = value
             End SyncLock
         End Set
@@ -91,39 +78,26 @@ Public Class ImageDictionary
 
     Public Sub Clear() Implements System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of String, Image)).Clear
         SyncLock Me.lockObject
-            For Each value As Image In Me.innerDictionary.Values
-                value.Dispose()
-            Next
-
-            Me.innerDictionary.Clear()
-            Me.sortedKeyList.Clear()
+            Me.innerDictionary.Trim(100)
         End SyncLock
     End Sub
 
     Public Function Contains(ByVal item As System.Collections.Generic.KeyValuePair(Of String, Image)) As Boolean Implements System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of String, Image)).Contains
         SyncLock Me.lockObject
-            Return Me.innerDictionary.ContainsKey(item.Key) AndAlso Me.innerDictionary(item.Key) Is item.Value
+            Return Me.innerDictionary.Contains(item.Key) AndAlso Me.innerDictionary(item.Key) Is item.Value
         End SyncLock
     End Function
 
     Public Sub CopyTo(ByVal array() As System.Collections.Generic.KeyValuePair(Of String, Image), ByVal arrayIndex As Integer) Implements System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of String, Image)).CopyTo
         SyncLock Me.lockObject
-            Dim index As Integer = arrayIndex
-            For Each Item As KeyValuePair(Of String, Image) In Me.innerDictionary
-                If array.Length - 1 < index Then
-                    Exit For
-                End If
-
-                array(index) = New KeyValuePair(Of String, Image)(Item.Key, Item.Value)
-                index += 1
-            Next
+            Throw New NotImplementedException()
         End SyncLock
     End Sub
 
     Public ReadOnly Property Count As Integer Implements System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of String, Image)).Count
         Get
             SyncLock Me.lockObject
-                Return Me.innerDictionary.Count
+                Return CType(Me.innerDictionary.GetCount(), Integer)
             End SyncLock
         End Get
     End Property
@@ -135,21 +109,21 @@ Public Class ImageDictionary
     End Property
 
     Public Function ContainsKey(ByVal key As String) As Boolean Implements System.Collections.Generic.IDictionary(Of String, Image).ContainsKey
-        Return Me.innerDictionary.ContainsKey(key)
+        Return Me.innerDictionary.Contains(key)
     End Function
 
     Public ReadOnly Property Keys As System.Collections.Generic.ICollection(Of String) Implements System.Collections.Generic.IDictionary(Of String, Image).Keys
         Get
             SyncLock Me.lockObject
-                Return Me.innerDictionary.Keys
+                Throw New NotImplementedException()
             End SyncLock
         End Get
     End Property
 
     Public Function TryGetValue(ByVal key As String, ByRef value As Image) As Boolean Implements System.Collections.Generic.IDictionary(Of String, Image).TryGetValue
         SyncLock Me.lockObject
-            If Me.innerDictionary.ContainsKey(key) Then
-                value = Me.innerDictionary(key)
+            If Me.innerDictionary.Contains(key) Then
+                value = DirectCast(Me.innerDictionary(key), Image)
                 Return True
             Else
                 Return False
@@ -160,11 +134,7 @@ Public Class ImageDictionary
     Public ReadOnly Property Values As System.Collections.Generic.ICollection(Of Image) Implements System.Collections.Generic.IDictionary(Of String, Image).Values
         Get
             SyncLock Me.lockObject
-                Dim imgList As New List(Of Image)(Me.memoryCacheCount)
-                For Each value As Image In Me.innerDictionary.Values
-                    imgList.Add(value)
-                Next
-                Return imgList
+                Throw New NotImplementedException()
             End SyncLock
         End Get
     End Property
@@ -179,22 +149,8 @@ Public Class ImageDictionary
 
     Public Sub Dispose() Implements IDisposable.Dispose
         SyncLock Me.lockObject
-            For Each item As Image In Me.innerDictionary.Values
-                If item IsNot Nothing Then
-                    item.Dispose()
-                End If
-            Next
+            Me.innerDictionary.Dispose()
         End SyncLock
-    End Sub
-
-    Private Sub DisposeOldImage()
-        If Me.sortedKeyList.Count > Me.memoryCacheCount Then
-            Dim key As String = Me.sortedKeyList(Me.sortedKeyList.Count - Me.memoryCacheCount - 1)
-            If Me.innerDictionary(key) IsNot Nothing Then
-                'Me.innerDictionary(key).Dispose()
-                Me.innerDictionary(key) = Nothing
-            End If
-        End If
     End Sub
 
     '取得一時停止
@@ -232,7 +188,7 @@ Public Class ImageDictionary
         Dim callbackImage As Image = Nothing
         SyncLock lockObject
             If Me.innerDictionary(downloadAsyncInfo.Key) IsNot Nothing Then
-                callbackImage = New Bitmap(Me.innerDictionary(downloadAsyncInfo.Key))
+                callbackImage = New Bitmap(DirectCast(Me.innerDictionary(downloadAsyncInfo.Key), Image))
             End If
         End SyncLock
         If callbackImage IsNot Nothing Then
