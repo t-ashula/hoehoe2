@@ -644,7 +644,7 @@ Public Class Twitter
             Return "Invalid XML!"
         End Try
 
-        Me._dIcon.Add(post.ImageUrl, Nothing)
+        'Me._dIcon.Add(post.ImageUrl, Nothing)
         TabInformations.GetInstance.AddPost(post)
 
         ''非同期アイコン取得＆StatusDictionaryに追加
@@ -1548,7 +1548,7 @@ Public Class Twitter
                 Continue For
             End Try
 
-            Me._dIcon.Add(post.ImageUrl, Nothing)
+            'Me._dIcon.Add(post.ImageUrl, Nothing)
             TabInformations.GetInstance.AddPost(post)
 
             ''非同期アイコン取得＆StatusDictionaryに追加
@@ -1685,7 +1685,7 @@ Public Class Twitter
                 Continue For
             End Try
 
-            Me._dIcon.Add(post.ImageUrl, Nothing)
+            'Me._dIcon.Add(post.ImageUrl, Nothing)
             TabInformations.GetInstance.AddPost(post)
 
             ''非同期アイコン取得＆StatusDictionaryに追加
@@ -1819,7 +1819,7 @@ Public Class Twitter
             post.IsExcludeReply = False
             post.IsDm = True
 
-            Me._dIcon.Add(post.ImageUrl, Nothing)
+            'Me._dIcon.Add(post.ImageUrl, Nothing)
             TabInformations.GetInstance.AddPost(post)
 
             ''非同期アイコン取得＆StatusDictionaryに追加
@@ -1974,7 +1974,7 @@ Public Class Twitter
                 Continue For
             End Try
 
-            Me._dIcon.Add(post.ImageUrl, Nothing)
+            'Me._dIcon.Add(post.ImageUrl, Nothing)
             TabInformations.GetInstance.AddPost(post)
 
             ''非同期アイコン取得＆StatusDictionaryに追加

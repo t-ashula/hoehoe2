@@ -2,6 +2,7 @@
 Imports System.IO
 Imports System.Threading
 Imports System.Runtime.Caching
+Imports System.Collections.Specialized
 
 Public Class ImageDictionary
     Implements IDictionary(Of String, Image), IDisposable
@@ -14,13 +15,12 @@ Public Class ImageDictionary
 
     Public Sub New(ByVal memoryCacheCount As Integer)
         SyncLock Me.lockObject
-            Dim cfg As New Specialized.NameValueCollection
-            cfg.Add("CacheMemoryLimitMegabytes", "4")
-            innerDictionary = New MemoryCache("imageCache", cfg)
+            Me.innerDictionary = MemoryCache.Default
             Me.waitStack = New Stack(Of KeyValuePair(Of String, Action(Of Image)))
             Me.cachePolicy.RemovedCallback = Sub(item)
                                                  DirectCast(item.CacheItem.Value, Image).Dispose()
                                              End Sub
+            Me.cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30)
         End SyncLock
     End Sub
 
@@ -30,9 +30,8 @@ Public Class ImageDictionary
 
     Public Sub Add(ByVal key As String, ByVal value As Image) Implements System.Collections.Generic.IDictionary(Of String, Image).Add
         SyncLock Me.lockObject
-            If Me.innerDictionary.Contains(key) OrElse value Is Nothing Then Exit Sub
+            If Me.innerDictionary.Contains(key) Then Exit Sub
             Me.innerDictionary.Add(key, value, Me.cachePolicy)
-            Me.waitStack.Push(New KeyValuePair(Of String, Action(Of Image))(key, Nothing))
         End SyncLock
     End Sub
 
@@ -74,7 +73,7 @@ Public Class ImageDictionary
         Set(ByVal value As Image)
             SyncLock Me.lockObject
                 DirectCast(Me.innerDictionary(key), Image).Dispose()
-                Me.innerDictionary(key) = value
+                Me.innerDictionary.Add(key, value, Me.cachePolicy)
             End SyncLock
         End Set
     End Property
@@ -203,11 +202,15 @@ Public Class ImageDictionary
         Dim hv As New HttpVarious()
         Dim dlImage As Image = hv.GetImage(downloadAsyncInfo.Key, 10000)
         SyncLock lockObject
-            If Me.innerDictionary(downloadAsyncInfo.Key) Is Nothing Then Me.innerDictionary(downloadAsyncInfo.Key) = dlImage
-            callbackImage = New Bitmap(dlImage)
+            If Me.innerDictionary(downloadAsyncInfo.Key) Is Nothing Then
+                If dlImage IsNot Nothing Then
+                    Me.innerDictionary.Add(downloadAsyncInfo.Key, dlImage, Me.cachePolicy)
+                    callbackImage = New Bitmap(dlImage)
+                End If
+            Else
+                callbackImage = New Bitmap(DirectCast(Me.innerDictionary(downloadAsyncInfo.Key), Image))
+            End If
         End SyncLock
-        If downloadAsyncInfo.Value IsNot Nothing Then
-            downloadAsyncInfo.Value.Invoke(callbackImage)
-        End If
+        If downloadAsyncInfo.Value IsNot Nothing Then downloadAsyncInfo.Value.Invoke(callbackImage)
     End Sub
 End Class
