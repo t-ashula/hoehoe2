@@ -12,16 +12,49 @@ Public Class ImageDictionary
     Private innerDictionary As MemoryCache
     Private waitStack As Stack(Of KeyValuePair(Of String, Action(Of Image)))
     Private cachePolicy As New CacheItemPolicy()
+    Private removedCount As Long = 0
 
     Public Sub New(ByVal memoryCacheCount As Integer)
         SyncLock Me.lockObject
             Me.innerDictionary = MemoryCache.Default
             Me.waitStack = New Stack(Of KeyValuePair(Of String, Action(Of Image)))
-            Me.cachePolicy.RemovedCallback = Sub(item)
-                                                 DirectCast(item.CacheItem.Value, Image).Dispose()
-                                             End Sub
+            Me.cachePolicy.RemovedCallback = AddressOf CacheRemoved
             Me.cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30)
         End SyncLock
+    End Sub
+
+    Public ReadOnly Property CacheCount As Long
+        Get
+            Return innerDictionary.GetCount
+        End Get
+    End Property
+
+    Public ReadOnly Property CacheRemoveCount As Long
+        Get
+            Return removedCount
+        End Get
+    End Property
+
+    Public ReadOnly Property CacheMemoryLimit As Long
+        Get
+            Return innerDictionary.CacheMemoryLimit
+        End Get
+    End Property
+
+    Public ReadOnly Property PhysicalMemoryLimit As Long
+        Get
+            Return innerDictionary.PhysicalMemoryLimit
+        End Get
+    End Property
+
+    Public ReadOnly Property PollingInterval As TimeSpan
+        Get
+            Return innerDictionary.PollingInterval
+        End Get
+    End Property
+    Private Sub CacheRemoved(ByVal item As CacheEntryRemovedArguments)
+        DirectCast(item.CacheItem.Value, Image).Dispose()
+        removedCount += 1
     End Sub
 
     Public Sub Add(ByVal item As System.Collections.Generic.KeyValuePair(Of String, Image)) Implements System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of String, Image)).Add
