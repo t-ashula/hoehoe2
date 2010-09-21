@@ -8,12 +8,15 @@ Public Class ImageDictionary
 
     Private ReadOnly lockObject As New Object()
 
-    Private innerDictionary As New MemoryCache("imageCache")
+    Private innerDictionary As MemoryCache
     Private waitStack As Stack(Of KeyValuePair(Of String, Action(Of Image)))
     Private cachePolicy As New CacheItemPolicy()
 
     Public Sub New(ByVal memoryCacheCount As Integer)
         SyncLock Me.lockObject
+            Dim cfg As New Specialized.NameValueCollection
+            cfg.Add("CacheMemoryLimitMegabytes", "4")
+            innerDictionary = New MemoryCache("imageCache", cfg)
             Me.waitStack = New Stack(Of KeyValuePair(Of String, Action(Of Image)))
             Me.cachePolicy.RemovedCallback = Sub(item)
                                                  DirectCast(item.CacheItem.Value, Image).Dispose()
