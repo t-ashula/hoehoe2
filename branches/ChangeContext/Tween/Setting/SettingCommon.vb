@@ -165,4 +165,5 @@ Public Class SettingCommon
     Public HotkeyValue As Integer = 0
     Public BlinkNewMentions As Boolean = False
     Public FocusLockToStatusText As Boolean = False
+    Public OpenFavorareGoToUrl As Integer = 0
 End Class
