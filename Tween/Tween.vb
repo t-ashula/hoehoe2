@@ -8802,7 +8802,7 @@ RETRY:
 
     Private Sub CacheInfoMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CacheInfoMenuItem.Click
         Dim buf As New StringBuilder
-        buf.AppendFormat("キャッシュメモリ容量         : {0}bytes({1}MB)" + vbCrLf, DirectCast(TIconDic, ImageDictionary).CacheMemoryLimit, DirectCast(TIconDic, ImageDictionary).CacheMemoryLimit / 1024)
+        buf.AppendFormat("キャッシュメモリ容量         : {0}bytes({1}MB)" + vbCrLf, DirectCast(TIconDic, ImageDictionary).CacheMemoryLimit, DirectCast(TIconDic, ImageDictionary).CacheMemoryLimit / 1048576)
         buf.AppendFormat("物理メモリ使用割合           : {0}%" + vbCrLf, DirectCast(TIconDic, ImageDictionary).PhysicalMemoryLimit)
         buf.AppendFormat("キャッシュエントリ保持数     : {0}" + vbCrLf, DirectCast(TIconDic, ImageDictionary).CacheCount)
         buf.AppendFormat("キャッシュエントリ破棄数     : {0}" + vbCrLf, DirectCast(TIconDic, ImageDictionary).CacheRemoveCount)
