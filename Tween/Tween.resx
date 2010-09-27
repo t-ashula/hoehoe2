@@ -1047,8 +1047,14 @@
   <data name="UseHashtagMenuItem.Text" xml:space="preserve">
     <value>ハッシュタグを固定(&amp;H)</value>
   </data>
+  <data name="TranslateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>210, 22</value>
+  </data>
+  <data name="TranslateToolStripMenuItem.Text" xml:space="preserve">
+    <value>この発言を翻訳</value>
+  </data>
   <data name="ContextMenuPostBrowser.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 320</value>
+    <value>211, 364</value>
   </data>
   <data name="&gt;&gt;ContextMenuPostBrowser.Name" xml:space="preserve">
     <value>ContextMenuPostBrowser</value>
@@ -3701,6 +3707,12 @@
   </data>
   <data name="&gt;&gt;ToolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TranslateToolStripMenuItem.Name" xml:space="preserve">
+    <value>TranslateToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;TranslateToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>TweenMain</value>

@@ -268,6 +268,7 @@ Partial Class TweenMain
         Me.TimerRefreshIcon = New System.Windows.Forms.Timer(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.TranslateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripContainer1.BottomToolStripPanel.SuspendLayout()
         Me.ToolStripContainer1.ContentPanel.SuspendLayout()
         Me.ToolStripContainer1.TopToolStripPanel.SuspendLayout()
@@ -744,7 +745,7 @@ Partial Class TweenMain
         '
         'ContextMenuPostBrowser
         '
-        Me.ContextMenuPostBrowser.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SelectionSearchContextMenuItem, Me.ToolStripSeparator13, Me.SelectionCopyContextMenuItem, Me.UrlCopyContextMenuItem, Me.SelectionAllContextMenuItem, Me.ToolStripSeparator5, Me.FollowContextMenuItem, Me.RemoveContextMenuItem, Me.FriendshipContextMenuItem, Me.FriendshipAllMenuItem, Me.ToolStripSeparator36, Me.ShowUserStatusContextMenuItem, Me.SearchPostsDetailToolStripMenuItem, Me.ToolStripSeparator32, Me.IdFilterAddMenuItem, Me.ListManageUserContextToolStripMenuItem, Me.ToolStripSeparator33, Me.UseHashtagMenuItem})
+        Me.ContextMenuPostBrowser.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SelectionSearchContextMenuItem, Me.ToolStripSeparator13, Me.SelectionCopyContextMenuItem, Me.UrlCopyContextMenuItem, Me.SelectionAllContextMenuItem, Me.ToolStripSeparator5, Me.FollowContextMenuItem, Me.RemoveContextMenuItem, Me.FriendshipContextMenuItem, Me.FriendshipAllMenuItem, Me.ToolStripSeparator36, Me.ShowUserStatusContextMenuItem, Me.SearchPostsDetailToolStripMenuItem, Me.ToolStripSeparator32, Me.IdFilterAddMenuItem, Me.ListManageUserContextToolStripMenuItem, Me.ToolStripSeparator33, Me.UseHashtagMenuItem, Me.TranslateToolStripMenuItem})
         Me.ContextMenuPostBrowser.Name = "ContextMenuStrip4"
         resources.ApplyResources(Me.ContextMenuPostBrowser, "ContextMenuPostBrowser")
         '
@@ -1672,6 +1673,11 @@ Partial Class TweenMain
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
+        'TranslateToolStripMenuItem
+        '
+        Me.TranslateToolStripMenuItem.Name = "TranslateToolStripMenuItem"
+        resources.ApplyResources(Me.TranslateToolStripMenuItem, "TranslateToolStripMenuItem")
+        '
         'TweenMain
         '
         Me.AllowDrop = True
@@ -1962,5 +1968,6 @@ Partial Class TweenMain
     Friend WithEvents ListManageUserContextToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ListManageUserContextToolStripMenuItem3 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ListManageToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents TranslateToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class
