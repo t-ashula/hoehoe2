@@ -1419,6 +1419,8 @@ Public Class Twitter
         Catch ex As Exception
             TraceOut(content)
             Return "Invalid Json!"
+        Finally
+            stream.Close()
         End Try
 #End If
 
@@ -2043,7 +2045,6 @@ Public Class Twitter
                 post.Id = Long.Parse(xentry.Item("id").InnerText)
                 '二重取得回避
                 SyncLock LockObj
-                    'If TabInformations.GetInstance.ContainsKey(post.Id) Then Continue For
                     If TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Contains(post.Id) Then Continue For
                 End SyncLock
                 'Retweet判定
