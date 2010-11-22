@@ -321,8 +321,32 @@ Public Class HttpTwitter
             param.Add("since_id", since_id.ToString())
         End If
 
+        param.Add("include_entities", "true")
+
         Return httpCon.GetContent(GetMethod, _
                             CreateTwitterUri("/1/statuses/home_timeline.json"), _
+                            param, _
+                            content, _
+                            TwitterApiInfo.HttpHeaders, _
+                            AddressOf GetApiCallback)
+    End Function
+
+    Public Function PublicTimeline(ByVal count As Integer, ByVal max_id As Long, ByVal since_id As Long, ByRef content As String) As HttpStatusCode
+        Dim param As New Dictionary(Of String, String)
+        If count > 0 Then
+            param.Add("count", count.ToString())
+        End If
+        If max_id > 0 Then
+            param.Add("max_id", max_id.ToString())
+        End If
+        If since_id > 0 Then
+            param.Add("since_id", since_id.ToString())
+        End If
+
+        param.Add("include_entities", "true")
+
+        Return httpCon.GetContent(GetMethod, _
+                            CreateTwitterUri("/1/statuses/public_timeline.json"), _
                             param, _
                             content, _
                             TwitterApiInfo.HttpHeaders, _
@@ -340,6 +364,8 @@ Public Class HttpTwitter
         If since_id > 0 Then
             param.Add("since_id", since_id.ToString())
         End If
+
+        param.Add("include_entities", "true")
 
         Return httpCon.GetContent(GetMethod, _
                             CreateTwitterUri("/1/statuses/mentions.json"), _

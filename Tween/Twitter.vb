@@ -32,6 +32,7 @@ Imports System.Diagnostics
 Imports System.Net
 Imports System.Reflection
 Imports System.Reflection.MethodBase
+Imports System.Runtime.Serialization
 Imports System.Runtime.Serialization.Json
 
 
@@ -1412,6 +1413,9 @@ Public Class Twitter
         ' エラーチェックはまだ行わない
         Try
             item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.status))
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + content)
+            Return "Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
             TraceOut(content)
             Return "Invalid Json!"
@@ -1433,7 +1437,13 @@ Public Class Twitter
                 End SyncLock
                 If status.retweeted_status IsNot Nothing Then
                     Dim retweeted As DataModel.retweeted_status = status.retweeted_status
-                    post.PDate = DateTime.ParseExact(retweeted.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+
+                    Try
+                        post.PDate = DateTime.ParseExact(retweeted.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+                    Catch ex As Exception
+                        TraceOut("Parse Error:retweeted_status.created_at : " + retweeted.created_at + Environment.NewLine + content)
+                        Continue For
+                    End Try
                     'Id
                     post.RetweetedId = retweeted.id
                     '本文
@@ -1457,7 +1467,12 @@ Public Class Twitter
                     'Retweetした人
                     post.RetweetedBy = status.user.screen_name
                 Else
-                    post.PDate = DateTime.ParseExact(status.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+                    Try
+                        post.PDate = DateTime.ParseExact(status.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+                    Catch ex As Exception
+                        TraceOut("Parse Error:created_at : " + status.created_at + Environment.NewLine + content)
+                        Continue For
+                    End Try
                     '本文
                     post.Data = status.text
                     'Source取得（htmlの場合は、中身を取り出し）
