@@ -420,7 +420,7 @@ Public Class HttpTwitter
         If count <> 20 Then param.Add("count", count.ToString())
 
         Return httpCon.GetContent(GetMethod, _
-                            CreateTwitterUri("/1/favorites.xml"), _
+                            CreateTwitterUri("/1/favorites.json"), _
                             param, _
                             content, _
                             TwitterApiInfo.HttpHeaders, _
@@ -646,9 +646,8 @@ Public Class HttpTwitter
 
 #Region "Proxy API"
     Private Shared _twitterUrl As String = "api.twitter.com"
-    'Private TwitterUrl As String = "sorayukigtap.appspot.com/api"
     Private Shared _TwitterSearchUrl As String = "search.twitter.com"
-    'Private TwitterSearchUrl As String = "sorayukigtap.appspot.com/search"
+    Private Shared _twitterStreamUrl As String = "userstream.twitter.com"
 
     Private Function CreateTwitterUri(ByVal path As String) As Uri
         Return New Uri(String.Format("{0}{1}{2}", _protocol, _twitterUrl, path))
@@ -656,6 +655,10 @@ Public Class HttpTwitter
 
     Private Function CreateTwitterSearchUri(ByVal path As String) As Uri
         Return New Uri(String.Format("{0}{1}{2}", _protocol, _TwitterSearchUrl, path))
+    End Function
+
+    Private Function CreateTwitterStreamUri(ByVal path As String) As Uri
+        Return New Uri(String.Format("{0}{1}{2}", _protocol, _twitterStreamUrl, path))
     End Function
 
     Public Shared WriteOnly Property TwitterUrl() As String
@@ -677,4 +680,11 @@ Public Class HttpTwitter
             TwitterApiInfo.ParseHttpHeaders(TwitterApiInfo.HttpHeaders)
         End If
     End Sub
+
+    Public Function UserStream(ByRef content As Stream) As HttpStatusCode
+        Return httpCon.GetContent(GetMethod, _
+                            CreateTwitterStreamUri("/2/user.json"), _
+                            Nothing, _
+                            content)
+    End Function
 End Class

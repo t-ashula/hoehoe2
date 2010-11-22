@@ -77,6 +77,10 @@ Public Class Twitter
 
     Private twCon As New HttpTwitter
 
+    Private _streamThread As Thread
+    Private _streamActive As Boolean
+    Private _streamBypass As Boolean
+
     Public Function Authenticate(ByVal username As String, ByVal password As String) As String
 
         Dim res As HttpStatusCode
@@ -1399,8 +1403,15 @@ Public Class Twitter
         End If
     End Function
 
-    Private Function CreatePostsFromJson(ByVal content As String, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
-        Dim stream As New MemoryStream(Encoding.Unicode.GetBytes(content))
+    Private Overloads Function CreatePostsFromJson(ByVal content As String, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
+        Using stream As New MemoryStream(Encoding.Unicode.GetBytes(content))
+            Return CreatePostsFromJson(stream, gType, tab, read, count, minimumId)
+        End Using
+    End Function
+
+    'MemoryStreamの面倒は呼び出しもとで見ること
+
+    Private Overloads Function CreatePostsFromJson(ByVal content As MemoryStream, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
         Dim serializer As New DataContractJsonSerializer(GetType(List(Of DataModel.status)))
         Dim item As List(Of DataModel.status)
 
@@ -1412,15 +1423,13 @@ Public Class Twitter
 #Else
         ' エラーチェックはまだ行わない
         Try
-            item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.status))
+            item = DirectCast(serializer.ReadObject(content), List(Of DataModel.status))
         Catch ex As SerializationException
-            TraceOut(ex.Message + Environment.NewLine + content)
+            TraceOut(ex.Message + Environment.NewLine + Encoding.Unicode.GetString(content.GetBuffer()))
             Return "Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
-            TraceOut(content)
+            TraceOut(Encoding.Unicode.GetString(content.GetBuffer()))
             Return "Invalid Json!"
-        Finally
-            stream.Close()
         End Try
 #End If
 
@@ -1443,7 +1452,7 @@ Public Class Twitter
                     Try
                         post.PDate = DateTime.ParseExact(retweeted.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
                     Catch ex As Exception
-                        TraceOut("Parse Error:retweeted_status.created_at : " + retweeted.created_at + Environment.NewLine + content)
+                        TraceOut("Parse Error:retweeted_status.created_at : " + retweeted.created_at + Environment.NewLine + Encoding.Unicode.GetString(content.GetBuffer()))
                         Continue For
                     End Try
                     'Id
@@ -1472,7 +1481,7 @@ Public Class Twitter
                     Try
                         post.PDate = DateTime.ParseExact(status.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
                     Catch ex As Exception
-                        TraceOut("Parse Error:created_at : " + status.created_at + Environment.NewLine + content)
+                        TraceOut("Parse Error:created_at : " + status.created_at + Environment.NewLine + Encoding.Unicode.GetString(content.GetBuffer()))
                         Continue For
                     End Try
                     '本文
@@ -1519,7 +1528,7 @@ Public Class Twitter
                 post.IsDm = False
                 If tab IsNot Nothing Then post.RelTabName = tab.TabName
             Catch ex As Exception
-                TraceOut(content)
+                TraceOut(Encoding.Unicode.GetString(content.GetBuffer()))
                 MessageBox.Show("Parse Error(CreatePostsFromJson)")
                 Continue For
             End Try
@@ -2026,77 +2035,92 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
+        Dim stream As New MemoryStream(Encoding.Unicode.GetBytes(content))
+        Dim serializer As New DataContractJsonSerializer(GetType(List(Of DataModel.status)))
+        Dim item As List(Of DataModel.status)
+
         Dim arIdx As Integer = -1
         Dim dlgt(300) As GetIconImageDelegate    'countQueryに合わせる
         Dim ar(300) As IAsyncResult              'countQueryに合わせる
-        Dim xdoc As New XmlDocument
+
         Try
-            xdoc.LoadXml(content)
+            item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.status))
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + content)
+            Return "Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
             TraceOut(content)
-            'MessageBox.Show("不正なXMLです。(TL-LoadXml)")
-            Return "Invalid XML!"
+            Return "Invalid Json!"
+        Finally
+            stream.Close()
         End Try
 
-        For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("./status")
-            Dim xentry As XmlElement = CType(xentryNode, XmlElement)
+        For Each status As DataModel.status In item
             Dim post As New PostClass
             Try
-                post.Id = Long.Parse(xentry.Item("id").InnerText)
+                post.Id = status.id
                 '二重取得回避
                 SyncLock LockObj
                     If TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Contains(post.Id) Then Continue For
                 End SyncLock
                 'Retweet判定
-                Dim xRnode As XmlNode = xentry.SelectSingleNode("./retweeted_status")
-                If xRnode IsNot Nothing Then
-                    Dim xRentry As XmlElement = CType(xRnode, XmlElement)
-                    post.PDate = DateTime.ParseExact(xRentry.Item("created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+                If status.retweeted_status IsNot Nothing Then
+                    Dim retweeted As DataModel.retweeted_status = status.retweeted_status
+                    Try
+                        post.PDate = DateTime.ParseExact(retweeted.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+                    Catch ex As Exception
+                        TraceOut("Parse Error:retweeted_status.created_at : " + retweeted.created_at + Environment.NewLine + content)
+                        Continue For
+                    End Try
+
                     'Id
-                    post.RetweetedId = Long.Parse(xRentry.Item("id").InnerText)
+                    post.RetweetedId = post.Id
                     '本文
-                    post.Data = xRentry.Item("text").InnerText
+                    post.Data = retweeted.text
                     'Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = xRentry.Item("source").InnerText
+                    post.Source = retweeted.source
                     'Reply先
-                    Long.TryParse(xRentry.Item("in_reply_to_status_id").InnerText, post.InReplyToId)
-                    post.InReplyToUser = xRentry.Item("in_reply_to_screen_name").InnerText
-                    'in_reply_to_user_idを使うか？
-                    post.IsFav = Boolean.Parse(xRentry.Item("favorited").InnerText)
+                    Long.TryParse(retweeted.in_reply_to_status_id, post.InReplyToId)
+                    post.InReplyToUser = retweeted.in_reply_to_screen_name
+                    post.IsFav = retweeted.favorited
 
                     '以下、ユーザー情報
-                    Dim xRUentry As XmlElement = CType(xRentry.SelectSingleNode("./user"), XmlElement)
-                    post.Uid = Long.Parse(xRUentry.Item("id").InnerText)
-                    post.Name = xRUentry.Item("screen_name").InnerText
-                    post.Nickname = xRUentry.Item("name").InnerText
-                    post.ImageUrl = xRUentry.Item("profile_image_url").InnerText
-                    post.IsProtect = Boolean.Parse(xRUentry.Item("protected").InnerText)
+                    Dim user As DataModel.user = retweeted.user
+                    post.Uid = user.id
+                    post.Name = user.screen_name
+                    post.Nickname = user._name
+                    post.ImageUrl = user.profile_image_url
+                    post.IsProtect = user.protected
                     post.IsMe = post.Name.ToLower.Equals(_uid)
                     If post.IsMe Then _UserIdNo = post.Uid.ToString()
 
                     'Retweetした人
-                    Dim xUentry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
-                    post.RetweetedBy = xUentry.Item("screen_name").InnerText
+                    post.RetweetedBy = status.user.screen_name
                 Else
-                    post.PDate = DateTime.ParseExact(xentry.Item("created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+                    Try
+                        post.PDate = DateTime.ParseExact(status.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+                    Catch ex As Exception
+                        TraceOut("Parse Error:created_at : " + status.created_at + Environment.NewLine + content)
+                        Continue For
+                    End Try
                     '本文
-                    post.Data = xentry.Item("text").InnerText
+                    post.Data = status.text
                     'Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = xentry.Item("source").InnerText
-                    Long.TryParse(xentry.Item("in_reply_to_status_id").InnerText, post.InReplyToId)
-                    post.InReplyToUser = xentry.Item("in_reply_to_screen_name").InnerText
-                    'in_reply_to_user_idを使うか？
-                    post.IsFav = Boolean.Parse(xentry.Item("favorited").InnerText)
+                    post.Source = status.source
+                    Long.TryParse(status.in_reply_to_status_id, post.InReplyToId)
+                    post.InReplyToUser = status.in_reply_to_screen_name
+
+                    post.IsFav = status.favorited
 
                     '以下、ユーザー情報
-                    Dim xUentry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
-                    post.Uid = Long.Parse(xUentry.Item("id").InnerText)
-                    post.Name = xUentry.Item("screen_name").InnerText
-                    post.Nickname = xUentry.Item("name").InnerText
-                    post.ImageUrl = xUentry.Item("profile_image_url").InnerText
-                    post.IsProtect = Boolean.Parse(xUentry.Item("protected").InnerText)
+                    Dim user As DataModel.user = status.user
+                    post.Uid = user.id
+                    post.Name = user.screen_name
+                    post.Nickname = user._name
+                    post.ImageUrl = user.profile_image_url
+                    post.IsProtect = user.protected
                     post.IsMe = post.Name.ToLower.Equals(_uid)
-                    If post.IsMe Then _UserIdNo = post.Uid.ToString()
+                    If post.IsMe Then _UserIdNo = post.Uid.ToString
                 End If
                 'HTMLに整形
                 post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
@@ -2121,7 +2145,6 @@ Public Class Twitter
                 'MessageBox.Show("不正なXMLです。(TL-Parse)")
                 Continue For
             End Try
-
             '非同期アイコン取得＆StatusDictionaryに追加
             arIdx += 1
             dlgt(arIdx) = New GetIconImageDelegate(AddressOf GetIconImage)
@@ -2727,4 +2750,65 @@ Public Class Twitter
 
     Private Sub Twitter_ApiInformationChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs) Handles Me.ApiInformationChanged
     End Sub
+
+    Public Sub StartUserStream()
+        StopUserStream()
+        If _streamThread IsNot Nothing AndAlso _streamThread.IsAlive Then Exit Sub
+        _streamThread = New Thread(AddressOf UserStreamLoop)
+        _streamThread.Name = "UserStreamReceiver"
+        _streamThread.IsBackground = True
+        _streamActive = True
+        _streamThread.Start()
+        RaiseEvent UserStreamStarted()
+    End Sub
+
+    Public Sub StopUserStream()
+        _streamActive = False
+    End Sub
+
+    Public Sub PauseUserStream()
+        If _streamBypass Then
+            _streamBypass = False
+            RaiseEvent UserStreamStarted()
+        Else
+            _streamBypass = True
+            RaiseEvent UserStreamPaused()
+        End If
+    End Sub
+
+    Private Sub UserStreamLoop()
+        Dim st As Stream = Nothing
+        Dim sr As StreamReader = Nothing
+        Try
+            twCon.UserStream(st)
+            sr = New StreamReader(st)
+            Do While _streamActive
+                Dim line As String = sr.ReadLine()
+                If _streamBypass OrElse String.IsNullOrEmpty(line) Then Continue Do
+                Dim s As String = "["
+                s += line
+                s += "]"
+                Using stream As New MemoryStream()
+                    Dim buf As Byte() = Encoding.Unicode.GetBytes(s)
+                    stream.Write(buf, 0, buf.Length)
+                    stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
+                    CreatePostsFromJson(stream, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
+                End Using
+                'CreatePostsFromJson(s, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
+                RaiseEvent NewPostFromStream()
+            Loop
+        Catch
+            Debug.Print("例外")
+        Finally
+            _streamActive = False
+            If sr IsNot Nothing Then sr.BaseStream.Close()
+            RaiseEvent UserStreamStopped()
+        End Try
+    End Sub
+
+    Public Event NewPostFromStream()
+    Public Event UserStreamStarted()
+    Public Event UserStreamStopped()
+    Public Event UserStreamPaused()
+
 End Class

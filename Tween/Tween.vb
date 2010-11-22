@@ -8166,6 +8166,15 @@ RETRY:
             End If
         End If
         _initial = False
+        AddHandler tw.NewPostFromStream, AddressOf tw_NewPostFromStream
+        AddHandler tw.UserStreamStarted, AddressOf tw_UserStreamStarted
+        AddHandler tw.UserStreamStopped, AddressOf tw_UserStreamStopped
+        AddHandler tw.UserStreamPaused, AddressOf tw_UserStreamPaused
+        PauseToolStripMenuItem.Text = "&Pause"
+        PauseToolStripMenuItem.Enabled = False
+        StartToolStripMenuItem.Text = "&Start"
+        StartToolStripMenuItem.Enabled = True
+        tw.StartUserStream()
         TimerTimeline.Enabled = True
     End Sub
 
@@ -9548,5 +9557,88 @@ RETRY:
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
+    End Sub
+
+    Private Sub tw_NewPostFromStream()
+        If InvokeRequired Then
+            Invoke(New MethodInvoker(AddressOf tw_NewPostFromStream))
+            Exit Sub
+        End If
+
+        Dim rsltAddCount As Integer = _statuses.DistributePosts()
+        RefreshTimeline()
+        SyncLock _syncObject
+            Dim tm As Date = Now
+            If _tlTimestamps.ContainsKey(tm) Then
+                _tlTimestamps(tm) += rsltAddCount
+            Else
+                _tlTimestamps.Add(Now, rsltAddCount)
+            End If
+            Dim oneHour As Date = Now.Subtract(New TimeSpan(1, 0, 0))
+            Dim keys As New List(Of Date)
+            _tlCount = 0
+            For Each key As Date In _tlTimestamps.Keys
+                If key.CompareTo(oneHour) < 0 Then
+                    keys.Add(key)
+                Else
+                    _tlCount += _tlTimestamps(key)
+                End If
+            Next
+            For Each key As Date In keys
+                _tlTimestamps.Remove(key)
+            Next
+            keys.Clear()
+        End SyncLock
+    End Sub
+    Private Sub tw_UserStreamStarted()
+        If InvokeRequired Then
+            Invoke(New MethodInvoker(AddressOf tw_UserStreamStarted))
+            Exit Sub
+        End If
+
+        MenuItemUserStream.Text = "&UserStream ▶"
+        MenuItemUserStream.Enabled = True
+        PauseToolStripMenuItem.Text = "&Pause"
+        PauseToolStripMenuItem.Enabled = True
+        StartToolStripMenuItem.Text = "&Stop"
+        StartToolStripMenuItem.Enabled = True
+    End Sub
+
+    Private Sub tw_UserStreamStopped()
+        If InvokeRequired Then
+            Invoke(New MethodInvoker(AddressOf tw_UserStreamStopped))
+            Exit Sub
+        End If
+
+        MenuItemUserStream.Text = "&UserStream ■"
+        MenuItemUserStream.Enabled = True
+        PauseToolStripMenuItem.Text = "&Pause"
+        PauseToolStripMenuItem.Enabled = False
+        StartToolStripMenuItem.Text = "&Start"
+        StartToolStripMenuItem.Enabled = True
+    End Sub
+
+    Private Sub tw_UserStreamPaused()
+        If InvokeRequired Then
+            Invoke(New MethodInvoker(AddressOf tw_UserStreamPaused))
+            Exit Sub
+        End If
+
+        MenuItemUserStream.Text = "&UserStream ||"
+        MenuItemUserStream.Enabled = True
+        PauseToolStripMenuItem.Text = "&Resume"
+        PauseToolStripMenuItem.Enabled = True
+        StartToolStripMenuItem.Text = "&Stop"
+        StartToolStripMenuItem.Enabled = True
+    End Sub
+
+    Private Sub PauseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PauseToolStripMenuItem.Click
+        PauseToolStripMenuItem.Enabled = False
+        tw.PauseUserStream()
+    End Sub
+
+    Private Sub StopToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles StopToolStripMenuItem.Click
+        StopToolStripMenuItem.Enabled = False
+        tw.StartUserStream()
     End Sub
 End Class

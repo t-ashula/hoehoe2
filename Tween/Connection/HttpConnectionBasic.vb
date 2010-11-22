@@ -98,6 +98,43 @@ Public Class HttpConnectionBasic
         Return code
     End Function
 
+    '''<summary>
+    '''OAuth認証で指定のURLとHTTP通信を行い、ストリームを返す
+    '''</summary>
+    '''<param name="method">HTTP通信メソッド（GET/HEAD/POST/PUT/DELETE）</param>
+    '''<param name="requestUri">通信先URI</param>
+    '''<param name="param">GET時のクエリ、またはPOST時のエンティティボディ</param>
+    '''<param name="content">[OUT]HTTP応答のボディストリーム</param>
+    '''<param name="headerInfo">[IN/OUT]HTTP応答のヘッダ情報。必要なヘッダ名を事前に設定しておくこと</param>
+    '''<returns>HTTP応答のステータスコード</returns>
+    Public Function GetContent(ByVal method As String, _
+            ByVal requestUri As Uri, _
+            ByVal param As Dictionary(Of String, String), _
+            ByRef content As Stream) As HttpStatusCode Implements IHttpConnection.GetContent
+        '認証済かチェック
+        If String.IsNullOrEmpty(Me.credential) Then Return HttpStatusCode.Unauthorized
+
+        Dim webReq As HttpWebRequest = CreateRequest(method, _
+                                                        requestUri, _
+                                                        param, _
+                                                        False)
+        'BASIC認証用ヘッダを付加
+        AppendApiInfo(webReq)
+
+        Try
+            Dim webRes As HttpWebResponse = CType(webReq.GetResponse(), HttpWebResponse)
+            content = webRes.GetResponseStream()
+            Return webRes.StatusCode
+        Catch ex As WebException
+            If ex.Status = WebExceptionStatus.ProtocolError Then
+                Dim res As HttpWebResponse = DirectCast(ex.Response, HttpWebResponse)
+                Return res.StatusCode
+            End If
+            Throw ex
+        End Try
+
+    End Function
+
 
     '''<summary>
     '''BASIC認証とREST APIで必要なヘッダを付加

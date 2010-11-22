@@ -129,6 +129,43 @@ Public Class HttpConnectionOAuth
         Return code
     End Function
 
+    '''<summary>
+    '''OAuth認証で指定のURLとHTTP通信を行い、ストリームを返す
+    '''</summary>
+    '''<param name="method">HTTP通信メソッド（GET/HEAD/POST/PUT/DELETE）</param>
+    '''<param name="requestUri">通信先URI</param>
+    '''<param name="param">GET時のクエリ、またはPOST時のエンティティボディ</param>
+    '''<param name="content">[OUT]HTTP応答のボディストリーム</param>
+    '''<returns>HTTP応答のステータスコード</returns>
+    Public Function GetContent(ByVal method As String, _
+            ByVal requestUri As Uri, _
+            ByVal param As Dictionary(Of String, String), _
+            ByRef content As Stream) As HttpStatusCode Implements IHttpConnection.GetContent
+        '認証済かチェック
+        If String.IsNullOrEmpty(token) Then Return HttpStatusCode.Unauthorized
+
+        Dim webReq As HttpWebRequest = CreateRequest(method, _
+                                                        requestUri, _
+                                                        param, _
+                                                        False)
+        'OAuth認証ヘッダを付加
+        AppendOAuthInfo(webReq, param, token, tokenSecret)
+
+        Try
+            Dim webRes As HttpWebResponse = CType(webReq.GetResponse(), HttpWebResponse)
+            content = webRes.GetResponseStream()
+            Return webRes.StatusCode
+        Catch ex As WebException
+            If ex.Status = WebExceptionStatus.ProtocolError Then
+                Dim res As HttpWebResponse = DirectCast(ex.Response, HttpWebResponse)
+                Return res.StatusCode
+            End If
+            Throw ex
+        End Try
+
+    End Function
+
+
 #Region "認証処理"
     '''<summary>
     '''OAuth認証の開始要求（リクエストトークン取得）。PIN入力用の前段
