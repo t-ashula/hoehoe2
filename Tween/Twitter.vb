@@ -32,6 +32,7 @@ Imports System.Diagnostics
 Imports System.Net
 Imports System.Reflection
 Imports System.Reflection.MethodBase
+Imports System.Runtime.Serialization.Json
 
 
 Public Class Twitter
@@ -454,7 +455,7 @@ Public Class Twitter
                     xNode = xd.SelectSingleNode("/status/user/description/text()")
                     If xNode IsNot Nothing Then _bio = xNode.Value
                     xNode = xd.SelectSingleNode("/status/user/id/text()")
-                    If xNode IsNot Nothing Then _userIdNo = xNode.Value
+                    If xNode IsNot Nothing Then _UserIdNo = xNode.Value
                 Catch ex As Exception
                     Return ""
                 End Try
@@ -1388,10 +1389,146 @@ Public Class Twitter
         End Select
 
         If gType = WORKERTYPE.Timeline Then
-            Return CreatePostsFromXml(content, gType, Nothing, read, count, Me.minHomeTimeline)
+
+            Return CreatePostsFromJson(content, gType, Nothing, read, count, Me.minHomeTimeline)
+            'Return CreatePostsFromXml(content, gType, Nothing, read, count, Me.minHomeTimeline)
         Else
-            Return CreatePostsFromXml(content, gType, Nothing, read, count, Me.minMentions)
+            'Return CreatePostsFromXml(content, gType, Nothing, read, count, Me.minMentions)
+            Return CreatePostsFromJson(content, gType, Nothing, read, count, Me.minMentions)
         End If
+    End Function
+
+    Private Function CreatePostsFromJson(ByVal content As String, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
+        Dim stream As New MemoryStream(Encoding.Unicode.GetBytes(content))
+        Dim serializer As New DataContractJsonSerializer(GetType(List(Of DataModel.status)))
+        Dim item As List(Of DataModel.status)
+
+        Dim arIdx As Integer = -1
+        Dim dlgt(300) As GetIconImageDelegate    'countQueryに合わせる
+        Dim ar(300) As IAsyncResult              'countQueryに合わせる
+#If 0 Then
+        item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.status))
+#Else
+        ' エラーチェックはまだ行わない
+        Try
+            item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.status))
+        Catch ex As Exception
+            TraceOut(content)
+            Return "Invalid Json!"
+        End Try
+#End If
+
+        For Each status As DataModel.status In item
+            Dim post As New PostClass
+            Try
+                post.Id = status.id
+                If minimumId > post.Id Then minimumId = post.Id
+                '二重取得回避
+                SyncLock LockObj
+                    If tab Is Nothing Then
+                        If TabInformations.GetInstance.ContainsKey(post.Id) Then Continue For
+                    Else
+                        If TabInformations.GetInstance.ContainsKey(post.Id, tab.TabName) Then Continue For
+                    End If
+                End SyncLock
+                If status.retweeted_status IsNot Nothing Then
+                    Dim retweeted As DataModel.retweeted_status = status.retweeted_status
+                    post.PDate = DateTime.ParseExact(retweeted.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+                    'Id
+                    post.RetweetedId = retweeted.id
+                    '本文
+                    post.Data = retweeted.text
+                    'Source取得（htmlの場合は、中身を取り出し）
+                    post.Source = retweeted.source
+                    'Reply先
+                    Long.TryParse(retweeted.in_reply_to_status_id, post.InReplyToId)
+                    post.InReplyToUser = retweeted.in_reply_to_screen_name
+                    post.IsFav = TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Contains(post.RetweetedId)
+
+                    '以下、ユーザー情報
+                    Dim user As DataModel.user = retweeted.user
+                    post.Uid = user.id
+                    post.Name = user.screen_name
+                    post.Nickname = user._name
+                    post.ImageUrl = user.profile_image_url
+                    post.IsProtect = user.protected
+                    If post.IsMe Then _UserIdNo = post.Uid.ToString()
+
+                    'Retweetした人
+                    post.RetweetedBy = status.user.screen_name
+                Else
+                    post.PDate = DateTime.ParseExact(status.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+                    '本文
+                    post.Data = status.text
+                    'Source取得（htmlの場合は、中身を取り出し）
+                    post.Source = status.source
+                    Long.TryParse(status.in_reply_to_status_id, post.InReplyToId)
+                    post.InReplyToUser = status.in_reply_to_screen_name
+
+                    post.IsFav = status.favorited
+
+                    '以下、ユーザー情報
+                    Dim user As DataModel.user = status.user
+                    post.Uid = user.id
+                    post.Name = user.screen_name
+                    post.Nickname = user._name
+                    post.ImageUrl = user.profile_image_url
+                    post.IsProtect = user.protected
+                    post.IsMe = post.Name.ToLower.Equals(_uid)
+                    If post.IsMe Then _UserIdNo = post.Uid.ToString
+                End If
+                'HTMLに整形
+                post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
+                post.Data = HttpUtility.HtmlDecode(post.Data)
+                post.Data = post.Data.Replace("<3", "♡")
+                'Source整形
+                CreateSource(post)
+
+                post.IsRead = read
+                If gType = WORKERTYPE.Timeline OrElse tab IsNot Nothing Then
+                    post.IsReply = post.ReplyToList.Contains(_uid)
+                Else
+                    post.IsReply = True
+                End If
+                post.IsExcludeReply = False
+
+                If post.IsMe Then
+                    post.IsOwl = False
+                Else
+                    If followerId.Count > 0 Then post.IsOwl = Not followerId.Contains(post.Uid)
+                End If
+                If post.IsMe AndAlso Not read AndAlso _readOwnPost Then post.IsRead = True
+
+                post.IsDm = False
+                If tab IsNot Nothing Then post.RelTabName = tab.TabName
+            Catch ex As Exception
+                TraceOut(content)
+                MessageBox.Show("Parse Error(CreatePostsFromJson)")
+                Continue For
+            End Try
+            '非同期アイコン取得＆StatusDictionaryに追加
+            arIdx += 1
+            If arIdx > dlgt.Length - 1 Then
+                arIdx -= 1
+                Exit For
+            End If
+            dlgt(arIdx) = New GetIconImageDelegate(AddressOf GetIconImage)
+            ar(arIdx) = dlgt(arIdx).BeginInvoke(post, Nothing, Nothing)
+        Next
+        'アイコン取得完了待ち
+        For i As Integer = 0 To arIdx
+            Try
+                dlgt(i).EndInvoke(ar(i))
+            Catch ex As IndexOutOfRangeException
+                Throw New IndexOutOfRangeException(String.Format("i={0},dlgt.Length={1},ar.Length={2},arIdx={3}", i, dlgt.Length, ar.Length, arIdx))
+            Catch ex As Exception
+                '最後までendinvoke回す（ゾンビ化回避）
+                ex.Data("IsTerminatePermission") = False
+                Throw
+            End Try
+        Next
+
+        Return ""
     End Function
 
     'Public Overloads Function GetListStatus(ByVal read As Boolean, _

@@ -322,7 +322,7 @@ Public Class HttpTwitter
         End If
 
         Return httpCon.GetContent(GetMethod, _
-                            CreateTwitterUri("/1/statuses/home_timeline.xml"), _
+                            CreateTwitterUri("/1/statuses/home_timeline.json"), _
                             param, _
                             content, _
                             TwitterApiInfo.HttpHeaders, _
@@ -342,7 +342,7 @@ Public Class HttpTwitter
         End If
 
         Return httpCon.GetContent(GetMethod, _
-                            CreateTwitterUri("/1/statuses/mentions.xml"), _
+                            CreateTwitterUri("/1/statuses/mentions.json"), _
                             param, _
                             content, _
                             TwitterApiInfo.HttpHeaders, _
