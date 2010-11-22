@@ -2797,8 +2797,8 @@ Public Class Twitter
                 'CreatePostsFromJson(s, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
                 RaiseEvent NewPostFromStream()
             Loop
-        Catch
-            Debug.Print("例外")
+        Catch ex As Exception
+            ExceptionOut(ex)
         Finally
             _streamActive = False
             If sr IsNot Nothing Then sr.BaseStream.Close()
