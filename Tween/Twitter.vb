@@ -2767,7 +2767,6 @@ Public Class Twitter
 
     Public Sub StopUserStream()
         _streamActive = False
-        RaiseEvent UserStreamStopped()
     End Sub
 
     Public Sub PauseUserStream()
@@ -2783,31 +2782,39 @@ Public Class Twitter
     Private Sub UserStreamLoop()
         Dim st As Stream = Nothing
         Dim sr As StreamReader = Nothing
-        Try
-            twCon.UserStream(st)
-            sr = New StreamReader(st)
-            Do While _streamActive
-                Dim line As String = sr.ReadLine()
-                If _streamBypass OrElse String.IsNullOrEmpty(line) Then Continue Do
-                Dim s As String = "["
-                s += line
-                s += "]"
-                Using stream As New MemoryStream()
-                    Dim buf As Byte() = Encoding.Unicode.GetBytes(s)
-                    stream.Write(buf, 0, buf.Length)
-                    stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
-                    CreatePostsFromJson(stream, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
-                End Using
-                'CreatePostsFromJson(s, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
-                RaiseEvent NewPostFromStream()
-            Loop
-        Catch ex As Exception
-            ExceptionOut(ex)
-        Finally
-            _streamActive = False
-            If sr IsNot Nothing Then sr.BaseStream.Close()
-            RaiseEvent UserStreamStopped()
-        End Try
+        Do
+            Try
+                twCon.UserStream(st)
+                sr = New StreamReader(st)
+                Do While _streamActive
+                    Dim line As String = sr.ReadLine()
+                    If _streamBypass OrElse String.IsNullOrEmpty(line) Then Continue Do
+                    Dim s As String = "["
+                    s += line
+                    s += "]"
+                    Using stream As New MemoryStream()
+                        Dim buf As Byte() = Encoding.Unicode.GetBytes(s)
+                        stream.Write(buf, 0, buf.Length)
+                        stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
+                        CreatePostsFromJson(stream, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
+                    End Using
+                    'CreatePostsFromJson(s, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
+                    RaiseEvent NewPostFromStream()
+                Loop
+            Catch ex As WebException
+                If ex.Status = WebExceptionStatus.Timeout Then
+                    Thread.Sleep(10 * 1000)       ' 10秒後に接続再試行
+                Else
+                    ExceptionOut(ex)
+                End If
+            Catch ex As Exception
+                ExceptionOut(ex)
+            Finally
+                _streamActive = False
+                If sr IsNot Nothing Then sr.BaseStream.Close()
+                RaiseEvent UserStreamStopped()
+            End Try
+        Loop Until _streamActive = False
     End Sub
 
     Public Event NewPostFromStream()
