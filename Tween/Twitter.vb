@@ -2767,6 +2767,7 @@ Public Class Twitter
 
     Public Sub StopUserStream()
         _streamActive = False
+        RaiseEvent UserStreamStopped()
     End Sub
 
     Public Sub PauseUserStream()
