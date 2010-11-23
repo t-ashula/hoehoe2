@@ -1404,7 +1404,10 @@ Public Class Twitter
     End Function
 
     Private Overloads Function CreatePostsFromJson(ByVal content As String, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
-        Using stream As New MemoryStream(Encoding.Unicode.GetBytes(content))
+        Using stream As New MemoryStream()
+            Dim buf As Byte() = Encoding.Unicode.GetBytes(content)
+            stream.Write(buf, 0, buf.Length)
+            stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
             Return CreatePostsFromJson(stream, gType, tab, read, count, minimumId)
         End Using
     End Function
