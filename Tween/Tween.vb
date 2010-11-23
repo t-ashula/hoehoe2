@@ -8172,8 +8172,8 @@ RETRY:
         AddHandler tw.UserStreamPaused, AddressOf tw_UserStreamPaused
         PauseToolStripMenuItem.Text = "&Pause"
         PauseToolStripMenuItem.Enabled = False
-        StartToolStripMenuItem.Text = "&Start"
-        StartToolStripMenuItem.Enabled = True
+        StopToolStripMenuItem.Text = "&Start"
+        StopToolStripMenuItem.Enabled = True
         tw.StartUserStream()
         TimerTimeline.Enabled = True
     End Sub
@@ -9600,8 +9600,8 @@ RETRY:
         MenuItemUserStream.Enabled = True
         PauseToolStripMenuItem.Text = "&Pause"
         PauseToolStripMenuItem.Enabled = True
-        StartToolStripMenuItem.Text = "&Stop"
-        StartToolStripMenuItem.Enabled = True
+        StopToolStripMenuItem.Text = "&Stop"
+        StopToolStripMenuItem.Enabled = True
     End Sub
 
     Private Sub tw_UserStreamStopped()
@@ -9614,8 +9614,8 @@ RETRY:
         MenuItemUserStream.Enabled = True
         PauseToolStripMenuItem.Text = "&Pause"
         PauseToolStripMenuItem.Enabled = False
-        StartToolStripMenuItem.Text = "&Start"
-        StartToolStripMenuItem.Enabled = True
+        StopToolStripMenuItem.Text = "&Start"
+        StopToolStripMenuItem.Enabled = True
     End Sub
 
     Private Sub tw_UserStreamPaused()
@@ -9628,17 +9628,17 @@ RETRY:
         MenuItemUserStream.Enabled = True
         PauseToolStripMenuItem.Text = "&Resume"
         PauseToolStripMenuItem.Enabled = True
-        StartToolStripMenuItem.Text = "&Stop"
-        StartToolStripMenuItem.Enabled = True
+        StopToolStripMenuItem.Text = "&Stop"
+        StopToolStripMenuItem.Enabled = True
     End Sub
 
     Private Sub PauseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PauseToolStripMenuItem.Click
-        PauseToolStripMenuItem.Enabled = False
+        MenuItemUserStream.Enabled = False
         tw.PauseUserStream()
     End Sub
 
     Private Sub StopToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles StopToolStripMenuItem.Click
-        StopToolStripMenuItem.Enabled = False
+        MenuItemUserStream.Enabled = False
         tw.StartUserStream()
     End Sub
 End Class

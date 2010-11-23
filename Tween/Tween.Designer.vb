@@ -209,6 +209,9 @@ Partial Class TweenMain
         Me.HashManageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RtCountMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ListManageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuItemUserStream = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PauseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StopToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.MatomeMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShortcutKeyListMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -269,10 +272,6 @@ Partial Class TweenMain
         Me.TimerRefreshIcon = New System.Windows.Forms.Timer(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.MenuItemUserStream = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StartToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PauseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StopToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripContainer1.BottomToolStripPanel.SuspendLayout()
         Me.ToolStripContainer1.ContentPanel.SuspendLayout()
         Me.ToolStripContainer1.TopToolStripPanel.SuspendLayout()
@@ -1385,6 +1384,22 @@ Partial Class TweenMain
         Me.ListManageToolStripMenuItem.Name = "ListManageToolStripMenuItem"
         resources.ApplyResources(Me.ListManageToolStripMenuItem, "ListManageToolStripMenuItem")
         '
+        'MenuItemUserStream
+        '
+        Me.MenuItemUserStream.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PauseToolStripMenuItem, Me.StopToolStripMenuItem})
+        resources.ApplyResources(Me.MenuItemUserStream, "MenuItemUserStream")
+        Me.MenuItemUserStream.Name = "MenuItemUserStream"
+        '
+        'PauseToolStripMenuItem
+        '
+        resources.ApplyResources(Me.PauseToolStripMenuItem, "PauseToolStripMenuItem")
+        Me.PauseToolStripMenuItem.Name = "PauseToolStripMenuItem"
+        '
+        'StopToolStripMenuItem
+        '
+        Me.StopToolStripMenuItem.Name = "StopToolStripMenuItem"
+        resources.ApplyResources(Me.StopToolStripMenuItem, "StopToolStripMenuItem")
+        '
         'MenuItemHelp
         '
         Me.MenuItemHelp.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MatomeMenuItem, Me.ShortcutKeyListMenuItem, Me.ToolStripSeparator16, Me.VerUpMenuItem, Me.ToolStripSeparator14, Me.ApiInfoMenuItem, Me.ToolStripSeparator7, Me.AboutMenuItem, Me.DebugModeToolStripMenuItem})
@@ -1690,27 +1705,6 @@ Partial Class TweenMain
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
-        'MenuItemUserStream
-        '
-        Me.MenuItemUserStream.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartToolStripMenuItem, Me.PauseToolStripMenuItem, Me.StopToolStripMenuItem})
-        Me.MenuItemUserStream.Name = "MenuItemUserStream"
-        resources.ApplyResources(Me.MenuItemUserStream, "MenuItemUserStream")
-        '
-        'StartToolStripMenuItem
-        '
-        Me.StartToolStripMenuItem.Name = "StartToolStripMenuItem"
-        resources.ApplyResources(Me.StartToolStripMenuItem, "StartToolStripMenuItem")
-        '
-        'PauseToolStripMenuItem
-        '
-        resources.ApplyResources(Me.PauseToolStripMenuItem, "PauseToolStripMenuItem")
-        Me.PauseToolStripMenuItem.Name = "PauseToolStripMenuItem"
-        '
-        'StopToolStripMenuItem
-        '
-        Me.StopToolStripMenuItem.Name = "StopToolStripMenuItem"
-        resources.ApplyResources(Me.StopToolStripMenuItem, "StopToolStripMenuItem")
-        '
         'TweenMain
         '
         Me.AllowDrop = True
@@ -2006,7 +2000,6 @@ Partial Class TweenMain
     Friend WithEvents ToolStripStatusLabel1 As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents CopyUserIdStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuItemUserStream As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents StartToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PauseToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents StopToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
