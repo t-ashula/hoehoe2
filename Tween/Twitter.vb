@@ -2782,39 +2782,46 @@ Public Class Twitter
     Private Sub UserStreamLoop()
         Dim st As Stream = Nothing
         Dim sr As StreamReader = Nothing
-        Do
-            Try
-                twCon.UserStream(st)
-                sr = New StreamReader(st)
-                Do While _streamActive
-                    Dim line As String = sr.ReadLine()
-                    If _streamBypass OrElse String.IsNullOrEmpty(line) Then Continue Do
-                    Dim s As String = "["
-                    s += line
-                    s += "]"
-                    Using stream As New MemoryStream()
-                        Dim buf As Byte() = Encoding.Unicode.GetBytes(s)
-                        stream.Write(buf, 0, buf.Length)
+        Dim isRetry As Boolean = False
+        Dim res As New StringBuilder(8192)
+        Using stream As New MemoryStream()
+            Do
+                Try
+                    isRetry = False
+                    twCon.UserStream(st)
+                    sr = New StreamReader(st)
+                    Do While _streamActive
+                        Dim line As String = sr.ReadLine()
+                        If _streamBypass OrElse String.IsNullOrEmpty(line) Then Continue Do
+                        res.Length = 0
+                        res.Append("[")
+                        res.Append(line)
+                        res.Append("]")
+                        Dim buf As Byte() = Encoding.Unicode.GetBytes(res.ToString)
+                        stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
+                        stream.Write(buf, offset:=0, count:=buf.Length)
                         stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
                         CreatePostsFromJson(stream, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
-                    End Using
-                    'CreatePostsFromJson(s, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
-                    RaiseEvent NewPostFromStream()
-                Loop
-            Catch ex As WebException
-                If ex.Status = WebExceptionStatus.Timeout Then
-                    Thread.Sleep(10 * 1000)       ' 10秒後に接続再試行
-                Else
+                        RaiseEvent NewPostFromStream()
+                    Loop
+                Catch ex As WebException
+                    If ex.Status = WebExceptionStatus.Timeout Then
+                        isRetry = True
+                    Else
+                        ExceptionOut(ex)
+                    End If
+                Catch ex As Exception
                     ExceptionOut(ex)
-                End If
-            Catch ex As Exception
-                ExceptionOut(ex)
-            Finally
-                _streamActive = False
-                If sr IsNot Nothing Then sr.BaseStream.Close()
-                RaiseEvent UserStreamStopped()
-            End Try
-        Loop Until _streamActive = False
+                Finally
+                    _streamActive = False
+                    If sr IsNot Nothing Then sr.BaseStream.Close()
+                    RaiseEvent UserStreamStopped()
+                    If isRetry Then
+                        Thread.Sleep(10 * 1000)
+                    End If
+                End Try
+            Loop While isRetry
+        End Using
     End Sub
 
     Public Event NewPostFromStream()
