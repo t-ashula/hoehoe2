@@ -9602,6 +9602,8 @@ RETRY:
         PauseToolStripMenuItem.Enabled = True
         StopToolStripMenuItem.Text = "&Stop"
         StopToolStripMenuItem.Enabled = True
+
+        StatusLabel.Text = "UserStream Started."
     End Sub
 
     Private Sub tw_UserStreamStopped()
@@ -9616,6 +9618,8 @@ RETRY:
         PauseToolStripMenuItem.Enabled = False
         StopToolStripMenuItem.Text = "&Start"
         StopToolStripMenuItem.Enabled = True
+
+        StatusLabel.Text = "UserStream Stopped."
     End Sub
 
     Private Sub tw_UserStreamPaused()
@@ -9630,6 +9634,8 @@ RETRY:
         PauseToolStripMenuItem.Enabled = True
         StopToolStripMenuItem.Text = "&Stop"
         StopToolStripMenuItem.Enabled = True
+
+        StatusLabel.Text = "UserStream Paused."
     End Sub
 
     Private Sub PauseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PauseToolStripMenuItem.Click
