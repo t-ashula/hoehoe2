@@ -2779,6 +2779,11 @@ Public Class Twitter
         End If
     End Sub
 
+    Private EventNameTable() As String = { _
+        "friends", _
+        "target"
+    }
+
     Private Sub UserStreamLoop()
         Dim st As Stream = Nothing
         Dim sr As StreamReader = Nothing
@@ -2792,6 +2797,25 @@ Public Class Twitter
                 Do While _streamActive
                     Dim line As String = sr.ReadLine()
                     If _streamBypass OrElse String.IsNullOrEmpty(line) Then Continue Do
+
+                    Dim idx As Integer = line.IndexOf("{""")
+                    Dim idx2 As Integer = line.IndexOf(""":")
+                    If idx = 0 AndAlso idx2 > 0 Then
+                        Dim eventname As String = line.Substring(idx + 2, idx2 - 2)
+
+                        Select Case Array.IndexOf(EventNameTable, eventname)
+                            Case 0  ' friends
+                                Debug.Print("friends")
+                                Continue Do
+                            Case 1  ' その他イベント
+                                Debug.Print("Event")
+                                TraceOut("Event" + Environment.NewLine + line)
+                                Continue Do
+                            Case Else
+                                '
+                        End Select
+                    End If
+
                     res.Length = 0
                     res.Append("[")
                     res.Append(line)
