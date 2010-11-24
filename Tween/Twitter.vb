@@ -2754,6 +2754,15 @@ Public Class Twitter
     Private Sub Twitter_ApiInformationChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs) Handles Me.ApiInformationChanged
     End Sub
 
+    Public Property UserStreamEnabled As Boolean
+        Get
+            Return _streamActive
+        End Get
+        Set(ByVal value As Boolean)
+            _streamActive = value
+        End Set
+    End Property
+
     Public Sub StartUserStream()
         StopUserStream()
         If _streamThread IsNot Nothing AndAlso _streamThread.IsAlive Then Exit Sub
