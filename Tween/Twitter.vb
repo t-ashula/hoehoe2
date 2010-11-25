@@ -2754,13 +2754,10 @@ Public Class Twitter
     Private Sub Twitter_ApiInformationChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs) Handles Me.ApiInformationChanged
     End Sub
 
-    Public Property UserStreamEnabled As Boolean
+    Public ReadOnly Property UserStreamEnabled As Boolean
         Get
             Return _streamActive
         End Get
-        Set(ByVal value As Boolean)
-            _streamActive = value
-        End Set
     End Property
 
     Public Sub StartUserStream()
@@ -2771,7 +2768,6 @@ Public Class Twitter
         _streamThread.IsBackground = True
         _streamActive = True
         _streamThread.Start()
-        RaiseEvent UserStreamStarted()
     End Sub
 
     Public Sub StopUserStream()
@@ -2803,6 +2799,7 @@ Public Class Twitter
                 isRetry = False
                 twCon.UserStream(st)
                 sr = New StreamReader(st)
+                RaiseEvent UserStreamStarted()
                 Do While _streamActive
                     Dim line As String = sr.ReadLine()
                     If _streamBypass OrElse String.IsNullOrEmpty(line) Then Continue Do
@@ -2851,6 +2848,7 @@ Public Class Twitter
                 RaiseEvent UserStreamStopped()
                 If isRetry Then
                     Thread.Sleep(10 * 1000)
+                    _streamActive = True
                 End If
             End Try
         Loop While isRetry
