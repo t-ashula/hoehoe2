@@ -388,7 +388,7 @@ Public Class HttpTwitter
         End If
 
         Return httpCon.GetContent(GetMethod, _
-                            CreateTwitterUri("/1/direct_messages.xml"), _
+                            CreateTwitterUri("/1/direct_messages.json"), _
                             Nothing, _
                             content, _
                             TwitterApiInfo.HttpHeaders, _
@@ -408,7 +408,7 @@ Public Class HttpTwitter
         End If
 
         Return httpCon.GetContent(GetMethod, _
-                            CreateTwitterUri("/1/direct_messages/sent.xml"), _
+                            CreateTwitterUri("/1/direct_messages/sent.json"), _
                             Nothing, _
                             content, _
                             TwitterApiInfo.HttpHeaders, _

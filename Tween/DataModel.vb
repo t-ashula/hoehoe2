@@ -142,5 +142,18 @@ Public Class DataModel
         <DataMember(Name:="text")> Public text As String
     End Class
 
+    <DataContract()> _
+    Public Class directmessage
+        <DataMember(Name:="created_at")> Public created_at As String
+        <DataMember(Name:="sender_id")> Public sender_id As Int64
+        <DataMember(Name:="sender_screen_name")> Public sender_screen_name As String
+        <DataMember(Name:="sender")> Public sender As user
+        <DataMember(Name:="id_str")> Public id_str As String
+        <DataMember(Name:="recipient")> Public recipient As user
+        <DataMember(Name:="recipient_screen_name")> Public recipient_screen_name As String
+        <DataMember(Name:="recipient_id")> Public recipient_id As Int64
+        <DataMember(Name:="id")> Public id As Int64
+        <DataMember(Name:="text")> Public text As String
+    End Class
 
 End Class

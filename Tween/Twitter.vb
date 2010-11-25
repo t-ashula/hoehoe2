@@ -1403,6 +1403,26 @@ Public Class Twitter
         End If
     End Function
 
+    Private Function DateTimeParse(ByVal input As String) As Date
+        Dim rslt As Date
+        Dim format() As String = {
+            "ddd MMM dd HH:mm:ss zzzz yyyy"
+        }
+        For Each fmt As String In format
+            If DateTime.TryParseExact(input, _
+                                      fmt, _
+                                      System.Globalization.DateTimeFormatInfo.InvariantInfo, _
+                                      System.Globalization.DateTimeStyles.None, _
+                                      rslt) Then
+                Return rslt
+            Else
+                Continue For
+            End If
+        Next
+        TraceOut("Parse Error(DateTimeFormat) : " + input)
+        Return New Date
+    End Function
+
     Private Overloads Function CreatePostsFromJson(ByVal content As String, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
         Using stream As New MemoryStream()
             Dim buf As Byte() = Encoding.Unicode.GetBytes(content)
@@ -1452,12 +1472,8 @@ Public Class Twitter
                 If status.retweeted_status IsNot Nothing Then
                     Dim retweeted As DataModel.retweeted_status = status.retweeted_status
 
-                    Try
-                        post.PDate = DateTime.ParseExact(retweeted.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-                    Catch ex As Exception
-                        TraceOut("Parse Error:retweeted_status.created_at : " + retweeted.created_at + Environment.NewLine + Encoding.Unicode.GetString(content.GetBuffer()))
-                        Continue For
-                    End Try
+                    post.PDate = DateTimeParse(retweeted.created_at)
+
                     'Id
                     post.RetweetedId = retweeted.id
                     '本文
@@ -1481,12 +1497,7 @@ Public Class Twitter
                     'Retweetした人
                     post.RetweetedBy = status.user.screen_name
                 Else
-                    Try
-                        post.PDate = DateTime.ParseExact(status.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-                    Catch ex As Exception
-                        TraceOut("Parse Error:created_at : " + status.created_at + Environment.NewLine + Encoding.Unicode.GetString(content.GetBuffer()))
-                        Continue For
-                    End Try
+                    post.PDate = DateTimeParse(status.created_at)
                     '本文
                     post.Data = status.text
                     'Source取得（htmlの場合は、中身を取り出し）
@@ -1917,23 +1928,30 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
+        Dim stream As New MemoryStream(Encoding.Unicode.GetBytes(content))
+        Dim serializer As New DataContractJsonSerializer(GetType(List(Of DataModel.directmessage)))
+        Dim item As List(Of DataModel.directmessage)
+
         Dim arIdx As Integer = -1
         Dim dlgt(300) As GetIconImageDelegate    'countQueryに合わせる
         Dim ar(300) As IAsyncResult              'countQueryに合わせる
-        Dim xdoc As New XmlDocument
+
         Try
-            xdoc.LoadXml(content)
+            item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.directmessage))
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + content)
+            Return "Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
             TraceOut(content)
-            'MessageBox.Show("不正なXMLです。(DM-LoadXml)")
-            Return "Invalid XML!"
+            Return "Invalid Json!"
+        Finally
+            stream.Close()
         End Try
 
-        For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("./direct_message")
-            Dim xentry As XmlElement = CType(xentryNode, XmlElement)
+        For Each message As DataModel.directmessage In item
             Dim post As New PostClass
             Try
-                post.Id = Long.Parse(xentry.Item("id").InnerText)
+                post.Id = message.id
                 If gType = WORKERTYPE.DirectMessegeRcv Then
                     If minDirectmessage > post.Id Then minDirectmessage = post.Id
                 Else
@@ -1945,9 +1963,9 @@ Public Class Twitter
                 End SyncLock
                 'sender_id
                 'recipient_id
-                post.PDate = DateTime.ParseExact(xentry.Item("created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
+                post.PDate = DateTimeParse(message.created_at)
                 '本文
-                post.Data = xentry.Item("text").InnerText
+                post.Data = message.text
                 'HTMLに整形
                 post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
                 post.Data = HttpUtility.HtmlDecode(post.Data)
@@ -1959,25 +1977,22 @@ Public Class Twitter
                 Else
                     post.IsOwl = False
                 End If
-
                 '以下、ユーザー情報
-                Dim xUentry As XmlElement
+                Dim user As DataModel.user
                 If gType = WORKERTYPE.DirectMessegeRcv Then
-                    xUentry = CType(xentry.SelectSingleNode("./sender"), XmlElement)
+                    user = message.sender
                     post.IsMe = False
                 Else
-                    xUentry = CType(xentry.SelectSingleNode("./recipient"), XmlElement)
+                    user = message.recipient
                     post.IsMe = True
                 End If
-                post.Uid = Long.Parse(xUentry.Item("id").InnerText)
-                post.Name = xUentry.Item("screen_name").InnerText
-                post.Nickname = xUentry.Item("name").InnerText
-                post.ImageUrl = xUentry.Item("profile_image_url").InnerText
-                post.IsProtect = Boolean.Parse(xUentry.Item("protected").InnerText)
+                post.Uid = user.id
+                post.Name = user.screen_name
+                post.Nickname = user._name
+                post.ImageUrl = user.profile_image_url
+                post.IsProtect = user.protected
             Catch ex As Exception
                 TraceOut(content)
-                'MessageBox.Show("不正なXMLです。(DM-Parse)")
-                Continue For
             End Try
 
             post.IsRead = read
@@ -2069,12 +2084,7 @@ Public Class Twitter
                 'Retweet判定
                 If status.retweeted_status IsNot Nothing Then
                     Dim retweeted As DataModel.retweeted_status = status.retweeted_status
-                    Try
-                        post.PDate = DateTime.ParseExact(retweeted.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-                    Catch ex As Exception
-                        TraceOut("Parse Error:retweeted_status.created_at : " + retweeted.created_at + Environment.NewLine + content)
-                        Continue For
-                    End Try
+                    post.PDate = DateTimeParse(retweeted.created_at)
 
                     'Id
                     post.RetweetedId = post.Id
@@ -2100,12 +2110,8 @@ Public Class Twitter
                     'Retweetした人
                     post.RetweetedBy = status.user.screen_name
                 Else
-                    Try
-                        post.PDate = DateTime.ParseExact(status.created_at, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-                    Catch ex As Exception
-                        TraceOut("Parse Error:created_at : " + status.created_at + Environment.NewLine + content)
-                        Continue For
-                    End Try
+                    post.PDate = DateTimeParse(status.created_at)
+
                     '本文
                     post.Data = status.text
                     'Source取得（htmlの場合は、中身を取り出し）
@@ -2145,7 +2151,6 @@ Public Class Twitter
                 post.IsDm = False
             Catch ex As Exception
                 TraceOut(content)
-                'MessageBox.Show("不正なXMLです。(TL-Parse)")
                 Continue For
             End Try
             '非同期アイコン取得＆StatusDictionaryに追加
