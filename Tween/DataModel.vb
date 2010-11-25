@@ -156,4 +156,29 @@ Public Class DataModel
         <DataMember(Name:="text")> Public text As String
     End Class
 
+    <DataContract()> _
+    Public Class friendsevent
+        <DataMember(Name:="friends")> Public friends As Int64()
+    End Class
+
+    <DataContract()> _
+    Public Class deletedstatus
+        <DataMember(Name:="id")> Public id As Int64
+        <DataMember(Name:="user_id")> Public user_id As Int64
+    End Class
+
+    <DataContract()> _
+    Public Class deleteevent
+        <DataMember(Name:="event")> Public [event] As String
+        <DataMember(Name:="status")> Public status As deletedstatus
+    End Class
+
+    <DataContract()> _
+    Public Class eventdata
+        <DataMember(Name:="target")> Public target As user
+        <DataMember(Name:="target_object")> Public target_object As status
+        <DataMember(Name:="created_at")> Public created_at As String
+        <DataMember(Name:="event")> Public [event] As String
+        <DataMember(Name:="source")> Public source As user
+    End Class
 End Class

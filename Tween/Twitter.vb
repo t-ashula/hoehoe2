@@ -2790,8 +2790,8 @@ Public Class Twitter
     End Sub
 
     Private EventNameTable() As String = { _
-        "friends", _
-        "target"
+        "favorite", _
+        "unfavorite"
     }
 
     Private Sub UserStreamLoop()
@@ -2813,18 +2813,35 @@ Public Class Twitter
                     Dim idx2 As Integer = line.IndexOf(""":")
                     If idx = 0 AndAlso idx2 > 0 Then
                         Dim eventname As String = line.Substring(idx + 2, idx2 - 2)
+                        If eventname.Equals("friends") Then
+                            Debug.Print("friends")
+                            Continue Do
+                        ElseIf eventname.Equals("delete") Then
+                            Debug.Print("delete")
+                            Continue Do
+                        ElseIf eventname.Equals("target") Then
+                            Dim data As DataModel.eventdata
+                            Debug.Print("Event")
+                            Using stream As New MemoryStream()
+                                Dim serializer As New DataContractJsonSerializer(GetType(DataModel.eventdata))
+                                res.Length = 0
+                                res.Append(line)
+                                Dim buf As Byte() = Encoding.Unicode.GetBytes(res.ToString)
+                                stream.Write(buf, offset:=0, count:=buf.Length)
+                                stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
+                                data = DirectCast(serializer.ReadObject(stream), DataModel.eventdata)
+                            End Using
+                            Select Case Array.IndexOf(EventNameTable, data.event)
+                                Case 0  ' favorite
+                                    Debug.Print("Event:favorite")
+                                Case 1  ' unfavorite
+                                    Debug.Print("Event:unfavorite")
+                                Case Else ' その他イベント
+                                    TraceOut("Unknown Event" + Environment.NewLine + line)
+                            End Select
+                            Continue Do
+                        End If
 
-                        Select Case Array.IndexOf(EventNameTable, eventname)
-                            Case 0  ' friends
-                                Debug.Print("friends")
-                                Continue Do
-                            Case 1  ' その他イベント
-                                Debug.Print("Event")
-                                TraceOut("Event" + Environment.NewLine + line)
-                                Continue Do
-                            Case Else
-                                '
-                        End Select
                     End If
 
                     res.Length = 0
@@ -2863,5 +2880,7 @@ Public Class Twitter
     Public Event UserStreamStarted()
     Public Event UserStreamStopped()
     Public Event UserStreamPaused()
+
+    Public Event UserStreamGetFriendsList()
 
 End Class
