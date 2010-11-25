@@ -116,6 +116,7 @@ Public Module MyCommon
         Retweet                 'Retweetする
         PublicSearch            '公式検索
         List                    'Lists
+        UserStream              'UserStream
         '''
         ErrorState              'エラー表示のみで後処理終了(認証エラー時など)
     End Enum

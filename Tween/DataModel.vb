@@ -174,6 +174,11 @@ Public Class DataModel
     End Class
 
     <DataContract()> _
+    Public Class directmessageevent
+        <DataMember(Name:="direct_message")> Public direct_message As directmessage
+    End Class
+
+    <DataContract()> _
     Public Class eventdata
         <DataMember(Name:="target")> Public target As user
         <DataMember(Name:="target_object")> Public target_object As status

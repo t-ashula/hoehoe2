@@ -1441,10 +1441,7 @@ Public Class Twitter
         Dim arIdx As Integer = -1
         Dim dlgt(300) As GetIconImageDelegate    'countQueryに合わせる
         Dim ar(300) As IAsyncResult              'countQueryに合わせる
-#If 0 Then
-        item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.status))
-#Else
-        ' エラーチェックはまだ行わない
+
         Try
             item = DirectCast(serializer.ReadObject(content), List(Of DataModel.status))
         Catch ex As SerializationException
@@ -1454,7 +1451,6 @@ Public Class Twitter
             TraceOut(Encoding.Unicode.GetString(content.GetBuffer()))
             Return "Invalid Json!"
         End Try
-#End If
 
         For Each status As DataModel.status In item
             Dim post As New PostClass
@@ -1888,6 +1884,131 @@ Public Class Twitter
         Return ""
     End Function
 
+    Private Function CreateDirectMessagesFromJson(ByVal content As MemoryStream, ByVal gType As WORKERTYPE, ByVal read As Boolean) As String
+
+        'Dim serializer As New DataContractJsonSerializer(GetType(List(Of DataModel.directmessage)))
+        Dim serializer As DataContractJsonSerializer
+        Dim item As New List(Of DataModel.directmessage)
+
+        Dim arIdx As Integer = -1
+        Dim dlgt(300) As GetIconImageDelegate    'countQueryに合わせる
+        Dim ar(300) As IAsyncResult              'countQueryに合わせる
+        Dim typ As Type
+
+        If gType = WORKERTYPE.UserStream Then
+            typ = GetType(List(Of DataModel.directmessageevent))
+            serializer = New DataContractJsonSerializer(typ)
+        Else
+            serializer = New DataContractJsonSerializer(GetType(List(Of DataModel.directmessage)))
+        End If
+
+        Try
+            If gType = WORKERTYPE.UserStream Then
+                Dim itm As List(Of DataModel.directmessageevent)
+                itm = DirectCast(serializer.ReadObject(content), List(Of DataModel.directmessageevent))
+                For Each dat As DataModel.directmessageevent In itm
+                    item.Add(dat.direct_message)
+                Next
+            Else
+                item = DirectCast(serializer.ReadObject(content), List(Of DataModel.directmessage))
+            End If
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + Encoding.Unicode.GetString(content.GetBuffer()))
+            Return "Json Parse Error(DataContractJsonSerializer)"
+        Catch ex As Exception
+            TraceOut(Encoding.Unicode.GetString(content.GetBuffer()))
+            Return "Invalid Json!"
+        End Try
+
+        For Each message As DataModel.directmessage In item
+            Dim post As New PostClass
+            Try
+                post.Id = message.id
+                If gType <> WORKERTYPE.UserStream Then
+                    If gType = WORKERTYPE.DirectMessegeRcv Then
+                        If minDirectmessage > post.Id Then minDirectmessage = post.Id
+                    Else
+                        If minDirectmessageSent > post.Id Then minDirectmessageSent = post.Id
+                    End If
+                End If
+
+                '二重取得回避
+                SyncLock LockObj
+                    If TabInformations.GetInstance.GetTabByType(TabUsageType.DirectMessage).Contains(post.Id) Then Continue For
+                End SyncLock
+                'sender_id
+                'recipient_id
+                post.PDate = DateTimeParse(message.created_at)
+                '本文
+                post.Data = message.text
+                'HTMLに整形
+                post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
+                post.Data = HttpUtility.HtmlDecode(post.Data)
+                post.Data = post.Data.Replace("<3", "♡")
+                post.IsFav = False
+
+                '以下、ユーザー情報
+                Dim user As DataModel.user
+                If gType = WORKERTYPE.UserStream Then
+                    If twCon.AuthenticatedUsername.Equals(message.recipient.screen_name, StringComparison.CurrentCultureIgnoreCase) Then
+                        user = message.sender
+                        post.IsMe = False
+                        post.IsOwl = True
+                    Else
+                        user = message.recipient
+                        post.IsMe = True
+                        post.IsOwl = False
+                    End If
+                Else
+                    If gType = WORKERTYPE.DirectMessegeRcv Then
+                        user = message.sender
+                        post.IsMe = False
+                        post.IsOwl = True
+                    Else
+                        user = message.recipient
+                        post.IsMe = True
+                        post.IsOwl = False
+                    End If
+                End If
+
+                post.Uid = user.id
+                post.Name = user.screen_name
+                post.Nickname = user._name
+                post.ImageUrl = user.profile_image_url
+                post.IsProtect = user.protected
+            Catch ex As Exception
+                TraceOut(Encoding.Unicode.GetString(content.GetBuffer()))
+                MessageBox.Show("Parse Error(CreateDirectMessagesFromJson)")
+                Continue For
+            End Try
+
+            post.IsRead = read
+            If gType = WORKERTYPE.DirectMessegeSnt AndAlso Not read AndAlso _readOwnPost Then post.IsRead = True
+            post.IsReply = False
+            post.IsExcludeReply = False
+            post.IsDm = True
+
+            '非同期アイコン取得＆StatusDictionaryに追加
+            arIdx += 1
+            dlgt(arIdx) = New GetIconImageDelegate(AddressOf GetIconImage)
+            ar(arIdx) = dlgt(arIdx).BeginInvoke(post, Nothing, Nothing)
+        Next
+
+        'アイコン取得完了待ち
+        For i As Integer = 0 To arIdx
+            Try
+                dlgt(i).EndInvoke(ar(i))
+            Catch ex As Exception
+                '最後までendinvoke回す（ゾンビ化回避）
+                ex.Data("IsTerminatePermission") = False
+                Throw
+            End Try
+        Next
+
+        Return ""
+
+    End Function
+
     Public Function GetDirectMessageApi(ByVal read As Boolean, _
                             ByVal gType As WORKERTYPE, _
                             ByVal more As Boolean) As String
@@ -1928,97 +2049,12 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Dim stream As New MemoryStream(Encoding.Unicode.GetBytes(content))
-        Dim serializer As New DataContractJsonSerializer(GetType(List(Of DataModel.directmessage)))
-        Dim item As List(Of DataModel.directmessage)
-
-        Dim arIdx As Integer = -1
-        Dim dlgt(300) As GetIconImageDelegate    'countQueryに合わせる
-        Dim ar(300) As IAsyncResult              'countQueryに合わせる
-
-        Try
-            item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.directmessage))
-        Catch ex As SerializationException
-            TraceOut(ex.Message + Environment.NewLine + content)
-            Return "Json Parse Error(DataContractJsonSerializer)"
-        Catch ex As Exception
-            TraceOut(content)
-            Return "Invalid Json!"
-        Finally
-            stream.Close()
-        End Try
-
-        For Each message As DataModel.directmessage In item
-            Dim post As New PostClass
-            Try
-                post.Id = message.id
-                If gType = WORKERTYPE.DirectMessegeRcv Then
-                    If minDirectmessage > post.Id Then minDirectmessage = post.Id
-                Else
-                    If minDirectmessageSent > post.Id Then minDirectmessageSent = post.Id
-                End If
-                '二重取得回避
-                SyncLock LockObj
-                    If TabInformations.GetInstance.GetTabByType(TabUsageType.DirectMessage).Contains(post.Id) Then Continue For
-                End SyncLock
-                'sender_id
-                'recipient_id
-                post.PDate = DateTimeParse(message.created_at)
-                '本文
-                post.Data = message.text
-                'HTMLに整形
-                post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
-                post.Data = HttpUtility.HtmlDecode(post.Data)
-                post.Data = post.Data.Replace("<3", "♡")
-                post.IsFav = False
-                '受信ＤＭかの判定で使用
-                If gType = WORKERTYPE.DirectMessegeRcv Then
-                    post.IsOwl = True
-                Else
-                    post.IsOwl = False
-                End If
-                '以下、ユーザー情報
-                Dim user As DataModel.user
-                If gType = WORKERTYPE.DirectMessegeRcv Then
-                    user = message.sender
-                    post.IsMe = False
-                Else
-                    user = message.recipient
-                    post.IsMe = True
-                End If
-                post.Uid = user.id
-                post.Name = user.screen_name
-                post.Nickname = user._name
-                post.ImageUrl = user.profile_image_url
-                post.IsProtect = user.protected
-            Catch ex As Exception
-                TraceOut(content)
-            End Try
-
-            post.IsRead = read
-            If gType = WORKERTYPE.DirectMessegeSnt AndAlso Not read AndAlso _readOwnPost Then post.IsRead = True
-            post.IsReply = False
-            post.IsExcludeReply = False
-            post.IsDm = True
-
-            '非同期アイコン取得＆StatusDictionaryに追加
-            arIdx += 1
-            dlgt(arIdx) = New GetIconImageDelegate(AddressOf GetIconImage)
-            ar(arIdx) = dlgt(arIdx).BeginInvoke(post, Nothing, Nothing)
-        Next
-
-        'アイコン取得完了待ち
-        For i As Integer = 0 To arIdx
-            Try
-                dlgt(i).EndInvoke(ar(i))
-            Catch ex As Exception
-                '最後までendinvoke回す（ゾンビ化回避）
-                ex.Data("IsTerminatePermission") = False
-                Throw
-            End Try
-        Next
-
-        Return ""
+        Using stream As New MemoryStream()
+            Dim buf As Byte() = Encoding.Unicode.GetBytes(content)
+            stream.Write(buf, 0, buf.Length)
+            stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
+            Return CreateDirectMessagesFromJson(stream, gType, read)
+        End Using
     End Function
 
     Public Function GetFavoritesApi(ByVal read As Boolean, _
@@ -2053,7 +2089,6 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Dim stream As New MemoryStream(Encoding.Unicode.GetBytes(content))
         Dim serializer As New DataContractJsonSerializer(GetType(List(Of DataModel.status)))
         Dim item As List(Of DataModel.status)
 
@@ -2062,15 +2097,18 @@ Public Class Twitter
         Dim ar(300) As IAsyncResult              'countQueryに合わせる
 
         Try
-            item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.status))
+            Using stream As New MemoryStream()
+                Dim buf As Byte() = Encoding.Unicode.GetBytes(content)
+                stream.Write(buf, 0, buf.Length)
+                stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
+                item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.status))
+            End Using
         Catch ex As SerializationException
             TraceOut(ex.Message + Environment.NewLine + content)
             Return "Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
             TraceOut(content)
             Return "Invalid Json!"
-        Finally
-            stream.Close()
         End Try
 
         For Each status As DataModel.status In item
@@ -2848,11 +2886,21 @@ Public Class Twitter
                     res.Append("[")
                     res.Append(line)
                     res.Append("]")
+
+                    Dim isDM As Boolean = False
+                    If line.StartsWith("{""direct_message"":") Then
+                        isDM = True
+                    End If
+
                     Using stream As New MemoryStream()
                         Dim buf As Byte() = Encoding.Unicode.GetBytes(res.ToString)
                         stream.Write(buf, offset:=0, count:=buf.Length)
                         stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
-                        CreatePostsFromJson(stream, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
+                        If isDM Then
+                            CreateDirectMessagesFromJson(stream, WORKERTYPE.UserStream, False)
+                        Else
+                            CreatePostsFromJson(stream, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
+                        End If
                     End Using
                     RaiseEvent NewPostFromStream()
                 Loop
