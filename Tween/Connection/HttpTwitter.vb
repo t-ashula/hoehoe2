@@ -658,7 +658,7 @@ Public Class HttpTwitter
     End Function
 
     Private Function CreateTwitterStreamUri(ByVal path As String) As Uri
-        Return New Uri(String.Format("{0}{1}{2}", _protocol, _twitterStreamUrl, path))
+        Return New Uri(String.Format("{0}{1}{2}", "https://", _twitterStreamUrl, path))
     End Function
 
     Public Shared WriteOnly Property TwitterUrl() As String
