@@ -2840,7 +2840,7 @@ Public Class Twitter
         Do
             Try
                 isRetry = False
-                twCon.UserStream(st)
+                twCon.UserStream(st, False, "")
                 sr = New StreamReader(st)
                 RaiseEvent UserStreamStarted()
                 Do While _streamActive
