@@ -121,7 +121,7 @@ Public Class DataModel
     <DataContract()> _
     Public Class status
         <DataMember(Name:="in_reply_to_status_id_str")> Public in_reply_to_status_id_str As String
-        <DataMember(Name:="contributors")> Public contributors As String
+        <DataMember(Name:="contributors", IsRequired:=False)> Public contributors As String
         <DataMember(Name:="in_reply_to_screen_name")> Public in_reply_to_screen_name As String
         <DataMember(Name:="in_reply_to_status_id")> Public in_reply_to_status_id As String
         <DataMember(Name:="in_reply_to_user_id_str")> Public in_reply_to_user_id_str As String
@@ -132,9 +132,9 @@ Public Class DataModel
         <DataMember(Name:="in_reply_to_user_id")> Public in_reply_to_user_id As String
         <DataMember(Name:="source")> Public source As String
         <DataMember(Name:="id_str")> Public id_str As String
-        <DataMember(Name:="coordinates")> Public coordinates As coordinates
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public coordinates As coordinates
         <DataMember(Name:="truncated")> Public truncated As Boolean
-        <DataMember(Name:="place")> Public place As String
+        <DataMember(Name:="place", IsRequired:=False)> Public place As String
         <DataMember(Name:="user")> Public user As user
         <DataMember(Name:="retweeted_status", IsRequired:=False)> Public retweeted_status As retweeted_status
         <DataMember(Name:="id")> Public id As Int64
