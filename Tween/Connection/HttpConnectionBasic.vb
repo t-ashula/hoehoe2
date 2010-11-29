@@ -26,6 +26,12 @@ Public Class HttpConnectionBasic
     '''</summary>
     Private credential As String = ""
 
+
+    '''<summary>
+    '''認証完了時の応答からuserIdentKey情報に基づいて取得するユーザー情報
+    '''</summary>
+    Private streamReq As HttpWebRequest = Nothing
+
     '''<summary>
     '''BASIC認証で指定のURLとHTTP通信を行い、結果を返す
     '''</summary>
@@ -114,15 +120,13 @@ Public Class HttpConnectionBasic
         '認証済かチェック
         If String.IsNullOrEmpty(Me.credential) Then Return HttpStatusCode.Unauthorized
 
-        Dim webReq As HttpWebRequest = CreateRequest(method, _
-                                                        requestUri, _
-                                                        param, _
-                                                        False)
+        streamReq = CreateRequest(method, requestUri, param, False)
+
         'BASIC認証用ヘッダを付加
-        AppendApiInfo(webReq)
+        AppendApiInfo(streamReq)
 
         Try
-            Dim webRes As HttpWebResponse = CType(webReq.GetResponse(), HttpWebResponse)
+            Dim webRes As HttpWebResponse = CType(streamReq.GetResponse(), HttpWebResponse)
             content = webRes.GetResponseStream()
             Return webRes.StatusCode
         Catch ex As WebException
@@ -135,6 +139,14 @@ Public Class HttpConnectionBasic
 
     End Function
 
+    Public Sub RequestAbort() Implements IHttpConnection.RequestAbort
+        Try
+            If streamReq IsNot Nothing Then
+                streamReq.Abort()
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
 
     '''<summary>
     '''BASIC認証とREST APIで必要なヘッダを付加

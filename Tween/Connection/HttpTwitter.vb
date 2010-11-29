@@ -698,4 +698,8 @@ Public Class HttpTwitter
                             param, _
                             content)
     End Function
+
+    Public Sub RequestAbort()
+        httpCon.RequestAbort()
+    End Sub
 End Class

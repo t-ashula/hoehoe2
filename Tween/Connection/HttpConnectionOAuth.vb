@@ -57,6 +57,11 @@ Public Class HttpConnectionOAuth
     Private authorizedUsername As String = ""
 
     '''<summary>
+    '''認証完了時の応答からuserIdentKey情報に基づいて取得するユーザー情報
+    '''</summary>
+    Private streamReq As HttpWebRequest = Nothing
+
+    '''<summary>
     '''OAuth認証で指定のURLとHTTP通信を行い、結果を返す
     '''</summary>
     '''<param name="method">HTTP通信メソッド（GET/HEAD/POST/PUT/DELETE）</param>
@@ -144,15 +149,12 @@ Public Class HttpConnectionOAuth
         '認証済かチェック
         If String.IsNullOrEmpty(token) Then Return HttpStatusCode.Unauthorized
 
-        Dim webReq As HttpWebRequest = CreateRequest(method, _
-                                                        requestUri, _
-                                                        param, _
-                                                        False)
+        streamReq = CreateRequest(method, requestUri, param, False)
         'OAuth認証ヘッダを付加
-        AppendOAuthInfo(webReq, param, token, tokenSecret)
+        AppendOAuthInfo(streamReq, param, token, tokenSecret)
 
         Try
-            Dim webRes As HttpWebResponse = CType(webReq.GetResponse(), HttpWebResponse)
+            Dim webRes As HttpWebResponse = CType(streamReq.GetResponse(), HttpWebResponse)
             content = webRes.GetResponseStream()
             Return webRes.StatusCode
         Catch ex As WebException
@@ -164,6 +166,15 @@ Public Class HttpConnectionOAuth
         End Try
 
     End Function
+
+    Public Sub RequestAbort() Implements IHttpConnection.RequestAbort
+        Try
+            If streamReq IsNot Nothing Then
+                streamReq.Abort()
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
 
 
 #Region "認証処理"

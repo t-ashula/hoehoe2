@@ -23,6 +23,8 @@ Public Interface IHttpConnection
             ByVal headerInfo As Dictionary(Of String, String), _
             ByVal callback As CallbackDelegate) As HttpStatusCode
 
+    Sub RequestAbort()
+
     Function Authenticate(ByVal url As Uri, ByVal username As String, ByVal password As String) As HttpStatusCode
 
 ReadOnly Property AuthUsername() As String

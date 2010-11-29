@@ -2835,6 +2835,9 @@ Public Class Twitter
         "list_member_removed"
     }
 
+
+
+
     Private Sub UserStreamLoop()
         Dim st As Stream = Nothing
         Dim sr As StreamReader = Nothing
@@ -2923,7 +2926,10 @@ Public Class Twitter
                 ExceptionOut(ex)
             Finally
                 _streamActive = False
-                If sr IsNot Nothing Then sr.BaseStream.Close()
+                If sr IsNot Nothing Then
+                    twCon.RequestAbort()
+                    sr.BaseStream.Close()
+                End If
                 RaiseEvent UserStreamStopped()
                 If isRetry Then
                     Thread.Sleep(10 * 1000)
