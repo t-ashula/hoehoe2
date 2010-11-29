@@ -2898,13 +2898,17 @@ Public Class Twitter
         End Get
     End Property
 
-    Public Sub StartUserStream()
+    Public Overloads Sub StartUserStream()
+        StartUserStream(False, "")
+    End Sub
+
+    Public Overloads Sub StartUserStream(ByVal allAtReplies As Boolean, ByVal trackWords As String)
         If userStream IsNot Nothing Then
             StopUserStream()
         Else
             Me._streamBypass = False
             userStream = New TwitterUserstream(twCon)
-            userStream.Start()
+            userStream.Start(allAtReplies, trackWords)
         End If
     End Sub
 
@@ -2943,11 +2947,20 @@ Public Class Twitter
         Private _streamThread As Thread
         Private _streamActive As Boolean
 
+        Private _allAtreplies As Boolean = False
+        Private _trackwords As String = ""
+
         Public Sub New(ByVal twitterConnection As HttpTwitter)
             twCon = DirectCast(twitterConnection.Clone(), HttpTwitter)
         End Sub
 
-        Public Sub Start()
+        Public Overloads Sub Start(ByVal allAtReplies As Boolean, ByVal trackwords As String)
+            Me.AllAtReplies = allAtReplies
+            Me.TrackWords = trackwords
+            Me.Start()
+        End Sub
+
+        Public Overloads Sub Start()
             _streamActive = True
             If _streamThread IsNot Nothing AndAlso _streamThread.IsAlive Then Exit Sub
             _streamThread = New Thread(AddressOf UserStreamLoop)
@@ -2962,6 +2975,24 @@ Public Class Twitter
             End Get
         End Property
 
+        Public Property AllAtReplies As Boolean
+            Get
+                Return _allAtreplies
+            End Get
+            Set(ByVal value As Boolean)
+                _allAtreplies = value
+            End Set
+        End Property
+
+        Public Property TrackWords As String
+            Get
+                Return _trackwords
+            End Get
+            Set(ByVal value As String)
+                _trackwords = value
+            End Set
+        End Property
+
         Private Sub UserStreamLoop()
             Dim st As Stream = Nothing
             Dim sr As StreamReader = Nothing
@@ -2969,7 +3000,7 @@ Public Class Twitter
                 Try
                     RaiseEvent Started()
 
-                    twCon.UserStream(st, False, "")
+                    twCon.UserStream(st, _allAtreplies, _trackwords)
                     sr = New StreamReader(st)
 
                     Do While _streamActive

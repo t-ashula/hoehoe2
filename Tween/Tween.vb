@@ -9646,4 +9646,13 @@ RETRY:
         MenuItemUserStream.Enabled = False
         tw.StartUserStream()
     End Sub
+
+    Private Sub TrackToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TrackToolStripMenuItem.Click
+
+    End Sub
+
+    Private Sub AllrepliesToolStripMenuItem_CheckStateChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AllrepliesToolStripMenuItem.CheckStateChanged
+        tw.StopUserStream()
+        tw.StartUserStream(AllrepliesToolStripMenuItem.Checked, "")
+    End Sub
 End Class

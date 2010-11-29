@@ -71,19 +71,19 @@ Public Class DataModel
     <DataContract()> _
     Public Class coordinates
         <DataMember(Name:="type")> Public type As String
-        <DataMember(Name:="coordinates")> Public _coordinates(2) As String
+        <DataMember(Name:="coordinates")> Public _coordinates(2) As Single
     End Class
 
     <DataContract()> _
     Public Class geo
         <DataMember(Name:="type", IsRequired:=False)> Public type As String
-        <DataMember(Name:="coordinates")> Public _coordinates(2) As String
+        <DataMember(Name:="coordinates")> Public _coordinates(2) As Single
     End Class
 
     <DataContract()> _
     Public Class bounding_box
         <DataMember(Name:="type")> Public type As String
-        <DataMember(Name:="coordinates")> Public _coordinates(2) As String
+        <DataMember(Name:="coordinates")> Public _coordinates(2) As Single
     End Class
 
     <DataContract()> _
@@ -132,7 +132,7 @@ Public Class DataModel
         <DataMember(Name:="in_reply_to_user_id")> Public in_reply_to_user_id As String
         <DataMember(Name:="source")> Public source As String
         <DataMember(Name:="id_str")> Public id_str As String
-        <DataMember(Name:="coordinates", IsRequired:=False)> Public coordinates As coordinates
+        <DataMember(Name:="coordinates")> Public coordinates As coordinates
         <DataMember(Name:="truncated")> Public truncated As Boolean
         <DataMember(Name:="place")> Public place As String
         <DataMember(Name:="user")> Public user As user

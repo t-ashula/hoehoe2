@@ -28,7 +28,6 @@ Partial Class TweenMain
         Me.ToolStripContainer1 = New System.Windows.Forms.ToolStripContainer()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.StatusLabelUrl = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.StatusLabel = New Tween.TweenCustomControl.ToolStripLabelHistory()
         Me.ToolStripStatusLabel1 = New System.Windows.Forms.ToolStripStatusLabel()
         Me.HashStripSplitButton = New System.Windows.Forms.ToolStripSplitButton()
         Me.ContextMenuPostMode = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -272,6 +271,10 @@ Partial Class TweenMain
         Me.TimerRefreshIcon = New System.Windows.Forms.Timer(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.StatusLabel = New Tween.TweenCustomControl.ToolStripLabelHistory()
+        Me.ToolStripSeparator38 = New System.Windows.Forms.ToolStripSeparator()
+        Me.TrackToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AllrepliesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripContainer1.BottomToolStripPanel.SuspendLayout()
         Me.ToolStripContainer1.ContentPanel.SuspendLayout()
         Me.ToolStripContainer1.TopToolStripPanel.SuspendLayout()
@@ -340,14 +343,6 @@ Partial Class TweenMain
         Me.StatusLabelUrl.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
         Me.StatusLabelUrl.Name = "StatusLabelUrl"
         Me.StatusLabelUrl.Spring = True
-        '
-        'StatusLabel
-        '
-        Me.StatusLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right
-        Me.StatusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.StatusLabel.DoubleClickEnabled = True
-        Me.StatusLabel.Name = "StatusLabel"
-        resources.ApplyResources(Me.StatusLabel, "StatusLabel")
         '
         'ToolStripStatusLabel1
         '
@@ -1386,7 +1381,7 @@ Partial Class TweenMain
         '
         'MenuItemUserStream
         '
-        Me.MenuItemUserStream.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PauseToolStripMenuItem, Me.StopToolStripMenuItem})
+        Me.MenuItemUserStream.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PauseToolStripMenuItem, Me.StopToolStripMenuItem, Me.ToolStripSeparator38, Me.TrackToolStripMenuItem, Me.AllrepliesToolStripMenuItem})
         resources.ApplyResources(Me.MenuItemUserStream, "MenuItemUserStream")
         Me.MenuItemUserStream.Name = "MenuItemUserStream"
         '
@@ -1705,6 +1700,30 @@ Partial Class TweenMain
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
+        'StatusLabel
+        '
+        Me.StatusLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right
+        Me.StatusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.StatusLabel.DoubleClickEnabled = True
+        Me.StatusLabel.Name = "StatusLabel"
+        resources.ApplyResources(Me.StatusLabel, "StatusLabel")
+        '
+        'ToolStripSeparator38
+        '
+        Me.ToolStripSeparator38.Name = "ToolStripSeparator38"
+        resources.ApplyResources(Me.ToolStripSeparator38, "ToolStripSeparator38")
+        '
+        'TrackToolStripMenuItem
+        '
+        Me.TrackToolStripMenuItem.Name = "TrackToolStripMenuItem"
+        resources.ApplyResources(Me.TrackToolStripMenuItem, "TrackToolStripMenuItem")
+        '
+        'AllrepliesToolStripMenuItem
+        '
+        Me.AllrepliesToolStripMenuItem.CheckOnClick = True
+        Me.AllrepliesToolStripMenuItem.Name = "AllrepliesToolStripMenuItem"
+        resources.ApplyResources(Me.AllrepliesToolStripMenuItem, "AllrepliesToolStripMenuItem")
+        '
         'TweenMain
         '
         Me.AllowDrop = True
@@ -2002,5 +2021,8 @@ Partial Class TweenMain
     Friend WithEvents MenuItemUserStream As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PauseToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents StopToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator38 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents TrackToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents AllrepliesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class
