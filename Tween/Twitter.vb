@@ -37,6 +37,8 @@ Imports System.Runtime.Serialization.Json
 
 
 Public Class Twitter
+    Implements IDisposable
+
     Delegate Sub GetIconImageDelegate(ByVal post As PostClass)
     Private ReadOnly LockObj As New Object
     Private followerId As New List(Of Long)
@@ -2910,7 +2912,7 @@ Public Class Twitter
         Me._streamBypass = True
         If userStream IsNot Nothing Then userStream.Dispose()
         userStream = Nothing
-        RaiseEvent UserStreamStopped()
+        If Not _endingFlag Then RaiseEvent UserStreamStopped()
     End Sub
 
     Private Sub ReconnectUserStream()
@@ -3041,4 +3043,37 @@ Public Class Twitter
 #End Region
 
     End Class
+
+#Region "IDisposable Support"
+    Private disposedValue As Boolean ' 重複する呼び出しを検出するには
+
+    ' IDisposable
+    Protected Overridable Sub Dispose(ByVal disposing As Boolean)
+        If Not Me.disposedValue Then
+            If disposing Then
+                ' TODO: マネージ状態を破棄します (マネージ オブジェクト)。
+                Me.StopUserStream()
+            End If
+
+            ' TODO: アンマネージ リソース (アンマネージ オブジェクト) を解放し、下の Finalize() をオーバーライドします。
+            ' TODO: 大きなフィールドを null に設定します。
+        End If
+        Me.disposedValue = True
+    End Sub
+
+    ' TODO: 上の Dispose(ByVal disposing As Boolean) にアンマネージ リソースを解放するコードがある場合にのみ、Finalize() をオーバーライドします。
+    'Protected Overrides Sub Finalize()
+    '    ' このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
+    '    Dispose(False)
+    '    MyBase.Finalize()
+    'End Sub
+
+    ' このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
+    Public Sub Dispose() Implements IDisposable.Dispose
+        ' このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
+        Dispose(True)
+        GC.SuppressFinalize(Me)
+    End Sub
+#End Region
+
 End Class
