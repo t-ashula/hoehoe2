@@ -179,6 +179,16 @@ Public Class DataModel
     End Class
 
     <DataContract()> _
+    Public Class trackcount
+        <DataMember(Name:="track")> Public track As Integer
+    End Class
+
+    <DataContract()> _
+    Public Class limitevent
+        <DataMember(Name:="limit")> Public limit As trackcount
+    End Class
+
+    <DataContract()> _
     Public Class eventdata
         <DataMember(Name:="target")> Public target As user
         <DataMember(Name:="target_object")> Public target_object As status
