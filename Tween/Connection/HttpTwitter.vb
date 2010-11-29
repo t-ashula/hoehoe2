@@ -1,8 +1,10 @@
 ﻿Imports System.Net
 Imports System.IO
 Imports System.Web
+Imports System.Threading
 
 Public Class HttpTwitter
+    Implements ICloneable
 
     'OAuth関連
     '''<summary>
@@ -34,10 +36,6 @@ Public Class HttpTwitter
     End Enum
     Private connectionType As AuthMethod = AuthMethod.Basic
 
-    Public Sub New()
-        TwitterApiInfo.Initialize()
-    End Sub
-
     Public Sub Initialize(ByVal accessToken As String, _
                                     ByVal accessTokenSecret As String, _
                                     ByVal username As String)
@@ -52,7 +50,6 @@ Public Class HttpTwitter
             tk = accessToken
             tks = accessTokenSecret
             un = username
-            TwitterApiInfo.Initialize()
         End If
         con.Initialize(ConsumerKey, ConsumerSecret, accessToken, accessTokenSecret, username, "screen_name")
         httpCon = con
@@ -69,7 +66,6 @@ Public Class HttpTwitter
             ' 以前の認証状態よりひとつでも変化があったらhttpヘッダより読み取ったカウントは初期化
             un = username
             pw = password
-            TwitterApiInfo.Initialize()
         End If
         con.Initialize(username, password)
         httpCon = con
@@ -702,4 +698,14 @@ Public Class HttpTwitter
     Public Sub RequestAbort()
         httpCon.RequestAbort()
     End Sub
+
+    Public Function Clone() As Object Implements System.ICloneable.Clone
+        Dim myCopy As New HttpTwitter
+        If Me.connectionType = AuthMethod.Basic Then
+            myCopy.Initialize(Me.AuthenticatedUsername, Me.Password)
+        Else
+            myCopy.Initialize(Me.AccessToken, Me.AccessTokenSecret, Me.AuthenticatedUsername)
+        End If
+        Return myCopy
+    End Function
 End Class

@@ -77,10 +77,6 @@ Public Class Twitter
 
     Private twCon As New HttpTwitter
 
-    Private _streamThread As Thread
-    Private _streamActive As Boolean
-    Private _streamBypass As Boolean
-
     Public Function Authenticate(ByVal username As String, ByVal password As String) As String
 
         Dim res As HttpStatusCode
@@ -97,6 +93,7 @@ Public Class Twitter
             Case HttpStatusCode.OK
                 Twitter.AccountState = ACCOUNT_STATE.Valid
                 _uid = username.ToLower
+                Me.ReconnectUserStream()
                 Return ""
             Case HttpStatusCode.Unauthorized
                 Twitter.AccountState = ACCOUNT_STATE.Invalid
@@ -119,6 +116,7 @@ Public Class Twitter
 
     Public Sub ClearAuthInfo()
         Twitter.AccountState = ACCOUNT_STATE.Invalid
+        TwitterApiInfo.Initialize()
         twCon.ClearAuthInfo()
         _UserIdNo = ""
     End Sub
@@ -2797,24 +2795,129 @@ Public Class Twitter
     Private Sub Twitter_ApiInformationChanged(ByVal sender As Object, ByVal e As ApiInformationChangedEventArgs) Handles Me.ApiInformationChanged
     End Sub
 
+
+
+    Public Event NewPostFromStream()
+    Public Event UserStreamStarted()
+    Public Event UserStreamStopped()
+    Public Event UserStreamPaused()
+    Public Event UserStreamGetFriendsList()
+    Private WithEvents userStream As TwitterUserstream
+
+    Private _streamBypass As Boolean
+    Private EventNameTable() As String = {
+        "favorite",
+        "unfavorite",
+        "follow",
+        "list_member_added",
+        "list_member_removed"
+    }
+
+    Private Sub userStream_StatusArrived(ByVal line As String) Handles userStream.StatusArrived
+        If _streamBypass OrElse String.IsNullOrEmpty(line) Then Exit Sub
+
+        Dim idx As Integer = line.IndexOf("{""")
+        Dim idx2 As Integer = line.IndexOf(""":")
+        If idx = 0 AndAlso idx2 > 0 Then
+            Dim eventname As String = line.Substring(idx + 2, idx2 - 2)
+            If eventname.Equals("friends") Then
+                Debug.Print("friends")
+                Exit Sub
+            ElseIf eventname.Equals("delete") Then
+                Debug.Print("delete")
+                Exit Sub
+            ElseIf eventname.Equals("target") Then
+                Dim data As DataModel.eventdata
+                Debug.Print("Event")
+                Using stream As New MemoryStream()
+                    Dim serializer As New DataContractJsonSerializer(GetType(DataModel.eventdata))
+                    Dim sb As New StringBuilder
+                    sb.Length = 0
+                    sb.Append(line)
+                    Dim buf As Byte() = Encoding.Unicode.GetBytes(sb.ToString)
+                    stream.Write(buf, offset:=0, count:=buf.Length)
+                    stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
+                    data = DirectCast(serializer.ReadObject(stream), DataModel.eventdata)
+                End Using
+                Select Case Array.IndexOf(EventNameTable, data.event)
+                    Case 0  ' favorite
+                        Debug.Print("Event:favorite")
+                    Case 1  ' unfavorite
+                        Debug.Print("Event:unfavorite")
+                    Case 2  ' follow
+                        Debug.Print("Event:follow")
+                    Case 3  ' list_member_added
+                        Debug.Print("Event:list_member_added")
+                    Case 4  ' list_member_removed
+                        Debug.Print("Event:list_member_removed")
+                    Case Else ' その他イベント
+                        TraceOut("Unknown Event:" + data.event + Environment.NewLine + line)
+                End Select
+                Exit Sub
+            End If
+
+        End If
+
+        Dim res As New StringBuilder
+        res.Length = 0
+        res.Append("[")
+        res.Append(line)
+        res.Append("]")
+
+        Dim isDM As Boolean = False
+        If line.StartsWith("{""direct_message"":") Then
+            isDM = True
+        End If
+
+        Using stream As New MemoryStream()
+            Dim buf As Byte() = Encoding.Unicode.GetBytes(res.ToString)
+            stream.Write(buf, offset:=0, count:=buf.Length)
+            stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
+            If isDM Then
+                CreateDirectMessagesFromJson(stream, WORKERTYPE.UserStream, False)
+            Else
+                CreatePostsFromJson(stream, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
+            End If
+        End Using
+        RaiseEvent NewPostFromStream()
+    End Sub
+
+    Private Sub userStream_Started() Handles userStream.Started
+        RaiseEvent UserStreamStarted()
+    End Sub
+
+    Private Sub userStream_Stopped() Handles userStream.Stopped
+        RaiseEvent UserStreamStopped()
+    End Sub
+
     Public ReadOnly Property UserStreamEnabled As Boolean
         Get
-            Return _streamActive
+            Return If(userStream Is Nothing, False, userStream.Enabled)
         End Get
     End Property
 
     Public Sub StartUserStream()
-        StopUserStream()
-        If _streamThread IsNot Nothing AndAlso _streamThread.IsAlive Then Exit Sub
-        _streamThread = New Thread(AddressOf UserStreamLoop)
-        _streamThread.Name = "UserStreamReceiver"
-        _streamThread.IsBackground = True
-        _streamActive = True
-        _streamThread.Start()
+        If userStream IsNot Nothing Then
+            StopUserStream()
+        Else
+            Me._streamBypass = False
+            userStream = New TwitterUserstream(twCon)
+            userStream.Start()
+        End If
     End Sub
 
     Public Sub StopUserStream()
-        _streamActive = False
+        Me._streamBypass = True
+        If userStream IsNot Nothing Then userStream.Dispose()
+        userStream = Nothing
+        RaiseEvent UserStreamStopped()
+    End Sub
+
+    Private Sub ReconnectUserStream()
+        If userStream IsNot Nothing Then
+            Me.StopUserStream()
+            Me.StartUserStream()
+        End If
     End Sub
 
     Public Sub PauseUserStream()
@@ -2827,138 +2930,115 @@ Public Class Twitter
         End If
     End Sub
 
-    Private EventNameTable() As String = { _
-        "favorite", _
-        "unfavorite", _
-        "follow", _
-        "list_member_added", _
-        "list_member_removed"
-    }
+    Private Class TwitterUserstream
+        Implements IDisposable
 
-    Private Function ReadLine(ByVal sr As StreamReader) As String
-        Dim ret As New StringBuilder(8192)
-        Dim tmp As Integer
+        Public Event StatusArrived(ByVal status As String)
+        Public Event Stopped()
+        Public Event Started()
+        Private twCon As HttpTwitter
 
-        Do While _streamActive
-            tmp = sr.Read()
-            If tmp <> -1 Then
-                If tmp = &HA Then
-                    Return ret.ToString
-                Else
-                    ret.Append(Convert.ToChar(tmp))
-                End If
-            End If
-            Thread.Sleep(10)
-        Loop
-        Return ""
-    End Function
+        Private _streamThread As Thread
+        Private _streamActive As Boolean
 
-    Private Sub UserStreamLoop()
-        Dim st As Stream = Nothing
-        Dim sr As StreamReader = Nothing
-        Dim isRetry As Boolean = False
-        Dim res As New StringBuilder(8192)
-        Do
-            Try
-                isRetry = False
-                twCon.UserStream(st, False, "")
-                sr = New StreamReader(st)
-                RaiseEvent UserStreamStarted()
-                Do While _streamActive
-                    Dim line As String = ReadLine(sr)
-                    If _streamBypass OrElse String.IsNullOrEmpty(line) Then Continue Do
+        Public Sub New(ByVal twitterConnection As HttpTwitter)
+            twCon = DirectCast(twitterConnection.Clone(), HttpTwitter)
+        End Sub
 
-                    Dim idx As Integer = line.IndexOf("{""")
-                    Dim idx2 As Integer = line.IndexOf(""":")
-                    If idx = 0 AndAlso idx2 > 0 Then
-                        Dim eventname As String = line.Substring(idx + 2, idx2 - 2)
-                        If eventname.Equals("friends") Then
-                            Debug.Print("friends")
-                            Continue Do
-                        ElseIf eventname.Equals("delete") Then
-                            Debug.Print("delete")
-                            Continue Do
-                        ElseIf eventname.Equals("target") Then
-                            Dim data As DataModel.eventdata
-                            Debug.Print("Event")
-                            Using stream As New MemoryStream()
-                                Dim serializer As New DataContractJsonSerializer(GetType(DataModel.eventdata))
-                                res.Length = 0
-                                res.Append(line)
-                                Dim buf As Byte() = Encoding.Unicode.GetBytes(res.ToString)
-                                stream.Write(buf, offset:=0, count:=buf.Length)
-                                stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
-                                data = DirectCast(serializer.ReadObject(stream), DataModel.eventdata)
-                            End Using
-                            Select Case Array.IndexOf(EventNameTable, data.event)
-                                Case 0  ' favorite
-                                    Debug.Print("Event:favorite")
-                                Case 1  ' unfavorite
-                                    Debug.Print("Event:unfavorite")
-                                Case 2  ' follow
-                                    Debug.Print("Event:follow")
-                                Case 3  ' list_member_added
-                                    Debug.Print("Event:list_member_added")
-                                Case 4  ' list_member_removed
-                                    Debug.Print("Event:list_member_removed")
-                                Case Else ' その他イベント
-                                    TraceOut("Unknown Event:" + data.event + Environment.NewLine + line)
-                            End Select
-                            Continue Do
-                        End If
+        Public Sub Start()
+            _streamActive = True
+            If _streamThread IsNot Nothing AndAlso _streamThread.IsAlive Then Exit Sub
+            _streamThread = New Thread(AddressOf UserStreamLoop)
+            _streamThread.Name = "UserStreamReceiver"
+            _streamThread.IsBackground = True
+            _streamThread.Start()
+        End Sub
 
+        Public ReadOnly Property Enabled() As Boolean
+            Get
+                Return _streamActive
+            End Get
+        End Property
+
+        Private Sub UserStreamLoop()
+            Dim st As Stream = Nothing
+            Dim sr As StreamReader = Nothing
+            Do
+                Try
+                    RaiseEvent Started()
+
+                    twCon.UserStream(st, False, "")
+                    sr = New StreamReader(st)
+
+                    Do While _streamActive
+                        RaiseEvent StatusArrived(sr.ReadLine())
+                    Loop
+
+                    RaiseEvent Stopped()
+                    Exit Do
+                Catch ex As WebException
+                    If Not Me._streamActive Then
+                        Exit Do
+                    ElseIf ex.Status = WebExceptionStatus.Timeout Then
+                        RaiseEvent Stopped()
+                        Thread.Sleep(10 * 1000)
+                    Else
+                        ExceptionOut(ex)
                     End If
-
-                    res.Length = 0
-                    res.Append("[")
-                    res.Append(line)
-                    res.Append("]")
-
-                    Dim isDM As Boolean = False
-                    If line.StartsWith("{""direct_message"":") Then
-                        isDM = True
+                Catch ex As ThreadAbortException
+                    Exit Do
+                Catch ex As IOException
+                    If Not Me._streamActive Then
+                        Exit Do
+                    Else
+                        ExceptionOut(ex)
                     End If
-
-                    Using stream As New MemoryStream()
-                        Dim buf As Byte() = Encoding.Unicode.GetBytes(res.ToString)
-                        stream.Write(buf, offset:=0, count:=buf.Length)
-                        stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
-                        If isDM Then
-                            CreateDirectMessagesFromJson(stream, WORKERTYPE.UserStream, False)
-                        Else
-                            CreatePostsFromJson(stream, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
-                        End If
-                    End Using
-                    RaiseEvent NewPostFromStream()
-                Loop
-            Catch ex As WebException
-                If ex.Status = WebExceptionStatus.Timeout Then
-                    isRetry = True
-                Else
+                Catch ex As Exception
                     ExceptionOut(ex)
-                End If
-            Catch ex As Exception
-                ExceptionOut(ex)
-            Finally
-                _streamActive = False
-                If sr IsNot Nothing Then
-                    twCon.RequestAbort()
-                    sr.BaseStream.Close()
-                End If
-                RaiseEvent UserStreamStopped()
-                If isRetry Then
-                    Thread.Sleep(10 * 1000)
-                    _streamActive = True
-                End If
-            End Try
-        Loop While isRetry
-    End Sub
+                Finally
+                    If sr IsNot Nothing Then
+                        twCon.RequestAbort()
+                        sr.BaseStream.Close()
+                    End If
+                End Try
+            Loop While True
+        End Sub
 
-    Public Event NewPostFromStream()
-    Public Event UserStreamStarted()
-    Public Event UserStreamStopped()
-    Public Event UserStreamPaused()
+#Region "IDisposable Support"
+        Private disposedValue As Boolean ' 重複する呼び出しを検出するには
 
-    Public Event UserStreamGetFriendsList()
+        ' IDisposable
+        Protected Overridable Sub Dispose(ByVal disposing As Boolean)
+            If Not Me.disposedValue Then
+                If disposing Then
+                    ' TODO: マネージ状態を破棄します (マネージ オブジェクト)。
+                    _streamActive = False
+                    If _streamThread IsNot Nothing AndAlso _streamThread.IsAlive Then
+                        _streamThread.Abort()
+                        _streamThread.Join(1000)
+                    End If
+                End If
 
+                ' TODO: アンマネージ リソース (アンマネージ オブジェクト) を解放し、下の Finalize() をオーバーライドします。
+                ' TODO: 大きなフィールドを null に設定します。
+            End If
+            Me.disposedValue = True
+        End Sub
+
+        ' TODO: 上の Dispose(ByVal disposing As Boolean) にアンマネージ リソースを解放するコードがある場合にのみ、Finalize() をオーバーライドします。
+        'Protected Overrides Sub Finalize()
+        '    ' このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
+        '    Dispose(False)
+        '    MyBase.Finalize()
+        'End Sub
+
+        ' このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
+        Public Sub Dispose() Implements IDisposable.Dispose
+            ' このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
+            Dispose(True)
+            GC.SuppressFinalize(Me)
+        End Sub
+#End Region
+
+    End Class
 End Class
