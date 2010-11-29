@@ -9559,10 +9559,14 @@ RETRY:
     End Sub
 
     Private Sub tw_NewPostFromStream()
-        If InvokeRequired Then
-            Invoke(New MethodInvoker(AddressOf tw_NewPostFromStream))
+        Try
+            If InvokeRequired Then
+                Invoke(New MethodInvoker(AddressOf tw_NewPostFromStream))
+                Exit Sub
+            End If
+        Catch ex As ObjectDisposedException
             Exit Sub
-        End If
+        End Try
 
         Dim rsltAddCount As Integer = _statuses.DistributePosts()
         RefreshTimeline()
