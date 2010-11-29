@@ -313,7 +313,6 @@ Public Class TweenMain
 
     Private Sub TweenMain_Disposed(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Disposed
         '後始末
-        If tw IsNot Nothing Then tw.Dispose()
         SettingDialog.Dispose()
         TabDialog.Dispose()
         SearchDialog.Dispose()
@@ -1238,6 +1237,7 @@ Public Class TweenMain
         addCount = _statuses.SubmitUpdate(soundFile, notifyPosts, isMention)
 
         If _endingFlag Then Exit Sub
+
         'リストに反映＆選択状態復元
         Try
             For Each tab As TabPage In ListTab.TabPages
@@ -1254,9 +1254,9 @@ Public Class TweenMain
                     Catch ex As Exception
                         'アイコン描画不具合あり？
                     End Try
-                    'Me.SelectListItem(lst, _
-                    '                  _statuses.IndexOf(tab.Text, selId(tab.Text)), _
-                    '                  _statuses.IndexOf(tab.Text, focusedId(tab.Text)))
+                    Me.SelectListItem(lst, _
+                                      _statuses.IndexOf(tab.Text, selId(tab.Text)), _
+                                      _statuses.IndexOf(tab.Text, focusedId(tab.Text)))
                 End If
                 lst.EndUpdate()
                 If tabInfo.UnreadCount > 0 Then
@@ -1295,6 +1295,7 @@ Public Class TweenMain
             ex.Data("Msg") = "Ref2"
             Throw
         End Try
+
         '新着通知
         NotifyNewPosts(notifyPosts,
                        soundFile,
@@ -9652,7 +9653,10 @@ RETRY:
     End Sub
 
     Private Sub TrackToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TrackToolStripMenuItem.Click
-
+        Static track As String
+        track = InputBox("追跡するキーワードを入力してください")
+        tw.StopUserStream()
+        tw.StartUserStream(AllrepliesToolStripMenuItem.Checked, track)
     End Sub
 
     Private Sub AllrepliesToolStripMenuItem_CheckStateChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AllrepliesToolStripMenuItem.CheckStateChanged
