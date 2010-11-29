@@ -2828,6 +2828,9 @@ Public Class Twitter
             ElseIf eventname.Equals("delete") Then
                 Debug.Print("delete")
                 Exit Sub
+            ElseIf eventname.Equals("limit") Then
+                Debug.Print("limit")
+                Exit Sub
             ElseIf eventname.Equals("target") Then
                 Dim data As DataModel.eventdata
                 Debug.Print("Event")
