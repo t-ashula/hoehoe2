@@ -2829,7 +2829,10 @@ Public Class Twitter
 
     Private EventNameTable() As String = { _
         "favorite", _
-        "unfavorite"
+        "unfavorite", _
+        "follow", _
+        "list_member_added", _
+        "list_member_removed"
     }
 
     Private Sub UserStreamLoop()
@@ -2874,8 +2877,14 @@ Public Class Twitter
                                     Debug.Print("Event:favorite")
                                 Case 1  ' unfavorite
                                     Debug.Print("Event:unfavorite")
+                                Case 2  ' follow
+                                    Debug.Print("Event:follow")
+                                Case 3  ' list_member_added
+                                    Debug.Print("Event:list_member_added")
+                                Case 4  ' list_member_removed
+                                    Debug.Print("Event:list_member_removed")
                                 Case Else ' その他イベント
-                                    TraceOut("Unknown Event" + Environment.NewLine + line)
+                                    TraceOut("Unknown Event:" + data.event + Environment.NewLine + line)
                             End Select
                             Continue Do
                         End If
