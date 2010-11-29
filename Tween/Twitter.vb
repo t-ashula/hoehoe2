@@ -2840,12 +2840,12 @@ Public Class Twitter
         Dim tmp As Integer
 
         Do While _streamActive
-            tmp = sr.Peek()
+            tmp = sr.Read()
             If tmp <> -1 Then
                 If tmp = &HA Then
                     Return ret.ToString
                 Else
-                    ret.Append(Convert.ToChar(sr.Read()))
+                    ret.Append(Convert.ToChar(tmp))
                 End If
             End If
             Thread.Sleep(10)
