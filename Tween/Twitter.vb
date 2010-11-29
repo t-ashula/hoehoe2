@@ -2835,8 +2835,23 @@ Public Class Twitter
         "list_member_removed"
     }
 
+    Private Function ReadLine(ByVal sr As StreamReader) As String
+        Dim ret As New StringBuilder(8192)
+        Dim tmp As Integer
 
-
+        Do While _streamActive
+            tmp = sr.Peek()
+            If tmp <> -1 Then
+                If tmp = &HA Then
+                    Return ret.ToString
+                Else
+                    ret.Append(Convert.ToChar(sr.Read()))
+                End If
+            End If
+            Thread.Sleep(10)
+        Loop
+        Return ""
+    End Function
 
     Private Sub UserStreamLoop()
         Dim st As Stream = Nothing
@@ -2850,7 +2865,7 @@ Public Class Twitter
                 sr = New StreamReader(st)
                 RaiseEvent UserStreamStarted()
                 Do While _streamActive
-                    Dim line As String = sr.ReadLine()
+                    Dim line As String = ReadLine(sr)
                     If _streamBypass OrElse String.IsNullOrEmpty(line) Then Continue Do
 
                     Dim idx As Integer = line.IndexOf("{""")
