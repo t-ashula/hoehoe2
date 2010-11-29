@@ -83,7 +83,7 @@ Public Class DataModel
     <DataContract()> _
     Public Class bounding_box
         <DataMember(Name:="type")> Public type As String
-        <DataMember(Name:="coordinates")> Public _coordinates(2) As Single
+        <DataMember(Name:="coordinates")> Public _coordinates(2)() As Single
     End Class
 
     <DataContract()> _
