@@ -9626,6 +9626,10 @@ RETRY:
         'If before.Subtract(Now).Seconds > -5 Then Exit Sub
         'before = Now
 
+        If SettingDialog.ReadOldPosts Then
+            _statuses.SetRead() '新着時未読クリア
+        End If
+
         Dim rsltAddCount As Integer = _statuses.DistributePosts()
         RefreshTimeline()
         SyncLock _syncObject
