@@ -1394,7 +1394,6 @@ Public Class Twitter
         End Select
 
         If gType = WORKERTYPE.Timeline Then
-
             Return CreatePostsFromJson(content, gType, Nothing, read, count, Me.minHomeTimeline)
             'Return CreatePostsFromXml(content, gType, Nothing, read, count, Me.minHomeTimeline)
         Else
@@ -1423,39 +1422,27 @@ Public Class Twitter
         Return New Date
     End Function
 
-    Private Overloads Function CreatePostsFromJson(ByVal content As String, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
-        Using stream As New MemoryStream()
-            Dim buf As Byte() = Encoding.Unicode.GetBytes(content)
-            stream.Write(buf, 0, buf.Length)
-            stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
-            Return CreatePostsFromJson(stream, gType, tab, read, count, minimumId)
-        End Using
-    End Function
-
-    'MemoryStreamの面倒は呼び出しもとで見ること
-
-    Private Overloads Function CreatePostsFromJson(ByVal content As MemoryStream, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
-        Dim serializer As New DataContractJsonSerializer(GetType(List(Of DataModel.status)))
-        Dim item As List(Of DataModel.status)
+    Private Function CreatePostsFromJson(ByVal content As String, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
 
         Dim arIdx As Integer = -1
         Dim dlgt(300) As GetIconImageDelegate    'countQueryに合わせる
         Dim ar(300) As IAsyncResult              'countQueryに合わせる
 
+        Dim items As List(Of TwitterDataModel.Status)
         Try
-            item = DirectCast(serializer.ReadObject(content), List(Of DataModel.status))
+            items = CreateDataFromJson(Of List(Of TwitterDataModel.Status))(content)
         Catch ex As SerializationException
-            TraceOut(ex.Message + Environment.NewLine + Encoding.Unicode.GetString(content.GetBuffer()))
+            TraceOut(ex.Message + Environment.NewLine + content)
             Return "Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
-            TraceOut(Encoding.Unicode.GetString(content.GetBuffer()))
+            TraceOut(content)
             Return "Invalid Json!"
         End Try
 
-        For Each status As DataModel.status In item
+        For Each status As TwitterDataModel.Status In items
             Dim post As New PostClass
             Try
-                post.Id = status.id
+                post.Id = status.Id
                 If minimumId > post.Id Then minimumId = post.Id
                 '二重取得回避
                 SyncLock LockObj
@@ -1465,51 +1452,51 @@ Public Class Twitter
                         If TabInformations.GetInstance.ContainsKey(post.Id, tab.TabName) Then Continue For
                     End If
                 End SyncLock
-                If status.retweeted_status IsNot Nothing Then
-                    Dim retweeted As DataModel.retweeted_status = status.retweeted_status
+                If status.RetweetedStatus IsNot Nothing Then
+                    Dim retweeted As TwitterDataModel.RetweetedStatus = status.RetweetedStatus
 
-                    post.PDate = DateTimeParse(retweeted.created_at)
+                    post.PDate = DateTimeParse(retweeted.CreatedAt)
 
                     'Id
-                    post.RetweetedId = retweeted.id
+                    post.RetweetedId = retweeted.Id
                     '本文
-                    post.Data = retweeted.text
+                    post.Data = retweeted.Text
                     'Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = retweeted.source
+                    post.Source = retweeted.Source
                     'Reply先
-                    Long.TryParse(retweeted.in_reply_to_status_id, post.InReplyToId)
-                    post.InReplyToUser = retweeted.in_reply_to_screen_name
+                    Long.TryParse(retweeted.InReplyToStatusId, post.InReplyToId)
+                    post.InReplyToUser = retweeted.InReplyToScreenName
                     post.IsFav = TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Contains(post.RetweetedId)
 
                     '以下、ユーザー情報
-                    Dim user As DataModel.user = retweeted.user
-                    post.Uid = user.id
-                    post.Name = user.screen_name
-                    post.Nickname = user._name
-                    post.ImageUrl = user.profile_image_url
-                    post.IsProtect = user.protected
+                    Dim user As TwitterDataModel.User = retweeted.User
+                    post.Uid = user.Id
+                    post.Name = user.ScreenName
+                    post.Nickname = user.Name
+                    post.ImageUrl = user.ProfileImageUrl
+                    post.IsProtect = user.Protected
                     If post.IsMe Then _UserIdNo = post.Uid.ToString()
 
                     'Retweetした人
-                    post.RetweetedBy = status.user.screen_name
+                    post.RetweetedBy = status.User.ScreenName
                 Else
-                    post.PDate = DateTimeParse(status.created_at)
+                    post.PDate = DateTimeParse(status.CreatedAt)
                     '本文
-                    post.Data = status.text
+                    post.Data = status.Text
                     'Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = status.source
-                    Long.TryParse(status.in_reply_to_status_id, post.InReplyToId)
-                    post.InReplyToUser = status.in_reply_to_screen_name
+                    post.Source = status.Source
+                    Long.TryParse(status.InReplyToStatusId, post.InReplyToId)
+                    post.InReplyToUser = status.InReplyToScreenName
 
-                    post.IsFav = status.favorited
+                    post.IsFav = status.Favorited
 
                     '以下、ユーザー情報
-                    Dim user As DataModel.user = status.user
-                    post.Uid = user.id
-                    post.Name = user.screen_name
-                    post.Nickname = user._name
-                    post.ImageUrl = user.profile_image_url
-                    post.IsProtect = user.protected
+                    Dim user As TwitterDataModel.User = status.User
+                    post.Uid = user.Id
+                    post.Name = user.ScreenName
+                    post.Nickname = user.Name
+                    post.ImageUrl = user.ProfileImageUrl
+                    post.IsProtect = user.Protected
                     post.IsMe = post.Name.ToLower.Equals(_uid)
                     If post.IsMe Then _UserIdNo = post.Uid.ToString
                 End If
@@ -1538,7 +1525,7 @@ Public Class Twitter
                 post.IsDm = False
                 If tab IsNot Nothing Then post.RelTabName = tab.TabName
             Catch ex As Exception
-                TraceOut(Encoding.Unicode.GetString(content.GetBuffer()))
+                TraceOut(content)
                 MessageBox.Show("Parse Error(CreatePostsFromJson)")
                 Continue For
             End Try
@@ -1566,13 +1553,6 @@ Public Class Twitter
 
         Return ""
     End Function
-
-    'Public Overloads Function GetListStatus(ByVal read As Boolean, _
-    '                        ByVal tab As TabClass, _
-    '                        ByVal more As Boolean) As String
-
-    '    Return GetListStatus(read, tab, more, -1)
-    'End Function
 
     Public Overloads Function GetListStatus(ByVal read As Boolean, _
                             ByVal tab As TabClass, _
@@ -1884,46 +1864,34 @@ Public Class Twitter
         Return ""
     End Function
 
-    Private Function CreateDirectMessagesFromJson(ByVal content As MemoryStream, ByVal gType As WORKERTYPE, ByVal read As Boolean) As String
-
-        'Dim serializer As New DataContractJsonSerializer(GetType(List(Of DataModel.directmessage)))
-        Dim serializer As DataContractJsonSerializer
-        Dim item As New List(Of DataModel.directmessage)
-
+    Private Function CreateDirectMessagesFromJson(ByVal content As String, ByVal gType As WORKERTYPE, ByVal read As Boolean) As String
+        Dim item As List(Of TwitterDataModel.Directmessage)
         Dim arIdx As Integer = -1
         Dim dlgt(300) As GetIconImageDelegate    'countQueryに合わせる
         Dim ar(300) As IAsyncResult              'countQueryに合わせる
-        Dim typ As Type
-
-        If gType = WORKERTYPE.UserStream Then
-            typ = GetType(List(Of DataModel.directmessageevent))
-            serializer = New DataContractJsonSerializer(typ)
-        Else
-            serializer = New DataContractJsonSerializer(GetType(List(Of DataModel.directmessage)))
-        End If
 
         Try
             If gType = WORKERTYPE.UserStream Then
-                Dim itm As List(Of DataModel.directmessageevent)
-                itm = DirectCast(serializer.ReadObject(content), List(Of DataModel.directmessageevent))
-                For Each dat As DataModel.directmessageevent In itm
-                    item.Add(dat.direct_message)
+                Dim itm As List(Of TwitterDataModel.DirectmessageEvent) = CreateDataFromJson(Of List(Of TwitterDataModel.DirectmessageEvent))(content)
+                item = New List(Of TwitterDataModel.Directmessage)
+                For Each dat As TwitterDataModel.DirectmessageEvent In itm
+                    item.Add(dat.Directmessage)
                 Next
             Else
-                item = DirectCast(serializer.ReadObject(content), List(Of DataModel.directmessage))
+                item = CreateDataFromJson(Of List(Of TwitterDataModel.Directmessage))(content)
             End If
         Catch ex As SerializationException
-            TraceOut(ex.Message + Environment.NewLine + Encoding.Unicode.GetString(content.GetBuffer()))
+            TraceOut(ex.Message + Environment.NewLine + content)
             Return "Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
-            TraceOut(Encoding.Unicode.GetString(content.GetBuffer()))
+            TraceOut(content)
             Return "Invalid Json!"
         End Try
 
-        For Each message As DataModel.directmessage In item
+        For Each message As TwitterDataModel.Directmessage In item
             Dim post As New PostClass
             Try
-                post.Id = message.id
+                post.Id = message.Id
                 If gType <> WORKERTYPE.UserStream Then
                     If gType = WORKERTYPE.DirectMessegeRcv Then
                         If minDirectmessage > post.Id Then minDirectmessage = post.Id
@@ -1938,9 +1906,9 @@ Public Class Twitter
                 End SyncLock
                 'sender_id
                 'recipient_id
-                post.PDate = DateTimeParse(message.created_at)
+                post.PDate = DateTimeParse(message.CreatedAt)
                 '本文
-                post.Data = message.text
+                post.Data = message.Text
                 'HTMLに整形
                 post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
                 post.Data = HttpUtility.HtmlDecode(post.Data)
@@ -1948,42 +1916,42 @@ Public Class Twitter
                 post.IsFav = False
 
                 '以下、ユーザー情報
-                Dim user As DataModel.user
+                Dim user As TwitterDataModel.User
                 If gType = WORKERTYPE.UserStream Then
-                    If twCon.AuthenticatedUsername.Equals(message.recipient.screen_name, StringComparison.CurrentCultureIgnoreCase) Then
-                        user = message.sender
+                    If twCon.AuthenticatedUsername.Equals(message.Recipient.ScreenName, StringComparison.CurrentCultureIgnoreCase) Then
+                        user = message.Sender
                         post.IsMe = False
                         post.IsOwl = True
                     Else
-                        user = message.recipient
+                        user = message.Recipient
                         post.IsMe = True
                         post.IsOwl = False
                     End If
                 Else
                     If gType = WORKERTYPE.DirectMessegeRcv Then
-                        user = message.sender
+                        user = message.Sender
                         post.IsMe = False
                         post.IsOwl = True
                     Else
-                        user = message.recipient
+                        user = message.Recipient
                         post.IsMe = True
                         post.IsOwl = False
                     End If
                 End If
 
                 post.Uid = user.id
-                post.Name = user.screen_name
-                post.Nickname = user._name
-                post.ImageUrl = user.profile_image_url
+                post.Name = user.ScreenName
+                post.Nickname = user.Name
+                post.ImageUrl = user.ProfileImageUrl
                 post.IsProtect = user.protected
             Catch ex As Exception
-                TraceOut(Encoding.Unicode.GetString(content.GetBuffer()))
+                TraceOut(content)
                 MessageBox.Show("Parse Error(CreateDirectMessagesFromJson)")
                 Continue For
             End Try
 
             post.IsRead = read
-            If gType = WORKERTYPE.DirectMessegeSnt AndAlso Not read AndAlso _readOwnPost Then post.IsRead = True
+            If post.IsMe AndAlso Not read AndAlso _readOwnPost Then post.IsRead = True
             post.IsReply = False
             post.IsExcludeReply = False
             post.IsDm = True
@@ -2049,12 +2017,7 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Using stream As New MemoryStream()
-            Dim buf As Byte() = Encoding.Unicode.GetBytes(content)
-            stream.Write(buf, 0, buf.Length)
-            stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
-            Return CreateDirectMessagesFromJson(stream, gType, read)
-        End Using
+        Return CreateDirectMessagesFromJson(content, gType, read)
     End Function
 
     Public Function GetFavoritesApi(ByVal read As Boolean, _
@@ -2089,8 +2052,8 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Dim serializer As New DataContractJsonSerializer(GetType(List(Of DataModel.status)))
-        Dim item As List(Of DataModel.status)
+        Dim serializer As New DataContractJsonSerializer(GetType(List(Of TwitterDataModel.Status)))
+        Dim item As List(Of TwitterDataModel.Status)
 
         Dim arIdx As Integer = -1
         Dim dlgt(300) As GetIconImageDelegate    'countQueryに合わせる
@@ -2101,7 +2064,7 @@ Public Class Twitter
                 Dim buf As Byte() = Encoding.Unicode.GetBytes(content)
                 stream.Write(buf, 0, buf.Length)
                 stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
-                item = DirectCast(serializer.ReadObject(stream), List(Of DataModel.status))
+                item = DirectCast(serializer.ReadObject(stream), List(Of TwitterDataModel.Status))
             End Using
         Catch ex As SerializationException
             TraceOut(ex.Message + Environment.NewLine + content)
@@ -2111,18 +2074,18 @@ Public Class Twitter
             Return "Invalid Json!"
         End Try
 
-        For Each status As DataModel.status In item
+        For Each status As TwitterDataModel.Status In item
             Dim post As New PostClass
             Try
-                post.Id = status.id
+                post.Id = status.Id
                 '二重取得回避
                 SyncLock LockObj
                     If TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Contains(post.Id) Then Continue For
                 End SyncLock
                 'Retweet判定
-                If status.retweeted_status IsNot Nothing Then
-                    Dim retweeted As DataModel.retweeted_status = status.retweeted_status
-                    post.PDate = DateTimeParse(retweeted.created_at)
+                If status.RetweetedStatus IsNot Nothing Then
+                    Dim retweeted As TwitterDataModel.RetweetedStatus = status.RetweetedStatus
+                    post.PDate = DateTimeParse(retweeted.CreatedAt)
 
                     'Id
                     post.RetweetedId = post.Id
@@ -2131,41 +2094,41 @@ Public Class Twitter
                     'Source取得（htmlの場合は、中身を取り出し）
                     post.Source = retweeted.source
                     'Reply先
-                    Long.TryParse(retweeted.in_reply_to_status_id, post.InReplyToId)
-                    post.InReplyToUser = retweeted.in_reply_to_screen_name
+                    Long.TryParse(retweeted.InReplyToStatusId, post.InReplyToId)
+                    post.InReplyToUser = retweeted.InReplyToScreenName
                     post.IsFav = retweeted.favorited
 
                     '以下、ユーザー情報
-                    Dim user As DataModel.user = retweeted.user
-                    post.Uid = user.id
-                    post.Name = user.screen_name
-                    post.Nickname = user._name
-                    post.ImageUrl = user.profile_image_url
-                    post.IsProtect = user.protected
+                    Dim user As TwitterDataModel.User = retweeted.User
+                    post.Uid = user.Id
+                    post.Name = user.ScreenName
+                    post.Nickname = user.Name
+                    post.ImageUrl = user.ProfileImageUrl
+                    post.IsProtect = user.Protected
                     post.IsMe = post.Name.ToLower.Equals(_uid)
                     If post.IsMe Then _UserIdNo = post.Uid.ToString()
 
                     'Retweetした人
-                    post.RetweetedBy = status.user.screen_name
+                    post.RetweetedBy = status.User.ScreenName
                 Else
-                    post.PDate = DateTimeParse(status.created_at)
+                    post.PDate = DateTimeParse(status.CreatedAt)
 
                     '本文
-                    post.Data = status.text
+                    post.Data = status.Text
                     'Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = status.source
-                    Long.TryParse(status.in_reply_to_status_id, post.InReplyToId)
-                    post.InReplyToUser = status.in_reply_to_screen_name
+                    post.Source = status.Source
+                    Long.TryParse(status.InReplyToStatusId, post.InReplyToId)
+                    post.InReplyToUser = status.InReplyToScreenName
 
-                    post.IsFav = status.favorited
+                    post.IsFav = status.Favorited
 
                     '以下、ユーザー情報
-                    Dim user As DataModel.user = status.user
-                    post.Uid = user.id
-                    post.Name = user.screen_name
-                    post.Nickname = user._name
-                    post.ImageUrl = user.profile_image_url
-                    post.IsProtect = user.protected
+                    Dim user As TwitterDataModel.User = status.User
+                    post.Uid = user.Id
+                    post.Name = user.ScreenName
+                    post.Nickname = user.Name
+                    post.ImageUrl = user.ProfileImageUrl
+                    post.IsProtect = user.Protected
                     post.IsMe = post.Name.ToLower.Equals(_uid)
                     If post.IsMe Then _UserIdNo = post.Uid.ToString
                 End If
@@ -2804,6 +2767,7 @@ Public Class Twitter
     Public Event UserStreamStopped()
     Public Event UserStreamPaused()
     Public Event UserStreamGetFriendsList()
+    Public Event PostDeleted(ByVal id As Long)
     Private WithEvents userStream As TwitterUserstream
 
     Private _streamBypass As Boolean
@@ -2821,45 +2785,49 @@ Public Class Twitter
         Dim idx As Integer = line.IndexOf("{""")
         Dim idx2 As Integer = line.IndexOf(""":")
         If idx = 0 AndAlso idx2 > 0 Then
-            Dim eventname As String = line.Substring(idx + 2, idx2 - 2)
-            If eventname.Equals("friends") Then
-                Debug.Print("friends")
-                Exit Sub
-            ElseIf eventname.Equals("delete") Then
-                Debug.Print("delete")
-                Exit Sub
-            ElseIf eventname.Equals("limit") Then
-                Debug.Print("limit")
-                Exit Sub
-            ElseIf eventname.Equals("target") Then
-                Dim data As DataModel.eventdata
-                Debug.Print("Event")
-                Using stream As New MemoryStream()
-                    Dim serializer As New DataContractJsonSerializer(GetType(DataModel.eventdata))
-                    Dim sb As New StringBuilder
-                    sb.Length = 0
-                    sb.Append(line)
-                    Dim buf As Byte() = Encoding.Unicode.GetBytes(sb.ToString)
-                    stream.Write(buf, offset:=0, count:=buf.Length)
-                    stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
-                    data = DirectCast(serializer.ReadObject(stream), DataModel.eventdata)
-                End Using
-                Select Case Array.IndexOf(EventNameTable, data.event)
-                    Case 0  ' favorite
-                        Debug.Print("Event:favorite")
-                    Case 1  ' unfavorite
-                        Debug.Print("Event:unfavorite")
-                    Case 2  ' follow
-                        Debug.Print("Event:follow")
-                    Case 3  ' list_member_added
-                        Debug.Print("Event:list_member_added")
-                    Case 4  ' list_member_removed
-                        Debug.Print("Event:list_member_removed")
-                    Case Else ' その他イベント
-                        TraceOut("Unknown Event:" + data.event + Environment.NewLine + line)
-                End Select
-                Exit Sub
-            End If
+            Try
+                Dim eventname As String = line.Substring(idx + 2, idx2 - 2)
+                If eventname.Equals("friends") Then
+                    Debug.Print("friends")
+                    Exit Sub
+                ElseIf eventname.Equals("delete") Then
+                    Debug.Print("delete")
+                    If line.Contains("direct_message") Then
+                        Dim data As TwitterDataModel.DeleteDirectmessageEvent = CreateDataFromJson(Of TwitterDataModel.DeleteDirectmessageEvent)(line)
+                        RaiseEvent PostDeleted(data.Event.Directmessage.Id)
+                    Else
+                        Dim data As TwitterDataModel.DeleteEvent = CreateDataFromJson(Of TwitterDataModel.DeleteEvent)(line)
+                        RaiseEvent PostDeleted(data.Event.Status.Id)
+                    End If
+                    Exit Sub
+                ElseIf eventname.Equals("limit") Then
+                    Debug.Print("limit")
+                    Exit Sub
+                ElseIf eventname.Equals("target") Then
+                    Dim data As TwitterDataModel.EventData = CreateDataFromJson(Of TwitterDataModel.EventData)(line)
+                    Select Case Array.IndexOf(EventNameTable, data.Event)
+                        Case 0  ' favorite
+                            Debug.Print("Event:favorite")
+                        Case 1  ' unfavorite
+                            Debug.Print("Event:unfavorite")
+                        Case 2  ' follow
+                            Debug.Print("Event:follow")
+                        Case 3  ' list_member_added
+                            Debug.Print("Event:list_member_added")
+                        Case 4  ' list_member_removed
+                            Debug.Print("Event:list_member_removed")
+                        Case Else ' その他イベント
+                            TraceOut("Unknown Event:" + data.Event + Environment.NewLine + line)
+                    End Select
+                    Exit Sub
+                ElseIf Not eventname.Equals("place") AndAlso Not eventname.Equals("in_reply_to_status_id_str") Then
+                    Debug.Print(eventname)
+                End If
+            Catch ex As SerializationException
+                TraceOut(ex.Message + Environment.NewLine + line)
+            Catch ex As Exception
+                TraceOut(line)
+            End Try
 
         End If
 
@@ -2869,23 +2837,31 @@ Public Class Twitter
         res.Append(line)
         res.Append("]")
 
-        Dim isDM As Boolean = False
-        If line.StartsWith("{""direct_message"":") Then
-            isDM = True
-        End If
-
-        Using stream As New MemoryStream()
-            Dim buf As Byte() = Encoding.Unicode.GetBytes(res.ToString)
-            stream.Write(buf, offset:=0, count:=buf.Length)
-            stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
-            If isDM Then
-                CreateDirectMessagesFromJson(stream, WORKERTYPE.UserStream, False)
+        Try
+            If line.StartsWith("{""direct_message"":") Then
+                CreateDirectMessagesFromJson(res.ToString, WORKERTYPE.UserStream, False)
             Else
-                CreatePostsFromJson(stream, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
+                CreatePostsFromJson(res.ToString, WORKERTYPE.Timeline, Nothing, False, Nothing, Nothing)
             End If
-        End Using
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + line)
+        Catch ex As Exception
+            TraceOut(line)
+        End Try
+
         RaiseEvent NewPostFromStream()
     End Sub
+
+    Private Function CreateDataFromJson(Of T)(ByVal content As String) As T
+        Dim data As T
+        Using stream As New MemoryStream()
+            Dim buf As Byte() = Encoding.Unicode.GetBytes(content)
+            stream.Write(Encoding.Unicode.GetBytes(content), offset:=0, count:=buf.Length)
+            stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
+            data = DirectCast((New DataContractJsonSerializer(GetType(T))).ReadObject(stream), T)
+        End Using
+        Return data
+    End Function
 
     Private Sub userStream_Started() Handles userStream.Started
         RaiseEvent UserStreamStarted()

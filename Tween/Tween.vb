@@ -8170,6 +8170,7 @@ RETRY:
         AddHandler tw.UserStreamStarted, AddressOf tw_UserStreamStarted
         AddHandler tw.UserStreamStopped, AddressOf tw_UserStreamStopped
         AddHandler tw.UserStreamPaused, AddressOf tw_UserStreamPaused
+        AddHandler tw.PostDeleted, AddressOf tw_PostDeleted
         PauseToolStripMenuItem.Text = "&Pause"
         PauseToolStripMenuItem.Enabled = False
         StopToolStripMenuItem.Text = "&Start"
@@ -9559,6 +9560,58 @@ RETRY:
         End Try
     End Sub
 
+    Private Sub tw_PostDeleted(ByVal id As Long)
+        Try
+            If InvokeRequired Then
+                Invoke(New Action(Of Long)(AddressOf tw_PostDeleted), id)
+                Exit Sub
+            End If
+        Catch ex As ObjectDisposedException
+            Exit Sub
+        End Try
+
+        _statuses.RemovePost(id)
+
+        If _curTab Is Nothing OrElse _curList Is Nothing Then Exit Sub
+
+        Dim fidx As Integer
+        If _curList.FocusedItem IsNot Nothing Then
+            fidx = _curList.FocusedItem.Index
+        ElseIf _curList.TopItem IsNot Nothing Then
+            fidx = _curList.TopItem.Index
+        Else
+            fidx = 0
+        End If
+
+        _itemCache = Nothing    'キャッシュ破棄
+        _postCache = Nothing
+        _curPost = Nothing
+        _curItemIndex = -1
+        For Each tb As TabPage In ListTab.TabPages
+            DirectCast(tb.Tag, DetailsListView).VirtualListSize = _statuses.Tabs(tb.Text).AllCount
+            If _curTab.Equals(tb) Then
+                _curList.SelectedIndices.Clear()
+                If _statuses.Tabs(tb.Text).AllCount > 0 Then
+                    If _statuses.Tabs(tb.Text).AllCount - 1 > fidx AndAlso fidx > -1 Then
+                        _curList.SelectedIndices.Add(fidx)
+                    Else
+                        _curList.SelectedIndices.Add(_statuses.Tabs(tb.Text).AllCount - 1)
+                    End If
+                    'If _curList.SelectedIndices.Count > 0 Then
+                    '    _curList.EnsureVisible(_curList.SelectedIndices(0))
+                    '    _curList.FocusedItem = _curList.Items(_curList.SelectedIndices(0))
+                    'End If
+                End If
+            End If
+            If _statuses.Tabs(tb.Text).UnreadCount = 0 Then
+                If SettingDialog.TabIconDisp Then
+                    If tb.ImageIndex = 0 Then tb.ImageIndex = -1 'タブアイコン
+                End If
+            End If
+        Next
+        If Not SettingDialog.TabIconDisp Then ListTab.Refresh()
+    End Sub
+
     Private Sub tw_NewPostFromStream()
         Try
             If InvokeRequired Then
@@ -9568,6 +9621,10 @@ RETRY:
         Catch ex As ObjectDisposedException
             Exit Sub
         End Try
+
+        'Static before As DateTime = Now
+        'If before.Subtract(Now).Seconds > -5 Then Exit Sub
+        'before = Now
 
         Dim rsltAddCount As Integer = _statuses.DistributePosts()
         RefreshTimeline()

@@ -1,205 +1,218 @@
 ﻿Imports System.Runtime.InteropServices
 Imports System.Runtime.Serialization
 
-Public Class DataModel
+Public Class TwitterDataModel
 
     <DataContract()> _
-    Public Class urls
-        <DataMember(Name:="urls")> Public urls As String
-        <DataMember(Name:="indices")> Public indices(2) As Integer
+    Public Class Urls
+        <DataMember(Name:="urls")> Public Urls As String
+        <DataMember(Name:="indices")> Public Indices(2) As Integer
     End Class
 
     <DataContract()> _
-    Public Class hashtags
-        <DataMember(Name:="indices")> Public indices(2) As Integer
-        <DataMember(Name:="text")> Public text As String
+    Public Class Hashtags
+        <DataMember(Name:="indices")> Public Indices(2) As Integer
+        <DataMember(Name:="text")> Public Text As String
     End Class
 
     <DataContract()> _
-    Public Class user_mentions
-        <DataMember(Name:="indices")> Public indices(2) As Integer
-        <DataMember(Name:="screen_name")> Public screen_name As String
-        <DataMember(Name:="name")> Public _name As String
-        <DataMember(Name:="id")> Public id As Int64
+    Public Class UserMentions
+        <DataMember(Name:="indices")> Public Indices(2) As Integer
+        <DataMember(Name:="screen_name")> Public ScreenName As String
+        <DataMember(Name:="name")> Public Name As String
+        <DataMember(Name:="id")> Public Id As Int64
     End Class
 
     <DataContract()> _
-    Public Class entities
-        <DataMember(Name:="urls")> Public urls() As urls
-        <DataMember(Name:="hashtags")> Public hashtags() As hashtags
-        <DataMember(Name:="user_mentions")> Public user_mentions() As user_mentions
+    Public Class Entities
+        <DataMember(Name:="urls")> Public Urls() As Urls
+        <DataMember(Name:="hashtags")> Public Hashtags() As Hashtags
+        <DataMember(Name:="user_mentions")> Public UserMentions() As UserMentions
     End Class
 
     <DataContract()> _
-    Public Class user
-        <DataMember(Name:="statuses_count")> Public statuses_count As Int64
-        <DataMember(Name:="profile_sidebar_fill_color")> Public profile_sidebar_fill_color As String
-        <DataMember(Name:="show_all_inline_media")> Public show_all_inline_media As Boolean
-        <DataMember(Name:="profile_use_background_image")> Public profile_use_background_image As Boolean
-        <DataMember(Name:="contributors_enabled")> Public contributors_enabled As Boolean
-        <DataMember(Name:="profile_sidebar_border_color")> Public profile_sidebar_border_color As String
-        <DataMember(Name:="location")> Public location As String
-        <DataMember(Name:="geo_enabled")> Public geo_enabled As Boolean
-        <DataMember(Name:="description")> Public description As String
-        <DataMember(Name:="friends_count")> Public friends_count As Integer
-        <DataMember(Name:="verified")> Public verified As Boolean
-        <DataMember(Name:="favourites_count")> Public favourites_count As Integer
-        <DataMember(Name:="created_at")> Public created_at As String
-        <DataMember(Name:="profile_background_color")> Public profile_background_color As String
-        <DataMember(Name:="follow_request_sent")> Public follow_request_sent As String
-        <DataMember(Name:="time_zone")> Public time_zone As String
-        <DataMember(Name:="followers_count")> Public followers_count As Integer
-        <DataMember(Name:="url")> Public url As String
-        <DataMember(Name:="profile_image_url")> Public profile_image_url As String
-        <DataMember(Name:="notifications")> Public notifications As String
-        <DataMember(Name:="profile_text_color")> Public profile_text_color As String
-        <DataMember(Name:="protected")> Public [protected] As Boolean
-        <DataMember(Name:="id_str")> Public id_str As String
-        <DataMember(Name:="lang")> Public lang As String
-        <DataMember(Name:="profile_background_image_url")> Public profile_background_image_url As String
-        <DataMember(Name:="screen_name")> Public screen_name As String
-        <DataMember(Name:="name")> Public _name As String
-        <DataMember(Name:="following")> Public following As String
-        <DataMember(Name:="profile_link_color")> Public profile_link_color As String
-        <DataMember(Name:="id")> Public id As Int64
-        <DataMember(Name:="listed_count")> Public listed_count As Integer
-        <DataMember(Name:="profile_background_tile")> Public profile_background_tile As Boolean
-        <DataMember(Name:="utc_offset")> Public utc_offset As String
-        <DataMember(Name:="place", IsRequired:=False)> Public place As place
+    Public Class User
+        <DataMember(Name:="statuses_count")> Public StatusesCount As Int64
+        <DataMember(Name:="profile_sidebar_fill_color")> Public ProfileSidebarFillColor As String
+        <DataMember(Name:="show_all_inline_media")> Public ShowAllInlineMedia As Boolean
+        <DataMember(Name:="profile_use_background_image")> Public ProfileUseBackgroundImage As Boolean
+        <DataMember(Name:="contributors_enabled")> Public ContributorsEnabled As Boolean
+        <DataMember(Name:="profile_sidebar_border_color")> Public ProfileSidebarBorderColor As String
+        <DataMember(Name:="location")> Public Location As String
+        <DataMember(Name:="geo_enabled")> Public GeoEnabled As Boolean
+        <DataMember(Name:="description")> Public Description As String
+        <DataMember(Name:="friends_count")> Public FriendsCount As Integer
+        <DataMember(Name:="verified")> Public Verified As Boolean
+        <DataMember(Name:="favourites_count")> Public FavouritesCount As Integer
+        <DataMember(Name:="created_at")> Public CreatedAt As String
+        <DataMember(Name:="profile_background_color")> Public ProfileBackgroundColor As String
+        <DataMember(Name:="follow_request_sent")> Public FollowRequestSent As String
+        <DataMember(Name:="time_zone")> Public TimeZone As String
+        <DataMember(Name:="followers_count")> Public FollowersCount As Integer
+        <DataMember(Name:="url")> Public Url As String
+        <DataMember(Name:="profile_image_url")> Public ProfileImageUrl As String
+        <DataMember(Name:="notifications")> Public Notifications As String
+        <DataMember(Name:="profile_text_color")> Public ProfileTextColor As String
+        <DataMember(Name:="protected")> Public [Protected] As Boolean
+        <DataMember(Name:="id_str")> Public IdStr As String
+        <DataMember(Name:="lang")> Public Lang As String
+        <DataMember(Name:="profile_background_image_url")> Public ProfileBackgroundImageUrl As String
+        <DataMember(Name:="screen_name")> Public ScreenName As String
+        <DataMember(Name:="name")> Public Name As String
+        <DataMember(Name:="following")> Public Following As String
+        <DataMember(Name:="profile_link_color")> Public ProfileLinkColor As String
+        <DataMember(Name:="id")> Public Id As Int64
+        <DataMember(Name:="listed_count")> Public ListedCount As Integer
+        <DataMember(Name:="profile_background_tile")> Public ProfileBackgroundTile As Boolean
+        <DataMember(Name:="utc_offset")> Public UtcOffset As String
+        <DataMember(Name:="place", IsRequired:=False)> Public Place As Place
     End Class
 
     <DataContract()> _
-    Public Class coordinates
-        <DataMember(Name:="type", IsRequired:=False)> Public type As String
-        <DataMember(Name:="coordinates", IsRequired:=False)> Public _coordinates(2) As Double
+    Public Class Coordinates
+        <DataMember(Name:="type", IsRequired:=False)> Public Type As String
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public Coordinates(2) As Double
     End Class
 
     <DataContract()> _
-    Public Class geo
-        <DataMember(Name:="type", IsRequired:=False)> Public type As String
-        <DataMember(Name:="coordinates", IsRequired:=False)> Public _coordinates(2) As Double
+    Public Class Geo
+        <DataMember(Name:="type", IsRequired:=False)> Public Type As String
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public Coordinates(2) As Double
     End Class
 
     <DataContract()> _
-    Public Class bounding_box
-        <DataMember(Name:="type", IsRequired:=False)> Public type As String
-        <DataMember(Name:="coordinates", IsRequired:=False)> Public _coordinates As List(Of List(Of Double()))
+    Public Class BoundingBox
+        <DataMember(Name:="type", IsRequired:=False)> Public Type As String
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public Coordinates As List(Of List(Of Double()))
     End Class
 
     <DataContract()> _
-    Public Class attributes
-        <DataMember(Name:="street_address", IsRequired:=False)> Public street_address As String
+    Public Class Attributes
+        <DataMember(Name:="street_address", IsRequired:=False)> Public StreetAddress As String
     End Class
 
     <DataContract()> _
-    Public Class place
-        <DataMember(Name:="url")> Public url As String
-        <DataMember(Name:="bounding_box", IsRequired:=False)> Public bounding_box As bounding_box
-        <DataMember(Name:="street_address", IsRequired:=False)> Public street_address As String
-        <DataMember(Name:="full_name")> Public full_name As String
-        <DataMember(Name:="name")> Public _name As String
+    Public Class Place
+        <DataMember(Name:="url")> Public Url As String
+        <DataMember(Name:="bounding_box", IsRequired:=False)> Public BoundingBox As BoundingBox
+        <DataMember(Name:="street_address", IsRequired:=False)> Public StreetAddress As String
+        <DataMember(Name:="full_name")> Public FullName As String
+        <DataMember(Name:="name")> Public Name As String
         '<DataMember(Name:="attributes", IsRequired:=False)> Public attributes As attributes
-        <DataMember(Name:="country_code", IsRequired:=False)> Public country_code As String
-        <DataMember(Name:="id")> Public id As String
-        <DataMember(Name:="country")> Public country As String
-        <DataMember(Name:="place_type")> Public place_type As String
+        <DataMember(Name:="country_code", IsRequired:=False)> Public CountryCode As String
+        <DataMember(Name:="id")> Public Id As String
+        <DataMember(Name:="country")> Public Country As String
+        <DataMember(Name:="place_type")> Public PlaceType As String
     End Class
 
     <DataContract()> _
-    Public Class retweeted_status
-        <DataMember(Name:="coordinates", IsRequired:=False)> Public coordinates As coordinates
-        <DataMember(Name:="geo", IsRequired:=False)> Public geo As geo
-        <DataMember(Name:="in_reply_to_user_id")> Public in_reply_to_user_id As String
-        <DataMember(Name:="source")> Public source As String
-        <DataMember(Name:="user")> Public user As user
-        <DataMember(Name:="in_reply_to_screen_name")> Public in_reply_to_screen_name As String
-        <DataMember(Name:="created_at")> Public created_at As String
-        <DataMember(Name:="contributors")> Public contributors As String
-        <DataMember(Name:="favorited")> Public favorited As Boolean
-        <DataMember(Name:="truncated")> Public truncated As Boolean
-        <DataMember(Name:="id")> Public id As Int64
-        <DataMember(Name:="annotations", IsRequired:=False)> Public annotations As String
-        <DataMember(Name:="place", IsRequired:=False)> Public place As place
-        <DataMember(Name:="in_reply_to_status_id")> Public in_reply_to_status_id As String
-        <DataMember(Name:="text")> Public text As String
+    Public Class RetweetedStatus
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public Coordinates As Coordinates
+        <DataMember(Name:="geo", IsRequired:=False)> Public Geo As Geo
+        <DataMember(Name:="in_reply_to_user_id")> Public InReplyToUserId As String
+        <DataMember(Name:="source")> Public Source As String
+        <DataMember(Name:="user")> Public User As User
+        <DataMember(Name:="in_reply_to_screen_name")> Public InReplyToScreenName As String
+        <DataMember(Name:="created_at")> Public CreatedAt As String
+        <DataMember(Name:="contributors")> Public Contributors As String
+        <DataMember(Name:="favorited")> Public Favorited As Boolean
+        <DataMember(Name:="truncated")> Public Truncated As Boolean
+        <DataMember(Name:="id")> Public Id As Int64
+        <DataMember(Name:="annotations", IsRequired:=False)> Public Annotations As String
+        <DataMember(Name:="place", IsRequired:=False)> Public Place As Place
+        <DataMember(Name:="in_reply_to_status_id")> Public InReplyToStatusId As String
+        <DataMember(Name:="text")> Public Text As String
     End Class
 
     <DataContract()> _
-    Public Class status
-        <DataMember(Name:="in_reply_to_status_id_str")> Public in_reply_to_status_id_str As String
-        <DataMember(Name:="contributors", IsRequired:=False)> Public contributors As String
-        <DataMember(Name:="in_reply_to_screen_name")> Public in_reply_to_screen_name As String
-        <DataMember(Name:="in_reply_to_status_id")> Public in_reply_to_status_id As String
-        <DataMember(Name:="in_reply_to_user_id_str")> Public in_reply_to_user_id_str As String
-        <DataMember(Name:="retweet_count")> Public retweet_count As String
-        <DataMember(Name:="created_at")> Public created_at As String
-        <DataMember(Name:="geo", IsRequired:=False)> Public geo As geo
-        <DataMember(Name:="retweeted")> Public retweeted As Boolean
-        <DataMember(Name:="in_reply_to_user_id")> Public in_reply_to_user_id As String
-        <DataMember(Name:="source")> Public source As String
-        <DataMember(Name:="id_str")> Public id_str As String
-        <DataMember(Name:="coordinates", IsRequired:=False)> Public coordinates As coordinates
-        <DataMember(Name:="truncated")> Public truncated As Boolean
-        <DataMember(Name:="place", IsRequired:=False)> Public place As place
-        <DataMember(Name:="user")> Public user As user
-        <DataMember(Name:="retweeted_status", IsRequired:=False)> Public retweeted_status As retweeted_status
-        <DataMember(Name:="id")> Public id As Int64
-        <DataMember(Name:="favorited")> Public favorited As Boolean
-        <DataMember(Name:="text")> Public text As String
+    Public Class Status
+        <DataMember(Name:="in_reply_to_status_id_str")> Public InReplyToStatusIdStr As String
+        <DataMember(Name:="contributors", IsRequired:=False)> Public Contributors As String
+        <DataMember(Name:="in_reply_to_screen_name")> Public InReplyToScreenName As String
+        <DataMember(Name:="in_reply_to_status_id")> Public InReplyToStatusId As String
+        <DataMember(Name:="in_reply_to_user_id_str")> Public InReplyToUserIdStr As String
+        <DataMember(Name:="retweet_count")> Public RetweetCount As String
+        <DataMember(Name:="created_at")> Public CreatedAt As String
+        <DataMember(Name:="geo", IsRequired:=False)> Public Geo As Geo
+        <DataMember(Name:="retweeted")> Public Retweeted As Boolean
+        <DataMember(Name:="in_reply_to_user_id")> Public InReplyToUserId As String
+        <DataMember(Name:="source")> Public Source As String
+        <DataMember(Name:="id_str")> Public IdStr As String
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public Coordinates As Coordinates
+        <DataMember(Name:="truncated")> Public Truncated As Boolean
+        <DataMember(Name:="place", IsRequired:=False)> Public Place As Place
+        <DataMember(Name:="user")> Public User As User
+        <DataMember(Name:="retweeted_status", IsRequired:=False)> Public RetweetedStatus As RetweetedStatus
+        <DataMember(Name:="id")> Public Id As Int64
+        <DataMember(Name:="favorited")> Public Favorited As Boolean
+        <DataMember(Name:="text")> Public Text As String
     End Class
 
     <DataContract()> _
-    Public Class directmessage
-        <DataMember(Name:="created_at")> Public created_at As String
-        <DataMember(Name:="sender_id")> Public sender_id As Int64
-        <DataMember(Name:="sender_screen_name")> Public sender_screen_name As String
-        <DataMember(Name:="sender")> Public sender As user
-        <DataMember(Name:="id_str")> Public id_str As String
-        <DataMember(Name:="recipient")> Public recipient As user
-        <DataMember(Name:="recipient_screen_name")> Public recipient_screen_name As String
-        <DataMember(Name:="recipient_id")> Public recipient_id As Int64
-        <DataMember(Name:="id")> Public id As Int64
-        <DataMember(Name:="text")> Public text As String
+    Public Class Directmessage
+        <DataMember(Name:="created_at")> Public CreatedAt As String
+        <DataMember(Name:="sender_id")> Public SenderId As Int64
+        <DataMember(Name:="sender_screen_name")> Public SenderScreenName As String
+        <DataMember(Name:="sender")> Public Sender As User
+        <DataMember(Name:="id_str")> Public IdStr As String
+        <DataMember(Name:="recipient")> Public Recipient As User
+        <DataMember(Name:="recipient_screen_name")> Public RecipientScreenName As String
+        <DataMember(Name:="recipient_id")> Public RecipientId As Int64
+        <DataMember(Name:="id")> Public Id As Int64
+        <DataMember(Name:="text")> Public Text As String
     End Class
 
     <DataContract()> _
-    Public Class friendsevent
-        <DataMember(Name:="friends")> Public friends As Int64()
+    Public Class Friendsevent
+        <DataMember(Name:="friends")> Public Friends As Int64()
     End Class
 
     <DataContract()> _
-    Public Class deletedstatus
-        <DataMember(Name:="id")> Public id As Int64
-        <DataMember(Name:="user_id")> Public user_id As Int64
+    Public Class DeletedStatusContent
+        <DataMember(Name:="id")> Public Id As Int64
+        <DataMember(Name:="user_id")> Public UserId As Int64
     End Class
 
     <DataContract()> _
-    Public Class deleteevent
-        <DataMember(Name:="event")> Public [event] As String
-        <DataMember(Name:="status")> Public status As deletedstatus
+    Public Class DeletedStatus
+        <DataMember(Name:="status")> Public Status As DeletedStatusContent
     End Class
 
     <DataContract()> _
-    Public Class directmessageevent
-        <DataMember(Name:="direct_message")> Public direct_message As directmessage
+    Public Class DeleteEvent
+        <DataMember(Name:="delete")> Public [Event] As DeletedStatus
     End Class
 
     <DataContract()> _
-    Public Class trackcount
-        <DataMember(Name:="track")> Public track As Integer
+    Public Class DeletedDirectmessage
+        <DataMember(Name:="direct_message")> Public Directmessage As DeletedStatusContent
     End Class
 
     <DataContract()> _
-    Public Class limitevent
-        <DataMember(Name:="limit")> Public limit As trackcount
+    Public Class DeleteDirectmessageEvent
+        <DataMember(Name:="delete")> Public [Event] As DeletedDirectmessage
+    End Class
+    <DataContract()> _
+    Public Class DirectmessageEvent
+        <DataMember(Name:="direct_message")> Public Directmessage As Directmessage
     End Class
 
     <DataContract()> _
-    Public Class eventdata
-        <DataMember(Name:="target")> Public target As user
-        <DataMember(Name:="target_object")> Public target_object As status
-        <DataMember(Name:="created_at")> Public created_at As String
-        <DataMember(Name:="event")> Public [event] As String
-        <DataMember(Name:="source")> Public source As user
+    Public Class TrackCount
+        <DataMember(Name:="track")> Public Track As Integer
+    End Class
+
+    <DataContract()> _
+    Public Class LimitEvent
+        <DataMember(Name:="limit")> Public Limit As TrackCount
+    End Class
+
+    <DataContract()> _
+    Public Class EventData
+        <DataMember(Name:="target")> Public Target As User
+        <DataMember(Name:="target_object")> Public TargetObject As Status
+        <DataMember(Name:="created_at")> Public CreatedAt As String
+        <DataMember(Name:="event")> Public [Event] As String
+        <DataMember(Name:="source")> Public Source As User
     End Class
 End Class
