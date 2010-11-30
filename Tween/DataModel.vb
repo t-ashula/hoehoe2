@@ -83,7 +83,7 @@ Public Class TwitterDataModel
     <DataContract()> _
     Public Class BoundingBox
         <DataMember(Name:="type", IsRequired:=False)> Public Type As String
-        <DataMember(Name:="coordinates", IsRequired:=False)> Public Coordinates As List(Of List(Of Double()))
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public Coordinates As Double()()()
     End Class
 
     <DataContract()> _
@@ -114,7 +114,7 @@ Public Class TwitterDataModel
         <DataMember(Name:="user")> Public User As User
         <DataMember(Name:="in_reply_to_screen_name")> Public InReplyToScreenName As String
         <DataMember(Name:="created_at")> Public CreatedAt As String
-        <DataMember(Name:="contributors")> Public Contributors As String
+        <DataMember(Name:="contributors")> Public Contributors As Integer()
         <DataMember(Name:="favorited")> Public Favorited As Boolean
         <DataMember(Name:="truncated")> Public Truncated As Boolean
         <DataMember(Name:="id")> Public Id As Int64
@@ -127,7 +127,7 @@ Public Class TwitterDataModel
     <DataContract()> _
     Public Class Status
         <DataMember(Name:="in_reply_to_status_id_str")> Public InReplyToStatusIdStr As String
-        <DataMember(Name:="contributors", IsRequired:=False)> Public Contributors As String
+        <DataMember(Name:="contributors", IsRequired:=False)> Public Contributors As Integer()
         <DataMember(Name:="in_reply_to_screen_name")> Public InReplyToScreenName As String
         <DataMember(Name:="in_reply_to_status_id")> Public InReplyToStatusId As String
         <DataMember(Name:="in_reply_to_user_id_str")> Public InReplyToUserIdStr As String
