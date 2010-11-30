@@ -65,35 +65,41 @@ Public Class DataModel
         <DataMember(Name:="listed_count")> Public listed_count As Integer
         <DataMember(Name:="profile_background_tile")> Public profile_background_tile As Boolean
         <DataMember(Name:="utc_offset")> Public utc_offset As String
-        <DataMember(Name:="place")> Public place As place
+        <DataMember(Name:="place", IsRequired:=False)> Public place As place
     End Class
 
     <DataContract()> _
     Public Class coordinates
-        <DataMember(Name:="type")> Public type As String
-        <DataMember(Name:="coordinates")> Public _coordinates(2) As Single
+        <DataMember(Name:="type", IsRequired:=False)> Public type As String
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public _coordinates(2) As Double
     End Class
 
     <DataContract()> _
     Public Class geo
         <DataMember(Name:="type", IsRequired:=False)> Public type As String
-        <DataMember(Name:="coordinates")> Public _coordinates(2) As Single
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public _coordinates(2) As Double
     End Class
 
     <DataContract()> _
     Public Class bounding_box
-        <DataMember(Name:="type")> Public type As String
-        <DataMember(Name:="coordinates")> Public _coordinates(2)() As Single
+        <DataMember(Name:="type", IsRequired:=False)> Public type As String
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public _coordinates As List(Of List(Of Double()))
+    End Class
+
+    <DataContract()> _
+    Public Class attributes
+        <DataMember(Name:="street_address", IsRequired:=False)> Public street_address As String
     End Class
 
     <DataContract()> _
     Public Class place
         <DataMember(Name:="url")> Public url As String
-        <DataMember(Name:="bounding_box")> Public bounding_box As bounding_box
-        <DataMember(Name:="street_address")> Public street_address As String
+        <DataMember(Name:="bounding_box", IsRequired:=False)> Public bounding_box As bounding_box
+        <DataMember(Name:="street_address", IsRequired:=False)> Public street_address As String
         <DataMember(Name:="full_name")> Public full_name As String
         <DataMember(Name:="name")> Public _name As String
-        <DataMember(Name:="country_code")> Public country_code As String
+        '<DataMember(Name:="attributes", IsRequired:=False)> Public attributes As attributes
+        <DataMember(Name:="country_code", IsRequired:=False)> Public country_code As String
         <DataMember(Name:="id")> Public id As String
         <DataMember(Name:="country")> Public country As String
         <DataMember(Name:="place_type")> Public place_type As String
@@ -101,8 +107,8 @@ Public Class DataModel
 
     <DataContract()> _
     Public Class retweeted_status
-        <DataMember(Name:="coordinates")> Public coordinates As coordinates
-        <DataMember(Name:="geo")> Public geo As geo
+        <DataMember(Name:="coordinates", IsRequired:=False)> Public coordinates As coordinates
+        <DataMember(Name:="geo", IsRequired:=False)> Public geo As geo
         <DataMember(Name:="in_reply_to_user_id")> Public in_reply_to_user_id As String
         <DataMember(Name:="source")> Public source As String
         <DataMember(Name:="user")> Public user As user
@@ -112,8 +118,8 @@ Public Class DataModel
         <DataMember(Name:="favorited")> Public favorited As Boolean
         <DataMember(Name:="truncated")> Public truncated As Boolean
         <DataMember(Name:="id")> Public id As Int64
-        <DataMember(Name:="annotations")> Public annotations As String
-        <DataMember(Name:="place")> Public place As place
+        <DataMember(Name:="annotations", IsRequired:=False)> Public annotations As String
+        <DataMember(Name:="place", IsRequired:=False)> Public place As place
         <DataMember(Name:="in_reply_to_status_id")> Public in_reply_to_status_id As String
         <DataMember(Name:="text")> Public text As String
     End Class
@@ -127,14 +133,14 @@ Public Class DataModel
         <DataMember(Name:="in_reply_to_user_id_str")> Public in_reply_to_user_id_str As String
         <DataMember(Name:="retweet_count")> Public retweet_count As String
         <DataMember(Name:="created_at")> Public created_at As String
-        <DataMember(Name:="geo")> Public geo As geo
+        <DataMember(Name:="geo", IsRequired:=False)> Public geo As geo
         <DataMember(Name:="retweeted")> Public retweeted As Boolean
         <DataMember(Name:="in_reply_to_user_id")> Public in_reply_to_user_id As String
         <DataMember(Name:="source")> Public source As String
         <DataMember(Name:="id_str")> Public id_str As String
         <DataMember(Name:="coordinates", IsRequired:=False)> Public coordinates As coordinates
         <DataMember(Name:="truncated")> Public truncated As Boolean
-        <DataMember(Name:="place", IsRequired:=False)> Public place As String
+        <DataMember(Name:="place", IsRequired:=False)> Public place As place
         <DataMember(Name:="user")> Public user As user
         <DataMember(Name:="retweeted_status", IsRequired:=False)> Public retweeted_status As retweeted_status
         <DataMember(Name:="id")> Public id As Int64
