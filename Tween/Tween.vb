@@ -9657,6 +9657,7 @@ RETRY:
         track = InputBox("追跡するキーワードを入力してください")
         tw.StopUserStream()
         tw.StartUserStream(AllrepliesToolStripMenuItem.Checked, track)
+        TrackToolStripMenuItem.Checked = Not String.IsNullOrEmpty(track)
     End Sub
 
     Private Sub AllrepliesToolStripMenuItem_CheckStateChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AllrepliesToolStripMenuItem.CheckStateChanged
