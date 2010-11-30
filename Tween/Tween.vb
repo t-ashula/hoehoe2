@@ -9613,25 +9613,11 @@ RETRY:
     End Sub
 
     Private Sub tw_NewPostFromStream()
-        Try
-            If InvokeRequired Then
-                Invoke(New MethodInvoker(AddressOf tw_NewPostFromStream))
-                Exit Sub
-            End If
-        Catch ex As ObjectDisposedException
-            Exit Sub
-        End Try
-
-        'Static before As DateTime = Now
-        'If before.Subtract(Now).Seconds > -5 Then Exit Sub
-        'before = Now
-
         If SettingDialog.ReadOldPosts Then
             _statuses.SetRead() '新着時未読クリア
         End If
 
         Dim rsltAddCount As Integer = _statuses.DistributePosts()
-        RefreshTimeline()
         SyncLock _syncObject
             Dim tm As Date = Now
             If _tlTimestamps.ContainsKey(tm) Then
@@ -9653,7 +9639,20 @@ RETRY:
                 _tlTimestamps.Remove(key)
             Next
             keys.Clear()
+
+            'Static before As DateTime = Now
+            'If before.Subtract(Now).Seconds > -5 Then Exit Sub
+            'before = Now
         End SyncLock
+
+        Try
+            If InvokeRequired AndAlso Not IsDisposed Then
+                Invoke(New MethodInvoker(AddressOf RefreshTimeline))
+                Exit Sub
+            End If
+        Catch ex As ObjectDisposedException
+            Exit Sub
+        End Try
     End Sub
     Private Sub tw_UserStreamStarted()
         If InvokeRequired Then
