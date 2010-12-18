@@ -1,4 +1,4 @@
-﻿Imports System.ComponentModel
+﻿
 Imports System.Threading
 
 Public Class AppendSettingDialog
