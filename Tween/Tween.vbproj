@@ -114,6 +114,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiInformation.vb" />
+    <Compile Include="AppendSettingDialog.Designer.vb">
+      <DependentUpon>AppendSettingDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="AppendSettingDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="AtIdSupplement.Designer.vb">
       <DependentUpon>AtIdSupplement.vb</DependentUpon>
@@ -279,6 +285,9 @@
     <Compile Include="Win32Api.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AppendSettingDialog.resx">
+      <DependentUpon>AppendSettingDialog.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AtIdSupplement.en.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AtIdSupplement.vb</DependentUpon>
