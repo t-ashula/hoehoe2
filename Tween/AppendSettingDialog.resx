@@ -244,6 +244,900 @@
   <data name="&gt;&gt;SplitContainer1.Panel1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="Label65.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Label65.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="Label65.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 220</value>
+  </data>
+  <data name="Label65.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 12</value>
+  </data>
+  <data name="Label65.TabIndex" type="System.Int32, mscorlib">
+    <value>78</value>
+  </data>
+  <data name="Label65.Text" xml:space="preserve">
+    <value>入力欄フォント</value>
+  </data>
+  <data name="&gt;&gt;Label65.Name" xml:space="preserve">
+    <value>Label65</value>
+  </data>
+  <data name="&gt;&gt;Label65.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Label65.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;Label65.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Label52.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Label52.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="Label52.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 195</value>
+  </data>
+  <data name="Label52.Size" type="System.Drawing.Size, System.Drawing">
+    <value>131, 12</value>
+  </data>
+  <data name="Label52.TabIndex" type="System.Int32, mscorlib">
+    <value>77</value>
+  </data>
+  <data name="Label52.Text" xml:space="preserve">
+    <value>入力欄アクティブ時背景色</value>
+  </data>
+  <data name="&gt;&gt;Label52.Name" xml:space="preserve">
+    <value>Label52</value>
+  </data>
+  <data name="&gt;&gt;Label52.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Label52.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;Label52.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Label49.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Label49.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="Label49.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 145</value>
+  </data>
+  <data name="Label49.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 12</value>
+  </data>
+  <data name="Label49.TabIndex" type="System.Int32, mscorlib">
+    <value>75</value>
+  </data>
+  <data name="Label49.Text" xml:space="preserve">
+    <value>その発言の@先発言</value>
+  </data>
+  <data name="&gt;&gt;Label49.Name" xml:space="preserve">
+    <value>Label49</value>
+  </data>
+  <data name="&gt;&gt;Label49.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Label49.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;Label49.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Label9.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Label9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="Label9.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 170</value>
+  </data>
+  <data name="Label9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 12</value>
+  </data>
+  <data name="Label9.TabIndex" type="System.Int32, mscorlib">
+    <value>76</value>
+  </data>
+  <data name="Label9.Text" xml:space="preserve">
+    <value>一般発言</value>
+  </data>
+  <data name="&gt;&gt;Label9.Name" xml:space="preserve">
+    <value>Label9</value>
+  </data>
+  <data name="&gt;&gt;Label9.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Label9.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;Label9.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="Label14.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Label14.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="Label14.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 120</value>
+  </data>
+  <data name="Label14.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 12</value>
+  </data>
+  <data name="Label14.TabIndex" type="System.Int32, mscorlib">
+    <value>74</value>
+  </data>
+  <data name="Label14.Text" xml:space="preserve">
+    <value>その発言の@先の人の発言</value>
+  </data>
+  <data name="&gt;&gt;Label14.Name" xml:space="preserve">
+    <value>Label14</value>
+  </data>
+  <data name="&gt;&gt;Label14.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Label14.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;Label14.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="Label16.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Label16.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="Label16.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 95</value>
+  </data>
+  <data name="Label16.Size" type="System.Drawing.Size, System.Drawing">
+    <value>88, 12</value>
+  </data>
+  <data name="Label16.TabIndex" type="System.Int32, mscorlib">
+    <value>73</value>
+  </data>
+  <data name="Label16.Text" xml:space="preserve">
+    <value>その人への@返信</value>
+  </data>
+  <data name="&gt;&gt;Label16.Name" xml:space="preserve">
+    <value>Label16</value>
+  </data>
+  <data name="&gt;&gt;Label16.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Label16.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;Label16.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="Label32.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Label32.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="Label32.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 70</value>
+  </data>
+  <data name="Label32.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 12</value>
+  </data>
+  <data name="Label32.TabIndex" type="System.Int32, mscorlib">
+    <value>72</value>
+  </data>
+  <data name="Label32.Text" xml:space="preserve">
+    <value>その人の発言</value>
+  </data>
+  <data name="&gt;&gt;Label32.Name" xml:space="preserve">
+    <value>Label32</value>
+  </data>
+  <data name="&gt;&gt;Label32.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Label32.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;Label32.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="Label34.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Label34.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="Label34.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 45</value>
+  </data>
+  <data name="Label34.Size" type="System.Drawing.Size, System.Drawing">
+    <value>81, 12</value>
+  </data>
+  <data name="Label34.TabIndex" type="System.Int32, mscorlib">
+    <value>71</value>
+  </data>
+  <data name="Label34.Text" xml:space="preserve">
+    <value>自分への@返信</value>
+  </data>
+  <data name="&gt;&gt;Label34.Name" xml:space="preserve">
+    <value>Label34</value>
+  </data>
+  <data name="&gt;&gt;Label34.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Label34.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;Label34.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="Label36.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="Label36.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="Label36.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 20</value>
+  </data>
+  <data name="Label36.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 12</value>
+  </data>
+  <data name="Label36.TabIndex" type="System.Int32, mscorlib">
+    <value>70</value>
+  </data>
+  <data name="Label36.Text" xml:space="preserve">
+    <value>自分の発言</value>
+  </data>
+  <data name="&gt;&gt;Label36.Name" xml:space="preserve">
+    <value>Label36</value>
+  </data>
+  <data name="&gt;&gt;Label36.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Label36.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;Label36.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="btnInputFont.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnInputFont.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInputFont.Location" type="System.Drawing.Point, System.Drawing">
+    <value>398, 216</value>
+  </data>
+  <data name="btnInputFont.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 22</value>
+  </data>
+  <data name="btnInputFont.TabIndex" type="System.Int32, mscorlib">
+    <value>69</value>
+  </data>
+  <data name="btnInputFont.Text" xml:space="preserve">
+    <value>フォント&amp;&amp;色</value>
+  </data>
+  <data name="&gt;&gt;btnInputFont.Name" xml:space="preserve">
+    <value>btnInputFont</value>
+  </data>
+  <data name="&gt;&gt;btnInputFont.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInputFont.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;btnInputFont.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="btnInputBackcolor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnInputBackcolor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInputBackcolor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>398, 191</value>
+  </data>
+  <data name="btnInputBackcolor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 22</value>
+  </data>
+  <data name="btnInputBackcolor.TabIndex" type="System.Int32, mscorlib">
+    <value>68</value>
+  </data>
+  <data name="btnInputBackcolor.Text" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="&gt;&gt;btnInputBackcolor.Name" xml:space="preserve">
+    <value>btnInputBackcolor</value>
+  </data>
+  <data name="&gt;&gt;btnInputBackcolor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInputBackcolor.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;btnInputBackcolor.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="btnAtTo.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnAtTo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnAtTo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>398, 141</value>
+  </data>
+  <data name="btnAtTo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 22</value>
+  </data>
+  <data name="btnAtTo.TabIndex" type="System.Int32, mscorlib">
+    <value>66</value>
+  </data>
+  <data name="btnAtTo.Text" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="&gt;&gt;btnAtTo.Name" xml:space="preserve">
+    <value>btnAtTo</value>
+  </data>
+  <data name="&gt;&gt;btnAtTo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnAtTo.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;btnAtTo.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="btnListBack.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnListBack.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnListBack.Location" type="System.Drawing.Point, System.Drawing">
+    <value>398, 166</value>
+  </data>
+  <data name="btnListBack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 22</value>
+  </data>
+  <data name="btnListBack.TabIndex" type="System.Int32, mscorlib">
+    <value>67</value>
+  </data>
+  <data name="btnListBack.Text" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="&gt;&gt;btnListBack.Name" xml:space="preserve">
+    <value>btnListBack</value>
+  </data>
+  <data name="&gt;&gt;btnListBack.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnListBack.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;btnListBack.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="btnAtFromTarget.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnAtFromTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnAtFromTarget.Location" type="System.Drawing.Point, System.Drawing">
+    <value>398, 116</value>
+  </data>
+  <data name="btnAtFromTarget.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 22</value>
+  </data>
+  <data name="btnAtFromTarget.TabIndex" type="System.Int32, mscorlib">
+    <value>65</value>
+  </data>
+  <data name="btnAtFromTarget.Text" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="&gt;&gt;btnAtFromTarget.Name" xml:space="preserve">
+    <value>btnAtFromTarget</value>
+  </data>
+  <data name="&gt;&gt;btnAtFromTarget.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnAtFromTarget.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;btnAtFromTarget.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="btnAtTarget.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnAtTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnAtTarget.Location" type="System.Drawing.Point, System.Drawing">
+    <value>398, 91</value>
+  </data>
+  <data name="btnAtTarget.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 22</value>
+  </data>
+  <data name="btnAtTarget.TabIndex" type="System.Int32, mscorlib">
+    <value>64</value>
+  </data>
+  <data name="btnAtTarget.Text" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="&gt;&gt;btnAtTarget.Name" xml:space="preserve">
+    <value>btnAtTarget</value>
+  </data>
+  <data name="&gt;&gt;btnAtTarget.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnAtTarget.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;btnAtTarget.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="btnTarget.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnTarget.Location" type="System.Drawing.Point, System.Drawing">
+    <value>398, 66</value>
+  </data>
+  <data name="btnTarget.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 22</value>
+  </data>
+  <data name="btnTarget.TabIndex" type="System.Int32, mscorlib">
+    <value>63</value>
+  </data>
+  <data name="btnTarget.Text" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="&gt;&gt;btnTarget.Name" xml:space="preserve">
+    <value>btnTarget</value>
+  </data>
+  <data name="&gt;&gt;btnTarget.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnTarget.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;btnTarget.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="btnAtSelf.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnAtSelf.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnAtSelf.Location" type="System.Drawing.Point, System.Drawing">
+    <value>398, 41</value>
+  </data>
+  <data name="btnAtSelf.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 22</value>
+  </data>
+  <data name="btnAtSelf.TabIndex" type="System.Int32, mscorlib">
+    <value>62</value>
+  </data>
+  <data name="btnAtSelf.Text" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="&gt;&gt;btnAtSelf.Name" xml:space="preserve">
+    <value>btnAtSelf</value>
+  </data>
+  <data name="&gt;&gt;btnAtSelf.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnAtSelf.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;btnAtSelf.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="btnSelf.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnSelf.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnSelf.Location" type="System.Drawing.Point, System.Drawing">
+    <value>398, 16</value>
+  </data>
+  <data name="btnSelf.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 22</value>
+  </data>
+  <data name="btnSelf.TabIndex" type="System.Int32, mscorlib">
+    <value>61</value>
+  </data>
+  <data name="btnSelf.Text" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="&gt;&gt;btnSelf.Name" xml:space="preserve">
+    <value>btnSelf</value>
+  </data>
+  <data name="&gt;&gt;btnSelf.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnSelf.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;btnSelf.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="lblInputFont.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblInputFont.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 220</value>
+  </data>
+  <data name="lblInputFont.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 19</value>
+  </data>
+  <data name="lblInputFont.TabIndex" type="System.Int32, mscorlib">
+    <value>60</value>
+  </data>
+  <data name="lblInputFont.Text" xml:space="preserve">
+    <value>This is sample.</value>
+  </data>
+  <data name="lblInputFont.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblInputFont.Name" xml:space="preserve">
+    <value>lblInputFont</value>
+  </data>
+  <data name="&gt;&gt;lblInputFont.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblInputFont.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;lblInputFont.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="lblInputBackcolor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblInputBackcolor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 195</value>
+  </data>
+  <data name="lblInputBackcolor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 19</value>
+  </data>
+  <data name="lblInputBackcolor.TabIndex" type="System.Int32, mscorlib">
+    <value>59</value>
+  </data>
+  <data name="lblInputBackcolor.Text" xml:space="preserve">
+    <value>This is sample.</value>
+  </data>
+  <data name="lblInputBackcolor.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblInputBackcolor.Name" xml:space="preserve">
+    <value>lblInputBackcolor</value>
+  </data>
+  <data name="&gt;&gt;lblInputBackcolor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblInputBackcolor.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;lblInputBackcolor.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="lblAtTo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblAtTo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 145</value>
+  </data>
+  <data name="lblAtTo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 19</value>
+  </data>
+  <data name="lblAtTo.TabIndex" type="System.Int32, mscorlib">
+    <value>57</value>
+  </data>
+  <data name="lblAtTo.Text" xml:space="preserve">
+    <value>This is sample.</value>
+  </data>
+  <data name="lblAtTo.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblAtTo.Name" xml:space="preserve">
+    <value>lblAtTo</value>
+  </data>
+  <data name="&gt;&gt;lblAtTo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblAtTo.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;lblAtTo.ZOrder" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="lblListBackcolor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblListBackcolor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 170</value>
+  </data>
+  <data name="lblListBackcolor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 19</value>
+  </data>
+  <data name="lblListBackcolor.TabIndex" type="System.Int32, mscorlib">
+    <value>58</value>
+  </data>
+  <data name="lblListBackcolor.Text" xml:space="preserve">
+    <value>This is sample.</value>
+  </data>
+  <data name="lblListBackcolor.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblListBackcolor.Name" xml:space="preserve">
+    <value>lblListBackcolor</value>
+  </data>
+  <data name="&gt;&gt;lblListBackcolor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblListBackcolor.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;lblListBackcolor.ZOrder" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="lblAtFromTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblAtFromTarget.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 120</value>
+  </data>
+  <data name="lblAtFromTarget.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 19</value>
+  </data>
+  <data name="lblAtFromTarget.TabIndex" type="System.Int32, mscorlib">
+    <value>56</value>
+  </data>
+  <data name="lblAtFromTarget.Text" xml:space="preserve">
+    <value>This is sample.</value>
+  </data>
+  <data name="lblAtFromTarget.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblAtFromTarget.Name" xml:space="preserve">
+    <value>lblAtFromTarget</value>
+  </data>
+  <data name="&gt;&gt;lblAtFromTarget.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblAtFromTarget.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;lblAtFromTarget.ZOrder" xml:space="preserve">
+    <value>22</value>
+  </data>
+  <data name="lblAtTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblAtTarget.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 95</value>
+  </data>
+  <data name="lblAtTarget.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 19</value>
+  </data>
+  <data name="lblAtTarget.TabIndex" type="System.Int32, mscorlib">
+    <value>55</value>
+  </data>
+  <data name="lblAtTarget.Text" xml:space="preserve">
+    <value>This is sample.</value>
+  </data>
+  <data name="lblAtTarget.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblAtTarget.Name" xml:space="preserve">
+    <value>lblAtTarget</value>
+  </data>
+  <data name="&gt;&gt;lblAtTarget.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblAtTarget.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;lblAtTarget.ZOrder" xml:space="preserve">
+    <value>23</value>
+  </data>
+  <data name="lblTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblTarget.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 70</value>
+  </data>
+  <data name="lblTarget.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 19</value>
+  </data>
+  <data name="lblTarget.TabIndex" type="System.Int32, mscorlib">
+    <value>54</value>
+  </data>
+  <data name="lblTarget.Text" xml:space="preserve">
+    <value>This is sample.</value>
+  </data>
+  <data name="lblTarget.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblTarget.Name" xml:space="preserve">
+    <value>lblTarget</value>
+  </data>
+  <data name="&gt;&gt;lblTarget.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTarget.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;lblTarget.ZOrder" xml:space="preserve">
+    <value>24</value>
+  </data>
+  <data name="lblAtSelf.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblAtSelf.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 45</value>
+  </data>
+  <data name="lblAtSelf.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 19</value>
+  </data>
+  <data name="lblAtSelf.TabIndex" type="System.Int32, mscorlib">
+    <value>53</value>
+  </data>
+  <data name="lblAtSelf.Text" xml:space="preserve">
+    <value>This is sample.</value>
+  </data>
+  <data name="lblAtSelf.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblAtSelf.Name" xml:space="preserve">
+    <value>lblAtSelf</value>
+  </data>
+  <data name="&gt;&gt;lblAtSelf.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblAtSelf.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;lblAtSelf.ZOrder" xml:space="preserve">
+    <value>25</value>
+  </data>
+  <data name="lblSelf.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblSelf.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 19</value>
+  </data>
+  <data name="lblSelf.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 19</value>
+  </data>
+  <data name="lblSelf.TabIndex" type="System.Int32, mscorlib">
+    <value>52</value>
+  </data>
+  <data name="lblSelf.Text" xml:space="preserve">
+    <value>This is sample.</value>
+  </data>
+  <data name="lblSelf.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblSelf.Name" xml:space="preserve">
+    <value>lblSelf</value>
+  </data>
+  <data name="&gt;&gt;lblSelf.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblSelf.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;lblSelf.ZOrder" xml:space="preserve">
+    <value>26</value>
+  </data>
+  <data name="ButtonBackToDefaultFontColor2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ButtonBackToDefaultFontColor2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="ButtonBackToDefaultFontColor2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>191, 252</value>
+  </data>
+  <data name="ButtonBackToDefaultFontColor2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>90, 22</value>
+  </data>
+  <data name="ButtonBackToDefaultFontColor2.TabIndex" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="ButtonBackToDefaultFontColor2.Text" xml:space="preserve">
+    <value>デフォルトに戻す</value>
+  </data>
+  <data name="&gt;&gt;ButtonBackToDefaultFontColor2.Name" xml:space="preserve">
+    <value>ButtonBackToDefaultFontColor2</value>
+  </data>
+  <data name="&gt;&gt;ButtonBackToDefaultFontColor2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ButtonBackToDefaultFontColor2.Parent" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;ButtonBackToDefaultFontColor2.ZOrder" xml:space="preserve">
+    <value>27</value>
+  </data>
+  <data name="GroupBox5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>22, 18</value>
+  </data>
+  <data name="GroupBox5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>489, 290</value>
+  </data>
+  <data name="GroupBox5.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="GroupBox5.Text" xml:space="preserve">
+    <value>フォント＆色設定</value>
+  </data>
+  <data name="&gt;&gt;GroupBox5.Name" xml:space="preserve">
+    <value>GroupBox5</value>
+  </data>
+  <data name="&gt;&gt;GroupBox5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GroupBox5.Parent" xml:space="preserve">
+    <value>FontPanel2</value>
+  </data>
+  <data name="&gt;&gt;GroupBox5.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="FontPanel2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="FontPanel2.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="FontPanel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="FontPanel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>525, 368</value>
+  </data>
+  <data name="FontPanel2.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="FontPanel2.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;FontPanel2.Name" xml:space="preserve">
+    <value>FontPanel2</value>
+  </data>
+  <data name="&gt;&gt;FontPanel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;FontPanel2.Parent" xml:space="preserve">
+    <value>SplitContainer1.Panel2</value>
+  </data>
+  <data name="&gt;&gt;FontPanel2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="Label30.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -599,7 +1493,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;GetCountPanel.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="TimelinePeriod.Location" type="System.Drawing.Point, System.Drawing">
     <value>258, 21</value>
@@ -1037,7 +1931,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;GetPeriodPanel.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="AuthBasicRadio.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1400,7 +2294,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;BasedPanel.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="Label55.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1754,7 +2648,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;ProxyPanel.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="CheckNicoms.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2201,7 +3095,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;ConnectionPanel.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="UserstreamPeriod.Location" type="System.Drawing.Point, System.Drawing">
     <value>227, 41</value>
@@ -2312,7 +3206,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;UserStreamPanel.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="StartupReaded.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2462,7 +3356,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;StartupPanel.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="Label47.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2909,7 +3803,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;TweetPrvPanel.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="HotkeyCheck.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -3542,7 +4436,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;ActionPanel.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="ReplyIconStateCombo.Items" xml:space="preserve">
     <value>通知なし</value>
@@ -4103,7 +4997,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;PreviewPanel.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="TextBitlyPw.Location" type="System.Drawing.Point, System.Drawing">
     <value>343, 94</value>
@@ -4532,7 +5426,7 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;TweetActPanel.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="btnRetweet.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5336,900 +6230,6 @@
     <value>SplitContainer1.Panel2</value>
   </data>
   <data name="&gt;&gt;FontPanel.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="btnInputFont.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnInputFont.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnInputFont.Location" type="System.Drawing.Point, System.Drawing">
-    <value>398, 216</value>
-  </data>
-  <data name="btnInputFont.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 22</value>
-  </data>
-  <data name="btnInputFont.TabIndex" type="System.Int32, mscorlib">
-    <value>69</value>
-  </data>
-  <data name="btnInputFont.Text" xml:space="preserve">
-    <value>フォント&amp;&amp;色</value>
-  </data>
-  <data name="&gt;&gt;btnInputFont.Name" xml:space="preserve">
-    <value>btnInputFont</value>
-  </data>
-  <data name="&gt;&gt;btnInputFont.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnInputFont.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;btnInputFont.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="btnInputBackcolor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnInputBackcolor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnInputBackcolor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>398, 191</value>
-  </data>
-  <data name="btnInputBackcolor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 22</value>
-  </data>
-  <data name="btnInputBackcolor.TabIndex" type="System.Int32, mscorlib">
-    <value>68</value>
-  </data>
-  <data name="btnInputBackcolor.Text" xml:space="preserve">
-    <value>背景色</value>
-  </data>
-  <data name="&gt;&gt;btnInputBackcolor.Name" xml:space="preserve">
-    <value>btnInputBackcolor</value>
-  </data>
-  <data name="&gt;&gt;btnInputBackcolor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnInputBackcolor.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;btnInputBackcolor.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="btnAtTo.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnAtTo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnAtTo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>398, 141</value>
-  </data>
-  <data name="btnAtTo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 22</value>
-  </data>
-  <data name="btnAtTo.TabIndex" type="System.Int32, mscorlib">
-    <value>66</value>
-  </data>
-  <data name="btnAtTo.Text" xml:space="preserve">
-    <value>背景色</value>
-  </data>
-  <data name="&gt;&gt;btnAtTo.Name" xml:space="preserve">
-    <value>btnAtTo</value>
-  </data>
-  <data name="&gt;&gt;btnAtTo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnAtTo.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;btnAtTo.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="btnListBack.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnListBack.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnListBack.Location" type="System.Drawing.Point, System.Drawing">
-    <value>398, 166</value>
-  </data>
-  <data name="btnListBack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 22</value>
-  </data>
-  <data name="btnListBack.TabIndex" type="System.Int32, mscorlib">
-    <value>67</value>
-  </data>
-  <data name="btnListBack.Text" xml:space="preserve">
-    <value>背景色</value>
-  </data>
-  <data name="&gt;&gt;btnListBack.Name" xml:space="preserve">
-    <value>btnListBack</value>
-  </data>
-  <data name="&gt;&gt;btnListBack.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnListBack.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;btnListBack.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="btnAtFromTarget.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnAtFromTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnAtFromTarget.Location" type="System.Drawing.Point, System.Drawing">
-    <value>398, 116</value>
-  </data>
-  <data name="btnAtFromTarget.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 22</value>
-  </data>
-  <data name="btnAtFromTarget.TabIndex" type="System.Int32, mscorlib">
-    <value>65</value>
-  </data>
-  <data name="btnAtFromTarget.Text" xml:space="preserve">
-    <value>背景色</value>
-  </data>
-  <data name="&gt;&gt;btnAtFromTarget.Name" xml:space="preserve">
-    <value>btnAtFromTarget</value>
-  </data>
-  <data name="&gt;&gt;btnAtFromTarget.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnAtFromTarget.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;btnAtFromTarget.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="btnAtTarget.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnAtTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnAtTarget.Location" type="System.Drawing.Point, System.Drawing">
-    <value>398, 91</value>
-  </data>
-  <data name="btnAtTarget.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 22</value>
-  </data>
-  <data name="btnAtTarget.TabIndex" type="System.Int32, mscorlib">
-    <value>64</value>
-  </data>
-  <data name="btnAtTarget.Text" xml:space="preserve">
-    <value>背景色</value>
-  </data>
-  <data name="&gt;&gt;btnAtTarget.Name" xml:space="preserve">
-    <value>btnAtTarget</value>
-  </data>
-  <data name="&gt;&gt;btnAtTarget.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnAtTarget.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;btnAtTarget.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="btnTarget.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnTarget.Location" type="System.Drawing.Point, System.Drawing">
-    <value>398, 66</value>
-  </data>
-  <data name="btnTarget.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 22</value>
-  </data>
-  <data name="btnTarget.TabIndex" type="System.Int32, mscorlib">
-    <value>63</value>
-  </data>
-  <data name="btnTarget.Text" xml:space="preserve">
-    <value>背景色</value>
-  </data>
-  <data name="&gt;&gt;btnTarget.Name" xml:space="preserve">
-    <value>btnTarget</value>
-  </data>
-  <data name="&gt;&gt;btnTarget.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTarget.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;btnTarget.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="btnAtSelf.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnAtSelf.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnAtSelf.Location" type="System.Drawing.Point, System.Drawing">
-    <value>398, 41</value>
-  </data>
-  <data name="btnAtSelf.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 22</value>
-  </data>
-  <data name="btnAtSelf.TabIndex" type="System.Int32, mscorlib">
-    <value>62</value>
-  </data>
-  <data name="btnAtSelf.Text" xml:space="preserve">
-    <value>背景色</value>
-  </data>
-  <data name="&gt;&gt;btnAtSelf.Name" xml:space="preserve">
-    <value>btnAtSelf</value>
-  </data>
-  <data name="&gt;&gt;btnAtSelf.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnAtSelf.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;btnAtSelf.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="btnSelf.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnSelf.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnSelf.Location" type="System.Drawing.Point, System.Drawing">
-    <value>398, 16</value>
-  </data>
-  <data name="btnSelf.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 22</value>
-  </data>
-  <data name="btnSelf.TabIndex" type="System.Int32, mscorlib">
-    <value>61</value>
-  </data>
-  <data name="btnSelf.Text" xml:space="preserve">
-    <value>背景色</value>
-  </data>
-  <data name="&gt;&gt;btnSelf.Name" xml:space="preserve">
-    <value>btnSelf</value>
-  </data>
-  <data name="&gt;&gt;btnSelf.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnSelf.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;btnSelf.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="lblInputFont.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblInputFont.Location" type="System.Drawing.Point, System.Drawing">
-    <value>214, 220</value>
-  </data>
-  <data name="lblInputFont.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 19</value>
-  </data>
-  <data name="lblInputFont.TabIndex" type="System.Int32, mscorlib">
-    <value>60</value>
-  </data>
-  <data name="lblInputFont.Text" xml:space="preserve">
-    <value>This is sample.</value>
-  </data>
-  <data name="lblInputFont.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblInputFont.Name" xml:space="preserve">
-    <value>lblInputFont</value>
-  </data>
-  <data name="&gt;&gt;lblInputFont.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblInputFont.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;lblInputFont.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="lblInputBackcolor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblInputBackcolor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>214, 195</value>
-  </data>
-  <data name="lblInputBackcolor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 19</value>
-  </data>
-  <data name="lblInputBackcolor.TabIndex" type="System.Int32, mscorlib">
-    <value>59</value>
-  </data>
-  <data name="lblInputBackcolor.Text" xml:space="preserve">
-    <value>This is sample.</value>
-  </data>
-  <data name="lblInputBackcolor.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblInputBackcolor.Name" xml:space="preserve">
-    <value>lblInputBackcolor</value>
-  </data>
-  <data name="&gt;&gt;lblInputBackcolor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblInputBackcolor.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;lblInputBackcolor.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="lblAtTo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblAtTo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>214, 145</value>
-  </data>
-  <data name="lblAtTo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 19</value>
-  </data>
-  <data name="lblAtTo.TabIndex" type="System.Int32, mscorlib">
-    <value>57</value>
-  </data>
-  <data name="lblAtTo.Text" xml:space="preserve">
-    <value>This is sample.</value>
-  </data>
-  <data name="lblAtTo.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblAtTo.Name" xml:space="preserve">
-    <value>lblAtTo</value>
-  </data>
-  <data name="&gt;&gt;lblAtTo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblAtTo.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;lblAtTo.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="lblListBackcolor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblListBackcolor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>214, 170</value>
-  </data>
-  <data name="lblListBackcolor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 19</value>
-  </data>
-  <data name="lblListBackcolor.TabIndex" type="System.Int32, mscorlib">
-    <value>58</value>
-  </data>
-  <data name="lblListBackcolor.Text" xml:space="preserve">
-    <value>This is sample.</value>
-  </data>
-  <data name="lblListBackcolor.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblListBackcolor.Name" xml:space="preserve">
-    <value>lblListBackcolor</value>
-  </data>
-  <data name="&gt;&gt;lblListBackcolor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblListBackcolor.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;lblListBackcolor.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="lblAtFromTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblAtFromTarget.Location" type="System.Drawing.Point, System.Drawing">
-    <value>214, 120</value>
-  </data>
-  <data name="lblAtFromTarget.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 19</value>
-  </data>
-  <data name="lblAtFromTarget.TabIndex" type="System.Int32, mscorlib">
-    <value>56</value>
-  </data>
-  <data name="lblAtFromTarget.Text" xml:space="preserve">
-    <value>This is sample.</value>
-  </data>
-  <data name="lblAtFromTarget.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblAtFromTarget.Name" xml:space="preserve">
-    <value>lblAtFromTarget</value>
-  </data>
-  <data name="&gt;&gt;lblAtFromTarget.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblAtFromTarget.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;lblAtFromTarget.ZOrder" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="lblAtTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblAtTarget.Location" type="System.Drawing.Point, System.Drawing">
-    <value>214, 95</value>
-  </data>
-  <data name="lblAtTarget.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 19</value>
-  </data>
-  <data name="lblAtTarget.TabIndex" type="System.Int32, mscorlib">
-    <value>55</value>
-  </data>
-  <data name="lblAtTarget.Text" xml:space="preserve">
-    <value>This is sample.</value>
-  </data>
-  <data name="lblAtTarget.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblAtTarget.Name" xml:space="preserve">
-    <value>lblAtTarget</value>
-  </data>
-  <data name="&gt;&gt;lblAtTarget.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblAtTarget.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;lblAtTarget.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="lblTarget.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblTarget.Location" type="System.Drawing.Point, System.Drawing">
-    <value>214, 70</value>
-  </data>
-  <data name="lblTarget.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 19</value>
-  </data>
-  <data name="lblTarget.TabIndex" type="System.Int32, mscorlib">
-    <value>54</value>
-  </data>
-  <data name="lblTarget.Text" xml:space="preserve">
-    <value>This is sample.</value>
-  </data>
-  <data name="lblTarget.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblTarget.Name" xml:space="preserve">
-    <value>lblTarget</value>
-  </data>
-  <data name="&gt;&gt;lblTarget.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblTarget.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;lblTarget.ZOrder" xml:space="preserve">
-    <value>15</value>
-  </data>
-  <data name="lblAtSelf.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblAtSelf.Location" type="System.Drawing.Point, System.Drawing">
-    <value>214, 45</value>
-  </data>
-  <data name="lblAtSelf.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 19</value>
-  </data>
-  <data name="lblAtSelf.TabIndex" type="System.Int32, mscorlib">
-    <value>53</value>
-  </data>
-  <data name="lblAtSelf.Text" xml:space="preserve">
-    <value>This is sample.</value>
-  </data>
-  <data name="lblAtSelf.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblAtSelf.Name" xml:space="preserve">
-    <value>lblAtSelf</value>
-  </data>
-  <data name="&gt;&gt;lblAtSelf.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblAtSelf.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;lblAtSelf.ZOrder" xml:space="preserve">
-    <value>16</value>
-  </data>
-  <data name="lblSelf.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblSelf.Location" type="System.Drawing.Point, System.Drawing">
-    <value>214, 19</value>
-  </data>
-  <data name="lblSelf.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 19</value>
-  </data>
-  <data name="lblSelf.TabIndex" type="System.Int32, mscorlib">
-    <value>52</value>
-  </data>
-  <data name="lblSelf.Text" xml:space="preserve">
-    <value>This is sample.</value>
-  </data>
-  <data name="lblSelf.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblSelf.Name" xml:space="preserve">
-    <value>lblSelf</value>
-  </data>
-  <data name="&gt;&gt;lblSelf.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblSelf.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;lblSelf.ZOrder" xml:space="preserve">
-    <value>17</value>
-  </data>
-  <data name="ButtonBackToDefaultFontColor2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="ButtonBackToDefaultFontColor2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="ButtonBackToDefaultFontColor2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>191, 252</value>
-  </data>
-  <data name="ButtonBackToDefaultFontColor2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 22</value>
-  </data>
-  <data name="ButtonBackToDefaultFontColor2.TabIndex" type="System.Int32, mscorlib">
-    <value>51</value>
-  </data>
-  <data name="ButtonBackToDefaultFontColor2.Text" xml:space="preserve">
-    <value>デフォルトに戻す</value>
-  </data>
-  <data name="&gt;&gt;ButtonBackToDefaultFontColor2.Name" xml:space="preserve">
-    <value>ButtonBackToDefaultFontColor2</value>
-  </data>
-  <data name="&gt;&gt;ButtonBackToDefaultFontColor2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ButtonBackToDefaultFontColor2.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;ButtonBackToDefaultFontColor2.ZOrder" xml:space="preserve">
-    <value>18</value>
-  </data>
-  <data name="Label89.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="Label89.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="Label89.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 220</value>
-  </data>
-  <data name="Label89.Size" type="System.Drawing.Size, System.Drawing">
-    <value>74, 12</value>
-  </data>
-  <data name="Label89.TabIndex" type="System.Int32, mscorlib">
-    <value>48</value>
-  </data>
-  <data name="Label89.Text" xml:space="preserve">
-    <value>入力欄フォント</value>
-  </data>
-  <data name="&gt;&gt;Label89.Name" xml:space="preserve">
-    <value>Label89</value>
-  </data>
-  <data name="&gt;&gt;Label89.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Label89.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;Label89.ZOrder" xml:space="preserve">
-    <value>19</value>
-  </data>
-  <data name="Label91.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="Label91.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="Label91.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 195</value>
-  </data>
-  <data name="Label91.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 12</value>
-  </data>
-  <data name="Label91.TabIndex" type="System.Int32, mscorlib">
-    <value>45</value>
-  </data>
-  <data name="Label91.Text" xml:space="preserve">
-    <value>入力欄アクティブ時背景色</value>
-  </data>
-  <data name="&gt;&gt;Label91.Name" xml:space="preserve">
-    <value>Label91</value>
-  </data>
-  <data name="&gt;&gt;Label91.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Label91.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;Label91.ZOrder" xml:space="preserve">
-    <value>20</value>
-  </data>
-  <data name="Label95.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="Label95.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="Label95.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 145</value>
-  </data>
-  <data name="Label95.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 12</value>
-  </data>
-  <data name="Label95.TabIndex" type="System.Int32, mscorlib">
-    <value>39</value>
-  </data>
-  <data name="Label95.Text" xml:space="preserve">
-    <value>その発言の@先発言</value>
-  </data>
-  <data name="&gt;&gt;Label95.Name" xml:space="preserve">
-    <value>Label95</value>
-  </data>
-  <data name="&gt;&gt;Label95.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Label95.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;Label95.ZOrder" xml:space="preserve">
-    <value>21</value>
-  </data>
-  <data name="Label99.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="Label99.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="Label99.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 170</value>
-  </data>
-  <data name="Label99.Size" type="System.Drawing.Size, System.Drawing">
-    <value>53, 12</value>
-  </data>
-  <data name="Label99.TabIndex" type="System.Int32, mscorlib">
-    <value>42</value>
-  </data>
-  <data name="Label99.Text" xml:space="preserve">
-    <value>一般発言</value>
-  </data>
-  <data name="&gt;&gt;Label99.Name" xml:space="preserve">
-    <value>Label99</value>
-  </data>
-  <data name="&gt;&gt;Label99.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Label99.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;Label99.ZOrder" xml:space="preserve">
-    <value>22</value>
-  </data>
-  <data name="Label101.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="Label101.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="Label101.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 120</value>
-  </data>
-  <data name="Label101.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 12</value>
-  </data>
-  <data name="Label101.TabIndex" type="System.Int32, mscorlib">
-    <value>36</value>
-  </data>
-  <data name="Label101.Text" xml:space="preserve">
-    <value>その発言の@先の人の発言</value>
-  </data>
-  <data name="&gt;&gt;Label101.Name" xml:space="preserve">
-    <value>Label101</value>
-  </data>
-  <data name="&gt;&gt;Label101.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Label101.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;Label101.ZOrder" xml:space="preserve">
-    <value>23</value>
-  </data>
-  <data name="Label103.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="Label103.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="Label103.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 95</value>
-  </data>
-  <data name="Label103.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 12</value>
-  </data>
-  <data name="Label103.TabIndex" type="System.Int32, mscorlib">
-    <value>33</value>
-  </data>
-  <data name="Label103.Text" xml:space="preserve">
-    <value>その人への@返信</value>
-  </data>
-  <data name="&gt;&gt;Label103.Name" xml:space="preserve">
-    <value>Label103</value>
-  </data>
-  <data name="&gt;&gt;Label103.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Label103.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;Label103.ZOrder" xml:space="preserve">
-    <value>24</value>
-  </data>
-  <data name="Label105.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="Label105.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="Label105.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 70</value>
-  </data>
-  <data name="Label105.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 12</value>
-  </data>
-  <data name="Label105.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="Label105.Text" xml:space="preserve">
-    <value>その人の発言</value>
-  </data>
-  <data name="&gt;&gt;Label105.Name" xml:space="preserve">
-    <value>Label105</value>
-  </data>
-  <data name="&gt;&gt;Label105.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Label105.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;Label105.ZOrder" xml:space="preserve">
-    <value>25</value>
-  </data>
-  <data name="Label107.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="Label107.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="Label107.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 45</value>
-  </data>
-  <data name="Label107.Size" type="System.Drawing.Size, System.Drawing">
-    <value>81, 12</value>
-  </data>
-  <data name="Label107.TabIndex" type="System.Int32, mscorlib">
-    <value>27</value>
-  </data>
-  <data name="Label107.Text" xml:space="preserve">
-    <value>自分への@返信</value>
-  </data>
-  <data name="&gt;&gt;Label107.Name" xml:space="preserve">
-    <value>Label107</value>
-  </data>
-  <data name="&gt;&gt;Label107.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Label107.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;Label107.ZOrder" xml:space="preserve">
-    <value>26</value>
-  </data>
-  <data name="Label109.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="Label109.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="Label109.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 20</value>
-  </data>
-  <data name="Label109.Size" type="System.Drawing.Size, System.Drawing">
-    <value>63, 12</value>
-  </data>
-  <data name="Label109.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
-  </data>
-  <data name="Label109.Text" xml:space="preserve">
-    <value>自分の発言</value>
-  </data>
-  <data name="&gt;&gt;Label109.Name" xml:space="preserve">
-    <value>Label109</value>
-  </data>
-  <data name="&gt;&gt;Label109.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Label109.Parent" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;Label109.ZOrder" xml:space="preserve">
-    <value>27</value>
-  </data>
-  <data name="GroupBox5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>22, 18</value>
-  </data>
-  <data name="GroupBox5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>489, 290</value>
-  </data>
-  <data name="GroupBox5.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="GroupBox5.Text" xml:space="preserve">
-    <value>フォント＆色設定</value>
-  </data>
-  <data name="&gt;&gt;GroupBox5.Name" xml:space="preserve">
-    <value>GroupBox5</value>
-  </data>
-  <data name="&gt;&gt;GroupBox5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;GroupBox5.Parent" xml:space="preserve">
-    <value>FontPanel2</value>
-  </data>
-  <data name="&gt;&gt;GroupBox5.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="FontPanel2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="FontPanel2.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="FontPanel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="FontPanel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>525, 368</value>
-  </data>
-  <data name="FontPanel2.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="FontPanel2.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;FontPanel2.Name" xml:space="preserve">
-    <value>FontPanel2</value>
-  </data>
-  <data name="&gt;&gt;FontPanel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;FontPanel2.Parent" xml:space="preserve">
-    <value>SplitContainer1.Panel2</value>
-  </data>
-  <data name="&gt;&gt;FontPanel2.ZOrder" xml:space="preserve">
     <value>12</value>
   </data>
   <data name="&gt;&gt;SplitContainer1.Panel2.Name" xml:space="preserve">
