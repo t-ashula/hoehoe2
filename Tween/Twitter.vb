@@ -2079,9 +2079,9 @@ Public Class Twitter
         Dim res As HttpStatusCode
         Dim content As String = ""
         Dim count As Integer = AppendSettingDialog.Instance.CountApi
-        If ap.Instance.UseAdditionalCount AndAlso
-            Setting.Instance.FavoritesCountApi <> 0 Then
-            count = Setting.Instance.FavoritesCountApi
+        If AppendSettingDialog.Instance.UseAdditionalCount AndAlso
+            AppendSettingDialog.Instance.FavoritesCountApi <> 0 Then
+            count = AppendSettingDialog.Instance.FavoritesCountApi
         End If
         Try
             res = twCon.Favorites(count, content)
