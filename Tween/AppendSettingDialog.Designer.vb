@@ -25,55 +25,15 @@ Partial Class AppendSettingDialog
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(AppendSettingDialog))
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TreeView1 = New System.Windows.Forms.TreeView()
-        Me.BasedPanel = New System.Windows.Forms.Panel()
-        Me.AuthBasicRadio = New System.Windows.Forms.RadioButton()
-        Me.AuthOAuthRadio = New System.Windows.Forms.RadioButton()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.AuthClearButton = New System.Windows.Forms.Button()
-        Me.AuthUserLabel = New System.Windows.Forms.Label()
-        Me.AuthStateLabel = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.AuthorizeButton = New System.Windows.Forms.Button()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Username = New System.Windows.Forms.TextBox()
-        Me.Password = New System.Windows.Forms.TextBox()
-        Me.GetPeriodPanel = New System.Windows.Forms.Panel()
-        Me.TimelinePeriod = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.ButtonApiCalc = New System.Windows.Forms.Button()
-        Me.LabelPostAndGet = New System.Windows.Forms.Label()
-        Me.LabelApiUsing = New System.Windows.Forms.Label()
-        Me.Label33 = New System.Windows.Forms.Label()
-        Me.ListsPeriod = New System.Windows.Forms.TextBox()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.PubSearchPeriod = New System.Windows.Forms.TextBox()
-        Me.Label69 = New System.Windows.Forms.Label()
-        Me.ReplyPeriod = New System.Windows.Forms.TextBox()
-        Me.CheckPostAndGet = New System.Windows.Forms.CheckBox()
-        Me.CheckPeriodAdjust = New System.Windows.Forms.CheckBox()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.DMPeriod = New System.Windows.Forms.TextBox()
-        Me.GetCountPanel = New System.Windows.Forms.Panel()
-        Me.Label30 = New System.Windows.Forms.Label()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.FavoritesTextCountApi = New System.Windows.Forms.TextBox()
-        Me.SearchTextCountApi = New System.Windows.Forms.TextBox()
-        Me.Label66 = New System.Windows.Forms.Label()
-        Me.FirstTextCountApi = New System.Windows.Forms.TextBox()
-        Me.GetMoreTextCountApi = New System.Windows.Forms.TextBox()
-        Me.Label53 = New System.Windows.Forms.Label()
-        Me.UseChangeGetCount = New System.Windows.Forms.CheckBox()
-        Me.TextCountApiReply = New System.Windows.Forms.TextBox()
-        Me.Label67 = New System.Windows.Forms.Label()
-        Me.TextCountApi = New System.Windows.Forms.TextBox()
         Me.StartupPanel = New System.Windows.Forms.Panel()
         Me.StartupReaded = New System.Windows.Forms.CheckBox()
         Me.CheckStartupFollowers = New System.Windows.Forms.CheckBox()
         Me.CheckStartupVersion = New System.Windows.Forms.CheckBox()
         Me.chkGetFav = New System.Windows.Forms.CheckBox()
         Me.UserStreamPanel = New System.Windows.Forms.Panel()
+        Me.UserstreamPeriod = New System.Windows.Forms.TextBox()
+        Me.StartupUserstreamCheck = New System.Windows.Forms.CheckBox()
+        Me.Label83 = New System.Windows.Forms.Label()
         Me.ActionPanel = New System.Windows.Forms.Panel()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.HotkeyCheck = New System.Windows.Forms.CheckBox()
@@ -219,30 +179,67 @@ Partial Class AppendSettingDialog
         Me.ProxyPanel = New System.Windows.Forms.Panel()
         Me.Label55 = New System.Windows.Forms.Label()
         Me.TextProxyPassword = New System.Windows.Forms.TextBox()
-        Me.LabelProxyPassword = New System.Windows.Forms.Label()
-        Me.TextProxyUser = New System.Windows.Forms.TextBox()
-        Me.LabelProxyUser = New System.Windows.Forms.Label()
-        Me.TextProxyPort = New System.Windows.Forms.TextBox()
-        Me.LabelProxyPort = New System.Windows.Forms.Label()
-        Me.TextProxyAddress = New System.Windows.Forms.TextBox()
-        Me.LabelProxyAddress = New System.Windows.Forms.Label()
-        Me.RadioProxySpecified = New System.Windows.Forms.RadioButton()
-        Me.RadioProxyIE = New System.Windows.Forms.RadioButton()
         Me.RadioProxyNone = New System.Windows.Forms.RadioButton()
+        Me.LabelProxyPassword = New System.Windows.Forms.Label()
+        Me.RadioProxyIE = New System.Windows.Forms.RadioButton()
+        Me.TextProxyUser = New System.Windows.Forms.TextBox()
+        Me.RadioProxySpecified = New System.Windows.Forms.RadioButton()
+        Me.LabelProxyUser = New System.Windows.Forms.Label()
+        Me.LabelProxyAddress = New System.Windows.Forms.Label()
+        Me.TextProxyPort = New System.Windows.Forms.TextBox()
+        Me.TextProxyAddress = New System.Windows.Forms.TextBox()
+        Me.LabelProxyPort = New System.Windows.Forms.Label()
+        Me.BasedPanel = New System.Windows.Forms.Panel()
+        Me.AuthBasicRadio = New System.Windows.Forms.RadioButton()
+        Me.AuthOAuthRadio = New System.Windows.Forms.RadioButton()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.AuthClearButton = New System.Windows.Forms.Button()
+        Me.AuthUserLabel = New System.Windows.Forms.Label()
+        Me.AuthStateLabel = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.AuthorizeButton = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Username = New System.Windows.Forms.TextBox()
+        Me.Password = New System.Windows.Forms.TextBox()
+        Me.GetPeriodPanel = New System.Windows.Forms.Panel()
+        Me.TimelinePeriod = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.ButtonApiCalc = New System.Windows.Forms.Button()
+        Me.LabelPostAndGet = New System.Windows.Forms.Label()
+        Me.LabelApiUsing = New System.Windows.Forms.Label()
+        Me.Label33 = New System.Windows.Forms.Label()
+        Me.ListsPeriod = New System.Windows.Forms.TextBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.PubSearchPeriod = New System.Windows.Forms.TextBox()
+        Me.Label69 = New System.Windows.Forms.Label()
+        Me.ReplyPeriod = New System.Windows.Forms.TextBox()
+        Me.CheckPostAndGet = New System.Windows.Forms.CheckBox()
+        Me.CheckPeriodAdjust = New System.Windows.Forms.CheckBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.DMPeriod = New System.Windows.Forms.TextBox()
+        Me.GetCountPanel = New System.Windows.Forms.Panel()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.FavoritesTextCountApi = New System.Windows.Forms.TextBox()
+        Me.SearchTextCountApi = New System.Windows.Forms.TextBox()
+        Me.Label66 = New System.Windows.Forms.Label()
+        Me.FirstTextCountApi = New System.Windows.Forms.TextBox()
+        Me.GetMoreTextCountApi = New System.Windows.Forms.TextBox()
+        Me.Label53 = New System.Windows.Forms.Label()
+        Me.UseChangeGetCount = New System.Windows.Forms.CheckBox()
+        Me.TextCountApiReply = New System.Windows.Forms.TextBox()
+        Me.Label67 = New System.Windows.Forms.Label()
+        Me.TextCountApi = New System.Windows.Forms.TextBox()
         Me.FontDialog1 = New System.Windows.Forms.FontDialog()
         Me.ColorDialog1 = New System.Windows.Forms.ColorDialog()
         Me.Cancel = New System.Windows.Forms.Button()
         Me.Save = New System.Windows.Forms.Button()
-        Me.StartupUserstreamCheck = New System.Windows.Forms.CheckBox()
-        Me.Label83 = New System.Windows.Forms.Label()
-        Me.UserstreamPeriod = New System.Windows.Forms.TextBox()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
-        Me.BasedPanel.SuspendLayout()
-        Me.GetPeriodPanel.SuspendLayout()
-        Me.GetCountPanel.SuspendLayout()
         Me.StartupPanel.SuspendLayout()
         Me.UserStreamPanel.SuspendLayout()
         Me.ActionPanel.SuspendLayout()
@@ -256,6 +253,9 @@ Partial Class AppendSettingDialog
         Me.GroupBox5.SuspendLayout()
         Me.ConnectionPanel.SuspendLayout()
         Me.ProxyPanel.SuspendLayout()
+        Me.BasedPanel.SuspendLayout()
+        Me.GetPeriodPanel.SuspendLayout()
+        Me.GetCountPanel.SuspendLayout()
         Me.SuspendLayout()
         '
         'SplitContainer1
@@ -270,19 +270,19 @@ Partial Class AppendSettingDialog
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.BackColor = System.Drawing.SystemColors.Window
-        Me.SplitContainer1.Panel2.Controls.Add(Me.StartupPanel)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.GetCountPanel)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.GetPeriodPanel)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.BasedPanel)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ProxyPanel)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ConnectionPanel)
         Me.SplitContainer1.Panel2.Controls.Add(Me.UserStreamPanel)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.ActionPanel)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.TweetActPanel)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.PreviewPanel)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.StartupPanel)
         Me.SplitContainer1.Panel2.Controls.Add(Me.TweetPrvPanel)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ActionPanel)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.PreviewPanel)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.TweetActPanel)
         Me.SplitContainer1.Panel2.Controls.Add(Me.FontPanel)
         Me.SplitContainer1.Panel2.Controls.Add(Me.FontPanel2)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.ConnectionPanel)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.ProxyPanel)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.BasedPanel)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.GetPeriodPanel)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.GetCountPanel)
         '
         'TreeView1
         '
@@ -290,277 +290,6 @@ Partial Class AppendSettingDialog
         resources.ApplyResources(Me.TreeView1, "TreeView1")
         Me.TreeView1.Name = "TreeView1"
         Me.TreeView1.Nodes.AddRange(New System.Windows.Forms.TreeNode() {CType(resources.GetObject("TreeView1.Nodes"), System.Windows.Forms.TreeNode), CType(resources.GetObject("TreeView1.Nodes1"), System.Windows.Forms.TreeNode), CType(resources.GetObject("TreeView1.Nodes2"), System.Windows.Forms.TreeNode), CType(resources.GetObject("TreeView1.Nodes3"), System.Windows.Forms.TreeNode), CType(resources.GetObject("TreeView1.Nodes4"), System.Windows.Forms.TreeNode)})
-        '
-        'BasedPanel
-        '
-        Me.BasedPanel.BackColor = System.Drawing.SystemColors.Window
-        Me.BasedPanel.Controls.Add(Me.AuthBasicRadio)
-        Me.BasedPanel.Controls.Add(Me.AuthOAuthRadio)
-        Me.BasedPanel.Controls.Add(Me.Label6)
-        Me.BasedPanel.Controls.Add(Me.AuthClearButton)
-        Me.BasedPanel.Controls.Add(Me.AuthUserLabel)
-        Me.BasedPanel.Controls.Add(Me.AuthStateLabel)
-        Me.BasedPanel.Controls.Add(Me.Label4)
-        Me.BasedPanel.Controls.Add(Me.AuthorizeButton)
-        Me.BasedPanel.Controls.Add(Me.Label1)
-        Me.BasedPanel.Controls.Add(Me.Label2)
-        Me.BasedPanel.Controls.Add(Me.Username)
-        Me.BasedPanel.Controls.Add(Me.Password)
-        resources.ApplyResources(Me.BasedPanel, "BasedPanel")
-        Me.BasedPanel.Name = "BasedPanel"
-        '
-        'AuthBasicRadio
-        '
-        resources.ApplyResources(Me.AuthBasicRadio, "AuthBasicRadio")
-        Me.AuthBasicRadio.Name = "AuthBasicRadio"
-        Me.AuthBasicRadio.UseVisualStyleBackColor = True
-        '
-        'AuthOAuthRadio
-        '
-        resources.ApplyResources(Me.AuthOAuthRadio, "AuthOAuthRadio")
-        Me.AuthOAuthRadio.Checked = True
-        Me.AuthOAuthRadio.Name = "AuthOAuthRadio"
-        Me.AuthOAuthRadio.TabStop = True
-        Me.AuthOAuthRadio.UseVisualStyleBackColor = True
-        '
-        'Label6
-        '
-        resources.ApplyResources(Me.Label6, "Label6")
-        Me.Label6.Name = "Label6"
-        '
-        'AuthClearButton
-        '
-        resources.ApplyResources(Me.AuthClearButton, "AuthClearButton")
-        Me.AuthClearButton.Name = "AuthClearButton"
-        Me.AuthClearButton.UseVisualStyleBackColor = True
-        '
-        'AuthUserLabel
-        '
-        Me.AuthUserLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        resources.ApplyResources(Me.AuthUserLabel, "AuthUserLabel")
-        Me.AuthUserLabel.Name = "AuthUserLabel"
-        '
-        'AuthStateLabel
-        '
-        Me.AuthStateLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        resources.ApplyResources(Me.AuthStateLabel, "AuthStateLabel")
-        Me.AuthStateLabel.Name = "AuthStateLabel"
-        '
-        'Label4
-        '
-        resources.ApplyResources(Me.Label4, "Label4")
-        Me.Label4.Name = "Label4"
-        '
-        'AuthorizeButton
-        '
-        resources.ApplyResources(Me.AuthorizeButton, "AuthorizeButton")
-        Me.AuthorizeButton.Name = "AuthorizeButton"
-        Me.AuthorizeButton.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        resources.ApplyResources(Me.Label1, "Label1")
-        Me.Label1.Name = "Label1"
-        '
-        'Label2
-        '
-        resources.ApplyResources(Me.Label2, "Label2")
-        Me.Label2.Name = "Label2"
-        '
-        'Username
-        '
-        resources.ApplyResources(Me.Username, "Username")
-        Me.Username.Name = "Username"
-        '
-        'Password
-        '
-        resources.ApplyResources(Me.Password, "Password")
-        Me.Password.Name = "Password"
-        Me.Password.UseSystemPasswordChar = True
-        '
-        'GetPeriodPanel
-        '
-        Me.GetPeriodPanel.BackColor = System.Drawing.SystemColors.Window
-        Me.GetPeriodPanel.Controls.Add(Me.TimelinePeriod)
-        Me.GetPeriodPanel.Controls.Add(Me.Label3)
-        Me.GetPeriodPanel.Controls.Add(Me.ButtonApiCalc)
-        Me.GetPeriodPanel.Controls.Add(Me.LabelPostAndGet)
-        Me.GetPeriodPanel.Controls.Add(Me.LabelApiUsing)
-        Me.GetPeriodPanel.Controls.Add(Me.Label33)
-        Me.GetPeriodPanel.Controls.Add(Me.ListsPeriod)
-        Me.GetPeriodPanel.Controls.Add(Me.Label7)
-        Me.GetPeriodPanel.Controls.Add(Me.PubSearchPeriod)
-        Me.GetPeriodPanel.Controls.Add(Me.Label69)
-        Me.GetPeriodPanel.Controls.Add(Me.ReplyPeriod)
-        Me.GetPeriodPanel.Controls.Add(Me.CheckPostAndGet)
-        Me.GetPeriodPanel.Controls.Add(Me.CheckPeriodAdjust)
-        Me.GetPeriodPanel.Controls.Add(Me.Label5)
-        Me.GetPeriodPanel.Controls.Add(Me.DMPeriod)
-        resources.ApplyResources(Me.GetPeriodPanel, "GetPeriodPanel")
-        Me.GetPeriodPanel.Name = "GetPeriodPanel"
-        '
-        'TimelinePeriod
-        '
-        resources.ApplyResources(Me.TimelinePeriod, "TimelinePeriod")
-        Me.TimelinePeriod.Name = "TimelinePeriod"
-        '
-        'Label3
-        '
-        resources.ApplyResources(Me.Label3, "Label3")
-        Me.Label3.Name = "Label3"
-        '
-        'ButtonApiCalc
-        '
-        resources.ApplyResources(Me.ButtonApiCalc, "ButtonApiCalc")
-        Me.ButtonApiCalc.Name = "ButtonApiCalc"
-        Me.ButtonApiCalc.UseVisualStyleBackColor = True
-        '
-        'LabelPostAndGet
-        '
-        resources.ApplyResources(Me.LabelPostAndGet, "LabelPostAndGet")
-        Me.LabelPostAndGet.Name = "LabelPostAndGet"
-        '
-        'LabelApiUsing
-        '
-        resources.ApplyResources(Me.LabelApiUsing, "LabelApiUsing")
-        Me.LabelApiUsing.Name = "LabelApiUsing"
-        '
-        'Label33
-        '
-        resources.ApplyResources(Me.Label33, "Label33")
-        Me.Label33.Name = "Label33"
-        '
-        'ListsPeriod
-        '
-        resources.ApplyResources(Me.ListsPeriod, "ListsPeriod")
-        Me.ListsPeriod.Name = "ListsPeriod"
-        '
-        'Label7
-        '
-        resources.ApplyResources(Me.Label7, "Label7")
-        Me.Label7.Name = "Label7"
-        '
-        'PubSearchPeriod
-        '
-        resources.ApplyResources(Me.PubSearchPeriod, "PubSearchPeriod")
-        Me.PubSearchPeriod.Name = "PubSearchPeriod"
-        '
-        'Label69
-        '
-        resources.ApplyResources(Me.Label69, "Label69")
-        Me.Label69.Name = "Label69"
-        '
-        'ReplyPeriod
-        '
-        resources.ApplyResources(Me.ReplyPeriod, "ReplyPeriod")
-        Me.ReplyPeriod.Name = "ReplyPeriod"
-        '
-        'CheckPostAndGet
-        '
-        resources.ApplyResources(Me.CheckPostAndGet, "CheckPostAndGet")
-        Me.CheckPostAndGet.Name = "CheckPostAndGet"
-        Me.CheckPostAndGet.UseVisualStyleBackColor = True
-        '
-        'CheckPeriodAdjust
-        '
-        resources.ApplyResources(Me.CheckPeriodAdjust, "CheckPeriodAdjust")
-        Me.CheckPeriodAdjust.Name = "CheckPeriodAdjust"
-        Me.CheckPeriodAdjust.UseVisualStyleBackColor = True
-        '
-        'Label5
-        '
-        resources.ApplyResources(Me.Label5, "Label5")
-        Me.Label5.Name = "Label5"
-        '
-        'DMPeriod
-        '
-        resources.ApplyResources(Me.DMPeriod, "DMPeriod")
-        Me.DMPeriod.Name = "DMPeriod"
-        '
-        'GetCountPanel
-        '
-        Me.GetCountPanel.BackColor = System.Drawing.SystemColors.Window
-        Me.GetCountPanel.Controls.Add(Me.Label30)
-        Me.GetCountPanel.Controls.Add(Me.Label28)
-        Me.GetCountPanel.Controls.Add(Me.Label19)
-        Me.GetCountPanel.Controls.Add(Me.FavoritesTextCountApi)
-        Me.GetCountPanel.Controls.Add(Me.SearchTextCountApi)
-        Me.GetCountPanel.Controls.Add(Me.Label66)
-        Me.GetCountPanel.Controls.Add(Me.FirstTextCountApi)
-        Me.GetCountPanel.Controls.Add(Me.GetMoreTextCountApi)
-        Me.GetCountPanel.Controls.Add(Me.Label53)
-        Me.GetCountPanel.Controls.Add(Me.UseChangeGetCount)
-        Me.GetCountPanel.Controls.Add(Me.TextCountApiReply)
-        Me.GetCountPanel.Controls.Add(Me.Label67)
-        Me.GetCountPanel.Controls.Add(Me.TextCountApi)
-        resources.ApplyResources(Me.GetCountPanel, "GetCountPanel")
-        Me.GetCountPanel.Name = "GetCountPanel"
-        '
-        'Label30
-        '
-        resources.ApplyResources(Me.Label30, "Label30")
-        Me.Label30.Name = "Label30"
-        '
-        'Label28
-        '
-        resources.ApplyResources(Me.Label28, "Label28")
-        Me.Label28.Name = "Label28"
-        '
-        'Label19
-        '
-        resources.ApplyResources(Me.Label19, "Label19")
-        Me.Label19.Name = "Label19"
-        '
-        'FavoritesTextCountApi
-        '
-        resources.ApplyResources(Me.FavoritesTextCountApi, "FavoritesTextCountApi")
-        Me.FavoritesTextCountApi.Name = "FavoritesTextCountApi"
-        '
-        'SearchTextCountApi
-        '
-        resources.ApplyResources(Me.SearchTextCountApi, "SearchTextCountApi")
-        Me.SearchTextCountApi.Name = "SearchTextCountApi"
-        '
-        'Label66
-        '
-        resources.ApplyResources(Me.Label66, "Label66")
-        Me.Label66.Name = "Label66"
-        '
-        'FirstTextCountApi
-        '
-        resources.ApplyResources(Me.FirstTextCountApi, "FirstTextCountApi")
-        Me.FirstTextCountApi.Name = "FirstTextCountApi"
-        '
-        'GetMoreTextCountApi
-        '
-        resources.ApplyResources(Me.GetMoreTextCountApi, "GetMoreTextCountApi")
-        Me.GetMoreTextCountApi.Name = "GetMoreTextCountApi"
-        '
-        'Label53
-        '
-        resources.ApplyResources(Me.Label53, "Label53")
-        Me.Label53.Name = "Label53"
-        '
-        'UseChangeGetCount
-        '
-        resources.ApplyResources(Me.UseChangeGetCount, "UseChangeGetCount")
-        Me.UseChangeGetCount.Name = "UseChangeGetCount"
-        Me.UseChangeGetCount.UseVisualStyleBackColor = True
-        '
-        'TextCountApiReply
-        '
-        resources.ApplyResources(Me.TextCountApiReply, "TextCountApiReply")
-        Me.TextCountApiReply.Name = "TextCountApiReply"
-        '
-        'Label67
-        '
-        resources.ApplyResources(Me.Label67, "Label67")
-        Me.Label67.Name = "Label67"
-        '
-        'TextCountApi
-        '
-        resources.ApplyResources(Me.TextCountApi, "TextCountApi")
-        Me.TextCountApi.Name = "TextCountApi"
         '
         'StartupPanel
         '
@@ -603,6 +332,22 @@ Partial Class AppendSettingDialog
         Me.UserStreamPanel.Controls.Add(Me.Label83)
         resources.ApplyResources(Me.UserStreamPanel, "UserStreamPanel")
         Me.UserStreamPanel.Name = "UserStreamPanel"
+        '
+        'UserstreamPeriod
+        '
+        resources.ApplyResources(Me.UserstreamPeriod, "UserstreamPeriod")
+        Me.UserstreamPeriod.Name = "UserstreamPeriod"
+        '
+        'StartupUserstreamCheck
+        '
+        resources.ApplyResources(Me.StartupUserstreamCheck, "StartupUserstreamCheck")
+        Me.StartupUserstreamCheck.Name = "StartupUserstreamCheck"
+        Me.StartupUserstreamCheck.UseVisualStyleBackColor = True
+        '
+        'Label83
+        '
+        resources.ApplyResources(Me.Label83, "Label83")
+        Me.Label83.Name = "Label83"
         '
         'ActionPanel
         '
@@ -1592,46 +1337,16 @@ Partial Class AppendSettingDialog
         Me.TextProxyPassword.Name = "TextProxyPassword"
         Me.TextProxyPassword.UseSystemPasswordChar = True
         '
+        'RadioProxyNone
+        '
+        resources.ApplyResources(Me.RadioProxyNone, "RadioProxyNone")
+        Me.RadioProxyNone.Name = "RadioProxyNone"
+        Me.RadioProxyNone.UseVisualStyleBackColor = True
+        '
         'LabelProxyPassword
         '
         resources.ApplyResources(Me.LabelProxyPassword, "LabelProxyPassword")
         Me.LabelProxyPassword.Name = "LabelProxyPassword"
-        '
-        'TextProxyUser
-        '
-        resources.ApplyResources(Me.TextProxyUser, "TextProxyUser")
-        Me.TextProxyUser.Name = "TextProxyUser"
-        '
-        'LabelProxyUser
-        '
-        resources.ApplyResources(Me.LabelProxyUser, "LabelProxyUser")
-        Me.LabelProxyUser.Name = "LabelProxyUser"
-        '
-        'TextProxyPort
-        '
-        resources.ApplyResources(Me.TextProxyPort, "TextProxyPort")
-        Me.TextProxyPort.Name = "TextProxyPort"
-        '
-        'LabelProxyPort
-        '
-        resources.ApplyResources(Me.LabelProxyPort, "LabelProxyPort")
-        Me.LabelProxyPort.Name = "LabelProxyPort"
-        '
-        'TextProxyAddress
-        '
-        resources.ApplyResources(Me.TextProxyAddress, "TextProxyAddress")
-        Me.TextProxyAddress.Name = "TextProxyAddress"
-        '
-        'LabelProxyAddress
-        '
-        resources.ApplyResources(Me.LabelProxyAddress, "LabelProxyAddress")
-        Me.LabelProxyAddress.Name = "LabelProxyAddress"
-        '
-        'RadioProxySpecified
-        '
-        resources.ApplyResources(Me.RadioProxySpecified, "RadioProxySpecified")
-        Me.RadioProxySpecified.Name = "RadioProxySpecified"
-        Me.RadioProxySpecified.UseVisualStyleBackColor = True
         '
         'RadioProxyIE
         '
@@ -1641,11 +1356,312 @@ Partial Class AppendSettingDialog
         Me.RadioProxyIE.TabStop = True
         Me.RadioProxyIE.UseVisualStyleBackColor = True
         '
-        'RadioProxyNone
+        'TextProxyUser
         '
-        resources.ApplyResources(Me.RadioProxyNone, "RadioProxyNone")
-        Me.RadioProxyNone.Name = "RadioProxyNone"
-        Me.RadioProxyNone.UseVisualStyleBackColor = True
+        resources.ApplyResources(Me.TextProxyUser, "TextProxyUser")
+        Me.TextProxyUser.Name = "TextProxyUser"
+        '
+        'RadioProxySpecified
+        '
+        resources.ApplyResources(Me.RadioProxySpecified, "RadioProxySpecified")
+        Me.RadioProxySpecified.Name = "RadioProxySpecified"
+        Me.RadioProxySpecified.UseVisualStyleBackColor = True
+        '
+        'LabelProxyUser
+        '
+        resources.ApplyResources(Me.LabelProxyUser, "LabelProxyUser")
+        Me.LabelProxyUser.Name = "LabelProxyUser"
+        '
+        'LabelProxyAddress
+        '
+        resources.ApplyResources(Me.LabelProxyAddress, "LabelProxyAddress")
+        Me.LabelProxyAddress.Name = "LabelProxyAddress"
+        '
+        'TextProxyPort
+        '
+        resources.ApplyResources(Me.TextProxyPort, "TextProxyPort")
+        Me.TextProxyPort.Name = "TextProxyPort"
+        '
+        'TextProxyAddress
+        '
+        resources.ApplyResources(Me.TextProxyAddress, "TextProxyAddress")
+        Me.TextProxyAddress.Name = "TextProxyAddress"
+        '
+        'LabelProxyPort
+        '
+        resources.ApplyResources(Me.LabelProxyPort, "LabelProxyPort")
+        Me.LabelProxyPort.Name = "LabelProxyPort"
+        '
+        'BasedPanel
+        '
+        Me.BasedPanel.BackColor = System.Drawing.SystemColors.Window
+        Me.BasedPanel.Controls.Add(Me.AuthBasicRadio)
+        Me.BasedPanel.Controls.Add(Me.AuthOAuthRadio)
+        Me.BasedPanel.Controls.Add(Me.Label6)
+        Me.BasedPanel.Controls.Add(Me.AuthClearButton)
+        Me.BasedPanel.Controls.Add(Me.AuthUserLabel)
+        Me.BasedPanel.Controls.Add(Me.AuthStateLabel)
+        Me.BasedPanel.Controls.Add(Me.Label4)
+        Me.BasedPanel.Controls.Add(Me.AuthorizeButton)
+        Me.BasedPanel.Controls.Add(Me.Label1)
+        Me.BasedPanel.Controls.Add(Me.Label2)
+        Me.BasedPanel.Controls.Add(Me.Username)
+        Me.BasedPanel.Controls.Add(Me.Password)
+        resources.ApplyResources(Me.BasedPanel, "BasedPanel")
+        Me.BasedPanel.Name = "BasedPanel"
+        '
+        'AuthBasicRadio
+        '
+        resources.ApplyResources(Me.AuthBasicRadio, "AuthBasicRadio")
+        Me.AuthBasicRadio.Name = "AuthBasicRadio"
+        Me.AuthBasicRadio.UseVisualStyleBackColor = True
+        '
+        'AuthOAuthRadio
+        '
+        resources.ApplyResources(Me.AuthOAuthRadio, "AuthOAuthRadio")
+        Me.AuthOAuthRadio.Checked = True
+        Me.AuthOAuthRadio.Name = "AuthOAuthRadio"
+        Me.AuthOAuthRadio.TabStop = True
+        Me.AuthOAuthRadio.UseVisualStyleBackColor = True
+        '
+        'Label6
+        '
+        resources.ApplyResources(Me.Label6, "Label6")
+        Me.Label6.Name = "Label6"
+        '
+        'AuthClearButton
+        '
+        resources.ApplyResources(Me.AuthClearButton, "AuthClearButton")
+        Me.AuthClearButton.Name = "AuthClearButton"
+        Me.AuthClearButton.UseVisualStyleBackColor = True
+        '
+        'AuthUserLabel
+        '
+        Me.AuthUserLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        resources.ApplyResources(Me.AuthUserLabel, "AuthUserLabel")
+        Me.AuthUserLabel.Name = "AuthUserLabel"
+        '
+        'AuthStateLabel
+        '
+        Me.AuthStateLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        resources.ApplyResources(Me.AuthStateLabel, "AuthStateLabel")
+        Me.AuthStateLabel.Name = "AuthStateLabel"
+        '
+        'Label4
+        '
+        resources.ApplyResources(Me.Label4, "Label4")
+        Me.Label4.Name = "Label4"
+        '
+        'AuthorizeButton
+        '
+        resources.ApplyResources(Me.AuthorizeButton, "AuthorizeButton")
+        Me.AuthorizeButton.Name = "AuthorizeButton"
+        Me.AuthorizeButton.UseVisualStyleBackColor = True
+        '
+        'Label1
+        '
+        resources.ApplyResources(Me.Label1, "Label1")
+        Me.Label1.Name = "Label1"
+        '
+        'Label2
+        '
+        resources.ApplyResources(Me.Label2, "Label2")
+        Me.Label2.Name = "Label2"
+        '
+        'Username
+        '
+        resources.ApplyResources(Me.Username, "Username")
+        Me.Username.Name = "Username"
+        '
+        'Password
+        '
+        resources.ApplyResources(Me.Password, "Password")
+        Me.Password.Name = "Password"
+        Me.Password.UseSystemPasswordChar = True
+        '
+        'GetPeriodPanel
+        '
+        Me.GetPeriodPanel.BackColor = System.Drawing.SystemColors.Window
+        Me.GetPeriodPanel.Controls.Add(Me.TimelinePeriod)
+        Me.GetPeriodPanel.Controls.Add(Me.Label3)
+        Me.GetPeriodPanel.Controls.Add(Me.ButtonApiCalc)
+        Me.GetPeriodPanel.Controls.Add(Me.LabelPostAndGet)
+        Me.GetPeriodPanel.Controls.Add(Me.LabelApiUsing)
+        Me.GetPeriodPanel.Controls.Add(Me.Label33)
+        Me.GetPeriodPanel.Controls.Add(Me.ListsPeriod)
+        Me.GetPeriodPanel.Controls.Add(Me.Label7)
+        Me.GetPeriodPanel.Controls.Add(Me.PubSearchPeriod)
+        Me.GetPeriodPanel.Controls.Add(Me.Label69)
+        Me.GetPeriodPanel.Controls.Add(Me.ReplyPeriod)
+        Me.GetPeriodPanel.Controls.Add(Me.CheckPostAndGet)
+        Me.GetPeriodPanel.Controls.Add(Me.CheckPeriodAdjust)
+        Me.GetPeriodPanel.Controls.Add(Me.Label5)
+        Me.GetPeriodPanel.Controls.Add(Me.DMPeriod)
+        resources.ApplyResources(Me.GetPeriodPanel, "GetPeriodPanel")
+        Me.GetPeriodPanel.Name = "GetPeriodPanel"
+        '
+        'TimelinePeriod
+        '
+        resources.ApplyResources(Me.TimelinePeriod, "TimelinePeriod")
+        Me.TimelinePeriod.Name = "TimelinePeriod"
+        '
+        'Label3
+        '
+        resources.ApplyResources(Me.Label3, "Label3")
+        Me.Label3.Name = "Label3"
+        '
+        'ButtonApiCalc
+        '
+        resources.ApplyResources(Me.ButtonApiCalc, "ButtonApiCalc")
+        Me.ButtonApiCalc.Name = "ButtonApiCalc"
+        Me.ButtonApiCalc.UseVisualStyleBackColor = True
+        '
+        'LabelPostAndGet
+        '
+        resources.ApplyResources(Me.LabelPostAndGet, "LabelPostAndGet")
+        Me.LabelPostAndGet.Name = "LabelPostAndGet"
+        '
+        'LabelApiUsing
+        '
+        resources.ApplyResources(Me.LabelApiUsing, "LabelApiUsing")
+        Me.LabelApiUsing.Name = "LabelApiUsing"
+        '
+        'Label33
+        '
+        resources.ApplyResources(Me.Label33, "Label33")
+        Me.Label33.Name = "Label33"
+        '
+        'ListsPeriod
+        '
+        resources.ApplyResources(Me.ListsPeriod, "ListsPeriod")
+        Me.ListsPeriod.Name = "ListsPeriod"
+        '
+        'Label7
+        '
+        resources.ApplyResources(Me.Label7, "Label7")
+        Me.Label7.Name = "Label7"
+        '
+        'PubSearchPeriod
+        '
+        resources.ApplyResources(Me.PubSearchPeriod, "PubSearchPeriod")
+        Me.PubSearchPeriod.Name = "PubSearchPeriod"
+        '
+        'Label69
+        '
+        resources.ApplyResources(Me.Label69, "Label69")
+        Me.Label69.Name = "Label69"
+        '
+        'ReplyPeriod
+        '
+        resources.ApplyResources(Me.ReplyPeriod, "ReplyPeriod")
+        Me.ReplyPeriod.Name = "ReplyPeriod"
+        '
+        'CheckPostAndGet
+        '
+        resources.ApplyResources(Me.CheckPostAndGet, "CheckPostAndGet")
+        Me.CheckPostAndGet.Name = "CheckPostAndGet"
+        Me.CheckPostAndGet.UseVisualStyleBackColor = True
+        '
+        'CheckPeriodAdjust
+        '
+        resources.ApplyResources(Me.CheckPeriodAdjust, "CheckPeriodAdjust")
+        Me.CheckPeriodAdjust.Name = "CheckPeriodAdjust"
+        Me.CheckPeriodAdjust.UseVisualStyleBackColor = True
+        '
+        'Label5
+        '
+        resources.ApplyResources(Me.Label5, "Label5")
+        Me.Label5.Name = "Label5"
+        '
+        'DMPeriod
+        '
+        resources.ApplyResources(Me.DMPeriod, "DMPeriod")
+        Me.DMPeriod.Name = "DMPeriod"
+        '
+        'GetCountPanel
+        '
+        Me.GetCountPanel.BackColor = System.Drawing.SystemColors.Window
+        Me.GetCountPanel.Controls.Add(Me.Label30)
+        Me.GetCountPanel.Controls.Add(Me.Label28)
+        Me.GetCountPanel.Controls.Add(Me.Label19)
+        Me.GetCountPanel.Controls.Add(Me.FavoritesTextCountApi)
+        Me.GetCountPanel.Controls.Add(Me.SearchTextCountApi)
+        Me.GetCountPanel.Controls.Add(Me.Label66)
+        Me.GetCountPanel.Controls.Add(Me.FirstTextCountApi)
+        Me.GetCountPanel.Controls.Add(Me.GetMoreTextCountApi)
+        Me.GetCountPanel.Controls.Add(Me.Label53)
+        Me.GetCountPanel.Controls.Add(Me.UseChangeGetCount)
+        Me.GetCountPanel.Controls.Add(Me.TextCountApiReply)
+        Me.GetCountPanel.Controls.Add(Me.Label67)
+        Me.GetCountPanel.Controls.Add(Me.TextCountApi)
+        resources.ApplyResources(Me.GetCountPanel, "GetCountPanel")
+        Me.GetCountPanel.Name = "GetCountPanel"
+        '
+        'Label30
+        '
+        resources.ApplyResources(Me.Label30, "Label30")
+        Me.Label30.Name = "Label30"
+        '
+        'Label28
+        '
+        resources.ApplyResources(Me.Label28, "Label28")
+        Me.Label28.Name = "Label28"
+        '
+        'Label19
+        '
+        resources.ApplyResources(Me.Label19, "Label19")
+        Me.Label19.Name = "Label19"
+        '
+        'FavoritesTextCountApi
+        '
+        resources.ApplyResources(Me.FavoritesTextCountApi, "FavoritesTextCountApi")
+        Me.FavoritesTextCountApi.Name = "FavoritesTextCountApi"
+        '
+        'SearchTextCountApi
+        '
+        resources.ApplyResources(Me.SearchTextCountApi, "SearchTextCountApi")
+        Me.SearchTextCountApi.Name = "SearchTextCountApi"
+        '
+        'Label66
+        '
+        resources.ApplyResources(Me.Label66, "Label66")
+        Me.Label66.Name = "Label66"
+        '
+        'FirstTextCountApi
+        '
+        resources.ApplyResources(Me.FirstTextCountApi, "FirstTextCountApi")
+        Me.FirstTextCountApi.Name = "FirstTextCountApi"
+        '
+        'GetMoreTextCountApi
+        '
+        resources.ApplyResources(Me.GetMoreTextCountApi, "GetMoreTextCountApi")
+        Me.GetMoreTextCountApi.Name = "GetMoreTextCountApi"
+        '
+        'Label53
+        '
+        resources.ApplyResources(Me.Label53, "Label53")
+        Me.Label53.Name = "Label53"
+        '
+        'UseChangeGetCount
+        '
+        resources.ApplyResources(Me.UseChangeGetCount, "UseChangeGetCount")
+        Me.UseChangeGetCount.Name = "UseChangeGetCount"
+        Me.UseChangeGetCount.UseVisualStyleBackColor = True
+        '
+        'TextCountApiReply
+        '
+        resources.ApplyResources(Me.TextCountApiReply, "TextCountApiReply")
+        Me.TextCountApiReply.Name = "TextCountApiReply"
+        '
+        'Label67
+        '
+        resources.ApplyResources(Me.Label67, "Label67")
+        Me.Label67.Name = "Label67"
+        '
+        'TextCountApi
+        '
+        resources.ApplyResources(Me.TextCountApi, "TextCountApi")
+        Me.TextCountApi.Name = "TextCountApi"
         '
         'Cancel
         '
@@ -1661,22 +1677,6 @@ Partial Class AppendSettingDialog
         resources.ApplyResources(Me.Save, "Save")
         Me.Save.Name = "Save"
         Me.Save.UseVisualStyleBackColor = True
-        '
-        'StartupUserstreamCheck
-        '
-        resources.ApplyResources(Me.StartupUserstreamCheck, "StartupUserstreamCheck")
-        Me.StartupUserstreamCheck.Name = "StartupUserstreamCheck"
-        Me.StartupUserstreamCheck.UseVisualStyleBackColor = True
-        '
-        'Label83
-        '
-        resources.ApplyResources(Me.Label83, "Label83")
-        Me.Label83.Name = "Label83"
-        '
-        'UserstreamPeriod
-        '
-        resources.ApplyResources(Me.UserstreamPeriod, "UserstreamPeriod")
-        Me.UserstreamPeriod.Name = "UserstreamPeriod"
         '
         'AppendSettingDialog
         '
@@ -1698,12 +1698,6 @@ Partial Class AppendSettingDialog
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
-        Me.BasedPanel.ResumeLayout(False)
-        Me.BasedPanel.PerformLayout()
-        Me.GetPeriodPanel.ResumeLayout(False)
-        Me.GetPeriodPanel.PerformLayout()
-        Me.GetCountPanel.ResumeLayout(False)
-        Me.GetCountPanel.PerformLayout()
         Me.StartupPanel.ResumeLayout(False)
         Me.StartupPanel.PerformLayout()
         Me.UserStreamPanel.ResumeLayout(False)
@@ -1728,6 +1722,12 @@ Partial Class AppendSettingDialog
         Me.ConnectionPanel.PerformLayout()
         Me.ProxyPanel.ResumeLayout(False)
         Me.ProxyPanel.PerformLayout()
+        Me.BasedPanel.ResumeLayout(False)
+        Me.BasedPanel.PerformLayout()
+        Me.GetPeriodPanel.ResumeLayout(False)
+        Me.GetPeriodPanel.PerformLayout()
+        Me.GetCountPanel.ResumeLayout(False)
+        Me.GetCountPanel.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
