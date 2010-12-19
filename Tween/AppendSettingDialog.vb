@@ -355,7 +355,7 @@ Public Class AppendSettingDialog
         End Try
     End Sub
 
-    Private Sub Setting_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs)
+    Private Sub Setting_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         If tw IsNot Nothing AndAlso tw.Username = "" AndAlso e.CloseReason = CloseReason.None Then
             If MessageBox.Show(My.Resources.Setting_FormClosing1, "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Cancel Then
                 e.Cancel = True
@@ -366,7 +366,7 @@ Public Class AppendSettingDialog
         End If
     End Sub
 
-    Private Sub Setting_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    Private Sub Setting_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Me.Load
         tw = DirectCast(Me.Owner, TweenMain).TwitterInstance
         Dim uname As String = tw.Username
         Dim pw As String = tw.Password
@@ -621,7 +621,7 @@ Public Class AppendSettingDialog
         FavoritesTextCountApi.Enabled = UseChangeGetCount.Checked
     End Sub
 
-    Private Sub UserstreamPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs)
+    Private Sub UserstreamPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles UserstreamPeriod.Validating
         Dim prd As Integer
         Try
             prd = CType(UserstreamPeriod.Text, Integer)
@@ -639,7 +639,7 @@ Public Class AppendSettingDialog
         CalcApiUsing()
     End Sub
 
-    Private Sub TimelinePeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs)
+    Private Sub TimelinePeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles TimelinePeriod.Validating
         Dim prd As Integer
         Try
             prd = CType(TimelinePeriod.Text, Integer)
@@ -657,7 +657,7 @@ Public Class AppendSettingDialog
         CalcApiUsing()
     End Sub
 
-    Private Sub ReplyPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs)
+    Private Sub ReplyPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles ReplyPeriod.Validating
         Dim prd As Integer
         Try
             prd = CType(ReplyPeriod.Text, Integer)
@@ -675,7 +675,7 @@ Public Class AppendSettingDialog
         CalcApiUsing()
     End Sub
 
-    Private Sub DMPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs)
+    Private Sub DMPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles DMPeriod.Validating
         Dim prd As Integer
         Try
             prd = CType(DMPeriod.Text, Integer)
@@ -693,7 +693,7 @@ Public Class AppendSettingDialog
         CalcApiUsing()
     End Sub
 
-    Private Sub PubSearchPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs)
+    Private Sub PubSearchPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles PubSearchPeriod.Validating
         Dim prd As Integer
         Try
             prd = CType(PubSearchPeriod.Text, Integer)
@@ -709,7 +709,7 @@ Public Class AppendSettingDialog
         End If
     End Sub
 
-    Private Sub ListsPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs)
+    Private Sub ListsPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles ListsPeriod.Validating
         Dim prd As Integer
         Try
             prd = CType(ListsPeriod.Text, Integer)
@@ -727,7 +727,7 @@ Public Class AppendSettingDialog
         CalcApiUsing()
     End Sub
 
-    Private Sub UReadMng_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub UReadMng_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UReadMng.CheckedChanged
         If UReadMng.Checked = True Then
             StartupReaded.Enabled = True
         Else
@@ -1773,15 +1773,15 @@ Public Class AppendSettingDialog
         Return True
     End Function
 
-    Private Sub CmbDateTimeFormat_TextUpdate(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub CmbDateTimeFormat_TextUpdate(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CmbDateTimeFormat.TextUpdate
         CreateDateTimeFormatSample()
     End Sub
 
-    Private Sub CmbDateTimeFormat_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub CmbDateTimeFormat_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CmbDateTimeFormat.SelectedIndexChanged
         CreateDateTimeFormatSample()
     End Sub
 
-    Private Sub CmbDateTimeFormat_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs)
+    Private Sub CmbDateTimeFormat_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles CmbDateTimeFormat.Validating
         If Not CreateDateTimeFormatSample() Then
             MessageBox.Show(My.Resources.CmbDateTimeFormat_Validating)
             e.Cancel = True
@@ -1804,7 +1804,7 @@ Public Class AppendSettingDialog
         End If
     End Sub
 
-    Private Sub LabelDateTimeFormatApplied_VisibleChanged(ByVal sender As Object, ByVal e As System.EventArgs)
+    Private Sub LabelDateTimeFormatApplied_VisibleChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles LabelDateTimeFormatApplied.VisibleChanged
         CreateDateTimeFormatSample()
     End Sub
 
