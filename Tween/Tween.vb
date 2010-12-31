@@ -4773,11 +4773,11 @@ RETRY:
     End Sub
 
     Private Sub MatomeMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MatomeMenuItem.Click
-        OpenUriAsync("http://sourceforge.jp/projects/tween/wiki/FrontPage")
+        OpenUriAsync("https://sites.google.com/site/tweentwitterclient/manual")
     End Sub
 
     Private Sub ShortcutKeyListMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ShortcutKeyListMenuItem.Click
-        OpenUriAsync("http://sourceforge.jp/projects/tween/wiki/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E3%82%AD%E3%83%BC")
+        OpenUriAsync("https://sites.google.com/site/tweentwitterclient/manual/operations/shortcutkeys")
     End Sub
 
     Private Sub ListTab_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles ListTab.KeyDown
@@ -4892,7 +4892,7 @@ RETRY:
             If e.KeyCode = Keys.F1 Then
                 e.Handled = True
                 e.SuppressKeyPress = True
-                OpenUriAsync("http://sourceforge.jp/projects/tween/wiki/FrontPage")
+                OpenUriAsync("https://sites.google.com/site/tweentwitterclient/manual")
             ElseIf e.KeyCode = Keys.F3 Then
                 e.Handled = True
                 e.SuppressKeyPress = True
@@ -5757,7 +5757,7 @@ RETRY:
             If e.KeyCode = Keys.F1 Then
                 e.Handled = True
                 e.SuppressKeyPress = True
-                OpenUriAsync("http://sourceforge.jp/projects/tween/wiki/FrontPage")
+                OpenUriAsync("https://sites.google.com/site/tweentwitterclient/manual")
             ElseIf e.KeyCode = Keys.F3 Then
                 e.Handled = True
                 e.SuppressKeyPress = True
@@ -6300,7 +6300,7 @@ RETRY:
                     ShowRelatedStatusesMenuItem_Click(Nothing, Nothing)
                 Case Keys.F1
                     e.IsInputKey = True
-                    OpenUriAsync("http://sourceforge.jp/projects/tween/wiki/FrontPage")
+                    OpenUriAsync("https://sites.google.com/site/tweentwitterclient/manual")
                 Case Keys.F3
                     e.IsInputKey = True
                     MenuItemSearchNext_Click(Nothing, Nothing)

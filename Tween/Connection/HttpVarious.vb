@@ -121,6 +121,7 @@ Public Class HttpVarious
             Else
                 req.Timeout = timeout
             End If
+            req.AllowAutoRedirect = True
             Dim res As HttpStatusCode = Me.GetResponse(req, content, Nothing, False)
             If res = HttpStatusCode.OK Then Return True
             If errmsg IsNot Nothing Then
@@ -146,6 +147,7 @@ Public Class HttpVarious
         Try
             Dim req As HttpWebRequest = CreateRequest(GetMethod, New Uri(Url), Nothing, False)
             req.AutomaticDecompression = DecompressionMethods.Deflate Or DecompressionMethods.GZip
+            req.AllowAutoRedirect = True
             Using strm As New System.IO.FileStream(savePath, IO.FileMode.Create, IO.FileAccess.Write)
                 Try
                     Dim res As HttpStatusCode = Me.GetResponse(req, strm, Nothing, False)

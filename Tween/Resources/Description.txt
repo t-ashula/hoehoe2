@@ -1,7 +1,7 @@
 ﻿Client of Twitter. Free software(GPL3)
 <Contacts>
 Twitter:kiri_feather
-Mail:kiri_feather@users.sourceforge.jp
+Mail:kiri.feather@gmail.com
 <Associator developer>
 Developer:Takeshi KIRIYA(http://www.takeshik.org/)
 Developer:moz

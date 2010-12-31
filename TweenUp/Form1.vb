@@ -109,11 +109,7 @@ Public Class Form1
         Const WaitTime As Integer = 5000 ' スリープ時間
         Dim cultures As New List(Of String)     'リソースを配置するフォルダ名（カルチャ名）
 
-        cultures.AddRange(New String() { _
-                            "en" _
-                          })
-
-
+        cultures.AddRange(New String() {"en", "zh-CHS"})
 
         BackgroundWorker1.ReportProgress(0, userState:=My.Resources.ProgressWaitForTweenExit)
         System.Threading.Thread.Sleep(WaitTime) ' スリープ
@@ -178,10 +174,10 @@ Public Class Form1
                 Dim DstFileRes As String = Path.Combine(Path.Combine(TWEENEXEPATH, cul), My.Resources.FilenameResourceDll)
 
                 If System.IO.File.Exists(SrcFileRes) Then
-                    ' リソースフォルダが更新先に存在しない場合は作成する
-                    If Not Directory.Exists(Path.Combine(TWEENEXEPATH, cul)) Then
-                        Directory.CreateDirectory(Path.Combine(TWEENEXEPATH, cul))
-                    End If
+                    '' リソースフォルダが更新先に存在しない場合は作成する
+                    'If Not Directory.Exists(Path.Combine(TWEENEXEPATH, cul)) Then
+                    '    Directory.CreateDirectory(Path.Combine(TWEENEXEPATH, cul))
+                    'End If
                     ' リソースファイルの上書き
                     If File.Exists(SrcFileRes) Then
                         File.Copy(SrcFileRes, DstFileRes, True)

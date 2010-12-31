@@ -894,7 +894,6 @@ Public Class Twitter
 
         Dim res As HttpStatusCode
         Dim content As String = ""
-        Dim xmlBuf As String = ""
 
         retweeted_count = 0
 
@@ -968,7 +967,7 @@ Public Class Twitter
                 Return "Err:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        'http://twitter.com/statuses/show/id.xml APIを発行して本文を取得
+        'http://twitter.com/statuses/show/id.json APIを発行して本文を取得
 
         'Dim content As String = ""
         content = ""
@@ -1152,7 +1151,10 @@ Public Class Twitter
 #Region "バージョンアップ"
     Public Function GetVersionInfo() As String
         Dim content As String = ""
-        If Not (New HttpVarious).GetData("http://tween.sourceforge.jp/version2.txt?" + Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Nothing, content) Then
+        'If Not (New HttpVarious).GetData("http://tween.sourceforge.jp/version2.txt?" + Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Nothing, content) Then
+        '    Throw New Exception("GetVersionInfo Failed")
+        'End If
+        If Not (New HttpVarious).GetData("https://sites.google.com/site/tweentwitterclient/autoupdate/version.txt?attredirects=0&d=1", Nothing, content) Then
             Throw New Exception("GetVersionInfo Failed")
         End If
         Return content
@@ -1160,22 +1162,29 @@ Public Class Twitter
 
     Public Function GetTweenBinary(ByVal strVer As String) As String
         Try
-            If Not (New HttpVarious).GetDataToFile("http://tween.sourceforge.jp/Tween" + strVer + ".gz?" + Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), _
+            If Not (New HttpVarious).GetDataToFile("https://sites.google.com/site/tweentwitterclient/autoupdate/Tween.gz?attredirects=0&d=1", _
                                                 Path.Combine(Application.StartupPath(), "TweenNew.exe")) Then
                 Return "Err:Download failed"
             End If
             If Directory.Exists(Path.Combine(Application.StartupPath(), "en")) = False Then
                 Directory.CreateDirectory(Path.Combine(Application.StartupPath(), "en"))
             End If
-            If Not (New HttpVarious).GetDataToFile("http://tween.sourceforge.jp/TweenRes" + strVer + ".gz?" + Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), _
+            If Not (New HttpVarious).GetDataToFile("https://sites.google.com/site/tweentwitterclient/autoupdate/TweenResEn.gz?attredirects=0&d=1", _
                                                 Path.Combine(Application.StartupPath(), "en\Tween.resourcesNew.dll")) Then
                 Return "Err:Download failed"
             End If
-            If Not (New HttpVarious).GetDataToFile("http://tween.sourceforge.jp/TweenUp.gz?" + Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), _
+            If Directory.Exists(Path.Combine(Application.StartupPath(), "zh-CHS")) = False Then
+                Directory.CreateDirectory(Path.Combine(Application.StartupPath(), "zh-CHS"))
+            End If
+            If Not (New HttpVarious).GetDataToFile("https://sites.google.com/site/tweentwitterclient/autoupdate/TweenResZhChs.gz?attredirects=0&d=1", _
+                                                Path.Combine(Application.StartupPath(), "zh-CHS\Tween.resourcesNew.dll")) Then
+                Return "Err:Download failed"
+            End If
+            If Not (New HttpVarious).GetDataToFile("https://sites.google.com/site/tweentwitterclient/autoupdate/TweenUp.gz?attredirects=0&d=1", _
                                                 Path.Combine(Application.StartupPath(), "TweenUp.exe")) Then
                 Return "Err:Download failed"
             End If
-            If Not (New HttpVarious).GetDataToFile("http://tween.sourceforge.jp/TweenDll" + strVer + ".gz?" + Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), _
+            If Not (New HttpVarious).GetDataToFile("https://sites.google.com/site/tweentwitterclient/autoupdate/TweenDll.gz?attredirects=0&d=1", _
                                                 Path.Combine(Application.StartupPath(), "TweenNew.XmlSerializers.dll")) Then
                 Return "Err:Download failed"
             End If
@@ -1728,118 +1737,6 @@ Public Class Twitter
         '    rslt = Me.GetUserTimelineApi(read, 10, replyToUserName, tab)
         'End If
         'Return rslt
-        Return ""
-    End Function
-
-    Private Function CreatePostsFromXml(ByVal content As String, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
-        Dim xdoc As New XmlDocument
-        Try
-            xdoc.LoadXml(content)
-        Catch ex As Exception
-            TraceOut(content)
-            'MessageBox.Show("不正なXMLです。(TL-LoadXml)")
-            Return "Invalid XML!"
-        End Try
-
-        For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("./status")
-            Dim xentry As XmlElement = CType(xentryNode, XmlElement)
-            Dim post As New PostClass
-            Try
-                post.Id = Long.Parse(xentry.Item("id").InnerText)
-                If minimumId > post.Id Then minimumId = post.Id
-                '二重取得回避
-                SyncLock LockObj
-                    If tab Is Nothing Then
-                        If TabInformations.GetInstance.ContainsKey(post.Id) Then Continue For
-                    Else
-                        If TabInformations.GetInstance.ContainsKey(post.Id, tab.TabName) Then Continue For
-                    End If
-                End SyncLock
-                'Retweet判定
-                Dim xRnode As XmlNode = xentry.SelectSingleNode("./retweeted_status")
-                If xRnode IsNot Nothing Then
-                    Dim xRentry As XmlElement = CType(xRnode, XmlElement)
-                    post.PDate = DateTime.ParseExact(xRentry.Item("created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-                    'Id
-                    post.RetweetedId = Long.Parse(xRentry.Item("id").InnerText)
-                    '本文
-                    post.Data = xRentry.Item("text").InnerText
-                    'Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = xRentry.Item("source").InnerText
-                    'Reply先
-                    Long.TryParse(xRentry.Item("in_reply_to_status_id").InnerText, post.InReplyToId)
-                    post.InReplyToUser = xRentry.Item("in_reply_to_screen_name").InnerText
-                    post.IsFav = TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Contains(post.RetweetedId)
-                    'post.IsFav = Boolean.Parse(xentry.Item("favorited").InnerText)
-
-                    '以下、ユーザー情報
-                    Dim xRUentry As XmlElement = CType(xRentry.SelectSingleNode("./user"), XmlElement)
-                    post.Uid = Long.Parse(xRUentry.Item("id").InnerText)
-                    post.Name = xRUentry.Item("screen_name").InnerText
-                    post.Nickname = xRUentry.Item("name").InnerText
-                    post.ImageUrl = xRUentry.Item("profile_image_url").InnerText
-                    post.IsProtect = Boolean.Parse(xRUentry.Item("protected").InnerText)
-                    post.IsMe = post.Name.ToLower.Equals(_uid)
-                    If post.IsMe Then _UserIdNo = post.Uid.ToString()
-
-                    'Retweetした人
-                    Dim xUentry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
-                    post.RetweetedBy = xUentry.Item("screen_name").InnerText
-                Else
-                    post.PDate = DateTime.ParseExact(xentry.Item("created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-                    '本文
-                    post.Data = xentry.Item("text").InnerText
-                    'Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = xentry.Item("source").InnerText
-                    Long.TryParse(xentry.Item("in_reply_to_status_id").InnerText, post.InReplyToId)
-                    post.InReplyToUser = xentry.Item("in_reply_to_screen_name").InnerText
-                    'in_reply_to_user_idを使うか？
-                    post.IsFav = Boolean.Parse(xentry.Item("favorited").InnerText)
-
-                    '以下、ユーザー情報
-                    Dim xUentry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
-                    post.Uid = Long.Parse(xUentry.Item("id").InnerText)
-                    post.Name = xUentry.Item("screen_name").InnerText
-                    post.Nickname = xUentry.Item("name").InnerText
-                    post.ImageUrl = xUentry.Item("profile_image_url").InnerText
-                    post.IsProtect = Boolean.Parse(xUentry.Item("protected").InnerText)
-                    post.IsMe = post.Name.ToLower.Equals(_uid)
-                    If post.IsMe Then _UserIdNo = post.Uid.ToString()
-                End If
-                'HTMLに整形
-                post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
-                post.Data = HttpUtility.HtmlDecode(post.Data)
-                post.Data = post.Data.Replace("<3", "♡")
-                'Source整形
-                CreateSource(post)
-
-                post.IsRead = read
-                If gType = WORKERTYPE.Timeline OrElse tab IsNot Nothing Then
-                    post.IsReply = post.ReplyToList.Contains(_uid)
-                Else
-                    post.IsReply = True
-                End If
-                post.IsExcludeReply = False
-
-                If post.IsMe Then
-                    post.IsOwl = False
-                Else
-                    If followerId.Count > 0 Then post.IsOwl = Not followerId.Contains(post.Uid)
-                End If
-                If post.IsMe AndAlso Not read AndAlso _readOwnPost Then post.IsRead = True
-
-                post.IsDm = False
-                If tab IsNot Nothing Then post.RelTabName = tab.TabName
-            Catch ex As Exception
-                TraceOut(content)
-                'MessageBox.Show("不正なXMLです。(TL-Parse)")
-                Continue For
-            End Try
-
-            TabInformations.GetInstance.AddPost(post)
-
-        Next
-
         Return ""
     End Function
 
