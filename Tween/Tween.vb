@@ -39,6 +39,7 @@ Imports Microsoft.Win32
 Imports System.Xml
 Imports System.Timers
 Imports System.Threading
+Imports System.Linq
 
 Public Class TweenMain
 
@@ -56,6 +57,8 @@ Public Class TweenMain
     Private _initialLayout As Boolean = True
     Private _ignoreConfigSave As Boolean         'True:起動時処理中
     Private _tabDrag As Boolean           'タブドラッグ中フラグ（DoDragDropを実行するかの判定用）
+    Private _beforeSelectedTab As TabPage 'タブが削除されたときに前回選択されていたときのタブを選択する為に保持
+    Private _tabMouseDownPoint As Point
     Private _rclickTabName As String      '右クリックしたタブの名前（Tabコントロール機能不足対応）
     Private ReadOnly _syncObject As New Object()    'ロック用
     Private Const detailHtmlFormatMono1 As String = "<html><head><style type=""text/css""><!-- pre {font-family: """
@@ -605,6 +608,7 @@ Public Class TweenMain
         SettingDialog.ReplyPeriodInt = _cfgCommon.ReplyPeriod
         SettingDialog.DMPeriodInt = _cfgCommon.DMPeriod
         SettingDialog.PubSearchPeriodInt = _cfgCommon.PubSearchPeriod
+        SettingDialog.UserTimelinePeriodInt = _cfgCommon.UserTimelinePeriod
         SettingDialog.ListsPeriodInt = _cfgCommon.ListsPeriod
         '不正値チェック
         If Not My.Application.CommandLineArgs.Contains("nolimit") Then
@@ -612,6 +616,7 @@ Public Class TweenMain
             If SettingDialog.ReplyPeriodInt < 15 AndAlso SettingDialog.ReplyPeriodInt > 0 Then SettingDialog.ReplyPeriodInt = 15
             If SettingDialog.DMPeriodInt < 15 AndAlso SettingDialog.DMPeriodInt > 0 Then SettingDialog.DMPeriodInt = 15
             If SettingDialog.PubSearchPeriodInt < 30 AndAlso SettingDialog.PubSearchPeriodInt > 0 Then SettingDialog.PubSearchPeriodInt = 30
+            If SettingDialog.UserTimelinePeriodInt < 15 AndAlso SettingDialog.UserTimelinePeriodInt > 0 Then SettingDialog.UserTimelinePeriodInt = 15
             If SettingDialog.ListsPeriodInt < 15 AndAlso SettingDialog.ListsPeriodInt > 0 Then SettingDialog.ListsPeriodInt = 15
         End If
 
@@ -764,6 +769,7 @@ Public Class TweenMain
         SettingDialog.FirstCountApi = _cfgCommon.FirstCountApi
         SettingDialog.SearchCountApi = _cfgCommon.SearchCountApi
         SettingDialog.FavoritesCountApi = _cfgCommon.FavoritesCountApi
+        SettingDialog.UserTimelineCountApi = _cfgCommon.UserTimelineCountApi
         'If _cfgCommon.UseAdditionalCount Then
         '    _FirstRefreshFlags = True
         '    _FirstListsRefreshFlags = True
@@ -1191,6 +1197,7 @@ Public Class TweenMain
         Static mentionCounter As Integer = 0
         Static dmCounter As Integer = 0
         Static pubSearchCounter As Integer = 0
+        Static userTimelineCounter As Integer = 0
         Static listsCounter As Integer = 0
         Static usCounter As Integer = 0
 
@@ -1198,6 +1205,7 @@ Public Class TweenMain
         If mentionCounter > 0 Then Interlocked.Decrement(mentionCounter)
         If dmCounter > 0 Then Interlocked.Decrement(dmCounter)
         If pubSearchCounter > 0 Then Interlocked.Decrement(pubSearchCounter)
+        If userTimelineCounter > 0 Then Interlocked.Decrement(userTimelineCounter)
         If listsCounter > 0 Then Interlocked.Decrement(listsCounter)
         If usCounter > 0 Then Interlocked.Decrement(usCounter)
 
@@ -1222,6 +1230,10 @@ Public Class TweenMain
         If pubSearchCounter <= 0 AndAlso SettingDialog.PubSearchPeriodInt > 0 Then
             Interlocked.Exchange(pubSearchCounter, SettingDialog.PubSearchPeriodInt)
             GetTimeline(WORKERTYPE.PublicSearch, 1, 0, "")
+        End If
+        If userTimelineCounter <= 0 AndAlso SettingDialog.UserTimelinePeriodInt > 0 Then
+            Interlocked.Exchange(userTimelineCounter, SettingDialog.UserTimelinePeriodInt)
+            GetTimeline(WORKERTYPE.UserTimeline, 1, 0, "")
         End If
         If listsCounter <= 0 AndAlso SettingDialog.ListsPeriodInt > 0 Then
             Interlocked.Exchange(listsCounter, SettingDialog.ListsPeriodInt)
@@ -1426,6 +1438,11 @@ Public Class TweenMain
     End Function
 
     Private Sub NotifyNewPosts(ByVal notifyPosts() As PostClass, ByVal soundFile As String, ByVal addCount As Integer, ByVal newMentions As Boolean)
+        If notifyPosts IsNot Nothing AndAlso _
+            notifyPosts.All(Function(post) post.Uid.ToString() = tw.UserIdNo OrElse post.Name = tw.Username) Then
+            Exit Sub
+        End If
+
         '新着通知
         If BalloonRequired() Then
             If notifyPosts IsNot Nothing AndAlso notifyPosts.Length > 0 Then
@@ -1636,7 +1653,7 @@ Public Class TweenMain
             End If
         End If
 
-        If _curPost IsNot Nothing AndAlso StatusText.Text.Trim() = String.Format("RT @{0}: {1}", _curPost.Name, _curPost.Data) Then
+        If Me.ExistCurrentPost AndAlso StatusText.Text.Trim() = String.Format("RT @{0}: {1}", _curPost.Name, _curPost.Data) Then
             Dim rtResult As DialogResult = MessageBox.Show(String.Format(My.Resources.PostButton_Click1, Environment.NewLine),
                                                            "Retweet",
                                                            MessageBoxButtons.YesNoCancel,
@@ -1916,7 +1933,7 @@ Public Class TweenMain
                     Dim tbc As TabClass = _statuses.Tabs(args.tName)
                     For i As Integer = 0 To args.ids.Count - 1
                         Dim post As PostClass = Nothing
-                        If tbc.TabType = TabUsageType.Lists OrElse tbc.TabType = TabUsageType.PublicSearch Then
+                        If tbc.IsInnerStorageTabType Then
                             post = tbc.Posts(args.ids(i))
                         Else
                             post = _statuses.Item(args.ids(i))
@@ -1959,7 +1976,7 @@ Public Class TweenMain
                     Dim tbc As TabClass = _statuses.Tabs(args.tName)
                     For i As Integer = 0 To args.ids.Count - 1
                         Dim post As PostClass = Nothing
-                        If tbc.TabType = TabUsageType.Lists OrElse tbc.TabType = TabUsageType.PublicSearch Then
+                        If tbc.IsInnerStorageTabType Then
                             post = tbc.Posts(args.ids(i))
                         Else
                             post = _statuses.Item(args.ids(i))
@@ -2061,6 +2078,22 @@ Public Class TweenMain
                 End If
                 '振り分け
                 rslt.addCount = _statuses.DistributePosts()
+            Case WORKERTYPE.UserTimeline
+                bw.ReportProgress(50, MakeStatusMessage(args, False))
+                Dim count As Integer = 20
+                If SettingDialog.UseAdditionalCount Then count = SettingDialog.UserTimelineCountApi
+                If args.tName = "" Then
+                    For Each tb As TabClass In _statuses.GetTabsByType(TabUsageType.UserTimeline)
+                        If tb.User <> "" Then ret = tw.GetUserTimelineApi(read, count, tb.User, tb, False)
+                    Next
+                Else
+                    Dim tb As TabClass = _statuses.GetTabByName(args.tName)
+                    If tb IsNot Nothing Then
+                        ret = tw.GetUserTimelineApi(read, count, tb.User, tb, args.page = -1)
+                    End If
+                End If
+                '振り分け
+                rslt.addCount = _statuses.DistributePosts()
             Case WORKERTYPE.List
                 bw.ReportProgress(50, MakeStatusMessage(args, False))
                 If args.tName = "" Then
@@ -2080,7 +2113,7 @@ Public Class TweenMain
             Case WORKERTYPE.Related
                 bw.ReportProgress(50, MakeStatusMessage(args, False))
                 Dim tb As TabClass = _statuses.GetTabByName(args.tName)
-                ret = tw.GetRelatedResultsApi(read, tb)
+                ret = tw.GetRelatedResult(read, tb)
                 rslt.addCount = _statuses.DistributePosts()
         End Select
         'キャンセル要求
@@ -2165,6 +2198,8 @@ Public Class TweenMain
                     smsg = "List refreshing..."
                 Case WORKERTYPE.Related
                     smsg = "Related refreshing..."
+                Case WORKERTYPE.UserTimeline
+                    smsg = "UserTimeline refreshing..."
             End Select
         Else
             '完了メッセージ
@@ -2191,6 +2226,8 @@ Public Class TweenMain
                     smsg = "List refreshed"
                 Case WORKERTYPE.Related
                     smsg = "Related refreshed"
+                Case WORKERTYPE.UserTimeline
+                    smsg = "UserTimeline refreshed"
             End Select
         End If
         Return smsg
@@ -2241,48 +2278,7 @@ Public Class TweenMain
         If rslt.type = WORKERTYPE.ErrorState Then Exit Sub
 
         If rslt.type = WORKERTYPE.FavRemove Then
-            DispSelectedPost()          ' 詳細画面書き直し
-            Dim favTabName As String = _statuses.GetTabByType(TabUsageType.Favorites).TabName
-            Dim fidx As Integer
-            If _curTab.Text.Equals(favTabName) Then
-                If _curList.FocusedItem IsNot Nothing Then
-                    fidx = _curList.FocusedItem.Index
-                ElseIf _curList.TopItem IsNot Nothing Then
-                    fidx = _curList.TopItem.Index
-                Else
-                    fidx = 0
-                End If
-            End If
-
-            For Each i As Long In rslt.sIds
-                _statuses.RemoveFavPost(i)
-            Next
-            If _curTab IsNot Nothing AndAlso _curTab.Text.Equals(favTabName) Then
-                _itemCache = Nothing    'キャッシュ破棄
-                _postCache = Nothing
-                _curPost = Nothing
-                '_curItemIndex = -1
-            End If
-            For Each tp As TabPage In ListTab.TabPages
-                If tp.Text = favTabName Then
-                    DirectCast(tp.Tag, DetailsListView).VirtualListSize = _statuses.Tabs(favTabName).AllCount
-                    Exit For
-                End If
-            Next
-            If _curTab.Text.Equals(favTabName) Then
-                _curList.SelectedIndices.Clear()
-                If _statuses.Tabs(favTabName).AllCount > 0 Then
-                    If _statuses.Tabs(favTabName).AllCount - 1 > fidx AndAlso fidx > -1 Then
-                        _curList.SelectedIndices.Add(fidx)
-                    Else
-                        _curList.SelectedIndices.Add(_statuses.Tabs(favTabName).AllCount - 1)
-                    End If
-                    If _curList.SelectedIndices.Count > 0 Then
-                        _curList.EnsureVisible(_curList.SelectedIndices(0))
-                        _curList.FocusedItem = _curList.Items(_curList.SelectedIndices(0))
-                    End If
-                End If
-            End If
+            Me.RemovePostFromFavTab(rslt.sIds.ToArray)
         End If
 
         'リストに反映
@@ -2304,7 +2300,8 @@ Public Class TweenMain
            rslt.type = WORKERTYPE.Follower OrElse _
            rslt.type = WORKERTYPE.FavAdd OrElse _
            rslt.type = WORKERTYPE.FavRemove OrElse _
-           rslt.type = WORKERTYPE.Related Then
+           rslt.type = WORKERTYPE.Related OrElse _
+           rslt.type = WORKERTYPE.UserTimeline Then
             RefreshTimeline(False) 'リスト反映
         End If
 
@@ -2372,7 +2369,18 @@ Public Class TweenMain
                     SetMainWindowTitle()
                     rslt.retMsg = ""
                 Else
-                    If MessageBox.Show(String.Format("{0}   --->   [ " & rslt.retMsg & " ]" & Environment.NewLine & """" & rslt.status.status & """" & Environment.NewLine & "{1}", My.Resources.StatusUpdateFailed1, My.Resources.StatusUpdateFailed2), "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Retry Then
+                    Dim retry As DialogResult
+                    Try
+                        retry = MessageBox.Show(String.Format("{0}   --->   [ " & rslt.retMsg & " ]" & Environment.NewLine & """" & rslt.status.status & """" & Environment.NewLine & "{1}",
+                                                            My.Resources.StatusUpdateFailed1,
+                                                            My.Resources.StatusUpdateFailed2),
+                                                        "Failed to update status",
+                                                        MessageBoxButtons.RetryCancel,
+                                                        MessageBoxIcon.Question)
+                    Catch ex As Exception
+                        retry = Windows.Forms.DialogResult.Abort
+                    End Try
+                    If retry = Windows.Forms.DialogResult.Retry Then
                         Dim args As New GetWorkerArg()
                         args.page = 0
                         args.endPage = 0
@@ -2403,14 +2411,69 @@ Public Class TweenMain
                 _itemCache = Nothing
                 _postCache = Nothing
                 If _curList IsNot Nothing Then _curList.Refresh()
-            Case WORKERTYPE.PublicSearch
+            Case WORKERTYPE.PublicSearch, WORKERTYPE.UserTimeline
                 _waitPubSearch = False
             Case WORKERTYPE.List
                 _waitLists = False
+            Case WORKERTYPE.Related
+                Dim tb As TabClass = _statuses.GetTabByType(TabUsageType.Related)
+                If tb IsNot Nothing AndAlso tb.RelationTargetPost IsNot Nothing AndAlso tb.Contains(tb.RelationTargetPost.Id) Then
+                    For Each tp As TabPage In ListTab.TabPages
+                        If tp.Text = tb.TabName Then
+                            DirectCast(tp.Tag, DetailsListView).SelectedIndices.Add(tb.IndexOf(tb.RelationTargetPost.Id))
+                            DirectCast(tp.Tag, DetailsListView).Items(tb.IndexOf(tb.RelationTargetPost.Id)).Focused = True
+                            Exit For
+                        End If
+                    Next
+                End If
         End Select
 
     End Sub
 
+    Private Sub RemovePostFromFavTab(ByVal ids As Int64())
+        Dim favTabName As String = _statuses.GetTabByType(TabUsageType.Favorites).TabName
+        Dim fidx As Integer
+        If _curTab.Text.Equals(favTabName) Then
+            If _curList.FocusedItem IsNot Nothing Then
+                fidx = _curList.FocusedItem.Index
+            ElseIf _curList.TopItem IsNot Nothing Then
+                fidx = _curList.TopItem.Index
+            Else
+                fidx = 0
+            End If
+        End If
+
+        For Each i As Long In ids
+            _statuses.RemoveFavPost(i)
+        Next
+        If _curTab IsNot Nothing AndAlso _curTab.Text.Equals(favTabName) Then
+            _itemCache = Nothing    'キャッシュ破棄
+            _postCache = Nothing
+            _curPost = Nothing
+            '_curItemIndex = -1
+        End If
+        For Each tp As TabPage In ListTab.TabPages
+            If tp.Text = favTabName Then
+                DirectCast(tp.Tag, DetailsListView).VirtualListSize = _statuses.Tabs(favTabName).AllCount
+                Exit For
+            End If
+        Next
+        If _curTab.Text.Equals(favTabName) Then
+            _curList.SelectedIndices.Clear()
+            If _statuses.Tabs(favTabName).AllCount > 0 Then
+                If _statuses.Tabs(favTabName).AllCount - 1 > fidx AndAlso fidx > -1 Then
+                    _curList.SelectedIndices.Add(fidx)
+                Else
+                    _curList.SelectedIndices.Add(_statuses.Tabs(favTabName).AllCount - 1)
+                End If
+                If _curList.SelectedIndices.Count > 0 Then
+                    _curList.EnsureVisible(_curList.SelectedIndices(0))
+                    _curList.FocusedItem = _curList.Items(_curList.SelectedIndices(0))
+                End If
+            End If
+        End If
+
+    End Sub
     Private Sub GetTimeline(ByVal WkType As WORKERTYPE, ByVal fromPage As Integer, ByVal toPage As Integer, ByVal tabName As String)
 
         If Not IsNetworkAvailable() Then Exit Sub
@@ -2478,7 +2541,8 @@ Public Class TweenMain
 
     Private Sub FavoriteChange(ByVal FavAdd As Boolean, Optional ByVal multiFavoriteChangeDialogEnable As Boolean = True)
         'TrueでFavAdd,FalseでFavRemove
-        If _statuses.Tabs(_curTab.Text).TabType = TabUsageType.DirectMessage OrElse _curList.SelectedIndices.Count = 0 Then Exit Sub
+        If _statuses.Tabs(_curTab.Text).TabType = TabUsageType.DirectMessage OrElse _curList.SelectedIndices.Count = 0 _
+            OrElse Not Me.ExistCurrentPost Then Exit Sub
 
         '複数fav確認msg
         If _curList.SelectedIndices.Count > 250 AndAlso FavAdd Then
@@ -2632,11 +2696,12 @@ Public Class TweenMain
     Private Sub ContextMenuOperate_Opening(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles ContextMenuOperate.Opening
         If ListTab.SelectedTab Is Nothing Then Exit Sub
         If _statuses Is Nothing OrElse _statuses.Tabs Is Nothing OrElse Not _statuses.Tabs.ContainsKey(ListTab.SelectedTab.Text) Then Exit Sub
-        If _curPost Is Nothing Then
+        If Not Me.ExistCurrentPost Then
             ReplyStripMenuItem.Enabled = False
             ReplyAllStripMenuItem.Enabled = False
             DMStripMenuItem.Enabled = False
             ShowProfileMenuItem.Enabled = False
+            ShowUserTimelineContextMenuItem.Enabled = False
             ListManageUserContextToolStripMenuItem2.Enabled = False
             MoveToFavToolStripMenuItem.Enabled = False
             TabMenuItem.Enabled = False
@@ -2649,13 +2714,14 @@ Public Class TweenMain
             ReplyStripMenuItem.Enabled = True
             ReplyAllStripMenuItem.Enabled = True
             DMStripMenuItem.Enabled = True
+            ShowUserTimelineContextMenuItem.Enabled = True
             MoveToFavToolStripMenuItem.Enabled = True
             TabMenuItem.Enabled = True
             IDRuleMenuItem.Enabled = True
             ReadedStripMenuItem.Enabled = True
             UnreadStripMenuItem.Enabled = True
         End If
-        If _statuses.Tabs(ListTab.SelectedTab.Text).TabType = TabUsageType.DirectMessage OrElse _curPost Is Nothing OrElse _curPost.IsDm Then
+        If _statuses.Tabs(ListTab.SelectedTab.Text).TabType = TabUsageType.DirectMessage OrElse Not Me.ExistCurrentPost OrElse _curPost.IsDm Then
             FavAddToolStripMenuItem.Enabled = False
             FavRemoveToolStripMenuItem.Enabled = False
             StatusOpenMenuItem.Enabled = False
@@ -2667,7 +2733,7 @@ Public Class TweenMain
             QuoteStripMenuItem.Enabled = False
             FavoriteRetweetContextMenu.Enabled = False
             FavoriteRetweetUnofficialContextMenu.Enabled = False
-            If _curPost IsNot Nothing AndAlso _curPost.IsDm Then DeleteStripMenuItem.Enabled = True
+            If Me.ExistCurrentPost AndAlso _curPost.IsDm Then DeleteStripMenuItem.Enabled = True
         Else
             FavAddToolStripMenuItem.Enabled = True
             FavRemoveToolStripMenuItem.Enabled = True
@@ -2702,13 +2768,13 @@ Public Class TweenMain
             RefreshMoreStripMenuItem.Enabled = False
         End If
         If _statuses.Tabs(ListTab.SelectedTab.Text).TabType = TabUsageType.PublicSearch _
-                            OrElse _curPost Is Nothing _
+                            OrElse Not Me.ExistCurrentPost _
                             OrElse Not _curPost.InReplyToId > 0 Then
             RepliedStatusOpenMenuItem.Enabled = False
         Else
             RepliedStatusOpenMenuItem.Enabled = True
         End If
-        If _curPost Is Nothing OrElse _curPost.RetweetedBy = "" Then
+        If Not Me.ExistCurrentPost OrElse _curPost.RetweetedBy = "" Then
             MoveToRTHomeMenuItem.Enabled = False
         Else
             MoveToRTHomeMenuItem.Enabled = True
@@ -2885,6 +2951,8 @@ Public Class TweenMain
                     Dim tb As TabClass = _statuses.Tabs(_curTab.Text)
                     If tb.SearchWords = "" Then Exit Sub
                     GetTimeline(WORKERTYPE.PublicSearch, 1, 0, _curTab.Text)
+                Case TabUsageType.UserTimeline
+                    GetTimeline(WORKERTYPE.UserTimeline, 1, 0, _curTab.Text)
                 Case TabUsageType.Lists
                     '' TODO
                     Dim tb As TabClass = _statuses.Tabs(_curTab.Text)
@@ -2915,6 +2983,8 @@ Public Class TweenMain
                     Dim tb As TabClass = _statuses.Tabs(_curTab.Text)
                     If tb.SearchWords = "" Then Exit Sub
                     GetTimeline(WORKERTYPE.PublicSearch, -1, 0, _curTab.Text)
+                Case TabUsageType.UserTimeline
+                    GetTimeline(WORKERTYPE.UserTimeline, -1, 0, _curTab.Text)
                 Case TabUsageType.Lists
                     '' TODO
                     Dim tb As TabClass = _statuses.Tabs(_curTab.Text)
@@ -3185,7 +3255,12 @@ Public Class TweenMain
                 AddNewTabForSearch(hash)
                 Exit Sub
             Else
-                OpenUriAsync(e.Url.OriginalString)
+                Dim m As Match = Regex.Match(e.Url.AbsoluteUri, "^https?://twitter.com/(#!/)?(?<name>[a-zA-Z0-9_]+)$")
+                If m.Success AndAlso IsTwitterId(m.Result("${name}")) Then
+                    Me.AddNewTabForUserTimeline(m.Result("${name}"))
+                Else
+                    OpenUriAsync(e.Url.OriginalString)
+                End If
             End If
         End If
     End Sub
@@ -3223,6 +3298,40 @@ Public Class TweenMain
         SaveConfigsTabs()
         '検索実行
         Me.SearchButton_Click(ListTab.SelectedTab.Controls("panelSearch").Controls("comboSearch"), Nothing)
+    End Sub
+
+    Private Sub ShowUserTimeline()
+        If Not Me.ExistCurrentPost Then Exit Sub
+        AddNewTabForUserTimeline(_curPost.Name)
+    End Sub
+
+    Public Sub AddNewTabForUserTimeline(ByVal user As String)
+        '同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
+        For Each tb As TabClass In _statuses.GetTabsByType(TabUsageType.UserTimeline)
+            If tb.User = user Then
+                For Each tp As TabPage In ListTab.TabPages
+                    If tb.TabName = tp.Text Then
+                        ListTab.SelectedTab = tp
+                        Exit Sub
+                    End If
+                Next
+            End If
+        Next
+        'ユニークなタブ名生成
+        Dim tabName As String = "user:" + user
+        While _statuses.ContainsTab(tabName)
+            tabName += "_"
+        End While
+        'タブ追加
+        _statuses.AddTab(tabName, TabUsageType.UserTimeline, Nothing)
+        _statuses.Tabs(tabName).User = user
+        AddNewTab(tabName, False, TabUsageType.UserTimeline)
+        '追加したタブをアクティブに
+        ListTab.SelectedIndex = ListTab.TabPages.Count - 1
+        SaveConfigsTabs()
+        '検索実行
+
+        GetTimeline(WORKERTYPE.UserTimeline, 1, 0, tabName)
     End Sub
 
     Public Function AddNewTab(ByVal tabName As String, ByVal startup As Boolean, ByVal tabType As TabUsageType) As Boolean
@@ -3268,7 +3377,23 @@ Public Class TweenMain
 
         _tabPage.SuspendLayout()
 
-
+        ''' UserTimeline関連
+        Dim label As Label = Nothing
+        If tabType = TabUsageType.UserTimeline OrElse tabType = TabUsageType.Lists Then
+            label = New Label()
+            label.Dock = DockStyle.Top
+            label.Name = "labelUser"
+            If tabType = TabUsageType.Lists Then
+                label.Text = _statuses.Tabs(tabName).ListInfo.ToString()
+            Else
+                label.Text = _statuses.Tabs(tabName).User + "'s Timeline"
+            End If
+            label.TextAlign = ContentAlignment.MiddleLeft
+            Using tmpComboBox As New ComboBox()
+                label.Height = tmpComboBox.Height
+            End Using
+            _tabPage.Controls.Add(label)
+        End If
 
         ''' 検索関連の準備
         Dim pnl As Panel = Nothing
@@ -3348,13 +3473,13 @@ Public Class TweenMain
             btn.Dock = DockStyle.Right
             btn.TabStop = False
             AddHandler btn.Click, AddressOf SearchButton_Click
-
         End If
 
         Me.ListTab.Controls.Add(_tabPage)
         _tabPage.Controls.Add(_listCustom)
 
         If tabType = TabUsageType.PublicSearch Then _tabPage.Controls.Add(pnl)
+        If tabType = TabUsageType.UserTimeline OrElse tabType = TabUsageType.Lists Then _tabPage.Controls.Add(label)
 
         _tabPage.Location = New Point(4, 4)
         _tabPage.Name = "CTab" + cnt.ToString()
@@ -3499,7 +3624,7 @@ Public Class TweenMain
         Return True
     End Function
 
-    Public Function RemoveSpecifiedTab(ByVal TabName As String) As Boolean
+    Public Function RemoveSpecifiedTab(ByVal TabName As String, ByVal confirm As Boolean) As Boolean
         Dim idx As Integer = 0
         For idx = 0 To ListTab.TabPages.Count - 1
             If ListTab.TabPages(idx).Text = TabName Then Exit For
@@ -3507,10 +3632,12 @@ Public Class TweenMain
 
         If _statuses.IsDefaultTab(TabName) Then Return False
 
-        Dim tmp As String = String.Format(My.Resources.RemoveSpecifiedTabText1, Environment.NewLine)
-        If MessageBox.Show(tmp, TabName + " " + My.Resources.RemoveSpecifiedTabText2, _
-                         MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
-            Return False
+        If confirm Then
+            Dim tmp As String = String.Format(My.Resources.RemoveSpecifiedTabText1, Environment.NewLine)
+            If MessageBox.Show(tmp, TabName + " " + My.Resources.RemoveSpecifiedTabText2, _
+                             MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
+                Return False
+            End If
         End If
 
         SetListProperty()   '他のタブに列幅等を反映
@@ -3530,6 +3657,9 @@ Public Class TweenMain
 
         _tabPage.SuspendLayout()
 
+        If Me.ListTab.SelectedTab Is Me.ListTab.TabPages(idx) Then
+            Me.ListTab.SelectTab(If(Me._beforeSelectedTab IsNot Nothing AndAlso Me.ListTab.TabPages.Contains(Me._beforeSelectedTab), Me._beforeSelectedTab, Me.ListTab.TabPages(0)))
+        End If
         Me.ListTab.Controls.Remove(_tabPage)
 
         Dim pnl As Control = Nothing
@@ -3601,6 +3731,7 @@ Public Class TweenMain
                 lst.VirtualListSize = _statuses.Tabs(tp.Text).AllCount
             End If
         Next
+
         Return True
     End Function
 
@@ -3608,6 +3739,7 @@ Public Class TweenMain
         _itemCache = Nothing
         _itemCacheIndex = -1
         _postCache = Nothing
+        _beforeSelectedTab = e.TabPage
     End Sub
 
     Private Sub ListTab_MouseMove(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles ListTab.MouseMove
@@ -3616,14 +3748,11 @@ Public Class TweenMain
 
         If e.Button = Windows.Forms.MouseButtons.Left AndAlso _tabDrag Then
             Dim tn As String = ""
-            For i As Integer = 0 To ListTab.TabPages.Count - 1
-                Dim rect As Rectangle = ListTab.GetTabRect(i)
-                If rect.Left <= cpos.X AndAlso cpos.X <= rect.Right AndAlso _
-                   rect.Top <= cpos.Y AndAlso cpos.Y <= rect.Bottom Then
-                    tn = ListTab.TabPages(i).Text
-                    Exit For
-                End If
-            Next
+            Dim dragEnableRectangle As New Rectangle(CInt(_tabMouseDownPoint.X - (SystemInformation.DragSize.Width / 2)), CInt(_tabMouseDownPoint.Y - (SystemInformation.DragSize.Height / 2)), SystemInformation.DragSize.Width, SystemInformation.DragSize.Height)
+            If Not dragEnableRectangle.Contains(e.Location) Then
+                'タブが多段の場合にはMouseDownの前の段階で選択されたタブの段が変わっているので、このタイミングでカーソルの位置からタブを判定出来ない。
+                tn = ListTab.SelectedTab.Text
+            End If
 
             If tn = "" Then Exit Sub
 
@@ -3870,11 +3999,12 @@ Public Class TweenMain
         If Post.IsMark Then mk += "♪"
         If Post.IsProtect Then mk += "Ю"
         If Post.InReplyToId > 0 Then mk += "⇒"
+        If Post.FavoritedCount > 0 Then mk += "+" + Post.FavoritedCount.ToString
         Dim itm As ImageListViewItem
         If Post.RetweetedId = 0 Then
             Dim sitem() As String = {"",
                                      Post.Nickname,
-                                     Post.Data,
+                                     If(Post.IsDeleted, "(DELETED)", Post.Data),
                                      Post.PDate.ToString(SettingDialog.DateTimeFormat),
                                      Post.Name,
                                      "",
@@ -3884,7 +4014,7 @@ Public Class TweenMain
         Else
             Dim sitem() As String = {"",
                                      Post.Nickname,
-                                     Post.Data,
+                                     If(Post.IsDeleted, "(DELETED)", Post.Data),
                                      Post.PDate.ToString(SettingDialog.DateTimeFormat),
                                      Post.Name + Environment.NewLine + "(RT:" + Post.RetweetedBy + ")",
                                      "",
@@ -4356,7 +4486,7 @@ RETRY:
         '現在タブから最終タブまで探索
         For i As Integer = bgnIdx To ListTab.TabPages.Count - 1
             '未読Index取得
-            idx = _statuses.GetOldestUnreadId(ListTab.TabPages(i).Text)
+            idx = _statuses.GetOldestUnreadIndex(ListTab.TabPages(i).Text)
             If idx > -1 Then
                 ListTab.SelectedIndex = i
                 lst = DirectCast(ListTab.TabPages(i).Tag, DetailsListView)
@@ -4368,7 +4498,7 @@ RETRY:
         '未読みつからず＆現在タブが先頭ではなかったら、先頭タブから現在タブの手前まで探索
         If idx = -1 AndAlso bgnIdx > 0 Then
             For i As Integer = 0 To bgnIdx - 1
-                idx = _statuses.GetOldestUnreadId(ListTab.TabPages(i).Text)
+                idx = _statuses.GetOldestUnreadIndex(ListTab.TabPages(i).Text)
                 If idx > -1 Then
                     ListTab.SelectedIndex = i
                     lst = DirectCast(ListTab.TabPages(i).Tag, DetailsListView)
@@ -4533,7 +4663,7 @@ RETRY:
 
         If _curList.SelectedIndices.Count = 0 OrElse _curPost Is Nothing Then Exit Sub
 
-        Dim dTxt As String = createDetailHtml(_curPost.OriginalData)
+        Dim dTxt As String = createDetailHtml(If(_curPost.IsDeleted, "(DELETED)", _curPost.OriginalData))
         If _curPost.IsDm Then
             SourceLinkLabel.Tag = Nothing
             SourceLinkLabel.Text = ""
@@ -4555,7 +4685,7 @@ RETRY:
                 SourceLinkLabel.Text = ""
                 'SourceLinkLabel.Visible = False
             Else
-                SourceLinkLabel.Text = "via " + _curPost.Source
+                SourceLinkLabel.Text = _curPost.Source
                 'SourceLinkLabel.Visible = True
             End If
         End If
@@ -4763,13 +4893,13 @@ RETRY:
             If e.KeyCode = Keys.Oem4 Then
                 e.Handled = True
                 e.SuppressKeyPress = True
-                GoInReplyToPost()
+                GoInReplyToPostTree()
             End If
             ' [ in_reply_toへジャンプ
             If e.KeyCode = Keys.Oem6 Then
                 e.Handled = True
                 e.SuppressKeyPress = True
-                GoBackInReplyToPost()
+                GoBackInReplyToPostTree()
             End If
             If e.KeyCode = Keys.F1 Then
                 e.Handled = True
@@ -4787,6 +4917,12 @@ RETRY:
                 e.Handled = True
                 e.SuppressKeyPress = True
                 GetTimeline(WORKERTYPE.DirectMessegeRcv, 1, 0, "")
+            ElseIf e.KeyCode = Keys.Escape Then
+                If ListTab.SelectedTab IsNot Nothing AndAlso _statuses.Tabs(ListTab.SelectedTab.Text).TabType = TabUsageType.Related Then
+                    Dim relTp As TabPage = ListTab.SelectedTab
+                    RemoveSpecifiedTab(relTp.Text, False)
+                    SaveConfigsTabs()
+                End If
             End If
         End If
 
@@ -4962,6 +5098,14 @@ RETRY:
                 e.Handled = True
                 e.SuppressKeyPress = True
                 SendKeys.Send("{UP}")
+            ElseIf e.KeyCode = Keys.Oem4 AndAlso Not e.Alt Then
+                e.Handled = True
+                e.SuppressKeyPress = True
+                GoBackInReplyToPostTree(True, False)
+            ElseIf e.KeyCode = Keys.Oem6 AndAlso Not e.Alt Then
+                e.Handled = True
+                e.SuppressKeyPress = True
+                GoBackInReplyToPostTree(True, True)
             End If
 
             ' お気に入り前後ジャンプ(SHIFT+N←/P→)
@@ -5125,6 +5269,7 @@ RETRY:
                 IsProtected = True
                 Continue For
             End If
+            If post.IsDeleted Then Continue For
             If post.RetweetedId > 0 Then
                 sb.AppendFormat("{0}:{1} [http://twitter.com/{0}/status/{2}]{3}", post.Name, post.Data, post.RetweetedId, Environment.NewLine)
             Else
@@ -5258,7 +5403,7 @@ RETRY:
     End Sub
 
     Private Sub GoPost(ByVal forward As Boolean)
-        If _curList.SelectedIndices.Count = 0 OrElse _curPost Is Nothing Then Exit Sub
+        If _curList.SelectedIndices.Count = 0 OrElse Not Me.ExistCurrentPost Then Exit Sub
         Dim fIdx As Integer = 0
         Dim toIdx As Integer = 0
         Dim stp As Integer = 1
@@ -5317,7 +5462,7 @@ RETRY:
         End If
 
         If Not _anchorFlag Then
-            If _curPost Is Nothing Then Exit Sub
+            If Not Me.ExistCurrentPost Then Exit Sub
             _anchorPost = _curPost
             _anchorFlag = True
         Else
@@ -5418,80 +5563,165 @@ RETRY:
         _curList.EnsureVisible(idx)
     End Sub
 
-    Private Sub GoInReplyToPost()
-        If _curPost IsNot Nothing AndAlso _curPost.InReplyToUser IsNot Nothing AndAlso _curPost.InReplyToId > 0 Then
-            If _statuses.Tabs(_curTab.Text).TabType = TabUsageType.Lists Then
-                If _statuses.Tabs(_curTab.Text).Posts.ContainsKey(_curPost.InReplyToId) Then
-                    Dim idx As Integer = _statuses.Tabs(_curTab.Text).IndexOf(_curPost.InReplyToId)
-                    If idx = -1 Then
-                        Dim repPost As PostClass = _statuses.Item(_curPost.InReplyToId)
-                        MessageBox.Show(repPost.Name + " / " + repPost.Nickname + "   (" + repPost.PDate.ToString() + ")" + Environment.NewLine + repPost.Data)
-                    Else
-                        If replyChains Is Nothing OrElse (replyChains.Count > 0 AndAlso replyChains.Peek().InReplyToId <> _curPost.Id) Then
-                            replyChains = New Stack(Of ReplyChain)
-                        End If
-                        replyChains.Push(New ReplyChain(_curPost.Id, _curPost.InReplyToId, _curTab))
-                        SelectListItem(_curList, idx)
-                        _curList.EnsureVisible(idx)
-                    End If
-                Else
-                    OpenUriAsync("http://twitter.com/" + _curPost.InReplyToUser + "/statuses/" + _curPost.InReplyToId.ToString())
-                End If
-            Else
-                If _statuses.ContainsKey(_curPost.InReplyToId) Then
-                    Dim tab As TabPage = _curTab
-                    Dim idx As Integer = _statuses.Tabs(_curTab.Text).IndexOf(_curPost.InReplyToId)
-                    If idx = -1 Then
-                        For Each tab In ListTab.TabPages
-                            idx = _statuses.Tabs(tab.Text).IndexOf(_curPost.InReplyToId)
-                            If idx <> -1 Then
-                                Exit For
-                            End If
-                        Next
-                    End If
-                    If idx = -1 Then
-                        Dim repPost As PostClass = _statuses.Item(_curPost.InReplyToId)
-                        MessageBox.Show(repPost.Name + " / " + repPost.Nickname + "   (" + repPost.PDate.ToString() + ")" + Environment.NewLine + repPost.Data)
-                    Else
-                        If replyChains Is Nothing OrElse (replyChains.Count > 0 AndAlso replyChains.Peek().InReplyToId <> _curPost.Id) Then
-                            replyChains = New Stack(Of ReplyChain)
-                        End If
-                        replyChains.Push(New ReplyChain(_curPost.Id, _curPost.InReplyToId, _curTab))
+    Private Sub GoInReplyToPostTree()
+        If _curPost Is Nothing Then Return
 
-                        If tab IsNot _curTab Then
-                            ListTab.SelectTab(tab)
-                        End If
-                        SelectListItem(_curList, idx)
-                        _curList.EnsureVisible(idx)
-                    End If
-                Else
-                    OpenUriAsync("http://twitter.com/" + _curPost.InReplyToUser + "/statuses/" + _curPost.InReplyToId.ToString())
-                End If
+        Dim curTabClass As TabClass = _statuses.Tabs(_curTab.Text)
+
+        If curTabClass.TabType = TabUsageType.PublicSearch AndAlso _curPost.InReplyToId = 0 AndAlso _curPost.Data.Contains("@") Then
+            Dim post As PostClass = Nothing
+            Dim r As String = tw.GetStatusApi(False, _curPost.Id, post)
+            If r = "" AndAlso post IsNot Nothing Then
+                _curPost.InReplyToId = post.InReplyToId
+                _curPost.InReplyToUser = post.InReplyToUser
+                _curPost.IsReply = post.IsReply
+                _itemCache = Nothing
+                _curList.RedrawItems(_curItemIndex, _curItemIndex, False)
+            Else
+                Me.StatusLabelUrl.Text = r
             End If
         End If
+
+        If Not (Me.ExistCurrentPost AndAlso _curPost.InReplyToUser IsNot Nothing AndAlso _curPost.InReplyToId > 0) Then Return
+
+        If replyChains Is Nothing OrElse (replyChains.Count > 0 AndAlso replyChains.Peek().InReplyToId <> _curPost.Id) Then
+            replyChains = New Stack(Of ReplyChain)
+        End If
+        replyChains.Push(New ReplyChain(_curPost.Id, _curPost.InReplyToId, _curTab))
+
+        Dim inReplyToIndex As Integer
+        Dim inReplyToTabName As String
+        Dim inReplyToId As Long = _curPost.InReplyToId
+        Dim inReplyToUser As String = _curPost.InReplyToUser
+        Dim curTabPosts As Dictionary(Of Long, PostClass)
+
+        If _statuses.Tabs(_curTab.Text).IsInnerStorageTabType Then
+            curTabPosts = curTabClass.Posts
+        Else
+            curTabPosts = _statuses.Posts
+        End If
+
+        Dim inReplyToPosts = From tab In _statuses.Tabs.Values
+                             Order By tab IsNot curTabClass
+                             From post In DirectCast(IIf(tab.IsInnerStorageTabType, tab.Posts, _statuses.Posts), Dictionary(Of Long, PostClass)).Values
+                             Where post.Id = inReplyToId
+                             Let index = tab.IndexOf(post.Id)
+                             Where index <> -1
+                             Select New With {.Tab = tab, .Index = index}
+
+        Try
+            Dim inReplyPost = inReplyToPosts.First()
+            inReplyToTabName = inReplyPost.Tab.TabName
+            inReplyToIndex = inReplyPost.Index
+        Catch ex As InvalidOperationException
+            Dim post As PostClass = Nothing
+            Dim r As String = tw.GetStatusApi(False, _curPost.InReplyToId, post)
+            If r = "" AndAlso post IsNot Nothing Then
+                post.IsRead = True
+                _statuses.AddPost(post)
+                _statuses.DistributePosts()
+                _statuses.SubmitUpdate(Nothing, Nothing, Nothing, False)
+                Me.RefreshTimeline(False)
+                Try
+                    Dim inReplyPost = inReplyToPosts.First()
+                    inReplyToTabName = inReplyPost.Tab.TabName
+                    inReplyToIndex = inReplyPost.Index
+                Catch ex2 As InvalidOperationException
+                    OpenUriAsync("http://twitter.com/" + inReplyToUser + "/statuses/" + inReplyToId.ToString())
+                    Exit Sub
+                End Try
+            Else
+                Me.StatusLabelUrl.Text = r
+                OpenUriAsync("http://twitter.com/" + inReplyToUser + "/statuses/" + inReplyToId.ToString())
+                Exit Sub
+            End If
+        End Try
+
+        Dim tabPage = Me.ListTab.TabPages.Cast(Of TabPage).First(Function(tp) tp.Text = inReplyToTabName)
+        Dim listView = DirectCast(tabPage.Tag, DetailsListView)
+
+        If _curTab IsNot tabPage Then
+            Me.ListTab.SelectTab(tabPage)
+        End If
+
+        Me.SelectListItem(listView, inReplyToIndex)
+        listView.EnsureVisible(inReplyToIndex)
     End Sub
 
-    Private Sub GoBackInReplyToPost()
-        If replyChains Is Nothing OrElse replyChains.Count < 1 Then
-            Exit Sub
-        End If
+    Private Sub GoBackInReplyToPostTree(Optional ByVal parallel As Boolean = False, Optional ByVal isForward As Boolean = True)
+        If _curPost Is Nothing Then Return
 
-        Dim chainHead As ReplyChain = replyChains.Pop()
-        If chainHead.InReplyToId = _curPost.Id Then
-            Dim idx As Integer = _statuses.Tabs(chainHead.OriginalTab.Text).IndexOf(chainHead.OriginalId)
-            If idx = -1 Then
-                replyChains = Nothing
-            Else
+        Dim curTabClass As TabClass = _statuses.Tabs(_curTab.Text)
+        Dim curTabPosts As Dictionary(Of Long, PostClass) = DirectCast(IIf(curTabClass.IsInnerStorageTabType, curTabClass.Posts, _statuses.Posts), Dictionary(Of Long, PostClass))
+
+        If parallel Then
+            If _curPost.InReplyToId <> 0 Then
+                Dim posts = From t In _statuses.Tabs
+                            From p In DirectCast(IIf(t.Value.IsInnerStorageTabType, t.Value.Posts, _statuses.Posts), Dictionary(Of Long, PostClass))
+                            Where p.Value.Id <> _curPost.Id AndAlso p.Value.InReplyToId = _curPost.InReplyToId
+                            Let indexOf = t.Value.IndexOf(p.Value.Id)
+                            Where indexOf > -1
+                            Order By IIf(isForward, indexOf, indexOf * -1)
+                            Order By t.Value IsNot curTabClass
+                            Select New With {.Tab = t.Value, .Post = p.Value, .Index = indexOf}
                 Try
-                    ListTab.SelectTab(chainHead.OriginalTab)
-                Catch ex As Exception
-                    replyChains = Nothing
+                    Dim postList = posts.ToList()
+                    For i As Integer = postList.Count - 1 To 0 Step -1
+                        Dim index As Integer = i
+                        If postList.FindIndex(Function(pst) pst.Post.Id = postList(index).Post.Id) <> index Then
+                            postList.RemoveAt(index)
+                        End If
+                    Next
+                    Dim post = postList.FirstOrDefault(Function(pst) pst.Tab Is curTabClass AndAlso DirectCast(IIf(isForward, pst.Index > _curItemIndex, pst.Index < _curItemIndex), Boolean))
+                    If post Is Nothing Then post = postList.FirstOrDefault(Function(pst) pst.Tab IsNot curTabClass)
+                    If post Is Nothing Then post = postList.First()
+                    Me.ListTab.SelectTab(Me.ListTab.TabPages.Cast(Of TabPage).First(Function(tp) tp.Text = post.Tab.TabName))
+                    Dim listView = DirectCast(Me.ListTab.SelectedTab.Tag, DetailsListView)
+                    SelectListItem(listView, post.Index)
+                    listView.EnsureVisible(post.Index)
+                Catch ex As InvalidOperationException
+                    Exit Sub
                 End Try
-                SelectListItem(_curList, idx)
-                _curList.EnsureVisible(idx)
             End If
         Else
-            replyChains = Nothing
+            If replyChains Is Nothing OrElse replyChains.Count < 1 Then
+                Dim posts = From t In _statuses.Tabs
+                            From p In DirectCast(IIf(t.Value.IsInnerStorageTabType, t.Value.Posts, _statuses.Posts), Dictionary(Of Long, PostClass))
+                            Where p.Value.InReplyToId = _curPost.Id
+                            Let indexOf = t.Value.IndexOf(p.Value.Id)
+                            Where indexOf > -1
+                            Order By indexOf
+                            Order By t.Value IsNot curTabClass
+                            Select New With {.Tab = t.Value, .Index = indexOf}
+                Try
+                    Dim post = posts.First()
+                    Me.ListTab.SelectTab(Me.ListTab.TabPages.Cast(Of TabPage).First(Function(tp) tp.Text = post.Tab.TabName))
+                    Dim listView = DirectCast(Me.ListTab.SelectedTab.Tag, DetailsListView)
+                    SelectListItem(listView, post.Index)
+                    listView.EnsureVisible(post.Index)
+                Catch ex As InvalidOperationException
+                    Exit Sub
+                End Try
+            Else
+                Dim chainHead As ReplyChain = replyChains.Pop()
+                If chainHead.InReplyToId = _curPost.Id Then
+                    Dim idx As Integer = _statuses.Tabs(chainHead.OriginalTab.Text).IndexOf(chainHead.OriginalId)
+                    If idx = -1 Then
+                        replyChains = Nothing
+                    Else
+                        Try
+                            ListTab.SelectTab(chainHead.OriginalTab)
+                        Catch ex As Exception
+                            replyChains = Nothing
+                        End Try
+                        SelectListItem(_curList, idx)
+                        _curList.EnsureVisible(idx)
+                    End If
+                Else
+                    replyChains = Nothing
+                    Me.GoBackInReplyToPostTree(parallel)
+                End If
+            End If
         End If
     End Sub
 
@@ -5848,6 +6078,7 @@ RETRY:
             _cfgCommon.DMPeriod = SettingDialog.DMPeriodInt
             _cfgCommon.PubSearchPeriod = SettingDialog.PubSearchPeriodInt
             _cfgCommon.ListsPeriod = SettingDialog.ListsPeriodInt
+            _cfgCommon.UserTimelineCountApi = SettingDialog.UserTimelinePeriodInt
             _cfgCommon.Read = SettingDialog.Readed
             _cfgCommon.IconSize = SettingDialog.IconSz
             _cfgCommon.UnreadManage = SettingDialog.UnreadManage
@@ -5941,6 +6172,7 @@ RETRY:
             _cfgCommon.FirstCountApi = SettingDialog.FirstCountApi
             _cfgCommon.SearchCountApi = SettingDialog.SearchCountApi
             _cfgCommon.FavoritesCountApi = SettingDialog.FavoritesCountApi
+            _cfgCommon.UserTimelineCountApi = SettingDialog.UserTimelineCountApi
             _cfgCommon.TrackWord = tw.TrackWord
             _cfgCommon.AllAtReply = tw.AllAtReply
 
@@ -6295,6 +6527,18 @@ RETRY:
         End If
     End Function
 
+    Private Sub ListTab_MouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles ListTab.MouseClick
+        If e.Button = Windows.Forms.MouseButtons.Middle Then
+            For i As Integer = 0 To Me.ListTab.TabPages.Count - 1
+                If Me.ListTab.GetTabRect(i).Contains(e.Location) Then
+                    Me.RemoveSpecifiedTab(Me.ListTab.TabPages(i).Text, True)
+                    Me.SaveConfigsTabs()
+                    Exit For
+                End If
+            Next
+        End If
+    End Sub
+
     Private Sub Tabs_DoubleClick(ByVal sender As System.Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles ListTab.MouseDoubleClick
         Dim tn As String = ListTab.SelectedTab.Text
         TabRename(tn)
@@ -6304,10 +6548,9 @@ RETRY:
         Dim cpos As New Point(e.X, e.Y)
         If e.Button = Windows.Forms.MouseButtons.Left Then
             For i As Integer = 0 To ListTab.TabPages.Count - 1
-                Dim rect As Rectangle = ListTab.GetTabRect(i)
-                If rect.Left <= cpos.X AndAlso cpos.X <= rect.Right AndAlso _
-                   rect.Top <= cpos.Y AndAlso cpos.Y <= rect.Bottom Then
+                If Me.ListTab.GetTabRect(i).Contains(e.Location) Then
                     _tabDrag = True
+                    _tabMouseDownPoint = e.Location
                     Exit For
                 End If
             Next
@@ -6394,7 +6637,7 @@ RETRY:
         If Not StatusText.Enabled Then Exit Sub
         If _curList Is Nothing Then Exit Sub
         If _curTab Is Nothing Then Exit Sub
-        If _curPost Is Nothing Then Exit Sub
+        If Not Me.ExistCurrentPost Then Exit Sub
 
         ' 複数あてリプライはReplyではなく通常ポスト
         '↑仕様変更で全部リプライ扱いでＯＫ（先頭ドット付加しない）
@@ -6403,7 +6646,7 @@ RETRY:
 
         If _curList.SelectedIndices.Count > 0 Then
             ' アイテムが1件以上選択されている
-            If _curList.SelectedIndices.Count = 1 AndAlso Not isAll AndAlso _curPost IsNot Nothing Then
+            If _curList.SelectedIndices.Count = 1 AndAlso Not isAll AndAlso Me.ExistCurrentPost Then
                 ' 単独ユーザー宛リプライまたはDM
                 If (_statuses.Tabs(ListTab.SelectedTab.Text).TabType = TabUsageType.DirectMessage AndAlso isAuto) OrElse (Not isAuto AndAlso Not isReply) Then
                     ' ダイレクトメッセージ
@@ -6835,7 +7078,7 @@ RETRY:
     Private Sub DeleteTabMenuItem_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles DeleteTabMenuItem.Click, DeleteTbMenuItem.Click
         If String.IsNullOrEmpty(_rclickTabName) OrElse sender Is Me.DeleteTbMenuItem Then _rclickTabName = ListTab.SelectedTab.Text
 
-        RemoveSpecifiedTab(_rclickTabName)
+        RemoveSpecifiedTab(_rclickTabName, True)
         SaveConfigsTabs()
     End Sub
 
@@ -6984,6 +7227,7 @@ RETRY:
                 End If
                 '投稿
                 If (Not StatusText.Multiline AndAlso _
+                        ((keyData And Keys.Shift) = Keys.Shift AndAlso (Not SettingDialog.PostCtrlEnter AndAlso Not SettingDialog.PostShiftEnter)) OrElse _
                         ((keyData And Keys.Control) = Keys.Control AndAlso SettingDialog.PostCtrlEnter) OrElse _
                         ((keyData And Keys.Shift) = Keys.Shift AndAlso SettingDialog.PostShiftEnter) OrElse _
                         (((keyData And Keys.Control) <> Keys.Control AndAlso Not SettingDialog.PostCtrlEnter) AndAlso _
@@ -7242,6 +7486,12 @@ RETRY:
                 HashSupl.AddItem(hash)
                 HashMgr.AddHashToHistory(hash.Trim, False)
                 AddNewTabForSearch(hash)
+                Exit Sub
+            ElseIf openUrlStr.StartsWith("http://twitter.com/") Then
+                Me.AddNewTabForUserTimeline(openUrlStr.Remove(0, "http://twitter.com/".Length))
+                Exit Sub
+            ElseIf openUrlStr.StartsWith("https://twitter.com/") Then
+                Me.AddNewTabForUserTimeline(openUrlStr.Remove(0, "https://twitter.com/".Length))
                 Exit Sub
             End If
 
@@ -7528,7 +7778,7 @@ RETRY:
     End Sub
 
     Private Sub doRepliedStatusOpen()
-        If _curPost IsNot Nothing AndAlso _curPost.InReplyToUser IsNot Nothing AndAlso _curPost.InReplyToId > 0 Then
+        If Me.ExistCurrentPost AndAlso _curPost.InReplyToUser IsNot Nothing AndAlso _curPost.InReplyToId > 0 Then
             If My.Computer.Keyboard.ShiftKeyDown Then
                 OpenUriAsync("http://twitter.com/" + _curPost.InReplyToUser + "/status/" + _curPost.InReplyToId.ToString())
                 Exit Sub
@@ -7808,6 +8058,10 @@ RETRY:
         UrlConvert(UrlConverter.Twurl)
     End Sub
 
+    Private Sub UxnuMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UxnuMenuItem.Click
+        UrlConvert(UrlConverter.Uxnu)
+    End Sub
+
     Private Sub UrlConvertAutoToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UrlConvertAutoToolStripMenuItem.Click
         If Not UrlConvert(SettingDialog.AutoShortUrlFirst) Then
             Dim svc As UrlConverter = SettingDialog.AutoShortUrlFirst
@@ -7815,7 +8069,7 @@ RETRY:
             ' 前回使用した短縮URLサービス以外を選択する
             Do
                 svc = CType(rnd.Next(System.Enum.GetNames(GetType(UrlConverter)).Length), UrlConverter)
-            Loop Until svc <> SettingDialog.AutoShortUrlFirst
+            Loop Until svc <> SettingDialog.AutoShortUrlFirst AndAlso svc <> UrlConverter.Nicoms AndAlso svc <> UrlConverter.Unu
             UrlConvert(svc)
         End If
     End Sub
@@ -8382,7 +8636,7 @@ RETRY:
 
     Private Sub doReTweetUnofficial()
         'RT @id:内容
-        If _curPost IsNot Nothing Then
+        If Me.ExistCurrentPost Then
             If _curPost.IsDm OrElse _
                Not StatusText.Enabled Then Exit Sub
 
@@ -8406,7 +8660,7 @@ RETRY:
 
     Private Sub doReTweetOfficial(ByVal isConfirm As Boolean)
         '公式RT
-        If _curPost IsNot Nothing Then
+        If Me.ExistCurrentPost Then
             If _curPost.IsProtect Then
                 MessageBox.Show("Protected.")
                 _DoFavRetweetFlags = False
@@ -8456,7 +8710,7 @@ RETRY:
     End Sub
 
     Private Sub FavoritesRetweetOriginal()
-        If _curPost Is Nothing Then Exit Sub
+        If Not Me.ExistCurrentPost Then Exit Sub
         _DoFavRetweetFlags = True
         doReTweetOfficial(True)
         If _DoFavRetweetFlags Then
@@ -8466,7 +8720,7 @@ RETRY:
     End Sub
 
     Private Sub FavoritesRetweetUnofficial()
-        If _curPost IsNot Nothing AndAlso Not _curPost.IsDm Then
+        If Me.ExistCurrentPost AndAlso Not _curPost.IsDm Then
             _DoFavRetweetFlags = True
             FavoriteChange(True)
             If Not _curPost.IsProtect AndAlso _DoFavRetweetFlags Then
@@ -8812,7 +9066,7 @@ RETRY:
     ' TwitterIDでない固定文字列を調べる（文字列検証のみ　実際に取得はしない）
     ' URLから切り出した文字列を渡す
 
-    Private Function IsTwitterId(ByVal name As String) As Boolean
+    Public Function IsTwitterId(ByVal name As String) As Boolean
         Return Not Regex.Match(name, "^(about|jobs|tos|privacy)$").Success
     End Function
 
@@ -8858,7 +9112,7 @@ RETRY:
 
     Private Sub SearchPostsDetailToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SearchPostsDetailToolStripMenuItem.Click
         Dim name As String = GetUserId()
-        If name IsNot Nothing Then AddNewTabForSearch("from:" + name)
+        If name IsNot Nothing Then AddNewTabForUserTimeline(name)
     End Sub
 
     Private Sub SearchAtPostsDetailToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SearchAtPostsDetailToolStripMenuItem.Click
@@ -8877,7 +9131,7 @@ RETRY:
     Private Sub doQuote()
         'QT @id:内容
         '返信先情報付加
-        If _curPost IsNot Nothing Then
+        If Me.ExistCurrentPost Then
             If _curPost.IsDm OrElse _
                Not StatusText.Enabled Then Exit Sub
 
@@ -8913,6 +9167,7 @@ RETRY:
         Dim tb As TabClass = _statuses.Tabs(tbName)
         Dim cmb As ComboBox = DirectCast(pnl.Controls("comboSearch"), ComboBox)
         Dim cmbLang As ComboBox = DirectCast(pnl.Controls("comboLang"), ComboBox)
+        Dim cmbusline As ComboBox = DirectCast(pnl.Controls("comboUserline"), ComboBox)
         cmb.Text = cmb.Text.Trim
         ' 検索式演算子 OR についてのみ大文字しか認識しないので強制的に大文字とする
         Dim Quote As Boolean = False
@@ -9173,11 +9428,12 @@ RETRY:
     Private Sub MenuItemOperate_DropDownOpening(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemOperate.DropDownOpening
         If ListTab.SelectedTab Is Nothing Then Exit Sub
         If _statuses Is Nothing OrElse _statuses.Tabs Is Nothing OrElse Not _statuses.Tabs.ContainsKey(ListTab.SelectedTab.Text) Then Exit Sub
-        If _curPost Is Nothing Then
+        If Not Me.ExistCurrentPost Then
             Me.ReplyOpMenuItem.Enabled = False
             Me.ReplyAllOpMenuItem.Enabled = False
             Me.DmOpMenuItem.Enabled = False
             Me.ShowProfMenuItem.Enabled = False
+            Me.ShowUserTimelineToolStripMenuItem.Enabled = False
             Me.ListManageMenuItem.Enabled = False
             Me.OpenFavOpMenuItem.Enabled = False
             Me.CreateTabRuleOpMenuItem.Enabled = False
@@ -9189,6 +9445,7 @@ RETRY:
             Me.ReplyAllOpMenuItem.Enabled = True
             Me.DmOpMenuItem.Enabled = True
             Me.ShowProfMenuItem.Enabled = True
+            Me.ShowUserTimelineToolStripMenuItem.Enabled = True
             Me.ListManageMenuItem.Enabled = True
             Me.OpenFavOpMenuItem.Enabled = True
             Me.CreateTabRuleOpMenuItem.Enabled = True
@@ -9197,7 +9454,7 @@ RETRY:
             Me.UnreadOpMenuItem.Enabled = True
         End If
 
-        If _statuses.Tabs(ListTab.SelectedTab.Text).TabType = TabUsageType.DirectMessage OrElse _curPost Is Nothing OrElse _curPost.IsDm Then
+        If _statuses.Tabs(ListTab.SelectedTab.Text).TabType = TabUsageType.DirectMessage OrElse Not Me.ExistCurrentPost OrElse _curPost.IsDm Then
             Me.FavOpMenuItem.Enabled = False
             Me.UnFavOpMenuItem.Enabled = False
             Me.OpenStatusOpMenuItem.Enabled = False
@@ -9208,7 +9465,7 @@ RETRY:
             Me.QtOpMenuItem.Enabled = False
             Me.FavoriteRetweetMenuItem.Enabled = False
             Me.FavoriteRetweetUnofficialMenuItem.Enabled = False
-            If _curPost IsNot Nothing AndAlso _curPost.IsDm Then Me.DelOpMenuItem.Enabled = True
+            If Me.ExistCurrentPost AndAlso _curPost.IsDm Then Me.DelOpMenuItem.Enabled = True
         Else
             Me.FavOpMenuItem.Enabled = True
             Me.UnFavOpMenuItem.Enabled = True
@@ -9244,13 +9501,13 @@ RETRY:
             Me.RefreshPrevOpMenuItem.Enabled = False
         End If
         If _statuses.Tabs(ListTab.SelectedTab.Text).TabType = TabUsageType.PublicSearch _
-                            OrElse _curPost Is Nothing _
+                            OrElse Not Me.ExistCurrentPost _
                             OrElse Not _curPost.InReplyToId > 0 Then
             OpenRepSourceOpMenuItem.Enabled = False
         Else
             OpenRepSourceOpMenuItem.Enabled = True
         End If
-        If _curPost Is Nothing OrElse _curPost.RetweetedBy = "" Then
+        If Not Me.ExistCurrentPost OrElse _curPost.RetweetedBy = "" Then
             OpenRterHomeMenuItem.Enabled = False
         Else
             OpenRterHomeMenuItem.Enabled = True
@@ -9290,7 +9547,7 @@ RETRY:
         Else
             PublicSearchQueryMenuItem.Enabled = False
         End If
-        If _curPost Is Nothing Then
+        If Not Me.ExistCurrentPost Then
             Me.CopySTOTMenuItem.Enabled = False
             Me.CopyURLMenuItem.Enabled = False
             Me.CopyUserIdStripMenuItem.Enabled = False
@@ -9425,7 +9682,7 @@ RETRY:
     Private Sub SearchPostsDetailNameToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SearchPostsDetailNameToolStripMenuItem.Click
         If NameLabel.Tag IsNot Nothing Then
             Dim id As String = DirectCast(NameLabel.Tag, String)
-            AddNewTabForSearch("from:" + id)
+            AddNewTabForUserTimeline(id)
         End If
     End Sub
 
@@ -9457,7 +9714,7 @@ RETRY:
     End Sub
 
     Private Sub RtCountMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RtCountMenuItem.Click
-        If _curPost IsNot Nothing Then
+        If Me.ExistCurrentPost Then
             Using _info As New FormInfo(Me, My.Resources.RtCountMenuItem_ClickText1, _
                             AddressOf GetRetweet_DoWork)
                 Dim retweet_count As Integer = 0
@@ -9781,7 +10038,7 @@ RETRY:
     End Sub
 
     Private Sub MenuItemCommand_DropDownOpening(ByVal sender As Object, ByVal e As System.EventArgs) Handles MenuItemCommand.DropDownOpening
-        If _curPost IsNot Nothing AndAlso Not _curPost.IsDm Then
+        If Me.ExistCurrentPost AndAlso Not _curPost.IsDm Then
             RtCountMenuItem.Enabled = True
         Else
             RtCountMenuItem.Enabled = False
@@ -9791,6 +10048,7 @@ RETRY:
     Private Sub CopyUserIdStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CopyUserIdStripMenuItem.Click
         CopyUserId()
     End Sub
+
     Private Sub CopyUserId()
         If _curPost Is Nothing Then Exit Sub
         Dim clstr As String = _curPost.Name
@@ -9802,7 +10060,8 @@ RETRY:
     End Sub
 
     Private Sub ShowRelatedStatusesMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ShowRelatedStatusesMenuItem.Click, ShowRelatedStatusesMenuItem2.Click
-        If _curPost IsNot Nothing AndAlso Not _curPost.IsDm Then
+        Dim backToTab As TabClass = If(_curTab Is Nothing, _statuses.Tabs(ListTab.SelectedTab.Text), _statuses.Tabs(_curTab.Text))
+        If Me.ExistCurrentPost AndAlso Not _curPost.IsDm Then
             'PublicSearchも除外した方がよい？
             If _statuses.GetTabByType(TabUsageType.Related) Is Nothing Then
                 Const TabName As String = "Related Tweets"
@@ -9819,6 +10078,7 @@ RETRY:
                     _statuses.AddTab(tName, TabUsageType.Related, Nothing)
                 End If
                 _statuses.GetTabByName(tName).UnreadManage = False
+                _statuses.GetTabByName(tName).Notify = False
             End If
 
             Dim tb As TabClass = _statuses.GetTabByType(TabUsageType.Related)
@@ -9850,6 +10110,21 @@ RETRY:
 
     Private Sub tw_PostDeleted(ByVal id As Long, ByRef post As PostClass)
         _statuses.RemovePostReserve(id, post)
+        Try
+            If InvokeRequired AndAlso Not IsDisposed Then
+                Invoke(Sub()
+                           If _curTab IsNot Nothing AndAlso _statuses.Tabs(_curTab.Text).Contains(id) Then
+                               _itemCache = Nothing
+                               _itemCacheIndex = -1
+                               _postCache = Nothing
+                               DirectCast(_curTab.Tag, DetailsListView).Update()
+                           End If
+                       End Sub)
+                Exit Sub
+            End If
+        Catch ex As ObjectDisposedException
+            Exit Sub
+        End Try
     End Sub
 
     Private Sub tw_NewPostFromStream()
@@ -9936,6 +10211,17 @@ RETRY:
         If ev.Event = "favorite" Then
             NotifyFavorite(ev)
         End If
+        If ev.Event = "favorite" OrElse ev.Event = "unfavorite" Then
+            If _curTab IsNot Nothing AndAlso _statuses.Tabs(_curTab.Text).Contains(ev.Id) Then
+                _itemCache = Nothing
+                _itemCacheIndex = -1
+                _postCache = Nothing
+                DirectCast(_curTab.Tag, DetailsListView).Update()
+            End If
+            If ev.Event = "unfavorite" AndAlso ev.Username.ToLower.Equals(tw.Username.ToLower) Then
+                RemovePostFromFavTab(New Int64() {ev.Id})
+            End If
+        End If
     End Sub
 
     Private Sub NotifyFavorite(ByVal ev As Twitter.FormattedEvent)
@@ -10015,10 +10301,26 @@ RETRY:
     Private Sub TranslationToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TranslationToolStripMenuItem.Click
         Dim g As New Google
         Dim buf As String = ""
-        If _curPost Is Nothing Then Exit Sub
+        If Not Me.ExistCurrentPost Then Exit Sub
         Dim lng As String = g.LanguageDetect(_curPost.Data)
         If lng <> "ja" AndAlso g.Translate(True, PostBrowser.DocumentText, buf) Then
             PostBrowser.DocumentText = buf
         End If
+    End Sub
+
+    Private ReadOnly Property ExistCurrentPost As Boolean
+        Get
+            If _curPost Is Nothing Then Return False
+            If _curPost.IsDeleted Then Return False
+            Return True
+        End Get
+    End Property
+
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
+
+    Private Sub ShowUserTimelineToolStripMenuItem_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles ShowUserTimelineToolStripMenuItem.Click, ShowUserTimelineContextMenuItem.Click
+        ShowUserTimeline()
     End Sub
 End Class

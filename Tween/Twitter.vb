@@ -572,98 +572,35 @@ Public Class Twitter
 
         Twitter.AccountState = ACCOUNT_STATE.Valid
 
-        'Dim dlgt As GetIconImageDelegate    'countQueryに合わせる
-        'Dim ar As IAsyncResult              'countQueryに合わせる
-        Dim xdoc As New XmlDocument
+        Dim status As TwitterDataModel.Status
         Try
-            xdoc.LoadXml(content)
+            status = CreateDataFromJson(Of TwitterDataModel.Status)(content)
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + content)
+            Return "Err:Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
             TraceOut(content)
-            'MessageBox.Show("不正なXMLです。(TL-LoadXml)")
-            Return "Invalid XML!"
+            Return "Err:Invalid Json!"
         End Try
 
         'ReTweetしたものをTLに追加
-        Dim xentryNode As XmlNode = xdoc.DocumentElement.SelectSingleNode("/status")
-        If xentryNode Is Nothing Then Return "Invalid XML!"
-        Dim xentry As XmlElement = CType(xentryNode, XmlElement)
-        Dim post As New PostClass
-        Try
-            post.Id = Long.Parse(xentry.Item("id").InnerText)
-            '二重取得回避
-            SyncLock LockObj
-                If TabInformations.GetInstance.ContainsKey(post.Id) Then Return ""
-            End SyncLock
-            'Retweet判定
-            Dim xRnode As XmlNode = xentry.SelectSingleNode("./retweeted_status")
-            If xRnode Is Nothing Then Return "Invalid XML!"
+        Dim post As PostClass = CreatePostsFromStatusData(status)
 
-            Dim xRentry As XmlElement = CType(xRnode, XmlElement)
-            post.PDate = DateTime.ParseExact(xRentry.Item("created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-            'Id
-            post.RetweetedId = Long.Parse(xRentry.Item("id").InnerText)
-            '本文
-            post.Data = xRentry.Item("text").InnerText
-            'Source取得（htmlの場合は、中身を取り出し）
-            post.Source = xRentry.Item("source").InnerText
-            'Reply先
-            Long.TryParse(xRentry.Item("in_reply_to_status_id").InnerText, post.InReplyToId)
-            post.InReplyToUser = xRentry.Item("in_reply_to_screen_name").InnerText
-            post.IsFav = TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Contains(post.RetweetedId)
+        '二重取得回避
+        SyncLock LockObj
+            If TabInformations.GetInstance.ContainsKey(post.Id) Then Return ""
+        End SyncLock
+        'Retweet判定
+        If post.RetweetedId = 0 Then Return "Invalid Json!"
+        'ユーザー情報
+        post.IsMe = True
 
-            '以下、ユーザー情報
-            Dim xRUentry As XmlElement = CType(xRentry.SelectSingleNode("./user"), XmlElement)
-            post.Uid = Long.Parse(xRUentry.Item("id").InnerText)
-            post.Name = xRUentry.Item("screen_name").InnerText
-            post.Nickname = xRUentry.Item("name").InnerText
-            post.ImageUrl = xRUentry.Item("profile_image_url").InnerText
-            post.IsProtect = Boolean.Parse(xRUentry.Item("protected").InnerText)
-            post.IsMe = True
+        post.IsRead = read
+        post.IsOwl = False
+        If _readOwnPost Then post.IsRead = True
+        post.IsDm = False
 
-            'Retweetした人(自分のはず)
-            Dim xUentry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
-            post.RetweetedBy = xUentry.Item("screen_name").InnerText
-
-            'HTMLに整形
-            post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
-            post.Data = HttpUtility.HtmlDecode(post.Data)
-            post.Data = post.Data.Replace("<3", "♡")
-            'Source整形
-            CreateSource(post)
-
-            post.IsRead = read
-            post.IsReply = post.ReplyToList.Contains(_uid)
-            post.IsExcludeReply = False
-
-            If post.IsMe Then
-                post.IsOwl = False
-            Else
-                If followerId.Count > 0 Then post.IsOwl = Not followerId.Contains(post.Uid)
-            End If
-            If post.IsMe AndAlso _readOwnPost Then post.IsRead = True
-
-            post.IsDm = False
-        Catch ex As Exception
-            TraceOut(content)
-            'MessageBox.Show("不正なXMLです。(TL-Parse)")
-            Return "Invalid XML!"
-        End Try
-
-        'Me._dIcon.Add(post.ImageUrl, Nothing)
         TabInformations.GetInstance.AddPost(post)
-
-        ''非同期アイコン取得＆StatusDictionaryに追加
-        'dlgt = New GetIconImageDelegate(AddressOf GetIconImage)
-        'ar = dlgt.BeginInvoke(post, Nothing, Nothing)
-
-        ''アイコン取得完了待ち
-        'Try
-        '    dlgt.EndInvoke(ar)
-        'Catch ex As Exception
-        '    '最後までendinvoke回す（ゾンビ化回避）
-        '    ex.Data("IsTerminatePermission") = False
-        '    Throw
-        'End Try
 
         Return ""
     End Function
@@ -721,15 +658,12 @@ Public Class Twitter
                 Twitter.AccountState = ACCOUNT_STATE.Invalid
                 Return "Check your Username/Password."
             Case HttpStatusCode.Forbidden
-                Dim xd As XmlDocument = New XmlDocument
-                Try
-                    xd.LoadXml(content)
-                    Dim xNode As XmlNode = Nothing
-                    xNode = xd.SelectSingleNode("/hash/error")
-                    Return "Err:" + xNode.InnerText + "(" + GetCurrentMethod.Name + ")"
-                Catch ex As Exception
-                    Return "Err:Forbidden" + "(" + GetCurrentMethod.Name + ")"
-                End Try
+                Dim errMsg As String = GetErrorMessageJson(content)
+                If String.IsNullOrEmpty(errMsg) Then
+                    Return "Err:Forbidden(" + GetCurrentMethod.Name + ")"
+                Else
+                    Return "Err:" + errMsg
+                End If
             Case Else
                 Return "Err:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
         End Select
@@ -758,15 +692,12 @@ Public Class Twitter
                 Twitter.AccountState = ACCOUNT_STATE.Invalid
                 Return "Check your Username/Password."
             Case HttpStatusCode.Forbidden
-                Dim xd As XmlDocument = New XmlDocument
-                Try
-                    xd.LoadXml(content)
-                    Dim xNode As XmlNode = Nothing
-                    xNode = xd.SelectSingleNode("/hash/error")
-                    Return "Err:" + xNode.InnerText + "(" + GetCurrentMethod.Name + ")"
-                Catch ex As Exception
-                    Return "Err:Forbidden" + "(" + GetCurrentMethod.Name + ")"
-                End Try
+                Dim errMsg As String = GetErrorMessageJson(content)
+                If String.IsNullOrEmpty(errMsg) Then
+                    Return "Err:Forbidden(" + GetCurrentMethod.Name + ")"
+                Else
+                    Return "Err:" + errMsg
+                End If
             Case Else
                 Return "Err:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
         End Select
@@ -795,15 +726,12 @@ Public Class Twitter
                 Twitter.AccountState = ACCOUNT_STATE.Invalid
                 Return "Check your Username/Password."
             Case HttpStatusCode.Forbidden
-                Dim xd As XmlDocument = New XmlDocument
-                Try
-                    xd.LoadXml(content)
-                    Dim xNode As XmlNode = Nothing
-                    xNode = xd.SelectSingleNode("/hash/error")
-                    Return "Err:" + xNode.InnerText + "(" + GetCurrentMethod.Name + ")"
-                Catch ex As Exception
-                    Return "Err:Forbidden" + "(" + GetCurrentMethod.Name + ")"
-                End Try
+                Dim errMsg As String = GetErrorMessageJson(content)
+                If String.IsNullOrEmpty(errMsg) Then
+                    Return "Err:Forbidden(" + GetCurrentMethod.Name + ")"
+                Else
+                    Return "Err:" + errMsg
+                End If
             Case Else
                 Return "Err:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
         End Select
@@ -832,15 +760,12 @@ Public Class Twitter
                 Twitter.AccountState = ACCOUNT_STATE.Invalid
                 Return "Check your Username/Password."
             Case HttpStatusCode.Forbidden
-                Dim xd As XmlDocument = New XmlDocument
-                Try
-                    xd.LoadXml(content)
-                    Dim xNode As XmlNode = Nothing
-                    xNode = xd.SelectSingleNode("/hash/error")
-                    Return "Err:" + xNode.InnerText + "(" + GetCurrentMethod.Name + ")"
-                Catch ex As Exception
-                    Return "Err:Forbidden" + "(" + GetCurrentMethod.Name + ")"
-                End Try
+                Dim errMsg As String = GetErrorMessageJson(content)
+                If String.IsNullOrEmpty(errMsg) Then
+                    Return "Err:Forbidden(" + GetCurrentMethod.Name + ")"
+                Else
+                    Return "Err:" + errMsg
+                End If
             Case Else
                 Return "Err:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
         End Select
@@ -869,15 +794,12 @@ Public Class Twitter
                 Twitter.AccountState = ACCOUNT_STATE.Invalid
                 Return "Check your Username/Password."
             Case HttpStatusCode.Forbidden
-                Dim xd As XmlDocument = New XmlDocument
-                Try
-                    xd.LoadXml(content)
-                    Dim xNode As XmlNode = Nothing
-                    xNode = xd.SelectSingleNode("/hash/error")
-                    Return "Err:" + xNode.InnerText + "(" + GetCurrentMethod.Name + ")"
-                Catch ex As Exception
-                    Return "Err:Forbidden" + "(" + GetCurrentMethod.Name + ")"
-                End Try
+                Dim errMsg As String = GetErrorMessageJson(content)
+                If String.IsNullOrEmpty(errMsg) Then
+                    Return "Err:Forbidden(" + GetCurrentMethod.Name + ")"
+                Else
+                    Return "Err:" + errMsg
+                End If
             Case Else
                 Return "Err:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
         End Select
@@ -899,17 +821,18 @@ Public Class Twitter
 
         Select Case res
             Case HttpStatusCode.OK
-                Dim xdoc As New XmlDocument
-                Dim result As String = ""
-                Twitter.AccountState = ACCOUNT_STATE.Valid
                 Try
-                    xdoc.LoadXml(content)
-                    isFollowing = Boolean.Parse(xdoc.SelectSingleNode("/relationship/source/following").InnerText)
-                    isFollowed = Boolean.Parse(xdoc.SelectSingleNode("/relationship/source/followed_by").InnerText)
+                    Dim relation = CreateDataFromJson(Of TwitterDataModel.Relationship)(content)
+                    isFollowing = relation.Relationship.Source.Following
+                    isFollowed = relation.Relationship.Source.FollowedBy
+                    Return ""
+                Catch ex As SerializationException
+                    TraceOut(ex.Message + Environment.NewLine + content)
+                    Return "Err:Json Parse Error(DataContractJsonSerializer)"
                 Catch ex As Exception
-                    result = "Err:Invalid XML."
+                    TraceOut(content)
+                    Return "Err:Invalid Json!"
                 End Try
-                Return result
             Case HttpStatusCode.BadRequest
                 Return "Err:API Limits?"
             Case HttpStatusCode.Unauthorized
@@ -986,19 +909,18 @@ Public Class Twitter
 
             Select Case res
                 Case HttpStatusCode.OK
-                    Dim xdoc As New XmlDocument
-                    Dim xnode As XmlNodeList
-                    Dim result As String = ""
-                    Twitter.AccountState = ACCOUNT_STATE.Valid
                     Try
-                        xdoc.LoadXml(content)
-                        xnode = xdoc.GetElementsByTagName("ids")
-                        retweeted_count += xnode.ItemOf(0).ChildNodes.Count
-                        If xnode.ItemOf(0).ChildNodes.Count < 100 Then Exit For
+                        Dim ids As Int64() = CreateDataFromJson(Of Int64())(content)
+                        retweeted_count += ids.Length
+                        If ids.Length < 100 Then Exit For
+                    Catch ex As SerializationException
+                        retweeted_count = -1
+                        TraceOut(ex.Message + Environment.NewLine + content)
+                        Return "Err:Json Parse Error(DataContractJsonSerializer)"
                     Catch ex As Exception
                         retweeted_count = -1
-                        result = "Err:Invalid XML."
-                        xmlBuf = Nothing
+                        TraceOut(content)
+                        Return "Err:Invalid Json!"
                     End Try
                 Case HttpStatusCode.BadRequest
                     retweeted_count = -1
@@ -1036,15 +958,12 @@ Public Class Twitter
                 Twitter.AccountState = ACCOUNT_STATE.Invalid
                 Return "Check your Username/Password."
             Case HttpStatusCode.Forbidden
-                Dim xd As XmlDocument = New XmlDocument
-                Try
-                    xd.LoadXml(content)
-                    Dim xNode As XmlNode = Nothing
-                    xNode = xd.SelectSingleNode("/hash/error")
-                    Return "Err:" + xNode.InnerText + "(" + GetCurrentMethod.Name + ")"
-                Catch ex As Exception
-                    Return "Err:Forbidden" + "(" + GetCurrentMethod.Name + ")"
-                End Try
+                Dim errMsg As String = GetErrorMessageJson(content)
+                If String.IsNullOrEmpty(errMsg) Then
+                    Return "Err:Forbidden(" + GetCurrentMethod.Name + ")"
+                Else
+                    Return "Err:" + errMsg
+                End If
             Case Else
                 Return "Err:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
         End Select
@@ -1109,15 +1028,12 @@ Public Class Twitter
                 Twitter.AccountState = ACCOUNT_STATE.Invalid
                 Return "Check your Username/Password."
             Case HttpStatusCode.Forbidden
-                Dim xd As XmlDocument = New XmlDocument
-                Try
-                    xd.LoadXml(content)
-                    Dim xNode As XmlNode = Nothing
-                    xNode = xd.SelectSingleNode("/hash/error")
-                    Return "Err:" + xNode.InnerText
-                Catch ex As Exception
-                    Return "Err:Forbidden"
-                End Try
+                Dim errMsg As String = GetErrorMessageJson(content)
+                If String.IsNullOrEmpty(errMsg) Then
+                    Return "Err:Forbidden(" + GetCurrentMethod.Name + ")"
+                Else
+                    Return "Err:" + errMsg
+                End If
             Case Else
                 Return "Err:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
         End Select
@@ -1144,15 +1060,12 @@ Public Class Twitter
                 Twitter.AccountState = ACCOUNT_STATE.Invalid
                 Return "Check your Username/Password."
             Case HttpStatusCode.Forbidden
-                Dim xd As XmlDocument = New XmlDocument
-                Try
-                    xd.LoadXml(content)
-                    Dim xNode As XmlNode = Nothing
-                    xNode = xd.SelectSingleNode("/hash/error")
-                    Return "Err:" + xNode.InnerText + "(" + GetCurrentMethod.Name + ")"
-                Catch ex As Exception
-                    Return "Err:Forbidden" + "(" + GetCurrentMethod.Name + ")"
-                End Try
+                Dim errMsg As String = GetErrorMessageJson(content)
+                If String.IsNullOrEmpty(errMsg) Then
+                    Return "Err:Forbidden(" + GetCurrentMethod.Name + ")"
+                Else
+                    Return "Err:" + errMsg
+                End If
             Case Else
                 Return "Err:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
         End Select
@@ -1179,15 +1092,12 @@ Public Class Twitter
                 Twitter.AccountState = ACCOUNT_STATE.Invalid
                 Return "Check your Username/Password."
             Case HttpStatusCode.Forbidden
-                Dim xd As XmlDocument = New XmlDocument
-                Try
-                    xd.LoadXml(content)
-                    Dim xNode As XmlNode = Nothing
-                    xNode = xd.SelectSingleNode("/hash/error")
-                    Return "Err:" + xNode.InnerText + "(" + GetCurrentMethod.Name + ")"
-                Catch ex As Exception
-                    Return "Err:Forbidden" + "(" + GetCurrentMethod.Name + ")"
-                End Try
+                Dim errMsg As String = GetErrorMessageJson(content)
+                If String.IsNullOrEmpty(errMsg) Then
+                    Return "Err:Forbidden(" + GetCurrentMethod.Name + ")"
+                Else
+                    Return "Err:" + errMsg
+                End If
             Case Else
                 Return "Err:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
         End Select
@@ -1408,7 +1318,8 @@ Public Class Twitter
     Public Function GetUserTimelineApi(ByVal read As Boolean,
                                        ByVal count As Integer,
                                        ByVal userName As String,
-                                       ByVal tab As TabClass) As String
+                                       ByVal tab As TabClass,
+                                       ByVal more As Boolean) As String
 
         If Twitter.AccountState <> ACCOUNT_STATE.Valid Then Return ""
 
@@ -1420,11 +1331,15 @@ Public Class Twitter
         If count = 0 Then count = 20
         Try
             If String.IsNullOrEmpty(userName) Then
-                Dim target As PostClass = tab.RelationTargetPost
+                Dim target As String = tab.User
                 If target Is Nothing Then Return ""
-                res = twCon.UserTimeline(target.Uid, "", count, 0, 0, content)
+                res = twCon.UserTimeline(0, target, count, 0, 0, content)
             Else
-                res = twCon.UserTimeline(0, userName, count, 0, 0, content)
+                If more Then
+                    res = twCon.UserTimeline(0, userName, count, tab.OldestId, 0, content)
+                Else
+                    res = twCon.UserTimeline(0, userName, count, 0, 0, content)
+                End If
             End If
         Catch ex As Exception
             Return "Err:" + ex.Message
@@ -1455,6 +1370,7 @@ Public Class Twitter
         For Each status As TwitterDataModel.Status In items
             Dim item As PostClass = CreatePostsFromStatusData(status)
             If item Is Nothing Then Continue For
+            If item.Id < tab.OldestId Then tab.OldestId = item.Id
             item.IsRead = read
             If item.IsMe AndAlso Not read AndAlso _readOwnPost Then item.IsRead = True
             If tab IsNot Nothing Then item.RelTabName = tab.TabName
@@ -1467,8 +1383,7 @@ Public Class Twitter
 
     Public Function GetStatusApi(ByVal read As Boolean,
                                        ByVal id As Int64,
-                                       ByVal tab As TabClass) As String
-
+                                       ByRef post As PostClass) As String
         If Twitter.AccountState <> ACCOUNT_STATE.Valid Then Return ""
 
         If _endingFlag Then Return ""
@@ -1508,11 +1423,24 @@ Public Class Twitter
         If item Is Nothing Then Return "Err:Can't create post"
         item.IsRead = read
         If item.IsMe AndAlso Not read AndAlso _readOwnPost Then item.IsRead = True
-        If tab IsNot Nothing Then item.RelTabName = tab.TabName
-        '非同期アイコン取得＆StatusDictionaryに追加
-        TabInformations.GetInstance.AddPost(item)
 
+        post = item
         Return ""
+    End Function
+
+    Public Function GetStatusApi(ByVal read As Boolean,
+                                       ByVal id As Int64,
+                                       ByVal tab As TabClass) As String
+        Dim post As PostClass = Nothing
+        Dim r As String = Me.GetStatusApi(read, id, post)
+
+        If r = "" Then
+            If tab IsNot Nothing Then post.RelTabName = tab.TabName
+            '非同期アイコン取得＆StatusDictionaryに追加
+            TabInformations.GetInstance.AddPost(post)
+        End If
+
+        Return r
     End Function
 
     Private Function CreatePostsFromStatusData(ByVal status As TwitterDataModel.Status) As PostClass
@@ -1543,7 +1471,7 @@ Public Class Twitter
             post.Nickname = user.Name
             post.ImageUrl = user.ProfileImageUrl
             post.IsProtect = user.Protected
-            If post.IsMe Then _UserIdNo = post.Uid.ToString()
+            post.IsMe = post.Name.ToLower.Equals(_uid)
 
             'Retweetした人
             post.RetweetedBy = status.User.ScreenName
@@ -1665,11 +1593,52 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Return CreatePostsFromXml(content, WORKERTYPE.List, tab, read, count, tab.OldestId)
+        Return CreatePostsFromJson(content, WORKERTYPE.List, tab, read, count, tab.OldestId)
     End Function
 
-    Public Function GetRelatedResultsApi(ByVal read As Boolean, _
-                            ByVal tab As TabClass) As String
+    Private Function CheckReplyToPost(ByVal relPosts As List(Of PostClass)) As PostClass
+        Dim tmpPost As PostClass = relPosts(0)
+        Dim lastPost As PostClass = Nothing
+        Do While tmpPost IsNot Nothing
+            If tmpPost.InReplyToId = 0 Then Return Nothing
+            lastPost = tmpPost
+            Dim replyToPost = From p In relPosts
+                             Where p.Id = tmpPost.InReplyToId
+                             Select p
+            tmpPost = replyToPost.FirstOrDefault()
+        Loop
+        Return lastPost
+    End Function
+
+    Public Function GetRelatedResult(ByVal read As Boolean, ByVal tab As TabClass) As String
+        Dim rslt As String = ""
+        Dim relPosts As New List(Of PostClass)
+        If tab.RelationTargetPost.Data.Contains("@") AndAlso tab.RelationTargetPost.InReplyToId = 0 Then
+            '検索結果対応
+            Dim p As PostClass = TabInformations.GetInstance.Item(tab.RelationTargetPost.Id)
+            If p IsNot Nothing AndAlso p.InReplyToId > 0 Then
+                tab.RelationTargetPost = p
+            Else
+                rslt = Me.GetStatusApi(read, tab.RelationTargetPost.Id, p)
+                If Not String.IsNullOrEmpty(rslt) Then Return rslt
+                tab.RelationTargetPost = p
+            End If
+        End If
+        relPosts.Add(tab.RelationTargetPost.Copy)
+        Dim tmpPost As PostClass = relPosts(0)
+        Do
+            rslt = Me.GetRelatedResultsApi(read, tmpPost, tab, relPosts)
+            If Not String.IsNullOrEmpty(rslt) Then Exit Do
+            tmpPost = CheckReplyToPost(relPosts)
+        Loop While tmpPost IsNot Nothing
+        relPosts.ForEach(New Action(Of PostClass)(Sub(p) TabInformations.GetInstance.AddPost(p)))
+        Return rslt
+    End Function
+
+    Public Function GetRelatedResultsApi(ByVal read As Boolean,
+                                         ByVal post As PostClass,
+                                         ByVal tab As TabClass,
+                                         ByVal relatedPosts As List(Of PostClass)) As String
 
         If Twitter.AccountState <> ACCOUNT_STATE.Valid Then Return ""
 
@@ -1678,7 +1647,7 @@ Public Class Twitter
         Dim res As HttpStatusCode
         Dim content As String = ""
         Try
-            res = twCon.GetRelatedResults(tab.RelationTargetPost.Id, content)
+            res = twCon.GetRelatedResults(post.Id, content)
         Catch ex As Exception
             Return "Err:" + ex.Message
         End Try
@@ -1694,7 +1663,18 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Dim targetItem As PostClass = tab.RelationTargetPost
+        Dim items As List(Of TwitterDataModel.RelatedResult)
+        Try
+            items = CreateDataFromJson(Of List(Of TwitterDataModel.RelatedResult))(content)
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + content)
+            Return "Json Parse Error(DataContractJsonSerializer)"
+        Catch ex As Exception
+            TraceOut(content)
+            Return "Invalid Json!"
+        End Try
+
+        Dim targetItem As PostClass = post
         If targetItem Is Nothing Then
             Return ""
         Else
@@ -1712,17 +1692,6 @@ Public Class Twitter
             replyToItem.RelTabName = tab.TabName
         End If
 
-        Dim items As List(Of TwitterDataModel.RelatedResult)
-        Try
-            items = CreateDataFromJson(Of List(Of TwitterDataModel.RelatedResult))(content)
-        Catch ex As SerializationException
-            TraceOut(ex.Message + Environment.NewLine + content)
-            Return "Json Parse Error(DataContractJsonSerializer)"
-        Catch ex As Exception
-            TraceOut(content)
-            Return "Invalid Json!"
-        End Try
-
         Dim replyAdded As Boolean = False
         For Each relatedData As TwitterDataModel.RelatedResult In items
             For Each result As TwitterDataModel.RelatedTweet In relatedData.Results
@@ -1736,13 +1705,21 @@ Public Class Twitter
                 If item.IsMe AndAlso Not read AndAlso _readOwnPost Then item.IsRead = True
                 If tab IsNot Nothing Then item.RelTabName = tab.TabName
                 '非同期アイコン取得＆StatusDictionaryに追加
-                TabInformations.GetInstance.AddPost(item)
+                relatedPosts.Add(item)
             Next
         Next
         If replyToItem IsNot Nothing Then
-            TabInformations.GetInstance.AddPost(replyToItem)
+            relatedPosts.Add(replyToItem)
         ElseIf targetItem.InReplyToId > 0 AndAlso Not replyAdded Then
-            Return GetStatusApi(read, targetItem.InReplyToId, tab)
+            Dim p As PostClass = Nothing
+            Dim rslt As String = ""
+            rslt = GetStatusApi(read, targetItem.InReplyToId, p)
+            If String.IsNullOrEmpty(rslt) Then
+                p.IsRead = read
+                p.RelTabName = tab.TabName
+                relatedPosts.Add(p)
+            End If
+            Return rslt
         End If
 
         '発言者・返信先ユーザーの直近10発言取得
@@ -1752,118 +1729,6 @@ Public Class Twitter
         '    rslt = Me.GetUserTimelineApi(read, 10, replyToUserName, tab)
         'End If
         'Return rslt
-        Return ""
-    End Function
-
-    Private Function CreatePostsFromXml(ByVal content As String, ByVal gType As WORKERTYPE, ByVal tab As TabClass, ByVal read As Boolean, ByVal count As Integer, ByRef minimumId As Long) As String
-        Dim xdoc As New XmlDocument
-        Try
-            xdoc.LoadXml(content)
-        Catch ex As Exception
-            TraceOut(content)
-            'MessageBox.Show("不正なXMLです。(TL-LoadXml)")
-            Return "Invalid XML!"
-        End Try
-
-        For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("./status")
-            Dim xentry As XmlElement = CType(xentryNode, XmlElement)
-            Dim post As New PostClass
-            Try
-                post.Id = Long.Parse(xentry.Item("id").InnerText)
-                If minimumId > post.Id Then minimumId = post.Id
-                '二重取得回避
-                SyncLock LockObj
-                    If tab Is Nothing Then
-                        If TabInformations.GetInstance.ContainsKey(post.Id) Then Continue For
-                    Else
-                        If TabInformations.GetInstance.ContainsKey(post.Id, tab.TabName) Then Continue For
-                    End If
-                End SyncLock
-                'Retweet判定
-                Dim xRnode As XmlNode = xentry.SelectSingleNode("./retweeted_status")
-                If xRnode IsNot Nothing Then
-                    Dim xRentry As XmlElement = CType(xRnode, XmlElement)
-                    post.PDate = DateTime.ParseExact(xRentry.Item("created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-                    'Id
-                    post.RetweetedId = Long.Parse(xRentry.Item("id").InnerText)
-                    '本文
-                    post.Data = xRentry.Item("text").InnerText
-                    'Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = xRentry.Item("source").InnerText
-                    'Reply先
-                    Long.TryParse(xRentry.Item("in_reply_to_status_id").InnerText, post.InReplyToId)
-                    post.InReplyToUser = xRentry.Item("in_reply_to_screen_name").InnerText
-                    post.IsFav = TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Contains(post.RetweetedId)
-                    'post.IsFav = Boolean.Parse(xentry.Item("favorited").InnerText)
-
-                    '以下、ユーザー情報
-                    Dim xRUentry As XmlElement = CType(xRentry.SelectSingleNode("./user"), XmlElement)
-                    post.Uid = Long.Parse(xRUentry.Item("id").InnerText)
-                    post.Name = xRUentry.Item("screen_name").InnerText
-                    post.Nickname = xRUentry.Item("name").InnerText
-                    post.ImageUrl = xRUentry.Item("profile_image_url").InnerText
-                    post.IsProtect = Boolean.Parse(xRUentry.Item("protected").InnerText)
-                    post.IsMe = post.Name.ToLower.Equals(_uid)
-                    If post.IsMe Then _UserIdNo = post.Uid.ToString()
-
-                    'Retweetした人
-                    Dim xUentry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
-                    post.RetweetedBy = xUentry.Item("screen_name").InnerText
-                Else
-                    post.PDate = DateTime.ParseExact(xentry.Item("created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-                    '本文
-                    post.Data = xentry.Item("text").InnerText
-                    'Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = xentry.Item("source").InnerText
-                    Long.TryParse(xentry.Item("in_reply_to_status_id").InnerText, post.InReplyToId)
-                    post.InReplyToUser = xentry.Item("in_reply_to_screen_name").InnerText
-                    'in_reply_to_user_idを使うか？
-                    post.IsFav = Boolean.Parse(xentry.Item("favorited").InnerText)
-
-                    '以下、ユーザー情報
-                    Dim xUentry As XmlElement = CType(xentry.SelectSingleNode("./user"), XmlElement)
-                    post.Uid = Long.Parse(xUentry.Item("id").InnerText)
-                    post.Name = xUentry.Item("screen_name").InnerText
-                    post.Nickname = xUentry.Item("name").InnerText
-                    post.ImageUrl = xUentry.Item("profile_image_url").InnerText
-                    post.IsProtect = Boolean.Parse(xUentry.Item("protected").InnerText)
-                    post.IsMe = post.Name.ToLower.Equals(_uid)
-                    If post.IsMe Then _UserIdNo = post.Uid.ToString()
-                End If
-                'HTMLに整形
-                post.OriginalData = CreateHtmlAnchor(post.Data, post.ReplyToList)
-                post.Data = HttpUtility.HtmlDecode(post.Data)
-                post.Data = post.Data.Replace("<3", "♡")
-                'Source整形
-                CreateSource(post)
-
-                post.IsRead = read
-                If gType = WORKERTYPE.Timeline OrElse tab IsNot Nothing Then
-                    post.IsReply = post.ReplyToList.Contains(_uid)
-                Else
-                    post.IsReply = True
-                End If
-                post.IsExcludeReply = False
-
-                If post.IsMe Then
-                    post.IsOwl = False
-                Else
-                    If followerId.Count > 0 Then post.IsOwl = Not followerId.Contains(post.Uid)
-                End If
-                If post.IsMe AndAlso Not read AndAlso _readOwnPost Then post.IsRead = True
-
-                post.IsDm = False
-                If tab IsNot Nothing Then post.RelTabName = tab.TabName
-            Catch ex As Exception
-                TraceOut(content)
-                'MessageBox.Show("不正なXMLです。(TL-Parse)")
-                Continue For
-            End Try
-
-            TabInformations.GetInstance.AddPost(post)
-
-        Next
-
         Return ""
     End Function
 
@@ -2057,11 +1922,11 @@ Public Class Twitter
                     End If
                 End If
 
-                post.Uid = user.id
+                post.Uid = user.Id
                 post.Name = user.ScreenName
                 post.Nickname = user.Name
                 post.ImageUrl = user.ProfileImageUrl
-                post.IsProtect = user.protected
+                post.IsProtect = user.Protected
             Catch ex As Exception
                 TraceOut(content)
                 MessageBox.Show("Parse Error(CreateDirectMessagesFromJson)")
@@ -2185,13 +2050,13 @@ Public Class Twitter
                     'Id
                     post.RetweetedId = post.Id
                     '本文
-                    post.Data = retweeted.text
+                    post.Data = retweeted.Text
                     'Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = retweeted.source
+                    post.Source = retweeted.Source
                     'Reply先
                     Long.TryParse(retweeted.InReplyToStatusId, post.InReplyToId)
                     post.InReplyToUser = retweeted.InReplyToScreenName
-                    post.IsFav = retweeted.favorited
+                    post.IsFav = retweeted.Favorited
 
                     '以下、ユーザー情報
                     Dim user As TwitterDataModel.User = retweeted.User
@@ -2308,26 +2173,18 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Dim xdoc As New XmlDocument
         Try
-            xdoc.LoadXml(content)
+            Dim followers = CreateDataFromJson(Of TwitterDataModel.Followers)(content)
+            followerId.AddRange(followers.Id)
+            cursor = followers.NextCursor
+            Return ""
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + content)
+            Return "Err:Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
             TraceOut(content)
-            Return "Invalid XML!"
+            Return "Err:Invalid Json!"
         End Try
-
-        Try
-            For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("/id_list/ids/id")
-                followerId.Add(Long.Parse(xentryNode.InnerText))
-            Next
-            cursor = Long.Parse(xdoc.DocumentElement.SelectSingleNode("/id_list/next_cursor").InnerText)
-        Catch ex As Exception
-            TraceOut(content)
-            Return "Invalid XML!"
-        End Try
-
-        Return ""
-
     End Function
 
     Public Function GetListsApi() As String
@@ -2357,22 +2214,18 @@ Public Class Twitter
                     Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
             End Select
 
-            Dim xdoc As New XmlDocument
             Try
-                xdoc.LoadXml(content)
-            Catch ex As Exception
-                TraceOut(content)
-                Return "Invalid XML!"
-            End Try
-
-            Try
-                For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("/lists_list/lists/list")
-                    lists.Add(New ListElement(xentryNode, Me))
+                Dim lst = CreateDataFromJson(Of TwitterDataModel.Lists)(content)
+                For Each le In lst.Lists
+                    lists.Add(New ListElement(le, Me))
                 Next
-                cursor = Long.Parse(xdoc.DocumentElement.SelectSingleNode("/lists_list/next_cursor").InnerText)
+                cursor = lst.NextCursor
+            Catch ex As SerializationException
+                TraceOut(ex.Message + Environment.NewLine + content)
+                Return "Err:Json Parse Error(DataContractJsonSerializer)"
             Catch ex As Exception
                 TraceOut(content)
-                Return "Invalid XML!"
+                Return "Err:Invalid Json!"
             End Try
         Loop While cursor <> 0
 
@@ -2397,22 +2250,18 @@ Public Class Twitter
                     Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
             End Select
 
-            Dim xdoc As New XmlDocument
             Try
-                xdoc.LoadXml(content)
-            Catch ex As Exception
-                TraceOut(content)
-                Return "Invalid XML!"
-            End Try
-
-            Try
-                For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("/lists_list/lists/list")
-                    lists.Add(New ListElement(xentryNode, Me))
+                Dim lst = CreateDataFromJson(Of TwitterDataModel.Lists)(content)
+                For Each le In lst.Lists
+                    lists.Add(New ListElement(le, Me))
                 Next
-                cursor = Long.Parse(xdoc.DocumentElement.SelectSingleNode("/lists_list/next_cursor").InnerText)
+                cursor = lst.NextCursor
+            Catch ex As SerializationException
+                TraceOut(ex.Message + Environment.NewLine + content)
+                Return "Err:Json Parse Error(DataContractJsonSerializer)"
             Catch ex As Exception
                 TraceOut(content)
-                Return "Invalid XML!"
+                Return "Err:Invalid Json!"
             End Try
         Loop While cursor <> 0
 
@@ -2471,10 +2320,9 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Dim xdoc As New XmlDocument
         Try
-            xdoc.LoadXml(content)
-            Dim newList As New ListElement(xdoc.DocumentElement, Me)
+            Dim le = CreateDataFromJson(Of TwitterDataModel.ListElementData)(content)
+            Dim newList As New ListElement(le, Me)
             list.Description = newList.Description
             list.Id = newList.Id
             list.IsPublic = newList.IsPublic
@@ -2485,12 +2333,15 @@ Public Class Twitter
             list.Nickname = newList.Nickname
             list.Username = newList.Username
             list.UserId = newList.UserId
+            Return ""
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + content)
+            Return "Err:Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
             TraceOut(content)
-            Return "Invalid XML!"
+            Return "Err:Invalid Json!"
         End Try
 
-        Return ""
     End Function
 
     Public Function GetListMembers(ByVal list_id As String, ByVal lists As List(Of UserInfo), ByRef cursor As Long) As String
@@ -2498,7 +2349,6 @@ Public Class Twitter
 
         Dim res As HttpStatusCode
         Dim content As String = ""
-        'Dim cursor As Long = -1
 
         'Do
         Try
@@ -2519,24 +2369,22 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Dim xdoc As New XmlDocument
         Try
-            xdoc.LoadXml(content)
+            Dim users = CreateDataFromJson(Of TwitterDataModel.Users)(content)
+            Array.ForEach(Of TwitterDataModel.User)(
+                users.users,
+                New Action(Of TwitterDataModel.User)(Sub(u)
+                                                         lists.Add(New UserInfo(u))
+                                                     End Sub))
+            cursor = users.NextCursor
+            Return ""
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + content)
+            Return "Err:Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
             TraceOut(content)
-            Return "Invalid XML!"
+            Return "Err:Invalid Json!"
         End Try
-
-        Try
-            For Each xentryNode As XmlNode In xdoc.DocumentElement.SelectNodes("/users_list/users/user")
-                lists.Add(New UserInfo(xentryNode))
-            Next
-            cursor = Long.Parse(xdoc.DocumentElement.SelectSingleNode("/users_list/next_cursor").InnerText)
-        Catch ex As Exception
-            TraceOut(content)
-            Return "Invalid XML!"
-        End Try
-        'Loop While cursor <> 0
 
         Return ""
     End Function
@@ -2565,17 +2413,17 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Dim xdoc As New XmlDocument
         Try
-            xdoc.LoadXml(content)
-
-            TabInformations.GetInstance().SubscribableLists.Add(New ListElement(xdoc.DocumentElement, Me))
+            Dim le = CreateDataFromJson(Of TwitterDataModel.ListElementData)(content)
+            TabInformations.GetInstance().SubscribableLists.Add(New ListElement(le, Me))
+            Return ""
+        Catch ex As SerializationException
+            TraceOut(ex.Message + Environment.NewLine + content)
+            Return "Err:Json Parse Error(DataContractJsonSerializer)"
         Catch ex As Exception
             TraceOut(content)
-            Return "Invalid XML!"
+            Return "Err:Invalid Json!"
         End Try
-
-        Return ""
     End Function
 
     Public Function ContainsUserAtList(ByVal list_name As String, ByVal user As String, ByRef value As Boolean) As String
@@ -2607,16 +2455,14 @@ Public Class Twitter
                 Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
         End Select
 
-        Dim xdoc As New XmlDocument
         Try
-            xdoc.LoadXml(content)
-            value = xdoc.DocumentElement.Name = "user"
+            Dim u = CreateDataFromJson(Of TwitterDataModel.User)(content)
+            value = True
+            Return ""
         Catch ex As Exception
-            TraceOut(content)
-            Return "Invalid XML!"
+            value = False
+            Return ""
         End Try
-
-        Return ""
     End Function
 
     Public Function AddUserToList(ByVal list_name As String, ByVal user As String) As String
@@ -2628,6 +2474,18 @@ Public Class Twitter
         Catch ex As Exception
             Return "Err:" + ex.Message + "(" + GetCurrentMethod.Name + ")"
         End Try
+
+        Select Case res
+            Case HttpStatusCode.OK
+                Twitter.AccountState = ACCOUNT_STATE.Valid
+            Case HttpStatusCode.Unauthorized
+                Twitter.AccountState = ACCOUNT_STATE.Invalid
+                Return "Check your Username/Password."
+            Case HttpStatusCode.BadRequest
+                Return "Err:API Limits?"
+            Case Else
+                Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
+        End Select
 
         Return ""
     End Function
@@ -2641,6 +2499,18 @@ Public Class Twitter
         Catch ex As Exception
             Return "Err:" + ex.Message + "(" + GetCurrentMethod.Name + ")"
         End Try
+
+        Select Case res
+            Case HttpStatusCode.OK
+                Twitter.AccountState = ACCOUNT_STATE.Valid
+            Case HttpStatusCode.Unauthorized
+                Twitter.AccountState = ACCOUNT_STATE.Invalid
+                Return "Check your Username/Password."
+            Case HttpStatusCode.BadRequest
+                Return "Err:API Limits?"
+            Case Else
+                Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
+        End Select
 
         Return ""
     End Function
@@ -2791,15 +2661,13 @@ Public Class Twitter
 
         If res <> HttpStatusCode.OK Then Return False
 
-        Dim xdoc As New XmlDocument
         Try
-            xdoc.LoadXml(content)
+            Dim limit = CreateDataFromJson(Of TwitterDataModel.RateLimitStatus)(content)
             Dim arg As New ApiInformationChangedEventArgs
-
-            arg.ApiInfo.MaxCount = Integer.Parse(xdoc.SelectSingleNode("/hash/hourly-limit").InnerText)
-            arg.ApiInfo.RemainCount = Integer.Parse(xdoc.SelectSingleNode("/hash/remaining-hits").InnerText)
-            arg.ApiInfo.ResetTime = DateTime.Parse(xdoc.SelectSingleNode("/hash/reset-time").InnerText)
-            arg.ApiInfo.ResetTimeInSeconds = Integer.Parse(xdoc.SelectSingleNode("/hash/reset-time-in-seconds").InnerText)
+            arg.ApiInfo.MaxCount = limit.HourlyLimit
+            arg.ApiInfo.RemainCount = limit.RemainingHits
+            arg.ApiInfo.ResetTime = DateTimeParse(limit.RestTime)
+            arg.ApiInfo.ResetTimeInSeconds = limit.RestTimeInSeconds
             If info IsNot Nothing Then
                 arg.ApiInfo.UsingCount = info.UsingCount
 
@@ -2813,6 +2681,7 @@ Public Class Twitter
             TwitterApiInfo.WriteBackEventArgs(arg)
             Return True
         Catch ex As Exception
+            TraceOut(content)
             TwitterApiInfo.Initialize()
             Return False
         End Try
@@ -2864,7 +2733,7 @@ Public Class Twitter
         Public Property [Event] As String
         Public Property Username As String
         Public Property Target As String
-
+        Public Property Id As Int64
     End Class
 
     Public Property StoredEvent As New List(Of FormattedEvent)
@@ -2899,12 +2768,17 @@ Public Class Twitter
                 Debug.Print("delete")
                 Dim post As PostClass = Nothing
                 Dim id As Int64
-                If xElm.Element("delete").Element("direct_message") IsNot Nothing Then
+                If xElm.Element("delete").Element("direct_message") IsNot Nothing AndAlso
+                    xElm.Element("delete").Element("direct_message").Element("id") IsNot Nothing Then
                     id = CLng(xElm.Element("delete").Element("direct_message").Element("id").Value)
                     RaiseEvent PostDeleted(id, post)
-                Else
+                ElseIf xElm.Element("delete").Element("status") IsNot Nothing AndAlso
+                    xElm.Element("delete").Element("status").Element("id") IsNot Nothing Then
                     id = CLng(xElm.Element("delete").Element("status").Element("id").Value)
                     RaiseEvent PostDeleted(id, post)
+                Else
+                    TraceOut("delete:" + line)
+                    Exit Sub
                 End If
                 CreateDeleteEvent(DateTime.Now, id, post)
                 Exit Sub
@@ -2918,6 +2792,13 @@ Public Class Twitter
             ElseIf xElm.Element("direct_message") IsNot Nothing Then
                 Debug.Print("direct_message")
                 isDm = True
+            ElseIf xElm.Element("scrub_geo") IsNot Nothing Then
+                Try
+                    Debug.Print("scrub_geo: user_id=" + xElm.Element("user_id").Value.ToString + " up_to_status_id=" + xElm.Element("up_to_status_id").Value.ToString)
+                Catch ex As Exception
+                    TraceOut("scrub_geo:" + line)
+                End Try
+                Exit Sub
             End If
         End Using
 
@@ -2959,6 +2840,8 @@ Public Class Twitter
         Else
             If post.IsDm Then
                 evt.Event = "DELETE(DM)"
+            ElseIf post.RetweetedId > 0 Then
+                evt.Event = "DELETE(RT)"
             Else
                 evt.Event = "DELETE(Post)"
             End If
@@ -2993,6 +2876,31 @@ Public Class Twitter
                 evt.Target = ""
             Case "favorite", "unfavorite"
                 evt.Target = eventData.TargetObject.Text
+                evt.Id = eventData.TargetObject.Id
+                If TabInformations.GetInstance.ContainsKey(eventData.TargetObject.Id) Then
+                    Dim post As PostClass = TabInformations.GetInstance.Item(eventData.TargetObject.Id)
+                    If eventData.Event = "favorite" Then
+                        If evt.Username.ToLower.Equals(_uid) Then
+                            post.IsFav = True
+                            TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Add(post.Id, post.IsRead, False)
+                        Else
+                            post.FavoritedCount += 1
+                            If Not TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Contains(post.Id) Then
+                                post.IsRead = False
+                                TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).Add(post.Id, post.IsRead, False)
+                            Else
+                                TabInformations.GetInstance.SetRead(False, TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).TabName, TabInformations.GetInstance.GetTabByType(TabUsageType.Favorites).IndexOf(post.Id))
+                            End If
+                        End If
+                    Else
+                        If evt.Username.ToLower.Equals(_uid) Then
+                            post.IsFav = False
+                        Else
+                            post.FavoritedCount -= 1
+                            If post.FavoritedCount < 0 Then post.FavoritedCount = 0
+                        End If
+                    End If
+                End If
             Case "list_member_added", "list_member_removed"
                 evt.Target = eventData.TargetObject.Name
             Case "block"

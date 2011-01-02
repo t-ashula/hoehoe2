@@ -11,6 +11,7 @@ Public Class AppendSettingDialog
     Private _MyDMPeriod As Integer
     Private _MyPubSearchPeriod As Integer
     Private _MyListsPeriod As Integer
+    Private _MyUserTimelinePeriod As Integer
     Private _MyLogDays As Integer
     Private _MyLogUnit As LogUnitEnum
     Private _MyReaded As Boolean
@@ -102,50 +103,39 @@ Public Class AppendSettingDialog
     Private _MyUseAdditonalCount As Boolean
     Private _SearchCountApi As Integer
     Private _FavoritesCountApi As Integer
+    Private _UserTimelineCountApi As Integer
     Private _MyRetweetNoConfirm As Boolean
     Private _MyUserstreamStartup As Boolean
     Private _MyUserstreamPeriod As Integer
 
     Private _ValidationError As Boolean = False
-
+    Private FirstExpandNode As Boolean = True
     Private _curPanel As Panel = Nothing
-    Private Sub TreeView1_AfterSelect(ByVal sender As System.Object, ByVal e As System.Windows.Forms.TreeViewEventArgs) Handles TreeView1.AfterSelect
-        Dim NodeName As String = TreeView1.SelectedNode.Name
+
+    Private Sub TreeView1_BeforeSelect(ByVal sender As Object, ByVal e As System.Windows.Forms.TreeViewCancelEventArgs) Handles TreeView1.BeforeSelect
         If _curPanel IsNot Nothing Then
             _curPanel.Enabled = False
             _curPanel.Visible = False
             _curPanel = Nothing
         End If
-        Select Case NodeName
-            Case "BasedNode"
-                _curPanel = BasedPanel
-            Case "PeriodNode"
-                _curPanel = GetPeriodPanel
-            Case "StartUpNode"
-                _curPanel = StartupPanel
-            Case "GetCountNode"
-                _curPanel = GetCountPanel
-            Case "UserStreamNode"
-                _curPanel = UserStreamPanel
-            Case "ActionNode"
-                _curPanel = ActionPanel
-            Case "TweetActNode"
-                _curPanel = TweetActPanel
-            Case "PreviewNode"
-                _curPanel = PreviewPanel
-            Case "TweetPrvNode"
-                _curPanel = TweetPrvPanel
-            Case "FontNode"
-                _curPanel = FontPanel
-            Case "FontNode2"
-                _curPanel = FontPanel2
-            Case "ConnectionNode"
-                _curPanel = ConnectionPanel
-            Case "ProxyNode"
-                _curPanel = ProxyPanel
-        End Select
-        _curPanel.Enabled = True
-        _curPanel.Visible = True
+        If Me.TreeView1.SelectedNode Is Nothing Then Exit Sub
+        Dim pnl = DirectCast(Me.TreeView1.SelectedNode.Tag, Panel)
+        If pnl Is Nothing Then Exit Sub
+        pnl.Enabled = False
+        pnl.Visible = False
+    End Sub
+
+    Private Sub TreeView1_AfterSelect(ByVal sender As System.Object, ByVal e As System.Windows.Forms.TreeViewEventArgs) Handles TreeView1.AfterSelect
+        If e.Node Is Nothing Then Exit Sub
+        If FirstExpandNode Then
+            FirstExpandNode = False
+        Else
+            e.Node.Expand()
+        End If
+        Dim pnl = DirectCast(e.Node.Tag, Panel)
+        If pnl Is Nothing Then Exit Sub
+        pnl.Enabled = True
+        pnl.Visible = True
     End Sub
 
     Private Sub Save_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Save.Click
@@ -164,6 +154,12 @@ Public Class AppendSettingDialog
         Else
             _ValidationError = False
         End If
+        If Me.Username.Focused OrElse Me.Password.Focused Then
+            If Not Authorize() Then
+                _ValidationError = True
+                Exit Sub
+            End If
+        End If
         Try
             _MyUserstreamPeriod = CType(Me.UserstreamPeriod.Text, Integer)
             _MyUserstreamStartup = Me.StartupUserstreamCheck.Checked
@@ -173,6 +169,7 @@ Public Class AppendSettingDialog
             _MyPubSearchPeriod = CType(PubSearchPeriod.Text, Integer)
             _MyListsPeriod = CType(ListsPeriod.Text, Integer)
             _MyReplyPeriod = CType(ReplyPeriod.Text, Integer)
+            _MyUserTimelinePeriod = CType(UserTimelinePeriod.Text, Integer)
             _MyMaxPostNum = 125
 
             _MyReaded = StartupReaded.Checked
@@ -224,16 +221,17 @@ Public Class AppendSettingDialog
             End Select
             '_MyPostCtrlEnter = CheckPostCtrlEnter.Checked
             '_MyPostShiftEnter = CheckPostShiftEnter.Checked
-            If ComboBoxPostKeySelect.SelectedIndex = 2 Then
-                _MyPostShiftEnter = True
-                _MyPostCtrlEnter = False
-            ElseIf ComboBoxPostKeySelect.SelectedIndex = 1 Then
-                _MyPostCtrlEnter = True
-                _MyPostShiftEnter = False
-            Else
-                _MyPostCtrlEnter = False
-                _MyPostShiftEnter = False
-            End If
+            Select Case ComboBoxPostKeySelect.SelectedIndex
+                Case 2
+                    _MyPostShiftEnter = True
+                    _MyPostCtrlEnter = False
+                Case 1
+                    _MyPostCtrlEnter = True
+                    _MyPostShiftEnter = False
+                Case 0
+                    _MyPostCtrlEnter = False
+                    _MyPostShiftEnter = False
+            End Select
             _usePostMethod = False
             _countApi = CType(TextCountApi.Text, Integer)
             _countApiReply = CType(TextCountApiReply.Text, Integer)
@@ -348,6 +346,7 @@ Public Class AppendSettingDialog
             _FirstCountApi = CType(FirstTextCountApi.Text, Integer)
             _SearchCountApi = CType(SearchTextCountApi.Text, Integer)
             _FavoritesCountApi = CType(FavoritesTextCountApi.Text, Integer)
+            _UserTimelineCountApi = CType(UserTimelineTextCountApi.Text, Integer)
         Catch ex As Exception
             MessageBox.Show(My.Resources.Save_ClickText3)
             Me.DialogResult = Windows.Forms.DialogResult.Cancel
@@ -356,6 +355,7 @@ Public Class AppendSettingDialog
     End Sub
 
     Private Sub Setting_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        If TreeView1.SelectedNode IsNot Nothing Then _curPanel = CType(TreeView1.SelectedNode.Tag, Panel)
         If tw IsNot Nothing AndAlso tw.Username = "" AndAlso e.CloseReason = CloseReason.None Then
             If MessageBox.Show(My.Resources.Setting_FormClosing1, "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Cancel Then
                 e.Cancel = True
@@ -408,6 +408,7 @@ Public Class AppendSettingDialog
         DMPeriod.Text = _MyDMPeriod.ToString()
         PubSearchPeriod.Text = _MyPubSearchPeriod.ToString()
         ListsPeriod.Text = _MyListsPeriod.ToString()
+        UserTimelinePeriod.Text = _MyUserTimelinePeriod.ToString
 
         StartupReaded.Checked = _MyReaded
         Select Case _MyIconSize
@@ -465,12 +466,10 @@ Public Class AppendSettingDialog
 
         If _MyPostCtrlEnter Then
             ComboBoxPostKeySelect.SelectedIndex = 1
+        ElseIf _MyPostShiftEnter Then
+            ComboBoxPostKeySelect.SelectedIndex = 2
         Else
-            If _MyPostShiftEnter Then
-                ComboBoxPostKeySelect.SelectedIndex = 2
-            Else
-                ComboBoxPostKeySelect.SelectedIndex = 0
-            End If
+            ComboBoxPostKeySelect.SelectedIndex = 0
         End If
 
         TextCountApi.Text = _countApi.ToString
@@ -601,24 +600,53 @@ Public Class AppendSettingDialog
         HotkeyCode.Enabled = HotkeyEnabled
         ChkNewMentionsBlink.Checked = _BlinkNewMentions
 
-        TreeView1.SelectedNode = TreeView1.Nodes(0)
-        ActiveControl = Username
-
         CheckOutputz_CheckedChanged(sender, e)
 
         GetMoreTextCountApi.Text = _MoreCountApi.ToString
         FirstTextCountApi.Text = _FirstCountApi.ToString
         SearchTextCountApi.Text = _SearchCountApi.ToString
         FavoritesTextCountApi.Text = _FavoritesCountApi.ToString
+        UserTimelineTextCountApi.Text = _UserTimelineCountApi.ToString
         UseChangeGetCount.Checked = _MyUseAdditonalCount
         Label28.Enabled = UseChangeGetCount.Checked
         Label30.Enabled = UseChangeGetCount.Checked
         Label53.Enabled = UseChangeGetCount.Checked
         Label66.Enabled = UseChangeGetCount.Checked
+        Label17.Enabled = UseChangeGetCount.Checked
         GetMoreTextCountApi.Enabled = UseChangeGetCount.Checked
         FirstTextCountApi.Enabled = UseChangeGetCount.Checked
         SearchTextCountApi.Enabled = UseChangeGetCount.Checked
         FavoritesTextCountApi.Enabled = UseChangeGetCount.Checked
+        UserTimelineTextCountApi.Enabled = UseChangeGetCount.Checked
+
+        With Me.TreeView1
+            .Nodes("BasedNode").Tag = BasedPanel
+            .Nodes("BasedNode").Nodes("PeriodNode").Tag = GetPeriodPanel
+            .Nodes("BasedNode").Nodes("StartUpNode").Tag = StartupPanel
+            .Nodes("BasedNode").Nodes("GetCountNode").Tag = GetCountPanel
+            .Nodes("BasedNode").Nodes("UserStreamNode").Tag = UserStreamPanel
+            .Nodes("ActionNode").Tag = ActionPanel
+            .Nodes("ActionNode").Nodes("TweetActNode").Tag = TweetActPanel
+            .Nodes("PreviewNode").Tag = PreviewPanel
+            .Nodes("PreviewNode").Nodes("TweetPrvNode").Tag = TweetPrvPanel
+            .Nodes("FontNode").Tag = FontPanel
+            .Nodes("FontNode").Nodes("FontNode2").Tag = FontPanel2
+            .Nodes("ConnectionNode").Tag = ConnectionPanel
+            .Nodes("ConnectionNode").Nodes("ProxyNode").Tag = ProxyPanel
+            .Nodes("ConnectionNode").Nodes("CooperateNode").Tag = CooperatePanel
+            .Nodes("ConnectionNode").Nodes("ShortUrlNode").Tag = ShortUrlPanel
+
+            .SelectedNode = .Nodes(0)
+        End With
+        If _curPanel IsNot Nothing Then
+            _curPanel.Enabled = False
+            _curPanel.Visible = False
+        End If
+        _curPanel = BasedPanel
+        _curPanel.Enabled = True
+        _curPanel.Visible = True
+        TreeView1.SelectedNode = Nothing
+        ActiveControl = Username
     End Sub
 
     Private Sub UserstreamPeriod_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles UserstreamPeriod.Validating
@@ -727,6 +755,24 @@ Public Class AppendSettingDialog
         CalcApiUsing()
     End Sub
 
+    Private Sub UserTimeline_Validating(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles UserTimelinePeriod.Validating
+        Dim prd As Integer
+        Try
+            prd = CType(UserTimelinePeriod.Text, Integer)
+        Catch ex As Exception
+            MessageBox.Show(My.Resources.DMPeriod_ValidatingText1)
+            e.Cancel = True
+            Exit Sub
+        End Try
+
+        If prd <> 0 AndAlso (prd < 15 OrElse prd > 6000) Then
+            MessageBox.Show(My.Resources.DMPeriod_ValidatingText2)
+            e.Cancel = True
+            Exit Sub
+        End If
+        CalcApiUsing()
+    End Sub
+
     Private Sub UReadMng_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UReadMng.CheckedChanged
         If UReadMng.Checked = True Then
             StartupReaded.Enabled = True
@@ -735,7 +781,7 @@ Public Class AppendSettingDialog
         End If
     End Sub
 
-    Private Sub btnFontAndColor_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnInputFont.Click
+    Private Sub btnFontAndColor_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnUnread.Click, btnDetail.Click, btnListFont.Click, btnInputFont.Click
         Dim Btn As Button = CType(sender, Button)
         Dim rtn As DialogResult
 
@@ -923,6 +969,15 @@ Public Class AppendSettingDialog
         End Get
         Set(ByVal value As Integer)
             _MyListsPeriod = value
+        End Set
+    End Property
+
+    Public Property UserTimelinePeriodInt() As Integer
+        Get
+            Return _MyUserTimelinePeriod
+        End Get
+        Set(ByVal value As Integer)
+            _MyUserTimelinePeriod = value
         End Set
     End Property
 
@@ -1250,6 +1305,15 @@ Public Class AppendSettingDialog
         End Get
         Set(ByVal value As Integer)
             _FavoritesCountApi = value
+        End Set
+    End Property
+
+    Public Property UserTimelineCountApi() As Integer
+        Get
+            Return _UserTimelineCountApi
+        End Get
+        Set(ByVal value As Integer)
+            _UserTimelineCountApi = value
         End Set
     End Property
 
@@ -1902,12 +1966,12 @@ Public Class AppendSettingDialog
         lblRetweet.ForeColor = Color.FromKnownColor(System.Drawing.KnownColor.Green)
     End Sub
 
-    Private Sub AuthorizeButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AuthorizeButton.Click
+    Private Function Authorize() As Boolean
         Dim user As String = Me.Username.Text.Trim
         Dim pwd As String = Me.Password.Text.Trim
         If String.IsNullOrEmpty(user) OrElse String.IsNullOrEmpty(pwd) Then
             MessageBox.Show(My.Resources.Save_ClickText1)
-            Exit Sub
+            Return False
         End If
 
         '現在の設定内容で通信
@@ -1938,12 +2002,17 @@ Public Class AppendSettingDialog
             MessageBox.Show(My.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK)
             Me.AuthStateLabel.Text = My.Resources.AuthorizeButton_Click3
             Me.AuthUserLabel.Text = tw.Username
+            Return True
         Else
             MessageBox.Show(My.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK)
             Me.AuthStateLabel.Text = My.Resources.AuthorizeButton_Click4
             Me.AuthUserLabel.Text = ""
+            Return False
         End If
-        CalcApiUsing()
+    End Function
+
+    Private Sub AuthorizeButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AuthorizeButton.Click
+        If Authorize() Then CalcApiUsing()
     End Sub
 
     Private Sub AuthClearButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AuthClearButton.Click
@@ -1984,10 +2053,18 @@ Public Class AppendSettingDialog
         Dim UsingApi As Integer = 0
         Dim tmp As Integer
         Dim ListsTabNum As Integer = 0
+        Dim UserTimelineTabNum As Integer = 0
 
         Try
             ' 初回起動時などにNothingの場合あり
             ListsTabNum = TabInformations.GetInstance.GetTabsByType(TabUsageType.Lists).Count
+        Catch ex As Exception
+            Exit Sub
+        End Try
+
+        Try
+            ' 初回起動時などにNothingの場合あり
+            UserTimelineTabNum = TabInformations.GetInstance.GetTabsByType(TabUsageType.UserTimeline).Count
         Catch ex As Exception
             Exit Sub
         End Try
@@ -2017,6 +2094,13 @@ Public Class AppendSettingDialog
         If Integer.TryParse(ListsPeriod.Text, tmp) Then
             If tmp <> 0 Then
                 UsingApi += (3600 \ tmp) * ListsTabNum
+            End If
+        End If
+
+        ' Listsタブ計算 0は手動更新
+        If Integer.TryParse(UserTimelinePeriod.Text, tmp) Then
+            If tmp <> 0 Then
+                UsingApi += (3600 \ tmp) * UserTimelineTabNum
             End If
         End If
 
@@ -2153,8 +2237,10 @@ Public Class AppendSettingDialog
         Label30.Enabled = UseChangeGetCount.Checked
         Label53.Enabled = UseChangeGetCount.Checked
         Label66.Enabled = UseChangeGetCount.Checked
+        Label17.Enabled = UseChangeGetCount.Checked
         SearchTextCountApi.Enabled = UseChangeGetCount.Checked
         FavoritesTextCountApi.Enabled = UseChangeGetCount.Checked
+        UserTimelineTextCountApi.Enabled = UseChangeGetCount.Checked
     End Sub
 
     Private Sub FirstTextCountApi_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles FirstTextCountApi.Validating
@@ -2199,6 +2285,23 @@ Public Class AppendSettingDialog
         Dim cnt As Integer
         Try
             cnt = Integer.Parse(FavoritesTextCountApi.Text)
+        Catch ex As Exception
+            MessageBox.Show(My.Resources.TextCountApi_Validating1)
+            e.Cancel = True
+            Exit Sub
+        End Try
+
+        If Not cnt = 0 AndAlso (cnt < 20 OrElse cnt > 200) Then
+            MessageBox.Show(My.Resources.TextCountApi_Validating1)
+            e.Cancel = True
+            Exit Sub
+        End If
+    End Sub
+
+    Private Sub UserTimelineTextCountApi_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles UserTimelineTextCountApi.Validating
+        Dim cnt As Integer
+        Try
+            cnt = Integer.Parse(UserTimelineTextCountApi.Text)
         Catch ex As Exception
             MessageBox.Show(My.Resources.TextCountApi_Validating1)
             e.Cancel = True

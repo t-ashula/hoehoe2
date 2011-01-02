@@ -57,6 +57,7 @@ Public NotInheritable Class PostClass
     Private _RetweetedBy As String = ""
     Private _RetweetedId As Long = 0
     Private _searchTabName As String = ""
+    Private _isDeleted As Boolean = False
 
     <FlagsAttribute()> _
     Private Enum Statuses
@@ -357,6 +358,21 @@ Public NotInheritable Class PostClass
             _searchTabName = value
         End Set
     End Property
+    Public Property IsDeleted As Boolean
+        Get
+            Return _isDeleted
+        End Get
+        Set(ByVal value As Boolean)
+            If value Then
+                Me.InReplyToId = 0
+                Me.InReplyToUser = ""
+                Me.IsReply = False
+                Me.ReplyToList = New List(Of String)
+            End If
+            _isDeleted = value
+        End Set
+    End Property
+    Public Property FavoritedCount As Integer
 
     Public Function Copy() As PostClass
         Dim post As PostClass = DirectCast(Me.Clone, PostClass)
@@ -377,7 +393,7 @@ Public NotInheritable Class TabInformations
     Private _tabs As New Dictionary(Of String, TabClass)
     Private _statuses As New Dictionary(Of Long, PostClass)
     Private _addedIds As List(Of Long)
-    Private _deletedIds As New List(Of Long)
+    'Private _deletedIds As New List(Of Long)
     Private _retweets As New Dictionary(Of Long, PostClass)
     Private _removedTab As TabClass = Nothing
 
@@ -614,7 +630,8 @@ Public NotInheritable Class TabInformations
             post = Nothing
             Dim tmp As PostClass = Me.Item(id)
             If tmp IsNot Nothing Then post = tmp.Copy
-            Me._deletedIds.Add(id)
+            'Me._deletedIds.Add(id)
+            Me.DeletePost(id)
         End SyncLock
     End Sub
 
@@ -653,7 +670,23 @@ Public NotInheritable Class TabInformations
         End SyncLock
     End Sub
 
-    Public Function GetOldestUnreadId(ByVal TabName As String) As Integer
+    Private Sub DeletePost(ByVal Id As Long)
+        SyncLock LockObj
+            Dim post As PostClass = Nothing
+            If _statuses.ContainsKey(Id) Then
+                post = _statuses(Id)
+                post.IsDeleted = True
+            End If
+            For Each tb As TabClass In Me.GetTabsInnerStorageType
+                If tb.Contains(Id) Then
+                    post = tb.Posts(Id)
+                    post.IsDeleted = True
+                End If
+            Next
+        End SyncLock
+    End Sub
+
+    Public Function GetOldestUnreadIndex(ByVal TabName As String) As Integer
         Dim tb As TabClass = _tabs(TabName)
         If tb.OldestUnreadId > -1 AndAlso _
            tb.Contains(tb.OldestUnreadId) AndAlso _
@@ -818,12 +851,12 @@ Public NotInheritable Class TabInformations
             If Not isUserStream OrElse Me.SortMode <> IdComparerClass.ComparerMode.Id Then
                 Me.SortPosts()
             End If
-            If isUserStream Then
-                For Each id As Long In Me._deletedIds
-                    Me.RemovePost(id)
-                Next
-                Me._deletedIds.Clear()
-            End If
+            'If isUserStream Then
+            '    For Each id As Long In Me._deletedIds
+            '        Me.DeletePost(id)
+            '    Next
+            '    Me._deletedIds.Clear()
+            'End If
 
             soundFile = _soundFile
             _soundFile = ""
@@ -924,11 +957,16 @@ Public NotInheritable Class TabInformations
                 If Not Item.IsDm Then
                     If _statuses.ContainsKey(Item.Id) Then
                         If Item.IsFav Then
-                            _statuses.Item(Item.Id).IsFav = True
+                            If Item.RetweetedId = 0 Then
+                                _statuses.Item(Item.Id).IsFav = True
+                            Else
+                                Item.IsFav = False
+                            End If
                         Else
                             Exit Sub        '追加済みなら何もしない
                         End If
                     Else
+                        If Item.IsFav AndAlso Item.RetweetedId > 0 Then Item.IsFav = False
                         _statuses.Add(Item.Id, Item)
                     End If
                     If Item.RetweetedId > 0 Then
@@ -1521,23 +1559,16 @@ End Class
 <Serializable()> _
 Public NotInheritable Class TabClass
     Private _unreadManage As Boolean = False
-    Private _notify As Boolean = False
-    Private _soundFile As String = ""
     Private _filters As List(Of FiltersClass)
-    Private _oldestUnreadItem As Long = -1     'ID
     Private _unreadCount As Integer = 0
     Private _ids As List(Of Long)
-    Private _filterMod As Boolean = False
     Private _tmpIds As New List(Of TemporaryId)
-    Private _tabName As String = ""
     Private _tabType As TabUsageType = TabUsageType.Undefined
-    Private _posts As New Dictionary(Of Long, PostClass)
     Private _sorter As New IdComparerClass
-    Private _oldestId As Long = Long.MaxValue   '古いポスト取得用
-    Private _sinceId As Long = 0
-    Private _relationTargetPost As PostClass = Nothing
 
     Private ReadOnly _lockObj As New Object
+
+    Public Property User As String
 
 #Region "検索"
     'Search query
@@ -1607,54 +1638,21 @@ Public NotInheritable Class TabClass
 
     <Xml.Serialization.XmlIgnore()> _
     Public Property RelationTargetPost() As PostClass
-        Get
-            Return _relationTargetPost
-        End Get
-        Set(ByVal value As PostClass)
-            _relationTargetPost = value
-        End Set
-    End Property
 
     <Xml.Serialization.XmlIgnore()> _
-    Public Property OldestId() As Long
-        Get
-            Return _oldestId
-        End Get
-        Set(ByVal value As Long)
-            _oldestId = value
-        End Set
-    End Property
+    Public Property OldestId() As Long = Long.MaxValue
 
     <Xml.Serialization.XmlIgnore()> _
     Public Property SinceId() As Long
-        Get
-            Return _sinceId
-        End Get
-        Set(ByVal value As Long)
-            _sinceId = value
-        End Set
-    End Property
 
     <Xml.Serialization.XmlIgnore()> _
-    Public Property Posts() As Dictionary(Of Long, PostClass)
-        Get
-            Return _posts
-        End Get
-        Set(ByVal value As Dictionary(Of Long, PostClass))
-            _posts = value
-        End Set
-    End Property
-
-    'Public Function SearchedPost(ByVal Id As Long) As PostClass
-    '    If Not _posts.ContainsKey(Id) Then Return Nothing
-    '    Return _posts(Id)
-    'End Function
+    Public Property Posts() As New Dictionary(Of Long, PostClass)
 
     Public Function GetTemporaryPosts() As PostClass()
         Dim tempPosts As New List(Of PostClass)
         If _tmpIds.Count = 0 Then Return tempPosts.ToArray
         For Each tempId As TemporaryId In _tmpIds
-            tempPosts.Add(_posts(tempId.Id))
+            tempPosts.Add(_Posts(tempId.Id))
         Next
         Return tempPosts.ToArray
     End Function
@@ -1679,7 +1677,7 @@ Public NotInheritable Class TabClass
         _soundFile = ""
         _unreadManage = True
         _ids = New List(Of Long)
-        _oldestUnreadItem = -1
+        Me.OldestUnreadId = -1
         _tabType = TabUsageType.Undefined
         _listInfo = Nothing
     End Sub
@@ -1691,7 +1689,7 @@ Public NotInheritable Class TabClass
         _soundFile = ""
         _unreadManage = True
         _ids = New List(Of Long)
-        _oldestUnreadItem = -1
+        Me.OldestUnreadId = -1
         _tabType = TabType
         Me.ListInfo = list
         If Me.IsInnerStorageTabType Then
@@ -1727,10 +1725,10 @@ Public NotInheritable Class TabClass
 
         If Not Read AndAlso Me._unreadManage Then
             Me._unreadCount += 1
-            If Me._oldestUnreadItem = -1 Then
-                Me._oldestUnreadItem = ID
+            If Me.OldestUnreadId = -1 Then
+                Me.OldestUnreadId = ID
             Else
-                If ID < Me._oldestUnreadItem Then Me._oldestUnreadItem = ID
+                If ID < Me.OldestUnreadId Then Me.OldestUnreadId = ID
             End If
         End If
     End Sub
@@ -1806,7 +1804,7 @@ Public NotInheritable Class TabClass
 
         If Not Read AndAlso Me._unreadManage Then
             Me._unreadCount -= 1
-            Me._oldestUnreadItem = -1
+            Me.OldestUnreadId = -1
         End If
 
         Me._ids.Remove(Id)
@@ -1820,39 +1818,18 @@ Public NotInheritable Class TabClass
         Set(ByVal value As Boolean)
             Me._unreadManage = value
             If Not value Then
-                Me._oldestUnreadItem = -1
+                Me.OldestUnreadId = -1
                 Me._unreadCount = 0
             End If
         End Set
     End Property
 
     Public Property Notify() As Boolean
-        Get
-            Return _notify
-        End Get
-        Set(ByVal value As Boolean)
-            _notify = value
-        End Set
-    End Property
 
-    Public Property SoundFile() As String
-        Get
-            Return _soundFile
-        End Get
-        Set(ByVal value As String)
-            _soundFile = value
-        End Set
-    End Property
+    Public Property SoundFile() As String = ""
 
     <Xml.Serialization.XmlIgnore()> _
-    Public Property OldestUnreadId() As Long
-        Get
-            Return _oldestUnreadItem
-        End Get
-        Set(ByVal value As Long)
-            _oldestUnreadItem = value
-        End Set
-    End Property
+    Public Property OldestUnreadId() As Long = -1
 
     <Xml.Serialization.XmlIgnore()> _
     Public Property UnreadCount() As Integer
@@ -1880,7 +1857,7 @@ Public NotInheritable Class TabClass
     Public Sub RemoveFilter(ByVal filter As FiltersClass)
         SyncLock Me._lockObj
             _filters.Remove(filter)
-            _filterMod = True
+            Me.FilterModified = True
         End SyncLock
     End Sub
 
@@ -1888,7 +1865,7 @@ Public NotInheritable Class TabClass
         SyncLock Me._lockObj
             If _filters.Contains(filter) Then Return False
             _filters.Add(filter)
-            _filterMod = True
+            Me.FilterModified = True
             Return True
         End SyncLock
     End Function
@@ -1912,7 +1889,7 @@ Public NotInheritable Class TabClass
         original.ExSource = modified.ExSource
         original.MoveFrom = modified.MoveFrom
         original.SetMark = modified.SetMark
-        _filterMod = True
+        Me.FilterModified = True
     End Sub
 
     <Xml.Serialization.XmlIgnore()> _
@@ -1951,7 +1928,7 @@ Public NotInheritable Class TabClass
         _ids.Clear()
         _tmpIds.Clear()
         _unreadCount = 0
-        _oldestUnreadItem = -1
+        Me.OldestUnreadId = -1
         If _posts IsNot Nothing Then
             _posts.Clear()
         End If
@@ -1967,26 +1944,12 @@ Public NotInheritable Class TabClass
 
     <Xml.Serialization.XmlIgnore()> _
     Public Property FilterModified() As Boolean
-        Get
-            Return _filterMod
-        End Get
-        Set(ByVal value As Boolean)
-            _filterMod = value
-        End Set
-    End Property
 
     Public Function BackupIds() As Long()
         Return _ids.ToArray()
     End Function
 
-    Public Property TabName() As String
-        Get
-            Return _tabName
-        End Get
-        Set(ByVal value As String)
-            _tabName = value
-        End Set
-    End Property
+    Public Property TabName() As String = ""
 
     Public Property TabType() As TabUsageType
         Get
@@ -2007,6 +1970,7 @@ Public NotInheritable Class TabClass
             If _tabType = TabUsageType.PublicSearch OrElse
                 _tabType = TabUsageType.DirectMessage OrElse
                 _tabType = TabUsageType.Lists OrElse
+                _tabType = TabUsageType.UserTimeline OrElse
                 _tabType = TabUsageType.Related Then
                 Return True
             Else

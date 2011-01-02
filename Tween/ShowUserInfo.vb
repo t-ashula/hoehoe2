@@ -338,7 +338,12 @@ Public Class ShowUserInfo
                 MyOwner.AddNewTabForSearch(hash)
                 Exit Sub
             Else
-                MyOwner.OpenUriAsync(e.Url.OriginalString)
+                Dim m As Match = Regex.Match(e.Url.AbsoluteUri, "^https?://twitter.com/(#!/)?(?<name>[a-zA-Z0-9_]+)$")
+                If m.Success AndAlso MyOwner.IsTwitterId(m.Result("${name}")) Then
+                    MyOwner.AddNewTabForUserTimeline(m.Result("${name}"))
+                Else
+                    MyOwner.OpenUriAsync(e.Url.OriginalString)
+                End If
             End If
         End If
     End Sub
@@ -398,7 +403,7 @@ Public Class ShowUserInfo
     End Sub
 
     Private Sub ButtonSearchPosts_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSearchPosts.Click
-        MyOwner.AddNewTabForSearch("from:" + _info.ScreenName)
+        MyOwner.AddNewTabForUserTimeline(_info.ScreenName)
     End Sub
 
     Private Sub UserPicture_DoubleClick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UserPicture.DoubleClick
