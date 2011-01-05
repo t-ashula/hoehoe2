@@ -1,7 +1,7 @@
 ﻿Imports System.Text.RegularExpressions
 
 Public Class PostView
-    Private Thumbnail As Thumbnail = New Thumbnail(Me)
+    Private Thumbnail As Thumbnail ' = New Thumbnail(Me)
 
     Private _post As PostClass
     Public Property Post As PostClass
@@ -62,6 +62,8 @@ Public Class PostView
             Else
                 UserPicture.Image = Nothing
             End If
+
+            Thumbnail.thumbnail(value.Id, Me.PostBrowser.Links)
         End Set
         Get
             Return Me._post

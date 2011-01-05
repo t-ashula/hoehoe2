@@ -28,7 +28,7 @@ Public Class PostBrowser
 
             Dim dTxt As String = createDetailHtml(If(value.IsDeleted, "(DELETED)", value.OriginalData))
 
-            If DumpPostClassToolStripMenuItem.Checked Then
+            If Me.IsDumpPostMode Then
                 Dim sb As New StringBuilder(512)
 
                 sb.Append("-----Start PostClass Dump<br>")
@@ -73,11 +73,11 @@ Public Class PostBrowser
                     If Me.WebBrowser1.DocumentText <> dTxt Then
                         Me.WebBrowser1.Visible = False
                         Me.WebBrowser1.DocumentText = dTxt
-                        Dim lnks As New List(Of String)
+
+                        Me.Links.Clear()
                         For Each lnk As Match In Regex.Matches(dTxt, "<a target=""_self"" href=""(?<url>http[^""]+)""", RegexOptions.IgnoreCase)
-                            lnks.Add(lnk.Result("${url}"))
+                            Me.Links.Add(lnk.Result("${url}"))
                         Next
-                        Thumbnail.thumbnail(value.Id, lnks)
                     End If
                 Catch ex As System.Runtime.InteropServices.COMException
                     '原因不明
@@ -87,6 +87,13 @@ Public Class PostBrowser
             End If
 
         End Set
+    End Property
+
+    Private _links As New List(Of String)
+    Public ReadOnly Property Links As List(Of String)
+        Get
+            Return Me._links
+        End Get
     End Property
 
     Private _isMonospace As Boolean
@@ -155,6 +162,8 @@ Public Class PostBrowser
             _linkColor = value
         End Set
     End Property
+
+    Public Property IsDumpPostMode As Boolean = False
 
     Public Function createDetailHtml(ByVal orgdata As String) As String
         Return Me.detailHtmlFormatHeader + orgdata + Me.detailHtmlFormatFooter
