@@ -23,10 +23,13 @@
 
 Imports System.Collections.Generic
 Imports System.Collections.ObjectModel
+Imports System.Linq.Expressions
 Imports Tween.TweenCustomControl
 Imports System.Text.RegularExpressions
 Imports System.Web.HttpUtility
 Imports System.Text
+Imports System.Linq
+Imports System.Linq.Expressions.DynamicExpression
 
 Public NotInheritable Class PostClass
     Implements ICloneable
@@ -2001,6 +2004,8 @@ Public NotInheritable Class FiltersClass
     Private _exSource As String = ""
     Private _moveFrom As Boolean = False
     Private _setMark As Boolean = True
+    Private _useLambda As Boolean = False
+    Private _exuseLambda As Boolean = False
 
     Public Sub New()
 
@@ -2044,6 +2049,9 @@ Public NotInheritable Class FiltersClass
             If _isRt Then
                 fs.Append("RT/")
             End If
+            If _useLambda Then
+                fs.Append("LambdaExp/")
+            End If
             If Not String.IsNullOrEmpty(_source) Then
                 fs.AppendFormat("Src…{0}/", _source)
             End If
@@ -2086,6 +2094,9 @@ Public NotInheritable Class FiltersClass
             End If
             If _isExRt Then
                 fs.Append("RT/")
+            End If
+            If _exuseLambda Then
+                fs.Append("LambdaExp/")
             End If
             If Not String.IsNullOrEmpty(_exSource) Then
                 fs.AppendFormat("Src…{0}/", _exSource)
@@ -2245,6 +2256,24 @@ Public NotInheritable Class FiltersClass
         End Set
     End Property
 
+    Public Property UseLambda() As Boolean
+        Get
+            Return _useLambda
+        End Get
+        Set(ByVal value As Boolean)
+            _useLambda = value
+        End Set
+    End Property
+
+    Public Property ExUseLambda() As Boolean
+        Get
+            Return _exuseLambda
+        End Get
+        Set(ByVal value As Boolean)
+            _exuseLambda = value
+        End Set
+    End Property
+
     Public Property UseRegex() As Boolean
         Get
             Return _useRegex
@@ -2303,6 +2332,14 @@ Public NotInheritable Class FiltersClass
         Return MakeSummary()
     End Function
 
+    Public Function ExecuteLambdaExpression(ByVal expr As String, ByVal post As PostClass) As Boolean
+        Dim dlg As [Delegate]
+        Dim exp As LambdaExpression
+        exp = ParseLambda(Of PostClass, Boolean)(expr, post)
+        dlg = exp.Compile()
+        Return DirectCast(dlg.DynamicInvoke(post), Boolean)
+    End Function
+
     Public Function IsHit(ByVal post As PostClass) As HITRESULT
         Dim bHit As Boolean = True
         Dim tBody As String
@@ -2339,6 +2376,8 @@ Public NotInheritable Class FiltersClass
                 For Each fs As String In _body
                     If _useRegex Then
                         If Not Regex.IsMatch(tBody, fs, rgOpt) Then bHit = False
+                    ElseIf _useLambda Then
+                        If Not ExecuteLambdaExpression(fs, post) Then bHit = False
                     Else
                         If _caseSensitive Then
                             If Not tBody.Contains(fs) Then bHit = False
@@ -2357,6 +2396,8 @@ Public NotInheritable Class FiltersClass
                     If Not (Regex.IsMatch(post.Name, fs, rgOpt) OrElse
                             (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) OrElse
                             Regex.IsMatch(tBody, fs, rgOpt)) Then bHit = False
+                ElseIf _useLambda Then
+                    If Not ExecuteLambdaExpression(fs, post) Then bHit = False
                 Else
                     If _caseSensitive Then
                         If Not (post.Name.Contains(fs) OrElse _
@@ -2416,6 +2457,8 @@ Public NotInheritable Class FiltersClass
                             For Each fs As String In _exbody
                                 If _exuseRegex Then
                                     If Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
+                                ElseIf _exuseLambda Then
+                                    If ExecuteLambdaExpression(fs, post) Then exFlag = True
                                 Else
                                     If _excaseSensitive Then
                                         If tBody.Contains(fs) Then exFlag = True
@@ -2435,6 +2478,8 @@ Public NotInheritable Class FiltersClass
                             If Regex.IsMatch(post.Name, fs, rgOpt) OrElse
                                (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) OrElse
                                Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
+                        ElseIf _exuseLambda Then
+                            If ExecuteLambdaExpression(fs, post) Then exFlag = True
                         Else
                             If _excaseSensitive Then
                                 If post.Name.Contains(fs) OrElse _

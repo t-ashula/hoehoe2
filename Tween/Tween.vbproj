@@ -142,6 +142,7 @@
     <Compile Include="DetailsListView.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Dynamic.vb" />
     <Compile Include="EventViewerDialog.Designer.vb">
       <DependentUpon>EventViewerDialog.vb</DependentUpon>
     </Compile>
