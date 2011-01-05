@@ -1,4 +1,7 @@
-﻿Public Class PostBrowser
+﻿Imports System.Text.RegularExpressions
+Imports System.Text
+
+Public Class PostBrowser
     Private Const detailHtmlFormatMono1 As String = "<html><head><style type=""text/css""><!-- pre {font-family: """
     Private Const detailHtmlFormat2 As String = """, sans-serif; font-size: "
     Private Const detailHtmlFormat3 As String = "pt; word-wrap: break-word; color:rgb("
@@ -19,6 +22,70 @@
         End Get
         Set(ByVal value As PostClass)
             Me._post = value
+
+
+            If value Is Nothing Then Exit Property
+
+            Dim dTxt As String = createDetailHtml(If(value.IsDeleted, "(DELETED)", value.OriginalData))
+
+            If DumpPostClassToolStripMenuItem.Checked Then
+                Dim sb As New StringBuilder(512)
+
+                sb.Append("-----Start PostClass Dump<br>")
+                sb.AppendFormat("Data           : {0}<br>", value.Data)
+                sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", value.Data)
+                sb.AppendFormat("Id             : {0}<br>", value.Id.ToString)
+                'sb.AppendFormat("ImageIndex     : {0}<br>", _curPost.ImageIndex.ToString)
+                sb.AppendFormat("ImageUrl       : {0}<br>", value.ImageUrl)
+                sb.AppendFormat("InReplyToId    : {0}<br>", value.InReplyToId.ToString)
+                sb.AppendFormat("InReplyToUser  : {0}<br>", value.InReplyToUser)
+                sb.AppendFormat("IsDM           : {0}<br>", value.IsDm.ToString)
+                sb.AppendFormat("IsFav          : {0}<br>", value.IsFav.ToString)
+                sb.AppendFormat("IsMark         : {0}<br>", value.IsMark.ToString)
+                sb.AppendFormat("IsMe           : {0}<br>", value.IsMe.ToString)
+                sb.AppendFormat("IsOwl          : {0}<br>", value.IsOwl.ToString)
+                sb.AppendFormat("IsProtect      : {0}<br>", value.IsProtect.ToString)
+                sb.AppendFormat("IsRead         : {0}<br>", value.IsRead.ToString)
+                sb.AppendFormat("IsReply        : {0}<br>", value.IsReply.ToString)
+
+                For Each nm As String In value.ReplyToList
+                    sb.AppendFormat("ReplyToList    : {0}<br>", nm)
+                Next
+
+                sb.AppendFormat("Name           : {0}<br>", value.Name)
+                sb.AppendFormat("NickName       : {0}<br>", value.Nickname)
+                sb.AppendFormat("OriginalData   : {0}<br>", value.OriginalData)
+                sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", value.OriginalData)
+                sb.AppendFormat("PDate          : {0}<br>", value.PDate.ToString)
+                sb.AppendFormat("Source         : {0}<br>", value.Source)
+                sb.AppendFormat("Uid            : {0}<br>", value.Uid)
+                sb.AppendFormat("FilterHit      : {0}<br>", value.FilterHit)
+                sb.AppendFormat("RetweetedBy    : {0}<br>", value.RetweetedBy)
+                sb.AppendFormat("RetweetedId    : {0}<br>", value.RetweetedId)
+                sb.AppendFormat("SearchTabName  : {0}<br>", value.RelTabName)
+                sb.Append("-----End PostClass Dump<br>")
+
+                Me.WebBrowser1.Visible = False
+                Me.WebBrowser1.DocumentText = detailHtmlFormatHeader + sb.ToString + detailHtmlFormatFooter
+                Me.WebBrowser1.Visible = True
+            Else
+                Try
+                    If Me.WebBrowser1.DocumentText <> dTxt Then
+                        Me.WebBrowser1.Visible = False
+                        Me.WebBrowser1.DocumentText = dTxt
+                        Dim lnks As New List(Of String)
+                        For Each lnk As Match In Regex.Matches(dTxt, "<a target=""_self"" href=""(?<url>http[^""]+)""", RegexOptions.IgnoreCase)
+                            lnks.Add(lnk.Result("${url}"))
+                        Next
+                        Thumbnail.thumbnail(value.Id, lnks)
+                    End If
+                Catch ex As System.Runtime.InteropServices.COMException
+                    '原因不明
+                Finally
+                    Me.WebBrowser1.Visible = True
+                End Try
+            End If
+
         End Set
     End Property
 
@@ -88,4 +155,8 @@
             _linkColor = value
         End Set
     End Property
+
+    Public Function createDetailHtml(ByVal orgdata As String) As String
+        Return Me.detailHtmlFormatHeader + orgdata + Me.detailHtmlFormatFooter
+    End Function
 End Class

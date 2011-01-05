@@ -14,7 +14,7 @@ Public Class ImageDictionary
     Private cachePolicy As New CacheItemPolicy()
     Private removedCount As Long = 0
 
-    Public Sub New(ByVal memoryCacheCount As Integer)
+    Private Sub New(ByVal memoryCacheCount As Integer)
         SyncLock Me.lockObject
             '10Mb,80%
             Me.innerDictionary = New MemoryCache("imageCache",
@@ -28,6 +28,17 @@ Public Class ImageDictionary
             Me.cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30)
         End SyncLock
     End Sub
+
+    Private Shared _instance As ImageDictionary = Nothing
+    Public Shared ReadOnly Property Instance As ImageDictionary
+        Get
+            If _instance Is Nothing Then
+                _instance = New ImageDictionary(5000)
+            End If
+
+            Return _instance
+        End Get
+    End Property
 
     Public ReadOnly Property CacheCount As Long
         Get
