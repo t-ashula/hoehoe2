@@ -37,7 +37,7 @@
                 Me.detailHtmlFormatFooter = detailHtmlFormat7
             End If
 
-            Me.detailHtmlFormatHeader += Me.Font.Name + detailHtmlFormat2 + Me.Font.Size.ToString() + detailHtmlFormat3 + Me.Color.R.ToString() + "," + Me.Color.G.ToString() + "," + _clDetail.B.ToString() + detailHtmlFormat4 + Me.LinkColor.R.ToString() + "," + Me.LinkColor.G.ToString() + "," + Me.LinkColor.B.ToString() + detailHtmlFormat5 + Me.BackColor.R.ToString() + "," + Me.BackColor.G.ToString() + "," + Me.BackColor.B.ToString()
+            Me.detailHtmlFormatHeader += Me.Font.Name + detailHtmlFormat2 + Me.Font.Size.ToString() + detailHtmlFormat3 + Me.Color.R.ToString() + "," + Me.Color.G.ToString() + "," + Me.Color.B.ToString() + detailHtmlFormat4 + Me.LinkColor.R.ToString() + "," + Me.LinkColor.G.ToString() + "," + Me.LinkColor.B.ToString() + detailHtmlFormat5 + Me.BackColor.R.ToString() + "," + Me.BackColor.G.ToString() + "," + Me.BackColor.B.ToString()
 
             If value Then
                 Me.detailHtmlFormatHeader += detailHtmlFormatMono6
