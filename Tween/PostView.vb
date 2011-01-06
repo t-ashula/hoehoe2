@@ -70,8 +70,45 @@ Public Class PostView
         End Get
     End Property
 
+    Private Sub SourceLinkLabel_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles SourceLinkLabel.LinkClicked
+        Dim link As String = CType(SourceLinkLabel.Tag, String)
+        If Not String.IsNullOrEmpty(link) Then
+            Dim hoge = Me.OpenUriAsync
+            hoge(link)
+        End If
+    End Sub
+
+    Private Sub SourceLinkLabel_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SourceLinkLabel.MouseEnter
+        Dim link As String = CType(SourceLinkLabel.Tag, String)
+        If Not String.IsNullOrEmpty(link) Then
+            Me.StatusText = link
+        End If
+    End Sub
+
+    Private Sub SourceLinkLabel_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SourceLinkLabel.MouseLeave
+        Me.StatusText = String.Empty
+    End Sub
+
+    Public Event StatusTextChanged(ByVal sender As Object, ByVal e As EventArgs)
+
+    Private _statusText As String
+    Public Property StatusText() As String
+        Get
+            Return _statusText
+        End Get
+        Private Set(ByVal value As String)
+            Dim needRaiseEvent As Boolean = _statusText <> value
+            _statusText = value
+            If needRaiseEvent Then
+                RaiseEvent StatusTextChanged(Me, EventArgs.Empty)
+            End If
+        End Set
+    End Property
+
+
     Public Property OneWayLoveColor As Color
     Public Property RetweetColor As Color
     Public Property FavoriteColor As Color
     Public Property Thumbnail As Thumbnail
+    Public Property OpenUriAsync As Action(Of String)
 End Class

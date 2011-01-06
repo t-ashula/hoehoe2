@@ -1,5 +1,7 @@
 ﻿Imports System.Text.RegularExpressions
 Imports System.Text
+Imports System.Web
+Imports System.Reflection
 
 Public Class PostBrowser
     Private Const detailHtmlFormatMono1 As String = "<html><head><style type=""text/css""><!-- pre {font-family: """
@@ -168,4 +170,105 @@ Public Class PostBrowser
     Public Function createDetailHtml(ByVal orgdata As String) As String
         Return Me.detailHtmlFormatHeader + orgdata + Me.detailHtmlFormatFooter
     End Function
+
+    Private Sub PostBrowser_Navigated(ByVal sender As Object, ByVal e As System.Windows.Forms.WebBrowserNavigatedEventArgs) Handles WebBrowser1.Navigated
+        If e.Url.AbsoluteUri <> "about:blank" Then
+            Me.Post = Me.Post
+            Dim hoge = Me.OpenUriAsync
+            hoge(e.Url.OriginalString) 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+        End If
+    End Sub
+
+    Private Sub PostBrowser_Navigating(ByVal sender As System.Object, ByVal e As System.Windows.Forms.WebBrowserNavigatingEventArgs) Handles WebBrowser1.Navigating
+        If e.Url.Scheme = "data" Then
+            Me.StatusText = Me.WebBrowser1.StatusText.Replace("&", "&&")
+        ElseIf e.Url.AbsoluteUri <> "about:blank" Then
+            e.Cancel = True
+
+            If e.Url.AbsoluteUri.StartsWith("http://twitter.com/search?q=%23") OrElse _
+               e.Url.AbsoluteUri.StartsWith("https://twitter.com/search?q=%23") Then
+                'ハッシュタグの場合は、タブで開く
+                Dim urlStr As String = HttpUtility.UrlDecode(e.Url.AbsoluteUri)
+                Dim hash As String = urlStr.Substring(urlStr.IndexOf("#"))
+                HashSupl.AddItem(hash)
+                HashMgr.AddHashToHistory(hash.Trim, False)
+                Dim hoge = Me.AddNewTabForSearch
+                hoge(hash)
+                Exit Sub
+            Else
+                Dim m As Match = Regex.Match(e.Url.AbsoluteUri, "^https?://twitter.com/(#!/)?(?<name>[a-zA-Z0-9_]+)$")
+                If m.Success AndAlso IsTwitterId(m.Result("${name}")) Then
+                    Dim hoge = Me.AddNewTabForUserTimeline
+                    hoge(m.Result("${name}"))
+                Else
+                    Dim hoge = Me.OpenUriAsync
+                    hoge(e.Url.OriginalString)
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub PostBrowser_StatusTextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles WebBrowser1.StatusTextChanged
+        If Me.WebBrowser1.StatusText.StartsWith("http") OrElse Me.WebBrowser1.StatusText.StartsWith("ftp") _
+                OrElse Me.WebBrowser1.StatusText.StartsWith("data") Then
+            Me.StatusText = Me.WebBrowser1.StatusText.Replace("&", "&&")
+        End If
+    End Sub
+
+    Private Sub ScrollDownPostBrowser(ByVal forward As Boolean)
+        Dim doc As HtmlDocument = Me.WebBrowser1.Document
+        If doc Is Nothing Then Exit Sub
+        If doc.Body Is Nothing Then Exit Sub
+
+        If forward Then
+            doc.Body.ScrollTop += AppendSettingDialog.Instance.FontDetail.Height
+        Else
+            doc.Body.ScrollTop -= AppendSettingDialog.Instance.FontDetail.Height
+        End If
+    End Sub
+
+    Private Sub PageDownPostBrowser(ByVal forward As Boolean)
+        Dim doc As HtmlDocument = Me.WebBrowser1.Document
+        If doc Is Nothing Then Exit Sub
+        If doc.Body Is Nothing Then Exit Sub
+
+        If forward Then
+            doc.Body.ScrollTop += Me.WebBrowser1.ClientRectangle.Height - AppendSettingDialog.Instance.FontDetail.Height
+        Else
+            doc.Body.ScrollTop -= Me.WebBrowser1.ClientRectangle.Height - AppendSettingDialog.Instance.FontDetail.Height
+        End If
+    End Sub
+
+    Public Function WebBrowser_GetSelectionText(ByRef ComponentInstance As WebBrowser) As String
+        '発言詳細で「選択文字列をコピー」を行う
+        'WebBrowserコンポーネントのインスタンスを渡す
+        Dim typ As Type = ComponentInstance.ActiveXInstance.GetType()
+        Dim _SelObj As Object = typ.InvokeMember("selection", BindingFlags.GetProperty, Nothing, ComponentInstance.Document.DomDocument, Nothing)
+        Dim _objRange As Object = _SelObj.GetType().InvokeMember("createRange", BindingFlags.InvokeMethod, Nothing, _SelObj, Nothing)
+        Return DirectCast(_objRange.GetType().InvokeMember("text", BindingFlags.GetProperty, Nothing, _objRange, Nothing), String)
+    End Function
+
+    Public Event StatusTextChanged(ByVal sender As Object, ByVal e As EventArgs)
+
+    Private _statusText As String
+    Public Property StatusText() As String
+        Get
+            Return _statusText
+        End Get
+        Private Set(ByVal value As String)
+            Dim needRaiseEvent As Boolean = Me._statusText <> value
+            _statusText = value
+            If needRaiseEvent Then
+                RaiseEvent StatusTextChanged(Me, EventArgs.Empty)
+            End If
+        End Set
+    End Property
+
+
+    Public Property OpenUriAsync As Action(Of String)
+    Public Property HashSupl As AtIdSupplement
+    Public Property HashMgr As HashtagManage
+    Public Property AddNewTabForSearch As Action(Of String)
+    Public Property IsTwitterId As Func(Of String, Boolean)
+    Public Property AddNewTabForUserTimeline As Action(Of String)
 End Class
