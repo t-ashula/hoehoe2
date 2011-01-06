@@ -25,9 +25,9 @@ Partial Class PostView
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.UserPicture = New System.Windows.Forms.PictureBox()
         Me.NameLabel = New System.Windows.Forms.Label()
+        Me.PostBrowser = New Tween.PostBrowser()
         Me.DateTimeLabel = New System.Windows.Forms.Label()
         Me.SourceLinkLabel = New System.Windows.Forms.LinkLabel()
-        Me.PostBrowser = New Tween.PostBrowser()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.UserPicture, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -82,6 +82,22 @@ Partial Class PostView
         Me.NameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.NameLabel.UseMnemonic = False
         '
+        'PostBrowser
+        '
+        Me.PostBrowser.Color = System.Drawing.Color.Empty
+        Me.TableLayoutPanel1.SetColumnSpan(Me.PostBrowser, 3)
+        Me.PostBrowser.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PostBrowser.IsDumpPostMode = False
+        Me.PostBrowser.IsMonospace = False
+        Me.PostBrowser.LinkColor = System.Drawing.Color.Empty
+        Me.PostBrowser.Location = New System.Drawing.Point(59, 20)
+        Me.PostBrowser.MinimumSize = New System.Drawing.Size(20, 20)
+        Me.PostBrowser.Name = "PostBrowser"
+        Me.PostBrowser.Post = Nothing
+        Me.PostBrowser.Size = New System.Drawing.Size(304, 161)
+        Me.PostBrowser.TabIndex = 6
+        Me.PostBrowser.TabStop = False
+        '
         'DateTimeLabel
         '
         Me.DateTimeLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -114,19 +130,6 @@ Partial Class PostView
         Me.SourceLinkLabel.TabStop = True
         Me.SourceLinkLabel.Text = "LinkLabel1"
         Me.SourceLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'PostBrowser
-        '
-        Me.TableLayoutPanel1.SetColumnSpan(Me.PostBrowser, 3)
-        Me.PostBrowser.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PostBrowser.isMonospace = False
-        Me.PostBrowser.Location = New System.Drawing.Point(59, 20)
-        Me.PostBrowser.MinimumSize = New System.Drawing.Size(20, 20)
-        Me.PostBrowser.Name = "PostBrowser"
-        Me.PostBrowser.Post = Nothing
-        Me.PostBrowser.Size = New System.Drawing.Size(304, 161)
-        Me.PostBrowser.TabIndex = 6
-        Me.PostBrowser.TabStop = False
         '
         'PostView
         '

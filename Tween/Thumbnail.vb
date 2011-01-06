@@ -119,6 +119,7 @@ Public Class Thumbnail
     Private ReadOnly Property _curPost As PostClass
         Get
             Return Owner.CurPost()
+            'Return Owner.PostView.Post
         End Get
     End Property
 
