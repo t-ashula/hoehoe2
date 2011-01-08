@@ -13,12 +13,13 @@ Imports System.Reflection
 Imports System.Reflection.Emit
 Imports System.Threading
 Imports System.Runtime.CompilerServices
+Imports System.Text.RegularExpressions
 
 
 Public Module DynamicQueryable
 
     Const Id As String = "DynamicQueryModule Copyright © Microsoft Corporation.  All Rights Reserved." + _
-                         "This code released under the terms of the Microsoft Public License (MS-PL, http://opensource.org/licenses/ms-pl.html.) "
+                         " This code released under the terms of the Microsoft Public License (MS-PL, http://opensource.org/licenses/ms-pl.html.) "
 
     <Extension()> _
     Public Function Where(Of T)(ByVal source As IQueryable(Of T), ByVal predicate As String, ByVal ParamArray values() As Object) As IQueryable(Of T)
@@ -572,7 +573,8 @@ Class ExpressionParser
                                                     GetType(TimeSpan), _
                                                     GetType(Guid), _
                                                     GetType(Math), _
-                                                    GetType(Convert) _
+                                                    GetType(Convert), _
+                                                    GetType(Regex) _
                                                 }
 
     Shared ReadOnly trueLiteral As Expression = Expression.Constant(True)
@@ -686,10 +688,10 @@ Class ExpressionParser
         Return expr
     End Function
 
-    ' ||, or operator
+    ' ||, or,orelse operator
     Function ParseLogicalOr() As Expression
         Dim left As Expression = ParseLogicalAnd()
-        Do While tokenVal.id = TokenId.DoubleBar OrElse TokenIdentifierIs("or")
+        Do While tokenVal.id = TokenId.DoubleBar OrElse TokenIdentifierIs("or") OrElse TokenIdentifierIs("orelse")
             Dim op As Token = tokenVal
             NextToken()
             Dim right As Expression = ParseLogicalAnd()
@@ -699,10 +701,10 @@ Class ExpressionParser
         Return left
     End Function
 
-    ' &&, and operator
+    ' &&, and, andalso operator
     Function ParseLogicalAnd() As Expression
         Dim left As Expression = ParseComparison()
-        Do While tokenVal.id = TokenId.DoubleAmphersand OrElse TokenIdentifierIs("and")
+        Do While tokenVal.id = TokenId.DoubleAmphersand OrElse TokenIdentifierIs("and") OrElse TokenIdentifierIs("andalso")
             Dim op As Token = tokenVal
             NextToken()
             Dim right As Expression = ParseComparison()

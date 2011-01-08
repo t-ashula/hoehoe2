@@ -2162,6 +2162,17 @@ Public NotInheritable Class FiltersClass
         End Set
     End Property
 
+    Public ReadOnly Property BodyFilterString As String
+        Get
+            Dim fs As New StringBuilder
+            For Each bf As String In _body
+                fs.Append(bf)
+                fs.Append(" ")
+            Next
+            Return fs.ToString.Trim()
+        End Get
+    End Property
+
     <Xml.Serialization.XmlIgnore()> _
     Public Property ExBodyFilter() As List(Of String)
         Get
@@ -2182,6 +2193,17 @@ Public NotInheritable Class FiltersClass
                 _exbody.Add(filter)
             Next
         End Set
+    End Property
+
+    Public ReadOnly Property ExBodyFilterString As String
+        Get
+            Dim fs As New StringBuilder
+            For Each exbf As String In _exbody
+                fs.Append(exbf)
+                fs.Append(" ")
+            Next
+            Return fs.ToString.Trim()
+        End Get
     End Property
 
     Public Property SearchBoth() As Boolean
@@ -2373,44 +2395,48 @@ Public NotInheritable Class FiltersClass
                   (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, _name, rgOpt))
                  )
                 ) Then
-                For Each fs As String In _body
-                    If _useRegex Then
-                        If Not Regex.IsMatch(tBody, fs, rgOpt) Then bHit = False
-                    ElseIf _useLambda Then
-                        If Not ExecuteLambdaExpression(fs, post) Then bHit = False
-                    Else
-                        If _caseSensitive Then
-                            If Not tBody.Contains(fs) Then bHit = False
+                If _useLambda Then
+                    If Not ExecuteLambdaExpression(BodyFilterString, post) Then bHit = False
+                Else
+                    For Each fs As String In _body
+                        If _useRegex Then
+                            If Not Regex.IsMatch(tBody, fs, rgOpt) Then bHit = False
                         Else
-                            If Not tBody.ToLower().Contains(fs.ToLower()) Then bHit = False
+                            If _caseSensitive Then
+                                If Not tBody.Contains(fs) Then bHit = False
+                            Else
+                                If Not tBody.ToLower().Contains(fs.ToLower()) Then bHit = False
+                            End If
                         End If
-                    End If
-                    If Not bHit Then Exit For
-                Next
+                        If Not bHit Then Exit For
+                    Next
+                End If
             Else
                 bHit = False
             End If
         Else
-            For Each fs As String In _body
-                If _useRegex Then
-                    If Not (Regex.IsMatch(post.Name, fs, rgOpt) OrElse
-                            (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) OrElse
-                            Regex.IsMatch(tBody, fs, rgOpt)) Then bHit = False
-                ElseIf _useLambda Then
-                    If Not ExecuteLambdaExpression(fs, post) Then bHit = False
-                Else
-                    If _caseSensitive Then
-                        If Not (post.Name.Contains(fs) OrElse _
-                                post.RetweetedBy.Contains(fs) OrElse _
-                                tBody.Contains(fs)) Then bHit = False
+            If _useLambda Then
+                If Not ExecuteLambdaExpression(BodyFilterString, post) Then bHit = False
+            Else
+                For Each fs As String In _body
+                    If _useRegex Then
+                        If Not (Regex.IsMatch(post.Name, fs, rgOpt) OrElse
+                                (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) OrElse
+                                Regex.IsMatch(tBody, fs, rgOpt)) Then bHit = False
                     Else
-                        If Not (post.Name.ToLower().Contains(fs.ToLower()) OrElse _
-                                post.RetweetedBy.ToLower().Contains(fs.ToLower()) OrElse _
-                                tBody.ToLower().Contains(fs.ToLower())) Then bHit = False
+                        If _caseSensitive Then
+                            If Not (post.Name.Contains(fs) OrElse _
+                                    post.RetweetedBy.Contains(fs) OrElse _
+                                    tBody.Contains(fs)) Then bHit = False
+                        Else
+                            If Not (post.Name.ToLower().Contains(fs.ToLower()) OrElse _
+                                    post.RetweetedBy.ToLower().Contains(fs.ToLower()) OrElse _
+                                    tBody.ToLower().Contains(fs.ToLower())) Then bHit = False
+                        End If
                     End If
-                End If
-                If Not bHit Then Exit For
-            Next
+                    If Not bHit Then Exit For
+                Next
+            End If
         End If
         If _isRt Then
             If post.RetweetedId = 0 Then bHit = False
@@ -2454,45 +2480,51 @@ Public NotInheritable Class FiltersClass
                             )
                         ) Then
                         If _exbody.Count > 0 Then
-                            For Each fs As String In _exbody
-                                If _exuseRegex Then
-                                    If Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
-                                ElseIf _exuseLambda Then
-                                    If ExecuteLambdaExpression(fs, post) Then exFlag = True
-                                Else
-                                    If _excaseSensitive Then
-                                        If tBody.Contains(fs) Then exFlag = True
+                            If _exuseLambda Then
+                                If ExecuteLambdaExpression(ExBodyFilterString, post) Then exFlag = True
+                            Else
+                                For Each fs As String In _exbody
+                                    If _exuseRegex Then
+                                        If Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
+                                    ElseIf _exuseLambda Then
+
                                     Else
-                                        If tBody.ToLower().Contains(fs.ToLower()) Then exFlag = True
+                                        If _excaseSensitive Then
+                                            If tBody.Contains(fs) Then exFlag = True
+                                        Else
+                                            If tBody.ToLower().Contains(fs.ToLower()) Then exFlag = True
+                                        End If
                                     End If
-                                End If
-                                If exFlag Then Exit For
-                            Next
+                                    If exFlag Then Exit For
+                                Next
+                            End If
                         Else
                             exFlag = True
                         End If
                     End If
                 Else
-                    For Each fs As String In _exbody
-                        If _exuseRegex Then
-                            If Regex.IsMatch(post.Name, fs, rgOpt) OrElse
-                               (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) OrElse
-                               Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
-                        ElseIf _exuseLambda Then
-                            If ExecuteLambdaExpression(fs, post) Then exFlag = True
-                        Else
-                            If _excaseSensitive Then
-                                If post.Name.Contains(fs) OrElse _
-                                   post.RetweetedBy.Contains(fs) OrElse _
-                                   tBody.Contains(fs) Then exFlag = True
+                    If _exuseLambda Then
+                        If ExecuteLambdaExpression(ExBodyFilterString, post) Then exFlag = True
+                    Else
+                        For Each fs As String In _exbody
+                            If _exuseRegex Then
+                                If Regex.IsMatch(post.Name, fs, rgOpt) OrElse
+                                   (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) OrElse
+                                   Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
                             Else
-                                If post.Name.ToLower().Contains(fs.ToLower()) OrElse _
-                                   post.RetweetedBy.ToLower().Contains(fs.ToLower()) OrElse _
-                                   tBody.ToLower().Contains(fs.ToLower()) Then exFlag = True
+                                If _excaseSensitive Then
+                                    If post.Name.Contains(fs) OrElse _
+                                       post.RetweetedBy.Contains(fs) OrElse _
+                                       tBody.Contains(fs) Then exFlag = True
+                                Else
+                                    If post.Name.ToLower().Contains(fs.ToLower()) OrElse _
+                                       post.RetweetedBy.ToLower().Contains(fs.ToLower()) OrElse _
+                                       tBody.ToLower().Contains(fs.ToLower()) Then exFlag = True
+                                End If
                             End If
-                        End If
-                        If exFlag Then Exit For
-                    Next
+                            If exFlag Then Exit For
+                        Next
+                    End If
                 End If
             End If
             If _isExRt Then
