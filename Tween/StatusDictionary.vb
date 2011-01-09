@@ -1881,6 +1881,7 @@ Public NotInheritable Class TabClass
         original.UseRegex = modified.UseRegex
         original.CaseSensitive = modified.CaseSensitive
         original.IsRt = modified.IsRt
+        original.UseLambda = modified.UseLambda
         original.Source = modified.Source
         original.ExBodyFilter = modified.ExBodyFilter
         original.ExNameFilter = modified.ExNameFilter
@@ -1889,6 +1890,7 @@ Public NotInheritable Class TabClass
         original.ExUseRegex = modified.ExUseRegex
         original.ExCaseSensitive = modified.ExCaseSensitive
         original.IsExRt = modified.IsExRt
+        original.ExUseLambda = modified.ExUseLambda
         original.ExSource = modified.ExSource
         original.MoveFrom = modified.MoveFrom
         original.SetMark = modified.SetMark
@@ -2396,7 +2398,7 @@ Public NotInheritable Class FiltersClass
                  )
                 ) Then
                 If _useLambda Then
-                    If Not ExecuteLambdaExpression(BodyFilterString, post) Then bHit = False
+                    If Not ExecuteLambdaExpression(_body.Item(0), post) Then bHit = False
                 Else
                     For Each fs As String In _body
                         If _useRegex Then
@@ -2416,7 +2418,7 @@ Public NotInheritable Class FiltersClass
             End If
         Else
             If _useLambda Then
-                If Not ExecuteLambdaExpression(BodyFilterString, post) Then bHit = False
+                If Not ExecuteLambdaExpression(_body.Item(0), post) Then bHit = False
             Else
                 For Each fs As String In _body
                     If _useRegex Then
@@ -2481,13 +2483,11 @@ Public NotInheritable Class FiltersClass
                         ) Then
                         If _exbody.Count > 0 Then
                             If _exuseLambda Then
-                                If ExecuteLambdaExpression(ExBodyFilterString, post) Then exFlag = True
+                                If ExecuteLambdaExpression(_exbody.Item(0), post) Then exFlag = True
                             Else
                                 For Each fs As String In _exbody
                                     If _exuseRegex Then
                                         If Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
-                                    ElseIf _exuseLambda Then
-
                                     Else
                                         If _excaseSensitive Then
                                             If tBody.Contains(fs) Then exFlag = True
@@ -2504,7 +2504,7 @@ Public NotInheritable Class FiltersClass
                     End If
                 Else
                     If _exuseLambda Then
-                        If ExecuteLambdaExpression(ExBodyFilterString, post) Then exFlag = True
+                        If ExecuteLambdaExpression(_exbody.Item(0), post) Then exFlag = True
                     Else
                         For Each fs As String In _exbody
                             If _exuseRegex Then
@@ -2578,20 +2578,22 @@ Public NotInheritable Class FiltersClass
             If Me.ExBodyFilter(i) <> other.ExBodyFilter(i) Then Return False
         Next
 
-        Return (Me.MoveFrom = other.MoveFrom) And _
-               (Me.SetMark = other.SetMark) And _
-               (Me.NameFilter = other.NameFilter) And _
-               (Me.SearchBoth = other.SearchBoth) And _
-               (Me.SearchUrl = other.SearchUrl) And _
-               (Me.UseRegex = other.UseRegex) And _
-               (Me.ExNameFilter = other.ExNameFilter) And _
-               (Me.ExSearchBoth = other.ExSearchBoth) And _
-               (Me.ExSearchUrl = other.ExSearchUrl) And _
-               (Me.ExUseRegex = other.ExUseRegex) And _
-               (Me.IsRt = other.IsRt) And _
-               (Me.Source = other.Source) And _
-               (Me.IsExRt = other.IsExRt) And _
-               (Me.ExSource = other.ExSource)
+        Return (Me.MoveFrom = other.MoveFrom) And
+               (Me.SetMark = other.SetMark) And
+               (Me.NameFilter = other.NameFilter) And
+               (Me.SearchBoth = other.SearchBoth) And
+               (Me.SearchUrl = other.SearchUrl) And
+               (Me.UseRegex = other.UseRegex) And
+               (Me.ExNameFilter = other.ExNameFilter) And
+               (Me.ExSearchBoth = other.ExSearchBoth) And
+               (Me.ExSearchUrl = other.ExSearchUrl) And
+               (Me.ExUseRegex = other.ExUseRegex) And
+               (Me.IsRt = other.IsRt) And
+               (Me.Source = other.Source) And
+               (Me.IsExRt = other.IsExRt) And
+               (Me.ExSource = other.ExSource) And
+               (Me.UseLambda = other.UseLambda) And
+               (Me.ExUseLambda = other.ExUseLambda)
     End Function
 
     Public Function CopyTo(ByVal destination As FiltersClass) As FiltersClass
@@ -2622,6 +2624,8 @@ Public NotInheritable Class FiltersClass
         destination.Source = Me.Source
         destination.IsExRt = Me.IsExRt
         destination.ExSource = Me.ExSource
+        destination.UseLambda = Me.UseLambda
+        destination.ExUseLambda = Me.ExUseLambda
         Return destination
     End Function
 
@@ -2631,22 +2635,24 @@ Public NotInheritable Class FiltersClass
     End Function
 
     Public Overrides Function GetHashCode() As Integer
-        Return Me.MoveFrom.GetHashCode Xor _
-               Me.SetMark.GetHashCode Xor _
-               Me.BodyFilter.GetHashCode Xor _
-               Me.NameFilter.GetHashCode Xor _
-               Me.SearchBoth.GetHashCode Xor _
-               Me.SearchUrl.GetHashCode Xor _
-               Me.UseRegex.GetHashCode Xor _
-               Me.ExBodyFilter.GetHashCode Xor _
-               Me.ExNameFilter.GetHashCode Xor _
-               Me.ExSearchBoth.GetHashCode Xor _
-               Me.ExSearchUrl.GetHashCode Xor _
-               Me.ExUseRegex.GetHashCode Xor _
-               Me.IsRt.GetHashCode Xor _
-               Me.Source.GetHashCode Xor _
-               Me.IsExRt.GetHashCode Xor _
-               Me.ExSource.GetHashCode
+        Return Me.MoveFrom.GetHashCode Xor
+               Me.SetMark.GetHashCode Xor
+               Me.BodyFilter.GetHashCode Xor
+               Me.NameFilter.GetHashCode Xor
+               Me.SearchBoth.GetHashCode Xor
+               Me.SearchUrl.GetHashCode Xor
+               Me.UseRegex.GetHashCode Xor
+               Me.ExBodyFilter.GetHashCode Xor
+               Me.ExNameFilter.GetHashCode Xor
+               Me.ExSearchBoth.GetHashCode Xor
+               Me.ExSearchUrl.GetHashCode Xor
+               Me.ExUseRegex.GetHashCode Xor
+               Me.IsRt.GetHashCode Xor
+               Me.Source.GetHashCode Xor
+               Me.IsExRt.GetHashCode Xor
+               Me.ExSource.GetHashCode Xor
+               Me.UseLambda.GetHashCode Xor
+               Me.ExUseLambda.GetHashCode
     End Function
 End Class
 
