@@ -2164,17 +2164,6 @@ Public NotInheritable Class FiltersClass
         End Set
     End Property
 
-    Public ReadOnly Property BodyFilterString As String
-        Get
-            Dim fs As New StringBuilder
-            For Each bf As String In _body
-                fs.Append(bf)
-                fs.Append(" ")
-            Next
-            Return fs.ToString.Trim()
-        End Get
-    End Property
-
     <Xml.Serialization.XmlIgnore()> _
     Public Property ExBodyFilter() As List(Of String)
         Get
@@ -2195,17 +2184,6 @@ Public NotInheritable Class FiltersClass
                 _exbody.Add(filter)
             Next
         End Set
-    End Property
-
-    Public ReadOnly Property ExBodyFilterString As String
-        Get
-            Dim fs As New StringBuilder
-            For Each exbf As String In _exbody
-                fs.Append(exbf)
-                fs.Append(" ")
-            Next
-            Return fs.ToString.Trim()
-        End Get
     End Property
 
     Public Property SearchBoth() As Boolean
