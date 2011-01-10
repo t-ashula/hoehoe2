@@ -316,11 +316,11 @@ Public NotInheritable Class PostClass
             _IsDm = value
         End Set
     End Property
-    Public ReadOnly Property StatusIndex() As Integer
-        Get
-            Return _statuses
-        End Get
-    End Property
+    'Public ReadOnly Property StatusIndex() As Integer
+    '    Get
+    '        Return _statuses
+    '    End Get
+    'End Property
     Public Property Uid() As Long
         Get
             Return _Uid

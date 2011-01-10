@@ -493,6 +493,7 @@
     <None Include="Resources\4r.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DynamicQuery.txt" />
     <Content Include="Resources\1o.ico" />
     <Content Include="tips.txt" />
     <None Include="Resources\5g.ico" />
