@@ -108,13 +108,14 @@ Public Class PostClass
 	Public IsOWL As Boolean						' 片思いかどうか
 	Public IsMark As Boolean					' マークされた発言かどうか
 	Public InReplyToUser As String				' Reply先のユーザーのName(APIでのin_reply_to_screen_name)
-	Public InReplyToId As Long					' Reply先のステータスID(APIでのin_reply_to_status_id)
+	Public InReplyTUserId As Long				' Reply先発言の発言者アカウントID(APIでのin_reply_to_user_id)
+	Public InReplyToStatusId As Long			' Reply先のステータスID(APIでのin_reply_to_status_id)
 	Public Source As String						' 発言のSource htmlタグ除去済み
 	Public SourceHtml As String					' 発言のSource APIの返したhtml生データ
 	Public InReplyToList As List(Of String)		' 発言中に認識した＠IDのリスト
 	Public IsMe As Boolean						' 自分の発言かどうか
 	Public IsDm As Boolean						' DMかどうか
-	Public Uid As Long							' 発言者のアカウントID
+	Public UserId As Long						' 発言者のアカウントID
 	Public FilterHit As Boolean					' フィルタにヒットしたかどうか
 	Public RetweetedBy As String				' 公式RTしたユーザーのName(screen_name)
 	Public RelTabName As String					' Recentと別扱いのタブに格納されている場合はそのタブ名称

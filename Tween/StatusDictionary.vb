@@ -48,19 +48,20 @@ Public NotInheritable Class PostClass
     Private _IsOWL As Boolean
     Private _IsMark As Boolean
     Private _InReplyToUser As String
-    Private _InReplyToId As Long
+    Private _InReplyToStatusId As Long
     Private _Source As String
     Private _SourceHtml As String
     Private _ReplyToList As New List(Of String)
     Private _IsMe As Boolean
     Private _IsDm As Boolean
     Private _statuses As Statuses = Statuses.None
-    Private _Uid As Long
+    Private _UserId As Long
     Private _FilterHit As Boolean
     Private _RetweetedBy As String = ""
     Private _RetweetedId As Long = 0
-    Private _searchTabName As String = ""
-    Private _isDeleted As Boolean = False
+    Private _SearchTabName As String = ""
+    Private _IsDeleted As Boolean = False
+    Private _InReplyToUserId As Long = 0
 
     <FlagsAttribute()> _
     Private Enum Statuses
@@ -86,13 +87,13 @@ Public NotInheritable Class PostClass
             ByVal IsOwl As Boolean, _
             ByVal IsMark As Boolean, _
             ByVal InReplyToUser As String, _
-            ByVal InReplyToId As Long, _
+            ByVal InReplyToStatusId As Long, _
             ByVal Source As String, _
             ByVal SourceHtml As String, _
             ByVal ReplyToList As List(Of String), _
             ByVal IsMe As Boolean, _
             ByVal IsDm As Boolean, _
-            ByVal Uid As Long, _
+            ByVal userId As Long, _
             ByVal FilterHit As Boolean, _
             ByVal RetweetedBy As String, _
             ByVal RetweetedId As Long)
@@ -111,13 +112,13 @@ Public NotInheritable Class PostClass
         _IsOWL = IsOwl
         _IsMark = IsMark
         _InReplyToUser = InReplyToUser
-        _InReplyToId = InReplyToId
+        _InReplyToStatusId = InReplyToStatusId
         _Source = Source
         _SourceHtml = SourceHtml
         _ReplyToList = ReplyToList
         _IsMe = IsMe
         _IsDm = IsDm
-        _Uid = Uid
+        _UserId = userId
         _FilterHit = FilterHit
         _RetweetedBy = RetweetedBy
         _RetweetedId = RetweetedId
@@ -268,12 +269,21 @@ Public NotInheritable Class PostClass
             _InReplyToUser = value
         End Set
     End Property
-    Public Property InReplyToId() As Long
+    Public Property InReplyToStatusId() As Long
         Get
-            Return _InReplyToId
+            Return _InReplyToStatusId
         End Get
         Set(ByVal value As Long)
-            _InReplyToId = value
+            _InReplyToStatusId = value
+        End Set
+    End Property
+
+    Public Property InReplyToUserId() As Long
+        Get
+            Return _inReplyToUserId
+        End Get
+        Set(ByVal value As Long)
+            _inReplyToUserId = value
         End Set
     End Property
     Public Property Source() As String
@@ -321,12 +331,12 @@ Public NotInheritable Class PostClass
     '        Return _statuses
     '    End Get
     'End Property
-    Public Property Uid() As Long
+    Public Property UserId() As Long
         Get
-            Return _Uid
+            Return _UserId
         End Get
         Set(ByVal value As Long)
-            _Uid = value
+            _UserId = value
         End Set
     End Property
     Public Property FilterHit() As Boolean
@@ -355,24 +365,25 @@ Public NotInheritable Class PostClass
     End Property
     Public Property RelTabName() As String
         Get
-            Return _searchTabName
+            Return _SearchTabName
         End Get
         Set(ByVal value As String)
-            _searchTabName = value
+            _SearchTabName = value
         End Set
     End Property
     Public Property IsDeleted As Boolean
         Get
-            Return _isDeleted
+            Return _IsDeleted
         End Get
         Set(ByVal value As Boolean)
             If value Then
-                Me.InReplyToId = 0
+                Me.InReplyToStatusId = 0
                 Me.InReplyToUser = ""
+                Me.InReplyToUserId = 0
                 Me.IsReply = False
                 Me.ReplyToList = New List(Of String)
             End If
-            _isDeleted = value
+            _IsDeleted = value
         End Set
     End Property
     Public Property FavoritedCount As Integer
@@ -1023,13 +1034,13 @@ Public NotInheritable Class TabInformations
                         item.IsOwl, _
                         item.IsMark, _
                         item.InReplyToUser, _
-                        item.InReplyToId, _
+                        item.InReplyToStatusId, _
                         item.Source, _
                         item.SourceHtml, _
                         item.ReplyToList, _
                         item.IsMe, _
                         item.IsDm, _
-                        item.Uid, _
+                        item.UserId, _
                         item.FilterHit, _
                         "", _
                         0 _
@@ -1468,11 +1479,11 @@ Public NotInheritable Class TabInformations
         SyncLock LockObj
             If follower.Count > 0 Then
                 For Each post As PostClass In _statuses.Values
-                    'If post.Uid = 0 OrElse post.IsDm Then Continue For
+                    'If post.UserId = 0 OrElse post.IsDm Then Continue For
                     If post.IsMe Then
                         post.IsOwl = False
                     Else
-                        post.IsOwl = Not follower.Contains(post.Uid)
+                        post.IsOwl = Not follower.Contains(post.UserId)
                     End If
                 Next
             Else
