@@ -124,6 +124,6 @@ Public Class PostClass
 End Class
 
 ---
-[1] http://code.msdn.microsoft.com/Project/Download/FileDownload.aspx?ProjectName=vb2010samples&DownloadId=10297
+[1] http://code.msdn.microsoft.com/vb2010samples
     Copyright © Microsoft Corporation.  All Rights Reserved.
 	This code released under the terms of the Microsoft Public License (MS-PL, http://opensource.org/licenses/ms-pl.html.)
