@@ -1021,4 +1021,7 @@
   <data name="WebSourceString" xml:space="preserve">
     <value>&lt;a href="http://twitter.com/" rel="nofollow"&gt;web&lt;/a&gt;</value>
   </data>
+  <data name="CheckNewVerV4" xml:space="preserve">
+    <value>新しいバージョンが公開されています。実行には.NET Framework 4 (Full)のインストールが必要です。インストール後に再度お試しください。</value>
+  </data>
 </root>

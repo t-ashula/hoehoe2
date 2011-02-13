@@ -942,4 +942,7 @@
   <data name="TextSearchCountApi_Validating1" xml:space="preserve">
     <value>取得発言数は20～100件を指定してください。</value>
   </data>
+  <data name="CheckNewVerV4" xml:space="preserve">
+    <value>New version released. This version require to install .NET Framework 4 (Full). Please retry after install it.</value>
+  </data>
 </root>

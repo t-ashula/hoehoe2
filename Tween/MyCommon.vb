@@ -562,4 +562,6 @@ retry:
             If img IsNot Nothing Then img.Dispose()
         End Try
     End Function
+
+    Public CLRv4Full As Boolean
 End Module

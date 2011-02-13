@@ -25,6 +25,9 @@ Option Strict On
 
 Imports System.Diagnostics
 Imports System.Threading.Thread
+Imports Microsoft.Win32
+Imports Microsoft.Win32.Registry
+Imports Microsoft.Win32.RegistryKey
 
 Namespace My
 
@@ -51,6 +54,18 @@ Namespace My
         End Sub
 
         Private Sub MyApplication_Startup(ByVal sender As Object, ByVal e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) Handles Me.Startup
+
+            Dim regPath As String = "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"
+            Dim regValue As String = "Install"
+            Try
+                Using rKey As RegistryKey = Registry.LocalMachine.OpenSubKey(regPath)
+                    Dim rVal As Integer = DirectCast(rKey.GetValue(regValue), Integer)
+                    rKey.Close()
+                    If rVal = 1 Then CLRv4Full = True
+                End Using
+            Catch ex As Exception
+
+            End Try
 
             InitCulture()
 

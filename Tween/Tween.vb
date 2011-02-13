@@ -4378,6 +4378,11 @@ RETRY:
                 strDetail = retMsg.Substring(5).Trim
             End If
             If fileVersion <> "" AndAlso strVer.CompareTo(fileVersion.Replace(".", "")) > 0 Then
+                If Not CLRv4Full Then
+                    MessageBox.Show(My.Resources.CheckNewVerV4)
+                    OpenUriAsync("http://www.microsoft.com/downloads/details.aspx?displaylang=ja&FamilyID=0a391abd-25c1-4fc0-919f-b21f31ab88b7")
+                    Exit Sub
+                End If
                 Dim tmp As String = String.Format(My.Resources.CheckNewVersionText3, strVer)
                 Using dialogAsShieldicon As New DialogAsShieldIcon
                     If dialogAsShieldicon.Show(tmp, strDetail, My.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
