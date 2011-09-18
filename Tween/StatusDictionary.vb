@@ -1,7 +1,9 @@
 ﻿' Tween - Client of Twitter
-' Copyright (c) 2007-2010 kiri_feather (@kiri_feather) <kiri_feather@gmail.com>
-'           (c) 2008-2010 Moz (@syo68k) <http://iddy.jp/profile/moz/>
-'           (c) 2008-2010 takeshik (@takeshik) <http://www.takeshik.org/>
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
 ' All rights reserved.
 ' 
 ' This file is part of Tween.
@@ -21,21 +23,25 @@
 ' the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 ' Boston, MA 02110-1301, USA.
 
-Imports System.Collections.Generic
-Imports System.Collections.ObjectModel
-Imports Tween.TweenCustomControl
+Imports System.Linq
+Imports System.Linq.Expressions
+Imports System.Text
 Imports System.Text.RegularExpressions
-Imports System.Web.HttpUtility
 
 Public NotInheritable Class PostClass
+    Implements ICloneable
+    Public Class StatusGeo
+        Public Property Lng As Double
+        Public Property Lat As Double
+    End Class
     Private _Nick As String
-    Private _Data As String
+    Private _textFromApi As String
     Private _ImageUrl As String
-    Private _Name As String
-    Private _PDate As Date
-    Private _Id As Long
+    Private _screenName As String
+    Private _createdAt As Date
+    Private _statusId As Long
     Private _IsFav As Boolean
-    Private _OrgData As String
+    Private _text As String
     Private _IsRead As Boolean
     Private _IsReply As Boolean
     Private _IsExcludeReply As Boolean
@@ -43,35 +49,41 @@ Public NotInheritable Class PostClass
     Private _IsOWL As Boolean
     Private _IsMark As Boolean
     Private _InReplyToUser As String
-    Private _InReplyToId As Long
+    Private _InReplyToStatusId As Long
     Private _Source As String
+    Private _SourceHtml As String
     Private _ReplyToList As New List(Of String)
     Private _IsMe As Boolean
-    Private _ImageIndex As Integer
     Private _IsDm As Boolean
-    Private _statuses As Statuses = Statuses.None
-    Private _Uid As Long
+    Private _states As States = States.None
+    Private _UserId As Long
     Private _FilterHit As Boolean
     Private _RetweetedBy As String = ""
     Private _RetweetedId As Long = 0
-    Private _searchTabName As String = ""
+    Private _SearchTabName As String = ""
+    Private _IsDeleted As Boolean = False
+    Private _InReplyToUserId As Long = 0
+    Private _postGeo As New StatusGeo
+    Public Property RetweetedCount As Integer = 0
+    Public Property RetweetedByUserId As Long = 0
+    Public Property Media As New Dictionary(Of String, String)
 
     <FlagsAttribute()> _
-    Private Enum Statuses
+    Private Enum States
         None = 0
         Protect = 1
         Mark = 2
-        Read = 4
-        Reply = 8
+        Reply = 4
+        Geo = 8
     End Enum
 
     Public Sub New(ByVal Nickname As String, _
-            ByVal Data As String, _
-            ByVal OriginalData As String, _
+            ByVal textFromApi As String, _
+            ByVal text As String, _
             ByVal ImageUrl As String, _
-            ByVal Name As String, _
-            ByVal PDate As Date, _
-            ByVal Id As Long, _
+            ByVal screenName As String, _
+            ByVal createdAt As Date, _
+            ByVal statusId As Long, _
             ByVal IsFav As Boolean, _
             ByVal IsRead As Boolean, _
             ByVal IsReply As Boolean, _
@@ -80,24 +92,25 @@ Public NotInheritable Class PostClass
             ByVal IsOwl As Boolean, _
             ByVal IsMark As Boolean, _
             ByVal InReplyToUser As String, _
-            ByVal InReplyToId As Long, _
+            ByVal InReplyToStatusId As Long, _
             ByVal Source As String, _
+            ByVal SourceHtml As String, _
             ByVal ReplyToList As List(Of String), _
             ByVal IsMe As Boolean, _
-            ByVal ImageIndex As Integer, _
             ByVal IsDm As Boolean, _
-            ByVal Uid As Long, _
+            ByVal userId As Long, _
             ByVal FilterHit As Boolean, _
             ByVal RetweetedBy As String, _
-            ByVal RetweetedId As Long)
+            ByVal RetweetedId As Long, _
+            ByVal Geo As StatusGeo)
         _Nick = Nickname
-        _Data = Data
+        _textFromApi = textFromApi
         _ImageUrl = ImageUrl
-        _Name = Name
-        _PDate = PDate
-        _Id = Id
+        _screenName = screenName
+        _createdAt = createdAt
+        _statusId = statusId
         _IsFav = IsFav
-        _OrgData = OriginalData
+        _text = text
         _IsRead = IsRead
         _IsReply = IsReply
         _IsExcludeReply = IsExcludeReply
@@ -105,16 +118,17 @@ Public NotInheritable Class PostClass
         _IsOWL = IsOwl
         _IsMark = IsMark
         _InReplyToUser = InReplyToUser
-        _InReplyToId = InReplyToId
+        _InReplyToStatusId = InReplyToStatusId
         _Source = Source
+        _SourceHtml = SourceHtml
         _ReplyToList = ReplyToList
         _IsMe = IsMe
-        _ImageIndex = ImageIndex
         _IsDm = IsDm
-        _Uid = Uid
+        _UserId = userId
         _FilterHit = FilterHit
         _RetweetedBy = RetweetedBy
         _RetweetedId = RetweetedId
+        _PostGeo = Geo
     End Sub
 
     Public Sub New()
@@ -128,12 +142,12 @@ Public NotInheritable Class PostClass
             _Nick = value
         End Set
     End Property
-    Public Property Data() As String
+    Public Property TextFromApi() As String
         Get
-            Return _Data
+            Return _textFromApi
         End Get
         Set(ByVal value As String)
-            _Data = value
+            _textFromApi = value
         End Set
     End Property
     Public Property ImageUrl() As String
@@ -144,28 +158,28 @@ Public NotInheritable Class PostClass
             _ImageUrl = value
         End Set
     End Property
-    Public Property Name() As String
+    Public Property ScreenName() As String
         Get
-            Return _Name
+            Return _screenName
         End Get
         Set(ByVal value As String)
-            _Name = value
+            _screenName = value
         End Set
     End Property
-    Public Property PDate() As Date
+    Public Property CreatedAt() As Date
         Get
-            Return _PDate
+            Return _createdAt
         End Get
         Set(ByVal value As Date)
-            _PDate = value
+            _createdAt = value
         End Set
     End Property
-    Public Property Id() As Long
+    Public Property StatusId() As Long
         Get
-            Return _Id
+            Return _statusId
         End Get
         Set(ByVal value As Long)
-            _Id = value
+            _statusId = value
         End Set
     End Property
     Public Property IsFav() As Boolean
@@ -183,12 +197,12 @@ Public NotInheritable Class PostClass
             End If
         End Set
     End Property
-    Public Property OriginalData() As String
+    Public Property Text() As String
         Get
-            Return _OrgData
+            Return _text
         End Get
         Set(ByVal value As String)
-            _OrgData = value
+            _text = value
         End Set
     End Property
     Public Property IsRead() As Boolean
@@ -196,11 +210,6 @@ Public NotInheritable Class PostClass
             Return _IsRead
         End Get
         Set(ByVal value As Boolean)
-            If value Then
-                _statuses = _statuses Or Statuses.Read
-            Else
-                _statuses = _statuses And Not Statuses.Read
-            End If
             _IsRead = value
         End Set
     End Property
@@ -226,9 +235,9 @@ Public NotInheritable Class PostClass
         End Get
         Set(ByVal value As Boolean)
             If value Then
-                _statuses = _statuses Or Statuses.Protect
+                _states = _states Or States.Protect
             Else
-                _statuses = _statuses And Not Statuses.Protect
+                _states = _states And Not States.Protect
             End If
             _IsProtect = value
         End Set
@@ -247,9 +256,9 @@ Public NotInheritable Class PostClass
         End Get
         Set(ByVal value As Boolean)
             If value Then
-                _statuses = _statuses Or Statuses.Mark
+                _states = _states Or States.Mark
             Else
-                _statuses = _statuses And Not Statuses.Mark
+                _states = _states And Not States.Mark
             End If
             _IsMark = value
         End Set
@@ -262,12 +271,26 @@ Public NotInheritable Class PostClass
             _InReplyToUser = value
         End Set
     End Property
-    Public Property InReplyToId() As Long
+    Public Property InReplyToStatusId() As Long
         Get
-            Return _InReplyToId
+            Return _InReplyToStatusId
         End Get
         Set(ByVal value As Long)
-            _InReplyToId = value
+            If value > 0 Then
+                _states = _states Or States.Reply
+            Else
+                _states = _states And Not States.Reply
+            End If
+            _InReplyToStatusId = value
+        End Set
+    End Property
+
+    Public Property InReplyToUserId() As Long
+        Get
+            Return _InReplyToUserId
+        End Get
+        Set(ByVal value As Long)
+            _InReplyToUserId = value
         End Set
     End Property
     Public Property Source() As String
@@ -276,6 +299,14 @@ Public NotInheritable Class PostClass
         End Get
         Set(ByVal value As String)
             _Source = value
+        End Set
+    End Property
+    Public Property SourceHtml() As String
+        Get
+            Return _SourceHtml
+        End Get
+        Set(ByVal value As String)
+            _SourceHtml = value
         End Set
     End Property
     Public Property ReplyToList() As List(Of String)
@@ -294,14 +325,6 @@ Public NotInheritable Class PostClass
             _IsMe = value
         End Set
     End Property
-    Public Property ImageIndex() As Integer
-        Get
-            Return _ImageIndex
-        End Get
-        Set(ByVal value As Integer)
-            _ImageIndex = value
-        End Set
-    End Property
     Public Property IsDm() As Boolean
         Get
             Return _IsDm
@@ -310,17 +333,17 @@ Public NotInheritable Class PostClass
             _IsDm = value
         End Set
     End Property
-    Public ReadOnly Property StatusIndex() As Integer
+    'Public ReadOnly Property StatusIndex() As Integer
+    '    Get
+    '        Return _statuses
+    '    End Get
+    'End Property
+    Public Property UserId() As Long
         Get
-            Return _statuses
-        End Get
-    End Property
-    Public Property Uid() As Long
-        Get
-            Return _Uid
+            Return _UserId
         End Get
         Set(ByVal value As Long)
-            _Uid = value
+            _UserId = value
         End Set
     End Property
     Public Property FilterHit() As Boolean
@@ -349,12 +372,99 @@ Public NotInheritable Class PostClass
     End Property
     Public Property RelTabName() As String
         Get
-            Return _searchTabName
+            Return _SearchTabName
         End Get
         Set(ByVal value As String)
-            _searchTabName = value
+            _SearchTabName = value
         End Set
     End Property
+    Public Property IsDeleted As Boolean
+        Get
+            Return _IsDeleted
+        End Get
+        Set(ByVal value As Boolean)
+            If value Then
+                Me.InReplyToStatusId = 0
+                Me.InReplyToUser = ""
+                Me.InReplyToUserId = 0
+                Me.IsReply = False
+                Me.ReplyToList = New List(Of String)
+                Me._states = States.None
+            End If
+            _IsDeleted = value
+        End Set
+    End Property
+
+    Public Property FavoritedCount As Integer
+
+    Public Property PostGeo As StatusGeo
+        Get
+            Return _postGeo
+        End Get
+        Set(ByVal value As StatusGeo)
+            If value IsNot Nothing AndAlso (value.Lat <> 0 OrElse value.Lng <> 0) Then
+                _states = _states Or States.Geo
+            Else
+                _states = _states And Not States.Geo
+            End If
+            _postGeo = value
+        End Set
+    End Property
+
+    Public ReadOnly Property StateIndex As Integer
+        Get
+            Return CType(_states, Integer) - 1
+        End Get
+    End Property
+
+    Public Function Copy() As PostClass
+        Dim post As PostClass = DirectCast(Me.Clone, PostClass)
+        post.ReplyToList = New List(Of String)(Me.ReplyToList)
+        Return post
+    End Function
+
+    Public Overrides Function Equals(ByVal obj As Object) As Boolean
+        If (obj Is Nothing) OrElse Not (Me.GetType() Is obj.GetType()) Then Return False
+        Return Me.Equals(CType(obj, PostClass))
+    End Function
+
+    Public Overloads Function Equals(ByVal other As PostClass) As Boolean
+        If other Is Nothing Then Return False
+        Return (Me.Nickname = other.Nickname) AndAlso
+                (Me.TextFromApi = other.TextFromApi) AndAlso
+                (Me.ImageUrl = other.ImageUrl) AndAlso
+                (Me.ScreenName = other.ScreenName) AndAlso
+                (Me.CreatedAt = other.CreatedAt) AndAlso
+                (Me.StatusId = other.StatusId) AndAlso
+                (Me.IsFav = other.IsFav) AndAlso
+                (Me.Text = other.Text) AndAlso
+                (Me.IsRead = other.IsRead) AndAlso
+                (Me.IsReply = other.IsReply) AndAlso
+                (Me.IsExcludeReply = other.IsExcludeReply) AndAlso
+                (Me.IsProtect = other.IsProtect) AndAlso
+                (Me.IsOwl = other.IsOwl) AndAlso
+                (Me.IsMark = other.IsMark) AndAlso
+                (Me.InReplyToUser = other.InReplyToUser) AndAlso
+                (Me.InReplyToStatusId = other.InReplyToStatusId) AndAlso
+                (Me.Source = other.Source) AndAlso
+                (Me.SourceHtml = other.SourceHtml) AndAlso
+                (Me.ReplyToList.Equals(other.ReplyToList)) AndAlso
+                (Me.IsMe = other.IsMe) AndAlso
+                (Me.IsDm = other.IsDm) AndAlso
+                (Me.UserId = other.UserId) AndAlso
+                (Me.FilterHit = other.FilterHit) AndAlso
+                (Me.RetweetedBy = other.RetweetedBy) AndAlso
+                (Me.RetweetedId = other.RetweetedId) AndAlso
+                (Me.RelTabName = other.RelTabName) AndAlso
+                (Me.IsDeleted = other.IsDeleted) AndAlso
+                (Me.InReplyToUserId = other.InReplyToUserId)
+
+    End Function
+#Region "IClonable.Clone"
+    Private Function Clone() As Object Implements ICloneable.Clone
+        Return Me.MemberwiseClone()
+    End Function
+#End Region
 End Class
 
 Public NotInheritable Class TabInformations
@@ -363,8 +473,17 @@ Public NotInheritable Class TabInformations
     Private _tabs As New Dictionary(Of String, TabClass)
     Private _statuses As New Dictionary(Of Long, PostClass)
     Private _addedIds As List(Of Long)
+    Private _deletedIds As New List(Of Long)
     Private _retweets As New Dictionary(Of Long, PostClass)
-    Private _removedTab As TabClass = Nothing
+    Private _removedTab As New Stack(Of TabClass)
+    Private _scrubGeo As New List(Of ScrubGeoInfo)
+
+    Private Class ScrubGeoInfo
+        Public UserId As Long
+        Public UpToStatusId As Long
+    End Class
+
+    Public BlockIds As New List(Of Long)
 
     '発言の追加
     'AddPost(複数回) -> DistributePosts          -> SubmitUpdate
@@ -408,11 +527,13 @@ Public NotInheritable Class TabInformations
         End Set
     End Property
 
-    Public Sub AddTab(ByVal TabName As String, ByVal TabType As TabUsageType, ByVal List As ListElement)
+    Public Function AddTab(ByVal TabName As String, ByVal TabType As TabUsageType, ByVal List As ListElement) As Boolean
+        If _tabs.ContainsKey(TabName) Then Return False
         _tabs.Add(TabName, New TabClass(TabName, TabType, List))
         _tabs(TabName).Sorter.Mode = _sorter.Mode
         _tabs(TabName).Sorter.Order = _sorter.Order
-    End Sub
+        Return True
+    End Function
 
     'Public Sub AddTab(ByVal TabName As String, ByVal Tab As TabClass)
     '    _tabs.Add(TabName, Tab)
@@ -421,13 +542,14 @@ Public NotInheritable Class TabInformations
     Public Sub RemoveTab(ByVal TabName As String)
         SyncLock LockObj
             If IsDefaultTab(TabName) Then Exit Sub '念のため
-            If _tabs(TabName).TabType <> TabUsageType.PublicSearch AndAlso _tabs(TabName).TabType <> TabUsageType.Lists Then
+            If Not _tabs(TabName).IsInnerStorageTabType Then
                 Dim homeTab As TabClass = GetTabByType(TabUsageType.Home)
                 Dim dmName As String = GetTabByType(TabUsageType.DirectMessage).TabName
 
                 For idx As Integer = 0 To _tabs(TabName).AllCount - 1
                     Dim exist As Boolean = False
                     Dim Id As Long = _tabs(TabName).GetId(idx)
+                    If Id < 0 Then Continue For
                     For Each key As String In _tabs.Keys
                         If Not key = TabName AndAlso key <> dmName Then
                             If _tabs(key).Contains(Id) Then
@@ -439,20 +561,12 @@ Public NotInheritable Class TabInformations
                     If Not exist Then homeTab.Add(Id, _statuses(Id).IsRead, False)
                 Next
             End If
-            If _removedTab IsNot Nothing Then _removedTab = Nothing
-            _removedTab = _tabs(TabName)
+            _removedTab.Push(_tabs(TabName))
             _tabs.Remove(TabName)
         End SyncLock
     End Sub
 
-    Public Property RemovedTab() As TabClass
-        Get
-            Return _removedTab
-        End Get
-        Set(ByVal value As TabClass)
-            _removedTab = value
-        End Set
-    End Property
+    Public RemovedTab As Stack(Of TabClass) = _removedTab
 
     Public Function ContainsTab(ByVal TabText As String) As Boolean
         Return _tabs.ContainsKey(TabText)
@@ -570,73 +684,120 @@ Public NotInheritable Class TabInformations
                             If tab.UnreadManage AndAlso Not rPost.IsRead Then    '未読管理
                                 SyncLock LockUnread
                                     tab.UnreadCount -= 1
-                                    Me.SetNextUnreadId(rPost.Id, tab)
+                                    Me.SetNextUnreadId(rPost.StatusId, tab)
                                 End SyncLock
                             End If
-                            tab.Remove(rPost.Id)
+                            tab.Remove(rPost.StatusId)
                         End If
                     Next
                 End If
             End If
             ''TabType=PublicSearchの場合（Postの保存先がTabClass内）
-            'If tab.Contains(Id) AndAlso _
+            'If tab.Contains(StatusId) AndAlso _
             '   (tab.TabType = TabUsageType.PublicSearch OrElse tab.TabType = TabUsageType.DirectMessage) Then
-            '    post = tab.Posts(Id)
+            '    post = tab.Posts(StatusId)
             '    If tab.UnreadManage AndAlso Not post.IsRead Then    '未読管理
             '        SyncLock LockUnread
             '            tab.UnreadCount -= 1
-            '            Me.SetNextUnreadId(Id, tab)
+            '            Me.SetNextUnreadId(StatusId, tab)
             '        End SyncLock
             '    End If
-            '    tab.Remove(Id)
+            '    tab.Remove(StatusId)
             'End If
+        End SyncLock
+    End Sub
+
+    Public Sub ScrubGeoReserve(ByVal id As Long, ByVal upToStatusId As Long)
+        SyncLock LockObj
+            'Me._scrubGeo.Add(New ScrubGeoInfo With {.UserId = id, .UpToStatusId = upToStatusId})
+            Me.ScrubGeo(id, upToStatusId)
+        End SyncLock
+    End Sub
+
+    Private Sub ScrubGeo(ByVal userId As Long, ByVal upToStatusId As Long)
+        SyncLock LockObj
+            Dim userPosts = From post In Me._statuses.Values
+                            Where post.UserId = userId AndAlso post.UserId <= upToStatusId
+                            Select post
+
+            For Each p In userPosts
+                p.PostGeo = New PostClass.StatusGeo
+            Next
+
+            Dim userPosts2 = From tb In Me.GetTabsInnerStorageType
+                             From post In tb.Posts.Values
+                             Where post.UserId = userId AndAlso post.UserId <= upToStatusId
+                             Select post
+
+            For Each p In userPosts2
+                p.PostGeo = New PostClass.StatusGeo
+            Next
+        End SyncLock
+    End Sub
+
+    Public Sub RemovePostReserve(ByVal id As Long)
+        SyncLock LockObj
+            Me._deletedIds.Add(id)
+            Me.DeletePost(id)   'UI選択行がずれるため、RemovePostは使用しない
         End SyncLock
     End Sub
 
     Public Sub RemovePost(ByVal Id As Long)
         SyncLock LockObj
             Dim post As PostClass = Nothing
-            If _statuses.ContainsKey(Id) Then
-                post = _statuses(Id)
-                '各タブから該当ID削除
-                For Each key As String In _tabs.Keys
-                    Dim tab As TabClass = _tabs(key)
-                    If tab.Contains(Id) Then
+            'If _statuses.ContainsKey(Id) Then
+            '各タブから該当ID削除
+            For Each key As String In _tabs.Keys
+                Dim tab As TabClass = _tabs(key)
+                If tab.Contains(Id) Then
+                    If Not tab.IsInnerStorageTabType Then
+                        post = _statuses(Id)
                         If tab.UnreadManage AndAlso Not post.IsRead Then    '未読管理
                             SyncLock LockUnread
                                 tab.UnreadCount -= 1
                                 Me.SetNextUnreadId(Id, tab)
                             End SyncLock
                         End If
-                        tab.Remove(Id)
+                    Else '未読数がずれる可能性があるためtab.Postsの未読も確認する
+                        If tab.UnreadManage AndAlso Not tab.Posts(Id).IsRead Then    '未読管理
+                            SyncLock LockUnread
+                                tab.UnreadCount -= 1
+                                Me.SetNextUnreadId(Id, tab)
+                            End SyncLock
+                        End If
                     End If
-                Next
-                _statuses.Remove(Id)
+                    tab.Remove(Id)
+                End If
+            Next
+            If _statuses.ContainsKey(Id) Then _statuses.Remove(Id)
+            'End If
+        End SyncLock
+    End Sub
+
+    Private Sub DeletePost(ByVal Id As Long)
+        SyncLock LockObj
+            Dim post As PostClass = Nothing
+            If _statuses.ContainsKey(Id) Then
+                post = _statuses(Id)
+                post.IsDeleted = True
             End If
-            For Each tb As TabClass In _tabs.Values
-                If (tb.TabType = TabUsageType.PublicSearch OrElse tb.TabType = TabUsageType.DirectMessage OrElse tb.TabType = TabUsageType.Lists) _
-                   AndAlso tb.Contains(Id) Then
+            For Each tb As TabClass In Me.GetTabsInnerStorageType
+                If tb.Contains(Id) Then
                     post = tb.Posts(Id)
-                    If tb.UnreadManage AndAlso Not post.IsRead Then
-                        SyncLock LockUnread
-                            tb.UnreadCount -= 1
-                            Me.SetNextUnreadId(Id, tb)
-                        End SyncLock
-                    End If
-                    tb.Remove(Id)
+                    post.IsDeleted = True
                 End If
             Next
         End SyncLock
     End Sub
 
-    Public Function GetOldestUnreadId(ByVal TabName As String) As Integer
+    Public Function GetOldestUnreadIndex(ByVal TabName As String) As Integer
         Dim tb As TabClass = _tabs(TabName)
         If tb.OldestUnreadId > -1 AndAlso _
            tb.Contains(tb.OldestUnreadId) AndAlso _
            tb.UnreadCount > 0 Then
             '未読アイテムへ
             Dim isRead As Boolean
-            If tb.TabType <> TabUsageType.PublicSearch AndAlso tb.TabType <> TabUsageType.DirectMessage AndAlso tb.TabType <> TabUsageType.Lists Then
+            If Not tb.IsInnerStorageTabType Then
                 isRead = _statuses(tb.OldestUnreadId).IsRead
             Else
                 isRead = tb.Posts(tb.OldestUnreadId).IsRead
@@ -657,7 +818,7 @@ Public NotInheritable Class TabInformations
         Else
             '一見未読なさそうだが、未読カウントはあるので探索
             'If tb.UnreadCount > 0 Then
-            If Not tb.UnreadManage Then Return -1
+            If Not (tb.UnreadManage AndAlso AppendSettingDialog.Instance.UnreadManage) Then Return -1
             SyncLock LockUnread
                 Me.SetNextUnreadId(-1, tb)
             End SyncLock
@@ -677,7 +838,7 @@ Public NotInheritable Class TabInformations
         '最古未読が設定されていて、既読の場合（1発言以上存在）
         Try
             Dim posts As Dictionary(Of Long, PostClass)
-            If Tab.TabType <> TabUsageType.PublicSearch AndAlso Tab.TabType <> TabUsageType.DirectMessage AndAlso Tab.TabType <> TabUsageType.Lists Then
+            If Not Tab.IsInnerStorageTabType Then
                 posts = _statuses
             Else
                 posts = Tab.Posts
@@ -742,21 +903,21 @@ Public NotInheritable Class TabInformations
             toIdx = 0
             stp = -1
         End If
-        If Tab.TabType <> TabUsageType.PublicSearch AndAlso Tab.TabType <> TabUsageType.DirectMessage AndAlso Tab.TabType <> TabUsageType.Lists Then
-            For i As Integer = StartIdx To toIdx Step stp
-                If Not _statuses(Tab.GetId(i)).IsRead Then
-                    Tab.OldestUnreadId = Tab.GetId(i)
-                    Exit For
-                End If
-            Next
+
+        Dim posts As Dictionary(Of Long, PostClass)
+        If Not Tab.IsInnerStorageTabType Then
+            posts = _statuses
         Else
-            For i As Integer = StartIdx To toIdx Step stp
-                If Not Tab.Posts(Tab.GetId(i)).IsRead Then
-                    Tab.OldestUnreadId = Tab.GetId(i)
-                    Exit For
-                End If
-            Next
+            posts = Tab.Posts
         End If
+
+        For i As Integer = StartIdx To toIdx Step stp
+            Dim id As Long = Tab.GetId(i)
+            If id > -1 AndAlso Not posts(id).IsRead Then
+                Tab.OldestUnreadId = id
+                Exit For
+            End If
+        Next
     End Sub
 
     Public Function DistributePosts() As Integer
@@ -767,7 +928,11 @@ Public NotInheritable Class TabInformations
 
             If _addedIds Is Nothing Then _addedIds = New List(Of Long)
             If _notifyPosts Is Nothing Then _notifyPosts = New List(Of PostClass)
-            Me.Distribute()    'タブに仮振分
+            Try
+                Me.Distribute()    'タブに仮振分
+            Catch ex As KeyNotFoundException
+                'タブ変更により振分が失敗した場合
+            End Try
             Dim retCnt As Integer = _addedIds.Count
             _addCount += retCnt
             _addedIds.Clear()
@@ -776,7 +941,11 @@ Public NotInheritable Class TabInformations
         End SyncLock
     End Function
 
-    Public Function SubmitUpdate(ByRef soundFile As String, ByRef notifyPosts As PostClass(), ByRef isMentionIncluded As Boolean) As Integer
+    Public Function SubmitUpdate(ByRef soundFile As String,
+                                 ByRef notifyPosts As PostClass(),
+                                 ByRef isMentionIncluded As Boolean,
+                                 ByRef isDeletePost As Boolean,
+                                 ByVal isUserStream As Boolean) As Integer
         '注：メインスレッドから呼ぶこと
         SyncLock LockObj
             If _notifyPosts Is Nothing Then
@@ -786,12 +955,33 @@ Public NotInheritable Class TabInformations
             End If
 
             For Each tb As TabClass In _tabs.Values
-                If tb.TabType = TabUsageType.PublicSearch OrElse tb.TabType = TabUsageType.DirectMessage OrElse tb.TabType = TabUsageType.Lists Then
+                If tb.IsInnerStorageTabType Then
                     _addCount += tb.GetTemporaryCount
                 End If
                 tb.AddSubmit(isMentionIncluded)  '振分確定（各タブに反映）
             Next
-            Me.SortPosts()
+            ''UserStreamで反映間隔10秒以下だったら、30秒ごとにソートする
+            ''10秒以上だったら毎回ソート
+            'Static lastSort As DateTime = Now
+            'If AppendSettingDialog.Instance.UserstreamPeriodInt < 10 AndAlso isUserStream Then
+            '    If Now.Subtract(lastSort) > TimeSpan.FromSeconds(30) Then
+            '        lastSort = Now
+            '        isUserStream = False
+            '    End If
+            'Else
+            '    isUserStream = False
+            'End If
+            If Not isUserStream OrElse Me.SortMode <> IdComparerClass.ComparerMode.Id Then
+                Me.SortPosts()
+            End If
+            If isUserStream Then
+                isDeletePost = Me._deletedIds.Count > 0
+                For Each id As Long In Me._deletedIds
+                    'Me.DeletePost(StatusId)
+                    Me.RemovePost(id)
+                Next
+                Me._deletedIds.Clear()
+            End If
 
             soundFile = _soundFile
             _soundFile = ""
@@ -839,36 +1029,36 @@ Public NotInheritable Class TabInformations
                 End If
             Next
             If Not mv Then  '移動されなかったらRecentに追加
-                homeTab.Add(post.Id, post.IsRead, True)
+                homeTab.Add(post.StatusId, post.IsRead, True)
                 If Not homeTab.SoundFile = "" AndAlso _soundFile = "" Then _soundFile = homeTab.SoundFile
                 If homeTab.Notify Then add = True
             End If
             If post.IsReply AndAlso Not post.IsExcludeReply Then    '除外ルール適用のないReplyならReplyタブに追加
-                replyTab.Add(post.Id, post.IsRead, True)
+                replyTab.Add(post.StatusId, post.IsRead, True)
                 If Not replyTab.SoundFile = "" Then _soundFile = replyTab.SoundFile
                 If replyTab.Notify Then add = True
             End If
             If post.IsFav Then    'Fav済み発言だったらFavoritesタブに追加
-                If favTab.Contains(post.Id) Then
+                If favTab.Contains(post.StatusId) Then
                     '取得済みなら非通知
                     '_soundFile = ""
                     add = False
                 Else
-                    favTab.Add(post.Id, post.IsRead, True)
-                    If Not favTab.SoundFile = "" AndAlso _soundFile = "" Then _soundFile = favTab.SoundFile
+                    favTab.Add(post.StatusId, post.IsRead, True)
+                    If Not String.IsNullOrEmpty(favTab.SoundFile) AndAlso String.IsNullOrEmpty(_soundFile) Then _soundFile = favTab.SoundFile
                     If favTab.Notify Then add = True
                 End If
             End If
             If add Then _notifyPosts.Add(post)
         Next
         For Each tb As TabClass In _tabs.Values
-            If tb.TabType = TabUsageType.PublicSearch OrElse tb.TabType = TabUsageType.DirectMessage OrElse tb.TabType = TabUsageType.Lists Then
+            If tb.IsInnerStorageTabType Then
                 If tb.Notify Then
                     If tb.GetTemporaryCount > 0 Then
                         For Each post As PostClass In tb.GetTemporaryPosts
                             Dim exist As Boolean = False
                             For Each npost As PostClass In _notifyPosts
-                                If npost.Id = post.Id Then
+                                If npost.StatusId = post.StatusId Then
                                     exist = True
                                     Exit For
                                 End If
@@ -890,31 +1080,42 @@ Public NotInheritable Class TabInformations
         SyncLock LockObj
             If Item.RelTabName = "" Then
                 If Not Item.IsDm Then
-                    If _statuses.ContainsKey(Item.Id) Then
+                    If _statuses.ContainsKey(Item.StatusId) Then
                         If Item.IsFav Then
-                            _statuses.Item(Item.Id).IsFav = True
+                            If Item.RetweetedId = 0 Then
+                                _statuses.Item(Item.StatusId).IsFav = True
+                            Else
+                                Item.IsFav = False
+                            End If
                         Else
                             Exit Sub        '追加済みなら何もしない
                         End If
                     Else
-                        _statuses.Add(Item.Id, Item)
+                        If Item.IsFav AndAlso Item.RetweetedId > 0 Then Item.IsFav = False
+                        '既に持っている公式RTは捨てる
+                        If AppendSettingDialog.Instance.HideDuplicatedRetweets AndAlso
+                            Not Item.IsMe AndAlso
+                            Me._retweets.ContainsKey(Item.RetweetedId) AndAlso
+                            Me._retweets(Item.RetweetedId).RetweetedCount > 0 Then Exit Sub
+                        If BlockIds.Contains(Item.UserId) Then Exit Sub
+                        _statuses.Add(Item.StatusId, Item)
                     End If
                     If Item.RetweetedId > 0 Then
                         Me.AddRetweet(Item)
                     End If
-                    If Item.IsFav AndAlso _retweets.ContainsKey(Item.Id) Then
+                    If Item.IsFav AndAlso _retweets.ContainsKey(Item.StatusId) Then
                         Exit Sub    'Fav済みのRetweet元発言は追加しない
                     End If
                     If _addedIds Is Nothing Then _addedIds = New List(Of Long) 'タブ追加用IDコレクション準備
-                    _addedIds.Add(Item.Id)
+                    _addedIds.Add(Item.StatusId)
                 Else
                     'DM
                     Dim tb As TabClass = Me.GetTabByType(TabUsageType.DirectMessage)
-                    If tb.Contains(Item.Id) Then Exit Sub
+                    If tb.Contains(Item.StatusId) Then Exit Sub
                     tb.AddPostToInnerStorage(Item)
                 End If
             Else
-                '公式検索、リストの場合
+                '公式検索、リスト、関連発言の場合
                 Dim tb As TabClass
                 If Me.Tabs.ContainsKey(Item.RelTabName) Then
                     tb = Me.Tabs(Item.RelTabName)
@@ -922,25 +1123,32 @@ Public NotInheritable Class TabInformations
                     Exit Sub
                 End If
                 If tb Is Nothing Then Exit Sub
-                If tb.Contains(Item.Id) Then Exit Sub
-                'tb.Add(Item.Id, Item.IsRead, True)
+                If tb.Contains(Item.StatusId) Then Exit Sub
+                'tb.Add(Item.StatusId, Item.IsRead, True)
                 tb.AddPostToInnerStorage(Item)
             End If
         End SyncLock
     End Sub
 
     Private Sub AddRetweet(ByVal item As PostClass)
-        If _retweets.ContainsKey(item.RetweetedId) Then Exit Sub
+        'True:追加、False:保持済み
+        If _retweets.ContainsKey(item.RetweetedId) Then
+            _retweets(item.RetweetedId).RetweetedCount += 1
+            If _retweets(item.RetweetedId).RetweetedCount > 10 Then
+                _retweets(item.RetweetedId).RetweetedCount = 0
+            End If
+            Exit Sub
+        End If
 
         _retweets.Add( _
                     item.RetweetedId, _
                     New PostClass( _
                         item.Nickname, _
-                        item.Data, _
-                        item.OriginalData, _
+                        item.TextFromApi, _
+                        item.Text, _
                         item.ImageUrl, _
-                        item.Name, _
-                        item.PDate, _
+                        item.ScreenName, _
+                        item.CreatedAt, _
                         item.RetweetedId, _
                         item.IsFav, _
                         item.IsRead, _
@@ -950,20 +1158,131 @@ Public NotInheritable Class TabInformations
                         item.IsOwl, _
                         item.IsMark, _
                         item.InReplyToUser, _
-                        item.InReplyToId, _
+                        item.InReplyToStatusId, _
                         item.Source, _
+                        item.SourceHtml, _
                         item.ReplyToList, _
                         item.IsMe, _
-                        item.ImageIndex, _
                         item.IsDm, _
-                        item.Uid, _
+                        item.UserId, _
                         item.FilterHit, _
                         "", _
-                        0 _
+                        0, _
+                        item.PostGeo _
                     ) _
                 )
+        _retweets(item.RetweetedId).RetweetedCount += 1
     End Sub
 
+    Public Sub SetReadAllTab(ByVal Read As Boolean, ByVal TabName As String, ByVal Index As Integer)
+        'Read:True=既読へ　False=未読へ
+        Dim tb As TabClass = _tabs(TabName)
+
+        If tb.UnreadManage = False Then Exit Sub '未読管理していなければ終了
+
+        Dim Id As Long = tb.GetId(Index)
+        If Id < 0 Then Exit Sub
+        Dim post As PostClass
+        If Not tb.IsInnerStorageTabType Then
+            post = _statuses(Id)
+        Else
+            post = tb.Posts(Id)
+        End If
+
+        If post.IsRead = Read Then Exit Sub '状態変更なければ終了
+
+        post.IsRead = Read
+
+        SyncLock LockUnread
+            If Read Then
+                tb.UnreadCount -= 1
+                Me.SetNextUnreadId(Id, tb)  '次の未読セット
+                '他タブの最古未読ＩＤはタブ切り替え時に。
+                If tb.IsInnerStorageTabType Then
+                    '一般タブ
+                    If _statuses.ContainsKey(Id) AndAlso Not _statuses(Id).IsRead Then
+                        For Each key As String In _tabs.Keys
+                            If _tabs(key).UnreadManage AndAlso _
+                               _tabs(key).Contains(Id) AndAlso _
+                               Not _tabs(key).IsInnerStorageTabType Then
+                                _tabs(key).UnreadCount -= 1
+                                If _tabs(key).OldestUnreadId = Id Then _tabs(key).OldestUnreadId = -1
+                            End If
+                        Next
+                        _statuses(Id).IsRead = True
+                    End If
+                Else
+                    '一般タブ
+                    For Each key As String In _tabs.Keys
+                        If key <> TabName AndAlso _
+                           _tabs(key).UnreadManage AndAlso _
+                           _tabs(key).Contains(Id) AndAlso _
+                           Not _tabs(key).IsInnerStorageTabType Then
+                            _tabs(key).UnreadCount -= 1
+                            If _tabs(key).OldestUnreadId = Id Then _tabs(key).OldestUnreadId = -1
+                        End If
+                    Next
+                End If
+                '内部保存タブ
+                For Each key As String In _tabs.Keys
+                    If key <> TabName AndAlso
+                        _tabs(key).Contains(Id) AndAlso
+                        _tabs(key).IsInnerStorageTabType AndAlso
+                        Not _tabs(key).Posts(Id).IsRead Then
+                        If _tabs(key).UnreadManage Then
+                            _tabs(key).UnreadCount -= 1
+                            If _tabs(key).OldestUnreadId = Id Then _tabs(key).OldestUnreadId = -1
+                        End If
+                        _tabs(key).Posts(Id).IsRead = True
+                    End If
+                Next
+            Else
+                tb.UnreadCount += 1
+                'If tb.OldestUnreadId > Id OrElse tb.OldestUnreadId = -1 Then tb.OldestUnreadId = Id
+                If tb.OldestUnreadId > Id Then tb.OldestUnreadId = Id
+                If tb.IsInnerStorageTabType Then
+                    '一般タブ
+                    If _statuses.ContainsKey(Id) AndAlso _statuses(Id).IsRead Then
+                        For Each key As String In _tabs.Keys
+                            If _tabs(key).UnreadManage AndAlso _
+                               _tabs(key).Contains(Id) AndAlso _
+                               Not _tabs(key).IsInnerStorageTabType Then
+                                _tabs(key).UnreadCount += 1
+                                If _tabs(key).OldestUnreadId > Id Then _tabs(key).OldestUnreadId = Id
+                            End If
+                        Next
+                        _statuses(Id).IsRead = False
+                    End If
+                Else
+                    '一般タブ
+                    For Each key As String In _tabs.Keys
+                        If key <> TabName AndAlso _
+                           _tabs(key).UnreadManage AndAlso _
+                           _tabs(key).Contains(Id) AndAlso _
+                           Not _tabs(key).IsInnerStorageTabType Then
+                            _tabs(key).UnreadCount += 1
+                            If _tabs(key).OldestUnreadId > Id Then _tabs(key).OldestUnreadId = Id
+                        End If
+                    Next
+                End If
+                '内部保存タブ
+                For Each key As String In _tabs.Keys
+                    If key <> TabName AndAlso
+                        _tabs(key).Contains(Id) AndAlso
+                        _tabs(key).IsInnerStorageTabType AndAlso
+                        _tabs(key).Posts(Id).IsRead Then
+                        If _tabs(key).UnreadManage Then
+                            _tabs(key).UnreadCount += 1
+                            If _tabs(key).OldestUnreadId > Id Then _tabs(key).OldestUnreadId = Id
+                        End If
+                        _tabs(key).Posts(Id).IsRead = False
+                    End If
+                Next
+            End If
+        End SyncLock
+    End Sub
+
+    ''' TODO: パフォーマンスを勘案して、戻すか決める
     Public Sub SetRead(ByVal Read As Boolean, ByVal TabName As String, ByVal Index As Integer)
         'Read:True=既読へ　False=未読へ
         Dim tb As TabClass = _tabs(TabName)
@@ -971,12 +1290,14 @@ Public NotInheritable Class TabInformations
         If tb.UnreadManage = False Then Exit Sub '未読管理していなければ終了
 
         Dim Id As Long = tb.GetId(Index)
+        If Id < 0 Then Exit Sub
         Dim post As PostClass
-        If tb.TabType <> TabUsageType.PublicSearch AndAlso tb.TabType <> TabUsageType.DirectMessage AndAlso tb.TabType <> TabUsageType.Lists Then
+        If Not tb.IsInnerStorageTabType Then
             post = _statuses(Id)
         Else
             post = tb.Posts(Id)
         End If
+
         If post.IsRead = Read Then Exit Sub '状態変更なければ終了
 
         post.IsRead = Read '指定の状態に変更
@@ -986,25 +1307,26 @@ Public NotInheritable Class TabInformations
                 tb.UnreadCount -= 1
                 Me.SetNextUnreadId(Id, tb)  '次の未読セット
                 '他タブの最古未読ＩＤはタブ切り替え時に。
-                If tb.TabType = TabUsageType.PublicSearch OrElse tb.TabType = TabUsageType.DirectMessage OrElse tb.TabType = TabUsageType.Lists Then Exit Sub
+                If tb.IsInnerStorageTabType Then Exit Sub
                 For Each key As String In _tabs.Keys
                     If key <> TabName AndAlso _
                        _tabs(key).UnreadManage AndAlso _
                        _tabs(key).Contains(Id) AndAlso _
-                       (_tabs(key).TabType <> TabUsageType.PublicSearch AndAlso _tabs(key).TabType <> TabUsageType.DirectMessage AndAlso _tabs(key).TabType <> TabUsageType.Lists) Then
+                       Not _tabs(key).IsInnerStorageTabType Then
                         _tabs(key).UnreadCount -= 1
                         If _tabs(key).OldestUnreadId = Id Then _tabs(key).OldestUnreadId = -1
                     End If
                 Next
             Else
                 tb.UnreadCount += 1
-                If tb.OldestUnreadId > Id OrElse tb.OldestUnreadId = -1 Then tb.OldestUnreadId = Id
-                If tb.TabType = TabUsageType.PublicSearch OrElse tb.TabType = TabUsageType.DirectMessage OrElse tb.TabType = TabUsageType.Lists Then Exit Sub
+                'If tb.OldestUnreadId > Id OrElse tb.OldestUnreadId = -1 Then tb.OldestUnreadId = Id
+                If tb.OldestUnreadId > Id Then tb.OldestUnreadId = Id
+                If tb.IsInnerStorageTabType Then Exit Sub
                 For Each key As String In _tabs.Keys
                     If Not key = TabName AndAlso _
                        _tabs(key).UnreadManage AndAlso _
                        _tabs(key).Contains(Id) AndAlso _
-                       (_tabs(key).TabType <> TabUsageType.PublicSearch AndAlso _tabs(key).TabType <> TabUsageType.DirectMessage AndAlso _tabs(key).TabType <> TabUsageType.Lists) Then
+                       Not _tabs(key).IsInnerStorageTabType Then
                         _tabs(key).UnreadCount += 1
                         If _tabs(key).OldestUnreadId > Id Then _tabs(key).OldestUnreadId = Id
                     End If
@@ -1017,30 +1339,32 @@ Public NotInheritable Class TabInformations
         Dim tb As TabClass = GetTabByType(TabUsageType.Home)
         If tb.UnreadManage = False Then Exit Sub
 
-        For i As Integer = 0 To tb.AllCount - 1
-            Dim id As Long = tb.GetId(i)
-            If Not _statuses(id).IsReply AndAlso _
-               Not _statuses(id).IsRead AndAlso _
-               Not _statuses(id).FilterHit Then
-                _statuses(id).IsRead = True
-                Me.SetNextUnreadId(id, tb)  '次の未読セット
-                For Each key As String In _tabs.Keys
-                    If _tabs(key).UnreadManage AndAlso _
-                       _tabs(key).Contains(id) Then
-                        _tabs(key).UnreadCount -= 1
-                        If _tabs(key).OldestUnreadId = id Then _tabs(key).OldestUnreadId = -1
-                    End If
-                Next
-            End If
-        Next
+        SyncLock LockObj
+            For i As Integer = 0 To tb.AllCount - 1
+                Dim id As Long = tb.GetId(i)
+                If id < 0 Then Exit Sub
+                If Not _statuses(id).IsReply AndAlso _
+                   Not _statuses(id).IsRead AndAlso _
+                   Not _statuses(id).FilterHit Then
+                    _statuses(id).IsRead = True
+                    Me.SetNextUnreadId(id, tb)  '次の未読セット
+                    For Each key As String In _tabs.Keys
+                        If _tabs(key).UnreadManage AndAlso _
+                           _tabs(key).Contains(id) Then
+                            _tabs(key).UnreadCount -= 1
+                            If _tabs(key).OldestUnreadId = id Then _tabs(key).OldestUnreadId = -1
+                        End If
+                    Next
+                End If
+            Next
+        End SyncLock
     End Sub
 
     Public ReadOnly Property Item(ByVal ID As Long) As PostClass
         Get
             If _statuses.ContainsKey(ID) Then Return _statuses(ID)
-            For Each tb As TabClass In _tabs.Values
-                If (tb.TabType = TabUsageType.PublicSearch OrElse tb.TabType = TabUsageType.DirectMessage OrElse tb.TabType = TabUsageType.Lists) AndAlso _
-                   tb.Contains(ID) Then
+            For Each tb As TabClass In Me.GetTabsInnerStorageType
+                If tb.Contains(ID) Then
                     Return tb.Posts(ID)
                 End If
             Next
@@ -1050,12 +1374,18 @@ Public NotInheritable Class TabInformations
 
     Public ReadOnly Property Item(ByVal TabName As String, ByVal Index As Integer) As PostClass
         Get
-            'If Not _tabs.ContainsKey(TabName) Then Return Nothing
-            If _tabs(TabName).TabType = TabUsageType.PublicSearch OrElse _tabs(TabName).TabType = TabUsageType.DirectMessage OrElse _tabs(TabName).TabType = TabUsageType.Lists Then
-                Return _tabs(TabName).Posts(_tabs(TabName).GetId(Index))
-            Else
-                Return _statuses(_tabs(TabName).GetId(Index))
-            End If
+            If Not _tabs.ContainsKey(TabName) Then Throw New ArgumentException("TabName=" + TabName + " is not contained.")
+            Dim id As Long = _tabs(TabName).GetId(Index)
+            If id < 0 Then Throw New ArgumentException("Index can't find. Index=" + Index.ToString + "/TabName=" + TabName)
+            Try
+                If _tabs(TabName).IsInnerStorageTabType Then
+                    Return _tabs(TabName).Posts(_tabs(TabName).GetId(Index))
+                Else
+                    Return _statuses(_tabs(TabName).GetId(Index))
+                End If
+            Catch ex As Exception
+                Throw New Exception("Index=" + Index.ToString + "/TabName=" + TabName, ex)
+            End Try
         End Get
     End Property
 
@@ -1063,7 +1393,7 @@ Public NotInheritable Class TabInformations
         Get
             Dim length As Integer = EndIndex - StartIndex + 1
             Dim posts() As PostClass = New PostClass(length - 1) {}
-            If _tabs(TabName).TabType = TabUsageType.PublicSearch OrElse _tabs(TabName).TabType = TabUsageType.DirectMessage OrElse _tabs(TabName).TabType = TabUsageType.Lists Then
+            If _tabs(TabName).IsInnerStorageTabType Then
                 For i As Integer = 0 To length - 1
                     posts(i) = _tabs(TabName).Posts(_tabs(TabName).GetId(StartIndex + i))
                 Next i
@@ -1094,7 +1424,11 @@ Public NotInheritable Class TabInformations
     Public Function ContainsKey(ByVal Id As Long, ByVal TabName As String) As Boolean
         'DM,公式検索は対応版
         SyncLock LockObj
-            Return _tabs(TabName).Contains(Id)
+            If _tabs.ContainsKey(TabName) Then
+                Return _tabs(TabName).Contains(Id)
+            Else
+                Return False
+            End If
         End SyncLock
     End Function
 
@@ -1107,7 +1441,7 @@ Public NotInheritable Class TabInformations
                         Dim cnt As Integer = 0
                         Dim oldest As Long = Long.MaxValue
                         Dim posts As Dictionary(Of Long, PostClass)
-                        If tb.TabType <> TabUsageType.PublicSearch AndAlso tb.TabType <> TabUsageType.DirectMessage AndAlso tb.TabType <> TabUsageType.Lists Then
+                        If Not tb.IsInnerStorageTabType Then
                             posts = _statuses
                         Else
                             posts = tb.Posts
@@ -1148,8 +1482,7 @@ Public NotInheritable Class TabInformations
         SyncLock LockObj
             Dim tbr As TabClass = GetTabByType(TabUsageType.Home)
             Dim replyTab As TabClass = GetTabByType(TabUsageType.Mentions)
-            For Each key As String In _tabs.Keys
-                Dim tb As TabClass = _tabs(key)
+            For Each tb As TabClass In _tabs.Values.ToArray
                 If tb.FilterModified Then
                     tb.FilterModified = False
                     Dim orgIds() As Long = tb.BackupIds()
@@ -1166,27 +1499,27 @@ Public NotInheritable Class TabInformations
                                 post.IsMark = True 'マークあり
                                 post.FilterHit = True
                             Case HITRESULT.Move
-                                tbr.Remove(post.Id, post.IsRead)
+                                tbr.Remove(post.StatusId, post.IsRead)
                                 post.IsMark = False
                                 post.FilterHit = True
                             Case HITRESULT.Copy
                                 post.IsMark = False
                                 post.FilterHit = True
                             Case HITRESULT.Exclude
-                                If key = replyTab.TabName AndAlso post.IsReply Then post.IsExcludeReply = True
-                                If post.IsFav Then GetTabByType(TabUsageType.Favorites).Add(post.Id, post.IsRead, True)
+                                If tb.TabName = replyTab.TabName AndAlso post.IsReply Then post.IsExcludeReply = True
+                                If post.IsFav Then GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, True)
                                 post.FilterHit = False
                             Case HITRESULT.None
-                                If key = replyTab.TabName AndAlso post.IsReply Then replyTab.Add(post.Id, post.IsRead, True)
-                                If post.IsFav Then GetTabByType(TabUsageType.Favorites).Add(post.Id, post.IsRead, True)
+                                If tb.TabName = replyTab.TabName AndAlso post.IsReply Then replyTab.Add(post.StatusId, post.IsRead, True)
+                                If post.IsFav Then GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, True)
                                 post.FilterHit = False
                         End Select
                     Next
                     tb.AddSubmit()  '振分確定
                     For Each id As Long In orgIds
                         Dim hit As Boolean = False
-                        For Each tkey As String In _tabs.Keys
-                            If _tabs(tkey).Contains(id) Then
+                        For Each tbTemp As TabClass In _tabs.Values.ToArray
+                            If tbTemp.Contains(id) Then
                                 hit = True
                                 Exit For
                             End If
@@ -1231,7 +1564,7 @@ Public NotInheritable Class TabInformations
     Public Sub ClearTabIds(ByVal TabName As String)
         '不要なPostを削除
         SyncLock LockObj
-            If _tabs(TabName).TabType <> TabUsageType.PublicSearch AndAlso _tabs(TabName).TabType <> TabUsageType.DirectMessage AndAlso _tabs(TabName).TabType <> TabUsageType.Lists Then
+            If Not _tabs(TabName).IsInnerStorageTabType Then
                 For Each Id As Long In _tabs(TabName).BackupIds
                     Dim Hit As Boolean = False
                     For Each tb As TabClass In _tabs.Values
@@ -1256,7 +1589,7 @@ Public NotInheritable Class TabInformations
                 Dim cnt As Integer = 0
                 Dim oldest As Long = Long.MaxValue
                 Dim posts As Dictionary(Of Long, PostClass)
-                If tb.TabType <> TabUsageType.PublicSearch AndAlso tb.TabType <> TabUsageType.DirectMessage AndAlso tb.TabType <> TabUsageType.Lists Then
+                If Not tb.IsInnerStorageTabType Then
                     posts = _statuses
                 Else
                     posts = tb.Posts
@@ -1278,29 +1611,15 @@ Public NotInheritable Class TabInformations
         tb.UnreadManage = Manage
     End Sub
 
-    'Public Sub RefreshOwl(ByVal follower As List(Of String))
-    '    SyncLock LockObj
-    '        If follower.Count > 1 Then
-    '            For Each id As Long In _statuses.Keys
-    '                _statuses(id).IsOwl = Not follower.Contains(_statuses(id).Name.ToLower())
-    '            Next
-    '        Else
-    '            For Each id As Long In _statuses.Keys
-    '                _statuses(id).IsOwl = False
-    '            Next
-    '        End If
-    '    End SyncLock
-    'End Sub
-
     Public Sub RefreshOwl(ByVal follower As List(Of Long))
         SyncLock LockObj
             If follower.Count > 0 Then
                 For Each post As PostClass In _statuses.Values
-                    'If post.Uid = 0 OrElse post.IsDm Then Continue For
+                    'If post.UserId = 0 OrElse post.IsDm Then Continue For
                     If post.IsMe Then
                         post.IsOwl = False
                     Else
-                        post.IsOwl = Not follower.Contains(post.Uid)
+                        post.IsOwl = Not follower.Contains(post.UserId)
                     End If
                 Next
             Else
@@ -1335,6 +1654,18 @@ Public NotInheritable Class TabInformations
         End SyncLock
     End Function
 
+    Public Function GetTabsInnerStorageType() As List(Of TabClass)
+        '合致したタブをListで返す
+        '合致しなければ空のListを返す
+        SyncLock LockObj
+            Dim tbs As New List(Of TabClass)
+            For Each tb As TabClass In _tabs.Values
+                If tb.IsInnerStorageTabType Then tbs.Add(tb)
+            Next
+            Return tbs
+        End SyncLock
+    End Function
+
     Public Function GetTabByName(ByVal tabName As String) As TabClass
         SyncLock LockObj
             If _tabs.ContainsKey(tabName) Then Return _tabs(tabName)
@@ -1354,6 +1685,14 @@ Public NotInheritable Class TabInformations
         Else
             Return False
         End If
+    End Function
+
+    '振り分け可能タブの判定処理
+    Public Function IsDistributableTab(ByVal tabName As String) As Boolean
+        Return tabName IsNot Nothing AndAlso
+            Me._tabs.ContainsKey(tabName) AndAlso
+            (_tabs(tabName).TabType = TabUsageType.Mentions OrElse
+             _tabs(tabName).TabType = TabUsageType.UserDefined)
     End Function
 
     Public Function GetUniqueTabName() As String
@@ -1378,32 +1717,29 @@ End Class
 <Serializable()> _
 Public NotInheritable Class TabClass
     Private _unreadManage As Boolean = False
-    Private _notify As Boolean = False
-    Private _soundFile As String = ""
     Private _filters As List(Of FiltersClass)
-    Private _oldestUnreadItem As Long = -1     'ID
     Private _unreadCount As Integer = 0
     Private _ids As List(Of Long)
-    Private _filterMod As Boolean = False
     Private _tmpIds As New List(Of TemporaryId)
-    Private _tabName As String = ""
     Private _tabType As TabUsageType = TabUsageType.Undefined
-    Private _posts As New Dictionary(Of Long, PostClass)
     Private _sorter As New IdComparerClass
-    Private _oldestId As Long = Long.MaxValue   '古いポスト取得用
-    Private _sinceId As Long = 0
+
+    Private ReadOnly _lockObj As New Object
+
+    Public Property User As String
 
 #Region "検索"
     'Search query
     Private _searchLang As String = ""
     Private _searchWords As String = ""
+    Private _nextPageQuery As String = ""
 
     Public Property SearchLang() As String
         Get
             Return _searchLang
         End Get
         Set(ByVal value As String)
-            _sinceId = 0
+            _SinceId = 0
             _searchLang = value
         End Set
     End Property
@@ -1412,15 +1748,23 @@ Public NotInheritable Class TabClass
             Return _searchWords
         End Get
         Set(ByVal value As String)
-            _sinceId = 0
+            _SinceId = 0
             _searchWords = value.Trim
         End Set
     End Property
-    Public ReadOnly Property SearchPage() As Integer
+
+    Public Property NextPageQuery() As String
         Get
-            Return ((_ids.Count \ 40) + 1)
+            Return _nextPageQuery
         End Get
+        Set(ByVal value As String)
+            _nextPageQuery = value
+        End Set
     End Property
+
+    Public Function GetSearchPage(ByVal count As Integer) As Integer
+        Return ((_ids.Count \ count) + 1)
+    End Function
     Private _beforeQuery As New Dictionary(Of String, String)
     Public Sub SaveQuery(ByVal more As Boolean)
         Dim qry As New Dictionary(Of String, String)
@@ -1462,45 +1806,22 @@ Public NotInheritable Class TabClass
 #End Region
 
     <Xml.Serialization.XmlIgnore()> _
-    Public Property OldestId() As Long
-        Get
-            Return _oldestId
-        End Get
-        Set(ByVal value As Long)
-            _oldestId = value
-        End Set
-    End Property
+    Public Property RelationTargetPost() As PostClass
+
+    <Xml.Serialization.XmlIgnore()> _
+    Public Property OldestId() As Long = Long.MaxValue
 
     <Xml.Serialization.XmlIgnore()> _
     Public Property SinceId() As Long
-        Get
-            Return _sinceId
-        End Get
-        Set(ByVal value As Long)
-            _sinceId = value
-        End Set
-    End Property
 
     <Xml.Serialization.XmlIgnore()> _
-    Public Property Posts() As Dictionary(Of Long, PostClass)
-        Get
-            Return _posts
-        End Get
-        Set(ByVal value As Dictionary(Of Long, PostClass))
-            _posts = value
-        End Set
-    End Property
-
-    'Public Function SearchedPost(ByVal Id As Long) As PostClass
-    '    If Not _posts.ContainsKey(Id) Then Return Nothing
-    '    Return _posts(Id)
-    'End Function
+    Public Property Posts() As New Dictionary(Of Long, PostClass)
 
     Public Function GetTemporaryPosts() As PostClass()
         Dim tempPosts As New List(Of PostClass)
         If _tmpIds.Count = 0 Then Return tempPosts.ToArray
         For Each tempId As TemporaryId In _tmpIds
-            tempPosts.Add(_posts(tempId.Id))
+            tempPosts.Add(_Posts(tempId.Id))
         Next
         Return tempPosts.ToArray
     End Function
@@ -1521,34 +1842,62 @@ Public NotInheritable Class TabClass
 
     Public Sub New()
         _filters = New List(Of FiltersClass)
-        _notify = True
-        _soundFile = ""
+        _Notify = True
+        _SoundFile = ""
         _unreadManage = True
         _ids = New List(Of Long)
-        _oldestUnreadItem = -1
+        Me.OldestUnreadId = -1
         _tabType = TabUsageType.Undefined
         _listInfo = Nothing
     End Sub
 
     Public Sub New(ByVal TabName As String, ByVal TabType As TabUsageType, ByVal list As ListElement)
-        _tabName = TabName
+        _TabName = TabName
         _filters = New List(Of FiltersClass)
-        _notify = True
-        _soundFile = ""
+        _Notify = True
+        _SoundFile = ""
         _unreadManage = True
         _ids = New List(Of Long)
-        _oldestUnreadItem = -1
+        Me.OldestUnreadId = -1
         _tabType = TabType
         Me.ListInfo = list
-        If TabType = TabUsageType.PublicSearch OrElse TabType = TabUsageType.DirectMessage OrElse TabType = TabUsageType.Lists Then
-            _sorter.posts = _posts
+        If Me.IsInnerStorageTabType Then
+            _sorter.posts = _Posts
         Else
             _sorter.posts = TabInformations.GetInstance.Posts
         End If
     End Sub
 
     Public Sub Sort()
-        _ids.Sort(_sorter.CmpMethod)
+        If _sorter.Mode = IdComparerClass.ComparerMode.Id Then
+            _ids.Sort(_sorter.CmpMethod)
+            Exit Sub
+        End If
+        Dim ar() As Long = Nothing
+        If _sorter.Order = SortOrder.Ascending Then
+            Select Case _sorter.Mode
+                Case IdComparerClass.ComparerMode.Data
+                    ar = _ids.OrderBy(Function(n) _sorter.posts(n).TextFromApi).ToArray
+                Case IdComparerClass.ComparerMode.Name
+                    ar = _ids.OrderBy(Function(n) _sorter.posts(n).ScreenName).ToArray
+                Case IdComparerClass.ComparerMode.Nickname
+                    ar = _ids.OrderBy(Function(n) _sorter.posts(n).Nickname).ToArray
+                Case IdComparerClass.ComparerMode.Source
+                    ar = _ids.OrderBy(Function(n) _sorter.posts(n).Source).ToArray
+            End Select
+        Else
+            Select Case _sorter.Mode
+                Case IdComparerClass.ComparerMode.Data
+                    ar = _ids.OrderByDescending(Function(n) _sorter.posts(n).TextFromApi).ToArray
+                Case IdComparerClass.ComparerMode.Name
+                    ar = _ids.OrderByDescending(Function(n) _sorter.posts(n).ScreenName).ToArray
+                Case IdComparerClass.ComparerMode.Nickname
+                    ar = _ids.OrderByDescending(Function(n) _sorter.posts(n).Nickname).ToArray
+                Case IdComparerClass.ComparerMode.Source
+                    ar = _ids.OrderByDescending(Function(n) _sorter.posts(n).Source).ToArray
+            End Select
+        End If
+        _ids = New List(Of Long)(ar)
     End Sub
 
     Public ReadOnly Property Sorter() As IdComparerClass
@@ -1561,15 +1910,24 @@ Public NotInheritable Class TabClass
     Private Sub Add(ByVal ID As Long, ByVal Read As Boolean)
         If Me._ids.Contains(ID) Then Exit Sub
 
-        Me._ids.Add(ID)
+        If Me.Sorter.Mode = IdComparerClass.ComparerMode.Id Then
+            If Me.Sorter.Order = SortOrder.Ascending Then
+                Me._ids.Add(ID)
+            Else
+                Me._ids.Insert(0, ID)
+            End If
+        Else
+            Me._ids.Add(ID)
+        End If
 
         If Not Read AndAlso Me._unreadManage Then
             Me._unreadCount += 1
-            If Me._oldestUnreadItem = -1 Then
-                Me._oldestUnreadItem = ID
-            Else
-                If ID < Me._oldestUnreadItem Then Me._oldestUnreadItem = ID
-            End If
+            If ID < Me.OldestUnreadId Then Me.OldestUnreadId = ID
+            'If Me.OldestUnreadId = -1 Then
+            '    Me.OldestUnreadId = ID
+            'Else
+            '    If ID < Me.OldestUnreadId Then Me.OldestUnreadId = ID
+            'End If
         End If
     End Sub
 
@@ -1583,48 +1941,50 @@ Public NotInheritable Class TabClass
 
     'フィルタに合致したら追加
     Public Function AddFiltered(ByVal post As PostClass) As HITRESULT
-        'Try
-        '    rwLock.AcquireReaderLock(System.Threading.Timeout.Infinite) '読み取りロック取得
-        If Me.TabType = TabUsageType.PublicSearch OrElse Me.TabType = TabUsageType.DirectMessage OrElse Me.TabType = TabUsageType.Lists Then Return HITRESULT.None
+        If Me.IsInnerStorageTabType Then Return HITRESULT.None
 
         Dim rslt As HITRESULT = HITRESULT.None
         '全フィルタ評価（優先順位あり）
-        For Each ft As FiltersClass In _filters
-            Select Case ft.IsHit(post)   'フィルタクラスでヒット判定
-                Case HITRESULT.None
-                Case HITRESULT.Copy
-                    If rslt <> HITRESULT.CopyAndMark Then rslt = HITRESULT.Copy
-                Case HITRESULT.CopyAndMark
-                    rslt = HITRESULT.CopyAndMark
-                Case HITRESULT.Move
-                    rslt = HITRESULT.Move
-                Case HITRESULT.Exclude
-                    rslt = HITRESULT.Exclude
-                    Exit For
-            End Select
-        Next
+        SyncLock Me._lockObj
+            For Each ft As FiltersClass In _filters
+                Try
+                    Select Case ft.IsHit(post)   'フィルタクラスでヒット判定
+                        Case HITRESULT.None
+                        Case HITRESULT.Copy
+                            If rslt <> HITRESULT.CopyAndMark Then rslt = HITRESULT.Copy
+                        Case HITRESULT.CopyAndMark
+                            rslt = HITRESULT.CopyAndMark
+                        Case HITRESULT.Move
+                            rslt = HITRESULT.Move
+                        Case HITRESULT.Exclude
+                            rslt = HITRESULT.Exclude
+                            Exit For
+                    End Select
+                Catch ex As NullReferenceException
+                    'IsHitでNullRef出る場合あり。暫定対応
+                    TraceOut("IsHitでNullRef: " + ft.ToString)
+                    rslt = HITRESULT.None
+                End Try
+            Next
+        End SyncLock
 
         If rslt <> HITRESULT.None AndAlso rslt <> HITRESULT.Exclude Then
-            _tmpIds.Add(New TemporaryId(post.Id, post.IsRead))
+            _tmpIds.Add(New TemporaryId(post.StatusId, post.IsRead))
         End If
-        'Me.Add(ID, Read)
 
         Return rslt 'マーク付けは呼び出し元で行うこと
-
-        'Finally
-        '    rwLock.ReleaseReaderLock()
-        'End Try
     End Function
 
     '検索結果の追加
     Public Sub AddPostToInnerStorage(ByVal Post As PostClass)
-        If _posts.ContainsKey(Post.Id) Then Exit Sub
-        _posts.Add(Post.Id, Post)
-        _tmpIds.Add(New TemporaryId(Post.Id, Post.IsRead))
+        If _Posts.ContainsKey(Post.StatusId) Then Exit Sub
+        _Posts.Add(Post.StatusId, Post)
+        _tmpIds.Add(New TemporaryId(Post.StatusId, Post.IsRead))
     End Sub
 
     Public Sub AddSubmit(ByRef isMentionIncluded As Boolean)
         If _tmpIds.Count = 0 Then Exit Sub
+        _tmpIds.Sort(Function(x As TemporaryId, y As TemporaryId) x.Id.CompareTo(y.Id))
         For Each tId As TemporaryId In _tmpIds
             If Me.TabType = TabUsageType.Mentions AndAlso TabInformations.GetInstance.Item(tId.Id).IsReply Then isMentionIncluded = True
             Me.Add(tId.Id, tId.Read)
@@ -1640,7 +2000,7 @@ Public NotInheritable Class TabClass
     Public Sub Remove(ByVal Id As Long)
         If Not Me._ids.Contains(Id) Then Exit Sub
         Me._ids.Remove(Id)
-        If Me.TabType = TabUsageType.PublicSearch OrElse Me.TabType = TabUsageType.DirectMessage OrElse Me.TabType = TabUsageType.Lists Then _posts.Remove(Id)
+        If Me.IsInnerStorageTabType Then _Posts.Remove(Id)
     End Sub
 
     Public Sub Remove(ByVal Id As Long, ByVal Read As Boolean)
@@ -1648,11 +2008,11 @@ Public NotInheritable Class TabClass
 
         If Not Read AndAlso Me._unreadManage Then
             Me._unreadCount -= 1
-            Me._oldestUnreadItem = -1
+            Me.OldestUnreadId = -1
         End If
 
         Me._ids.Remove(Id)
-        If Me.TabType = TabUsageType.PublicSearch OrElse Me.TabType = TabUsageType.DirectMessage OrElse Me.TabType = TabUsageType.Lists Then _posts.Remove(Id)
+        If Me.IsInnerStorageTabType Then _Posts.Remove(Id)
     End Sub
 
     Public Property UnreadManage() As Boolean
@@ -1662,44 +2022,23 @@ Public NotInheritable Class TabClass
         Set(ByVal value As Boolean)
             Me._unreadManage = value
             If Not value Then
-                Me._oldestUnreadItem = -1
+                Me.OldestUnreadId = -1
                 Me._unreadCount = 0
             End If
         End Set
     End Property
 
     Public Property Notify() As Boolean
-        Get
-            Return _notify
-        End Get
-        Set(ByVal value As Boolean)
-            _notify = value
-        End Set
-    End Property
 
-    Public Property SoundFile() As String
-        Get
-            Return _soundFile
-        End Get
-        Set(ByVal value As String)
-            _soundFile = value
-        End Set
-    End Property
+    Public Property SoundFile() As String = ""
 
     <Xml.Serialization.XmlIgnore()> _
-    Public Property OldestUnreadId() As Long
-        Get
-            Return _oldestUnreadItem
-        End Get
-        Set(ByVal value As Long)
-            _oldestUnreadItem = value
-        End Set
-    End Property
+    Public Property OldestUnreadId() As Long = -1
 
     <Xml.Serialization.XmlIgnore()> _
     Public Property UnreadCount() As Integer
         Get
-            Return _unreadCount
+            Return If(Me.UnreadManage AndAlso AppendSettingDialog.Instance.UnreadManage, _unreadCount, 0)
         End Get
         Set(ByVal value As Integer)
             If value < 0 Then value = 0
@@ -1714,19 +2053,25 @@ Public NotInheritable Class TabClass
     End Property
 
     Public Function GetFilters() As FiltersClass()
-        Return _filters.ToArray()
+        SyncLock Me._lockObj
+            Return _filters.ToArray()
+        End SyncLock
     End Function
 
     Public Sub RemoveFilter(ByVal filter As FiltersClass)
-        _filters.Remove(filter)
-        _filterMod = True
+        SyncLock Me._lockObj
+            _filters.Remove(filter)
+            Me.FilterModified = True
+        End SyncLock
     End Sub
 
     Public Function AddFilter(ByVal filter As FiltersClass) As Boolean
-        If _filters.Contains(filter) Then Return False
-        _filters.Add(filter)
-        _filterMod = True
-        Return True
+        SyncLock Me._lockObj
+            If _filters.Contains(filter) Then Return False
+            _filters.Add(filter)
+            Me.FilterModified = True
+            Return True
+        End SyncLock
     End Function
 
     Public Sub EditFilter(ByVal original As FiltersClass, ByVal modified As FiltersClass)
@@ -1737,6 +2082,7 @@ Public NotInheritable Class TabClass
         original.UseRegex = modified.UseRegex
         original.CaseSensitive = modified.CaseSensitive
         original.IsRt = modified.IsRt
+        original.UseLambda = modified.UseLambda
         original.Source = modified.Source
         original.ExBodyFilter = modified.ExBodyFilter
         original.ExNameFilter = modified.ExNameFilter
@@ -1745,33 +2091,41 @@ Public NotInheritable Class TabClass
         original.ExUseRegex = modified.ExUseRegex
         original.ExCaseSensitive = modified.ExCaseSensitive
         original.IsExRt = modified.IsExRt
+        original.ExUseLambda = modified.ExUseLambda
         original.ExSource = modified.ExSource
         original.MoveFrom = modified.MoveFrom
         original.SetMark = modified.SetMark
-        _filterMod = True
+        Me.FilterModified = True
     End Sub
 
     <Xml.Serialization.XmlIgnore()> _
     Public Property Filters() As List(Of FiltersClass)
         Get
-            Return _filters
+            SyncLock Me._lockObj
+                Return _filters
+            End SyncLock
         End Get
         Set(ByVal value As List(Of FiltersClass))
-            _filters = value
+            SyncLock Me._lockObj
+                _filters = value
+            End SyncLock
         End Set
     End Property
 
     Public Property FilterArray() As FiltersClass()
         Get
-            Return _filters.ToArray
+            SyncLock Me._lockObj
+                Return _filters.ToArray
+            End SyncLock
         End Get
         Set(ByVal value As FiltersClass())
-            For Each filters As FiltersClass In value
-                _filters.Add(filters)
-            Next
+            SyncLock Me._lockObj
+                For Each filters As FiltersClass In value
+                    _filters.Add(filters)
+                Next
+            End SyncLock
         End Set
     End Property
-
     Public Function Contains(ByVal ID As Long) As Boolean
         Return _ids.Contains(ID)
     End Function
@@ -1780,14 +2134,14 @@ Public NotInheritable Class TabClass
         _ids.Clear()
         _tmpIds.Clear()
         _unreadCount = 0
-        _oldestUnreadItem = -1
-        If _posts IsNot Nothing Then
-            _posts.Clear()
+        Me.OldestUnreadId = -1
+        If _Posts IsNot Nothing Then
+            _Posts.Clear()
         End If
     End Sub
 
     Public Function GetId(ByVal Index As Integer) As Long
-        Return _ids(Index)
+        Return If(Index < _ids.Count, _ids(Index), -1)
     End Function
 
     Public Function IndexOf(ByVal ID As Long) As Integer
@@ -1796,26 +2150,12 @@ Public NotInheritable Class TabClass
 
     <Xml.Serialization.XmlIgnore()> _
     Public Property FilterModified() As Boolean
-        Get
-            Return _filterMod
-        End Get
-        Set(ByVal value As Boolean)
-            _filterMod = value
-        End Set
-    End Property
 
     Public Function BackupIds() As Long()
         Return _ids.ToArray()
     End Function
 
-    Public Property TabName() As String
-        Get
-            Return _tabName
-        End Get
-        Set(ByVal value As String)
-            _tabName = value
-        End Set
-    End Property
+    Public Property TabName() As String = ""
 
     Public Property TabType() As TabUsageType
         Get
@@ -1823,14 +2163,27 @@ Public NotInheritable Class TabClass
         End Get
         Set(ByVal value As TabUsageType)
             _tabType = value
-            If _tabType = TabUsageType.PublicSearch OrElse _tabType = TabUsageType.DirectMessage OrElse _tabType = TabUsageType.Lists Then
-                _sorter.posts = _posts
+            If Me.IsInnerStorageTabType Then
+                _sorter.posts = _Posts
             Else
                 _sorter.posts = TabInformations.GetInstance.Posts
             End If
         End Set
     End Property
 
+    Public ReadOnly Property IsInnerStorageTabType As Boolean
+        Get
+            If _tabType = TabUsageType.PublicSearch OrElse
+                _tabType = TabUsageType.DirectMessage OrElse
+                _tabType = TabUsageType.Lists OrElse
+                _tabType = TabUsageType.UserTimeline OrElse
+                _tabType = TabUsageType.Related Then
+                Return True
+            Else
+                Return False
+            End If
+        End Get
+    End Property
 End Class
 
 <Serializable()> _
@@ -1854,70 +2207,14 @@ Public NotInheritable Class FiltersClass
     Private _exSource As String = ""
     Private _moveFrom As Boolean = False
     Private _setMark As Boolean = True
+    Private _useLambda As Boolean = False
+    Private _exuseLambda As Boolean = False
 
-    'Public Sub New(ByVal NameFilter As String, _
-    '    ByVal BodyFilter As List(Of String), _
-    '    ByVal SearchBoth As Boolean, _
-    '    ByVal SearchUrl As Boolean, _
-    '    ByVal CaseSensitive As Boolean, _
-    '    ByVal UseRegex As Boolean, _
-    '    ByVal ParentTab As String, _
-    '    ByVal ExNameFilter As String, _
-    '    ByVal ExBodyFilter As List(Of String), _
-    '    ByVal ExSearchBoth As Boolean, _
-    '    ByVal ExSearchUrl As Boolean, _
-    '    ByVal ExUseRegex As Boolean, _
-    '    ByVal ExCaseSensitive As Boolean, _
-    '    ByVal MoveFrom As Boolean, _
-    '    ByVal SetMark As Boolean)
-    '    _name = NameFilter
-    '    _body = BodyFilter
-    '    _searchBoth = SearchBoth
-    '    _searchUrl = SearchUrl
-    '    _caseSensitive = CaseSensitive
-    '    _useRegex = UseRegex
-    '    _exname = ExNameFilter
-    '    _exbody = ExBodyFilter
-    '    _exsearchBoth = ExSearchBoth
-    '    _exsearchUrl = ExSearchUrl
-    '    _exuseRegex = ExUseRegex
-    '    _excaseSensitive = ExCaseSensitive
-    '    _moveFrom = MoveFrom
-    '    _setMark = SetMark
-    '    '正規表現検証
-    '    If _useRegex Then
-    '        Try
-    '            Dim rgx As New Regex(_name)
-    '        Catch ex As Exception
-    '            Throw New Exception(My.Resources.ButtonOK_ClickText3 + ex.Message)
-    '            Exit Sub
-    '        End Try
-    '        For Each bs As String In _body
-    '            Try
-    '                Dim rgx As New Regex(bs)
-    '            Catch ex As Exception
-    '                Throw New Exception(My.Resources.ButtonOK_ClickText3 + ex.Message)
-    '                Exit Sub
-    '            End Try
-    '        Next
-    '    End If
-    '    If _exuseRegex Then
-    '        Try
-    '            Dim rgx As New Regex(_exname)
-    '        Catch ex As Exception
-    '            Throw New Exception(My.Resources.ButtonOK_ClickText3 + ex.Message)
-    '            Exit Sub
-    '        End Try
-    '        For Each bs As String In _exbody
-    '            Try
-    '                Dim rgx As New Regex(bs)
-    '            Catch ex As Exception
-    '                Throw New Exception(My.Resources.ButtonOK_ClickText3 + ex.Message)
-    '                Exit Sub
-    '            End Try
-    '        Next
-    '    End If
-    'End Sub
+    ' ラムダ式コンパイルキャッシュ
+    Private _lambdaExp As LambdaExpression = Nothing
+    Private _lambdaExpDelegate As [Delegate] = Nothing
+    Private _exlambdaExp As LambdaExpression = Nothing
+    Private _exlambdaExpDelegate As [Delegate] = Nothing
 
     Public Sub New()
 
@@ -1925,10 +2222,10 @@ Public NotInheritable Class FiltersClass
 
     'フィルタ一覧に表示する文言生成
     Private Function MakeSummary() As String
-        Dim fs As New System.Text.StringBuilder()
-        If _name <> "" OrElse _body.Count > 0 OrElse _isRt OrElse _source <> "" Then
+        Dim fs As New StringBuilder()
+        If Not String.IsNullOrEmpty(_name) OrElse _body.Count > 0 OrElse _isRt OrElse Not String.IsNullOrEmpty(_source) Then
             If _searchBoth Then
-                If _name <> "" Then
+                If Not String.IsNullOrEmpty(_name) Then
                     fs.AppendFormat(My.Resources.SetFiltersText1, _name)
                 Else
                     fs.Append(My.Resources.SetFiltersText2)
@@ -1961,24 +2258,20 @@ Public NotInheritable Class FiltersClass
             If _isRt Then
                 fs.Append("RT/")
             End If
-            If _source <> "" Then
+            If _useLambda Then
+                fs.Append("LambdaExp/")
+            End If
+            If Not String.IsNullOrEmpty(_source) Then
                 fs.AppendFormat("Src…{0}/", _source)
             End If
-            'If _moveFrom Then
-            '    fs.Append(My.Resources.SetFiltersText9)
-            'ElseIf _setMark Then
-            '    fs.Append(My.Resources.SetFiltersText10)
-            'Else
-            '    fs.Append(My.Resources.SetFiltersText11)
-            'End If
             fs.Length -= 1
             fs.Append(")")
         End If
-        If _exname <> "" OrElse _exbody.Count > 0 OrElse _isExRt OrElse _exSource <> "" Then
+        If Not String.IsNullOrEmpty(_exname) OrElse _exbody.Count > 0 OrElse _isExRt OrElse Not String.IsNullOrEmpty(_exSource) Then
             '除外
             fs.Append(My.Resources.SetFiltersText12)
             If _exsearchBoth Then
-                If _exname <> "" Then
+                If Not String.IsNullOrEmpty(_exname) Then
                     fs.AppendFormat(My.Resources.SetFiltersText1, _exname)
                 Else
                     fs.Append(My.Resources.SetFiltersText2)
@@ -2011,7 +2304,10 @@ Public NotInheritable Class FiltersClass
             If _isExRt Then
                 fs.Append("RT/")
             End If
-            If _exSource <> "" Then
+            If _exuseLambda Then
+                fs.Append("LambdaExp/")
+            End If
+            If Not String.IsNullOrEmpty(_exSource) Then
                 fs.AppendFormat("Src…{0}/", _exSource)
             End If
             fs.Length -= 1
@@ -2059,6 +2355,8 @@ Public NotInheritable Class FiltersClass
             Return _body
         End Get
         Set(ByVal value As List(Of String))
+            _lambdaExp = Nothing
+            _lambdaExpDelegate = Nothing
             _body = value
         End Set
     End Property
@@ -2081,6 +2379,8 @@ Public NotInheritable Class FiltersClass
             Return _exbody
         End Get
         Set(ByVal value As List(Of String))
+            _exlambdaExp = Nothing
+            _exlambdaExpDelegate = Nothing
             _exbody = value
         End Set
     End Property
@@ -2169,6 +2469,28 @@ Public NotInheritable Class FiltersClass
         End Set
     End Property
 
+    Public Property UseLambda() As Boolean
+        Get
+            Return _useLambda
+        End Get
+        Set(ByVal value As Boolean)
+            _lambdaExp = Nothing
+            _lambdaExpDelegate = Nothing
+            _useLambda = value
+        End Set
+    End Property
+
+    Public Property ExUseLambda() As Boolean
+        Get
+            Return _exuseLambda
+        End Get
+        Set(ByVal value As Boolean)
+            _exlambdaExp = Nothing
+            _exlambdaExpDelegate = Nothing
+            _exuseLambda = value
+        End Set
+    End Property
+
     Public Property UseRegex() As Boolean
         Get
             Return _useRegex
@@ -2227,13 +2549,32 @@ Public NotInheritable Class FiltersClass
         Return MakeSummary()
     End Function
 
+    Public Function ExecuteLambdaExpression(ByVal expr As String, ByVal post As PostClass) As Boolean
+        If _lambdaExp Is Nothing OrElse _lambdaExpDelegate Is Nothing Then
+            _lambdaExp = ParseLambda(Of PostClass, Boolean)(expr, post)
+            _lambdaExpDelegate = _lambdaExp.Compile()
+        End If
+        Return (DirectCast(_lambdaExpDelegate.DynamicInvoke(post), Boolean))
+    End Function
+
+    Public Function ExecuteExLambdaExpression(ByVal expr As String, ByVal post As PostClass) As Boolean
+        If _exlambdaExp Is Nothing OrElse _exlambdaExpDelegate Is Nothing Then
+            _exlambdaExp = ParseLambda(Of PostClass, Boolean)(expr, post)
+            _exlambdaExpDelegate = _exlambdaExp.Compile()
+        End If
+        Return (DirectCast(_exlambdaExpDelegate.DynamicInvoke(post), Boolean))
+    End Function
+
     Public Function IsHit(ByVal post As PostClass) As HITRESULT
         Dim bHit As Boolean = True
         Dim tBody As String
+        Dim tSource As String
         If _searchUrl Then
-            tBody = post.OriginalData
+            tBody = post.Text
+            tSource = post.SourceHtml
         Else
-            tBody = post.Data
+            tBody = post.TextFromApi
+            tSource = post.Source
         End If
         '検索オプション
         Dim compOpt As System.StringComparison
@@ -2246,76 +2587,82 @@ Public NotInheritable Class FiltersClass
             rgOpt = RegexOptions.IgnoreCase
         End If
         If _searchBoth Then
-            If _name = "" OrElse
+            If String.IsNullOrEmpty(_name) OrElse
                 (Not _useRegex AndAlso
-                 (post.Name.Equals(_name, compOpt) OrElse
+                 (post.ScreenName.Equals(_name, compOpt) OrElse
                   post.RetweetedBy.Equals(_name, compOpt)
                  )
                 ) OrElse
                 (_useRegex AndAlso
-                 (Regex.IsMatch(post.Name, _name, rgOpt) OrElse
+                 (Regex.IsMatch(post.ScreenName, _name, rgOpt) OrElse
                   (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, _name, rgOpt))
                  )
                 ) Then
-                For Each fs As String In _body
-                    If _useRegex Then
-                        If Not Regex.IsMatch(tBody, fs, rgOpt) Then bHit = False
-                    Else
-                        If _caseSensitive Then
-                            If Not tBody.Contains(fs) Then bHit = False
+                If _useLambda Then
+                    If Not ExecuteLambdaExpression(_body.Item(0), post) Then bHit = False
+                Else
+                    For Each fs As String In _body
+                        If _useRegex Then
+                            If Not Regex.IsMatch(tBody, fs, rgOpt) Then bHit = False
                         Else
-                            If Not tBody.ToLower().Contains(fs.ToLower()) Then bHit = False
+                            If _caseSensitive Then
+                                If Not tBody.Contains(fs) Then bHit = False
+                            Else
+                                If Not tBody.ToLower().Contains(fs.ToLower()) Then bHit = False
+                            End If
                         End If
-                    End If
-                    If Not bHit Then Exit For
-                Next
+                        If Not bHit Then Exit For
+                    Next
+                End If
             Else
                 bHit = False
             End If
         Else
-            For Each fs As String In _body
-                If _useRegex Then
-                    If Not (Regex.IsMatch(post.Name, fs, rgOpt) OrElse
-                            (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) OrElse
-                            Regex.IsMatch(tBody, fs, rgOpt)) Then bHit = False
-                Else
-                    If _caseSensitive Then
-                        If Not (post.Name.Contains(fs) OrElse _
-                                post.RetweetedBy.Contains(fs) OrElse _
-                                tBody.Contains(fs)) Then bHit = False
+            If _useLambda Then
+                If Not ExecuteLambdaExpression(_body.Item(0), post) Then bHit = False
+            Else
+                For Each fs As String In _body
+                    If _useRegex Then
+                        If Not (Regex.IsMatch(post.ScreenName, fs, rgOpt) OrElse
+                                (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) OrElse
+                                Regex.IsMatch(tBody, fs, rgOpt)) Then bHit = False
                     Else
-                        If Not (post.Name.ToLower().Contains(fs.ToLower()) OrElse _
-                                post.RetweetedBy.ToLower().Contains(fs.ToLower()) OrElse _
-                                tBody.ToLower().Contains(fs.ToLower())) Then bHit = False
+                        If _caseSensitive Then
+                            If Not (post.ScreenName.Contains(fs) OrElse _
+                                    post.RetweetedBy.Contains(fs) OrElse _
+                                    tBody.Contains(fs)) Then bHit = False
+                        Else
+                            If Not (post.ScreenName.ToLower().Contains(fs.ToLower()) OrElse _
+                                    post.RetweetedBy.ToLower().Contains(fs.ToLower()) OrElse _
+                                    tBody.ToLower().Contains(fs.ToLower())) Then bHit = False
+                        End If
                     End If
-                End If
-                If Not bHit Then Exit For
-            Next
+                    If Not bHit Then Exit For
+                Next
+            End If
         End If
         If _isRt Then
             If post.RetweetedId = 0 Then bHit = False
         End If
         If Not String.IsNullOrEmpty(_source) Then
             If _useRegex Then
-                If Not Regex.IsMatch(post.Source, _source, rgOpt) Then bHit = False
+                If Not Regex.IsMatch(tSource, _source, rgOpt) Then bHit = False
             Else
-                If Not post.Source.Equals(_source, compOpt) Then bHit = False
+                If Not tSource.Equals(_source, compOpt) Then bHit = False
             End If
         End If
         If bHit Then
             '除外判定
             If _exsearchUrl Then
-                tBody = post.OriginalData
+                tBody = post.Text
+                tSource = post.SourceHtml
             Else
-                tBody = post.Data
+                tBody = post.TextFromApi
+                tSource = post.Source
             End If
 
             Dim exFlag As Boolean = False
-            'If _name = "" AndAlso _body.Count = 0 Then
-            '    exFlag = True
-            '    'bHit = False
-            'End If
-            If _exname <> "" OrElse _exbody.Count > 0 Then
+            If Not String.IsNullOrEmpty(_exname) OrElse _exbody.Count > 0 Then
                 If _excaseSensitive Then
                     compOpt = StringComparison.Ordinal
                     rgOpt = RegexOptions.None
@@ -2324,53 +2671,61 @@ Public NotInheritable Class FiltersClass
                     rgOpt = RegexOptions.IgnoreCase
                 End If
                 If _exsearchBoth Then
-                    If _exname = "" OrElse
+                    If String.IsNullOrEmpty(_exname) OrElse
                         (Not _exuseRegex AndAlso
-                         (post.Name.Equals(_exname, compOpt) OrElse
+                         (post.ScreenName.Equals(_exname, compOpt) OrElse
                           post.RetweetedBy.Equals(_exname, compOpt)
                          )
                         ) OrElse
                         (_exuseRegex AndAlso _
-                            (Regex.IsMatch(post.Name, _exname, rgOpt) OrElse _
+                            (Regex.IsMatch(post.ScreenName, _exname, rgOpt) OrElse _
                              (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, _exname, rgOpt))
                             )
                         ) Then
                         If _exbody.Count > 0 Then
-                            For Each fs As String In _exbody
-                                If _exuseRegex Then
-                                    If Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
-                                Else
-                                    If _excaseSensitive Then
-                                        If tBody.Contains(fs) Then exFlag = True
+                            If _exuseLambda Then
+                                If ExecuteExLambdaExpression(_exbody.Item(0), post) Then exFlag = True
+                            Else
+                                For Each fs As String In _exbody
+                                    If _exuseRegex Then
+                                        If Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
                                     Else
-                                        If tBody.ToLower().Contains(fs.ToLower()) Then exFlag = True
+                                        If _excaseSensitive Then
+                                            If tBody.Contains(fs) Then exFlag = True
+                                        Else
+                                            If tBody.ToLower().Contains(fs.ToLower()) Then exFlag = True
+                                        End If
                                     End If
-                                End If
-                                If exFlag Then Exit For
-                            Next
+                                    If exFlag Then Exit For
+                                Next
+                            End If
                         Else
                             exFlag = True
                         End If
                     End If
                 Else
-                    For Each fs As String In _exbody
-                        If _exuseRegex Then
-                            If Regex.IsMatch(post.Name, fs, rgOpt) OrElse
-                               (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) OrElse
-                               Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
-                        Else
-                            If _excaseSensitive Then
-                                If post.Name.Contains(fs) OrElse _
-                                   post.RetweetedBy.Contains(fs) OrElse _
-                                   tBody.Contains(fs) Then exFlag = True
+                    If _exuseLambda Then
+                        If ExecuteExLambdaExpression(_exbody.Item(0), post) Then exFlag = True
+                    Else
+                        For Each fs As String In _exbody
+                            If _exuseRegex Then
+                                If Regex.IsMatch(post.ScreenName, fs, rgOpt) OrElse
+                                   (Not String.IsNullOrEmpty(post.RetweetedBy) AndAlso Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) OrElse
+                                   Regex.IsMatch(tBody, fs, rgOpt) Then exFlag = True
                             Else
-                                If post.Name.ToLower().Contains(fs.ToLower()) OrElse _
-                                   post.RetweetedBy.ToLower().Contains(fs.ToLower()) OrElse _
-                                   tBody.ToLower().Contains(fs.ToLower()) Then exFlag = True
+                                If _excaseSensitive Then
+                                    If post.ScreenName.Contains(fs) OrElse _
+                                       post.RetweetedBy.Contains(fs) OrElse _
+                                       tBody.Contains(fs) Then exFlag = True
+                                Else
+                                    If post.ScreenName.ToLower().Contains(fs.ToLower()) OrElse _
+                                       post.RetweetedBy.ToLower().Contains(fs.ToLower()) OrElse _
+                                       tBody.ToLower().Contains(fs.ToLower()) Then exFlag = True
+                                End If
                             End If
-                        End If
-                        If exFlag Then Exit For
-                    Next
+                            If exFlag Then Exit For
+                        Next
+                    End If
                 End If
             End If
             If _isExRt Then
@@ -2378,18 +2733,17 @@ Public NotInheritable Class FiltersClass
             End If
             If Not String.IsNullOrEmpty(_exSource) Then
                 If _exuseRegex Then
-                    If Regex.IsMatch(post.Source, _exSource, rgOpt) Then exFlag = True
+                    If Regex.IsMatch(tSource, _exSource, rgOpt) Then exFlag = True
                 Else
-                    If post.Source.Equals(_exSource, compOpt) Then exFlag = True
+                    If tSource.Equals(_exSource, compOpt) Then exFlag = True
                 End If
             End If
 
-            If _name = "" AndAlso _body.Count = 0 AndAlso Not _isRt AndAlso _source = "" Then
+            If String.IsNullOrEmpty(_name) AndAlso _body.Count = 0 AndAlso Not _isRt AndAlso String.IsNullOrEmpty(_source) Then
                 bHit = False
             End If
             If bHit Then
                 If Not exFlag Then
-                    'If _setMark Then Return HITRESULT.CopyAndMark
                     If _moveFrom Then
                         Return HITRESULT.Move
                     Else
@@ -2398,7 +2752,6 @@ Public NotInheritable Class FiltersClass
                         End If
                         Return HITRESULT.Copy
                     End If
-                    'Return HITRESULT.Copy
                 Else
                     Return HITRESULT.Exclude
                 End If
@@ -2426,23 +2779,25 @@ Public NotInheritable Class FiltersClass
             If Me.ExBodyFilter(i) <> other.ExBodyFilter(i) Then Return False
         Next
 
-        Return (Me.MoveFrom = other.MoveFrom) And _
-               (Me.SetMark = other.SetMark) And _
-               (Me.NameFilter = other.NameFilter) And _
-               (Me.SearchBoth = other.SearchBoth) And _
-               (Me.SearchUrl = other.SearchUrl) And _
-               (Me.UseRegex = other.UseRegex) And _
-               (Me.ExNameFilter = other.ExNameFilter) And _
-               (Me.ExSearchBoth = other.ExSearchBoth) And _
-               (Me.ExSearchUrl = other.ExSearchUrl) And _
-               (Me.ExUseRegex = other.ExUseRegex) And _
-               (Me.IsRt = other.IsRt) And _
-               (Me.Source = other.Source) And _
-               (Me.IsExRt = other.IsExRt) And _
-               (Me.ExSource = other.ExSource)
+        Return (Me.MoveFrom = other.MoveFrom) And
+               (Me.SetMark = other.SetMark) And
+               (Me.NameFilter = other.NameFilter) And
+               (Me.SearchBoth = other.SearchBoth) And
+               (Me.SearchUrl = other.SearchUrl) And
+               (Me.UseRegex = other.UseRegex) And
+               (Me.ExNameFilter = other.ExNameFilter) And
+               (Me.ExSearchBoth = other.ExSearchBoth) And
+               (Me.ExSearchUrl = other.ExSearchUrl) And
+               (Me.ExUseRegex = other.ExUseRegex) And
+               (Me.IsRt = other.IsRt) And
+               (Me.Source = other.Source) And
+               (Me.IsExRt = other.IsExRt) And
+               (Me.ExSource = other.ExSource) And
+               (Me.UseLambda = other.UseLambda) And
+               (Me.ExUseLambda = other.ExUseLambda)
     End Function
 
-    Public Overloads Function CopyTo(ByVal destination As FiltersClass) As FiltersClass
+    Public Function CopyTo(ByVal destination As FiltersClass) As FiltersClass
 
         If Me.BodyFilter.Count > 0 Then
             For Each flt As String In Me.BodyFilter
@@ -2470,6 +2825,8 @@ Public NotInheritable Class FiltersClass
         destination.Source = Me.Source
         destination.IsExRt = Me.IsExRt
         destination.ExSource = Me.ExSource
+        destination.UseLambda = Me.UseLambda
+        destination.ExUseLambda = Me.ExUseLambda
         Return destination
     End Function
 
@@ -2479,22 +2836,24 @@ Public NotInheritable Class FiltersClass
     End Function
 
     Public Overrides Function GetHashCode() As Integer
-        Return Me.MoveFrom.GetHashCode Xor _
-               Me.SetMark.GetHashCode Xor _
-               Me.BodyFilter.GetHashCode Xor _
-               Me.NameFilter.GetHashCode Xor _
-               Me.SearchBoth.GetHashCode Xor _
-               Me.SearchUrl.GetHashCode Xor _
-               Me.UseRegex.GetHashCode Xor _
-               Me.ExBodyFilter.GetHashCode Xor _
-               Me.ExNameFilter.GetHashCode Xor _
-               Me.ExSearchBoth.GetHashCode Xor _
-               Me.ExSearchUrl.GetHashCode Xor _
-               Me.ExUseRegex.GetHashCode Xor _
-               Me.IsRt.GetHashCode Xor _
-               Me.Source.GetHashCode Xor _
-               Me.IsExRt.GetHashCode Xor _
-               Me.ExSource.GetHashCode
+        Return Me.MoveFrom.GetHashCode Xor
+               Me.SetMark.GetHashCode Xor
+               Me.BodyFilter.GetHashCode Xor
+               Me.NameFilter.GetHashCode Xor
+               Me.SearchBoth.GetHashCode Xor
+               Me.SearchUrl.GetHashCode Xor
+               Me.UseRegex.GetHashCode Xor
+               Me.ExBodyFilter.GetHashCode Xor
+               Me.ExNameFilter.GetHashCode Xor
+               Me.ExSearchBoth.GetHashCode Xor
+               Me.ExSearchUrl.GetHashCode Xor
+               Me.ExUseRegex.GetHashCode Xor
+               Me.IsRt.GetHashCode Xor
+               Me.Source.GetHashCode Xor
+               Me.IsExRt.GetHashCode Xor
+               Me.ExSource.GetHashCode Xor
+               Me.UseLambda.GetHashCode Xor
+               Me.ExUseLambda.GetHashCode
     End Function
 End Class
 
@@ -2557,10 +2916,13 @@ Public NotInheritable Class IdComparerClass
         SetCmpMethod(_mode, _order)
     End Sub
 
-    Public WriteOnly Property posts() As Dictionary(Of Long, PostClass)
+    Public Property posts() As Dictionary(Of Long, PostClass)
         Set(ByVal value As Dictionary(Of Long, PostClass))
             _statuses = value
         End Set
+        Get
+            Return _statuses
+        End Get
     End Property
 
     ' 指定したソートモードとソートオーダーに従い使用する比較関数のアドレスを返す
@@ -2623,14 +2985,14 @@ Public NotInheritable Class IdComparerClass
     ' 比較用関数群 いずれもステータスIDの順序を考慮する
     ' 本文比較　昇順
     Public Function Compare_ModeData_Ascending(ByVal x As Long, ByVal y As Long) As Integer
-        Dim result As Integer = String.Compare(_statuses.Item(x).Data, _statuses.Item(y).Data)
+        Dim result As Integer = String.Compare(_statuses.Item(x).TextFromApi, _statuses.Item(y).TextFromApi)
         If result = 0 Then result = x.CompareTo(y)
         Return result
     End Function
 
     ' 本文比較　降順
     Public Function Compare_ModeData_Descending(ByVal x As Long, ByVal y As Long) As Integer
-        Dim result As Integer = String.Compare(_statuses.Item(y).Data, _statuses.Item(x).Data)
+        Dim result As Integer = String.Compare(_statuses.Item(y).TextFromApi, _statuses.Item(x).TextFromApi)
         If result = 0 Then result = y.CompareTo(x)
         Return result
     End Function
@@ -2647,14 +3009,14 @@ Public NotInheritable Class IdComparerClass
 
     ' 表示名比較　昇順
     Public Function Compare_ModeName_Ascending(ByVal x As Long, ByVal y As Long) As Integer
-        Dim result As Integer = String.Compare(_statuses.Item(x).Name, _statuses.Item(y).Name)
+        Dim result As Integer = String.Compare(_statuses.Item(x).ScreenName, _statuses.Item(y).ScreenName)
         If result = 0 Then result = x.CompareTo(y)
         Return result
     End Function
 
     ' 表示名比較　降順
     Public Function Compare_ModeName_Descending(ByVal x As Long, ByVal y As Long) As Integer
-        Dim result As Integer = String.Compare(_statuses.Item(y).Name, _statuses.Item(x).Name)
+        Dim result As Integer = String.Compare(_statuses.Item(y).ScreenName, _statuses.Item(x).ScreenName)
         If result = 0 Then result = y.CompareTo(x)
         Return result
     End Function

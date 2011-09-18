@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddNewTabText1" xml:space="preserve">
     <value>(新規タブ)</value>
@@ -443,7 +443,7 @@
     <value>http://www.google.com/search?hl=ja&amp;q={0}</value>
   </data>
   <data name="SearchItem3Url" xml:space="preserve">
-    <value>http://pcod.no-ip.org/yats/search?query={0}</value>
+    <value>http://yats-data.com/yats/search?query={0}</value>
   </data>
   <data name="SearchItem4Url" xml:space="preserve">
     <value>http://search.twitter.com/search?q={0}</value>
@@ -671,13 +671,13 @@
     <value>大小区別/</value>
   </data>
   <data name="ApiInfo1" xml:space="preserve">
-    <value>上限 : </value>
+    <value>REST API上限 : </value>
   </data>
   <data name="ApiInfo2" xml:space="preserve">
-    <value>残数 : </value>
+    <value>REST API残数 : </value>
   </data>
   <data name="ApiInfo3" xml:space="preserve">
-    <value>リセット日時 : </value>
+    <value>REST API残数リセット日時 : </value>
   </data>
   <data name="ApiInfo4" xml:space="preserve">
     <value>API情報</value>
@@ -740,7 +740,7 @@
     <value>未認証</value>
   </data>
   <data name="Setting_FormClosing1" xml:space="preserve">
-    <value>ユーザー名とパスワードを入力して「認証する」ボタンを押してください。認証せずに終了してもよろしいですか？</value>
+    <value>「認証開始」ボタンを押すとブラウザが開きます。「連携アプリを認証」し、表示されたPINを画面上部に入力後、「Finish」ボタンを押してください。認証せずに終了してもよろしいですか？</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>いいえ</value>
@@ -946,9 +946,6 @@
   <data name="Description" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\description.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="BasicAuthWarning" xml:space="preserve">
-    <value>認証モードがBASIC認証になっています。{0}BASIC認証の終了後はTwitterへログインすることはできません。{0}xAuthを使用してください。</value>
-  </data>
   <data name="ListManageDeleteLists1" xml:space="preserve">
     <value>このリストを削除してもよろしいですか？</value>
   </data>
@@ -975,5 +972,164 @@
   </data>
   <data name="MyLists1" xml:space="preserve">
     <value>を含むリストの管理</value>
+  </data>
+  <data name="PostLengthOverMessage3" xml:space="preserve">
+    <value>文末の＠ユーザー名が切り捨てられた可能性があるため、投稿をキャンセルします。</value>
+  </data>
+  <data name="FavstarUrl" xml:space="preserve">
+    <value>http://ja.favstar.fm/</value>
+  </data>
+  <data name="VimeoInfoText1" xml:space="preserve">
+    <value>タイトル:</value>
+  </data>
+  <data name="VimeoInfoText2" xml:space="preserve">
+    <value>投稿日時:</value>
+  </data>
+  <data name="VimeoInfoText3" xml:space="preserve">
+    <value>Likes:</value>
+  </data>
+  <data name="VimeoInfoText4" xml:space="preserve">
+    <value>再生数:</value>
+  </data>
+  <data name="VimeoInfoText5" xml:space="preserve">
+    <value>コメント数:</value>
+  </data>
+  <data name="VimeoInfoText6" xml:space="preserve">
+    <value>再生時間:</value>
+  </data>
+  <data name="YouTubeInfoText1" xml:space="preserve">
+    <value>タイトル:</value>
+  </data>
+  <data name="YouTubeInfoText2" xml:space="preserve">
+    <value>再生時間:</value>
+  </data>
+  <data name="YouTubeInfoText3" xml:space="preserve">
+    <value>投稿日時:</value>
+  </data>
+  <data name="YouTubeInfoText4" xml:space="preserve">
+    <value>再生数:</value>
+  </data>
+  <data name="FavoriteLimitCountText" xml:space="preserve">
+    <value>一度にFav追加が実行できるのは250件までです</value>
+  </data>
+  <data name="TextSearchCountApi_Validating1" xml:space="preserve">
+    <value>取得発言数は20～100件を指定してください。</value>
+  </data>
+  <data name="KeitaiMailSourceString" xml:space="preserve">
+    <value>&lt;a href="http://twitter.com/" rel="nofollow"&gt;Keitai Mail&lt;/a&gt;</value>
+  </data>
+  <data name="WebSourceString" xml:space="preserve">
+    <value>&lt;a href="http://twitter.com/" rel="nofollow"&gt;web&lt;/a&gt;</value>
+  </data>
+  <data name="RetweetLimitText" xml:space="preserve">
+    <value>一度にRetweetできるのは15件までです</value>
+  </data>
+  <data name="RetweetQuestion2" xml:space="preserve">
+    <value>選択された発言をRetweetしてもよろしいですか？</value>
+  </data>
+  <data name="FavoriteRetweetQuestionText1" xml:space="preserve">
+    <value>選択された発言をFavoriteに追加してRetweetします。よろしいですか？</value>
+  </data>
+  <data name="FavoritesRetweetQuestionText2" xml:space="preserve">
+    <value>Favoriteに追加してRetweetします。よろしいですか？</value>
+  </data>
+  <data name="TabUsageTypeName_Related" xml:space="preserve">
+    <value>RelatedTweets</value>
+  </data>
+  <data name="FavoriteRetweetQuestionText3" xml:space="preserve">
+    <value>選択された発言をFavoritesに追加して非公式RTを実行します。よろしいですか？</value>
+  </data>
+  <data name="GetFriendshipInfo7" xml:space="preserve">
+    <value>フォロー解除しますか？</value>
+  </data>
+  <data name="GetFriendshipInfo8" xml:space="preserve">
+    <value>フォロー解除確認</value>
+  </data>
+  <data name="UserstreamPeriod_ValidatingText1" xml:space="preserve">
+    <value>反映間隔には数値（0～60）を指定してください。</value>
+  </data>
+  <data name="TabUsageTypeName_UserTimeline" xml:space="preserve">
+    <value>UserTimeline</value>
+  </data>
+  <data name="TranslateDefaultLanguage" xml:space="preserve">
+    <value>ja</value>
+  </data>
+  <data name="SettingAPIUse2" xml:space="preserve">
+    <value>UserStream有効時の消費API数 :  {0} / h</value>
+  </data>
+  <data name="ApiInfo7" xml:space="preserve">
+    <value>UserStream接続 : </value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>無効</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>有効</value>
+  </data>
+  <data name="ChangeIconToolStripMenuItem_ClickText6" xml:space="preserve">
+    <value>ユーザーアイコンとして使用できないファイルです</value>
+  </data>
+  <data name="IsValidLambdaExpText1" xml:space="preserve">
+    <value>構文エラー：</value>
+  </data>
+  <data name="IsValidLambdaExpText2" xml:space="preserve">
+    <value>ラムダ式構文チェック</value>
+  </data>
+  <data name="TweenMain_LoadText1" xml:space="preserve">
+    <value>タブ作成エラー</value>
+  </data>
+  <data name="SaveLogMenuItem_ClickText5" xml:space="preserve">
+    <value>現在のタブに表示されているイベントログを保存しますか？{0}　「はい」　　：現在タブに表示されているイベントログを保存する{0}　「いいえ」　：全てのイベントログを保存する{0}「キャンセル」：保存処理をキャンセル{0}（タブ区切りのテキストファイル形式で保存します）</value>
+  </data>
+  <data name="UpdateBlockUserText1" xml:space="preserve">
+    <value>BlockIds取得中...</value>
+  </data>
+  <data name="UpdateBlockUserText2" xml:space="preserve">
+    <value>BlockIds取得エラー :</value>
+  </data>
+  <data name="UpdateBlockUserText3" xml:space="preserve">
+    <value>BlockIds取得完了</value>
+  </data>
+  <data name="ListManageGetMoreUsers1" xml:space="preserve">
+    <value>取得(&amp;M)</value>
+  </data>
+  <data name="ListManageGetMoreUsers2" xml:space="preserve">
+    <value>さらに取得(&amp;M)</value>
+  </data>
+  <data name="AuthorizeButton_Click6" xml:space="preserve">
+    <value>認証サーバーに接続できませんでした。</value>
+  </data>
+  <data name="Save_ClickText4" xml:space="preserve">
+    <value>PINを入力してください。</value>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>You are not authorized.</value>
+  </data>
+  <data name="ReAuthorizeText" xml:space="preserve">
+    <value>Direct Messageの送受信をするため、もう一度認証処理をして下さい。</value>
+  </data>
+  <data name="RegistrationEmail1" xml:space="preserve">
+    <value>Emailアドレスが正しくありません。</value>
+  </data>
+  <data name="RegistrationEmail2" xml:space="preserve">
+    <value>登録ありがとうございます。</value>
+  </data>
+  <data name="ads" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ads.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;shift_jis</value>
+  </data>
+  <data name="ApiInfo10" xml:space="preserve">
+    <value>画像投稿API残数：</value>
+  </data>
+  <data name="ApiInfo11" xml:space="preserve">
+    <value>画像投稿APIリセット日時：</value>
+  </data>
+  <data name="ApiInfo8" xml:space="preserve">
+    <value>APIアクセス権限：</value>
+  </data>
+  <data name="ApiInfo9" xml:space="preserve">
+    <value>画像投稿API上限：</value>
+  </data>
+  <data name="ApiInfo91" xml:space="preserve">
+    <value>（画像投稿後に取得/更新されます）</value>
   </data>
 </root>

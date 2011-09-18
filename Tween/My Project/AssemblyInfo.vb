@@ -1,5 +1,5 @@
 ﻿' Tween - Client of Twitter
-' Copyright (c) 2007-2009 kiri_feather (@kiri_feather) <kiri_feather@gmail.com>
+' Copyright (c) 2007-2009 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 '           (c) 2008-2009 Moz (@syo68k) <http://iddy.jp/profile/moz/>
 '           (c) 2008-2009 takeshik (@takeshik) <http://www.takeshik.org/>
 ' All rights reserved.
@@ -32,10 +32,10 @@ Imports System.Runtime.InteropServices
 ' アセンブリ属性の値を確認します。
 
 <Assembly: AssemblyTitle("Tween")> 
-<Assembly: AssemblyDescription("Client of Twitter. Free software(GPL3)")> 
-<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyDescription("Client of Twitter. Free software(GPLv3)")> 
+<Assembly: AssemblyCompany("Tween")> 
 <Assembly: AssemblyProduct("Tween")> 
-<Assembly: AssemblyCopyright("(C)kiri_feather 2007-2010 All Rights Reserved.")> 
+<Assembly: AssemblyCopyright("(C) kiri_feather 2007 - 2011")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
@@ -55,5 +55,5 @@ Imports System.Runtime.InteropServices
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
 <Assembly: AssemblyVersion("0.1.0.0")> 
-<Assembly: AssemblyFileVersion("0.9.5.0")> 
+<Assembly: AssemblyFileVersion("1.0.7.0")> 
 

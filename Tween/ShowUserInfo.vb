@@ -1,7 +1,9 @@
 ﻿' Tween - Client of Twitter
-' Copyright (c) 2007-2010 kiri_feather (@kiri_feather) <kiri_feather@gmail.com>
-'           (c) 2008-2010 Moz (@syo68k) <http://iddy.jp/profile/moz/>
-'           (c) 2008-2010 takeshik (@takeshik) <http://www.takeshik.org/>
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
 ' All rights reserved.
 ' 
 ' This file is part of Tween.
@@ -21,15 +23,14 @@
 ' the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 ' Boston, MA 02110-1301, USA.
 
-Imports System.Xml
-Imports System.Web
-Imports System.Text.RegularExpressions
 Imports System.ComponentModel
 Imports System.IO
+Imports System.Text.RegularExpressions
+Imports System.Web
 
 Public Class ShowUserInfo
 
-    Private userInfoXml As String = ""
+    Private userInfo As TwitterDataModel.User = Nothing
     Private _info As New UserInfo
     Private icondata As Image = Nothing
     Private atlist As New Generic.List(Of String)
@@ -63,54 +64,40 @@ Public Class ShowUserInfo
         ToolTip1.SetToolTip(LinkLabelFav, Favorites)
     End Sub
 
-    Private Function AnalizeUserInfo(ByVal xmlData As String) As Boolean
-        If xmlData Is Nothing Then Return False
-        Dim xdoc As New XmlDocument
+    Private Function AnalizeUserInfo(ByVal user As TwitterDataModel.User) As Boolean
+        If user Is Nothing Then Return False
+
         Try
-            xdoc.LoadXml(xmlData)
-            Dim nd As String = "/user"
-
-            If xdoc.SelectSingleNode(nd) Is Nothing Then
-                nd = "/status/user"
-            End If
-
-            _info.Id = Int64.Parse(xdoc.SelectSingleNode(nd + "/id").InnerText)
-            _info.Name = xdoc.SelectSingleNode(nd + "/name").InnerText
-            _info.ScreenName = xdoc.SelectSingleNode(nd + "/screen_name").InnerText
-            _info.Location = xdoc.SelectSingleNode(nd + "/location").InnerText
-            _info.Description = xdoc.SelectSingleNode(nd + "/description").InnerText
-            _info.ImageUrl = New Uri(xdoc.SelectSingleNode(nd + "/profile_image_url").InnerText)
-
-            _info.Url = xdoc.SelectSingleNode(nd + "/url").InnerText
-
-            _info.Protect = Boolean.Parse(xdoc.SelectSingleNode(nd + "/protected").InnerText)
-            _info.FriendsCount = Integer.Parse(xdoc.SelectSingleNode(nd + "/friends_count").InnerText)
-            _info.FollowersCount = Integer.Parse(xdoc.SelectSingleNode(nd + "/followers_count").InnerText)
-            _info.FavoriteCount = Integer.Parse(xdoc.SelectSingleNode(nd + "/favourites_count").InnerText)
-            _info.CreatedAt = DateTime.ParseExact(xdoc.SelectSingleNode(nd + "/created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-            _info.StatusesCount = Integer.Parse(xdoc.SelectSingleNode(nd + "/statuses_count").InnerText)
-            _info.Verified = Boolean.Parse(xdoc.SelectSingleNode(nd + "/verified").InnerText)
-
-            ' 最終発言が取れないことがある
+            _info.Id = user.Id
+            _info.Name = user.Name.Trim()
+            _info.ScreenName = user.ScreenName
+            _info.Location = user.Location
+            _info.Description = user.Description
+            _info.ImageUrl = New Uri(user.ProfileImageUrl)
+            _info.Url = user.Url
+            _info.Protect = user.Protected
+            _info.FriendsCount = user.FriendsCount
+            _info.FollowersCount = user.FollowersCount
+            _info.FavoriteCount = user.FavouritesCount
+            _info.CreatedAt = DateTimeParse(user.CreatedAt)
+            _info.StatusesCount = user.StatusesCount
+            _info.Verified = user.Verified
             Try
-                If nd = "/user" Then
-                    _info.RecentPost = xdoc.SelectSingleNode(nd + "/status/text").InnerText
-                    _info.PostCreatedAt = DateTime.ParseExact(xdoc.SelectSingleNode(nd + "/status/created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-                    _info.PostSource = xdoc.SelectSingleNode(nd + "/status/source").InnerText
-                Else
-                    _info.RecentPost = xdoc.SelectSingleNode("/status/text").InnerText
-                    _info.PostCreatedAt = DateTime.ParseExact(xdoc.SelectSingleNode("/status/created_at").InnerText, "ddd MMM dd HH:mm:ss zzzz yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None)
-                    _info.PostSource = xdoc.SelectSingleNode("/status/source").InnerText
+                _info.RecentPost = user.Status.Text
+                _info.PostCreatedAt = DateTimeParse(user.Status.CreatedAt)
+                _info.PostSource = user.Status.Source
+                If Not _info.PostSource.Contains("</a>") Then
+                    _info.PostSource += "</a>"
                 End If
             Catch ex As Exception
                 _info.RecentPost = Nothing
                 _info.PostCreatedAt = Nothing
                 _info.PostSource = Nothing
             End Try
+
         Catch ex As Exception
             Return False
         End Try
-
         Return True
     End Function
 
@@ -118,7 +105,7 @@ Public Class ShowUserInfo
         Dim webtext As String
         Dim jumpto As String
         webtext = MyOwner.TwitterInstance.PreProcessUrl("<a href=""" + data + """>Dummy</a>")
-        webtext = ShortUrl.Resolve(webtext)
+        webtext = ShortUrl.Resolve(webtext, False)
         jumpto = Regex.Match(webtext, "<a href=""(?<url>.*?)""").Groups.Item("url").Value
         ToolTip1.SetToolTip(LinkLabelWeb, jumpto)
         LinkLabelWeb.Tag = jumpto
@@ -127,18 +114,18 @@ Public Class ShowUserInfo
 
     Private Function MakeDescriptionBrowserText(ByVal data As String) As String
         descriptionTxt = MyOwner.createDetailHtml( _
-                                MyOwner.TwitterInstance.CreateHtmlAnchor(data, atlist))
+                                MyOwner.TwitterInstance.CreateHtmlAnchor(data, atlist, Nothing))
         Return descriptionTxt
     End Function
 
     Private Sub ShowUserInfo_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
-        TweenMain.TopMost = Not TweenMain.TopMost
-        TweenMain.TopMost = Not TweenMain.TopMost
+        'TweenMain.TopMost = Not TweenMain.TopMost
+        'TweenMain.TopMost = Not TweenMain.TopMost
     End Sub
 
     Private Sub ShowUserInfo_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         MyOwner = DirectCast(Me.Owner, TweenMain)
-        If Not AnalizeUserInfo(userInfoXml) Then
+        If Not AnalizeUserInfo(userInfo) Then
             MessageBox.Show(My.Resources.ShowUserInfo1)
             Me.Close()
             Exit Sub
@@ -164,7 +151,7 @@ Public Class ShowUserInfo
         RecentPostBrowser.Visible = False
         If _info.RecentPost IsNot Nothing Then
             recentPostTxt = MyOwner.createDetailHtml( _
-                MyOwner.TwitterInstance.CreateHtmlAnchor(_info.RecentPost, atlist) + _
+                MyOwner.TwitterInstance.CreateHtmlAnchor(_info.RecentPost, atlist, userInfo.Status.Entities, Nothing) + _
                  " Posted at " + _info.PostCreatedAt.ToString + _
                  " via " + _info.PostSource)
         End If
@@ -207,9 +194,9 @@ Public Class ShowUserInfo
         Me.Close()
     End Sub
 
-    Public WriteOnly Property XmlData() As String
-        Set(ByVal value As String)
-            userInfoXml = value
+    Public WriteOnly Property User() As TwitterDataModel.User
+        Set(ByVal value As TwitterDataModel.User)
+            Me.userInfo = value
         End Set
     End Property
 
@@ -348,10 +335,17 @@ Public Class ShowUserInfo
                 'ハッシュタグの場合は、タブで開く
                 Dim urlStr As String = HttpUtility.UrlDecode(e.Url.AbsoluteUri)
                 Dim hash As String = urlStr.Substring(urlStr.IndexOf("#"))
+                MyOwner.HashSupl.AddItem(hash)
+                MyOwner.HashMgr.AddHashToHistory(hash.Trim, False)
                 MyOwner.AddNewTabForSearch(hash)
                 Exit Sub
             Else
-                MyOwner.OpenUriAsync(e.Url.OriginalString)
+                Dim m As Match = Regex.Match(e.Url.AbsoluteUri, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$")
+                If AppendSettingDialog.Instance.OpenUserTimeline AndAlso m.Success AndAlso MyOwner.IsTwitterId(m.Result("${ScreenName}")) Then
+                    MyOwner.AddNewTabForUserTimeline(m.Result("${ScreenName}"))
+                Else
+                    MyOwner.OpenUriAsync(e.Url.OriginalString)
+                End If
             End If
         End If
     End Sub
@@ -403,11 +397,15 @@ Public Class ShowUserInfo
     End Sub
 
     Private Sub LinkLabel1_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
-        MyOwner.OpenUriAsync("http://twitter.com/help/verified")
+        MyOwner.OpenUriAsync("http://support.twitter.com/groups/31-twitter-basics/topics/111-features/articles/268350-x8a8d-x8a3c-x6e08-x307f-x30a2-x30ab-x30a6-x30f3-x30c8-x306b-x3064-x3044-x3066")
+    End Sub
+
+    Private Sub LinkLabel2_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
+        MyOwner.OpenUriAsync("http://support.twitter.com/groups/31-twitter-basics/topics/107-my-profile-account-settings/articles/243055-x516c-x958b-x3001-x975e-x516c-x958b-x30a2-x30ab-x30a6-x30f3-x30c8-x306b-x3064-x3044-x3066")
     End Sub
 
     Private Sub ButtonSearchPosts_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSearchPosts.Click
-        MyOwner.AddNewTabForSearch("from:" + _info.ScreenName)
+        MyOwner.AddNewTabForUserTimeline(_info.ScreenName)
     End Sub
 
     Private Sub UserPicture_DoubleClick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UserPicture.DoubleClick
@@ -439,6 +437,13 @@ Public Class ShowUserInfo
                                             arg.url, _
                                             arg.location, _
                                             arg.description)
+    End Sub
+
+    Private Sub UpddateProfile_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs)
+        Dim res As String = DirectCast(e.Result, String)
+        If res.StartsWith("err:", StringComparison.CurrentCultureIgnoreCase) Then
+            MessageBox.Show(res)
+        End If
     End Sub
 
     Private Sub ButtonEdit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonEdit.Click
@@ -508,14 +513,14 @@ Public Class ShowUserInfo
                 TextBoxDescription.Modified Then
 
                 arg.tw = MyOwner.TwitterInstance
-                arg.name = TextBoxName.Text
-                arg.url = TextBoxWeb.Text
-                arg.location = TextBoxLocation.Text
-                arg.description = TextBoxDescription.Text
+                arg.name = TextBoxName.Text.Trim()
+                arg.url = TextBoxWeb.Text.Trim()
+                arg.location = TextBoxLocation.Text.Trim()
+                arg.description = TextBoxDescription.Text.Trim()
 
                 Using dlg As New FormInfo(Me, My.Resources.UserInfoButtonEdit_ClickText2, _
                                             AddressOf UpdateProfile_Dowork, _
-                                            Nothing, _
+                                            AddressOf UpddateProfile_RunWorkerCompleted, _
                                             arg)
                     dlg.ShowDialog()
                     If Not String.IsNullOrEmpty(dlg.Result.ToString) Then
@@ -568,7 +573,7 @@ Public Class ShowUserInfo
 
     Private Sub UpdateProfileImage_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs)
         Dim res As String = ""
-        Dim xdocbuf As String = ""
+        Dim user As TwitterDataModel.User = Nothing
 
         If e.Result Is Nothing Then
             Exit Sub
@@ -578,21 +583,15 @@ Public Class ShowUserInfo
         ' アイコンを取得してみる
         ' が、古いアイコンのユーザーデータが返ってくるため反映/判断できない
 
-        res = MyOwner.TwitterInstance.GetUserInfo(_info.ScreenName, xdocbuf)
-
-        Dim xdoc As New XmlDocument
-        Dim img As Image
         Try
-            xdoc.LoadXml(xdocbuf)
-            _info.ImageUrl = New Uri(xdoc.SelectSingleNode("/user/profile_image_url").InnerText)
-            img = (New HttpVarious).GetImage(_info.ImageUrl.ToString)
+            res = MyOwner.TwitterInstance.GetUserInfo(_info.ScreenName, user)
+            Dim img As Image = (New HttpVarious).GetImage(user.ProfileImageUrl)
             If img IsNot Nothing Then
                 UserPicture.Image = img
             End If
         Catch ex As Exception
 
         End Try
-
     End Sub
 
     Private Sub doChangeIcon(ByVal filename As String)
@@ -614,7 +613,6 @@ Public Class ShowUserInfo
         End Using
     End Sub
 
-
     Private Sub ChangeIconToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ChangeIconToolStripMenuItem.Click
         OpenFileDialogIcon.Filter = My.Resources.ChangeIconToolStripMenuItem_ClickText1
         OpenFileDialogIcon.Title = My.Resources.ChangeIconToolStripMenuItem_ClickText2
@@ -630,7 +628,7 @@ Public Class ShowUserInfo
         If isValidIconFile(New FileInfo(fn)) Then
             doChangeIcon(fn)
         Else
-            MessageBox.Show("ユーザーアイコンとして使用できないファイルです")
+            MessageBox.Show(My.Resources.ChangeIconToolStripMenuItem_ClickText6)
         End If
     End Sub
 

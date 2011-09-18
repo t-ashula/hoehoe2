@@ -112,25 +112,25 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="ButtonClose.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="ButtonClose.Location" type="System.Drawing.Point, System.Drawing">
     <value>497, 431</value>
   </data>
   <data name="ButtonClose.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="ButtonClose.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
+    <value>36</value>
   </data>
   <data name="ButtonClose.Text" xml:space="preserve">
     <value>閉じる</value>
@@ -139,7 +139,7 @@
     <value>ButtonClose</value>
   </data>
   <data name="&gt;&gt;ButtonClose.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ButtonClose.Parent" xml:space="preserve">
     <value>$this</value>
@@ -160,7 +160,7 @@
     <value>29, 12</value>
   </data>
   <data name="Label1.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+    <value>5</value>
   </data>
   <data name="Label1.Text" xml:space="preserve">
     <value>名前</value>
@@ -169,7 +169,7 @@
     <value>Label1</value>
   </data>
   <data name="&gt;&gt;Label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label1.Parent" xml:space="preserve">
     <value>$this</value>
@@ -190,7 +190,7 @@
     <value>41, 12</value>
   </data>
   <data name="Label2.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+    <value>7</value>
   </data>
   <data name="Label2.Text" xml:space="preserve">
     <value>現在地</value>
@@ -199,7 +199,7 @@
     <value>Label2</value>
   </data>
   <data name="&gt;&gt;Label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label2.Parent" xml:space="preserve">
     <value>$this</value>
@@ -220,7 +220,7 @@
     <value>26, 12</value>
   </data>
   <data name="Label3.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+    <value>9</value>
   </data>
   <data name="Label3.Text" xml:space="preserve">
     <value>Web</value>
@@ -229,7 +229,7 @@
     <value>Label3</value>
   </data>
   <data name="&gt;&gt;Label3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label3.Parent" xml:space="preserve">
     <value>$this</value>
@@ -250,7 +250,7 @@
     <value>53, 12</value>
   </data>
   <data name="Label4.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
+    <value>23</value>
   </data>
   <data name="Label4.Text" xml:space="preserve">
     <value>自己紹介</value>
@@ -259,7 +259,7 @@
     <value>Label4</value>
   </data>
   <data name="&gt;&gt;Label4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label4.Parent" xml:space="preserve">
     <value>$this</value>
@@ -277,7 +277,7 @@
     <value>418, 14</value>
   </data>
   <data name="LinkLabelWeb.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+    <value>10</value>
   </data>
   <data name="LinkLabelWeb.Text" xml:space="preserve">
     <value>LinkLabelWeb</value>
@@ -286,7 +286,7 @@
     <value>LinkLabelWeb</value>
   </data>
   <data name="&gt;&gt;LinkLabelWeb.Type" xml:space="preserve">
-    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LinkLabelWeb.Parent" xml:space="preserve">
     <value>$this</value>
@@ -304,7 +304,7 @@
     <value>418, 13</value>
   </data>
   <data name="LabelLocation.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+    <value>8</value>
   </data>
   <data name="LabelLocation.Text" xml:space="preserve">
     <value>LabelLocation</value>
@@ -313,7 +313,7 @@
     <value>LabelLocation</value>
   </data>
   <data name="&gt;&gt;LabelLocation.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LabelLocation.Parent" xml:space="preserve">
     <value>$this</value>
@@ -328,10 +328,10 @@
     <value>154, 60</value>
   </data>
   <data name="LabelName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>306, 14</value>
+    <value>286, 14</value>
   </data>
   <data name="LabelName.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>6</value>
   </data>
   <data name="LabelName.Text" xml:space="preserve">
     <value>LabelName</value>
@@ -340,7 +340,7 @@
     <value>LabelName</value>
   </data>
   <data name="&gt;&gt;LabelName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LabelName.Parent" xml:space="preserve">
     <value>$this</value>
@@ -361,7 +361,7 @@
     <value>77, 12</value>
   </data>
   <data name="Label5.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
+    <value>27</value>
   </data>
   <data name="Label5.Text" xml:space="preserve">
     <value>フォローしている</value>
@@ -370,7 +370,7 @@
     <value>Label5</value>
   </data>
   <data name="&gt;&gt;Label5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label5.Parent" xml:space="preserve">
     <value>$this</value>
@@ -391,7 +391,7 @@
     <value>87, 12</value>
   </data>
   <data name="Label6.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
+    <value>29</value>
   </data>
   <data name="Label6.Text" xml:space="preserve">
     <value>フォローされている</value>
@@ -400,7 +400,7 @@
     <value>Label6</value>
   </data>
   <data name="&gt;&gt;Label6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label6.Parent" xml:space="preserve">
     <value>$this</value>
@@ -421,7 +421,7 @@
     <value>101, 12</value>
   </data>
   <data name="LinkLabelFollowing.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+    <value>28</value>
   </data>
   <data name="LinkLabelFollowing.Text" xml:space="preserve">
     <value>LinkLabelFollowing</value>
@@ -430,13 +430,13 @@
     <value>LinkLabelFollowing</value>
   </data>
   <data name="&gt;&gt;LinkLabelFollowing.Type" xml:space="preserve">
-    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LinkLabelFollowing.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LinkLabelFollowing.ZOrder" xml:space="preserve">
-    <value>30</value>
+    <value>31</value>
   </data>
   <data name="LinkLabelFollowers.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -451,7 +451,7 @@
     <value>102, 12</value>
   </data>
   <data name="LinkLabelFollowers.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
+    <value>30</value>
   </data>
   <data name="LinkLabelFollowers.Text" xml:space="preserve">
     <value>LinkLabelFollowers</value>
@@ -460,13 +460,13 @@
     <value>LinkLabelFollowers</value>
   </data>
   <data name="&gt;&gt;LinkLabelFollowers.Type" xml:space="preserve">
-    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LinkLabelFollowers.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LinkLabelFollowers.ZOrder" xml:space="preserve">
-    <value>28</value>
+    <value>29</value>
   </data>
   <data name="Label7.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -481,7 +481,7 @@
     <value>120, 12</value>
   </data>
   <data name="Label7.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
+    <value>1</value>
   </data>
   <data name="Label7.Text" xml:space="preserve">
     <value>アカウント作成日時</value>
@@ -493,7 +493,7 @@
     <value>Label7</value>
   </data>
   <data name="&gt;&gt;Label7.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label7.Parent" xml:space="preserve">
     <value>$this</value>
@@ -508,13 +508,13 @@
     <value>NoControl</value>
   </data>
   <data name="LabelCreatedAt.Location" type="System.Drawing.Point, System.Drawing">
-    <value>466, 24</value>
+    <value>446, 24</value>
   </data>
   <data name="LabelCreatedAt.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 14</value>
+    <value>126, 14</value>
   </data>
   <data name="LabelCreatedAt.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
+    <value>2</value>
   </data>
   <data name="LabelCreatedAt.Text" xml:space="preserve">
     <value>LabelCreatedAt</value>
@@ -526,13 +526,13 @@
     <value>LabelCreatedAt</value>
   </data>
   <data name="&gt;&gt;LabelCreatedAt.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LabelCreatedAt.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelCreatedAt.ZOrder" xml:space="preserve">
-    <value>23</value>
+    <value>24</value>
   </data>
   <data name="Label8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -547,7 +547,7 @@
     <value>83, 12</value>
   </data>
   <data name="Label8.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
+    <value>31</value>
   </data>
   <data name="Label8.Text" xml:space="preserve">
     <value>発言数（ホーム）</value>
@@ -556,13 +556,13 @@
     <value>Label8</value>
   </data>
   <data name="&gt;&gt;Label8.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label8.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label8.ZOrder" xml:space="preserve">
-    <value>26</value>
+    <value>27</value>
   </data>
   <data name="LinkLabelTweet.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -577,7 +577,7 @@
     <value>84, 12</value>
   </data>
   <data name="LinkLabelTweet.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
+    <value>32</value>
   </data>
   <data name="LinkLabelTweet.Text" xml:space="preserve">
     <value>LinkLabelTweet</value>
@@ -586,13 +586,13 @@
     <value>LinkLabelTweet</value>
   </data>
   <data name="&gt;&gt;LinkLabelTweet.Type" xml:space="preserve">
-    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LinkLabelTweet.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LinkLabelTweet.ZOrder" xml:space="preserve">
-    <value>24</value>
+    <value>25</value>
   </data>
   <data name="Label9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -607,7 +607,7 @@
     <value>56, 12</value>
   </data>
   <data name="Label9.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
+    <value>33</value>
   </data>
   <data name="Label9.Text" xml:space="preserve">
     <value>お気に入り</value>
@@ -616,13 +616,13 @@
     <value>Label9</value>
   </data>
   <data name="&gt;&gt;Label9.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label9.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label9.ZOrder" xml:space="preserve">
-    <value>21</value>
+    <value>22</value>
   </data>
   <data name="LinkLabelFav.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -637,7 +637,7 @@
     <value>72, 12</value>
   </data>
   <data name="LinkLabelFav.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
+    <value>34</value>
   </data>
   <data name="LinkLabelFav.Text" xml:space="preserve">
     <value>LinkLabelFav</value>
@@ -646,13 +646,13 @@
     <value>LinkLabelFav</value>
   </data>
   <data name="&gt;&gt;LinkLabelFav.Type" xml:space="preserve">
-    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LinkLabelFav.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LinkLabelFav.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>21</value>
   </data>
   <data name="ButtonFollow.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -664,7 +664,7 @@
     <value>75, 23</value>
   </data>
   <data name="ButtonFollow.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+    <value>17</value>
   </data>
   <data name="ButtonFollow.Text" xml:space="preserve">
     <value>フォローする</value>
@@ -673,7 +673,7 @@
     <value>ButtonFollow</value>
   </data>
   <data name="&gt;&gt;ButtonFollow.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ButtonFollow.Parent" xml:space="preserve">
     <value>$this</value>
@@ -691,7 +691,7 @@
     <value>75, 23</value>
   </data>
   <data name="ButtonUnFollow.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+    <value>18</value>
   </data>
   <data name="ButtonUnFollow.Text" xml:space="preserve">
     <value>フォロー解除</value>
@@ -700,49 +700,13 @@
     <value>ButtonUnFollow</value>
   </data>
   <data name="&gt;&gt;ButtonUnFollow.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ButtonUnFollow.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ButtonUnFollow.ZOrder" xml:space="preserve">
-    <value>29</value>
-  </data>
-  <data name="Label10.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Right</value>
-  </data>
-  <data name="Label10.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="Label10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="Label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>152, 127</value>
-  </data>
-  <data name="Label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 12</value>
-  </data>
-  <data name="Label10.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="Label10.Text" xml:space="preserve">
-    <value>非公開（Protect)</value>
-  </data>
-  <data name="Label10.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>TopRight</value>
-  </data>
-  <data name="&gt;&gt;Label10.Name" xml:space="preserve">
-    <value>Label10</value>
-  </data>
-  <data name="&gt;&gt;Label10.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Label10.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;Label10.ZOrder" xml:space="preserve">
-    <value>31</value>
+    <value>30</value>
   </data>
   <data name="LabelIsProtected.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -757,7 +721,7 @@
     <value>75, 15</value>
   </data>
   <data name="LabelIsProtected.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+    <value>12</value>
   </data>
   <data name="LabelIsProtected.Text" xml:space="preserve">
     <value>LabelIsProtected</value>
@@ -766,13 +730,13 @@
     <value>LabelIsProtected</value>
   </data>
   <data name="&gt;&gt;LabelIsProtected.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LabelIsProtected.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelIsProtected.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>23</value>
   </data>
   <data name="LabelIsFollowing.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -787,7 +751,7 @@
     <value>84, 12</value>
   </data>
   <data name="LabelIsFollowing.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
+    <value>15</value>
   </data>
   <data name="LabelIsFollowing.Text" xml:space="preserve">
     <value>Getting datas ...</value>
@@ -796,13 +760,13 @@
     <value>LabelIsFollowing</value>
   </data>
   <data name="&gt;&gt;LabelIsFollowing.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LabelIsFollowing.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelIsFollowing.ZOrder" xml:space="preserve">
-    <value>27</value>
+    <value>28</value>
   </data>
   <data name="LabelIsFollowed.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -817,7 +781,7 @@
     <value>84, 12</value>
   </data>
   <data name="LabelIsFollowed.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
+    <value>16</value>
   </data>
   <data name="LabelIsFollowed.Text" xml:space="preserve">
     <value>Getting datas ...</value>
@@ -826,15 +790,15 @@
     <value>LabelIsFollowed</value>
   </data>
   <data name="&gt;&gt;LabelIsFollowed.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LabelIsFollowed.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelIsFollowed.ZOrder" xml:space="preserve">
-    <value>25</value>
+    <value>26</value>
   </data>
-  <metadata name="ContextMenuUserPicture.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="ContextMenuUserPicture.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>697, 15</value>
   </metadata>
   <data name="ContextMenuUserPicture.Size" type="System.Drawing.Size, System.Drawing">
@@ -844,7 +808,7 @@
     <value>ContextMenuUserPicture</value>
   </data>
   <data name="&gt;&gt;ContextMenuUserPicture.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="UserPicture.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -865,13 +829,13 @@
     <value>UserPicture</value>
   </data>
   <data name="&gt;&gt;UserPicture.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;UserPicture.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;UserPicture.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>16</value>
   </data>
   <data name="ChangeIconToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>139, 22</value>
@@ -879,7 +843,7 @@
   <data name="ChangeIconToolStripMenuItem.Text" xml:space="preserve">
     <value>アイコンの変更</value>
   </data>
-  <metadata name="BackgroundWorkerImageLoader.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="BackgroundWorkerImageLoader.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
   <data name="LabelScreenName.Font" type="System.Drawing.Font, System.Drawing">
@@ -892,7 +856,7 @@
     <value>9, 20</value>
   </data>
   <data name="LabelScreenName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>451, 20</value>
+    <value>431, 20</value>
   </data>
   <data name="LabelScreenName.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -904,15 +868,15 @@
     <value>LabelScreenName</value>
   </data>
   <data name="&gt;&gt;LabelScreenName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LabelScreenName.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelScreenName.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>19</value>
   </data>
-  <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>230, 17</value>
   </metadata>
   <data name="LinkLabel1.AutoSize" type="System.Boolean, mscorlib">
@@ -928,27 +892,24 @@
     <value>100, 12</value>
   </data>
   <data name="LinkLabel1.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+    <value>13</value>
   </data>
   <data name="LinkLabel1.Text" xml:space="preserve">
     <value>認証済み(Verified)</value>
-  </data>
-  <data name="LinkLabel1.ToolTip" xml:space="preserve">
-    <value>http://twitter.com/help/verified</value>
   </data>
   <data name="&gt;&gt;LinkLabel1.Name" xml:space="preserve">
     <value>LinkLabel1</value>
   </data>
   <data name="&gt;&gt;LinkLabel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LinkLabel1.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LinkLabel1.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
-  <metadata name="ContextMenuRecentPostBrowser.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="ContextMenuRecentPostBrowser.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>326, 17</value>
   </metadata>
   <data name="ContextMenuRecentPostBrowser.Size" type="System.Drawing.Size, System.Drawing">
@@ -958,7 +919,7 @@
     <value>ContextMenuRecentPostBrowser</value>
   </data>
   <data name="&gt;&gt;ContextMenuRecentPostBrowser.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="SelectionCopyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>166, 22</value>
@@ -985,7 +946,7 @@
     <value>63, 12</value>
   </data>
   <data name="LabelRecentPost.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
+    <value>25</value>
   </data>
   <data name="LabelRecentPost.Text" xml:space="preserve">
     <value>最近の発言</value>
@@ -994,13 +955,13 @@
     <value>LabelRecentPost</value>
   </data>
   <data name="&gt;&gt;LabelRecentPost.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LabelRecentPost.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelRecentPost.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>20</value>
   </data>
   <data name="LabelIsVerified.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -1015,7 +976,7 @@
     <value>75, 15</value>
   </data>
   <data name="LabelIsVerified.TabIndex" type="System.Int32, mscorlib">
-    <value>29</value>
+    <value>14</value>
   </data>
   <data name="LabelIsVerified.Text" xml:space="preserve">
     <value>LabelIsVerified</value>
@@ -1024,13 +985,13 @@
     <value>LabelIsVerified</value>
   </data>
   <data name="&gt;&gt;LabelIsVerified.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LabelIsVerified.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelIsVerified.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>17</value>
   </data>
   <data name="ButtonSearchPosts.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1042,22 +1003,22 @@
     <value>75, 23</value>
   </data>
   <data name="ButtonSearchPosts.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>19</value>
   </data>
   <data name="ButtonSearchPosts.Text" xml:space="preserve">
-    <value>発言を検索</value>
+    <value>TLを取得</value>
   </data>
   <data name="&gt;&gt;ButtonSearchPosts.Name" xml:space="preserve">
     <value>ButtonSearchPosts</value>
   </data>
   <data name="&gt;&gt;ButtonSearchPosts.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ButtonSearchPosts.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ButtonSearchPosts.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="LabelId.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -1066,13 +1027,13 @@
     <value>NoControl</value>
   </data>
   <data name="LabelId.Location" type="System.Drawing.Point, System.Drawing">
-    <value>466, 60</value>
+    <value>446, 60</value>
   </data>
   <data name="LabelId.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 14</value>
+    <value>126, 14</value>
   </data>
   <data name="LabelId.TabIndex" type="System.Int32, mscorlib">
-    <value>34</value>
+    <value>4</value>
   </data>
   <data name="LabelId.Text" xml:space="preserve">
     <value>LabelId</value>
@@ -1084,13 +1045,13 @@
     <value>LabelId</value>
   </data>
   <data name="&gt;&gt;LabelId.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LabelId.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelId.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="Label12.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -1105,7 +1066,7 @@
     <value>120, 12</value>
   </data>
   <data name="Label12.TabIndex" type="System.Int32, mscorlib">
-    <value>33</value>
+    <value>3</value>
   </data>
   <data name="Label12.Text" xml:space="preserve">
     <value>アカウントID</value>
@@ -1117,13 +1078,13 @@
     <value>Label12</value>
   </data>
   <data name="&gt;&gt;Label12.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label12.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label12.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="ButtonEdit.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1135,7 +1096,7 @@
     <value>75, 23</value>
   </data>
   <data name="ButtonEdit.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
+    <value>35</value>
   </data>
   <data name="ButtonEdit.Text" xml:space="preserve">
     <value>編集</value>
@@ -1144,13 +1105,13 @@
     <value>ButtonEdit</value>
   </data>
   <data name="&gt;&gt;ButtonEdit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ButtonEdit.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ButtonEdit.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="RecentPostBrowser.Location" type="System.Drawing.Point, System.Drawing">
     <value>82, 303</value>
@@ -1159,19 +1120,19 @@
     <value>490, 65</value>
   </data>
   <data name="RecentPostBrowser.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
+    <value>26</value>
   </data>
   <data name="&gt;&gt;RecentPostBrowser.Name" xml:space="preserve">
     <value>RecentPostBrowser</value>
   </data>
   <data name="&gt;&gt;RecentPostBrowser.Type" xml:space="preserve">
-    <value>System.Windows.Forms.WebBrowser, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.WebBrowser, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;RecentPostBrowser.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;RecentPostBrowser.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>15</value>
   </data>
   <data name="DescriptionBrowser.Location" type="System.Drawing.Point, System.Drawing">
     <value>82, 211</value>
@@ -1180,23 +1141,20 @@
     <value>490, 73</value>
   </data>
   <data name="DescriptionBrowser.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
+    <value>24</value>
   </data>
   <data name="&gt;&gt;DescriptionBrowser.Name" xml:space="preserve">
     <value>DescriptionBrowser</value>
   </data>
   <data name="&gt;&gt;DescriptionBrowser.Type" xml:space="preserve">
-    <value>System.Windows.Forms.WebBrowser, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.WebBrowser, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;DescriptionBrowser.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;DescriptionBrowser.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>18</value>
   </data>
-  <metadata name="OpenFileDialogIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>547, 15</value>
-  </metadata>
   <data name="TextBoxName.Location" type="System.Drawing.Point, System.Drawing">
     <value>34, 163</value>
   </data>
@@ -1204,7 +1162,7 @@
     <value>16, 19</value>
   </data>
   <data name="TextBoxName.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+    <value>37</value>
   </data>
   <data name="TextBoxName.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1213,13 +1171,13 @@
     <value>TextBoxName</value>
   </data>
   <data name="&gt;&gt;TextBoxName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;TextBoxName.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TextBoxName.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="TextBoxLocation.Location" type="System.Drawing.Point, System.Drawing">
     <value>34, 188</value>
@@ -1228,7 +1186,7 @@
     <value>16, 19</value>
   </data>
   <data name="TextBoxLocation.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
+    <value>38</value>
   </data>
   <data name="TextBoxLocation.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1237,13 +1195,13 @@
     <value>TextBoxLocation</value>
   </data>
   <data name="&gt;&gt;TextBoxLocation.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;TextBoxLocation.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TextBoxLocation.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="TextBoxWeb.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 163</value>
@@ -1252,7 +1210,7 @@
     <value>16, 19</value>
   </data>
   <data name="TextBoxWeb.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
+    <value>39</value>
   </data>
   <data name="TextBoxWeb.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1261,13 +1219,13 @@
     <value>TextBoxWeb</value>
   </data>
   <data name="&gt;&gt;TextBoxWeb.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;TextBoxWeb.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TextBoxWeb.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="TextBoxDescription.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 186</value>
@@ -1276,7 +1234,7 @@
     <value>16, 19</value>
   </data>
   <data name="TextBoxDescription.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
+    <value>40</value>
   </data>
   <data name="TextBoxDescription.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1285,13 +1243,13 @@
     <value>TextBoxDescription</value>
   </data>
   <data name="&gt;&gt;TextBoxDescription.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;TextBoxDescription.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TextBoxDescription.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="ButtonBlock.Location" type="System.Drawing.Point, System.Drawing">
     <value>416, 182</value>
@@ -1300,7 +1258,7 @@
     <value>75, 23</value>
   </data>
   <data name="ButtonBlock.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+    <value>21</value>
   </data>
   <data name="ButtonBlock.Text" xml:space="preserve">
     <value>ブロック</value>
@@ -1309,13 +1267,13 @@
     <value>ButtonBlock</value>
   </data>
   <data name="&gt;&gt;ButtonBlock.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ButtonBlock.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ButtonBlock.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="ButtonReportSpam.Location" type="System.Drawing.Point, System.Drawing">
     <value>497, 182</value>
@@ -1324,7 +1282,7 @@
     <value>75, 23</value>
   </data>
   <data name="ButtonReportSpam.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+    <value>22</value>
   </data>
   <data name="ButtonReportSpam.Text" xml:space="preserve">
     <value>スパム報告</value>
@@ -1333,13 +1291,13 @@
     <value>ButtonReportSpam</value>
   </data>
   <data name="&gt;&gt;ButtonReportSpam.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ButtonReportSpam.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ButtonReportSpam.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="ButtonBlockDestroy.Location" type="System.Drawing.Point, System.Drawing">
     <value>335, 182</value>
@@ -1348,7 +1306,7 @@
     <value>75, 23</value>
   </data>
   <data name="ButtonBlockDestroy.TabIndex" type="System.Int32, mscorlib">
-    <value>35</value>
+    <value>20</value>
   </data>
   <data name="ButtonBlockDestroy.Text" xml:space="preserve">
     <value>ブロック解除</value>
@@ -1357,18 +1315,48 @@
     <value>ButtonBlockDestroy</value>
   </data>
   <data name="&gt;&gt;ButtonBlockDestroy.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ButtonBlockDestroy.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ButtonBlockDestroy.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="LinkLabel2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="LinkLabel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>152, 127</value>
+  </data>
+  <data name="LinkLabel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 12</value>
+  </data>
+  <data name="LinkLabel2.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="LinkLabel2.Text" xml:space="preserve">
+    <value>非公開(Protect)</value>
+  </data>
+  <data name="&gt;&gt;LinkLabel2.Name" xml:space="preserve">
+    <value>LinkLabel2</value>
+  </data>
+  <data name="&gt;&gt;LinkLabel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LinkLabel2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;LinkLabel2.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="OpenFileDialogIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>547, 15</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>45</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
@@ -1387,42 +1375,42 @@
     <value>ChangeIconToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;ChangeIconToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;BackgroundWorkerImageLoader.Name" xml:space="preserve">
     <value>BackgroundWorkerImageLoader</value>
   </data>
   <data name="&gt;&gt;BackgroundWorkerImageLoader.Type" xml:space="preserve">
-    <value>System.ComponentModel.BackgroundWorker, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.ComponentModel.BackgroundWorker, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ToolTip1.Name" xml:space="preserve">
     <value>ToolTip1</value>
   </data>
   <data name="&gt;&gt;ToolTip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;SelectionCopyToolStripMenuItem.Name" xml:space="preserve">
     <value>SelectionCopyToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;SelectionCopyToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;SelectAllToolStripMenuItem.Name" xml:space="preserve">
     <value>SelectAllToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;SelectAllToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;OpenFileDialogIcon.Name" xml:space="preserve">
     <value>OpenFileDialogIcon</value>
   </data>
   <data name="&gt;&gt;OpenFileDialogIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>ShowUserInfo</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

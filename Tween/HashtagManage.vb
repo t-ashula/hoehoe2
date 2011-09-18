@@ -1,7 +1,9 @@
 ﻿' Tween - Client of Twitter
-' Copyright (c) 2007-2010 kiri_feather (@kiri_feather) <kiri_feather@gmail.com>
-'           (c) 2008-2010 Moz (@syo68k) <http://iddy.jp/profile/moz/>
-'           (c) 2008-2010 takeshik (@takeshik) <http://www.takeshik.org/>
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
 ' All rights reserved.
 ' 
 ' This file is part of Tween.
@@ -20,7 +22,7 @@
 ' with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 ' the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 ' Boston, MA 02110-1301, USA.
-Imports System.Windows.Forms
+
 
 Public Class HashtagManage
     '入力補助画面
@@ -79,7 +81,9 @@ Public Class HashtagManage
     End Sub
 
     Private Sub UnSelectButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UnSelectButton.Click
-        HistoryHashList.SelectedIndices.Clear()
+        Do
+            HistoryHashList.SelectedIndices.Clear()
+        Loop While HistoryHashList.SelectedIndices.Count > 0
     End Sub
 
     Private Function GetIndexOf(ByVal list As ListBox.ObjectCollection, ByVal value As String) As Integer
@@ -249,12 +253,16 @@ Public Class HashtagManage
         If Not Me._isAdd AndAlso Me.HistoryHashList.SelectedIndices.Count > 0 Then
             idx = Me.HistoryHashList.SelectedIndices(0)
             Me.HistoryHashList.Items.RemoveAt(idx)
-            Me.HistoryHashList.SelectedIndices.Clear()
+            Do
+                Me.HistoryHashList.SelectedIndices.Clear()
+            Loop While Me.HistoryHashList.SelectedIndices.Count > 0
             Me.HistoryHashList.Items.Insert(idx, hashStr)
             Me.HistoryHashList.SelectedIndex = idx
         Else
             Me.AddHashToHistory(hashStr, False)
-            Me.HistoryHashList.SelectedIndices.Clear()
+            Do
+                Me.HistoryHashList.SelectedIndices.Clear()
+            Loop While Me.HistoryHashList.SelectedIndices.Count > 0
             Me.HistoryHashList.SelectedIndex = Me.HistoryHashList.Items.IndexOf(hashStr)
         End If
 
@@ -296,7 +304,7 @@ Public Class HashtagManage
                     Return False
                 End If
                 If hash.Length = 1 Then
-                    If isShowWarn Then MessageBox.Show("emply hashtag.", "Hashtag warning", MessageBoxButtons.OK, MessageBoxIcon.Asterisk)
+                    If isShowWarn Then MessageBox.Show("empty hashtag.", "Hashtag warning", MessageBoxButtons.OK, MessageBoxIcon.Asterisk)
                     Return False
                 End If
                 '使用不可の文字チェックはしない

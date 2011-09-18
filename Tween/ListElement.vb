@@ -1,11 +1,36 @@
+Ôªø' Tween - Client of Twitter
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
+' All rights reserved.
+' 
+' This file is part of Tween.
+' 
+' This program is free software; you can redistribute it and/or modify it
+' under the terms of the GNU General Public License as published by the Free
+' Software Foundation; either version 3 of the License, or (at your option)
+' any later version.
+' 
+' This program is distributed in the hope that it will be useful, but
+' WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+' or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+' for more details. 
+' 
+' You should have received a copy of the GNU General Public License along
+' with this program. If not, see <http://www.gnu.org/licenses/>, or write to
+' the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+' Boston, MA 02110-1301, USA.
+
 Public Class ListElement
     Public Id As Long = 0
     Public Name As String = ""
     Public Description As String = ""
     Public Slug As String = ""
     Public IsPublic As Boolean = True
-    Public SubscriberCount As Integer = 0   'çwì«é“êî
-    Public MemberCount As Integer = 0   'ÉäÉXÉgÉÅÉìÉoêî
+    Public SubscriberCount As Integer = 0   'Ë≥ºË™≠ËÄÖÊï∞
+    Public MemberCount As Integer = 0   '„É™„Çπ„Éà„É°„É≥„ÉêÊï∞
     Public UserId As Long = 0
     Public Username As String = ""
     Public Nickname As String = ""
@@ -19,18 +44,17 @@ Public Class ListElement
 
     End Sub
 
-    Public Sub New(ByVal xmlNode As Xml.XmlNode, ByVal tw As Twitter)
-        Me.Description = xmlNode.Item("description").InnerText
-        Me.Id = Long.Parse(xmlNode.Item("id").InnerText)
-        Me.IsPublic = (xmlNode.Item("mode").InnerText = "public")
-        Me.MemberCount = Integer.Parse(xmlNode.Item("member_count").InnerText)
-        Me.Name = xmlNode.Item("name").InnerText
-        Me.SubscriberCount = Integer.Parse(xmlNode.Item("subscriber_count").InnerText)
-        Me.Slug = xmlNode.Item("slug").InnerText
-        Dim xUserEntry As Xml.XmlElement = CType(xmlNode.SelectSingleNode("./user"), Xml.XmlElement)
-        Me.Nickname = xUserEntry.Item("name").InnerText
-        Me.Username = xUserEntry.Item("screen_name").InnerText
-        Me.UserId = Long.Parse(xUserEntry.Item("id").InnerText)
+    Public Sub New(ByVal listElementData As TwitterDataModel.ListElementData, ByVal tw As Twitter)
+        Me.Description = listElementData.Description
+        Me.Id = listElementData.Id
+        Me.IsPublic = (listElementData.Mode = "public")
+        Me.MemberCount = listElementData.MemberCount
+        Me.Name = listElementData.Name
+        Me.SubscriberCount = listElementData.SubscriberCount
+        Me.Slug = listElementData.Slug
+        Me.Nickname = listElementData.User.Name.Trim()
+        Me.Username = listElementData.User.ScreenName
+        Me.UserId = listElementData.User.Id
 
         Me._tw = tw
     End Sub

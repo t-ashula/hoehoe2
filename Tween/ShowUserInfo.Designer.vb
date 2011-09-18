@@ -44,7 +44,6 @@ Partial Class ShowUserInfo
         Me.LinkLabelFav = New System.Windows.Forms.LinkLabel()
         Me.ButtonFollow = New System.Windows.Forms.Button()
         Me.ButtonUnFollow = New System.Windows.Forms.Button()
-        Me.Label10 = New System.Windows.Forms.Label()
         Me.LabelIsProtected = New System.Windows.Forms.Label()
         Me.LabelIsFollowing = New System.Windows.Forms.Label()
         Me.LabelIsFollowed = New System.Windows.Forms.Label()
@@ -66,7 +65,6 @@ Partial Class ShowUserInfo
         Me.ButtonEdit = New System.Windows.Forms.Button()
         Me.RecentPostBrowser = New System.Windows.Forms.WebBrowser()
         Me.DescriptionBrowser = New System.Windows.Forms.WebBrowser()
-        Me.OpenFileDialogIcon = New System.Windows.Forms.OpenFileDialog()
         Me.TextBoxName = New System.Windows.Forms.TextBox()
         Me.TextBoxLocation = New System.Windows.Forms.TextBox()
         Me.TextBoxWeb = New System.Windows.Forms.TextBox()
@@ -74,6 +72,8 @@ Partial Class ShowUserInfo
         Me.ButtonBlock = New System.Windows.Forms.Button()
         Me.ButtonReportSpam = New System.Windows.Forms.Button()
         Me.ButtonBlockDestroy = New System.Windows.Forms.Button()
+        Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
+        Me.OpenFileDialogIcon = New System.Windows.Forms.OpenFileDialog()
         CType(Me.UserPicture, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuUserPicture.SuspendLayout()
         Me.ContextMenuRecentPostBrowser.SuspendLayout()
@@ -197,11 +197,6 @@ Partial Class ShowUserInfo
         Me.ButtonUnFollow.Name = "ButtonUnFollow"
         Me.ButtonUnFollow.UseVisualStyleBackColor = True
         '
-        'Label10
-        '
-        resources.ApplyResources(Me.Label10, "Label10")
-        Me.Label10.Name = "Label10"
-        '
         'LabelIsProtected
         '
         resources.ApplyResources(Me.LabelIsProtected, "LabelIsProtected")
@@ -220,6 +215,7 @@ Partial Class ShowUserInfo
         '
         'UserPicture
         '
+        Me.UserPicture.BackColor = System.Drawing.Color.White
         Me.UserPicture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.UserPicture.ContextMenuStrip = Me.ContextMenuUserPicture
         resources.ApplyResources(Me.UserPicture, "UserPicture")
@@ -256,7 +252,6 @@ Partial Class ShowUserInfo
         resources.ApplyResources(Me.LinkLabel1, "LinkLabel1")
         Me.LinkLabel1.Name = "LinkLabel1"
         Me.LinkLabel1.TabStop = True
-        Me.ToolTip1.SetToolTip(Me.LinkLabel1, resources.GetString("LinkLabel1.ToolTip"))
         '
         'ContextMenuRecentPostBrowser
         '
@@ -332,10 +327,6 @@ Partial Class ShowUserInfo
         Me.DescriptionBrowser.Url = New System.Uri("about:blank", System.UriKind.Absolute)
         Me.DescriptionBrowser.WebBrowserShortcutsEnabled = False
         '
-        'OpenFileDialogIcon
-        '
-        Me.OpenFileDialogIcon.FileName = "OpenFileDialog1"
-        '
         'TextBoxName
         '
         resources.ApplyResources(Me.TextBoxName, "TextBoxName")
@@ -378,12 +369,23 @@ Partial Class ShowUserInfo
         Me.ButtonBlockDestroy.Name = "ButtonBlockDestroy"
         Me.ButtonBlockDestroy.UseVisualStyleBackColor = True
         '
+        'LinkLabel2
+        '
+        resources.ApplyResources(Me.LinkLabel2, "LinkLabel2")
+        Me.LinkLabel2.Name = "LinkLabel2"
+        Me.LinkLabel2.TabStop = True
+        '
+        'OpenFileDialogIcon
+        '
+        Me.OpenFileDialogIcon.FileName = "OpenFileDialog1"
+        '
         'ShowUserInfo
         '
         Me.AllowDrop = True
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButtonClose
+        Me.Controls.Add(Me.LinkLabel2)
         Me.Controls.Add(Me.ButtonBlockDestroy)
         Me.Controls.Add(Me.ButtonReportSpam)
         Me.Controls.Add(Me.ButtonBlock)
@@ -413,7 +415,6 @@ Partial Class ShowUserInfo
         Me.Controls.Add(Me.LinkLabelFollowers)
         Me.Controls.Add(Me.ButtonUnFollow)
         Me.Controls.Add(Me.LinkLabelFollowing)
-        Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.LabelName)
         Me.Controls.Add(Me.ButtonFollow)
@@ -431,6 +432,7 @@ Partial Class ShowUserInfo
         Me.MinimizeBox = False
         Me.Name = "ShowUserInfo"
         Me.ShowIcon = False
+        Me.ShowInTaskbar = False
         Me.TopMost = True
         CType(Me.UserPicture, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuUserPicture.ResumeLayout(False)
@@ -459,7 +461,6 @@ Partial Class ShowUserInfo
     Friend WithEvents LinkLabelFav As System.Windows.Forms.LinkLabel
     Friend WithEvents ButtonFollow As System.Windows.Forms.Button
     Friend WithEvents ButtonUnFollow As System.Windows.Forms.Button
-    Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents LabelIsProtected As System.Windows.Forms.Label
     Friend WithEvents LabelIsFollowing As System.Windows.Forms.Label
     Friend WithEvents LabelIsFollowed As System.Windows.Forms.Label
@@ -489,4 +490,5 @@ Partial Class ShowUserInfo
     Friend WithEvents ButtonBlock As System.Windows.Forms.Button
     Friend WithEvents ButtonReportSpam As System.Windows.Forms.Button
     Friend WithEvents ButtonBlockDestroy As System.Windows.Forms.Button
+    Friend WithEvents LinkLabel2 As System.Windows.Forms.LinkLabel
 End Class

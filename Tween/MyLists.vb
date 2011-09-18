@@ -1,4 +1,29 @@
-﻿Public Class MyLists
+﻿' Tween - Client of Twitter
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
+' All rights reserved.
+' 
+' This file is part of Tween.
+' 
+' This program is free software; you can redistribute it and/or modify it
+' under the terms of the GNU General Public License as published by the Free
+' Software Foundation; either version 3 of the License, or (at your option)
+' any later version.
+' 
+' This program is distributed in the hope that it will be useful, but
+' WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+' or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+' for more details. 
+' 
+' You should have received a copy of the GNU General Public License along
+' with this program. If not, see <http://www.gnu.org/licenses/>, or write to
+' the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+' Boston, MA 02110-1301, USA.
+
+Public Class MyLists
     Private contextUserName As String
     Private _tw As Twitter
 
@@ -39,7 +64,7 @@
             End If
 
             'リストに該当ユーザーのポストが含まれていれば、リストにユーザーが含まれているとする。
-            If listPost.Exists(Function(item) item.Name = contextUserName) Then
+            If listPost.Exists(Function(item) item.ScreenName = contextUserName) Then
                 Me.ListsCheckedListBox.SetItemChecked(i, True)
                 Continue For
             End If
@@ -50,17 +75,17 @@
             Dim listNewistPostCreatedAt As DateTime = DateTime.MinValue
 
             For Each post As PostClass In listPost
-                If post.Uid > 0 AndAlso Not listPostUserIDs.Contains(post.Uid) Then
-                    listPostUserIDs.Add(post.Uid)
+                If post.UserId > 0 AndAlso Not listPostUserIDs.Contains(post.UserId) Then
+                    listPostUserIDs.Add(post.UserId)
                 End If
-                If post.Name IsNot Nothing AndAlso Not listPostUserNames.Contains(post.Name) Then
-                    listPostUserNames.Add(post.Name)
+                If post.ScreenName IsNot Nothing AndAlso Not listPostUserNames.Contains(post.ScreenName) Then
+                    listPostUserNames.Add(post.ScreenName)
                 End If
-                If post.PDate < listOlderPostCreatedAt Then
-                    listOlderPostCreatedAt = post.PDate
+                If post.CreatedAt < listOlderPostCreatedAt Then
+                    listOlderPostCreatedAt = post.CreatedAt
                 End If
-                If post.PDate > listNewistPostCreatedAt Then
-                    listNewistPostCreatedAt = post.PDate
+                If post.CreatedAt > listNewistPostCreatedAt Then
+                    listNewistPostCreatedAt = post.CreatedAt
                 End If
             Next
 
@@ -73,7 +98,7 @@
             otherPost.AddRange(TabInformations.GetInstance().Posts().Values)
 
             'リストに該当ユーザーのポストが含まれていないのにリスト以外で取得したポストの中にリストに含まれるべきポストがある場合は、リストにユーザーは含まれていないとする。
-            If otherPost.Exists(Function(item) (item.Name = Me.contextUserName) AndAlso (item.PDate > listOlderPostCreatedAt) AndAlso (item.PDate < listNewistPostCreatedAt) AndAlso ((Not item.IsReply) OrElse listPostUserNames.Contains(item.InReplyToUser))) Then
+            If otherPost.Exists(Function(item) (item.ScreenName = Me.contextUserName) AndAlso (item.CreatedAt > listOlderPostCreatedAt) AndAlso (item.CreatedAt < listNewistPostCreatedAt) AndAlso ((Not item.IsReply) OrElse listPostUserNames.Contains(item.InReplyToUser))) Then
                 Me.ListsCheckedListBox.SetItemChecked(i, False)
                 Continue For
             End If
@@ -100,7 +125,7 @@
                 Dim listItem As ListElement = CType(Me.ListsCheckedListBox.Items(e.Index), ListElement)
 
                 Dim ret As Boolean
-                Dim rslt As String = Me._tw.ContainsUserAtList(listItem.Id.ToString(), contextUserName.ToString(), ret)
+                Dim rslt As String = Me._tw.ContainsUserAtList(listItem.Id.ToString(), contextUserName, ret)
                 If rslt <> "" Then
                     MessageBox.Show(String.Format(My.Resources.ListManageOKButton2, rslt))
                     e.NewValue = CheckState.Indeterminate

@@ -1,7 +1,31 @@
-﻿Imports System.Net
-Imports System.IO
-Imports System.Collections.Generic
+﻿' Tween - Client of Twitter
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
+' All rights reserved.
+' 
+' This file is part of Tween.
+' 
+' This program is free software; you can redistribute it and/or modify it
+' under the terms of the GNU General Public License as published by the Free
+' Software Foundation; either version 3 of the License, or (at your option)
+' any later version.
+' 
+' This program is distributed in the hope that it will be useful, but
+' WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+' or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+' for more details. 
+' 
+' You should have received a copy of the GNU General Public License along
+' with this program. If not, see <http://www.gnu.org/licenses/>, or write to
+' the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+' Boston, MA 02110-1301, USA.
+
 Imports System.Collections.Specialized
+Imports System.IO
+Imports System.Net
 Imports System.Text
 
 '''<summary>
@@ -38,6 +62,10 @@ Public Class HttpConnection
         Specified
     End Enum
 
+    Protected Const PostMethod As String = "POST"
+    Protected Const GetMethod As String = "GET"
+    Protected Const HeadMethod As String = "HEAD"
+
     '''<summary>
     '''HttpWebRequestオブジェクトを取得する。パラメータはGET/HEAD/DELETEではクエリに、POST/PUTではエンティティボディに変換される。
     '''</summary>
@@ -65,6 +93,8 @@ Public Class HttpConnection
         End If
 
         Dim webReq As HttpWebRequest = DirectCast(WebRequest.Create(ub.Uri), HttpWebRequest)
+
+        webReq.ReadWriteTimeout = 90 * 1000 'Streamの読み込みは90秒でタイムアウト（デフォルト5分）
 
         'プロキシ設定
         If proxyKind <> ProxyType.IE Then webReq.Proxy = proxy
@@ -264,7 +294,7 @@ Public Class HttpConnection
                 GetHeaderInfo(res, headerInfo)
                 Return res.StatusCode
             End If
-            Throw ex
+            Throw
         End Try
     End Function
 
@@ -309,7 +339,7 @@ Public Class HttpConnection
                 End Using
                 Return res.StatusCode
             End If
-            Throw ex
+            Throw
         End Try
     End Function
 
@@ -343,7 +373,7 @@ Public Class HttpConnection
                 GetHeaderInfo(res, headerInfo)
                 Return res.StatusCode
             End If
-            Throw ex
+            Throw
         End Try
     End Function
 
@@ -382,7 +412,7 @@ Public Class HttpConnection
                 GetHeaderInfo(res, headerInfo)
                 Return res.StatusCode
             End If
-            Throw ex
+            Throw
         End Try
     End Function
 
@@ -523,10 +553,8 @@ Public Class HttpConnection
         Set(ByVal value As Integer)
             Const TimeoutMinValue As Integer = 10000
             Const TimeoutMaxValue As Integer = 120000
-            Const TimeoutDefaultValue As Integer = 0
             If value < TimeoutMinValue OrElse value > TimeoutMaxValue Then
-                ' 範囲外ならデフォルト値設定
-                _timeout = TimeoutDefaultValue
+                Throw New ArgumentOutOfRangeException("Set " + TimeoutMinValue.ToString + "-" + TimeoutMaxValue.ToString + ": Value=" + value.ToString)
             Else
                 _timeout = value
             End If
@@ -595,6 +623,9 @@ Public Class HttpConnection
                 'IE設定（システム設定）はデフォルト値なので処理しない
         End Select
         proxyKind = proxyType
+
+        Win32Api.SetProxy(proxyType, proxyAddress, proxyPort, proxyUser, proxyPassword)
+
     End Sub
 
 End Class

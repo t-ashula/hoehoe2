@@ -1,9 +1,34 @@
-﻿Imports System.Net
-Imports System.Collections.Generic
+﻿' Tween - Client of Twitter
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
+' All rights reserved.
+' 
+' This file is part of Tween.
+' 
+' This program is free software; you can redistribute it and/or modify it
+' under the terms of the GNU General Public License as published by the Free
+' Software Foundation; either version 3 of the License, or (at your option)
+' any later version.
+' 
+' This program is distributed in the hope that it will be useful, but
+' WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+' or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+' for more details. 
+' 
+' You should have received a copy of the GNU General Public License along
+' with this program. If not, see <http://www.gnu.org/licenses/>, or write to
+' the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+' Boston, MA 02110-1301, USA.
+
 Imports System.Collections.Specialized
+Imports System.Diagnostics
 Imports System.IO
-Imports System.Text
+Imports System.Net
 Imports System.Security
+Imports System.Text
 
 '''<summary>
 '''OAuth認証を使用するHTTP通信。HMAC-SHA1固定
@@ -51,9 +76,24 @@ Public Class HttpConnectionOAuth
     Private userIdentKey As String = ""
 
     '''<summary>
+    '''認証成功時の応答でユーザーID情報を取得する場合のキー。設定しない場合は、AuthUserIdもブランクのままとなる
+    '''</summary>
+    Private userIdIdentKey As String = ""
+
+    '''<summary>
     '''認証完了時の応答からuserIdentKey情報に基づいて取得するユーザー情報
     '''</summary>
     Private authorizedUsername As String = ""
+
+    '''<summary>
+    '''認証完了時の応答からuserIdentKey情報に基づいて取得するユーザー情報
+    '''</summary>
+    Private authorizedUserId As Long
+
+    '''<summary>
+    '''Stream用のHttpWebRequest
+    '''</summary>
+    Private streamReq As HttpWebRequest = Nothing
 
     '''<summary>
     '''OAuth認証で指定のURLとHTTP通信を行い、結果を返す
@@ -88,7 +128,8 @@ Public Class HttpConnectionOAuth
             code = GetResponse(webReq, content, headerInfo, False)
         End If
         If callback IsNot Nothing Then
-            callback(Me)
+            Dim frame As New StackFrame(1)
+            callback(frame.GetMethod.Name, code, content)
         End If
         Return code
     End Function
@@ -121,10 +162,60 @@ Public Class HttpConnectionOAuth
             code = GetResponse(webReq, content, headerInfo, False)
         End If
         If callback IsNot Nothing Then
-            callback(Me)
+            Dim frame As New StackFrame(1)
+            callback(frame.GetMethod.Name, code, content)
         End If
         Return code
     End Function
+
+    '''<summary>
+    '''OAuth認証で指定のURLとHTTP通信を行い、ストリームを返す
+    '''</summary>
+    '''<param name="method">HTTP通信メソッド（GET/HEAD/POST/PUT/DELETE）</param>
+    '''<param name="requestUri">通信先URI</param>
+    '''<param name="param">GET時のクエリ、またはPOST時のエンティティボディ</param>
+    '''<param name="content">[OUT]HTTP応答のボディストリーム</param>
+    '''<returns>HTTP応答のステータスコード</returns>
+    Public Function GetContent(ByVal method As String, _
+            ByVal requestUri As Uri, _
+            ByVal param As Dictionary(Of String, String), _
+            ByRef content As Stream,
+            ByVal userAgent As String) As HttpStatusCode Implements IHttpConnection.GetContent
+        '認証済かチェック
+        If String.IsNullOrEmpty(token) Then Return HttpStatusCode.Unauthorized
+
+        Me.RequestAbort()
+        streamReq = CreateRequest(method, requestUri, param, False)
+        'User-Agent指定がある場合は付加
+        If Not String.IsNullOrEmpty(userAgent) Then streamReq.UserAgent = userAgent
+
+        'OAuth認証ヘッダを付加
+        AppendOAuthInfo(streamReq, param, token, tokenSecret)
+
+        Try
+            Dim webRes As HttpWebResponse = CType(streamReq.GetResponse(), HttpWebResponse)
+            content = webRes.GetResponseStream()
+            Return webRes.StatusCode
+        Catch ex As WebException
+            If ex.Status = WebExceptionStatus.ProtocolError Then
+                Dim res As HttpWebResponse = DirectCast(ex.Response, HttpWebResponse)
+                Return res.StatusCode
+            End If
+            Throw
+        End Try
+
+    End Function
+
+    Public Sub RequestAbort() Implements IHttpConnection.RequestAbort
+        Try
+            If streamReq IsNot Nothing Then
+                streamReq.Abort()
+                streamReq = Nothing
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
+
 
 #Region "認証処理"
     '''<summary>
@@ -180,6 +271,15 @@ Public Class HttpConnectionOAuth
             Else
                 authorizedUsername = ""
             End If
+            If Me.userIdIdentKey <> "" Then
+                Try
+                    authorizedUserId = CLng(accessTokenData.Item(Me.userIdIdentKey))
+                Catch ex As Exception
+                    authorizedUserId = 0
+                End Try
+            Else
+                authorizedUserId = 0
+            End If
             If token = "" Then Throw New InvalidDataException("Token is null.")
             Return HttpStatusCode.OK
         Else
@@ -194,7 +294,7 @@ Public Class HttpConnectionOAuth
     '''<param name="username">認証用ユーザー名</param>
     '''<param name="password">認証用パスワード</param>
     '''<returns>取得結果真偽値</returns>
-    Public Function AuthenticateXAuth(ByVal accessTokenUrl As Uri, ByVal username As String, ByVal password As String) As HttpStatusCode Implements IHttpConnection.Authenticate
+    Public Function AuthenticateXAuth(ByVal accessTokenUrl As Uri, ByVal username As String, ByVal password As String, ByRef content As String) As HttpStatusCode Implements IHttpConnection.Authenticate
         'ユーザー・パスワードチェック
         If String.IsNullOrEmpty(username) OrElse String.IsNullOrEmpty(password) Then
             Throw New Exception("Sequence error.(username or password is blank)")
@@ -206,7 +306,6 @@ Public Class HttpConnectionOAuth
         parameter.Add("x_auth_password", password)
 
         'アクセストークン取得
-        Dim content As String = ""
         Dim httpCode As HttpStatusCode = GetOAuthToken(accessTokenUrl, "", "", parameter, content)
         If httpCode <> HttpStatusCode.OK Then Return httpCode
         Dim accessTokenData As NameValueCollection = ParseQueryString(content)
@@ -219,6 +318,15 @@ Public Class HttpConnectionOAuth
                 authorizedUsername = accessTokenData.Item(Me.userIdentKey)
             Else
                 authorizedUsername = ""
+            End If
+            If Me.userIdIdentKey <> "" Then
+                Try
+                    authorizedUserId = CLng(accessTokenData.Item(Me.userIdIdentKey))
+                Catch ex As Exception
+                    authorizedUserId = 0
+                End Try
+            Else
+                authorizedUserId = 0
             End If
             If token = "" Then Throw New InvalidDataException("Token is null.")
             Return HttpStatusCode.OK
@@ -284,7 +392,11 @@ Public Class HttpConnectionOAuth
         'OAuth関連情報をHTTPリクエストに追加
         AppendOAuthInfo(webReq, query, requestToken, "")
         'HTTP応答取得
-        Return GetResponse(webReq, content, Nothing, False)
+        Dim header As New Dictionary(Of String, String) From {{"Date", ""}}
+        Dim responseCode As HttpStatusCode = GetResponse(webReq, content, header, False)
+        If responseCode = HttpStatusCode.OK Then Return responseCode
+        If Not String.IsNullOrEmpty(header("Date")) Then content += Environment.NewLine + "Check the Date & Time of this computer." + Environment.NewLine + "Server:" + CDate(header("Date")).ToString + "  PC:" + Now.ToString
+        Return responseCode
     End Function
 #End Region
 
@@ -362,9 +474,10 @@ Public Class HttpConnectionOAuth
         Dim key As String = UrlEncode(consumerSecret) + "&"
         If Not String.IsNullOrEmpty(tokenSecret) Then key += UrlEncode(tokenSecret)
         '鍵生成＆署名生成
-        Dim hmac As New Cryptography.HMACSHA1(Encoding.ASCII.GetBytes(key))
-        Dim hash As Byte() = hmac.ComputeHash(Encoding.ASCII.GetBytes(signatureBase))
-        Return Convert.ToBase64String(hash)
+        Using hmac As New Cryptography.HMACSHA1(Encoding.ASCII.GetBytes(key))
+            Dim hash As Byte() = hmac.ComputeHash(Encoding.ASCII.GetBytes(signatureBase))
+            Return Convert.ToBase64String(hash)
+        End Using
     End Function
 
 #End Region
@@ -381,12 +494,14 @@ Public Class HttpConnectionOAuth
                                     ByVal consumerSecret As String, _
                                     ByVal accessToken As String, _
                                     ByVal accessTokenSecret As String, _
-                                    ByVal userIdentifier As String)
+                                    ByVal userIdentifier As String,
+                                    ByVal userIdIdentifier As String)
         Me.consumerKey = consumerKey
         Me.consumerSecret = consumerSecret
         Me.token = accessToken
         Me.tokenSecret = accessTokenSecret
         Me.userIdentKey = userIdentifier
+        Me.userIdIdentKey = userIdIdentifier
     End Sub
 
     '''<summary>
@@ -403,9 +518,12 @@ Public Class HttpConnectionOAuth
                                 ByVal accessToken As String, _
                                 ByVal accessTokenSecret As String, _
                                 ByVal username As String, _
-                                ByVal userIdentifier As String)
-        Initialize(consumerKey, consumerSecret, accessToken, accessTokenSecret, userIdentifier)
+                                ByVal userId As Long,
+                                ByVal userIdentifier As String,
+                                ByVal userIdIdentifier As String)
+        Initialize(consumerKey, consumerSecret, accessToken, accessTokenSecret, userIdentifier, userIdIdentifier)
         authorizedUsername = username
+        authorizedUserId = userId
     End Sub
 
     '''<summary>
@@ -433,6 +551,18 @@ Public Class HttpConnectionOAuth
         Get
             Return authorizedUsername
         End Get
+    End Property
+
+    '''<summary>
+    '''認証済みユーザーId
+    '''</summary>
+    Public Property AuthUserId() As Long Implements IHttpConnection.AuthUserId
+        Get
+            Return authorizedUserId
+        End Get
+        Set(ByVal value As Long)
+            authorizedUserId = value
+        End Set
     End Property
 
 End Class

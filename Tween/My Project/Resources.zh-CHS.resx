@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddNewTabText1" xml:space="preserve">
     <value>(新标签)</value>
@@ -412,7 +412,7 @@
     <value>http://www.google.com.hk/search?q={0}</value>
   </data>
   <data name="SearchItem3Url" xml:space="preserve">
-    <value>http://pcod.no-ip.org/yats/search?query={0}</value>
+    <value>http://yats-data.com/yats/search?query={0}</value>
   </data>
   <data name="SearchItem4Url" xml:space="preserve">
     <value>http://search.twitter.com/search?q={0}</value>
@@ -723,12 +723,6 @@
   <data name="GetTimelineWorker_RunWorkerCompletedText24" xml:space="preserve">
     <value>列表已刷新</value>
   </data>
-  <data name="Yes" xml:space="preserve">
-    <value>是</value>
-  </data>
-  <data name="No" xml:space="preserve">
-    <value>否</value>
-  </data>
   <data name="ShowUserInfo1" xml:space="preserve">
     <value>用户信息解析失败</value>
   </data>
@@ -897,13 +891,112 @@
   <data name="PostPictureWarn2" xml:space="preserve">
     <value>上传图片</value>
   </data>
-  <data name="BasicAuthWarning" xml:space="preserve">
-    <value>当前登录认证模式是BASIC模式。{0}Twitter官方BASIC认证停止后将可能无法登录。{0}请尽快改用xAuth模式。</value>
-  </data>
   <data name="PostButton_Click1" xml:space="preserve">
     <value>要用官方锐推方式发送未修改过的RT锐推吗？{0}[是：改用官方锐推]{0}[否：仍然用RT锐推]{0}[取消：不发送]</value>
   </data>
   <data name="ApiInfo6" xml:space="preserve">
-    <value>Getting Api Information...</value>
+    <value>正在获取API信息…</value>
+  </data>
+  <data name="ListManageDeleteLists1" xml:space="preserve">
+    <value>该列表将被删除，要继续吗？</value>
+  </data>
+  <data name="ListManageDeleteUser1" xml:space="preserve">
+    <value>该成员用户将从列表删除，要继续吗？</value>
+  </data>
+  <data name="ListManageDeleteUser2" xml:space="preserve">
+    <value>成员删除失败（{0}）</value>
+  </data>
+  <data name="ListManageGetListMembersCallback1" xml:space="preserve">
+    <value>成员读取失败（{0}）</value>
+  </data>
+  <data name="ListManageOKButton1" xml:space="preserve">
+    <value>请输入列表名称</value>
+  </data>
+  <data name="ListManageOKButton2" xml:space="preserve">
+    <value>列表信息更新失败（{0}）</value>
+  </data>
+  <data name="ListsDeleteFailed" xml:space="preserve">
+    <value>列表信息读取失败（{0}）</value>
+  </data>
+  <data name="ListsGetting" xml:space="preserve">
+    <value>正在读取列表信息。请稍候...</value>
+  </data>
+  <data name="MyLists1" xml:space="preserve">
+    <value>所在列表管理</value>
+  </data>
+  <data name="RtCountText1" xml:space="preserve">
+    <value>人锐推了该消息</value>
+  </data>
+  <data name="PostLengthOverMessage3" xml:space="preserve">
+    <value>Abort to posting status because @id may be rounded down.</value>
+  </data>
+  <data name="FavstarUrl" xml:space="preserve">
+    <value>http://favstar.fm/</value>
+  </data>
+  <data name="VimeoInfoText1" xml:space="preserve">
+    <value>タイトル:</value>
+  </data>
+  <data name="VimeoInfoText2" xml:space="preserve">
+    <value>投稿日時:</value>
+  </data>
+  <data name="VimeoInfoText3" xml:space="preserve">
+    <value>Likes:</value>
+  </data>
+  <data name="VimeoInfoText4" xml:space="preserve">
+    <value>再生数:</value>
+  </data>
+  <data name="VimeoInfoText5" xml:space="preserve">
+    <value>コメント数:</value>
+  </data>
+  <data name="VimeoInfoText6" xml:space="preserve">
+    <value>再生時間:</value>
+  </data>
+  <data name="YouTubeInfoText1" xml:space="preserve">
+    <value>タイトル:</value>
+  </data>
+  <data name="YouTubeInfoText2" xml:space="preserve">
+    <value>再生時間:</value>
+  </data>
+  <data name="YouTubeInfoText3" xml:space="preserve">
+    <value>投稿日時:</value>
+  </data>
+  <data name="YouTubeInfoText4" xml:space="preserve">
+    <value>再生数:</value>
+  </data>
+  <data name="FavoriteLimitCountText" xml:space="preserve">
+    <value>一度にふぁぼ追加が実行できるのは250件までです</value>
+  </data>
+  <data name="TextSearchCountApi_Validating1" xml:space="preserve">
+    <value>取得発言数は20～100件を指定してください。</value>
+  </data>
+  <data name="RetweetLimitText" xml:space="preserve">
+    <value>一度にRetweetできるのは15件までです</value>
+  </data>
+  <data name="RetweetQuestion2" xml:space="preserve">
+    <value>選択された発言をRetweetしてもよろしいですか？</value>
+  </data>
+  <data name="FavoriteRetweetQuestionText1" xml:space="preserve">
+    <value>選択された発言をFavoriteに追加してRetweetします。よろしいですか？</value>
+  </data>
+  <data name="FavoritesRetweetQuestionText2" xml:space="preserve">
+    <value>Favoriteに追加してRetweetします。よろしいですか？</value>
+  </data>
+  <data name="FavoriteRetweetQuestionText3" xml:space="preserve">
+    <value>選択された発言をFavoritesに追加して非公式RTを実行します。よろしいですか？</value>
+  </data>
+  <data name="TabUsageTypeName_UserTimeline" xml:space="preserve">
+    <value>UserTimeline</value>
+  </data>
+  <data name="ListManageGetMoreUsers1" xml:space="preserve">
+    <value>Get members(&amp;M)</value>
+  </data>
+  <data name="ListManageGetMoreUsers2" xml:space="preserve">
+    <value>Get more(&amp;M)</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是</value>
   </data>
 </root>

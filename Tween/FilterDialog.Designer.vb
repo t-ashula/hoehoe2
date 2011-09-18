@@ -29,6 +29,7 @@ Partial Class FilterDialog
         Me.EditFilterGroup = New System.Windows.Forms.GroupBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.GroupExclude = New System.Windows.Forms.GroupBox()
+        Me.CheckExLambDa = New System.Windows.Forms.CheckBox()
         Me.TextExSource = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.CheckExRetweet = New System.Windows.Forms.CheckBox()
@@ -45,6 +46,7 @@ Partial Class FilterDialog
         Me.ExMSG1 = New System.Windows.Forms.TextBox()
         Me.ExMSG2 = New System.Windows.Forms.TextBox()
         Me.GroupMatch = New System.Windows.Forms.GroupBox()
+        Me.CheckLambda = New System.Windows.Forms.CheckBox()
         Me.TextSource = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.CheckRetweet = New System.Windows.Forms.CheckBox()
@@ -97,27 +99,27 @@ Partial Class FilterDialog
         '
         'ButtonClose
         '
-        Me.ButtonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel
         resources.ApplyResources(Me.ButtonClose, "ButtonClose")
+        Me.ButtonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.ButtonClose.Name = "ButtonClose"
         Me.ButtonClose.UseVisualStyleBackColor = True
         '
         'ListFilters
         '
-        Me.ListFilters.FormattingEnabled = True
         resources.ApplyResources(Me.ListFilters, "ListFilters")
+        Me.ListFilters.FormattingEnabled = True
         Me.ListFilters.Name = "ListFilters"
         Me.ListFilters.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
         '
         'EditFilterGroup
         '
+        resources.ApplyResources(Me.EditFilterGroup, "EditFilterGroup")
         Me.EditFilterGroup.Controls.Add(Me.Label11)
         Me.EditFilterGroup.Controls.Add(Me.GroupExclude)
         Me.EditFilterGroup.Controls.Add(Me.GroupMatch)
         Me.EditFilterGroup.Controls.Add(Me.GroupBox1)
         Me.EditFilterGroup.Controls.Add(Me.ButtonCancel)
         Me.EditFilterGroup.Controls.Add(Me.ButtonOK)
-        resources.ApplyResources(Me.EditFilterGroup, "EditFilterGroup")
         Me.EditFilterGroup.Name = "EditFilterGroup"
         Me.EditFilterGroup.TabStop = False
         '
@@ -128,6 +130,8 @@ Partial Class FilterDialog
         '
         'GroupExclude
         '
+        resources.ApplyResources(Me.GroupExclude, "GroupExclude")
+        Me.GroupExclude.Controls.Add(Me.CheckExLambDa)
         Me.GroupExclude.Controls.Add(Me.TextExSource)
         Me.GroupExclude.Controls.Add(Me.Label12)
         Me.GroupExclude.Controls.Add(Me.CheckExRetweet)
@@ -143,9 +147,14 @@ Partial Class FilterDialog
         Me.GroupExclude.Controls.Add(Me.ExUID)
         Me.GroupExclude.Controls.Add(Me.ExMSG1)
         Me.GroupExclude.Controls.Add(Me.ExMSG2)
-        resources.ApplyResources(Me.GroupExclude, "GroupExclude")
         Me.GroupExclude.Name = "GroupExclude"
         Me.GroupExclude.TabStop = False
+        '
+        'CheckExLambDa
+        '
+        resources.ApplyResources(Me.CheckExLambDa, "CheckExLambDa")
+        Me.CheckExLambDa.Name = "CheckExLambDa"
+        Me.CheckExLambDa.UseVisualStyleBackColor = True
         '
         'TextExSource
         '
@@ -217,9 +226,9 @@ Partial Class FilterDialog
         '
         'ExUID
         '
+        resources.ApplyResources(Me.ExUID, "ExUID")
         Me.ExUID.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.ExUID.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource
-        resources.ApplyResources(Me.ExUID, "ExUID")
         Me.ExUID.Name = "ExUID"
         '
         'ExMSG1
@@ -234,6 +243,8 @@ Partial Class FilterDialog
         '
         'GroupMatch
         '
+        resources.ApplyResources(Me.GroupMatch, "GroupMatch")
+        Me.GroupMatch.Controls.Add(Me.CheckLambda)
         Me.GroupMatch.Controls.Add(Me.TextSource)
         Me.GroupMatch.Controls.Add(Me.Label5)
         Me.GroupMatch.Controls.Add(Me.CheckRetweet)
@@ -249,9 +260,14 @@ Partial Class FilterDialog
         Me.GroupMatch.Controls.Add(Me.UID)
         Me.GroupMatch.Controls.Add(Me.MSG1)
         Me.GroupMatch.Controls.Add(Me.MSG2)
-        resources.ApplyResources(Me.GroupMatch, "GroupMatch")
         Me.GroupMatch.Name = "GroupMatch"
         Me.GroupMatch.TabStop = False
+        '
+        'CheckLambda
+        '
+        resources.ApplyResources(Me.CheckLambda, "CheckLambda")
+        Me.CheckLambda.Name = "CheckLambda"
+        Me.CheckLambda.UseVisualStyleBackColor = True
         '
         'TextSource
         '
@@ -323,9 +339,9 @@ Partial Class FilterDialog
         '
         'UID
         '
+        resources.ApplyResources(Me.UID, "UID")
         Me.UID.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.UID.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource
-        resources.ApplyResources(Me.UID, "UID")
         Me.UID.Name = "UID"
         '
         'MSG1
@@ -340,10 +356,10 @@ Partial Class FilterDialog
         '
         'GroupBox1
         '
+        resources.ApplyResources(Me.GroupBox1, "GroupBox1")
         Me.GroupBox1.Controls.Add(Me.CheckMark)
         Me.GroupBox1.Controls.Add(Me.OptCopy)
         Me.GroupBox1.Controls.Add(Me.OptMove)
-        resources.ApplyResources(Me.GroupBox1, "GroupBox1")
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.TabStop = False
         '
@@ -399,6 +415,7 @@ Partial Class FilterDialog
         '
         'GroupBox2
         '
+        resources.ApplyResources(Me.GroupBox2, "GroupBox2")
         Me.GroupBox2.Controls.Add(Me.ButtonRuleMove)
         Me.GroupBox2.Controls.Add(Me.ButtonRuleCopy)
         Me.GroupBox2.Controls.Add(Me.ButtonRuleDown)
@@ -408,7 +425,6 @@ Partial Class FilterDialog
         Me.GroupBox2.Controls.Add(Me.ButtonDelete)
         Me.GroupBox2.Controls.Add(Me.ButtonNew)
         Me.GroupBox2.Controls.Add(Me.EditFilterGroup)
-        resources.ApplyResources(Me.GroupBox2, "GroupBox2")
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.TabStop = False
         '
@@ -438,8 +454,8 @@ Partial Class FilterDialog
         '
         'ListTabs
         '
-        Me.ListTabs.FormattingEnabled = True
         resources.ApplyResources(Me.ListTabs, "ListTabs")
+        Me.ListTabs.FormattingEnabled = True
         Me.ListTabs.Name = "ListTabs"
         '
         'ButtonAddTab
@@ -474,8 +490,8 @@ Partial Class FilterDialog
         '
         'ComboSound
         '
-        Me.ComboSound.FormattingEnabled = True
         resources.ApplyResources(Me.ComboSound, "ComboSound")
+        Me.ComboSound.FormattingEnabled = True
         Me.ComboSound.Name = "ComboSound"
         '
         'Label10
@@ -497,6 +513,7 @@ Partial Class FilterDialog
         '
         'GroupTab
         '
+        resources.ApplyResources(Me.GroupTab, "GroupTab")
         Me.GroupTab.Controls.Add(Me.LabelTabType)
         Me.GroupTab.Controls.Add(Me.Label13)
         Me.GroupTab.Controls.Add(Me.ListTabs)
@@ -509,7 +526,6 @@ Partial Class FilterDialog
         Me.GroupTab.Controls.Add(Me.ComboSound)
         Me.GroupTab.Controls.Add(Me.CheckManageRead)
         Me.GroupTab.Controls.Add(Me.CheckNotifyNew)
-        resources.ApplyResources(Me.GroupTab, "GroupTab")
         Me.GroupTab.Name = "GroupTab"
         Me.GroupTab.TabStop = False
         '
@@ -615,5 +631,7 @@ Partial Class FilterDialog
     Friend WithEvents ButtonRuleCopy As System.Windows.Forms.Button
     Friend WithEvents LabelTabType As System.Windows.Forms.Label
     Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents CheckExLambDa As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckLambda As System.Windows.Forms.CheckBox
 
 End Class

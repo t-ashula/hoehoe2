@@ -1,7 +1,9 @@
 ﻿' Tween - Client of Twitter
-' Copyright (c) 2007-2010 kiri_feather (@kiri_feather) <kiri_feather@gmail.com>
-'           (c) 2008-2010 Moz (@syo68k) <http://iddy.jp/profile/moz/>
-'           (c) 2008-2010 takeshik (@takeshik) <http://www.takeshik.org/>
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
 ' All rights reserved.
 ' 
 ' This file is part of Tween.
@@ -24,14 +26,17 @@
 Imports System.Text
 Imports System.Globalization
 Imports System.Security.Principal
-Imports System.Reflection
 Imports System.Web
 Imports System.IO
+Imports System.Runtime.Serialization.Json
+Imports System.Net.NetworkInformation
+Imports System.Text.RegularExpressions
 
 Public Module MyCommon
     Private ReadOnly LockObj As New Object
     Public _endingFlag As Boolean        '終了フラグ
     Public cultureStr As String = Nothing
+    Public settingPath As String
 
     Public Enum IconSizes
         IconNone = 0
@@ -74,11 +79,13 @@ Public Module MyCommon
         TinyUrl
         Isgd
         Twurl
-        Unu
         Bitly
         Jmp
+        Uxnu
         '特殊
         Nicoms
+        '廃止
+        Unu = -1
     End Enum
 
     Public Enum OutputzUrlmode
@@ -115,6 +122,11 @@ Public Module MyCommon
         Retweet                 'Retweetする
         PublicSearch            '公式検索
         List                    'Lists
+        Related                 '関連発言
+        UserStream              'UserStream
+        UserTimeline            'UserTimeline
+        BlockIds                'Blocking/ids
+        Configuration           'Twitter Configuration読み込み
         '''
         ErrorState              'エラー表示のみで後処理終了(認証エラー時など)
     End Enum
@@ -156,6 +168,30 @@ Public Module MyCommon
         BlinkIcon
     End Enum
 
+    <FlagsAttribute()> _
+    Public Enum EVENTTYPE
+        None = 0
+        Favorite = 1
+        Unfavorite = 2
+        Follow = 4
+        ListMemberAdded = 8
+        ListMemberRemoved = 16
+        Block = 32
+        Unblock = 64
+        UserUpdate = 128
+        Deleted = 256
+        ListCreated = 512
+        ListUpdated = 1024
+
+        All = (None Or Favorite Or Unfavorite Or Follow Or ListMemberAdded Or ListMemberRemoved Or _
+               Block Or Unblock Or UserUpdate Or Deleted Or ListCreated Or ListUpdated)
+    End Enum
+
+    Public Sub TraceOut(ByVal ex As Exception, ByVal Message As String)
+        Dim buf As String = ExceptionOutMessage(ex)
+        TraceOut(TraceFlag, Message + Environment.NewLine + buf)
+    End Sub
+
     Public Sub TraceOut(ByVal Message As String)
         TraceOut(TraceFlag, Message)
     End Sub
@@ -186,8 +222,10 @@ Public Module MyCommon
     ' 文頭メッセージ、権限、動作環境
     ' Dataプロパティにある終了許可フラグのパースもここで行う
 
-    Public Function ExceptionOut(ByVal ex As Exception, ByVal buffer As String, _
+    Public Function ExceptionOutMessage(ByVal ex As Exception, _
                                  Optional ByRef IsTerminatePermission As Boolean = True) As String
+        If ex Is Nothing Then Return ""
+
         Dim buf As New StringBuilder
 
         buf.AppendFormat(My.Resources.UnhandledExceptionText8, ex.GetType().FullName, ex.Message)
@@ -244,8 +282,7 @@ Public Module MyCommon
             nesting += 1
             _ex = _ex.InnerException
         End While
-        buffer = buf.ToString()
-        Return buffer
+        Return buf.ToString()
     End Function
 
     Public Function ExceptionOut(ByVal ex As Exception) As Boolean
@@ -271,8 +308,7 @@ Public Module MyCommon
                 writer.WriteLine(My.Resources.UnhandledExceptionText6, Environment.Version.ToString())
                 writer.WriteLine(My.Resources.UnhandledExceptionText7, fileVersion)
 
-                Dim buffer As String = Nothing
-                writer.Write(ExceptionOut(ex, buffer, IsTerminatePermission))
+                writer.Write(ExceptionOutMessage(ex, IsTerminatePermission))
                 writer.Flush()
             End Using
 
@@ -314,13 +350,10 @@ retry:
             If Convert.ToInt32(c) > 255 Then
                 ' Unicodeの場合(1charが複数のバイトで構成されている）
                 ' UriクラスをNewして再構成し、入力をPathAndQueryのみとしてやり直す
-                If uri Is Nothing Then
-                    uri = New Uri(input)
-                    input = uri.PathAndQuery
-                    sb.Length = 0
-                    GoTo retry
-                End If
-            ElseIf Convert.ToInt32(c) > 127 Then
+                For Each b In Encoding.UTF8.GetBytes(c)
+                    sb.AppendFormat("%{0:X2}", b)
+                Next
+            ElseIf Convert.ToInt32(c) > 127 OrElse c = "%"c Then
                 ' UTF-8の場合
                 ' UriクラスをNewして再構成し、入力をinputからAuthority部分を除去してやり直す
                 If uri Is Nothing Then
@@ -397,37 +430,38 @@ retry:
         Dim bytesIn As Byte() = System.Text.Encoding.UTF8.GetBytes(str)
 
         'DESCryptoServiceProviderオブジェクトの作成
-        Dim des As New System.Security.Cryptography.DESCryptoServiceProvider
+        Using des As New System.Security.Cryptography.DESCryptoServiceProvider
 
-        '共有キーと初期化ベクタを決定
-        'パスワードをバイト配列にする
-        Dim bytesKey As Byte() = System.Text.Encoding.UTF8.GetBytes("_tween_encrypt_key_")
-        '共有キーと初期化ベクタを設定
-        des.Key = ResizeBytesArray(bytesKey, des.Key.Length)
-        des.IV = ResizeBytesArray(bytesKey, des.IV.Length)
+            '共有キーと初期化ベクタを決定
+            'パスワードをバイト配列にする
+            Dim bytesKey As Byte() = System.Text.Encoding.UTF8.GetBytes("_tween_encrypt_key_")
+            '共有キーと初期化ベクタを設定
+            des.Key = ResizeBytesArray(bytesKey, des.Key.Length)
+            des.IV = ResizeBytesArray(bytesKey, des.IV.Length)
 
-        '暗号化されたデータを書き出すためのMemoryStream
-        Using msOut As New System.IO.MemoryStream
-            'DES暗号化オブジェクトの作成
-            Using desdecrypt As System.Security.Cryptography.ICryptoTransform = _
-                des.CreateEncryptor()
+            '暗号化されたデータを書き出すためのMemoryStream
+            Using msOut As New System.IO.MemoryStream
+                'DES暗号化オブジェクトの作成
+                Using desdecrypt As System.Security.Cryptography.ICryptoTransform = _
+                    des.CreateEncryptor()
 
-                '書き込むためのCryptoStreamの作成
-                Using cryptStream As New System.Security.Cryptography.CryptoStream( _
-                    msOut, desdecrypt, _
-                    System.Security.Cryptography.CryptoStreamMode.Write)
-                    '書き込む
-                    cryptStream.Write(bytesIn, 0, bytesIn.Length)
-                    cryptStream.FlushFinalBlock()
-                    '暗号化されたデータを取得
-                    Dim bytesOut As Byte() = msOut.ToArray()
+                    '書き込むためのCryptoStreamの作成
+                    Using cryptStream As New System.Security.Cryptography.CryptoStream( _
+                        msOut, desdecrypt, _
+                        System.Security.Cryptography.CryptoStreamMode.Write)
+                        '書き込む
+                        cryptStream.Write(bytesIn, 0, bytesIn.Length)
+                        cryptStream.FlushFinalBlock()
+                        '暗号化されたデータを取得
+                        Dim bytesOut As Byte() = msOut.ToArray()
 
-                    '閉じる
-                    cryptStream.Close()
-                    msOut.Close()
+                        '閉じる
+                        cryptStream.Close()
+                        msOut.Close()
 
-                    'Base64で文字列に変更して結果を返す
-                    Return System.Convert.ToBase64String(bytesOut)
+                        'Base64で文字列に変更して結果を返す
+                        Return System.Convert.ToBase64String(bytesOut)
+                    End Using
                 End Using
             End Using
         End Using
@@ -437,39 +471,40 @@ retry:
         If String.IsNullOrEmpty(str) Then Return ""
 
         'DESCryptoServiceProviderオブジェクトの作成
-        Dim des As New System.Security.Cryptography.DESCryptoServiceProvider
+        Using des As New System.Security.Cryptography.DESCryptoServiceProvider
 
-        '共有キーと初期化ベクタを決定
-        'パスワードをバイト配列にする
-        Dim bytesKey As Byte() = System.Text.Encoding.UTF8.GetBytes("_tween_encrypt_key_")
-        '共有キーと初期化ベクタを設定
-        des.Key = ResizeBytesArray(bytesKey, des.Key.Length)
-        des.IV = ResizeBytesArray(bytesKey, des.IV.Length)
+            '共有キーと初期化ベクタを決定
+            'パスワードをバイト配列にする
+            Dim bytesKey As Byte() = System.Text.Encoding.UTF8.GetBytes("_tween_encrypt_key_")
+            '共有キーと初期化ベクタを設定
+            des.Key = ResizeBytesArray(bytesKey, des.Key.Length)
+            des.IV = ResizeBytesArray(bytesKey, des.IV.Length)
 
-        'Base64で文字列をバイト配列に戻す
-        Dim bytesIn As Byte() = System.Convert.FromBase64String(str)
-        '暗号化されたデータを読み込むためのMemoryStream
-        Using msIn As New System.IO.MemoryStream(bytesIn)
-            'DES復号化オブジェクトの作成
-            Using desdecrypt As System.Security.Cryptography.ICryptoTransform = _
-                des.CreateDecryptor()
-                '読み込むためのCryptoStreamの作成
-                Using cryptStreem As New System.Security.Cryptography.CryptoStream( _
-                    msIn, desdecrypt, _
-                    System.Security.Cryptography.CryptoStreamMode.Read)
+            'Base64で文字列をバイト配列に戻す
+            Dim bytesIn As Byte() = System.Convert.FromBase64String(str)
+            '暗号化されたデータを読み込むためのMemoryStream
+            Using msIn As New System.IO.MemoryStream(bytesIn)
+                'DES復号化オブジェクトの作成
+                Using desdecrypt As System.Security.Cryptography.ICryptoTransform = _
+                    des.CreateDecryptor()
+                    '読み込むためのCryptoStreamの作成
+                    Using cryptStreem As New System.Security.Cryptography.CryptoStream( _
+                        msIn, desdecrypt, _
+                        System.Security.Cryptography.CryptoStreamMode.Read)
 
-                    '復号化されたデータを取得するためのStreamReader
-                    Using srOut As New System.IO.StreamReader( _
-                        cryptStreem, System.Text.Encoding.UTF8)
-                        '復号化されたデータを取得する
-                        Dim result As String = srOut.ReadToEnd()
+                        '復号化されたデータを取得するためのStreamReader
+                        Using srOut As New System.IO.StreamReader( _
+                            cryptStreem, System.Text.Encoding.UTF8)
+                            '復号化されたデータを取得する
+                            Dim result As String = srOut.ReadToEnd()
 
-                        '閉じる
-                        srOut.Close()
-                        cryptStreem.Close()
-                        msIn.Close()
+                            '閉じる
+                            srOut.Close()
+                            cryptStreem.Close()
+                            msIn.Close()
 
-                        Return result
+                            Return result
+                        End Using
                     End Using
                 End Using
             End Using
@@ -503,21 +538,6 @@ retry:
         Return Environment.OSVersion.Platform = PlatformID.Win32NT AndAlso Environment.OSVersion.Version.Major = 6
     End Function
 
-    Public Function ReplaceInvalidFilename(ByVal name As String) As String
-        name = name.Replace("\", "[en]")
-        name = name.Replace(":", "[c]")
-        name = name.Replace("/", "[bs]")
-        name = name.Replace("?", "[q]")
-        name = name.Replace("*", "[a]")
-        name = name.Replace("<", "[lt]")
-        name = name.Replace(">", "[gt]")
-        name = name.Replace("|", "[p]")
-        name = name.Replace(ChrW(&H201D), "[wdq]")
-        name = name.Replace("""", "[dq]")
-
-        Return name
-    End Function
-
     <FlagsAttribute()> _
     Public Enum TabUsageType
         Undefined = 0
@@ -530,12 +550,21 @@ retry:
         Profile = 64         'Pin(save/no distribute/manual update)
         PublicSearch = 128    'Pin(save/no distribute/auto update)
         Lists = 256
+        Related = 512
+        UserTimeline = 1024
         'RTMyTweet
         'RTByOthers
         'RTByMe
     End Enum
 
-    Public fileVersion As String
+    Public fileVersion As String = ""
+
+    Public Function GetUserAgentString() As String
+        If String.IsNullOrEmpty(fileVersion) Then
+            Throw New Exception("fileversion is not Initialized.")
+        End If
+        Return "Tween/" + fileVersion
+    End Function
 
     Public WithEvents TwitterApiInfo As New ApiInformation
 
@@ -560,5 +589,51 @@ retry:
         Finally
             If img IsNot Nothing Then img.Dispose()
         End Try
+    End Function
+
+    Public Function DateTimeParse(ByVal input As String) As Date
+        Dim rslt As Date
+        Dim format() As String = {
+            "ddd MMM dd HH:mm:ss zzzz yyyy"
+        }
+        For Each fmt As String In format
+            If DateTime.TryParseExact(input, _
+                                      fmt, _
+                                      System.Globalization.DateTimeFormatInfo.InvariantInfo, _
+                                      System.Globalization.DateTimeStyles.None, _
+                                      rslt) Then
+                Return rslt
+            Else
+                Continue For
+            End If
+        Next
+        TraceOut("Parse Error(DateTimeFormat) : " + input)
+        Return New Date
+    End Function
+
+    Public Function CreateDataFromJson(Of T)(ByVal content As String) As T
+        Dim data As T
+        Using stream As New MemoryStream()
+            Dim buf As Byte() = Encoding.Unicode.GetBytes(content)
+            stream.Write(Encoding.Unicode.GetBytes(content), offset:=0, count:=buf.Length)
+            stream.Seek(offset:=0, loc:=SeekOrigin.Begin)
+            data = DirectCast((New DataContractJsonSerializer(GetType(T))).ReadObject(stream), T)
+        End Using
+        Return data
+    End Function
+
+    Public Function IsNetworkAvailable() As Boolean
+        Try
+            Return NetworkInterface.GetIsNetworkAvailable
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
+    Function IsValidEmail(ByVal strIn As String) As Boolean
+        ' Return true if strIn is in valid e-mail format.
+        Return Regex.IsMatch(strIn, _
+               "^(?("")("".+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))" + _
+               "(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,6}))$")
     End Function
 End Module

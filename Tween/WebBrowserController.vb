@@ -1,7 +1,9 @@
 ﻿' Tween - Client of Twitter
-' Copyright (c) 2007-2010 kiri_feather (@kiri_feather) <kiri_feather@gmail.com>
-'           (c) 2008-2010 Moz (@syo68k) <http://iddy.jp/profile/moz/>
-'           (c) 2008-2010 takeshik (@takeshik) <http://www.takeshik.org/>
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
 ' All rights reserved.
 ' 
 ' This file is part of Tween.
@@ -22,6 +24,7 @@
 ' Boston, MA 02110-1301, USA.
 
 Imports System.Runtime.InteropServices
+Imports System.Threading
 
 
 Public Class InternetSecurityManager
@@ -271,23 +274,43 @@ Public Class InternetSecurityManager
 
     Public Sub New(ByVal _WebBrowser As System.Windows.Forms.WebBrowser)
         ' ActiveXコントロール取得
-        _WebBrowser.DocumentText = "" 'ActiveXを初期化する 
+        _WebBrowser.DocumentText = "about:blank" 'ActiveXを初期化する
+        Dim hresult As Integer = 0
+
+        Do
+            Thread.Sleep(100)
+            Application.DoEvents()
+        Loop Until _WebBrowser.ReadyState = WebBrowserReadyState.Complete
+
         ocx = _WebBrowser.ActiveXInstance
 
         ' IServiceProvider.QueryService() を使って IProfferService を取得
         ocxServiceProvider = DirectCast(ocx, WebBrowserAPI.IServiceProvider)
 
-        ocxServiceProvider.QueryService( _
-            WebBrowserAPI.SID_SProfferService, _
-            WebBrowserAPI.IID_IProfferService, profferServicePtr)
+        Try
+            hresult = ocxServiceProvider.QueryService( _
+                            WebBrowserAPI.SID_SProfferService, _
+                            WebBrowserAPI.IID_IProfferService, profferServicePtr)
+        Catch ex As SEHException
+        Catch ex As ExternalException
+            TraceOut(ex, "ocxServiceProvider.QueryService() HRESULT:" + ex.ErrorCode.ToString("X8") + Environment.NewLine)
+            Exit Sub
+        End Try
+
 
         profferService = DirectCast(Marshal.GetObjectForIUnknown(profferServicePtr),  _
             WebBrowserAPI.IProfferService)
 
         ' IProfferService.ProfferService() を使って
         ' 自分を IInternetSecurityManager として提供
-        profferService.ProfferService( _
-            WebBrowserAPI.IID_IInternetSecurityManager, Me, cookie:=0)
+        Try
+            hresult = profferService.ProfferService( _
+                            WebBrowserAPI.IID_IInternetSecurityManager, Me, cookie:=0)
+        Catch ex As SEHException
+        Catch ex As ExternalException
+            TraceOut(ex, "IProfferSerive.ProfferService() HRESULT:" + ex.ErrorCode.ToString("X8") + Environment.NewLine)
+            Exit Sub
+        End Try
 
     End Sub
 

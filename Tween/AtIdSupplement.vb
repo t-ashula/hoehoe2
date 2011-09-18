@@ -1,7 +1,9 @@
 ﻿' Tween - Client of Twitter
-' Copyright (c) 2007-2010 kiri_feather (@kiri_feather) <kiri_feather@gmail.com>
-'           (c) 2008-2010 Moz (@syo68k) <http://iddy.jp/profile/moz/>
-'           (c) 2008-2010 takeshik (@takeshik) <http://www.takeshik.org/>
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
 ' All rights reserved.
 ' 
 ' This file is part of Tween.
@@ -20,6 +22,7 @@
 ' with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 ' the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 ' Boston, MA 02110-1301, USA.
+
 Public Class AtIdSupplement
 
     Public inputText As String = ""
@@ -88,7 +91,10 @@ Public Class AtIdSupplement
     End Sub
 
     Private Sub AtIdSupplement_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If startChar = "#" Then Me.ClientSize = New Size(Me.TextId.Width, Me.TextId.Height) 'プロパティで切り替えできるように
+        If startChar = "#" Then
+            Me.ClientSize = New Size(Me.TextId.Width, Me.TextId.Height) 'プロパティで切り替えできるように
+            Me.TextId.ImeMode = Windows.Forms.ImeMode.Inherit
+        End If
     End Sub
 
     Private Sub AtIdSupplement_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown

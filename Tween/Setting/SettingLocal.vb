@@ -1,7 +1,9 @@
 ﻿' Tween - Client of Twitter
-' Copyright (c) 2007-2010 kiri_feather (@kiri_feather) <kiri_feather@gmail.com>
-'           (c) 2008-2010 Moz (@syo68k) <http://iddy.jp/profile/moz/>
-'           (c) 2008-2010 takeshik (@takeshik) <http://www.takeshik.org/>
+' Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+'           (c) 2008-2011 Moz (@syo68k)
+'           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+'           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+'           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
 ' All rights reserved.
 ' 
 ' This file is part of Tween.
@@ -20,6 +22,7 @@
 ' with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 ' the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 ' Boston, MA 02110-1301, USA.
+
 <Serializable()> _
 Public Class SettingLocal
     Inherits SettingBase(Of SettingLocal)
@@ -38,8 +41,9 @@ Public Class SettingLocal
     Private _cc As New ColorConverter
 
     Public FormLocation As New Point(0, 0)
-    Public SplitterDistance As Integer = 320
-    Public FormSize As New Size(436, 476)
+    Public SplitterDistance As Integer = 200
+    Public AdSplitterDistance As Integer = 350
+    Public FormSize As New Size(600, 500)
     Public StatusText As String = ""
     Public UseRecommendStatus As Boolean = False
     Public Width1 As Integer = 48
