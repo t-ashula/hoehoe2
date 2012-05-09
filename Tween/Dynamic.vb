@@ -469,7 +469,7 @@ Class ExpressionParser
 
     Interface ILogicalSignatures
         Sub F(ByVal x As Boolean, ByVal y As Boolean)
-        Sub F(ByVal x? As Boolean, ByVal y? As Boolean)
+        Sub F(ByVal x As Boolean?, ByVal y As Boolean?)
     End Interface
 
     Interface IArithmeticSignatures
@@ -480,13 +480,13 @@ Class ExpressionParser
         Sub F(ByVal x As Single, ByVal y As Single)
         Sub F(ByVal x As Double, ByVal y As Double)
         Sub F(ByVal x As Decimal, ByVal y As Decimal)
-        Sub F(ByVal x? As Integer, ByVal y? As Integer)
-        Sub F(ByVal x? As UInteger, ByVal y? As UInteger)
-        Sub F(ByVal x? As Long, ByVal y? As Long)
-        Sub F(ByVal x? As ULong, ByVal y? As ULong)
-        Sub F(ByVal x? As Single, ByVal y? As Single)
-        Sub F(ByVal x? As Double, ByVal y? As Double)
-        Sub F(ByVal x? As Decimal, ByVal y? As Decimal)
+        Sub F(ByVal x As Integer?, ByVal y As Integer?)
+        Sub F(ByVal x As UInteger?, ByVal y As UInteger?)
+        Sub F(ByVal x As Long?, ByVal y As Long?)
+        Sub F(ByVal x As ULong?, ByVal y As ULong?)
+        Sub F(ByVal x As Single?, ByVal y As Single?)
+        Sub F(ByVal x As Double?, ByVal y As Double?)
+        Sub F(ByVal x As Decimal?, ByVal y As Decimal?)
     End Interface
 
     Interface IRelationalSignatures : Inherits IArithmeticSignatures
@@ -494,26 +494,26 @@ Class ExpressionParser
         Overloads Sub F(ByVal x As Char, ByVal y As Char)
         Overloads Sub F(ByVal x As DateTime, ByVal y As DateTime)
         Overloads Sub F(ByVal x As TimeSpan, ByVal y As TimeSpan)
-        Overloads Sub F(ByVal x? As Char, ByVal y? As Char)
-        Overloads Sub F(ByVal x? As DateTime, ByVal y? As DateTime)
-        Overloads Sub F(ByVal x? As TimeSpan, ByVal y? As TimeSpan)
+        Overloads Sub F(ByVal x As Char?, ByVal y As Char?)
+        Overloads Sub F(ByVal x As Nullable(Of DateTime), ByVal y As Nullable(Of DateTime))
+        Overloads Sub F(ByVal x As Nullable(Of TimeSpan), ByVal y As Nullable(Of TimeSpan))
     End Interface
 
     Interface IEqualitySignatures : Inherits IRelationalSignatures
         Overloads Sub F(ByVal x As Boolean, ByVal y As Boolean)
-        Overloads Sub F(ByVal x? As Boolean, ByVal y? As Boolean)
+        Overloads Sub F(ByVal x As Boolean?, ByVal y As Boolean?)
     End Interface
 
     Interface IAddSignatures : Inherits IArithmeticSignatures
         Overloads Sub F(ByVal x As DateTime, ByVal y As TimeSpan)
         Overloads Sub F(ByVal x As TimeSpan, ByVal y As TimeSpan)
-        Overloads Sub F(ByVal x? As DateTime, ByVal y? As TimeSpan)
-        Overloads Sub F(ByVal x? As TimeSpan, ByVal y? As TimeSpan)
+        Overloads Sub F(ByVal x As Nullable(Of DateTime), ByVal y As Nullable(Of TimeSpan))
+        Overloads Sub F(ByVal x As Nullable(Of TimeSpan), ByVal y As Nullable(Of TimeSpan))
     End Interface
 
     Interface ISubtractSignatures : Inherits IAddSignatures
         Overloads Sub F(ByVal x As DateTime, ByVal y As DateTime)
-        Overloads Sub F(ByVal x? As DateTime, ByVal y? As DateTime)
+        Overloads Sub F(ByVal x As Nullable(Of DateTime), ByVal y As Nullable(Of DateTime))
     End Interface
 
     Interface INegationSignatures
@@ -531,7 +531,7 @@ Class ExpressionParser
 
     Interface INotSignatures
         Sub F(ByVal x As Boolean)
-        Sub F(ByVal x? As Boolean)
+        Sub F(ByVal x As Boolean?)
     End Interface
 
     Interface IEnumerableSignatures
@@ -544,25 +544,25 @@ Class ExpressionParser
         Sub Min(ByVal selector As Object)
         Sub Max(ByVal selector As Object)
         Sub Sum(ByVal selector As Integer)
-        Sub Sum(ByVal selector? As Integer)
+        Sub Sum(ByVal selector As Integer?)
         Sub Sum(ByVal selector As Long)
-        Sub Sum(ByVal selector? As Long)
+        Sub Sum(ByVal selector As Long?)
         Sub Sum(ByVal selector As Single)
-        Sub Sum(ByVal selector? As Single)
+        Sub Sum(ByVal selector As Single?)
         Sub Sum(ByVal selector As Double)
-        Sub Sum(ByVal selector? As Double)
+        Sub Sum(ByVal selector As Double?)
         Sub Sum(ByVal selector As Decimal)
-        Sub Sum(ByVal selector? As Decimal)
+        Sub Sum(ByVal selector As Decimal?)
         Sub Average(ByVal selector As Integer)
-        Sub Average(ByVal selector? As Integer)
+        Sub Average(ByVal selector As Integer?)
         Sub Average(ByVal selector As Long)
-        Sub Average(ByVal selector? As Long)
+        Sub Average(ByVal selector As Long?)
         Sub Average(ByVal selector As Single)
-        Sub Average(ByVal selector? As Single)
+        Sub Average(ByVal selector As Single?)
         Sub Average(ByVal selector As Double)
-        Sub Average(ByVal selector? As Double)
+        Sub Average(ByVal selector As Double?)
         Sub Average(ByVal selector As Decimal)
-        Sub Average(ByVal selector? As Decimal)
+        Sub Average(ByVal selector As Decimal?)
     End Interface
 
     Shared ReadOnly predefinedTypes As Type() = { _
