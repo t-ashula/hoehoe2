@@ -42,12 +42,10 @@ Public Class ImageDictionary
         SyncLock Me.lockObject
             '5Mb,80%
             'キャッシュチェック間隔はデフォルト値（2分毎）
-            Me.innerDictionary = New MemoryCache("imageCache",
-                                                 New NameValueCollection() From
-                                                 {
-                                                     {"CacheMemoryLimitMegabytes", cacheMemoryLimit.ToString},
-                                                     {"PhysicalMemoryLimitPercentage", "80"}
-                                                 })
+            Dim nvc = New NameValueCollection()
+            nvc.Add({"CacheMemoryLimitMegabytes", cacheMemoryLimit.ToString})
+            nvc.Add({"PhysicalMemoryLimitPercentage", "80"})
+            Me.innerDictionary = New MemoryCache("imageCache", nvc)
             Me.waitStack = New Stack(Of KeyValuePair(Of String, Action(Of Image)))
             Me.cachePolicy.RemovedCallback = AddressOf CacheRemoved
             Me.cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30)     '30分参照されなかったら削除
