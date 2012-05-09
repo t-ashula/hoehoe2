@@ -2537,19 +2537,19 @@ Public Class TweenMain
         '    End If
         'Next
         'If Not busy Then RefreshTimeline() 'background処理なければ、リスト反映
-        If rslt.type = WORKERTYPE.Timeline OrElse
-           rslt.type = WORKERTYPE.Reply OrElse
-           rslt.type = WORKERTYPE.List OrElse
-           rslt.type = WORKERTYPE.PublicSearch OrElse
-           rslt.type = WORKERTYPE.DirectMessegeRcv OrElse
-           rslt.type = WORKERTYPE.DirectMessegeSnt OrElse
-           rslt.type = WORKERTYPE.Favorites OrElse
-           rslt.type = WORKERTYPE.Follower OrElse
-           rslt.type = WORKERTYPE.FavAdd OrElse
-           rslt.type = WORKERTYPE.FavRemove OrElse
-           rslt.type = WORKERTYPE.Related OrElse
-           rslt.type = WORKERTYPE.UserTimeline OrElse
-           rslt.type = WORKERTYPE.BlockIds OrElse
+        If rslt.type = WORKERTYPE.Timeline OrElse _
+           rslt.type = WORKERTYPE.Reply OrElse _
+           rslt.type = WORKERTYPE.List OrElse _
+           rslt.type = WORKERTYPE.PublicSearch OrElse _
+           rslt.type = WORKERTYPE.DirectMessegeRcv OrElse _
+           rslt.type = WORKERTYPE.DirectMessegeSnt OrElse _
+           rslt.type = WORKERTYPE.Favorites OrElse _
+           rslt.type = WORKERTYPE.Follower OrElse _
+           rslt.type = WORKERTYPE.FavAdd OrElse _
+           rslt.type = WORKERTYPE.FavRemove OrElse _
+           rslt.type = WORKERTYPE.Related OrElse _
+           rslt.type = WORKERTYPE.UserTimeline OrElse _
+           rslt.type = WORKERTYPE.BlockIds OrElse _
            rslt.type = WORKERTYPE.Configuration Then
             RefreshTimeline(False) 'リスト反映
         End If
@@ -4523,18 +4523,18 @@ Public Class TweenMain
                                                   e.Item.Font,
                                                   Rectangle.Round(rct),
                                                   brs.Color,
-                                                  TextFormatFlags.WordBreak Or
-                                                  TextFormatFlags.EndEllipsis Or
-                                                  TextFormatFlags.GlyphOverhangPadding Or
+                                                  TextFormatFlags.WordBreak Or _
+                                                  TextFormatFlags.EndEllipsis Or _
+                                                  TextFormatFlags.GlyphOverhangPadding Or _
                                                   TextFormatFlags.NoPrefix)
                             TextRenderer.DrawText(e.Graphics,
                                                   e.Item.SubItems(4).Text + " / " + e.Item.SubItems(1).Text + " (" + e.Item.SubItems(3).Text + ") " + e.Item.SubItems(5).Text + e.Item.SubItems(6).Text + " [" + e.Item.SubItems(7).Text + "]",
                                                   fnt,
                                                   Rectangle.Round(rctB),
                                                   brs.Color,
-                                                  TextFormatFlags.SingleLine Or
-                                                  TextFormatFlags.EndEllipsis Or
-                                                  TextFormatFlags.GlyphOverhangPadding Or
+                                                  TextFormatFlags.SingleLine Or _
+                                                  TextFormatFlags.EndEllipsis Or _
+                                                  TextFormatFlags.GlyphOverhangPadding Or _
                                                   TextFormatFlags.NoPrefix)
                         End Using
                     ElseIf drawLineCount = 1 Then
@@ -4543,10 +4543,10 @@ Public Class TweenMain
                                               e.Item.Font,
                                               Rectangle.Round(rct),
                                               brs.Color,
-                                              TextFormatFlags.SingleLine Or
-                                              TextFormatFlags.EndEllipsis Or
-                                              TextFormatFlags.GlyphOverhangPadding Or
-                                              TextFormatFlags.NoPrefix Or
+                                              TextFormatFlags.SingleLine Or _
+                                              TextFormatFlags.EndEllipsis Or _
+                                              TextFormatFlags.GlyphOverhangPadding Or _
+                                              TextFormatFlags.NoPrefix Or _
                                               TextFormatFlags.VerticalCenter)
                     Else
                         'e.Graphics.DrawString(e.SubItem.Text, e.Item.Font, brs, rct, sf)
@@ -4555,9 +4555,9 @@ Public Class TweenMain
                                               e.Item.Font,
                                               Rectangle.Round(rct),
                                               brs.Color,
-                                              TextFormatFlags.WordBreak Or
-                                              TextFormatFlags.EndEllipsis Or
-                                              TextFormatFlags.GlyphOverhangPadding Or
+                                              TextFormatFlags.WordBreak Or _
+                                              TextFormatFlags.EndEllipsis Or _
+                                              TextFormatFlags.GlyphOverhangPadding Or _
                                               TextFormatFlags.NoPrefix)
                     End If
                 End If
@@ -4575,18 +4575,18 @@ Public Class TweenMain
                                                       e.Item.Font,
                                                       Rectangle.Round(rct),
                                                       _brsHighLightText.Color,
-                                                      TextFormatFlags.WordBreak Or
-                                                      TextFormatFlags.EndEllipsis Or
-                                                      TextFormatFlags.GlyphOverhangPadding Or
+                                                      TextFormatFlags.WordBreak Or _
+                                                      TextFormatFlags.EndEllipsis Or _
+                                                      TextFormatFlags.GlyphOverhangPadding Or _
                                                       TextFormatFlags.NoPrefix)
                                 TextRenderer.DrawText(e.Graphics,
                                                       e.Item.SubItems(4).Text + " / " + e.Item.SubItems(1).Text + " (" + e.Item.SubItems(3).Text + ") " + e.Item.SubItems(5).Text + e.Item.SubItems(6).Text + " [" + e.Item.SubItems(7).Text + "]",
                                                       fnt,
                                                       Rectangle.Round(rctB),
                                                       _brsHighLightText.Color,
-                                                      TextFormatFlags.SingleLine Or
-                                                      TextFormatFlags.EndEllipsis Or
-                                                      TextFormatFlags.GlyphOverhangPadding Or
+                                                      TextFormatFlags.SingleLine Or _
+                                                      TextFormatFlags.EndEllipsis Or _
+                                                      TextFormatFlags.GlyphOverhangPadding Or _
                                                       TextFormatFlags.NoPrefix)
                             ElseIf drawLineCount = 1 Then
                                 TextRenderer.DrawText(e.Graphics,
@@ -4594,10 +4594,10 @@ Public Class TweenMain
                                                       e.Item.Font,
                                                       Rectangle.Round(rct),
                                                       _brsHighLightText.Color,
-                                                      TextFormatFlags.SingleLine Or
-                                                      TextFormatFlags.EndEllipsis Or
-                                                      TextFormatFlags.GlyphOverhangPadding Or
-                                                      TextFormatFlags.NoPrefix Or
+                                                      TextFormatFlags.SingleLine Or _
+                                                      TextFormatFlags.EndEllipsis Or _
+                                                      TextFormatFlags.GlyphOverhangPadding Or _
+                                                      TextFormatFlags.NoPrefix Or _
                                                       TextFormatFlags.VerticalCenter)
                             Else
                                 'e.Graphics.DrawString(e.SubItem.Text, e.Item.Font, _brsHighLightText, rct, sf)
@@ -4606,9 +4606,9 @@ Public Class TweenMain
                                                       e.Item.Font,
                                                       Rectangle.Round(rct),
                                                       _brsHighLightText.Color,
-                                                      TextFormatFlags.WordBreak Or
-                                                      TextFormatFlags.EndEllipsis Or
-                                                      TextFormatFlags.GlyphOverhangPadding Or
+                                                      TextFormatFlags.WordBreak Or _
+                                                      TextFormatFlags.EndEllipsis Or _
+                                                      TextFormatFlags.GlyphOverhangPadding Or _
                                                       TextFormatFlags.NoPrefix)
                             End If
                         Else
@@ -4620,18 +4620,18 @@ Public Class TweenMain
                                                       e.Item.Font,
                                                       Rectangle.Round(rct),
                                                       _brsForeColorUnread.Color,
-                                                      TextFormatFlags.WordBreak Or
-                                                      TextFormatFlags.EndEllipsis Or
-                                                      TextFormatFlags.GlyphOverhangPadding Or
+                                                      TextFormatFlags.WordBreak Or _
+                                                      TextFormatFlags.EndEllipsis Or _
+                                                      TextFormatFlags.GlyphOverhangPadding Or _
                                                       TextFormatFlags.NoPrefix)
                                 TextRenderer.DrawText(e.Graphics,
                                                       e.Item.SubItems(4).Text + " / " + e.Item.SubItems(1).Text + " (" + e.Item.SubItems(3).Text + ") " + e.Item.SubItems(5).Text + e.Item.SubItems(6).Text + " [" + e.Item.SubItems(7).Text + "]",
                                                       fnt,
                                                       Rectangle.Round(rctB),
                                                       _brsForeColorUnread.Color,
-                                                      TextFormatFlags.SingleLine Or
-                                                      TextFormatFlags.EndEllipsis Or
-                                                      TextFormatFlags.GlyphOverhangPadding Or
+                                                      TextFormatFlags.SingleLine Or _
+                                                      TextFormatFlags.EndEllipsis Or _
+                                                      TextFormatFlags.GlyphOverhangPadding Or _
                                                       TextFormatFlags.NoPrefix)
                             ElseIf drawLineCount = 1 Then
                                 TextRenderer.DrawText(e.Graphics,
@@ -4639,10 +4639,10 @@ Public Class TweenMain
                                                       e.Item.Font,
                                                       Rectangle.Round(rct),
                                                       _brsForeColorUnread.Color,
-                                                      TextFormatFlags.SingleLine Or
-                                                      TextFormatFlags.EndEllipsis Or
-                                                      TextFormatFlags.GlyphOverhangPadding Or
-                                                      TextFormatFlags.NoPrefix Or
+                                                      TextFormatFlags.SingleLine Or _
+                                                      TextFormatFlags.EndEllipsis Or _
+                                                      TextFormatFlags.GlyphOverhangPadding Or _
+                                                      TextFormatFlags.NoPrefix Or _
                                                       TextFormatFlags.VerticalCenter)
                             Else
                                 'e.Graphics.DrawString(e.SubItem.Text, e.Item.Font, _brsForeColorUnread, rct, sf)
@@ -4651,9 +4651,9 @@ Public Class TweenMain
                                                       e.Item.Font,
                                                       Rectangle.Round(rct),
                                                       _brsForeColorUnread.Color,
-                                                      TextFormatFlags.WordBreak Or
-                                                      TextFormatFlags.EndEllipsis Or
-                                                      TextFormatFlags.GlyphOverhangPadding Or
+                                                      TextFormatFlags.WordBreak Or _
+                                                      TextFormatFlags.EndEllipsis Or _
+                                                      TextFormatFlags.GlyphOverhangPadding Or _
                                                       TextFormatFlags.NoPrefix)
                             End If
                         End If
@@ -5308,9 +5308,9 @@ RETRY:
     Private Function CommonKeyDown(ByVal KeyCode As System.Windows.Forms.Keys, ByVal Focused As FocusedControl, ByVal Modifier As ModifierState) As Boolean
         'リストのカーソル移動関係（上下キー、PageUp/Downに該当）
         If Focused = FocusedControl.ListTab Then
-            If Modifier = (ModifierState.Ctrl Or ModifierState.Shift) OrElse
-                Modifier = ModifierState.Ctrl OrElse
-                Modifier = ModifierState.None OrElse
+            If Modifier = (ModifierState.Ctrl Or ModifierState.Shift) OrElse _ 
+                Modifier = ModifierState.Ctrl OrElse _
+                Modifier = ModifierState.None OrElse _
                 Modifier = ModifierState.Shift Then
                 If KeyCode = Keys.J Then
                     SendKeys.Send("{DOWN}")
@@ -5320,7 +5320,7 @@ RETRY:
                     Return True
                 End If
             End If
-            If Modifier = ModifierState.Shift OrElse
+            If Modifier = ModifierState.Shift OrElse _
                 Modifier = ModifierState.None Then
                 If KeyCode = Keys.F Then
                     SendKeys.Send("{PGDN}")
@@ -6201,12 +6201,12 @@ RETRY:
             curTabPosts = _statuses.Posts
         End If
 
-        Dim inReplyToPosts = From tab In _statuses.Tabs.Values
-                             Order By tab IsNot curTabClass
-                             From post In DirectCast(IIf(tab.IsInnerStorageTabType, tab.Posts, _statuses.Posts), Dictionary(Of Long, PostClass)).Values
-                             Where post.StatusId = inReplyToId
-                             Let index = tab.IndexOf(post.StatusId)
-                             Where index <> -1
+        Dim inReplyToPosts = From tab In _statuses.Tabs.Values _  
+                             Order By tab IsNot curTabClass _  
+                             From post In DirectCast(IIf(tab.IsInnerStorageTabType, tab.Posts, _statuses.Posts), Dictionary(Of Long, PostClass)).Values _  
+                             Where post.StatusId = inReplyToId _  
+                             Let index = tab.IndexOf(post.StatusId) _  
+                             Where index <> -1 _  
                              Select New With {.Tab = tab, .Index = index}
 
         Try
@@ -6256,13 +6256,13 @@ RETRY:
 
         If parallel Then
             If _curPost.InReplyToStatusId <> 0 Then
-                Dim posts = From t In _statuses.Tabs
-                            From p In DirectCast(IIf(t.Value.IsInnerStorageTabType, t.Value.Posts, _statuses.Posts), Dictionary(Of Long, PostClass))
-                            Where p.Value.StatusId <> _curPost.StatusId AndAlso p.Value.InReplyToStatusId = _curPost.InReplyToStatusId
-                            Let indexOf = t.Value.IndexOf(p.Value.StatusId)
-                            Where indexOf > -1
-                            Order By IIf(isForward, indexOf, indexOf * -1)
-                            Order By t.Value IsNot curTabClass
+                Dim posts = From t In _statuses.Tabs _   
+                            From p In DirectCast(IIf(t.Value.IsInnerStorageTabType, t.Value.Posts, _statuses.Posts), Dictionary(Of Long, PostClass)) _  
+                            Where p.Value.StatusId <> _curPost.StatusId AndAlso p.Value.InReplyToStatusId = _curPost.InReplyToStatusId _  
+                            Let indexOf = t.Value.IndexOf(p.Value.StatusId) _  
+                            Where indexOf > -1 _  
+                            Order By IIf(isForward, indexOf, indexOf * -1) _  
+                            Order By t.Value IsNot curTabClass _  
                             Select New With {.Tab = t.Value, .Post = p.Value, .Index = indexOf}
                 Try
                     Dim postList = posts.ToList()
@@ -6285,13 +6285,13 @@ RETRY:
             End If
         Else
             If replyChains Is Nothing OrElse replyChains.Count < 1 Then
-                Dim posts = From t In _statuses.Tabs
-                            From p In DirectCast(IIf(t.Value.IsInnerStorageTabType, t.Value.Posts, _statuses.Posts), Dictionary(Of Long, PostClass))
-                            Where p.Value.InReplyToStatusId = _curPost.StatusId
-                            Let indexOf = t.Value.IndexOf(p.Value.StatusId)
-                            Where indexOf > -1
-                            Order By indexOf
-                            Order By t.Value IsNot curTabClass
+                Dim posts = From t In _statuses.Tabs _  
+                            From p In DirectCast(IIf(t.Value.IsInnerStorageTabType, t.Value.Posts, _statuses.Posts), Dictionary(Of Long, PostClass)) _  
+                            Where p.Value.InReplyToStatusId = _curPost.StatusId _  
+                            Let indexOf = t.Value.IndexOf(p.Value.StatusId) _  
+                            Where indexOf > -1 _  
+                            Order By indexOf _  
+                            Order By t.Value IsNot curTabClass _  
                             Select New With {.Tab = t.Value, .Index = indexOf}
                 Try
                     Dim post = posts.First()
@@ -7432,7 +7432,7 @@ RETRY:
             Me.Cursor = Cursors.Default
         End Try
         SaveConfigsTabs()
-        If Me.ListTab.SelectedTab IsNot Nothing AndAlso
+        If Me.ListTab.SelectedTab IsNot Nothing AndAlso _
             DirectCast(Me.ListTab.SelectedTab.Tag, DetailsListView).SelectedIndices.Count > 0 Then
             _curPost = _statuses.Item(Me.ListTab.SelectedTab.Text, DirectCast(Me.ListTab.SelectedTab.Tag, DetailsListView).SelectedIndices(0))
         End If
@@ -8002,7 +8002,7 @@ RETRY:
             If Not SplitContainer4.Panel2Collapsed AndAlso _cfgLocal.AdSplitterDistance > Me.SplitContainer4.Panel1MinSize Then
                 Me.SplitContainer4.SplitterDistance = _cfgLocal.AdSplitterDistance 'Splitterの位置設定
             End If
-            If _cfgLocal.SplitterDistance > Me.SplitContainer1.Panel1MinSize AndAlso
+            If _cfgLocal.SplitterDistance > Me.SplitContainer1.Panel1MinSize AndAlso _
                 _cfgLocal.SplitterDistance < Me.SplitContainer1.Height - Me.SplitContainer1.Panel2MinSize - Me.SplitContainer1.SplitterWidth Then
                 Me.SplitContainer1.SplitterDistance = _cfgLocal.SplitterDistance 'Splitterの位置設定
             End If
@@ -8187,11 +8187,11 @@ RETRY:
         End If
     End Sub
 
-    Private Sub SplitContainer2_Panel2_Resize(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SplitContainer2.Panel2.Resize
-        Me.StatusText.Multiline = Me.SplitContainer2.Panel2.Height > Me.SplitContainer2.Panel2MinSize + 2
-        MultiLineMenuItem.Checked = Me.StatusText.Multiline
-        _modifySettingLocal = True
-    End Sub
+    '''Private Sub SplitContainer2_Panel2_Resize(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SplitContainer2.Panel2.Resize
+    '''    Me.StatusText.Multiline = Me.SplitContainer2.Panel2.Height > Me.SplitContainer2.Panel2MinSize + 2
+    '''    MultiLineMenuItem.Checked = Me.StatusText.Multiline
+    '''    _modifySettingLocal = True
+    '''End Sub
 
     Private Sub StatusText_MultilineChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles StatusText.MultilineChanged
         If Me.StatusText.Multiline Then
@@ -10485,17 +10485,19 @@ RETRY:
 
     Private Sub tw_PostDeleted(ByVal id As Long)
         Try
-            If InvokeRequired AndAlso Not IsDisposed Then
-                Invoke(Sub()
-                           _statuses.RemovePostReserve(id)
-                           If _curTab IsNot Nothing AndAlso _statuses.Tabs(_curTab.Text).Contains(id) Then
-                               _itemCache = Nothing
-                               _itemCacheIndex = -1
-                               _postCache = Nothing
-                               DirectCast(_curTab.Tag, DetailsListView).Update()
-                               If _curPost IsNot Nothing AndAlso _curPost.StatusId = id Then DispSelectedPost(True)
-                           End If
-                       End Sub)
+        	If InvokeRequired AndAlso Not IsDisposed Then
+        		
+'toconvert
+'                Invoke(Sub()
+'                           _statuses.RemovePostReserve(id)
+'                           If _curTab IsNot Nothing AndAlso _statuses.Tabs(_curTab.Text).Contains(id) Then
+'                               _itemCache = Nothing
+'                               _itemCacheIndex = -1
+'                               _postCache = Nothing
+'                               DirectCast(_curTab.Tag, DetailsListView).Update()
+'                               If _curPost IsNot Nothing AndAlso _curPost.StatusId = id Then DispSelectedPost(True)
+'                           End If
+'                       End Sub)
                 Exit Sub
             End If
         Catch ex As ObjectDisposedException
@@ -10893,11 +10895,11 @@ RETRY:
     Private Sub SplitContainer4_Resize(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SplitContainer4.Resize
         If Me.WindowState = FormWindowState.Minimized Then Exit Sub
         If SplitContainer4.Panel2Collapsed Then Exit Sub
-        If SplitContainer4.Height < SplitContainer4.SplitterWidth + SplitContainer4.Panel2MinSize + SplitContainer4.SplitterDistance AndAlso
+        If SplitContainer4.Height < SplitContainer4.SplitterWidth + SplitContainer4.Panel2MinSize + SplitContainer4.SplitterDistance AndAlso _
             SplitContainer4.Height - SplitContainer4.SplitterWidth - SplitContainer4.Panel2MinSize > 0 Then
             SplitContainer4.SplitterDistance = SplitContainer4.Height - SplitContainer4.SplitterWidth - SplitContainer4.Panel2MinSize
         End If
-        If SplitContainer4.Panel2.Height > 90 AndAlso
+        If SplitContainer4.Panel2.Height > 90 AndAlso _
             SplitContainer4.Height - SplitContainer4.SplitterWidth - 90 > 0 Then
             SplitContainer4.SplitterDistance = SplitContainer4.Height - SplitContainer4.SplitterWidth - 90
         End If
@@ -10936,18 +10938,19 @@ RETRY:
     End Sub
 
     Private Sub GrowlHelper_Callback(ByVal sender As Object, ByVal e As GrowlHelper.NotifyCallbackEventArgs) Handles gh.NotifyClicked
-        If Form.ActiveForm Is Nothing Then
-            Me.BeginInvoke(Sub()
-                               Me.Visible = True
-                               If Me.WindowState = FormWindowState.Minimized Then Me.WindowState = FormWindowState.Normal
-                               Me.Activate()
-                               Me.BringToFront()
-                               If e.NotifyType = GrowlHelper.NotifyType.DirectMessage Then
-                                   If Not Me.GoDirectMessage(e.StatusId) Then Me.StatusText.Focus()
-                               Else
-                                   If Not Me.GoStatus(e.StatusId) Then Me.StatusText.Focus()
-                               End If
-                           End Sub)
+    	If Form.ActiveForm Is Nothing Then
+    		'to convert
+''            Me.BeginInvoke(Sub()
+''                               Me.Visible = True
+''                               If Me.WindowState = FormWindowState.Minimized Then Me.WindowState = FormWindowState.Normal
+''                               Me.Activate()
+''                               Me.BringToFront()
+''                               If e.NotifyType = GrowlHelper.NotifyType.DirectMessage Then
+''                                   If Not Me.GoDirectMessage(e.StatusId) Then Me.StatusText.Focus()
+''                               Else
+''                                   If Not Me.GoStatus(e.StatusId) Then Me.StatusText.Focus()
+''                               End If
+''                           End Sub)
         End If
     End Sub
 

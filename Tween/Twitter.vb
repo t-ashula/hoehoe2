@@ -702,14 +702,19 @@ Public Class Twitter
             Return "Err:" + ex.Message
         End Try
 
-        Select Case res
-            Case HttpStatusCode.Unauthorized
-                'Blockユーザーの発言をRTすると認証エラー返る
-                'Twitter.AccountState = ACCOUNT_STATE.Invalid
-                Return My.Resources.Unauthorized + " or blocked user."
-            Case Is <> HttpStatusCode.OK
-                Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
-        End Select
+        'Select Case res
+        '    Case HttpStatusCode.Unauthorized
+        '        'Blockユーザーの発言をRTすると認証エラー返る
+        '        'Twitter.AccountState = ACCOUNT_STATE.Invalid
+        '        Return My.Resources.Unauthorized + " or blocked user."
+        '    Case Is <> HttpStatusCode.OK
+        '        Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
+        'End Select
+        If res = HttpStatusCode.Unauthorized Then
+        	Return My.Resources.Unauthorized + " or blocked user."
+        ElseIf res <> HttpStatusCode.OK then
+        	Return "Err:" + res.ToString() + "(" + GetCurrentMethod.Name + ")"
+        End If
 
         Google.GASender.GetInstance().TrackEventWithCategory("post", "retweet", Me.UserId)
         Twitter.AccountState = ACCOUNT_STATE.Valid
