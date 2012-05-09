@@ -2462,12 +2462,12 @@ Public Class AppendSettingDialog
         If tw IsNot Nothing Then
             If TwitterApiInfo.MaxCount = -1 Then
                 If Twitter.AccountState = ACCOUNT_STATE.Valid Then
-                    TwitterApiInfo.UsingCount = UsingApi
-                    Dim proc As New Thread(New Threading.ThreadStart(Sub()
-                                                                         tw.GetInfoApi(Nothing) '取得エラー時はinfoCountは初期状態（値：-1）
-                                                                         If Me.IsHandleCreated AndAlso Not Me.IsDisposed Then Invoke(New MethodInvoker(AddressOf DisplayApiMaxCount))
-                                                                     End Sub))
-                    proc.Start()
+                	TwitterApiInfo.UsingCount = UsingApi
+                	''' Dim proc As New Thread(New Threading.ThreadStart(Sub()
+                    '''                                                  tw.GetInfoApi(Nothing) '取得エラー時はinfoCountは初期状態（値：-1）
+                    '''                                                  If Me.IsHandleCreated AndAlso Not Me.IsDisposed Then Invoke(New MethodInvoker(AddressOf DisplayApiMaxCount))
+                    '''                                              End Sub))
+                    ''' proc.Start()
                 Else
                     LabelApiUsing.Text = String.Format(My.Resources.SettingAPIUse1, UsingApi, "???")
                 End If
