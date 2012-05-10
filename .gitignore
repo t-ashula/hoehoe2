@@ -1,0 +1,8 @@
+*.suo
+Tween.cs/bin/*
+Tween.cs/obj/*
+Tween/obj/*
+Tween/bin/*
+TweenUp/bin/*
+TweenUp/obj/*
+*.user
