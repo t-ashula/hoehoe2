@@ -243,7 +243,7 @@ namespace Tween
             return orgData;
         }
 
-        public static string Make(UrlConverter ConverterType, string SrcUrl)
+        public static string Make(Tween.MyCommon.UrlConverter ConverterType, string SrcUrl)
         {
             string src = "";
             try
@@ -274,7 +274,7 @@ namespace Tween
 
             switch (ConverterType)
             {
-                case UrlConverter.TinyUrl:
+                case Tween.MyCommon.UrlConverter.TinyUrl:
                     //tinyurl
                     if (SrcUrl.StartsWith("http"))
                     {
@@ -294,7 +294,7 @@ namespace Tween
                         return "Can't convert";
                     }
                     break;
-                case UrlConverter.Isgd:
+                case Tween.MyCommon.UrlConverter.Isgd:
                     if (SrcUrl.StartsWith("http"))
                     {
                         if ("http://is.gd/xxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
@@ -313,7 +313,7 @@ namespace Tween
                         return "Can't convert";
                     }
                     break;
-                case UrlConverter.Twurl:
+                case Tween.MyCommon.UrlConverter.Twurl:
                     if (SrcUrl.StartsWith("http"))
                     {
                         if ("http://twurl.nl/xxxxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
@@ -334,8 +334,8 @@ namespace Tween
                         return "Can't convert";
                     }
                     break;
-                case UrlConverter.Bitly:
-                case UrlConverter.Jmp:
+                case Tween.MyCommon.UrlConverter.Bitly:
+                case Tween.MyCommon.UrlConverter.Jmp:
                     const string BitlyLogin = "tweenapi";
                     const string BitlyApiKey = "R_c5ee0e30bdfff88723c4457cc331886b";
                     const string BitlyApiVersion = "3";
@@ -352,7 +352,7 @@ namespace Tween
                         req += "login=" + BitlyLogin + "&apiKey=" + BitlyApiKey + "&format=txt" + "&longUrl=" + SrcUrl;
                         if (!string.IsNullOrEmpty(_bitlyId) && !string.IsNullOrEmpty(_bitlyKey))
                             req += "&x_login=" + _bitlyId + "&x_apiKey=" + _bitlyKey;
-                        if (ConverterType == UrlConverter.Jmp)
+                        if (ConverterType == Tween.MyCommon.UrlConverter.Jmp)
                             req += "&domain=j.mp";
                         if (!(new HttpVarious()).GetData(req, null, ref content))
                         {
@@ -360,7 +360,7 @@ namespace Tween
                         }
                     }
                     break;
-                case UrlConverter.Uxnu:
+                case Tween.MyCommon.UrlConverter.Uxnu:
                     if (SrcUrl.StartsWith("http"))
                     {
                         if ("http://ux.nx/xxxxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
