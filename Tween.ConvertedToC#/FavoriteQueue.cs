@@ -57,7 +57,7 @@ namespace Tween
 
         public bool Contains(long item)
         {
-            FavoriteCache.Contains(item);
+            return FavoriteCache.Contains(item);
         }
 
         public void CopyTo(long[] array, int arrayIndex)
