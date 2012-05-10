@@ -742,7 +742,7 @@ namespace Tween
         public class Lists
         {
             [DataMember(Name = "lists")]
-            public ListElementData[] Lists;
+            public ListElementData[] Lists_;
 
             [DataMember(Name = "next_cursor")]
             public long NextCursor;
