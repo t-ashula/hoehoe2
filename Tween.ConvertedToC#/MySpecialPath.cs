@@ -7,14 +7,14 @@ namespace Tween
 {
     public class MySpecialPath
     {
-        public static string UserAppDataPath
+        public static string UserAppDataPath()
         {
-            get { return GetFileSystemPath(Environment.SpecialFolder.ApplicationData); }
+            { return GetFileSystemPath(Environment.SpecialFolder.ApplicationData); }
         }
 
-        public static string UserAppDataPath
+        public static string UserAppDataPath(string productName)
         {
-            get { return GetFileSystemPath(Environment.SpecialFolder.ApplicationData, productName); }
+            { return GetFileSystemPath(Environment.SpecialFolder.ApplicationData, productName); }
         }
 
         public static string CommonAppDataPath
