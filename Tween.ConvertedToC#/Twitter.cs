@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -134,36 +135,40 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     _uname = username.ToLower();
                     if (AppendSettingDialog.Instance.UserstreamStartup)
                         this.ReconnectUserStream();
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    string errMsg = GetErrorMessageJson(content);
-                    if (string.IsNullOrEmpty(errMsg))
                     {
-                        return Tween.My.Resources.Unauthorized + Environment.NewLine + content;
-                    }
-                    else
-                    {
-                        return "Auth error:" + errMsg;
+                        Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                        string errMsg = GetErrorMessageJson(content);
+                        if (string.IsNullOrEmpty(errMsg))
+                        {
+                            return Tween.My.Resources.Resources.Unauthorized + Environment.NewLine + content;
+                        }
+                        else
+                        {
+                            return "Auth error:" + errMsg;
+                        }
                     }
                     break;
                 case HttpStatusCode.Forbidden:
-                    string errMsg = GetErrorMessageJson(content);
-                    if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden";
-                    }
-                    else
-                    {
-                        return "Err:" + errMsg;
+                        string errMsg = GetErrorMessageJson(content);
+                        if (string.IsNullOrEmpty(errMsg))
+                        {
+                            return "Err:Forbidden";
+                        }
+                        else
+                        {
+                            return "Err:" + errMsg;
+                        }
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -204,43 +209,47 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     _uname = Username.ToLower();
                     if (AppendSettingDialog.Instance.UserstreamStartup)
                         this.ReconnectUserStream();
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "authenticate", this.UserId);
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    string errMsg = GetErrorMessageJson(content);
-                    if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Check the PIN or retry." + Environment.NewLine + content;
-                    }
-                    else
-                    {
-                        return "Auth error:" + errMsg;
+                        Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                        string errMsg = GetErrorMessageJson(content);
+                        if (string.IsNullOrEmpty(errMsg))
+                        {
+                            return "Check the PIN or retry." + Environment.NewLine + content;
+                        }
+                        else
+                        {
+                            return "Auth error:" + errMsg;
+                        }
                     }
                     break;
                 case HttpStatusCode.Forbidden:
-                    string errMsg = GetErrorMessageJson(content);
-                    if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden";
-                    }
-                    else
-                    {
-                        return "Err:" + errMsg;
+                        string errMsg = GetErrorMessageJson(content);
+                        if (string.IsNullOrEmpty(errMsg))
+                        {
+                            return "Err:Forbidden";
+                        }
+                        else
+                        {
+                            return "Err:" + errMsg;
+                        }
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
         public void ClearAuthInfo()
         {
-            Twitter.AccountState = ACCOUNT_STATE.Invalid;
+            Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
             MyCommon.TwitterApiInfo.Initialize();
             twCon.ClearAuthInfo();
         }
@@ -261,11 +270,11 @@ namespace Tween
 
             if (res == HttpStatusCode.OK)
             {
-                Twitter.AccountState = ACCOUNT_STATE.Valid;
+                Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                 TwitterDataModel.User user = null;
                 try
                 {
-                    user = MyCommon.CreateDataFromJson(content);
+                    user = MyCommon.CreateDataFromJson<TwitterDataModel.User>(content);
                 }
                 catch (SerializationException ex)
                 {
@@ -310,7 +319,7 @@ namespace Tween
             //OAuth認証
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(tokenSecret) || string.IsNullOrEmpty(username))
             {
-                Twitter.AccountState = ACCOUNT_STATE.Invalid;
+                Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
             }
             MyCommon.TwitterApiInfo.Initialize();
             twCon.Initialize(token, tokenSecret, username, userId);
@@ -504,7 +513,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             postStr = postStr.Trim();
@@ -529,11 +538,11 @@ namespace Tween
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "status", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     TwitterDataModel.Status status = null;
                     try
                     {
-                        status = MyCommon.CreateDataFromJson(content);
+                        status = MyCommon.CreateDataFromJson<TwitterDataModel.Status>(content);
                     }
                     catch (SerializationException ex)
                     {
@@ -542,7 +551,7 @@ namespace Tween
                     }
                     catch (Exception ex)
                     {
-                        MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                        MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                         return "Err:Invalid Json!";
                     }
                     _followersCount = status.User.FollowersCount;
@@ -568,14 +577,16 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.BadRequest:
-                    string errMsg = GetErrorMessageJson(content);
-                    if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Warn:" + res.ToString();
-                    }
-                    else
-                    {
-                        return "Warn:" + errMsg;
+                        string errMsg = GetErrorMessageJson(content);
+                        if (string.IsNullOrEmpty(errMsg))
+                        {
+                            return "Warn:" + res.ToString();
+                        }
+                        else
+                        {
+                            return "Warn:" + errMsg;
+                        }
                     }
                     break;
                 case HttpStatusCode.Conflict:
@@ -584,7 +595,7 @@ namespace Tween
                 case HttpStatusCode.LengthRequired:
                 case HttpStatusCode.MethodNotAllowed:
                 case HttpStatusCode.NotAcceptable:
-                case HttpStatusCode.NotFound:
+                //case HttpStatusCode.NotFound:
                 case HttpStatusCode.PaymentRequired:
                 case HttpStatusCode.PreconditionFailed:
                 case HttpStatusCode.RequestedRangeNotSatisfiable:
@@ -592,21 +603,23 @@ namespace Tween
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
                     //仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
-                    return "Warn:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Warn:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    string errMsg = GetErrorMessageJson(content);
-                    if (string.IsNullOrEmpty(errMsg))
                     {
-                        return Tween.My.Resources.Unauthorized;
-                    }
-                    else
-                    {
-                        return "Auth err:" + errMsg;
+                        Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                        string errMsg = GetErrorMessageJson(content);
+                        if (string.IsNullOrEmpty(errMsg))
+                        {
+                            return Tween.My.Resources.Resources.Unauthorized;
+                        }
+                        else
+                        {
+                            return "Auth err:" + errMsg;
+                        }
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -615,7 +628,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             postStr = postStr.Trim();
@@ -635,11 +648,11 @@ namespace Tween
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "status_with_media", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     TwitterDataModel.Status status = null;
                     try
                     {
-                        status = MyCommon.CreateDataFromJson(content);
+                        status = MyCommon.CreateDataFromJson<TwitterDataModel.Status>(content);
                     }
                     catch (SerializationException ex)
                     {
@@ -648,7 +661,7 @@ namespace Tween
                     }
                     catch (Exception ex)
                     {
-                        MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                        MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                         return "Err:Invalid Json!";
                     }
                     _followersCount = status.User.FollowersCount;
@@ -674,14 +687,16 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.BadRequest:
-                    string errMsg = GetErrorMessageJson(content);
-                    if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Warn:" + res.ToString();
-                    }
-                    else
-                    {
-                        return "Warn:" + errMsg;
+                        string errMsg = GetErrorMessageJson(content);
+                        if (string.IsNullOrEmpty(errMsg))
+                        {
+                            return "Warn:" + res.ToString();
+                        }
+                        else
+                        {
+                            return "Warn:" + errMsg;
+                        }
                     }
                     break;
                 case HttpStatusCode.Conflict:
@@ -690,7 +705,7 @@ namespace Tween
                 case HttpStatusCode.LengthRequired:
                 case HttpStatusCode.MethodNotAllowed:
                 case HttpStatusCode.NotAcceptable:
-                case HttpStatusCode.NotFound:
+                //case HttpStatusCode.NotFound:
                 case HttpStatusCode.PaymentRequired:
                 case HttpStatusCode.PreconditionFailed:
                 case HttpStatusCode.RequestedRangeNotSatisfiable:
@@ -698,21 +713,23 @@ namespace Tween
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
                     //仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
-                    return "Warn:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Warn:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    string errMsg = GetErrorMessageJson(content);
-                    if (string.IsNullOrEmpty(errMsg))
                     {
-                        return Tween.My.Resources.Unauthorized;
-                    }
-                    else
-                    {
-                        return "Auth err:" + errMsg;
+                        Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                        string errMsg = GetErrorMessageJson(content);
+                        if (string.IsNullOrEmpty(errMsg))
+                        {
+                            return Tween.My.Resources.Resources.Unauthorized;
+                        }
+                        else
+                        {
+                            return "Auth err:" + errMsg;
+                        }
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -721,7 +738,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
             if (MyCommon.TwitterApiInfo.AccessLevel != ApiAccessLevel.None)
             {
@@ -749,11 +766,11 @@ namespace Tween
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "direct_message", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     TwitterDataModel.Directmessage status = null;
                     try
                     {
-                        status = MyCommon.CreateDataFromJson(content);
+                        status = MyCommon.CreateDataFromJson<TwitterDataModel.Directmessage>(content);
                     }
                     catch (SerializationException ex)
                     {
@@ -762,7 +779,7 @@ namespace Tween
                     }
                     catch (Exception ex)
                     {
-                        MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                        MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                         return "Err:Invalid Json!";
                     }
                     _followersCount = status.Sender.FollowersCount;
@@ -782,14 +799,16 @@ namespace Tween
                     break;
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.BadRequest:
-                    string errMsg = GetErrorMessageJson(content);
-                    if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Warn:" + res.ToString();
-                    }
-                    else
-                    {
-                        return "Warn:" + errMsg;
+                        string errMsg = GetErrorMessageJson(content);
+                        if (string.IsNullOrEmpty(errMsg))
+                        {
+                            return "Warn:" + res.ToString();
+                        }
+                        else
+                        {
+                            return "Warn:" + errMsg;
+                        }
                     }
                     break;
                 case HttpStatusCode.Conflict:
@@ -808,19 +827,21 @@ namespace Tween
                     //仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
                     return "Warn:" + res.ToString();
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    string errMsg = GetErrorMessageJson(content);
-                    if (string.IsNullOrEmpty(errMsg))
                     {
-                        return Tween.My.Resources.Unauthorized;
-                    }
-                    else
-                    {
-                        return "Auth err:" + errMsg;
+                        Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                        string errMsg = GetErrorMessageJson(content);
+                        if (string.IsNullOrEmpty(errMsg))
+                        {
+                            return Tween.My.Resources.Resources.Unauthorized;
+                        }
+                        else
+                        {
+                            return "Auth err:" + errMsg;
+                        }
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -829,7 +850,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -847,15 +868,15 @@ namespace Tween
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.NotFound:
                     return "";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -863,19 +884,19 @@ namespace Tween
         {
             if (MyCommon._endingFlag)
                 return "";
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             //データ部分の生成
             long target = id;
-            PostClass post = TabInformations.GetInstance().Item[id];
+            PostClass post = TabInformations.GetInstance().Item(id);
             if (post == null)
             {
                 return "Err:Target isn't found.";
             }
-            if (TabInformations.GetInstance().Item[id].RetweetedId > 0)
+            if (TabInformations.GetInstance().Item(id).RetweetedId > 0)
             {
-                target = TabInformations.GetInstance().Item[id].RetweetedId;
+                target = TabInformations.GetInstance().Item(id).RetweetedId;
                 //再RTの場合は元発言をRT
             }
 
@@ -900,20 +921,20 @@ namespace Tween
             //End Select
             if (res == HttpStatusCode.Unauthorized)
             {
-                return Tween.My.Resources.Unauthorized + " or blocked user.";
+                return Tween.My.Resources.Resources.Unauthorized + " or blocked user.";
             }
             else if (res != HttpStatusCode.OK)
             {
-                return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             Google.GASender.GetInstance().TrackEventWithCategory("post", "retweet", this.UserId);
-            Twitter.AccountState = ACCOUNT_STATE.Valid;
+            Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
 
             TwitterDataModel.Status status = null;
             try
             {
-                status = MyCommon.CreateDataFromJson(content);
+                status = MyCommon.CreateDataFromJson<TwitterDataModel.Status>(content);
             }
             catch (SerializationException ex)
             {
@@ -922,7 +943,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Err:Invalid Json!";
             }
 
@@ -959,7 +980,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
             if (MyCommon.TwitterApiInfo.AccessLevel != ApiAccessLevel.None)
             {
@@ -985,15 +1006,15 @@ namespace Tween
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy_direct_message", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.NotFound:
                     return "";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1002,7 +1023,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -1021,16 +1042,16 @@ namespace Tween
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "follow", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden(" + GetCurrentMethod().Name + ")";
+                        return "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                     }
                     else
                     {
@@ -1038,7 +1059,7 @@ namespace Tween
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1047,7 +1068,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -1059,23 +1080,23 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy_friendships", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden(" + GetCurrentMethod().Name + ")";
+                        return "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                     }
                     else
                     {
@@ -1083,7 +1104,7 @@ namespace Tween
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1092,7 +1113,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -1104,23 +1125,23 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "block", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden(" + GetCurrentMethod().Name + ")";
+                        return "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                     }
                     else
                     {
@@ -1128,7 +1149,7 @@ namespace Tween
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1137,7 +1158,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -1149,23 +1170,23 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy_block", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden(" + GetCurrentMethod().Name + ")";
+                        return "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                     }
                     else
                     {
@@ -1173,7 +1194,7 @@ namespace Tween
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1182,7 +1203,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -1194,23 +1215,23 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "spam", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden(" + GetCurrentMethod().Name + ")";
+                        return "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                     }
                     else
                     {
@@ -1218,7 +1239,7 @@ namespace Tween
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1227,7 +1248,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             Google.GASender.GetInstance().TrackPage("/friendships", this.UserId);
@@ -1239,7 +1260,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
@@ -1247,9 +1268,9 @@ namespace Tween
                 case HttpStatusCode.OK:
                     try
                     {
-                        var relation = MyCommon.CreateDataFromJson(content);
-                        isFollowing = relation.Relationship.Source.Following;
-                        isFollowed = relation.Relationship.Source.FollowedBy;
+                        var relation = MyCommon.CreateDataFromJson<TwitterDataModel.Relationship>(content);
+                        isFollowing = relation.Relationship_.Source.Following;
+                        isFollowed = relation.Relationship_.Source.FollowedBy;
                         return "";
                     }
                     catch (SerializationException ex)
@@ -1259,17 +1280,17 @@ namespace Tween
                     }
                     catch (Exception ex)
                     {
-                        MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                        MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                         return "Err:Invalid Json!";
                     }
                     break;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1278,7 +1299,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             Google.GASender.GetInstance().TrackPage("/showuser", this.UserId);
@@ -1291,16 +1312,16 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     try
                     {
-                        user = MyCommon.CreateDataFromJson(content);
+                        user = MyCommon.CreateDataFromJson<TwitterDataModel.User>(content);
                     }
                     catch (SerializationException ex)
                     {
@@ -1309,18 +1330,18 @@ namespace Tween
                     }
                     catch (Exception ex)
                     {
-                        MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                        MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                         return "Err:Invalid Json!";
                     }
                     return "";
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return Tween.My.Resources.Unauthorized;
+                        return Tween.My.Resources.Resources.Unauthorized;
                     }
                     else
                     {
@@ -1328,7 +1349,7 @@ namespace Tween
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1337,7 +1358,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             Google.GASender.GetInstance().TrackPage("/retweet_count", this.UserId);
@@ -1365,7 +1386,7 @@ namespace Tween
                     case HttpStatusCode.OK:
                         try
                         {
-                            Int64[] ids = MyCommon.CreateDataFromJson(content);
+                            Int64[] ids = MyCommon.CreateDataFromJson<long[]>(content);
                             retweeted_count += ids.Length;
                             if (ids.Length < 100)
                                 break; // TODO: might not be correct. Was : Exit For
@@ -1379,7 +1400,7 @@ namespace Tween
                         catch (Exception ex)
                         {
                             retweeted_count = -1;
-                            MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                            MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                             return "Err:Invalid Json!";
                         }
                         break;
@@ -1388,11 +1409,11 @@ namespace Tween
                         return "Err:API Limits?";
                     case HttpStatusCode.Unauthorized:
                         retweeted_count = -1;
-                        Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                        return Tween.My.Resources.Unauthorized;
+                        Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                        return Tween.My.Resources.Resources.Unauthorized;
                     default:
                         retweeted_count = -1;
-                        return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                        return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                 }
             }
             return "";
@@ -1403,7 +1424,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             //If Me.favQueue Is Nothing Then Me.favQueue = New FavoriteQueue(Me)
@@ -1420,26 +1441,26 @@ namespace Tween
             {
                 //Me.favQueue.Add(id)
                 //Return "Err:->FavoriteQueue:" + ex.Message + "(" + GetCurrentMethod.Name + ")"
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "favorites", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     //Me.favQueue.FavoriteCacheStart()
                     if (!_restrictFavCheck)
                         return "";
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden(" + GetCurrentMethod().Name + ")";
+                        return "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                     }
                     else
                     {
@@ -1454,7 +1475,7 @@ namespace Tween
                 //    'Me.favQueue.Add(id)
                 //    Return "Err:->FavoriteQueue:" + res.ToString + "(" + GetCurrentMethod.Name + ")"
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             //http://twitter.com/statuses/show/id.xml APIを発行して本文を取得
@@ -1473,11 +1494,11 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     TwitterDataModel.Status status = null;
                     try
                     {
-                        status = MyCommon.CreateDataFromJson(content);
+                        status = MyCommon.CreateDataFromJson<TwitterDataModel.Status>(content);
                     }
                     catch (SerializationException ex)
                     {
@@ -1486,7 +1507,7 @@ namespace Tween
                     }
                     catch (Exception ex)
                     {
-                        MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                        MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                         return "Err:Invalid Json!";
                     }
                     if (status.Favorited)
@@ -1499,12 +1520,12 @@ namespace Tween
                     }
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1513,7 +1534,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             //If Me.favQueue Is Nothing Then Me.favQueue = New FavoriteQueue(Me)
@@ -1538,16 +1559,16 @@ namespace Tween
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy_favorites", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden(" + GetCurrentMethod().Name + ")";
+                        return "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                     }
                     else
                     {
@@ -1555,7 +1576,7 @@ namespace Tween
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1564,7 +1585,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -1582,16 +1603,16 @@ namespace Tween
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "update_profile", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden(" + GetCurrentMethod().Name + ")";
+                        return "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                     }
                     else
                     {
@@ -1599,7 +1620,7 @@ namespace Tween
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1608,7 +1629,7 @@ namespace Tween
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -1619,23 +1640,23 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "update_profile_image", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return "Err:Forbidden(" + GetCurrentMethod().Name + ")";
+                        return "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                     }
                     else
                     {
@@ -1643,7 +1664,7 @@ namespace Tween
                     }
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
@@ -1662,9 +1683,9 @@ namespace Tween
             get { return twCon.Password; }
         }
 
-        private static ACCOUNT_STATE _accountState = ACCOUNT_STATE.Valid;
+        private static MyCommon.ACCOUNT_STATE _accountState = MyCommon.ACCOUNT_STATE.Valid;
 
-        public static ACCOUNT_STATE AccountState
+        public static MyCommon.ACCOUNT_STATE AccountState
         {
             get { return _accountState; }
             set { _accountState = value; }
@@ -1854,9 +1875,9 @@ namespace Tween
             }
         }
 
-        public string GetTimelineApi(bool read, WORKERTYPE gType, bool more, bool startup)
+        public string GetTimelineApi(bool read, Tween.MyCommon.WORKERTYPE gType, bool more, bool startup)
         {
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             if (MyCommon._endingFlag)
@@ -1865,22 +1886,22 @@ namespace Tween
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
             int count = AppendSettingDialog.Instance.CountApi;
-            if (gType == WORKERTYPE.Reply)
-                count = AppendSettingDialog.Instance.CountApiReply();
+            if (gType == MyCommon.WORKERTYPE.Reply)
+                count = AppendSettingDialog.Instance.CountApiReply;
             if (AppendSettingDialog.Instance.UseAdditionalCount)
             {
                 if (more && AppendSettingDialog.Instance.MoreCountApi != 0)
                 {
                     count = AppendSettingDialog.Instance.MoreCountApi;
                 }
-                else if (startup && AppendSettingDialog.Instance.FirstCountApi != 0 && gType == WORKERTYPE.Timeline)
+                else if (startup && AppendSettingDialog.Instance.FirstCountApi != 0 && gType == MyCommon.WORKERTYPE.Timeline)
                 {
                     count = AppendSettingDialog.Instance.FirstCountApi;
                 }
             }
             try
             {
-                if (gType == WORKERTYPE.Timeline)
+                if (gType == MyCommon.WORKERTYPE.Timeline)
                 {
                     if (more)
                     {
@@ -1910,18 +1931,18 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            if (gType == WORKERTYPE.Timeline)
+            if (gType == MyCommon.WORKERTYPE.Timeline)
             {
                 return CreatePostsFromJson(content, gType, null, read, count, ref this.minHomeTimeline);
             }
@@ -1933,7 +1954,7 @@ namespace Tween
 
         public string GetUserTimelineApi(bool read, int count, string userName, TabClass tab, bool more)
         {
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             if (MyCommon._endingFlag)
@@ -1973,21 +1994,21 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     return "Err:@" + userName + "'s Tweets are protected.";
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             List<TwitterDataModel.Status> items = null;
             try
             {
-                items = MyCommon.CreateDataFromJson(content);
+                items = MyCommon.CreateDataFromJson<List<TwitterDataModel.Status>>(content);
             }
             catch (SerializationException ex)
             {
@@ -1996,7 +2017,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Invalid Json!";
             }
 
@@ -2021,7 +2042,7 @@ namespace Tween
 
         public string GetStatusApi(bool read, Int64 id, ref PostClass post)
         {
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             if (MyCommon._endingFlag)
@@ -2042,23 +2063,23 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 case HttpStatusCode.Forbidden:
                     return "Err:Protected user's tweet";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             TwitterDataModel.Status status = null;
             try
             {
-                status = MyCommon.CreateDataFromJson(content);
+                status = MyCommon.CreateDataFromJson<TwitterDataModel.Status>(content);
             }
             catch (SerializationException ex)
             {
@@ -2067,7 +2088,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Invalid Json!";
             }
 
@@ -2118,12 +2139,12 @@ namespace Tween
                 //Source取得（htmlの場合は、中身を取り出し）
                 post.Source = retweeted.Source;
                 //Reply先
-                long.TryParse(retweeted.InReplyToStatusId, out post.InReplyToStatusId);
+                { long t; long.TryParse(retweeted.InReplyToStatusId, out t); post.InReplyToStatusId = t; }
                 post.InReplyToUser = retweeted.InReplyToScreenName;
-                long.TryParse(status.InReplyToUserId, out post.InReplyToUserId);
+                { long t; long.TryParse(status.InReplyToUserId, out t); post.InReplyToUserId = t; }
 
                 //幻覚fav対策
-                TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
+                TabClass tc = TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites);
                 post.IsFav = tc.Contains(post.RetweetedId);
 
                 if (retweeted.Geo != null)
@@ -2158,9 +2179,9 @@ namespace Tween
                 entities = status.Entities;
                 //Source取得（htmlの場合は、中身を取り出し）
                 post.Source = status.Source;
-                long.TryParse(status.InReplyToStatusId, out post.InReplyToStatusId);
+                { long t; long.TryParse(status.InReplyToStatusId, out t); post.InReplyToStatusId = t; }
                 post.InReplyToUser = status.InReplyToScreenName;
-                long.TryParse(status.InReplyToUserId, out post.InReplyToUserId);
+                { long t; long.TryParse(status.InReplyToUserId, out t); post.InReplyToUserId = t; }
 
                 if (status.Geo != null)
                     post.PostGeo = new PostClass.StatusGeo
@@ -2183,11 +2204,11 @@ namespace Tween
                 post.IsMe = post.ScreenName.ToLower().Equals(_uname);
 
                 //幻覚fav対策
-                TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
-                post.IsFav = tc.Contains(post.StatusId) && TabInformations.GetInstance().Item[post.StatusId].IsFav;
+                TabClass tc = TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites);
+                post.IsFav = tc.Contains(post.StatusId) && TabInformations.GetInstance().Item(post.StatusId).IsFav;
             }
             //HTMLに整形
-            post.Text = CreateHtmlAnchor(ref post.TextFromApi, post.ReplyToList, entities, post.Media);
+            { var t = post.TextFromApi; post.Text = CreateHtmlAnchor(ref t, post.ReplyToList, entities, post.Media); post.TextFromApi = t; }
             post.TextFromApi = this.ReplaceTextFromApi(post.TextFromApi, entities);
             post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
             post.TextFromApi = post.TextFromApi.Replace("<3", "♡");
@@ -2212,12 +2233,12 @@ namespace Tween
             return post;
         }
 
-        private string CreatePostsFromJson(string content, WORKERTYPE gType, TabClass tab, bool read, int count, ref long minimumId)
+        private string CreatePostsFromJson(string content, MyCommon.WORKERTYPE gType, TabClass tab, bool read, int count, ref long minimumId)
         {
             List<TwitterDataModel.Status> items = null;
             try
             {
-                items = MyCommon.CreateDataFromJson(content);
+                items = MyCommon.CreateDataFromJson<List<TwitterDataModel.Status>>(content);
             }
             catch (SerializationException ex)
             {
@@ -2226,7 +2247,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Invalid Json!";
             }
 
@@ -2271,12 +2292,12 @@ namespace Tween
             return "";
         }
 
-        private string CreatePostsFromPhoenixSearch(string content, WORKERTYPE gType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
+        private string CreatePostsFromPhoenixSearch(string content, MyCommon.WORKERTYPE gType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
         {
             TwitterDataModel.SearchResult items = null;
             try
             {
-                items = MyCommon.CreateDataFromJson(content);
+                items = MyCommon.CreateDataFromJson<TwitterDataModel.SearchResult>(content);
             }
             catch (SerializationException ex)
             {
@@ -2285,7 +2306,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Invalid Json!";
             }
 
@@ -2378,33 +2399,39 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            return CreatePostsFromJson(content, WORKERTYPE.List, tab, read, count, ref tab.OldestId);
+            var t = tab.OldestId;
+            var ret = CreatePostsFromJson(content, MyCommon.WORKERTYPE.List, tab, read, count, ref t);
+            tab.OldestId = t;
+            return ret;
         }
 
         private PostClass CheckReplyToPost(List<PostClass> relPosts)
-		{
-			PostClass tmpPost = relPosts[0];
-			PostClass lastPost = null;
-			while (tmpPost != null) {
-				if (tmpPost.InReplyToStatusId == 0)
-					return null;
-				lastPost = tmpPost;
-				var replyToPost = from p in relPostswhere p.StatusId == tmpPost.InReplyToStatusIdp;
-				tmpPost = replyToPost.FirstOrDefault();
-			}
-			return lastPost;
-		}
+        {
+            PostClass tmpPost = relPosts[0];
+            PostClass lastPost = null;
+            while (tmpPost != null)
+            {
+                if (tmpPost.InReplyToStatusId == 0)
+                    return null;
+                lastPost = tmpPost;
+                var replyToPost = from p in relPosts
+                                  where p.StatusId == tmpPost.InReplyToStatusId
+                                  select p;
+                tmpPost = replyToPost.FirstOrDefault();
+            }
+            return lastPost;
+        }
 
         public string GetRelatedResult(bool read, TabClass tab)
         {
@@ -2414,7 +2441,7 @@ namespace Tween
             if (tab.RelationTargetPost.TextFromApi.Contains("@") && tab.RelationTargetPost.InReplyToStatusId == 0)
             {
                 //検索結果対応
-                PostClass p = TabInformations.GetInstance().Item[tab.RelationTargetPost.StatusId];
+                PostClass p = TabInformations.GetInstance().Item(tab.RelationTargetPost.StatusId);
                 if (p != null && p.InReplyToStatusId > 0)
                 {
                     tab.RelationTargetPost = p;
@@ -2443,7 +2470,7 @@ namespace Tween
 
         private string GetRelatedResultsApi(bool read, PostClass post, TabClass tab, List<PostClass> relatedPosts)
         {
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             if (MyCommon._endingFlag)
@@ -2469,21 +2496,21 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             List<TwitterDataModel.RelatedResult> items = null;
             try
             {
-                items = MyCommon.CreateDataFromJson(content);
+                items = MyCommon.CreateDataFromJson<List<TwitterDataModel.RelatedResult>>(content);
             }
             catch (SerializationException ex)
             {
@@ -2492,7 +2519,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Invalid Json!";
             }
 
@@ -2510,9 +2537,9 @@ namespace Tween
 
             PostClass replyToItem = null;
             string replyToUserName = targetItem.InReplyToUser;
-            if (targetItem.InReplyToStatusId > 0 && TabInformations.GetInstance().Item[targetItem.InReplyToStatusId] != null)
+            if (targetItem.InReplyToStatusId > 0 && TabInformations.GetInstance().Item(targetItem.InReplyToStatusId) != null)
             {
-                replyToItem = TabInformations.GetInstance().Item[targetItem.InReplyToStatusId].Copy;
+                replyToItem = TabInformations.GetInstance().Item(targetItem.InReplyToStatusId).Copy();
                 replyToItem.IsRead = read;
                 if (replyToItem.IsMe && !read && _readOwnPost)
                     replyToItem.IsRead = true;
@@ -2575,7 +2602,7 @@ namespace Tween
                 if (Int64.TryParse(_match.Groups["StatusId"].Value, out _statusId))
                 {
                     PostClass p = null;
-                    PostClass _post = TabInformations.GetInstance().Item[_statusId];
+                    PostClass _post = TabInformations.GetInstance().Item(_statusId);
                     if (_post == null)
                     {
                         var rslt = this.GetStatusApi(read, _statusId, ref p);
@@ -2643,7 +2670,7 @@ namespace Tween
                 case HttpStatusCode.OK:
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             if (!TabInformations.GetInstance().ContainsTab(tab))
@@ -2656,7 +2683,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Invalid ATOM!";
             }
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(xdoc.NameTable);
@@ -2730,7 +2757,7 @@ namespace Tween
                 }
                 catch (Exception ex)
                 {
-                    MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                    MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                     continue;
                 }
 
@@ -2745,7 +2772,7 @@ namespace Tween
                         XmlNode xNode = xdoc.DocumentElement.SelectSingleNode("/search:feed/twitter:warning", nsmgr);
 
                         if (xNode != null) {
-                            return "Warn:" + xNode.InnerText + "(" + GetCurrentMethod().Name + ")";
+                            return "Warn:" + xNode.InnerText + "(" +System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                         }
                         #endif
             */
@@ -2807,7 +2834,7 @@ namespace Tween
                 case HttpStatusCode.OK:
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             if (!TabInformations.GetInstance().ContainsTab(tab))
@@ -2815,18 +2842,22 @@ namespace Tween
 
             //' TODO
             //' 遡るための情報max_idやnext_pageの情報を保持する
-
-            return CreatePostsFromPhoenixSearch(content, WORKERTYPE.PublicSearch, tab, read, count, ref tab.OldestId, ref tab.NextPageQuery);
+            var oid = tab.OldestId;
+            var npq = tab.NextPageQuery;
+            var ret = CreatePostsFromPhoenixSearch(content, MyCommon.WORKERTYPE.PublicSearch, tab, read, count, ref oid, ref npq);
+            tab.OldestId = oid;
+            tab.NextPageQuery = npq;
+            return ret;
         }
 
-        private string CreateDirectMessagesFromJson(string content, WORKERTYPE gType, bool read)
+        private string CreateDirectMessagesFromJson(string content, MyCommon.WORKERTYPE gType, bool read)
         {
             List<TwitterDataModel.Directmessage> item = null;
             try
             {
-                if (gType == WORKERTYPE.UserStream)
+                if (gType == MyCommon.WORKERTYPE.UserStream)
                 {
-                    List<TwitterDataModel.DirectmessageEvent> itm = MyCommon.CreateDataFromJson(content);
+                    List<TwitterDataModel.DirectmessageEvent> itm = MyCommon.CreateDataFromJson<List<TwitterDataModel.DirectmessageEvent>>(content);
                     item = new List<TwitterDataModel.Directmessage>();
                     foreach (TwitterDataModel.DirectmessageEvent dat in itm)
                     {
@@ -2835,7 +2866,7 @@ namespace Tween
                 }
                 else
                 {
-                    item = MyCommon.CreateDataFromJson(content);
+                    item = MyCommon.CreateDataFromJson<List<TwitterDataModel.Directmessage>>(content);
                 }
             }
             catch (SerializationException ex)
@@ -2845,7 +2876,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Invalid Json!";
             }
 
@@ -2855,9 +2886,9 @@ namespace Tween
                 try
                 {
                     post.StatusId = message.Id;
-                    if (gType != WORKERTYPE.UserStream)
+                    if (gType != MyCommon.WORKERTYPE.UserStream)
                     {
-                        if (gType == WORKERTYPE.DirectMessegeRcv)
+                        if (gType == MyCommon.WORKERTYPE.DirectMessegeRcv)
                         {
                             if (minDirectmessage > post.StatusId)
                                 minDirectmessage = post.StatusId;
@@ -2872,7 +2903,7 @@ namespace Tween
                     //二重取得回避
                     lock (LockObj)
                     {
-                        if (TabInformations.GetInstance().GetTabByType(TabUsageType.DirectMessage).Contains(post.StatusId))
+                        if (TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.DirectMessage).Contains(post.StatusId))
                             continue;
                     }
                     //sender_id
@@ -2888,7 +2919,7 @@ namespace Tween
 
                     //以下、ユーザー情報
                     TwitterDataModel.User user = null;
-                    if (gType == WORKERTYPE.UserStream)
+                    if (gType == MyCommon.WORKERTYPE.UserStream)
                     {
                         if (twCon.AuthenticatedUsername.Equals(message.Recipient.ScreenName, StringComparison.CurrentCultureIgnoreCase))
                         {
@@ -2905,7 +2936,7 @@ namespace Tween
                     }
                     else
                     {
-                        if (gType == WORKERTYPE.DirectMessegeRcv)
+                        if (gType == MyCommon.WORKERTYPE.DirectMessegeRcv)
                         {
                             user = message.Sender;
                             post.IsMe = false;
@@ -2927,7 +2958,7 @@ namespace Tween
                 }
                 catch (Exception ex)
                 {
-                    MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                    MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                     MessageBox.Show("Parse Error(CreateDirectMessagesFromJson)");
                     continue;
                 }
@@ -2945,12 +2976,12 @@ namespace Tween
             return "";
         }
 
-        public string GetDirectMessageApi(bool read, WORKERTYPE gType, bool more)
+        public string GetDirectMessageApi(bool read, Tween.MyCommon.WORKERTYPE gType, bool more)
         {
             if (MyCommon._endingFlag)
                 return "";
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
             if (MyCommon.TwitterApiInfo.AccessLevel != ApiAccessLevel.None)
             {
@@ -2963,7 +2994,7 @@ namespace Tween
 
             try
             {
-                if (gType == WORKERTYPE.DirectMessegeRcv)
+                if (gType == MyCommon.WORKERTYPE.DirectMessegeRcv)
                 {
                     if (more)
                     {
@@ -2994,15 +3025,15 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             return CreateDirectMessagesFromJson(content, gType, read);
@@ -3012,7 +3043,7 @@ namespace Tween
 
         int static_GetFavoritesApi_page;
 
-        public string GetFavoritesApi(bool read, WORKERTYPE gType, bool more)
+        public string GetFavoritesApi(bool read, Tween.MyCommon.WORKERTYPE gType, bool more)
         {
             lock (static_GetFavoritesApi_page_Init)
             {
@@ -3029,7 +3060,7 @@ namespace Tween
                 }
             }
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             if (MyCommon._endingFlag)
@@ -3059,21 +3090,21 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<TwitterDataModel.Status>));
@@ -3081,7 +3112,7 @@ namespace Tween
 
             try
             {
-                item = MyCommon.CreateDataFromJson(content);
+                item = MyCommon.CreateDataFromJson<List<TwitterDataModel.Status>>(content);
             }
             catch (SerializationException ex)
             {
@@ -3090,7 +3121,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Invalid Json!";
             }
 
@@ -3105,7 +3136,7 @@ namespace Tween
                     //二重取得回避
                     lock (LockObj)
                     {
-                        if (TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Contains(post.StatusId))
+                        if (TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).Contains(post.StatusId))
                             continue;
                     }
                     //Retweet判定
@@ -3122,9 +3153,9 @@ namespace Tween
                         //Source取得（htmlの場合は、中身を取り出し）
                         post.Source = retweeted.Source;
                         //Reply先
-                        long.TryParse(retweeted.InReplyToStatusId, out post.InReplyToStatusId);
+                        { long t; long.TryParse(retweeted.InReplyToStatusId, out t); post.InReplyToStatusId = t; }
                         post.InReplyToUser = retweeted.InReplyToScreenName;
-                        long.TryParse(retweeted.InReplyToUserId, out post.InReplyToUserId);
+                        { long t; long.TryParse(retweeted.InReplyToUserId, out t); post.InReplyToUserId = t; }
                         post.IsFav = true;
 
                         //以下、ユーザー情報
@@ -3148,9 +3179,9 @@ namespace Tween
                         entities = status.Entities;
                         //Source取得（htmlの場合は、中身を取り出し）
                         post.Source = status.Source;
-                        long.TryParse(status.InReplyToStatusId, out post.InReplyToStatusId);
+                        { long t; long.TryParse(status.InReplyToStatusId, out t); post.InReplyToStatusId = t; }
                         post.InReplyToUser = status.InReplyToScreenName;
-                        long.TryParse(status.InReplyToUserId, out post.InReplyToUserId);
+                        { long t; long.TryParse(status.InReplyToUserId, out t); post.InReplyToUserId = t; }
 
                         post.IsFav = true;
 
@@ -3164,7 +3195,7 @@ namespace Tween
                         post.IsMe = post.ScreenName.ToLower().Equals(_uname);
                     }
                     //HTMLに整形
-                    post.Text = CreateHtmlAnchor(ref post.TextFromApi, post.ReplyToList, entities, post.Media);
+                    { var t = post.TextFromApi; post.Text = CreateHtmlAnchor(ref t, post.ReplyToList, entities, post.Media); post.TextFromApi = t; }
                     post.TextFromApi = this.ReplaceTextFromApi(post.TextFromApi, entities);
                     post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
                     post.TextFromApi = post.TextFromApi.Replace("<3", "♡");
@@ -3189,7 +3220,7 @@ namespace Tween
                 }
                 catch (Exception ex)
                 {
-                    MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                    MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                     continue;
                 }
 
@@ -3207,7 +3238,7 @@ namespace Tween
                 {
                     foreach (TwitterDataModel.Urls m_loopVariable in entities.Urls)
                     {
-                        m = m_loopVariable;
+                        var m = m_loopVariable;
                         if (!string.IsNullOrEmpty(m.DisplayUrl))
                             text = text.Replace(m.Url, m.DisplayUrl);
                     }
@@ -3216,7 +3247,7 @@ namespace Tween
                 {
                     foreach (TwitterDataModel.Media m_loopVariable in entities.Media)
                     {
-                        m = m_loopVariable;
+                        var m = m_loopVariable;
                         if (!string.IsNullOrEmpty(m.DisplayUrl))
                             text = text.Replace(m.Url, m.DisplayUrl);
                     }
@@ -3258,7 +3289,7 @@ namespace Tween
 
         private string FollowerApi(ref long cursor)
         {
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -3269,26 +3300,26 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             try
             {
-                var followers = MyCommon.CreateDataFromJson(content);
+                var followers = MyCommon.CreateDataFromJson<TwitterDataModel.Ids>(content);
                 followerId.AddRange(followers.Id);
                 cursor = followers.NextCursor;
                 return "";
@@ -3300,7 +3331,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Err:Invalid Json!";
             }
         }
@@ -3331,7 +3362,7 @@ namespace Tween
 
         private string NoRetweetApi(ref long cursor)
         {
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -3342,26 +3373,26 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             try
             {
-                var ids = MyCommon.CreateDataFromJson(content);
+                var ids = MyCommon.CreateDataFromJson<long[]>(content);
                 noRTId.AddRange(ids);
                 cursor = 0;
                 //0より小さければ何でも良い。
@@ -3374,7 +3405,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Err:Invalid Json!";
             }
         }
@@ -3394,26 +3425,26 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             try
             {
-                AppendSettingDialog.Instance.TwitterConfiguration = MyCommon.CreateDataFromJson(content);
+                AppendSettingDialog.Instance.TwitterConfiguration = MyCommon.CreateDataFromJson<TwitterDataModel.Configuration>(content);
                 return "";
             }
             catch (SerializationException ex)
@@ -3423,92 +3454,112 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Err:Invalid Json!";
             }
         }
 
         public string GetListsApi()
-		{
-			if (Twitter.AccountState != ACCOUNT_STATE.Valid)
-				return "";
+        {
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
+                return "";
 
-			HttpStatusCode res = default(HttpStatusCode);
-			string content = "";
-			long cursor = -1;
+            HttpStatusCode res = default(HttpStatusCode);
+            string content = "";
+            long cursor = -1;
 
-			List<ListElement> lists = new List<ListElement>();
-			do {
-				try {
-					res = twCon.GetLists(this.Username, cursor, ref content);
-				} catch (Exception ex) {
-					return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
-				}
+            List<ListElement> lists = new List<ListElement>();
+            do
+            {
+                try
+                {
+                    res = twCon.GetLists(this.Username, cursor, ref content);
+                }
+                catch (Exception ex)
+                {
+                    return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                }
 
-				switch (res) {
-					case HttpStatusCode.OK:
-						Twitter.AccountState = ACCOUNT_STATE.Valid;
-						break;
-					case HttpStatusCode.Unauthorized:
-						Twitter.AccountState = ACCOUNT_STATE.Invalid;
-						return Tween.My.Resources.Unauthorized;
-					case HttpStatusCode.BadRequest:
-						return "Err:API Limits?";
-					default:
-						return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
-				}
+                switch (res)
+                {
+                    case HttpStatusCode.OK:
+                        Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                        return Tween.My.Resources.Resources.Unauthorized;
+                    case HttpStatusCode.BadRequest:
+                        return "Err:API Limits?";
+                    default:
+                        return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                }
 
-				try {
-					var lst = MyCommon.CreateDataFromJson(content);
-					lists.AddRange(from le in lst.Listsnew ListElement(le, this));
-					cursor = lst.NextCursor;
-				} catch (SerializationException ex) {
-					MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
-					return "Err:Json Parse Error(DataContractJsonSerializer)";
-				} catch (Exception ex) {
-					MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
-					return "Err:Invalid Json!";
-				}
-			} while (cursor != 0);
+                try
+                {
+                    var lst = MyCommon.CreateDataFromJson<TwitterDataModel.Lists>(content);
+                    lists.AddRange(from le in lst.Lists_ select new ListElement(le, this));
+                    cursor = lst.NextCursor;
+                }
+                catch (SerializationException ex)
+                {
+                    MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
+                    return "Err:Json Parse Error(DataContractJsonSerializer)";
+                }
+                catch (Exception ex)
+                {
+                    MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
+                    return "Err:Invalid Json!";
+                }
+            } while (cursor != 0);
 
-			cursor = -1;
-			content = "";
-			do {
-				try {
-					res = twCon.GetListsSubscriptions(this.Username, cursor, ref content);
-				} catch (Exception ex) {
-					return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
-				}
+            cursor = -1;
+            content = "";
+            do
+            {
+                try
+                {
+                    res = twCon.GetListsSubscriptions(this.Username, cursor, ref content);
+                }
+                catch (Exception ex)
+                {
+                    return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                }
 
-				switch (res) {
-					case HttpStatusCode.OK:
-						Twitter.AccountState = ACCOUNT_STATE.Valid;
-						break;
-					case HttpStatusCode.Unauthorized:
-						Twitter.AccountState = ACCOUNT_STATE.Invalid;
-						return Tween.My.Resources.Unauthorized;
-					case HttpStatusCode.BadRequest:
-						return "Err:API Limits?";
-					default:
-						return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
-				}
+                switch (res)
+                {
+                    case HttpStatusCode.OK:
+                        Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                        return Tween.My.Resources.Resources.Unauthorized;
+                    case HttpStatusCode.BadRequest:
+                        return "Err:API Limits?";
+                    default:
+                        return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                }
 
-				try {
-					var lst = MyCommon.CreateDataFromJson(content);
-					lists.AddRange(from le in lst.Listsnew ListElement(le, this));
-					cursor = lst.NextCursor;
-				} catch (SerializationException ex) {
-					MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
-					return "Err:Json Parse Error(DataContractJsonSerializer)";
-				} catch (Exception ex) {
-					MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
-					return "Err:Invalid Json!";
-				}
-			} while (cursor != 0);
+                try
+                {
+                    var lst = MyCommon.CreateDataFromJson<TwitterDataModel.Lists>(content);
+                    lists.AddRange(from le in lst.Lists_ select new ListElement(le, this));
+                    cursor = lst.NextCursor;
+                }
+                catch (SerializationException ex)
+                {
+                    MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
+                    return "Err:Json Parse Error(DataContractJsonSerializer)";
+                }
+                catch (Exception ex)
+                {
+                    MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
+                    return "Err:Invalid Json!";
+                }
+            } while (cursor != 0);
 
-			TabInformations.GetInstance().SubscribableLists = lists;
-			return "";
-		}
+            TabInformations.GetInstance().SubscribableLists = lists;
+            return "";
+        }
 
         public string DeleteList(string list_id)
         {
@@ -3521,22 +3572,22 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy_list", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             return "";
@@ -3553,27 +3604,27 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("get", "update_list", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             try
             {
-                var le = MyCommon.CreateDataFromJson(content);
+                var le = MyCommon.CreateDataFromJson<TwitterDataModel.ListElementData>(content);
                 ListElement newList = new ListElement(le, this);
                 list.Description = newList.Description;
                 list.Id = newList.Id;
@@ -3594,14 +3645,14 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Err:Invalid Json!";
             }
         }
 
         public string GetListMembers(string list_id, List<UserInfo> lists, ref long cursor)
         {
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -3620,20 +3671,20 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             try
             {
-                var users = MyCommon.CreateDataFromJson(content);
+                var users = MyCommon.CreateDataFromJson<TwitterDataModel.Users>(content);
                 Array.ForEach<TwitterDataModel.User>(users.users, new Action<TwitterDataModel.User>(u => { lists.Add(new UserInfo(u)); }));
                 cursor = users.NextCursor;
                 return "";
@@ -3645,7 +3696,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Err:Invalid Json!";
             }
 
@@ -3654,7 +3705,7 @@ namespace Tween
 
         public string CreateListApi(string listName, bool isPrivate, string description)
         {
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -3666,27 +3717,27 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "create_list", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             try
             {
-                var le = MyCommon.CreateDataFromJson(content);
+                var le = MyCommon.CreateDataFromJson<TwitterDataModel.ListElementData>(content);
                 TabInformations.GetInstance().SubscribableLists.Add(new ListElement(le, this));
                 return "";
             }
@@ -3697,7 +3748,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Err:Invalid Json!";
             }
         }
@@ -3706,7 +3757,7 @@ namespace Tween
         {
             value = false;
 
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -3718,29 +3769,29 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 case HttpStatusCode.NotFound:
                     value = false;
                     return "";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             try
             {
-                var u = MyCommon.CreateDataFromJson(content);
+                var u = MyCommon.CreateDataFromJson<TwitterDataModel.User>(content);
                 value = true;
                 return "";
             }
@@ -3762,22 +3813,22 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "add_user_to_list", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:" + GetErrorMessageJson(content);
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             return "";
@@ -3794,22 +3845,22 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
                     Google.GASender.GetInstance().TrackEventWithCategory("post", "remove_user_from_list", this.UserId);
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:" + GetErrorMessageJson(content);
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             return "";
@@ -3971,7 +4022,7 @@ namespace Tween
                 {
                     foreach (TwitterDataModel.Urls ent_loopVariable in entities.Urls)
                     {
-                        ent = ent_loopVariable;
+                        var ent = ent_loopVariable;
                         if (string.IsNullOrEmpty(ent.DisplayUrl))
                         {
                             etInfo.Add(ent.Indices[0], new EntityInfo
@@ -4002,7 +4053,7 @@ namespace Tween
                 {
                     foreach (TwitterDataModel.Hashtags ent_loopVariable in entities.Hashtags)
                     {
-                        ent = ent_loopVariable;
+                        var ent = ent_loopVariable;
                         string hash = Text.Substring(ent.Indices[0], ent.Indices[1] - ent.Indices[0]);
                         etInfo.Add(ent.Indices[0], new EntityInfo
                         {
@@ -4021,7 +4072,7 @@ namespace Tween
                 {
                     foreach (TwitterDataModel.UserMentions ent_loopVariable in entities.UserMentions)
                     {
-                        ent = ent_loopVariable;
+                        var ent = ent_loopVariable;
                         string screenName = Text.Substring(ent.Indices[0] + 1, ent.Indices[1] - ent.Indices[0] - 1);
                         etInfo.Add(ent.Indices[0] + 1, new EntityInfo
                         {
@@ -4038,7 +4089,7 @@ namespace Tween
                 {
                     foreach (TwitterDataModel.Media ent_loopVariable in entities.Media)
                     {
-                        ent = ent_loopVariable;
+                        var ent = ent_loopVariable;
                         if (ent.Type == "photo")
                         {
                             etInfo.Add(ent.Indices[0], new EntityInfo
@@ -4062,7 +4113,7 @@ namespace Tween
                         ret = "";
                         foreach (KeyValuePair<int, Twitter.EntityInfo> et_loopVariable in etInfo)
                         {
-                            et = et_loopVariable;
+                            var et = et_loopVariable;
                             ret += Text.Substring(idx, et.Key - idx) + et.Value.Html;
                             idx = et.Value.EndIndex;
                         }
@@ -4111,11 +4162,11 @@ namespace Tween
             {
                 if (post.Source == "web")
                 {
-                    post.SourceHtml = Tween.My.Resources.WebSourceString;
+                    post.SourceHtml = Tween.My.Resources.Resources.WebSourceString;
                 }
                 else if (post.Source == "Keitai Mail")
                 {
-                    post.SourceHtml = Tween.My.Resources.KeitaiMailSourceString;
+                    post.SourceHtml = Tween.My.Resources.Resources.KeitaiMailSourceString;
                 }
                 else
                 {
@@ -4126,7 +4177,7 @@ namespace Tween
 
         public bool GetInfoApi(ApiInfo info)
         {
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return true;
 
             if (MyCommon._endingFlag)
@@ -4149,7 +4200,7 @@ namespace Tween
 
             try
             {
-                var limit = MyCommon.CreateDataFromJson(content);
+                var limit = MyCommon.CreateDataFromJson<TwitterDataModel.RateLimitStatus>(content);
                 ApiInformationChangedEventArgs arg = new ApiInformationChangedEventArgs();
                 arg.ApiInfo.MaxCount = limit.HourlyLimit;
                 arg.ApiInfo.RemainCount = limit.RemainingHits;
@@ -4174,7 +4225,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 MyCommon.TwitterApiInfo.Initialize();
                 return false;
             }
@@ -4182,7 +4233,7 @@ namespace Tween
 
         public string GetBlockUserIds()
         {
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != MyCommon.ACCOUNT_STATE.Valid)
                 return "";
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -4194,26 +4245,26 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + GetCurrentMethod().Name + ")";
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Unauthorized;
+                    Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
+                    return Tween.My.Resources.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + GetCurrentMethod().Name + ")";
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
             try
             {
-                var Ids = MyCommon.CreateDataFromJson(content);
+                var Ids = MyCommon.CreateDataFromJson<List<long>>(content);
                 if (Ids.Contains(this.UserId))
                     Ids.Remove(this.UserId);
                 TabInformations.GetInstance().BlockIds.AddRange(Ids);
@@ -4226,7 +4277,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MyCommon.TraceOut(ex, GetCurrentMethod().Name + " " + content);
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Err:Invalid Json!";
             }
         }
@@ -4315,7 +4366,7 @@ namespace Tween
 
         public class FormattedEvent
         {
-            public EVENTTYPE Eventtype { get; set; }
+            public Tween.MyCommon.EVENTTYPE Eventtype { get; set; }
 
             public DateTime CreatedAt { get; set; }
 
@@ -4336,9 +4387,9 @@ namespace Tween
         {
             public string Name;
 
-            public EVENTTYPE Type;
+            public Tween.MyCommon.EVENTTYPE Type;
 
-            public EventTypeTableElement(string name, EVENTTYPE type)
+            public EventTypeTableElement(string name, Tween.MyCommon.EVENTTYPE type)
             {
                 this.Name = name;
                 this.Type = type;
@@ -4346,23 +4397,23 @@ namespace Tween
         }
 
         private EventTypeTableElement[] EventTable = {
-			new EventTypeTableElement("favorite", EVENTTYPE.Favorite),
-			new EventTypeTableElement("unfavorite", EVENTTYPE.Unfavorite),
-			new EventTypeTableElement("follow", EVENTTYPE.Follow),
-			new EventTypeTableElement("list_member_added", EVENTTYPE.ListMemberAdded),
-			new EventTypeTableElement("list_member_removed", EVENTTYPE.ListMemberRemoved),
-			new EventTypeTableElement("block", EVENTTYPE.Block),
-			new EventTypeTableElement("unblock", EVENTTYPE.Unblock),
-			new EventTypeTableElement("user_update", EVENTTYPE.UserUpdate),
-			new EventTypeTableElement("deleted", EVENTTYPE.Deleted),
-			new EventTypeTableElement("list_created", EVENTTYPE.ListCreated),
-			new EventTypeTableElement("list_updated", EVENTTYPE.ListUpdated)
+			new EventTypeTableElement("favorite", MyCommon.EVENTTYPE.Favorite),
+			new EventTypeTableElement("unfavorite", MyCommon.EVENTTYPE.Unfavorite),
+			new EventTypeTableElement("follow", MyCommon.EVENTTYPE.Follow),
+			new EventTypeTableElement("list_member_added", MyCommon.EVENTTYPE.ListMemberAdded),
+			new EventTypeTableElement("list_member_removed", MyCommon.EVENTTYPE.ListMemberRemoved),
+			new EventTypeTableElement("block",MyCommon. EVENTTYPE.Block),
+			new EventTypeTableElement("unblock",MyCommon. EVENTTYPE.Unblock),
+			new EventTypeTableElement("user_update",MyCommon. EVENTTYPE.UserUpdate),
+			new EventTypeTableElement("deleted", MyCommon.EVENTTYPE.Deleted),
+			new EventTypeTableElement("list_created", MyCommon.EVENTTYPE.ListCreated),
+			new EventTypeTableElement("list_updated", MyCommon.EVENTTYPE.ListUpdated)
 		};
 
-        public EVENTTYPE EventNameToEventType(string EventName)
-		{
-			return (from tbl in EventTablewhere tbl.Name.Equals(EventName)tbl.Type).FirstOrDefault();
-		}
+        public MyCommon.EVENTTYPE EventNameToEventType(string EventName)
+        {
+            return (from tbl in EventTable where tbl.Name.Equals(EventName) select tbl.Type).FirstOrDefault();
+        }
 
         public bool IsUserstreamDataReceived
         {
@@ -4460,11 +4511,12 @@ namespace Tween
 
                 if (isDm)
                 {
-                    CreateDirectMessagesFromJson(res.ToString(), WORKERTYPE.UserStream, false);
+                    CreateDirectMessagesFromJson(res.ToString(), MyCommon.WORKERTYPE.UserStream, false);
                 }
                 else
                 {
-                    CreatePostsFromJson(res.ToString(), WORKERTYPE.Timeline, null, false, null, ref null);
+                    long t = -1;
+                    CreatePostsFromJson(res.ToString(), MyCommon.WORKERTYPE.Timeline, null, false, 0, ref t);
                 }
             }
             catch (NullReferenceException ex)
@@ -4483,7 +4535,7 @@ namespace Tween
             TwitterDataModel.EventData eventData = null;
             try
             {
-                eventData = MyCommon.CreateDataFromJson(content);
+                eventData = MyCommon.CreateDataFromJson<TwitterDataModel.EventData>(content);
             }
             catch (SerializationException ex)
             {
@@ -4530,30 +4582,30 @@ namespace Tween
                     }
                     if (TabInformations.GetInstance().ContainsKey(eventData.TargetObject.Id))
                     {
-                        PostClass post = TabInformations.GetInstance().Item[eventData.TargetObject.Id];
+                        PostClass post = TabInformations.GetInstance().Item(eventData.TargetObject.Id);
                         if (eventData.Event == "favorite")
                         {
                             if (evt.Username.ToLower().Equals(_uname))
                             {
                                 post.IsFav = true;
-                                TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
                             }
                             else
                             {
                                 post.FavoritedCount += 1;
-                                if (!TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Contains(post.StatusId))
+                                if (!TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).Contains(post.StatusId))
                                 {
                                     if (AppendSettingDialog.Instance.FavEventUnread && post.IsRead)
                                     {
                                         post.IsRead = false;
                                     }
-                                    TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                    TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
                                 }
                                 else
                                 {
                                     if (AppendSettingDialog.Instance.FavEventUnread)
                                     {
-                                        TabInformations.GetInstance().SetRead(false, TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).TabName, TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).IndexOf(post.StatusId));
+                                        TabInformations.GetInstance().SetRead(false, TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).TabName, TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).IndexOf(post.StatusId));
                                     }
                                 }
                             }
@@ -4738,10 +4790,10 @@ namespace Tween
                         switch (res)
                         {
                             case HttpStatusCode.OK:
-                                Twitter.AccountState = ACCOUNT_STATE.Valid;
+                                Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
                                 break;
                             case HttpStatusCode.Unauthorized:
-                                Twitter.AccountState = ACCOUNT_STATE.Invalid;
+                                Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
                                 sleepSec = 120;
                                 continue;
                         }
@@ -4755,7 +4807,7 @@ namespace Tween
 
                         sr = new StreamReader(st);
 
-                        while (_streamActive && !sr.EndOfStream && Twitter.AccountState == ACCOUNT_STATE.Valid)
+                        while (_streamActive && !sr.EndOfStream && Twitter.AccountState == MyCommon.ACCOUNT_STATE.Valid)
                         {
                             if (StatusArrived != null)
                             {
@@ -4764,7 +4816,7 @@ namespace Tween
                             //Me.LastTime = Now
                         }
 
-                        if (sr.EndOfStream || Twitter.AccountState == ACCOUNT_STATE.Invalid)
+                        if (sr.EndOfStream || Twitter.AccountState == MyCommon.ACCOUNT_STATE.Invalid)
                         {
                             sleepSec = 30;
                             //TraceOut("Stop:EndOfStream")
@@ -4779,7 +4831,7 @@ namespace Tween
                             sleepSec = 30;
                             //TraceOut("Stop:Timeout")
                         }
-                        else if (ex.Response != null && ((HttpWebResponse)ex.Response).StatusCode == 420)
+                        else if (ex.Response != null && (int)((HttpWebResponse)ex.Response).StatusCode == 420)
                         {
                             //TraceOut("Stop:Connection Limit")
                             break; // TODO: might not be correct. Was : Exit Do
