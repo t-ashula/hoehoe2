@@ -8,9 +8,9 @@ namespace Tween
 
         string GetFileOpenDialogFilter();
 
-        UploadFileType GetFileType(string ext);
+        Tween.MyCommon.UploadFileType GetFileType(string ext);
 
-        bool IsSupportedFileType(UploadFileType type);
+        bool IsSupportedFileType(Tween.MyCommon.UploadFileType type);
 
         bool CheckValidFilesize(string ext, long fileSize);
 
