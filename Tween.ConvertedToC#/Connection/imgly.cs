@@ -163,18 +163,18 @@ namespace Tween
             return "Image Files(*.gif;*.jpg;*.jpeg;*.png)|*.gif;*.jpg;*.jpeg;*.png";
         }
 
-        public UploadFileType GetFileType(string ext)
+        public Tween.MyCommon.UploadFileType GetFileType(string ext)
         {
             if (this.CheckValidExtension(ext))
             {
-                return UploadFileType.Picture;
+                return Tween.MyCommon.UploadFileType.Picture;
             }
-            return UploadFileType.Invalid;
+            return Tween.MyCommon.UploadFileType.Invalid;
         }
 
-        public bool IsSupportedFileType(UploadFileType type)
+        public bool IsSupportedFileType(Tween.MyCommon.UploadFileType type)
         {
-            return type.Equals(UploadFileType.Picture);
+            return type.Equals(Tween.MyCommon.UploadFileType.Picture);
         }
 
         public bool CheckValidFilesize(string ext, long fileSize)
