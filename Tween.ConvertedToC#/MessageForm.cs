@@ -2,7 +2,7 @@ namespace Tween
 {
     public partial class MessageForm
     {
-        public new Windows.Forms.DialogResult ShowDialog(string message)
+        public new System.Windows.Forms.DialogResult ShowDialog(string message)
         {
             Label1.Text = message;
 
