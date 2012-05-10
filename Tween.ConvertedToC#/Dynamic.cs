@@ -324,8 +324,10 @@ namespace Tween
             try
             {
                 module = assembly.DefineDynamicModule("Module");
+            }
+            finally
+            {
 #if ENABLE_LINQ_PARTIAL_TRUST
-			} finally {
 				PermissionSet.RevertAssert();
 #endif
             }
@@ -372,8 +374,10 @@ namespace Tween
                     Type result = tb.CreateType();
                     classCount += 1;
                     return result;
+                }
+                finally
+                {
 #if ENABLE_LINQ_PARTIAL_TRUST
-				} finally {
 					PermissionSet.RevertAssert();
 #endif
                 }
