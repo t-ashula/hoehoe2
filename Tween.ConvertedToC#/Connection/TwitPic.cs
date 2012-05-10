@@ -161,7 +161,7 @@ namespace Tween
             param.Add("message", message);
             List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
-            if (this.GetFileType(mediaFile.Extension) == UploadFileType.Picture)
+            if (this.GetFileType(mediaFile.Extension) == MyCommon.UploadFileType.Picture)
             {
                 this.InstanceTimeout = 60000;
                 //タイムアウト60秒
@@ -188,18 +188,18 @@ namespace Tween
             return "Image Files(*" + string.Join(";*", pictureExt) + ")|*" + string.Join(";*", pictureExt) + "|Videos(*" + string.Join(";*", multimediaExt) + ")|*" + string.Join(";*", multimediaExt);
         }
 
-        public UploadFileType GetFileType(string ext)
+        public MyCommon.UploadFileType GetFileType(string ext)
         {
             if (Array.IndexOf(pictureExt, ext.ToLower()) > -1)
-                return UploadFileType.Picture;
+                return MyCommon.UploadFileType.Picture;
             if (Array.IndexOf(multimediaExt, ext.ToLower()) > -1)
-                return UploadFileType.MultiMedia;
-            return UploadFileType.Invalid;
+                return MyCommon.UploadFileType.MultiMedia;
+            return MyCommon.UploadFileType.Invalid;
         }
 
-        public bool IsSupportedFileType(UploadFileType type)
+        public bool IsSupportedFileType(MyCommon.UploadFileType type)
         {
-            return !type.Equals(UploadFileType.Invalid);
+            return !type.Equals(MyCommon.UploadFileType.Invalid);
         }
 
         public bool CheckValidFilesize(string ext, long fileSize)
