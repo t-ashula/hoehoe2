@@ -237,7 +237,8 @@ namespace Tween
 
         public static void TraceOut(Exception ex, string Message)
         {
-            string buf = ExceptionOutMessage(ex);
+            bool a = true;
+            string buf = ExceptionOutMessage(ex, ref a);
             TraceOut(TraceFlag, Message + Environment.NewLine + buf);
         }
 
@@ -258,13 +259,13 @@ namespace Tween
                 using (System.IO.StreamWriter writer = new System.IO.StreamWriter(fileName))
                 {
                     writer.WriteLine("**** TraceOut: {0} ****", DateTime.Now.ToString());
-                    writer.WriteLine(Tween.My.Resources.TraceOutText1);
-                    writer.WriteLine(Tween.My.Resources.TraceOutText2);
+                    writer.WriteLine(Tween.My.Resources.Resources.TraceOutText1);
+                    writer.WriteLine(Tween.My.Resources.Resources.TraceOutText2);
                     writer.WriteLine();
-                    writer.WriteLine(Tween.My.Resources.TraceOutText3);
-                    writer.WriteLine(Tween.My.Resources.TraceOutText4, Environment.OSVersion.VersionString);
-                    writer.WriteLine(Tween.My.Resources.TraceOutText5, Environment.Version.ToString());
-                    writer.WriteLine(Tween.My.Resources.TraceOutText6, fileVersion);
+                    writer.WriteLine(Tween.My.Resources.Resources.TraceOutText3);
+                    writer.WriteLine(Tween.My.Resources.Resources.TraceOutText4, Environment.OSVersion.VersionString);
+                    writer.WriteLine(Tween.My.Resources.Resources.TraceOutText5, Environment.Version.ToString());
+                    writer.WriteLine(Tween.My.Resources.Resources.TraceOutText6, fileVersion);
                     writer.WriteLine(Message);
                     writer.WriteLine();
                 }
@@ -276,14 +277,14 @@ namespace Tween
         // 文頭メッセージ、権限、動作環境
         // Dataプロパティにある終了許可フラグのパースもここで行う
 
-        public static string ExceptionOutMessage(Exception ex, ref bool IsTerminatePermission = true)
+        public static string ExceptionOutMessage(Exception ex, ref bool IsTerminatePermission)
         {
             if (ex == null)
                 return "";
 
             StringBuilder buf = new StringBuilder();
 
-            buf.AppendFormat(Tween.My.Resources.UnhandledExceptionText8, ex.GetType().FullName, ex.Message);
+            buf.AppendFormat(Tween.My.Resources.Resources.UnhandledExceptionText8, ex.GetType().FullName, ex.Message);
             buf.AppendLine();
             if (ex.Data != null)
             {
@@ -318,7 +319,7 @@ namespace Tween
             {
                 buf.AppendFormat("-----InnerException[{0}]-----" + Constants.vbCrLf, nesting);
                 buf.AppendLine();
-                buf.AppendFormat(Tween.My.Resources.UnhandledExceptionText8, _ex.GetType().FullName, _ex.Message);
+                buf.AppendFormat(Tween.My.Resources.Resources.UnhandledExceptionText8, _ex.GetType().FullName, _ex.Message);
                 buf.AppendLine();
                 if (_ex.Data != null)
                 {
@@ -364,24 +365,24 @@ namespace Tween
                     WindowsIdentity ident = WindowsIdentity.GetCurrent();
                     WindowsPrincipal princ = new WindowsPrincipal(ident);
 
-                    writer.WriteLine(Tween.My.Resources.UnhandledExceptionText1, DateTime.Now.ToString());
-                    writer.WriteLine(Tween.My.Resources.UnhandledExceptionText2);
-                    writer.WriteLine(Tween.My.Resources.UnhandledExceptionText3);
+                    writer.WriteLine(Tween.My.Resources.Resources.UnhandledExceptionText1, DateTime.Now.ToString());
+                    writer.WriteLine(Tween.My.Resources.Resources.UnhandledExceptionText2);
+                    writer.WriteLine(Tween.My.Resources.Resources.UnhandledExceptionText3);
                     // 権限書き出し
-                    writer.WriteLine(Tween.My.Resources.UnhandledExceptionText11 + princ.IsInRole(WindowsBuiltInRole.Administrator).ToString());
-                    writer.WriteLine(Tween.My.Resources.UnhandledExceptionText12 + princ.IsInRole(WindowsBuiltInRole.User).ToString());
+                    writer.WriteLine(Tween.My.Resources.Resources.UnhandledExceptionText11 + princ.IsInRole(WindowsBuiltInRole.Administrator).ToString());
+                    writer.WriteLine(Tween.My.Resources.Resources.UnhandledExceptionText12 + princ.IsInRole(WindowsBuiltInRole.User).ToString());
                     writer.WriteLine();
                     // OSVersion,AppVersion書き出し
-                    writer.WriteLine(Tween.My.Resources.UnhandledExceptionText4);
-                    writer.WriteLine(Tween.My.Resources.UnhandledExceptionText5, Environment.OSVersion.VersionString);
-                    writer.WriteLine(Tween.My.Resources.UnhandledExceptionText6, Environment.Version.ToString());
-                    writer.WriteLine(Tween.My.Resources.UnhandledExceptionText7, fileVersion);
+                    writer.WriteLine(Tween.My.Resources.Resources.UnhandledExceptionText4);
+                    writer.WriteLine(Tween.My.Resources.Resources.UnhandledExceptionText5, Environment.OSVersion.VersionString);
+                    writer.WriteLine(Tween.My.Resources.Resources.UnhandledExceptionText6, Environment.Version.ToString());
+                    writer.WriteLine(Tween.My.Resources.Resources.UnhandledExceptionText7, fileVersion);
 
                     writer.Write(ExceptionOutMessage(ex, ref IsTerminatePermission));
                     writer.Flush();
                 }
 
-                switch (MessageBox.Show(string.Format(Tween.My.Resources.UnhandledExceptionText9, fileName, Environment.NewLine), Tween.My.Resources.UnhandledExceptionText10, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error))
+                switch (MessageBox.Show(string.Format(Tween.My.Resources.Resources.UnhandledExceptionText9, fileName, Environment.NewLine), Tween.My.Resources.Resources.UnhandledExceptionText10, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error))
                 {
                     case DialogResult.Yes:
                         System.Diagnostics.Process.Start(fileName);
@@ -391,6 +392,7 @@ namespace Tween
                     case DialogResult.Cancel:
                         return IsTerminatePermission;
                 }
+                return IsTerminatePermission;
             }
         }
 
@@ -427,9 +429,9 @@ namespace Tween
                 {
                     // Unicodeの場合(1charが複数のバイトで構成されている）
                     // UriクラスをNewして再構成し、入力をPathAndQueryのみとしてやり直す
-                    foreach (byte b_loopVariable in Encoding.UTF8.GetBytes(c))
+                    foreach (byte b_loopVariable in Encoding.UTF8.GetBytes(new string(new[] { c })))
                     {
-                        b = b_loopVariable;
+                        var b = b_loopVariable;
                         sb.AppendFormat("%{0:X2}", b);
                     }
                 }
@@ -626,7 +628,7 @@ namespace Tween
                 int i = 0;
                 for (i = 0; i <= bytes.Length - 1; i++)
                 {
-                    newBytes[pos] = newBytes[pos] ^ bytes[i];
+                    newBytes[pos] = (byte)(newBytes[pos] ^ bytes[i]);
                     pos += 1;
                     if (pos >= newBytes.Length)
                     {
