@@ -408,7 +408,7 @@ namespace Tween
 
         #region "IClonable.Clone"
 
-        private object Clone()
+        public object Clone()
         {
             return this.MemberwiseClone();
         }
