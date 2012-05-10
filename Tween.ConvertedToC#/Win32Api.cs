@@ -1,9 +1,5 @@
-using Microsoft.VisualBasic;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
+
 // Tween - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
@@ -11,19 +7,19 @@ using System.Windows.Forms;
 //           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
 //           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
 // All rights reserved.
-// 
+//
 // This file is part of Tween.
-// 
+//
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by the Free
 // Software Foundation; either version 3 of the License, or (at your option)
 // any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful, but
 // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 // or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
-// for more details. 
-// 
+// for more details.
+//
 // You should have received a copy of the GNU General Public License along
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
@@ -33,12 +29,14 @@ using System.Diagnostics;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Forms;
+
 namespace Tween
 {
-
-	static class Win32Api
+	internal static class Win32Api
 	{
 		#region "先行起動プロセスをアクティブにする"
+
 		// 外部プロセスのウィンドウを起動する
 		public static void WakeupWindow(IntPtr hWnd)
 		{
@@ -56,16 +54,19 @@ namespace Tween
 		private static bool SetForegroundWindow(IntPtr hWnd)
 		{
 		}
+
 		// ウィンドウの表示状態を設定
 		[DllImport("user32.dll")]
 		private static bool ShowWindowAsync(IntPtr hWnd, int nCmdShow)
 		{
 		}
+
 		// 指定されたウィンドウが最小化（ アイコン化）されているかどうかを調べる
 		[DllImport("user32.dll")]
 		private static bool IsIconic(IntPtr hWnd)
 		{
 		}
+
 		// ShowWindowAsync関数のパラメータに渡す定義値
 			// 画面を元の大きさに戻す
 		private const int SW_RESTORE = 9;
@@ -89,26 +90,32 @@ namespace Tween
 				}
 			}
 
-			// 同じアプリケーションのプロセスが見つからない！  
+			// 同じアプリケーションのプロセスが見つからない！
 			return null;
 		}
-		#endregion
+
+		#endregion "先行起動プロセスをアクティブにする"
+
 		#region "タスクトレイアイコンのクリック"
+
 		// 指定されたクラス名およびウィンドウ名と一致するトップレベルウィンドウのハンドルを取得します
 		[DllImport("user32.dll")]
 		private static IntPtr FindWindow(string lpClassName, string lpWindowName)
 		{
 		}
+
 		// 指定された文字列と一致するクラス名とウィンドウ名文字列を持つウィンドウのハンドルを返します
 		[DllImport("user32.dll")]
 		private static IntPtr FindWindowEx(IntPtr hWnd1, IntPtr hWnd2, string lpsz1, string lpsz2)
 		{
 		}
+
 		// 指定されたウィンドウへ、指定されたメッセージを送信します
 		[DllImport("user32.dll")]
 		private static int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam)
 		{
 		}
+
 		// SendMessageで送信するメッセージ
 		private enum Sm_Message : int
 		{
@@ -121,6 +128,7 @@ namespace Tween
 			TB_GETBUTTONINFO = WM_USER + 65
 			//ツールバーのボタン詳細情報取得
 		}
+
 		// ツールバーボタン構造体
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		private struct TBBUTTON
@@ -134,6 +142,7 @@ namespace Tween
 			public int dwData;
 			public int iString;
 		}
+
 		// ツールバーボタン詳細情報構造体
 		[StructLayout(LayoutKind.Sequential)]
 		private struct TBBUTTONINFO
@@ -149,6 +158,7 @@ namespace Tween
 			public IntPtr pszText;
 			public Int32 cchText;
 		}
+
 		// TBBUTTONINFOのlParamでポイントされるアイコン情報（PostMessageで使用）
 		[StructLayout(LayoutKind.Sequential)]
 		private struct TRAYNOTIFY
@@ -160,25 +170,24 @@ namespace Tween
 			public UInt32 dwDummy2;
 			public IntPtr hIcon;
 		}
+
 		// TBBUTTONINFOに指定するマスク情報
 		[Flags()]
-		private enum ToolbarButtonMask : Int32
+		private enum ToolbarButtonMask : int
 		{
 			TBIF_COMMAND = 0x20,
 			TBIF_LPARAM = 0x10,
 			TBIF_TEXT = 0x2
 		}
+
 		// 指定されたウィンドウを作成したスレッドの ID を取得します
 		[DllImport("user32.dll", SetLastError = true)]
-		private static int GetWindowThreadProcessId(IntPtr hwnd, ref int lpdwProcessId)
-		{
-		}
+		private extern static int GetWindowThreadProcessId(IntPtr hwnd, ref int lpdwProcessId);
+
 		// 指定したプロセスIDに対するプロセスハンドルを取得します
 		[DllImport("kernel32.dll")]
-		private static IntPtr OpenProcess(ProcessAccess dwDesiredAccess, 		[MarshalAs(UnmanagedType.Bool)]
-bool bInheritHandle, int dwProcessId)
-		{
-		}
+		private extern static IntPtr OpenProcess(ProcessAccess dwDesiredAccess, 		[MarshalAs(UnmanagedType.Bool)]bool bInheritHandle, int dwProcessId);
+
 		// OpenProcessで指定するアクセス権
 		[Flags()]
 		private enum ProcessAccess : int
@@ -204,11 +213,13 @@ bool bInheritHandle, int dwProcessId)
 			/// <summary>Enables usage of the process handle in any of the wait functions to wait for the process to terminate.</summary>
 			Synchronize = 0x100000
 		}
+
 		// 指定したプロセスの仮想アドレス空間にメモリ領域を確保
 		[DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
 		private static IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, AllocationTypes flAllocationType, MemoryProtectionTypes flProtect)
 		{
 		}
+
 		// アロケート種類
 		[Flags()]
 		private enum AllocationTypes : uint
@@ -223,6 +234,7 @@ bool bInheritHandle, int dwProcessId)
 			WriteWatch = 0x200000,
 			LargePages = 0x20000000
 		}
+
 		// アロケートしたメモリに対する保護レベル
 		[Flags()]
 		private enum MemoryProtectionTypes : uint
@@ -239,40 +251,47 @@ bool bInheritHandle, int dwProcessId)
 			NoCacheModifierflag = 0x200,
 			WriteCombineModifierflag = 0x400
 		}
+
 		// オープンしているカーネルオブジェクトのハンドルをクローズします
 		[DllImport("kernel32.dll", SetLastError = true)]
 		private static bool CloseHandle(IntPtr hHandle)
 		{
 		}
+
 		// 指定されたプロセスの仮想アドレス空間内のメモリ領域を解放またはコミット解除します
 		[DllImport("kernel32.dll")]
 		private static bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, int dwFreeType)
 		{
 		}
+
 		// メモリ解放種別
 		[Flags()]
 		private enum MemoryFreeTypes
 		{
 			Release = 0x8000
 		}
+
 		//指定したプロセスのメモリ領域にデータをコピーする
 		[DllImport("kernel32.dll", SetLastError = true)]
 		private static bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, ref TBBUTTONINFO lpBuffer, int nSize, 		[Out()]
 ref int lpNumberOfBytesWritten)
 		{
 		}
+
 		//指定したプロセスのメモリ領域のデータを呼び出し側プロセスのバッファにコピーする
 		[DllImport("kernel32.dll", SetLastError = true)]
 		private static bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int iSize, ref int lpNumberOfBytesRead)
 		{
 		}
+
 		//メッセージをウィンドウのメッセージ キューに置き、対応するウィンドウがメッセージを処理するのを待たずに戻ります
 		[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
 		private static bool PostMessage(IntPtr hWnd, uint Msg, UInt32 wParam, UInt32 lParam)
 		{
 		}
+
 		//PostMessageで送信するメッセージ
-		private enum PM_Message : UInt32
+		private enum PM_Message :uint
 		{
 			WM_LBUTTONDOWN = 0x201,
 			//左マウスボタン押し下げ
@@ -457,7 +476,8 @@ ref int lpNumberOfBytesWritten)
 				//Explorerのプロセス閉じる
 			}
 		}
-		#endregion
+
+		#endregion "タスクトレイアイコンのクリック"
 
 		//画面をブリンクするためのWin32API。起動時に10ページ読み取りごとに継続確認メッセージを表示する際の通知強調用
 		[DllImport("user32.dll")]
@@ -466,6 +486,7 @@ ref int lpNumberOfBytesWritten)
 		}
 
 		#region "画面ブリンク用"
+
 		public static bool FlashMyWindow(IntPtr hwnd, FlashSpecification flashType, int flashCount)
 		{
 			FLASHWINFO fInfo = new FLASHWINFO();
@@ -487,6 +508,7 @@ ref int lpNumberOfBytesWritten)
 			FlashTimer = Win32Api.FLASHW_TIMER,
 			FlashTimerNoForeground = Win32Api.FLASHW_TIMERNOFG
 		}
+
 		/// http://www.atmarkit.co.jp/fdotnet/dotnettips/723flashwindow/flashwindow.html
 		[DllImport("user32.dll")]
 		private static bool FlashWindowEx(ref FLASHWINFO FWInfo)
@@ -497,12 +519,16 @@ ref int lpNumberOfBytesWritten)
 		{
 				// FLASHWINFO構造体のサイズ
 			public Int32 cbSize;
+
 				// 点滅対象のウィンドウ・ハンドル
 			public IntPtr hwnd;
+
 				// 以下の「FLASHW_XXX」のいずれか
 			public Int32 dwFlags;
+
 				// 点滅する回数
 			public Int32 uCount;
+
 				// 点滅する間隔（ミリ秒単位）
 			public Int32 dwTimeout;
 		}
@@ -518,7 +544,9 @@ ref int lpNumberOfBytesWritten)
 		// FLASHW_STOPが指定されるまでずっと点滅させる
 		private const Int32 FLASHW_TIMER = 0x4;
 		// ウィンドウが最前面に来るまでずっと点滅させる
-			#endregion
+
+			#endregion "画面ブリンク用"
+
 		private const Int32 FLASHW_TIMERNOFG = 0xc;
 
 		[DllImport("user32.dll")]
@@ -527,14 +555,17 @@ ref int lpNumberOfBytesWritten)
 		}
 
 		#region "スクリーンセーバー起動中か判定"
+
 		[DllImport("user32", CharSet = CharSet.Auto)]
 		private static int SystemParametersInfo(int intAction, int intParam, ref bool bParam, int intWinIniFlag)
 		{
 			// returns non-zero value if function succeeds
 		}
+
 		//スクリーンセーバーが起動中かを取得する定数
 
 		private const int SPI_GETSCREENSAVERRUNNING = 0x61;
+
 		public static bool IsScreenSaverRunning()
 		{
 			int ret = 0;
@@ -543,22 +574,30 @@ ref int lpNumberOfBytesWritten)
 			ret = SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, ref isRunning, 0);
 			return isRunning;
 		}
+
 		[DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-		#endregion
+
+		#endregion "スクリーンセーバー起動中か判定"
 
 		#region "グローバルフック"
+
 		private static extern int RegisterHotKey(IntPtr hwnd, int id, int fsModifiers, int vk);
+
 		[DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
 		private static extern int UnregisterHotKey(IntPtr hwnd, int id);
+
 		[DllImport("kernel32", EntryPoint = "GlobalAddAtomA", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
 		private static extern int GlobalAddAtom(string lpString);
+
 		[DllImport("kernel32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
 		private static extern int GlobalDeleteAtom(int nAtom);
+
 		static readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_RegisterGlobalHotKey_count_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
 
 		// register a global hot key
 		// use the GlobalAddAtom API to get a unique ID (as suggested by MSDN docs)
 		static int static_RegisterGlobalHotKey_count;
+
 		public static int RegisterGlobalHotKey(int hotkeyValue, int modifiers, Form targetForm)
 		{
 			int hotkeyID = 0;
@@ -601,9 +640,11 @@ ref int lpNumberOfBytesWritten)
 				hotkeyID = 0;
 			}
 		}
-		#endregion
+
+		#endregion "グローバルフック"
 
 		#region "プロセスのProxy設定"
+
 		[DllImport("wininet.dll", SetLastError = true)]
 		private static bool InternetSetOption(IntPtr hInternet, int dwOption, IntPtr lpBuffer, int lpdwBufferLength)
 		{
@@ -710,7 +751,8 @@ ref int lpNumberOfBytesWritten)
 			RefreshProxySettings(proxy);
 			RefreshProxyAccount(username, password);
 		}
-		static bool InitStaticVariableHelper(Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag flag)
+
+		private static bool InitStaticVariableHelper(Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag flag)
 		{
 			if (flag.State == 0) {
 				flag.State = 2;
@@ -721,6 +763,7 @@ ref int lpNumberOfBytesWritten)
 				return false;
 			}
 		}
-		#endregion
+
+		#endregion "プロセスのProxy設定"
 	}
 }

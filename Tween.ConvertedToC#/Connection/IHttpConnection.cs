@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 
 // Tween - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
@@ -30,8 +28,6 @@ using System.Drawing;
 
 using System.IO;
 using System.Net;
-using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Tween
 {

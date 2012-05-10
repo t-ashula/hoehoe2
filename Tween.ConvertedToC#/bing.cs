@@ -1,18 +1,14 @@
-using Microsoft.VisualBasic;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
+
 namespace Tween
 {
-	public class Bing
-	{
+    public class Bing
+    {
+        private const string AppId = "8DFACAC0C4891D0F75F5728391C9D30664B797A1";
 
+        #region "言語テーブル定義"
 
-		private const string AppId = "8DFACAC0C4891D0F75F5728391C9D30664B797A1";
-		#region "言語テーブル定義"
-		private static readonly List<string> LanguageTable = new List<string> {
+        private static readonly List<string> LanguageTable = new List<string> {
 			"af",
 			"sq",
 			"ar-sa",
@@ -137,35 +133,37 @@ namespace Tween
 			"xh",
 			"ji",
 			"zu"
-			#endregion
+
+			#endregion "言語テーブル定義"
 		};
 
-		#region "Translation"
+        #region "Translation"
 
+        private const string TranslateUri = "http://api.microsofttranslator.com/v2/Http.svc/Translate?appId=" + AppId;
 
-		private const string TranslateUri = "http://api.microsofttranslator.com/v2/Http.svc/Translate?appId=" + AppId;
-		public bool Translate(string _from, string _to, string _text, ref string buf)
-		{
+        public bool Translate(string _from, string _to, string _text, ref string buf)
+        {
+            HttpVarious http = new HttpVarious();
+            string apiurl = TranslateUri + "&text=" + System.Web.HttpUtility.UrlEncode(_text) + "&to=" + _to;
+            string content = "";
+            if (http.GetData(apiurl, null, ref content))
+            {
+                buf = string.Copy(content);
+                return true;
+            }
+            return false;
+        }
 
-			HttpVarious http = new HttpVarious();
-			string apiurl = TranslateUri + "&text=" + System.Web.HttpUtility.UrlEncode(_text) + "&to=" + _to;
-			string content = "";
-			if (http.GetData(apiurl, null, ref content)) {
-				buf = string.Copy(content);
-				return true;
-			}
-			return false;
-		}
+        public string GetLanguageEnumFromIndex(int index)
+        {
+            return LanguageTable[index];
+        }
 
-		public string GetLanguageEnumFromIndex(int index)
-		{
-			return LanguageTable[index];
-		}
+        public int GetIndexFromLanguageEnum(string lang)
+        {
+            return LanguageTable.IndexOf(lang);
+        }
 
-		public int GetIndexFromLanguageEnum(string lang)
-		{
-			return LanguageTable.IndexOf(lang);
-		}
-		#endregion
-	}
+        #endregion "Translation"
+    }
 }

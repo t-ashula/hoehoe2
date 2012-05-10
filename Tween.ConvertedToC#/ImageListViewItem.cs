@@ -1,101 +1,106 @@
-using Microsoft.VisualBasic;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace Tween
 {
-	// Tween - Client of Twitter
-	// Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
-	//           (c) 2008-2011 Moz (@syo68k)
-	//           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
-	//           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
-	//           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
-	// All rights reserved.
-	// 
-	// This file is part of Tween.
-	// 
-	// This program is free software; you can redistribute it and/or modify it
-	// under the terms of the GNU General Public License as published by the Free
-	// Software Foundation; either version 3 of the License, or (at your option)
-	// any later version.
-	// 
-	// This program is distributed in the hope that it will be useful, but
-	// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-	// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
-	// for more details. 
-	// 
-	// You should have received a copy of the GNU General Public License along
-	// with this program. If not, see <http://www.gnu.org/licenses/>, or write to
-	// the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
-	// Boston, MA 02110-1301, USA.
+    // Tween - Client of Twitter
+    // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
+    //           (c) 2008-2011 Moz (@syo68k)
+    //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
+    //           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
+    //           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
+    // All rights reserved.
+    //
+    // This file is part of Tween.
+    //
+    // This program is free software; you can redistribute it and/or modify it
+    // under the terms of the GNU General Public License as published by the Free
+    // Software Foundation; either version 3 of the License, or (at your option)
+    // any later version.
+    //
+    // This program is distributed in the hope that it will be useful, but
+    // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+    // or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+    // for more details.
+    //
+    // You should have received a copy of the GNU General Public License along
+    // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
+    // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+    // Boston, MA 02110-1301, USA.
 
-	public class ImageListViewItem : ListViewItem
-	{
+    public class ImageListViewItem : ListViewItem
+    {
+        //Public Property Image As Image = Nothing
+        public event ImageDownloadedEventHandler ImageDownloaded;
 
-		//Public Property Image As Image = Nothing
-		public event ImageDownloadedEventHandler ImageDownloaded;
-		public delegate void ImageDownloadedEventHandler(object sender, EventArgs e);
-		private ImageDictionary imageDict = null;
+        public delegate void ImageDownloadedEventHandler(object sender, EventArgs e);
+        private ImageDictionary imageDict = null;
 
-		private string imageUrl;
-		public ImageListViewItem(string[] items, string imageKey) : base(items, imageKey)
-		{
-		}
+        private string imageUrl;
 
-		public ImageListViewItem(string[] items, ImageDictionary imageDictionary, string imageKey) : base(items, imageKey)
-		{
-			this.imageDict = imageDictionary;
-			this.imageUrl = imageKey;
-			Image dummy = this.GetImage(false);
-		}
+        public ImageListViewItem(string[] items, string imageKey)
+            : base(items, imageKey)
+        {
+        }
 
-		private Image GetImage(bool force)
-		{
-			return this.imageDict[this.imageUrl, force, getImg =>
-			{
-				if (getImg == null)
-					return;
-				//Me.Image = getImg
-				if (this.ListView != null && this.ListView.Created && !this.ListView.IsDisposed) {
-					this.ListView.Invoke(() =>
-					{
-						if (this.Index < this.ListView.VirtualListSize) {
-							this.ListView.RedrawItems(this.Index, this.Index, true);
-							if (ImageDownloaded != null) {
-								ImageDownloaded(this, EventArgs.Empty);
-							}
-						}
-					});
-				}
-			}];
+        public ImageListViewItem(string[] items, ImageDictionary imageDictionary, string imageKey)
+            : base(items, imageKey)
+        {
+            this.imageDict = imageDictionary;
+            this.imageUrl = imageKey;
+            Image dummy = this.GetImage(false);
+        }
 
-		}
+        private Image GetImage(bool force)
+        {
+            return this.imageDict[this.imageUrl, force, getImg =>
+            {
+                if (getImg == null)
+                    return;
+                //Me.Image = getImg
+                if (this.ListView != null && this.ListView.Created && !this.ListView.IsDisposed)
+                {
+                    this.ListView.Invoke(() =>
+                    {
+                        if (this.Index < this.ListView.VirtualListSize)
+                        {
+                            this.ListView.RedrawItems(this.Index, this.Index, true);
+                            if (ImageDownloaded != null)
+                            {
+                                ImageDownloaded(this, EventArgs.Empty);
+                            }
+                        }
+                    });
+                }
+            }];
+        }
 
-		public Image Image {
-			get {
-				if (string.IsNullOrEmpty(this.imageUrl))
-					return null;
-				return this.imageDict[this.imageUrl];
-			}
-		}
+        public Image Image
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.imageUrl))
+                    return null;
+                return this.imageDict[this.imageUrl];
+            }
+        }
 
-		public void RegetImage()
-		{
-			//If Me.Image IsNot Nothing Then
-			//    Me.Image.Dispose()
-			//    Me.Image = Nothing
-			//End If
-			Image dummy = GetImage(true);
-		}
+        public void RegetImage()
+        {
+            //If Me.Image IsNot Nothing Then
+            //    Me.Image.Dispose()
+            //    Me.Image = Nothing
+            //End If
+            Image dummy = GetImage(true);
+        }
 
-		//Protected Overrides Sub Finalize()
-		//    If Me.Image IsNot Nothing Then
-		//        Me.Image.Dispose()
-		//        Me.Image = Nothing
-		//    End If
-		//    MyBase.Finalize()
-		//End Sub
-	}
+        //Protected Overrides Sub Finalize()
+        //    If Me.Image IsNot Nothing Then
+        //        Me.Image.Dispose()
+        //        Me.Image = Nothing
+        //    End If
+        //    MyBase.Finalize()
+        //End Sub
+    }
 }
