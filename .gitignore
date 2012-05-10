@@ -1,4 +1,6 @@
 *.suo
+*/bin/*
+*/obj/*
 Tween.cs/bin/*
 Tween.cs/obj/*
 Tween/obj/*
