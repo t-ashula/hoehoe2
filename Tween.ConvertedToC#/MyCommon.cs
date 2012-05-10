@@ -193,10 +193,10 @@ namespace Tween
 
 		public static bool TraceFlag = false;
 		#if DEBUG
-			#elif
 		public static bool DebugBuild = true;
-			#endif
+			#else
 		public static bool DebugBuild = false;
+			#endif
 
 		public enum ACCOUNT_STATE
 		{

@@ -252,7 +252,7 @@ namespace Tween
 				tw.Initialize("", "", "", 0);
 			}
 
-			#if UA = "True"
+			#if UA // = True
 			//フォロー
 			if (this.FollowCheckBox.Checked) {
 				//現在の設定内容で通信
@@ -617,11 +617,11 @@ namespace Tween
 			}
 		}
 
-		#if UA = "True"
 		private void Setting_Load(System.Object sender, System.EventArgs e)
 		{
+		#if UA //= "True"
 			this.GroupBox2.Visible = true;
-			#elif
+			#else
 			this.GroupBox2.Visible = false;
 			#endif
 			tw = ((TweenMain)this.Owner).TwitterInstance;

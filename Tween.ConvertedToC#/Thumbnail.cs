@@ -412,7 +412,7 @@ namespace Tween
 		}
 
 		#region "テンプレ"
-		#if 0
+		#if template
 		/// <summary>
 		/// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
 		/// </summary>

@@ -675,13 +675,13 @@ namespace Tween
 			}
 		}
 
-		#if DEBUG
 		private void InitializeTraceFrag()
-		{
+        {
+#if DEBUG
 			TraceOutToolStripMenuItem.Checked = true;
 			MyCommon.TraceFlag = true;
-			#endif
-			if (!MyCommon.fileVersion.EndsWith("0")) {
+#endif
+            if (!MyCommon.fileVersion.EndsWith("0")) {
 				TraceOutToolStripMenuItem.Checked = true;
 				MyCommon.TraceFlag = true;
 			}
@@ -1364,10 +1364,10 @@ namespace Tween
 				ListTab.ImageList = null;
 			}
 
-			#if UA = "True"
+			#if UA //= "True"
 			ab = new AdsBrowser();
 			this.SplitContainer4.Panel2.Controls.Add(ab);
-			#elif
+			#else
 			SplitContainer4.Panel2Collapsed = true;
 			#endif
 
@@ -3897,7 +3897,7 @@ namespace Tween
 
 					HttpConnection.InitializeConnection(SettingDialog.DefaultTimeOut, SettingDialog.SelectedProxyType, SettingDialog.ProxyAddress, SettingDialog.ProxyPort, SettingDialog.ProxyUser, SettingDialog.ProxyPassword);
 					this.CreatePictureServices();
-					#if UA = "True"
+					#if UA //= "True"
 					this.SplitContainer4.Panel2.Controls.RemoveAt(0);
 					this.ab = new AdsBrowser();
 					this.SplitContainer4.Panel2.Controls.Add(ab);

@@ -2314,14 +2314,14 @@ namespace Tween
 			//' TODO
 			//' 遡るための情報max_idやnext_pageの情報を保持する
 
-			#if 0
+/*			#if 0
 			XmlNode xNode = xdoc.DocumentElement.SelectSingleNode("/search:feed/twitter:warning", nsmgr);
 
 			if (xNode != null) {
 				return "Warn:" + xNode.InnerText + "(" + GetCurrentMethod().Name + ")";
 			}
 			#endif
-
+*/
 			return "";
 		}
 
