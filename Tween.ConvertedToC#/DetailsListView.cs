@@ -50,6 +50,8 @@ namespace Tween.TweenCustomControl
             FullRowSelect = true;
             HideSelection = false;
             DoubleBuffered = true;
+            si.cbSize = Marshal.SizeOf(si);
+            si.fMask = (int)ScrollInfoMask.SIF_POS;
         }
 
         //<System.ComponentModel.DefaultValue(0), _
@@ -229,11 +231,11 @@ namespace Tween.TweenCustomControl
         [DllImport("user32.dll")]
         private static extern int GetScrollInfo(IntPtr hWnd, ScrollBarDirection fnBar, ref SCROLLINFO lpsi);
 
-        private SCROLLINFO si = new SCROLLINFO
+        private SCROLLINFO si;/* = new SCROLLINFO
         {
-            cbSize = Strings.Len(si),
-            fMask = ScrollInfoMask.SIF_POS
-        };
+            cbSize = Marshal.SizeOf(si),
+            fMask = (int)ScrollInfoMask.SIF_POS
+        };*/
 
         [DebuggerStepThrough()]
         protected override void WndProc(ref System.Windows.Forms.Message m)
