@@ -80,7 +80,7 @@ namespace Tween
 
         public int PreviewDistance = -1;
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Font FontUnread = new Font(SystemFonts.DefaultFont, FontStyle.Bold | FontStyle.Underline);
 
         public string FontUnreadStr
@@ -89,7 +89,7 @@ namespace Tween
             set { FontUnread = (Font)_fc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorUnread = System.Drawing.SystemColors.ControlText;
 
         public string ColorUnreadStr
@@ -98,7 +98,7 @@ namespace Tween
             set { ColorUnread = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Font FontRead = System.Drawing.SystemFonts.DefaultFont;
 
         public string FontReadStr
@@ -107,7 +107,7 @@ namespace Tween
             set { FontRead = (Font)_fc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorRead = System.Drawing.SystemColors.ControlText;
 
         public string ColorReadStr
@@ -116,7 +116,7 @@ namespace Tween
             set { ColorRead = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorFav = Color.FromKnownColor(System.Drawing.KnownColor.Red);
 
         public string ColorFavStr
@@ -125,7 +125,7 @@ namespace Tween
             set { ColorFav = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorOWL = Color.FromKnownColor(System.Drawing.KnownColor.Blue);
 
         public string ColorOWLStr
@@ -134,7 +134,7 @@ namespace Tween
             set { ColorOWL = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorRetweet = Color.FromKnownColor(System.Drawing.KnownColor.Green);
 
         public string ColorRetweetStr
@@ -143,7 +143,7 @@ namespace Tween
             set { ColorRetweet = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Font FontDetail = System.Drawing.SystemFonts.DefaultFont;
 
         public string FontDetailStr
@@ -152,7 +152,7 @@ namespace Tween
             set { FontDetail = (Font)_fc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorSelf = Color.FromKnownColor(System.Drawing.KnownColor.AliceBlue);
 
         public string ColorSelfStr
@@ -161,7 +161,7 @@ namespace Tween
             set { ColorSelf = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorAtSelf = Color.FromKnownColor(System.Drawing.KnownColor.AntiqueWhite);
 
         public string ColorAtSelfStr
@@ -170,7 +170,7 @@ namespace Tween
             set { ColorAtSelf = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorTarget = Color.FromKnownColor(System.Drawing.KnownColor.LemonChiffon);
 
         public string ColorTargetStr
@@ -179,7 +179,7 @@ namespace Tween
             set { ColorTarget = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorAtTarget = Color.FromKnownColor(System.Drawing.KnownColor.LavenderBlush);
 
         public string ColorAtTargetStr
@@ -188,7 +188,7 @@ namespace Tween
             set { ColorAtTarget = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorAtFromTarget = Color.FromKnownColor(System.Drawing.KnownColor.Honeydew);
 
         public string ColorAtFromTargetStr
@@ -197,7 +197,7 @@ namespace Tween
             set { ColorAtFromTarget = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorAtTo = Color.FromKnownColor(System.Drawing.KnownColor.Pink);
 
         public string ColorAtToStr
@@ -206,7 +206,7 @@ namespace Tween
             set { ColorAtTo = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorInputBackcolor = Color.FromKnownColor(System.Drawing.KnownColor.LemonChiffon);
 
         public string ColorInputBackcolorStr
@@ -215,7 +215,7 @@ namespace Tween
             set { ColorInputBackcolor = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorInputFont = Color.FromKnownColor(System.Drawing.KnownColor.ControlText);
 
         public string ColorInputFontStr
@@ -224,7 +224,7 @@ namespace Tween
             set { ColorInputFont = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Font FontInputFont = System.Drawing.SystemFonts.DefaultFont;
 
         public string FontInputFontStr
@@ -233,7 +233,7 @@ namespace Tween
             set { FontInputFont = (Font)_fc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorListBackcolor = Color.FromKnownColor(System.Drawing.KnownColor.Window);
 
         public string ColorListBackcolorStr
@@ -242,7 +242,7 @@ namespace Tween
             set { ColorListBackcolor = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorDetailBackcolor = Color.FromKnownColor(System.Drawing.KnownColor.Window);
 
         public string ColorDetailBackcolorStr
@@ -251,7 +251,7 @@ namespace Tween
             set { ColorDetailBackcolor = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorDetail = Color.FromKnownColor(System.Drawing.KnownColor.ControlText);
 
         public string ColorDetailStr
@@ -260,7 +260,7 @@ namespace Tween
             set { ColorDetail = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public Color ColorDetailLink = Color.FromKnownColor(System.Drawing.KnownColor.Blue);
 
         public string ColorDetailLinkStr
@@ -269,7 +269,7 @@ namespace Tween
             set { ColorDetailLink = (Color)_cc.ConvertFromString(value); }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public string ProxyPassword = "";
 
         public string EncryptProxyPassword
