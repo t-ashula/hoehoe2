@@ -156,7 +156,7 @@ namespace Tween
             [DataMember(Name = "user_mentions")]
             public UserMentions[] UserMentions;
 
-            [DataMember(Name = "media", isRequired = false)]
+            [DataMember(Name = "media", IsRequired = false)]
             public Media[] Media;
         }
 
@@ -386,7 +386,7 @@ namespace Tween
             [DataMember(Name = "text")]
             public string Text;
 
-            [DataMember(Name = "entities", isRequired = false)]
+            [DataMember(Name = "entities", IsRequired = false)]
             public Entities Entities;
         }
 
@@ -453,7 +453,7 @@ namespace Tween
             [DataMember(Name = "text")]
             public string Text;
 
-            [DataMember(Name = "entities", isRequired = false)]
+            [DataMember(Name = "entities", IsRequired = false)]
             public Entities Entities;
         }
 
@@ -521,7 +521,7 @@ namespace Tween
             [DataMember(Name = "text")]
             public string Text;
 
-            [DataMember(Name = "entities", isRequired = false)]
+            [DataMember(Name = "entities", IsRequired = false)]
             public Entities Entities;
         }
 
@@ -597,7 +597,7 @@ namespace Tween
             [DataMember(Name = "target")]
             public User Target;
 
-            [DataMember(Name = "target_object", isRequired = false)]
+            [DataMember(Name = "target_object", IsRequired = false)]
             public TargetObject TargetObject;
 
             [DataMember(Name = "created_at")]
