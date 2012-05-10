@@ -455,7 +455,7 @@ namespace Tween
             public int endPage;
 
             //処理種別
-            public WORKERTYPE type;
+            public Tween.MyCommon.WORKERTYPE type;
 
             //新規取得したアイコンイメージ
             public Dictionary<string, Image> imgs;
@@ -484,7 +484,7 @@ namespace Tween
             public int endPage;
 
             //処理種別
-            public WORKERTYPE type;
+            public Tween.MyCommon.WORKERTYPE type;
 
             //URLをブラウザで開くときのアドレス
             public string url = "";
@@ -680,17 +680,17 @@ namespace Tween
             //タスクトレイ通常時アイコン
             string dir = Application.StartupPath;
 
-            NIconAt = Tween.My.Resources.At;
-            NIconAtRed = Tween.My.Resources.AtRed;
-            NIconAtSmoke = Tween.My.Resources.AtSmoke;
-            NIconRefresh[0] = Tween.My.Resources.Refresh;
-            NIconRefresh[1] = Tween.My.Resources.Refresh2;
-            NIconRefresh[2] = Tween.My.Resources.Refresh3;
-            NIconRefresh[3] = Tween.My.Resources.Refresh4;
-            TabIcon = Tween.My.Resources.TabIcon;
-            MainIcon = Tween.My.Resources.MIcon;
-            ReplyIcon = Tween.My.Resources.Reply;
-            ReplyIconBlink = Tween.My.Resources.ReplyBlink;
+            NIconAt = Tween.My.Resources.Resources.At;
+            NIconAtRed = Tween.My.Resources.Resources.AtRed;
+            NIconAtSmoke = Tween.My.Resources.Resources.AtSmoke;
+            NIconRefresh[0] = Tween.My.Resources.Resources.Refresh;
+            NIconRefresh[1] = Tween.My.Resources.Resources.Refresh2;
+            NIconRefresh[2] = Tween.My.Resources.Resources.Refresh3;
+            NIconRefresh[3] = Tween.My.Resources.Resources.Refresh4;
+            TabIcon = Tween.My.Resources.Resources.TabIcon;
+            MainIcon = Tween.My.Resources.Resources.MIcon;
+            ReplyIcon = Tween.My.Resources.Resources.Reply;
+            ReplyIconBlink = Tween.My.Resources.Resources.ReplyBlink;
 
             if (!Directory.Exists(Path.Combine(dir, "Icons")))
             {
@@ -728,19 +728,19 @@ namespace Tween
         private void InitColumnText()
         {
             ColumnText[0] = "";
-            ColumnText[1] = Tween.My.Resources.AddNewTabText2;
-            ColumnText[2] = Tween.My.Resources.AddNewTabText3;
-            ColumnText[3] = Tween.My.Resources.AddNewTabText4_2;
-            ColumnText[4] = Tween.My.Resources.AddNewTabText5;
+            ColumnText[1] = Tween.My.Resources.Resources.AddNewTabText2;
+            ColumnText[2] = Tween.My.Resources.Resources.AddNewTabText3;
+            ColumnText[3] = Tween.My.Resources.Resources.AddNewTabText4_2;
+            ColumnText[4] = Tween.My.Resources.Resources.AddNewTabText5;
             ColumnText[5] = "";
             ColumnText[6] = "";
             ColumnText[7] = "Source";
 
             ColumnOrgText[0] = "";
-            ColumnOrgText[1] = Tween.My.Resources.AddNewTabText2;
-            ColumnOrgText[2] = Tween.My.Resources.AddNewTabText3;
-            ColumnOrgText[3] = Tween.My.Resources.AddNewTabText4_2;
-            ColumnOrgText[4] = Tween.My.Resources.AddNewTabText5;
+            ColumnOrgText[1] = Tween.My.Resources.Resources.AddNewTabText2;
+            ColumnOrgText[2] = Tween.My.Resources.Resources.AddNewTabText3;
+            ColumnOrgText[3] = Tween.My.Resources.Resources.AddNewTabText4_2;
+            ColumnOrgText[4] = Tween.My.Resources.Resources.AddNewTabText5;
             ColumnOrgText[5] = "";
             ColumnOrgText[6] = "";
             ColumnOrgText[7] = "Source";
@@ -772,7 +772,7 @@ namespace Tween
 
             if (_iconCol)
             {
-                if (_statuses.SortOrder() == SortOrder.Descending)
+                if (_statuses.SortOrder == SortOrder.Descending)
                 {
                     // U+25BE BLACK DOWN-POINTING SMALL TRIANGLE
                     ColumnText[2] = ColumnOrgText[2] + "▾";
@@ -785,7 +785,7 @@ namespace Tween
             }
             else
             {
-                if (_statuses.SortOrder() == SortOrder.Descending)
+                if (_statuses.SortOrder == SortOrder.Descending)
                 {
                     // U+25BE BLACK DOWN-POINTING SMALL TRIANGLE
                     ColumnText[c] = ColumnOrgText[c] + "▾";
@@ -1047,7 +1047,7 @@ namespace Tween
             //廃止サービスが選択されていた場合bit.lyへ読み替え
             if (_cfgCommon.AutoShortUrlFirst < 0)
             {
-                _cfgCommon.AutoShortUrlFirst = Tween.UrlConverter.Bitly;
+                _cfgCommon.AutoShortUrlFirst = Tween.MyCommon.UrlConverter.Bitly;
             }
 
             SettingDialog.AutoShortUrlFirst = _cfgCommon.AutoShortUrlFirst;
@@ -1287,10 +1287,10 @@ namespace Tween
             Outputz.Enabled = SettingDialog.OutputzEnabled;
             switch (SettingDialog.OutputzUrlmode)
             {
-                case OutputzUrlmode.twittercom:
+                case Tween.MyCommon.OutputzUrlmode.twittercom:
                     Outputz.OutUrl = "http://twitter.com/";
                     break;
-                case OutputzUrlmode.twittercomWithUsername:
+                case Tween.MyCommon.OutputzUrlmode.twittercomWithUsername:
                     Outputz.OutUrl = "http://twitter.com/" + tw.Username;
                     break;
             }
@@ -1418,19 +1418,19 @@ namespace Tween
 
             switch (SettingDialog.IconSz)
             {
-                case IconSizes.IconNone:
+                case Tween.MyCommon.IconSizes.IconNone:
                     _iconSz = 0;
                     break;
-                case IconSizes.Icon16:
+                case Tween.MyCommon.IconSizes.Icon16:
                     _iconSz = 16;
                     break;
-                case IconSizes.Icon24:
+                case Tween.MyCommon.IconSizes.Icon24:
                     _iconSz = 26;
                     break;
-                case IconSizes.Icon48:
+                case Tween.MyCommon.IconSizes.Icon48:
                     _iconSz = 48;
                     break;
-                case IconSizes.Icon48_2:
+                case Tween.MyCommon.IconSizes.Icon48_2:
                     _iconSz = 48;
                     _iconCol = true;
                     break;
@@ -1456,7 +1456,7 @@ namespace Tween
 
             tw.DetailIcon = TIconDic;
 
-            StatusLabel.Text = Tween.My.Resources.Form1_LoadText1;
+            StatusLabel.Text = Tween.My.Resources.Resources.Form1_LoadText1;
             //画面右下の状態表示を変更
             StatusLabelUrl.Text = "";
             //画面左下のリンク先URL表示部を初期化
@@ -1469,58 +1469,58 @@ namespace Tween
 
             //<<<<<<<<タブ関連>>>>>>>
             //デフォルトタブの存在チェック、ない場合には追加
-            if (_statuses.GetTabByType(TabUsageType.Home) == null)
+            if (_statuses.GetTabByType(Tween.MyCommon.TabUsageType.Home) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(DEFAULTTAB.RECENT))
+                if (!_statuses.Tabs.ContainsKey(Tween.MyCommon.DEFAULTTAB.RECENT))
                 {
-                    _statuses.AddTab(DEFAULTTAB.RECENT, TabUsageType.Home, null);
+                    _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.RECENT, Tween.MyCommon.TabUsageType.Home, null);
                 }
                 else
                 {
-                    _statuses.Tabs[DEFAULTTAB.RECENT].TabType = TabUsageType.Home;
+                    _statuses.Tabs[Tween.MyCommon.DEFAULTTAB.RECENT].TabType = Tween.MyCommon.TabUsageType.Home;
                 }
             }
-            if (_statuses.GetTabByType(TabUsageType.Mentions) == null)
+            if (_statuses.GetTabByType(Tween.MyCommon.TabUsageType.Mentions) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(DEFAULTTAB.REPLY))
+                if (!_statuses.Tabs.ContainsKey(Tween.MyCommon.DEFAULTTAB.REPLY))
                 {
-                    _statuses.AddTab(DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
+                    _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.REPLY, Tween.MyCommon.TabUsageType.Mentions, null);
                 }
                 else
                 {
-                    _statuses.Tabs[DEFAULTTAB.REPLY].TabType = TabUsageType.Mentions;
+                    _statuses.Tabs[Tween.MyCommon.DEFAULTTAB.REPLY].TabType = Tween.MyCommon.TabUsageType.Mentions;
                 }
             }
-            if (_statuses.GetTabByType(TabUsageType.DirectMessage) == null)
+            if (_statuses.GetTabByType(Tween.MyCommon.TabUsageType.DirectMessage) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(DEFAULTTAB.DM))
+                if (!_statuses.Tabs.ContainsKey(Tween.MyCommon.DEFAULTTAB.DM))
                 {
-                    _statuses.AddTab(DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
+                    _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.DM, Tween.MyCommon.TabUsageType.DirectMessage, null);
                 }
                 else
                 {
-                    _statuses.Tabs[DEFAULTTAB.DM].TabType = TabUsageType.DirectMessage;
+                    _statuses.Tabs[Tween.MyCommon.DEFAULTTAB.DM].TabType = Tween.MyCommon.TabUsageType.DirectMessage;
                 }
             }
-            if (_statuses.GetTabByType(TabUsageType.Favorites) == null)
+            if (_statuses.GetTabByType(Tween.MyCommon.TabUsageType.Favorites) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(DEFAULTTAB.FAV))
+                if (!_statuses.Tabs.ContainsKey(Tween.MyCommon.DEFAULTTAB.FAV))
                 {
-                    _statuses.AddTab(DEFAULTTAB.FAV, TabUsageType.Favorites, null);
+                    _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.FAV, Tween.MyCommon.TabUsageType.Favorites, null);
                 }
                 else
                 {
-                    _statuses.Tabs[DEFAULTTAB.FAV].TabType = TabUsageType.Favorites;
+                    _statuses.Tabs[Tween.MyCommon.DEFAULTTAB.FAV].TabType = Tween.MyCommon.TabUsageType.Favorites;
                 }
             }
             foreach (string tn in _statuses.Tabs.Keys)
             {
-                if (_statuses.Tabs[tn].TabType == TabUsageType.Undefined)
+                if (_statuses.Tabs[tn].TabType == Tween.MyCommon.TabUsageType.Undefined)
                 {
-                    _statuses.Tabs[tn].TabType = TabUsageType.UserDefined;
+                    _statuses.Tabs[tn].TabType = Tween.MyCommon.TabUsageType.UserDefined;
                 }
                 if (!AddNewTab(tn, true, _statuses.Tabs[tn].TabType, _statuses.Tabs[tn].ListInfo))
-                    throw new Exception(Tween.My.Resources.TweenMain_LoadText1);
+                    throw new Exception(Tween.My.Resources.Resources.TweenMain_LoadText1);
             }
 
             this.JumpReadOpMenuItem.ShortcutKeyDisplayString = "Space";
@@ -1569,7 +1569,7 @@ namespace Tween
                 tw.VerifyCredentials();
                 foreach (UserAccount ua_loopVariable in _cfgCommon.UserAccounts)
                 {
-                    ua = ua_loopVariable;
+                    var ua = ua_loopVariable;
                     if (ua.Username.ToLower() == tw.Username.ToLower())
                     {
                         ua.UserId = tw.UserId;
@@ -1579,7 +1579,7 @@ namespace Tween
             }
             foreach (UserAccount ua_loopVariable in SettingDialog.UserAccounts)
             {
-                ua = ua_loopVariable;
+                var ua = ua_loopVariable;
                 if (ua.UserId == 0 && ua.Username.ToLower() == tw.Username.ToLower())
                 {
                     ua.UserId = tw.UserId;
@@ -1694,10 +1694,10 @@ namespace Tween
             }
             if (_statuses.Tabs.Count == 0)
             {
-                _statuses.AddTab(DEFAULTTAB.RECENT, TabUsageType.Home, null);
-                _statuses.AddTab(DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
-                _statuses.AddTab(DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
-                _statuses.AddTab(DEFAULTTAB.FAV, TabUsageType.Favorites, null);
+                _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.RECENT, Tween.MyCommon.TabUsageType.Home, null);
+                _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.REPLY, Tween.MyCommon.TabUsageType.Mentions, null);
+                _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.DM, Tween.MyCommon.TabUsageType.DirectMessage, null);
+                _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.FAV, Tween.MyCommon.TabUsageType.Favorites, null);
             }
         }
 
@@ -1878,42 +1878,42 @@ namespace Tween
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_homeCounter, SettingDialog.TimelinePeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Timeline)
-                    GetTimeline(WORKERTYPE.Timeline, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.Timeline, 1, 0, "");
                 ResetTimers.Timeline = false;
             }
             if (ResetTimers.Reply || static_TimerTimeline_Elapsed_mentionCounter <= 0 && SettingDialog.ReplyPeriodInt > 0)
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_mentionCounter, SettingDialog.ReplyPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Reply)
-                    GetTimeline(WORKERTYPE.Reply, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.Reply, 1, 0, "");
                 ResetTimers.Reply = false;
             }
             if (ResetTimers.DirectMessage || static_TimerTimeline_Elapsed_dmCounter <= 0 && SettingDialog.DMPeriodInt > 0)
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_dmCounter, SettingDialog.DMPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.DirectMessage)
-                    GetTimeline(WORKERTYPE.DirectMessegeRcv, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 0, "");
                 ResetTimers.DirectMessage = false;
             }
             if (ResetTimers.PublicSearch || static_TimerTimeline_Elapsed_pubSearchCounter <= 0 && SettingDialog.PubSearchPeriodInt > 0)
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_pubSearchCounter, SettingDialog.PubSearchPeriodInt);
                 if (!ResetTimers.PublicSearch)
-                    GetTimeline(WORKERTYPE.PublicSearch, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.PublicSearch, 1, 0, "");
                 ResetTimers.PublicSearch = false;
             }
             if (ResetTimers.UserTimeline || static_TimerTimeline_Elapsed_userTimelineCounter <= 0 && SettingDialog.UserTimelinePeriodInt > 0)
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_userTimelineCounter, SettingDialog.UserTimelinePeriodInt);
                 if (!ResetTimers.UserTimeline)
-                    GetTimeline(WORKERTYPE.UserTimeline, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.UserTimeline, 1, 0, "");
                 ResetTimers.UserTimeline = false;
             }
             if (ResetTimers.Lists || static_TimerTimeline_Elapsed_listsCounter <= 0 && SettingDialog.ListsPeriodInt > 0)
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_listsCounter, SettingDialog.ListsPeriodInt);
                 if (!ResetTimers.Lists)
-                    GetTimeline(WORKERTYPE.List, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.List, 1, 0, "");
                 ResetTimers.Lists = false;
             }
             if (ResetTimers.UserStream || static_TimerTimeline_Elapsed_usCounter <= 0 && SettingDialog.UserstreamPeriodInt > 0)
@@ -1927,7 +1927,7 @@ namespace Tween
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_refreshFollowers, 0);
                 doGetFollowersMenu();
-                GetTimeline(WORKERTYPE.Configuration, 0, 0, "");
+                GetTimeline(Tween.MyCommon.WORKERTYPE.Configuration, 0, 0, "");
                 if (InvokeRequired && !IsDisposed)
                     this.Invoke(new MethodInvoker(this.TrimPostChain));
             }
@@ -1938,14 +1938,14 @@ namespace Tween
                 {
                     osResumed = false;
                     Interlocked.Exchange(ref static_TimerTimeline_Elapsed_ResumeWait, 0);
-                    GetTimeline(WORKERTYPE.Timeline, 1, 0, "");
-                    GetTimeline(WORKERTYPE.Reply, 1, 0, "");
-                    GetTimeline(WORKERTYPE.DirectMessegeRcv, 1, 0, "");
-                    GetTimeline(WORKERTYPE.PublicSearch, 1, 0, "");
-                    GetTimeline(WORKERTYPE.UserTimeline, 1, 0, "");
-                    GetTimeline(WORKERTYPE.List, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.Timeline, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.Reply, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.PublicSearch, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.UserTimeline, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.List, 1, 0, "");
                     doGetFollowersMenu();
-                    GetTimeline(WORKERTYPE.Configuration, 0, 0, "");
+                    GetTimeline(Tween.MyCommon.WORKERTYPE.Configuration, 0, 0, "");
                     if (InvokeRequired && !IsDisposed)
                         this.Invoke(new MethodInvoker(this.TrimPostChain));
                 }
@@ -1968,7 +1968,7 @@ namespace Tween
             SaveSelectedStatus(selId, focusedId);
 
             //mentionsの更新前件数を保持
-            int dmCount = _statuses.GetTabByType(TabUsageType.DirectMessage).AllCount;
+            int dmCount = _statuses.GetTabByType(Tween.MyCommon.TabUsageType.DirectMessage).AllCount;
 
             //更新確定
             PostClass[] notifyPosts = null;
@@ -2068,7 +2068,7 @@ namespace Tween
             }
 
             //新着通知
-            NotifyNewPosts(notifyPosts, soundFile, addCount, isMention || dmCount != _statuses.GetTabByType(TabUsageType.DirectMessage).AllCount);
+            NotifyNewPosts(notifyPosts, soundFile, addCount, isMention || dmCount != _statuses.GetTabByType(Tween.MyCommon.TabUsageType.DirectMessage).AllCount);
 
             SetMainWindowTitle();
             if (!StatusLabelUrl.Text.StartsWith("http"))
@@ -2191,12 +2191,12 @@ namespace Tween
 
         private bool BalloonRequired()
         {
-            return BalloonRequired(new Twitter.FormattedEvent { Eventtype = EVENTTYPE.None });
+            return BalloonRequired(new Twitter.FormattedEvent { Eventtype = Tween.MyCommon.EVENTTYPE.None });
         }
 
-        private bool IsEventNotifyAsEventType(EVENTTYPE type)
+        private bool IsEventNotifyAsEventType(Tween.MyCommon.EVENTTYPE type)
         {
-            return SettingDialog.EventNotifyEnabled && Convert.ToBoolean(type & SettingDialog.EventNotifyFlag) || type == EVENTTYPE.None;
+            return SettingDialog.EventNotifyEnabled && Convert.ToBoolean(type & SettingDialog.EventNotifyFlag) || type == Tween.MyCommon.EVENTTYPE.None;
         }
 
         private bool IsMyEventNotityAsEventType(Twitter.FormattedEvent ev)
@@ -2206,7 +2206,7 @@ namespace Tween
 
         private bool BalloonRequired(Twitter.FormattedEvent ev)
         {
-            if ((IsEventNotifyAsEventType(ev.Eventtype) && IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (SettingDialog.ForceEventNotify && ev.Eventtype != EVENTTYPE.None)) && !_initial && ((SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !SettingDialog.LimitBalloon)) && !Win32Api.IsScreenSaverRunning())
+            if ((IsEventNotifyAsEventType(ev.Eventtype) && IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (SettingDialog.ForceEventNotify && ev.Eventtype != Tween.MyCommon.EVENTTYPE.None)) && !_initial && ((SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !SettingDialog.LimitBalloon)) && !Win32Api.IsScreenSaverRunning())
             {
                 return true;
             }
@@ -2237,7 +2237,7 @@ namespace Tween
 
                         foreach (PostClass post_loopVariable in notifyPosts)
                         {
-                            post = post_loopVariable;
+                            var post = post_loopVariable;
                             if (!(notifyPosts.Count() > 3))
                             {
                                 sb.Clear();
@@ -2252,10 +2252,10 @@ namespace Tween
                                 sb.Append(System.Environment.NewLine);
                             switch (SettingDialog.NameBalloon)
                             {
-                                case NameBalloonEnum.UserID:
+                                case Tween.MyCommon.NameBalloonEnum.UserID:
                                     sb.Append(post.ScreenName).Append(" : ");
                                     break;
-                                case NameBalloonEnum.NickName:
+                                case Tween.MyCommon.NameBalloonEnum.NickName:
                                     sb.Append(post.Nickname).Append(" : ");
                                     break;
                             }
@@ -2284,10 +2284,10 @@ namespace Tween
                                 //NotifyIcon1.BalloonTipTitle += "Tween [DM] " + My.Resources.RefreshDirectMessageText1 + " " + addCount.ToString() + My.Resources.RefreshDirectMessageText2
                                 ntIcon = ToolTipIcon.Warning;
                                 title.Append("Tween [DM] ");
-                                title.Append(Tween.My.Resources.RefreshDirectMessageText1);
+                                title.Append(Tween.My.Resources.Resources.RefreshDirectMessageText1);
                                 title.Append(" ");
                                 title.Append(addCount);
-                                title.Append(Tween.My.Resources.RefreshDirectMessageText2);
+                                title.Append(Tween.My.Resources.Resources.RefreshDirectMessageText2);
                                 nt = GrowlHelper.NotifyType.DirectMessage;
                             }
                             else if (reply)
@@ -2296,10 +2296,10 @@ namespace Tween
                                 //NotifyIcon1.BalloonTipTitle += "Tween [Reply!] " + My.Resources.RefreshTimelineText1 + " " + addCount.ToString() + My.Resources.RefreshTimelineText2
                                 ntIcon = ToolTipIcon.Warning;
                                 title.Append("Tween [Reply!] ");
-                                title.Append(Tween.My.Resources.RefreshTimelineText1);
+                                title.Append(Tween.My.Resources.Resources.RefreshTimelineText1);
                                 title.Append(" ");
                                 title.Append(addCount);
-                                title.Append(Tween.My.Resources.RefreshTimelineText2);
+                                title.Append(Tween.My.Resources.Resources.RefreshTimelineText2);
                                 nt = GrowlHelper.NotifyType.Reply;
                             }
                             else
@@ -2308,10 +2308,10 @@ namespace Tween
                                 //NotifyIcon1.BalloonTipTitle += "Tween " + My.Resources.RefreshTimelineText1 + " " + addCount.ToString() + My.Resources.RefreshTimelineText2
                                 ntIcon = ToolTipIcon.Info;
                                 title.Append("Tween ");
-                                title.Append(Tween.My.Resources.RefreshTimelineText1);
+                                title.Append(Tween.My.Resources.Resources.RefreshTimelineText1);
                                 title.Append(" ");
                                 title.Append(addCount);
-                                title.Append(Tween.My.Resources.RefreshTimelineText2);
+                                title.Append(Tween.My.Resources.Resources.RefreshTimelineText2);
                                 nt = GrowlHelper.NotifyType.Notify;
                             }
                             string bText = sb.ToString();
@@ -2336,10 +2336,10 @@ namespace Tween
                                 sb.Append(System.Environment.NewLine);
                             switch (SettingDialog.NameBalloon)
                             {
-                                case NameBalloonEnum.UserID:
+                                case Tween.MyCommon.NameBalloonEnum.UserID:
                                     sb.Append(post.ScreenName).Append(" : ");
                                     break;
-                                case NameBalloonEnum.NickName:
+                                case Tween.MyCommon.NameBalloonEnum.NickName:
                                     sb.Append(post.Nickname).Append(" : ");
                                     break;
                             }
@@ -2364,10 +2364,10 @@ namespace Tween
                             //NotifyIcon1.BalloonTipTitle += "Tween [DM] " + My.Resources.RefreshDirectMessageText1 + " " + addCount.ToString() + My.Resources.RefreshDirectMessageText2
                             ntIcon = ToolTipIcon.Warning;
                             title.Append("Tween [DM] ");
-                            title.Append(Tween.My.Resources.RefreshDirectMessageText1);
+                            title.Append(Tween.My.Resources.Resources.RefreshDirectMessageText1);
                             title.Append(" ");
                             title.Append(addCount);
-                            title.Append(Tween.My.Resources.RefreshDirectMessageText2);
+                            title.Append(Tween.My.Resources.Resources.RefreshDirectMessageText2);
                             nt = GrowlHelper.NotifyType.DirectMessage;
                         }
                         else if (reply)
@@ -2376,10 +2376,10 @@ namespace Tween
                             //NotifyIcon1.BalloonTipTitle += "Tween [Reply!] " + My.Resources.RefreshTimelineText1 + " " + addCount.ToString() + My.Resources.RefreshTimelineText2
                             ntIcon = ToolTipIcon.Warning;
                             title.Append("Tween [Reply!] ");
-                            title.Append(Tween.My.Resources.RefreshTimelineText1);
+                            title.Append(Tween.My.Resources.Resources.RefreshTimelineText1);
                             title.Append(" ");
                             title.Append(addCount);
-                            title.Append(Tween.My.Resources.RefreshTimelineText2);
+                            title.Append(Tween.My.Resources.Resources.RefreshTimelineText2);
                             nt = GrowlHelper.NotifyType.Reply;
                         }
                         else
@@ -2388,10 +2388,10 @@ namespace Tween
                             //NotifyIcon1.BalloonTipTitle += "Tween " + My.Resources.RefreshTimelineText1 + " " + addCount.ToString() + My.Resources.RefreshTimelineText2
                             ntIcon = ToolTipIcon.Info;
                             title.Append("Tween ");
-                            title.Append(Tween.My.Resources.RefreshTimelineText1);
+                            title.Append(Tween.My.Resources.Resources.RefreshTimelineText1);
                             title.Append(" ");
                             title.Append(addCount);
-                            title.Append(Tween.My.Resources.RefreshTimelineText2);
+                            title.Append(Tween.My.Resources.Resources.RefreshTimelineText2);
                             nt = GrowlHelper.NotifyType.Notify;
                         }
                         string bText = sb.ToString();
@@ -2427,7 +2427,7 @@ namespace Tween
             //mentions新着時に画面ブリンク
             if (!_initial && SettingDialog.BlinkNewMentions && newMentions && Form.ActiveForm == null)
             {
-                Win32Api.FlashMyWindow(this.Handle, FlashSpecification.FlashTray, 3);
+                Win32Api.FlashMyWindow(this.Handle, Tween.Win32Api.FlashSpecification.FlashTray, 3);
             }
         }
 
@@ -2479,7 +2479,7 @@ namespace Tween
             else
             {
                 itm = ((DetailsListView)Tab.Tag).Items[Index];
-                post = _statuses.Item[Tab.Text, Index];
+                post = _statuses.Item(Tab.Text, Index);
             }
 
             ChangeItemStyleRead(Read, itm, post, (DetailsListView)Tab.Tag);
@@ -2659,7 +2659,7 @@ namespace Tween
 
             if (this.ExistCurrentPost && StatusText.Text.Trim() == string.Format("RT @{0}: {1}", _curPost.ScreenName, _curPost.TextFromApi))
             {
-                DialogResult rtResult = MessageBox.Show(string.Format(Tween.My.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult rtResult = MessageBox.Show(string.Format(Tween.My.Resources.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (rtResult)
                 {
                     case System.Windows.Forms.DialogResult.Yes:
@@ -2680,7 +2680,7 @@ namespace Tween
             if (SettingDialog.Nicoms)
             {
                 StatusText.SelectionStart = StatusText.Text.Length;
-                UrlConvert(UrlConverter.Nicoms);
+                UrlConvert(Tween.MyCommon.UrlConverter.Nicoms);
             }
             //If SettingDialog.UrlConvertAuto Then
             //    StatusText.SelectionStart = StatusText.Text.Length
@@ -2693,7 +2693,7 @@ namespace Tween
             GetWorkerArg args = new GetWorkerArg();
             args.page = 0;
             args.endPage = 0;
-            args.type = WORKERTYPE.PostMessage;
+            args.type = Tween.MyCommon.WORKERTYPE.PostMessage;
             CheckReplyTo(StatusText.Text);
 
             //整形によって増加する文字数を取得
@@ -2729,7 +2729,7 @@ namespace Tween
             }
             if (GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
             {
-                if (MessageBox.Show(Tween.My.Resources.PostLengthOverMessage1, Tween.My.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.OK)
+                if (MessageBox.Show(Tween.My.Resources.Resources.PostLengthOverMessage1, Tween.My.Resources.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.OK)
                 {
                     isCutOff = true;
                     //If Not SettingDialog.UrlConvertAuto Then UrlConvertAutoToolStripMenuItem_Click(Nothing, Nothing)
@@ -2844,7 +2844,7 @@ namespace Tween
                 //画像投稿
                 if (!object.ReferenceEquals(ImageSelectedPicture.Image, ImageSelectedPicture.InitialImage) && ImageServiceCombo.SelectedIndex > -1 && !string.IsNullOrEmpty(ImagefilePathText.Text))
                 {
-                    if (MessageBox.Show(Tween.My.Resources.PostPictureConfirm1, Tween.My.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Cancel)
+                    if (MessageBox.Show(Tween.My.Resources.Resources.PostPictureConfirm1, Tween.My.Resources.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Cancel)
                     {
                         TimelinePanel.Visible = true;
                         TimelinePanel.Enabled = true;
@@ -2871,7 +2871,7 @@ namespace Tween
                 }
                 else
                 {
-                    MessageBox.Show(Tween.My.Resources.PostPictureWarn1, Tween.My.Resources.PostPictureWarn2);
+                    MessageBox.Show(Tween.My.Resources.Resources.PostPictureWarn1, Tween.My.Resources.Resources.PostPictureWarn2);
                     return;
                 }
             }
@@ -2881,7 +2881,7 @@ namespace Tween
             //Google検索（試験実装）
             if (StatusText.Text.StartsWith("Google:", StringComparison.OrdinalIgnoreCase) && StatusText.Text.Trim().Length > 7)
             {
-                string tmp = string.Format(Tween.My.Resources.SearchItem2Url, HttpUtility.UrlEncode(StatusText.Text.Substring(7)));
+                string tmp = string.Format(Tween.My.Resources.Resources.SearchItem2Url, HttpUtility.UrlEncode(StatusText.Text.Substring(7)));
                 OpenUriAsync(tmp);
             }
 
@@ -2955,13 +2955,13 @@ namespace Tween
                     static_CheckAccountValid_errorCount_Init.State = 1;
                 }
             }
-            if (Twitter.AccountState != ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != Tween.MyCommon.ACCOUNT_STATE.Valid)
             {
                 static_CheckAccountValid_errorCount += 1;
                 if (static_CheckAccountValid_errorCount > 5)
                 {
                     static_CheckAccountValid_errorCount = 0;
-                    Twitter.AccountState = ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = Tween.MyCommon.ACCOUNT_STATE.Valid;
                     return true;
                 }
                 return false;
@@ -2995,39 +2995,39 @@ namespace Tween
             if (!CheckAccountValid())
             {
                 rslt.retMsg = "Auth error. Check your account";
-                rslt.type = WORKERTYPE.ErrorState;
+                rslt.type = Tween.MyCommon.WORKERTYPE.ErrorState;
                 //エラー表示のみ行ない、後処理キャンセル
                 rslt.tName = args.tName;
                 e.Result = rslt;
                 return;
             }
 
-            if (args.type != WORKERTYPE.OpenUri)
+            if (args.type != Tween.MyCommon.WORKERTYPE.OpenUri)
                 bw.ReportProgress(0, "");
             //Notifyアイコンアニメーション開始
             switch (args.type)
             {
-                case WORKERTYPE.Timeline:
-                case WORKERTYPE.Reply:
+                case Tween.MyCommon.WORKERTYPE.Timeline:
+                case Tween.MyCommon.WORKERTYPE.Reply:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetTimelineApi(read, args.type, args.page == -1, _initial);
                     //新着時未読クリア
-                    if (string.IsNullOrEmpty(ret) && args.type == WORKERTYPE.Timeline && SettingDialog.ReadOldPosts)
+                    if (string.IsNullOrEmpty(ret) && args.type == Tween.MyCommon.WORKERTYPE.Timeline && SettingDialog.ReadOldPosts)
                     {
                         _statuses.SetRead();
                     }
                     //振り分け
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case WORKERTYPE.DirectMessegeRcv:
+                case Tween.MyCommon.WORKERTYPE.DirectMessegeRcv:
                     //送信分もまとめて取得
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
-                    ret = tw.GetDirectMessageApi(read, WORKERTYPE.DirectMessegeRcv, args.page == -1);
+                    ret = tw.GetDirectMessageApi(read, Tween.MyCommon.WORKERTYPE.DirectMessegeRcv, args.page == -1);
                     if (string.IsNullOrEmpty(ret))
-                        ret = tw.GetDirectMessageApi(read, WORKERTYPE.DirectMessegeSnt, args.page == -1);
+                        ret = tw.GetDirectMessageApi(read, Tween.MyCommon.WORKERTYPE.DirectMessegeSnt, args.page == -1);
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case WORKERTYPE.FavAdd:
+                case Tween.MyCommon.WORKERTYPE.FavAdd:
                     //スレッド処理はしない
                     if (_statuses.Tabs.ContainsKey(args.tName))
                     {
@@ -3041,7 +3041,7 @@ namespace Tween
                             }
                             else
                             {
-                                post = _statuses.Item[args.ids[i]];
+                                post = _statuses.Item(args.ids[i]);
                             }
                             args.page = i + 1;
                             bw.ReportProgress(50, MakeStatusMessage(args, false));
@@ -3064,20 +3064,20 @@ namespace Tween
                                     if (string.IsNullOrEmpty(post.RelTabName))
                                     {
                                         //検索,リストUserTimeline.Relatedタブからのfavは、favタブへ追加せず。それ以外は追加
-                                        _statuses.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                        _statuses.GetTabByType(Tween.MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
                                     }
                                     else
                                     {
                                         //検索,リスト,UserTimeline.Relatedタブからのfavで、TLでも取得済みならfav反映
                                         if (_statuses.ContainsKey(post.StatusId))
                                         {
-                                            PostClass postTl = _statuses.Item[post.StatusId];
+                                            PostClass postTl = _statuses.Item(post.StatusId);
                                             postTl.IsFav = true;
-                                            _statuses.GetTabByType(TabUsageType.Favorites).Add(postTl.StatusId, postTl.IsRead, false);
+                                            _statuses.GetTabByType(Tween.MyCommon.TabUsageType.Favorites).Add(postTl.StatusId, postTl.IsRead, false);
                                         }
                                     }
                                     //検索,リスト,UserTimeline,Relatedの各タブに反映
-                                    foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
+                                    foreach (TabClass tb in _statuses.GetTabsByType(Tween.MyCommon.TabUsageType.PublicSearch | Tween.MyCommon.TabUsageType.Lists | Tween.MyCommon.TabUsageType.UserTimeline | Tween.MyCommon.TabUsageType.Related))
                                     {
                                         if (tb.Contains(post.StatusId))
                                             tb.Posts[post.StatusId].IsFav = true;
@@ -3088,7 +3088,7 @@ namespace Tween
                     }
                     rslt.sIds = args.sIds;
                     break;
-                case WORKERTYPE.FavRemove:
+                case Tween.MyCommon.WORKERTYPE.FavRemove:
                     //スレッド処理はしない
                     if (_statuses.Tabs.ContainsKey(args.tName))
                     {
@@ -3102,7 +3102,7 @@ namespace Tween
                             }
                             else
                             {
-                                post = _statuses.Item[args.ids[i]];
+                                post = _statuses.Item(args.ids[i]);
                             }
                             args.page = i + 1;
                             bw.ReportProgress(50, MakeStatusMessage(args, false));
@@ -3122,9 +3122,9 @@ namespace Tween
                                     post.IsFav = false;
                                     //リスト再描画必要
                                     if (_statuses.ContainsKey(post.StatusId))
-                                        _statuses.Item[post.StatusId].IsFav = false;
+                                        _statuses.Item(post.StatusId).IsFav = false;
                                     //検索,リスト,UserTimeline,Relatedの各タブに反映
-                                    foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
+                                    foreach (TabClass tb in _statuses.GetTabsByType(Tween.MyCommon.TabUsageType.PublicSearch | Tween.MyCommon.TabUsageType.Lists | Tween.MyCommon.TabUsageType.UserTimeline | Tween.MyCommon.TabUsageType.Related))
                                     {
                                         if (tb.Contains(post.StatusId))
                                             tb.Posts[post.StatusId].IsFav = false;
@@ -3135,14 +3135,14 @@ namespace Tween
                     }
                     rslt.sIds = args.sIds;
                     break;
-                case WORKERTYPE.PostMessage:
+                case Tween.MyCommon.WORKERTYPE.PostMessage:
                     bw.ReportProgress(200);
                     if (string.IsNullOrEmpty(args.status.imagePath))
                     {
                         for (int i = 0; i <= 1; i++)
                         {
                             ret = tw.PostStatus(args.status.status, args.status.inReplyToId);
-                            if (string.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.status.status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.status.status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != ACCOUNT_STATE.Valid)
+                            if (string.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.status.status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.status.status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != Tween.MyCommon.ACCOUNT_STATE.Valid)
                             {
                                 break; // TODO: might not be correct. Was : Exit For
                             }
@@ -3155,7 +3155,7 @@ namespace Tween
                     bw.ReportProgress(300);
                     rslt.status = args.status;
                     break;
-                case WORKERTYPE.Retweet:
+                case Tween.MyCommon.WORKERTYPE.Retweet:
                     bw.ReportProgress(200);
                     for (int i = 0; i <= args.ids.Count - 1; i++)
                     {
@@ -3164,18 +3164,18 @@ namespace Tween
 
                     bw.ReportProgress(300);
                     break;
-                case WORKERTYPE.Follower:
-                    bw.ReportProgress(50, Tween.My.Resources.UpdateFollowersMenuItem1_ClickText1);
+                case Tween.MyCommon.WORKERTYPE.Follower:
+                    bw.ReportProgress(50, Tween.My.Resources.Resources.UpdateFollowersMenuItem1_ClickText1);
                     ret = tw.GetFollowersApi();
                     if (string.IsNullOrEmpty(ret))
                     {
                         ret = tw.GetNoRetweetIdsApi();
                     }
                     break;
-                case WORKERTYPE.Configuration:
+                case Tween.MyCommon.WORKERTYPE.Configuration:
                     ret = tw.ConfigurationApi();
                     break;
-                case WORKERTYPE.OpenUri:
+                case Tween.MyCommon.WORKERTYPE.OpenUri:
                     string myPath = Convert.ToString(args.url);
 
                     try
@@ -3209,16 +3209,16 @@ namespace Tween
                         //                MessageBox.Show("ブラウザの起動に失敗、またはタイムアウトしました。" + ex.ToString())
                     }
                     break;
-                case WORKERTYPE.Favorites:
+                case Tween.MyCommon.WORKERTYPE.Favorites:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetFavoritesApi(read, args.type, args.page == -1);
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case WORKERTYPE.PublicSearch:
+                case Tween.MyCommon.WORKERTYPE.PublicSearch:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (string.IsNullOrEmpty(args.tName))
                     {
-                        foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.PublicSearch))
+                        foreach (TabClass tb in _statuses.GetTabsByType(Tween.MyCommon.TabUsageType.PublicSearch))
                         {
                             //If tb.SearchWords <> "" Then ret = tw.GetPhoenixSearch(read, tb, False)
                             if (!string.IsNullOrEmpty(tb.SearchWords))
@@ -3242,14 +3242,14 @@ namespace Tween
                     //振り分け
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case WORKERTYPE.UserTimeline:
+                case Tween.MyCommon.WORKERTYPE.UserTimeline:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     int count = 20;
                     if (SettingDialog.UseAdditionalCount)
                         count = SettingDialog.UserTimelineCountApi;
                     if (string.IsNullOrEmpty(args.tName))
                     {
-                        foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.UserTimeline))
+                        foreach (TabClass tb in _statuses.GetTabsByType(Tween.MyCommon.TabUsageType.UserTimeline))
                         {
                             if (!string.IsNullOrEmpty(tb.User))
                                 ret = tw.GetUserTimelineApi(read, count, tb.User, tb, false);
@@ -3266,12 +3266,12 @@ namespace Tween
                     //振り分け
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case WORKERTYPE.List:
+                case Tween.MyCommon.WORKERTYPE.List:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (string.IsNullOrEmpty(args.tName))
                     {
                         //定期更新
-                        foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.Lists))
+                        foreach (TabClass tb in _statuses.GetTabsByType(Tween.MyCommon.TabUsageType.Lists))
                         {
                             if (tb.ListInfo != null && tb.ListInfo.Id != 0)
                                 ret = tw.GetListStatus(read, tb, false, _initial);
@@ -3289,14 +3289,13 @@ namespace Tween
                     //振り分け
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case WORKERTYPE.Related:
+                case Tween.MyCommon.WORKERTYPE.Related:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
-                    TabClass tb = _statuses.GetTabByName(args.tName);
-                    ret = tw.GetRelatedResult(read, tb);
+                    ret = tw.GetRelatedResult(read, _statuses.GetTabByName(args.tName));
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case WORKERTYPE.BlockIds:
-                    bw.ReportProgress(50, Tween.My.Resources.UpdateBlockUserText1);
+                case Tween.MyCommon.WORKERTYPE.BlockIds:
+                    bw.ReportProgress(50, Tween.My.Resources.Resources.UpdateBlockUserText1);
                     ret = tw.GetBlockUserIds();
                     if (TabInformations.GetInstance().BlockIds.Count == 0)
                     {
@@ -3312,7 +3311,7 @@ namespace Tween
             }
 
             //時速表示用
-            if (args.type == WORKERTYPE.FavAdd)
+            if (args.type == Tween.MyCommon.WORKERTYPE.FavAdd)
             {
                 System.DateTime oneHour = DateAndTime.Now.Subtract(new TimeSpan(1, 0, 0));
                 for (int i = _favTimestamps.Count - 1; i >= 0; i += -1)
@@ -3323,7 +3322,7 @@ namespace Tween
                     }
                 }
             }
-            if (args.type == WORKERTYPE.Timeline && !_initial)
+            if (args.type == Tween.MyCommon.WORKERTYPE.Timeline && !_initial)
             {
                 lock (_syncObject)
                 {
@@ -3359,14 +3358,14 @@ namespace Tween
             }
 
             //終了ステータス
-            if (args.type != WORKERTYPE.OpenUri)
+            if (args.type != Tween.MyCommon.WORKERTYPE.OpenUri)
                 bw.ReportProgress(100, MakeStatusMessage(args, true));
             //ステータス書き換え、Notifyアイコンアニメーション開始
 
             rslt.retMsg = ret;
             rslt.type = args.type;
             rslt.tName = args.tName;
-            if (args.type == WORKERTYPE.DirectMessegeRcv || args.type == WORKERTYPE.DirectMessegeSnt || args.type == WORKERTYPE.Reply || args.type == WORKERTYPE.Timeline || args.type == WORKERTYPE.Favorites)
+            if (args.type == Tween.MyCommon.WORKERTYPE.DirectMessegeRcv || args.type == Tween.MyCommon.WORKERTYPE.DirectMessegeSnt || args.type == Tween.MyCommon.WORKERTYPE.Reply || args.type == Tween.MyCommon.WORKERTYPE.Timeline || args.type == Tween.MyCommon.WORKERTYPE.Favorites)
             {
                 rslt.page = args.page - 1;
                 //値が正しいか後でチェック。10ページ毎の継続確認
@@ -3383,34 +3382,34 @@ namespace Tween
                 //継続中メッセージ
                 switch (AsyncArg.type)
                 {
-                    case WORKERTYPE.Timeline:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText5 + AsyncArg.page.ToString() + Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText6;
+                    case Tween.MyCommon.WORKERTYPE.Timeline:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText5 + AsyncArg.page.ToString() + Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case WORKERTYPE.Reply:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText4 + AsyncArg.page.ToString() + Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText6;
+                    case Tween.MyCommon.WORKERTYPE.Reply:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText4 + AsyncArg.page.ToString() + Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case WORKERTYPE.DirectMessegeRcv:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText8 + AsyncArg.page.ToString() + Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText6;
+                    case Tween.MyCommon.WORKERTYPE.DirectMessegeRcv:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText8 + AsyncArg.page.ToString() + Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case WORKERTYPE.FavAdd:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText15 + AsyncArg.page.ToString() + "/" + AsyncArg.ids.Count.ToString() + Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText16 + (AsyncArg.page - AsyncArg.sIds.Count - 1).ToString();
+                    case Tween.MyCommon.WORKERTYPE.FavAdd:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText15 + AsyncArg.page.ToString() + "/" + AsyncArg.ids.Count.ToString() + Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText16 + (AsyncArg.page - AsyncArg.sIds.Count - 1).ToString();
                         break;
-                    case WORKERTYPE.FavRemove:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText17 + AsyncArg.page.ToString() + "/" + AsyncArg.ids.Count.ToString() + Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText18 + (AsyncArg.page - AsyncArg.sIds.Count - 1).ToString();
+                    case Tween.MyCommon.WORKERTYPE.FavRemove:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText17 + AsyncArg.page.ToString() + "/" + AsyncArg.ids.Count.ToString() + Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText18 + (AsyncArg.page - AsyncArg.sIds.Count - 1).ToString();
                         break;
-                    case WORKERTYPE.Favorites:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText19;
+                    case Tween.MyCommon.WORKERTYPE.Favorites:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText19;
                         break;
-                    case WORKERTYPE.PublicSearch:
+                    case Tween.MyCommon.WORKERTYPE.PublicSearch:
                         smsg = "Search refreshing...";
                         break;
-                    case WORKERTYPE.List:
+                    case Tween.MyCommon.WORKERTYPE.List:
                         smsg = "List refreshing...";
                         break;
-                    case WORKERTYPE.Related:
+                    case Tween.MyCommon.WORKERTYPE.Related:
                         smsg = "Related refreshing...";
                         break;
-                    case WORKERTYPE.UserTimeline:
+                    case Tween.MyCommon.WORKERTYPE.UserTimeline:
                         smsg = "UserTimeline refreshing...";
                         break;
                 }
@@ -3420,47 +3419,47 @@ namespace Tween
                 //完了メッセージ
                 switch (AsyncArg.type)
                 {
-                    case WORKERTYPE.Timeline:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText1;
+                    case Tween.MyCommon.WORKERTYPE.Timeline:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText1;
                         break;
-                    case WORKERTYPE.Reply:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText9;
+                    case Tween.MyCommon.WORKERTYPE.Reply:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText9;
                         break;
-                    case WORKERTYPE.DirectMessegeRcv:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText11;
+                    case Tween.MyCommon.WORKERTYPE.DirectMessegeRcv:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText11;
                         break;
-                    case WORKERTYPE.DirectMessegeSnt:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText13;
+                    case Tween.MyCommon.WORKERTYPE.DirectMessegeSnt:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText13;
                         break;
-                    case WORKERTYPE.FavAdd:
-                        break;
-                    //進捗メッセージ残す
-                    case WORKERTYPE.FavRemove:
+                    case Tween.MyCommon.WORKERTYPE.FavAdd:
                         break;
                     //進捗メッセージ残す
-                    case WORKERTYPE.Favorites:
-                        smsg = Tween.My.Resources.GetTimelineWorker_RunWorkerCompletedText20;
-                        break;
-                    case WORKERTYPE.Follower:
-                        smsg = Tween.My.Resources.UpdateFollowersMenuItem1_ClickText3;
-                        break;
-                    case WORKERTYPE.Configuration:
+                    case Tween.MyCommon.WORKERTYPE.FavRemove:
                         break;
                     //進捗メッセージ残す
-                    case WORKERTYPE.PublicSearch:
+                    case Tween.MyCommon.WORKERTYPE.Favorites:
+                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText20;
+                        break;
+                    case Tween.MyCommon.WORKERTYPE.Follower:
+                        smsg = Tween.My.Resources.Resources.UpdateFollowersMenuItem1_ClickText3;
+                        break;
+                    case Tween.MyCommon.WORKERTYPE.Configuration:
+                        break;
+                    //進捗メッセージ残す
+                    case Tween.MyCommon.WORKERTYPE.PublicSearch:
                         smsg = "Search refreshed";
                         break;
-                    case WORKERTYPE.List:
+                    case Tween.MyCommon.WORKERTYPE.List:
                         smsg = "List refreshed";
                         break;
-                    case WORKERTYPE.Related:
+                    case Tween.MyCommon.WORKERTYPE.Related:
                         smsg = "Related refreshed";
                         break;
-                    case WORKERTYPE.UserTimeline:
+                    case Tween.MyCommon.WORKERTYPE.UserTimeline:
                         smsg = "UserTimeline refreshed";
                         break;
-                    case WORKERTYPE.BlockIds:
-                        smsg = Tween.My.Resources.UpdateBlockUserText3;
+                    case Tween.MyCommon.WORKERTYPE.BlockIds:
+                        smsg = Tween.My.Resources.Resources.UpdateBlockUserText3;
                         break;
                 }
             }
@@ -3482,7 +3481,7 @@ namespace Tween
                 //終了
                 if (e.ProgressPercentage == 300)
                 {
-                    StatusLabel.Text = Tween.My.Resources.PostWorker_RunWorkerCompletedText4;
+                    StatusLabel.Text = Tween.My.Resources.Resources.PostWorker_RunWorkerCompletedText4;
                 }
             }
             else
@@ -3515,7 +3514,7 @@ namespace Tween
 
             GetWorkerResult rslt = (GetWorkerResult)e.Result;
 
-            if (rslt.type == WORKERTYPE.OpenUri)
+            if (rslt.type == Tween.MyCommon.WORKERTYPE.OpenUri)
                 return;
 
             //エラー
@@ -3525,10 +3524,10 @@ namespace Tween
                 StatusLabel.Text = rslt.retMsg;
             }
 
-            if (rslt.type == WORKERTYPE.ErrorState)
+            if (rslt.type == Tween.MyCommon.WORKERTYPE.ErrorState)
                 return;
 
-            if (rslt.type == WORKERTYPE.FavRemove)
+            if (rslt.type == Tween.MyCommon.WORKERTYPE.FavRemove)
             {
                 this.RemovePostFromFavTab(rslt.sIds.ToArray());
             }
@@ -3542,7 +3541,7 @@ namespace Tween
             //    End If
             //Next
             //If Not busy Then RefreshTimeline() 'background処理なければ、リスト反映
-            if (rslt.type == WORKERTYPE.Timeline || rslt.type == WORKERTYPE.Reply || rslt.type == WORKERTYPE.List || rslt.type == WORKERTYPE.PublicSearch || rslt.type == WORKERTYPE.DirectMessegeRcv || rslt.type == WORKERTYPE.DirectMessegeSnt || rslt.type == WORKERTYPE.Favorites || rslt.type == WORKERTYPE.Follower || rslt.type == WORKERTYPE.FavAdd || rslt.type == WORKERTYPE.FavRemove || rslt.type == WORKERTYPE.Related || rslt.type == WORKERTYPE.UserTimeline || rslt.type == WORKERTYPE.BlockIds || rslt.type == WORKERTYPE.Configuration)
+            if (rslt.type == Tween.MyCommon.WORKERTYPE.Timeline || rslt.type == Tween.MyCommon.WORKERTYPE.Reply || rslt.type == Tween.MyCommon.WORKERTYPE.List || rslt.type == Tween.MyCommon.WORKERTYPE.PublicSearch || rslt.type == Tween.MyCommon.WORKERTYPE.DirectMessegeRcv || rslt.type == Tween.MyCommon.WORKERTYPE.DirectMessegeSnt || rslt.type == Tween.MyCommon.WORKERTYPE.Favorites || rslt.type == Tween.MyCommon.WORKERTYPE.Follower || rslt.type == Tween.MyCommon.WORKERTYPE.FavAdd || rslt.type == Tween.MyCommon.WORKERTYPE.FavRemove || rslt.type == Tween.MyCommon.WORKERTYPE.Related || rslt.type == Tween.MyCommon.WORKERTYPE.UserTimeline || rslt.type == Tween.MyCommon.WORKERTYPE.BlockIds || rslt.type == Tween.MyCommon.WORKERTYPE.Configuration)
             {
                 RefreshTimeline(false);
                 //リスト反映
@@ -3550,32 +3549,32 @@ namespace Tween
 
             switch (rslt.type)
             {
-                case WORKERTYPE.Timeline:
+                case Tween.MyCommon.WORKERTYPE.Timeline:
                     _waitTimeline = false;
                     if (!_initial)
                     {
                         //    'API使用時の取得調整は別途考える（カウント調整？）
                     }
                     break;
-                case WORKERTYPE.Reply:
+                case Tween.MyCommon.WORKERTYPE.Reply:
                     _waitReply = false;
                     if (rslt.newDM && !_initial)
                     {
-                        GetTimeline(WORKERTYPE.DirectMessegeRcv, 1, 0, "");
+                        GetTimeline(Tween.MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 0, "");
                     }
                     break;
-                case WORKERTYPE.Favorites:
+                case Tween.MyCommon.WORKERTYPE.Favorites:
                     _waitFav = false;
                     break;
-                case WORKERTYPE.DirectMessegeRcv:
+                case Tween.MyCommon.WORKERTYPE.DirectMessegeRcv:
                     _waitDm = false;
                     break;
-                case WORKERTYPE.FavAdd:
-                case WORKERTYPE.FavRemove:
+                case Tween.MyCommon.WORKERTYPE.FavAdd:
+                case Tween.MyCommon.WORKERTYPE.FavRemove:
                     if (_curList != null && _curTab != null)
                     {
                         _curList.BeginUpdate();
-                        if (rslt.type == WORKERTYPE.FavRemove && _statuses.Tabs[_curTab.Text].TabType == TabUsageType.Favorites)
+                        if (rslt.type == Tween.MyCommon.WORKERTYPE.FavRemove && _statuses.Tabs[_curTab.Text].TabType == Tween.MyCommon.TabUsageType.Favorites)
                         {
                             //色変えは不要
                         }
@@ -3592,13 +3591,13 @@ namespace Tween
                                         TabClass tb = _statuses.Tabs[rslt.tName];
                                         if (tb != null)
                                         {
-                                            if (tb.TabType == TabUsageType.Lists || tb.TabType == TabUsageType.PublicSearch)
+                                            if (tb.TabType == MyCommon.TabUsageType.Lists || tb.TabType == MyCommon.TabUsageType.PublicSearch)
                                             {
                                                 post = tb.Posts[rslt.sIds[i]];
                                             }
                                             else
                                             {
-                                                post = _statuses.Item[rslt.sIds[i]];
+                                                post = _statuses.Item(rslt.sIds[i]);
                                             }
                                             ChangeCacheStyleRead(post.IsRead, idx, _curTab);
                                         }
@@ -3612,7 +3611,7 @@ namespace Tween
                         _curList.EndUpdate();
                     }
                     break;
-                case WORKERTYPE.PostMessage:
+                case MyCommon.WORKERTYPE.PostMessage:
                     if (string.IsNullOrEmpty(rslt.retMsg) || rslt.retMsg.StartsWith("Outputz") || rslt.retMsg.StartsWith("OK:") || rslt.retMsg == "Warn:Status is a duplicate.")
                     {
                         _postTimestamps.Add(DateAndTime.Now);
@@ -3640,7 +3639,7 @@ namespace Tween
                         DialogResult retry = default(DialogResult);
                         try
                         {
-                            retry = MessageBox.Show(string.Format("{0}   --->   [ " + rslt.retMsg + " ]" + Environment.NewLine + "\"" + rslt.status.status + "\"" + Environment.NewLine + "{1}", Tween.My.Resources.StatusUpdateFailed1, Tween.My.Resources.StatusUpdateFailed2), "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
+                            retry = MessageBox.Show(string.Format("{0}   --->   [ " + rslt.retMsg + " ]" + Environment.NewLine + "\"" + rslt.status.status + "\"" + Environment.NewLine + "{1}", Tween.My.Resources.Resources.StatusUpdateFailed1, Tween.My.Resources.Resources.StatusUpdateFailed2), "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
                         }
                         catch (Exception ex)
                         {
@@ -3651,7 +3650,7 @@ namespace Tween
                             GetWorkerArg args = new GetWorkerArg();
                             args.page = 0;
                             args.endPage = 0;
-                            args.type = WORKERTYPE.PostMessage;
+                            args.type = MyCommon.WORKERTYPE.PostMessage;
                             args.status = rslt.status;
                             RunAsync(args);
                         }
@@ -3672,11 +3671,11 @@ namespace Tween
                         }
                         else
                         {
-                            GetTimeline(WORKERTYPE.Timeline, 1, 0, "");
+                            GetTimeline(MyCommon.WORKERTYPE.Timeline, 1, 0, "");
                         }
                     }
                     break;
-                case WORKERTYPE.Retweet:
+                case MyCommon.WORKERTYPE.Retweet:
                     if (rslt.retMsg.Length == 0)
                     {
                         _postTimestamps.Add(DateAndTime.Now);
@@ -3689,17 +3688,17 @@ namespace Tween
                             }
                         }
                         if (!_isActiveUserstream && SettingDialog.PostAndGet)
-                            GetTimeline(WORKERTYPE.Timeline, 1, 0, "");
+                            GetTimeline(MyCommon.WORKERTYPE.Timeline, 1, 0, "");
                     }
                     break;
-                case WORKERTYPE.Follower:
+                case MyCommon.WORKERTYPE.Follower:
                     //_waitFollower = False
                     _itemCache = null;
                     _postCache = null;
                     if (_curList != null)
                         _curList.Refresh();
                     break;
-                case WORKERTYPE.Configuration:
+                case MyCommon.WORKERTYPE.Configuration:
                     //_waitFollower = False
                     if (SettingDialog.TwitterConfiguration.PhotoSizeLimit != 0)
                     {
@@ -3710,26 +3709,28 @@ namespace Tween
                     if (_curList != null)
                         _curList.Refresh();
                     break;
-                case WORKERTYPE.PublicSearch:
+                case MyCommon.WORKERTYPE.PublicSearch:
                     _waitPubSearch = false;
                     break;
-                case WORKERTYPE.UserTimeline:
+                case MyCommon.WORKERTYPE.UserTimeline:
                     _waitUserTimeline = false;
                     break;
-                case WORKERTYPE.List:
+                case MyCommon.WORKERTYPE.List:
                     _waitLists = false;
                     break;
-                case WORKERTYPE.Related:
-                    TabClass tb = _statuses.GetTabByType(TabUsageType.Related);
-                    if (tb != null && tb.RelationTargetPost != null && tb.Contains(tb.RelationTargetPost.StatusId))
+                case MyCommon.WORKERTYPE.Related:
                     {
-                        foreach (TabPage tp in ListTab.TabPages)
+                        TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Related);
+                        if (tb != null && tb.RelationTargetPost != null && tb.Contains(tb.RelationTargetPost.StatusId))
                         {
-                            if (tp.Text == tb.TabName)
+                            foreach (TabPage tp in ListTab.TabPages)
                             {
-                                ((DetailsListView)tp.Tag).SelectedIndices.Add(tb.IndexOf(tb.RelationTargetPost.StatusId));
-                                ((DetailsListView)tp.Tag).Items[tb.IndexOf(tb.RelationTargetPost.StatusId)].Focused = true;
-                                break; // TODO: might not be correct. Was : Exit For
+                                if (tp.Text == tb.TabName)
+                                {
+                                    ((DetailsListView)tp.Tag).SelectedIndices.Add(tb.IndexOf(tb.RelationTargetPost.StatusId));
+                                    ((DetailsListView)tp.Tag).Items[tb.IndexOf(tb.RelationTargetPost.StatusId)].Focused = true;
+                                    break; // TODO: might not be correct. Was : Exit For
+                                }
                             }
                         }
                     }
@@ -3739,7 +3740,7 @@ namespace Tween
 
         private void RemovePostFromFavTab(Int64[] ids)
         {
-            string favTabName = _statuses.GetTabByType(TabUsageType.Favorites).TabName;
+            string favTabName = _statuses.GetTabByType(MyCommon.TabUsageType.Favorites).TabName;
             int fidx = 0;
             if (_curTab.Text.Equals(favTabName))
             {
@@ -3810,9 +3811,9 @@ namespace Tween
         }
 
         readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_GetTimeline_lastTime_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        Dictionary<WORKERTYPE, DateTime> static_GetTimeline_lastTime;
+        Dictionary<Tween.MyCommon.WORKERTYPE, DateTime> static_GetTimeline_lastTime;
 
-        private void GetTimeline(WORKERTYPE WkType, int fromPage, int toPage, string tabName)
+        private void GetTimeline(Tween.MyCommon.WORKERTYPE WkType, int fromPage, int toPage, string tabName)
         {
             if (!this.IsNetworkAvailable())
                 return;
@@ -3829,7 +3830,7 @@ namespace Tween
                 {
                     if (InitStaticVariableHelper(static_GetTimeline_lastTime_Init))
                     {
-                        static_GetTimeline_lastTime = new Dictionary<WORKERTYPE, DateTime>();
+                        static_GetTimeline_lastTime = new Dictionary<MyCommon.WORKERTYPE, DateTime>();
                     }
                 }
                 finally
@@ -3932,13 +3933,13 @@ namespace Tween
         private void FavoriteChange(bool FavAdd, bool multiFavoriteChangeDialogEnable = true)
         {
             //TrueでFavAdd,FalseでFavRemove
-            if (_statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage || _curList.SelectedIndices.Count == 0 || !this.ExistCurrentPost)
+            if (_statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage || _curList.SelectedIndices.Count == 0 || !this.ExistCurrentPost)
                 return;
 
             //複数fav確認msg
             if (_curList.SelectedIndices.Count > 250 && FavAdd)
             {
-                MessageBox.Show(Tween.My.Resources.FavoriteLimitCountText);
+                MessageBox.Show(Tween.My.Resources.Resources.FavoriteLimitCountText);
                 _DoFavRetweetFlags = false;
                 return;
             }
@@ -3946,10 +3947,10 @@ namespace Tween
             {
                 if (FavAdd)
                 {
-                    string QuestionText = Tween.My.Resources.FavAddToolStripMenuItem_ClickText1;
+                    string QuestionText = Tween.My.Resources.Resources.FavAddToolStripMenuItem_ClickText1;
                     if (_DoFavRetweetFlags)
-                        QuestionText = Tween.My.Resources.FavoriteRetweetQuestionText3;
-                    if (MessageBox.Show(QuestionText, Tween.My.Resources.FavAddToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+                        QuestionText = Tween.My.Resources.Resources.FavoriteRetweetQuestionText3;
+                    if (MessageBox.Show(QuestionText, Tween.My.Resources.Resources.FavAddToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
                     {
                         _DoFavRetweetFlags = false;
                         return;
@@ -3957,7 +3958,7 @@ namespace Tween
                 }
                 else
                 {
-                    if (MessageBox.Show(Tween.My.Resources.FavRemoveToolStripMenuItem_ClickText1, Tween.My.Resources.FavRemoveToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+                    if (MessageBox.Show(Tween.My.Resources.Resources.FavRemoveToolStripMenuItem_ClickText1, Tween.My.Resources.Resources.FavRemoveToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
                     {
                         return;
                     }
@@ -3970,11 +3971,11 @@ namespace Tween
             args.tName = _curTab.Text;
             if (FavAdd)
             {
-                args.type = WORKERTYPE.FavAdd;
+                args.type = MyCommon.WORKERTYPE.FavAdd;
             }
             else
             {
-                args.type = WORKERTYPE.FavRemove;
+                args.type = MyCommon.WORKERTYPE.FavRemove;
             }
             foreach (int idx in _curList.SelectedIndices)
             {
@@ -3994,11 +3995,11 @@ namespace Tween
             {
                 if (FavAdd)
                 {
-                    StatusLabel.Text = Tween.My.Resources.FavAddToolStripMenuItem_ClickText4;
+                    StatusLabel.Text = Tween.My.Resources.Resources.FavAddToolStripMenuItem_ClickText4;
                 }
                 else
                 {
-                    StatusLabel.Text = Tween.My.Resources.FavRemoveToolStripMenuItem_ClickText4;
+                    StatusLabel.Text = Tween.My.Resources.Resources.FavRemoveToolStripMenuItem_ClickText4;
                 }
                 return;
             }
@@ -4014,7 +4015,7 @@ namespace Tween
             }
             else
             {
-                return _statuses.Item[_curTab.Text, Index];
+                return _statuses.Item(_curTab.Text, Index);
             }
         }
 
@@ -4174,8 +4175,8 @@ namespace Tween
                 ReadedStripMenuItem.Enabled = true;
                 UnreadStripMenuItem.Enabled = true;
             }
-            DeleteStripMenuItem.Text = Tween.My.Resources.DeleteMenuText1;
-            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || _curPost.IsDm)
+            DeleteStripMenuItem.Text = Tween.My.Resources.Resources.DeleteMenuText1;
+            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.DirectMessage || !this.ExistCurrentPost || _curPost.IsDm)
             {
                 FavAddToolStripMenuItem.Enabled = false;
                 FavRemoveToolStripMenuItem.Enabled = false;
@@ -4212,11 +4213,11 @@ namespace Tween
                     FavoriteRetweetContextMenu.Enabled = false;
                     if (string.IsNullOrEmpty(_curPost.RetweetedBy))
                     {
-                        DeleteStripMenuItem.Text = Tween.My.Resources.DeleteMenuText1;
+                        DeleteStripMenuItem.Text = Tween.My.Resources.Resources.DeleteMenuText1;
                     }
                     else
                     {
-                        DeleteStripMenuItem.Text = Tween.My.Resources.DeleteMenuText2;
+                        DeleteStripMenuItem.Text = Tween.My.Resources.Resources.DeleteMenuText2;
                     }
                     DeleteStripMenuItem.Enabled = true;
                 }
@@ -4224,11 +4225,11 @@ namespace Tween
                 {
                     if (string.IsNullOrEmpty(_curPost.RetweetedBy))
                     {
-                        DeleteStripMenuItem.Text = Tween.My.Resources.DeleteMenuText1;
+                        DeleteStripMenuItem.Text = Tween.My.Resources.Resources.DeleteMenuText1;
                     }
                     else
                     {
-                        DeleteStripMenuItem.Text = Tween.My.Resources.DeleteMenuText2;
+                        DeleteStripMenuItem.Text = Tween.My.Resources.Resources.DeleteMenuText2;
                     }
                     DeleteStripMenuItem.Enabled = false;
                     if (_curPost.IsProtect)
@@ -4254,7 +4255,7 @@ namespace Tween
             //Else
             //    RefreshMoreStripMenuItem.Enabled = False
             //End If
-            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(_curPost.InReplyToStatusId > 0))
+            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch || !this.ExistCurrentPost || !(_curPost.InReplyToStatusId > 0))
             {
                 RepliedStatusOpenMenuItem.Enabled = false;
             }
@@ -4286,7 +4287,7 @@ namespace Tween
         {
             if (_curTab == null || _curList == null)
                 return;
-            if (_statuses.Tabs[_curTab.Text].TabType != TabUsageType.DirectMessage)
+            if (_statuses.Tabs[_curTab.Text].TabType != MyCommon.TabUsageType.DirectMessage)
             {
                 bool myPost = false;
                 foreach (int idx in _curList.SelectedIndices)
@@ -4308,9 +4309,9 @@ namespace Tween
                 }
             }
 
-            string tmp = string.Format(Tween.My.Resources.DeleteStripMenuItem_ClickText1, Environment.NewLine);
+            string tmp = string.Format(Tween.My.Resources.Resources.DeleteStripMenuItem_ClickText1, Environment.NewLine);
 
-            if (MessageBox.Show(tmp, Tween.My.Resources.DeleteStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+            if (MessageBox.Show(tmp, Tween.My.Resources.Resources.DeleteStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             int fidx = 0;
@@ -4335,13 +4336,13 @@ namespace Tween
                 foreach (long Id in _statuses.GetId(_curTab.Text, _curList.SelectedIndices))
                 {
                     string rtn = "";
-                    if (_statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage)
+                    if (_statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage)
                     {
-                        rtn = tw.RemoveDirectMessage(Id, _statuses.Item[Id]);
+                        rtn = tw.RemoveDirectMessage(Id, _statuses.Item(Id));
                     }
                     else
                     {
-                        if (_statuses.Item[Id].IsMe || _statuses.Item[Id].RetweetedBy.ToLower == tw.Username.ToLower())
+                        if (_statuses.Item(Id).IsMe || _statuses.Item(Id).RetweetedBy.ToLower() == tw.Username.ToLower())
                         {
                             rtn = tw.RemoveStatus(Id);
                         }
@@ -4363,12 +4364,12 @@ namespace Tween
 
                 if (!rslt)
                 {
-                    StatusLabel.Text = Tween.My.Resources.DeleteStripMenuItem_ClickText3;
+                    StatusLabel.Text = Tween.My.Resources.Resources.DeleteStripMenuItem_ClickText3;
                     //失敗
                 }
                 else
                 {
-                    StatusLabel.Text = Tween.My.Resources.DeleteStripMenuItem_ClickText4;
+                    StatusLabel.Text = Tween.My.Resources.Resources.DeleteStripMenuItem_ClickText4;
                     //成功
                 }
 
@@ -4502,44 +4503,48 @@ namespace Tween
             {
                 switch (_statuses.Tabs[_curTab.Text].TabType)
                 {
-                    case TabUsageType.Mentions:
-                        GetTimeline(WORKERTYPE.Reply, 1, 0, "");
+                    case MyCommon.TabUsageType.Mentions:
+                        GetTimeline(MyCommon.WORKERTYPE.Reply, 1, 0, "");
                         break;
-                    case TabUsageType.DirectMessage:
-                        GetTimeline(WORKERTYPE.DirectMessegeRcv, 1, 0, "");
+                    case MyCommon.TabUsageType.DirectMessage:
+                        GetTimeline(MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 0, "");
                         break;
-                    case TabUsageType.Favorites:
-                        GetTimeline(WORKERTYPE.Favorites, 1, 0, "");
+                    case MyCommon.TabUsageType.Favorites:
+                        GetTimeline(MyCommon.WORKERTYPE.Favorites, 1, 0, "");
                         break;
                     //Case TabUsageType.Profile
                     //' TODO
-                    case TabUsageType.PublicSearch:
-                        //' TODO
-                        TabClass tb = _statuses.Tabs[_curTab.Text];
-                        if (string.IsNullOrEmpty(tb.SearchWords))
-                            return;
+                    case MyCommon.TabUsageType.PublicSearch:
+                        {
+                            //' TODO
+                            TabClass tb = _statuses.Tabs[_curTab.Text];
+                            if (string.IsNullOrEmpty(tb.SearchWords))
+                                return;
 
-                        GetTimeline(WORKERTYPE.PublicSearch, 1, 0, _curTab.Text);
+                            GetTimeline(MyCommon.WORKERTYPE.PublicSearch, 1, 0, _curTab.Text);
+                        }
                         break;
-                    case TabUsageType.UserTimeline:
-                        GetTimeline(WORKERTYPE.UserTimeline, 1, 0, _curTab.Text);
+                    case MyCommon.TabUsageType.UserTimeline:
+                        GetTimeline(MyCommon.WORKERTYPE.UserTimeline, 1, 0, _curTab.Text);
                         break;
-                    case TabUsageType.Lists:
-                        //' TODO
-                        TabClass tb = _statuses.Tabs[_curTab.Text];
-                        if (tb.ListInfo == null || tb.ListInfo.Id == 0)
-                            return;
+                    case MyCommon.TabUsageType.Lists:
+                        {
+                            //' TODO
+                            TabClass tb = _statuses.Tabs[_curTab.Text];
+                            if (tb.ListInfo == null || tb.ListInfo.Id == 0)
+                                return;
 
-                        GetTimeline(WORKERTYPE.List, 1, 0, _curTab.Text);
+                            GetTimeline(MyCommon.WORKERTYPE.List, 1, 0, _curTab.Text);
+                        }
                         break;
                     default:
-                        GetTimeline(WORKERTYPE.Timeline, 1, 0, "");
+                        GetTimeline(MyCommon.WORKERTYPE.Timeline, 1, 0, "");
                         break;
                 }
             }
             else
             {
-                GetTimeline(WORKERTYPE.Timeline, 1, 0, "");
+                GetTimeline(MyCommon.WORKERTYPE.Timeline, 1, 0, "");
             }
         }
 
@@ -4550,45 +4555,49 @@ namespace Tween
             {
                 switch (_statuses.Tabs[_curTab.Text].TabType)
                 {
-                    case TabUsageType.Mentions:
-                        GetTimeline(WORKERTYPE.Reply, -1, 0, "");
+                    case MyCommon.TabUsageType.Mentions:
+                        GetTimeline(MyCommon.WORKERTYPE.Reply, -1, 0, "");
                         break;
-                    case TabUsageType.DirectMessage:
-                        GetTimeline(WORKERTYPE.DirectMessegeRcv, -1, 0, "");
+                    case MyCommon.TabUsageType.DirectMessage:
+                        GetTimeline(MyCommon.WORKERTYPE.DirectMessegeRcv, -1, 0, "");
                         break;
-                    case TabUsageType.Favorites:
-                        GetTimeline(WORKERTYPE.Favorites, -1, 0, "");
+                    case MyCommon.TabUsageType.Favorites:
+                        GetTimeline(MyCommon.WORKERTYPE.Favorites, -1, 0, "");
                         break;
-                    case TabUsageType.Profile:
+                    case MyCommon.TabUsageType.Profile:
                         break;
                     //' TODO
-                    case TabUsageType.PublicSearch:
-                        // TODO
-                        TabClass tb = _statuses.Tabs[_curTab.Text];
-                        if (string.IsNullOrEmpty(tb.SearchWords))
-                            return;
+                    case MyCommon.TabUsageType.PublicSearch:
+                        {
+                            // TODO
+                            TabClass tb = _statuses.Tabs[_curTab.Text];
+                            if (string.IsNullOrEmpty(tb.SearchWords))
+                                return;
 
-                        GetTimeline(WORKERTYPE.PublicSearch, -1, 0, _curTab.Text);
+                            GetTimeline(MyCommon.WORKERTYPE.PublicSearch, -1, 0, _curTab.Text);
+                        }
                         break;
-                    case TabUsageType.UserTimeline:
-                        GetTimeline(WORKERTYPE.UserTimeline, -1, 0, _curTab.Text);
+                    case MyCommon.TabUsageType.UserTimeline:
+                        GetTimeline(MyCommon.WORKERTYPE.UserTimeline, -1, 0, _curTab.Text);
                         break;
-                    case TabUsageType.Lists:
-                        //' TODO
-                        TabClass tb = _statuses.Tabs[_curTab.Text];
-                        if (tb.ListInfo == null || tb.ListInfo.Id == 0)
-                            return;
+                    case MyCommon.TabUsageType.Lists:
+                        {
+                            //' TODO
+                            TabClass tb = _statuses.Tabs[_curTab.Text];
+                            if (tb.ListInfo == null || tb.ListInfo.Id == 0)
+                                return;
 
-                        GetTimeline(WORKERTYPE.List, -1, 0, _curTab.Text);
+                            GetTimeline(MyCommon.WORKERTYPE.List, -1, 0, _curTab.Text);
+                        }
                         break;
                     default:
-                        GetTimeline(WORKERTYPE.Timeline, -1, 0, "");
+                        GetTimeline(MyCommon.WORKERTYPE.Timeline, -1, 0, "");
                         break;
                 }
             }
             else
             {
-                GetTimeline(WORKERTYPE.Timeline, -1, 0, "");
+                GetTimeline(MyCommon.WORKERTYPE.Timeline, -1, 0, "");
             }
         }
 
@@ -4599,7 +4608,7 @@ namespace Tween
             string uid = tw.Username.ToLower();
             foreach (UserAccount u_loopVariable in SettingDialog.UserAccounts)
             {
-                u = u_loopVariable;
+                var u = u_loopVariable;
                 if (u.UserId == tw.UserId)
                 {
                     u.GAFirst = Ga.SessionFirst;
@@ -4843,10 +4852,10 @@ namespace Tween
                     Outputz.Enabled = SettingDialog.OutputzEnabled;
                     switch (SettingDialog.OutputzUrlmode)
                     {
-                        case OutputzUrlmode.twittercom:
+                        case MyCommon.OutputzUrlmode.twittercom:
                             Outputz.OutUrl = "http://twitter.com/";
                             break;
-                        case OutputzUrlmode.twittercomWithUsername:
+                        case MyCommon.OutputzUrlmode.twittercomWithUsername:
                             Outputz.OutUrl = "http://twitter.com/" + tw.Username;
                             break;
                     }
@@ -4884,7 +4893,7 @@ namespace Tween
                 }
             }
 
-            Twitter.AccountState = ACCOUNT_STATE.Valid;
+            Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
 
             this.TopMost = SettingDialog.AlwaysTop;
             SaveConfigsAll(false);
@@ -4960,7 +4969,7 @@ namespace Tween
         public void AddNewTabForSearch(string searchWord)
         {
             //同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
-            foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.PublicSearch))
+            foreach (TabClass tb in _statuses.GetTabsByType(MyCommon.TabUsageType.PublicSearch))
             {
                 if (tb.SearchWords == searchWord && string.IsNullOrEmpty(tb.SearchLang))
                 {
@@ -4988,8 +4997,8 @@ namespace Tween
                 }
             }
             //タブ追加
-            _statuses.AddTab(tabName, TabUsageType.PublicSearch, null);
-            AddNewTab(tabName, false, TabUsageType.PublicSearch);
+            _statuses.AddTab(tabName, MyCommon.TabUsageType.PublicSearch, null);
+            AddNewTab(tabName, false, MyCommon.TabUsageType.PublicSearch);
             //追加したタブをアクティブに
             ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
             //検索条件の設定
@@ -5022,7 +5031,7 @@ namespace Tween
         public void AddNewTabForUserTimeline(string user)
         {
             //同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
-            foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.UserTimeline))
+            foreach (TabClass tb in _statuses.GetTabsByType(MyCommon.TabUsageType.UserTimeline))
             {
                 if (tb.User == user)
                 {
@@ -5043,18 +5052,18 @@ namespace Tween
                 tabName += "_";
             }
             //タブ追加
-            _statuses.AddTab(tabName, TabUsageType.UserTimeline, null);
+            _statuses.AddTab(tabName, MyCommon.TabUsageType.UserTimeline, null);
             _statuses.Tabs[tabName].User = user;
-            AddNewTab(tabName, false, TabUsageType.UserTimeline);
+            AddNewTab(tabName, false, MyCommon.TabUsageType.UserTimeline);
             //追加したタブをアクティブに
             ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
             SaveConfigsTabs();
             //検索実行
 
-            GetTimeline(WORKERTYPE.UserTimeline, 1, 0, tabName);
+            GetTimeline(MyCommon.WORKERTYPE.UserTimeline, 1, 0, tabName);
         }
 
-        public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
+        public bool AddNewTab(string tabName, bool startup, Tween.MyCommon.TabUsageType tabType, ListElement listInfo = null)
         {
             //重複チェック
             foreach (TabPage tb in ListTab.TabPages)
@@ -5064,13 +5073,13 @@ namespace Tween
             }
 
             //新規タブ名チェック
-            if (tabName == Tween.My.Resources.AddNewTabText1)
+            if (tabName == Tween.My.Resources.Resources.AddNewTabText1)
                 return false;
 
             //タブタイプ重複チェック
             if (!startup)
             {
-                if (tabType == TabUsageType.DirectMessage || tabType == TabUsageType.Favorites || tabType == TabUsageType.Home || tabType == TabUsageType.Mentions || tabType == TabUsageType.Related)
+                if (tabType == MyCommon.TabUsageType.DirectMessage || tabType == MyCommon.TabUsageType.Favorites || tabType == MyCommon.TabUsageType.Home || tabType == MyCommon.TabUsageType.Mentions || tabType == MyCommon.TabUsageType.Related)
                 {
                     if (_statuses.GetTabByType(tabType) != null)
                         return false;
@@ -5112,12 +5121,12 @@ namespace Tween
 
             /// UserTimeline関連
             Label label = null;
-            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
+            if (tabType == MyCommon.TabUsageType.UserTimeline || tabType == MyCommon.TabUsageType.Lists)
             {
                 label = new Label();
                 label.Dock = DockStyle.Top;
                 label.Name = "labelUser";
-                if (tabType == TabUsageType.Lists)
+                if (tabType == MyCommon.TabUsageType.Lists)
                 {
                     label.Text = listInfo.ToString();
                 }
@@ -5135,7 +5144,7 @@ namespace Tween
 
             /// 検索関連の準備
             Panel pnl = null;
-            if (tabType == TabUsageType.PublicSearch)
+            if (tabType == MyCommon.TabUsageType.PublicSearch)
             {
                 pnl = new Panel();
 
@@ -5220,9 +5229,9 @@ namespace Tween
             this.ListTab.Controls.Add(_tabPage);
             _tabPage.Controls.Add(_listCustom);
 
-            if (tabType == TabUsageType.PublicSearch)
+            if (tabType == MyCommon.TabUsageType.PublicSearch)
                 _tabPage.Controls.Add(pnl);
-            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
+            if (tabType == MyCommon.TabUsageType.UserTimeline || tabType == MyCommon.TabUsageType.Lists)
                 _tabPage.Controls.Add(label);
 
             _tabPage.Location = new Point(4, 4);
@@ -5399,7 +5408,7 @@ namespace Tween
                 }
             }
 
-            if (tabType == TabUsageType.PublicSearch)
+            if (tabType == MyCommon.TabUsageType.PublicSearch)
                 pnl.ResumeLayout(false);
 
             _tabPage.ResumeLayout(false);
@@ -5429,8 +5438,8 @@ namespace Tween
             Google.GASender.GetInstance().TrackEventWithCategory("post", "remove_tab", tw.UserId);
             if (confirm)
             {
-                string tmp = string.Format(Tween.My.Resources.RemoveSpecifiedTabText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, TabName + " " + Tween.My.Resources.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Cancel)
+                string tmp = string.Format(Tween.My.Resources.Resources.RemoveSpecifiedTabText1, Environment.NewLine);
+                if (MessageBox.Show(tmp, TabName + " " + Tween.My.Resources.Resources.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Cancel)
                 {
                     return false;
                 }
@@ -5439,7 +5448,7 @@ namespace Tween
             SetListProperty();
             //他のタブに列幅等を反映
 
-            TabUsageType tabType = _statuses.Tabs[TabName].TabType;
+            MyCommon.TabUsageType tabType = _statuses.Tabs[TabName].TabType;
 
             //オブジェクトインスタンスの削除
             this.SplitContainer1.Panel1.SuspendLayout();
@@ -5461,7 +5470,7 @@ namespace Tween
             this.ListTab.Controls.Remove(_tabPage);
 
             Control pnl = null;
-            if (tabType == TabUsageType.PublicSearch)
+            if (tabType == MyCommon.TabUsageType.PublicSearch)
             {
                 pnl = _tabPage.Controls["panelSearch"];
                 foreach (Control ctrl in pnl.Controls)
@@ -5602,37 +5611,37 @@ namespace Tween
             this.PushSelectPostChain();
             switch (_statuses.Tabs[ListTab.SelectedTab.Text].TabType)
             {
-                case TabUsageType.Home:
+                case MyCommon.TabUsageType.Home:
                     Google.GASender.GetInstance().TrackPage("/home_timeline", tw.UserId);
                     break;
-                case TabUsageType.Mentions:
+                case MyCommon.TabUsageType.Mentions:
                     Google.GASender.GetInstance().TrackPage("/mentions", tw.UserId);
                     break;
-                case TabUsageType.DirectMessage:
+                case MyCommon.TabUsageType.DirectMessage:
                     Google.GASender.GetInstance().TrackPage("/direct_messages", tw.UserId);
                     break;
-                case TabUsageType.Favorites:
+                case MyCommon.TabUsageType.Favorites:
                     Google.GASender.GetInstance().TrackPage("/favorites", tw.UserId);
                     break;
-                case TabUsageType.Lists:
+                case MyCommon.TabUsageType.Lists:
                     Google.GASender.GetInstance().TrackPage("/lists", tw.UserId);
                     break;
-                case TabUsageType.Profile:
+                case MyCommon.TabUsageType.Profile:
                     Google.GASender.GetInstance().TrackPage("/profile", tw.UserId);
                     break;
-                case TabUsageType.LocalQuery:
+                case MyCommon.TabUsageType.LocalQuery:
                     Google.GASender.GetInstance().TrackPage("/local_query", tw.UserId);
                     break;
-                case TabUsageType.PublicSearch:
+                case MyCommon.TabUsageType.PublicSearch:
                     Google.GASender.GetInstance().TrackPage("/search", tw.UserId);
                     break;
-                case TabUsageType.Related:
+                case MyCommon.TabUsageType.Related:
                     Google.GASender.GetInstance().TrackPage("/related", tw.UserId);
                     break;
-                case TabUsageType.UserDefined:
+                case MyCommon.TabUsageType.UserDefined:
                     Google.GASender.GetInstance().TrackPage("/local_tab", tw.UserId);
                     break;
-                case TabUsageType.UserTimeline:
+                case MyCommon.TabUsageType.UserTimeline:
                     Google.GASender.GetInstance().TrackPage("/user_timeline", tw.UserId);
                     break;
             }
@@ -5699,7 +5708,7 @@ namespace Tween
 
         private void StatusText_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
-            if (e.KeyChar == "@")
+            if (e.KeyChar == '@')
             {
                 if (!SettingDialog.UseAtIdSupplement)
                     return;
@@ -5710,7 +5719,7 @@ namespace Tween
                     _modifySettingAtId = true;
                 e.Handled = true;
             }
-            else if (e.KeyChar == "#")
+            else if (e.KeyChar == '#')
             {
                 if (!SettingDialog.UseHashSupplement)
                     return;
@@ -5789,7 +5798,7 @@ namespace Tween
                     bool isSpace = false;
                     foreach (char c in StatusText.Text.ToCharArray())
                     {
-                        if (c == " " || c == "　")
+                        if (c == ' ' || c == '　')
                         {
                             isSpace = true;
                         }
@@ -5895,7 +5904,7 @@ namespace Tween
                 TabPage tb = (TabPage)((Tween.TweenCustomControl.DetailsListView)sender).Parent;
                 try
                 {
-                    e.Item = CreateItem(tb, _statuses.Item[tb.Text, e.ItemIndex], e.ItemIndex);
+                    e.Item = CreateItem(tb, _statuses.Item(tb.Text, e.ItemIndex), e.ItemIndex);
                 }
                 catch (Exception ex)
                 {
@@ -5926,7 +5935,7 @@ namespace Tween
                 EndIndex += 30;
                 if (EndIndex >= _statuses.Tabs[_curTab.Text].AllCount)
                     EndIndex = _statuses.Tabs[_curTab.Text].AllCount - 1;
-                _postCache = _statuses.Item[_curTab.Text, StartIndex, EndIndex];
+                _postCache = _statuses.Item(_curTab.Text, StartIndex, EndIndex);
                 //配列で取得
                 _itemCacheIndex = StartIndex;
 
@@ -6014,36 +6023,41 @@ namespace Tween
             if (!e.Item.Selected)
             {
                 SolidBrush brs2 = null;
-                switch (e.Item.BackColor)
+                var cl = e.Item.BackColor;
+                if (cl == _clSelf)
                 {
-                    case _clSelf:
-                        brs2 = _brsBackColorMine;
-                        break;
-                    case _clAtSelf:
-                        brs2 = _brsBackColorAt;
-                        break;
-                    case _clTarget:
-                        brs2 = _brsBackColorYou;
-                        break;
-                    case _clAtTarget:
-                        brs2 = _brsBackColorAtYou;
-                        break;
-                    case _clAtFromTarget:
-                        brs2 = _brsBackColorAtFromTarget;
-                        break;
-                    case _clAtTo:
-                        brs2 = _brsBackColorAtTo;
-                        break;
-                    default:
-                        brs2 = _brsBackColorNone;
-                        break;
+                    brs2 = _brsBackColorMine;
+                }
+                else if (cl == _clAtSelf)
+                {
+                    brs2 = _brsBackColorAt;
+                }
+                else if (cl == _clTarget)
+                {
+                    brs2 = _brsBackColorYou;
+                }
+                else if (cl == _clAtTarget)
+                {
+                    brs2 = _brsBackColorAtYou;
+                }
+                else if (cl == _clAtFromTarget)
+                {
+                    brs2 = _brsBackColorAtFromTarget;
+                }
+                else if (cl == _clAtTo)
+                {
+                    brs2 = _brsBackColorAtTo;
+                }
+                else
+                {
+                    brs2 = _brsBackColorNone;
                 }
                 e.Graphics.FillRectangle(brs2, e.Bounds);
             }
             else
             {
                 //選択中の行
-                if (((Windows.Forms.Control)sender).Focused)
+                if (((System.Windows.Forms.Control)sender).Focused)
                 {
                     e.Graphics.FillRectangle(_brsHighLight, e.Bounds);
                 }
@@ -6112,28 +6126,33 @@ namespace Tween
                     //文字色
                     SolidBrush brs = null;
                     bool flg = false;
-                    switch (e.Item.ForeColor)
+                    var cl = e.Item.ForeColor;
+                    if (cl == _clUnread)
                     {
-                        case _clUnread:
-                            brs = _brsForeColorUnread;
-                            break;
-                        case _clReaded:
-                            brs = _brsForeColorReaded;
-                            break;
-                        case _clFav:
-                            brs = _brsForeColorFav;
-                            break;
-                        case _clOWL:
-                            brs = _brsForeColorOWL;
-                            break;
-                        case _clRetweet:
-                            brs = _brsForeColorRetweet;
-                            break;
-                        default:
-                            brs = new SolidBrush(e.Item.ForeColor);
-                            flg = true;
-                            break;
+                        brs = _brsForeColorUnread;
                     }
+                    else if (cl == _clReaded)
+                    {
+                        brs = _brsForeColorReaded;
+                    }
+                    else if (cl == _clFav)
+                    {
+                        brs = _brsForeColorFav;
+                    }
+                    else if (cl == _clOWL)
+                    {
+                        brs = _brsForeColorOWL;
+                    }
+                    else if (cl == _clRetweet)
+                    {
+                        brs = _brsForeColorRetweet;
+                    }
+                    else
+                    {
+                        brs = new SolidBrush(e.Item.ForeColor);
+                        flg = true;
+                    }
+
                     if (rct.Width > 0)
                     {
                         if (_iconCol)
@@ -6166,7 +6185,7 @@ namespace Tween
                         //選択中の行
                         using (Font fnt = new Font(e.Item.Font, FontStyle.Bold))
                         {
-                            if (((Windows.Forms.Control)sender).Focused)
+                            if (((System.Windows.Forms.Control)sender).Focused)
                             {
                                 if (_iconCol)
                                 {
@@ -6301,7 +6320,7 @@ namespace Tween
 
             if (_curList.VirtualListSize == 0)
             {
-                MessageBox.Show(Tween.My.Resources.DoTabSearchText2, Tween.My.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Tween.My.Resources.Resources.DoTabSearchText2, Tween.My.Resources.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             if (_curList.SelectedIndices.Count > 0)
@@ -6369,19 +6388,19 @@ namespace Tween
                     Regex _search = null;
                     try
                     {
-                        _search = new Regex(_word);
+                        _search = new Regex(_word, regOpt);
                         for (int idx = cidx; idx <= toIdx; idx += stp)
                         {
                             PostClass post = null;
                             try
                             {
-                                post = _statuses.Item[_curTab.Text, idx];
+                                post = _statuses.Item(_curTab.Text, idx);
                             }
                             catch (Exception ex)
                             {
                                 continue;
                             }
-                            if (_search.IsMatch(post.Nickname, regOpt) || _search.IsMatch(post.TextFromApi, regOpt) || _search.IsMatch(post.ScreenName, regOpt))
+                            if (_search.IsMatch(post.Nickname) || _search.IsMatch(post.TextFromApi) || _search.IsMatch(post.ScreenName))
                             {
                                 SelectListItem(_curList, idx);
                                 _curList.EnsureVisible(idx);
@@ -6391,7 +6410,7 @@ namespace Tween
                     }
                     catch (ArgumentException ex)
                     {
-                        Interaction.MsgBox(Tween.My.Resources.DoTabSearchText1, MsgBoxStyle.Critical);
+                        Interaction.MsgBox(Tween.My.Resources.Resources.DoTabSearchText1, MsgBoxStyle.Critical);
                         return;
                     }
                 }
@@ -6403,7 +6422,7 @@ namespace Tween
                         PostClass post = null;
                         try
                         {
-                            post = _statuses.Item[_curTab.Text, idx];
+                            post = _statuses.Item(_curTab.Text, idx);
                         }
                         catch (Exception ex)
                         {
@@ -6439,7 +6458,7 @@ namespace Tween
             catch (ArgumentOutOfRangeException ex)
             {
             }
-            MessageBox.Show(Tween.My.Resources.DoTabSearchText2, Tween.My.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Tween.My.Resources.Resources.DoTabSearchText2, Tween.My.Resources.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void MenuItemSubSearch_Click(System.Object sender, System.EventArgs e)
@@ -6586,9 +6605,9 @@ namespace Tween
 
         private void StatusOpenMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            if (_curList.SelectedIndices.Count > 0 && _statuses.Tabs[_curTab.Text].TabType != TabUsageType.DirectMessage)
+            if (_curList.SelectedIndices.Count > 0 && _statuses.Tabs[_curTab.Text].TabType != MyCommon.TabUsageType.DirectMessage)
             {
-                PostClass post = _statuses.Item[_curTab.Text, _curList.SelectedIndices[0]];
+                PostClass post = _statuses.Item(_curTab.Text, _curList.SelectedIndices[0]);
                 if (post.RetweetedId == 0)
                 {
                     OpenUriAsync("http://twitter.com/" + post.ScreenName + "/status/" + post.StatusId.ToString());
@@ -6604,8 +6623,8 @@ namespace Tween
         {
             if (_curList.SelectedIndices.Count > 0)
             {
-                PostClass post = _statuses.Item[_curTab.Text, _curList.SelectedIndices[0]];
-                OpenUriAsync(Tween.My.Resources.FavstarUrl + "users/" + post.ScreenName + "/recent");
+                PostClass post = _statuses.Item(_curTab.Text, _curList.SelectedIndices[0]);
+                OpenUriAsync(Tween.My.Resources.Resources.FavstarUrl + "users/" + post.ScreenName + "/recent");
             }
         }
 
@@ -6644,9 +6663,9 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                StatusLabel.Text = Tween.My.Resources.CheckNewVersionText9;
+                StatusLabel.Text = Tween.My.Resources.Resources.CheckNewVersionText9;
                 if (!startup)
-                    MessageBox.Show(Tween.My.Resources.CheckNewVersionText10, Tween.My.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                    MessageBox.Show(Tween.My.Resources.Resources.CheckNewVersionText10, Tween.My.Resources.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                 return;
             }
             if (retMsg.Length > 0)
@@ -6658,10 +6677,10 @@ namespace Tween
                 }
                 if (!string.IsNullOrEmpty(MyCommon.fileVersion) && strVer.CompareTo(MyCommon.fileVersion.Replace(".", "")) > 0)
                 {
-                    string tmp = string.Format(Tween.My.Resources.CheckNewVersionText3, strVer);
+                    string tmp = string.Format(Tween.My.Resources.Resources.CheckNewVersionText3, strVer);
                     using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                     {
-                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Tween.My.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Tween.My.Resources.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                         {
                             retMsg = tw.GetTweenBinary(strVer);
                             if (retMsg.Length == 0)
@@ -6675,7 +6694,7 @@ namespace Tween
                             else
                             {
                                 if (!startup)
-                                    MessageBox.Show(Tween.My.Resources.CheckNewVersionText5 + System.Environment.NewLine + retMsg, Tween.My.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show(Tween.My.Resources.Resources.CheckNewVersionText5 + System.Environment.NewLine + retMsg, Tween.My.Resources.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
                         dialogAsShieldicon.Dispose();
@@ -6685,10 +6704,10 @@ namespace Tween
                 {
                     if (forceUpdate)
                     {
-                        string tmp = string.Format(Tween.My.Resources.CheckNewVersionText6, strVer);
+                        string tmp = string.Format(Tween.My.Resources.Resources.CheckNewVersionText6, strVer);
                         using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                         {
-                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Tween.My.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Tween.My.Resources.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                             {
                                 retMsg = tw.GetTweenBinary(strVer);
                                 if (retMsg.Length == 0)
@@ -6702,7 +6721,7 @@ namespace Tween
                                 else
                                 {
                                     if (!startup)
-                                        MessageBox.Show(Tween.My.Resources.CheckNewVersionText5 + System.Environment.NewLine + retMsg, Tween.My.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                        MessageBox.Show(Tween.My.Resources.Resources.CheckNewVersionText5 + System.Environment.NewLine + retMsg, Tween.My.Resources.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 }
                             }
                             dialogAsShieldicon.Dispose();
@@ -6710,15 +6729,15 @@ namespace Tween
                     }
                     else if (!startup)
                     {
-                        MessageBox.Show(Tween.My.Resources.CheckNewVersionText7 + MyCommon.fileVersion.Replace(".", "") + Tween.My.Resources.CheckNewVersionText8 + strVer, Tween.My.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(Tween.My.Resources.Resources.CheckNewVersionText7 + MyCommon.fileVersion.Replace(".", "") + Tween.My.Resources.Resources.CheckNewVersionText8 + strVer, Tween.My.Resources.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             else
             {
-                StatusLabel.Text = Tween.My.Resources.CheckNewVersionText9;
+                StatusLabel.Text = Tween.My.Resources.Resources.CheckNewVersionText9;
                 if (!startup)
-                    MessageBox.Show(Tween.My.Resources.CheckNewVersionText10, Tween.My.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(Tween.My.Resources.Resources.CheckNewVersionText10, Tween.My.Resources.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -6727,7 +6746,7 @@ namespace Tween
             _colorize = false;
             DispSelectedPost();
             //件数関連の場合、タイトル即時書き換え
-            if (SettingDialog.DispLatestPost != DispTitleEnum.None && SettingDialog.DispLatestPost != DispTitleEnum.Post && SettingDialog.DispLatestPost != DispTitleEnum.Ver && SettingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
+            if (SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.None && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Post && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Ver && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.OwnStatus)
             {
                 SetMainWindowTitle();
             }
@@ -6855,11 +6874,11 @@ namespace Tween
             }
             SourceLinkLabel.TabStop = false;
 
-            if (_statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage && !_curPost.IsOwl)
+            if (_statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage && !_curPost.IsOwl)
             {
                 NameLabel.Text = "DM TO -> ";
             }
-            else if (_statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage)
+            else if (_statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage)
             {
                 NameLabel.Text = "DM FROM <- ";
             }
@@ -6893,7 +6912,7 @@ namespace Tween
 
             NameLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             DateTimeLabel.Text = _curPost.CreatedAt.ToString();
-            if (_curPost.IsOwl && (SettingDialog.OneWayLove || _statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage))
+            if (_curPost.IsOwl && (SettingDialog.OneWayLove || _statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage))
                 NameLabel.ForeColor = _clOWL;
             if (_curPost.RetweetedId > 0)
                 NameLabel.ForeColor = _clRetweet;
@@ -6988,7 +7007,7 @@ namespace Tween
         {
             if (ListTab.SelectedTab != null)
             {
-                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
+                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch)
                 {
                     Control pnl = ListTab.SelectedTab.Controls["panelSearch"];
                     if (pnl.Controls["comboSearch"].Focused || pnl.Controls["comboLang"].Focused || pnl.Controls["buttonSearch"].Focused)
@@ -7095,10 +7114,10 @@ namespace Tween
                             DoRefresh();
                             return true;
                         case Keys.F6:
-                            GetTimeline(WORKERTYPE.Reply, 1, 0, "");
+                            GetTimeline(MyCommon.WORKERTYPE.Reply, 1, 0, "");
                             return true;
                         case Keys.F7:
-                            GetTimeline(WORKERTYPE.DirectMessegeRcv, 1, 0, "");
+                            GetTimeline(MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 0, "");
                             return true;
                     }
                     if (Focused != FocusedControl.StatusText)
@@ -7140,7 +7159,7 @@ namespace Tween
                                     this.StatusText.Focus();
                                 return true;
                             case Keys.Enter:
-                            case Keys.Return:
+                                //case Keys.Return:
                                 MakeReplyOrDirectStatus();
                                 return true;
                             case Keys.R:
@@ -7178,8 +7197,8 @@ namespace Tween
                             case Keys.Escape:
                                 if (ListTab.SelectedTab != null)
                                 {
-                                    TabUsageType tabtype = _statuses.Tabs[ListTab.SelectedTab.Text].TabType;
-                                    if (tabtype == TabUsageType.Related || tabtype == TabUsageType.UserTimeline || tabtype == TabUsageType.PublicSearch)
+                                    MyCommon.TabUsageType tabtype = _statuses.Tabs[ListTab.SelectedTab.Text].TabType;
+                                    if (tabtype == MyCommon.TabUsageType.Related || tabtype == MyCommon.TabUsageType.UserTimeline || tabtype == MyCommon.TabUsageType.PublicSearch)
                                     {
                                         TabPage relTp = ListTab.SelectedTab;
                                         RemoveSpecifiedTab(relTp.Text, false);
@@ -7371,7 +7390,7 @@ namespace Tween
                                 return true;
                             case Keys.C:
                             case Keys.Insert:
-                                string _selText = WebBrowser_GetSelectionText(ref PostBrowser);
+                                string _selText = WebBrowser_GetSelectionText(ref withEventsField_PostBrowser);
                                 if (!string.IsNullOrEmpty(_selText))
                                 {
                                     try
@@ -7402,10 +7421,10 @@ namespace Tween
                             DoRefreshMore();
                             return true;
                         case Keys.F6:
-                            GetTimeline(WORKERTYPE.Reply, -1, 0, "");
+                            GetTimeline(MyCommon.WORKERTYPE.Reply, -1, 0, "");
                             return true;
                         case Keys.F7:
-                            GetTimeline(WORKERTYPE.DirectMessegeRcv, -1, 0, "");
+                            GetTimeline(MyCommon.WORKERTYPE.DirectMessegeRcv, -1, 0, "");
                             return true;
                     }
                     //フォーカスStatusText以外
@@ -7512,7 +7531,7 @@ namespace Tween
                         case Keys.F:
                             if (ListTab.SelectedTab != null)
                             {
-                                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
+                                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch)
                                 {
                                     ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
                                     return true;
@@ -7543,23 +7562,27 @@ namespace Tween
                         switch (KeyCode)
                         {
                             case Keys.Up:
-                                int idx = 0;
-                                if (_curList != null && _curList.Items.Count != 0 && _curList.SelectedIndices.Count > 0 && _curList.SelectedIndices[0] > 0)
                                 {
-                                    idx = _curList.SelectedIndices[0] - 1;
-                                    SelectListItem(_curList, idx);
-                                    _curList.EnsureVisible(idx);
-                                    return true;
+                                    int idx = 0;
+                                    if (_curList != null && _curList.Items.Count != 0 && _curList.SelectedIndices.Count > 0 && _curList.SelectedIndices[0] > 0)
+                                    {
+                                        idx = _curList.SelectedIndices[0] - 1;
+                                        SelectListItem(_curList, idx);
+                                        _curList.EnsureVisible(idx);
+                                        return true;
+                                    }
                                 }
                                 break;
                             case Keys.Down:
-                                int idx = 0;
-                                if (_curList != null && _curList.Items.Count != 0 && _curList.SelectedIndices.Count > 0 && _curList.SelectedIndices[0] < _curList.Items.Count - 1)
                                 {
-                                    idx = _curList.SelectedIndices[0] + 1;
-                                    SelectListItem(_curList, idx);
-                                    _curList.EnsureVisible(idx);
-                                    return true;
+                                    int idx = 0;
+                                    if (_curList != null && _curList.Items.Count != 0 && _curList.SelectedIndices.Count > 0 && _curList.SelectedIndices[0] < _curList.Items.Count - 1)
+                                    {
+                                        idx = _curList.SelectedIndices[0] + 1;
+                                        SelectListItem(_curList, idx);
+                                        _curList.EnsureVisible(idx);
+                                        return true;
+                                    }
                                 }
                                 break;
                             case Keys.Space:
@@ -7571,11 +7594,11 @@ namespace Tween
                                     for (int i = StatusText.SelectionStart - 1; i >= 0; i += -1)
                                     {
                                         char c = StatusText.Text[i];
-                                        if (char.IsLetterOrDigit(c) || c == "_")
+                                        if (char.IsLetterOrDigit(c) || c == '_')
                                         {
                                             continue;
                                         }
-                                        if (c == "@")
+                                        if (c == '@')
                                         {
                                             pressed = true;
                                             startstr = StatusText.Text.Substring(i + 1, endidx - i);
@@ -7584,7 +7607,7 @@ namespace Tween
                                             if (AtIdSupl.ItemCount != cnt)
                                                 _modifySettingAtId = true;
                                         }
-                                        else if (c == "#")
+                                        else if (c == '#')
                                         {
                                             pressed = true;
                                             startstr = StatusText.Text.Substring(i + 1, endidx - i);
@@ -7613,20 +7636,25 @@ namespace Tween
                             case Keys.D7:
                             case Keys.D8:
                                 // ソートダイレクト選択(Ctrl+Shift+1～8,Ctrl+Shift+9)
-                                int colNo = KeyCode - Keys.D1;
-                                DetailsListView lst = (DetailsListView)ListTab.SelectedTab.Tag;
-                                if (lst.Columns.Count < colNo)
-                                    return functionReturnValue;
-                                var col = lst.Columns.Cast<ColumnHeader>().Where(x => x.DisplayIndex == colNo).FirstOrDefault();
-                                if (col == null)
-                                    return functionReturnValue;
-                                MyList_ColumnClick(lst, new ColumnClickEventArgs(col.Index));
-                                return true;
+                                {
+                                    int colNo = KeyCode - Keys.D1;
+                                    DetailsListView lst = (DetailsListView)ListTab.SelectedTab.Tag;
+                                    if (lst.Columns.Count < colNo)
+                                        return functionReturnValue;
+                                    var col = lst.Columns.Cast<ColumnHeader>().Where(x => x.DisplayIndex == colNo).FirstOrDefault();
+                                    if (col == null)
+                                        return functionReturnValue;
+                                    MyList_ColumnClick(lst, new ColumnClickEventArgs(col.Index));
+
+                                    return true;
+                                }
                             case Keys.D9:
-                                DetailsListView lst = (DetailsListView)ListTab.SelectedTab.Tag;
-                                var col = lst.Columns.Cast<ColumnHeader>().OrderByDescending(x => x.DisplayIndex).First();
-                                MyList_ColumnClick(lst, new ColumnClickEventArgs(col.Index));
-                                return true;
+                                {
+                                    DetailsListView lst = (DetailsListView)ListTab.SelectedTab.Tag;
+                                    var col = lst.Columns.Cast<ColumnHeader>().OrderByDescending(x => x.DisplayIndex).First();
+                                    MyList_ColumnClick(lst, new ColumnClickEventArgs(col.Index));
+                                    return true;
+                                }
                         }
                     }
                     break;
@@ -7755,10 +7783,10 @@ namespace Tween
             bool IsProtected = false;
             bool isDm = false;
             if (this._curTab != null && this._statuses.GetTabByName(this._curTab.Text) != null)
-                isDm = this._statuses.GetTabByName(this._curTab.Text).TabType == TabUsageType.DirectMessage;
+                isDm = this._statuses.GetTabByName(this._curTab.Text).TabType == MyCommon.TabUsageType.DirectMessage;
             foreach (int idx in _curList.SelectedIndices)
             {
-                PostClass post = _statuses.Item[_curTab.Text, idx];
+                PostClass post = _statuses.Item(_curTab.Text, idx);
                 if (post.IsProtect)
                 {
                     IsProtected = true;
@@ -7786,7 +7814,7 @@ namespace Tween
             {
                 //MessageBox.Show(My.Resources.CopyStotText1)
                 MessageForm w = new MessageForm();
-                w.ShowDialog(Tween.My.Resources.CopyStotText1);
+                w.ShowDialog(Tween.My.Resources.Resources.CopyStotText1);
             }
             if (sb.Length > 0)
             {
@@ -7810,11 +7838,11 @@ namespace Tween
                 return;
             if (this._statuses.GetTabByName(this._curTab.Text) == null)
                 return;
-            if (this._statuses.GetTabByName(this._curTab.Text).TabType == TabUsageType.DirectMessage)
+            if (this._statuses.GetTabByName(this._curTab.Text).TabType == MyCommon.TabUsageType.DirectMessage)
                 return;
             foreach (int idx in _curList.SelectedIndices)
             {
-                PostClass post = _statuses.Item[_curTab.Text, idx];
+                PostClass post = _statuses.Item(_curTab.Text, idx);
                 if (post.RetweetedId > 0)
                 {
                     sb.AppendFormat("http://twitter.com/{0}/status/{1}{2}", post.ScreenName, post.RetweetedId, Environment.NewLine);
@@ -7879,7 +7907,7 @@ namespace Tween
 
             for (int idx = fIdx; idx <= toIdx; idx += stp)
             {
-                if (_statuses.Item[_curTab.Text, idx].IsFav)
+                if (_statuses.Item(_curTab.Text, idx).IsFav)
                 {
                     SelectListItem(_curList, idx);
                     _curList.EnsureVisible(idx);
@@ -7897,7 +7925,7 @@ namespace Tween
             int stp = 1;
             long targetId = 0;
 
-            if (_statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage)
+            if (_statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage)
                 return;
             // Directタブは対象外（見つかるはずがない）
             if (_curList.SelectedIndices.Count == 0)
@@ -7938,12 +7966,12 @@ namespace Tween
             bool found = false;
             for (int tabidx = fIdx; tabidx <= toIdx; tabidx += stp)
             {
-                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType == TabUsageType.DirectMessage)
+                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType == MyCommon.TabUsageType.DirectMessage)
                     continue;
                 // Directタブは対象外
                 for (int idx = 0; idx <= ((DetailsListView)ListTab.TabPages[tabidx].Tag).VirtualListSize - 1; idx++)
                 {
-                    if (_statuses.Item[ListTab.TabPages[tabidx].Text, idx].StatusId == targetId)
+                    if (_statuses.Item(ListTab.TabPages[tabidx].Text, idx).StatusId == targetId)
                     {
                         ListTab.SelectedIndex = tabidx;
                         ListTabSelect(ListTab.TabPages[tabidx]);
@@ -7994,9 +8022,9 @@ namespace Tween
             }
             for (int idx = fIdx; idx <= toIdx; idx += stp)
             {
-                if (_statuses.Item[_curTab.Text, idx].RetweetedId == 0)
+                if (_statuses.Item(_curTab.Text, idx).RetweetedId == 0)
                 {
-                    if (_statuses.Item[_curTab.Text, idx].ScreenName == name)
+                    if (_statuses.Item(_curTab.Text, idx).ScreenName == name)
                     {
                         SelectListItem(_curList, idx);
                         _curList.EnsureVisible(idx);
@@ -8005,7 +8033,7 @@ namespace Tween
                 }
                 else
                 {
-                    if (_statuses.Item[_curTab.Text, idx].RetweetedBy == name)
+                    if (_statuses.Item(_curTab.Text, idx).RetweetedBy == name)
                     {
                         SelectListItem(_curList, idx);
                         _curList.EnsureVisible(idx);
@@ -8055,7 +8083,7 @@ namespace Tween
 
             for (int idx = fIdx; idx <= toIdx; idx += stp)
             {
-                PostClass post = _statuses.Item[_curTab.Text, idx];
+                PostClass post = _statuses.Item(_curTab.Text, idx);
                 if (post.ScreenName == _anchorPost.ScreenName || post.RetweetedBy == _anchorPost.ScreenName || post.ScreenName == _anchorPost.RetweetedBy || (!string.IsNullOrEmpty(post.RetweetedBy) && post.RetweetedBy == _anchorPost.RetweetedBy) || _anchorPost.ReplyToList.Contains(post.ScreenName.ToLower()) || _anchorPost.ReplyToList.Contains(post.RetweetedBy.ToLower()) || post.ReplyToList.Contains(_anchorPost.ScreenName.ToLower()) || post.ReplyToList.Contains(_anchorPost.RetweetedBy.ToLower()))
                 {
                     SelectListItem(_curList, idx);
@@ -8173,163 +8201,219 @@ namespace Tween
         }
 
         private void GoInReplyToPostTree()
-		{
-			if (_curPost == null)
-				return;
+        {
+            if (_curPost == null)
+                return;
 
-			TabClass curTabClass = _statuses.Tabs[_curTab.Text];
+            TabClass curTabClass = _statuses.Tabs[_curTab.Text];
 
-			if (curTabClass.TabType == TabUsageType.PublicSearch && _curPost.InReplyToStatusId == 0 && _curPost.TextFromApi.Contains("@")) {
-				PostClass post = null;
-				string r = tw.GetStatusApi(false, _curPost.StatusId, ref post);
-				if (string.IsNullOrEmpty(r) && post != null) {
-					_curPost.InReplyToStatusId = post.InReplyToStatusId;
-					_curPost.InReplyToUser = post.InReplyToUser;
-					_curPost.IsReply = post.IsReply;
-					_itemCache = null;
-					_curList.RedrawItems(_curItemIndex, _curItemIndex, false);
-				} else {
-					this.StatusLabel.Text = r;
-				}
-			}
+            if (curTabClass.TabType == MyCommon.TabUsageType.PublicSearch && _curPost.InReplyToStatusId == 0 && _curPost.TextFromApi.Contains("@"))
+            {
+                PostClass post = null;
+                string r = tw.GetStatusApi(false, _curPost.StatusId, ref post);
+                if (string.IsNullOrEmpty(r) && post != null)
+                {
+                    _curPost.InReplyToStatusId = post.InReplyToStatusId;
+                    _curPost.InReplyToUser = post.InReplyToUser;
+                    _curPost.IsReply = post.IsReply;
+                    _itemCache = null;
+                    _curList.RedrawItems(_curItemIndex, _curItemIndex, false);
+                }
+                else
+                {
+                    this.StatusLabel.Text = r;
+                }
+            }
 
-			if (!(this.ExistCurrentPost && _curPost.InReplyToUser != null && _curPost.InReplyToStatusId > 0))
-				return;
+            if (!(this.ExistCurrentPost && _curPost.InReplyToUser != null && _curPost.InReplyToStatusId > 0))
+                return;
 
-			if (replyChains == null || (replyChains.Count > 0 && replyChains.Peek().InReplyToId != _curPost.StatusId)) {
-				replyChains = new Stack<ReplyChain>();
-			}
-			replyChains.Push(new ReplyChain(_curPost.StatusId, _curPost.InReplyToStatusId, _curTab));
+            if (replyChains == null || (replyChains.Count > 0 && replyChains.Peek().InReplyToId != _curPost.StatusId))
+            {
+                replyChains = new Stack<ReplyChain>();
+            }
+            replyChains.Push(new ReplyChain(_curPost.StatusId, _curPost.InReplyToStatusId, _curTab));
 
-			int inReplyToIndex = 0;
-			string inReplyToTabName = null;
-			long inReplyToId = _curPost.InReplyToStatusId;
-			string inReplyToUser = _curPost.InReplyToUser;
-			Dictionary<long, PostClass> curTabPosts = null;
+            int inReplyToIndex = 0;
+            string inReplyToTabName = null;
+            long inReplyToId = _curPost.InReplyToStatusId;
+            string inReplyToUser = _curPost.InReplyToUser;
+            Dictionary<long, PostClass> curTabPosts = null;
 
-			if (_statuses.Tabs[_curTab.Text].IsInnerStorageTabType) {
-				curTabPosts = curTabClass.Posts;
-			} else {
-				curTabPosts = _statuses.Posts;
-			}
+            if (_statuses.Tabs[_curTab.Text].IsInnerStorageTabType)
+            {
+                curTabPosts = curTabClass.Posts;
+            }
+            else
+            {
+                curTabPosts = _statuses.Posts;
+            }
 
-			var inReplyToPosts = from tab in _statuses.Tabs.Valuesorderby !object.ReferenceEquals(tab, curTabClass)from post in ((Dictionary<long, PostClass>)(tab.IsInnerStorageTabType ? tab.Posts : _statuses.Posts)).Valueswhere post.StatusId == inReplyToIdtab.IndexOf(post.StatusId)where index != -1new {
-				Tab = tab,
-				Index = index
-			};
+            var inReplyToPosts = from tab in _statuses.Tabs.Values
+                                 orderby !object.ReferenceEquals(tab, curTabClass)
+                                 from post in ((Dictionary<long, PostClass>)(tab.IsInnerStorageTabType ? tab.Posts : _statuses.Posts)).Values
+                                 where post.StatusId == inReplyToId
+                                 let index = tab.IndexOf(post.StatusId)
+                                 where index != -1
+                                 select new { Tab = tab, Index = index };
 
-			try {
-				var inReplyPost = inReplyToPosts.First();
-				inReplyToTabName = inReplyPost.Tab.TabName;
-				inReplyToIndex = inReplyPost.Index;
-			} catch (InvalidOperationException ex) {
-				PostClass post = null;
-				string r = tw.GetStatusApi(false, _curPost.InReplyToStatusId, ref post);
-				if (string.IsNullOrEmpty(r) && post != null) {
-					post.IsRead = true;
-					_statuses.AddPost(post);
-					_statuses.DistributePosts();
-					//_statuses.SubmitUpdate(Nothing, Nothing, Nothing, False)
-					this.RefreshTimeline(false);
-					try {
-						var inReplyPost = inReplyToPosts.First();
-						inReplyToTabName = inReplyPost.Tab.TabName;
-						inReplyToIndex = inReplyPost.Index;
-					} catch (InvalidOperationException ex2) {
-						OpenUriAsync("http://twitter.com/" + inReplyToUser + "/statuses/" + inReplyToId.ToString());
-						return;
-					}
-				} else {
-					this.StatusLabel.Text = r;
-					OpenUriAsync("http://twitter.com/" + inReplyToUser + "/statuses/" + inReplyToId.ToString());
-					return;
-				}
-			}
+            try
+            {
+                var inReplyPost = inReplyToPosts.First();
+                inReplyToTabName = inReplyPost.Tab.TabName;
+                inReplyToIndex = inReplyPost.Index;
+            }
+            catch (InvalidOperationException ex)
+            {
+                PostClass post = null;
+                string r = tw.GetStatusApi(false, _curPost.InReplyToStatusId, ref post);
+                if (string.IsNullOrEmpty(r) && post != null)
+                {
+                    post.IsRead = true;
+                    _statuses.AddPost(post);
+                    _statuses.DistributePosts();
+                    //_statuses.SubmitUpdate(Nothing, Nothing, Nothing, False)
+                    this.RefreshTimeline(false);
+                    try
+                    {
+                        var inReplyPost = inReplyToPosts.First();
+                        inReplyToTabName = inReplyPost.Tab.TabName;
+                        inReplyToIndex = inReplyPost.Index;
+                    }
+                    catch (InvalidOperationException ex2)
+                    {
+                        OpenUriAsync("http://twitter.com/" + inReplyToUser + "/statuses/" + inReplyToId.ToString());
+                        return;
+                    }
+                }
+                else
+                {
+                    this.StatusLabel.Text = r;
+                    OpenUriAsync("http://twitter.com/" + inReplyToUser + "/statuses/" + inReplyToId.ToString());
+                    return;
+                }
+            }
 
-			var tabPage = this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == inReplyToTabName);
-			var listView = (DetailsListView)tabPage.Tag;
+            var tabPage = this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == inReplyToTabName);
+            var listView = (DetailsListView)tabPage.Tag;
 
-			if (!object.ReferenceEquals(_curTab, tabPage)) {
-				this.ListTab.SelectTab(tabPage);
-			}
+            if (!object.ReferenceEquals(_curTab, tabPage))
+            {
+                this.ListTab.SelectTab(tabPage);
+            }
 
-			this.SelectListItem(listView, inReplyToIndex);
-			listView.EnsureVisible(inReplyToIndex);
-		}
+            this.SelectListItem(listView, inReplyToIndex);
+            listView.EnsureVisible(inReplyToIndex);
+        }
 
         private void GoBackInReplyToPostTree(bool parallel = false, bool isForward = true)
-		{
-			if (_curPost == null)
-				return;
+        {
+            if (_curPost == null)
+                return;
 
-			TabClass curTabClass = _statuses.Tabs[_curTab.Text];
-			Dictionary<long, PostClass> curTabPosts = (Dictionary<long, PostClass>)(curTabClass.IsInnerStorageTabType ? curTabClass.Posts : _statuses.Posts);
+            TabClass curTabClass = _statuses.Tabs[_curTab.Text];
+            Dictionary<long, PostClass> curTabPosts = (Dictionary<long, PostClass>)(curTabClass.IsInnerStorageTabType ? curTabClass.Posts : _statuses.Posts);
 
-			if (parallel) {
-				if (_curPost.InReplyToStatusId != 0) {
-					var posts = from t in _statuses.Tabsfrom p in (Dictionary<long, PostClass>)(t.Value.IsInnerStorageTabType ? t.Value.Posts : _statuses.Posts)where p.Value.StatusId != _curPost.StatusId && p.Value.InReplyToStatusId == _curPost.InReplyToStatusIdt.Value.IndexOf(p.Value.StatusId)where indexOf > -1orderby (isForward ? indexOf : indexOf * -1)orderby !object.ReferenceEquals(t.Value, curTabClass)new {
-						Tab = t.Value,
-						Post = p.Value,
-						Index = indexOf
-					};
-					try {
-						var postList = posts.ToList();
-						for (int i = postList.Count - 1; i >= 0; i += -1) {
-							int index = i;
-							if (postList.FindIndex(pst => pst.Post.StatusId == postList[index].Post.StatusId) != index) {
-								postList.RemoveAt(index);
-							}
-						}
-						var post = postList.FirstOrDefault(pst => object.ReferenceEquals(pst.Tab, curTabClass) && (bool)(isForward ? pst.Index > _curItemIndex : pst.Index < _curItemIndex));
-						if (post == null)
-							post = postList.FirstOrDefault(pst => !object.ReferenceEquals(pst.Tab, curTabClass));
-						if (post == null)
-							post = postList.First();
-						this.ListTab.SelectTab(this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == post.Tab.TabName));
-						var listView = (DetailsListView)this.ListTab.SelectedTab.Tag;
-						SelectListItem(listView, post.Index);
-						listView.EnsureVisible(post.Index);
-					} catch (InvalidOperationException ex) {
-						return;
-					}
-				}
-			} else {
-				if (replyChains == null || replyChains.Count < 1) {
-					var posts = from t in _statuses.Tabsfrom p in (Dictionary<long, PostClass>)(t.Value.IsInnerStorageTabType ? t.Value.Posts : _statuses.Posts)where p.Value.InReplyToStatusId == _curPost.StatusIdt.Value.IndexOf(p.Value.StatusId)where indexOf > -1orderby indexOforderby !object.ReferenceEquals(t.Value, curTabClass)new {
-						Tab = t.Value,
-						Index = indexOf
-					};
-					try {
-						var post = posts.First();
-						this.ListTab.SelectTab(this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == post.Tab.TabName));
-						var listView = (DetailsListView)this.ListTab.SelectedTab.Tag;
-						SelectListItem(listView, post.Index);
-						listView.EnsureVisible(post.Index);
-					} catch (InvalidOperationException ex) {
-						return;
-					}
-				} else {
-					ReplyChain chainHead = replyChains.Pop();
-					if (chainHead.InReplyToId == _curPost.StatusId) {
-						int idx = _statuses.Tabs[chainHead.OriginalTab.Text].IndexOf(chainHead.OriginalId);
-						if (idx == -1) {
-							replyChains = null;
-						} else {
-							try {
-								ListTab.SelectTab(chainHead.OriginalTab);
-							} catch (Exception ex) {
-								replyChains = null;
-							}
-							SelectListItem(_curList, idx);
-							_curList.EnsureVisible(idx);
-						}
-					} else {
-						replyChains = null;
-						this.GoBackInReplyToPostTree(parallel);
-					}
-				}
-			}
-		}
+            if (parallel)
+            {
+                if (_curPost.InReplyToStatusId != 0)
+                {
+                    var posts = from t in _statuses.Tabs
+                                from p in (Dictionary<long, PostClass>)(t.Value.IsInnerStorageTabType ? t.Value.Posts : _statuses.Posts)
+                                where p.Value.StatusId != _curPost.StatusId && p.Value.InReplyToStatusId == _curPost.InReplyToStatusId
+                                let indexOf = t.Value.IndexOf(p.Value.StatusId)
+                                where indexOf > -1
+                                orderby (isForward ? indexOf : indexOf * -1)
+                                orderby !object.ReferenceEquals(t.Value, curTabClass)
+                                select new { Tab = t.Value, Post = p.Value, Index = indexOf };
+                    try
+                    {
+                        var postList = posts.ToList();
+                        for (int i = postList.Count - 1; i >= 0; i += -1)
+                        {
+                            int index = i;
+                            if (postList.FindIndex(pst => pst.Post.StatusId == postList[index].Post.StatusId) != index)
+                            {
+                                postList.RemoveAt(index);
+                            }
+                        }
+                        var post = postList.FirstOrDefault(pst => object.ReferenceEquals(pst.Tab, curTabClass) && (bool)(isForward ? pst.Index > _curItemIndex : pst.Index < _curItemIndex));
+                        if (post == null)
+                            post = postList.FirstOrDefault(pst => !object.ReferenceEquals(pst.Tab, curTabClass));
+                        if (post == null)
+                            post = postList.First();
+                        this.ListTab.SelectTab(this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == post.Tab.TabName));
+                        var listView = (DetailsListView)this.ListTab.SelectedTab.Tag;
+                        SelectListItem(listView, post.Index);
+                        listView.EnsureVisible(post.Index);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                if (replyChains == null || replyChains.Count < 1)
+                {
+                    var posts = from t in _statuses.Tabs
+                                from p in (Dictionary<long, PostClass>)(t.Value.IsInnerStorageTabType ? t.Value.Posts : _statuses.Posts)
+                                where p.Value.InReplyToStatusId == _curPost.StatusId
+                                let indexOf = t.Value.IndexOf(p.Value.StatusId)
+                                where indexOf > -1
+                                orderby indexOf
+                                orderby !object.ReferenceEquals(t.Value, curTabClass)
+                                select new
+                                {
+                                    Tab = t.Value,
+                                    Index = indexOf
+                                };
+                    try
+                    {
+                        var post = posts.First();
+                        this.ListTab.SelectTab(this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == post.Tab.TabName));
+                        var listView = (DetailsListView)this.ListTab.SelectedTab.Tag;
+                        SelectListItem(listView, post.Index);
+                        listView.EnsureVisible(post.Index);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    ReplyChain chainHead = replyChains.Pop();
+                    if (chainHead.InReplyToId == _curPost.StatusId)
+                    {
+                        int idx = _statuses.Tabs[chainHead.OriginalTab.Text].IndexOf(chainHead.OriginalId);
+                        if (idx == -1)
+                        {
+                            replyChains = null;
+                        }
+                        else
+                        {
+                            try
+                            {
+                                ListTab.SelectTab(chainHead.OriginalTab);
+                            }
+                            catch (Exception ex)
+                            {
+                                replyChains = null;
+                            }
+                            SelectListItem(_curList, idx);
+                            _curList.EnsureVisible(idx);
+                        }
+                    }
+                    else
+                    {
+                        replyChains = null;
+                        this.GoBackInReplyToPostTree(parallel);
+                    }
+                }
+            }
+        }
 
         private void GoBackSelectPostChain()
         {
@@ -8364,12 +8448,12 @@ namespace Tween
             if (this.selectPostChains.Count < 2000)
                 return;
             Stack<Tuple<TabPage, PostClass>> p = new Stack<Tuple<TabPage, PostClass>>();
-            for (i = 0; i <= 1999; i++)
+            for (var i = 0; i <= 1999; i++)
             {
                 p.Push(this.selectPostChains.Pop());
             }
             this.selectPostChains.Clear();
-            for (i = 0; i <= 1999; i++)
+            for (var i = 0; i <= 1999; i++)
             {
                 this.selectPostChains.Push(p.Pop());
             }
@@ -8381,7 +8465,7 @@ namespace Tween
                 return false;
             for (int tabidx = 0; tabidx <= ListTab.TabCount - 1; tabidx++)
             {
-                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType != TabUsageType.DirectMessage && _statuses.Tabs[ListTab.TabPages[tabidx].Text].Contains(statusId))
+                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType != MyCommon.TabUsageType.DirectMessage && _statuses.Tabs[ListTab.TabPages[tabidx].Text].Contains(statusId))
                 {
                     var idx = _statuses.Tabs[ListTab.TabPages[tabidx].Text].IndexOf(statusId);
                     ListTab.SelectedIndex = tabidx;
@@ -8400,7 +8484,7 @@ namespace Tween
                 return false;
             for (int tabidx = 0; tabidx <= ListTab.TabCount - 1; tabidx++)
             {
-                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType == TabUsageType.DirectMessage && _statuses.Tabs[ListTab.TabPages[tabidx].Text].Contains(statusId))
+                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType == MyCommon.TabUsageType.DirectMessage && _statuses.Tabs[ListTab.TabPages[tabidx].Text].Contains(statusId))
                 {
                     var idx = _statuses.Tabs[ListTab.TabPages[tabidx].Text].IndexOf(statusId);
                     ListTab.SelectedIndex = tabidx;
@@ -8565,7 +8649,7 @@ namespace Tween
                 _cfgCommon.PreviewEnable = SettingDialog.PreviewEnable;
                 _cfgCommon.Language = SettingDialog.Language;
 
-                _cfgCommon.SortOrder = _statuses.SortOrder;
+                _cfgCommon.SortOrder = (int)_statuses.SortOrder;
                 switch (_statuses.SortMode)
                 {
                     case IdComparerClass.ComparerMode.Nickname:
@@ -8699,7 +8783,7 @@ namespace Tween
             SettingTabs tabSetting = new SettingTabs();
             for (int i = 0; i <= ListTab.TabPages.Count - 1; i++)
             {
-                if (_statuses.Tabs[ListTab.TabPages[i].Text].TabType != TabUsageType.Related)
+                if (_statuses.Tabs[ListTab.TabPages[i].Text].TabType != MyCommon.TabUsageType.Related)
                     tabSetting.Tabs.Add(_statuses.Tabs[ListTab.TabPages[i].Text]);
             }
             tabSetting.Save();
@@ -8707,15 +8791,15 @@ namespace Tween
 
         private void SaveLogMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            DialogResult rslt = MessageBox.Show(string.Format(Tween.My.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Tween.My.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult rslt = MessageBox.Show(string.Format(Tween.My.Resources.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Tween.My.Resources.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (rslt == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             SaveFileDialog1.FileName = "TweenPosts" + Strings.Format(DateAndTime.Now, "yyMMdd-HHmmss") + ".tsv";
             SaveFileDialog1.InitialDirectory = Tween.My.MyProject.Application.Info.DirectoryPath;
-            SaveFileDialog1.Filter = Tween.My.Resources.SaveLogMenuItem_ClickText3;
+            SaveFileDialog1.Filter = Tween.My.Resources.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
-            SaveFileDialog1.Title = Tween.My.Resources.SaveLogMenuItem_ClickText4;
+            SaveFileDialog1.Title = Tween.My.Resources.Resources.SaveLogMenuItem_ClickText4;
             SaveFileDialog1.RestoreDirectory = true;
 
             if (SaveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -8729,7 +8813,7 @@ namespace Tween
                         //All
                         for (int idx = 0; idx <= _curList.VirtualListSize - 1; idx++)
                         {
-                            PostClass post = _statuses.Item[_curTab.Text, idx];
+                            PostClass post = _statuses.Item(_curTab.Text, idx);
                             string protect = "";
                             if (post.IsProtect)
                                 protect = "Protect";
@@ -8740,7 +8824,7 @@ namespace Tween
                     {
                         foreach (int idx in _curList.SelectedIndices)
                         {
-                            PostClass post = _statuses.Item[_curTab.Text, idx];
+                            PostClass post = _statuses.Item(_curTab.Text, idx);
                             string protect = "";
                             if (post.IsProtect)
                                 protect = "Protect";
@@ -8787,8 +8871,8 @@ namespace Tween
                 {
                     if (ListTab.TabPages[i].Text == newTabText)
                     {
-                        string tmp = string.Format(Tween.My.Resources.Tabs_DoubleClickText1, newTabText);
-                        MessageBox.Show(tmp, Tween.My.Resources.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        string tmp = string.Format(Tween.My.Resources.Resources.Tabs_DoubleClickText1, newTabText);
+                        MessageBox.Show(tmp, Tween.My.Resources.Resources.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return false;
                     }
                 }
@@ -8991,7 +9075,7 @@ namespace Tween
                 if (_curList.SelectedIndices.Count == 1 && !isAll && this.ExistCurrentPost)
                 {
                     // 単独ユーザー宛リプライまたはDM
-                    if ((_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage && isAuto) || (!isAuto && !isReply))
+                    if ((_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.DirectMessage && isAuto) || (!isAuto && !isReply))
                     {
                         // ダイレクトメッセージ
                         StatusText.Text = "D " + _curPost.ScreenName + " " + StatusText.Text;
@@ -9128,7 +9212,7 @@ namespace Tween
                         }
                         for (int cnt = 0; cnt <= _curList.SelectedIndices.Count - 1; cnt++)
                         {
-                            PostClass post = _statuses.Item[_curTab.Text, _curList.SelectedIndices[cnt]];
+                            PostClass post = _statuses.Item(_curTab.Text, _curList.SelectedIndices[cnt]);
                             if (!sTxt.Contains("@" + post.ScreenName + " "))
                             {
                                 sTxt = sTxt.Insert(2, "@" + post.ScreenName + " ");
@@ -9148,7 +9232,7 @@ namespace Tween
                             int sidx = StatusText.SelectionStart;
                             for (int cnt = 0; cnt <= _curList.SelectedIndices.Count - 1; cnt++)
                             {
-                                PostClass post = _statuses.Item[_curTab.Text, _curList.SelectedIndices[cnt]];
+                                PostClass post = _statuses.Item(_curTab.Text, _curList.SelectedIndices[cnt]);
                                 if (!ids.Contains("@" + post.ScreenName + " ") && !post.ScreenName.Equals(tw.Username, StringComparison.CurrentCultureIgnoreCase))
                                 {
                                     ids += "@" + post.ScreenName + " ";
@@ -9406,13 +9490,13 @@ namespace Tween
                 return;
             }
 
-            TabClass tb = _statuses.GetTabByType(TabUsageType.Mentions);
-            if (SettingDialog.ReplyIconState != REPLY_ICONSTATE.None && tb != null && tb.UnreadCount > 0)
+            TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Mentions);
+            if (SettingDialog.ReplyIconState != MyCommon.REPLY_ICONSTATE.None && tb != null && tb.UnreadCount > 0)
             {
                 if (static_RefreshTasktrayIcon_blinkCnt > 0)
                     return;
                 static_RefreshTasktrayIcon_blink = !static_RefreshTasktrayIcon_blink;
-                if (static_RefreshTasktrayIcon_blink || SettingDialog.ReplyIconState == REPLY_ICONSTATE.StaticIcon)
+                if (static_RefreshTasktrayIcon_blink || SettingDialog.ReplyIconState == MyCommon.REPLY_ICONSTATE.StaticIcon)
                 {
                     NotifyIcon1.Icon = ReplyIcon;
                 }
@@ -9506,14 +9590,14 @@ namespace Tween
 
         private void TabMenuControl(string tabName)
         {
-            if (_statuses.Tabs[tabName].TabType != TabUsageType.Mentions && _statuses.IsDefaultTab(tabName))
+            if (_statuses.Tabs[tabName].TabType != MyCommon.TabUsageType.Mentions && _statuses.IsDefaultTab(tabName))
             {
                 FilterEditMenuItem.Enabled = true;
                 this.EditRuleTbMenuItem.Enabled = true;
                 DeleteTabMenuItem.Enabled = false;
                 this.DeleteTbMenuItem.Enabled = false;
             }
-            else if (_statuses.Tabs[tabName].TabType == TabUsageType.Mentions)
+            else if (_statuses.Tabs[tabName].TabType == MyCommon.TabUsageType.Mentions)
             {
                 FilterEditMenuItem.Enabled = true;
                 this.EditRuleTbMenuItem.Enabled = true;
@@ -9611,7 +9695,7 @@ namespace Tween
         private void FilterEditMenuItem_Click(System.Object sender, System.EventArgs e)
         {
             if (string.IsNullOrEmpty(_rclickTabName))
-                _rclickTabName = _statuses.GetTabByType(TabUsageType.Home).TabName;
+                _rclickTabName = _statuses.GetTabByType(MyCommon.TabUsageType.Home).TabName;
             fltDialog.SetCurrent(_rclickTabName);
             fltDialog.ShowDialog();
             this.TopMost = SettingDialog.AlwaysTop;
@@ -9655,7 +9739,7 @@ namespace Tween
         private void AddTabMenuItem_Click(System.Object sender, System.EventArgs e)
         {
             string tabName = null;
-            TabUsageType tabUsage = default(TabUsageType);
+            MyCommon.TabUsageType tabUsage = default(MyCommon.TabUsageType);
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.TabName = _statuses.GetUniqueTabName();
@@ -9672,7 +9756,7 @@ namespace Tween
             {
                 //List対応
                 ListElement list = null;
-                if (tabUsage == TabUsageType.Lists)
+                if (tabUsage == MyCommon.TabUsageType.Lists)
                 {
                     using (ListAvailable listAvail = new ListAvailable())
                     {
@@ -9685,24 +9769,24 @@ namespace Tween
                 }
                 if (!_statuses.AddTab(tabName, tabUsage, list) || !AddNewTab(tabName, false, tabUsage, list))
                 {
-                    string tmp = string.Format(Tween.My.Resources.AddTabMenuItem_ClickText1, tabName);
-                    MessageBox.Show(tmp, Tween.My.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string tmp = string.Format(Tween.My.Resources.Resources.AddTabMenuItem_ClickText1, tabName);
+                    MessageBox.Show(tmp, Tween.My.Resources.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
                 {
                     //成功
                     SaveConfigsTabs();
-                    if (tabUsage == TabUsageType.PublicSearch)
+                    if (tabUsage == MyCommon.TabUsageType.PublicSearch)
                     {
                         ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
                         ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
                         ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
                     }
-                    if (tabUsage == TabUsageType.Lists)
+                    if (tabUsage == MyCommon.TabUsageType.Lists)
                     {
                         ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
                         ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
-                        GetTimeline(WORKERTYPE.List, 1, 0, tabName);
+                        GetTimeline(MyCommon.WORKERTYPE.List, 1, 0, tabName);
                     }
                 }
             }
@@ -9719,13 +9803,13 @@ namespace Tween
                     return;
 
                 fltDialog.SetCurrent(tabName);
-                if (_statuses.Item[_curTab.Text, idx].RetweetedId == 0)
+                if (_statuses.Item(_curTab.Text, idx).RetweetedId == 0)
                 {
-                    fltDialog.AddNewFilter(_statuses.Item[_curTab.Text, idx].ScreenName, _statuses.Item[_curTab.Text, idx].TextFromApi);
+                    fltDialog.AddNewFilter(_statuses.Item(_curTab.Text, idx).ScreenName, _statuses.Item(_curTab.Text, idx).TextFromApi);
                 }
                 else
                 {
-                    fltDialog.AddNewFilter(_statuses.Item[_curTab.Text, idx].RetweetedBy, _statuses.Item[_curTab.Text, idx].TextFromApi);
+                    fltDialog.AddNewFilter(_statuses.Item(_curTab.Text, idx).RetweetedBy, _statuses.Item(_curTab.Text, idx).TextFromApi);
                 }
                 fltDialog.ShowDialog();
                 this.TopMost = SettingDialog.AlwaysTop;
@@ -9767,7 +9851,7 @@ namespace Tween
             SaveConfigsTabs();
             if (this.ListTab.SelectedTab != null && ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices.Count > 0)
             {
-                _curPost = _statuses.Item[this.ListTab.SelectedTab.Text, ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices[0]];
+                _curPost = _statuses.Item(this.ListTab.SelectedTab.Text, ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices[0]);
             }
         }
 
@@ -9855,7 +9939,7 @@ namespace Tween
                         return true;
                     }
                 }
-                else if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch && (ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focused || ListTab.SelectedTab.Controls["panelSearch"].Controls["comboLang"].Focused))
+                else if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch && (ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focused || ListTab.SelectedTab.Controls["panelSearch"].Controls["comboLang"].Focused))
                 {
                     this.SearchButton_Click(ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
                     return true;
@@ -9889,7 +9973,7 @@ namespace Tween
             List<string> ids = new List<string>();
             foreach (int idx in _curList.SelectedIndices)
             {
-                PostClass post = _statuses.Item[_curTab.Text, idx];
+                PostClass post = _statuses.Item(_curTab.Text, idx);
                 if (!ids.Contains(post.ScreenName))
                 {
                     FiltersClass fc = new FiltersClass();
@@ -9977,7 +10061,7 @@ namespace Tween
 
                 ListTab.SelectedTab.Focus();
                 //新規タブを選択→タブ作成
-                if (tabName == Tween.My.Resources.IDRuleMenuItem_ClickText1)
+                if (tabName == Tween.My.Resources.Resources.IDRuleMenuItem_ClickText1)
                 {
                     using (InputTabName inputName = new InputTabName())
                     {
@@ -9991,10 +10075,10 @@ namespace Tween
                     this.TopMost = SettingDialog.AlwaysTop;
                     if (!string.IsNullOrEmpty(tabName))
                     {
-                        if (!_statuses.AddTab(tabName, TabUsageType.UserDefined, null) || !AddNewTab(tabName, false, TabUsageType.UserDefined))
+                        if (!_statuses.AddTab(tabName, MyCommon.TabUsageType.UserDefined, null) || !AddNewTab(tabName, false, MyCommon.TabUsageType.UserDefined))
                         {
-                            string tmp = string.Format(Tween.My.Resources.IDRuleMenuItem_ClickText2, tabName);
-                            MessageBox.Show(tmp, Tween.My.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            string tmp = string.Format(Tween.My.Resources.Resources.IDRuleMenuItem_ClickText2, tabName);
+                            MessageBox.Show(tmp, Tween.My.Resources.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             //もう一度タブ名入力
                         }
                         else
@@ -10015,8 +10099,8 @@ namespace Tween
         {
             var _with1 = MyCommon.Block;
             //移動するか？
-            string _tmp = string.Format(Tween.My.Resources.IDRuleMenuItem_ClickText4, Environment.NewLine);
-            if (MessageBox.Show(_tmp, Tween.My.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+            string _tmp = string.Format(Tween.My.Resources.Resources.IDRuleMenuItem_ClickText4, Environment.NewLine);
+            if (MessageBox.Show(_tmp, Tween.My.Resources.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
                 move = false;
             }
@@ -10027,8 +10111,8 @@ namespace Tween
             if (!move)
             {
                 //マークするか？
-                string _tmp = string.Format(Tween.My.Resources.IDRuleMenuItem_ClickText6, Constants.vbCrLf);
-                if (MessageBox.Show(_tmp, Tween.My.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                _tmp = string.Format(Tween.My.Resources.Resources.IDRuleMenuItem_ClickText6, Constants.vbCrLf);
+                if (MessageBox.Show(_tmp, Tween.My.Resources.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                 {
                     mark = true;
                 }
@@ -10220,8 +10304,8 @@ namespace Tween
         {
             if (showWarning)
             {
-                string tmp = string.Format(Tween.My.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, tabName + " " + Tween.My.Resources.ClearTabMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+                string tmp = string.Format(Tween.My.Resources.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
+                if (MessageBox.Show(tmp, tabName + " " + Tween.My.Resources.Resources.ClearTabMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
                 {
                     return;
                 }
@@ -10295,7 +10379,7 @@ namespace Tween
                     static_SetMainWindowTitle_followers_Init.State = 1;
                 }
             }
-            if (SettingDialog.DispLatestPost != DispTitleEnum.None && SettingDialog.DispLatestPost != DispTitleEnum.Post && SettingDialog.DispLatestPost != DispTitleEnum.Ver && SettingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
+            if (SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.None && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Post && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Ver && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.OwnStatus)
             {
                 foreach (string key in _statuses.Tabs.Keys)
                 {
@@ -10309,31 +10393,31 @@ namespace Tween
             ttl.Append("Tween  ");
             switch (SettingDialog.DispLatestPost)
             {
-                case DispTitleEnum.Ver:
+                case MyCommon.DispTitleEnum.Ver:
                     ttl.Append("Ver:").Append(static_SetMainWindowTitle_myVer);
                     break;
-                case DispTitleEnum.Post:
+                case MyCommon.DispTitleEnum.Post:
                     if (_history != null && _history.Count > 1)
                     {
                         ttl.Append(_history[_history.Count - 2].status.Replace(Constants.vbCrLf, ""));
                     }
                     break;
-                case DispTitleEnum.UnreadRepCount:
-                    ttl.AppendFormat(Tween.My.Resources.SetMainWindowTitleText1, _statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
+                case MyCommon.DispTitleEnum.UnreadRepCount:
+                    ttl.AppendFormat(Tween.My.Resources.Resources.SetMainWindowTitleText1, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
                     break;
-                case DispTitleEnum.UnreadAllCount:
-                    ttl.AppendFormat(Tween.My.Resources.SetMainWindowTitleText2, ur);
+                case MyCommon.DispTitleEnum.UnreadAllCount:
+                    ttl.AppendFormat(Tween.My.Resources.Resources.SetMainWindowTitleText2, ur);
                     break;
-                case DispTitleEnum.UnreadAllRepCount:
-                    ttl.AppendFormat(Tween.My.Resources.SetMainWindowTitleText3, ur, _statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
+                case MyCommon.DispTitleEnum.UnreadAllRepCount:
+                    ttl.AppendFormat(Tween.My.Resources.Resources.SetMainWindowTitleText3, ur, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
                     break;
-                case DispTitleEnum.UnreadCountAllCount:
-                    ttl.AppendFormat(Tween.My.Resources.SetMainWindowTitleText4, ur, al);
+                case MyCommon.DispTitleEnum.UnreadCountAllCount:
+                    ttl.AppendFormat(Tween.My.Resources.Resources.SetMainWindowTitleText4, ur, al);
                     break;
-                case DispTitleEnum.OwnStatus:
+                case MyCommon.DispTitleEnum.OwnStatus:
                     if (static_SetMainWindowTitle_followers == 0 && tw.FollowersCount > 0)
                         static_SetMainWindowTitle_followers = tw.FollowersCount;
-                    ttl.AppendFormat(Tween.My.Resources.OwnStatusTitle, tw.StatusesCount, tw.FriendsCount, tw.FollowersCount, tw.FollowersCount - static_SetMainWindowTitle_followers);
+                    ttl.AppendFormat(Tween.My.Resources.Resources.OwnStatusTitle, tw.StatusesCount, tw.FriendsCount, tw.FollowersCount, tw.FollowersCount - static_SetMainWindowTitle_followers);
                     break;
             }
 
@@ -10353,8 +10437,8 @@ namespace Tween
             //タブ未読数/タブ発言数 全未読数/総発言数 (未読＠＋未読DM数)
             if (_statuses == null)
                 return "";
-            TabClass tbRep = _statuses.GetTabByType(TabUsageType.Mentions);
-            TabClass tbDm = _statuses.GetTabByType(TabUsageType.DirectMessage);
+            TabClass tbRep = _statuses.GetTabByType(MyCommon.TabUsageType.Mentions);
+            TabClass tbDm = _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage);
             if (tbRep == null || tbDm == null)
                 return "";
             int urat = tbRep.UnreadCount + tbDm.UnreadCount;
@@ -10384,14 +10468,14 @@ namespace Tween
             UnreadCounter = ur;
             UnreadAtCounter = urat;
 
-            slbl.AppendFormat(Tween.My.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, _postTimestamps.Count, _favTimestamps.Count, _tlCount);
+            slbl.AppendFormat(Tween.My.Resources.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, _postTimestamps.Count, _favTimestamps.Count, _tlCount);
             if (SettingDialog.TimelinePeriodInt == 0)
             {
-                slbl.Append(Tween.My.Resources.SetStatusLabelText2);
+                slbl.Append(Tween.My.Resources.Resources.SetStatusLabelText2);
             }
             else
             {
-                slbl.Append(SettingDialog.TimelinePeriodInt.ToString() + Tween.My.Resources.SetStatusLabelText3);
+                slbl.Append(SettingDialog.TimelinePeriodInt.ToString() + Tween.My.Resources.Resources.SetStatusLabelText3);
             }
             return slbl.ToString();
         }
@@ -10652,16 +10736,16 @@ namespace Tween
                 }
                 if (_statuses.ContainsKey(_curPost.InReplyToStatusId))
                 {
-                    PostClass repPost = _statuses.Item[_curPost.InReplyToStatusId];
+                    PostClass repPost = _statuses.Item(_curPost.InReplyToStatusId);
                     MessageBox.Show(repPost.ScreenName + " / " + repPost.Nickname + "   (" + repPost.CreatedAt.ToString() + ")" + Environment.NewLine + repPost.TextFromApi);
                 }
                 else
                 {
-                    foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.Lists | TabUsageType.PublicSearch))
+                    foreach (TabClass tb in _statuses.GetTabsByType(MyCommon.TabUsageType.Lists | MyCommon.TabUsageType.PublicSearch))
                     {
                         if (tb == null || !tb.Contains(_curPost.InReplyToStatusId))
                             break; // TODO: might not be correct. Was : Exit For
-                        PostClass repPost = _statuses.Item[_curPost.InReplyToStatusId];
+                        PostClass repPost = _statuses.Item(_curPost.InReplyToStatusId);
                         MessageBox.Show(repPost.ScreenName + " / " + repPost.Nickname + "   (" + repPost.CreatedAt.ToString() + ")" + Environment.NewLine + repPost.TextFromApi);
                         return;
                     }
@@ -10696,13 +10780,13 @@ namespace Tween
                         else
                         {
                             this.IconNameToolStripMenuItem.Enabled = false;
-                            this.IconNameToolStripMenuItem.Text = Tween.My.Resources.ContextMenuStrip3_OpeningText1;
+                            this.IconNameToolStripMenuItem.Text = Tween.My.Resources.Resources.ContextMenuStrip3_OpeningText1;
                         }
                     }
                     else
                     {
                         this.IconNameToolStripMenuItem.Enabled = false;
-                        this.IconNameToolStripMenuItem.Text = Tween.My.Resources.ContextMenuStrip3_OpeningText1;
+                        this.IconNameToolStripMenuItem.Text = Tween.My.Resources.Resources.ContextMenuStrip3_OpeningText1;
                     }
                     if (this.TIconDic[_curPost.ImageUrl] != null)
                     {
@@ -10717,14 +10801,14 @@ namespace Tween
                 {
                     this.IconNameToolStripMenuItem.Enabled = false;
                     this.SaveIconPictureToolStripMenuItem.Enabled = false;
-                    this.IconNameToolStripMenuItem.Text = Tween.My.Resources.ContextMenuStrip3_OpeningText1;
+                    this.IconNameToolStripMenuItem.Text = Tween.My.Resources.Resources.ContextMenuStrip3_OpeningText1;
                 }
             }
             else
             {
                 this.IconNameToolStripMenuItem.Enabled = false;
                 this.SaveIconPictureToolStripMenuItem.Enabled = false;
-                this.IconNameToolStripMenuItem.Text = Tween.My.Resources.ContextMenuStrip3_OpeningText2;
+                this.IconNameToolStripMenuItem.Text = Tween.My.Resources.Resources.ContextMenuStrip3_OpeningText2;
             }
             if (NameLabel.Tag != null)
             {
@@ -10864,7 +10948,7 @@ namespace Tween
             _modifySettingLocal = true;
         }
 
-        private bool UrlConvert(UrlConverter Converter_Type)
+        private bool UrlConvert(Tween.MyCommon.UrlConverter Converter_Type)
         {
             //t.coで投稿時自動短縮する場合は、外部サービスでの短縮禁止
             //If SettingDialog.UrlConvertAuto AndAlso SettingDialog.ShortenTco Then Exit Function
@@ -10891,7 +10975,7 @@ namespace Tween
                     {
                         result = nicoms.Shorten(tmp);
                     }
-                    else if (Converter_Type != UrlConverter.Nicoms)
+                    else if (Converter_Type != MyCommon.UrlConverter.Nicoms)
                     {
                         //短縮URL変換 日本語を含むかもしれないのでURLエンコードする
                         result = ShortUrl.Make(Converter_Type, tmp);
@@ -10948,7 +11032,7 @@ namespace Tween
                     {
                         result = nicoms.Shorten(tmp);
                     }
-                    else if (Converter_Type != UrlConverter.Nicoms)
+                    else if (Converter_Type != MyCommon.UrlConverter.Nicoms)
                     {
                         //短縮URL変換 日本語を含むかもしれないのでURLエンコードする
                         result = ShortUrl.Make(Converter_Type, tmp);
@@ -11004,35 +11088,35 @@ namespace Tween
 
         private void TinyURLToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            UrlConvert(UrlConverter.TinyUrl);
+            UrlConvert(MyCommon.UrlConverter.TinyUrl);
         }
 
         private void IsgdToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            UrlConvert(UrlConverter.Isgd);
+            UrlConvert(MyCommon.UrlConverter.Isgd);
         }
 
         private void TwurlnlToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            UrlConvert(UrlConverter.Twurl);
+            UrlConvert(MyCommon.UrlConverter.Twurl);
         }
 
         private void UxnuMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            UrlConvert(UrlConverter.Uxnu);
+            UrlConvert(MyCommon.UrlConverter.Uxnu);
         }
 
         private void UrlConvertAutoToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
             if (!UrlConvert(SettingDialog.AutoShortUrlFirst))
             {
-                UrlConverter svc = SettingDialog.AutoShortUrlFirst;
+                MyCommon.UrlConverter svc = SettingDialog.AutoShortUrlFirst;
                 Random rnd = new Random();
                 // 前回使用した短縮URLサービス以外を選択する
                 do
                 {
-                    svc = (UrlConverter)rnd.Next(System.Enum.GetNames(typeof(UrlConverter)).Length);
-                } while (!(svc != SettingDialog.AutoShortUrlFirst && svc != UrlConverter.Nicoms && svc != UrlConverter.Unu));
+                    svc = (MyCommon.UrlConverter)rnd.Next(System.Enum.GetNames(typeof(MyCommon.UrlConverter)).Length);
+                } while (!(svc != SettingDialog.AutoShortUrlFirst && svc != MyCommon.UrlConverter.Nicoms && svc != MyCommon.UrlConverter.Unu));
                 UrlConvert(svc);
             }
         }
@@ -11246,7 +11330,7 @@ namespace Tween
         private void SelectionCopyContextMenuItem_Click(System.Object sender, System.EventArgs e)
         {
             //発言詳細で「選択文字列をコピー」
-            string _selText = WebBrowser_GetSelectionText(ref PostBrowser);
+            string _selText = WebBrowser_GetSelectionText(ref withEventsField_PostBrowser);
             try
             {
                 Clipboard.SetDataObject(_selText, false, 5, 100);
@@ -11260,11 +11344,11 @@ namespace Tween
         private void doSearchToolStrip(string url)
         {
             //発言詳細で「選択文字列で検索」（選択文字列取得）
-            string _selText = WebBrowser_GetSelectionText(ref PostBrowser);
+            string _selText = WebBrowser_GetSelectionText(ref withEventsField_PostBrowser);
 
             if (_selText != null)
             {
-                if (url == Tween.My.Resources.SearchItem4Url)
+                if (url == Tween.My.Resources.Resources.SearchItem4Url)
                 {
                     //公式検索
                     AddNewTabForSearch(_selText);
@@ -11284,22 +11368,22 @@ namespace Tween
 
         private void SearchWikipediaContextMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            doSearchToolStrip(Tween.My.Resources.SearchItem1Url);
+            doSearchToolStrip(Tween.My.Resources.Resources.SearchItem1Url);
         }
 
         private void SearchGoogleContextMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            doSearchToolStrip(Tween.My.Resources.SearchItem2Url);
+            doSearchToolStrip(Tween.My.Resources.Resources.SearchItem2Url);
         }
 
         private void SearchYatsContextMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            doSearchToolStrip(Tween.My.Resources.SearchItem3Url);
+            doSearchToolStrip(Tween.My.Resources.Resources.SearchItem3Url);
         }
 
         private void SearchPublicSearchContextMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            doSearchToolStrip(Tween.My.Resources.SearchItem4Url);
+            doSearchToolStrip(Tween.My.Resources.Resources.SearchItem4Url);
         }
 
         private void UrlCopyContextMenuItem_Click(System.Object sender, System.EventArgs e)
@@ -11382,7 +11466,7 @@ namespace Tween
                 ListManageUserContextToolStripMenuItem.Enabled = false;
             }
             // 文字列選択されていないときは選択文字列関係の項目を非表示に
-            string _selText = WebBrowser_GetSelectionText(ref PostBrowser);
+            string _selText = WebBrowser_GetSelectionText(ref withEventsField_PostBrowser);
             if (_selText == null)
             {
                 SelectionSearchContextMenuItem.Enabled = false;
@@ -11423,7 +11507,7 @@ namespace Tween
         private void CurrentTabToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
             //発言詳細の選択文字列で現在のタブを検索
-            string _selText = WebBrowser_GetSelectionText(ref PostBrowser);
+            string _selText = WebBrowser_GetSelectionText(ref withEventsField_PostBrowser);
 
             if (_selText != null)
             {
@@ -11450,7 +11534,7 @@ namespace Tween
                 ImageSelectionPanel.Enabled = true;
                 TimelinePanel.Visible = false;
                 TimelinePanel.Enabled = false;
-                ImagefilePathText.Text = Convert.ToString(e.Data.GetData(DataFormats.FileDrop, false))[0];
+                ImagefilePathText.Text = ((string[])(e.Data.GetData(DataFormats.FileDrop, false)))[0];
                 ImageFromSelectedFile();
                 this.Activate();
                 this.BringToFront();
@@ -11468,7 +11552,7 @@ namespace Tween
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string filename = Convert.ToString(e.Data.GetData(DataFormats.FileDrop, false))[0];
+                string filename = ((string[])(e.Data.GetData(DataFormats.FileDrop, false)))[0];
                 FileInfo fl = new FileInfo(filename);
                 string ext = fl.Extension;
 
@@ -11512,7 +11596,7 @@ namespace Tween
         {
             Google.GASender.GetInstance().TrackPage("/open_url", tw.UserId);
             GetWorkerArg args = new GetWorkerArg();
-            args.type = WORKERTYPE.OpenUri;
+            args.type = MyCommon.WORKERTYPE.OpenUri;
             args.url = UriString;
 
             RunAsync(args);
@@ -11626,7 +11710,7 @@ namespace Tween
         private void RunAsync(GetWorkerArg args)
         {
             BackgroundWorker bw = null;
-            if (args.type != WORKERTYPE.Follower)
+            if (args.type != MyCommon.WORKERTYPE.Follower)
             {
                 for (int i = 0; i <= _bw.Length - 1; i++)
                 {
@@ -11713,32 +11797,32 @@ namespace Tween
 
             if (this.IsNetworkAvailable())
             {
-                GetTimeline(WORKERTYPE.BlockIds, 0, 0, "");
+                GetTimeline(MyCommon.WORKERTYPE.BlockIds, 0, 0, "");
                 if (SettingDialog.StartupFollowers)
                 {
-                    GetTimeline(WORKERTYPE.Follower, 0, 0, "");
+                    GetTimeline(MyCommon.WORKERTYPE.Follower, 0, 0, "");
                 }
-                GetTimeline(WORKERTYPE.Configuration, 0, 0, "");
+                GetTimeline(MyCommon.WORKERTYPE.Configuration, 0, 0, "");
                 StartUserStream();
                 _waitTimeline = true;
-                GetTimeline(WORKERTYPE.Timeline, 1, 1, "");
+                GetTimeline(MyCommon.WORKERTYPE.Timeline, 1, 1, "");
                 _waitReply = true;
-                GetTimeline(WORKERTYPE.Reply, 1, 1, "");
+                GetTimeline(MyCommon.WORKERTYPE.Reply, 1, 1, "");
                 _waitDm = true;
-                GetTimeline(WORKERTYPE.DirectMessegeRcv, 1, 1, "");
+                GetTimeline(MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 1, "");
                 if (SettingDialog.GetFav)
                 {
                     _waitFav = true;
-                    GetTimeline(WORKERTYPE.Favorites, 1, 1, "");
+                    GetTimeline(MyCommon.WORKERTYPE.Favorites, 1, 1, "");
                 }
                 _waitPubSearch = true;
-                GetTimeline(WORKERTYPE.PublicSearch, 1, 0, "");
+                GetTimeline(MyCommon.WORKERTYPE.PublicSearch, 1, 0, "");
                 //tabname="":全タブ
                 _waitUserTimeline = true;
-                GetTimeline(WORKERTYPE.UserTimeline, 1, 0, "");
+                GetTimeline(MyCommon.WORKERTYPE.UserTimeline, 1, 0, "");
                 //tabname="":全タブ
                 _waitLists = true;
-                GetTimeline(WORKERTYPE.List, 1, 0, "");
+                GetTimeline(MyCommon.WORKERTYPE.List, 1, 0, "");
                 //tabname="":全タブ
                 int i = 0;
                 int j = 0;
@@ -11773,19 +11857,19 @@ namespace Tween
                 // 取得失敗の場合は再試行する
                 if (!tw.GetFollowersSuccess && SettingDialog.StartupFollowers)
                 {
-                    GetTimeline(WORKERTYPE.Follower, 0, 0, "");
+                    GetTimeline(MyCommon.WORKERTYPE.Follower, 0, 0, "");
                 }
 
                 // 取得失敗の場合は再試行する
                 if (SettingDialog.TwitterConfiguration.PhotoSizeLimit == 0)
                 {
-                    GetTimeline(WORKERTYPE.Configuration, 0, 0, "");
+                    GetTimeline(MyCommon.WORKERTYPE.Configuration, 0, 0, "");
                 }
 
                 // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
                 if (MyCommon.TwitterApiInfo.AccessLevel == ApiAccessLevel.ReadWrite)
                 {
-                    MessageBox.Show(Tween.My.Resources.ReAuthorizeText);
+                    MessageBox.Show(Tween.My.Resources.Resources.ReAuthorizeText);
                     SettingStripMenuItem_Click(null, null);
                 }
 
@@ -11803,7 +11887,7 @@ namespace Tween
 
         private void doGetFollowersMenu()
         {
-            GetTimeline(WORKERTYPE.Follower, 1, 0, "");
+            GetTimeline(MyCommon.WORKERTYPE.Follower, 1, 0, "");
             DispSelectedPost(true);
         }
 
@@ -11853,15 +11937,15 @@ namespace Tween
                 }
                 if (_curList.SelectedIndices.Count > 15)
                 {
-                    MessageBox.Show(Tween.My.Resources.RetweetLimitText);
+                    MessageBox.Show(Tween.My.Resources.Resources.RetweetLimitText);
                     _DoFavRetweetFlags = false;
                     return;
                 }
                 else if (_curList.SelectedIndices.Count > 1)
                 {
-                    string QuestionText = Tween.My.Resources.RetweetQuestion2;
+                    string QuestionText = Tween.My.Resources.Resources.RetweetQuestion2;
                     if (_DoFavRetweetFlags)
-                        QuestionText = Tween.My.Resources.FavoriteRetweetQuestionText1;
+                        QuestionText = Tween.My.Resources.Resources.FavoriteRetweetQuestionText1;
                     switch (MessageBox.Show(QuestionText, "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                     {
                         case System.Windows.Forms.DialogResult.Cancel:
@@ -11881,9 +11965,9 @@ namespace Tween
                     }
                     if (!SettingDialog.RetweetNoConfirm)
                     {
-                        string Questiontext = Tween.My.Resources.RetweetQuestion1;
+                        string Questiontext = Tween.My.Resources.Resources.RetweetQuestion1;
                         if (_DoFavRetweetFlags)
-                            Questiontext = Tween.My.Resources.FavoritesRetweetQuestionText2;
+                            Questiontext = Tween.My.Resources.Resources.FavoritesRetweetQuestionText2;
                         if (isConfirm && MessageBox.Show(Questiontext, "Retweet", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
                         {
                             _DoFavRetweetFlags = false;
@@ -11895,7 +11979,7 @@ namespace Tween
                 args.ids = new List<long>();
                 args.sIds = new List<long>();
                 args.tName = _curTab.Text;
-                args.type = WORKERTYPE.Retweet;
+                args.type = MyCommon.WORKERTYPE.Retweet;
                 foreach (int idx in _curList.SelectedIndices)
                 {
                     PostClass post = GetCurTabPost(idx);
@@ -12038,12 +12122,12 @@ namespace Tween
 
         private void BitlyToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            UrlConvert(UrlConverter.Bitly);
+            UrlConvert(MyCommon.UrlConverter.Bitly);
         }
 
         private void JmpToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            UrlConvert(UrlConverter.Jmp);
+            UrlConvert(MyCommon.UrlConverter.Jmp);
         }
 
         private class GetApiInfoArgs
@@ -12068,32 +12152,32 @@ namespace Tween
                 info = info
             };
 
-            using (FormInfo dlg = new FormInfo(this, Tween.My.Resources.ApiInfo6, GetApiInfo_Dowork, null, args))
+            using (FormInfo dlg = new FormInfo(this, Tween.My.Resources.Resources.ApiInfo6, GetApiInfo_Dowork, null, args))
             {
                 dlg.ShowDialog();
                 if (Convert.ToBoolean(dlg.Result))
                 {
-                    tmp.AppendLine(Tween.My.Resources.ApiInfo1 + args.info.MaxCount.ToString());
-                    tmp.AppendLine(Tween.My.Resources.ApiInfo2 + args.info.RemainCount.ToString());
-                    tmp.AppendLine(Tween.My.Resources.ApiInfo3 + args.info.ResetTime.ToString());
-                    tmp.AppendLine(Tween.My.Resources.ApiInfo7 + (tw.UserStreamEnabled ? Tween.My.Resources.Enable : Tween.My.Resources.Disable).ToString());
+                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo1 + args.info.MaxCount.ToString());
+                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo2 + args.info.RemainCount.ToString());
+                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo3 + args.info.ResetTime.ToString());
+                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo7 + (tw.UserStreamEnabled ? Tween.My.Resources.Resources.Enable : Tween.My.Resources.Resources.Disable).ToString());
 
                     tmp.AppendLine();
-                    tmp.AppendLine(Tween.My.Resources.ApiInfo8 + args.info.AccessLevel.ToString());
+                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo8 + args.info.AccessLevel.ToString());
                     SetStatusLabelUrl();
 
                     tmp.AppendLine();
-                    tmp.AppendLine(Tween.My.Resources.ApiInfo9 + (args.info.MediaMaxCount < 0 ? Tween.My.Resources.ApiInfo91 : args.info.MediaMaxCount).ToString());
-                    tmp.AppendLine(Tween.My.Resources.ApiInfo10 + (args.info.MediaRemainCount < 0 ? Tween.My.Resources.ApiInfo91 : args.info.MediaRemainCount).ToString());
-                    tmp.AppendLine(Tween.My.Resources.ApiInfo11 + (args.info.MediaResetTime == new DateTime() ? Tween.My.Resources.ApiInfo91 : args.info.MediaResetTime).ToString());
+                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo9 + (args.info.MediaMaxCount < 0 ? Tween.My.Resources.Resources.ApiInfo91 : args.info.MediaMaxCount.ToString()));
+                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo10 + (args.info.MediaRemainCount < 0 ? Tween.My.Resources.Resources.ApiInfo91 : args.info.MediaRemainCount.ToString()));
+                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo11 + (args.info.MediaResetTime == new DateTime() ? Tween.My.Resources.Resources.ApiInfo91 : args.info.MediaResetTime.ToString()));
                 }
                 else
                 {
-                    tmp.Append(Tween.My.Resources.ApiInfo5);
+                    tmp.Append(Tween.My.Resources.Resources.ApiInfo5);
                 }
             }
 
-            MessageBox.Show(tmp.ToString(), Tween.My.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(tmp.ToString(), Tween.My.Resources.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void FollowCommandMenuItem_Click(System.Object sender, System.EventArgs e)
@@ -12115,24 +12199,24 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.FormTitle = "Follow";
-                inputName.FormDescription = Tween.My.Resources.FRMessage1;
+                inputName.FormDescription = Tween.My.Resources.Resources.FRMessage1;
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
                     FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs();
                     arg.tw = tw;
                     arg.id = inputName.TabName.Trim();
-                    using (FormInfo _info = new FormInfo(this, Tween.My.Resources.FollowCommandText1, FollowCommand_DoWork, null, arg))
+                    using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.FollowCommandText1, FollowCommand_DoWork, null, arg))
                     {
                         _info.ShowDialog();
                         string ret = (string)_info.Result;
                         if (!string.IsNullOrEmpty(ret))
                         {
-                            MessageBox.Show(Tween.My.Resources.FRMessage2 + ret);
+                            MessageBox.Show(Tween.My.Resources.Resources.FRMessage2 + ret);
                         }
                         else
                         {
-                            MessageBox.Show(Tween.My.Resources.FRMessage3);
+                            MessageBox.Show(Tween.My.Resources.Resources.FRMessage3);
                         }
                     }
                 }
@@ -12169,7 +12253,7 @@ namespace Tween
                 using (InputTabName inputName = new InputTabName())
                 {
                     inputName.FormTitle = "Unfollow";
-                    inputName.FormDescription = Tween.My.Resources.FRMessage1;
+                    inputName.FormDescription = Tween.My.Resources.Resources.FRMessage1;
                     inputName.TabName = id;
                     if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                     {
@@ -12183,17 +12267,17 @@ namespace Tween
                 }
             }
 
-            using (FormInfo _info = new FormInfo(this, Tween.My.Resources.RemoveCommandText1, RemoveCommand_DoWork, null, arg))
+            using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.RemoveCommandText1, RemoveCommand_DoWork, null, arg))
             {
                 _info.ShowDialog();
                 string ret = (string)_info.Result;
                 if (!string.IsNullOrEmpty(ret))
                 {
-                    MessageBox.Show(Tween.My.Resources.FRMessage2 + ret);
+                    MessageBox.Show(Tween.My.Resources.Resources.FRMessage2 + ret);
                 }
                 else
                 {
-                    MessageBox.Show(Tween.My.Resources.FRMessage3);
+                    MessageBox.Show(Tween.My.Resources.Resources.FRMessage3);
                 }
             }
         }
@@ -12252,13 +12336,13 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.FormTitle = "Show Friendships";
-                inputName.FormDescription = Tween.My.Resources.FRMessage1;
+                inputName.FormDescription = Tween.My.Resources.Resources.FRMessage1;
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
                     string ret = "";
                     args.ids.Add(new ShowFriendshipArgs.FriendshipInfo(inputName.TabName.Trim()));
-                    using (FormInfo _info = new FormInfo(this, Tween.My.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
+                    using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
                     {
                         _info.ShowDialog();
                         ret = (string)_info.Result;
@@ -12268,21 +12352,21 @@ namespace Tween
                     {
                         if (args.ids[0].isFollowing)
                         {
-                            result = Tween.My.Resources.GetFriendshipInfo1 + System.Environment.NewLine;
+                            result = Tween.My.Resources.Resources.GetFriendshipInfo1 + System.Environment.NewLine;
                         }
                         else
                         {
-                            result = Tween.My.Resources.GetFriendshipInfo2 + System.Environment.NewLine;
+                            result = Tween.My.Resources.Resources.GetFriendshipInfo2 + System.Environment.NewLine;
                         }
                         if (args.ids[0].isFollowed)
                         {
-                            result += Tween.My.Resources.GetFriendshipInfo3;
+                            result += Tween.My.Resources.Resources.GetFriendshipInfo3;
                         }
                         else
                         {
-                            result += Tween.My.Resources.GetFriendshipInfo4;
+                            result += Tween.My.Resources.Resources.GetFriendshipInfo4;
                         }
-                        result = args.ids[0].id + Tween.My.Resources.GetFriendshipInfo5 + System.Environment.NewLine + result;
+                        result = args.ids[0].id + Tween.My.Resources.Resources.GetFriendshipInfo5 + System.Environment.NewLine + result;
                     }
                     else
                     {
@@ -12301,7 +12385,7 @@ namespace Tween
                 ShowFriendshipArgs args = new ShowFriendshipArgs();
                 args.tw = tw;
                 args.ids.Add(new ShowFriendshipArgs.FriendshipInfo(id.Trim()));
-                using (FormInfo _info = new FormInfo(this, Tween.My.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
+                using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
                 {
                     _info.ShowDialog();
                     ret = (string)_info.Result;
@@ -12314,25 +12398,25 @@ namespace Tween
                     ff = "  ";
                     if (fInfo.isFollowing)
                     {
-                        ff += Tween.My.Resources.GetFriendshipInfo1;
+                        ff += Tween.My.Resources.Resources.GetFriendshipInfo1;
                     }
                     else
                     {
-                        ff += Tween.My.Resources.GetFriendshipInfo2;
+                        ff += Tween.My.Resources.Resources.GetFriendshipInfo2;
                     }
                     ff += System.Environment.NewLine + "  ";
                     if (fInfo.isFollowed)
                     {
-                        ff += Tween.My.Resources.GetFriendshipInfo3;
+                        ff += Tween.My.Resources.Resources.GetFriendshipInfo3;
                     }
                     else
                     {
-                        ff += Tween.My.Resources.GetFriendshipInfo4;
+                        ff += Tween.My.Resources.Resources.GetFriendshipInfo4;
                     }
-                    result += fInfo.id + Tween.My.Resources.GetFriendshipInfo5 + System.Environment.NewLine + ff;
+                    result += fInfo.id + Tween.My.Resources.Resources.GetFriendshipInfo5 + System.Environment.NewLine + ff;
                     if (fInfo.isFollowing)
                     {
-                        if (MessageBox.Show(Tween.My.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result, Tween.My.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
+                        if (MessageBox.Show(Tween.My.Resources.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result, Tween.My.Resources.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
                         {
                             RemoveCommand(fInfo.id, true);
                         }
@@ -12556,7 +12640,7 @@ namespace Tween
                 //検索条件の保存
             }
 
-            GetTimeline(WORKERTYPE.PublicSearch, 1, 0, tbName);
+            GetTimeline(MyCommon.WORKERTYPE.PublicSearch, 1, 0, tbName);
             ((DetailsListView)ListTab.SelectedTab.Tag).Focus();
         }
 
@@ -12737,7 +12821,7 @@ namespace Tween
         {
             if (ListTab.SelectedTab != null)
             {
-                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType != TabUsageType.PublicSearch)
+                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType != MyCommon.TabUsageType.PublicSearch)
                     return;
                 ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
             }
@@ -12866,7 +12950,7 @@ namespace Tween
                 this.UnreadOpMenuItem.Enabled = true;
             }
 
-            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || _curPost.IsDm)
+            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.DirectMessage || !this.ExistCurrentPost || _curPost.IsDm)
             {
                 this.FavOpMenuItem.Enabled = false;
                 this.UnFavOpMenuItem.Enabled = false;
@@ -12918,7 +13002,7 @@ namespace Tween
                 }
             }
 
-            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType != TabUsageType.Favorites)
+            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType != MyCommon.TabUsageType.Favorites)
             {
                 this.RefreshPrevOpMenuItem.Enabled = true;
             }
@@ -12926,7 +13010,7 @@ namespace Tween
             {
                 this.RefreshPrevOpMenuItem.Enabled = false;
             }
-            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(_curPost.InReplyToStatusId > 0))
+            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch || !this.ExistCurrentPost || !(_curPost.InReplyToStatusId > 0))
             {
                 OpenRepSourceOpMenuItem.Enabled = false;
             }
@@ -12975,7 +13059,7 @@ namespace Tween
             }
             if (ListTab.SelectedTab != null)
             {
-                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
+                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch)
                 {
                     PublicSearchQueryMenuItem.Enabled = true;
                 }
@@ -13044,7 +13128,7 @@ namespace Tween
                 using (InputTabName inputName = new InputTabName())
                 {
                     inputName.FormTitle = "Show UserStatus";
-                    inputName.FormDescription = Tween.My.Resources.FRMessage1;
+                    inputName.FormDescription = Tween.My.Resources.Resources.FRMessage1;
                     inputName.TabName = id;
                     if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                     {
@@ -13052,7 +13136,7 @@ namespace Tween
                         args.tw = tw;
                         args.id = id;
                         args.user = user;
-                        using (FormInfo _info = new FormInfo(this, Tween.My.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
+                        using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
                         {
                             _info.ShowDialog();
                             string ret = (string)_info.Result;
@@ -13073,7 +13157,7 @@ namespace Tween
                 args.tw = tw;
                 args.id = id;
                 args.user = user;
-                using (FormInfo _info = new FormInfo(this, Tween.My.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
+                using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
                 {
                     _info.ShowDialog();
                     string ret = (string)_info.Result;
@@ -13206,7 +13290,7 @@ namespace Tween
         {
             if (this.ExistCurrentPost)
             {
-                using (FormInfo _info = new FormInfo(this, Tween.My.Resources.RtCountMenuItem_ClickText1, GetRetweet_DoWork))
+                using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.RtCountMenuItem_ClickText1, GetRetweet_DoWork))
                 {
                     int retweet_count = 0;
 
@@ -13215,11 +13299,11 @@ namespace Tween
                     retweet_count = Convert.ToInt32(_info.Result);
                     if (retweet_count < 0)
                     {
-                        MessageBox.Show(Tween.My.Resources.RtCountText2);
+                        MessageBox.Show(Tween.My.Resources.Resources.RtCountText2);
                     }
                     else
                     {
-                        MessageBox.Show(retweet_count.ToString() + Tween.My.Resources.RtCountText1);
+                        MessageBox.Show(retweet_count.ToString() + Tween.My.Resources.Resources.RtCountText1);
                     }
                 }
             }
@@ -13350,7 +13434,7 @@ namespace Tween
             if (string.IsNullOrEmpty(this.ImageService))
                 return;
             OpenFileDialog1.Filter = this.pictureService[this.ImageService].GetFileOpenDialogFilter();
-            OpenFileDialog1.Title = Tween.My.Resources.PickPictureDialog1;
+            OpenFileDialog1.Title = Tween.My.Resources.Resources.PickPictureDialog1;
             OpenFileDialog1.FileName = "";
 
             try
@@ -13379,7 +13463,7 @@ namespace Tween
             if (string.IsNullOrEmpty(ImagefilePathText.Text))
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
             }
             else
             {
@@ -13394,7 +13478,7 @@ namespace Tween
                 if (string.IsNullOrEmpty(Strings.Trim(ImagefilePathText.Text)) || string.IsNullOrEmpty(this.ImageService))
                 {
                     ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                    ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                    ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
                     ImagefilePathText.Text = "";
                     return;
                 }
@@ -13404,7 +13488,7 @@ namespace Tween
                 {
                     //画像以外の形式
                     ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                    ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                    ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
                     ImagefilePathText.Text = "";
                     return;
                 }
@@ -13413,7 +13497,7 @@ namespace Tween
                 {
                     // ファイルサイズが大きすぎる
                     ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                    ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                    ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
                     ImagefilePathText.Text = "";
                     MessageBox.Show("File is too large.");
                     return;
@@ -13421,12 +13505,12 @@ namespace Tween
 
                 switch (this.pictureService[this.ImageService].GetFileType(fl.Extension))
                 {
-                    case UploadFileType.Invalid:
+                    case MyCommon.UploadFileType.Invalid:
                         ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                        ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                        ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
                         ImagefilePathText.Text = "";
                         break;
-                    case UploadFileType.Picture:
+                    case MyCommon.UploadFileType.Picture:
                         Image img = null;
                         using (FileStream fs = new FileStream(ImagefilePathText.Text, FileMode.Open, FileAccess.Read))
                         {
@@ -13435,15 +13519,15 @@ namespace Tween
                         }
 
                         ImageSelectedPicture.Image = (new HttpVarious()).CheckValidImage(img, img.Width, img.Height);
-                        ImageSelectedPicture.Tag = UploadFileType.Picture;
+                        ImageSelectedPicture.Tag = MyCommon.UploadFileType.Picture;
                         break;
-                    case UploadFileType.MultiMedia:
-                        ImageSelectedPicture.Image = Tween.My.Resources.MultiMediaImage;
-                        ImageSelectedPicture.Tag = UploadFileType.MultiMedia;
+                    case MyCommon.UploadFileType.MultiMedia:
+                        ImageSelectedPicture.Image = Tween.My.Resources.Resources.MultiMediaImage;
+                        ImageSelectedPicture.Tag = MyCommon.UploadFileType.MultiMedia;
                         break;
                     default:
                         ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                        ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                        ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
                         ImagefilePathText.Text = "";
                         break;
                 }
@@ -13451,14 +13535,14 @@ namespace Tween
             catch (FileNotFoundException ex)
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
                 ImagefilePathText.Text = "";
                 MessageBox.Show("File not found.");
             }
             catch (Exception ex)
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
                 ImagefilePathText.Text = "";
                 MessageBox.Show("The type of this file is not image.");
             }
@@ -13469,7 +13553,7 @@ namespace Tween
             if (e.KeyCode == Keys.Escape)
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
                 TimelinePanel.Visible = true;
                 TimelinePanel.Enabled = true;
                 ImageSelectionPanel.Visible = false;
@@ -13553,7 +13637,7 @@ namespace Tween
                     {
                         ImagefilePathText.Text = "";
                         ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                        ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                        ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
                     }
                 }
                 catch (Exception ex)
@@ -13661,31 +13745,31 @@ namespace Tween
             if (this.ExistCurrentPost && !_curPost.IsDm)
             {
                 //PublicSearchも除外した方がよい？
-                if (_statuses.GetTabByType(TabUsageType.Related) == null)
+                if (_statuses.GetTabByType(MyCommon.TabUsageType.Related) == null)
                 {
                     const string TabName = "Related Tweets";
                     string tName = TabName;
-                    if (!this.AddNewTab(tName, false, TabUsageType.Related))
+                    if (!this.AddNewTab(tName, false, MyCommon.TabUsageType.Related))
                     {
                         for (int i = 2; i <= 100; i++)
                         {
                             tName = TabName + i.ToString();
-                            if (this.AddNewTab(tName, false, TabUsageType.Related))
+                            if (this.AddNewTab(tName, false, MyCommon.TabUsageType.Related))
                             {
-                                _statuses.AddTab(tName, TabUsageType.Related, null);
+                                _statuses.AddTab(tName, MyCommon.TabUsageType.Related, null);
                                 break; // TODO: might not be correct. Was : Exit For
                             }
                         }
                     }
                     else
                     {
-                        _statuses.AddTab(tName, TabUsageType.Related, null);
+                        _statuses.AddTab(tName, MyCommon.TabUsageType.Related, null);
                     }
                     _statuses.GetTabByName(tName).UnreadManage = false;
                     _statuses.GetTabByName(tName).Notify = false;
                 }
 
-                TabClass tb = _statuses.GetTabByType(TabUsageType.Related);
+                TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Related);
                 tb.RelationTargetPost = _curPost;
                 this.ClearTab(tb.TabName, false);
                 for (int i = 0; i <= ListTab.TabPages.Count - 1; i++)
@@ -13698,7 +13782,7 @@ namespace Tween
                     }
                 }
 
-                GetTimeline(WORKERTYPE.Related, 1, 1, tb.TabName);
+                GetTimeline(MyCommon.WORKERTYPE.Related, 1, 1, tb.TabName);
             }
         }
 
@@ -14107,7 +14191,7 @@ namespace Tween
         private void OpenOwnFavedMenuItem_Click(object sender, System.EventArgs e)
         {
             if (!string.IsNullOrEmpty(tw.Username))
-                OpenUriAsync(Tween.My.Resources.FavstarUrl + "users/" + tw.Username + "/recent");
+                OpenUriAsync(Tween.My.Resources.Resources.FavstarUrl + "users/" + tw.Username + "/recent");
         }
 
         private void OpenOwnHomeMenuItem_Click(object sender, System.EventArgs e)
@@ -14147,7 +14231,7 @@ namespace Tween
 
         private void SelectionTranslationToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            doTranslation(WebBrowser_GetSelectionText(ref PostBrowser));
+            doTranslation(WebBrowser_GetSelectionText(ref withEventsField_PostBrowser));
         }
 
         private bool ExistCurrentPost
@@ -14162,11 +14246,7 @@ namespace Tween
             }
         }
 
-        protected override void Finalize()
-        {
-            base.Finalize();
-        }
-
+        //protected override void Finalize()        {            //base.Finalize();        }
         private void ShowUserTimelineToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             ShowUserTimeline();
@@ -14187,7 +14267,7 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.FormTitle = caption;
-                inputName.FormDescription = Tween.My.Resources.FRMessage1;
+                inputName.FormDescription = Tween.My.Resources.Resources.FRMessage1;
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
@@ -14215,7 +14295,7 @@ namespace Tween
             string id = GetUserIdFromCurPostOrInput("Show Favstar");
             if (!string.IsNullOrEmpty(id))
             {
-                OpenUriAsync(Tween.My.Resources.FavstarUrl + "users/" + id + "/recent");
+                OpenUriAsync(Tween.My.Resources.Resources.FavstarUrl + "users/" + id + "/recent");
             }
         }
 
