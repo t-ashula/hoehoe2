@@ -44,27 +44,23 @@ namespace Tween
         private Semaphore netSemaphore;
 
         public ImageDictionary(int cacheMemoryLimit)
-		{
-			lock (this.lockObject) {
-				//5Mb,80%
-				//キャッシュチェック間隔はデフォルト値（2分毎）
-				var nvc = new NameValueCollection();
-				nvc.Add({
-					"CacheMemoryLimitMegabytes",
-					cacheMemoryLimit.ToString()
-				});
-				nvc.Add({
-					"PhysicalMemoryLimitPercentage",
-					"80"
-				});
-				this.innerDictionary = new MemoryCache("imageCache", nvc);
-				this.waitStack = new Stack<KeyValuePair<string, Action<Image>>>();
-				this.cachePolicy.RemovedCallback = CacheRemoved;
-				this.cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30);
-				//30分参照されなかったら削除
-				this.netSemaphore = new Semaphore(5, 5);
-			}
-		}
+        {
+            lock (this.lockObject)
+            {
+                //5Mb,80%
+                //キャッシュチェック間隔はデフォルト値（2分毎）
+                var nvc = new NameValueCollection() {
+                    { "CacheMemoryLimitMegabytes", cacheMemoryLimit.ToString() },
+                    { "PhysicalMemoryLimitPercentage", "80" }
+                };
+                this.innerDictionary = new MemoryCache("imageCache", nvc);
+                this.waitStack = new Stack<KeyValuePair<string, Action<Image>>>();
+                this.cachePolicy.RemovedCallback = CacheRemoved;
+                this.cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30);
+                //30分参照されなかったら削除
+                this.netSemaphore = new Semaphore(5, 5);
+            }
+        }
 
         public long CacheCount
         {
@@ -124,6 +120,7 @@ namespace Tween
             {
                 this.innerDictionary.Remove(key);
             }
+            return true;
         }
 
         public Image this[string key, bool force, Action<Image> callBack]
@@ -238,7 +235,7 @@ namespace Tween
             }
         }
 
-        public bool TryGetValue(string key, ref Image value)
+        public bool TryGetValue(string key, out Image value)
         {
             lock (this.lockObject)
             {
@@ -249,6 +246,7 @@ namespace Tween
                 }
                 else
                 {
+                    value = default(Image);
                     return false;
                 }
             }
@@ -334,7 +332,7 @@ namespace Tween
                                 {
                                     req = this.waitStack.Pop();
                                 }
-                                if (AppendSettingDialog.Instance.IconSz == IconSizes.IconNone)
+                                if (AppendSettingDialog.Instance.IconSz == MyCommon.IconSizes.IconNone)
                                     continue;
                                 GetImageDelegate proc = new GetImageDelegate(GetImage);
                                 try
