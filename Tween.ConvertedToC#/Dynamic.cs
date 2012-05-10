@@ -36,14 +36,12 @@ namespace Tween
     {
         const string Id = "DynamicQueryModule Copyright © Microsoft Corporation.  All Rights Reserved." + " This code released under the terms of the Microsoft Public License (MS-PL, http://opensource.org/licenses/ms-pl.html.) ";
 
-        [Extension()]
-        public static IQueryable<T> Where<T>(IQueryable<T> source, string predicate, params object[] values)
+        public static IQueryable<T> Where<T>(this IQueryable<T> source, string predicate, params object[] values)
         {
             return (IQueryable<T>)Where((IQueryable)source, predicate, values);
         }
 
-        [Extension()]
-        public static IQueryable Where(IQueryable source, string predicate, params object[] values)
+        public static IQueryable Where(this IQueryable source, string predicate, params object[] values)
         {
             if (source == null)
                 throw new ArgumentNullException("source");
@@ -53,8 +51,7 @@ namespace Tween
             return source.Provider.CreateQuery(Expression.Call(typeof(Queryable), "Where", new Type[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
         }
 
-        [Extension()]
-        public static IQueryable Select(IQueryable source, string selector, params object[] values)
+        public static IQueryable Select(this IQueryable source, string selector, params object[] values)
         {
             if (source == null)
                 throw new ArgumentNullException("source");
@@ -67,14 +64,12 @@ namespace Tween
 			}, source.Expression, Expression.Quote(lambda)));
         }
 
-        [Extension()]
-        public static IQueryable<T> OrderBy<T>(IQueryable<T> source, string ordering, params object[] values)
+        public static IQueryable<T> OrderBy<T>(this IQueryable<T> source, string ordering, params object[] values)
         {
             return (IQueryable<T>)OrderBy((IQueryable)source, ordering, values);
         }
 
-        [Extension()]
-        public static IQueryable OrderBy(IQueryable source, string ordering, params object[] values)
+        public static IQueryable OrderBy(this IQueryable source, string ordering, params object[] values)
         {
             if ((source == null))
                 throw new ArgumentNullException("source");
@@ -98,24 +93,21 @@ namespace Tween
             return source.Provider.CreateQuery(queryExpr);
         }
 
-        [Extension()]
-        public static IQueryable Take(IQueryable source, int count)
+        public static IQueryable Take(this IQueryable source, int count)
         {
             if ((source == null))
                 throw new ArgumentNullException("source");
             return source.Provider.CreateQuery(Expression.Call(typeof(Queryable), "Take", new Type[] { source.ElementType }, source.Expression, Expression.Constant(count)));
         }
 
-        [Extension()]
-        public static IQueryable Skip(IQueryable source, int count)
+        public static IQueryable Skip(this IQueryable source, int count)
         {
             if ((source == null))
                 throw new ArgumentNullException("source");
             return source.Provider.CreateQuery(Expression.Call(typeof(Queryable), "Skip", new Type[] { source.ElementType }, source.Expression, Expression.Constant(count)));
         }
 
-        [Extension()]
-        public static IQueryable GroupBy(IQueryable source, string keySelector, string elementSelector, params object[] values)
+        public static IQueryable GroupBy(this IQueryable source, string keySelector, string elementSelector, params object[] values)
         {
             if ((source == null))
                 throw new ArgumentNullException("source");
@@ -132,16 +124,14 @@ namespace Tween
 			}, source.Expression, Expression.Quote(keyLambda), Expression.Quote(elementLambda)));
         }
 
-        [Extension()]
-        public static bool Any(IQueryable source)
+        public static bool Any(this IQueryable source)
         {
             if ((source == null))
                 throw new ArgumentNullException("source");
             return Convert.ToBoolean(source.Provider.Execute(Expression.Call(typeof(Queryable), "Any", new Type[] { source.ElementType }, source.Expression)));
         }
 
-        [Extension()]
-        public static int Count(IQueryable source)
+        public static int Count(this IQueryable source)
         {
             if ((source == null))
                 throw new ArgumentNullException("source");
@@ -421,7 +411,7 @@ namespace Tween
             MethodBuilder mb = tb.DefineMethod("Equals", MethodAttributes.Public | MethodAttributes.ReuseSlot | MethodAttributes.Virtual | MethodAttributes.HideBySig, typeof(bool), new Type[] { typeof(object) });
             ILGenerator gen = mb.GetILGenerator();
             LocalBuilder other = gen.DeclareLocal(tb);
-            Label next = gen.DefineLabel();
+            var next = gen.DefineLabel();
             gen.Emit(OpCodes.Ldarg_1);
             gen.Emit(OpCodes.Isinst, tb);
             gen.Emit(OpCodes.Stloc, other);
@@ -1135,7 +1125,7 @@ namespace Tween
                 start = i + 1;
             } while (true);
 
-            if (quote == "'")
+            if (quote == '\'')
             {
                 if (s.Length != 1)
                 {
@@ -1152,7 +1142,7 @@ namespace Tween
         {
             ValidateToken(TokenId.IntegerLiteral);
             var text = tokenVal.text;
-            if (text[0] != "-")
+            if (text[0] != '-')
             {
                 ulong value = 0;
                 if (!UInt64.TryParse(text, out value))
@@ -1191,7 +1181,7 @@ namespace Tween
             var text = tokenVal.text;
             object value = null;
             var last = text[text.Length - 1];
-            if (last == "f" | last == "F")
+            if (last == 'f' | last == 'F')
             {
                 float f = 0;
                 if (float.TryParse(text.Substring(0, text.Length - 1), out f))
@@ -1464,7 +1454,7 @@ namespace Tween
                         {
                             throw ParseError(errorPos, Res.MethodsAreInaccessible, GetTypeName(method.DeclaringType));
                         }
-                        if (method.ReturnType.Equals(typeof(Void)))
+                        if (method.ReturnType.Equals(typeof(void)))
                         {
                             throw ParseError(errorPos, Res.MethodIsVoid, id, GetTypeName(method.DeclaringType));
                         }
@@ -1652,7 +1642,7 @@ namespace Tween
             type = GetNonNullableType(type);
             if (type.IsEnum)
                 return 0;
-            switch (type.GetTypeCode(type))
+            switch (Type.GetTypeCode(type))
             {
                 case TypeCode.Char:
                 case TypeCode.Single:
@@ -1712,10 +1702,10 @@ namespace Tween
 
         public MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess)
         {
-            BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | staticAccess ? BindingFlags.Static : BindingFlags.Instance;
+            BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in SelfAndBaseTypes(type))
             {
-                MemberInfo[] members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, type.FilterNameIgnoreCase, memberName);
+                MemberInfo[] members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, Type.FilterNameIgnoreCase, memberName);
                 if (members.Length != 0)
                     return members[0];
             }
@@ -1724,10 +1714,10 @@ namespace Tween
 
         public int FindMethod(Type type, string methodName, bool staticAccess, Expression[] args, ref MethodBase method)
         {
-            BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | staticAccess ? BindingFlags.Static : BindingFlags.Instance;
+            BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in SelfAndBaseTypes(type))
             {
-                MemberInfo[] members = t.FindMembers(MemberTypes.Method, flags, type.FilterNameIgnoreCase, methodName);
+                MemberInfo[] members = t.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName);
                 int count = FindBestMethod(members.Cast<MethodBase>(), args, ref method);
                 if (count != 0)
                     return count;
@@ -1865,7 +1855,7 @@ namespace Tween
                     {
                         Type target = GetNonNullableType(type);
                         object value = null;
-                        switch (type.GetTypeCode(ce.Type))
+                        switch (Type.GetTypeCode(ce.Type))
                         {
                             case TypeCode.Int32:
                             case TypeCode.UInt32:
@@ -1905,7 +1895,7 @@ namespace Tween
 
         public static object ParseNumber(string text, Type type)
         {
-            switch (type.GetTypeCode(GetNonNullableType(type)))
+            switch (Type.GetTypeCode(GetNonNullableType(type)))
             {
                 case TypeCode.SByte:
                     sbyte sb = 0;
@@ -1970,7 +1960,7 @@ namespace Tween
         {
             if (type.IsEnum)
             {
-                MemberInfo[] memberInfos = type.FindMembers(MemberTypes.Field, BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static, type.FilterNameIgnoreCase, name);
+                MemberInfo[] memberInfos = type.FindMembers(MemberTypes.Field, BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static, Type.FilterNameIgnoreCase, name);
                 if (memberInfos.Length != 0)
                     return ((FieldInfo)memberInfos[0]).GetValue(null);
             }
@@ -2257,7 +2247,7 @@ namespace Tween
             {
                 case '!':
                     NextChar();
-                    if (ch == "=")
+                    if (ch == '=')
                     {
                         NextChar();
                         t = TokenId.ExclamationEqual;
@@ -2273,7 +2263,7 @@ namespace Tween
                     break;
                 case '&':
                     NextChar();
-                    if (ch == "&")
+                    if (ch == '&')
                     {
                         NextChar();
                         t = TokenId.DoubleAmphersand;
@@ -2321,12 +2311,12 @@ namespace Tween
                     break;
                 case '<':
                     NextChar();
-                    if (ch == "=")
+                    if (ch == '=')
                     {
                         NextChar();
                         t = TokenId.LessThanEqual;
                     }
-                    else if (ch == ">")
+                    else if (ch == '>')
                     {
                         NextChar();
                         t = TokenId.LessGreater;
@@ -2338,7 +2328,7 @@ namespace Tween
                     break;
                 case '=':
                     NextChar();
-                    if (ch == "=")
+                    if (ch == '=')
                     {
                         NextChar();
                         t = TokenId.DoubleEqual;
@@ -2350,7 +2340,7 @@ namespace Tween
                     break;
                 case '>':
                     NextChar();
-                    if (ch == "=")
+                    if (ch == '=')
                     {
                         NextChar();
                         t = TokenId.GreaterThanEqual;
@@ -2374,7 +2364,7 @@ namespace Tween
                     break;
                 case '|':
                     NextChar();
-                    if (ch == "|")
+                    if (ch == '|')
                     {
                         NextChar();
                         t = TokenId.DoubleBar;
@@ -2402,12 +2392,12 @@ namespace Tween
                     t = TokenId.StringLiteral;
                     break;
                 default:
-                    if (char.IsLetter(ch) || ch == "@" || ch == "_")
+                    if (char.IsLetter(ch) || ch == '@' || ch == '_')
                     {
                         do
                         {
                             NextChar();
-                        } while (char.IsLetterOrDigit(ch) || ch == "_");
+                        } while (char.IsLetterOrDigit(ch) || ch == '_');
                         t = TokenId.Identifier;
                         break; // TODO: might not be correct. Was : Exit Select
                     }
@@ -2419,7 +2409,7 @@ namespace Tween
                         {
                             NextChar();
                         } while (char.IsDigit(ch));
-                        if (ch == ".")
+                        if (ch == '.')
                         {
                             t = TokenId.RealLiteral;
                             NextChar();
@@ -2429,11 +2419,11 @@ namespace Tween
                                 NextChar();
                             } while (char.IsDigit(ch));
                         }
-                        if (ch == "E" || ch == "e")
+                        if (ch == 'E' || ch == 'e')
                         {
                             t = TokenId.RealLiteral;
                             NextChar();
-                            if (ch == "+" || ch == "-")
+                            if (ch == '+' || ch == '-')
                                 NextChar();
                             ValidateDigit();
                             do
@@ -2441,7 +2431,7 @@ namespace Tween
                                 NextChar();
                             } while (char.IsDigit(ch));
                         }
-                        if (ch == "F" | ch == "f")
+                        if (ch == 'F' | ch == 'f')
                             NextChar();
                         break; // TODO: might not be correct. Was : Exit Select
                     }
@@ -2466,7 +2456,7 @@ namespace Tween
         {
             ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
             var id = tokenVal.text;
-            if (id.Length > 1 && id[0] == "@")
+            if (id.Length > 1 && id[0] == '@')
                 id = id.Substring(1);
             return id;
         }
