@@ -50,7 +50,7 @@ namespace Tween
 
         public string UserName = "";
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public string Password = "";
 
         public string EncryptPassword
@@ -61,7 +61,7 @@ namespace Tween
 
         public string Token = "";
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public string TokenSecret = "";
 
         public string EncryptTokenSecret
@@ -118,19 +118,19 @@ namespace Tween
         public int ListsPeriod = 180;
         public bool Read = true;
         public bool ListLock = false;
-        public IconSizes IconSize = IconSizes.Icon16;
+        public Tween.MyCommon.IconSizes IconSize = Tween.MyCommon.IconSizes.Icon16;
         public bool NewAllPop = true;
         public bool EventNotifyEnabled = true;
-        public EVENTTYPE EventNotifyFlag = EVENTTYPE.All;
-        public EVENTTYPE IsMyEventNotifyFlag = EVENTTYPE.All;
+        public Tween.MyCommon.EVENTTYPE EventNotifyFlag = Tween.MyCommon.EVENTTYPE.All;
+        public Tween.MyCommon.EVENTTYPE IsMyEventNotifyFlag = Tween.MyCommon.EVENTTYPE.All;
         public bool ForceEventNotify = false;
         public bool FavEventUnread = true;
-        public string TranslateLanguage = Tween.My.Resources.TranslateDefaultLanguage;
+        public string TranslateLanguage = Tween.My.Resources.Resources.TranslateDefaultLanguage;
         public string EventSoundFile = "";
         public bool PlaySound = false;
         public bool UnreadManage = true;
         public bool OneWayLove = true;
-        public NameBalloonEnum NameBalloon = NameBalloonEnum.NickName;
+        public Tween.MyCommon.NameBalloonEnum NameBalloon = Tween.MyCommon.NameBalloonEnum.NickName;
         public bool PostCtrlEnter = false;
         public bool PostShiftEnter = false;
         public int CountApi = 60;
@@ -139,7 +139,7 @@ namespace Tween
         public bool DispUsername = false;
         public bool MinimizeToTray = false;
         public bool CloseToExit = false;
-        public DispTitleEnum DispLatestPost = DispTitleEnum.Post;
+        public Tween.MyCommon.DispTitleEnum DispLatestPost = Tween.MyCommon.DispTitleEnum.Post;
         public bool SortOrderLock = false;
         public bool TinyUrlResolve = true;
         public bool ShortUrlForceResolve = false;
@@ -166,7 +166,7 @@ namespace Tween
 
         public bool PreviewEnable = true;
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public string OutputzKey = "";
 
         public string EncryptOutputzKey
@@ -175,15 +175,15 @@ namespace Tween
             set { OutputzKey = Decrypt(value); }
         }
 
-        public OutputzUrlmode OutputzUrlMode = MyCommon.OutputzUrlmode.twittercom;
-        public UrlConverter AutoShortUrlFirst = UrlConverter.Bitly;
+        public Tween.MyCommon.OutputzUrlmode OutputzUrlMode = MyCommon.OutputzUrlmode.twittercom;
+        public Tween.MyCommon.UrlConverter AutoShortUrlFirst = Tween.MyCommon.UrlConverter.Bitly;
         public bool UseUnreadStyle = true;
         public string DateTimeFormat = "yyyy/MM/dd H:mm:ss";
         public int DefaultTimeOut = 20;
         public bool RetweetNoConfirm = false;
         public bool LimitBalloon = false;
         public bool TabIconDisp = true;
-        public REPLY_ICONSTATE ReplyIconState = REPLY_ICONSTATE.StaticIcon;
+        public Tween.MyCommon.REPLY_ICONSTATE ReplyIconState = Tween.MyCommon.REPLY_ICONSTATE.StaticIcon;
         public bool WideSpaceConvert = true;
         public bool ReadOwnPost = false;
         public bool GetFav = true;
@@ -240,7 +240,7 @@ namespace Tween
         public long GALast = 0;
         public string Token = "";
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public string TokenSecret = "";
 
         public string EncryptTokenSecret
