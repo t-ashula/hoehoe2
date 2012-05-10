@@ -73,10 +73,11 @@ namespace Tween
 
         public virtual string Refresh()
         {
-            return _tw.EditList(this.Id.ToString(), Name, !this.IsPublic, this.Description, ref this);
+            var t = this;
+            return _tw.EditList(this.Id.ToString(), Name, !this.IsPublic, this.Description, ref t);
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public List<UserInfo> Members
         {
             get
@@ -87,7 +88,7 @@ namespace Tween
             }
         }
 
-        [Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore()]
         public long Cursor
         {
             get { return _cursor; }
@@ -110,7 +111,7 @@ namespace Tween
 
         public override string ToString()
         {
-            return "@" + Username + "/" + Name + " [" + this.IsPublic ? "Public" : "Protected" + "]";
+            return "@" + Username + "/" + Name + " [" + (this.IsPublic ? "Public" : "Protected") + "]";
         }
     }
 }
