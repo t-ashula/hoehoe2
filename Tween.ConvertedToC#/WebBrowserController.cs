@@ -34,9 +34,9 @@ namespace Tween
 {
     #region "WebBrowserAPI"
 
-    internal class WebBrowserAPI
+    public class WebBrowserAPI
     {
-        public static int INET_E_DEFAULT_ACTION = 0x800c0011;
+        public static int INET_E_DEFAULT_ACTION = (int)0x800c0011;
 
         public enum URLZONE
         {
@@ -207,57 +207,44 @@ namespace Tween
 
         public static Guid IID_IInternetSecurityManager = new Guid("79eac9ee-baf9-11ce-8c82-00aa004ba90b");
 
-        [ComImport(), Guid("6d5140c1-7436-11ce-8034-00aa006009fa"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComImport, Guid("6d5140c1-7436-11ce-8034-00aa006009fa"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IServiceProvider
         {
-            [PreserveSig()]
-            int QueryService([In()]
-ref Guid guidService, [In()]
-ref Guid riid, [Out()]
-ref IntPtr ppvObject);
+            [PreserveSig]
+            int QueryService(ref Guid guidService, ref Guid riid, [MarshalAs(UnmanagedType.Interface)] out IntPtr ppvObject);
         }
 
         [ComImport(), Guid("cb728b20-f786-11ce-92ad-00aa00a74cd0"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IProfferService
         {
             [PreserveSig()]
-            int ProfferService([In()]
-ref Guid guidService, [In()]
-IServiceProvider psp, [Out()]
-ref int cookie);
+            int ProfferService(ref Guid guidService, IServiceProvider psp, out int cookie);
 
             [PreserveSig()]
-            int RevokeService([In()]
-int cookie);
+            int RevokeService(int cookie);
         }
 
         [ComImport(), Guid("79eac9ed-baf9-11ce-8c82-00aa004ba90b"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IInternetSecurityMgrSite
         {
             [PreserveSig()]
-            int GetWindow([Out()]
-ref IntPtr hwnd);
+            int GetWindow(out IntPtr hwnd);
 
             [PreserveSig()]
-            int EnableModeless([In(), MarshalAs(UnmanagedType.Bool)]
-bool fEnable);
+            int EnableModeless([In(), MarshalAs(UnmanagedType.Bool)]bool fEnable);
         }
 
         [ComImport(), Guid("79eac9ee-baf9-11ce-8c82-00aa004ba90b"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IInternetSecurityManager
         {
             [PreserveSig()]
-            int SetSecuritySite([In()]
-IInternetSecurityMgrSite pSite);
+            int SetSecuritySite([In()]IInternetSecurityMgrSite pSite);
 
             [PreserveSig()]
-            int GetSecuritySite([Out()]
-ref IInternetSecurityMgrSite pSite);
+            int GetSecuritySite(ref IInternetSecurityMgrSite pSite);
 
             [PreserveSig()]
-            int MapUrlToZone([In(), MarshalAs(UnmanagedType.LPWStr)]
-string pwszUrl, [Out()]
-ref int pdwZone, int dwFlags);
+            int MapUrlToZone([In(), MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, out int pdwZone, int dwFlags);
 
             [PreserveSig()]
             int GetSecurityId([MarshalAs(UnmanagedType.LPWStr)]
@@ -265,17 +252,13 @@ string pwszUrl, [MarshalAs(UnmanagedType.LPArray)]
 byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
 
             [PreserveSig()]
-            int ProcessUrlAction([In(), MarshalAs(UnmanagedType.LPWStr)]
-string pwszUrl, int dwAction, [Out()]
-ref byte pPolicy, int cbPolicy, byte pContext, int cbContext, int dwFlags, int dwReserved);
+            int ProcessUrlAction([In(), MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, int dwAction, ref byte pPolicy, int cbPolicy, byte pContext, int cbContext, int dwFlags, int dwReserved);
 
             [PreserveSig()]
-            int QueryCustomPolicy([In(), MarshalAs(UnmanagedType.LPWStr)]
-string pwszUrl, ref Guid guidKey, byte ppPolicy, int pcbPolicy, byte pContext, int cbContext, int dwReserved);
+            int QueryCustomPolicy([In(), MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, ref Guid guidKey, byte ppPolicy, int pcbPolicy, byte pContext, int cbContext, int dwReserved);
 
             [PreserveSig()]
-            int SetZoneMapping(int dwZone, [In(), MarshalAs(UnmanagedType.LPWStr)]
-string lpszPattern, int dwFlags);
+            int SetZoneMapping(int dwZone, [In(), MarshalAs(UnmanagedType.LPWStr)]string lpszPattern, int dwFlags);
 
             [PreserveSig()]
             int GetZoneMappings(int dwZone, ref System.Runtime.InteropServices.ComTypes.IEnumString ppenumString, int dwFlags);
@@ -292,8 +275,8 @@ string lpszPattern, int dwFlags);
         {
             public static int S_OK = 0x0;
             public static int S_FALSE = 0x1;
-            public static int E_NOTIMPL = 0x80004001;
-            public static int E_NOINTERFACE = 0x80004002;
+            public static int E_NOTIMPL = (int)0x80004001;
+            public static int E_NOINTERFACE = (int)0x80004002;
         }
 
         #endregion "HRESULT"
@@ -334,7 +317,7 @@ string lpszPattern, int dwFlags);
 
             try
             {
-                hresult = ocxServiceProvider.QueryService(WebBrowserAPI.SID_SProfferService, WebBrowserAPI.IID_IProfferService, profferServicePtr);
+                hresult = ocxServiceProvider.QueryService(ref WebBrowserAPI.SID_SProfferService, ref WebBrowserAPI.IID_IProfferService, out profferServicePtr);
             }
             catch (SEHException ex)
             {
@@ -351,7 +334,8 @@ string lpszPattern, int dwFlags);
             // 自分を IInternetSecurityManager として提供
             try
             {
-                hresult = profferService.ProfferService(WebBrowserAPI.IID_IInternetSecurityManager, this, cookie: 0);
+                int cookie;
+                hresult = profferService.ProfferService(ref WebBrowserAPI.IID_IInternetSecurityManager, this, out cookie);
             }
             catch (SEHException ex)
             {
@@ -363,7 +347,7 @@ string lpszPattern, int dwFlags);
             }
         }
 
-        private int QueryService(ref System.Guid guidService, ref System.Guid riid, ref System.IntPtr ppvObject)
+        public int QueryService(ref System.Guid guidService, ref System.Guid riid, out System.IntPtr ppvObject)
         {
             ppvObject = IntPtr.Zero;
             if (guidService.CompareTo(WebBrowserAPI.IID_IInternetSecurityManager) == 0)
@@ -376,23 +360,23 @@ string lpszPattern, int dwFlags);
             return HRESULT.E_NOINTERFACE;
         }
 
-        private int GetSecurityId(string pwszUrl, byte[] pbSecurityId, ref uint pcbSecurityId, uint dwReserved)
+        public int GetSecurityId(string pwszUrl, byte[] pbSecurityId, ref uint pcbSecurityId, uint dwReserved)
         {
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
-        private int GetSecuritySite(ref WebBrowserAPI.IInternetSecurityMgrSite pSite)
+        public int GetSecuritySite(ref WebBrowserAPI.IInternetSecurityMgrSite pSite)
         {
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
-        private int GetZoneMappings(int dwZone, ref System.Runtime.InteropServices.ComTypes.IEnumString ppenumString, int dwFlags)
+        public int GetZoneMappings(int dwZone, ref System.Runtime.InteropServices.ComTypes.IEnumString ppenumString, int dwFlags)
         {
             ppenumString = null;
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
-        private int MapUrlToZone(string pwszUrl, ref int pdwZone, int dwFlags)
+        public int MapUrlToZone(string pwszUrl, out int pdwZone, int dwFlags)
         {
             pdwZone = 0;
             if (pwszUrl == "about:blank")
@@ -415,7 +399,7 @@ string lpszPattern, int dwFlags);
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
-        private int ProcessUrlAction(string pwszUrl, int dwAction, ref byte pPolicy, int cbPolicy, byte pContext, int cbContext, int dwFlags, int dwReserved)
+        public int ProcessUrlAction(string pwszUrl, int dwAction, ref byte pPolicy, int cbPolicy, byte pContext, int cbContext, int dwFlags, int dwReserved)
         {
             //スクリプト実行状態かを検査しポリシー設定
             if (WebBrowserAPI.URLACTION_SCRIPT_MIN <= dwAction & dwAction <= WebBrowserAPI.URLACTION_SCRIPT_MAX)
@@ -451,17 +435,17 @@ string lpszPattern, int dwFlags);
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
-        private int QueryCustomPolicy(string pwszUrl, ref System.Guid guidKey, byte ppPolicy, int pcbPolicy, byte pContext, int cbContext, int dwReserved)
+        public int QueryCustomPolicy(string pwszUrl, ref System.Guid guidKey, byte ppPolicy, int pcbPolicy, byte pContext, int cbContext, int dwReserved)
         {
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
-        private int SetSecuritySite(WebBrowserAPI.IInternetSecurityMgrSite pSite)
+        public int SetSecuritySite(WebBrowserAPI.IInternetSecurityMgrSite pSite)
         {
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
-        private int SetZoneMapping(int dwZone, string lpszPattern, int dwFlags)
+        public int SetZoneMapping(int dwZone, string lpszPattern, int dwFlags)
         {
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
