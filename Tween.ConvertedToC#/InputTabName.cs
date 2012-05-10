@@ -63,9 +63,9 @@ namespace Tween
             set { _isShowUsage = value; }
         }
 
-        private TabUsageType _usage;
+        private Tween.MyCommon.TabUsageType _usage;
 
-        public TabUsageType Usage
+        public Tween.MyCommon.TabUsageType Usage
         {
             get { return _usage; }
         }
@@ -74,7 +74,7 @@ namespace Tween
         {
             this.LabelUsage.Visible = false;
             this.ComboUsage.Visible = false;
-            this.ComboUsage.Items.Add(Tween.My.Resources.InputTabName_Load1);
+            this.ComboUsage.Items.Add(Tween.My.Resources.Resources.InputTabName_Load1);
             this.ComboUsage.Items.Add("Lists");
             this.ComboUsage.Items.Add("PublicSearch");
             this.ComboUsage.SelectedIndex = 0;
@@ -95,16 +95,16 @@ namespace Tween
             switch (ComboUsage.SelectedIndex)
             {
                 case 0:
-                    _usage = TabUsageType.UserDefined;
+                    _usage = Tween.MyCommon.TabUsageType.UserDefined;
                     break;
                 case 1:
-                    _usage = TabUsageType.Lists;
+                    _usage = Tween.MyCommon.TabUsageType.Lists;
                     break;
                 case 2:
-                    _usage = TabUsageType.PublicSearch;
+                    _usage = Tween.MyCommon.TabUsageType.PublicSearch;
                     break;
                 default:
-                    _usage = TabUsageType.Undefined;
+                    _usage = Tween.MyCommon.TabUsageType.Undefined;
                     break;
             }
         }
