@@ -99,7 +99,7 @@ namespace Tween
                         return System.Windows.Forms.DialogResult.No;
                 }
             }
-            else
+            //else
             {
                 return dResult;
             }
