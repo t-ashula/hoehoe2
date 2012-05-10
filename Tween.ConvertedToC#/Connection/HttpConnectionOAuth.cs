@@ -109,7 +109,7 @@ namespace Tween
         ///<param name="headerInfo">[IN/OUT]HTTP応答のヘッダ情報。必要なヘッダ名を事前に設定しておくこと</param>
         ///<param name="callback">処理終了直前に呼ばれるコールバック関数のデリゲート 不要な場合はNothingを渡すこと</param>
         ///<returns>HTTP応答のステータスコード</returns>
-        public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content, Dictionary<string, string> headerInfo, IHttpConnection.CallbackDelegate callback)
+        public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content, Dictionary<string, string> headerInfo, CallbackDelegate callback)
         {
             //認証済かチェック
             if (string.IsNullOrEmpty(token))
@@ -126,12 +126,12 @@ namespace Tween
             }
             else
             {
-                code = GetResponse(webReq, content, headerInfo, false);
+                code = GetResponse(webReq, ref content, headerInfo, false);
             }
             if (callback != null)
             {
                 StackFrame frame = new StackFrame(1);
-                callback(frame.GetMethod().Name, code, content);
+                callback(frame.GetMethod().Name, ref code, ref content);
             }
             return code;
         }
@@ -139,7 +139,7 @@ namespace Tween
         ///<summary>
         ///バイナリアップロード
         ///</summary>
-        public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, List<KeyValuePair<string, FileInfo>> binary, ref string content, Dictionary<string, string> headerInfo, IHttpConnection.CallbackDelegate callback)
+        public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, List<KeyValuePair<string, FileInfo>> binary, ref string content, Dictionary<string, string> headerInfo, CallbackDelegate callback)
         {
             //認証済かチェック
             if (string.IsNullOrEmpty(token))
@@ -156,12 +156,12 @@ namespace Tween
             }
             else
             {
-                code = GetResponse(webReq, content, headerInfo, false);
+                code = GetResponse(webReq, ref content, headerInfo, false);
             }
             if (callback != null)
             {
                 StackFrame frame = new StackFrame(1);
-                callback(frame.GetMethod().Name, code, content);
+                callback(frame.GetMethod().Name, ref code, ref content);
             }
             return code;
         }
@@ -371,7 +371,7 @@ namespace Tween
 
         HttpStatusCode IHttpConnection.Authenticate(Uri accessTokenUrl, string username, string password, ref string content)
         {
-            return AuthenticateXAuth(accessTokenUrl, username, password, content);
+            return AuthenticateXAuth(accessTokenUrl, username, password, ref content);
         }
 
         ///<summary>
@@ -446,7 +446,7 @@ namespace Tween
 				"Date",
 				""
 			} };
-            HttpStatusCode responseCode = GetResponse(webReq, content, header, false);
+            HttpStatusCode responseCode = GetResponse(webReq, ref content, header, false);
             if (responseCode == HttpStatusCode.OK)
                 return responseCode;
             if (!string.IsNullOrEmpty(header["Date"]))
