@@ -276,7 +276,7 @@ namespace Tween
             public string Type;
 
             [DataMember(Name = "coordinates", IsRequired = false)]
-            public double[] Coordinates = new double[3];
+            public double[] Coordinates_ = new double[3];
         }
 
         [DataContract()]
@@ -669,7 +669,7 @@ namespace Tween
         public class Relationship
         {
             [DataMember(Name = "relationship")]
-            public RelationshipUsers Relationship;
+            public RelationshipUsers Relationship_;
         }
 
         [DataContract()]
