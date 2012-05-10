@@ -63,7 +63,8 @@ namespace Tween.My
             CheckSettingFilePath();
             InitCulture();
 
-            string pt = Application.Info.DirectoryPath.Replace("\\", "/") + "/" + Application.Info.ProductName;
+            //string pt = Application.Info.DirectoryPath.Replace("\\", "/") + "/" + Application.Info.ProductName;
+            string pt = System.Reflection.Assembly.GetEntryAssembly().Location.Replace("\\", "/") + "/" + Application.ProductName;
             mt = new System.Threading.Mutex(false, pt);
             try
             {
@@ -71,7 +72,7 @@ namespace Tween.My
                 {
                     // 実行中の同じアプリケーションのウィンドウ・ハンドルの取得
                     Process prevProcess = Win32Api.GetPreviousProcess();
-                    if (prevProcess != null && IntPtr.op_Inequality(prevProcess.MainWindowHandle, IntPtr.Zero))
+                    if (prevProcess != null && prevProcess.MainWindowHandle == IntPtr.Zero)
                     {
                         // 起動中のアプリケーションを最前面に表示
                         Win32Api.WakeupWindow(prevProcess.MainWindowHandle);
@@ -87,13 +88,13 @@ namespace Tween.My
                             if (!rslt)
                             {
                                 // 警告を表示（見つからない、またはその他の原因で失敗）
-                                MessageBox.Show(Tween.My.Resources.StartupText1, Tween.My.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show(Tween.My.Resources.Resources.StartupText1, Tween.My.Resources.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                         }
                         else
                         {
                             // 警告を表示（プロセス見つからない場合）
-                            MessageBox.Show(Tween.My.Resources.StartupText1, Tween.My.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(Tween.My.Resources.Resources.StartupText1, Tween.My.Resources.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     //起動キャンセル
@@ -178,13 +179,13 @@ namespace Tween.My
 
         private void CheckSettingFilePath()
         {
-            if (File.Exists(Path.Combine(Application.Info.DirectoryPath, "roaming")))
+            if (File.Exists(Path.Combine(System.Reflection.Assembly.GetEntryAssembly().Location, "roaming")))
             {
                 MyCommon.settingPath = MySpecialPath.UserAppDataPath();
             }
             else
             {
-                MyCommon.settingPath = Application.Info.DirectoryPath;
+                MyCommon.settingPath = System.Reflection.Assembly.GetEntryAssembly().Location;
             }
         }
     }
