@@ -55,7 +55,7 @@ namespace Tween
             this.CreatedAt = MyCommon.DateTimeParse(user.CreatedAt);
             this.StatusesCount = user.StatusesCount;
             this.Verified = user.Verified;
-            this.isFollowing = this.isFollowing;
+            //this.isFollowing = this.isFollowing;
             if (user.Status != null)
             {
                 this.RecentPost = user.Status.Text;
@@ -65,28 +65,25 @@ namespace Tween
         }
 
         public Int64 Id = 0;
-        public string Name = "";
-        public string ScreenName = "";
-        public string Location = "";
-        public string Description = "";
-        public Uri ImageUrl = null;
-        public string Url = "";
-        public bool Protect = false;
-        public int FriendsCount = 0;
-        public int FollowersCount = 0;
-        public int FavoriteCount = 0;
+        public string Name = String.Empty;
+        public string ScreenName = String.Empty;
+        public string Location = String.Empty;
+        public string Description = String.Empty;
+        public Uri ImageUrl;
+        public string Url = String.Empty;
+        public bool Protect;
+        public int FriendsCount;
+        public int FollowersCount;
+        public int FavoriteCount;
         public DateTime CreatedAt = new DateTime();
-        public int StatusesCount = 0;
-        public bool Verified = false;
-        public string RecentPost = "";
+        public int StatusesCount;
+        public bool Verified;
+        public string RecentPost = String.Empty;
         public DateTime PostCreatedAt = new DateTime();
-
         // html形式　"<a href="http://sourceforge.jp/projects/tween/wiki/FrontPage" rel="nofollow">Tween</a>"
-        public string PostSource = "";
-
-        public bool isFollowing = false;
-
-        public bool isFollowed = false;
+        public string PostSource = String.Empty;
+        public bool IsFollowing;
+        public bool IsFollowed;
 
         public override string ToString()
         {

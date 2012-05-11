@@ -316,9 +316,9 @@ namespace Tween
             if (MyOwner.TwitterInstance.Username == _info.ScreenName)
                 return;
 
-            _info.isFollowing = false;
-            _info.isFollowed = false;
-            FriendshipResult = MyOwner.TwitterInstance.GetFriendshipInfo(_info.ScreenName, ref _info.isFollowing, ref _info.isFollowed);
+            _info.IsFollowing = false;
+            _info.IsFollowed = false;
+            FriendshipResult = MyOwner.TwitterInstance.GetFriendshipInfo(_info.ScreenName, ref _info.IsFollowing, ref _info.IsFollowed);
         }
 
         private void BackgroundWorkerImageLoader_RunWorkerCompleted(System.Object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
@@ -347,7 +347,7 @@ namespace Tween
             {
                 if (string.IsNullOrEmpty(FriendshipResult))
                 {
-                    if (_info.isFollowing)
+                    if (_info.IsFollowing)
                     {
                         LabelIsFollowing.Text = Tween.My_Project.Resources.GetFriendshipInfo1;
                     }
@@ -355,8 +355,8 @@ namespace Tween
                     {
                         LabelIsFollowing.Text = Tween.My_Project.Resources.GetFriendshipInfo2;
                     }
-                    ButtonFollow.Enabled = !_info.isFollowing;
-                    if (_info.isFollowed)
+                    ButtonFollow.Enabled = !_info.IsFollowing;
+                    if (_info.IsFollowed)
                     {
                         LabelIsFollowed.Text = Tween.My_Project.Resources.GetFriendshipInfo3;
                     }
@@ -364,7 +364,7 @@ namespace Tween
                     {
                         LabelIsFollowed.Text = Tween.My_Project.Resources.GetFriendshipInfo4;
                     }
-                    ButtonUnFollow.Enabled = _info.isFollowing;
+                    ButtonUnFollow.Enabled = _info.IsFollowing;
                 }
                 else
                 {
