@@ -190,7 +190,7 @@ namespace Tween
                     //内蔵アイコンリソースを使用
                     ConstructorInfo cibd = _core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(byte[]) }, null);
                     TypeConverter tc = new TypeConverter();
-                    object bdata = cibd.Invoke(new object[] { IconToByteArray(Tween.My.Resources.MIcon) });
+                    object bdata = cibd.Invoke(new object[] { IconToByteArray(Tween.My.Resources.Resources.MIcon) });
 
                     ConstructorInfo ciRes = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { bdata.GetType() }, null);
 

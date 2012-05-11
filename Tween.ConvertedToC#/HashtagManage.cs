@@ -84,7 +84,7 @@ namespace Tween
         {
             if (this.HistoryHashList.SelectedIndices.Count == 0)
                 return;
-            if (MessageBox.Show(Tween.My.Resources.DeleteHashtagsMessage1, "Delete Hashtags", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+            if (MessageBox.Show(Tween.My.Resources.Resources.DeleteHashtagsMessage1, "Delete Hashtags", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
             {
                 return;
             }
@@ -219,7 +219,7 @@ namespace Tween
 
         private void UseHashText_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
-            if (e.KeyChar == "#")
+            if (e.KeyChar == '#')
             {
                 _hashSupl.ShowDialog();
                 if (!string.IsNullOrEmpty(_hashSupl.inputText))
