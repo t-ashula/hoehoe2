@@ -65,7 +65,7 @@ namespace Tween
                     FourSquareDataModel.FourSquareData curData = null;
                     try
                     {
-                        curData = MyCommon.CreateDataFromJson(content);
+                        curData = MyCommon.CreateDataFromJson<FourSquareDataModel.FourSquareData>(content);
                     }
                     catch (Exception ex)
                     {
@@ -118,7 +118,7 @@ namespace Tween
             {
                 Latitude = curVenue.Location.Latitude,
                 Longitude = curVenue.Location.Longitude,
-                LocateInfo = CreateVenueInfoText[curVenue]
+                LocateInfo = CreateVenueInfoText(curVenue)
             };
             //例外発生の場合があるため
             if (!CheckInUrlsVenueCollection.ContainsKey(urlId))
@@ -127,16 +127,16 @@ namespace Tween
             return (new Google()).CreateGoogleStaticMapsUri(curLocation);
         }
 
-        private string CreateVenueInfoText
+        private string CreateVenueInfoText(FourSquareDataModel.Venue info)
         {
-            get { return info.Name + Environment.NewLine + info.Stats.UsersCount.ToString + "/" + info.Stats.CheckinsCount.ToString + Environment.NewLine + info.Location.Address + Environment.NewLine + info.Location.City + info.Location.State + Environment.NewLine + info.Location.Latitude.ToString + Environment.NewLine + info.Location.Longitude.ToString; }
+            return info.Name + Environment.NewLine + info.Stats.UsersCount.ToString() + "/" + info.Stats.CheckinsCount.ToString() + Environment.NewLine + info.Location.Address + Environment.NewLine + info.Location.City + info.Location.State + Environment.NewLine + info.Location.Latitude.ToString() + Environment.NewLine + info.Location.Longitude.ToString();
         }
 
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content)
         {
             HttpWebRequest webReq = CreateRequest(method, requestUri, param, false);
             HttpStatusCode code = default(HttpStatusCode);
-            code = GetResponse(webReq, content, null, false);
+            code = GetResponse(webReq, ref content, null, false);
             return code;
         }
 
@@ -147,17 +147,17 @@ namespace Tween
             [DataContract()]
             public class FourSquareData
             {
-                [DataMember(Name = "meta", isRequired = false)]
+                [DataMember(Name = "meta", IsRequired = false)]
                 public Meta Meta;
 
-                [DataMember(Name = "response", isRequired = false)]
+                [DataMember(Name = "response", IsRequired = false)]
                 public Response Response;
             }
 
             [DataContract()]
             public class Response
             {
-                [DataMember(Name = "venue", isRequired = false)]
+                [DataMember(Name = "venue", IsRequired = false)]
                 public Venue Venue;
             }
 
@@ -224,7 +224,7 @@ namespace Tween
                 [DataMember(Name = "count")]
                 public int Count;
 
-                [DataMember(Name = "user", isrequired = false)]
+                [DataMember(Name = "user", IsRequired = false)]
                 public FoursquareUser User;
             }
 
