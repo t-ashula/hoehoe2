@@ -39,17 +39,17 @@ namespace Tween
             {
                 ApplicationTitle = System.IO.Path.GetFileNameWithoutExtension(Tween.My.MyProject.Application.Info.AssemblyName);
             }
-            this.Text = string.Format(Tween.My.Resources.TweenAboutBox_LoadText1, ApplicationTitle);
+            this.Text = string.Format(Tween.My.Resources.Resources.TweenAboutBox_LoadText1, ApplicationTitle);
             // バージョン情報ボックスに表示されたテキストをすべて初期化します。
             // TODO: [プロジェクト] メニューの下にある [プロジェクト プロパティ] ダイアログの [アプリケーション] ペインで、アプリケーションのアセンブリ情報を
             //    カスタマイズします。
             this.LabelProductName.Text = Tween.My.MyProject.Application.Info.ProductName;
-            this.LabelVersion.Text = string.Format(Tween.My.Resources.TweenAboutBox_LoadText2, MyCommon.fileVersion + "(" + Tween.My.MyProject.Application.Info.Version.ToString() + ")");
+            this.LabelVersion.Text = string.Format(Tween.My.Resources.Resources.TweenAboutBox_LoadText2, MyCommon.fileVersion + "(" + Tween.My.MyProject.Application.Info.Version.ToString() + ")");
             this.LabelCopyright.Text = Tween.My.MyProject.Application.Info.Copyright;
             this.LabelCompanyName.Text = Tween.My.MyProject.Application.Info.CompanyName;
             this.TextBoxDescription.Text = Tween.My.MyProject.Application.Info.Description;
-            this.ChangeLog.Text = Tween.My.Resources.ChangeLog;
-            this.TextBoxDescription.Text = Tween.My.Resources.Description;
+            this.ChangeLog.Text = Tween.My.Resources.Resources.ChangeLog;
+            this.TextBoxDescription.Text = Tween.My.Resources.Resources.Description;
         }
 
         private void OKButton_Click(System.Object sender, System.EventArgs e)
