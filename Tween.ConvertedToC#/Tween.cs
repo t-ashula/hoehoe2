@@ -13811,17 +13811,20 @@ namespace Tween
             {
                 if (InvokeRequired && !IsDisposed)
                 {
-                    //toconvert
-                    //                Invoke(Sub()
-                    //                           _statuses.RemovePostReserve(id)
-                    //                           If _curTab IsNot Nothing AndAlso _statuses.Tabs(_curTab.Text).Contains(id) Then
-                    //                               _itemCache = Nothing
-                    //                               _itemCacheIndex = -1
-                    //                               _postCache = Nothing
-                    //                               DirectCast(_curTab.Tag, DetailsListView).Update()
-                    //                               If _curPost IsNot Nothing AndAlso _curPost.StatusId = id Then DispSelectedPost(True)
-                    //                           End If
-                    //                       End Sub)
+                    Invoke(new Action(() => {
+                        _statuses.RemovePostReserve(id);
+                        if (_curTab != null && _statuses.Tabs[_curTab.Text].Contains(id))
+                        {
+                            _itemCache = null;
+                            _itemCacheIndex = -1;
+                            _postCache = null;
+                            ((DetailsListView)_curTab.Tag).Update();
+                            if (_curPost != null & _curPost.StatusId == id)
+                            {
+                                DispSelectedPost(true);
+                            }
+                        }
+                    }));
                     return;
                 }
             }
@@ -14426,18 +14429,31 @@ namespace Tween
         {
             if (Form.ActiveForm == null)
             {
-                //to convert
-                //'            Me.BeginInvoke(Sub()
-                //'                               Me.Visible = True
-                //'                               If Me.WindowState = FormWindowState.Minimized Then Me.WindowState = FormWindowState.Normal
-                //'                               Me.Activate()
-                //'                               Me.BringToFront()
-                //'                               If e.NotifyType = GrowlHelper.NotifyType.DirectMessage Then
-                //'                                   If Not Me.GoDirectMessage(e.StatusId) Then Me.StatusText.Focus()
-                //'                               Else
-                //'                                   If Not Me.GoStatus(e.StatusId) Then Me.StatusText.Focus()
-                //'                               End If
-                //'                           End Sub)
+                this.BeginInvoke(
+                    new Action(() =>
+                    {
+                        this.Visible = true;
+                        if (WindowState == FormWindowState.Minimized)
+                        {
+                            this.WindowState = FormWindowState.Normal;
+                        }
+                        this.Activate();
+                        this.BringToFront();
+                        if (e.NotifyType == GrowlHelper.NotifyType.DirectMessage)
+                        {
+                            if (!this.GoDirectMessage(e.StatusId))
+                            {
+                                this.StatusText.Focus();
+                            }
+                        }
+                        else
+                        {
+                            if (!this.GoStatus(e.StatusId))
+                            {
+                                this.StatusText.Focus();
+                            }
+                        }
+                    }));
             }
         }
 
