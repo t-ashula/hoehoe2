@@ -76,14 +76,14 @@ namespace Tween
         {
             if (this.CheckValidExtension(ext))
             {
-                return UploadFileType.Picture;
+                return MyCommon.UploadFileType.Picture;
             }
-            return UploadFileType.Invalid;
+            return MyCommon.UploadFileType.Invalid;
         }
 
         public bool IsSupportedFileType(MyCommon.UploadFileType type)
         {
-            return type.Equals(UploadFileType.Picture);
+            return type.Equals(MyCommon.UploadFileType.Picture);
         }
 
         public string Upload(ref string filePath, ref string message, long reply_to)
