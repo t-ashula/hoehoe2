@@ -2520,11 +2520,15 @@ namespace Tween
                     if (Twitter.AccountState == Tween.MyCommon.ACCOUNT_STATE.Valid)
                     {
                         MyCommon.TwitterApiInfo.UsingCount = UsingApi;
-                        /// Dim proc As New Thread(New Threading.ThreadStart(Sub()
-                        ///                                                  tw.GetInfoApi(Nothing) '取得エラー時はinfoCountは初期状態（値：-1）
-                        ///                                                  If Me.IsHandleCreated AndAlso Not Me.IsDisposed Then Invoke(New MethodInvoker(AddressOf DisplayApiMaxCount))
-                        ///                                              End Sub))
-                        /// proc.Start()
+                        var proc = new Thread(new System.Threading.ThreadStart(() =>
+                        {
+                            tw.GetInfoApi(null); //'取得エラー時はinfoCountは初期状態（値：-1）
+                            if (this.IsHandleCreated && this.IsDisposed)
+                            {
+                                Invoke(new MethodInvoker(DisplayApiMaxCount));
+                            }
+                        }));
+                        proc.Start();
                     }
                     else
                     {
