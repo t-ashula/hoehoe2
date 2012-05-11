@@ -179,13 +179,13 @@ namespace Tween.My
 
         private void CheckSettingFilePath()
         {
-            if (File.Exists(Path.Combine(System.Reflection.Assembly.GetEntryAssembly().Location, "roaming")))
+            if (File.Exists(Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "roaming")))
             {
                 MyCommon.settingPath = MySpecialPath.UserAppDataPath();
             }
             else
             {
-                MyCommon.settingPath = System.Reflection.Assembly.GetEntryAssembly().Location;
+                MyCommon.settingPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             }
         }
     }
