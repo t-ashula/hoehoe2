@@ -52,21 +52,15 @@ namespace Tween
 
         // 外部プロセスのメイン・ウィンドウを起動するためのWin32 API
         [DllImport("user32.dll")]
-        private static bool SetForegroundWindow(IntPtr hWnd)
-        {
-        }
+        private extern static bool SetForegroundWindow(IntPtr hWnd);
 
         // ウィンドウの表示状態を設定
         [DllImport("user32.dll")]
-        private static bool ShowWindowAsync(IntPtr hWnd, int nCmdShow)
-        {
-        }
+        private extern static bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 
         // 指定されたウィンドウが最小化（ アイコン化）されているかどうかを調べる
         [DllImport("user32.dll")]
-        private static bool IsIconic(IntPtr hWnd)
-        {
-        }
+        private extern static bool IsIconic(IntPtr hWnd);
 
         // ShowWindowAsync関数のパラメータに渡す定義値
         // 画面を元の大きさに戻す
@@ -104,21 +98,15 @@ namespace Tween
 
         // 指定されたクラス名およびウィンドウ名と一致するトップレベルウィンドウのハンドルを取得します
         [DllImport("user32.dll")]
-        private static IntPtr FindWindow(string lpClassName, string lpWindowName)
-        {
-        }
+        private extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         // 指定された文字列と一致するクラス名とウィンドウ名文字列を持つウィンドウのハンドルを返します
         [DllImport("user32.dll")]
-        private static IntPtr FindWindowEx(IntPtr hWnd1, IntPtr hWnd2, string lpsz1, string lpsz2)
-        {
-        }
+        private extern static IntPtr FindWindowEx(IntPtr hWnd1, IntPtr hWnd2, string lpsz1, string lpsz2);
 
         // 指定されたウィンドウへ、指定されたメッセージを送信します
         [DllImport("user32.dll")]
-        private static int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam)
-        {
-        }
+        private extern static int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
 
         // SendMessageで送信するメッセージ
         private enum Sm_Message : int
@@ -220,9 +208,7 @@ namespace Tween
 
         // 指定したプロセスの仮想アドレス空間にメモリ領域を確保
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-        private static IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, AllocationTypes flAllocationType, MemoryProtectionTypes flProtect)
-        {
-        }
+        private extern static IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, AllocationTypes flAllocationType, MemoryProtectionTypes flProtect);
 
         // アロケート種類
         [Flags()]
@@ -258,15 +244,11 @@ namespace Tween
 
         // オープンしているカーネルオブジェクトのハンドルをクローズします
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static bool CloseHandle(IntPtr hHandle)
-        {
-        }
+        private extern static bool CloseHandle(IntPtr hHandle);
 
         // 指定されたプロセスの仮想アドレス空間内のメモリ領域を解放またはコミット解除します
         [DllImport("kernel32.dll")]
-        private static bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, int dwFreeType)
-        {
-        }
+        private extern static bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, int dwFreeType);
 
         // メモリ解放種別
         [Flags()]
@@ -277,22 +259,15 @@ namespace Tween
 
         //指定したプロセスのメモリ領域にデータをコピーする
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, ref TBBUTTONINFO lpBuffer, int nSize, [Out()]
-ref int lpNumberOfBytesWritten)
-        {
-        }
+        private extern static bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, ref TBBUTTONINFO lpBuffer, int nSize, out int lpNumberOfBytesWritten);
 
         //指定したプロセスのメモリ領域のデータを呼び出し側プロセスのバッファにコピーする
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int iSize, ref int lpNumberOfBytesRead)
-        {
-        }
+        private extern static bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int iSize, ref int lpNumberOfBytesRead);
 
         //メッセージをウィンドウのメッセージ キューに置き、対応するウィンドウがメッセージを処理するのを待たずに戻ります
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static bool PostMessage(IntPtr hWnd, uint Msg, UInt32 wParam, UInt32 lParam)
-        {
-        }
+        private extern static bool PostMessage(IntPtr hWnd, uint Msg, UInt32 wParam, UInt32 lParam);
 
         //PostMessageで送信するメッセージ
         private enum PM_Message : uint
@@ -374,7 +349,7 @@ ref int lpNumberOfBytesWritten)
                             try
                             {
                                 //通知領域ボタン数取得
-                                int iCount = SendMessage(toolWin, Sm_Message.TB_BUTTONCOUNT, new IntPtr(0), new IntPtr(0));
+                                int iCount = SendMessage(toolWin, (int)Sm_Message.TB_BUTTONCOUNT, new IntPtr(0), new IntPtr(0));
                                 //左から順に情報取得
                                 for (int i = 0; i <= iCount - 1; i++)
                                 {
@@ -394,7 +369,7 @@ ref int lpNumberOfBytesWritten)
                                         Marshal.StructureToPtr(tbButtonLocal, ptrLocal, true);
                                         //共有メモリ初期化
                                         //ボタン情報取得（idCommandを取得するため）
-                                        SendMessage(toolWin, Sm_Message.TB_GETBUTTON, new IntPtr(i), ptbSysButton);
+                                        SendMessage(toolWin, (int)Sm_Message.TB_GETBUTTON, new IntPtr(i), ptbSysButton);
                                         //Explorer内のメモリを共有メモリに読み込み
                                         ReadProcessMemory(hProc, ptbSysButton, ptrLocal, Marshal.SizeOf(tbButtonLocal), ref dwBytes);
                                         //共有メモリの内容を構造体に変換
@@ -408,14 +383,14 @@ ref int lpNumberOfBytesWritten)
 
                                     //ボタン詳細情報を取得するためのマスク等を設定
                                     tbButtonInfoLocal.cbSize = Marshal.SizeOf(tbButtonInfoLocal);
-                                    tbButtonInfoLocal.dwMask = ToolbarButtonMask.TBIF_COMMAND | ToolbarButtonMask.TBIF_LPARAM | ToolbarButtonMask.TBIF_TEXT;
+                                    tbButtonInfoLocal.dwMask = (int)(ToolbarButtonMask.TBIF_COMMAND | ToolbarButtonMask.TBIF_LPARAM | ToolbarButtonMask.TBIF_TEXT);
                                     tbButtonInfoLocal.pszText = pszSysTitle;
                                     //Tooltip書き込み先領域
                                     tbButtonInfoLocal.cchText = titleSize;
                                     //マスク設定等をExplorerのメモリへ書き込み
-                                    WriteProcessMemory(hProc, ptbSysInfo, ref tbButtonInfoLocal, Marshal.SizeOf(tbButtonInfoLocal), ref dwBytes);
+                                    WriteProcessMemory(hProc, ptbSysInfo, ref tbButtonInfoLocal, Marshal.SizeOf(tbButtonInfoLocal), out dwBytes);
                                     //ボタン詳細情報取得
-                                    SendMessage(toolWin, Sm_Message.TB_GETBUTTONINFO, tbButtonLocal2.idCommand, ptbSysInfo);
+                                    SendMessage(toolWin, (int)Sm_Message.TB_GETBUTTONINFO, tbButtonLocal2.idCommand, ptbSysInfo);
                                     //共有メモリにボタン詳細情報を読み込む領域確保
                                     IntPtr ptrInfo = Marshal.AllocCoTaskMem(Marshal.SizeOf(tbButtonInfoLocal));
                                     if (ptrInfo.Equals(IntPtr.Zero))
@@ -468,8 +443,8 @@ ref int lpNumberOfBytesWritten)
                                         //クリックするためには通知領域がアクティブでなければならない
                                         SetForegroundWindow(tNotify2.hWnd);
                                         //左クリック
-                                        PostMessage(tNotify2.hWnd, tNotify2.uCallbackMessage, tNotify2.uID, PM_Message.WM_LBUTTONDOWN);
-                                        PostMessage(tNotify2.hWnd, tNotify2.uCallbackMessage, tNotify2.uID, PM_Message.WM_LBUTTONUP);
+                                        PostMessage(tNotify2.hWnd, tNotify2.uCallbackMessage, tNotify2.uID, (uint)PM_Message.WM_LBUTTONDOWN);
+                                        PostMessage(tNotify2.hWnd, tNotify2.uCallbackMessage, tNotify2.uID, (uint)PM_Message.WM_LBUTTONUP);
                                         return true;
                                     }
                                 }
@@ -478,7 +453,7 @@ ref int lpNumberOfBytesWritten)
                             }
                             finally
                             {
-                                VirtualFreeEx(hProc, pszSysTitle, titleSize, MemoryFreeTypes.Release);
+                                VirtualFreeEx(hProc, pszSysTitle, titleSize, (int)MemoryFreeTypes.Release);
                                 //メモリ解放
                             }
                         }
@@ -490,13 +465,13 @@ ref int lpNumberOfBytesWritten)
                     }
                     finally
                     {
-                        VirtualFreeEx(hProc, ptbSysInfo, Marshal.SizeOf(tbButtonInfoLocal), MemoryFreeTypes.Release);
+                        VirtualFreeEx(hProc, ptbSysInfo, Marshal.SizeOf(tbButtonInfoLocal), (int)MemoryFreeTypes.Release);
                         //メモリ解放
                     }
                 }
                 finally
                 {
-                    VirtualFreeEx(hProc, ptbSysButton, Marshal.SizeOf(tbButtonLocal), MemoryFreeTypes.Release);
+                    VirtualFreeEx(hProc, ptbSysButton, Marshal.SizeOf(tbButtonLocal), (int)MemoryFreeTypes.Release);
                     //メモリ解放
                 }
             }
@@ -511,9 +486,7 @@ ref int lpNumberOfBytesWritten)
 
         //画面をブリンクするためのWin32API。起動時に10ページ読み取りごとに継続確認メッセージを表示する際の通知強調用
         [DllImport("user32.dll")]
-        public static int FlashWindow(int hwnd, int bInvert)
-        {
-        }
+        public extern static int FlashWindow(int hwnd, int bInvert);
 
         #region "画面ブリンク用"
 
@@ -522,7 +495,7 @@ ref int lpNumberOfBytesWritten)
             FLASHWINFO fInfo = new FLASHWINFO();
             fInfo.cbSize = Convert.ToInt32(Marshal.SizeOf(fInfo));
             fInfo.hwnd = hwnd;
-            fInfo.dwFlags = FlashSpecification.FlashAll;
+            fInfo.dwFlags = (int)FlashSpecification.FlashAll;
             fInfo.uCount = flashCount;
             fInfo.dwTimeout = 0;
 
@@ -541,9 +514,7 @@ ref int lpNumberOfBytesWritten)
 
         /// http://www.atmarkit.co.jp/fdotnet/dotnettips/723flashwindow/flashwindow.html
         [DllImport("user32.dll")]
-        private static bool FlashWindowEx(ref FLASHWINFO FWInfo)
-        {
-        }
+        private extern static bool FlashWindowEx(ref FLASHWINFO FWInfo);
 
         private struct FLASHWINFO
         {
@@ -580,20 +551,14 @@ ref int lpNumberOfBytesWritten)
         private const Int32 FLASHW_TIMERNOFG = 0xc;
 
         [DllImport("user32.dll")]
-        public static bool ValidateRect(IntPtr hwnd, IntPtr rect)
-        {
-        }
+        public extern static bool ValidateRect(IntPtr hwnd, IntPtr rect);
 
         #region "スクリーンセーバー起動中か判定"
 
         [DllImport("user32", CharSet = CharSet.Auto)]
-        private static int SystemParametersInfo(int intAction, int intParam, ref bool bParam, int intWinIniFlag)
-        {
-            // returns non-zero value if function succeeds
-        }
+        private extern static int SystemParametersInfo(int intAction, int intParam, ref bool bParam, int intWinIniFlag);
 
         //スクリーンセーバーが起動中かを取得する定数
-
         private const int SPI_GETSCREENSAVERRUNNING = 0x61;
 
         public static bool IsScreenSaverRunning()
@@ -605,12 +570,11 @@ ref int lpNumberOfBytesWritten)
             return isRunning;
         }
 
-        [DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-
         #endregion "スクリーンセーバー起動中か判定"
 
         #region "グローバルフック"
 
+        [DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         private static extern int RegisterHotKey(IntPtr hwnd, int id, int fsModifiers, int vk);
 
         [DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
@@ -687,9 +651,7 @@ ref int lpNumberOfBytesWritten)
         #region "プロセスのProxy設定"
 
         [DllImport("wininet.dll", SetLastError = true)]
-        private static bool InternetSetOption(IntPtr hInternet, int dwOption, IntPtr lpBuffer, int lpdwBufferLength)
-        {
-        }
+        private extern static bool InternetSetOption(IntPtr hInternet, int dwOption, IntPtr lpBuffer, int lpdwBufferLength);
 
         private struct INTERNET_PROXY_INFO
         {
@@ -807,7 +769,7 @@ ref int lpNumberOfBytesWritten)
                     proxy = "";
                     break;
                 case HttpConnection.ProxyType.Specified:
-                    proxy = host + port > 0 ? ":" + port.ToString() : "";
+                    proxy = host + (port > 0 ? ":" + port.ToString() : "");
                     break;
             }
             RefreshProxySettings(proxy);
