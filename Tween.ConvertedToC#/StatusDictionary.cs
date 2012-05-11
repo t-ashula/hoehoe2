@@ -2211,6 +2211,7 @@ namespace Tween
 
         public TabClass(string TabName, Tween.MyCommon.TabUsageType TabType, ListElement list)
         {
+            Posts = new Dictionary<long, PostClass>();
             this.TabName = TabName;
             _filters = new List<FiltersClass>();
             Notify = true;

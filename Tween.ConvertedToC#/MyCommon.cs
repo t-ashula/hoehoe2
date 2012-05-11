@@ -40,7 +40,7 @@ using Microsoft.VisualBasic;
 
 namespace Tween
 {
-    public static class MyCommon
+    public sealed class MyCommon
     {
         private static readonly object LockObj = new object();
 
