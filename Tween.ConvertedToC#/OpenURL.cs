@@ -1,5 +1,3 @@
-using System.Windows.Forms;
-
 // Tween - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
@@ -24,6 +22,9 @@ using System.Windows.Forms;
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
+
+using System;
+using System.Windows.Forms;
 
 namespace Tween
 {

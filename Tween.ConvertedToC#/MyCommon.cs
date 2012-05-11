@@ -1,12 +1,3 @@
-using System;
-using System.Collections;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Net.NetworkInformation;
-using System.Runtime.Serialization.Json;
-using System.Security.Principal;
-
 // Tween - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
@@ -32,6 +23,14 @@ using System.Security.Principal;
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Net.NetworkInformation;
+using System.Runtime.Serialization.Json;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
