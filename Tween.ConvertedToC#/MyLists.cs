@@ -43,7 +43,7 @@ namespace Tween
             this.contextUserName = userName;
             this._tw = tw;
 
-            this.Text = this.contextUserName + Tween.My.Resources.Resources.MyLists1;
+            this.Text = this.contextUserName + Tween.My_Project.Resources.MyLists1;
         }
 
         private void MyLists_Load(System.Object sender, System.EventArgs e)
@@ -140,7 +140,7 @@ namespace Tween
             string rslt = this._tw.GetListsApi();
             if (!string.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(string.Format(Tween.My.Resources.Resources.ListsDeleteFailed, rslt));
+                MessageBox.Show(string.Format(Tween.My_Project.Resources.ListsDeleteFailed, rslt));
             }
             else
             {
@@ -161,7 +161,7 @@ namespace Tween
                         string rslt = this._tw.ContainsUserAtList(listItem.Id.ToString(), contextUserName, ref ret);
                         if (!string.IsNullOrEmpty(rslt))
                         {
-                            MessageBox.Show(string.Format(Tween.My.Resources.Resources.ListManageOKButton2, rslt));
+                            MessageBox.Show(string.Format(Tween.My_Project.Resources.ListManageOKButton2, rslt));
                             e.NewValue = CheckState.Indeterminate;
                         }
                         else
@@ -183,7 +183,7 @@ namespace Tween
                         string rslt = this._tw.AddUserToList(list.Id.ToString(), this.contextUserName.ToString());
                         if (!string.IsNullOrEmpty(rslt))
                         {
-                            MessageBox.Show(string.Format(Tween.My.Resources.Resources.ListManageOKButton2, rslt));
+                            MessageBox.Show(string.Format(Tween.My_Project.Resources.ListManageOKButton2, rslt));
                             e.NewValue = CheckState.Indeterminate;
                         }
                     }
@@ -194,7 +194,7 @@ namespace Tween
                         string rslt = this._tw.RemoveUserToList(list.Id.ToString(), this.contextUserName.ToString());
                         if (!string.IsNullOrEmpty(rslt))
                         {
-                            MessageBox.Show(string.Format(Tween.My.Resources.Resources.ListManageOKButton2, rslt));
+                            MessageBox.Show(string.Format(Tween.My_Project.Resources.ListManageOKButton2, rslt));
                             e.NewValue = CheckState.Indeterminate;
                         }
                     }

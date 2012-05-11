@@ -146,7 +146,7 @@ namespace Tween
                         string errMsg = GetErrorMessageJson(content);
                         if (string.IsNullOrEmpty(errMsg))
                         {
-                            return Tween.My.Resources.Resources.Unauthorized + Environment.NewLine + content;
+                            return Tween.My_Project.Resources.Unauthorized + Environment.NewLine + content;
                         }
                         else
                         {
@@ -610,7 +610,7 @@ namespace Tween
                         string errMsg = GetErrorMessageJson(content);
                         if (string.IsNullOrEmpty(errMsg))
                         {
-                            return Tween.My.Resources.Resources.Unauthorized;
+                            return Tween.My_Project.Resources.Unauthorized;
                         }
                         else
                         {
@@ -720,7 +720,7 @@ namespace Tween
                         string errMsg = GetErrorMessageJson(content);
                         if (string.IsNullOrEmpty(errMsg))
                         {
-                            return Tween.My.Resources.Resources.Unauthorized;
+                            return Tween.My_Project.Resources.Unauthorized;
                         }
                         else
                         {
@@ -832,7 +832,7 @@ namespace Tween
                         string errMsg = GetErrorMessageJson(content);
                         if (string.IsNullOrEmpty(errMsg))
                         {
-                            return Tween.My.Resources.Resources.Unauthorized;
+                            return Tween.My_Project.Resources.Unauthorized;
                         }
                         else
                         {
@@ -872,7 +872,7 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.NotFound:
                     return "";
                 default:
@@ -921,7 +921,7 @@ namespace Tween
             //End Select
             if (res == HttpStatusCode.Unauthorized)
             {
-                return Tween.My.Resources.Resources.Unauthorized + " or blocked user.";
+                return Tween.My_Project.Resources.Unauthorized + " or blocked user.";
             }
             else if (res != HttpStatusCode.OK)
             {
@@ -1010,7 +1010,7 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.NotFound:
                     return "";
                 default:
@@ -1046,7 +1046,7 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
@@ -1091,7 +1091,7 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
@@ -1136,7 +1136,7 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
@@ -1181,7 +1181,7 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
@@ -1226,7 +1226,7 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
@@ -1288,7 +1288,7 @@ namespace Tween
                     return "Err:API Limits?";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -1341,7 +1341,7 @@ namespace Tween
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
                     {
-                        return Tween.My.Resources.Resources.Unauthorized;
+                        return Tween.My_Project.Resources.Unauthorized;
                     }
                     else
                     {
@@ -1410,7 +1410,7 @@ namespace Tween
                     case HttpStatusCode.Unauthorized:
                         retweeted_count = -1;
                         Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                        return Tween.My.Resources.Resources.Unauthorized;
+                        return Tween.My_Project.Resources.Unauthorized;
                     default:
                         retweeted_count = -1;
                         return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
@@ -1455,7 +1455,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
@@ -1521,7 +1521,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -1563,7 +1563,7 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
@@ -1607,7 +1607,7 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
@@ -1651,7 +1651,7 @@ namespace Tween
                     return "";
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     if (string.IsNullOrEmpty(errMsg))
@@ -1935,7 +1935,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -2067,7 +2067,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 case HttpStatusCode.Forbidden:
@@ -2403,7 +2403,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -2500,7 +2500,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -3029,7 +3029,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -3100,7 +3100,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -3310,7 +3310,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -3383,7 +3383,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -3435,7 +3435,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -3487,7 +3487,7 @@ namespace Tween
                         break;
                     case HttpStatusCode.Unauthorized:
                         Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                        return Tween.My.Resources.Resources.Unauthorized;
+                        return Tween.My_Project.Resources.Unauthorized;
                     case HttpStatusCode.BadRequest:
                         return "Err:API Limits?";
                     default:
@@ -3532,7 +3532,7 @@ namespace Tween
                         break;
                     case HttpStatusCode.Unauthorized:
                         Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                        return Tween.My.Resources.Resources.Unauthorized;
+                        return Tween.My_Project.Resources.Unauthorized;
                     case HttpStatusCode.BadRequest:
                         return "Err:API Limits?";
                     default:
@@ -3583,7 +3583,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -3615,7 +3615,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -3675,7 +3675,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -3728,7 +3728,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
@@ -3779,7 +3779,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 case HttpStatusCode.NotFound:
@@ -3824,7 +3824,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:" + GetErrorMessageJson(content);
                 default:
@@ -3856,7 +3856,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:" + GetErrorMessageJson(content);
                 default:
@@ -4162,11 +4162,11 @@ namespace Tween
             {
                 if (post.Source == "web")
                 {
-                    post.SourceHtml = Tween.My.Resources.Resources.WebSourceString;
+                    post.SourceHtml = Tween.My_Project.Resources.WebSourceString;
                 }
                 else if (post.Source == "Keitai Mail")
                 {
-                    post.SourceHtml = Tween.My.Resources.Resources.KeitaiMailSourceString;
+                    post.SourceHtml = Tween.My_Project.Resources.KeitaiMailSourceString;
                 }
                 else
                 {
@@ -4255,7 +4255,7 @@ namespace Tween
                     break;
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.ACCOUNT_STATE.Invalid;
-                    return Tween.My.Resources.Resources.Unauthorized;
+                    return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:

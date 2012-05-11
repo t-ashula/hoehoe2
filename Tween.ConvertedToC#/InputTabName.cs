@@ -74,7 +74,7 @@ namespace Tween
         {
             this.LabelUsage.Visible = false;
             this.ComboUsage.Visible = false;
-            this.ComboUsage.Items.Add(Tween.My.Resources.Resources.InputTabName_Load1);
+            this.ComboUsage.Items.Add(Tween.My_Project.Resources.InputTabName_Load1);
             this.ComboUsage.Items.Add("Lists");
             this.ComboUsage.Items.Add("PublicSearch");
             this.ComboUsage.SelectedIndex = 0;

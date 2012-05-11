@@ -125,7 +125,7 @@ namespace Tween
         public Tween.MyCommon.EVENTTYPE IsMyEventNotifyFlag = Tween.MyCommon.EVENTTYPE.All;
         public bool ForceEventNotify = false;
         public bool FavEventUnread = true;
-        public string TranslateLanguage = Tween.My.Resources.Resources.TranslateDefaultLanguage;
+        public string TranslateLanguage = Tween.My_Project.Resources.TranslateDefaultLanguage;
         public string EventSoundFile = "";
         public bool PlaySound = false;
         public bool UnreadManage = true;

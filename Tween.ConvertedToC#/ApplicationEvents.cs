@@ -64,7 +64,7 @@ namespace Tween.My
             InitCulture();
 
             //string pt = Application.Info.DirectoryPath.Replace("\\", "/") + "/" + Application.Info.ProductName;
-            string pt = System.Reflection.Assembly.GetEntryAssembly().Location.Replace("\\", "/") + "/" + Application.ProductName;
+            string pt = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location).Replace("\\", "/") + "/" + Application.ProductName;
             mt = new System.Threading.Mutex(false, pt);
             try
             {
@@ -88,13 +88,13 @@ namespace Tween.My
                             if (!rslt)
                             {
                                 // 警告を表示（見つからない、またはその他の原因で失敗）
-                                MessageBox.Show(Tween.My.Resources.Resources.StartupText1, Tween.My.Resources.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show(Tween.My_Project.Resources.StartupText1, Tween.My_Project.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                         }
                         else
                         {
                             // 警告を表示（プロセス見つからない場合）
-                            MessageBox.Show(Tween.My.Resources.Resources.StartupText1, Tween.My.Resources.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(Tween.My_Project.Resources.StartupText1, Tween.My_Project.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     //起動キャンセル

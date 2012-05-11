@@ -108,7 +108,7 @@ namespace Tween
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(Tween.My.Resources.Resources.ButtonOK_ClickText3 + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(Tween.My_Project.Resources.ButtonOK_ClickText3 + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return false;
                     }
                 }
@@ -207,7 +207,7 @@ namespace Tween
 
         private void SaveLogButton_Click(System.Object sender, System.EventArgs e)
         {
-            DialogResult rslt = MessageBox.Show(string.Format(Tween.My.Resources.Resources.SaveLogMenuItem_ClickText5, Environment.NewLine), Tween.My.Resources.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult rslt = MessageBox.Show(string.Format(Tween.My_Project.Resources.SaveLogMenuItem_ClickText5, Environment.NewLine), Tween.My_Project.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             switch (rslt)
             {
                 case System.Windows.Forms.DialogResult.Yes:
@@ -223,9 +223,9 @@ namespace Tween
             }
 
             SaveFileDialog1.InitialDirectory = Tween.My.MyProject.Application.Info.DirectoryPath;
-            SaveFileDialog1.Filter = Tween.My.Resources.Resources.SaveLogMenuItem_ClickText3;
+            SaveFileDialog1.Filter = Tween.My_Project.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
-            SaveFileDialog1.Title = Tween.My.Resources.Resources.SaveLogMenuItem_ClickText4;
+            SaveFileDialog1.Title = Tween.My_Project.Resources.SaveLogMenuItem_ClickText4;
             SaveFileDialog1.RestoreDirectory = true;
 
             if (SaveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)

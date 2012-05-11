@@ -211,7 +211,7 @@ namespace Tween
         public interface IServiceProvider
         {
             [PreserveSig]
-            int QueryService(ref Guid guidService, ref Guid riid, [MarshalAs(UnmanagedType.Interface)] out IntPtr ppvObject);
+            int QueryService(ref Guid guidService, ref Guid riid, out IntPtr ppvObject);
         }
 
         [ComImport(), Guid("cb728b20-f786-11ce-92ad-00aa00a74cd0"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]

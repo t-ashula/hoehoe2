@@ -680,17 +680,17 @@ namespace Tween
             //タスクトレイ通常時アイコン
             string dir = Application.StartupPath;
 
-            NIconAt = Tween.My.Resources.Resources.At;
-            NIconAtRed = Tween.My.Resources.Resources.AtRed;
-            NIconAtSmoke = Tween.My.Resources.Resources.AtSmoke;
-            NIconRefresh[0] = Tween.My.Resources.Resources.Refresh;
-            NIconRefresh[1] = Tween.My.Resources.Resources.Refresh2;
-            NIconRefresh[2] = Tween.My.Resources.Resources.Refresh3;
-            NIconRefresh[3] = Tween.My.Resources.Resources.Refresh4;
-            TabIcon = Tween.My.Resources.Resources.TabIcon;
-            MainIcon = Tween.My.Resources.Resources.MIcon;
-            ReplyIcon = Tween.My.Resources.Resources.Reply;
-            ReplyIconBlink = Tween.My.Resources.Resources.ReplyBlink;
+            NIconAt = Tween.My_Project.Resources.At;
+            NIconAtRed = Tween.My_Project.Resources.AtRed;
+            NIconAtSmoke = Tween.My_Project.Resources.AtSmoke;
+            NIconRefresh[0] = Tween.My_Project.Resources.Refresh;
+            NIconRefresh[1] = Tween.My_Project.Resources.Refresh2;
+            NIconRefresh[2] = Tween.My_Project.Resources.Refresh3;
+            NIconRefresh[3] = Tween.My_Project.Resources.Refresh4;
+            TabIcon = Tween.My_Project.Resources.TabIcon;
+            MainIcon = Tween.My_Project.Resources.MIcon;
+            ReplyIcon = Tween.My_Project.Resources.Reply;
+            ReplyIconBlink = Tween.My_Project.Resources.ReplyBlink;
 
             if (!Directory.Exists(Path.Combine(dir, "Icons")))
             {
@@ -728,19 +728,19 @@ namespace Tween
         private void InitColumnText()
         {
             ColumnText[0] = "";
-            ColumnText[1] = Tween.My.Resources.Resources.AddNewTabText2;
-            ColumnText[2] = Tween.My.Resources.Resources.AddNewTabText3;
-            ColumnText[3] = Tween.My.Resources.Resources.AddNewTabText4_2;
-            ColumnText[4] = Tween.My.Resources.Resources.AddNewTabText5;
+            ColumnText[1] = Tween.My_Project.Resources.AddNewTabText2;
+            ColumnText[2] = Tween.My_Project.Resources.AddNewTabText3;
+            ColumnText[3] = Tween.My_Project.Resources.AddNewTabText4_2;
+            ColumnText[4] = Tween.My_Project.Resources.AddNewTabText5;
             ColumnText[5] = "";
             ColumnText[6] = "";
             ColumnText[7] = "Source";
 
             ColumnOrgText[0] = "";
-            ColumnOrgText[1] = Tween.My.Resources.Resources.AddNewTabText2;
-            ColumnOrgText[2] = Tween.My.Resources.Resources.AddNewTabText3;
-            ColumnOrgText[3] = Tween.My.Resources.Resources.AddNewTabText4_2;
-            ColumnOrgText[4] = Tween.My.Resources.Resources.AddNewTabText5;
+            ColumnOrgText[1] = Tween.My_Project.Resources.AddNewTabText2;
+            ColumnOrgText[2] = Tween.My_Project.Resources.AddNewTabText3;
+            ColumnOrgText[3] = Tween.My_Project.Resources.AddNewTabText4_2;
+            ColumnOrgText[4] = Tween.My_Project.Resources.AddNewTabText5;
             ColumnOrgText[5] = "";
             ColumnOrgText[6] = "";
             ColumnOrgText[7] = "Source";
@@ -1456,7 +1456,7 @@ namespace Tween
 
             tw.DetailIcon = TIconDic;
 
-            StatusLabel.Text = Tween.My.Resources.Resources.Form1_LoadText1;
+            StatusLabel.Text = Tween.My_Project.Resources.Form1_LoadText1;
             //画面右下の状態表示を変更
             StatusLabelUrl.Text = "";
             //画面左下のリンク先URL表示部を初期化
@@ -1520,7 +1520,7 @@ namespace Tween
                     _statuses.Tabs[tn].TabType = Tween.MyCommon.TabUsageType.UserDefined;
                 }
                 if (!AddNewTab(tn, true, _statuses.Tabs[tn].TabType, _statuses.Tabs[tn].ListInfo))
-                    throw new Exception(Tween.My.Resources.Resources.TweenMain_LoadText1);
+                    throw new Exception(Tween.My_Project.Resources.TweenMain_LoadText1);
             }
 
             this.JumpReadOpMenuItem.ShortcutKeyDisplayString = "Space";
@@ -2284,10 +2284,10 @@ namespace Tween
                                 //NotifyIcon1.BalloonTipTitle += "Tween [DM] " + My.Resources.RefreshDirectMessageText1 + " " + addCount.ToString() + My.Resources.RefreshDirectMessageText2
                                 ntIcon = ToolTipIcon.Warning;
                                 title.Append("Tween [DM] ");
-                                title.Append(Tween.My.Resources.Resources.RefreshDirectMessageText1);
+                                title.Append(Tween.My_Project.Resources.RefreshDirectMessageText1);
                                 title.Append(" ");
                                 title.Append(addCount);
-                                title.Append(Tween.My.Resources.Resources.RefreshDirectMessageText2);
+                                title.Append(Tween.My_Project.Resources.RefreshDirectMessageText2);
                                 nt = GrowlHelper.NotifyType.DirectMessage;
                             }
                             else if (reply)
@@ -2296,10 +2296,10 @@ namespace Tween
                                 //NotifyIcon1.BalloonTipTitle += "Tween [Reply!] " + My.Resources.RefreshTimelineText1 + " " + addCount.ToString() + My.Resources.RefreshTimelineText2
                                 ntIcon = ToolTipIcon.Warning;
                                 title.Append("Tween [Reply!] ");
-                                title.Append(Tween.My.Resources.Resources.RefreshTimelineText1);
+                                title.Append(Tween.My_Project.Resources.RefreshTimelineText1);
                                 title.Append(" ");
                                 title.Append(addCount);
-                                title.Append(Tween.My.Resources.Resources.RefreshTimelineText2);
+                                title.Append(Tween.My_Project.Resources.RefreshTimelineText2);
                                 nt = GrowlHelper.NotifyType.Reply;
                             }
                             else
@@ -2308,10 +2308,10 @@ namespace Tween
                                 //NotifyIcon1.BalloonTipTitle += "Tween " + My.Resources.RefreshTimelineText1 + " " + addCount.ToString() + My.Resources.RefreshTimelineText2
                                 ntIcon = ToolTipIcon.Info;
                                 title.Append("Tween ");
-                                title.Append(Tween.My.Resources.Resources.RefreshTimelineText1);
+                                title.Append(Tween.My_Project.Resources.RefreshTimelineText1);
                                 title.Append(" ");
                                 title.Append(addCount);
-                                title.Append(Tween.My.Resources.Resources.RefreshTimelineText2);
+                                title.Append(Tween.My_Project.Resources.RefreshTimelineText2);
                                 nt = GrowlHelper.NotifyType.Notify;
                             }
                             string bText = sb.ToString();
@@ -2364,10 +2364,10 @@ namespace Tween
                             //NotifyIcon1.BalloonTipTitle += "Tween [DM] " + My.Resources.RefreshDirectMessageText1 + " " + addCount.ToString() + My.Resources.RefreshDirectMessageText2
                             ntIcon = ToolTipIcon.Warning;
                             title.Append("Tween [DM] ");
-                            title.Append(Tween.My.Resources.Resources.RefreshDirectMessageText1);
+                            title.Append(Tween.My_Project.Resources.RefreshDirectMessageText1);
                             title.Append(" ");
                             title.Append(addCount);
-                            title.Append(Tween.My.Resources.Resources.RefreshDirectMessageText2);
+                            title.Append(Tween.My_Project.Resources.RefreshDirectMessageText2);
                             nt = GrowlHelper.NotifyType.DirectMessage;
                         }
                         else if (reply)
@@ -2376,10 +2376,10 @@ namespace Tween
                             //NotifyIcon1.BalloonTipTitle += "Tween [Reply!] " + My.Resources.RefreshTimelineText1 + " " + addCount.ToString() + My.Resources.RefreshTimelineText2
                             ntIcon = ToolTipIcon.Warning;
                             title.Append("Tween [Reply!] ");
-                            title.Append(Tween.My.Resources.Resources.RefreshTimelineText1);
+                            title.Append(Tween.My_Project.Resources.RefreshTimelineText1);
                             title.Append(" ");
                             title.Append(addCount);
-                            title.Append(Tween.My.Resources.Resources.RefreshTimelineText2);
+                            title.Append(Tween.My_Project.Resources.RefreshTimelineText2);
                             nt = GrowlHelper.NotifyType.Reply;
                         }
                         else
@@ -2388,10 +2388,10 @@ namespace Tween
                             //NotifyIcon1.BalloonTipTitle += "Tween " + My.Resources.RefreshTimelineText1 + " " + addCount.ToString() + My.Resources.RefreshTimelineText2
                             ntIcon = ToolTipIcon.Info;
                             title.Append("Tween ");
-                            title.Append(Tween.My.Resources.Resources.RefreshTimelineText1);
+                            title.Append(Tween.My_Project.Resources.RefreshTimelineText1);
                             title.Append(" ");
                             title.Append(addCount);
-                            title.Append(Tween.My.Resources.Resources.RefreshTimelineText2);
+                            title.Append(Tween.My_Project.Resources.RefreshTimelineText2);
                             nt = GrowlHelper.NotifyType.Notify;
                         }
                         string bText = sb.ToString();
@@ -2659,7 +2659,7 @@ namespace Tween
 
             if (this.ExistCurrentPost && StatusText.Text.Trim() == string.Format("RT @{0}: {1}", _curPost.ScreenName, _curPost.TextFromApi))
             {
-                DialogResult rtResult = MessageBox.Show(string.Format(Tween.My.Resources.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult rtResult = MessageBox.Show(string.Format(Tween.My_Project.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (rtResult)
                 {
                     case System.Windows.Forms.DialogResult.Yes:
@@ -2729,7 +2729,7 @@ namespace Tween
             }
             if (GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
             {
-                if (MessageBox.Show(Tween.My.Resources.Resources.PostLengthOverMessage1, Tween.My.Resources.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.OK)
+                if (MessageBox.Show(Tween.My_Project.Resources.PostLengthOverMessage1, Tween.My_Project.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.OK)
                 {
                     isCutOff = true;
                     //If Not SettingDialog.UrlConvertAuto Then UrlConvertAutoToolStripMenuItem_Click(Nothing, Nothing)
@@ -2844,7 +2844,7 @@ namespace Tween
                 //画像投稿
                 if (!object.ReferenceEquals(ImageSelectedPicture.Image, ImageSelectedPicture.InitialImage) && ImageServiceCombo.SelectedIndex > -1 && !string.IsNullOrEmpty(ImagefilePathText.Text))
                 {
-                    if (MessageBox.Show(Tween.My.Resources.Resources.PostPictureConfirm1, Tween.My.Resources.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Cancel)
+                    if (MessageBox.Show(Tween.My_Project.Resources.PostPictureConfirm1, Tween.My_Project.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Cancel)
                     {
                         TimelinePanel.Visible = true;
                         TimelinePanel.Enabled = true;
@@ -2871,7 +2871,7 @@ namespace Tween
                 }
                 else
                 {
-                    MessageBox.Show(Tween.My.Resources.Resources.PostPictureWarn1, Tween.My.Resources.Resources.PostPictureWarn2);
+                    MessageBox.Show(Tween.My_Project.Resources.PostPictureWarn1, Tween.My_Project.Resources.PostPictureWarn2);
                     return;
                 }
             }
@@ -2881,7 +2881,7 @@ namespace Tween
             //Google検索（試験実装）
             if (StatusText.Text.StartsWith("Google:", StringComparison.OrdinalIgnoreCase) && StatusText.Text.Trim().Length > 7)
             {
-                string tmp = string.Format(Tween.My.Resources.Resources.SearchItem2Url, HttpUtility.UrlEncode(StatusText.Text.Substring(7)));
+                string tmp = string.Format(Tween.My_Project.Resources.SearchItem2Url, HttpUtility.UrlEncode(StatusText.Text.Substring(7)));
                 OpenUriAsync(tmp);
             }
 
@@ -3165,7 +3165,7 @@ namespace Tween
                     bw.ReportProgress(300);
                     break;
                 case Tween.MyCommon.WORKERTYPE.Follower:
-                    bw.ReportProgress(50, Tween.My.Resources.Resources.UpdateFollowersMenuItem1_ClickText1);
+                    bw.ReportProgress(50, Tween.My_Project.Resources.UpdateFollowersMenuItem1_ClickText1);
                     ret = tw.GetFollowersApi();
                     if (string.IsNullOrEmpty(ret))
                     {
@@ -3295,7 +3295,7 @@ namespace Tween
                     rslt.addCount = _statuses.DistributePosts();
                     break;
                 case Tween.MyCommon.WORKERTYPE.BlockIds:
-                    bw.ReportProgress(50, Tween.My.Resources.Resources.UpdateBlockUserText1);
+                    bw.ReportProgress(50, Tween.My_Project.Resources.UpdateBlockUserText1);
                     ret = tw.GetBlockUserIds();
                     if (TabInformations.GetInstance().BlockIds.Count == 0)
                     {
@@ -3383,22 +3383,22 @@ namespace Tween
                 switch (AsyncArg.type)
                 {
                     case Tween.MyCommon.WORKERTYPE.Timeline:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText5 + AsyncArg.page.ToString() + Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText6;
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText5 + AsyncArg.page.ToString() + Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
                     case Tween.MyCommon.WORKERTYPE.Reply:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText4 + AsyncArg.page.ToString() + Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText6;
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText4 + AsyncArg.page.ToString() + Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
                     case Tween.MyCommon.WORKERTYPE.DirectMessegeRcv:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText8 + AsyncArg.page.ToString() + Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText6;
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText8 + AsyncArg.page.ToString() + Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
                     case Tween.MyCommon.WORKERTYPE.FavAdd:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText15 + AsyncArg.page.ToString() + "/" + AsyncArg.ids.Count.ToString() + Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText16 + (AsyncArg.page - AsyncArg.sIds.Count - 1).ToString();
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText15 + AsyncArg.page.ToString() + "/" + AsyncArg.ids.Count.ToString() + Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText16 + (AsyncArg.page - AsyncArg.sIds.Count - 1).ToString();
                         break;
                     case Tween.MyCommon.WORKERTYPE.FavRemove:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText17 + AsyncArg.page.ToString() + "/" + AsyncArg.ids.Count.ToString() + Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText18 + (AsyncArg.page - AsyncArg.sIds.Count - 1).ToString();
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText17 + AsyncArg.page.ToString() + "/" + AsyncArg.ids.Count.ToString() + Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText18 + (AsyncArg.page - AsyncArg.sIds.Count - 1).ToString();
                         break;
                     case Tween.MyCommon.WORKERTYPE.Favorites:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText19;
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText19;
                         break;
                     case Tween.MyCommon.WORKERTYPE.PublicSearch:
                         smsg = "Search refreshing...";
@@ -3420,16 +3420,16 @@ namespace Tween
                 switch (AsyncArg.type)
                 {
                     case Tween.MyCommon.WORKERTYPE.Timeline:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText1;
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText1;
                         break;
                     case Tween.MyCommon.WORKERTYPE.Reply:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText9;
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText9;
                         break;
                     case Tween.MyCommon.WORKERTYPE.DirectMessegeRcv:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText11;
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText11;
                         break;
                     case Tween.MyCommon.WORKERTYPE.DirectMessegeSnt:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText13;
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText13;
                         break;
                     case Tween.MyCommon.WORKERTYPE.FavAdd:
                         break;
@@ -3438,10 +3438,10 @@ namespace Tween
                         break;
                     //進捗メッセージ残す
                     case Tween.MyCommon.WORKERTYPE.Favorites:
-                        smsg = Tween.My.Resources.Resources.GetTimelineWorker_RunWorkerCompletedText20;
+                        smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText20;
                         break;
                     case Tween.MyCommon.WORKERTYPE.Follower:
-                        smsg = Tween.My.Resources.Resources.UpdateFollowersMenuItem1_ClickText3;
+                        smsg = Tween.My_Project.Resources.UpdateFollowersMenuItem1_ClickText3;
                         break;
                     case Tween.MyCommon.WORKERTYPE.Configuration:
                         break;
@@ -3459,7 +3459,7 @@ namespace Tween
                         smsg = "UserTimeline refreshed";
                         break;
                     case Tween.MyCommon.WORKERTYPE.BlockIds:
-                        smsg = Tween.My.Resources.Resources.UpdateBlockUserText3;
+                        smsg = Tween.My_Project.Resources.UpdateBlockUserText3;
                         break;
                 }
             }
@@ -3481,7 +3481,7 @@ namespace Tween
                 //終了
                 if (e.ProgressPercentage == 300)
                 {
-                    StatusLabel.Text = Tween.My.Resources.Resources.PostWorker_RunWorkerCompletedText4;
+                    StatusLabel.Text = Tween.My_Project.Resources.PostWorker_RunWorkerCompletedText4;
                 }
             }
             else
@@ -3639,7 +3639,7 @@ namespace Tween
                         DialogResult retry = default(DialogResult);
                         try
                         {
-                            retry = MessageBox.Show(string.Format("{0}   --->   [ " + rslt.retMsg + " ]" + Environment.NewLine + "\"" + rslt.status.status + "\"" + Environment.NewLine + "{1}", Tween.My.Resources.Resources.StatusUpdateFailed1, Tween.My.Resources.Resources.StatusUpdateFailed2), "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
+                            retry = MessageBox.Show(string.Format("{0}   --->   [ " + rslt.retMsg + " ]" + Environment.NewLine + "\"" + rslt.status.status + "\"" + Environment.NewLine + "{1}", Tween.My_Project.Resources.StatusUpdateFailed1, Tween.My_Project.Resources.StatusUpdateFailed2), "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
                         }
                         catch (Exception ex)
                         {
@@ -3939,7 +3939,7 @@ namespace Tween
             //複数fav確認msg
             if (_curList.SelectedIndices.Count > 250 && FavAdd)
             {
-                MessageBox.Show(Tween.My.Resources.Resources.FavoriteLimitCountText);
+                MessageBox.Show(Tween.My_Project.Resources.FavoriteLimitCountText);
                 _DoFavRetweetFlags = false;
                 return;
             }
@@ -3947,10 +3947,10 @@ namespace Tween
             {
                 if (FavAdd)
                 {
-                    string QuestionText = Tween.My.Resources.Resources.FavAddToolStripMenuItem_ClickText1;
+                    string QuestionText = Tween.My_Project.Resources.FavAddToolStripMenuItem_ClickText1;
                     if (_DoFavRetweetFlags)
-                        QuestionText = Tween.My.Resources.Resources.FavoriteRetweetQuestionText3;
-                    if (MessageBox.Show(QuestionText, Tween.My.Resources.Resources.FavAddToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+                        QuestionText = Tween.My_Project.Resources.FavoriteRetweetQuestionText3;
+                    if (MessageBox.Show(QuestionText, Tween.My_Project.Resources.FavAddToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
                     {
                         _DoFavRetweetFlags = false;
                         return;
@@ -3958,7 +3958,7 @@ namespace Tween
                 }
                 else
                 {
-                    if (MessageBox.Show(Tween.My.Resources.Resources.FavRemoveToolStripMenuItem_ClickText1, Tween.My.Resources.Resources.FavRemoveToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+                    if (MessageBox.Show(Tween.My_Project.Resources.FavRemoveToolStripMenuItem_ClickText1, Tween.My_Project.Resources.FavRemoveToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
                     {
                         return;
                     }
@@ -3995,11 +3995,11 @@ namespace Tween
             {
                 if (FavAdd)
                 {
-                    StatusLabel.Text = Tween.My.Resources.Resources.FavAddToolStripMenuItem_ClickText4;
+                    StatusLabel.Text = Tween.My_Project.Resources.FavAddToolStripMenuItem_ClickText4;
                 }
                 else
                 {
-                    StatusLabel.Text = Tween.My.Resources.Resources.FavRemoveToolStripMenuItem_ClickText4;
+                    StatusLabel.Text = Tween.My_Project.Resources.FavRemoveToolStripMenuItem_ClickText4;
                 }
                 return;
             }
@@ -4175,7 +4175,7 @@ namespace Tween
                 ReadedStripMenuItem.Enabled = true;
                 UnreadStripMenuItem.Enabled = true;
             }
-            DeleteStripMenuItem.Text = Tween.My.Resources.Resources.DeleteMenuText1;
+            DeleteStripMenuItem.Text = Tween.My_Project.Resources.DeleteMenuText1;
             if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.DirectMessage || !this.ExistCurrentPost || _curPost.IsDm)
             {
                 FavAddToolStripMenuItem.Enabled = false;
@@ -4213,11 +4213,11 @@ namespace Tween
                     FavoriteRetweetContextMenu.Enabled = false;
                     if (string.IsNullOrEmpty(_curPost.RetweetedBy))
                     {
-                        DeleteStripMenuItem.Text = Tween.My.Resources.Resources.DeleteMenuText1;
+                        DeleteStripMenuItem.Text = Tween.My_Project.Resources.DeleteMenuText1;
                     }
                     else
                     {
-                        DeleteStripMenuItem.Text = Tween.My.Resources.Resources.DeleteMenuText2;
+                        DeleteStripMenuItem.Text = Tween.My_Project.Resources.DeleteMenuText2;
                     }
                     DeleteStripMenuItem.Enabled = true;
                 }
@@ -4225,11 +4225,11 @@ namespace Tween
                 {
                     if (string.IsNullOrEmpty(_curPost.RetweetedBy))
                     {
-                        DeleteStripMenuItem.Text = Tween.My.Resources.Resources.DeleteMenuText1;
+                        DeleteStripMenuItem.Text = Tween.My_Project.Resources.DeleteMenuText1;
                     }
                     else
                     {
-                        DeleteStripMenuItem.Text = Tween.My.Resources.Resources.DeleteMenuText2;
+                        DeleteStripMenuItem.Text = Tween.My_Project.Resources.DeleteMenuText2;
                     }
                     DeleteStripMenuItem.Enabled = false;
                     if (_curPost.IsProtect)
@@ -4309,9 +4309,9 @@ namespace Tween
                 }
             }
 
-            string tmp = string.Format(Tween.My.Resources.Resources.DeleteStripMenuItem_ClickText1, Environment.NewLine);
+            string tmp = string.Format(Tween.My_Project.Resources.DeleteStripMenuItem_ClickText1, Environment.NewLine);
 
-            if (MessageBox.Show(tmp, Tween.My.Resources.Resources.DeleteStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+            if (MessageBox.Show(tmp, Tween.My_Project.Resources.DeleteStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             int fidx = 0;
@@ -4364,12 +4364,12 @@ namespace Tween
 
                 if (!rslt)
                 {
-                    StatusLabel.Text = Tween.My.Resources.Resources.DeleteStripMenuItem_ClickText3;
+                    StatusLabel.Text = Tween.My_Project.Resources.DeleteStripMenuItem_ClickText3;
                     //失敗
                 }
                 else
                 {
-                    StatusLabel.Text = Tween.My.Resources.Resources.DeleteStripMenuItem_ClickText4;
+                    StatusLabel.Text = Tween.My_Project.Resources.DeleteStripMenuItem_ClickText4;
                     //成功
                 }
 
@@ -5073,7 +5073,7 @@ namespace Tween
             }
 
             //新規タブ名チェック
-            if (tabName == Tween.My.Resources.Resources.AddNewTabText1)
+            if (tabName == Tween.My_Project.Resources.AddNewTabText1)
                 return false;
 
             //タブタイプ重複チェック
@@ -5438,8 +5438,8 @@ namespace Tween
             Google.GASender.GetInstance().TrackEventWithCategory("post", "remove_tab", tw.UserId);
             if (confirm)
             {
-                string tmp = string.Format(Tween.My.Resources.Resources.RemoveSpecifiedTabText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, TabName + " " + Tween.My.Resources.Resources.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Cancel)
+                string tmp = string.Format(Tween.My_Project.Resources.RemoveSpecifiedTabText1, Environment.NewLine);
+                if (MessageBox.Show(tmp, TabName + " " + Tween.My_Project.Resources.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Cancel)
                 {
                     return false;
                 }
@@ -6320,7 +6320,7 @@ namespace Tween
 
             if (_curList.VirtualListSize == 0)
             {
-                MessageBox.Show(Tween.My.Resources.Resources.DoTabSearchText2, Tween.My.Resources.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Tween.My_Project.Resources.DoTabSearchText2, Tween.My_Project.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             if (_curList.SelectedIndices.Count > 0)
@@ -6410,7 +6410,7 @@ namespace Tween
                     }
                     catch (ArgumentException ex)
                     {
-                        Interaction.MsgBox(Tween.My.Resources.Resources.DoTabSearchText1, MsgBoxStyle.Critical);
+                        Interaction.MsgBox(Tween.My_Project.Resources.DoTabSearchText1, MsgBoxStyle.Critical);
                         return;
                     }
                 }
@@ -6458,7 +6458,7 @@ namespace Tween
             catch (ArgumentOutOfRangeException ex)
             {
             }
-            MessageBox.Show(Tween.My.Resources.Resources.DoTabSearchText2, Tween.My.Resources.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Tween.My_Project.Resources.DoTabSearchText2, Tween.My_Project.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void MenuItemSubSearch_Click(System.Object sender, System.EventArgs e)
@@ -6624,7 +6624,7 @@ namespace Tween
             if (_curList.SelectedIndices.Count > 0)
             {
                 PostClass post = _statuses.Item(_curTab.Text, _curList.SelectedIndices[0]);
-                OpenUriAsync(Tween.My.Resources.Resources.FavstarUrl + "users/" + post.ScreenName + "/recent");
+                OpenUriAsync(Tween.My_Project.Resources.FavstarUrl + "users/" + post.ScreenName + "/recent");
             }
         }
 
@@ -6663,9 +6663,9 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                StatusLabel.Text = Tween.My.Resources.Resources.CheckNewVersionText9;
+                StatusLabel.Text = Tween.My_Project.Resources.CheckNewVersionText9;
                 if (!startup)
-                    MessageBox.Show(Tween.My.Resources.Resources.CheckNewVersionText10, Tween.My.Resources.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                    MessageBox.Show(Tween.My_Project.Resources.CheckNewVersionText10, Tween.My_Project.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                 return;
             }
             if (retMsg.Length > 0)
@@ -6677,10 +6677,10 @@ namespace Tween
                 }
                 if (!string.IsNullOrEmpty(MyCommon.fileVersion) && strVer.CompareTo(MyCommon.fileVersion.Replace(".", "")) > 0)
                 {
-                    string tmp = string.Format(Tween.My.Resources.Resources.CheckNewVersionText3, strVer);
+                    string tmp = string.Format(Tween.My_Project.Resources.CheckNewVersionText3, strVer);
                     using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                     {
-                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Tween.My.Resources.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Tween.My_Project.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                         {
                             retMsg = tw.GetTweenBinary(strVer);
                             if (retMsg.Length == 0)
@@ -6694,7 +6694,7 @@ namespace Tween
                             else
                             {
                                 if (!startup)
-                                    MessageBox.Show(Tween.My.Resources.Resources.CheckNewVersionText5 + System.Environment.NewLine + retMsg, Tween.My.Resources.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show(Tween.My_Project.Resources.CheckNewVersionText5 + System.Environment.NewLine + retMsg, Tween.My_Project.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
                         dialogAsShieldicon.Dispose();
@@ -6704,10 +6704,10 @@ namespace Tween
                 {
                     if (forceUpdate)
                     {
-                        string tmp = string.Format(Tween.My.Resources.Resources.CheckNewVersionText6, strVer);
+                        string tmp = string.Format(Tween.My_Project.Resources.CheckNewVersionText6, strVer);
                         using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                         {
-                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Tween.My.Resources.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Tween.My_Project.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                             {
                                 retMsg = tw.GetTweenBinary(strVer);
                                 if (retMsg.Length == 0)
@@ -6721,7 +6721,7 @@ namespace Tween
                                 else
                                 {
                                     if (!startup)
-                                        MessageBox.Show(Tween.My.Resources.Resources.CheckNewVersionText5 + System.Environment.NewLine + retMsg, Tween.My.Resources.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                        MessageBox.Show(Tween.My_Project.Resources.CheckNewVersionText5 + System.Environment.NewLine + retMsg, Tween.My_Project.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 }
                             }
                             dialogAsShieldicon.Dispose();
@@ -6729,15 +6729,15 @@ namespace Tween
                     }
                     else if (!startup)
                     {
-                        MessageBox.Show(Tween.My.Resources.Resources.CheckNewVersionText7 + MyCommon.fileVersion.Replace(".", "") + Tween.My.Resources.Resources.CheckNewVersionText8 + strVer, Tween.My.Resources.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(Tween.My_Project.Resources.CheckNewVersionText7 + MyCommon.fileVersion.Replace(".", "") + Tween.My_Project.Resources.CheckNewVersionText8 + strVer, Tween.My_Project.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             else
             {
-                StatusLabel.Text = Tween.My.Resources.Resources.CheckNewVersionText9;
+                StatusLabel.Text = Tween.My_Project.Resources.CheckNewVersionText9;
                 if (!startup)
-                    MessageBox.Show(Tween.My.Resources.Resources.CheckNewVersionText10, Tween.My.Resources.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(Tween.My_Project.Resources.CheckNewVersionText10, Tween.My_Project.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -7814,7 +7814,7 @@ namespace Tween
             {
                 //MessageBox.Show(My.Resources.CopyStotText1)
                 MessageForm w = new MessageForm();
-                w.ShowDialog(Tween.My.Resources.Resources.CopyStotText1);
+                w.ShowDialog(Tween.My_Project.Resources.CopyStotText1);
             }
             if (sb.Length > 0)
             {
@@ -8791,15 +8791,15 @@ namespace Tween
 
         private void SaveLogMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            DialogResult rslt = MessageBox.Show(string.Format(Tween.My.Resources.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Tween.My.Resources.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult rslt = MessageBox.Show(string.Format(Tween.My_Project.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Tween.My_Project.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (rslt == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             SaveFileDialog1.FileName = "TweenPosts" + Strings.Format(DateAndTime.Now, "yyMMdd-HHmmss") + ".tsv";
             SaveFileDialog1.InitialDirectory = Tween.My.MyProject.Application.Info.DirectoryPath;
-            SaveFileDialog1.Filter = Tween.My.Resources.Resources.SaveLogMenuItem_ClickText3;
+            SaveFileDialog1.Filter = Tween.My_Project.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
-            SaveFileDialog1.Title = Tween.My.Resources.Resources.SaveLogMenuItem_ClickText4;
+            SaveFileDialog1.Title = Tween.My_Project.Resources.SaveLogMenuItem_ClickText4;
             SaveFileDialog1.RestoreDirectory = true;
 
             if (SaveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -8871,8 +8871,8 @@ namespace Tween
                 {
                     if (ListTab.TabPages[i].Text == newTabText)
                     {
-                        string tmp = string.Format(Tween.My.Resources.Resources.Tabs_DoubleClickText1, newTabText);
-                        MessageBox.Show(tmp, Tween.My.Resources.Resources.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        string tmp = string.Format(Tween.My_Project.Resources.Tabs_DoubleClickText1, newTabText);
+                        MessageBox.Show(tmp, Tween.My_Project.Resources.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return false;
                     }
                 }
@@ -9769,8 +9769,8 @@ namespace Tween
                 }
                 if (!_statuses.AddTab(tabName, tabUsage, list) || !AddNewTab(tabName, false, tabUsage, list))
                 {
-                    string tmp = string.Format(Tween.My.Resources.Resources.AddTabMenuItem_ClickText1, tabName);
-                    MessageBox.Show(tmp, Tween.My.Resources.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string tmp = string.Format(Tween.My_Project.Resources.AddTabMenuItem_ClickText1, tabName);
+                    MessageBox.Show(tmp, Tween.My_Project.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
                 {
@@ -10061,7 +10061,7 @@ namespace Tween
 
                 ListTab.SelectedTab.Focus();
                 //新規タブを選択→タブ作成
-                if (tabName == Tween.My.Resources.Resources.IDRuleMenuItem_ClickText1)
+                if (tabName == Tween.My_Project.Resources.IDRuleMenuItem_ClickText1)
                 {
                     using (InputTabName inputName = new InputTabName())
                     {
@@ -10077,8 +10077,8 @@ namespace Tween
                     {
                         if (!_statuses.AddTab(tabName, MyCommon.TabUsageType.UserDefined, null) || !AddNewTab(tabName, false, MyCommon.TabUsageType.UserDefined))
                         {
-                            string tmp = string.Format(Tween.My.Resources.Resources.IDRuleMenuItem_ClickText2, tabName);
-                            MessageBox.Show(tmp, Tween.My.Resources.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            string tmp = string.Format(Tween.My_Project.Resources.IDRuleMenuItem_ClickText2, tabName);
+                            MessageBox.Show(tmp, Tween.My_Project.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             //もう一度タブ名入力
                         }
                         else
@@ -10099,8 +10099,8 @@ namespace Tween
         {
             var _with1 = MyCommon.Block;
             //移動するか？
-            string _tmp = string.Format(Tween.My.Resources.Resources.IDRuleMenuItem_ClickText4, Environment.NewLine);
-            if (MessageBox.Show(_tmp, Tween.My.Resources.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+            string _tmp = string.Format(Tween.My_Project.Resources.IDRuleMenuItem_ClickText4, Environment.NewLine);
+            if (MessageBox.Show(_tmp, Tween.My_Project.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
                 move = false;
             }
@@ -10111,8 +10111,8 @@ namespace Tween
             if (!move)
             {
                 //マークするか？
-                _tmp = string.Format(Tween.My.Resources.Resources.IDRuleMenuItem_ClickText6, Constants.vbCrLf);
-                if (MessageBox.Show(_tmp, Tween.My.Resources.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                _tmp = string.Format(Tween.My_Project.Resources.IDRuleMenuItem_ClickText6, Constants.vbCrLf);
+                if (MessageBox.Show(_tmp, Tween.My_Project.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                 {
                     mark = true;
                 }
@@ -10304,8 +10304,8 @@ namespace Tween
         {
             if (showWarning)
             {
-                string tmp = string.Format(Tween.My.Resources.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, tabName + " " + Tween.My.Resources.Resources.ClearTabMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+                string tmp = string.Format(Tween.My_Project.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
+                if (MessageBox.Show(tmp, tabName + " " + Tween.My_Project.Resources.ClearTabMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
                 {
                     return;
                 }
@@ -10403,21 +10403,21 @@ namespace Tween
                     }
                     break;
                 case MyCommon.DispTitleEnum.UnreadRepCount:
-                    ttl.AppendFormat(Tween.My.Resources.Resources.SetMainWindowTitleText1, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
+                    ttl.AppendFormat(Tween.My_Project.Resources.SetMainWindowTitleText1, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
                     break;
                 case MyCommon.DispTitleEnum.UnreadAllCount:
-                    ttl.AppendFormat(Tween.My.Resources.Resources.SetMainWindowTitleText2, ur);
+                    ttl.AppendFormat(Tween.My_Project.Resources.SetMainWindowTitleText2, ur);
                     break;
                 case MyCommon.DispTitleEnum.UnreadAllRepCount:
-                    ttl.AppendFormat(Tween.My.Resources.Resources.SetMainWindowTitleText3, ur, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
+                    ttl.AppendFormat(Tween.My_Project.Resources.SetMainWindowTitleText3, ur, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
                     break;
                 case MyCommon.DispTitleEnum.UnreadCountAllCount:
-                    ttl.AppendFormat(Tween.My.Resources.Resources.SetMainWindowTitleText4, ur, al);
+                    ttl.AppendFormat(Tween.My_Project.Resources.SetMainWindowTitleText4, ur, al);
                     break;
                 case MyCommon.DispTitleEnum.OwnStatus:
                     if (static_SetMainWindowTitle_followers == 0 && tw.FollowersCount > 0)
                         static_SetMainWindowTitle_followers = tw.FollowersCount;
-                    ttl.AppendFormat(Tween.My.Resources.Resources.OwnStatusTitle, tw.StatusesCount, tw.FriendsCount, tw.FollowersCount, tw.FollowersCount - static_SetMainWindowTitle_followers);
+                    ttl.AppendFormat(Tween.My_Project.Resources.OwnStatusTitle, tw.StatusesCount, tw.FriendsCount, tw.FollowersCount, tw.FollowersCount - static_SetMainWindowTitle_followers);
                     break;
             }
 
@@ -10468,14 +10468,14 @@ namespace Tween
             UnreadCounter = ur;
             UnreadAtCounter = urat;
 
-            slbl.AppendFormat(Tween.My.Resources.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, _postTimestamps.Count, _favTimestamps.Count, _tlCount);
+            slbl.AppendFormat(Tween.My_Project.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, _postTimestamps.Count, _favTimestamps.Count, _tlCount);
             if (SettingDialog.TimelinePeriodInt == 0)
             {
-                slbl.Append(Tween.My.Resources.Resources.SetStatusLabelText2);
+                slbl.Append(Tween.My_Project.Resources.SetStatusLabelText2);
             }
             else
             {
-                slbl.Append(SettingDialog.TimelinePeriodInt.ToString() + Tween.My.Resources.Resources.SetStatusLabelText3);
+                slbl.Append(SettingDialog.TimelinePeriodInt.ToString() + Tween.My_Project.Resources.SetStatusLabelText3);
             }
             return slbl.ToString();
         }
@@ -10780,13 +10780,13 @@ namespace Tween
                         else
                         {
                             this.IconNameToolStripMenuItem.Enabled = false;
-                            this.IconNameToolStripMenuItem.Text = Tween.My.Resources.Resources.ContextMenuStrip3_OpeningText1;
+                            this.IconNameToolStripMenuItem.Text = Tween.My_Project.Resources.ContextMenuStrip3_OpeningText1;
                         }
                     }
                     else
                     {
                         this.IconNameToolStripMenuItem.Enabled = false;
-                        this.IconNameToolStripMenuItem.Text = Tween.My.Resources.Resources.ContextMenuStrip3_OpeningText1;
+                        this.IconNameToolStripMenuItem.Text = Tween.My_Project.Resources.ContextMenuStrip3_OpeningText1;
                     }
                     if (this.TIconDic[_curPost.ImageUrl] != null)
                     {
@@ -10801,14 +10801,14 @@ namespace Tween
                 {
                     this.IconNameToolStripMenuItem.Enabled = false;
                     this.SaveIconPictureToolStripMenuItem.Enabled = false;
-                    this.IconNameToolStripMenuItem.Text = Tween.My.Resources.Resources.ContextMenuStrip3_OpeningText1;
+                    this.IconNameToolStripMenuItem.Text = Tween.My_Project.Resources.ContextMenuStrip3_OpeningText1;
                 }
             }
             else
             {
                 this.IconNameToolStripMenuItem.Enabled = false;
                 this.SaveIconPictureToolStripMenuItem.Enabled = false;
-                this.IconNameToolStripMenuItem.Text = Tween.My.Resources.Resources.ContextMenuStrip3_OpeningText2;
+                this.IconNameToolStripMenuItem.Text = Tween.My_Project.Resources.ContextMenuStrip3_OpeningText2;
             }
             if (NameLabel.Tag != null)
             {
@@ -11348,7 +11348,7 @@ namespace Tween
 
             if (_selText != null)
             {
-                if (url == Tween.My.Resources.Resources.SearchItem4Url)
+                if (url == Tween.My_Project.Resources.SearchItem4Url)
                 {
                     //公式検索
                     AddNewTabForSearch(_selText);
@@ -11368,22 +11368,22 @@ namespace Tween
 
         private void SearchWikipediaContextMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            doSearchToolStrip(Tween.My.Resources.Resources.SearchItem1Url);
+            doSearchToolStrip(Tween.My_Project.Resources.SearchItem1Url);
         }
 
         private void SearchGoogleContextMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            doSearchToolStrip(Tween.My.Resources.Resources.SearchItem2Url);
+            doSearchToolStrip(Tween.My_Project.Resources.SearchItem2Url);
         }
 
         private void SearchYatsContextMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            doSearchToolStrip(Tween.My.Resources.Resources.SearchItem3Url);
+            doSearchToolStrip(Tween.My_Project.Resources.SearchItem3Url);
         }
 
         private void SearchPublicSearchContextMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            doSearchToolStrip(Tween.My.Resources.Resources.SearchItem4Url);
+            doSearchToolStrip(Tween.My_Project.Resources.SearchItem4Url);
         }
 
         private void UrlCopyContextMenuItem_Click(System.Object sender, System.EventArgs e)
@@ -11869,7 +11869,7 @@ namespace Tween
                 // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
                 if (MyCommon.TwitterApiInfo.AccessLevel == ApiAccessLevel.ReadWrite)
                 {
-                    MessageBox.Show(Tween.My.Resources.Resources.ReAuthorizeText);
+                    MessageBox.Show(Tween.My_Project.Resources.ReAuthorizeText);
                     SettingStripMenuItem_Click(null, null);
                 }
 
@@ -11937,15 +11937,15 @@ namespace Tween
                 }
                 if (_curList.SelectedIndices.Count > 15)
                 {
-                    MessageBox.Show(Tween.My.Resources.Resources.RetweetLimitText);
+                    MessageBox.Show(Tween.My_Project.Resources.RetweetLimitText);
                     _DoFavRetweetFlags = false;
                     return;
                 }
                 else if (_curList.SelectedIndices.Count > 1)
                 {
-                    string QuestionText = Tween.My.Resources.Resources.RetweetQuestion2;
+                    string QuestionText = Tween.My_Project.Resources.RetweetQuestion2;
                     if (_DoFavRetweetFlags)
-                        QuestionText = Tween.My.Resources.Resources.FavoriteRetweetQuestionText1;
+                        QuestionText = Tween.My_Project.Resources.FavoriteRetweetQuestionText1;
                     switch (MessageBox.Show(QuestionText, "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                     {
                         case System.Windows.Forms.DialogResult.Cancel:
@@ -11965,9 +11965,9 @@ namespace Tween
                     }
                     if (!SettingDialog.RetweetNoConfirm)
                     {
-                        string Questiontext = Tween.My.Resources.Resources.RetweetQuestion1;
+                        string Questiontext = Tween.My_Project.Resources.RetweetQuestion1;
                         if (_DoFavRetweetFlags)
-                            Questiontext = Tween.My.Resources.Resources.FavoritesRetweetQuestionText2;
+                            Questiontext = Tween.My_Project.Resources.FavoritesRetweetQuestionText2;
                         if (isConfirm && MessageBox.Show(Questiontext, "Retweet", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
                         {
                             _DoFavRetweetFlags = false;
@@ -12152,32 +12152,32 @@ namespace Tween
                 info = info
             };
 
-            using (FormInfo dlg = new FormInfo(this, Tween.My.Resources.Resources.ApiInfo6, GetApiInfo_Dowork, null, args))
+            using (FormInfo dlg = new FormInfo(this, Tween.My_Project.Resources.ApiInfo6, GetApiInfo_Dowork, null, args))
             {
                 dlg.ShowDialog();
                 if (Convert.ToBoolean(dlg.Result))
                 {
-                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo1 + args.info.MaxCount.ToString());
-                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo2 + args.info.RemainCount.ToString());
-                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo3 + args.info.ResetTime.ToString());
-                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo7 + (tw.UserStreamEnabled ? Tween.My.Resources.Resources.Enable : Tween.My.Resources.Resources.Disable).ToString());
+                    tmp.AppendLine(Tween.My_Project.Resources.ApiInfo1 + args.info.MaxCount.ToString());
+                    tmp.AppendLine(Tween.My_Project.Resources.ApiInfo2 + args.info.RemainCount.ToString());
+                    tmp.AppendLine(Tween.My_Project.Resources.ApiInfo3 + args.info.ResetTime.ToString());
+                    tmp.AppendLine(Tween.My_Project.Resources.ApiInfo7 + (tw.UserStreamEnabled ? Tween.My_Project.Resources.Enable : Tween.My_Project.Resources.Disable).ToString());
 
                     tmp.AppendLine();
-                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo8 + args.info.AccessLevel.ToString());
+                    tmp.AppendLine(Tween.My_Project.Resources.ApiInfo8 + args.info.AccessLevel.ToString());
                     SetStatusLabelUrl();
 
                     tmp.AppendLine();
-                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo9 + (args.info.MediaMaxCount < 0 ? Tween.My.Resources.Resources.ApiInfo91 : args.info.MediaMaxCount.ToString()));
-                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo10 + (args.info.MediaRemainCount < 0 ? Tween.My.Resources.Resources.ApiInfo91 : args.info.MediaRemainCount.ToString()));
-                    tmp.AppendLine(Tween.My.Resources.Resources.ApiInfo11 + (args.info.MediaResetTime == new DateTime() ? Tween.My.Resources.Resources.ApiInfo91 : args.info.MediaResetTime.ToString()));
+                    tmp.AppendLine(Tween.My_Project.Resources.ApiInfo9 + (args.info.MediaMaxCount < 0 ? Tween.My_Project.Resources.ApiInfo91 : args.info.MediaMaxCount.ToString()));
+                    tmp.AppendLine(Tween.My_Project.Resources.ApiInfo10 + (args.info.MediaRemainCount < 0 ? Tween.My_Project.Resources.ApiInfo91 : args.info.MediaRemainCount.ToString()));
+                    tmp.AppendLine(Tween.My_Project.Resources.ApiInfo11 + (args.info.MediaResetTime == new DateTime() ? Tween.My_Project.Resources.ApiInfo91 : args.info.MediaResetTime.ToString()));
                 }
                 else
                 {
-                    tmp.Append(Tween.My.Resources.Resources.ApiInfo5);
+                    tmp.Append(Tween.My_Project.Resources.ApiInfo5);
                 }
             }
 
-            MessageBox.Show(tmp.ToString(), Tween.My.Resources.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(tmp.ToString(), Tween.My_Project.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void FollowCommandMenuItem_Click(System.Object sender, System.EventArgs e)
@@ -12199,24 +12199,24 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.FormTitle = "Follow";
-                inputName.FormDescription = Tween.My.Resources.Resources.FRMessage1;
+                inputName.FormDescription = Tween.My_Project.Resources.FRMessage1;
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
                     FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs();
                     arg.tw = tw;
                     arg.id = inputName.TabName.Trim();
-                    using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.FollowCommandText1, FollowCommand_DoWork, null, arg))
+                    using (FormInfo _info = new FormInfo(this, Tween.My_Project.Resources.FollowCommandText1, FollowCommand_DoWork, null, arg))
                     {
                         _info.ShowDialog();
                         string ret = (string)_info.Result;
                         if (!string.IsNullOrEmpty(ret))
                         {
-                            MessageBox.Show(Tween.My.Resources.Resources.FRMessage2 + ret);
+                            MessageBox.Show(Tween.My_Project.Resources.FRMessage2 + ret);
                         }
                         else
                         {
-                            MessageBox.Show(Tween.My.Resources.Resources.FRMessage3);
+                            MessageBox.Show(Tween.My_Project.Resources.FRMessage3);
                         }
                     }
                 }
@@ -12253,7 +12253,7 @@ namespace Tween
                 using (InputTabName inputName = new InputTabName())
                 {
                     inputName.FormTitle = "Unfollow";
-                    inputName.FormDescription = Tween.My.Resources.Resources.FRMessage1;
+                    inputName.FormDescription = Tween.My_Project.Resources.FRMessage1;
                     inputName.TabName = id;
                     if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                     {
@@ -12267,17 +12267,17 @@ namespace Tween
                 }
             }
 
-            using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.RemoveCommandText1, RemoveCommand_DoWork, null, arg))
+            using (FormInfo _info = new FormInfo(this, Tween.My_Project.Resources.RemoveCommandText1, RemoveCommand_DoWork, null, arg))
             {
                 _info.ShowDialog();
                 string ret = (string)_info.Result;
                 if (!string.IsNullOrEmpty(ret))
                 {
-                    MessageBox.Show(Tween.My.Resources.Resources.FRMessage2 + ret);
+                    MessageBox.Show(Tween.My_Project.Resources.FRMessage2 + ret);
                 }
                 else
                 {
-                    MessageBox.Show(Tween.My.Resources.Resources.FRMessage3);
+                    MessageBox.Show(Tween.My_Project.Resources.FRMessage3);
                 }
             }
         }
@@ -12336,13 +12336,13 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.FormTitle = "Show Friendships";
-                inputName.FormDescription = Tween.My.Resources.Resources.FRMessage1;
+                inputName.FormDescription = Tween.My_Project.Resources.FRMessage1;
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
                     string ret = "";
                     args.ids.Add(new ShowFriendshipArgs.FriendshipInfo(inputName.TabName.Trim()));
-                    using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
+                    using (FormInfo _info = new FormInfo(this, Tween.My_Project.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
                     {
                         _info.ShowDialog();
                         ret = (string)_info.Result;
@@ -12352,21 +12352,21 @@ namespace Tween
                     {
                         if (args.ids[0].isFollowing)
                         {
-                            result = Tween.My.Resources.Resources.GetFriendshipInfo1 + System.Environment.NewLine;
+                            result = Tween.My_Project.Resources.GetFriendshipInfo1 + System.Environment.NewLine;
                         }
                         else
                         {
-                            result = Tween.My.Resources.Resources.GetFriendshipInfo2 + System.Environment.NewLine;
+                            result = Tween.My_Project.Resources.GetFriendshipInfo2 + System.Environment.NewLine;
                         }
                         if (args.ids[0].isFollowed)
                         {
-                            result += Tween.My.Resources.Resources.GetFriendshipInfo3;
+                            result += Tween.My_Project.Resources.GetFriendshipInfo3;
                         }
                         else
                         {
-                            result += Tween.My.Resources.Resources.GetFriendshipInfo4;
+                            result += Tween.My_Project.Resources.GetFriendshipInfo4;
                         }
-                        result = args.ids[0].id + Tween.My.Resources.Resources.GetFriendshipInfo5 + System.Environment.NewLine + result;
+                        result = args.ids[0].id + Tween.My_Project.Resources.GetFriendshipInfo5 + System.Environment.NewLine + result;
                     }
                     else
                     {
@@ -12385,7 +12385,7 @@ namespace Tween
                 ShowFriendshipArgs args = new ShowFriendshipArgs();
                 args.tw = tw;
                 args.ids.Add(new ShowFriendshipArgs.FriendshipInfo(id.Trim()));
-                using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
+                using (FormInfo _info = new FormInfo(this, Tween.My_Project.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
                 {
                     _info.ShowDialog();
                     ret = (string)_info.Result;
@@ -12398,25 +12398,25 @@ namespace Tween
                     ff = "  ";
                     if (fInfo.isFollowing)
                     {
-                        ff += Tween.My.Resources.Resources.GetFriendshipInfo1;
+                        ff += Tween.My_Project.Resources.GetFriendshipInfo1;
                     }
                     else
                     {
-                        ff += Tween.My.Resources.Resources.GetFriendshipInfo2;
+                        ff += Tween.My_Project.Resources.GetFriendshipInfo2;
                     }
                     ff += System.Environment.NewLine + "  ";
                     if (fInfo.isFollowed)
                     {
-                        ff += Tween.My.Resources.Resources.GetFriendshipInfo3;
+                        ff += Tween.My_Project.Resources.GetFriendshipInfo3;
                     }
                     else
                     {
-                        ff += Tween.My.Resources.Resources.GetFriendshipInfo4;
+                        ff += Tween.My_Project.Resources.GetFriendshipInfo4;
                     }
-                    result += fInfo.id + Tween.My.Resources.Resources.GetFriendshipInfo5 + System.Environment.NewLine + ff;
+                    result += fInfo.id + Tween.My_Project.Resources.GetFriendshipInfo5 + System.Environment.NewLine + ff;
                     if (fInfo.isFollowing)
                     {
-                        if (MessageBox.Show(Tween.My.Resources.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result, Tween.My.Resources.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
+                        if (MessageBox.Show(Tween.My_Project.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result, Tween.My_Project.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
                         {
                             RemoveCommand(fInfo.id, true);
                         }
@@ -13128,7 +13128,7 @@ namespace Tween
                 using (InputTabName inputName = new InputTabName())
                 {
                     inputName.FormTitle = "Show UserStatus";
-                    inputName.FormDescription = Tween.My.Resources.Resources.FRMessage1;
+                    inputName.FormDescription = Tween.My_Project.Resources.FRMessage1;
                     inputName.TabName = id;
                     if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                     {
@@ -13136,7 +13136,7 @@ namespace Tween
                         args.tw = tw;
                         args.id = id;
                         args.user = user;
-                        using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
+                        using (FormInfo _info = new FormInfo(this, Tween.My_Project.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
                         {
                             _info.ShowDialog();
                             string ret = (string)_info.Result;
@@ -13157,7 +13157,7 @@ namespace Tween
                 args.tw = tw;
                 args.id = id;
                 args.user = user;
-                using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
+                using (FormInfo _info = new FormInfo(this, Tween.My_Project.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
                 {
                     _info.ShowDialog();
                     string ret = (string)_info.Result;
@@ -13290,7 +13290,7 @@ namespace Tween
         {
             if (this.ExistCurrentPost)
             {
-                using (FormInfo _info = new FormInfo(this, Tween.My.Resources.Resources.RtCountMenuItem_ClickText1, GetRetweet_DoWork))
+                using (FormInfo _info = new FormInfo(this, Tween.My_Project.Resources.RtCountMenuItem_ClickText1, GetRetweet_DoWork))
                 {
                     int retweet_count = 0;
 
@@ -13299,11 +13299,11 @@ namespace Tween
                     retweet_count = Convert.ToInt32(_info.Result);
                     if (retweet_count < 0)
                     {
-                        MessageBox.Show(Tween.My.Resources.Resources.RtCountText2);
+                        MessageBox.Show(Tween.My_Project.Resources.RtCountText2);
                     }
                     else
                     {
-                        MessageBox.Show(retweet_count.ToString() + Tween.My.Resources.Resources.RtCountText1);
+                        MessageBox.Show(retweet_count.ToString() + Tween.My_Project.Resources.RtCountText1);
                     }
                 }
             }
@@ -13434,7 +13434,7 @@ namespace Tween
             if (string.IsNullOrEmpty(this.ImageService))
                 return;
             OpenFileDialog1.Filter = this.pictureService[this.ImageService].GetFileOpenDialogFilter();
-            OpenFileDialog1.Title = Tween.My.Resources.Resources.PickPictureDialog1;
+            OpenFileDialog1.Title = Tween.My_Project.Resources.PickPictureDialog1;
             OpenFileDialog1.FileName = "";
 
             try
@@ -13522,7 +13522,7 @@ namespace Tween
                         ImageSelectedPicture.Tag = MyCommon.UploadFileType.Picture;
                         break;
                     case MyCommon.UploadFileType.MultiMedia:
-                        ImageSelectedPicture.Image = Tween.My.Resources.Resources.MultiMediaImage;
+                        ImageSelectedPicture.Image = Tween.My_Project.Resources.MultiMediaImage;
                         ImageSelectedPicture.Tag = MyCommon.UploadFileType.MultiMedia;
                         break;
                     default:
@@ -14191,7 +14191,7 @@ namespace Tween
         private void OpenOwnFavedMenuItem_Click(object sender, System.EventArgs e)
         {
             if (!string.IsNullOrEmpty(tw.Username))
-                OpenUriAsync(Tween.My.Resources.Resources.FavstarUrl + "users/" + tw.Username + "/recent");
+                OpenUriAsync(Tween.My_Project.Resources.FavstarUrl + "users/" + tw.Username + "/recent");
         }
 
         private void OpenOwnHomeMenuItem_Click(object sender, System.EventArgs e)
@@ -14267,7 +14267,7 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.FormTitle = caption;
-                inputName.FormDescription = Tween.My.Resources.Resources.FRMessage1;
+                inputName.FormDescription = Tween.My_Project.Resources.FRMessage1;
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
@@ -14295,7 +14295,7 @@ namespace Tween
             string id = GetUserIdFromCurPostOrInput("Show Favstar");
             if (!string.IsNullOrEmpty(id))
             {
-                OpenUriAsync(Tween.My.Resources.Resources.FavstarUrl + "users/" + id + "/recent");
+                OpenUriAsync(Tween.My_Project.Resources.FavstarUrl + "users/" + id + "/recent");
             }
         }
 

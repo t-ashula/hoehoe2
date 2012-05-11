@@ -34,7 +34,7 @@ namespace Tween
     {
         private bool _multiSelect = false;
 
-        private string _newtabItem = Tween.My.Resources.Resources.AddNewTabText1;
+        private string _newtabItem = Tween.My_Project.Resources.AddNewTabText1;
 
         public TabsDialog()
         {
@@ -163,7 +163,7 @@ namespace Tween
                 if (value)
                 {
                     this.TabList.SelectionMode = SelectionMode.MultiExtended;
-                    if (this.TabList.Items[0].ToString() == Tween.My.Resources.Resources.AddNewTabText1)
+                    if (this.TabList.Items[0].ToString() == Tween.My_Project.Resources.AddNewTabText1)
                     {
                         this.TabList.Items.RemoveAt(0);
                     }
@@ -171,9 +171,9 @@ namespace Tween
                 else
                 {
                     this.TabList.SelectionMode = SelectionMode.One;
-                    if (this.TabList.Items[0].ToString() != Tween.My.Resources.Resources.AddNewTabText1)
+                    if (this.TabList.Items[0].ToString() != Tween.My_Project.Resources.AddNewTabText1)
                     {
-                        this.TabList.Items.Insert(0, Tween.My.Resources.Resources.AddNewTabText1);
+                        this.TabList.Items.Insert(0, Tween.My_Project.Resources.AddNewTabText1);
                     }
                 }
             }

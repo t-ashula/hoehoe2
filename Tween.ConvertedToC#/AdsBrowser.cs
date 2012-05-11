@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Tween.My_Project;
 
 namespace Tween.TweenCustomControl
 {
@@ -32,7 +33,7 @@ namespace Tween.TweenCustomControl
             Disposed += AdsBrowser_Disposed;
 
             adsPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            File.WriteAllText(adsPath, Tween.My.Resources.Resources.ads);
+            File.WriteAllText(adsPath, Resources.ads);
 
             this.Size = new Size(728 + 5, 90);
             this.ScrollBarsEnabled = false;
