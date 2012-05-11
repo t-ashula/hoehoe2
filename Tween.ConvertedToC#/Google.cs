@@ -231,7 +231,7 @@ namespace Tween
 
                 try
                 {
-                    res = MyCommon.CreateDataFromJson(content);
+                    res = MyCommon.CreateDataFromJson<TranslateResponse>(content);
                 }
                 catch (Exception ex)
                 {
@@ -267,7 +267,7 @@ namespace Tween
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(LanguageDetectResponse));
                 try
                 {
-                    LanguageDetectResponse res = MyCommon.CreateDataFromJson(content);
+                    LanguageDetectResponse res = MyCommon.CreateDataFromJson<LanguageDetectResponse>(content);
                     return res.ResponseData.Language;
                 }
                 catch (Exception ex)
@@ -426,7 +426,7 @@ namespace Tween
                                 req.UserAgent = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; MALC)";
                                 req.Headers.Add("Accept-Encoding", "gzip, deflate");
                                 Bitmap img = null;
-                                var res = this.GetResponse(req, img, null, false);
+                                var res = this.GetResponse(req, ref img, null, false);
                             }
                             catch (Exception ex)
                             {
@@ -441,92 +441,44 @@ namespace Tween
 
             private void Init()
             {
-                this._sessionFirst = Convert.ToInt64((DateTime.Now - UnixEpoch).TotalSeconds);
-                this._sessionLast = this._sessionFirst;
+                this.SessionFirst = Convert.ToInt64((DateTime.Now - UnixEpoch).TotalSeconds);
+                this.SessionLast = this.SessionFirst;
             }
 
             private void SendRequest(Dictionary<string, string> info, long userId)
             {
                 if (userId == 0)
                     return;
-                if (this._SessionFirst == 0)
+                if (this.SessionFirst == 0)
                     this.Init();
 
                 this._sessionCount += 1;
                 long sessionCurrent = Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds);
-                string utma = string.Format("{0}.{1}.{2}.{3}.{4}.{5}", GA_DOMAIN_HASH, userId, this._SessionFirst, this._SessionLast, sessionCurrent, this._sessionCount);
-                string utmz = string.Format("{0}.{1}.{2}.{3}.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)", GA_DOMAIN_HASH, this._SessionFirst, 1, 1);
+                string utma = string.Format("{0}.{1}.{2}.{3}.{4}.{5}", GA_DOMAIN_HASH, userId, this.SessionFirst, this.SessionLast, sessionCurrent, this._sessionCount);
+                string utmz = string.Format("{0}.{1}.{2}.{3}.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)", GA_DOMAIN_HASH, this.SessionFirst, 1, 1);
                 //Dim utmcc = String.Format("__utma={0};+__utmz={1};",
                 //                        utma,
                 //                        utmz)
                 var utmcc = string.Format("__utma={0};", utma);
-                this._SessionLast = sessionCurrent;
+                this.SessionLast = sessionCurrent;
 
                 Dictionary<string, string> @params = new Dictionary<string, string> {
-					{
-						"utmwv",
-						GA_VERSION
-					},
-					{
-						"utms",
-						"1"
-					},
-					{
-						"utmn",
-						rnd.Next().ToString()
-					},
-					{
-						"utmhn",
-						GA_HOSTNAME
-					},
-					{
-						"utmcs",
-						GA_CHARACTER_SET
-					},
-					{
-						"utmsr",
-						this._screenResolution
-					},
-					{
-						"utmsc",
-						this._screenColorDepth
-					},
-					{
-						"utmul",
-						this._language
-					},
-					{
-						"utmje",
-						GA_JAVA_ENABLED
-					},
-					{
-						"utmfl",
-						GA_FLASH_VERSION
-					},
-					{
-						"utmhid",
-						rnd.Next().ToString()
-					},
-					{
-						"utmr",
-						"-"
-					},
-					{
-						"utmp",
-						"/"
-					},
-					{
-						"utmac",
-						GA_ACCOUNT
-					},
-					{
-						"utmcc",
-						utmcc
-					},
-					{
-						"utmu",
-						"q~"
-					}
+					{						"utmwv",						GA_VERSION					},
+					{						"utms",						"1"					},
+					{						"utmn",						rnd.Next().ToString()					},
+					{						"utmhn",						GA_HOSTNAME					},
+					{						"utmcs",						GA_CHARACTER_SET					},
+					{						"utmsr",						this._screenResolution					},
+					{						"utmsc",						this._screenColorDepth					},
+					{						"utmul",						this._language					},
+					{						"utmje",						GA_JAVA_ENABLED					},
+					{						"utmfl",						GA_FLASH_VERSION					},
+					{						"utmhid",						rnd.Next().ToString()					},
+					{						"utmr",						"-"					},
+					{						"utmp",						"/"					},
+					{						"utmac",						GA_ACCOUNT					},
+					{						"utmcc",						utmcc					},
+					{						"utmu",						"q~"					}
 				};
                 //                {"utmdt", GA_PAGE_TITLE},
 
