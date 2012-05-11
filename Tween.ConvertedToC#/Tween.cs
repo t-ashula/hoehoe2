@@ -1268,9 +1268,9 @@ namespace Tween
             //Twitter用通信クラス初期化
             HttpConnection.InitializeConnection(SettingDialog.DefaultTimeOut, SettingDialog.SelectedProxyType, SettingDialog.ProxyAddress, SettingDialog.ProxyPort, SettingDialog.ProxyUser, SettingDialog.ProxyPassword);
 
-            tw.RestrictFavCheck = SettingDialog.RestrictFavCheck;
+            tw.SetRestrictFavCheck(SettingDialog.RestrictFavCheck);
             tw.ReadOwnPost = SettingDialog.ReadOwnPost;
-            tw.UseSsl = SettingDialog.UseSsl;
+            tw.SetUseSsl(SettingDialog.UseSsl);
             ShortUrl.IsResolve = SettingDialog.TinyUrlResolve;
             ShortUrl.IsForceResolve = SettingDialog.ShortUrlForceResolve;
             ShortUrl.BitlyId = SettingDialog.BitlyUser;
@@ -1436,14 +1436,14 @@ namespace Tween
             }
             if (_iconSz == 0)
             {
-                tw.GetIcon = false;
+                tw.SetGetIcon(false);
             }
             else
             {
-                tw.GetIcon = true;
-                tw.IconSize = _iconSz;
+                tw.SetGetIcon(true);
+                tw.SetIconSize(_iconSz);
             }
-            tw.TinyUrlResolve = SettingDialog.TinyUrlResolve;
+            tw.SetTinyUrlResolve(SettingDialog.TinyUrlResolve);
             ShortUrl.IsForceResolve = SettingDialog.ShortUrlForceResolve;
 
             //発言詳細部アイコンをリストアイコンにサイズ変更
@@ -4629,10 +4629,10 @@ namespace Tween
             {
                 lock (_syncObject)
                 {
-                    tw.TinyUrlResolve = SettingDialog.TinyUrlResolve;
-                    tw.RestrictFavCheck = SettingDialog.RestrictFavCheck;
+                    tw.SetTinyUrlResolve(SettingDialog.TinyUrlResolve);
+                    tw.SetRestrictFavCheck(SettingDialog.RestrictFavCheck);
                     tw.ReadOwnPost = SettingDialog.ReadOwnPost;
-                    tw.UseSsl = SettingDialog.UseSsl;
+                    tw.SetUseSsl(SettingDialog.UseSsl);
                     ShortUrl.IsResolve = SettingDialog.TinyUrlResolve;
                     ShortUrl.IsForceResolve = SettingDialog.ShortUrlForceResolve;
                     ShortUrl.BitlyId = SettingDialog.BitlyUser;
