@@ -83,17 +83,6 @@ namespace Tween.My
                 set { SetForm(ref TweenMain_instance, value); }
             }
 
-            global::Tween.ListManage ListManage_instance;
-            bool ListManage_isCreating;
-
-            public global::Tween.ListManage ListManage
-            {
-                [DebuggerStepThrough]
-                get { return GetForm(ref ListManage_instance, ref ListManage_isCreating); }
-                [DebuggerStepThrough]
-                set { SetForm(ref ListManage_instance, value); }
-            }
-
             global::Tween.MessageForm MessageForm_instance;
             bool MessageForm_isCreating;
 
@@ -103,17 +92,6 @@ namespace Tween.My
                 get { return GetForm(ref MessageForm_instance, ref MessageForm_isCreating); }
                 [DebuggerStepThrough]
                 set { SetForm(ref MessageForm_instance, value); }
-            }
-
-            global::Tween.MyLists MyLists_instance;
-            bool MyLists_isCreating;
-
-            public global::Tween.MyLists MyLists
-            {
-                [DebuggerStepThrough]
-                get { return GetForm(ref MyLists_instance, ref MyLists_isCreating); }
-                [DebuggerStepThrough]
-                set { SetForm(ref MyLists_instance, value); }
             }
 
             global::Tween.OpenURL OpenURL_instance;
@@ -182,17 +160,6 @@ namespace Tween.My
                 set { SetForm(ref ShowUserInfo_instance, value); }
             }
 
-            global::Tween.HashtagManage HashtagManage_instance;
-            bool HashtagManage_isCreating;
-
-            public global::Tween.HashtagManage HashtagManage
-            {
-                [DebuggerStepThrough]
-                get { return GetForm(ref HashtagManage_instance, ref HashtagManage_isCreating); }
-                [DebuggerStepThrough]
-                set { SetForm(ref HashtagManage_instance, value); }
-            }
-
             global::Tween.InputTabName InputTabName_instance;
             bool InputTabName_isCreating;
 
@@ -235,17 +202,6 @@ namespace Tween.My
                 get { return GetForm(ref DialogAsShieldIcon_instance, ref DialogAsShieldIcon_isCreating); }
                 [DebuggerStepThrough]
                 set { SetForm(ref DialogAsShieldIcon_instance, value); }
-            }
-
-            global::Tween.FormInfo FormInfo_instance;
-            bool FormInfo_isCreating;
-
-            public global::Tween.FormInfo FormInfo
-            {
-                [DebuggerStepThrough]
-                get { return GetForm(ref FormInfo_instance, ref FormInfo_isCreating); }
-                [DebuggerStepThrough]
-                set { SetForm(ref FormInfo_instance, value); }
             }
 
             global::Tween.FilterDialog FilterDialog_instance;
