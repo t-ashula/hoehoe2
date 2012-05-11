@@ -61,7 +61,7 @@ namespace Tween
                 //Me.Image = getImg
                 if (this.ListView != null && this.ListView.Created && !this.ListView.IsDisposed)
                 {
-                    this.ListView.Invoke(() =>
+                    this.ListView.Invoke(new Action(() =>
                     {
                         if (this.Index < this.ListView.VirtualListSize)
                         {
@@ -71,7 +71,7 @@ namespace Tween
                                 ImageDownloaded(this, EventArgs.Empty);
                             }
                         }
-                    });
+                    }));
                 }
             }];
         }
