@@ -70,7 +70,6 @@ namespace Tween
         {
             Process curProcess = Process.GetCurrentProcess();
             Process[] allProcesses = Process.GetProcessesByName(curProcess.ProcessName);
-
             Process checkProcess = null;
             foreach (Process checkProcess_loopVariable in allProcesses)
             {
@@ -110,14 +109,14 @@ namespace Tween
         // SendMessageで送信するメッセージ
         private enum Sm_Message : int
         {
-            WM_USER = 0x400,
             //ユーザー定義メッセージ
-            TB_GETBUTTON = WM_USER + 23,
+            WM_USER = 0x400,
             //ツールバーのボタン取得
-            TB_BUTTONCOUNT = WM_USER + 24,
+            TB_GETBUTTON = WM_USER + 23,
             //ツールバーのボタン（アイコン）数取得
-            TB_GETBUTTONINFO = WM_USER + 65
+            TB_BUTTONCOUNT = WM_USER + 24,
             //ツールバーのボタン詳細情報取得
+            TB_GETBUTTONINFO = WM_USER + 65
         }
 
         // ツールバーボタン構造体
@@ -163,7 +162,7 @@ namespace Tween
         }
 
         // TBBUTTONINFOに指定するマスク情報
-        [Flags()]
+        [Flags]
         private enum ToolbarButtonMask : int
         {
             TBIF_COMMAND = 0x20,
@@ -180,7 +179,7 @@ namespace Tween
         private extern static IntPtr OpenProcess(ProcessAccess dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)]bool bInheritHandle, int dwProcessId);
 
         // OpenProcessで指定するアクセス権
-        [Flags()]
+        [Flags]
         private enum ProcessAccess : int
         {
             /// <summary>Specifies all possible access flags for the process object.</summary>
@@ -210,7 +209,7 @@ namespace Tween
         private extern static IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, AllocationTypes flAllocationType, MemoryProtectionTypes flProtect);
 
         // アロケート種類
-        [Flags()]
+        [Flags]
         private enum AllocationTypes : uint
         {
             Commit = 0x1000,
@@ -225,7 +224,7 @@ namespace Tween
         }
 
         // アロケートしたメモリに対する保護レベル
-        [Flags()]
+        [Flags]
         private enum MemoryProtectionTypes : uint
         {
             Execute = 0x10,
@@ -250,7 +249,7 @@ namespace Tween
         private extern static bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, int dwFreeType);
 
         // メモリ解放種別
-        [Flags()]
+        [Flags]
         private enum MemoryFreeTypes
         {
             Release = 0x8000
@@ -271,10 +270,10 @@ namespace Tween
         //PostMessageで送信するメッセージ
         private enum PM_Message : uint
         {
-            WM_LBUTTONDOWN = 0x201,
             //左マウスボタン押し下げ
-            WM_LBUTTONUP = 0x202
+            WM_LBUTTONDOWN = 0x201,
             //左マウスボタン離し
+            WM_LBUTTONUP = 0x202
         }
 
         //タスクトレイアイコンのクリック処理
@@ -287,26 +286,36 @@ namespace Tween
             //タスクバーのハンドル取得
             IntPtr taskbarWin = FindWindow(TRAY_WINDOW, null);
             if (taskbarWin.Equals(IntPtr.Zero))
+            {
                 return false;
+            }
             //通知領域のハンドル取得
             IntPtr trayWin = FindWindowEx(taskbarWin, IntPtr.Zero, TRAY_NOTIFYWINDOW, null);
             if (trayWin.Equals(IntPtr.Zero))
+            {
                 return false;
+            }
             //SysPagerの有無確認。（XP/2000はSysPagerあり）
             IntPtr tempWin = FindWindowEx(trayWin, IntPtr.Zero, TRAY_PAGER, null);
             if (tempWin.Equals(IntPtr.Zero))
+            {
                 tempWin = trayWin;
+            }
             //タスクトレイがツールバーで出来ているか確認
             //　→　ツールバーでなければ終了
             IntPtr toolWin = FindWindowEx(tempWin, IntPtr.Zero, TOOLBAR_CONTROL, null);
             if (toolWin.Equals(IntPtr.Zero))
+            {
                 return false;
+            }
             //タスクトレイのプロセス（Explorer）を取得し、外部から参照するために開く
             int expPid = 0;
             GetWindowThreadProcessId(toolWin, ref expPid);
             IntPtr hProc = OpenProcess(ProcessAccess.VMOperation | ProcessAccess.VMRead | ProcessAccess.VMWrite, false, expPid);
             if (hProc.Equals(IntPtr.Zero))
+            {
                 return false;
+            }
 
             //プロセスを閉じるためにTry-Finally
             try
@@ -316,7 +325,9 @@ namespace Tween
                 //Explorer内のタスクバーボタン格納メモリ確保
                 IntPtr ptbSysButton = VirtualAllocEx(hProc, IntPtr.Zero, Marshal.SizeOf(tbButtonLocal), AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
                 if (ptbSysButton.Equals(IntPtr.Zero))
+                {
                     return false;
+                }
                 //メモリ確保失敗
                 try
                 {
@@ -325,7 +336,9 @@ namespace Tween
                     //Explorer内のタスクバーボタン詳細情報格納メモリ確保
                     IntPtr ptbSysInfo = VirtualAllocEx(hProc, IntPtr.Zero, Marshal.SizeOf(tbButtonInfoLocal), AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
                     if (ptbSysInfo.Equals(IntPtr.Zero))
+                    {
                         return false;
+                    }
                     //メモリ確保失敗
                     try
                     {
@@ -336,21 +349,25 @@ namespace Tween
                         //共有メモリにTooltip読込メモリ確保
                         IntPtr pszTitle = Marshal.AllocCoTaskMem(titleSize);
                         if (pszTitle.Equals(IntPtr.Zero))
+                        {
                             return false;
+                        }
                         //メモリ確保失敗
                         try
                         {
                             //Explorer内にTooltip読込メモリ確保
                             IntPtr pszSysTitle = VirtualAllocEx(hProc, IntPtr.Zero, titleSize, AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
                             if (pszSysTitle.Equals(IntPtr.Zero))
+                            {
                                 return false;
+                            }
                             //メモリ確保失敗
                             try
                             {
                                 //通知領域ボタン数取得
                                 int iCount = SendMessage(toolWin, (int)Sm_Message.TB_BUTTONCOUNT, new IntPtr(0), new IntPtr(0));
                                 //左から順に情報取得
-                                for (int i = 0; i <= iCount - 1; i++)
+                                for (int i = 0; i < iCount; i++)
                                 {
                                     int dwBytes = 0;
                                     //読み書きバイト数
@@ -361,7 +378,9 @@ namespace Tween
                                     //共有メモリにボタン情報読込メモリ確保
                                     IntPtr ptrLocal = Marshal.AllocCoTaskMem(Marshal.SizeOf(tbButtonLocal));
                                     if (ptrLocal.Equals(IntPtr.Zero))
+                                    {
                                         return false;
+                                    }
                                     //メモリ確保失敗
                                     try
                                     {
@@ -393,7 +412,9 @@ namespace Tween
                                     //共有メモリにボタン詳細情報を読み込む領域確保
                                     IntPtr ptrInfo = Marshal.AllocCoTaskMem(Marshal.SizeOf(tbButtonInfoLocal));
                                     if (ptrInfo.Equals(IntPtr.Zero))
+                                    {
                                         return false;
+                                    }
                                     //共有メモリ確保失敗
                                     try
                                     {
@@ -423,7 +444,9 @@ namespace Tween
                                         //共有メモリ確保
                                         IntPtr ptNotify = Marshal.AllocCoTaskMem(Marshal.SizeOf(tNotify));
                                         if (ptNotify.Equals(IntPtr.Zero))
+                                        {
                                             return false;
+                                        }
                                         //メモリ確保失敗
                                         try
                                         {
@@ -562,10 +585,8 @@ namespace Tween
 
         public static bool IsScreenSaverRunning()
         {
-            int ret = 0;
             bool isRunning = false;
-
-            ret = SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, ref isRunning, 0);
+            int ret = SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, ref isRunning, 0);
             return isRunning;
         }
 
@@ -706,7 +727,9 @@ namespace Tween
                 // Allocating memory
                 IntPtr pIpi = Marshal.AllocCoTaskMem(Marshal.SizeOf(ipi));
                 if (pIpi.Equals(IntPtr.Zero))
+                {
                     return;
+                }
                 try
                 {
                     // Converting structure to IntPtr
@@ -721,9 +744,13 @@ namespace Tween
             finally
             {
                 if (ipi.proxy != IntPtr.Zero)
+                {
                     Marshal.FreeHGlobal(ipi.proxy);
+                }
                 if (ipi.proxyBypass != IntPtr.Zero)
+                {
                     Marshal.FreeHGlobal(ipi.proxyBypass);
+                }
             }
         }
 
