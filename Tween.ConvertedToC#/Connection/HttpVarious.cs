@@ -42,7 +42,7 @@ namespace Tween
                 req.AllowAutoRedirect = false;
                 string data = "";
                 Dictionary<string, string> head = new Dictionary<string, string>();
-                HttpStatusCode ret = GetResponse(req, data, head, false);
+                HttpStatusCode ret = GetResponse(req, ref data, head, false);
                 if (head.ContainsKey("Location"))
                 {
                     return head["Location"];
@@ -60,22 +60,26 @@ namespace Tween
 
         public Image GetImage(Uri url)
         {
-            return GetImage(url.ToString(), "", 10000, ref null);
+            string t = "";
+            return GetImage(url.ToString(), "", 10000, ref t);
         }
 
         public Image GetImage(string url)
         {
-            return GetImage(url, "", 10000, ref null);
+            string t = "";
+            return GetImage(url, "", 10000, ref t);
         }
 
         public Image GetImage(string url, int timeout)
         {
-            return GetImage(url, "", timeout, ref null);
+            string t = "";
+            return GetImage(url, "", timeout, ref t);
         }
 
         public Image GetImage(string url, string referer)
         {
-            return GetImage(url, referer, 10000, ref null);
+            string t = "";
+            return GetImage(url, referer, 10000, ref t);
         }
 
         public Image GetImage(string url, string referer, int timeout, ref string errmsg)
@@ -85,7 +89,8 @@ namespace Tween
 
         public Image GetIconImage(string url, int timeout)
         {
-            return GetImageInternal(CheckValidIconImage, url, "", timeout, ref null);
+            string t = "";
+            return GetImageInternal(CheckValidIconImage, url, "", timeout, ref t);
         }
 
         private delegate Image CheckValidImageDelegate(Image img, int width, int height);
@@ -106,7 +111,7 @@ namespace Tween
                     req.Timeout = timeout;
                 }
                 Bitmap img = null;
-                HttpStatusCode ret = GetResponse(req, img, null, false);
+                HttpStatusCode ret = GetResponse(req, ref img, null, false);
                 if (errmsg != null)
                 {
                     if (ret == HttpStatusCode.OK)
@@ -159,7 +164,7 @@ namespace Tween
             try
             {
                 HttpWebRequest req = CreateRequest(PostMethod, new Uri(Url), param, false);
-                HttpStatusCode res = this.GetResponse(req, content, null, false);
+                HttpStatusCode res = this.GetResponse(req, ref content, null, false);
                 if (res == HttpStatusCode.OK)
                     return true;
                 return false;
@@ -172,17 +177,20 @@ namespace Tween
 
         public bool GetData(string Url, Dictionary<string, string> param, ref string content, string userAgent)
         {
-            return GetData(Url, param, ref content, 100000, ref null, userAgent);
+            string t = "";
+            return GetData(Url, param, ref content, 100000, ref t, userAgent);
         }
 
         public bool GetData(string Url, Dictionary<string, string> param, ref string content)
         {
-            return GetData(Url, param, ref content, 100000, ref null, "");
+            string t = "";
+            return GetData(Url, param, ref content, 100000, ref t, "");
         }
 
         public bool GetData(string Url, Dictionary<string, string> param, ref string content, int timeout)
         {
-            return GetData(Url, param, ref content, timeout, ref null, "");
+            string t = "";
+            return GetData(Url, param, ref content, timeout, ref t, "");
         }
 
         public bool GetData(string Url, Dictionary<string, string> param, ref string content, int timeout, ref string errmsg, string userAgent)
@@ -200,7 +208,7 @@ namespace Tween
                 }
                 if (!string.IsNullOrEmpty(userAgent))
                     req.UserAgent = userAgent;
-                HttpStatusCode res = this.GetResponse(req, content, null, false);
+                HttpStatusCode res = this.GetResponse(req, ref content, null, false);
                 if (res == HttpStatusCode.OK)
                     return true;
                 if (errmsg != null)
@@ -224,7 +232,7 @@ namespace Tween
             //Searchで使用。呼び出し元で例外キャッチしている。
             HttpWebRequest req = CreateRequest(method, Url, param, false);
             req.UserAgent = userAgent;
-            return this.GetResponse(req, content, headerInfo, false);
+            return this.GetResponse(req, ref content, headerInfo, false);
         }
 
         public bool GetDataToFile(string Url, string savePath)
