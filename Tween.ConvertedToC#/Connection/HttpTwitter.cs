@@ -279,7 +279,8 @@ namespace Tween
 
         public HttpStatusCode DestroyStatus(long id)
         {
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/destroy/" + id.ToString() + ".json"), null, ref null, null, null);
+            string t = "";
+            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/destroy/" + id.ToString() + ".json"), null, ref t, null, null);
         }
 
         public HttpStatusCode SendDirectMessage(string status, string sendto, ref string content)
@@ -294,7 +295,8 @@ namespace Tween
 
         public HttpStatusCode DestroyDirectMessage(long id)
         {
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/direct_messages/destroy/" + id.ToString() + ".json"), null, ref null, null, null);
+            string t = "";
+            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/direct_messages/destroy/" + id.ToString() + ".json"), null, ref t, null, null);
         }
 
         public HttpStatusCode RetweetStatus(long id, ref string content)
