@@ -10906,11 +10906,12 @@ namespace Tween
             }
         }
 
-        ///Private Sub SplitContainer2_Panel2_Resize(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SplitContainer2.Panel2.Resize
-        ///    Me.StatusText.Multiline = Me.SplitContainer2.Panel2.Height > Me.SplitContainer2.Panel2MinSize + 2
-        ///    MultiLineMenuItem.Checked = Me.StatusText.Multiline
-        ///    _modifySettingLocal = True
-        ///End Sub
+        private void SplitContainer2_Panel2_Resize(object sender, EventArgs e)
+        {
+            this.StatusText.Multiline = this.SplitContainer2.Panel2.Height > this.SplitContainer2.Panel2MinSize + 2;
+            MultiLineMenuItem.Checked = this.StatusText.Multiline;
+            _modifySettingLocal = true;
+        }
 
         private void StatusText_MultilineChanged(System.Object sender, System.EventArgs e)
         {
