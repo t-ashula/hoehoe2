@@ -51,7 +51,6 @@ namespace Tween
         public static int URLACTION_DOWNLOAD_SIGNED_ACTIVEX = 0x1001;
         public static int URLACTION_DOWNLOAD_UNSIGNED_ACTIVEX = 0x1004;
         public static int URLACTION_DOWNLOAD_CURR_MAX = 0x1004;
-
         public static int URLACTION_DOWNLOAD_MAX = 0x11ff;
         public static int URLACTION_ACTIVEX_MIN = 0x1200;
         public static int URLACTION_ACTIVEX_RUN = 0x1200;
@@ -64,7 +63,6 @@ namespace Tween
         public static int URLACTION_ACTIVEX_TREATASUNTRUSTED = 0x1205;
         public static int URLACTION_ACTIVEX_NO_WEBOC_SCRIPT = 0x1206;
         public static int URLACTION_ACTIVEX_CURR_MAX = 0x1206;
-
         public static int URLACTION_ACTIVEX_MAX = 0x13ff;
         public static int URLACTION_SCRIPT_MIN = 0x1400;
         public static int URLACTION_SCRIPT_RUN = 0x1400;
@@ -73,29 +71,21 @@ namespace Tween
         public static int URLACTION_CROSS_DOMAIN_DATA = 0x1406;
         public static int URLACTION_SCRIPT_PASTE = 0x1407;
         public static int URLACTION_SCRIPT_CURR_MAX = 0x1407;
-
         public static int URLACTION_SCRIPT_MAX = 0x15ff;
         public static int URLACTION_HTML_MIN = 0x1600;
-
         // aggregate next two
         public static int URLACTION_HTML_SUBMIT_FORMS = 0x1601;
-
         //
         public static int URLACTION_HTML_SUBMIT_FORMS_FROM = 0x1602;
-
         //
         public static int URLACTION_HTML_SUBMIT_FORMS_TO = 0x1603;
-
         public static int URLACTION_HTML_FONT_DOWNLOAD = 0x1604;
-
         // derive from Java custom policy
         public static int URLACTION_HTML_JAVA_RUN = 0x1605;
-
         public static int URLACTION_HTML_USERDATA_SAVE = 0x1606;
         public static int URLACTION_HTML_SUBFRAME_NAVIGATE = 0x1607;
         public static int URLACTION_HTML_META_REFRESH = 0x1608;
         public static int URLACTION_HTML_MIXED_CONTENT = 0x1609;
-
         public static int URLACTION_HTML_MAX = 0x17ff;
         public static int URLACTION_SHELL_MIN = 0x1800;
         public static int URLACTION_SHELL_INSTALL_DTITEMS = 0x1800;
@@ -105,36 +95,25 @@ namespace Tween
         public static int URLACTION_SHELL_WEBVIEW_VERB = 0x1805;
         public static int URLACTION_SHELL_SHELLEXECUTE = 0x1806;
         public static int URLACTION_SHELL_CURR_MAX = 0x1806;
-
         public static int URLACTION_SHELL_MAX = 0x19ff;
-
         public static int URLACTION_NETWORK_MIN = 0x1a00;
         public static int URLACTION_CREDENTIALS_USE = 0x1a00;
         public static int URLPOLICY_CREDENTIALS_SILENT_LOGON_OK = 0x0;
         public static int URLPOLICY_CREDENTIALS_MUST_PROMPT_USER = 0x10000;
         public static int URLPOLICY_CREDENTIALS_CONDITIONAL_PROMPT = 0x20000;
-
         public static int URLPOLICY_CREDENTIALS_ANONYMOUS_ONLY = 0x30000;
         public static int URLACTION_AUTHENTICATE_CLIENT = 0x1a01;
         public static int URLPOLICY_AUTHENTICATE_CLEARTEXT_OK = 0x0;
         public static int URLPOLICY_AUTHENTICATE_CHALLENGE_RESPONSE = 0x10000;
-
         public static int URLPOLICY_AUTHENTICATE_MUTUAL_ONLY = 0x30000;
-
         public static int URLACTION_COOKIES = 0x1a02;
-
         public static int URLACTION_COOKIES_SESSION = 0x1a03;
-
         public static int URLACTION_CLIENT_CERT_PROMPT = 0x1a04;
         public static int URLACTION_COOKIES_THIRD_PARTY = 0x1a05;
-
         public static int URLACTION_COOKIES_SESSION_THIRD_PARTY = 0x1a06;
-
         public static int URLACTION_COOKIES_ENABLED = 0x1a10;
         public static int URLACTION_NETWORK_CURR_MAX = 0x1a10;
-
         public static int URLACTION_NETWORK_MAX = 0x1bff;
-
         public static int URLACTION_JAVA_MIN = 0x1c00;
         public static int URLACTION_JAVA_PERMISSIONS = 0x1c00;
         public static int URLPOLICY_JAVA_PROHIBIT = 0x0;
@@ -143,7 +122,6 @@ namespace Tween
         public static int URLPOLICY_JAVA_LOW = 0x30000;
         public static int URLPOLICY_JAVA_CUSTOM = 0x800000;
         public static int URLACTION_JAVA_CURR_MAX = 0x1c00;
-
         public static int URLACTION_JAVA_MAX = 0x1cff;
 
         // The following Infodelivery actions should have no default policies
@@ -166,7 +144,6 @@ namespace Tween
         public static int URLPOLICY_CHANNEL_SOFTDIST_PROHIBIT = 0x10000;
         public static int URLPOLICY_CHANNEL_SOFTDIST_PRECACHE = 0x20000;
         public static int URLPOLICY_CHANNEL_SOFTDIST_AUTOINSTALL = 0x30000;
-
         public static int URLACTION_CHANNEL_SOFTDIST_MAX = 0x1eff;
         // For each action specified above the system maintains
         // a set of policies for the action.
@@ -179,23 +156,16 @@ namespace Tween
 
         // Permissions
         public static byte URLPOLICY_ALLOW = 0x0;
-
         public static byte URLPOLICY_QUERY = 0x1;
-
         public static byte URLPOLICY_DISALLOW = 0x3;
 
         // Notifications are not done when user already queried.
         public static int URLPOLICY_NOTIFY_ON_ALLOW = 0x10;
-
         public static int URLPOLICY_NOTIFY_ON_DISALLOW = 0x20;
-
         // Logging is done regardless of whether user was queried.
         public static int URLPOLICY_LOG_ON_ALLOW = 0x40;
-
         public static int URLPOLICY_LOG_ON_DISALLOW = 0x80;
-
         public static int URLPOLICY_MASK_PERMISSIONS = 0xf;
-
         public static int URLPOLICY_DONTCHECKDLGBOX = 0x100;
 
         // ----------------------------------------------------------------------
@@ -213,53 +183,51 @@ namespace Tween
             int QueryService(ref Guid guidService, ref Guid riid, out IntPtr ppvObject);
         }
 
-        [ComImport(), Guid("cb728b20-f786-11ce-92ad-00aa00a74cd0"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComImport, Guid("cb728b20-f786-11ce-92ad-00aa00a74cd0"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IProfferService
         {
-            [PreserveSig()]
+            [PreserveSig]
             int ProfferService(ref Guid guidService, IServiceProvider psp, out int cookie);
 
-            [PreserveSig()]
+            [PreserveSig]
             int RevokeService(int cookie);
         }
 
-        [ComImport(), Guid("79eac9ed-baf9-11ce-8c82-00aa004ba90b"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComImport, Guid("79eac9ed-baf9-11ce-8c82-00aa004ba90b"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IInternetSecurityMgrSite
         {
-            [PreserveSig()]
+            [PreserveSig]
             int GetWindow(out IntPtr hwnd);
 
-            [PreserveSig()]
-            int EnableModeless([In(), MarshalAs(UnmanagedType.Bool)]bool fEnable);
+            [PreserveSig]
+            int EnableModeless([In, MarshalAs(UnmanagedType.Bool)]bool fEnable);
         }
 
-        [ComImport(), Guid("79eac9ee-baf9-11ce-8c82-00aa004ba90b"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComImport, Guid("79eac9ee-baf9-11ce-8c82-00aa004ba90b"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IInternetSecurityManager
         {
-            [PreserveSig()]
-            int SetSecuritySite([In()]IInternetSecurityMgrSite pSite);
+            [PreserveSig]
+            int SetSecuritySite([In]IInternetSecurityMgrSite pSite);
 
-            [PreserveSig()]
+            [PreserveSig]
             int GetSecuritySite(ref IInternetSecurityMgrSite pSite);
 
-            [PreserveSig()]
-            int MapUrlToZone([In(), MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, out int pdwZone, int dwFlags);
+            [PreserveSig]
+            int MapUrlToZone([In, MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, out int pdwZone, int dwFlags);
 
-            [PreserveSig()]
-            int GetSecurityId([MarshalAs(UnmanagedType.LPWStr)]
-string pwszUrl, [MarshalAs(UnmanagedType.LPArray)]
-byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
+            [PreserveSig]
+            int GetSecurityId([MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, [MarshalAs(UnmanagedType.LPArray)]byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
 
-            [PreserveSig()]
-            int ProcessUrlAction([In(), MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, int dwAction, ref byte pPolicy, int cbPolicy, byte pContext, int cbContext, int dwFlags, int dwReserved);
+            [PreserveSig]
+            int ProcessUrlAction([In, MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, int dwAction, ref byte pPolicy, int cbPolicy, byte pContext, int cbContext, int dwFlags, int dwReserved);
 
-            [PreserveSig()]
-            int QueryCustomPolicy([In(), MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, ref Guid guidKey, byte ppPolicy, int pcbPolicy, byte pContext, int cbContext, int dwReserved);
+            [PreserveSig]
+            int QueryCustomPolicy([In, MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, ref Guid guidKey, byte ppPolicy, int pcbPolicy, byte pContext, int cbContext, int dwReserved);
 
-            [PreserveSig()]
-            int SetZoneMapping(int dwZone, [In(), MarshalAs(UnmanagedType.LPWStr)]string lpszPattern, int dwFlags);
+            [PreserveSig]
+            int SetZoneMapping(int dwZone, [In, MarshalAs(UnmanagedType.LPWStr)]string lpszPattern, int dwFlags);
 
-            [PreserveSig()]
+            [PreserveSig]
             int GetZoneMappings(int dwZone, ref System.Runtime.InteropServices.ComTypes.IEnumString ppenumString, int dwFlags);
         }
     }
@@ -280,7 +248,7 @@ byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
 
         #endregion "HRESULT"
 
-        [Flags()]
+        [Flags]
         public enum POLICY : int
         {
             ALLOW_ACTIVEX = 0x1,
@@ -290,7 +258,6 @@ byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
         private object ocx = new object();
         private WebBrowserAPI.IServiceProvider ocxServiceProvider;
         private IntPtr profferServicePtr = new IntPtr();
-
         private WebBrowserAPI.IProfferService profferService;
 
         // DefaultですべてDisAllow
@@ -301,8 +268,6 @@ byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
             // ActiveXコントロール取得
             _WebBrowser.DocumentText = "about:blank";
             //ActiveXを初期化する
-            int hresult = 0;
-
             do
             {
                 Thread.Sleep(100);
@@ -314,6 +279,7 @@ byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
             // IServiceProvider.QueryService() を使って IProfferService を取得
             ocxServiceProvider = (WebBrowserAPI.IServiceProvider)ocx;
 
+            int hresult = 0;
             try
             {
                 hresult = ocxServiceProvider.QueryService(ref WebBrowserAPI.SID_SProfferService, ref WebBrowserAPI.IID_IProfferService, out profferServicePtr);
@@ -379,12 +345,16 @@ byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
         {
             pdwZone = 0;
             if (pwszUrl == "about:blank")
+            {
                 return WebBrowserAPI.INET_E_DEFAULT_ACTION;
+            }
             try
             {
                 string urlStr = MyCommon.IDNDecode(pwszUrl);
-                if (urlStr == null)
+                if (String.IsNullOrEmpty(urlStr))
+                {
                     return WebBrowserAPI.URLPOLICY_DISALLOW;
+                }
                 Uri url = new Uri(urlStr);
                 if (url.Scheme == "data")
                 {
@@ -413,7 +383,9 @@ byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
                     pPolicy = WebBrowserAPI.URLPOLICY_DISALLOW;
                 }
                 if (Regex.IsMatch(pwszUrl, "^https?://((api\\.)?twitter\\.com/|([a-zA-Z0-9]+\\.)?twimg\\.com/|ssl\\.google-analytics\\.com/)"))
+                {
                     pPolicy = WebBrowserAPI.URLPOLICY_ALLOW;
+                }
                 return HRESULT.S_OK;
             }
             // ActiveX実行状態かを検査しポリシー設定
