@@ -178,10 +178,10 @@ namespace Tween
 
         private PostClass _curPost
         {
-            get { return Owner.CurPost(); }
+            get { return Owner.CurPost; }
         }
 
-        private bool IsDirectLink(string url)
+        private static bool IsDirectLink(string url)
         {
             return Regex.Match(url, "^http://.*(\\.jpg|\\.jpeg|\\.gif|\\.png|\\.bmp)$", RegexOptions.IgnoreCase).Success;
         }
@@ -218,7 +218,7 @@ namespace Tween
             {
                 foreach (string link_loopVariable in links.ToArray())
                 {
-                    link = link_loopVariable;
+                    var link = link_loopVariable;
                     if (media.ContainsKey(link))
                         links.Remove(link);
                 }
@@ -246,7 +246,7 @@ namespace Tween
             {
                 foreach (KeyValuePair<string, string> m_loopVariable in media)
                 {
-                    m = m_loopVariable;
+                    var m = m_loopVariable;
                     foreach (ThumbnailService svc in ThumbnailServices)
                     {
                         GetUrlArgs args = new GetUrlArgs();
@@ -539,7 +539,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool ImgUr_GetUrl(GetUrlArgs args)
+        private static bool ImgUr_GetUrl(GetUrlArgs args)
         {
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
             if (mc.Success)
@@ -566,7 +566,7 @@ namespace Tween
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
 
-        private bool ImgUr_CreateImage(CreateImageArgs args)
+        private static bool ImgUr_CreateImage(CreateImageArgs args)
         {
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
             if (img == null)
@@ -582,7 +582,7 @@ namespace Tween
 
         #region "画像直リンク"
 
-        private bool DirectLink_GetUrl(GetUrlArgs args)
+        private static bool DirectLink_GetUrl(GetUrlArgs args)
         {
             //画像拡張子で終わるURL（直リンク）
             if (IsDirectLink(string.IsNullOrEmpty(args.extended) ? args.url : args.extended))
@@ -609,7 +609,7 @@ namespace Tween
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
 
-        private bool DirectLink_CreateImage(CreateImageArgs args)
+        private static bool DirectLink_CreateImage(CreateImageArgs args)
         {
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
             if (img == null)
@@ -633,7 +633,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool TwitPic_GetUrl(GetUrlArgs args)
+        private static bool TwitPic_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(www\\.)?twitpic\\.com/(?<photoId>\\w+)(/full/?)?$", RegexOptions.IgnoreCase);
@@ -661,7 +661,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool TwitPic_CreateImage(CreateImageArgs args)
+        private static bool TwitPic_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
@@ -689,7 +689,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool yfrog_GetUrl(GetUrlArgs args)
+        private static bool yfrog_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://yfrog\\.com/(\\w+)$", RegexOptions.IgnoreCase);
@@ -717,7 +717,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool yfrog_CreateImage(CreateImageArgs args)
+        private static bool yfrog_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
@@ -745,7 +745,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Plixi_GetUrl(GetUrlArgs args)
+        private static bool Plixi_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^(http://tweetphoto\\.com/[0-9]+|http://pic\\.gd/[a-z0-9]+|http://(lockerz|plixi)\\.com/[ps]/[0-9]+)$", RegexOptions.IgnoreCase);
@@ -753,7 +753,7 @@ namespace Tween
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 const string comp = "http://api.plixi.com/api/tpapi.svc/imagefromurl?size=thumbnail&url=";
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, comp + string.IsNullOrEmpty(args.extended) ? args.url : args.extended));
+                args.imglist.Add(new KeyValuePair<string, string>(args.url, comp + (string.IsNullOrEmpty(args.extended) ? args.url : args.extended)));
                 return true;
             }
             else
@@ -774,7 +774,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Plixi_CreateImage(CreateImageArgs args)
+        private static bool Plixi_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             string referer = "";
@@ -822,7 +822,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool MobyPicture_GetUrl(GetUrlArgs args)
+        private static bool MobyPicture_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://moby\\.to/(\\w+)$", RegexOptions.IgnoreCase);
@@ -850,7 +850,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool MobyPicture_CreateImage(CreateImageArgs args)
+        private static bool MobyPicture_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
@@ -878,7 +878,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool MovaPic_GetUrl(GetUrlArgs args)
+        private static bool MovaPic_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://movapic\\.com/pic/(\\w+)$", RegexOptions.IgnoreCase);
@@ -906,7 +906,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool MovaPic_CreateImage(CreateImageArgs args)
+        private static  bool MovaPic_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
@@ -934,7 +934,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Hatena_GetUrl(GetUrlArgs args)
+        private static bool Hatena_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://f\\.hatena\\.ne\\.jp/(([a-z])[a-z0-9_-]{1,30}[a-z0-9])/((\\d{8})\\d+)$", RegexOptions.IgnoreCase);
@@ -962,7 +962,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Hatena_CreateImage(CreateImageArgs args)
+        private static bool Hatena_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
@@ -990,7 +990,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool PhotoShare_GetUrl(GetUrlArgs args)
+        private static bool PhotoShare_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(?:www\\.)?bcphotoshare\\.com/photos/\\d+/(\\d+)$", RegexOptions.IgnoreCase);
@@ -1028,7 +1028,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool PhotoShare_CreateImage(CreateImageArgs args)
+        private static bool PhotoShare_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
@@ -1056,7 +1056,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool imgly_GetUrl(GetUrlArgs args)
+        private static bool imgly_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://img\\.ly/(\\w+)$", RegexOptions.IgnoreCase);
@@ -1084,7 +1084,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool imgly_CreateImage(CreateImageArgs args)
+        private static bool imgly_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
@@ -1112,7 +1112,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool brightkite_GetUrl(GetUrlArgs args)
+        private static bool brightkite_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://brightkite\\.com/objects/((\\w{2})(\\w{2})\\w+)$", RegexOptions.IgnoreCase);
@@ -1140,7 +1140,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool brightkite_CreateImage(CreateImageArgs args)
+        private static bool brightkite_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
@@ -1168,7 +1168,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Twitgoo_GetUrl(GetUrlArgs args)
+        private static bool Twitgoo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://twitgoo\\.com/(\\w+)$", RegexOptions.IgnoreCase);
@@ -1196,7 +1196,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Twitgoo_CreateImage(CreateImageArgs args)
+        private static bool Twitgoo_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
@@ -1224,7 +1224,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool youtube_GetUrl(GetUrlArgs args)
+        private static bool youtube_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://www\\.youtube\\.com/watch\\?v=([\\w\\-]+)", RegexOptions.IgnoreCase);
@@ -1258,7 +1258,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool youtube_CreateImage(CreateImageArgs args)
+        private static bool youtube_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             // 参考
@@ -1307,7 +1307,7 @@ namespace Tween
                             tmp = xentry["media:title"].InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Tween.My.Resources.YouTubeInfoText1);
+                                sb.Append(Tween.My.Resources.Resources.YouTubeInfoText1);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1321,7 +1321,7 @@ namespace Tween
                             int sec = 0;
                             if (int.TryParse(xentry["yt:duration"].Attributes["seconds"].Value, out sec))
                             {
-                                sb.Append(Tween.My.Resources.YouTubeInfoText2);
+                                sb.Append(Tween.My.Resources.Resources.YouTubeInfoText2);
                                 sb.AppendFormat("{0:d}:{1:d2}", sec / 60, sec % 60);
                                 sb.AppendLine();
                             }
@@ -1336,7 +1336,7 @@ namespace Tween
                             xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry", nsmgr);
                             if (DateTime.TryParse(xentry["published"].InnerText, out tmpdate))
                             {
-                                sb.Append(Tween.My.Resources.YouTubeInfoText3);
+                                sb.Append(Tween.My.Resources.Resources.YouTubeInfoText3);
                                 sb.Append(tmpdate);
                                 sb.AppendLine();
                             }
@@ -1352,7 +1352,7 @@ namespace Tween
                             tmp = xentry["yt:statistics"].Attributes["viewCount"].Value;
                             if (int.TryParse(tmp, out count))
                             {
-                                sb.Append(Tween.My.Resources.YouTubeInfoText4);
+                                sb.Append(Tween.My.Resources.Resources.YouTubeInfoText4);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1418,7 +1418,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool nicovideo_GetUrl(GetUrlArgs args)
+        private static bool nicovideo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?:sm|nm)?([0-9]+)(\\?.+)?$", RegexOptions.IgnoreCase);
@@ -1446,7 +1446,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool nicovideo_CreateImage(CreateImageArgs args)
+        private static bool nicovideo_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
@@ -1474,7 +1474,7 @@ namespace Tween
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/title").InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Tween.My.Resources.NiconicoInfoText1);
+                                sb.Append(Tween.My.Resources.Resources.NiconicoInfoText1);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1488,7 +1488,7 @@ namespace Tween
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/length").InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Tween.My.Resources.NiconicoInfoText2);
+                                sb.Append(Tween.My.Resources.Resources.NiconicoInfoText2);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1503,7 +1503,7 @@ namespace Tween
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/first_retrieve").InnerText;
                             if (DateTime.TryParse(tmp, out tm))
                             {
-                                sb.Append(Tween.My.Resources.NiconicoInfoText3);
+                                sb.Append(Tween.My.Resources.Resources.NiconicoInfoText3);
                                 sb.Append(tm.ToString());
                                 sb.AppendLine();
                             }
@@ -1517,7 +1517,7 @@ namespace Tween
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/view_counter").InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Tween.My.Resources.NiconicoInfoText4);
+                                sb.Append(Tween.My.Resources.Resources.NiconicoInfoText4);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1531,7 +1531,7 @@ namespace Tween
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/comment_num").InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Tween.My.Resources.NiconicoInfoText5);
+                                sb.Append(Tween.My.Resources.Resources.NiconicoInfoText5);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1544,7 +1544,7 @@ namespace Tween
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/mylist_counter").InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Tween.My.Resources.NiconicoInfoText6);
+                                sb.Append(Tween.My.Resources.Resources.NiconicoInfoText6);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1598,7 +1598,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool nicoseiga_GetUrl(GetUrlArgs args)
+        private static bool nicoseiga_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(?:seiga\\.nicovideo\\.jp/seiga/|nico\\.ms/)im\\d+");
@@ -1626,7 +1626,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool nicoseiga_CreateImage(CreateImageArgs args)
+        private static bool nicoseiga_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
@@ -1657,7 +1657,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Pixiv_GetUrl(GetUrlArgs args)
+        private static bool Pixiv_GetUrl(GetUrlArgs args)
         {
             //参考: http://tail.s68.xrea.com/blog/2009/02/pixivflash.html Pixivの画像をFlashとかで取得する方法など:しっぽのブログ
             //ユーザー向けの画像ページ http://www.pixiv.net/member_illust.php?mode=medium&illust_id=[ID番号]
@@ -1690,7 +1690,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Pixiv_CreateImage(CreateImageArgs args)
+        private static bool Pixiv_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             string src = "";
@@ -1743,7 +1743,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool flickr_GetUrl(GetUrlArgs args)
+        private static bool flickr_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
@@ -1771,7 +1771,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool flickr_CreateImage(CreateImageArgs args)
+        private static bool flickr_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             //参考: http://tanarky.blogspot.com/2010/03/flickr-urlunavailable.html アグレッシブエンジニア: flickr の画像URL仕様についてまとめ(Unavailable画像)
@@ -1817,7 +1817,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Photozou_GetUrl(GetUrlArgs args)
+        private static bool Photozou_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
@@ -1845,7 +1845,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Photozou_CreateImage(CreateImageArgs args)
+        private static bool Photozou_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
@@ -1895,7 +1895,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool TwitVideo_GetUrl(GetUrlArgs args)
+        private static bool TwitVideo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://twitvideo\\.jp/(\\w+)$", RegexOptions.IgnoreCase);
@@ -1923,7 +1923,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool TwitVideo_CreateImage(CreateImageArgs args)
+        private static bool TwitVideo_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 0, ref args.errmsg);
@@ -1951,7 +1951,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Piapro_GetUrl(GetUrlArgs args)
+        private static bool Piapro_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
@@ -1979,7 +1979,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Piapro_CreateImage(CreateImageArgs args)
+        private static bool Piapro_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
@@ -2025,7 +2025,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Tumblr_GetUrl(GetUrlArgs args)
+        private static bool Tumblr_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(.+\\.)?tumblr\\.com/.+/?", RegexOptions.IgnoreCase);
@@ -2053,7 +2053,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Tumblr_CreateImage(CreateImageArgs args)
+        private static bool Tumblr_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
@@ -2118,7 +2118,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool TwipplePhoto_GetUrl(GetUrlArgs args)
+        private static bool TwipplePhoto_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://p\\.twipple\\.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
@@ -2146,7 +2146,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool TwipplePhoto_CreateImage(CreateImageArgs args)
+        private static bool TwipplePhoto_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
@@ -2198,7 +2198,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool mypix_GetUrl(GetUrlArgs args)
+        private static bool mypix_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(www\\.mypix\\.jp|www\\.shamoji\\.info)/app\\.php/picture/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
@@ -2226,7 +2226,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool mypix_CreateImage(CreateImageArgs args)
+        private static bool mypix_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 0, ref args.errmsg);
@@ -2254,7 +2254,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Owly_GetUrl(GetUrlArgs args)
+        private static bool Owly_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://ow\\.ly/i/(\\w+)$", RegexOptions.IgnoreCase);
@@ -2282,7 +2282,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Owly_CreateImage(CreateImageArgs args)
+        private static bool Owly_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 0, ref args.errmsg);
@@ -2310,7 +2310,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Vimeo_GetUrl(GetUrlArgs args)
+        private static bool Vimeo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://vimeo\\.com/[0-9]+", RegexOptions.IgnoreCase);
@@ -2338,7 +2338,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Vimeo_CreateImage(CreateImageArgs args)
+        private static bool Vimeo_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
@@ -2358,7 +2358,7 @@ namespace Tween
                         string tmp = xdoc.SelectSingleNode("videos/video/title").InnerText;
                         if (!string.IsNullOrEmpty(tmp))
                         {
-                            sb.Append(Tween.My.Resources.VimeoInfoText1);
+                            sb.Append(Tween.My.Resources.Resources.VimeoInfoText1);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
@@ -2371,7 +2371,7 @@ namespace Tween
                         DateTime tmpdate = new DateTime();
                         if (DateTime.TryParse(xdoc.SelectSingleNode("videos/video/upload_date").InnerText, out tmpdate))
                         {
-                            sb.Append(Tween.My.Resources.VimeoInfoText2);
+                            sb.Append(Tween.My.Resources.Resources.VimeoInfoText2);
                             sb.Append(tmpdate);
                             sb.AppendLine();
                         }
@@ -2384,7 +2384,7 @@ namespace Tween
                         string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_likes").InnerText;
                         if (!string.IsNullOrEmpty(tmp))
                         {
-                            sb.Append(Tween.My.Resources.VimeoInfoText3);
+                            sb.Append(Tween.My.Resources.Resources.VimeoInfoText3);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
@@ -2397,7 +2397,7 @@ namespace Tween
                         string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_plays").InnerText;
                         if (!string.IsNullOrEmpty(tmp))
                         {
-                            sb.Append(Tween.My.Resources.VimeoInfoText4);
+                            sb.Append(Tween.My.Resources.Resources.VimeoInfoText4);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
@@ -2410,7 +2410,7 @@ namespace Tween
                         string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_comments").InnerText;
                         if (!string.IsNullOrEmpty(tmp))
                         {
-                            sb.Append(Tween.My.Resources.VimeoInfoText5);
+                            sb.Append(Tween.My.Resources.Resources.VimeoInfoText5);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
@@ -2423,7 +2423,7 @@ namespace Tween
                         int sec = 0;
                         if (int.TryParse(xdoc.SelectSingleNode("videos/video/duration").InnerText, out sec))
                         {
-                            sb.Append(Tween.My.Resources.VimeoInfoText6);
+                            sb.Append(Tween.My.Resources.Resources.VimeoInfoText6);
                             sb.AppendFormat("{0:d}:{1:d2}", sec / 60, sec % 60);
                             sb.AppendLine();
                         }
@@ -2475,7 +2475,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool CloudFiles_GetUrl(GetUrlArgs args)
+        private static bool CloudFiles_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://c[0-9]+\\.cdn[0-9]+\\.cloudfiles\\.rackspacecloud\\.com/[a-z_0-9]+", RegexOptions.IgnoreCase);
@@ -2503,7 +2503,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool CloudFiles_CreateImage(CreateImageArgs args)
+        private static bool CloudFiles_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 0, ref args.errmsg);
@@ -2531,7 +2531,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool instagram_GetUrl(GetUrlArgs args)
+        private static bool instagram_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://instagr.am/p/.+/", RegexOptions.IgnoreCase);
@@ -2559,7 +2559,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool instagram_CreateImage(CreateImageArgs args)
+        private static bool instagram_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
 
@@ -2599,7 +2599,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool pikubo_GetUrl(GetUrlArgs args)
+        private static bool pikubo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://pikubo\\.me/([a-z0-9-_]+)", RegexOptions.IgnoreCase);
@@ -2627,7 +2627,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool pikubo_CreateImage(CreateImageArgs args)
+        private static bool pikubo_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
 
@@ -2653,7 +2653,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool PicPlz_GetUrl(GetUrlArgs args)
+        private static bool PicPlz_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://picplz\\.com/user/\\w+/pic/(?<longurl_ids>\\w+)/?$", RegexOptions.IgnoreCase);
@@ -2798,7 +2798,7 @@ namespace Tween
             }
         }
 
-        private bool PicPlz_CreateImage(CreateImageArgs args)
+        private static bool PicPlz_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
@@ -2831,7 +2831,7 @@ namespace Tween
 
                 try
                 {
-                    res = MyCommon.CreateDataFromJson(src);
+                    res = MyCommon.CreateDataFromJson<PicPlzDataModel.ResultData>(src);
                 }
                 catch (Exception ex)
                 {
@@ -2842,7 +2842,7 @@ namespace Tween
                 {
                     try
                     {
-                        imgurl = res.Value.Pics(0).PicFiles.Pic320rh.ImgUrl;
+                        imgurl = res.Value.Pics[0].PicFiles.Pic320rh.ImgUrl;
                     }
                     catch (Exception ex)
                     {
@@ -2850,7 +2850,7 @@ namespace Tween
 
                     try
                     {
-                        sb.Append(res.Value.Pics(0).Caption);
+                        sb.Append(res.Value.Pics[0].Caption);
                     }
                     catch (Exception ex)
                     {
@@ -2888,7 +2888,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Foursquare_GetUrl(GetUrlArgs args)
+        private static bool Foursquare_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^https?://(4sq|foursquare).com/", RegexOptions.IgnoreCase);
@@ -2920,7 +2920,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Foursquare_CreateImage(CreateImageArgs args)
+        private static bool Foursquare_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             string tipsText = "";
@@ -2952,7 +2952,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool TwitterGeo_GetUrl(GetUrlArgs args)
+        private static bool TwitterGeo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             if (args.geoInfo != null && (args.geoInfo.Latitude != 0 || args.geoInfo.Longitude != 0))
@@ -2976,7 +2976,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool TwitterGeo_CreateImage(CreateImageArgs args)
+        private static bool TwitterGeo_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
@@ -3023,7 +3023,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Tinami_GetUrl(GetUrlArgs args)
+        private static bool Tinami_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             //http://www.tinami.com/view/250818
@@ -3063,12 +3063,12 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Tinami_CreateImage(CreateImageArgs args)
+        private static bool Tinami_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
             Match mc = Regex.Match(args.url.Value, "^http://www\\.tinami\\.com/view/(?<ContentId>\\d+)$", RegexOptions.IgnoreCase);
-            const var ApiKey = "4e353d9113dce";
+            const string ApiKey = "4e353d9113dce";
             if (mc.Success)
             {
                 string src = "";
@@ -3145,7 +3145,7 @@ namespace Tween
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
 
-        private bool Twimg_GetUrl(GetUrlArgs args)
+        private static bool Twimg_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^https?://p\\.twimg\\.com/.*$", RegexOptions.IgnoreCase);
@@ -3170,7 +3170,7 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private bool Twimg_CreateImage(CreateImageArgs args)
+        private static bool Twimg_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
