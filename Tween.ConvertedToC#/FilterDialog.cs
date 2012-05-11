@@ -82,13 +82,13 @@ namespace Tween
             EditFilterGroup.Enabled = false;
             switch (TabInformations.GetInstance().Tabs[tabName].TabType)
             {
-                case TabUsageType.Home:
-                case TabUsageType.DirectMessage:
-                case TabUsageType.Favorites:
-                case TabUsageType.PublicSearch:
-                case TabUsageType.Lists:
-                case TabUsageType.Related:
-                case TabUsageType.UserTimeline:
+                case MyCommon.TabUsageType.Home:
+                case MyCommon.TabUsageType.DirectMessage:
+                case MyCommon.TabUsageType.Favorites:
+                case MyCommon.TabUsageType.PublicSearch:
+                case MyCommon.TabUsageType.Lists:
+                case MyCommon.TabUsageType.Related:
+                case MyCommon.TabUsageType.UserTimeline:
                     ButtonNew.Enabled = false;
                     ButtonEdit.Enabled = false;
                     ButtonDelete.Enabled = false;
@@ -121,32 +121,32 @@ namespace Tween
             }
             switch (TabInformations.GetInstance().Tabs[tabName].TabType)
             {
-                case TabUsageType.Home:
-                    LabelTabType.Text = Tween.My.Resources.TabUsageTypeName_Home;
+                case MyCommon.TabUsageType.Home:
+                    LabelTabType.Text = Tween.My.Resources.Resources.TabUsageTypeName_Home;
                     break;
-                case TabUsageType.Mentions:
-                    LabelTabType.Text = Tween.My.Resources.TabUsageTypeName_Mentions;
+                case MyCommon.TabUsageType.Mentions:
+                    LabelTabType.Text = Tween.My.Resources.Resources.TabUsageTypeName_Mentions;
                     break;
-                case TabUsageType.DirectMessage:
-                    LabelTabType.Text = Tween.My.Resources.TabUsageTypeName_DirectMessage;
+                case MyCommon.TabUsageType.DirectMessage:
+                    LabelTabType.Text = Tween.My.Resources.Resources.TabUsageTypeName_DirectMessage;
                     break;
-                case TabUsageType.Favorites:
-                    LabelTabType.Text = Tween.My.Resources.TabUsageTypeName_Favorites;
+                case MyCommon.TabUsageType.Favorites:
+                    LabelTabType.Text = Tween.My.Resources.Resources.TabUsageTypeName_Favorites;
                     break;
-                case TabUsageType.UserDefined:
-                    LabelTabType.Text = Tween.My.Resources.TabUsageTypeName_UserDefined;
+                case MyCommon.TabUsageType.UserDefined:
+                    LabelTabType.Text = Tween.My.Resources.Resources.TabUsageTypeName_UserDefined;
                     break;
-                case TabUsageType.PublicSearch:
-                    LabelTabType.Text = Tween.My.Resources.TabUsageTypeName_PublicSearch;
+                case MyCommon.TabUsageType.PublicSearch:
+                    LabelTabType.Text = Tween.My.Resources.Resources.TabUsageTypeName_PublicSearch;
                     break;
-                case TabUsageType.Lists:
-                    LabelTabType.Text = Tween.My.Resources.TabUsageTypeName_Lists;
+                case MyCommon.TabUsageType.Lists:
+                    LabelTabType.Text = Tween.My.Resources.Resources.TabUsageTypeName_Lists;
                     break;
-                case TabUsageType.Related:
-                    LabelTabType.Text = Tween.My.Resources.TabUsageTypeName_Related;
+                case MyCommon.TabUsageType.Related:
+                    LabelTabType.Text = Tween.My.Resources.Resources.TabUsageTypeName_Related;
                     break;
-                case TabUsageType.UserTimeline:
-                    LabelTabType.Text = Tween.My.Resources.TabUsageTypeName_UserTimeline;
+                case MyCommon.TabUsageType.UserTimeline:
+                    LabelTabType.Text = Tween.My.Resources.Resources.TabUsageTypeName_UserTimeline;
                     break;
                 default:
                     LabelTabType.Text = "UNKNOWN";
@@ -316,13 +316,13 @@ namespace Tween
 
             if (ListFilters.SelectedIndices.Count == 1)
             {
-                tmp = string.Format(Tween.My.Resources.ButtonDelete_ClickText1, Constants.vbCrLf, ListFilters.SelectedItem.ToString());
-                rslt = MessageBox.Show(tmp, Tween.My.Resources.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                tmp = string.Format(Tween.My.Resources.Resources.ButtonDelete_ClickText1, Constants.vbCrLf, ListFilters.SelectedItem.ToString());
+                rslt = MessageBox.Show(tmp, Tween.My.Resources.Resources.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             }
             else
             {
-                tmp = string.Format(Tween.My.Resources.ButtonDelete_ClickText3, ListFilters.SelectedIndices.Count.ToString());
-                rslt = MessageBox.Show(tmp, Tween.My.Resources.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                tmp = string.Format(Tween.My.Resources.Resources.ButtonDelete_ClickText3, ListFilters.SelectedIndices.Count.ToString());
+                rslt = MessageBox.Show(tmp, Tween.My.Resources.Resources.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             }
             if (rslt == System.Windows.Forms.DialogResult.Cancel)
                 return;
@@ -547,7 +547,7 @@ namespace Tween
             }
             if (isBlankMatch && isBlankExclude)
             {
-                MessageBox.Show(Tween.My.Resources.ButtonOK_ClickText1, Tween.My.Resources.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(Tween.My.Resources.Resources.ButtonOK_ClickText1, Tween.My.Resources.Resources.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -639,7 +639,7 @@ namespace Tween
             {
                 if (!_sts.Tabs[ListTabs.SelectedItem.ToString()].AddFilter(ft))
                 {
-                    MessageBox.Show(Tween.My.Resources.ButtonOK_ClickText4, Tween.My.Resources.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Tween.My.Resources.Resources.ButtonOK_ClickText4, Tween.My.Resources.Resources.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -672,11 +672,11 @@ namespace Tween
             try
             {
                 LambdaExpression expr = null;
-                expr = DynamicExpression.ParseLambda(text, new PostClass());
+                expr = DynamicExpression.ParseLambda<PostClass, bool>(text, new PostClass());
             }
             catch (ParseException ex)
             {
-                MessageBox.Show(Tween.My.Resources.IsValidLambdaExpText1 + ex.Message, Tween.My.Resources.IsValidLambdaExpText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(Tween.My.Resources.Resources.IsValidLambdaExpText1 + ex.Message, Tween.My.Resources.Resources.IsValidLambdaExpText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
             return true;
@@ -690,7 +690,7 @@ namespace Tween
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Tween.My.Resources.ButtonOK_ClickText3 + ex.Message, Tween.My.Resources.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(Tween.My.Resources.Resources.ButtonOK_ClickText3 + ex.Message, Tween.My.Resources.Resources.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
             return true;
@@ -954,7 +954,7 @@ namespace Tween
         private void ButtonAddTab_Click(System.Object sender, System.EventArgs e)
         {
             string tabName = null;
-            TabUsageType tabType = default(TabUsageType);
+            MyCommon.TabUsageType tabType = default(MyCommon.TabUsageType);
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.TabName = _sts.GetUniqueTabName();
@@ -969,7 +969,7 @@ namespace Tween
             {
                 //List対応
                 ListElement list = null;
-                if (tabType == TabUsageType.Lists)
+                if (tabType == MyCommon.TabUsageType.Lists)
                 {
                     string rslt = ((TweenMain)this.Owner).TwitterInstance.GetListsApi();
                     if (!string.IsNullOrEmpty(rslt))
@@ -987,8 +987,8 @@ namespace Tween
                 }
                 if (!_sts.AddTab(tabName, tabType, list) || !((TweenMain)this.Owner).AddNewTab(tabName, false, tabType, list))
                 {
-                    string tmp = string.Format(Tween.My.Resources.AddTabMenuItem_ClickText1, tabName);
-                    MessageBox.Show(tmp, Tween.My.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string tmp = string.Format(Tween.My.Resources.Resources.AddTabMenuItem_ClickText1, tabName);
+                    MessageBox.Show(tmp, Tween.My.Resources.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
                 else
@@ -1134,7 +1134,7 @@ namespace Tween
         {
             if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null)
             {
-                tabdialog.Text = Tween.My.Resources.ButtonRuleCopy_ClickText1;
+                tabdialog.Text = Tween.My.Resources.Resources.ButtonRuleCopy_ClickText1;
                 if (tabdialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
                 {
                     return;
@@ -1168,7 +1168,7 @@ namespace Tween
         {
             if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null)
             {
-                tabdialog.Text = Tween.My.Resources.ButtonRuleMove_ClickText1;
+                tabdialog.Text = Tween.My.Resources.Resources.ButtonRuleMove_ClickText1;
                 if (tabdialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
                 {
                     return;
@@ -1221,16 +1221,16 @@ namespace Tween
                     for (int i = tbox.SelectionStart - 1; i >= 0; i += -1)
                     {
                         char c = tbox.Text[i];
-                        if (char.IsLetterOrDigit(c) || c == "_")
+                        if (char.IsLetterOrDigit(c) || c == '_')
                         {
                             continue;
                         }
-                        if (c == "@")
+                        if (c == '@')
                         {
                             startstr = tbox.Text.Substring(i + 1, endidx - i);
                             main.ShowSuplDialog(tbox, main.AtIdSupl, startstr.Length + 1, startstr);
                         }
-                        else if (c == "#")
+                        else if (c == '#')
                         {
                             startstr = tbox.Text.Substring(i + 1, endidx - i);
                             main.ShowSuplDialog(tbox, main.HashSupl, startstr.Length + 1, startstr);
@@ -1249,14 +1249,14 @@ namespace Tween
         {
             TweenMain main = (TweenMain)this.Owner;
             TextBox tbox = (TextBox)sender;
-            if (e.KeyChar == "@")
+            if (e.KeyChar == '@')
             {
                 //If Not SettingDialog.UseAtIdSupplement Then Exit Sub
                 //@マーク
                 main.ShowSuplDialog(tbox, main.AtIdSupl);
                 e.Handled = true;
             }
-            else if (e.KeyChar == "#")
+            else if (e.KeyChar == '#')
             {
                 //If Not SettingDialog.UseHashSupplement Then Exit Sub
                 main.ShowSuplDialog(tbox, main.HashSupl);
