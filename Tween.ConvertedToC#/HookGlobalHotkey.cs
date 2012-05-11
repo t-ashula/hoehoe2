@@ -127,7 +127,7 @@ namespace Tween
                     return true;
                 //登録済みなら正常終了
             }
-            int hotkeyId = Win32Api.RegisterGlobalHotKey(hotkeyValue, modifiers, this._targetForm);
+            int hotkeyId = Win32Api.RegisterGlobalHotKey(hotkeyValue, (int)modifiers, this._targetForm);
             if (hotkeyId > 0)
             {
                 this._hotkeyID.Add(hotkeyId, new KeyEventValue(key, hotkeyValue));
@@ -184,7 +184,7 @@ namespace Tween
         protected override void Finalize()
         {
             this.Dispose(false);
-            base.Finalize();
+            //base.Finalize();
         }
     }
 }
