@@ -36,7 +36,7 @@ namespace Tween
 
     public class WebBrowserAPI
     {
-        public static int INET_E_DEFAULT_ACTION = (int)0x800c0011;
+        public static int INET_E_DEFAULT_ACTION = unchecked((int)0x800c0011);
 
         public enum URLZONE
         {
@@ -275,8 +275,8 @@ byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
         {
             public static int S_OK = 0x0;
             public static int S_FALSE = 0x1;
-            public static int E_NOTIMPL = (int)0x80004001;
-            public static int E_NOINTERFACE = (int)0x80004002;
+            public static int E_NOTIMPL = unchecked((int)0x80004001);
+            public static int E_NOINTERFACE = unchecked((int)0x80004002);
         }
 
         #endregion "HRESULT"
