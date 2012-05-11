@@ -43,7 +43,7 @@ namespace Tween
             this.contextUserName = userName;
             this._tw = tw;
 
-            this.Text = this.contextUserName + Tween.My.Resources.MyLists1;
+            this.Text = this.contextUserName + Tween.My.Resources.Resources.MyLists1;
         }
 
         private void MyLists_Load(System.Object sender, System.EventArgs e)
@@ -61,7 +61,7 @@ namespace Tween
 
                 foreach (TabClass tab in TabInformations.GetInstance().Tabs.Values)
                 {
-                    if (tab.TabType == TabUsageType.Lists)
+                    if (tab.TabType == MyCommon.TabUsageType.Lists)
                     {
                         if (listItem.Id == tab.ListInfo.Id)
                         {
@@ -120,7 +120,7 @@ namespace Tween
                     continue;
                 }
 
-                otherPost.AddRange(TabInformations.GetInstance().Posts().Values);
+                otherPost.AddRange(TabInformations.GetInstance().Posts.Values);
 
                 //リストに該当ユーザーのポストが含まれていないのにリスト以外で取得したポストの中にリストに含まれるべきポストがある場合は、リストにユーザーは含まれていないとする。
                 if (otherPost.Exists(item => (item.ScreenName == this.contextUserName) && (item.CreatedAt > listOlderPostCreatedAt) && (item.CreatedAt < listNewistPostCreatedAt) && ((!item.IsReply) || listPostUserNames.Contains(item.InReplyToUser))))
@@ -140,7 +140,7 @@ namespace Tween
             string rslt = this._tw.GetListsApi();
             if (!string.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(string.Format(Tween.My.Resources.ListsDeleteFailed, rslt));
+                MessageBox.Show(string.Format(Tween.My.Resources.Resources.ListsDeleteFailed, rslt));
             }
             else
             {
@@ -154,43 +154,49 @@ namespace Tween
             switch (e.CurrentValue)
             {
                 case CheckState.Indeterminate:
-                    ListElement listItem = (ListElement)this.ListsCheckedListBox.Items[e.Index];
+                    {
+                        ListElement listItem = (ListElement)this.ListsCheckedListBox.Items[e.Index];
 
-                    bool ret = false;
-                    string rslt = this._tw.ContainsUserAtList(listItem.Id.ToString(), contextUserName, ref ret);
-                    if (!string.IsNullOrEmpty(rslt))
-                    {
-                        MessageBox.Show(string.Format(Tween.My.Resources.ListManageOKButton2, rslt));
-                        e.NewValue = CheckState.Indeterminate;
-                    }
-                    else
-                    {
-                        if (ret)
+                        bool ret = false;
+                        string rslt = this._tw.ContainsUserAtList(listItem.Id.ToString(), contextUserName, ref ret);
+                        if (!string.IsNullOrEmpty(rslt))
                         {
-                            e.NewValue = CheckState.Checked;
+                            MessageBox.Show(string.Format(Tween.My.Resources.Resources.ListManageOKButton2, rslt));
+                            e.NewValue = CheckState.Indeterminate;
                         }
                         else
                         {
-                            e.NewValue = CheckState.Unchecked;
+                            if (ret)
+                            {
+                                e.NewValue = CheckState.Checked;
+                            }
+                            else
+                            {
+                                e.NewValue = CheckState.Unchecked;
+                            }
                         }
                     }
                     break;
                 case CheckState.Unchecked:
-                    ListElement list = (ListElement)this.ListsCheckedListBox.Items[e.Index];
-                    string rslt = this._tw.AddUserToList(list.Id.ToString(), this.contextUserName.ToString());
-                    if (!string.IsNullOrEmpty(rslt))
                     {
-                        MessageBox.Show(string.Format(Tween.My.Resources.ListManageOKButton2, rslt));
-                        e.NewValue = CheckState.Indeterminate;
+                        ListElement list = (ListElement)this.ListsCheckedListBox.Items[e.Index];
+                        string rslt = this._tw.AddUserToList(list.Id.ToString(), this.contextUserName.ToString());
+                        if (!string.IsNullOrEmpty(rslt))
+                        {
+                            MessageBox.Show(string.Format(Tween.My.Resources.Resources.ListManageOKButton2, rslt));
+                            e.NewValue = CheckState.Indeterminate;
+                        }
                     }
                     break;
                 case CheckState.Checked:
-                    ListElement list = (ListElement)this.ListsCheckedListBox.Items[e.Index];
-                    string rslt = this._tw.RemoveUserToList(list.Id.ToString(), this.contextUserName.ToString());
-                    if (!string.IsNullOrEmpty(rslt))
                     {
-                        MessageBox.Show(string.Format(Tween.My.Resources.ListManageOKButton2, rslt));
-                        e.NewValue = CheckState.Indeterminate;
+                        ListElement list = (ListElement)this.ListsCheckedListBox.Items[e.Index];
+                        string rslt = this._tw.RemoveUserToList(list.Id.ToString(), this.contextUserName.ToString());
+                        if (!string.IsNullOrEmpty(rslt))
+                        {
+                            MessageBox.Show(string.Format(Tween.My.Resources.Resources.ListManageOKButton2, rslt));
+                            e.NewValue = CheckState.Indeterminate;
+                        }
                     }
                     break;
             }
