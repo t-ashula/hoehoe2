@@ -723,17 +723,17 @@ namespace Tween
             //s -> ms
             switch (proxyType)
             {
-                case proxyType.None:
+                case ProxyType.None:
                     proxy = null;
                     break;
-                case proxyType.Specified:
+                case ProxyType.Specified:
                     proxy = new WebProxy("http://" + proxyAddress + ":" + proxyPort.ToString());
                     if (!string.IsNullOrEmpty(proxyUser) || !string.IsNullOrEmpty(proxyPassword))
                     {
                         proxy.Credentials = new NetworkCredential(proxyUser, proxyPassword);
                     }
                     break;
-                case proxyType.IE:
+                case ProxyType.IE:
                     break;
                 //IE設定（システム設定）はデフォルト値なので処理しない
             }
