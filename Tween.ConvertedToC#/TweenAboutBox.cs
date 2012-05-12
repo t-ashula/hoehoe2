@@ -64,8 +64,6 @@ namespace Tween
 
         public TweenAboutBox()
         {
-            Shown += TweenAboutBox_Shown;
-            Load += TweenAboutBox_Load;
             InitializeComponent();
         }
     }
