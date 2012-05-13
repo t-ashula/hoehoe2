@@ -6974,7 +6974,7 @@ namespace Tween
                         {
                             lnks.Add(lnk.Result("${url}"));
                         }
-                        Thumbnail.thumbnail(_curPost.StatusId, lnks, _curPost.PostGeo, _curPost.Media);
+                        Thumbnail.GenThumbnail(_curPost.StatusId, lnks, _curPost.PostGeo, _curPost.Media);
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException ex)

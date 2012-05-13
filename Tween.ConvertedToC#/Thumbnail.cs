@@ -38,35 +38,33 @@ namespace Tween
 {
     public class Thumbnail
     {
-        private object lckPrev = new object();
+        private object _lckPrev = new object();
         private PreviewData _prev;
 
         private class PreviewData : IDisposable
         {
-            public long statusId;
-            public List<KeyValuePair<string, string>> urls;
-            public List<KeyValuePair<string, Image>> pics = new List<KeyValuePair<string, Image>>();
-            public List<KeyValuePair<string, string>> tooltipText = new List<KeyValuePair<string, string>>();
-            public List<KeyValuePair<string, ImageCreatorDelegate>> imageCreators = new List<KeyValuePair<string, ImageCreatorDelegate>>();
+            public long StatusId;
+            public List<KeyValuePair<string, string>> Urls;
+            public List<KeyValuePair<string, Image>> Pics = new List<KeyValuePair<string, Image>>();
+            public List<KeyValuePair<string, string>> TooltipText = new List<KeyValuePair<string, string>>();
+            public List<KeyValuePair<string, ImageCreatorDelegate>> ImageCreators = new List<KeyValuePair<string, ImageCreatorDelegate>>();
+            public bool IsError;
+            public string AdditionalErrorMessage;
 
             public PreviewData(long id, List<KeyValuePair<string, string>> urlList, List<KeyValuePair<string, ImageCreatorDelegate>> imageCreatorList)
             {
-                statusId = id;
-                urls = urlList;
-                imageCreators = imageCreatorList;
+                StatusId = id;
+                Urls = urlList;
+                ImageCreators = imageCreatorList;
             }
 
-            public bool IsError;
-
-            public string AdditionalErrorMessage;
-
             // 重複する呼び出しを検出するには
-            private bool disposedValue = false;
+            private bool _disposedValue = false;
 
             // IDisposable
             protected virtual void Dispose(bool disposing)
             {
-                if (!this.disposedValue)
+                if (!this._disposedValue)
                 {
                     if (disposing)
                     {
@@ -74,13 +72,13 @@ namespace Tween
                     }
 
                     // TODO: 共有のアンマネージ リソースを解放します
-                    foreach (KeyValuePair<string, Image> pic in pics)
+                    foreach (KeyValuePair<string, Image> pic in Pics)
                     {
                         if (pic.Value != null)
                             pic.Value.Dispose();
                     }
                 }
-                this.disposedValue = true;
+                this._disposedValue = true;
             }
 
             #region " IDisposable Support "
@@ -96,38 +94,37 @@ namespace Tween
             #endregion " IDisposable Support "
         }
 
-        private TweenMain Owner;
+        private TweenMain _owner;
         private delegate bool UrlCreatorDelegate(GetUrlArgs args);
         private delegate bool ImageCreatorDelegate(CreateImageArgs args);
 
         private class GetUrlArgs
         {
-            public string url;
-            public string extended;
-            public List<KeyValuePair<string, string>> imglist;
-            public Google.GlobalLocation geoInfo;
+            public string Url;
+            public string Extended;
+            public List<KeyValuePair<string, string>> ImgList;
+            public Google.GlobalLocation GeoInfo;
         }
 
         private class CreateImageArgs
         {
-            public KeyValuePair<string, string> url;
-            public List<KeyValuePair<string, Image>> pics;
-            public List<KeyValuePair<string, string>> tooltipText;
-            public string errmsg;
+            public KeyValuePair<string, string> Url;
+            public List<KeyValuePair<string, Image>> Pics;
+            public List<KeyValuePair<string, string>> TooltipText;
+            public string Errmsg;
         }
 
         private class ThumbnailService
         {
             public string Name;
-            public UrlCreatorDelegate urlCreator;
-
-            public ImageCreatorDelegate imageCreator;
+            public UrlCreatorDelegate UrlCreator;
+            public ImageCreatorDelegate ImageCreator;
 
             public ThumbnailService(string name, UrlCreatorDelegate urlcreator, ImageCreatorDelegate imagecreator)
             {
                 this.Name = name;
-                this.urlCreator = urlcreator;
-                this.imageCreator = imagecreator;
+                this.UrlCreator = urlcreator;
+                this.ImageCreator = imagecreator;
             }
         }
 
@@ -166,18 +163,18 @@ namespace Tween
 			new ThumbnailService("Twimg", Twimg_GetUrl, Twimg_CreateImage)
 		};
 
-        public Thumbnail(TweenMain Owner)
+        public Thumbnail(TweenMain owner)
         {
-            this.Owner = Owner;
+            this._owner = owner;
 
-            Owner.PreviewScrollBar.Scroll += PreviewScrollBar_Scroll;
-            Owner.PreviewPicture.MouseLeave += PreviewPicture_MouseLeave;
-            Owner.PreviewPicture.DoubleClick += PreviewPicture_DoubleClick;
+            owner.PreviewScrollBar.Scroll += PreviewScrollBar_Scroll;
+            owner.PreviewPicture.MouseLeave += PreviewPicture_MouseLeave;
+            owner.PreviewPicture.DoubleClick += PreviewPicture_DoubleClick;
         }
 
         private PostClass _curPost
         {
-            get { return Owner.CurPost; }
+            get { return _owner.CurPost; }
         }
 
         private static bool IsDirectLink(string url)
@@ -185,41 +182,37 @@ namespace Tween
             return Regex.Match(url, "^http://.*(\\.jpg|\\.jpeg|\\.gif|\\.png|\\.bmp)$", RegexOptions.IgnoreCase).Success;
         }
 
-        public void thumbnail(long id, List<string> links, PostClass.StatusGeo geo, Dictionary<string, string> media)
+        public void GenThumbnail(long id, List<string> links, PostClass.StatusGeo geo, Dictionary<string, string> media)
         {
-            if (!Owner.IsPreviewEnable)
+            if (!_owner.IsPreviewEnable)
             {
-                Owner.SplitContainer3.Panel2Collapsed = true;
+                _owner.SplitContainer3.Panel2Collapsed = true;
                 return;
             }
-            if (Owner.PreviewPicture.Image != null)
+
+            if (_owner.PreviewPicture.Image != null)
             {
-                Owner.PreviewPicture.Image.Dispose();
-                Owner.PreviewPicture.Image = null;
-                Owner.SplitContainer3.Panel2Collapsed = true;
+                _owner.PreviewPicture.Image.Dispose();
+                _owner.PreviewPicture.Image = null;
+                _owner.SplitContainer3.Panel2Collapsed = true;
             }
-            //SyncLock lckPrev
-            //    If _prev IsNot Nothing Then
-            //        _prev.Dispose()
-            //        _prev = Nothing
-            //    End If
-            //End SyncLock
 
             if (links.Count == 0 && geo == null && (media == null || media.Count == 0))
             {
-                Owner.PreviewScrollBar.Maximum = 0;
-                Owner.PreviewScrollBar.Enabled = false;
-                Owner.SplitContainer3.Panel2Collapsed = true;
+                _owner.PreviewScrollBar.Maximum = 0;
+                _owner.PreviewScrollBar.Enabled = false;
+                _owner.SplitContainer3.Panel2Collapsed = true;
                 return;
             }
 
             if (media != null && media.Count > 0)
             {
-                foreach (string link_loopVariable in links.ToArray())
+                foreach (var link in links.ToArray())
                 {
-                    var link = link_loopVariable;
                     if (media.ContainsKey(link))
+                    {
                         links.Remove(link);
+                    }
                 }
             }
 
@@ -230,64 +223,50 @@ namespace Tween
             {
                 foreach (ThumbnailService svc in ThumbnailServices)
                 {
-                    GetUrlArgs args = new GetUrlArgs();
-                    args.url = url;
-                    args.imglist = imglist;
-                    if (svc.urlCreator(args))
+                    GetUrlArgs args = new GetUrlArgs() { Url = url, ImgList = imglist };
+                    if (svc.UrlCreator(args))
                     {
                         // URLに対応したサムネイル作成処理デリゲートをリストに登録
-                        dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(url, svc.imageCreator));
-                        break; // TODO: might not be correct. Was : Exit For
+                        dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(url, svc.ImageCreator));
+                        break;
                     }
                 }
             }
             if (media != null)
             {
-                foreach (KeyValuePair<string, string> m_loopVariable in media)
+                foreach (var m in media)
                 {
-                    var m = m_loopVariable;
                     foreach (ThumbnailService svc in ThumbnailServices)
                     {
-                        GetUrlArgs args = new GetUrlArgs();
-                        args.url = m.Key;
-                        args.extended = m.Value;
-                        args.imglist = imglist;
-                        if (svc.urlCreator(args))
+                        GetUrlArgs args = new GetUrlArgs() { Url = m.Key, Extended = m.Value, ImgList = imglist };
+                        if (svc.UrlCreator(args))
                         {
                             // URLに対応したサムネイル作成処理デリゲートをリストに登録
-                            dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(m.Key, svc.imageCreator));
-                            break; // TODO: might not be correct. Was : Exit For
+                            dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(m.Key, svc.ImageCreator));
+                            break;
                         }
                     }
                 }
             }
             if (geo != null)
             {
-                GetUrlArgs args = new GetUrlArgs();
-                args.url = "";
-                args.imglist = imglist;
-                args.geoInfo = new Google.GlobalLocation
-                {
-                    Latitude = geo.Lat,
-                    Longitude = geo.Lng
-                };
+                GetUrlArgs args = new GetUrlArgs() { Url = "", ImgList = imglist, GeoInfo = new Google.GlobalLocation { Latitude = geo.Lat, Longitude = geo.Lng } };
                 if (TwitterGeo_GetUrl(args))
                 {
                     // URLに対応したサムネイル作成処理デリゲートをリストに登録
-                    dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(args.url, new ImageCreatorDelegate(TwitterGeo_CreateImage)));
+                    dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(args.Url, new ImageCreatorDelegate(TwitterGeo_CreateImage)));
                 }
             }
             if (imglist.Count == 0)
             {
-                Owner.PreviewScrollBar.Maximum = 0;
-                Owner.PreviewScrollBar.Enabled = false;
-                Owner.SplitContainer3.Panel2Collapsed = true;
+                _owner.PreviewScrollBar.Maximum = 0;
+                _owner.PreviewScrollBar.Enabled = false;
+                _owner.SplitContainer3.Panel2Collapsed = true;
                 return;
             }
 
             ThumbnailProgressChanged(0);
-            BackgroundWorker bgw = null;
-            bgw = new BackgroundWorker();
+            BackgroundWorker bgw = new BackgroundWorker();
             bgw.DoWork += bgw_DoWork;
             bgw.RunWorkerCompleted += bgw_Completed;
             bgw.RunWorkerAsync(new PreviewData(id, imglist, dlg));
@@ -308,13 +287,13 @@ namespace Tween
             }
             else
             {
-                if (string.IsNullOrEmpty(AddMsg))
+                if (String.IsNullOrEmpty(AddMsg))
                 {
-                    Owner.SetStatusLabel("can't get Thumbnail.");
+                    _owner.SetStatusLabel("can't get Thumbnail.");
                 }
                 else
                 {
-                    Owner.SetStatusLabel("can't get Thumbnail.(" + AddMsg + ")");
+                    _owner.SetStatusLabel("can't get Thumbnail.(" + AddMsg + ")");
                 }
             }
         }
@@ -322,31 +301,19 @@ namespace Tween
         private void bgw_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             PreviewData arg = (PreviewData)e.Argument;
-            BackgroundWorker worker = (BackgroundWorker)sender;
             arg.AdditionalErrorMessage = "";
 
-            foreach (KeyValuePair<string, string> url in arg.urls)
+            foreach (KeyValuePair<string, string> url in arg.Urls)
             {
-                CreateImageArgs args = new CreateImageArgs();
-                args.url = url;
-                args.pics = arg.pics;
-                args.tooltipText = arg.tooltipText;
-                args.errmsg = "";
-                if (!arg.imageCreators[arg.urls.IndexOf(url)].Value(args))
+                CreateImageArgs args = new CreateImageArgs() { Url = url, Pics = arg.Pics, TooltipText = arg.TooltipText, Errmsg = "" };
+                if (!arg.ImageCreators[arg.Urls.IndexOf(url)].Value(args))
                 {
-                    arg.AdditionalErrorMessage = args.errmsg;
+                    arg.AdditionalErrorMessage = args.Errmsg;
                     arg.IsError = true;
                 }
             }
 
-            if (arg.pics.Count == 0)
-            {
-                arg.IsError = true;
-            }
-            else
-            {
-                arg.IsError = false;
-            }
+            arg.IsError = arg.Pics.Count == 0;
             e.Result = arg;
         }
 
@@ -355,10 +322,10 @@ namespace Tween
             PreviewData prv = e.Result as PreviewData;
             if (prv == null || prv.IsError)
             {
-                Owner.PreviewScrollBar.Maximum = 0;
-                Owner.PreviewScrollBar.Enabled = false;
-                Owner.SplitContainer3.Panel2Collapsed = true;
-                if (prv != null && !string.IsNullOrEmpty(prv.AdditionalErrorMessage))
+                _owner.PreviewScrollBar.Maximum = 0;
+                _owner.PreviewScrollBar.Enabled = false;
+                _owner.SplitContainer3.Panel2Collapsed = true;
+                if (prv != null && !String.IsNullOrEmpty(prv.AdditionalErrorMessage))
                 {
                     ThumbnailProgressChanged(-1, prv.AdditionalErrorMessage);
                 }
@@ -368,37 +335,24 @@ namespace Tween
                 }
                 return;
             }
-            lock (lckPrev)
+            lock (_lckPrev)
             {
-                if (prv != null && _curPost != null && prv.statusId == _curPost.StatusId)
+                if (prv != null && _curPost != null && prv.StatusId == _curPost.StatusId)
                 {
                     _prev = prv;
-                    Owner.SplitContainer3.Panel2Collapsed = false;
-                    Owner.PreviewScrollBar.Maximum = _prev.pics.Count - 1;
-                    if (Owner.PreviewScrollBar.Maximum > 0)
-                    {
-                        Owner.PreviewScrollBar.Enabled = true;
-                    }
-                    else
-                    {
-                        Owner.PreviewScrollBar.Enabled = false;
-                    }
-                    Owner.PreviewScrollBar.Value = 0;
-                    Owner.PreviewPicture.Image = _prev.pics[0].Value;
-                    if (!string.IsNullOrEmpty(_prev.tooltipText[0].Value))
-                    {
-                        Owner.ToolTip1.SetToolTip(Owner.PreviewPicture, _prev.tooltipText[0].Value);
-                    }
-                    else
-                    {
-                        Owner.ToolTip1.SetToolTip(Owner.PreviewPicture, "");
-                    }
+                    _owner.SplitContainer3.Panel2Collapsed = false;
+                    _owner.PreviewScrollBar.Maximum = _prev.Pics.Count - 1;
+                    _owner.PreviewScrollBar.Enabled = _owner.PreviewScrollBar.Maximum > 0;
+                    _owner.PreviewScrollBar.Value = 0;
+                    _owner.PreviewPicture.Image = _prev.Pics[0].Value;
+                    string prevtooltipTextValue = _prev.TooltipText[0].Value;
+                    _owner.ToolTip1.SetToolTip(_owner.PreviewPicture, String.IsNullOrEmpty(prevtooltipTextValue) ? "" : prevtooltipTextValue);
                 }
-                else if (_curPost == null || (_prev != null && _curPost.StatusId != _prev.statusId))
+                else if (_curPost == null || (_prev != null && _curPost.StatusId != _prev.StatusId))
                 {
-                    Owner.PreviewScrollBar.Maximum = 0;
-                    Owner.PreviewScrollBar.Enabled = false;
-                    Owner.SplitContainer3.Panel2Collapsed = true;
+                    _owner.PreviewScrollBar.Maximum = 0;
+                    _owner.PreviewScrollBar.Enabled = false;
+                    _owner.SplitContainer3.Panel2Collapsed = true;
                 }
             }
             ThumbnailProgressChanged(100);
@@ -408,34 +362,34 @@ namespace Tween
         {
             if (forward)
             {
-                Owner.PreviewScrollBar.Value = Math.Min(Owner.PreviewScrollBar.Value + 1, Owner.PreviewScrollBar.Maximum);
-                PreviewScrollBar_Scroll(Owner.PreviewScrollBar, new ScrollEventArgs(ScrollEventType.SmallIncrement, Owner.PreviewScrollBar.Value));
+                _owner.PreviewScrollBar.Value = Math.Min(_owner.PreviewScrollBar.Value + 1, _owner.PreviewScrollBar.Maximum);
+                PreviewScrollBar_Scroll(_owner.PreviewScrollBar, new ScrollEventArgs(ScrollEventType.SmallIncrement, _owner.PreviewScrollBar.Value));
             }
             else
             {
-                Owner.PreviewScrollBar.Value = Math.Max(Owner.PreviewScrollBar.Value - 1, Owner.PreviewScrollBar.Minimum);
-                PreviewScrollBar_Scroll(Owner.PreviewScrollBar, new ScrollEventArgs(ScrollEventType.SmallDecrement, Owner.PreviewScrollBar.Value));
+                _owner.PreviewScrollBar.Value = Math.Max(_owner.PreviewScrollBar.Value - 1, _owner.PreviewScrollBar.Minimum);
+                PreviewScrollBar_Scroll(_owner.PreviewScrollBar, new ScrollEventArgs(ScrollEventType.SmallDecrement, _owner.PreviewScrollBar.Value));
             }
         }
 
         private void PreviewScrollBar_Scroll(System.Object sender, System.Windows.Forms.ScrollEventArgs e)
         {
-            lock (lckPrev)
+            lock (_lckPrev)
             {
-                if (_prev != null && _curPost != null && _prev.statusId == _curPost.StatusId)
+                if (_prev != null && _curPost != null && _prev.StatusId == _curPost.StatusId)
                 {
-                    if (_prev.pics.Count > e.NewValue)
+                    if (_prev.Pics.Count > e.NewValue)
                     {
-                        Owner.PreviewPicture.Image = _prev.pics[e.NewValue].Value;
-                        if (!string.IsNullOrEmpty(_prev.tooltipText[e.NewValue].Value))
+                        _owner.PreviewPicture.Image = _prev.Pics[e.NewValue].Value;
+                        if (!String.IsNullOrEmpty(_prev.TooltipText[e.NewValue].Value))
                         {
-                            Owner.ToolTip1.Hide(Owner.PreviewPicture);
-                            Owner.ToolTip1.SetToolTip(Owner.PreviewPicture, _prev.tooltipText[e.NewValue].Value);
+                            _owner.ToolTip1.Hide(_owner.PreviewPicture);
+                            _owner.ToolTip1.SetToolTip(_owner.PreviewPicture, _prev.TooltipText[e.NewValue].Value);
                         }
                         else
                         {
-                            Owner.ToolTip1.SetToolTip(Owner.PreviewPicture, "");
-                            Owner.ToolTip1.Hide(Owner.PreviewPicture);
+                            _owner.ToolTip1.SetToolTip(_owner.PreviewPicture, "");
+                            _owner.ToolTip1.Hide(_owner.PreviewPicture);
                         }
                     }
                 }
@@ -444,7 +398,7 @@ namespace Tween
 
         private void PreviewPicture_MouseLeave(object sender, System.EventArgs e)
         {
-            Owner.ToolTip1.Hide(Owner.PreviewPicture);
+            _owner.ToolTip1.Hide(_owner.PreviewPicture);
         }
 
         private void PreviewPicture_DoubleClick(object sender, System.EventArgs e)
@@ -456,18 +410,9 @@ namespace Tween
         {
             if (_prev != null)
             {
-                if (Owner.PreviewScrollBar.Value < _prev.pics.Count)
+                if (_owner.PreviewScrollBar.Value < _prev.Pics.Count)
                 {
-                    Owner.OpenUriAsync(_prev.pics[Owner.PreviewScrollBar.Value].Key);
-                    //If AppendSettingDialog.Instance.OpenPicBuiltinBrowser Then
-                    //    Using ab As New AuthBrowser
-                    //        ab.Auth = False
-                    //        ab.UrlString = _prev.pics(Owner.PreviewScrollBar.Value).Key
-                    //        ab.ShowDialog(Owner)
-                    //    End Using
-                    //Else
-                    //    Owner.OpenUriAsync(_prev.pics(Owner.PreviewScrollBar.Value).Key)
-                    //End If
+                    _owner.OpenUriAsync(_prev.Pics[_owner.PreviewScrollBar.Value].Key);
                 }
             }
         }
@@ -540,10 +485,10 @@ namespace Tween
 
         private static bool ImgUr_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://i.imgur.com/${1}l.jpg")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg")));
                 return true;
             }
             else
@@ -564,16 +509,15 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-
         private static bool ImgUr_CreateImage(CreateImageArgs args)
         {
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -584,9 +528,9 @@ namespace Tween
         private static bool DirectLink_GetUrl(GetUrlArgs args)
         {
             //画像拡張子で終わるURL（直リンク）
-            if (IsDirectLink(string.IsNullOrEmpty(args.extended) ? args.url : args.extended))
+            if (IsDirectLink(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended))
             {
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, string.IsNullOrEmpty(args.extended) ? args.url : args.extended));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
                 return true;
             }
             else
@@ -607,14 +551,15 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-
         private static bool DirectLink_CreateImage(CreateImageArgs args)
         {
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
+            {
                 return false;
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            }
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -631,15 +576,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool TwitPic_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(www\\.)?twitpic\\.com/(?<photoId>\\w+)(/full/?)?$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(www\\.)?twitpic\\.com/(?<photoId>\\w+)(/full/?)?$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://twitpic.com/show/thumb/${photoId}")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://twitpic.com/show/thumb/${photoId}")));
                 return true;
             }
             else
@@ -663,14 +607,14 @@ namespace Tween
         private static bool TwitPic_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -687,15 +631,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool yfrog_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://yfrog\\.com/(\\w+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://yfrog\\.com/(\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, string.IsNullOrEmpty(args.extended) ? args.url : args.extended + ".th.jpg"));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended + ".th.jpg"));
                 return true;
             }
             else
@@ -719,14 +662,14 @@ namespace Tween
         private static bool yfrog_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -743,16 +686,15 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Plixi_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^(http://tweetphoto\\.com/[0-9]+|http://pic\\.gd/[a-z0-9]+|http://(lockerz|plixi)\\.com/[ps]/[0-9]+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^(http://tweetphoto\\.com/[0-9]+|http://pic\\.gd/[a-z0-9]+|http://(lockerz|plixi)\\.com/[ps]/[0-9]+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 const string comp = "http://api.plixi.com/api/tpapi.svc/imagefromurl?size=thumbnail&url=";
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, comp + (string.IsNullOrEmpty(args.extended) ? args.url : args.extended)));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, comp + (String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended)));
                 return true;
             }
             else
@@ -777,13 +719,13 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             string referer = "";
-            if (args.url.Key.Contains("t.co"))
+            if (args.Url.Key.Contains("t.co"))
             {
-                if (args.url.Value.Contains("tweetphoto.com"))
+                if (args.Url.Value.Contains("tweetphoto.com"))
                 {
                     referer = "http://tweetphoto.com";
                 }
-                else if (args.url.Value.Contains("http://lockerz.com"))
+                else if (args.Url.Value.Contains("http://lockerz.com"))
                 {
                     referer = "http://lockerz.com";
                 }
@@ -794,16 +736,16 @@ namespace Tween
             }
             else
             {
-                referer = args.url.Key;
+                referer = args.Url.Key;
             }
-            Image img = (new HttpVarious()).GetImage(args.url.Value, referer, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, referer, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -820,15 +762,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool MobyPicture_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://moby\\.to/(\\w+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://moby\\.to/(\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://mobypicture.com/?${1}:small")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://mobypicture.com/?${1}:small")));
                 return true;
             }
             else
@@ -852,14 +793,14 @@ namespace Tween
         private static bool MobyPicture_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -876,15 +817,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool MovaPic_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://movapic\\.com/pic/(\\w+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://movapic\\.com/pic/(\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://image.movapic.com/pic/s_${1}.jpeg")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://image.movapic.com/pic/s_${1}.jpeg")));
                 return true;
             }
             else
@@ -905,17 +845,17 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private static  bool MovaPic_CreateImage(CreateImageArgs args)
+        private static bool MovaPic_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -932,15 +872,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Hatena_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://f\\.hatena\\.ne\\.jp/(([a-z])[a-z0-9_-]{1,30}[a-z0-9])/((\\d{8})\\d+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://f\\.hatena\\.ne\\.jp/(([a-z])[a-z0-9_-]{1,30}[a-z0-9])/((\\d{8})\\d+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://img.f.hatena.ne.jp/images/fotolife/${2}/${1}/${4}/${3}_120.jpg")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://img.f.hatena.ne.jp/images/fotolife/${2}/${1}/${4}/${3}_120.jpg")));
                 return true;
             }
             else
@@ -964,14 +903,14 @@ namespace Tween
         private static bool Hatena_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -988,27 +927,26 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool PhotoShare_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(?:www\\.)?bcphotoshare\\.com/photos/\\d+/(\\d+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(?:www\\.)?bcphotoshare\\.com/photos/\\d+/(\\d+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://images.bcphotoshare.com/storages/${1}/thumb180.jpg")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://images.bcphotoshare.com/storages/${1}/thumb180.jpg")));
                 return true;
             }
             // 短縮URL
-            mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://bctiny\\.com/p(\\w+)$", RegexOptions.IgnoreCase);
+            mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://bctiny\\.com/p(\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 try
                 {
-                    args.imglist.Add(new KeyValuePair<string, string>(args.url, "http://images.bcphotoshare.com/storages/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString() + "/thumb180.jpg"));
+                    args.ImgList.Add(new KeyValuePair<string, string>(args.Url, "http://images.bcphotoshare.com/storages/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString() + "/thumb180.jpg"));
                     return true;
                 }
-                catch (ArgumentOutOfRangeException ex)
+                catch (ArgumentOutOfRangeException)
                 {
                 }
             }
@@ -1030,14 +968,14 @@ namespace Tween
         private static bool PhotoShare_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -1054,15 +992,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool imgly_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://img\\.ly/(\\w+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://img\\.ly/(\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://img.ly/show/thumb/${1}")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://img.ly/show/thumb/${1}")));
                 return true;
             }
             else
@@ -1086,14 +1023,14 @@ namespace Tween
         private static bool imgly_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -1110,15 +1047,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool brightkite_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://brightkite\\.com/objects/((\\w{2})(\\w{2})\\w+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://brightkite\\.com/objects/((\\w{2})(\\w{2})\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://cdn.brightkite.com/${2}/${3}/${1}-feed.jpg")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://cdn.brightkite.com/${2}/${3}/${1}-feed.jpg")));
                 return true;
             }
             else
@@ -1142,14 +1078,14 @@ namespace Tween
         private static bool brightkite_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -1166,15 +1102,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Twitgoo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://twitgoo\\.com/(\\w+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://twitgoo\\.com/(\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://twitgoo.com/${1}/mini")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://twitgoo.com/${1}/mini")));
                 return true;
             }
             else
@@ -1198,14 +1133,14 @@ namespace Tween
         private static bool Twitgoo_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -1222,24 +1157,23 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool youtube_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://www\\.youtube\\.com/watch\\?v=([\\w\\-]+)", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.youtube\\.com/watch\\?v=([\\w\\-]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 //args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")))
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("${0}")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("${0}")));
                 return true;
             }
-            mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://youtu\\.be/([\\w\\-]+)", RegexOptions.IgnoreCase);
+            mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://youtu\\.be/([\\w\\-]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 //args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")))
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("${0}")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("${0}")));
                 return true;
             }
             return false;
@@ -1266,7 +1200,7 @@ namespace Tween
             // http://code.google.com/intl/ja/apis/youtube/2.0/developers_guide_protocol_understanding_video_feeds.html#Understanding_Feeds_and_Entries
             // デベロッパー ガイド: Data API プロトコル - 動画のフィードとエントリについて - YouTube の API とツール - Google Code
             string imgurl = "";
-            Match mcImg = Regex.Match(args.url.Value, "^http://(?:(www\\.youtube\\.com)|(youtu\\.be))/(watch\\?v=)?(?<videoid>([\\w\\-]+))", RegexOptions.IgnoreCase);
+            Match mcImg = Regex.Match(args.Url.Value, "^http://(?:(www\\.youtube\\.com)|(youtu\\.be))/(watch\\?v=)?(?<videoid>([\\w\\-]+))", RegexOptions.IgnoreCase);
             if (mcImg.Success)
             {
                 imgurl = mcImg.Result("http://i.ytimg.com/vi/${videoid}/default.jpg");
@@ -1275,11 +1209,11 @@ namespace Tween
             {
                 return false;
             }
-            string videourl = (new HttpVarious()).GetRedirectTo(args.url.Value);
+            string videourl = (new HttpVarious()).GetRedirectTo(args.Url.Value);
             Match mc = Regex.Match(videourl, "^http://(?:(www\\.youtube\\.com)|(youtu\\.be))/(watch\\?v=)?(?<videoid>([\\w\\-]+))", RegexOptions.IgnoreCase);
             if (videourl.StartsWith("http://www.youtube.com/index?ytsession="))
             {
-                videourl = args.url.Value;
+                videourl = args.Url.Value;
                 mc = Regex.Match(videourl, "^http://(?:(www\\.youtube\\.com)|(youtu\\.be))/(watch\\?v=)?(?<videoid>([\\w\\-]+))", RegexOptions.IgnoreCase);
             }
             if (mc.Success)
@@ -1304,14 +1238,14 @@ namespace Tween
                         try
                         {
                             tmp = xentry["media:title"].InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
+                            if (!String.IsNullOrEmpty(tmp))
                             {
                                 sb.Append(Tween.My_Project.Resources.YouTubeInfoText1);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
 
@@ -1325,7 +1259,7 @@ namespace Tween
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
 
@@ -1340,7 +1274,7 @@ namespace Tween
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
 
@@ -1356,7 +1290,7 @@ namespace Tween
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
 
@@ -1371,31 +1305,24 @@ namespace Tween
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
-
-                        //mc = Regex.Match(videourl, "^http://www\.youtube\.com/watch\?v=([\w\-]+)", RegexOptions.IgnoreCase)
-                        //If mc.Success Then
-                        //    imgurl = mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")
-                        //End If
-                        //mc = Regex.Match(videourl, "^http://youtu\.be/([\w\-]+)", RegexOptions.IgnoreCase)
-                        //If mc.Success Then
-                        //    imgurl = mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")
-                        //End If
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
 
-                    if (!string.IsNullOrEmpty(imgurl))
+                    if (!String.IsNullOrEmpty(imgurl))
                     {
                         HttpVarious http = new HttpVarious();
-                        Image _img = http.GetImage(imgurl, videourl, 10000, ref args.errmsg);
-                        if (_img == null)
+                        Image img = http.GetImage(imgurl, videourl, 10000, ref args.Errmsg);
+                        if (img == null)
+                        {
                             return false;
-                        args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                        args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, sb.ToString().Trim()));
+                        }
+                        args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                        args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, sb.ToString().Trim()));
                         return true;
                     }
                 }
@@ -1416,15 +1343,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool nicovideo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?:sm|nm)?([0-9]+)(\\?.+)?$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?:sm|nm)?([0-9]+)(\\?.+)?$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             else
@@ -1449,11 +1375,11 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
-            Match mc = Regex.Match(args.url.Value, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?<id>(?:sm|nm)?([0-9]+))(\\?.+)?$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(args.Url.Value, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?<id>(?:sm|nm)?([0-9]+))(\\?.+)?$", RegexOptions.IgnoreCase);
             string apiurl = "http://www.nicovideo.jp/api/getthumbinfo/" + mc.Groups["id"].Value;
             string src = "";
             string imgurl = "";
-            if ((new HttpVarious()).GetData(apiurl, null, ref src, 0, ref args.errmsg, MyCommon.GetUserAgentString()))
+            if ((new HttpVarious()).GetData(apiurl, null, ref src, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
             {
                 StringBuilder sb = new StringBuilder();
                 XmlDocument xdoc = new XmlDocument();
@@ -1471,28 +1397,28 @@ namespace Tween
                         try
                         {
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/title").InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
+                            if (!String.IsNullOrEmpty(tmp))
                             {
                                 sb.Append(Tween.My_Project.Resources.NiconicoInfoText1);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
 
                         try
                         {
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/length").InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
+                            if (!String.IsNullOrEmpty(tmp))
                             {
                                 sb.Append(Tween.My_Project.Resources.NiconicoInfoText2);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
 
@@ -1507,76 +1433,78 @@ namespace Tween
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
 
                         try
                         {
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/view_counter").InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
+                            if (!String.IsNullOrEmpty(tmp))
                             {
                                 sb.Append(Tween.My_Project.Resources.NiconicoInfoText4);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
 
                         try
                         {
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/comment_num").InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
+                            if (!String.IsNullOrEmpty(tmp))
                             {
                                 sb.Append(Tween.My_Project.Resources.NiconicoInfoText5);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
                         try
                         {
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/mylist_counter").InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
+                            if (!String.IsNullOrEmpty(tmp))
                             {
                                 sb.Append(Tween.My_Project.Resources.NiconicoInfoText6);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
                     }
                     else if (status == "fail")
                     {
                         string errcode = xdoc.SelectSingleNode("/nicovideo_thumb_response/error/code").InnerText;
-                        args.errmsg = errcode;
+                        args.Errmsg = errcode;
                         imgurl = "";
                     }
                     else
                     {
-                        args.errmsg = "UnknownResponse";
+                        args.Errmsg = "UnknownResponse";
                         imgurl = "";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     imgurl = "";
-                    args.errmsg = "Invalid XML";
+                    args.Errmsg = "Invalid XML";
                 }
 
-                if (!string.IsNullOrEmpty(imgurl))
+                if (!String.IsNullOrEmpty(imgurl))
                 {
-                    Image _img = http.GetImage(imgurl, args.url.Key, 0, ref args.errmsg);
-                    if (_img == null)
+                    Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
+                    if (img == null)
+                    {
                         return false;
-                    args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                    args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, sb.ToString().Trim()));
+                    }
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, sb.ToString().Trim()));
                     return true;
                 }
             }
@@ -1596,15 +1524,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool nicoseiga_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(?:seiga\\.nicovideo\\.jp/seiga/|nico\\.ms/)im\\d+");
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(?:seiga\\.nicovideo\\.jp/seiga/|nico\\.ms/)im\\d+");
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             else
@@ -1629,14 +1556,16 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
-            Match mc = Regex.Match(args.url.Value, "^http://(?:seiga\\.nicovideo\\.jp/seiga/|nico\\.ms/)im(?<id>\\d+)");
+            Match mc = Regex.Match(args.Url.Value, "^http://(?:seiga\\.nicovideo\\.jp/seiga/|nico\\.ms/)im(?<id>\\d+)");
             if (mc.Success)
             {
-                Image _img = http.GetImage("http://lohas.nicoseiga.jp/thumb/" + mc.Groups["id"].Value + "q?", args.url.Key, 0, ref args.errmsg);
-                if (_img == null)
+                Image img = http.GetImage("http://lohas.nicoseiga.jp/thumb/" + mc.Groups["id"].Value + "q?", args.Url.Key, 0, ref args.Errmsg);
+                if (img == null)
+                {
                     return false;
-                args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+                }
+                args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
                 return true;
             }
             return false;
@@ -1655,7 +1584,6 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Pixiv_GetUrl(GetUrlArgs args)
         {
             //参考: http://tail.s68.xrea.com/blog/2009/02/pixivflash.html Pixivの画像をFlashとかで取得する方法など:しっぽのブログ
@@ -1664,11 +1592,11 @@ namespace Tween
             //サムネイルURL http://img[サーバー番号].pixiv.net/img/[ユーザー名]/[サムネイルID]_s.[拡張子]
             //サムネイルURLは画像ページから抽出する
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url.Replace("amp;", ""), mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url.Replace("amp;", ""), mc.Value));
                 return true;
             }
             else
@@ -1694,34 +1622,36 @@ namespace Tween
             // TODO: サムネイル画像読み込み処理を記述します
             string src = "";
             //illustIDをキャプチャ
-            Match mc = Regex.Match(args.url.Value, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(args.Url.Value, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
             if (mc.Groups["tag"].Value == "R-18" || mc.Groups["tag"].Value == "R-18G")
             {
-                args.errmsg = "NotSupported";
+                args.Errmsg = "NotSupported";
                 return false;
             }
             else
             {
                 HttpVarious http = new HttpVarious();
-                if (http.GetData(Regex.Replace(mc.Groups[0].Value, "amp;", ""), null, ref src, 0, ref args.errmsg, ""))
+                if (http.GetData(Regex.Replace(mc.Groups[0].Value, "amp;", ""), null, ref src, 0, ref args.Errmsg, ""))
                 {
-                    Match _mc = Regex.Match(src, mc.Result("http://img([0-9]+)\\.pixiv\\.net/img/.+/${illustId}_[ms]\\.([a-zA-Z]+)"));
-                    if (_mc.Success)
+                    Match mc2 = Regex.Match(src, mc.Result("http://img([0-9]+)\\.pixiv\\.net/img/.+/${illustId}_[ms]\\.([a-zA-Z]+)"));
+                    if (mc2.Success)
                     {
-                        Image _img = http.GetImage(_mc.Value, args.url.Value, 0, ref args.errmsg);
-                        if (_img == null)
+                        Image img = http.GetImage(mc2.Value, args.Url.Value, 0, ref args.Errmsg);
+                        if (img == null)
+                        {
                             return false;
-                        args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                        args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+                        }
+                        args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                        args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
                         return true;
                     }
                     else if (Regex.Match(src, "<span class='error'>ログインしてください</span>").Success)
                     {
-                        args.errmsg = "NotSupported";
+                        args.Errmsg = "NotSupported";
                     }
                     else
                     {
-                        args.errmsg = "Pattern NotFound";
+                        args.Errmsg = "Pattern NotFound";
                     }
                 }
             }
@@ -1741,15 +1671,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool flickr_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, string.IsNullOrEmpty(args.extended) ? args.url : args.extended));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
                 return true;
             }
             else
@@ -1779,24 +1708,26 @@ namespace Tween
             //(二つ目のキャプチャ 一つ目の画像はユーザーアイコン）
 
             string src = "";
-            Match mc = Regex.Match(args.url.Value, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(args.Url.Value, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
             HttpVarious http = new HttpVarious();
-            if (http.GetData(args.url.Value, null, ref src, 0, ref args.errmsg, ""))
+            if (http.GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, ""))
             {
-                MatchCollection _mc = Regex.Matches(src, mc.Result("http://farm[0-9]+\\.static\\.flickr\\.com/[0-9]+/.+?\\.([a-zA-Z]+)"));
+                MatchCollection mc2 = Regex.Matches(src, mc.Result("http://farm[0-9]+\\.static\\.flickr\\.com/[0-9]+/.+?\\.([a-zA-Z]+)"));
                 //二つ以上キャプチャした場合先頭の一つだけ 一つだけの場合はユーザーアイコンしか取れなかった
-                if (_mc.Count > 1)
+                if (mc2.Count > 1)
                 {
-                    Image _img = http.GetImage(_mc[1].Value, args.url.Value, 0, ref args.errmsg);
-                    if (_img == null)
+                    Image img = http.GetImage(mc2[1].Value, args.Url.Value, 0, ref args.Errmsg);
+                    if (img == null)
+                    {
                         return false;
-                    args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                    args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+                    }
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
                     return true;
                 }
                 else
                 {
-                    args.errmsg = "Pattern NotFound";
+                    args.Errmsg = "Pattern NotFound";
                 }
             }
             return false;
@@ -1815,15 +1746,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Photozou_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             else
@@ -1848,32 +1778,36 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
-            Match mc = Regex.Match(args.url.Value, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(args.Url.Value, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 string src = "";
                 string show_info = mc.Result("http://api.photozou.jp/rest/photo_info?photo_id=${photoId}");
-                if (http.GetData(show_info, null, ref src, 0, ref args.errmsg, ""))
+                if (http.GetData(show_info, null, ref src, 0, ref args.Errmsg, ""))
                 {
                     XmlDocument xdoc = new XmlDocument();
-                    string thumbnail_url = "";
+                    string thumbnailUrl = "";
                     try
                     {
                         xdoc.LoadXml(src);
-                        thumbnail_url = xdoc.SelectSingleNode("/rsp/info/photo/thumbnail_image_url").InnerText;
+                        thumbnailUrl = xdoc.SelectSingleNode("/rsp/info/photo/thumbnail_image_url").InnerText;
                     }
                     catch (Exception ex)
                     {
-                        args.errmsg = ex.Message;
-                        thumbnail_url = "";
+                        args.Errmsg = ex.Message;
+                        thumbnailUrl = "";
                     }
-                    if (string.IsNullOrEmpty(thumbnail_url))
+                    if (String.IsNullOrEmpty(thumbnailUrl))
+                    {
                         return false;
-                    Image _img = http.GetImage(thumbnail_url, args.url.Key);
-                    if (_img == null)
+                    }
+                    Image img = http.GetImage(thumbnailUrl, args.Url.Key);
+                    if (img == null)
+                    {
                         return false;
-                    args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                    args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+                    }
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
                     return true;
                 }
             }
@@ -1893,15 +1827,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool TwitVideo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://twitvideo\\.jp/(\\w+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://twitvideo\\.jp/(\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://twitvideo.jp/img/thumb/${1}")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://twitvideo.jp/img/thumb/${1}")));
                 return true;
             }
             else
@@ -1925,14 +1858,14 @@ namespace Tween
         private static bool TwitVideo_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 0, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 0, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -1949,15 +1882,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Piapro_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             else
@@ -1982,28 +1914,30 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
-            Match mc = Regex.Match(args.url.Value, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
+            Match mc = Regex.Match(args.Url.Value, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
             if (mc.Success)
             {
                 string src = "";
-                if (http.GetData(args.url.Key, null, ref src, 0, ref args.errmsg, ""))
+                if (http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, ""))
                 {
-                    Match _mc = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<big_img>http://c1\\.piapro\\.jp/timg/[0-9a-z]+_\\d{14}_0500_0500\\.(?:jpg|png|gif)?)\" />");
-                    if (_mc.Success)
+                    Match mc2 = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<big_img>http://c1\\.piapro\\.jp/timg/[0-9a-z]+_\\d{14}_0500_0500\\.(?:jpg|png|gif)?)\" />");
+                    if (mc2.Success)
                     {
                         //各画像には120x120のサムネイルがある（多分）ので、URLを置き換える。元々ページに埋め込まれている画像は500x500
-                        System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex("_\\d{4}_\\d{4}");
-                        string min_img_url = r.Replace(_mc.Groups["big_img"].Value, "_0120_0120");
-                        Image _img = http.GetImage(min_img_url, args.url.Key, 0, ref args.errmsg);
-                        if (_img == null)
+                        Regex r = new Regex("_\\d{4}_\\d{4}");
+                        string minImgUrl = r.Replace(mc2.Groups["big_img"].Value, "_0120_0120");
+                        Image img = http.GetImage(minImgUrl, args.Url.Key, 0, ref args.Errmsg);
+                        if (img == null)
+                        {
                             return false;
-                        args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                        args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+                        }
+                        args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                        args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
                         return true;
                     }
                     else
                     {
-                        args.errmsg = "Pattern NotFound";
+                        args.Errmsg = "Pattern NotFound";
                     }
                 }
             }
@@ -2023,15 +1957,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Tumblr_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(.+\\.)?tumblr\\.com/.+/?", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(.+\\.)?tumblr\\.com/.+/?", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             else
@@ -2056,7 +1989,7 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
-            string TargetUrl = args.url.Value;
+            string TargetUrl = args.Url.Value;
             string tmp = http.GetRedirectTo(TargetUrl);
             while (!TargetUrl.Equals(tmp))
             {
@@ -2067,7 +2000,7 @@ namespace Tween
             string apiurl = mc.Groups["base"].Value + "api/read?id=" + mc.Groups["postID"].Value;
             string src = "";
             string imgurl = null;
-            if (http.GetData(apiurl, null, ref src, 0, ref args.errmsg, ""))
+            if (http.GetData(apiurl, null, ref src, 0, ref args.Errmsg, ""))
             {
                 XmlDocument xdoc = new XmlDocument();
                 try
@@ -2081,22 +2014,24 @@ namespace Tween
                     }
                     else
                     {
-                        args.errmsg = "PostType:" + type;
+                        args.Errmsg = "PostType:" + type;
                         imgurl = "";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     imgurl = "";
                 }
 
-                if (!string.IsNullOrEmpty(imgurl))
+                if (!String.IsNullOrEmpty(imgurl))
                 {
-                    Image _img = http.GetImage(imgurl, args.url.Key, 0, ref args.errmsg);
-                    if (_img == null)
+                    Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
+                    if (img == null)
+                    {
                         return false;
-                    args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                    args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+                    }
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
                     return true;
                 }
             }
@@ -2116,15 +2051,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool TwipplePhoto_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://p\\.twipple\\.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://p\\.twipple\\.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             else
@@ -2149,34 +2083,38 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
-            Match mc = Regex.Match(args.url.Value, "^http://p.twipple.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(args.Url.Value, "^http://p.twipple.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 string src = "";
-                if (http.GetData(args.url.Key, null, ref src, 0, ref args.errmsg, ""))
+                if (http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, ""))
                 {
-                    string thumbnail_url = "";
-                    string ContentId = mc.Groups["contentId"].Value;
-                    StringBuilder DataDir = new StringBuilder();
+                    string thumbnailUrl = "";
+                    string contentId = mc.Groups["contentId"].Value;
+                    StringBuilder dataDir = new StringBuilder();
 
                     // DataDir作成
-                    DataDir.Append("data");
-                    for (int i = 0; i <= ContentId.Length - 1; i++)
+                    dataDir.Append("data");
+                    for (int i = 0; i < contentId.Length; i++)
                     {
-                        DataDir.Append("/");
-                        DataDir.Append(ContentId[i]);
+                        dataDir.Append("/");
+                        dataDir.Append(contentId[i]);
                     }
 
                     // サムネイルURL抽出
-                    thumbnail_url = Regex.Match(src, "http://p\\.twipple\\.jp/" + DataDir.ToString() + "_s\\.([a-zA-Z]+)").Value;
+                    thumbnailUrl = Regex.Match(src, "http://p\\.twipple\\.jp/" + dataDir.ToString() + "_s\\.([a-zA-Z]+)").Value;
 
-                    if (string.IsNullOrEmpty(thumbnail_url))
+                    if (String.IsNullOrEmpty(thumbnailUrl))
+                    {
                         return false;
-                    Image _img = http.GetImage(thumbnail_url, args.url.Key, 0, ref args.errmsg);
-                    if (_img == null)
+                    }
+                    Image img = http.GetImage(thumbnailUrl, args.Url.Key, 0, ref args.Errmsg);
+                    if (img == null)
+                    {
                         return false;
-                    args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                    args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+                    }
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
                     return true;
                 }
             }
@@ -2196,15 +2134,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool mypix_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://(www\\.mypix\\.jp|www\\.shamoji\\.info)/app\\.php/picture/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(www\\.mypix\\.jp|www\\.shamoji\\.info)/app\\.php/picture/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value + "/thumb.jpg"));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value + "/thumb.jpg"));
                 return true;
             }
             else
@@ -2228,14 +2165,14 @@ namespace Tween
         private static bool mypix_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 0, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 0, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -2252,15 +2189,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Owly_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://ow\\.ly/i/(\\w+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://ow\\.ly/i/(\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://static.ow.ly/photos/thumb/${1}.jpg")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://static.ow.ly/photos/thumb/${1}.jpg")));
                 return true;
             }
             else
@@ -2284,14 +2220,14 @@ namespace Tween
         private static bool Owly_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 0, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 0, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -2308,15 +2244,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Vimeo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://vimeo\\.com/[0-9]+", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://vimeo\\.com/[0-9]+", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             else
@@ -2341,11 +2276,11 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
-            Match mc = Regex.Match(args.url.Value, "http://vimeo\\.com/(?<postID>[0-9]+)", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(args.Url.Value, "http://vimeo\\.com/(?<postID>[0-9]+)", RegexOptions.IgnoreCase);
             string apiurl = "http://vimeo.com/api/v2/video/" + mc.Groups["postID"].Value + ".xml";
             string src = "";
             string imgurl = null;
-            if (http.GetData(apiurl, null, ref src, 0, ref args.errmsg, ""))
+            if (http.GetData(apiurl, null, ref src, 0, ref args.Errmsg, ""))
             {
                 XmlDocument xdoc = new XmlDocument();
                 StringBuilder sb = new StringBuilder();
@@ -2355,16 +2290,17 @@ namespace Tween
                     try
                     {
                         string tmp = xdoc.SelectSingleNode("videos/video/title").InnerText;
-                        if (!string.IsNullOrEmpty(tmp))
+                        if (!String.IsNullOrEmpty(tmp))
                         {
                             sb.Append(Tween.My_Project.Resources.VimeoInfoText1);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
+
                     try
                     {
                         DateTime tmpdate = new DateTime();
@@ -2375,48 +2311,52 @@ namespace Tween
                             sb.AppendLine();
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
+
                     try
                     {
                         string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_likes").InnerText;
-                        if (!string.IsNullOrEmpty(tmp))
+                        if (!String.IsNullOrEmpty(tmp))
                         {
                             sb.Append(Tween.My_Project.Resources.VimeoInfoText3);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
+
                     try
                     {
                         string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_plays").InnerText;
-                        if (!string.IsNullOrEmpty(tmp))
+                        if (!String.IsNullOrEmpty(tmp))
                         {
                             sb.Append(Tween.My_Project.Resources.VimeoInfoText4);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
+
                     try
                     {
                         string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_comments").InnerText;
-                        if (!string.IsNullOrEmpty(tmp))
+                        if (!String.IsNullOrEmpty(tmp))
                         {
                             sb.Append(Tween.My_Project.Resources.VimeoInfoText5);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
+
                     try
                     {
                         int sec = 0;
@@ -2427,33 +2367,36 @@ namespace Tween
                             sb.AppendLine();
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
+
                     try
                     {
                         string tmp = xdoc.SelectSingleNode("videos/video/thumbnail_medium").InnerText;
-                        if (!string.IsNullOrEmpty(tmp))
+                        if (!String.IsNullOrEmpty(tmp))
                         {
                             imgurl = tmp;
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     imgurl = "";
                 }
 
-                if (!string.IsNullOrEmpty(imgurl))
+                if (!String.IsNullOrEmpty(imgurl))
                 {
-                    Image _img = http.GetImage(imgurl, args.url.Key, 0, ref args.errmsg);
-                    if (_img == null)
+                    Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
+                    if (img == null)
+                    {
                         return false;
-                    args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                    args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, sb.ToString().Trim()));
+                    }
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, sb.ToString().Trim()));
                     return true;
                 }
             }
@@ -2473,15 +2416,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool CloudFiles_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://c[0-9]+\\.cdn[0-9]+\\.cloudfiles\\.rackspacecloud\\.com/[a-z_0-9]+", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://c[0-9]+\\.cdn[0-9]+\\.cloudfiles\\.rackspacecloud\\.com/[a-z_0-9]+", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             else
@@ -2505,14 +2447,14 @@ namespace Tween
         private static bool CloudFiles_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 0, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 0, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -2529,15 +2471,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool instagram_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://instagr.am/p/.+/", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://instagr.am/p/.+/", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             else
@@ -2564,21 +2505,23 @@ namespace Tween
 
             string src = "";
             HttpVarious http = new HttpVarious();
-            if (http.GetData(args.url.Value, null, ref src, 0, ref args.errmsg, ""))
+            if (http.GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, ""))
             {
                 Match mc = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<url>.+)\" ?/>");
                 if (mc.Success)
                 {
-                    Image _img = http.GetImage(mc.Groups["url"].Value, args.url.Key, 0, ref args.errmsg);
-                    if (_img == null)
+                    Image img = http.GetImage(mc.Groups["url"].Value, args.Url.Key, 0, ref args.Errmsg);
+                    if (img == null)
+                    {
                         return false;
-                    args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                    args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+                    }
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
                     return true;
                 }
                 else
                 {
-                    args.errmsg = "Pattern NotFound";
+                    args.Errmsg = "Pattern NotFound";
                 }
             }
             return false;
@@ -2597,15 +2540,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool pikubo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://pikubo\\.me/([a-z0-9-_]+)", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://pikubo\\.me/([a-z0-9-_]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://pikubo.me/q/${1}")));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://pikubo.me/q/${1}")));
                 return true;
             }
             else
@@ -2630,11 +2572,13 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
 
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 0, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 0, ref args.Errmsg);
             if (img == null)
+            {
                 return false;
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+            }
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             return true;
         }
 
@@ -2651,22 +2595,21 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool PicPlz_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://picplz\\.com/user/\\w+/pic/(?<longurl_ids>\\w+)/?$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://picplz\\.com/user/\\w+/pic/(?<longurl_ids>\\w+)/?$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
-            mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://picplz\\.com/(?<shorturl_ids>\\w+)?$", RegexOptions.IgnoreCase);
+            mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://picplz\\.com/(?<shorturl_ids>\\w+)?$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             return false;
@@ -2684,10 +2627,9 @@ namespace Tween
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-
         private class PicPlzDataModel
         {
-            [DataContract()]
+            [DataContract]
             public class Icon
             {
                 [DataMember(Name = "url")]
@@ -2700,7 +2642,7 @@ namespace Tween
                 public int Height;
             }
 
-            [DataContract()]
+            [DataContract]
             public class Creator
             {
                 [DataMember(Name = "username")]
@@ -2722,7 +2664,7 @@ namespace Tween
                 public PicPlzDataModel.Icon Icon;
             }
 
-            [DataContract()]
+            [DataContract]
             public class PicFileInfo
             {
                 [DataMember(Name = "width")]
@@ -2735,7 +2677,7 @@ namespace Tween
                 public int Height;
             }
 
-            [DataContract()]
+            [DataContract]
             public class PicFiles
             {
                 [DataMember(Name = "640r")]
@@ -2748,7 +2690,7 @@ namespace Tween
                 public PicFileInfo Pic320rh;
             }
 
-            [DataContract()]
+            [DataContract]
             public class Pics
             {
                 [DataMember(Name = "view_count")]
@@ -2779,14 +2721,14 @@ namespace Tween
                 public int Id;
             }
 
-            [DataContract()]
+            [DataContract]
             public class Value
             {
                 [DataMember(Name = "pics")]
                 public Pics[] Pics;
             }
 
-            [DataContract()]
+            [DataContract]
             public class ResultData
             {
                 [DataMember(Name = "result")]
@@ -2801,16 +2743,15 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
-            Match mc = null;
             string apiurl = "http://api.picplz.com/api/v2/pic.json?";
-            mc = Regex.Match(args.url.Value, "^http://picplz\\.com/user/\\w+/pic/(?<longurl_ids>\\w+)/?$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(args.Url.Value, "^http://picplz\\.com/user/\\w+/pic/(?<longurl_ids>\\w+)/?$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 apiurl += "longurl_ids=" + mc.Groups["longurl_ids"].Value;
             }
             else
             {
-                mc = Regex.Match(args.url.Value, "^http://picplz\\.com/(?<shorturl_ids>\\w+)?$", RegexOptions.IgnoreCase);
+                mc = Regex.Match(args.Url.Value, "^http://picplz\\.com/(?<shorturl_ids>\\w+)?$", RegexOptions.IgnoreCase);
                 if (mc.Success)
                 {
                     apiurl += "shorturl_ids=" + mc.Groups["shorturl_ids"].Value;
@@ -2822,7 +2763,7 @@ namespace Tween
             }
             string src = "";
             string imgurl = "";
-            if ((new HttpVarious()).GetData(apiurl, null, ref src, 0, ref args.errmsg, MyCommon.GetUserAgentString()))
+            if ((new HttpVarious()).GetData(apiurl, null, ref src, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
             {
                 StringBuilder sb = new StringBuilder();
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(PicPlzDataModel.ResultData));
@@ -2832,7 +2773,7 @@ namespace Tween
                 {
                     res = MyCommon.CreateDataFromJson<PicPlzDataModel.ResultData>(src);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -2843,7 +2784,7 @@ namespace Tween
                     {
                         imgurl = res.Value.Pics[0].PicFiles.Pic320rh.ImgUrl;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
 
@@ -2851,7 +2792,7 @@ namespace Tween
                     {
                         sb.Append(res.Value.Pics[0].Caption);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
                 }
@@ -2860,13 +2801,15 @@ namespace Tween
                     return false;
                 }
 
-                if (!string.IsNullOrEmpty(imgurl))
+                if (!String.IsNullOrEmpty(imgurl))
                 {
-                    Image _img = http.GetImage(imgurl, args.url.Key, 0, ref args.errmsg);
-                    if (_img == null)
+                    Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
+                    if (img == null)
+                    {
                         return false;
-                    args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                    args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, sb.ToString().Trim()));
+                    }
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, sb.ToString().Trim()));
                     return true;
                 }
             }
@@ -2886,19 +2829,18 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Foursquare_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^https?://(4sq|foursquare).com/", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^https?://(4sq|foursquare).com/", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                //Dim mapsUrl As String = Foursquare.GetInstance.GetMapsUri(args.url)
-                //If mapsUrl Is Nothing Then Return False
                 if (!AppendSettingDialog.Instance.IsPreviewFoursquare)
+                {
                     return false;
-                args.imglist.Add(new KeyValuePair<string, string>(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, ""));
+                }
+                args.ImgList.Add(new KeyValuePair<string, string>(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, ""));
                 return true;
             }
             else
@@ -2923,17 +2865,19 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             string tipsText = "";
-            string mapsUrl = Foursquare.GetInstance.GetMapsUri(args.url.Key, ref tipsText);
+            string mapsUrl = Foursquare.GetInstance.GetMapsUri(args.Url.Key, ref tipsText);
             if (mapsUrl == null)
+            {
                 return false;
-            Image img = (new HttpVarious()).GetImage(mapsUrl, args.url.Key, 10000, ref args.errmsg);
+            }
+            Image img = (new HttpVarious()).GetImage(mapsUrl, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, tipsText));
+            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, tipsText));
             return true;
         }
 
@@ -2950,14 +2894,13 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool TwitterGeo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            if (args.geoInfo != null && (args.geoInfo.Latitude != 0 || args.geoInfo.Longitude != 0))
+            if (args.GeoInfo != null && (args.GeoInfo.Latitude != 0 || args.GeoInfo.Longitude != 0))
             {
-                string url = (new Google()).CreateGoogleStaticMapsUri(args.geoInfo);
-                args.imglist.Add(new KeyValuePair<string, string>(url, url));
+                string url = (new Google()).CreateGoogleStaticMapsUri(args.GeoInfo);
+                args.ImgList.Add(new KeyValuePair<string, string>(url, url));
                 return true;
             }
             return false;
@@ -2978,13 +2921,13 @@ namespace Tween
         private static bool TwitterGeo_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            Image img = (new HttpVarious()).GetImage(args.url.Value, args.url.Key, 10000, ref args.errmsg);
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            string url = args.url.Value;
+            string url = args.Url.Value;
             try
             {
                 // URLをStaticMapAPIから通常のURLへ変換
@@ -2999,12 +2942,12 @@ namespace Tween
                 url = Regex.Replace(url, "&size=\\d+x\\d+&zoom=\\d+", "");
                 url = url.Replace("&sensor=false", "");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                url = args.url.Value;
+                url = args.Url.Value;
             }
-            args.pics.Add(new KeyValuePair<string, Image>(url, img));
-            args.tooltipText.Add(new KeyValuePair<string, string>(url, ""));
+            args.Pics.Add(new KeyValuePair<string, Image>(url, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(url, ""));
             return true;
         }
 
@@ -3021,29 +2964,28 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Tinami_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
             //http://www.tinami.com/view/250818
             //http://tinami.jp/5dj6 (短縮URL)
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://www\\.tinami\\.com/view/\\d+$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.tinami\\.com/view/\\d+$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             // 短縮URL
-            mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^http://tinami\\.jp/(\\w+)$", RegexOptions.IgnoreCase);
+            mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://tinami\\.jp/(\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 try
                 {
-                    args.imglist.Add(new KeyValuePair<string, string>(args.url, "http://www.tinami.com/view/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString()));
+                    args.ImgList.Add(new KeyValuePair<string, string>(args.Url, "http://www.tinami.com/view/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString()));
                     return true;
                 }
-                catch (ArgumentOutOfRangeException ex)
+                catch (ArgumentOutOfRangeException)
                 {
                 }
             }
@@ -3066,16 +3008,16 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
-            Match mc = Regex.Match(args.url.Value, "^http://www\\.tinami\\.com/view/(?<ContentId>\\d+)$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(args.Url.Value, "^http://www\\.tinami\\.com/view/(?<ContentId>\\d+)$", RegexOptions.IgnoreCase);
             const string ApiKey = "4e353d9113dce";
             if (mc.Success)
             {
                 string src = "";
                 string ContentInfo = mc.Result("http://api.tinami.com/content/info?api_key=" + ApiKey + "&cont_id=${ContentId}");
-                if (http.GetData(ContentInfo, null, ref src, 0, ref args.errmsg, ""))
+                if (http.GetData(ContentInfo, null, ref src, 0, ref args.Errmsg, ""))
                 {
                     XmlDocument xdoc = new XmlDocument();
-                    string thumbnail_url = "";
+                    string thumbnailUrl = "";
                     try
                     {
                         xdoc.LoadXml(src);
@@ -3085,14 +3027,18 @@ namespace Tween
                             if (xdoc.SelectSingleNode("/rsp/content/thumbnails/thumbnail_150x150") != null)
                             {
                                 var nd = xdoc.SelectSingleNode("/rsp/content/thumbnails/thumbnail_150x150");
-                                thumbnail_url = nd.Attributes.GetNamedItem("url").InnerText;
-                                if (string.IsNullOrEmpty(thumbnail_url))
+                                thumbnailUrl = nd.Attributes.GetNamedItem("url").InnerText;
+                                if (String.IsNullOrEmpty(thumbnailUrl))
+                                {
                                     return false;
-                                Image _img = http.GetImage(thumbnail_url, args.url.Key);
-                                if (_img == null)
+                                }
+                                Image img = http.GetImage(thumbnailUrl, args.Url.Key);
+                                if (img == null)
+                                {
                                     return false;
-                                args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                                args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+                                }
+                                args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                                args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
                                 return true;
                             }
                             else
@@ -3100,29 +3046,27 @@ namespace Tween
                                 //エラー処理 エラーメッセージが返ってきた場合はここで処理
                                 if (xdoc.SelectSingleNode("/rsp/err") != null)
                                 {
-                                    args.errmsg = xdoc.SelectSingleNode("/rsp/err").Attributes.GetNamedItem("msg").InnerText;
+                                    args.Errmsg = xdoc.SelectSingleNode("/rsp/err").Attributes.GetNamedItem("msg").InnerText;
                                 }
                                 return false;
                             }
                         }
                         else
                         {
-                            // TODO rsp stat=failの際のエラーメッセージ返却はAPI拡張待ち(2011/8/2要望済み)
-                            // TODO 後日APIレスポンスを確認し修正すること
                             if (xdoc.SelectSingleNode("/rsp/err") != null)
                             {
-                                args.errmsg = xdoc.SelectSingleNode("/rsp/err").Attributes.GetNamedItem("msg").InnerText;
+                                args.Errmsg = xdoc.SelectSingleNode("/rsp/err").Attributes.GetNamedItem("msg").InnerText;
                             }
                             else
                             {
-                                args.errmsg = "DeletedOrSuspended";
+                                args.Errmsg = "DeletedOrSuspended";
                             }
                             return false;
                         }
                     }
                     catch (Exception ex)
                     {
-                        args.errmsg = ex.Message;
+                        args.Errmsg = ex.Message;
                         return false;
                     }
                 }
@@ -3143,15 +3087,14 @@ namespace Tween
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-
         private static bool Twimg_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.extended) ? args.url : args.extended, "^https?://p\\.twimg\\.com/.*$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^https?://p\\.twimg\\.com/.*$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Value));
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
             return false;
@@ -3173,16 +3116,18 @@ namespace Tween
         {
             // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
-            Match mc = Regex.Match(args.url.Value, "^https?://p\\.twimg\\.com/.*$", RegexOptions.IgnoreCase);
+            Match mc = Regex.Match(args.Url.Value, "^https?://p\\.twimg\\.com/.*$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 string src = "";
-                string ContentInfo = args.url.Value + ":thumb";
-                var _img = http.GetImage(ContentInfo, src, 0, ref args.errmsg);
-                if (_img == null)
+                string contentInfo = args.Url.Value + ":thumb";
+                var img = http.GetImage(contentInfo, src, 0, ref args.Errmsg);
+                if (img == null)
+                {
                     return false;
-                args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, _img));
-                args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, ""));
+                }
+                args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, ""));
             }
             return false;
         }
