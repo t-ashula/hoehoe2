@@ -47,11 +47,8 @@ namespace Tween.TweenCustomControl
         public class LogEntry
         {
             private readonly LogLevel _logLevel;
-
             private readonly DateTime _timestamp;
-
             private readonly string _summary;
-
             private readonly string _detail;
 
             public LogLevel LogLevel
@@ -89,7 +86,7 @@ namespace Tween.TweenCustomControl
 
             public override string ToString()
             {
-                return Timestamp.ToString("T") + ": " + Summary;
+                return String.Format("{0:T}: {1}", Timestamp, Summary);
             }
         }
 
