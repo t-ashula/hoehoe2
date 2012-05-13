@@ -51,7 +51,9 @@ namespace Tween
             {
                 this._gaugeHeight = value;
                 if (this.Control != null && !this.Control.IsDisposed)
+                {
                     this.Control.Refresh();
+                }
             }
         }
 
@@ -155,15 +157,7 @@ namespace Tween
             }
 
             double minute = Math.Ceiling((this.ResetTime - DateTime.Now).TotalMinutes);
-            string minuteText = null;
-            if (minute >= 0)
-            {
-                minuteText = minute.ToString();
-            }
-            else
-            {
-                minuteText = "???";
-            }
+            string minuteText = minute >= 0 ? minute.ToString() : "???";
 
             this.ToolTipText = string.Format(toolTipTextFormat, this._remainCount, this._maxCount, minuteText);
         }
