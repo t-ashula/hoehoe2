@@ -38,10 +38,8 @@ namespace Tween
         private int _unreadCount = 0;
         private List<long> _ids;
         private List<TemporaryId> _tmpIds = new List<TemporaryId>();
-        private Tween.MyCommon.TabUsageType _tabType = Tween.MyCommon.TabUsageType.Undefined;
-
+        private MyCommon.TabUsageType _tabType = MyCommon.TabUsageType.Undefined;
         private IdComparerClass _sorter = new IdComparerClass();
-
         private readonly object _lockObj = new object();
 
         public string User { get; set; }
@@ -52,7 +50,6 @@ namespace Tween
         private string _searchLang = "";
 
         private string _searchWords = "";
-
         private string _nextPageQuery = "";
 
         public string SearchLang
@@ -98,7 +95,9 @@ namespace Tween
             }
             qry.Add("q", _searchWords);
             if (!string.IsNullOrEmpty(_searchLang))
+            {
                 qry.Add("lang", _searchLang);
+            }
             _beforeQuery = qry;
         }
 
@@ -109,10 +108,14 @@ namespace Tween
             {
                 qry.Add("q", _searchWords);
                 if (!string.IsNullOrEmpty(_searchLang))
+                {
                     qry.Add("lang", _searchLang);
+                }
             }
             if (qry.Count != _beforeQuery.Count)
+            {
                 return true;
+            }
 
             foreach (KeyValuePair<string, string> kvp in qry)
             {
@@ -138,23 +141,25 @@ namespace Tween
 
         #endregion "リスト"
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore]
         public PostClass RelationTargetPost { get; set; }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore]
         public long OldestId { get; set; }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore]
         public long SinceId { get; set; }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore]
         public Dictionary<long, PostClass> Posts { get; set; }
 
         public PostClass[] GetTemporaryPosts()
         {
             List<PostClass> tempPosts = new List<PostClass>();
             if (_tmpIds.Count == 0)
+            {
                 return tempPosts.ToArray();
+            }
             foreach (TemporaryId tempId in _tmpIds)
             {
                 tempPosts.Add(Posts[tempId.Id]);
@@ -170,7 +175,6 @@ namespace Tween
         private struct TemporaryId
         {
             public long Id;
-
             public bool Read;
 
             public TemporaryId(long argId, bool argRead)
@@ -189,23 +193,23 @@ namespace Tween
             _unreadManage = true;
             _ids = new List<long>();
             this.OldestUnreadId = -1;
-            _tabType = Tween.MyCommon.TabUsageType.Undefined;
+            _tabType = MyCommon.TabUsageType.Undefined;
             _listInfo = null;
         }
 
-        public TabClass(string TabName, Tween.MyCommon.TabUsageType TabType, ListElement list)
+        public TabClass(string tabName, MyCommon.TabUsageType tabType, ListElement list)
         {
             Posts = new Dictionary<long, PostClass>();
-            this.TabName = TabName;
+            TabName = tabName;
             _filters = new List<FiltersClass>();
             Notify = true;
             SoundFile = "";
             _unreadManage = true;
             _ids = new List<long>();
-            this.OldestUnreadId = -1;
-            _tabType = TabType;
-            this.ListInfo = list;
-            if (this.IsInnerStorageTabType)
+            OldestUnreadId = -1;
+            _tabType = tabType;
+            ListInfo = list;
+            if (IsInnerStorageTabType)
             {
                 _sorter.posts = Posts;
             }
@@ -268,59 +272,59 @@ namespace Tween
         }
 
         //無条件に追加
-        private void Add(long ID, bool Read)
+        private void Add(long id, bool read)
         {
-            if (this._ids.Contains(ID))
-                return;
-
-            if (this.Sorter.Mode == IdComparerClass.ComparerMode.Id)
+            if (this._ids.Contains(id))
             {
-                if (this.Sorter.Order == SortOrder.Ascending)
+                return;
+            }
+
+            if (Sorter.Mode == IdComparerClass.ComparerMode.Id)
+            {
+                if (Sorter.Order == SortOrder.Ascending)
                 {
-                    this._ids.Add(ID);
+                    _ids.Add(id);
                 }
                 else
                 {
-                    this._ids.Insert(0, ID);
+                    _ids.Insert(0, id);
                 }
             }
             else
             {
-                this._ids.Add(ID);
+                _ids.Add(id);
             }
 
-            if (!Read && this._unreadManage)
+            if (!read && _unreadManage)
             {
-                this._unreadCount += 1;
-                if (ID < this.OldestUnreadId)
-                    this.OldestUnreadId = ID;
-                //If Me.OldestUnreadId = -1 Then
-                //    Me.OldestUnreadId = ID
-                //Else
-                //    If ID < Me.OldestUnreadId Then Me.OldestUnreadId = ID
-                //End If
+                _unreadCount += 1;
+                if (id < OldestUnreadId)
+                {
+                    OldestUnreadId = id;
+                }
             }
         }
 
-        public void Add(long ID, bool Read, bool Temporary)
+        public void Add(long id, bool read, bool temporary)
         {
-            if (!Temporary)
+            if (!temporary)
             {
-                this.Add(ID, Read);
+                this.Add(id, read);
             }
             else
             {
-                _tmpIds.Add(new TemporaryId(ID, Read));
+                _tmpIds.Add(new TemporaryId(id, read));
             }
         }
 
         //フィルタに合致したら追加
-        public Tween.MyCommon.HITRESULT AddFiltered(PostClass post)
+        public MyCommon.HITRESULT AddFiltered(PostClass post)
         {
-            if (this.IsInnerStorageTabType)
-                return Tween.MyCommon.HITRESULT.None;
-
-            Tween.MyCommon.HITRESULT rslt = Tween.MyCommon.HITRESULT.None;
+            if (IsInnerStorageTabType)
+            {
+                return MyCommon.HITRESULT.None;
+            }
+            MyCommon.HITRESULT rslt = MyCommon.HITRESULT.None;
             //全フィルタ評価（優先順位あり）
             lock (this._lockObj)
             {
@@ -331,35 +335,35 @@ namespace Tween
                         switch (ft.IsHit(post))
                         {
                             //フィルタクラスでヒット判定
-                            case Tween.MyCommon.HITRESULT.None:
+                            case MyCommon.HITRESULT.None:
                                 break;
-                            case Tween.MyCommon.HITRESULT.Copy:
-                                if (rslt != Tween.MyCommon.HITRESULT.CopyAndMark)
-                                    rslt = Tween.MyCommon.HITRESULT.Copy;
+                            case MyCommon.HITRESULT.Copy:
+                                if (rslt != MyCommon.HITRESULT.CopyAndMark)
+                                {
+                                    rslt = MyCommon.HITRESULT.Copy;
+                                }
                                 break;
-                            case Tween.MyCommon.HITRESULT.CopyAndMark:
-                                rslt = Tween.MyCommon.HITRESULT.CopyAndMark;
+                            case MyCommon.HITRESULT.CopyAndMark:
+                                rslt = MyCommon.HITRESULT.CopyAndMark;
                                 break;
-                            case Tween.MyCommon.HITRESULT.Move:
-                                rslt = Tween.MyCommon.HITRESULT.Move;
+                            case MyCommon.HITRESULT.Move:
+                                rslt = MyCommon.HITRESULT.Move;
                                 break;
-                            case Tween.MyCommon.HITRESULT.Exclude:
-                                rslt = Tween.MyCommon.HITRESULT.Exclude;
-                                break; // TODO: might not be correct. Was : Exit For
-
+                            case MyCommon.HITRESULT.Exclude:
+                                rslt = MyCommon.HITRESULT.Exclude;
                                 break;
                         }
                     }
-                    catch (NullReferenceException ex)
+                    catch (NullReferenceException)
                     {
                         //IsHitでNullRef出る場合あり。暫定対応
                         MyCommon.TraceOut("IsHitでNullRef: " + ft.ToString());
-                        rslt = Tween.MyCommon.HITRESULT.None;
+                        rslt = MyCommon.HITRESULT.None;
                     }
                 }
             }
 
-            if (rslt != Tween.MyCommon.HITRESULT.None && rslt != Tween.MyCommon.HITRESULT.Exclude)
+            if (rslt != MyCommon.HITRESULT.None && rslt != MyCommon.HITRESULT.Exclude)
             {
                 _tmpIds.Add(new TemporaryId(post.StatusId, post.IsRead));
             }
@@ -369,23 +373,29 @@ namespace Tween
         }
 
         //検索結果の追加
-        public void AddPostToInnerStorage(PostClass Post)
+        public void AddPostToInnerStorage(PostClass post)
         {
-            if (Posts.ContainsKey(Post.StatusId))
+            if (Posts.ContainsKey(post.StatusId))
+            {
                 return;
-            Posts.Add(Post.StatusId, Post);
-            _tmpIds.Add(new TemporaryId(Post.StatusId, Post.IsRead));
+            }
+            Posts.Add(post.StatusId, post);
+            _tmpIds.Add(new TemporaryId(post.StatusId, post.IsRead));
         }
 
         public void AddSubmit(ref bool isMentionIncluded)
         {
             if (_tmpIds.Count == 0)
+            {
                 return;
+            }
             _tmpIds.Sort((TemporaryId x, TemporaryId y) => x.Id.CompareTo(y.Id));
             foreach (TemporaryId tId in _tmpIds)
             {
-                if (this.TabType == Tween.MyCommon.TabUsageType.Mentions && TabInformations.GetInstance().Item(tId.Id).IsReply)
+                if (this.TabType == MyCommon.TabUsageType.Mentions && TabInformations.GetInstance().Item(tId.Id).IsReply)
+                {
                     isMentionIncluded = true;
+                }
                 this.Add(tId.Id, tId.Read);
             }
             _tmpIds.Clear();
@@ -397,29 +407,37 @@ namespace Tween
             AddSubmit(ref mention);
         }
 
-        public void Remove(long Id)
+        public void Remove(long id)
         {
-            if (!this._ids.Contains(Id))
+            if (!_ids.Contains(id))
+            {
                 return;
-            this._ids.Remove(Id);
-            if (this.IsInnerStorageTabType)
-                Posts.Remove(Id);
+            }
+            _ids.Remove(id);
+            if (IsInnerStorageTabType)
+            {
+                Posts.Remove(id);
+            }
         }
 
-        public void Remove(long Id, bool Read)
+        public void Remove(long id, bool read)
         {
-            if (!this._ids.Contains(Id))
-                return;
-
-            if (!Read && this._unreadManage)
+            if (!_ids.Contains(id))
             {
-                this._unreadCount -= 1;
-                this.OldestUnreadId = -1;
+                return;
             }
 
-            this._ids.Remove(Id);
-            if (this.IsInnerStorageTabType)
-                Posts.Remove(Id);
+            if (!read && _unreadManage)
+            {
+                _unreadCount -= 1;
+                OldestUnreadId = -1;
+            }
+
+            _ids.Remove(id);
+            if (IsInnerStorageTabType)
+            {
+                Posts.Remove(id);
+            }
         }
 
         public bool UnreadManage
@@ -427,11 +445,11 @@ namespace Tween
             get { return _unreadManage; }
             set
             {
-                this._unreadManage = value;
+                _unreadManage = value;
                 if (!value)
                 {
-                    this.OldestUnreadId = -1;
-                    this._unreadCount = 0;
+                    OldestUnreadId = -1;
+                    _unreadCount = 0;
                 }
             }
         }
@@ -440,29 +458,31 @@ namespace Tween
 
         public string SoundFile { get; set; }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore]
         public long OldestUnreadId { get; set; }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore]
         public int UnreadCount
         {
             get { return this.UnreadManage && AppendSettingDialog.Instance.UnreadManage ? _unreadCount : 0; }
             set
             {
                 if (value < 0)
+                {
                     value = 0;
+                }
                 _unreadCount = value;
             }
         }
 
         public int AllCount
         {
-            get { return this._ids.Count; }
+            get { return _ids.Count; }
         }
 
         public FiltersClass[] GetFilters()
         {
-            lock (this._lockObj)
+            lock (_lockObj)
             {
                 return _filters.ToArray();
             }
@@ -470,21 +490,23 @@ namespace Tween
 
         public void RemoveFilter(FiltersClass filter)
         {
-            lock (this._lockObj)
+            lock (_lockObj)
             {
                 _filters.Remove(filter);
-                this.FilterModified = true;
+                FilterModified = true;
             }
         }
 
         public bool AddFilter(FiltersClass filter)
         {
-            lock (this._lockObj)
+            lock (_lockObj)
             {
                 if (_filters.Contains(filter))
+                {
                     return false;
+                }
                 _filters.Add(filter);
-                this.FilterModified = true;
+                FilterModified = true;
                 return true;
             }
         }
@@ -511,40 +533,22 @@ namespace Tween
             original.ExSource = modified.ExSource;
             original.MoveFrom = modified.MoveFrom;
             original.SetMark = modified.SetMark;
-            this.FilterModified = true;
+            FilterModified = true;
         }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore]
         public List<FiltersClass> Filters
         {
-            get
-            {
-                lock (this._lockObj)
-                {
-                    return _filters;
-                }
-            }
-            set
-            {
-                lock (this._lockObj)
-                {
-                    _filters = value;
-                }
-            }
+            get { lock (_lockObj) { return _filters; } }
+            set { lock (_lockObj) { _filters = value; } }
         }
 
         public FiltersClass[] FilterArray
         {
-            get
-            {
-                lock (this._lockObj)
-                {
-                    return _filters.ToArray();
-                }
-            }
+            get { lock (_lockObj) { return _filters.ToArray(); } }
             set
             {
-                lock (this._lockObj)
+                lock (_lockObj)
                 {
                     foreach (FiltersClass filters in value)
                     {
@@ -554,9 +558,9 @@ namespace Tween
             }
         }
 
-        public bool Contains(long ID)
+        public bool Contains(long id)
         {
-            return _ids.Contains(ID);
+            return _ids.Contains(id);
         }
 
         public void ClearIDs()
@@ -564,24 +568,24 @@ namespace Tween
             _ids.Clear();
             _tmpIds.Clear();
             _unreadCount = 0;
-            this.OldestUnreadId = -1;
+            OldestUnreadId = -1;
             if (Posts != null)
             {
                 Posts.Clear();
             }
         }
 
-        public long GetId(int Index)
+        public long GetId(int index)
         {
-            return Index < _ids.Count ? _ids[Index] : -1;
+            return index < _ids.Count ? _ids[index] : -1;
         }
 
-        public int IndexOf(long ID)
+        public int IndexOf(long id)
         {
-            return _ids.IndexOf(ID);
+            return _ids.IndexOf(id);
         }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [System.Xml.Serialization.XmlIgnore]
         public bool FilterModified { get; set; }
 
         public long[] BackupIds()
@@ -591,13 +595,13 @@ namespace Tween
 
         public string TabName { get; set; }
 
-        public Tween.MyCommon.TabUsageType TabType
+        public MyCommon.TabUsageType TabType
         {
             get { return _tabType; }
             set
             {
                 _tabType = value;
-                if (this.IsInnerStorageTabType)
+                if (IsInnerStorageTabType)
                 {
                     _sorter.posts = Posts;
                 }
@@ -612,14 +616,7 @@ namespace Tween
         {
             get
             {
-                if (_tabType == Tween.MyCommon.TabUsageType.PublicSearch || _tabType == Tween.MyCommon.TabUsageType.DirectMessage || _tabType == Tween.MyCommon.TabUsageType.Lists || _tabType == Tween.MyCommon.TabUsageType.UserTimeline || _tabType == Tween.MyCommon.TabUsageType.Related)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return _tabType == MyCommon.TabUsageType.PublicSearch || _tabType == MyCommon.TabUsageType.DirectMessage || _tabType == MyCommon.TabUsageType.Lists || _tabType == MyCommon.TabUsageType.UserTimeline || _tabType == MyCommon.TabUsageType.Related;
             }
         }
     }
