@@ -37,30 +37,12 @@ namespace Tween
             public double Lat { get; set; }
         }
 
-        private string _Nick;
-        private string _textFromApi;
-        private string _ImageUrl;
-        private string _screenName;
-        private System.DateTime _createdAt;
-        private long _statusId;
         private bool _IsFav;
-        private string _text;
-        private bool _IsRead;
-        private bool _IsReply;
-        private bool _IsExcludeReply;
         private bool _IsProtect;
-        private bool _IsOWL;
         private bool _IsMark;
-        private string _InReplyToUser;
         private long _InReplyToStatusId;
-        private string _Source;
-        private string _SourceHtml;
         private List<string> _ReplyToList = new List<string>();
-        private bool _IsMe;
-        private bool _IsDm;
         private States _states = States.None;
-        private long _UserId;
-        private bool _FilterHit;
         private string _RetweetedBy = "";
         private long _RetweetedId = 0;
         private string _SearchTabName = "";
@@ -84,85 +66,62 @@ namespace Tween
             Geo = 8
         }
 
-        public PostClass(string Nickname, string textFromApi, string text, string ImageUrl, string screenName, System.DateTime createdAt, long statusId, bool IsFav, bool IsRead, bool IsReply,
-        bool IsExcludeReply, bool IsProtect, bool IsOwl, bool IsMark, string InReplyToUser, long InReplyToStatusId, string Source, string SourceHtml, List<string> ReplyToList, bool IsMe,
-        bool IsDm, long userId, bool FilterHit, string RetweetedBy, long RetweetedId, StatusGeo Geo)
+        public PostClass(string nickname, string textFromApi, string text, string imageUrl, string screenName, DateTime createdAt, long statusId,
+            bool isFav, bool isRead, bool isReply, bool isExcludeReply, bool isProtect, bool isOwl, bool isMark,
+            string inReplyToUser, long inReplyToStatusId, string source, string sourceHtml,
+            List<string> replyToList, bool isMe, bool isDm, long userId, bool filterHit, string retweetedBy, long retweetedId, StatusGeo geo)
         {
-            _Nick = Nickname;
-            _textFromApi = textFromApi;
-            _ImageUrl = ImageUrl;
-            _screenName = screenName;
-            _createdAt = createdAt;
-            _statusId = statusId;
-            _IsFav = IsFav;
-            _text = text;
-            _IsRead = IsRead;
-            _IsReply = IsReply;
-            _IsExcludeReply = IsExcludeReply;
-            _IsProtect = IsProtect;
-            _IsOWL = IsOwl;
-            _IsMark = IsMark;
-            _InReplyToUser = InReplyToUser;
-            _InReplyToStatusId = InReplyToStatusId;
-            _Source = Source;
-            _SourceHtml = SourceHtml;
-            _ReplyToList = ReplyToList;
-            _IsMe = IsMe;
-            _IsDm = IsDm;
-            _UserId = userId;
-            _FilterHit = FilterHit;
-            _RetweetedBy = RetweetedBy;
-            _RetweetedId = RetweetedId;
-            _postGeo = Geo;
+            Nickname = nickname;
+            TextFromApi = textFromApi;
+            ImageUrl = imageUrl;
+            ScreenName = screenName;
+            CreatedAt = createdAt;
+            StatusId = statusId;
+            _IsFav = isFav;
+            Text = text;
+            IsRead = isRead;
+            IsReply = isReply;
+            IsExcludeReply = isExcludeReply;
+            _IsProtect = isProtect;
+            IsOwl = isOwl;
+            _IsMark = isMark;
+            InReplyToUser = inReplyToUser;
+            _InReplyToStatusId = inReplyToStatusId;
+            Source = source;
+            SourceHtml = sourceHtml;
+            _ReplyToList = replyToList;
+            IsMe = isMe;
+            IsDm = isDm;
+            UserId = userId;
+            FilterHit = filterHit;
+            _RetweetedBy = retweetedBy;
+            _RetweetedId = retweetedId;
+            _postGeo = geo;
         }
 
         public PostClass()
         {
         }
 
-        public string Nickname
-        {
-            get { return _Nick; }
-            set { _Nick = value; }
-        }
+        public string Nickname { get; set; }
 
-        public string TextFromApi
-        {
-            get { return _textFromApi; }
-            set { _textFromApi = value; }
-        }
+        public string TextFromApi { get; set; }
 
-        public string ImageUrl
-        {
-            get { return _ImageUrl; }
-            set { _ImageUrl = value; }
-        }
+        public string ImageUrl { get; set; }
 
-        public string ScreenName
-        {
-            get { return _screenName; }
-            set { _screenName = value; }
-        }
+        public string ScreenName { get; set; }
 
-        public System.DateTime CreatedAt
-        {
-            get { return _createdAt; }
-            set { _createdAt = value; }
-        }
+        public System.DateTime CreatedAt { get; set; }
 
-        public long StatusId
-        {
-            get { return _statusId; }
-            set { _statusId = value; }
-        }
+        public long StatusId { get; set; }
 
         public bool IsFav
         {
             get
             {
-                if (this.RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(this.RetweetedId) != null)
+                if (RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(RetweetedId) != null)
                 {
-                    return TabInformations.GetInstance().RetweetSource(this.RetweetedId).IsFav;
+                    return TabInformations.GetInstance().RetweetSource(RetweetedId).IsFav;
                 }
                 else
                 {
@@ -172,36 +131,20 @@ namespace Tween
             set
             {
                 _IsFav = value;
-                if (this.RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(this.RetweetedId) != null)
+                if (RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(RetweetedId) != null)
                 {
-                    TabInformations.GetInstance().RetweetSource(this.RetweetedId).IsFav = value;
+                    TabInformations.GetInstance().RetweetSource(RetweetedId).IsFav = value;
                 }
             }
         }
 
-        public string Text
-        {
-            get { return _text; }
-            set { _text = value; }
-        }
+        public string Text { get; set; }
 
-        public bool IsRead
-        {
-            get { return _IsRead; }
-            set { _IsRead = value; }
-        }
+        public bool IsRead { get; set; }
 
-        public bool IsReply
-        {
-            get { return _IsReply; }
-            set { _IsReply = value; }
-        }
+        public bool IsReply { get; set; }
 
-        public bool IsExcludeReply
-        {
-            get { return _IsExcludeReply; }
-            set { _IsExcludeReply = value; }
-        }
+        public bool IsExcludeReply { get; set; }
 
         public bool IsProtect
         {
@@ -220,11 +163,7 @@ namespace Tween
             }
         }
 
-        public bool IsOwl
-        {
-            get { return _IsOWL; }
-            set { _IsOWL = value; }
-        }
+        public bool IsOwl { get; set; }
 
         public bool IsMark
         {
@@ -243,11 +182,7 @@ namespace Tween
             }
         }
 
-        public string InReplyToUser
-        {
-            get { return _InReplyToUser; }
-            set { _InReplyToUser = value; }
-        }
+        public string InReplyToUser { get; set; }
 
         public long InReplyToStatusId
         {
@@ -272,17 +207,9 @@ namespace Tween
             set { _InReplyToUserId = value; }
         }
 
-        public string Source
-        {
-            get { return _Source; }
-            set { _Source = value; }
-        }
+        public string Source { get; set; }
 
-        public string SourceHtml
-        {
-            get { return _SourceHtml; }
-            set { _SourceHtml = value; }
-        }
+        public string SourceHtml { get; set; }
 
         public List<string> ReplyToList
         {
@@ -290,34 +217,13 @@ namespace Tween
             set { _ReplyToList = value; }
         }
 
-        public bool IsMe
-        {
-            get { return _IsMe; }
-            set { _IsMe = value; }
-        }
+        public bool IsMe { get; set; }
 
-        public bool IsDm
-        {
-            get { return _IsDm; }
-            set { _IsDm = value; }
-        }
+        public bool IsDm { get; set; }
 
-        //Public ReadOnly Property StatusIndex() As Integer
-        //    Get
-        //        Return _statuses
-        //    End Get
-        //End Property
-        public long UserId
-        {
-            get { return _UserId; }
-            set { _UserId = value; }
-        }
+        public long UserId { get; set; }
 
-        public bool FilterHit
-        {
-            get { return _FilterHit; }
-            set { _FilterHit = value; }
-        }
+        public bool FilterHit { get; set; }
 
         public string RetweetedBy
         {
@@ -389,14 +295,18 @@ namespace Tween
         public override bool Equals(object obj)
         {
             if ((obj == null) || (!object.ReferenceEquals(this.GetType(), obj.GetType())))
+            {
                 return false;
+            }
             return this.Equals((PostClass)obj);
         }
 
         public bool Equals(PostClass other)
         {
             if (other == null)
+            {
                 return false;
+            }
             return (this.Nickname == other.Nickname) && (this.TextFromApi == other.TextFromApi) && (this.ImageUrl == other.ImageUrl) && (this.ScreenName == other.ScreenName) && (this.CreatedAt == other.CreatedAt) && (this.StatusId == other.StatusId) && (this.IsFav == other.IsFav) && (this.Text == other.Text) && (this.IsRead == other.IsRead) && (this.IsReply == other.IsReply) && (this.IsExcludeReply == other.IsExcludeReply) && (this.IsProtect == other.IsProtect) && (this.IsOwl == other.IsOwl) && (this.IsMark == other.IsMark) && (this.InReplyToUser == other.InReplyToUser) && (this.InReplyToStatusId == other.InReplyToStatusId) && (this.Source == other.Source) && (this.SourceHtml == other.SourceHtml) && (this.ReplyToList.Equals(other.ReplyToList)) && (this.IsMe == other.IsMe) && (this.IsDm == other.IsDm) && (this.UserId == other.UserId) && (this.FilterHit == other.FilterHit) && (this.RetweetedBy == other.RetweetedBy) && (this.RetweetedId == other.RetweetedId) && (this.RelTabName == other.RelTabName) && (this.IsDeleted == other.IsDeleted) && (this.InReplyToUserId == other.InReplyToUserId);
         }
 
