@@ -270,6 +270,7 @@
       <DependentUpon>ShowUserInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="StatusDictionary.cs" />
+    <Compile Include="TabInformations.cs" />
     <Compile Include="TabsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
