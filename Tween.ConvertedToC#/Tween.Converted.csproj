@@ -247,6 +247,7 @@
     <Compile Include="PictureBoxEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PostClass.cs" />
     <Compile Include="RadixConvert.cs" />
     <Compile Include="SearchWord.cs">
       <SubType>Form</SubType>
