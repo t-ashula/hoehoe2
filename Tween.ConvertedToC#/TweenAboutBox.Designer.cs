@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +5,6 @@ using System.Drawing;
 using System.Windows.Forms;
 namespace Tween
 {
-    [Microsoft.VisualBasic.CompilerServices.DesignerGenerated()]
     partial class TweenAboutBox : System.Windows.Forms.Form
     {
 
