@@ -169,6 +169,7 @@
     <Compile Include="FilterDialog.Designer.cs">
       <DependentUpon>FilterDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="FiltersClass.cs" />
     <Compile Include="FormInfo.cs">
       <SubType>Form</SubType>
     </Compile>
