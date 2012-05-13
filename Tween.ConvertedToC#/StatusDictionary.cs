@@ -414,10 +414,7 @@ namespace Tween
 
         #endregion "IClonable.Clone"
     }
-}
 
-namespace Tween
-{
     public sealed class TabInformations
     {
         //個別タブの情報をDictionaryで保持
@@ -2041,11 +2038,8 @@ namespace Tween
             get { return _statuses; }
         }
     }
-}
 
-namespace Tween
-{
-    [Serializable()]
+    [Serializable]
     public sealed class TabClass
     {
         private bool _unreadManage = false;
@@ -2638,11 +2632,8 @@ namespace Tween
             }
         }
     }
-}
 
-namespace Tween
-{
-    [Serializable()]
+    [Serializable]
     public sealed class FiltersClass : System.IEquatable<FiltersClass>
     {
         private string _name = "";
@@ -3381,10 +3372,7 @@ namespace Tween
             return this.MoveFrom.GetHashCode() ^ this.SetMark.GetHashCode() ^ this.BodyFilter.GetHashCode() ^ this.NameFilter.GetHashCode() ^ this.SearchBoth.GetHashCode() ^ this.SearchUrl.GetHashCode() ^ this.UseRegex.GetHashCode() ^ this.ExBodyFilter.GetHashCode() ^ this.ExNameFilter.GetHashCode() ^ this.ExSearchBoth.GetHashCode() ^ this.ExSearchUrl.GetHashCode() ^ this.ExUseRegex.GetHashCode() ^ this.IsRt.GetHashCode() ^ this.Source.GetHashCode() ^ this.IsExRt.GetHashCode() ^ this.ExSource.GetHashCode() ^ this.UseLambda.GetHashCode() ^ this.ExUseLambda.GetHashCode();
         }
     }
-}
 
-namespace Tween
-{
     //ソート比較クラス：ID比較のみ
     public sealed class IdComparerClass : IComparer<long>
     {
