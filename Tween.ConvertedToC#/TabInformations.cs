@@ -41,8 +41,14 @@ namespace Tween
         private List<long> _deletedIds = new List<long>();
         private Dictionary<long, PostClass> _retweets = new Dictionary<long, PostClass>();
         private Stack<TabClass> _removedTab = new Stack<TabClass>();
-
         private List<ScrubGeoInfo> _scrubGeo = new List<ScrubGeoInfo>();
+        private int _addCount;
+        private string _soundFile;
+        private List<PostClass> _notifyPosts;
+        private readonly object _lockObj = new object();
+        private readonly object _lockUnread = new object();
+        private static TabInformations _instance = new TabInformations();
+        private List<ListElement> _lists = new List<ListElement>();
 
         private class ScrubGeoInfo
         {
@@ -51,22 +57,6 @@ namespace Tween
         }
 
         public List<long> BlockIds = new List<long>();
-        //発言の追加
-        //AddPost(複数回) -> DistributePosts          -> SubmitUpdate
-
-        //トランザクション用
-        private int _addCount;
-
-        private string _soundFile;
-        private List<PostClass> _notifyPosts;
-        private readonly object LockObj = new object();
-
-        private readonly object LockUnread = new object();
-
-        private static TabInformations _instance = new TabInformations();
-        //List
-
-        private List<ListElement> _lists = new List<ListElement>();
 
         private TabInformations()
         {
@@ -76,7 +66,6 @@ namespace Tween
         public static TabInformations GetInstance()
         {
             return _instance;
-            //singleton
         }
 
         public List<ListElement> SubscribableLists
@@ -86,14 +75,14 @@ namespace Tween
             {
                 if (value != null && value.Count > 0)
                 {
-                    foreach (TabClass tb in this.GetTabsByType(Tween.MyCommon.TabUsageType.Lists))
+                    foreach (TabClass tb in this.GetTabsByType(MyCommon.TabUsageType.Lists))
                     {
                         foreach (ListElement list in value)
                         {
                             if (tb.ListInfo.Id == list.Id)
                             {
                                 tb.ListInfo = list;
-                                break; // TODO: might not be correct. Was : Exit For
+                                break;
                             }
                         }
                     }
@@ -102,59 +91,63 @@ namespace Tween
             }
         }
 
-        public bool AddTab(string TabName, Tween.MyCommon.TabUsageType TabType, ListElement List)
+        public bool AddTab(string tabName, MyCommon.TabUsageType tabType, ListElement list)
         {
-            if (_tabs.ContainsKey(TabName))
+            if (_tabs.ContainsKey(tabName))
+            {
                 return false;
-            _tabs.Add(TabName, new TabClass(TabName, TabType, List));
-            _tabs[TabName].Sorter.Mode = _sorter.Mode;
-            _tabs[TabName].Sorter.Order = _sorter.Order;
+            }
+            _tabs.Add(tabName, new TabClass(tabName, tabType, list));
+            _tabs[tabName].Sorter.Mode = _sorter.Mode;
+            _tabs[tabName].Sorter.Order = _sorter.Order;
             return true;
         }
 
-        //Public Sub AddTab(ByVal TabName As String, ByVal Tab As TabClass)
-        //    _tabs.Add(TabName, Tab)
-        //End Sub
-
-        public void RemoveTab(string TabName)
+        public void RemoveTab(string tabName)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
-                if (IsDefaultTab(TabName))
-                    return;
-                //念のため
-                if (!_tabs[TabName].IsInnerStorageTabType)
+                if (IsDefaultTab(tabName))
                 {
-                    TabClass homeTab = GetTabByType(Tween.MyCommon.TabUsageType.Home);
-                    string dmName = GetTabByType(Tween.MyCommon.TabUsageType.DirectMessage).TabName;
+                    return;
+                }
+                //念のため
+                if (!_tabs[tabName].IsInnerStorageTabType)
+                {
+                    TabClass homeTab = GetTabByType(MyCommon.TabUsageType.Home);
+                    string dmName = GetTabByType(MyCommon.TabUsageType.DirectMessage).TabName;
 
-                    for (int idx = 0; idx <= _tabs[TabName].AllCount - 1; idx++)
+                    for (int idx = 0; idx < _tabs[tabName].AllCount; idx++)
                     {
                         bool exist = false;
-                        long Id = _tabs[TabName].GetId(idx);
-                        if (Id < 0)
+                        long id = _tabs[tabName].GetId(idx);
+                        if (id < 0)
+                        {
                             continue;
+                        }
                         foreach (string key in _tabs.Keys)
                         {
-                            if (!(key == TabName) && key != dmName)
+                            if (!(key == tabName) && key != dmName)
                             {
-                                if (_tabs[key].Contains(Id))
+                                if (_tabs[key].Contains(id))
                                 {
                                     exist = true;
-                                    break; // TODO: might not be correct. Was : Exit For
+                                    break;
                                 }
                             }
                         }
                         if (!exist)
-                            homeTab.Add(Id, _statuses[Id].IsRead, false);
+                        {
+                            homeTab.Add(id, _statuses[id].IsRead, false);
+                        }
                     }
                 }
-                _removedTab.Push(_tabs[TabName]);
-                _tabs.Remove(TabName);
+                _removedTab.Push(_tabs[tabName]);
+                _tabs.Remove(tabName);
             }
         }
 
-        public Stack<TabClass> RemovedTab;//= _removedTab;
+        public Stack<TabClass> RemovedTab { get { return _removedTab; } }
 
         public bool ContainsTab(string TabText)
         {
@@ -242,66 +235,63 @@ namespace Tween
             return _sorter.Order;
         }
 
-        public PostClass RetweetSource(long Id)
+        public PostClass RetweetSource(long id)
         {
-            //get
+            if (_retweets.ContainsKey(id))
             {
-                if (_retweets.ContainsKey(Id))
-                {
-                    return _retweets[Id];
-                }
-                else
-                {
-                    return null;
-                }
+                return _retweets[id];
+            }
+            else
+            {
+                return null;
             }
         }
 
-        public void RemoveFavPost(long Id)
+        public void RemoveFavPost(long id)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
                 PostClass post = null;
-                TabClass tab = this.GetTabByType(Tween.MyCommon.TabUsageType.Favorites);
+                TabClass tab = this.GetTabByType(MyCommon.TabUsageType.Favorites);
                 string tn = tab.TabName;
-                if (_statuses.ContainsKey(Id))
+                if (_statuses.ContainsKey(id))
                 {
-                    post = _statuses[Id];
+                    post = _statuses[id];
                     //指定タブから該当ID削除
-                    Tween.MyCommon.TabUsageType tType = tab.TabType;
-                    if (tab.Contains(Id))
+                    MyCommon.TabUsageType tType = tab.TabType;
+                    if (tab.Contains(id))
                     {
                         //未読管理
                         if (tab.UnreadManage && !post.IsRead)
                         {
-                            lock (LockUnread)
+                            lock (_lockUnread)
                             {
                                 tab.UnreadCount -= 1;
-                                this.SetNextUnreadId(Id, tab);
+                                this.SetNextUnreadId(id, tab);
                             }
                         }
-                        tab.Remove(Id);
+                        tab.Remove(id);
                     }
                     //FavタブからRetweet発言を削除する場合は、他の同一参照Retweetも削除
-                    if (tType == Tween.MyCommon.TabUsageType.Favorites && post.RetweetedId > 0)
+                    if (tType == MyCommon.TabUsageType.Favorites && post.RetweetedId > 0)
                     {
-                        for (int i = 0; i <= tab.AllCount - 1; i++)
+                        for (int i = 0; i < tab.AllCount; i++)
                         {
                             PostClass rPost = null;
                             try
                             {
                                 rPost = this.Item(tn, i);
                             }
-                            catch (ArgumentOutOfRangeException ex)
+                            catch (ArgumentOutOfRangeException)
                             {
-                                break; // TODO: might not be correct. Was : Exit For
+                                break;
                             }
                             if (rPost.RetweetedId > 0 && rPost.RetweetedId == post.RetweetedId)
                             {
                                 //未読管理
                                 if (tab.UnreadManage && !rPost.IsRead)
                                 {
-                                    lock (LockUnread)
+                                    lock (_lockUnread)
                                     {
                                         tab.UnreadCount -= 1;
                                         this.SetNextUnreadId(rPost.StatusId, tab);
@@ -312,47 +302,37 @@ namespace Tween
                         }
                     }
                 }
-                //'TabType=PublicSearchの場合（Postの保存先がTabClass内）
-                //If tab.Contains(StatusId) AndAlso _
-                //   (tab.TabType = TabUsageType.PublicSearch OrElse tab.TabType = TabUsageType.DirectMessage) Then
-                //    post = tab.Posts(StatusId)
-                //    If tab.UnreadManage AndAlso Not post.IsRead Then    '未読管理
-                //        SyncLock LockUnread
-                //            tab.UnreadCount -= 1
-                //            Me.SetNextUnreadId(StatusId, tab)
-                //        End SyncLock
-                //    End If
-                //    tab.Remove(StatusId)
-                //End If
             }
         }
 
         public void ScrubGeoReserve(long id, long upToStatusId)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
-                //Me._scrubGeo.Add(New ScrubGeoInfo With {.UserId = id, .UpToStatusId = upToStatusId})
                 this.ScrubGeo(id, upToStatusId);
             }
         }
 
         private void ScrubGeo(long userId, long upToStatusId)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
-                var userPosts = from post in this._statuses.Values where post.UserId == userId && post.UserId <= upToStatusId select post;
+                var userPosts = from post in this._statuses.Values
+                                where post.UserId == userId && post.UserId <= upToStatusId
+                                select post;
 
-                foreach (var p_loopVariable in userPosts)
+                foreach (var p in userPosts)
                 {
-                    var p = p_loopVariable;
                     p.PostGeo = new PostClass.StatusGeo();
                 }
 
-                var userPosts2 = from tb in this.GetTabsInnerStorageType() from post in tb.Posts.Values where post.UserId == userId && post.UserId <= upToStatusId select post;
+                var userPosts2 = from tb in this.GetTabsInnerStorageType()
+                                 from post in tb.Posts.Values
+                                 where post.UserId == userId && post.UserId <= upToStatusId
+                                 select post;
 
-                foreach (var p_loopVariable in userPosts2)
+                foreach (var p in userPosts2)
                 {
-                    var p = p_loopVariable;
                     p.PostGeo = new PostClass.StatusGeo();
                 }
             }
@@ -360,7 +340,7 @@ namespace Tween
 
         public void RemovePostReserve(long id)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
                 this._deletedIds.Add(id);
                 this.DeletePost(id);
@@ -368,9 +348,9 @@ namespace Tween
             }
         }
 
-        public void RemovePost(long Id)
+        public void RemovePost(long id)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
                 PostClass post = null;
                 //If _statuses.ContainsKey(Id) Then
@@ -378,18 +358,18 @@ namespace Tween
                 foreach (string key in _tabs.Keys)
                 {
                     TabClass tab = _tabs[key];
-                    if (tab.Contains(Id))
+                    if (tab.Contains(id))
                     {
                         if (!tab.IsInnerStorageTabType)
                         {
-                            post = _statuses[Id];
+                            post = _statuses[id];
                             //未読管理
                             if (tab.UnreadManage && !post.IsRead)
                             {
-                                lock (LockUnread)
+                                lock (_lockUnread)
                                 {
                                     tab.UnreadCount -= 1;
-                                    this.SetNextUnreadId(Id, tab);
+                                    this.SetNextUnreadId(id, tab);
                                 }
                             }
                             //未読数がずれる可能性があるためtab.Postsの未読も確認する
@@ -397,48 +377,50 @@ namespace Tween
                         else
                         {
                             //未読管理
-                            if (tab.UnreadManage && !tab.Posts[Id].IsRead)
+                            if (tab.UnreadManage && !tab.Posts[id].IsRead)
                             {
-                                lock (LockUnread)
+                                lock (_lockUnread)
                                 {
                                     tab.UnreadCount -= 1;
-                                    this.SetNextUnreadId(Id, tab);
+                                    this.SetNextUnreadId(id, tab);
                                 }
                             }
                         }
-                        tab.Remove(Id);
+                        tab.Remove(id);
                     }
                 }
-                if (_statuses.ContainsKey(Id))
-                    _statuses.Remove(Id);
+                if (_statuses.ContainsKey(id))
+                {
+                    _statuses.Remove(id);
+                }
                 //End If
             }
         }
 
-        private void DeletePost(long Id)
+        private void DeletePost(long id)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
                 PostClass post = null;
-                if (_statuses.ContainsKey(Id))
+                if (_statuses.ContainsKey(id))
                 {
-                    post = _statuses[Id];
+                    post = _statuses[id];
                     post.IsDeleted = true;
                 }
                 foreach (TabClass tb in this.GetTabsInnerStorageType())
                 {
-                    if (tb.Contains(Id))
+                    if (tb.Contains(id))
                     {
-                        post = tb.Posts[Id];
+                        post = tb.Posts[id];
                         post.IsDeleted = true;
                     }
                 }
             }
         }
 
-        public int GetOldestUnreadIndex(string TabName)
+        public int GetOldestUnreadIndex(string tabName)
         {
-            TabClass tb = _tabs[TabName];
+            TabClass tb = _tabs[tabName];
             if (tb.OldestUnreadId > -1 && tb.Contains(tb.OldestUnreadId) && tb.UnreadCount > 0)
             {
                 //未読アイテムへ
@@ -451,10 +433,11 @@ namespace Tween
                 {
                     isRead = tb.Posts[tb.OldestUnreadId].IsRead;
                 }
+
                 if (isRead)
                 {
                     //状態不整合（最古未読ＩＤが実は既読）
-                    lock (LockUnread)
+                    lock (_lockUnread)
                     {
                         this.SetNextUnreadId(-1, tb);
                         //頭から探索
@@ -477,10 +460,11 @@ namespace Tween
             else
             {
                 //一見未読なさそうだが、未読カウントはあるので探索
-                //If tb.UnreadCount > 0 Then
                 if (!(tb.UnreadManage && AppendSettingDialog.Instance.UnreadManage))
+                {
                     return -1;
-                lock (LockUnread)
+                }
+                lock (_lockUnread)
                 {
                     this.SetNextUnreadId(-1, tb);
                 }
@@ -492,132 +476,134 @@ namespace Tween
                 {
                     return tb.IndexOf(tb.OldestUnreadId);
                 }
-                //    Else
-                //    Return -1
-                //End If
             }
         }
 
-        private void SetNextUnreadId(long CurrentId, TabClass Tab)
+        private void SetNextUnreadId(long currentId, TabClass tab)
         {
             //CurrentID:今既読にしたID(OldestIDの可能性あり)
             //最古未読が設定されていて、既読の場合（1発言以上存在）
             try
             {
                 Dictionary<long, PostClass> posts = null;
-                if (!Tab.IsInnerStorageTabType)
+                if (!tab.IsInnerStorageTabType)
                 {
                     posts = _statuses;
                 }
                 else
                 {
-                    posts = Tab.Posts;
+                    posts = tab.Posts;
                 }
                 //次の未読探索
-                if (Tab.OldestUnreadId > -1 && posts.ContainsKey(Tab.OldestUnreadId) && posts[Tab.OldestUnreadId].IsRead && _sorter.Mode == IdComparerClass.ComparerMode.Id)
+                if (tab.OldestUnreadId > -1 && posts.ContainsKey(tab.OldestUnreadId) && posts[tab.OldestUnreadId].IsRead && _sorter.Mode == IdComparerClass.ComparerMode.Id)
                 {
-                    if (Tab.UnreadCount == 0)
+                    if (tab.UnreadCount == 0)
                     {
                         //未読数０→最古未読なし
-                        Tab.OldestUnreadId = -1;
+                        tab.OldestUnreadId = -1;
                     }
-                    else if (Tab.OldestUnreadId == CurrentId && CurrentId > -1)
+                    else if (tab.OldestUnreadId == currentId && currentId > -1)
                     {
                         //最古IDを既読にしたタイミング→次のIDから続けて探索
-                        int idx = Tab.IndexOf(CurrentId);
+                        int idx = tab.IndexOf(currentId);
                         if (idx > -1)
                         {
                             //続きから探索
-                            FindUnreadId(idx, Tab);
+                            FindUnreadId(idx, tab);
                         }
                         else
                         {
                             //頭から探索
-                            FindUnreadId(-1, Tab);
+                            FindUnreadId(-1, tab);
                         }
                     }
                     else
                     {
                         //頭から探索
-                        FindUnreadId(-1, Tab);
+                        FindUnreadId(-1, tab);
                     }
                 }
                 else
                 {
                     //頭から探索
-                    FindUnreadId(-1, Tab);
+                    FindUnreadId(-1, tab);
                 }
             }
-            catch (System.Collections.Generic.KeyNotFoundException ex)
+            catch (KeyNotFoundException)
             {
                 //頭から探索
-                FindUnreadId(-1, Tab);
+                FindUnreadId(-1, tab);
             }
         }
 
-        private void FindUnreadId(int StartIdx, TabClass Tab)
+        private void FindUnreadId(int startIdx, TabClass tab)
         {
-            if (Tab.AllCount == 0)
+            if (tab.AllCount == 0)
             {
-                Tab.OldestUnreadId = -1;
-                Tab.UnreadCount = 0;
+                tab.OldestUnreadId = -1;
+                tab.UnreadCount = 0;
                 return;
             }
             int toIdx = 0;
             int stp = 1;
-            Tab.OldestUnreadId = -1;
+            tab.OldestUnreadId = -1;
             if (_sorter.Order == System.Windows.Forms.SortOrder.Ascending)
             {
-                if (StartIdx == -1)
+                if (startIdx == -1)
                 {
-                    StartIdx = 0;
+                    startIdx = 0;
                 }
                 else
                 {
                     //StartIdx += 1
-                    if (StartIdx > Tab.AllCount - 1)
-                        StartIdx = Tab.AllCount - 1;
+                    if (startIdx > tab.AllCount - 1)
+                    {
+                        startIdx = tab.AllCount - 1;
+                    }
                     //念のため
                 }
-                toIdx = Tab.AllCount - 1;
+                toIdx = tab.AllCount - 1;
                 if (toIdx < 0)
+                {
                     toIdx = 0;
+                }
                 //念のため
                 stp = 1;
             }
             else
             {
-                if (StartIdx == -1)
+                if (startIdx == -1)
                 {
-                    StartIdx = Tab.AllCount - 1;
+                    startIdx = tab.AllCount - 1;
                 }
                 else
                 {
-                    //StartIdx -= 1
                 }
-                if (StartIdx < 0)
-                    StartIdx = 0;
+                if (startIdx < 0)
+                {
+                    startIdx = 0;
+                }
                 //念のため
                 toIdx = 0;
                 stp = -1;
             }
 
             Dictionary<long, PostClass> posts = null;
-            if (!Tab.IsInnerStorageTabType)
+            if (!tab.IsInnerStorageTabType)
             {
                 posts = _statuses;
             }
             else
             {
-                posts = Tab.Posts;
+                posts = tab.Posts;
             }
 
-            for (int i = StartIdx; i <= toIdx; i += stp)
+            for (int i = startIdx; i <= toIdx; i += stp)
             {
-                long id = Tab.GetId(i);
+                long id = tab.GetId(i);
                 if (id > -1 && !posts[id].IsRead)
                 {
-                    Tab.OldestUnreadId = id;
+                    tab.OldestUnreadId = id;
                     break; // TODO: might not be correct. Was : Exit For
                 }
             }
@@ -625,22 +611,26 @@ namespace Tween
 
         public int DistributePosts()
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
                 //戻り値は追加件数
                 //If _addedIds Is Nothing Then Return 0
                 //If _addedIds.Count = 0 Then Return 0
 
                 if (_addedIds == null)
+                {
                     _addedIds = new List<long>();
+                }
                 if (_notifyPosts == null)
+                {
                     _notifyPosts = new List<PostClass>();
+                }
                 try
                 {
                     this.Distribute();
                     //タブに仮振分
                 }
-                catch (KeyNotFoundException ex)
+                catch (KeyNotFoundException)
                 {
                     //タブ変更により振分が失敗した場合
                 }
@@ -649,15 +639,14 @@ namespace Tween
                 _addedIds.Clear();
                 _addedIds = null;
                 //後始末
-                return retCnt;
-                //件数
+                return retCnt;                //件数
             }
         }
 
         public int SubmitUpdate(ref string soundFile, ref PostClass[] notifyPosts, ref bool isMentionIncluded, ref bool isDeletePost, bool isUserStream)
         {
             //注：メインスレッドから呼ぶこと
-            lock (LockObj)
+            lock (_lockObj)
             {
                 if (_notifyPosts == null)
                 {
@@ -675,17 +664,7 @@ namespace Tween
                     tb.AddSubmit(ref isMentionIncluded);
                     //振分確定（各タブに反映）
                 }
-                //'UserStreamで反映間隔10秒以下だったら、30秒ごとにソートする
-                //'10秒以上だったら毎回ソート
-                //Static lastSort As DateTime = Now
-                //If AppendSettingDialog.Instance.UserstreamPeriodInt < 10 AndAlso isUserStream Then
-                //    If Now.Subtract(lastSort) > TimeSpan.FromSeconds(30) Then
-                //        lastSort = Now
-                //        isUserStream = False
-                //    End If
-                //Else
-                //    isUserStream = False
-                //End If
+
                 if (!isUserStream || this.SortMode != IdComparerClass.ComparerMode.Id)
                 {
                     this.SortPosts();
@@ -718,10 +697,10 @@ namespace Tween
             //各タブのフィルターと照合。合致したらタブにID追加
             //通知メッセージ用に、表示必要な発言リストと再生サウンドを返す
             //notifyPosts = New List(Of PostClass)
-            TabClass homeTab = GetTabByType(Tween.MyCommon.TabUsageType.Home);
-            TabClass replyTab = GetTabByType(Tween.MyCommon.TabUsageType.Mentions);
-            TabClass dmTab = GetTabByType(Tween.MyCommon.TabUsageType.DirectMessage);
-            TabClass favTab = GetTabByType(Tween.MyCommon.TabUsageType.Favorites);
+            TabClass homeTab = GetTabByType(MyCommon.TabUsageType.Home);
+            TabClass replyTab = GetTabByType(MyCommon.TabUsageType.Mentions);
+            TabClass dmTab = GetTabByType(MyCommon.TabUsageType.DirectMessage);
+            TabClass favTab = GetTabByType(MyCommon.TabUsageType.Favorites);
             foreach (long id in _addedIds)
             {
                 PostClass post = _statuses[id];
@@ -729,26 +708,29 @@ namespace Tween
                 //通知リスト追加フラグ
                 bool mv = false;
                 //移動フラグ（Recent追加有無）
-                Tween.MyCommon.HITRESULT rslt = Tween.MyCommon.HITRESULT.None;
+                MyCommon.HITRESULT rslt = MyCommon.HITRESULT.None;
                 post.IsExcludeReply = false;
                 foreach (string tn in _tabs.Keys)
                 {
                     rslt = _tabs[tn].AddFiltered(post);
-                    if (rslt != Tween.MyCommon.HITRESULT.None && rslt != Tween.MyCommon.HITRESULT.Exclude)
+                    if (rslt != MyCommon.HITRESULT.None && rslt != MyCommon.HITRESULT.Exclude)
                     {
-                        if (rslt == Tween.MyCommon.HITRESULT.CopyAndMark)
-                            post.IsMark = true;
-                        //マークあり
-                        if (rslt == Tween.MyCommon.HITRESULT.Move)
+                        if (rslt == MyCommon.HITRESULT.CopyAndMark)
                         {
-                            mv = true;
-                            //移動
+                            post.IsMark = true;
+                        }
+                        //マークあり
+                        if (rslt == MyCommon.HITRESULT.Move)
+                        {
+                            mv = true; //移動
                             post.IsMark = false;
                         }
                         if (_tabs[tn].Notify)
+                        {
                             @add = true;
+                        }
                         //通知あり
-                        if (!string.IsNullOrEmpty(_tabs[tn].SoundFile) && string.IsNullOrEmpty(_soundFile))
+                        if (!String.IsNullOrEmpty(_tabs[tn].SoundFile) && String.IsNullOrEmpty(_soundFile))
                         {
                             _soundFile = _tabs[tn].SoundFile;
                             //wavファイル（未設定の場合のみ）
@@ -757,7 +739,7 @@ namespace Tween
                     }
                     else
                     {
-                        if (rslt == Tween.MyCommon.HITRESULT.Exclude && _tabs[tn].TabType == Tween.MyCommon.TabUsageType.Mentions)
+                        if (rslt == MyCommon.HITRESULT.Exclude && _tabs[tn].TabType == MyCommon.TabUsageType.Mentions)
                         {
                             post.IsExcludeReply = true;
                         }
@@ -768,19 +750,28 @@ namespace Tween
                 if (!mv)
                 {
                     homeTab.Add(post.StatusId, post.IsRead, true);
-                    if (!string.IsNullOrEmpty(homeTab.SoundFile) && string.IsNullOrEmpty(_soundFile))
+                    if (!String.IsNullOrEmpty(homeTab.SoundFile) && String.IsNullOrEmpty(_soundFile))
+                    {
                         _soundFile = homeTab.SoundFile;
+                    }
+
                     if (homeTab.Notify)
+                    {
                         @add = true;
+                    }
                 }
                 //除外ルール適用のないReplyならReplyタブに追加
                 if (post.IsReply && !post.IsExcludeReply)
                 {
                     replyTab.Add(post.StatusId, post.IsRead, true);
-                    if (!string.IsNullOrEmpty(replyTab.SoundFile))
+                    if (!String.IsNullOrEmpty(replyTab.SoundFile))
+                    {
                         _soundFile = replyTab.SoundFile;
+                    }
                     if (replyTab.Notify)
+                    {
                         @add = true;
+                    }
                 }
                 //Fav済み発言だったらFavoritesタブに追加
                 if (post.IsFav)
@@ -794,14 +785,20 @@ namespace Tween
                     else
                     {
                         favTab.Add(post.StatusId, post.IsRead, true);
-                        if (!string.IsNullOrEmpty(favTab.SoundFile) && string.IsNullOrEmpty(_soundFile))
+                        if (!String.IsNullOrEmpty(favTab.SoundFile) && String.IsNullOrEmpty(_soundFile))
+                        {
                             _soundFile = favTab.SoundFile;
+                        }
                         if (favTab.Notify)
+                        {
                             @add = true;
+                        }
                     }
                 }
                 if (@add)
+                {
                     _notifyPosts.Add(post);
+                }
             }
             foreach (TabClass tb in _tabs.Values)
             {
@@ -823,11 +820,13 @@ namespace Tween
                                     }
                                 }
                                 if (!exist)
+                                {
                                     _notifyPosts.Add(post);
+                                }
                             }
-                            if (!string.IsNullOrEmpty(tb.SoundFile))
+                            if (!String.IsNullOrEmpty(tb.SoundFile))
                             {
-                                if (tb.TabType == Tween.MyCommon.TabUsageType.DirectMessage || string.IsNullOrEmpty(_soundFile))
+                                if (tb.TabType == MyCommon.TabUsageType.DirectMessage || String.IsNullOrEmpty(_soundFile))
                                 {
                                     _soundFile = tb.SoundFile;
                                 }
@@ -838,25 +837,25 @@ namespace Tween
             }
         }
 
-        public void AddPost(PostClass Item)
+        public void AddPost(PostClass item)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
-                if (string.IsNullOrEmpty(Item.RelTabName))
+                if (String.IsNullOrEmpty(item.RelTabName))
                 {
-                    if (!Item.IsDm)
+                    if (!item.IsDm)
                     {
-                        if (_statuses.ContainsKey(Item.StatusId))
+                        if (_statuses.ContainsKey(item.StatusId))
                         {
-                            if (Item.IsFav)
+                            if (item.IsFav)
                             {
-                                if (Item.RetweetedId == 0)
+                                if (item.RetweetedId == 0)
                                 {
-                                    _statuses[Item.StatusId].IsFav = true;
+                                    _statuses[item.StatusId].IsFav = true;
                                 }
                                 else
                                 {
-                                    Item.IsFav = false;
+                                    item.IsFav = false;
                                 }
                             }
                             else
@@ -867,56 +866,69 @@ namespace Tween
                         }
                         else
                         {
-                            if (Item.IsFav && Item.RetweetedId > 0)
-                                Item.IsFav = false;
+                            if (item.IsFav && item.RetweetedId > 0)
+                            {
+                                item.IsFav = false;
+                            }
                             //既に持っている公式RTは捨てる
-                            if (AppendSettingDialog.Instance.HideDuplicatedRetweets && !Item.IsMe && this._retweets.ContainsKey(Item.RetweetedId) && this._retweets[Item.RetweetedId].RetweetedCount > 0)
+                            if (AppendSettingDialog.Instance.HideDuplicatedRetweets && !item.IsMe && this._retweets.ContainsKey(item.RetweetedId) && this._retweets[item.RetweetedId].RetweetedCount > 0)
+                            {
                                 return;
-                            if (BlockIds.Contains(Item.UserId))
+                            }
+                            if (BlockIds.Contains(item.UserId))
+                            {
                                 return;
-                            _statuses.Add(Item.StatusId, Item);
+                            }
+                            _statuses.Add(item.StatusId, item);
                         }
-                        if (Item.RetweetedId > 0)
+                        if (item.RetweetedId > 0)
                         {
-                            this.AddRetweet(Item);
+                            this.AddRetweet(item);
                         }
-                        if (Item.IsFav && _retweets.ContainsKey(Item.StatusId))
+                        if (item.IsFav && _retweets.ContainsKey(item.StatusId))
                         {
                             return;
                             //Fav済みのRetweet元発言は追加しない
                         }
                         if (_addedIds == null)
+                        {
                             _addedIds = new List<long>();
+                        }
                         //タブ追加用IDコレクション準備
-                        _addedIds.Add(Item.StatusId);
+                        _addedIds.Add(item.StatusId);
                     }
                     else
                     {
                         //DM
-                        TabClass tb = this.GetTabByType(Tween.MyCommon.TabUsageType.DirectMessage);
-                        if (tb.Contains(Item.StatusId))
+                        TabClass tb = this.GetTabByType(MyCommon.TabUsageType.DirectMessage);
+                        if (tb.Contains(item.StatusId))
+                        {
                             return;
-                        tb.AddPostToInnerStorage(Item);
+                        }
+                        tb.AddPostToInnerStorage(item);
                     }
                 }
                 else
                 {
                     //公式検索、リスト、関連発言の場合
                     TabClass tb = null;
-                    if (this.Tabs.ContainsKey(Item.RelTabName))
+                    if (this.Tabs.ContainsKey(item.RelTabName))
                     {
-                        tb = this.Tabs[Item.RelTabName];
+                        tb = this.Tabs[item.RelTabName];
                     }
                     else
                     {
                         return;
                     }
                     if (tb == null)
+                    {
                         return;
-                    if (tb.Contains(Item.StatusId))
+                    }
+                    if (tb.Contains(item.StatusId))
+                    {
                         return;
-                    //tb.Add(Item.StatusId, Item.IsRead, True)
-                    tb.AddPostToInnerStorage(Item);
+                    }
+                    tb.AddPostToInnerStorage(item);
                 }
             }
         }
@@ -940,57 +952,65 @@ namespace Tween
             _retweets[item.RetweetedId].RetweetedCount += 1;
         }
 
-        public void SetReadAllTab(bool Read, string TabName, int Index)
+        public void SetReadAllTab(bool read, string tabName, int index)
         {
             //Read:True=既読へ　False=未読へ
-            TabClass tb = _tabs[TabName];
+            TabClass tb = _tabs[tabName];
 
-            if (tb.UnreadManage == false)
+            if (!tb.UnreadManage)
+            {
                 return;
+            }
             //未読管理していなければ終了
 
-            long Id = tb.GetId(Index);
-            if (Id < 0)
+            long id = tb.GetId(index);
+            if (id < 0)
+            {
                 return;
+            }
             PostClass post = null;
             if (!tb.IsInnerStorageTabType)
             {
-                post = _statuses[Id];
+                post = _statuses[id];
             }
             else
             {
-                post = tb.Posts[Id];
+                post = tb.Posts[id];
             }
 
-            if (post.IsRead == Read)
+            if (post.IsRead == read)
+            {
                 return;
+            }
             //状態変更なければ終了
 
-            post.IsRead = Read;
+            post.IsRead = read;
 
-            lock (LockUnread)
+            lock (_lockUnread)
             {
-                if (Read)
+                if (read)
                 {
                     tb.UnreadCount -= 1;
-                    this.SetNextUnreadId(Id, tb);
+                    this.SetNextUnreadId(id, tb);
                     //次の未読セット
                     //他タブの最古未読ＩＤはタブ切り替え時に。
                     if (tb.IsInnerStorageTabType)
                     {
                         //一般タブ
-                        if (_statuses.ContainsKey(Id) && !_statuses[Id].IsRead)
+                        if (_statuses.ContainsKey(id) && !_statuses[id].IsRead)
                         {
                             foreach (string key in _tabs.Keys)
                             {
-                                if (_tabs[key].UnreadManage && _tabs[key].Contains(Id) && !_tabs[key].IsInnerStorageTabType)
+                                if (_tabs[key].UnreadManage && _tabs[key].Contains(id) && !_tabs[key].IsInnerStorageTabType)
                                 {
                                     _tabs[key].UnreadCount -= 1;
-                                    if (_tabs[key].OldestUnreadId == Id)
+                                    if (_tabs[key].OldestUnreadId == id)
+                                    {
                                         _tabs[key].OldestUnreadId = -1;
+                                    }
                                 }
                             }
-                            _statuses[Id].IsRead = true;
+                            _statuses[id].IsRead = true;
                         }
                     }
                     else
@@ -998,26 +1018,30 @@ namespace Tween
                         //一般タブ
                         foreach (string key in _tabs.Keys)
                         {
-                            if (key != TabName && _tabs[key].UnreadManage && _tabs[key].Contains(Id) && !_tabs[key].IsInnerStorageTabType)
+                            if (key != tabName && _tabs[key].UnreadManage && _tabs[key].Contains(id) && !_tabs[key].IsInnerStorageTabType)
                             {
                                 _tabs[key].UnreadCount -= 1;
-                                if (_tabs[key].OldestUnreadId == Id)
+                                if (_tabs[key].OldestUnreadId == id)
+                                {
                                     _tabs[key].OldestUnreadId = -1;
+                                }
                             }
                         }
                     }
                     //内部保存タブ
                     foreach (string key in _tabs.Keys)
                     {
-                        if (key != TabName && _tabs[key].Contains(Id) && _tabs[key].IsInnerStorageTabType && !_tabs[key].Posts[Id].IsRead)
+                        if (key != tabName && _tabs[key].Contains(id) && _tabs[key].IsInnerStorageTabType && !_tabs[key].Posts[id].IsRead)
                         {
                             if (_tabs[key].UnreadManage)
                             {
                                 _tabs[key].UnreadCount -= 1;
-                                if (_tabs[key].OldestUnreadId == Id)
+                                if (_tabs[key].OldestUnreadId == id)
+                                {
                                     _tabs[key].OldestUnreadId = -1;
+                                }
                             }
-                            _tabs[key].Posts[Id].IsRead = true;
+                            _tabs[key].Posts[id].IsRead = true;
                         }
                     }
                 }
@@ -1025,23 +1049,27 @@ namespace Tween
                 {
                     tb.UnreadCount += 1;
                     //If tb.OldestUnreadId > Id OrElse tb.OldestUnreadId = -1 Then tb.OldestUnreadId = Id
-                    if (tb.OldestUnreadId > Id)
-                        tb.OldestUnreadId = Id;
+                    if (tb.OldestUnreadId > id)
+                    {
+                        tb.OldestUnreadId = id;
+                    }
                     if (tb.IsInnerStorageTabType)
                     {
                         //一般タブ
-                        if (_statuses.ContainsKey(Id) && _statuses[Id].IsRead)
+                        if (_statuses.ContainsKey(id) && _statuses[id].IsRead)
                         {
                             foreach (string key in _tabs.Keys)
                             {
-                                if (_tabs[key].UnreadManage && _tabs[key].Contains(Id) && !_tabs[key].IsInnerStorageTabType)
+                                if (_tabs[key].UnreadManage && _tabs[key].Contains(id) && !_tabs[key].IsInnerStorageTabType)
                                 {
                                     _tabs[key].UnreadCount += 1;
-                                    if (_tabs[key].OldestUnreadId > Id)
-                                        _tabs[key].OldestUnreadId = Id;
+                                    if (_tabs[key].OldestUnreadId > id)
+                                    {
+                                        _tabs[key].OldestUnreadId = id;
+                                    }
                                 }
                             }
-                            _statuses[Id].IsRead = false;
+                            _statuses[id].IsRead = false;
                         }
                     }
                     else
@@ -1049,26 +1077,30 @@ namespace Tween
                         //一般タブ
                         foreach (string key in _tabs.Keys)
                         {
-                            if (key != TabName && _tabs[key].UnreadManage && _tabs[key].Contains(Id) && !_tabs[key].IsInnerStorageTabType)
+                            if (key != tabName && _tabs[key].UnreadManage && _tabs[key].Contains(id) && !_tabs[key].IsInnerStorageTabType)
                             {
                                 _tabs[key].UnreadCount += 1;
-                                if (_tabs[key].OldestUnreadId > Id)
-                                    _tabs[key].OldestUnreadId = Id;
+                                if (_tabs[key].OldestUnreadId > id)
+                                {
+                                    _tabs[key].OldestUnreadId = id;
+                                }
                             }
                         }
                     }
                     //内部保存タブ
                     foreach (string key in _tabs.Keys)
                     {
-                        if (key != TabName && _tabs[key].Contains(Id) && _tabs[key].IsInnerStorageTabType && _tabs[key].Posts[Id].IsRead)
+                        if (key != tabName && _tabs[key].Contains(id) && _tabs[key].IsInnerStorageTabType && _tabs[key].Posts[id].IsRead)
                         {
                             if (_tabs[key].UnreadManage)
                             {
                                 _tabs[key].UnreadCount += 1;
-                                if (_tabs[key].OldestUnreadId > Id)
-                                    _tabs[key].OldestUnreadId = Id;
+                                if (_tabs[key].OldestUnreadId > id)
+                                {
+                                    _tabs[key].OldestUnreadId = id;
+                                }
                             }
-                            _tabs[key].Posts[Id].IsRead = false;
+                            _tabs[key].Posts[id].IsRead = false;
                         }
                     }
                 }
@@ -1076,70 +1108,85 @@ namespace Tween
         }
 
         /// TODO: パフォーマンスを勘案して、戻すか決める
-        public void SetRead(bool Read, string TabName, int Index)
+        public void SetRead(bool read, string tabName, int index)
         {
             //Read:True=既読へ　False=未読へ
-            TabClass tb = _tabs[TabName];
+            TabClass tb = _tabs[tabName];
 
-            if (tb.UnreadManage == false)
+            if (!tb.UnreadManage)
+            {
                 return;
+            }
             //未読管理していなければ終了
 
-            long Id = tb.GetId(Index);
-            if (Id < 0)
+            long id = tb.GetId(index);
+            if (id < 0)
+            {
                 return;
+            }
             PostClass post = null;
             if (!tb.IsInnerStorageTabType)
             {
-                post = _statuses[Id];
+                post = _statuses[id];
             }
             else
             {
-                post = tb.Posts[Id];
+                post = tb.Posts[id];
             }
 
-            if (post.IsRead == Read)
+            if (post.IsRead == read)
+            {
                 return;
+            }
             //状態変更なければ終了
 
-            post.IsRead = Read;
+            post.IsRead = read;
             //指定の状態に変更
 
-            lock (LockUnread)
+            lock (_lockUnread)
             {
-                if (Read)
+                if (read)
                 {
                     tb.UnreadCount -= 1;
-                    this.SetNextUnreadId(Id, tb);
+                    this.SetNextUnreadId(id, tb);
                     //次の未読セット
                     //他タブの最古未読ＩＤはタブ切り替え時に。
                     if (tb.IsInnerStorageTabType)
+                    {
                         return;
+                    }
                     foreach (string key in _tabs.Keys)
                     {
-                        if (key != TabName && _tabs[key].UnreadManage && _tabs[key].Contains(Id) && !_tabs[key].IsInnerStorageTabType)
+                        if (key != tabName && _tabs[key].UnreadManage && _tabs[key].Contains(id) && !_tabs[key].IsInnerStorageTabType)
                         {
                             _tabs[key].UnreadCount -= 1;
-                            if (_tabs[key].OldestUnreadId == Id)
+                            if (_tabs[key].OldestUnreadId == id)
+                            {
                                 _tabs[key].OldestUnreadId = -1;
+                            }
                         }
                     }
                 }
                 else
                 {
                     tb.UnreadCount += 1;
-                    //If tb.OldestUnreadId > Id OrElse tb.OldestUnreadId = -1 Then tb.OldestUnreadId = Id
-                    if (tb.OldestUnreadId > Id)
-                        tb.OldestUnreadId = Id;
+                    if (tb.OldestUnreadId > id)
+                    {
+                        tb.OldestUnreadId = id;
+                    }
                     if (tb.IsInnerStorageTabType)
+                    {
                         return;
+                    }
                     foreach (string key in _tabs.Keys)
                     {
-                        if (!(key == TabName) && _tabs[key].UnreadManage && _tabs[key].Contains(Id) && !_tabs[key].IsInnerStorageTabType)
+                        if (!(key == tabName) && _tabs[key].UnreadManage && _tabs[key].Contains(id) && !_tabs[key].IsInnerStorageTabType)
                         {
                             _tabs[key].UnreadCount += 1;
-                            if (_tabs[key].OldestUnreadId > Id)
-                                _tabs[key].OldestUnreadId = Id;
+                            if (_tabs[key].OldestUnreadId > id)
+                            {
+                                _tabs[key].OldestUnreadId = id;
+                            }
                         }
                     }
                 }
@@ -1148,17 +1195,21 @@ namespace Tween
 
         public void SetRead()
         {
-            TabClass tb = GetTabByType(Tween.MyCommon.TabUsageType.Home);
-            if (tb.UnreadManage == false)
-                return;
-
-            lock (LockObj)
+            TabClass tb = GetTabByType(MyCommon.TabUsageType.Home);
+            if (!tb.UnreadManage)
             {
-                for (int i = 0; i <= tb.AllCount - 1; i++)
+                return;
+            }
+
+            lock (_lockObj)
+            {
+                for (int i = 0; i < tb.AllCount; i++)
                 {
                     long id = tb.GetId(i);
                     if (id < 0)
+                    {
                         return;
+                    }
                     if (!_statuses[id].IsReply && !_statuses[id].IsRead && !_statuses[id].FilterHit)
                     {
                         _statuses[id].IsRead = true;
@@ -1170,7 +1221,9 @@ namespace Tween
                             {
                                 _tabs[key].UnreadCount -= 1;
                                 if (_tabs[key].OldestUnreadId == id)
+                                {
                                     _tabs[key].OldestUnreadId = -1;
+                                }
                             }
                         }
                     }
@@ -1178,99 +1231,88 @@ namespace Tween
             }
         }
 
-        public PostClass Item(long ID)
+        public PostClass Item(long id)
         {
-            //get
+            if (_statuses.ContainsKey(id))
             {
-                if (_statuses.ContainsKey(ID))
-                    return _statuses[ID];
-                foreach (TabClass tb in this.GetTabsInnerStorageType())
-                {
-                    if (tb.Contains(ID))
-                    {
-                        return tb.Posts[ID];
-                    }
-                }
-                return null;
+                return _statuses[id];
             }
-        }
-
-        public PostClass Item(string TabName, int Index)
-        {
-            //get
+            foreach (TabClass tb in this.GetTabsInnerStorageType())
             {
-                if (!_tabs.ContainsKey(TabName))
-                    throw new ArgumentException("TabName=" + TabName + " is not contained.");
-                long id = _tabs[TabName].GetId(Index);
-                if (id < 0)
-                    throw new ArgumentException("Index can't find. Index=" + Index.ToString() + "/TabName=" + TabName);
-                try
+                if (tb.Contains(id))
                 {
-                    if (_tabs[TabName].IsInnerStorageTabType)
-                    {
-                        return _tabs[TabName].Posts[_tabs[TabName].GetId(Index)];
-                    }
-                    else
-                    {
-                        return _statuses[_tabs[TabName].GetId(Index)];
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Index=" + Index.ToString() + "/TabName=" + TabName, ex);
+                    return tb.Posts[id];
                 }
             }
+            return null;
         }
 
-        public PostClass[] Item(string TabName, int StartIndex, int EndIndex)
+        public PostClass Item(string tabName, int index)
         {
-            //get
+            if (!_tabs.ContainsKey(tabName))
             {
-                int length = EndIndex - StartIndex + 1;
-                PostClass[] posts = new PostClass[length];
-                if (_tabs[TabName].IsInnerStorageTabType)
+                throw new ArgumentException("TabName=" + tabName + " is not contained.");
+            }
+            long id = _tabs[tabName].GetId(index);
+            if (id < 0)
+            {
+                throw new ArgumentException("Index can't find. Index=" + index.ToString() + "/TabName=" + tabName);
+            }
+            try
+            {
+                if (_tabs[tabName].IsInnerStorageTabType)
                 {
-                    for (int i = 0; i <= length - 1; i++)
-                    {
-                        posts[i] = _tabs[TabName].Posts[_tabs[TabName].GetId(StartIndex + i)];
-                    }
+                    return _tabs[tabName].Posts[_tabs[tabName].GetId(index)];
                 }
                 else
                 {
-                    for (int i = 0; i <= length - 1; i++)
-                    {
-                        posts[i] = _statuses[_tabs[TabName].GetId(StartIndex + i)];
-                    }
+                    return _statuses[_tabs[tabName].GetId(index)];
                 }
-                return posts;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Index=" + index.ToString() + "/TabName=" + tabName, ex);
             }
         }
 
-        //Public ReadOnly Property ItemCount() As Integer
-        //    Get
-        //        SyncLock LockObj
-        //            Return _statuses.Count   'DM,公式検索は除く
-        //        End SyncLock
-        //    End Get
-        //End Property
+        public PostClass[] Item(string tabName, int startIndex, int endIndex)
+        {
+            int length = endIndex - startIndex + 1;
+            PostClass[] posts = new PostClass[length];
+            if (_tabs[tabName].IsInnerStorageTabType)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    posts[i] = _tabs[tabName].Posts[_tabs[tabName].GetId(startIndex + i)];
+                }
+            }
+            else
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    posts[i] = _statuses[_tabs[tabName].GetId(startIndex + i)];
+                }
+            }
+            return posts;
+        }
 
-        public bool ContainsKey(long Id)
+        public bool ContainsKey(long id)
         {
             //DM,公式検索は非対応
-            lock (LockObj)
+            lock (_lockObj)
             {
-                return _statuses.ContainsKey(Id);
+                return _statuses.ContainsKey(id);
             }
         }
 
-        public bool ContainsKey(long Id, string TabName)
+        public bool ContainsKey(long id, string tabName)
         {
             //DM,公式検索は対応版
-            lock (LockObj)
+            lock (_lockObj)
             {
-                if (_tabs.ContainsKey(TabName))
+                if (_tabs.ContainsKey(tabName))
                 {
-                    return _tabs[TabName].Contains(Id);
+                    return _tabs[tabName].Contains(id);
                 }
                 else
                 {
@@ -1279,16 +1321,16 @@ namespace Tween
             }
         }
 
-        public void SetUnreadManage(bool Manage)
+        public void SetUnreadManage(bool manage)
         {
-            if (Manage)
+            if (manage)
             {
                 foreach (string key in _tabs.Keys)
                 {
                     TabClass tb = _tabs[key];
                     if (tb.UnreadManage)
                     {
-                        lock (LockUnread)
+                        lock (_lockUnread)
                         {
                             int cnt = 0;
                             long oldest = long.MaxValue;
@@ -1307,11 +1349,15 @@ namespace Tween
                                 {
                                     cnt += 1;
                                     if (oldest > id)
+                                    {
                                         oldest = id;
+                                    }
                                 }
                             }
                             if (oldest == long.MaxValue)
+                            {
                                 oldest = -1;
+                            }
                             tb.OldestUnreadId = oldest;
                             tb.UnreadCount = cnt;
                         }
@@ -1325,7 +1371,7 @@ namespace Tween
                     TabClass tb = _tabs[key];
                     if (tb.UnreadManage && tb.UnreadCount > 0)
                     {
-                        lock (LockUnread)
+                        lock (_lockUnread)
                         {
                             tb.UnreadCount = 0;
                             tb.OldestUnreadId = -1;
@@ -1335,20 +1381,20 @@ namespace Tween
             }
         }
 
-        public void RenameTab(string Original, string NewName)
+        public void RenameTab(string original, string newName)
         {
-            TabClass tb = _tabs[Original];
-            _tabs.Remove(Original);
-            tb.TabName = NewName;
-            _tabs.Add(NewName, tb);
+            TabClass tb = _tabs[original];
+            _tabs.Remove(original);
+            tb.TabName = newName;
+            _tabs.Add(newName, tb);
         }
 
         public void FilterAll()
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
-                TabClass tbr = GetTabByType(Tween.MyCommon.TabUsageType.Home);
-                TabClass replyTab = GetTabByType(Tween.MyCommon.TabUsageType.Mentions);
+                TabClass tbr = GetTabByType(MyCommon.TabUsageType.Home);
+                TabClass replyTab = GetTabByType(MyCommon.TabUsageType.Mentions);
                 foreach (TabClass tb in _tabs.Values.ToArray())
                 {
                     if (tb.FilterModified)
@@ -1362,37 +1408,46 @@ namespace Tween
                         {
                             PostClass post = _statuses[id];
                             if (post.IsDm)
+                            {
                                 continue;
-                            Tween.MyCommon.HITRESULT rslt = Tween.MyCommon.HITRESULT.None;
+                            }
+                            MyCommon.HITRESULT rslt = MyCommon.HITRESULT.None;
                             rslt = tb.AddFiltered(post);
                             switch (rslt)
                             {
-                                case Tween.MyCommon.HITRESULT.CopyAndMark:
-                                    post.IsMark = true;
-                                    //マークあり
+                                case MyCommon.HITRESULT.CopyAndMark:
+                                    post.IsMark = true;             //マークあり
                                     post.FilterHit = true;
                                     break;
-                                case Tween.MyCommon.HITRESULT.Move:
+                                case MyCommon.HITRESULT.Move:
                                     tbr.Remove(post.StatusId, post.IsRead);
                                     post.IsMark = false;
                                     post.FilterHit = true;
                                     break;
-                                case Tween.MyCommon.HITRESULT.Copy:
+                                case MyCommon.HITRESULT.Copy:
                                     post.IsMark = false;
                                     post.FilterHit = true;
                                     break;
-                                case Tween.MyCommon.HITRESULT.Exclude:
+                                case MyCommon.HITRESULT.Exclude:
                                     if (tb.TabName == replyTab.TabName && post.IsReply)
+                                    {
                                         post.IsExcludeReply = true;
+                                    }
                                     if (post.IsFav)
-                                        GetTabByType(Tween.MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
+                                    {
+                                        GetTabByType(MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
+                                    }
                                     post.FilterHit = false;
                                     break;
-                                case Tween.MyCommon.HITRESULT.None:
+                                case MyCommon.HITRESULT.None:
                                     if (tb.TabName == replyTab.TabName && post.IsReply)
+                                    {
                                         replyTab.Add(post.StatusId, post.IsRead, true);
+                                    }
                                     if (post.IsFav)
-                                        GetTabByType(Tween.MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
+                                    {
+                                        GetTabByType(MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
+                                    }
                                     post.FilterHit = false;
                                     break;
                             }
@@ -1407,11 +1462,13 @@ namespace Tween
                                 if (tbTemp.Contains(id))
                                 {
                                     hit = true;
-                                    break; // TODO: might not be correct. Was : Exit For
+                                    break;
                                 }
                             }
                             if (!hit)
+                            {
                                 tbr.Add(id, _statuses[id].IsRead, false);
+                            }
                         }
                     }
                 }
@@ -1419,77 +1476,82 @@ namespace Tween
             }
         }
 
-        public long[] GetId(string TabName, System.Windows.Forms.ListView.SelectedIndexCollection IndexCollection)
+        public long[] GetId(string tabName, System.Windows.Forms.ListView.SelectedIndexCollection indexCollection)
         {
-            if (IndexCollection.Count == 0)
-                return null;
-
-            TabClass tb = _tabs[TabName];
-            long[] Ids = new long[IndexCollection.Count];
-            for (int i = 0; i <= Ids.Length - 1; i++)
+            if (indexCollection.Count == 0)
             {
-                Ids[i] = tb.GetId(IndexCollection[i]);
+                return null;
             }
-            return Ids;
-        }
 
-        public long GetId(string TabName, int Index)
-        {
-            return _tabs[TabName].GetId(Index);
-        }
-
-        public int[] IndexOf(string TabName, long[] Ids)
-        {
-            if (Ids == null)
-                return null;
-            int[] idx = new int[Ids.Length];
-            TabClass tb = _tabs[TabName];
-            for (int i = 0; i <= Ids.Length - 1; i++)
+            TabClass tb = _tabs[tabName];
+            long[] ids = new long[indexCollection.Count];
+            for (int i = 0; i < ids.Length; i++)
             {
-                idx[i] = tb.IndexOf(Ids[i]);
+                ids[i] = tb.GetId(indexCollection[i]);
+            }
+            return ids;
+        }
+
+        public long GetId(string tabName, int index)
+        {
+            return _tabs[tabName].GetId(index);
+        }
+
+        public int[] IndexOf(string tabName, long[] ids)
+        {
+            if (ids == null)
+            {
+                return null;
+            }
+            int[] idx = new int[ids.Length];
+            TabClass tb = _tabs[tabName];
+            for (int i = 0; i < ids.Length; i++)
+            {
+                idx[i] = tb.IndexOf(ids[i]);
             }
             return idx;
         }
 
-        public int IndexOf(string TabName, long Id)
+        public int IndexOf(string tabName, long id)
         {
-            return _tabs[TabName].IndexOf(Id);
+            return _tabs[tabName].IndexOf(id);
         }
 
-        public void ClearTabIds(string TabName)
+        public void ClearTabIds(string tabName)
         {
             //不要なPostを削除
-            lock (LockObj)
+            lock (_lockObj)
             {
-                if (!_tabs[TabName].IsInnerStorageTabType)
+                if (!_tabs[tabName].IsInnerStorageTabType)
                 {
-                    foreach (long Id in _tabs[TabName].BackupIds())
+                    foreach (long id in _tabs[tabName].BackupIds())
                     {
-                        bool Hit = false;
+                        bool hit = false;
                         foreach (TabClass tb in _tabs.Values)
                         {
-                            if (tb.Contains(Id))
+                            if (tb.Contains(id))
                             {
-                                Hit = true;
-                                break; // TODO: might not be correct. Was : Exit For
+                                hit = true;
+                                break;
                             }
                         }
-                        if (!Hit)
-                            _statuses.Remove(Id);
+                        if (!hit)
+                        {
+                            _statuses.Remove(id);
+                        }
                     }
                 }
-
                 //指定タブをクリア
-                _tabs[TabName].ClearIDs();
+                _tabs[tabName].ClearIDs();
             }
         }
 
-        public void SetTabUnreadManage(string TabName, bool Manage)
+        public void SetTabUnreadManage(string tabName, bool manage)
         {
-            TabClass tb = _tabs[TabName];
-            lock (LockUnread)
+            TabClass tb = _tabs[tabName];
+            lock (_lockUnread)
             {
-                if (Manage)
+                if (manage)
                 {
                     int cnt = 0;
                     long oldest = long.MaxValue;
@@ -1508,11 +1570,15 @@ namespace Tween
                         {
                             cnt += 1;
                             if (oldest > id)
+                            {
                                 oldest = id;
+                            }
                         }
                     }
                     if (oldest == long.MaxValue)
+                    {
                         oldest = -1;
+                    }
                     tb.OldestUnreadId = oldest;
                     tb.UnreadCount = cnt;
                 }
@@ -1522,12 +1588,12 @@ namespace Tween
                     tb.UnreadCount = 0;
                 }
             }
-            tb.UnreadManage = Manage;
+            tb.UnreadManage = manage;
         }
 
         public void RefreshOwl(List<long> follower)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
                 if (follower.Count > 0)
                 {
@@ -1554,33 +1620,37 @@ namespace Tween
             }
         }
 
-        public TabClass GetTabByType(Tween.MyCommon.TabUsageType tabType)
+        public TabClass GetTabByType(MyCommon.TabUsageType tabType)
         {
             //Home,Mentions,DM,Favは1つに制限する
             //その他のタイプを指定されたら、最初に合致したものを返す
             //合致しなければNothingを返す
-            lock (LockObj)
+            lock (_lockObj)
             {
                 foreach (TabClass tb in _tabs.Values)
                 {
                     if (tb != null && tb.TabType == tabType)
+                    {
                         return tb;
+                    }
                 }
                 return null;
             }
         }
 
-        public List<TabClass> GetTabsByType(Tween.MyCommon.TabUsageType tabType)
+        public List<TabClass> GetTabsByType(MyCommon.TabUsageType tabType)
         {
             //合致したタブをListで返す
             //合致しなければ空のListを返す
-            lock (LockObj)
+            lock (_lockObj)
             {
                 List<TabClass> tbs = new List<TabClass>();
                 foreach (TabClass tb in _tabs.Values)
                 {
                     if ((tabType & tb.TabType) == tb.TabType)
+                    {
                         tbs.Add(tb);
+                    }
                 }
                 return tbs;
             }
@@ -1590,13 +1660,15 @@ namespace Tween
         {
             //合致したタブをListで返す
             //合致しなければ空のListを返す
-            lock (LockObj)
+            lock (_lockObj)
             {
                 List<TabClass> tbs = new List<TabClass>();
                 foreach (TabClass tb in _tabs.Values)
                 {
                     if (tb.IsInnerStorageTabType)
+                    {
                         tbs.Add(tb);
+                    }
                 }
                 return tbs;
             }
@@ -1604,10 +1676,12 @@ namespace Tween
 
         public TabClass GetTabByName(string tabName)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
                 if (_tabs.ContainsKey(tabName))
+                {
                     return _tabs[tabName];
+                }
                 return null;
             }
         }
@@ -1615,7 +1689,7 @@ namespace Tween
         // デフォルトタブの判定処理
         public bool IsDefaultTab(string tabName)
         {
-            if (tabName != null && _tabs.ContainsKey(tabName) && (_tabs[tabName].TabType == Tween.MyCommon.TabUsageType.Home || _tabs[tabName].TabType == Tween.MyCommon.TabUsageType.Mentions || _tabs[tabName].TabType == Tween.MyCommon.TabUsageType.DirectMessage || _tabs[tabName].TabType == Tween.MyCommon.TabUsageType.Favorites))
+            if (tabName != null && _tabs.ContainsKey(tabName) && (_tabs[tabName].TabType == MyCommon.TabUsageType.Home || _tabs[tabName].TabType == MyCommon.TabUsageType.Mentions || _tabs[tabName].TabType == MyCommon.TabUsageType.DirectMessage || _tabs[tabName].TabType == MyCommon.TabUsageType.Favorites))
             {
                 return true;
             }
@@ -1628,7 +1702,7 @@ namespace Tween
         //振り分け可能タブの判定処理
         public bool IsDistributableTab(string tabName)
         {
-            return tabName != null && this._tabs.ContainsKey(tabName) && (_tabs[tabName].TabType == Tween.MyCommon.TabUsageType.Mentions || _tabs[tabName].TabType == Tween.MyCommon.TabUsageType.UserDefined);
+            return tabName != null && this._tabs.ContainsKey(tabName) && (_tabs[tabName].TabType == MyCommon.TabUsageType.Mentions || _tabs[tabName].TabType == MyCommon.TabUsageType.UserDefined);
         }
 
         public string GetUniqueTabName()
@@ -1642,7 +1716,7 @@ namespace Tween
                 }
                 else
                 {
-                    break; // TODO: might not be correct. Was : Exit For
+                    break;
                 }
             }
             return tabNameTemp;
