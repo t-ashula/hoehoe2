@@ -37,23 +37,12 @@ namespace Tween
 
         public TabsDialog()
         {
-            Shown += TabsDialog_Shown;
-            Load += TabsDialog_Load;
-            // この呼び出しはデザイナーで必要です。
             InitializeComponent();
-
-            // InitializeComponent() 呼び出しの後で初期化を追加します。
         }
 
         public TabsDialog(bool multiselect)
         {
-            Shown += TabsDialog_Shown;
-            Load += TabsDialog_Load;
-            // この呼び出しはデザイナーで必要です。
             InitializeComponent();
-
-            // InitializeComponent() 呼び出しの後で初期化を追加します。
-
             this.MultiSelect = true;
         }
 
@@ -87,14 +76,16 @@ namespace Tween
             foreach (string obj in TabList.Items)
             {
                 if (obj == tabName)
+                {
                     return;
+                }
             }
             TabList.Items.Add(tabName);
         }
 
         public void RemoveTab(string tabName)
         {
-            for (int i = 0; i <= TabList.Items.Count - 1; i++)
+            for (int i = 0; i < TabList.Items.Count; i++)
             {
                 if (Convert.ToString(TabList.Items[i]) == tabName)
                 {
@@ -112,7 +103,8 @@ namespace Tween
             {
                 startidx = 0;
             }
-            for (int i = startidx; i <= TabList.Items.Count - 1; i++)
+
+            for (int i = startidx; i < TabList.Items.Count; i++)
             {
                 TabList.Items.RemoveAt(0);
             }
