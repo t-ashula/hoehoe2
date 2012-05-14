@@ -32,19 +32,15 @@ namespace Tween
 {
     public partial class ListManage
     {
-        private Twitter tw;
+        private Twitter _tw;
 
         public ListManage(Twitter tw)
         {
-            Validating += ListManage_Validating;
-            Load += ListManage_Load;
-            KeyDown += ListManage_KeyDown;
-            this.InitializeComponent();
-
-            this.tw = tw;
+            InitializeComponent();
+            this._tw = tw;
         }
 
-        private void ListManage_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void ListManage_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && this.EditCheckBox.Checked)
             {
@@ -52,12 +48,14 @@ namespace Tween
             }
         }
 
-        private void ListManage_Load(System.Object sender, System.EventArgs e)
+        private void ListManage_Load(object sender, EventArgs e)
         {
             this.UserList_SelectedIndexChanged(null, EventArgs.Empty);
             if (TabInformations.GetInstance().SubscribableLists.Count == 0)
+            {
                 this.RefreshLists();
-            foreach (ListElement listItem in TabInformations.GetInstance().SubscribableLists.FindAll(i => i.Username == this.tw.Username))
+            }
+            foreach (ListElement listItem in TabInformations.GetInstance().SubscribableLists.FindAll(i => i.Username == this._tw.Username))
             {
                 this.ListsList.Items.Add(listItem);
             }
@@ -68,10 +66,12 @@ namespace Tween
             this.ListsList.Focus();
         }
 
-        private void ListsList_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        private void ListsList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.ListsList.SelectedItem == null)
+            {
                 return;
+            }
 
             ListElement list = (ListElement)this.ListsList.SelectedItem;
             this.UsernameTextBox.Text = list.Username;
@@ -91,40 +91,41 @@ namespace Tween
             this.GetMoreUsersButton.Text = (this.UserList.Items.Count > 0 ? Tween.My_Project.Resources.ListManageGetMoreUsers2 : Tween.My_Project.Resources.ListManageGetMoreUsers1).ToString();
         }
 
-        private void EditCheckBox_CheckedChanged(System.Object sender, System.EventArgs e)
+        private void EditCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            this.AddListButton.Enabled = !this.EditCheckBox.Checked;
-            this.EditCheckBox.Enabled = !this.EditCheckBox.Checked;
-            this.DeleteListButton.Enabled = !this.EditCheckBox.Checked;
-
-            this.NameTextBox.ReadOnly = !this.EditCheckBox.Checked;
-            this.PublicRadioButton.Enabled = this.EditCheckBox.Checked;
-            this.PrivateRadioButton.Enabled = this.EditCheckBox.Checked;
-            this.DescriptionText.ReadOnly = !this.EditCheckBox.Checked;
-            this.ListsList.Enabled = !this.EditCheckBox.Checked;
-
-            this.OKEditButton.Enabled = this.EditCheckBox.Checked;
-            this.CancelEditButton.Enabled = this.EditCheckBox.Checked;
-            this.EditCheckBox.AutoCheck = !this.EditCheckBox.Checked;
-
-            this.MemberGroup.Enabled = !this.EditCheckBox.Checked;
-            this.UserGroup.Enabled = !this.EditCheckBox.Checked;
-            this.CloseButton.Enabled = !this.EditCheckBox.Checked;
-
-            this.UsernameTextBox.TabStop = !this.EditCheckBox.Checked;
-            this.MemberCountTextBox.TabStop = !this.EditCheckBox.Checked;
-            this.SubscriberCountTextBox.TabStop = !this.EditCheckBox.Checked;
-            if (this.EditCheckBox.Checked == true)
+            var state = this.EditCheckBox.Checked;
+            this.AddListButton.Enabled = !state;
+            this.EditCheckBox.Enabled = !state;
+            this.DeleteListButton.Enabled = !state;
+            this.NameTextBox.ReadOnly = !state;
+            this.PublicRadioButton.Enabled = state;
+            this.PrivateRadioButton.Enabled = state;
+            this.DescriptionText.ReadOnly = !state;
+            this.ListsList.Enabled = !state;
+            this.OKEditButton.Enabled = state;
+            this.CancelEditButton.Enabled = state;
+            this.EditCheckBox.AutoCheck = !state;
+            this.MemberGroup.Enabled = !state;
+            this.UserGroup.Enabled = !state;
+            this.CloseButton.Enabled = !state;
+            this.UsernameTextBox.TabStop = !state;
+            this.MemberCountTextBox.TabStop = !state;
+            this.SubscriberCountTextBox.TabStop = !state;
+            if (state)
+            {
                 this.NameTextBox.Focus();
+            }
         }
 
-        private void OKButton_Click(System.Object sender, System.EventArgs e)
+        private void OKButton_Click(object sender, EventArgs e)
         {
             if (this.ListsList.SelectedItem == null)
+            {
                 return;
+            }
             ListElement listItem = (ListElement)this.ListsList.SelectedItem;
 
-            if (string.IsNullOrEmpty(this.NameTextBox.Text))
+            if (String.IsNullOrEmpty(this.NameTextBox.Text))
             {
                 MessageBox.Show(Tween.My_Project.Resources.ListManageOKButton1);
                 return;
@@ -136,9 +137,9 @@ namespace Tween
 
             string rslt = listItem.Refresh();
 
-            if (!string.IsNullOrEmpty(rslt))
+            if (!String.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(string.Format(Tween.My_Project.Resources.ListManageOKButton2, rslt));
+                MessageBox.Show(String.Format(Tween.My_Project.Resources.ListManageOKButton2, rslt));
                 return;
             }
 
@@ -149,12 +150,12 @@ namespace Tween
             this.EditCheckBox.Checked = false;
         }
 
-        private void CancelButton_Click(System.Object sender, System.EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             this.EditCheckBox.AutoCheck = true;
             this.EditCheckBox.Checked = false;
 
-            for (int i = this.ListsList.Items.Count - 1; i >= 0; i += -1)
+            for (int i = this.ListsList.Items.Count - 1; i >= 0; i--)
             {
                 if (this.ListsList.Items[i] is NewListElement)
                 {
@@ -165,19 +166,23 @@ namespace Tween
             this.ListsList_SelectedIndexChanged(this.ListsList, EventArgs.Empty);
         }
 
-        private void RefreshUsersButton_Click(System.Object sender, System.EventArgs e)
+        private void RefreshUsersButton_Click(object sender, EventArgs e)
         {
             if (this.ListsList.SelectedItem == null)
+            {
                 return;
+            }
             this.UserList.Items.Clear();
             Action<ListElement> dlgt = new Action<ListElement>(lElement => { this.Invoke(new Action<string>(GetListMembersCallback), lElement.RefreshMembers()); });
             dlgt.BeginInvoke((ListElement)this.ListsList.SelectedItem, null, null);
         }
 
-        private void GetMoreUsersButton_Click(System.Object sender, System.EventArgs e)
+        private void GetMoreUsersButton_Click(object sender, EventArgs e)
         {
             if (this.ListsList.SelectedItem == null)
+            {
                 return;
+            }
             Action<ListElement> dlgt = new Action<ListElement>(lElement => { this.Invoke(new Action<string>(GetListMembersCallback), lElement.GetMoreMembers()); });
             dlgt.BeginInvoke((ListElement)this.ListsList.SelectedItem, null, null);
         }
@@ -191,11 +196,11 @@ namespace Tween
             }
             else
             {
-                MessageBox.Show(string.Format(Tween.My_Project.Resources.ListManageGetListMembersCallback1, result));
+                MessageBox.Show(String.Format(Tween.My_Project.Resources.ListManageGetListMembersCallback1, result));
             }
         }
 
-        private void DeleteUserButton_Click(System.Object sender, System.EventArgs e)
+        private void DeleteUserButton_Click(object sender, EventArgs e)
         {
             if (this.ListsList.SelectedItem == null || this.UserList.SelectedItem == null)
             {
@@ -206,42 +211,46 @@ namespace Tween
             UserInfo user = (UserInfo)this.UserList.SelectedItem;
             if (MessageBox.Show(Tween.My_Project.Resources.ListManageDeleteUser1, "Tween", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
-                string rslt = this.tw.RemoveUserToList(list.Id.ToString(), user.Id.ToString());
+                string rslt = this._tw.RemoveUserToList(list.Id.ToString(), user.Id.ToString());
 
-                if (!string.IsNullOrEmpty(rslt))
+                if (!String.IsNullOrEmpty(rslt))
                 {
-                    MessageBox.Show(string.Format(Tween.My_Project.Resources.ListManageDeleteUser2, rslt));
+                    MessageBox.Show(String.Format(Tween.My_Project.Resources.ListManageDeleteUser2, rslt));
                     return;
                 }
                 int idx = ListsList.SelectedIndex;
                 list.Members.Remove(user);
                 this.ListsList_SelectedIndexChanged(this.ListsList, EventArgs.Empty);
                 if (idx < ListsList.Items.Count)
+                {
                     ListsList.SelectedIndex = idx;
+                }
             }
         }
 
-        private void DeleteListButton_Click(System.Object sender, System.EventArgs e)
+        private void DeleteListButton_Click(object sender, EventArgs e)
         {
             if (this.ListsList.SelectedItem == null)
+            {
                 return;
+            }
             ListElement list = (ListElement)this.ListsList.SelectedItem;
 
             if (MessageBox.Show(Tween.My_Project.Resources.ListManageDeleteLists1, "Tween", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 string rslt = "";
 
-                rslt = this.tw.DeleteList(list.Id.ToString());
+                rslt = this._tw.DeleteList(list.Id.ToString());
 
-                if (!string.IsNullOrEmpty(rslt))
+                if (!String.IsNullOrEmpty(rslt))
                 {
                     MessageBox.Show(Tween.My_Project.Resources.ListManageOKButton2, rslt);
                     return;
                 }
 
-                rslt = this.tw.GetListsApi();
+                rslt = this._tw.GetListsApi();
 
-                if (!string.IsNullOrEmpty(rslt))
+                if (!String.IsNullOrEmpty(rslt))
                 {
                     MessageBox.Show(Tween.My_Project.Resources.ListsDeleteFailed, rslt);
                     return;
@@ -252,16 +261,16 @@ namespace Tween
             }
         }
 
-        private void AddListButton_Click(System.Object sender, System.EventArgs e)
+        private void AddListButton_Click(object sender, EventArgs e)
         {
-            NewListElement newList = new NewListElement(this.tw);
+            NewListElement newList = new NewListElement(this._tw);
             this.ListsList.Items.Add(newList);
             this.ListsList.SelectedItem = newList;
             this.EditCheckBox.Checked = true;
             this.EditCheckBox_CheckedChanged(this.EditCheckBox, EventArgs.Empty);
         }
 
-        private void UserList_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        private void UserList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (UserList.SelectedItem == null)
             {
@@ -289,7 +298,7 @@ namespace Tween
                 this.UserFollowerNum.Text = user.FollowersCount.ToString("#,###,##0");
                 this.UserPostsNum.Text = user.StatusesCount.ToString("#,###,##0");
                 this.UserProfile.Text = user.Description;
-                if (!string.IsNullOrEmpty(user.RecentPost))
+                if (!String.IsNullOrEmpty(user.RecentPost))
                 {
                     this.UserTweetDateTime.Text = user.PostCreatedAt.ToString("yy/MM/dd HH:mm");
                     this.UserTweet.Text = user.RecentPost;
@@ -309,14 +318,16 @@ namespace Tween
         private void DisplayIcon(Image img)
         {
             if (img == null || this.UserList.SelectedItem == null)
+            {
                 return;
+            }
             if (((UserInfo)this.UserList.SelectedItem).ImageUrl.ToString() == (string)img.Tag)
             {
                 this.UserIcon.Image = img;
             }
         }
 
-        private void RefreshListsButton_Click(System.Object sender, System.EventArgs e)
+        private void RefreshListsButton_Click(object sender, EventArgs e)
         {
             this.RefreshLists();
             this.ListsList.Items.Clear();
@@ -328,9 +339,9 @@ namespace Tween
             using (FormInfo dlg = new FormInfo(this, Tween.My_Project.Resources.ListsGetting, RefreshLists_Dowork))
             {
                 dlg.ShowDialog();
-                if (!string.IsNullOrEmpty((string)dlg.Result))
+                if (!String.IsNullOrEmpty((string)dlg.Result))
                 {
-                    MessageBox.Show(string.Format(Tween.My_Project.Resources.ListsDeleteFailed, (string)dlg.Result));
+                    MessageBox.Show(String.Format(Tween.My_Project.Resources.ListsDeleteFailed, (string)dlg.Result));
                     return;
                 }
             }
@@ -338,10 +349,10 @@ namespace Tween
 
         private void RefreshLists_Dowork(object sender, DoWorkEventArgs e)
         {
-            e.Result = tw.GetListsApi();
+            e.Result = _tw.GetListsApi();
         }
 
-        private void UserWeb_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void UserWeb_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (this.Owner != null)
             {
@@ -349,53 +360,39 @@ namespace Tween
             }
         }
 
-        private class NewListElement : ListElement
-        {
-            private bool _isCreated = false;
-
-            public NewListElement(Twitter tw)
-            {
-                this._tw = tw;
-            }
-
-            public override string Refresh()
-            {
-                if (this.IsCreated)
-                {
-                    return base.Refresh();
-                }
-                else
-                {
-                    string rslt = this._tw.CreateListApi(this.Name, !this.IsPublic, this.Description);
-                    this._isCreated = (string.IsNullOrEmpty(rslt));
-                    return rslt;
-                }
-            }
-
-            public bool IsCreated
-            {
-                get { return this._isCreated; }
-            }
-
-            public override string ToString()
-            {
-                if (IsCreated)
-                {
-                    return base.ToString();
-                }
-                else
-                {
-                    return "NewList";
-                }
-            }
-        }
-
-        private void ListManage_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ListManage_Validating(object sender, CancelEventArgs e)
         {
             if (this.EditCheckBox.Checked)
             {
                 e.Cancel = true;
                 this.CancelButton.PerformClick();
+            }
+        }
+
+        private class NewListElement : ListElement
+        {
+            public NewListElement(Twitter tw)
+            {
+                this._tw = tw;
+                this.IsCreated = false;
+            }
+
+            public override string Refresh()
+            {
+                if (IsCreated)
+                {
+                    return base.Refresh();
+                }
+                string rslt = this._tw.CreateListApi(this.Name, !this.IsPublic, this.Description);
+                this.IsCreated = String.IsNullOrEmpty(rslt);
+                return rslt;
+            }
+
+            public bool IsCreated { get; private set; }
+
+            public override string ToString()
+            {
+                return IsCreated ? base.ToString() : "NewList";
             }
         }
     }
