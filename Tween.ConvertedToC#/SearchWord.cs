@@ -22,18 +22,19 @@
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
+using System;
 
 namespace Tween
 {
     public partial class SearchWord
     {
-        private void OK_Button_Click(System.Object sender, System.EventArgs e)
+        private void OK_Button_Click(object sender, EventArgs e)
         {
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
 
-        private void Cancel_Button_Click(System.Object sender, System.EventArgs e)
+        private void Cancel_Button_Click(object sender, EventArgs e)
         {
             this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
@@ -57,7 +58,7 @@ namespace Tween
             set { CheckSearchRegex.Checked = value; }
         }
 
-        private void SearchWord_Shown(object sender, System.EventArgs e)
+        private void SearchWord_Shown(object sender, EventArgs e)
         {
             SWordText.SelectAll();
             SWordText.Focus();
@@ -65,7 +66,6 @@ namespace Tween
 
         public SearchWord()
         {
-            Shown += SearchWord_Shown;
             InitializeComponent();
         }
     }
