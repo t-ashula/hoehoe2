@@ -37,20 +37,16 @@ namespace Tween
     public class GrowlHelper
     {
         private Assembly _connector = null;
-
         private Assembly _core = null;
         private object _growlNTreply;
         private object _growlNTdm;
         private object _growlNTnew;
         private object _growlNTusevent;
-
         private object _growlApp;
         private object _targetConnector;
-
         private object _targetCore;
         private string _appName = "";
-
-        bool _initialized = false;
+        private bool _initialized = false;
 
         public class NotifyCallbackEventArgs : EventArgs
         {
@@ -71,6 +67,14 @@ namespace Tween
         public event NotifyClickedEventHandler NotifyClicked;
 
         public delegate void NotifyClickedEventHandler(object sender, NotifyCallbackEventArgs e);
+
+        private void OnNotifyClicked(NotifyCallbackEventArgs e)
+        {
+            if (NotifyClicked != null)
+            {
+                NotifyClicked(this, e);
+            }
+        }
 
         public string AppName
         {
@@ -94,14 +98,7 @@ namespace Tween
         {
             get
             {
-                if (_connector == null || _core == null || !_initialized)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return _connector != null && _core != null && _initialized;
             }
         }
 
@@ -127,14 +124,7 @@ namespace Tween
                 string dir = Application.StartupPath;
                 string connectorPath = Path.Combine(dir, "Growl.Connector.dll");
                 string corePath = Path.Combine(dir, "Growl.CoreLibrary.dll");
-                if (File.Exists(connectorPath) && File.Exists(corePath))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return File.Exists(connectorPath) && File.Exists(corePath);
             }
         }
 
@@ -144,15 +134,16 @@ namespace Tween
             string dir = Application.StartupPath;
             string connectorPath = Path.Combine(dir, "Growl.Connector.dll");
             string corePath = Path.Combine(dir, "Growl.CoreLibrary.dll");
-
             try
             {
                 if (!IsDllExists)
+                {
                     return false;
+                }
                 _connector = Assembly.LoadFile(connectorPath);
                 _core = Assembly.LoadFile(corePath);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -254,7 +245,7 @@ namespace Tween
 
                 _initialized = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _initialized = false;
                 return false;
@@ -266,7 +257,9 @@ namespace Tween
         public void Notify(NotifyType notificationType, string id, string title, string text, Image icon = null, string url = "")
         {
             if (!_initialized)
+            {
                 return;
+            }
             string notificationName = "";
             switch (notificationType)
             {
@@ -359,13 +352,10 @@ namespace Tween
                             nt = NotifyType.UserStreamEvent;
                             break;
                     }
-                    if (NotifyClicked != null)
-                    {
-                        NotifyClicked(this, new NotifyCallbackEventArgs(nt, notifyId));
-                    }
+                    OnNotifyClicked(new NotifyCallbackEventArgs(nt, notifyId));
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }
