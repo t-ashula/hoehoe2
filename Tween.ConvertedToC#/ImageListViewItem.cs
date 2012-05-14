@@ -35,9 +35,9 @@ namespace Tween
         public event ImageDownloadedEventHandler ImageDownloaded;
 
         public delegate void ImageDownloadedEventHandler(object sender, EventArgs e);
-        private ImageDictionary imageDict = null;
 
-        private string imageUrl;
+        private ImageDictionary _imageDict = null;
+        private string _imageUrl;
 
         public ImageListViewItem(string[] items, string imageKey)
             : base(items, imageKey)
@@ -47,60 +47,48 @@ namespace Tween
         public ImageListViewItem(string[] items, ImageDictionary imageDictionary, string imageKey)
             : base(items, imageKey)
         {
-            this.imageDict = imageDictionary;
-            this.imageUrl = imageKey;
+            this._imageDict = imageDictionary;
+            this._imageUrl = imageKey;
             Image dummy = this.GetImage(false);
         }
 
         private Image GetImage(bool force)
         {
-            return this.imageDict[this.imageUrl, force, getImg =>
+            return this._imageDict[this._imageUrl, force, getImg =>
             {
                 if (getImg == null)
+                {
                     return;
-                //Me.Image = getImg
+                }
                 if (this.ListView != null && this.ListView.Created && !this.ListView.IsDisposed)
                 {
                     this.ListView.Invoke(new Action(() =>
                     {
                         if (this.Index < this.ListView.VirtualListSize)
                         {
-                            this.ListView.RedrawItems(this.Index, this.Index, true);
-                            if (ImageDownloaded != null)
-                            {
-                                ImageDownloaded(this, EventArgs.Empty);
-                            }
+                            this.ListView.RedrawItems(this.Index, this.Index, true); OnImageDownloaded();
                         }
                     }));
                 }
             }];
         }
 
+        private void OnImageDownloaded()
+        {
+            if (ImageDownloaded != null)
+            {
+                ImageDownloaded(this, EventArgs.Empty);
+            }
+        }
+
         public Image Image
         {
-            get
-            {
-                if (string.IsNullOrEmpty(this.imageUrl))
-                    return null;
-                return this.imageDict[this.imageUrl];
-            }
+            get { return String.IsNullOrEmpty(this._imageUrl) ? null : this._imageDict[this._imageUrl]; }
         }
 
         public void RegetImage()
         {
-            //If Me.Image IsNot Nothing Then
-            //    Me.Image.Dispose()
-            //    Me.Image = Nothing
-            //End If
             Image dummy = GetImage(true);
         }
-
-        //Protected Overrides Sub Finalize()
-        //    If Me.Image IsNot Nothing Then
-        //        Me.Image.Dispose()
-        //        Me.Image = Nothing
-        //    End If
-        //    MyBase.Finalize()
-        //End Sub
     }
 }
