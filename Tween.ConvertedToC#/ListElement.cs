@@ -23,7 +23,9 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace Tween
 {
@@ -77,18 +79,20 @@ namespace Tween
             return _tw.EditList(this.Id.ToString(), Name, !this.IsPublic, this.Description, ref t);
         }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [XmlIgnore]
         public List<UserInfo> Members
         {
             get
             {
                 if (this._members == null)
+                {
                     this._members = new List<UserInfo>();
+                }
                 return this._members;
             }
         }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [XmlIgnore]
         public long Cursor
         {
             get { return _cursor; }
@@ -100,18 +104,18 @@ namespace Tween
             _cursor = -1;
             string result = this._tw.GetListMembers(this.Id.ToString(), users, ref _cursor);
             this._members = users;
-            return string.IsNullOrEmpty(result) ? this.ToString() : result;
+            return String.IsNullOrEmpty(result) ? this.ToString() : result;
         }
 
         public string GetMoreMembers()
         {
             string result = this._tw.GetListMembers(this.Id.ToString(), this._members, ref _cursor);
-            return string.IsNullOrEmpty(result) ? this.ToString() : result;
+            return String.IsNullOrEmpty(result) ? this.ToString() : result;
         }
 
         public override string ToString()
         {
-            return "@" + Username + "/" + Name + " [" + (this.IsPublic ? "Public" : "Protected") + "]";
+            return String.Format("@{0}/{1} [{2}]", Username, Name, this.IsPublic ? "Public" : "Protected");
         }
     }
 }
