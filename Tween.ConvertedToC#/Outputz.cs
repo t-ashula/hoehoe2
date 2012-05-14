@@ -30,42 +30,23 @@ namespace Tween
 {
     public class Outputz
     {
-        private static string myOuturl;
+        public static string OutUrl { get; set; }
 
-        private static string myApikey;
+        public static string Key { get; set; }
 
-        private static bool state;
-
-        public static string OutUrl
-        {
-            get { return myOuturl; }
-            set { myOuturl = value; }
-        }
-
-        public static string Key
-        {
-            get { return myApikey; }
-            set { myApikey = value; }
-        }
-
-        public static bool Enabled
-        {
-            get { return state; }
-            set { state = value; }
-        }
+        public static bool Enabled { get; set; }
 
         public bool Post(int length)
         {
-            if (state == false)
+            if (!Enabled)
+            {
                 return true;
+            }
 
-            string content = "";
             string output = "http://outputz.com/api/post";
-            Dictionary<string, string> param = new Dictionary<string, string>();
-            param.Add("key", myApikey);
-            param.Add("uri", myOuturl);
-            param.Add("size", length.ToString());
-
+            var param = new Dictionary<string, string>() {
+                { "key", Key }, { "uri", OutUrl }, { "size", length.ToString() }
+            };
             return (new HttpVarious()).PostData(output, param);
         }
     }
