@@ -36,16 +36,17 @@ namespace Tween
 {
     public partial class ShowUserInfo
     {
+        private const string Mainpath = "http://twitter.com/";
+        private const string Followingpath = "/following";
+        private const string Followerspath = "/followers";
+        private const string Favpath = "/favorites";
+
         private TwitterDataModel.User _userInfo;
         private UserInfo _info = new UserInfo();
         private Image _icondata;
         private List<string> _atList = new List<string>();
         private string _descriptionTxt;
         private string _recentPostTxt;
-        private const string Mainpath = "http://twitter.com/";
-        private const string Followingpath = "/following";
-        private const string Followerspath = "/followers";
-        private const string Favpath = "/favorites";
         private string _home;
         private string _following;
         private string _followers;
@@ -519,17 +520,17 @@ namespace Tween
 
         private class UpdateProfileArgs
         {
-            public Twitter tw;
-            public string name;
-            public string location;
-            public string url;
-            public string description;
+            public Twitter Tw;
+            public string Name;
+            public string Location;
+            public string Url;
+            public string Description;
         }
 
         private void UpdateProfile_Dowork(object sender, DoWorkEventArgs e)
         {
             UpdateProfileArgs arg = (UpdateProfileArgs)e.Argument;
-            e.Result = arg.tw.PostUpdateProfile(arg.name, arg.url, arg.location, arg.description);
+            e.Result = arg.Tw.PostUpdateProfile(arg.Name, arg.Url, arg.Location, arg.Description);
         }
 
         private void UpddateProfile_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -610,11 +611,11 @@ namespace Tween
 
                 if (TextBoxName.Modified || TextBoxLocation.Modified || TextBoxWeb.Modified || TextBoxDescription.Modified)
                 {
-                    arg.tw = _owner.TwitterInstance;
-                    arg.name = TextBoxName.Text.Trim();
-                    arg.url = TextBoxWeb.Text.Trim();
-                    arg.location = TextBoxLocation.Text.Trim();
-                    arg.description = TextBoxDescription.Text.Trim();
+                    arg.Tw = _owner.TwitterInstance;
+                    arg.Name = TextBoxName.Text.Trim();
+                    arg.Url = TextBoxWeb.Text.Trim();
+                    arg.Location = TextBoxLocation.Text.Trim();
+                    arg.Description = TextBoxDescription.Text.Trim();
 
                     using (FormInfo dlg = new FormInfo(this, Tween.My_Project.Resources.UserInfoButtonEdit_ClickText2, UpdateProfile_Dowork, UpddateProfile_RunWorkerCompleted, arg))
                     {
@@ -658,14 +659,14 @@ namespace Tween
 
         public class UpdateProfileImageArgs
         {
-            public Twitter tw;
+            public Twitter Tw;
             public string FileName;
         }
 
         private void UpdateProfileImage_Dowork(object sender, DoWorkEventArgs e)
         {
             UpdateProfileImageArgs arg = (UpdateProfileImageArgs)e.Argument;
-            e.Result = arg.tw.PostUpdateProfileImage(arg.FileName);
+            e.Result = arg.Tw.PostUpdateProfileImage(arg.FileName);
         }
 
         private void UpdateProfileImage_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -700,7 +701,7 @@ namespace Tween
             string res = "";
             UpdateProfileImageArgs arg = new UpdateProfileImageArgs
             {
-                tw = _owner.TwitterInstance,
+                Tw = _owner.TwitterInstance,
                 FileName = filename
             };
 
