@@ -36,34 +36,22 @@ namespace Tween
 
     public class HookGlobalHotkey : NativeWindow, IDisposable
     {
-        private Form _targetForm;
+        public event KeyEventHandler HotkeyPressed;
 
         private class KeyEventValue
         {
-            KeyEventArgs _keyEvent;
-
-            int _value;
-
-            public KeyEventValue(KeyEventArgs keyEvent, int Value)
+            public KeyEventValue(KeyEventArgs keyEvent, int value)
             {
-                _keyEvent = keyEvent;
-                _value = Value;
+                KeyEvent = keyEvent;
+                Value = value;
             }
 
-            public KeyEventArgs KeyEvent
-            {
-                get { return _keyEvent; }
-            }
+            public KeyEventArgs KeyEvent { get; private set; }
 
-            public int Value
-            {
-                get { return _value; }
-            }
+            public int Value { get; private set; }
         }
 
-        private Dictionary<int, KeyEventValue> _hotkeyID;
-
-        [FlagsAttribute()]
+        [Flags]
         public enum ModKeys : int
         {
             None = 0,
@@ -73,18 +61,22 @@ namespace Tween
             Win = 0x8
         }
 
-        public event KeyEventHandler HotkeyPressed;
+        private Form _targetForm;
+        private Dictionary<int, KeyEventValue> _hotkeyID;
 
         protected override void WndProc(ref System.Windows.Forms.Message m)
         {
             const int WM_HOTKEY = 0x312;
             if (m.Msg == WM_HOTKEY)
             {
-                if (_hotkeyID.ContainsKey(m.WParam.ToInt32()))
+                int mwParam = m.WParam.ToInt32();
+                if (_hotkeyID.ContainsKey(mwParam))
+                {
                     if (HotkeyPressed != null)
                     {
-                        HotkeyPressed(this, _hotkeyID[m.WParam.ToInt32()].KeyEvent);
+                        HotkeyPressed(this, _hotkeyID[mwParam].KeyEvent);
                     }
+                }
                 return;
             }
             base.WndProc(ref m);
@@ -113,19 +105,29 @@ namespace Tween
         {
             Keys modKey = Keys.None;
             if ((modifiers & ModKeys.Alt) == ModKeys.Alt)
+            {
                 modKey = modKey | Keys.Alt;
+            }
             if ((modifiers & ModKeys.Ctrl) == ModKeys.Ctrl)
+            {
                 modKey = modKey | Keys.Control;
+            }
             if ((modifiers & ModKeys.Shift) == ModKeys.Shift)
+            {
                 modKey = modKey | Keys.Shift;
+            }
             if ((modifiers & ModKeys.Win) == ModKeys.Win)
+            {
                 modKey = modKey | Keys.LWin;
+            }
             KeyEventArgs key = new KeyEventArgs(hotkey | modKey);
             foreach (KeyValuePair<int, KeyEventValue> kvp in this._hotkeyID)
             {
-                if (kvp.Value.KeyEvent.KeyData == key.KeyData && kvp.Value.Value == hotkeyValue)
-                    return true;
                 //登録済みなら正常終了
+                if (kvp.Value.KeyEvent.KeyData == key.KeyData && kvp.Value.Value == hotkeyValue)
+                {
+                    return true;
+                }
             }
             int hotkeyId = Win32Api.RegisterGlobalHotKey(hotkeyValue, (int)modifiers, this._targetForm);
             if (hotkeyId > 0)
