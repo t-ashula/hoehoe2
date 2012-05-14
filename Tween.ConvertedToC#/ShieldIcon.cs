@@ -44,20 +44,16 @@ namespace Tween
         }
 
         [DllImport("shell32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-
         private static extern int SHGetStockIconInfo(int siid, uint uFlags, ref SHSTOCKICONINFO psii);
 
         [DllImport("shell32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-
         private static extern bool DestroyIcon(IntPtr hIcon);
 
         const int SIID_SHIELD = 77;
         const uint SHGFI_ICON = 0x100;
-
         const uint SHGFI_SMALLICON = 0x1;
 
-        private Image icondata = null;
-
+        private Image icondata;
         private SHSTOCKICONINFO sii;
 
         public ShieldIcon()
@@ -77,7 +73,7 @@ namespace Tween
                 SHGetStockIconInfo(SIID_SHIELD, SHGFI_ICON | SHGFI_SMALLICON, ref sii);
                 icondata = Bitmap.FromHicon(sii.hIcon);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 icondata = null;
             }
