@@ -23,6 +23,7 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -39,8 +40,8 @@ namespace Tween
         private bool _isPermanent = false;
         private bool _isHead = false;
         private bool _isNotAddToAtReply = true;
-        //編集モード
 
+        //編集モード
         private bool _isAdd = false;
 
         private void ChangeMode(bool isEdit)
@@ -58,40 +59,46 @@ namespace Tween
             }
         }
 
-        private void Cancel_Button_Click(System.Object sender, System.EventArgs e)
+        private void cancelButton_Click(object sender, EventArgs e)
         {
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        private void AddButton_Click(System.Object sender, System.EventArgs e)
+        private void AddButton_Click(object sender, EventArgs e)
         {
             this.UseHashText.Text = "";
             ChangeMode(true);
             _isAdd = true;
         }
 
-        private void EditButton_Click(System.Object sender, System.EventArgs e)
+        private void EditButton_Click(object sender, EventArgs e)
         {
             if (this.HistoryHashList.SelectedIndices.Count == 0)
+            {
                 return;
+            }
             this.UseHashText.Text = this.HistoryHashList.SelectedItems[0].ToString();
             ChangeMode(true);
             _isAdd = false;
         }
 
-        private void DeleteButton_Click(System.Object sender, System.EventArgs e)
+        private void DeleteButton_Click(object sender, EventArgs e)
         {
             if (this.HistoryHashList.SelectedIndices.Count == 0)
+            {
                 return;
+            }
             if (MessageBox.Show(Tween.My_Project.Resources.DeleteHashtagsMessage1, "Delete Hashtags", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
             {
                 return;
             }
-            for (int i = 0; i <= HistoryHashList.SelectedIndices.Count - 1; i++)
+            for (int i = 0; i < HistoryHashList.SelectedIndices.Count; i++)
             {
                 if (UseHashText.Text == HistoryHashList.SelectedItems[0].ToString())
+                {
                     UseHashText.Text = "";
+                }
                 HistoryHashList.Items.RemoveAt(HistoryHashList.SelectedIndices[0]);
             }
             if (HistoryHashList.Items.Count > 0)
@@ -100,7 +107,7 @@ namespace Tween
             }
         }
 
-        private void UnSelectButton_Click(System.Object sender, System.EventArgs e)
+        private void UnSelectButton_Click(object sender, EventArgs e)
         {
             do
             {
@@ -108,26 +115,28 @@ namespace Tween
             } while (HistoryHashList.SelectedIndices.Count > 0);
         }
 
-        private int GetIndexOf(System.Windows.Forms.ListBox.ObjectCollection list, string value)
+        private int GetIndexOf(ListBox.ObjectCollection list, string value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (String.IsNullOrEmpty(value))
+            {
                 return -1;
+            }
 
             int idx = 0;
 
             foreach (object l in list)
             {
                 string src = l as string;
-                if (string.IsNullOrEmpty(src))
+                if (String.IsNullOrEmpty(src))
                 {
-                    idx += 1;
+                    idx++;
                     continue;
                 }
-                if (string.Compare(src, value, true) == 0)
+                if (String.Compare(src, value, true) == 0)
                 {
                     return idx;
                 }
-                idx += 1;
+                idx++;
             }
 
             // Not Found
@@ -137,7 +146,7 @@ namespace Tween
         public void AddHashToHistory(string hash, bool isIgnorePermanent)
         {
             hash = hash.Trim();
-            if (!string.IsNullOrEmpty(hash))
+            if (!String.IsNullOrEmpty(hash))
             {
                 if (isIgnorePermanent || !_isPermanent)
                 {
@@ -145,7 +154,9 @@ namespace Tween
                     int idx = GetIndexOf(HistoryHashList.Items, hash);
 
                     if (idx != -1)
+                    {
                         HistoryHashList.Items.RemoveAt(idx);
+                    }
                     HistoryHashList.Items.Insert(0, hash);
                 }
                 else
@@ -200,10 +211,8 @@ namespace Tween
             this.ChangeMode(false);
         }
 
-        public HashtagManage(AtIdSupplement hashSuplForm, string[] history, string permanentHash, bool IsPermanent, bool IsHead, bool IsNotAddToAtReply)
+        public HashtagManage(AtIdSupplement hashSuplForm, string[] history, string permanentHash, bool isPermanent, bool isHead, bool isNotAddToAtReply)
         {
-            KeyDown += HashtagManage_KeyDown;
-            Shown += HashtagManage_Shown;
             // この呼び出しは、Windows フォーム デザイナで必要です。
             InitializeComponent();
 
@@ -212,17 +221,17 @@ namespace Tween
             _hashSupl = hashSuplForm;
             HistoryHashList.Items.AddRange(history);
             _useHash = permanentHash;
-            _isPermanent = IsPermanent;
-            _isHead = IsHead;
-            _isNotAddToAtReply = IsNotAddToAtReply;
+            _isPermanent = isPermanent;
+            _isHead = isHead;
+            _isNotAddToAtReply = isNotAddToAtReply;
         }
 
-        private void UseHashText_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        private void UseHashText_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '#')
             {
                 _hashSupl.ShowDialog();
-                if (!string.IsNullOrEmpty(_hashSupl.inputText))
+                if (!String.IsNullOrEmpty(_hashSupl.inputText))
                 {
                     string fHalf = "";
                     string eHalf = "";
@@ -242,14 +251,14 @@ namespace Tween
             }
         }
 
-        private void HistoryHashList_DoubleClick(object sender, System.EventArgs e)
+        private void HistoryHashList_DoubleClick(object sender, EventArgs e)
         {
-            this.OK_Button_Click(null, null);
+            this.OkButton_Click(null, null);
         }
 
         public void ToggleHash()
         {
-            if (string.IsNullOrEmpty(this._useHash))
+            if (String.IsNullOrEmpty(this._useHash))
             {
                 if (this.HistoryHashList.Items.Count > 0)
                 {
@@ -308,12 +317,14 @@ namespace Tween
             get { return _isNotAddToAtReply; }
         }
 
-        private void PermOK_Button_Click(System.Object sender, System.EventArgs e)
+        private void PermOkButton_Click(object sender, EventArgs e)
         {
             //ハッシュタグの整形
             string hashStr = UseHashText.Text;
             if (!this.AdjustHashtags(ref hashStr, true))
+            {
                 return;
+            }
 
             UseHashText.Text = hashStr;
             int idx = 0;
@@ -341,7 +352,7 @@ namespace Tween
             ChangeMode(false);
         }
 
-        private void PermCancel_Button_Click(System.Object sender, System.EventArgs e)
+        private void PermCancelButton_Click(object sender, EventArgs e)
         {
             if (this.HistoryHashList.Items.Count > 0 && this.HistoryHashList.SelectedIndices.Count > 0)
             {
@@ -355,7 +366,7 @@ namespace Tween
             ChangeMode(false);
         }
 
-        private void HistoryHashList_KeyDown(System.Object sender, System.Windows.Forms.KeyEventArgs e)
+        private void HistoryHashList_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
@@ -371,10 +382,12 @@ namespace Tween
         {
             //ハッシュタグの整形
             hashtag = hashtag.Trim();
-            if (string.IsNullOrEmpty(hashtag))
+            if (String.IsNullOrEmpty(hashtag))
             {
                 if (isShowWarn)
+                {
                     MessageBox.Show("emply hashtag.", "Hashtag warning", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
                 return false;
             }
             hashtag = hashtag.Replace("＃", "#");
@@ -387,13 +400,17 @@ namespace Tween
                     if (!hash.StartsWith("#"))
                     {
                         if (isShowWarn)
+                        {
                             MessageBox.Show("Invalid hashtag. -> " + hash, "Hashtag warning", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        }
                         return false;
                     }
                     if (hash.Length == 1)
                     {
                         if (isShowWarn)
+                        {
                             MessageBox.Show("empty hashtag.", "Hashtag warning", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        }
                         return false;
                     }
                     //使用不可の文字チェックはしない
@@ -404,7 +421,7 @@ namespace Tween
             return true;
         }
 
-        private void OK_Button_Click(System.Object sender, System.EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
             string hash = "";
             foreach (string hs in this.HistoryHashList.SelectedItems)
@@ -412,7 +429,7 @@ namespace Tween
                 hash += hs + " ";
             }
             hash = hash.Trim();
-            if (!string.IsNullOrEmpty(hash))
+            if (!String.IsNullOrEmpty(hash))
             {
                 this.AddHashToHistory(hash, true);
                 this._isPermanent = this.CheckPermanent.Checked;
@@ -425,22 +442,22 @@ namespace Tween
             this._isHead = this.RadioHead.Checked;
             this._useHash = hash;
 
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void HashtagManage_KeyDown(System.Object sender, System.Windows.Forms.KeyEventArgs e)
+        private void HashtagManage_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 e.Handled = true;
                 if (this.GroupDetail.Enabled)
                 {
-                    this.PermOK_Button_Click(null, null);
+                    this.PermOkButton_Click(null, null);
                 }
                 else
                 {
-                    this.OK_Button_Click(null, null);
+                    this.OkButton_Click(null, null);
                 }
             }
             else if (e.KeyCode == Keys.Escape)
@@ -448,16 +465,16 @@ namespace Tween
                 e.Handled = true;
                 if (this.GroupDetail.Enabled)
                 {
-                    this.PermCancel_Button_Click(null, null);
+                    this.PermCancelButton_Click(null, null);
                 }
                 else
                 {
-                    this.Cancel_Button_Click(null, null);
+                    this.cancelButton_Click(null, null);
                 }
             }
         }
 
-        private void CheckNotAddToAtReply_CheckedChanged(System.Object sender, System.EventArgs e)
+        private void CheckNotAddToAtReply_CheckedChanged(object sender, EventArgs e)
         {
             _isNotAddToAtReply = CheckNotAddToAtReply.Checked;
         }

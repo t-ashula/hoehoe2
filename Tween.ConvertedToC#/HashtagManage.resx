@@ -125,65 +125,65 @@
   <data name="TableLayoutButtons.ColumnCount" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
-  <data name="Cancel_Button.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+  <data name="cancelButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>None</value>
   </data>
-  <data name="Cancel_Button.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="cancelButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="Cancel_Button.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="cancelButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>78, 3</value>
   </data>
-  <data name="Cancel_Button.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="cancelButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>67, 21</value>
   </data>
-  <data name="Cancel_Button.TabIndex" type="System.Int32, mscorlib">
+  <data name="cancelButton.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="Cancel_Button.Text" xml:space="preserve">
+  <data name="cancelButton.Text" xml:space="preserve">
     <value>キャンセル</value>
   </data>
-  <data name="&gt;&gt;Cancel_Button.Name" xml:space="preserve">
-    <value>Cancel_Button</value>
+  <data name="&gt;&gt;cancelButton.Name" xml:space="preserve">
+    <value>cancelButton</value>
   </data>
-  <data name="&gt;&gt;Cancel_Button.Type" xml:space="preserve">
+  <data name="&gt;&gt;cancelButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Cancel_Button.Parent" xml:space="preserve">
+  <data name="&gt;&gt;cancelButton.Parent" xml:space="preserve">
     <value>TableLayoutButtons</value>
   </data>
-  <data name="&gt;&gt;Cancel_Button.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;cancelButton.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="OK_Button.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+  <data name="okButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>None</value>
   </data>
-  <data name="OK_Button.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="okButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="OK_Button.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="okButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 3</value>
   </data>
-  <data name="OK_Button.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="okButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 21</value>
   </data>
-  <data name="OK_Button.TabIndex" type="System.Int32, mscorlib">
+  <data name="okButton.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="OK_Button.Text" xml:space="preserve">
+  <data name="okButton.Text" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="&gt;&gt;OK_Button.Name" xml:space="preserve">
-    <value>OK_Button</value>
+  <data name="&gt;&gt;okButton.Name" xml:space="preserve">
+    <value>okButton</value>
   </data>
-  <data name="&gt;&gt;OK_Button.Type" xml:space="preserve">
+  <data name="&gt;&gt;okButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;OK_Button.Parent" xml:space="preserve">
+  <data name="&gt;&gt;okButton.Parent" xml:space="preserve">
     <value>TableLayoutButtons</value>
   </data>
-  <data name="&gt;&gt;OK_Button.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;okButton.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="TableLayoutButtons.Location" type="System.Drawing.Point, System.Drawing">
@@ -211,7 +211,7 @@
     <value>3</value>
   </data>
   <data name="TableLayoutButtons.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="Cancel_Button" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="OK_Button" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Absolute,75,AutoSize,0" /&gt;&lt;Rows Styles="Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="cancelButton" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="okButton" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Absolute,75,AutoSize,0" /&gt;&lt;Rows Styles="Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="DeleteButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>240, 100</value>
@@ -393,64 +393,64 @@
   <data name="TableLayoutPanel2.ColumnCount" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
-  <data name="PermOK_Button.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+  <data name="PermOkButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>None</value>
   </data>
-  <data name="PermOK_Button.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="PermOkButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="PermOK_Button.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="PermOkButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
   </data>
-  <data name="PermOK_Button.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="PermOkButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>67, 21</value>
   </data>
-  <data name="PermOK_Button.TabIndex" type="System.Int32, mscorlib">
+  <data name="PermOkButton.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="PermOK_Button.Text" xml:space="preserve">
+  <data name="PermOkButton.Text" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="&gt;&gt;PermOK_Button.Name" xml:space="preserve">
-    <value>PermOK_Button</value>
+  <data name="&gt;&gt;PermOkButton.Name" xml:space="preserve">
+    <value>PermOkButton</value>
   </data>
-  <data name="&gt;&gt;PermOK_Button.Type" xml:space="preserve">
+  <data name="&gt;&gt;PermOkButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;PermOK_Button.Parent" xml:space="preserve">
+  <data name="&gt;&gt;PermOkButton.Parent" xml:space="preserve">
     <value>TableLayoutPanel2</value>
   </data>
-  <data name="&gt;&gt;PermOK_Button.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;PermOkButton.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="PermCancel_Button.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+  <data name="PermCancelButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>None</value>
   </data>
-  <data name="PermCancel_Button.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="PermCancelButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="PermCancel_Button.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="PermCancelButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>76, 3</value>
   </data>
-  <data name="PermCancel_Button.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="PermCancelButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>67, 21</value>
   </data>
-  <data name="PermCancel_Button.TabIndex" type="System.Int32, mscorlib">
+  <data name="PermCancelButton.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="PermCancel_Button.Text" xml:space="preserve">
+  <data name="PermCancelButton.Text" xml:space="preserve">
     <value>キャンセル</value>
   </data>
-  <data name="&gt;&gt;PermCancel_Button.Name" xml:space="preserve">
-    <value>PermCancel_Button</value>
+  <data name="&gt;&gt;PermCancelButton.Name" xml:space="preserve">
+    <value>PermCancelButton</value>
   </data>
-  <data name="&gt;&gt;PermCancel_Button.Type" xml:space="preserve">
+  <data name="&gt;&gt;PermCancelButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;PermCancel_Button.Parent" xml:space="preserve">
+  <data name="&gt;&gt;PermCancelButton.Parent" xml:space="preserve">
     <value>TableLayoutPanel2</value>
   </data>
-  <data name="&gt;&gt;PermCancel_Button.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;PermCancelButton.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="TableLayoutPanel2.Location" type="System.Drawing.Point, System.Drawing">
@@ -478,7 +478,7 @@
     <value>0</value>
   </data>
   <data name="TableLayoutPanel2.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="PermOK_Button" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="PermCancel_Button" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Percent,50" /&gt;&lt;Rows Styles="Percent,50" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="PermOkButton" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="PermCancelButton" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Percent,50" /&gt;&lt;Rows Styles="Percent,50" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="GroupDetail.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 264</value>
