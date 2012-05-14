@@ -392,24 +392,6 @@ namespace Tween
 
         private ImageListViewItem displayItem;
         private AdsBrowser ab;
-        private Google.GASender withEventsField_Ga;
-
-        private Google.GASender Ga
-        {
-            get { return withEventsField_Ga; }
-            set
-            {
-                if (withEventsField_Ga != null)
-                {
-                    withEventsField_Ga.Sent -= Ga_Sent;
-                }
-                withEventsField_Ga = value;
-                if (withEventsField_Ga != null)
-                {
-                    withEventsField_Ga.Sent += Ga_Sent;
-                }
-            }
-        }
 
         //URL短縮のUndo用
         private struct urlUndo
@@ -1560,9 +1542,6 @@ namespace Tween
             if (saveRequired)
                 SaveConfigsAll(false);
 
-            Ga = Google.GASender.GetInstance();
-            Google.GASender.GetInstance().SessionFirst = _cfgCommon.GAFirst;
-            Google.GASender.GetInstance().SessionLast = _cfgCommon.GALast;
             if (tw.UserId == 0)
             {
                 tw.VerifyCredentials();
@@ -1585,8 +1564,6 @@ namespace Tween
                     break; // TODO: might not be correct. Was : Exit For
                 }
             }
-            Google.GASender.GetInstance().TrackPage("/home_timeline", tw.UserId);
-            Google.GASender.GetInstance().TrackEventWithCategory("post", "start", tw.UserId);
         }
 
         private void CreatePictureServices()
@@ -4602,7 +4579,6 @@ namespace Tween
 
         private void SettingStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            Google.GASender.GetInstance().TrackPage("/settings", tw.UserId);
             DialogResult result = default(DialogResult);
             string uid = tw.Username.ToLower();
             foreach (UserAccount u_loopVariable in SettingDialog.UserAccounts)
@@ -4610,8 +4586,6 @@ namespace Tween
                 var u = u_loopVariable;
                 if (u.UserId == tw.UserId)
                 {
-                    u.GAFirst = Ga.SessionFirst;
-                    u.GALast = Ga.SessionLast;
                     break; // TODO: might not be correct. Was : Exit For
                 }
             }
@@ -4896,7 +4870,6 @@ namespace Tween
 
             this.TopMost = SettingDialog.AlwaysTop;
             SaveConfigsAll(false);
-            Google.GASender.GetInstance().TrackPage("/home_timeline", tw.UserId);
         }
 
         private void PostBrowser_Navigated(object sender, System.Windows.Forms.WebBrowserNavigatedEventArgs e)
@@ -5085,8 +5058,6 @@ namespace Tween
                 }
             }
 
-            if (!startup)
-                Google.GASender.GetInstance().TrackEventWithCategory("post", "add_tab", tw.UserId);
             TabPage _tabPage = new TabPage();
             DetailsListView _listCustom = new DetailsListView();
             ColumnHeader _colHd1 = new ColumnHeader();
@@ -5434,7 +5405,6 @@ namespace Tween
             if (_statuses.IsDefaultTab(TabName))
                 return false;
 
-            Google.GASender.GetInstance().TrackEventWithCategory("post", "remove_tab", tw.UserId);
             if (confirm)
             {
                 string tmp = string.Format(Tween.My_Project.Resources.RemoveSpecifiedTabText1, Environment.NewLine);
@@ -5611,37 +5581,26 @@ namespace Tween
             switch (_statuses.Tabs[ListTab.SelectedTab.Text].TabType)
             {
                 case MyCommon.TabUsageType.Home:
-                    Google.GASender.GetInstance().TrackPage("/home_timeline", tw.UserId);
                     break;
                 case MyCommon.TabUsageType.Mentions:
-                    Google.GASender.GetInstance().TrackPage("/mentions", tw.UserId);
                     break;
                 case MyCommon.TabUsageType.DirectMessage:
-                    Google.GASender.GetInstance().TrackPage("/direct_messages", tw.UserId);
                     break;
                 case MyCommon.TabUsageType.Favorites:
-                    Google.GASender.GetInstance().TrackPage("/favorites", tw.UserId);
                     break;
                 case MyCommon.TabUsageType.Lists:
-                    Google.GASender.GetInstance().TrackPage("/lists", tw.UserId);
                     break;
                 case MyCommon.TabUsageType.Profile:
-                    Google.GASender.GetInstance().TrackPage("/profile", tw.UserId);
                     break;
                 case MyCommon.TabUsageType.LocalQuery:
-                    Google.GASender.GetInstance().TrackPage("/local_query", tw.UserId);
                     break;
                 case MyCommon.TabUsageType.PublicSearch:
-                    Google.GASender.GetInstance().TrackPage("/search", tw.UserId);
                     break;
                 case MyCommon.TabUsageType.Related:
-                    Google.GASender.GetInstance().TrackPage("/related", tw.UserId);
                     break;
                 case MyCommon.TabUsageType.UserDefined:
-                    Google.GASender.GetInstance().TrackPage("/local_tab", tw.UserId);
                     break;
                 case MyCommon.TabUsageType.UserTimeline:
-                    Google.GASender.GetInstance().TrackPage("/user_timeline", tw.UserId);
                     break;
             }
         }
@@ -8716,8 +8675,6 @@ namespace Tween
                 _cfgCommon.FoursquarePreviewWidth = SettingDialog.FoursquarePreviewWidth;
                 _cfgCommon.FoursquarePreviewZoom = SettingDialog.FoursquarePreviewZoom;
                 _cfgCommon.IsListsIncludeRts = SettingDialog.IsListStatusesIncludeRts;
-                _cfgCommon.GAFirst = Google.GASender.GetInstance().SessionFirst;
-                _cfgCommon.GALast = Google.GASender.GetInstance().SessionLast;
                 _cfgCommon.TabMouseLock = SettingDialog.TabMouseLock;
                 _cfgCommon.IsRemoveSameEvent = SettingDialog.IsRemoveSameEvent;
                 _cfgCommon.IsUseNotifyGrowl = SettingDialog.IsNotifyUseGrowl;
@@ -10725,7 +10682,6 @@ namespace Tween
 
         private void doRepliedStatusOpen()
         {
-            Google.GASender.GetInstance().TrackPage("/open_reply_to_status", tw.UserId);
             if (this.ExistCurrentPost && _curPost.InReplyToUser != null && _curPost.InReplyToStatusId > 0)
             {
                 if (Tween.My.MyProject.Computer.Keyboard.ShiftKeyDown)
@@ -11594,7 +11550,6 @@ namespace Tween
 
         public void OpenUriAsync(string UriString)
         {
-            Google.GASender.GetInstance().TrackPage("/open_url", tw.UserId);
             GetWorkerArg args = new GetWorkerArg();
             args.type = MyCommon.WorkerType.OpenUri;
             args.url = UriString;
@@ -12791,12 +12746,10 @@ namespace Tween
                 }
             }
 
-            Google.GASender.GetInstance().TrackPage("/listuser_manage", tw.UserId);
             using (MyLists listSelectForm = new MyLists(user, this.tw))
             {
                 listSelectForm.ShowDialog(this);
             }
-            Google.GASender.GetInstance().TrackPage("/home_timeline", tw.UserId);
         }
 
         private void SearchControls_Enter(System.Object sender, System.EventArgs e)
@@ -12848,7 +12801,6 @@ namespace Tween
 
         private void HashManageMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            Google.GASender.GetInstance().TrackPage("/hashtag_manage", tw.UserId);
             DialogResult rslt = default(DialogResult);
             try
             {
@@ -12888,7 +12840,6 @@ namespace Tween
             //End If
             _modifySettingCommon = true;
             this.StatusText_TextChanged(null, null);
-            Google.GASender.GetInstance().TrackPage("/home_timeline", tw.UserId);
         }
 
         private void HashToggleMenuItem_Click(object sender, System.EventArgs e)
@@ -13179,11 +13130,9 @@ namespace Tween
             {
                 userinfo.Owner = this;
                 userinfo.SetUser(user);
-                Google.GASender.GetInstance().TrackPage("/user_profile", tw.UserId);
                 userinfo.ShowDialog(this);
                 this.Activate();
                 this.BringToFront();
-                Google.GASender.GetInstance().TrackPage("/home_timeline", tw.UserId);
             }
         }
 
@@ -13656,12 +13605,10 @@ namespace Tween
 
         private void ListManageToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            Google.GASender.GetInstance().TrackPage("/list_manage", tw.UserId);
             using (ListManage form = new ListManage(tw))
             {
                 form.ShowDialog(this);
             }
-            Google.GASender.GetInstance().TrackPage("/home_timeline", tw.UserId);
         }
 
         public bool ModifySettingCommon
@@ -13811,7 +13758,8 @@ namespace Tween
             {
                 if (InvokeRequired && !IsDisposed)
                 {
-                    Invoke(new Action(() => {
+                    Invoke(new Action(() =>
+                    {
                         _statuses.RemovePostReserve(id);
                         if (_curTab != null && _statuses.Tabs[_curTab.Text].Contains(id))
                         {
@@ -14222,7 +14170,6 @@ namespace Tween
                     StatusLabel.Text = msg;
                 }
             }
-            Google.GASender.GetInstance().TrackEventWithCategory("post", "translation", tw.UserId);
         }
 
         private void TranslationToolStripMenuItem_Click(System.Object sender, System.EventArgs e)

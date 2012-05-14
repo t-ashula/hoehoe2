@@ -77,8 +77,10 @@ namespace Tween
         private string _location = "";
         private string _bio = "";
         private string _protocol = "https://";
+
         //プロパティからアクセスされる共通情報
         private string _uname;
+
         private int _iconSz;
         private bool _getIcon;
         private IDictionary<string, Image> _dIcon;
@@ -87,16 +89,22 @@ namespace Tween
         private string _hubServer;
         private bool _readOwnPost;
         private List<string> _hashList = new List<string>();
+
         //共通で使用する状態
         private int _remainCountApi = -1;
+
         private Outputz op = new Outputz();
+
         //max_idで古い発言を取得するために保持（lists分は個別タブで管理）
         private long minHomeTimeline = long.MaxValue;
+
         private long minMentions = long.MaxValue;
         private long minDirectmessage = long.MaxValue;
         private long minDirectmessageSent = long.MaxValue;
         private HttpTwitter twCon = new HttpTwitter();
+
         public event UserIdChangedEventHandler UserIdChanged;
+
         public delegate void UserIdChangedEventHandler();
 
         public string Authenticate(string username, string password)
@@ -195,7 +203,6 @@ namespace Tween
                     {
                         this.ReconnectUserStream();
                     }
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "authenticate", this.UserId);
                     return "";
                 case HttpStatusCode.Unauthorized:
                     {
@@ -514,7 +521,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "status", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     TwitterDataModel.Status status = null;
                     try
@@ -603,7 +609,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "status_with_media", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     TwitterDataModel.Status status = null;
                     try
@@ -699,7 +704,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "direct_message", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     TwitterDataModel.Directmessage status = null;
                     try
@@ -779,7 +783,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
@@ -836,7 +839,6 @@ namespace Tween
                 return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            Google.GASender.GetInstance().TrackEventWithCategory("post", "retweet", this.UserId);
             Twitter.AccountState = MyCommon.AccountState.Valid;
             TwitterDataModel.Status status = null;
             try
@@ -874,7 +876,7 @@ namespace Tween
             {
                 return "Invalid Json!";
             }
-            
+
             //ユーザー情報
             post.IsMe = true;
             post.IsRead = read;
@@ -901,7 +903,7 @@ namespace Tween
             {
                 return "";
             }
-            
+
             if (MyCommon.TwitterApiInfo.AccessLevel != ApiAccessLevel.None)
             {
                 if (!MyCommon.TwitterApiInfo.IsDirectMessagePermission)
@@ -923,7 +925,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy_direct_message", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
@@ -962,7 +963,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "follow", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
@@ -1002,7 +1002,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy_friendships", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
@@ -1010,7 +1009,7 @@ namespace Tween
                     return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;                    
+                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -1042,7 +1041,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "block", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
@@ -1082,7 +1080,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy_block", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
@@ -1122,7 +1119,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "spam", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
@@ -1148,7 +1144,6 @@ namespace Tween
                 return "";
             }
 
-            Google.GASender.GetInstance().TrackPage("/friendships", this.UserId);
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
             try
@@ -1202,7 +1197,6 @@ namespace Tween
                 return "";
             }
 
-            Google.GASender.GetInstance().TrackPage("/showuser", this.UserId);
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
             user = null;
@@ -1257,7 +1251,6 @@ namespace Tween
                 return "";
             }
 
-            Google.GASender.GetInstance().TrackPage("/retweet_count", this.UserId);
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
             retweeted_count = 0;
@@ -1338,7 +1331,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "favorites", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     if (!_restrictFavCheck)
                     {
@@ -1421,7 +1413,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy_favorites", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
@@ -1461,7 +1452,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "update_profile", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
@@ -1501,7 +1491,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "update_profile_image", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
@@ -1572,7 +1561,6 @@ namespace Tween
 
         public string GetTweenBinary(string strVer)
         {
-            Google.GASender.GetInstance().TrackPage("/newversion", this.UserId);
             try
             {
                 //本体
@@ -1910,7 +1898,6 @@ namespace Tween
                 return "";
             }
 
-            Google.GASender.GetInstance().TrackPage("/showstatus", this.UserId);
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
             try
@@ -2325,7 +2312,6 @@ namespace Tween
 
         public string GetRelatedResult(bool read, TabClass tab)
         {
-            Google.GASender.GetInstance().TrackPage("/related_statuses", this.UserId);
             string rslt = "";
             List<PostClass> relPosts = new List<PostClass>();
             if (tab.RelationTargetPost.TextFromApi.Contains("@") && tab.RelationTargetPost.InReplyToStatusId == 0)
@@ -2538,7 +2524,7 @@ namespace Tween
             {
                 count = AppendSettingDialog.Instance.CountApi;
             }
-            
+
             if (more)
             {
                 page = tab.GetSearchPage(count);
@@ -3257,7 +3243,7 @@ namespace Tween
             {
                 return "";
             }
-            
+
             long cursor = -1;
             List<long> tmpIds = new List<long>(noRTId);
             noRTId.Clear();
@@ -3498,7 +3484,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "destroy_list", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
@@ -3530,7 +3515,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("get", "update_list", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
@@ -3642,7 +3626,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "create_list", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
@@ -3738,7 +3721,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "add_user_to_list", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
@@ -3769,7 +3751,6 @@ namespace Tween
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Google.GASender.GetInstance().TrackEventWithCategory("post", "remove_user_from_list", this.UserId);
                     Twitter.AccountState = MyCommon.AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
@@ -3926,7 +3907,7 @@ namespace Tween
                         }
                     }
                 }
-                
+
                 if (entities.Hashtags != null)
                 {
                     foreach (TwitterDataModel.Hashtags ent_loopVariable in entities.Hashtags)
@@ -3966,7 +3947,7 @@ namespace Tween
                         }
                     }
                 }
-                
+
                 if (entities.Media != null)
                 {
                     foreach (TwitterDataModel.Media ent_loopVariable in entities.Media)
@@ -4551,7 +4532,6 @@ namespace Tween
 
         private void userStream_Started()
         {
-            Google.GASender.GetInstance().TrackPage("/userstream", this.UserId);
             if (UserStreamStarted != null)
             {
                 UserStreamStarted();
@@ -4709,10 +4689,10 @@ namespace Tween
                         if (sr.EndOfStream || Twitter.AccountState == MyCommon.AccountState.Invalid)
                         {
                             sleepSec = 30;
-                            
+
                             continue;
                         }
-                        break; 
+                        break;
                     }
                     catch (WebException ex)
                     {
@@ -4726,12 +4706,12 @@ namespace Tween
                         }
                         else
                         {
-                            sleepSec = 30;                            
+                            sleepSec = 30;
                         }
                     }
                     catch (ThreadAbortException ex)
                     {
-                        break; 
+                        break;
                     }
                     catch (IOException ex)
                     {

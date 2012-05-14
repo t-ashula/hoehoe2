@@ -267,8 +267,6 @@ namespace Tween
                             tw.VerifyCredentials();
                             u.UserId = tw.UserId;
                         }
-                        Google.GASender.GetInstance().SessionFirst = u.GAFirst;
-                        Google.GASender.GetInstance().SessionLast = u.GALast;
                         break; // TODO: might not be correct. Was : Exit For
                     }
                 }
@@ -643,8 +641,6 @@ namespace Tween
                         if (u.UserId == this.InitialUserId)
                         {
                             tw.Initialize(u.Token, u.TokenSecret, u.Username, u.UserId);
-                            Google.GASender.GetInstance().SessionFirst = u.GAFirst;
-                            Google.GASender.GetInstance().SessionLast = u.GALast;
                             userSet = true;
                             break; // TODO: might not be correct. Was : Exit For
                         }
