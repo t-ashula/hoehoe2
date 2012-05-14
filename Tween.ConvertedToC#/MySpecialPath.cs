@@ -30,16 +30,16 @@ using Microsoft.Win32;
 
 namespace Tween
 {
-    public class MySpecialPath
+    public static class MySpecialPath
     {
         public static string UserAppDataPath()
         {
-            { return GetFileSystemPath(Environment.SpecialFolder.ApplicationData); }
+            return GetFileSystemPath(Environment.SpecialFolder.ApplicationData);
         }
 
         public static string UserAppDataPath(string productName)
         {
-            { return GetFileSystemPath(Environment.SpecialFolder.ApplicationData, productName); }
+            return GetFileSystemPath(Environment.SpecialFolder.ApplicationData, productName);
         }
 
         public static string CommonAppDataPath
@@ -62,11 +62,15 @@ namespace Tween
             get { return GetRegistryPath(Registry.CurrentUser); }
         }
 
-        private static string GetFileSystemPath(System.Environment.SpecialFolder folder)
+        private static string GetFileSystemPath(Environment.SpecialFolder folder)
+        {
+            return GetFileSystemPath(folder, Application.ProductName);
+        }
+
+        private static string GetFileSystemPath(Environment.SpecialFolder folder, string productName)
         {
             // パスを取得
-            string path = string.Format("{0}{3}{1}{3}{2}", Environment.GetFolderPath(folder), Application.CompanyName, Application.ProductName, System.IO.Path.DirectorySeparatorChar.ToString());
-
+            string path = System.IO.Path.Combine(Environment.GetFolderPath(folder), Application.CompanyName, productName);
             // パスのフォルダを作成
             lock (typeof(Application))
             {
@@ -77,44 +81,14 @@ namespace Tween
             }
             return path;
         }
-
-        //GetFileSystemPath
-
-        private static string GetFileSystemPath(System.Environment.SpecialFolder folder, string productName)
-        {
-            // パスを取得
-            string path = string.Format("{0}{3}{1}{3}{2}", Environment.GetFolderPath(folder), Application.CompanyName, productName, System.IO.Path.DirectorySeparatorChar.ToString());
-
-            // パスのフォルダを作成
-            lock (typeof(Application))
-            {
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-            }
-            return path;
-        }
-
-        //GetFileSystemPath
 
         private static RegistryKey GetRegistryPath(RegistryKey key)
         {
             // パスを取得
-            string basePath = null;
-            if (object.ReferenceEquals(key, Registry.LocalMachine))
-            {
-                basePath = "SOFTWARE";
-            }
-            else
-            {
-                basePath = "Software";
-            }
-            string path = string.Format("{0}\\{1}\\{2}", basePath, Application.CompanyName, Application.ProductName);
+            string basePath = key == Registry.LocalMachine ? "SOFTWARE" : "Software";
+            string path = String.Format("{0}\\{1}\\{2}", basePath, Application.CompanyName, Application.ProductName);
             // パスのレジストリ・キーの取得（および作成）
             return key.CreateSubKey(path);
         }
-
-        //GetRegistryPath
     }
 }
