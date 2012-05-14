@@ -25,20 +25,11 @@
 
 using System;
 using System.Text;
-using Microsoft.VisualBasic;
 
 namespace Tween
 {
-    public class RadixConvert
+    public static class RadixConvert
     {
-        /// <summary>
-        /// インスタンス化を禁止しています。
-        /// </summary>
-
-        private RadixConvert()
-        {
-        }
-
         #region "Int16型およびUInt16型用のメソッド群"
 
         /// <summary>
@@ -388,7 +379,6 @@ namespace Tween
                 digit = curDigit % Convert.ToDecimal(radix);
                 // 取り出した1けたを切り捨てる
                 curDigit = curDigit / Convert.ToDecimal(radix);
-
                 curValue.Insert(0, GetNumberFromDigit(Convert.ToInt32(digit), uppercase));
             } while (curDigit != 0);
 
@@ -445,39 +435,33 @@ namespace Tween
 
         private static int GetDigitFromNumber(char num)
         {
-            int ascNum = Strings.Asc(num);
-            if (ascNum >= Strings.Asc("0") && ascNum <= Strings.Asc("9"))
+            int ascNum = num;
+            if (ascNum >= '0' && ascNum <= '9')
             {
-                return Strings.Asc(num) - Strings.Asc("0");
+                return num - '0';
             }
-            else if (ascNum >= Strings.Asc("A") && ascNum <= Strings.Asc("Z"))
+            if (ascNum >= 'A' && ascNum <= 'Z')
             {
-                return ascNum - Strings.Asc("A") + 10;
+                return ascNum - 'A' + 10;
             }
-            else if (ascNum >= Strings.Asc("a") && ascNum <= Strings.Asc("z"))
+            if (ascNum >= 'a' && ascNum <= 'z')
             {
-                return ascNum - Strings.Asc("a") + 10;
+                return ascNum - 'a' + 10;
             }
-            else
-            {
-                return -1;
-            }
+            return -1;
         }
 
         private static char GetNumberFromDigit(int digit, bool uppercase)
         {
             if (digit < 10)
             {
-                return Strings.Chr(Strings.Asc("0") + digit);
+                return (char)('0' + digit);
             }
-            else if (uppercase)
+            if (uppercase)
             {
-                return Strings.Chr(Strings.Asc("A") + digit - 10);
+                return (char)('A' + digit - 10);
             }
-            else
-            {
-                return Strings.Chr(Strings.Asc("a") + digit - 10);
-            }
+            return (char)('a' + digit - 10);
         }
 
         #endregion "内部で使用しているメソッド群"
