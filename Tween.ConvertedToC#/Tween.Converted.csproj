@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -245,6 +245,7 @@
     <Compile Include="OpenURL.Designer.cs">
       <DependentUpon>OpenURL.cs</DependentUpon>
     </Compile>
+    <Compile Include="OpenUrlItem.cs" />
     <Compile Include="Outputz.cs" />
     <Compile Include="PictureBoxEx.cs">
       <SubType>Component</SubType>

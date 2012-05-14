@@ -32,21 +32,31 @@ namespace Tween
     {
         private string _selUrl;
 
-        private void OK_Button_Click(System.Object sender, System.EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
+        {
+            SelectUrlOrCancelDialog();
+        }
+
+        private void SelectUrlOrCancelDialog()
         {
             if (UrlList.SelectedItems.Count == 0)
             {
-                this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                CloseWithCancel();
             }
             else
             {
                 _selUrl = UrlList.SelectedItem.ToString();
                 this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                this.Close();
             }
-            this.Close();
         }
 
-        private void Cancel_Button_Click(System.Object sender, System.EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            CloseWithCancel();
+        }
+
+        private void CloseWithCancel()
         {
             this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
@@ -64,20 +74,10 @@ namespace Tween
 
         public string SelectedUrl
         {
-            get
-            {
-                if (UrlList.SelectedItems.Count == 1)
-                {
-                    return _selUrl;
-                }
-                else
-                {
-                    return "";
-                }
-            }
+            get { return UrlList.SelectedItems.Count == 1 ? _selUrl : ""; }
         }
 
-        private void OpenURL_Shown(object sender, System.EventArgs e)
+        private void OpenURL_Shown(object sender, EventArgs e)
         {
             UrlList.Focus();
             if (UrlList.Items.Count > 0)
@@ -86,7 +86,7 @@ namespace Tween
             }
         }
 
-        private void UrlList_DoubleClick(System.Object sender, System.EventArgs e)
+        private void UrlList_DoubleClick(object sender, EventArgs e)
         {
             if (UrlList.SelectedItem == null)
             {
@@ -102,10 +102,10 @@ namespace Tween
             {
                 return;
             }
-            OK_Button_Click(sender, e);
+            SelectUrlOrCancelDialog();
         }
 
-        private void UrlList_KeyDown(System.Object sender, System.Windows.Forms.KeyEventArgs e)
+        private void UrlList_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.J && UrlList.SelectedIndex < UrlList.Items.Count - 1)
             {
@@ -120,66 +120,13 @@ namespace Tween
             if (e.Control && e.KeyCode == Keys.Oem4)
             {
                 e.SuppressKeyPress = true;
-                Cancel_Button_Click(null, null);
+                CloseWithCancel();
             }
         }
 
         public OpenURL()
         {
-            Shown += OpenURL_Shown;
             InitializeComponent();
-        }
-    }
-}
-
-namespace Tween
-{
-    public class OpenUrlItem
-    {
-        private string _url;
-        private string _linkText;
-
-        private string _href;
-
-        public OpenUrlItem(string linkText, string url, string href)
-        {
-            this._linkText = linkText;
-            this._url = url;
-            this._href = href;
-        }
-
-        public string Text
-        {
-            get
-            {
-                if (this._linkText.StartsWith("@") || this._linkText.StartsWith("＠") || this._linkText.StartsWith("#") || this._linkText.StartsWith("＃"))
-                {
-                    return this._linkText;
-                }
-                if (this._linkText.TrimEnd('/') == this._url.TrimEnd('/'))
-                {
-                    return this._url;
-                }
-                else
-                {
-                    return this._linkText + "  >>>  " + this.Url;
-                }
-            }
-        }
-
-        public string Url
-        {
-            get { return this._url; }
-        }
-
-        public override string ToString()
-        {
-            return this._href;
-        }
-
-        public string Href
-        {
-            get { return this._href; }
         }
     }
 }
