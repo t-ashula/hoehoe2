@@ -27,13 +27,12 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
-using Microsoft.VisualBasic;
 
 namespace Tween
 {
     public class ShortUrl
     {
-        private static string[] _ShortUrlService = {
+        private static string[] _shortUrlServices = {
 			"http://t.co/",
 			"http://tinyurl.com/",
 			"http://is.gd/",
@@ -80,27 +79,25 @@ namespace Tween
 
         private static string _bitlyId = "";
         private static string _bitlyKey = "";
-        private static bool _isresolve = true;
+        private static bool _isResolve = true;
         private static bool _isForceResolve = true;
-
-        private static Dictionary<string, string> urlCache = new Dictionary<string, string>();
-
+        private static Dictionary<string, string> _urlCache = new Dictionary<string, string>();
         private static readonly object _lockObj = new object();
 
-        public static string BitlyId
+        public static void SetBitlyId(string value)
         {
-            set { _bitlyId = value; }
+            _bitlyId = value;
         }
 
-        public static string BitlyKey
+        public static void SetBitlyKey(string value)
         {
-            set { _bitlyKey = value; }
+            _bitlyKey = value;
         }
 
         public static bool IsResolve
         {
-            get { return _isresolve; }
-            set { _isresolve = value; }
+            get { return _isResolve; }
+            set { _isResolve = value; }
         }
 
         public static bool IsForceResolve
@@ -111,13 +108,15 @@ namespace Tween
 
         public static string Resolve(string orgData, bool tcoResolve)
         {
-            if (!_isresolve)
+            if (!_isResolve)
+            {
                 return orgData;
+            }
             lock (_lockObj)
             {
-                if (urlCache.Count > 500)
+                if (_urlCache.Count > 500)
                 {
-                    urlCache.Clear();
+                    _urlCache.Clear();
                     //定期的にリセット
                 }
             }
@@ -128,10 +127,12 @@ namespace Tween
             {
                 string orgUrl = orgUrlMatch.Result("${svc}");
                 string orgUrlPath = orgUrlMatch.Result("${path}");
-                if ((_isForceResolve || Array.IndexOf(_ShortUrlService, orgUrl) > -1) && !urlList.Contains(orgUrl + orgUrlPath) && orgUrl != "http://twitter.com/")
+                if ((_isForceResolve || Array.IndexOf(_shortUrlServices, orgUrl) > -1) && !urlList.Contains(orgUrl + orgUrlPath) && orgUrl != "http://twitter.com/")
                 {
                     if (!tcoResolve && (orgUrl == "http://t.co/" || orgUrl == "https://t.co"))
+                    {
                         continue;
+                    }
                     lock (_lockObj)
                     {
                         urlList.Add(orgUrl + orgUrlPath);
@@ -141,13 +142,13 @@ namespace Tween
 
             foreach (string orgUrl in urlList)
             {
-                if (urlCache.ContainsKey(orgUrl))
+                if (_urlCache.ContainsKey(orgUrl))
                 {
                     try
                     {
-                        orgData = orgData.Replace("<a href=\"" + orgUrl + "\"", "<a href=\"" + urlCache[orgUrl] + "\"");
+                        orgData = orgData.Replace("<a href=\"" + orgUrl + "\"", "<a href=\"" + _urlCache[orgUrl] + "\"");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //Through
                     }
@@ -169,12 +170,14 @@ namespace Tween
                             orgData = orgData.Replace("<a href=\"" + tmpurlStr, "<a href=\"" + retUrlStr);
                             lock (_lockObj)
                             {
-                                if (!urlCache.ContainsKey(orgUrl))
-                                    urlCache.Add(orgUrl, retUrlStr);
+                                if (!_urlCache.ContainsKey(orgUrl))
+                                {
+                                    _urlCache.Add(orgUrl, retUrlStr);
+                                }
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //Through
                     }
@@ -185,13 +188,15 @@ namespace Tween
 
         public static string ResolveMedia(string orgData, bool tcoResolve)
         {
-            if (!_isresolve)
+            if (!_isResolve)
+            {
                 return orgData;
+            }
             lock (_lockObj)
             {
-                if (urlCache.Count > 500)
+                if (_urlCache.Count > 500)
                 {
-                    urlCache.Clear();
+                    _urlCache.Clear();
                     //定期的にリセット
                 }
             }
@@ -201,81 +206,84 @@ namespace Tween
             {
                 string orgUrl = m.Result("${svc}");
                 string orgUrlPath = m.Result("${path}");
-                if ((_isForceResolve || Array.IndexOf(_ShortUrlService, orgUrl) > -1) && orgUrl != "http://twitter.com/")
+                if ((_isForceResolve || Array.IndexOf(_shortUrlServices, orgUrl) > -1) && orgUrl != "http://twitter.com/")
                 {
                     if (!tcoResolve && (orgUrl == "http://t.co/" || orgUrl == "https://t.co/"))
+                    {
                         return orgData;
-                    orgUrl += orgUrlPath;
-                    if (urlCache.ContainsKey(orgUrl))
-                    {
-                        return orgData.Replace(orgUrl, urlCache[orgUrl]);
                     }
-                    else
+                    orgUrl += orgUrlPath;
+                    if (_urlCache.ContainsKey(orgUrl))
                     {
-                        try
+                        return orgData.Replace(orgUrl, _urlCache[orgUrl]);
+                    }
+                    try
+                    {
+                        //urlとして生成できない場合があるらしい
+                        //Dim urlstr As String = New Uri(urlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path)
+                        string retUrlStr = "";
+                        string tmpurlStr = new Uri(MyCommon.urlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
+                        HttpVarious httpVar = new HttpVarious();
+                        retUrlStr = MyCommon.urlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
+                        if (retUrlStr.StartsWith("http"))
                         {
-                            //urlとして生成できない場合があるらしい
-                            //Dim urlstr As String = New Uri(urlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path)
-                            string retUrlStr = "";
-                            string tmpurlStr = new Uri(MyCommon.urlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
-                            HttpVarious httpVar = new HttpVarious();
-                            retUrlStr = MyCommon.urlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
-                            if (retUrlStr.StartsWith("http"))
+                            retUrlStr = retUrlStr.Replace("\"", "%22");
+                            //ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
+                            lock (_lockObj)
                             {
-                                retUrlStr = retUrlStr.Replace("\"", "%22");
-                                //ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
-                                lock (_lockObj)
+                                if (!_urlCache.ContainsKey(orgUrl))
                                 {
-                                    if (!urlCache.ContainsKey(orgUrl))
-                                        urlCache.Add(orgUrl, orgData.Replace(tmpurlStr, retUrlStr));
+                                    _urlCache.Add(orgUrl, orgData.Replace(tmpurlStr, retUrlStr));
                                 }
-                                return orgData.Replace(tmpurlStr, retUrlStr);
                             }
+                            return orgData.Replace(tmpurlStr, retUrlStr);
                         }
-                        catch (Exception ex)
-                        {
-                            return orgData;
-                        }
+                    }
+                    catch (Exception)
+                    {
+                        return orgData;
                     }
                 }
             }
             return orgData;
         }
 
-        public static string Make(Tween.MyCommon.UrlConverter ConverterType, string SrcUrl)
+        public static string Make(MyCommon.UrlConverter converterType, string srcUrl)
         {
             string src = "";
             try
             {
-                src = MyCommon.urlEncodeMultibyteChar(SrcUrl);
+                src = MyCommon.urlEncodeMultibyteChar(srcUrl);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "Can't convert";
             }
-            string orgSrc = SrcUrl;
+
+            string orgSrc = srcUrl;
             Dictionary<string, string> param = new Dictionary<string, string>();
             string content = "";
-
-            foreach (string svc in _ShortUrlService)
+            foreach (string svc in _shortUrlServices)
             {
-                if (SrcUrl.StartsWith(svc))
+                if (srcUrl.StartsWith(svc))
                 {
                     return "Can't convert";
                 }
             }
 
             //nico.msは短縮しない
-            if (SrcUrl.StartsWith("http://nico.ms/"))
+            if (srcUrl.StartsWith("http://nico.ms/"))
+            {
                 return "Can't convert";
+            }
 
-            SrcUrl = HttpUtility.UrlEncode(SrcUrl);
+            srcUrl = HttpUtility.UrlEncode(srcUrl);
 
-            switch (ConverterType)
+            switch (converterType)
             {
                 case Tween.MyCommon.UrlConverter.TinyUrl:
                     //tinyurl
-                    if (SrcUrl.StartsWith("http"))
+                    if (srcUrl.StartsWith("http"))
                     {
                         if ("http://tinyurl.com/xxxxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
                         {
@@ -283,7 +291,7 @@ namespace Tween
                             content = src;
                             break; // TODO: might not be correct. Was : Exit Select
                         }
-                        if (!(new HttpVarious()).PostData("http://tinyurl.com/api-create.php?url=" + SrcUrl, null, ref content))
+                        if (!(new HttpVarious()).PostData("http://tinyurl.com/api-create.php?url=" + srcUrl, null, ref content))
                         {
                             return "Can't convert";
                         }
@@ -294,15 +302,15 @@ namespace Tween
                     }
                     break;
                 case Tween.MyCommon.UrlConverter.Isgd:
-                    if (SrcUrl.StartsWith("http"))
+                    if (srcUrl.StartsWith("http"))
                     {
                         if ("http://is.gd/xxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
                         {
                             // 明らかに長くなると推測できる場合は圧縮しない
                             content = src;
-                            break; // TODO: might not be correct. Was : Exit Select
+                            break;
                         }
-                        if (!(new HttpVarious()).PostData("http://is.gd/api.php?longurl=" + SrcUrl, null, ref content))
+                        if (!(new HttpVarious()).PostData("http://is.gd/api.php?longurl=" + srcUrl, null, ref content))
                         {
                             return "Can't convert";
                         }
@@ -313,13 +321,13 @@ namespace Tween
                     }
                     break;
                 case Tween.MyCommon.UrlConverter.Twurl:
-                    if (SrcUrl.StartsWith("http"))
+                    if (srcUrl.StartsWith("http"))
                     {
                         if ("http://twurl.nl/xxxxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
                         {
                             // 明らかに長くなると推測できる場合は圧縮しない
                             content = src;
-                            break; // TODO: might not be correct. Was : Exit Select
+                            break;
                         }
                         param.Add("link[url]", orgSrc);
                         //twurlはpostメソッドなので日本語エンコードのみ済ませた状態で送る
@@ -338,21 +346,24 @@ namespace Tween
                     const string BitlyLogin = "tweenapi";
                     const string BitlyApiKey = "R_c5ee0e30bdfff88723c4457cc331886b";
                     const string BitlyApiVersion = "3";
-                    if (SrcUrl.StartsWith("http"))
+                    if (srcUrl.StartsWith("http"))
                     {
                         if ("http://bit.ly/xxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
                         {
                             // 明らかに長くなると推測できる場合は圧縮しない
                             content = src;
-                            break; // TODO: might not be correct. Was : Exit Select
+                            break;
                         }
-                        string req = "";
-                        req = "http://api.bitly.com/v" + BitlyApiVersion + "/shorten?";
-                        req += "login=" + BitlyLogin + "&apiKey=" + BitlyApiKey + "&format=txt" + "&longUrl=" + SrcUrl;
-                        if (!string.IsNullOrEmpty(_bitlyId) && !string.IsNullOrEmpty(_bitlyKey))
+                        string req = "http://api.bitly.com/v" + BitlyApiVersion + "/shorten?";
+                        req += "login=" + BitlyLogin + "&apiKey=" + BitlyApiKey + "&format=txt" + "&longUrl=" + srcUrl;
+                        if (!String.IsNullOrEmpty(_bitlyId) && !String.IsNullOrEmpty(_bitlyKey))
+                        {
                             req += "&x_login=" + _bitlyId + "&x_apiKey=" + _bitlyKey;
-                        if (ConverterType == Tween.MyCommon.UrlConverter.Jmp)
+                        }
+                        if (converterType == Tween.MyCommon.UrlConverter.Jmp)
+                        {
                             req += "&domain=j.mp";
+                        }
                         if (!(new HttpVarious()).GetData(req, null, ref content))
                         {
                             return "Can't convert";
@@ -360,15 +371,15 @@ namespace Tween
                     }
                     break;
                 case Tween.MyCommon.UrlConverter.Uxnu:
-                    if (SrcUrl.StartsWith("http"))
+                    if (srcUrl.StartsWith("http"))
                     {
                         if ("http://ux.nx/xxxxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
                         {
                             // 明らかに長くなると推測できる場合は圧縮しない
                             content = src;
-                            break; // TODO: might not be correct. Was : Exit Select
+                            break;
                         }
-                        if (!(new HttpVarious()).PostData("http://ux.nu/api/short?url=" + SrcUrl + "&format=plain", null, ref content))
+                        if (!(new HttpVarious()).PostData("http://ux.nu/api/short?url=" + srcUrl + "&format=plain", null, ref content))
                         {
                             return "Can't convert";
                         }
@@ -380,14 +391,12 @@ namespace Tween
                     break;
             }
             //変換結果から改行を除去
-            char[] ch = {
-				ControlChars.Cr,
-				ControlChars.Lf
-			};
-            content = content.TrimEnd(ch);
-            if (src.Length < content.Length)
-                content = src;
+            content = content.TrimEnd(new char[] { '\r', '\n' });
             // 圧縮の結果逆に長くなった場合は圧縮前のURLを返す
+            if (src.Length < content.Length)
+            {
+                content = src;
+            }
             return content;
         }
     }

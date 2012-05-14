@@ -1273,8 +1273,8 @@ namespace Tween
             tw.SetUseSsl(SettingDialog.UseSsl);
             ShortUrl.IsResolve = SettingDialog.TinyUrlResolve;
             ShortUrl.IsForceResolve = SettingDialog.ShortUrlForceResolve;
-            ShortUrl.BitlyId = SettingDialog.BitlyUser;
-            ShortUrl.BitlyKey = SettingDialog.BitlyPwd;
+            ShortUrl.SetBitlyId(SettingDialog.BitlyUser);
+            ShortUrl.SetBitlyKey(SettingDialog.BitlyPwd);
             HttpTwitter.TwitterUrl = _cfgCommon.TwitterUrl;
             HttpTwitter.TwitterSearchUrl = _cfgCommon.TwitterSearchUrl;
             tw.TrackWord = _cfgCommon.TrackWord;
@@ -4635,8 +4635,8 @@ namespace Tween
                     tw.SetUseSsl(SettingDialog.UseSsl);
                     ShortUrl.IsResolve = SettingDialog.TinyUrlResolve;
                     ShortUrl.IsForceResolve = SettingDialog.ShortUrlForceResolve;
-                    ShortUrl.BitlyId = SettingDialog.BitlyUser;
-                    ShortUrl.BitlyKey = SettingDialog.BitlyPwd;
+                    ShortUrl.SetBitlyId(SettingDialog.BitlyUser);
+                    ShortUrl.SetBitlyKey(SettingDialog.BitlyPwd);
                     HttpTwitter.TwitterUrl = _cfgCommon.TwitterUrl;
                     HttpTwitter.TwitterSearchUrl = _cfgCommon.TwitterSearchUrl;
 
