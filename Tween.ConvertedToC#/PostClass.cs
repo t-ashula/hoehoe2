@@ -37,17 +37,12 @@ namespace Tween
             public double Lat { get; set; }
         }
 
-        private bool _IsFav;
-        private bool _IsProtect;
-        private bool _IsMark;
-        private long _InReplyToStatusId;
-        private List<string> _ReplyToList = new List<string>();
+        private bool _isFav;
+        private bool _isProtect;
+        private bool _isMark;
+        private long _inReplyToStatusId;
         private States _states = States.None;
-        private string _RetweetedBy = "";
-        private long _RetweetedId = 0;
-        private string _SearchTabName = "";
-        private bool _IsDeleted = false;
-        private long _InReplyToUserId = 0;
+        private bool _IsDeleted;
         private StatusGeo _postGeo = new StatusGeo();
 
         public int RetweetedCount { get; set; }
@@ -56,7 +51,7 @@ namespace Tween
 
         public Dictionary<string, string> Media { get; set; }
 
-        [FlagsAttribute()]
+        [Flags]
         private enum States
         {
             None = 0,
@@ -77,30 +72,37 @@ namespace Tween
             ScreenName = screenName;
             CreatedAt = createdAt;
             StatusId = statusId;
-            _IsFav = isFav;
+            _isFav = isFav;
             Text = text;
             IsRead = isRead;
             IsReply = isReply;
             IsExcludeReply = isExcludeReply;
-            _IsProtect = isProtect;
+            _isProtect = isProtect;
             IsOwl = isOwl;
-            _IsMark = isMark;
+            _isMark = isMark;
             InReplyToUser = inReplyToUser;
-            _InReplyToStatusId = inReplyToStatusId;
+            _inReplyToStatusId = inReplyToStatusId;
             Source = source;
             SourceHtml = sourceHtml;
-            _ReplyToList = replyToList;
+            ReplyToList = replyToList;
             IsMe = isMe;
             IsDm = isDm;
             UserId = userId;
             FilterHit = filterHit;
-            _RetweetedBy = retweetedBy;
-            _RetweetedId = retweetedId;
+            RetweetedBy = retweetedBy;
+            RetweetedId = retweetedId;
             _postGeo = geo;
+            RelTabName = "";
+            InReplyToUserId = 0;
         }
 
         public PostClass()
         {
+            RelTabName = "";
+            InReplyToUserId = 0;
+            RetweetedId = 0;
+            RetweetedBy = "";
+            ReplyToList = new List<string>();
         }
 
         public string Nickname { get; set; }
@@ -125,12 +127,12 @@ namespace Tween
                 }
                 else
                 {
-                    return _IsFav;
+                    return _isFav;
                 }
             }
             set
             {
-                _IsFav = value;
+                _isFav = value;
                 if (RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(RetweetedId) != null)
                 {
                     TabInformations.GetInstance().RetweetSource(RetweetedId).IsFav = value;
@@ -148,7 +150,7 @@ namespace Tween
 
         public bool IsProtect
         {
-            get { return _IsProtect; }
+            get { return _isProtect; }
             set
             {
                 if (value)
@@ -159,7 +161,7 @@ namespace Tween
                 {
                     _states = _states & ~States.Protect;
                 }
-                _IsProtect = value;
+                _isProtect = value;
             }
         }
 
@@ -167,7 +169,7 @@ namespace Tween
 
         public bool IsMark
         {
-            get { return _IsMark; }
+            get { return _isMark; }
             set
             {
                 if (value)
@@ -178,7 +180,7 @@ namespace Tween
                 {
                     _states = _states & ~States.Mark;
                 }
-                _IsMark = value;
+                _isMark = value;
             }
         }
 
@@ -186,7 +188,7 @@ namespace Tween
 
         public long InReplyToStatusId
         {
-            get { return _InReplyToStatusId; }
+            get { return _inReplyToStatusId; }
             set
             {
                 if (value > 0)
@@ -197,25 +199,17 @@ namespace Tween
                 {
                     _states = _states & ~States.Reply;
                 }
-                _InReplyToStatusId = value;
+                _inReplyToStatusId = value;
             }
         }
 
-        public long InReplyToUserId
-        {
-            get { return _InReplyToUserId; }
-            set { _InReplyToUserId = value; }
-        }
+        public long InReplyToUserId { get; set; }
 
         public string Source { get; set; }
 
         public string SourceHtml { get; set; }
 
-        public List<string> ReplyToList
-        {
-            get { return _ReplyToList; }
-            set { _ReplyToList = value; }
-        }
+        public List<string> ReplyToList { get; set; }
 
         public bool IsMe { get; set; }
 
@@ -225,23 +219,11 @@ namespace Tween
 
         public bool FilterHit { get; set; }
 
-        public string RetweetedBy
-        {
-            get { return _RetweetedBy; }
-            set { _RetweetedBy = value; }
-        }
+        public string RetweetedBy { get; set; }
 
-        public long RetweetedId
-        {
-            get { return _RetweetedId; }
-            set { _RetweetedId = value; }
-        }
+        public long RetweetedId { get; set; }
 
-        public string RelTabName
-        {
-            get { return _SearchTabName; }
-            set { _SearchTabName = value; }
-        }
+        public string RelTabName { get; set; }
 
         public bool IsDeleted
         {
