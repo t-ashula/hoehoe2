@@ -30,13 +30,13 @@ namespace Tween.TweenCustomControl
 {
     public class PictureBoxEx : PictureBox
     {
-        protected override void OnPaint(System.Windows.Forms.PaintEventArgs pe)
+        protected override void OnPaint(PaintEventArgs pe)
         {
             try
             {
                 base.OnPaint(pe);
             }
-            catch (OutOfMemoryException ex)
+            catch (OutOfMemoryException)
             {
             }
         }
