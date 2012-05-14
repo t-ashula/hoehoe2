@@ -60,22 +60,16 @@ namespace Tween
             {
                 HttpStatusCode res = GetContent("GET", new Uri(url), null, ref content);
                 if (res != HttpStatusCode.OK)
+                {
                     return "";
+                }
             }
             catch (Exception ex)
             {
                 return "";
             }
             Match mc = Regex.Match(content, "/venue/(?<venueId>[0-9]+)", RegexOptions.IgnoreCase);
-            if (mc.Success)
-            {
-                string vId = mc.Result("${venueId}");
-                return vId;
-            }
-            else
-            {
-                return "";
-            }
+            return mc.Success ? mc.Result("${venueId}") : "";
         }
 
         private FourSquareDataModel.Venue GetVenueInfo(string venueId)
@@ -101,17 +95,10 @@ namespace Tween
                 }
                 else
                 {
-                    //Dim curData As FourSquareDataModel.FourSquareData = Nothing
-                    //Try
-                    //    curData = CreateDataFromJson(Of FourSquareDataModel.FourSquareData)(content)
-                    //Catch ex As Exception
-                    //    Return Nothing
-                    //End Try
-                    //MessageBox.Show(res.ToString + Environment.NewLine + curData.Meta.ErrorType + Environment.NewLine + curData.Meta.ErrorDetail)
                     return null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -120,7 +107,9 @@ namespace Tween
         public string GetMapsUri(string url, ref string refText)
         {
             if (!AppendSettingDialog.Instance.IsPreviewFoursquare)
+            {
                 return null;
+            }
 
             string urlId = Regex.Replace(url, "https?://(4sq|foursquare)\\.com/", "");
 
@@ -132,12 +121,16 @@ namespace Tween
 
             FourSquareDataModel.Venue curVenue = null;
             string venueId = GetVenueId(url);
-            if (string.IsNullOrEmpty(venueId))
+            if (String.IsNullOrEmpty(venueId))
+            {
                 return null;
+            }
 
             curVenue = GetVenueInfo(venueId);
             if (curVenue == null)
+            {
                 return null;
+            }
 
             Google.GlobalLocation curLocation = new Google.GlobalLocation
             {
@@ -147,14 +140,21 @@ namespace Tween
             };
             //例外発生の場合があるため
             if (!CheckInUrlsVenueCollection.ContainsKey(urlId))
+            {
                 CheckInUrlsVenueCollection.Add(urlId, curLocation);
+            }
             refText = curLocation.LocateInfo;
             return (new Google()).CreateGoogleStaticMapsUri(curLocation);
         }
 
         private string CreateVenueInfoText(FourSquareDataModel.Venue info)
         {
-            return info.Name + Environment.NewLine + info.Stats.UsersCount.ToString() + "/" + info.Stats.CheckinsCount.ToString() + Environment.NewLine + info.Location.Address + Environment.NewLine + info.Location.City + info.Location.State + Environment.NewLine + info.Location.Latitude.ToString() + Environment.NewLine + info.Location.Longitude.ToString();
+            return info.Name + Environment.NewLine
+                + info.Stats.UsersCount.ToString() + "/" + info.Stats.CheckinsCount.ToString() + Environment.NewLine
+                + info.Location.Address + Environment.NewLine
+                + info.Location.City + info.Location.State + Environment.NewLine
+                + info.Location.Latitude.ToString() + Environment.NewLine
+                + info.Location.Longitude.ToString();
         }
 
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content)
@@ -169,7 +169,7 @@ namespace Tween
 
         public class FourSquareDataModel
         {
-            [DataContract()]
+            [DataContract]
             public class FourSquareData
             {
                 [DataMember(Name = "meta", IsRequired = false)]
@@ -179,14 +179,14 @@ namespace Tween
                 public Response Response;
             }
 
-            [DataContract()]
+            [DataContract]
             public class Response
             {
                 [DataMember(Name = "venue", IsRequired = false)]
                 public Venue Venue;
             }
 
-            [DataContract()]
+            [DataContract]
             public class Venue
             {
                 [DataMember(Name = "id")]
@@ -214,7 +214,7 @@ namespace Tween
                 public string TimeZone;
             }
 
-            [DataContract()]
+            [DataContract]
             public class Location
             {
                 [DataMember(Name = "address")]
@@ -233,7 +233,7 @@ namespace Tween
                 public double Longitude;
             }
 
-            [DataContract()]
+            [DataContract]
             public class Stats
             {
                 [DataMember(Name = "checkinsCount")]
@@ -243,7 +243,7 @@ namespace Tween
                 public int UsersCount;
             }
 
-            [DataContract()]
+            [DataContract]
             public class Mayor
             {
                 [DataMember(Name = "count")]
@@ -253,7 +253,7 @@ namespace Tween
                 public FoursquareUser User;
             }
 
-            [DataContract()]
+            [DataContract]
             public class FoursquareUser
             {
                 [DataMember(Name = "id")]
@@ -272,7 +272,7 @@ namespace Tween
                 public string HomeCity;
             }
 
-            [DataContract()]
+            [DataContract]
             public class Meta
             {
                 [DataMember(Name = "code")]
