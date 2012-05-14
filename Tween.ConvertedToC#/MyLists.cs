@@ -25,34 +25,37 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace Tween
 {
     public partial class MyLists
     {
-        private string contextUserName;
-
+        private string _contextUserName;
         private Twitter _tw;
 
         public MyLists(string userName, Twitter tw)
         {
-            Load += MyLists_Load;
-            this.InitializeComponent();
+            InitializeComponent();
 
-            this.contextUserName = userName;
+            this._contextUserName = userName;
             this._tw = tw;
-
-            this.Text = this.contextUserName + Tween.My_Project.Resources.MyLists1;
+            this.Text = this._contextUserName + Tween.My_Project.Resources.MyLists1;
         }
 
-        private void MyLists_Load(System.Object sender, System.EventArgs e)
+        private void MyLists_Load(object sender, EventArgs e)
+        {
+            LoadList();
+        }
+
+        private void LoadList()
         {
             this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
 
             this.ListsCheckedListBox.Items.AddRange(TabInformations.GetInstance().SubscribableLists.FindAll(item => item.Username == this._tw.Username).ToArray());
 
-            for (int i = 0; i <= this.ListsCheckedListBox.Items.Count - 1; i++)
+            for (int i = 0; i < this.ListsCheckedListBox.Items.Count; i++)
             {
                 ListElement listItem = (ListElement)this.ListsCheckedListBox.Items[i];
 
@@ -82,7 +85,7 @@ namespace Tween
                 }
 
                 //リストに該当ユーザーのポストが含まれていれば、リストにユーザーが含まれているとする。
-                if (listPost.Exists(item => item.ScreenName == contextUserName))
+                if (listPost.Exists(item => item.ScreenName == _contextUserName))
                 {
                     this.ListsCheckedListBox.SetItemChecked(i, true);
                     continue;
@@ -114,7 +117,7 @@ namespace Tween
                 }
 
                 //リスト中のユーザーの人数がlistItem.MemberCount以上で、かつ該当のユーザーが含まれていなければ、リストにユーザーは含まれていないとする。
-                if (listItem.MemberCount > 0 && listItem.MemberCount <= listPostUserIDs.Count && (!listPostUserNames.Contains(contextUserName)))
+                if (listItem.MemberCount > 0 && listItem.MemberCount <= listPostUserIDs.Count && (!listPostUserNames.Contains(_contextUserName)))
                 {
                     this.ListsCheckedListBox.SetItemChecked(i, false);
                     continue;
@@ -123,7 +126,7 @@ namespace Tween
                 otherPost.AddRange(TabInformations.GetInstance().Posts.Values);
 
                 //リストに該当ユーザーのポストが含まれていないのにリスト以外で取得したポストの中にリストに含まれるべきポストがある場合は、リストにユーザーは含まれていないとする。
-                if (otherPost.Exists(item => (item.ScreenName == this.contextUserName) && (item.CreatedAt > listOlderPostCreatedAt) && (item.CreatedAt < listNewistPostCreatedAt) && ((!item.IsReply) || listPostUserNames.Contains(item.InReplyToUser))))
+                if (otherPost.Exists(item => (item.ScreenName == this._contextUserName) && (item.CreatedAt > listOlderPostCreatedAt) && (item.CreatedAt < listNewistPostCreatedAt) && ((!item.IsReply) || listPostUserNames.Contains(item.InReplyToUser))))
                 {
                     this.ListsCheckedListBox.SetItemChecked(i, false);
                     continue;
@@ -135,21 +138,21 @@ namespace Tween
             this.ListsCheckedListBox.ItemCheck += this.ListsCheckedListBox_ItemCheck;
         }
 
-        private void ListRefreshButton_Click(System.Object sender, System.EventArgs e)
+        private void ListRefreshButton_Click(object sender, EventArgs e)
         {
             string rslt = this._tw.GetListsApi();
-            if (!string.IsNullOrEmpty(rslt))
+            if (!String.IsNullOrEmpty(rslt))
             {
                 MessageBox.Show(string.Format(Tween.My_Project.Resources.ListsDeleteFailed, rslt));
             }
             else
             {
                 this.ListsCheckedListBox.Items.Clear();
-                this.MyLists_Load(this, EventArgs.Empty);
+                LoadList();
             }
         }
 
-        private void ListsCheckedListBox_ItemCheck(System.Object sender, System.Windows.Forms.ItemCheckEventArgs e)
+        private void ListsCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             switch (e.CurrentValue)
             {
@@ -158,7 +161,7 @@ namespace Tween
                         ListElement listItem = (ListElement)this.ListsCheckedListBox.Items[e.Index];
 
                         bool ret = false;
-                        string rslt = this._tw.ContainsUserAtList(listItem.Id.ToString(), contextUserName, ref ret);
+                        string rslt = this._tw.ContainsUserAtList(listItem.Id.ToString(), _contextUserName, ref ret);
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(Tween.My_Project.Resources.ListManageOKButton2, rslt));
@@ -180,7 +183,7 @@ namespace Tween
                 case CheckState.Unchecked:
                     {
                         ListElement list = (ListElement)this.ListsCheckedListBox.Items[e.Index];
-                        string rslt = this._tw.AddUserToList(list.Id.ToString(), this.contextUserName.ToString());
+                        string rslt = this._tw.AddUserToList(list.Id.ToString(), this._contextUserName.ToString());
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(Tween.My_Project.Resources.ListManageOKButton2, rslt));
@@ -191,7 +194,7 @@ namespace Tween
                 case CheckState.Checked:
                     {
                         ListElement list = (ListElement)this.ListsCheckedListBox.Items[e.Index];
-                        string rslt = this._tw.RemoveUserToList(list.Id.ToString(), this.contextUserName.ToString());
+                        string rslt = this._tw.RemoveUserToList(list.Id.ToString(), this._contextUserName.ToString());
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(Tween.My_Project.Resources.ListManageOKButton2, rslt));
@@ -202,12 +205,12 @@ namespace Tween
             }
         }
 
-        private void ContextMenuStrip1_Opening(System.Object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             e.Cancel = this.ListsCheckedListBox.SelectedItem == null;
         }
 
-        private void 追加AToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
+        private void AddListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
             this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Unchecked);
@@ -215,7 +218,7 @@ namespace Tween
             this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Checked);
         }
 
-        private void 削除DToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
+        private void DeleteListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
             this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Checked);
@@ -223,7 +226,7 @@ namespace Tween
             this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Unchecked);
         }
 
-        private void 更新RToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
+        private void ReloadListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
             this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Indeterminate);
@@ -231,13 +234,13 @@ namespace Tween
             this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Checked);
         }
 
-        private void ListsCheckedListBox_MouseDown(System.Object sender, System.Windows.Forms.MouseEventArgs e)
+        private void ListsCheckedListBox_MouseDown(object sender, MouseEventArgs e)
         {
             switch (e.Button)
             {
                 case MouseButtons.Left:
                     //項目が無い部分をクリックしても、選択されている項目のチェック状態が変更されてしまうので、その対策
-                    for (int index = 0; index <= this.ListsCheckedListBox.Items.Count - 1; index++)
+                    for (int index = 0; index < ListsCheckedListBox.Items.Count; index++)
                     {
                         if (this.ListsCheckedListBox.GetItemRectangle(index).Contains(e.Location))
                         {
@@ -249,7 +252,7 @@ namespace Tween
                     break;
                 case MouseButtons.Right:
                     //コンテキストメニューの項目実行時にSelectedItemプロパティを利用出来るように
-                    for (int index = 0; index <= this.ListsCheckedListBox.Items.Count - 1; index++)
+                    for (int index = 0; index < ListsCheckedListBox.Items.Count; index++)
                     {
                         if (this.ListsCheckedListBox.GetItemRectangle(index).Contains(e.Location))
                         {
@@ -263,7 +266,7 @@ namespace Tween
             }
         }
 
-        private void CloseButton_Click(System.Object sender, System.EventArgs e)
+        private void CloseButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
