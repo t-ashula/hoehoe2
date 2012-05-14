@@ -31,7 +31,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Tween
 {
@@ -42,7 +41,7 @@ namespace Tween
         private Image _icondata;
         private List<string> _atList = new List<string>();
         private string _descriptionTxt;
-        private string _recentPostTxt;        
+        private string _recentPostTxt;
         private const string Mainpath = "http://twitter.com/";
         private const string Followingpath = "/following";
         private const string Followerspath = "/followers";
@@ -542,52 +541,19 @@ namespace Tween
             }
         }
 
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_ButtonEdit_Click_IsEditing_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-
-        bool static_ButtonEdit_Click_IsEditing;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_ButtonEdit_Click_ButtonEditText_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        string static_ButtonEdit_Click_ButtonEditText;
-
+        bool isEditing = false;
+        string buttonEditText = "";
         private void ButtonEdit_Click(object sender, EventArgs e)
         {
-            lock (static_ButtonEdit_Click_IsEditing_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_ButtonEdit_Click_IsEditing_Init))
-                    {
-                        static_ButtonEdit_Click_IsEditing = false;
-                    }
-                }
-                finally
-                {
-                    static_ButtonEdit_Click_IsEditing_Init.State = 1;
-                }
-            }
-            lock (static_ButtonEdit_Click_ButtonEditText_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_ButtonEdit_Click_ButtonEditText_Init))
-                    {
-                        static_ButtonEdit_Click_ButtonEditText = "";
-                    }
-                }
-                finally
-                {
-                    static_ButtonEdit_Click_ButtonEditText_Init.State = 1;
-                }
-            }
-
             // 自分以外のプロフィールは変更できない
             if (_owner.TwitterInstance.Username != _info.ScreenName)
             {
                 return;
             }
 
-            if (!static_ButtonEdit_Click_IsEditing)
+            if (!isEditing)
             {
-                static_ButtonEdit_Click_ButtonEditText = ButtonEdit.Text;
+                buttonEditText = ButtonEdit.Text;
                 ButtonEdit.Text = Tween.My_Project.Resources.UserInfoButtonEdit_ClickText1;
 
                 //座標初期化,プロパティ設定
@@ -636,7 +602,7 @@ namespace Tween
                 TextBoxName.Focus();
                 TextBoxName.Select(TextBoxName.Text.Length, 0);
 
-                static_ButtonEdit_Click_IsEditing = true;
+                isEditing = true;
             }
             else
             {
@@ -684,9 +650,9 @@ namespace Tween
                 TextBoxDescription.Visible = false;
                 DescriptionBrowser.Visible = true;
 
-                ButtonEdit.Text = static_ButtonEdit_Click_ButtonEditText;
+                ButtonEdit.Text = buttonEditText;
 
-                static_ButtonEdit_Click_IsEditing = false;
+                isEditing = false;
             }
         }
 
@@ -745,7 +711,7 @@ namespace Tween
                 if (!String.IsNullOrEmpty(res))
                 {
                     // "Err:"が付いたエラーメッセージが返ってくる
-                    MessageBox.Show(res + Constants.vbCrLf + Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText4);
+                    MessageBox.Show(res + System.Environment.NewLine + Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText4);
                 }
                 else
                 {
@@ -868,23 +834,6 @@ namespace Tween
         public ShowUserInfo()
         {
             InitializeComponent();
-        }
-
-        private static bool InitStaticVariableHelper(Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag flag)
-        {
-            if (flag.State == 0)
-            {
-                flag.State = 2;
-                return true;
-            }
-            else if (flag.State == 2)
-            {
-                throw new Microsoft.VisualBasic.CompilerServices.IncompleteInitialization();
-            }
-            else
-            {
-                return false;
-            }
         }
     }
 }
