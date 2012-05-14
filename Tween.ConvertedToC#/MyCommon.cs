@@ -25,7 +25,9 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -35,20 +37,18 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Tween
 {
     public sealed class MyCommon
     {
-        private static readonly object LockObj = new object();
+        private static readonly object _lockObj = new object();
 
         //終了フラグ
-        public static bool _endingFlag;
+        public static bool IsEnding;
 
-        public static string cultureStr = null;
-
-        public static string settingPath;
+        public static string CultureStr = null;
+        public static string SettingPath;
 
         public enum IconSizes
         {
@@ -129,47 +129,27 @@ namespace Tween
         }
 
         //Backgroundworkerへ処理種別を通知するための引数用Enum
-        public enum WORKERTYPE
+        public enum WorkerType
         {
-            Timeline,
-            //タイムライン取得
-            Reply,
-            //返信取得
-            DirectMessegeRcv,
-            //受信DM取得
-            DirectMessegeSnt,
-            //送信DM取得
-            PostMessage,
-            //発言POST
-            FavAdd,
-            //Fav追加
-            FavRemove,
-            //Fav削除
-            Follower,
-            //Followerリスト取得
-            OpenUri,
-            //Uri開く
-            Favorites,
-            //Fav取得
-            Retweet,
-            //Retweetする
-            PublicSearch,
-            //公式検索
-            List,
-            //Lists
-            Related,
-            //関連発言
-            UserStream,
-            //UserStream
-            UserTimeline,
-            //UserTimeline
-            BlockIds,
-            //Blocking/ids
-            Configuration,
-            //Twitter Configuration読み込み
-            ///
-            ErrorState
-            //エラー表示のみで後処理終了(認証エラー時など)
+            Timeline,           //タイムライン取得
+            Reply,              //返信取得
+            DirectMessegeRcv,   //受信DM取得
+            DirectMessegeSnt,   //送信DM取得
+            PostMessage,        //発言POST
+            FavAdd,             //Fav追加
+            FavRemove,          //Fav削除
+            Follower,           //Followerリスト取得
+            OpenUri,            //Uri開く
+            Favorites,          //Fav取得
+            Retweet,            //Retweetする
+            PublicSearch,       //公式検索
+            List,               //Lists
+            Related,            //関連発言
+            UserStream,         //UserStream
+            UserTimeline,       //UserTimeline
+            BlockIds,           //Blocking/ids
+            Configuration,      //Twitter Configuration読み込み
+            ErrorState          //エラー表示のみで後処理終了(認証エラー時など)
         }
 
         public struct DEFAULTTAB
@@ -177,20 +157,7 @@ namespace Tween
             public const string RECENT = "Recent";
             public const string REPLY = "Reply";
             public const string DM = "Direct";
-
             public const string FAV = "Favorites";
-
-            private string dummy;
-
-            private new object ReferenceEquals()
-            {
-                return new object();
-            }
-
-            private new object Equals()
-            {
-                return new object();
-            }
         }
 
         public const object Block = null;
@@ -202,21 +169,21 @@ namespace Tween
         public static bool DebugBuild = false;
 #endif
 
-        public enum ACCOUNT_STATE
+        public enum AccountState
         {
             Valid,
             Invalid
         }
 
-        public enum REPLY_ICONSTATE
+        public enum ReplyIconState
         {
             None,
             StaticIcon,
             BlinkIcon
         }
 
-        [FlagsAttribute()]
-        public enum EVENTTYPE
+        [Flags]
+        public enum EventType
         {
             None = 0,
             Favorite = 1,
@@ -234,30 +201,32 @@ namespace Tween
             All = (None | Favorite | Unfavorite | Follow | ListMemberAdded | ListMemberRemoved | Block | Unblock | UserUpdate | Deleted | ListCreated | ListUpdated)
         }
 
-        public static void TraceOut(Exception ex, string Message)
+        public static void TraceOut(Exception ex, string message)
         {
             bool a = true;
             string buf = ExceptionOutMessage(ex, ref a);
-            TraceOut(TraceFlag, Message + Environment.NewLine + buf);
+            TraceOut(TraceFlag, message + Environment.NewLine + buf);
         }
 
-        public static void TraceOut(string Message)
+        public static void TraceOut(string message)
         {
-            TraceOut(TraceFlag, Message);
+            TraceOut(TraceFlag, message);
         }
 
-        public static void TraceOut(bool OutputFlag, string Message)
+        public static void TraceOut(bool outputFlag, string message)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
-                if (!OutputFlag)
-                    return;
-                DateTime now = DateTime.Now;
-                string fileName = string.Format("TweenTrace-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
-
-                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(fileName))
+                if (!outputFlag)
                 {
-                    writer.WriteLine("**** TraceOut: {0} ****", DateTime.Now.ToString());
+                    return;
+                }
+                DateTime now = DateTime.Now;
+                string fileName = String.Format("TweenTrace-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+
+                using (var writer = new StreamWriter(fileName))
+                {
+                    writer.WriteLine("**** TraceOut: {0} ****", now.ToString());
                     writer.WriteLine(Tween.My_Project.Resources.TraceOutText1);
                     writer.WriteLine(Tween.My_Project.Resources.TraceOutText2);
                     writer.WriteLine();
@@ -265,7 +234,7 @@ namespace Tween
                     writer.WriteLine(Tween.My_Project.Resources.TraceOutText4, Environment.OSVersion.VersionString);
                     writer.WriteLine(Tween.My_Project.Resources.TraceOutText5, Environment.Version.ToString());
                     writer.WriteLine(Tween.My_Project.Resources.TraceOutText6, fileVersion);
-                    writer.WriteLine(Message);
+                    writer.WriteLine(message);
                     writer.WriteLine();
                 }
             }
@@ -275,14 +244,14 @@ namespace Tween
         // 注意：最終的にファイル出力されるエラーログに記録されるため次の情報は書き出さない
         // 文頭メッセージ、権限、動作環境
         // Dataプロパティにある終了許可フラグのパースもここで行う
-
-        public static string ExceptionOutMessage(Exception ex, ref bool IsTerminatePermission)
+        public static string ExceptionOutMessage(Exception ex, ref bool isTerminatePermission)
         {
             if (ex == null)
+            {
                 return "";
+            }
 
             StringBuilder buf = new StringBuilder();
-
             buf.AppendFormat(Tween.My_Project.Resources.UnhandledExceptionText8, ex.GetType().FullName, ex.Message);
             buf.AppendLine();
             if (ex.Data != null)
@@ -300,7 +269,7 @@ namespace Tween
                     buf.AppendLine();
                     if (dt.Key.Equals("IsTerminatePermission"))
                     {
-                        IsTerminatePermission = Convert.ToBoolean(dt.Value);
+                        isTerminatePermission = Convert.ToBoolean(dt.Value);
                     }
                 }
                 if (!needHeader)
@@ -312,19 +281,19 @@ namespace Tween
             buf.AppendLine();
 
             //InnerExceptionが存在する場合書き出す
-            Exception _ex = ex.InnerException;
+            Exception innerEx = ex.InnerException;
             int nesting = 0;
-            while (_ex != null)
+            while (innerEx != null)
             {
-                buf.AppendFormat("-----InnerException[{0}]-----" + Constants.vbCrLf, nesting);
+                buf.AppendFormat("-----InnerException[{0}]-----" + Environment.NewLine, nesting);
                 buf.AppendLine();
-                buf.AppendFormat(Tween.My_Project.Resources.UnhandledExceptionText8, _ex.GetType().FullName, _ex.Message);
+                buf.AppendFormat(Tween.My_Project.Resources.UnhandledExceptionText8, innerEx.GetType().FullName, innerEx.Message);
                 buf.AppendLine();
-                if (_ex.Data != null)
+                if (innerEx.Data != null)
                 {
                     bool needHeader = true;
 
-                    foreach (DictionaryEntry dt in _ex.Data)
+                    foreach (DictionaryEntry dt in innerEx.Data)
                     {
                         if (needHeader)
                         {
@@ -335,7 +304,7 @@ namespace Tween
                         buf.AppendFormat("{0}  :  {1}", dt.Key, dt.Value);
                         if (dt.Key.Equals("IsTerminatePermission"))
                         {
-                            IsTerminatePermission = Convert.ToBoolean(dt.Value);
+                            isTerminatePermission = Convert.ToBoolean(dt.Value);
                         }
                     }
                     if (!needHeader)
@@ -343,23 +312,23 @@ namespace Tween
                         buf.AppendLine("-----End Extra Information-----");
                     }
                 }
-                buf.AppendLine(_ex.StackTrace);
+                buf.AppendLine(innerEx.StackTrace);
                 buf.AppendLine();
                 nesting += 1;
-                _ex = _ex.InnerException;
+                innerEx = innerEx.InnerException;
             }
             return buf.ToString();
         }
 
         public static bool ExceptionOut(Exception ex)
         {
-            lock (LockObj)
+            lock (_lockObj)
             {
-                bool IsTerminatePermission = true;
+                bool isTerminatePermission = true;
                 DateTime now = DateTime.Now;
-                string fileName = string.Format("Tween-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+                string fileName = String.Format("Tween-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 
-                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(fileName))
+                using (var writer = new StreamWriter(fileName))
                 {
                     WindowsIdentity ident = WindowsIdentity.GetCurrent();
                     WindowsPrincipal princ = new WindowsPrincipal(ident);
@@ -377,21 +346,21 @@ namespace Tween
                     writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText6, Environment.Version.ToString());
                     writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText7, fileVersion);
 
-                    writer.Write(ExceptionOutMessage(ex, ref IsTerminatePermission));
+                    writer.Write(ExceptionOutMessage(ex, ref isTerminatePermission));
                     writer.Flush();
                 }
 
-                switch (MessageBox.Show(string.Format(Tween.My_Project.Resources.UnhandledExceptionText9, fileName, Environment.NewLine), Tween.My_Project.Resources.UnhandledExceptionText10, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error))
+                switch (MessageBox.Show(String.Format(Tween.My_Project.Resources.UnhandledExceptionText9, fileName, Environment.NewLine), Tween.My_Project.Resources.UnhandledExceptionText10, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error))
                 {
                     case DialogResult.Yes:
-                        System.Diagnostics.Process.Start(fileName);
+                        Process.Start(fileName);
                         return false;
                     case DialogResult.No:
                         return false;
                     case DialogResult.Cancel:
-                        return IsTerminatePermission;
+                        return isTerminatePermission;
                 }
-                return IsTerminatePermission;
+                return isTerminatePermission;
             }
         }
 
@@ -403,34 +372,35 @@ namespace Tween
         /// </summary>
         /// <param name = input>エンコード対象のURL</param>
         /// <returns>マルチバイト文字の部分をUTF-8/%xx形式でエンコードした文字列を返します。</returns>
-
-        public static string urlEncodeMultibyteChar(string _input)
+        public static string urlEncodeMultibyteChar(string input)
         {
             Uri uri = null;
             StringBuilder sb = new StringBuilder(256);
-            string result = "";
             char c = 'd';
-            foreach (char c_loopVariable in _input)
+            foreach (char cc in input)
             {
-                c = c_loopVariable;
+                c = cc;
                 if (Convert.ToInt32(c) > 127)
-                    break; // TODO: might not be correct. Was : Exit For
+                {
+                    break;
+                }
             }
             if (Convert.ToInt32(c) <= 127)
-                return _input;
-
-            string input = HttpUtility.UrlDecode(_input);
-        retry:
-            foreach (char c_loopVariable in input)
             {
-                c = c_loopVariable;
+                return input;
+            }
+
+            string decodedInput = HttpUtility.UrlDecode(input);
+        retry:
+            foreach (char cc in decodedInput)
+            {
+                c = cc;
                 if (Convert.ToInt32(c) > 255)
                 {
                     // Unicodeの場合(1charが複数のバイトで構成されている）
                     // UriクラスをNewして再構成し、入力をPathAndQueryのみとしてやり直す
-                    foreach (byte b_loopVariable in Encoding.UTF8.GetBytes(new string(new[] { c })))
+                    foreach (var b in Encoding.UTF8.GetBytes(new string(new[] { c })))
                     {
-                        var b = b_loopVariable;
                         sb.AppendFormat("%{0:X2}", b);
                     }
                 }
@@ -440,8 +410,8 @@ namespace Tween
                     // UriクラスをNewして再構成し、入力をinputからAuthority部分を除去してやり直す
                     if (uri == null)
                     {
-                        uri = new Uri(input);
-                        input = input.Remove(0, uri.GetLeftPart(UriPartial.Authority).Length);
+                        uri = new Uri(decodedInput);
+                        decodedInput = decodedInput.Remove(0, uri.GetLeftPart(UriPartial.Authority).Length);
                         sb.Length = 0;
                         goto retry;
                     }
@@ -455,17 +425,7 @@ namespace Tween
                     sb.Append(c);
                 }
             }
-
-            if (uri == null)
-            {
-                result = sb.ToString();
-            }
-            else
-            {
-                result = uri.GetLeftPart(UriPartial.Authority) + sb.ToString();
-            }
-
-            return result;
+            return uri == null ? sb.ToString() : uri.GetLeftPart(UriPartial.Authority) + sb.ToString();
         }
 
         /// <summary>
@@ -477,53 +437,55 @@ namespace Tween
         /// </summary>
         /// <param name="input">展開対象のURL</param>
         /// <returns>IDNが含まれていた場合はPunycodeに展開したURLをを返します。Punycode展開時にエラーが発生した場合はNothingを返します。</returns>
-
         public static string IDNDecode(string input)
         {
-            string result = "";
-            IdnMapping IDNConverter = new IdnMapping();
+            IdnMapping idnConverter = new IdnMapping();
 
             if (!input.Contains("://"))
+            {
                 return null;
+            }
 
             // ドメイン名をPunycode展開
-            string Domain = null;
-            string AsciiDomain = null;
+            string domain = null;
+            string asciiDomain = null;
 
             try
             {
-                Domain = input.Split('/')[2];
-                AsciiDomain = IDNConverter.GetAscii(Domain);
+                domain = input.Split('/')[2];
+                asciiDomain = idnConverter.GetAscii(domain);
             }
             catch (Exception ex)
             {
                 return null;
             }
 
-            return input.Replace("://" + Domain, "://" + AsciiDomain);
+            return input.Replace("://" + domain, "://" + asciiDomain);
         }
 
-        public static void MoveArrayItem(int[] values, int idx_fr, int idx_to)
+        public static void MoveArrayItem(int[] values, int fromIndex, int toIndex)
         {
-            int moved_value = values[idx_fr];
-            int num_moved = Math.Abs(idx_fr - idx_to);
+            int movedValue = values[fromIndex];
+            int numMoved = Math.Abs(fromIndex - toIndex);
 
-            if (idx_to < idx_fr)
+            if (toIndex < fromIndex)
             {
-                Array.Copy(values, idx_to, values, idx_to + 1, num_moved);
+                Array.Copy(values, toIndex, values, toIndex + 1, numMoved);
             }
             else
             {
-                Array.Copy(values, idx_fr + 1, values, idx_fr, num_moved);
+                Array.Copy(values, fromIndex + 1, values, fromIndex, numMoved);
             }
 
-            values[idx_to] = moved_value;
+            values[toIndex] = movedValue;
         }
 
         public static string EncryptString(string str)
         {
-            if (string.IsNullOrEmpty(str))
+            if (String.IsNullOrEmpty(str))
+            {
                 return "";
+            }
 
             //文字列をバイト型配列にする
             byte[] bytesIn = System.Text.Encoding.UTF8.GetBytes(str);
@@ -567,8 +529,10 @@ namespace Tween
 
         public static string DecryptString(string str)
         {
-            if (string.IsNullOrEmpty(str))
+            if (String.IsNullOrEmpty(str))
+            {
                 return "";
+            }
 
             //DESCryptoServiceProviderオブジェクトの作成
             using (System.Security.Cryptography.DESCryptoServiceProvider des = new System.Security.Cryptography.DESCryptoServiceProvider())
@@ -616,7 +580,7 @@ namespace Tween
             if (bytes.Length <= newSize)
             {
                 int i = 0;
-                for (i = 0; i <= bytes.Length - 1; i++)
+                for (i = 0; i < bytes.Length; i++)
                 {
                     newBytes[i] = bytes[i];
                 }
@@ -625,7 +589,7 @@ namespace Tween
             {
                 int pos = 0;
                 int i = 0;
-                for (i = 0; i <= bytes.Length - 1; i++)
+                for (i = 0; i < bytes.Length; i++)
                 {
                     newBytes[pos] = (byte)(newBytes[pos] ^ bytes[i]);
                     pos += 1;
@@ -644,38 +608,28 @@ namespace Tween
             return Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major == 6;
         }
 
-        [FlagsAttribute()]
+        [Flags]
         public enum TabUsageType
         {
             Undefined = 0,
-            Home = 1,
-            //Unique
-            Mentions = 2,
-            //Unique
-            DirectMessage = 4,
-            //Unique
-            Favorites = 8,
-            //Unique
+            Home = 1,            //Unique
+            Mentions = 2,            //Unique
+            DirectMessage = 4,            //Unique
+            Favorites = 8,            //Unique
             UserDefined = 16,
-            LocalQuery = 32,
-            //Pin(no save/no save query/distribute/no update(normal update))
-            Profile = 64,
-            //Pin(save/no distribute/manual update)
-            PublicSearch = 128,
-            //Pin(save/no distribute/auto update)
+            LocalQuery = 32,            //Pin(no save/no save query/distribute/no update(normal update))
+            Profile = 64,            //Pin(save/no distribute/manual update)
+            PublicSearch = 128,            //Pin(save/no distribute/auto update)
             Lists = 256,
             Related = 512,
             UserTimeline = 1024
-            //RTMyTweet
-            //RTByOthers
-            //RTByMe
         }
 
         public static string fileVersion = "";
 
         public static string GetUserAgentString()
         {
-            if (string.IsNullOrEmpty(fileVersion))
+            if (String.IsNullOrEmpty(fileVersion))
             {
                 throw new Exception("fileversion is not Initialized.");
             }
@@ -691,43 +645,39 @@ namespace Tween
             {
                 img = Image.FromFile(filename);
                 if (img == null)
-                    return false;
-                if (img.RawFormat.Guid == System.Drawing.Imaging.ImageFormat.Gif.Guid)
                 {
-                    System.Drawing.Imaging.FrameDimension fd = new System.Drawing.Imaging.FrameDimension(img.FrameDimensionsList[0]);
-                    int fd_count = img.GetFrameCount(fd);
-                    if (fd_count > 1)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
+                }
+                if (img.RawFormat.Guid == ImageFormat.Gif.Guid)
+                {
+                    var fd = new FrameDimension(img.FrameDimensionsList[0]);
+                    return img.GetFrameCount(fd) > 1;
                 }
                 else
                 {
                     return false;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
             finally
             {
                 if (img != null)
+                {
                     img.Dispose();
+                }
             }
         }
 
-        public static System.DateTime DateTimeParse(string input)
+        public static DateTime DateTimeParse(string input)
         {
-            System.DateTime rslt = default(System.DateTime);
+            DateTime rslt = default(DateTime);
             string[] format = { "ddd MMM dd HH:mm:ss zzzz yyyy" };
             foreach (string fmt in format)
             {
-                if (DateTime.TryParseExact(input, fmt, System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None, out rslt))
+                if (DateTime.TryParseExact(input, fmt, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out rslt))
                 {
                     return rslt;
                 }
@@ -737,7 +687,7 @@ namespace Tween
                 }
             }
             TraceOut("Parse Error(DateTimeFormat) : " + input);
-            return new System.DateTime();
+            return new DateTime();
         }
 
         public static T CreateDataFromJson<T>(string content)
@@ -759,7 +709,7 @@ namespace Tween
             {
                 return NetworkInterface.GetIsNetworkAvailable();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

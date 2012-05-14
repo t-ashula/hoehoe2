@@ -406,7 +406,7 @@ namespace Tween
                 proc = () =>
                 {
                     System.Threading.Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-                    while (!MyCommon._endingFlag)
+                    while (!MyCommon.IsEnding)
                     {
                         if (this.gaQueue.Count > 0)
                         {

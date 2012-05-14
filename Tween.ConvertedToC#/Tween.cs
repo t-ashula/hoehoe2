@@ -454,7 +454,7 @@ namespace Tween
             public int endPage;
 
             //処理種別
-            public Tween.MyCommon.WORKERTYPE type;
+            public Tween.MyCommon.WorkerType type;
 
             //新規取得したアイコンイメージ
             public Dictionary<string, Image> imgs;
@@ -483,7 +483,7 @@ namespace Tween
             public int endPage;
 
             //処理種別
-            public Tween.MyCommon.WORKERTYPE type;
+            public Tween.MyCommon.WorkerType type;
 
             //URLをブラウザで開くときのアドレス
             public string url = "";
@@ -1877,42 +1877,42 @@ namespace Tween
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_homeCounter, SettingDialog.TimelinePeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Timeline)
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.Timeline, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.Timeline, 1, 0, "");
                 ResetTimers.Timeline = false;
             }
             if (ResetTimers.Reply || static_TimerTimeline_Elapsed_mentionCounter <= 0 && SettingDialog.ReplyPeriodInt > 0)
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_mentionCounter, SettingDialog.ReplyPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Reply)
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.Reply, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.Reply, 1, 0, "");
                 ResetTimers.Reply = false;
             }
             if (ResetTimers.DirectMessage || static_TimerTimeline_Elapsed_dmCounter <= 0 && SettingDialog.DMPeriodInt > 0)
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_dmCounter, SettingDialog.DMPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.DirectMessage)
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
                 ResetTimers.DirectMessage = false;
             }
             if (ResetTimers.PublicSearch || static_TimerTimeline_Elapsed_pubSearchCounter <= 0 && SettingDialog.PubSearchPeriodInt > 0)
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_pubSearchCounter, SettingDialog.PubSearchPeriodInt);
                 if (!ResetTimers.PublicSearch)
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.PublicSearch, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.PublicSearch, 1, 0, "");
                 ResetTimers.PublicSearch = false;
             }
             if (ResetTimers.UserTimeline || static_TimerTimeline_Elapsed_userTimelineCounter <= 0 && SettingDialog.UserTimelinePeriodInt > 0)
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_userTimelineCounter, SettingDialog.UserTimelinePeriodInt);
                 if (!ResetTimers.UserTimeline)
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.UserTimeline, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.UserTimeline, 1, 0, "");
                 ResetTimers.UserTimeline = false;
             }
             if (ResetTimers.Lists || static_TimerTimeline_Elapsed_listsCounter <= 0 && SettingDialog.ListsPeriodInt > 0)
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_listsCounter, SettingDialog.ListsPeriodInt);
                 if (!ResetTimers.Lists)
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.List, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.List, 1, 0, "");
                 ResetTimers.Lists = false;
             }
             if (ResetTimers.UserStream || static_TimerTimeline_Elapsed_usCounter <= 0 && SettingDialog.UserstreamPeriodInt > 0)
@@ -1926,7 +1926,7 @@ namespace Tween
             {
                 Interlocked.Exchange(ref static_TimerTimeline_Elapsed_refreshFollowers, 0);
                 doGetFollowersMenu();
-                GetTimeline(Tween.MyCommon.WORKERTYPE.Configuration, 0, 0, "");
+                GetTimeline(Tween.MyCommon.WorkerType.Configuration, 0, 0, "");
                 if (InvokeRequired && !IsDisposed)
                     this.Invoke(new MethodInvoker(this.TrimPostChain));
             }
@@ -1937,14 +1937,14 @@ namespace Tween
                 {
                     osResumed = false;
                     Interlocked.Exchange(ref static_TimerTimeline_Elapsed_ResumeWait, 0);
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.Timeline, 1, 0, "");
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.Reply, 1, 0, "");
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 0, "");
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.PublicSearch, 1, 0, "");
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.UserTimeline, 1, 0, "");
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.List, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.Timeline, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.Reply, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.PublicSearch, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.UserTimeline, 1, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.List, 1, 0, "");
                     doGetFollowersMenu();
-                    GetTimeline(Tween.MyCommon.WORKERTYPE.Configuration, 0, 0, "");
+                    GetTimeline(Tween.MyCommon.WorkerType.Configuration, 0, 0, "");
                     if (InvokeRequired && !IsDisposed)
                         this.Invoke(new MethodInvoker(this.TrimPostChain));
                 }
@@ -1977,7 +1977,7 @@ namespace Tween
             bool isDelete = false;
             addCount = _statuses.SubmitUpdate(ref soundFile, ref notifyPosts, ref isMention, ref isDelete, isUserStream);
 
-            if (MyCommon._endingFlag)
+            if (MyCommon.IsEnding)
                 return;
 
             //リストに反映＆選択状態復元
@@ -2164,7 +2164,7 @@ namespace Tween
 
         private void SaveSelectedStatus(Dictionary<string, long[]> selId, Dictionary<string, long> focusedId)
         {
-            if (MyCommon._endingFlag)
+            if (MyCommon.IsEnding)
                 return;
             foreach (TabPage tab in ListTab.TabPages)
             {
@@ -2190,12 +2190,12 @@ namespace Tween
 
         private bool BalloonRequired()
         {
-            return BalloonRequired(new Twitter.FormattedEvent { Eventtype = Tween.MyCommon.EVENTTYPE.None });
+            return BalloonRequired(new Twitter.FormattedEvent { Eventtype = Tween.MyCommon.EventType.None });
         }
 
-        private bool IsEventNotifyAsEventType(Tween.MyCommon.EVENTTYPE type)
+        private bool IsEventNotifyAsEventType(Tween.MyCommon.EventType type)
         {
-            return SettingDialog.EventNotifyEnabled && Convert.ToBoolean(type & SettingDialog.EventNotifyFlag) || type == Tween.MyCommon.EVENTTYPE.None;
+            return SettingDialog.EventNotifyEnabled && Convert.ToBoolean(type & SettingDialog.EventNotifyFlag) || type == Tween.MyCommon.EventType.None;
         }
 
         private bool IsMyEventNotityAsEventType(Twitter.FormattedEvent ev)
@@ -2205,7 +2205,7 @@ namespace Tween
 
         private bool BalloonRequired(Twitter.FormattedEvent ev)
         {
-            if ((IsEventNotifyAsEventType(ev.Eventtype) && IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (SettingDialog.ForceEventNotify && ev.Eventtype != Tween.MyCommon.EVENTTYPE.None)) && !_initial && ((SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !SettingDialog.LimitBalloon)) && !Win32Api.IsScreenSaverRunning())
+            if ((IsEventNotifyAsEventType(ev.Eventtype) && IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (SettingDialog.ForceEventNotify && ev.Eventtype != Tween.MyCommon.EventType.None)) && !_initial && ((SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !SettingDialog.LimitBalloon)) && !Win32Api.IsScreenSaverRunning())
             {
                 return true;
             }
@@ -2692,7 +2692,7 @@ namespace Tween
             GetWorkerArg args = new GetWorkerArg();
             args.page = 0;
             args.endPage = 0;
-            args.type = Tween.MyCommon.WORKERTYPE.PostMessage;
+            args.type = Tween.MyCommon.WorkerType.PostMessage;
             CheckReplyTo(StatusText.Text);
 
             //整形によって増加する文字数を取得
@@ -2900,13 +2900,13 @@ namespace Tween
 
         private void EndToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
-            MyCommon._endingFlag = true;
+            MyCommon.IsEnding = true;
             this.Close();
         }
 
         private void Tween_FormClosing(System.Object sender, System.Windows.Forms.FormClosingEventArgs e)
         {
-            if (!SettingDialog.CloseToExit && e.CloseReason == CloseReason.UserClosing && MyCommon._endingFlag == false)
+            if (!SettingDialog.CloseToExit && e.CloseReason == CloseReason.UserClosing && MyCommon.IsEnding == false)
             {
                 //_endingFlag=False:フォームの×ボタン
                 e.Cancel = true;
@@ -2917,7 +2917,7 @@ namespace Tween
                 //Google.GASender.GetInstance().TrackEventWithCategory("post", "end", tw.UserId)
                 _hookGlobalHotkey.UnregisterAllOriginalHotkey();
                 _ignoreConfigSave = true;
-                MyCommon._endingFlag = true;
+                MyCommon.IsEnding = true;
                 TimerTimeline.Enabled = false;
                 TimerRefreshIcon.Enabled = false;
             }
@@ -2954,13 +2954,13 @@ namespace Tween
                     static_CheckAccountValid_errorCount_Init.State = 1;
                 }
             }
-            if (Twitter.AccountState != Tween.MyCommon.ACCOUNT_STATE.Valid)
+            if (Twitter.AccountState != Tween.MyCommon.AccountState.Valid)
             {
                 static_CheckAccountValid_errorCount += 1;
                 if (static_CheckAccountValid_errorCount > 5)
                 {
                     static_CheckAccountValid_errorCount = 0;
-                    Twitter.AccountState = Tween.MyCommon.ACCOUNT_STATE.Valid;
+                    Twitter.AccountState = Tween.MyCommon.AccountState.Valid;
                     return true;
                 }
                 return false;
@@ -2972,7 +2972,7 @@ namespace Tween
         private void GetTimelineWorker_DoWork(System.Object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             BackgroundWorker bw = (BackgroundWorker)sender;
-            if (bw.CancellationPending || MyCommon._endingFlag)
+            if (bw.CancellationPending || MyCommon.IsEnding)
             {
                 e.Cancel = true;
                 return;
@@ -2994,39 +2994,39 @@ namespace Tween
             if (!CheckAccountValid())
             {
                 rslt.retMsg = "Auth error. Check your account";
-                rslt.type = Tween.MyCommon.WORKERTYPE.ErrorState;
+                rslt.type = Tween.MyCommon.WorkerType.ErrorState;
                 //エラー表示のみ行ない、後処理キャンセル
                 rslt.tName = args.tName;
                 e.Result = rslt;
                 return;
             }
 
-            if (args.type != Tween.MyCommon.WORKERTYPE.OpenUri)
+            if (args.type != Tween.MyCommon.WorkerType.OpenUri)
                 bw.ReportProgress(0, "");
             //Notifyアイコンアニメーション開始
             switch (args.type)
             {
-                case Tween.MyCommon.WORKERTYPE.Timeline:
-                case Tween.MyCommon.WORKERTYPE.Reply:
+                case Tween.MyCommon.WorkerType.Timeline:
+                case Tween.MyCommon.WorkerType.Reply:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetTimelineApi(read, args.type, args.page == -1, _initial);
                     //新着時未読クリア
-                    if (string.IsNullOrEmpty(ret) && args.type == Tween.MyCommon.WORKERTYPE.Timeline && SettingDialog.ReadOldPosts)
+                    if (string.IsNullOrEmpty(ret) && args.type == Tween.MyCommon.WorkerType.Timeline && SettingDialog.ReadOldPosts)
                     {
                         _statuses.SetRead();
                     }
                     //振り分け
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WORKERTYPE.DirectMessegeRcv:
+                case Tween.MyCommon.WorkerType.DirectMessegeRcv:
                     //送信分もまとめて取得
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
-                    ret = tw.GetDirectMessageApi(read, Tween.MyCommon.WORKERTYPE.DirectMessegeRcv, args.page == -1);
+                    ret = tw.GetDirectMessageApi(read, Tween.MyCommon.WorkerType.DirectMessegeRcv, args.page == -1);
                     if (string.IsNullOrEmpty(ret))
-                        ret = tw.GetDirectMessageApi(read, Tween.MyCommon.WORKERTYPE.DirectMessegeSnt, args.page == -1);
+                        ret = tw.GetDirectMessageApi(read, Tween.MyCommon.WorkerType.DirectMessegeSnt, args.page == -1);
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WORKERTYPE.FavAdd:
+                case Tween.MyCommon.WorkerType.FavAdd:
                     //スレッド処理はしない
                     if (_statuses.Tabs.ContainsKey(args.tName))
                     {
@@ -3087,7 +3087,7 @@ namespace Tween
                     }
                     rslt.sIds = args.sIds;
                     break;
-                case Tween.MyCommon.WORKERTYPE.FavRemove:
+                case Tween.MyCommon.WorkerType.FavRemove:
                     //スレッド処理はしない
                     if (_statuses.Tabs.ContainsKey(args.tName))
                     {
@@ -3134,14 +3134,14 @@ namespace Tween
                     }
                     rslt.sIds = args.sIds;
                     break;
-                case Tween.MyCommon.WORKERTYPE.PostMessage:
+                case Tween.MyCommon.WorkerType.PostMessage:
                     bw.ReportProgress(200);
                     if (string.IsNullOrEmpty(args.status.imagePath))
                     {
                         for (int i = 0; i <= 1; i++)
                         {
                             ret = tw.PostStatus(args.status.status, args.status.inReplyToId);
-                            if (string.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.status.status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.status.status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != Tween.MyCommon.ACCOUNT_STATE.Valid)
+                            if (string.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.status.status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.status.status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != Tween.MyCommon.AccountState.Valid)
                             {
                                 break; // TODO: might not be correct. Was : Exit For
                             }
@@ -3154,7 +3154,7 @@ namespace Tween
                     bw.ReportProgress(300);
                     rslt.status = args.status;
                     break;
-                case Tween.MyCommon.WORKERTYPE.Retweet:
+                case Tween.MyCommon.WorkerType.Retweet:
                     bw.ReportProgress(200);
                     for (int i = 0; i <= args.ids.Count - 1; i++)
                     {
@@ -3163,7 +3163,7 @@ namespace Tween
 
                     bw.ReportProgress(300);
                     break;
-                case Tween.MyCommon.WORKERTYPE.Follower:
+                case Tween.MyCommon.WorkerType.Follower:
                     bw.ReportProgress(50, Tween.My_Project.Resources.UpdateFollowersMenuItem1_ClickText1);
                     ret = tw.GetFollowersApi();
                     if (string.IsNullOrEmpty(ret))
@@ -3171,10 +3171,10 @@ namespace Tween
                         ret = tw.GetNoRetweetIdsApi();
                     }
                     break;
-                case Tween.MyCommon.WORKERTYPE.Configuration:
+                case Tween.MyCommon.WorkerType.Configuration:
                     ret = tw.ConfigurationApi();
                     break;
-                case Tween.MyCommon.WORKERTYPE.OpenUri:
+                case Tween.MyCommon.WorkerType.OpenUri:
                     string myPath = Convert.ToString(args.url);
 
                     try
@@ -3208,12 +3208,12 @@ namespace Tween
                         //                MessageBox.Show("ブラウザの起動に失敗、またはタイムアウトしました。" + ex.ToString())
                     }
                     break;
-                case Tween.MyCommon.WORKERTYPE.Favorites:
+                case Tween.MyCommon.WorkerType.Favorites:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetFavoritesApi(read, args.type, args.page == -1);
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WORKERTYPE.PublicSearch:
+                case Tween.MyCommon.WorkerType.PublicSearch:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (string.IsNullOrEmpty(args.tName))
                     {
@@ -3241,7 +3241,7 @@ namespace Tween
                     //振り分け
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WORKERTYPE.UserTimeline:
+                case Tween.MyCommon.WorkerType.UserTimeline:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     int count = 20;
                     if (SettingDialog.UseAdditionalCount)
@@ -3265,7 +3265,7 @@ namespace Tween
                     //振り分け
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WORKERTYPE.List:
+                case Tween.MyCommon.WorkerType.List:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (string.IsNullOrEmpty(args.tName))
                     {
@@ -3288,12 +3288,12 @@ namespace Tween
                     //振り分け
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WORKERTYPE.Related:
+                case Tween.MyCommon.WorkerType.Related:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetRelatedResult(read, _statuses.GetTabByName(args.tName));
                     rslt.addCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WORKERTYPE.BlockIds:
+                case Tween.MyCommon.WorkerType.BlockIds:
                     bw.ReportProgress(50, Tween.My_Project.Resources.UpdateBlockUserText1);
                     ret = tw.GetBlockUserIds();
                     if (TabInformations.GetInstance().BlockIds.Count == 0)
@@ -3310,7 +3310,7 @@ namespace Tween
             }
 
             //時速表示用
-            if (args.type == Tween.MyCommon.WORKERTYPE.FavAdd)
+            if (args.type == Tween.MyCommon.WorkerType.FavAdd)
             {
                 System.DateTime oneHour = DateAndTime.Now.Subtract(new TimeSpan(1, 0, 0));
                 for (int i = _favTimestamps.Count - 1; i >= 0; i += -1)
@@ -3321,7 +3321,7 @@ namespace Tween
                     }
                 }
             }
-            if (args.type == Tween.MyCommon.WORKERTYPE.Timeline && !_initial)
+            if (args.type == Tween.MyCommon.WorkerType.Timeline && !_initial)
             {
                 lock (_syncObject)
                 {
@@ -3357,14 +3357,14 @@ namespace Tween
             }
 
             //終了ステータス
-            if (args.type != Tween.MyCommon.WORKERTYPE.OpenUri)
+            if (args.type != Tween.MyCommon.WorkerType.OpenUri)
                 bw.ReportProgress(100, MakeStatusMessage(args, true));
             //ステータス書き換え、Notifyアイコンアニメーション開始
 
             rslt.retMsg = ret;
             rslt.type = args.type;
             rslt.tName = args.tName;
-            if (args.type == Tween.MyCommon.WORKERTYPE.DirectMessegeRcv || args.type == Tween.MyCommon.WORKERTYPE.DirectMessegeSnt || args.type == Tween.MyCommon.WORKERTYPE.Reply || args.type == Tween.MyCommon.WORKERTYPE.Timeline || args.type == Tween.MyCommon.WORKERTYPE.Favorites)
+            if (args.type == Tween.MyCommon.WorkerType.DirectMessegeRcv || args.type == Tween.MyCommon.WorkerType.DirectMessegeSnt || args.type == Tween.MyCommon.WorkerType.Reply || args.type == Tween.MyCommon.WorkerType.Timeline || args.type == Tween.MyCommon.WorkerType.Favorites)
             {
                 rslt.page = args.page - 1;
                 //値が正しいか後でチェック。10ページ毎の継続確認
@@ -3381,34 +3381,34 @@ namespace Tween
                 //継続中メッセージ
                 switch (AsyncArg.type)
                 {
-                    case Tween.MyCommon.WORKERTYPE.Timeline:
+                    case Tween.MyCommon.WorkerType.Timeline:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText5 + AsyncArg.page.ToString() + Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case Tween.MyCommon.WORKERTYPE.Reply:
+                    case Tween.MyCommon.WorkerType.Reply:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText4 + AsyncArg.page.ToString() + Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case Tween.MyCommon.WORKERTYPE.DirectMessegeRcv:
+                    case Tween.MyCommon.WorkerType.DirectMessegeRcv:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText8 + AsyncArg.page.ToString() + Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case Tween.MyCommon.WORKERTYPE.FavAdd:
+                    case Tween.MyCommon.WorkerType.FavAdd:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText15 + AsyncArg.page.ToString() + "/" + AsyncArg.ids.Count.ToString() + Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText16 + (AsyncArg.page - AsyncArg.sIds.Count - 1).ToString();
                         break;
-                    case Tween.MyCommon.WORKERTYPE.FavRemove:
+                    case Tween.MyCommon.WorkerType.FavRemove:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText17 + AsyncArg.page.ToString() + "/" + AsyncArg.ids.Count.ToString() + Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText18 + (AsyncArg.page - AsyncArg.sIds.Count - 1).ToString();
                         break;
-                    case Tween.MyCommon.WORKERTYPE.Favorites:
+                    case Tween.MyCommon.WorkerType.Favorites:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText19;
                         break;
-                    case Tween.MyCommon.WORKERTYPE.PublicSearch:
+                    case Tween.MyCommon.WorkerType.PublicSearch:
                         smsg = "Search refreshing...";
                         break;
-                    case Tween.MyCommon.WORKERTYPE.List:
+                    case Tween.MyCommon.WorkerType.List:
                         smsg = "List refreshing...";
                         break;
-                    case Tween.MyCommon.WORKERTYPE.Related:
+                    case Tween.MyCommon.WorkerType.Related:
                         smsg = "Related refreshing...";
                         break;
-                    case Tween.MyCommon.WORKERTYPE.UserTimeline:
+                    case Tween.MyCommon.WorkerType.UserTimeline:
                         smsg = "UserTimeline refreshing...";
                         break;
                 }
@@ -3418,46 +3418,46 @@ namespace Tween
                 //完了メッセージ
                 switch (AsyncArg.type)
                 {
-                    case Tween.MyCommon.WORKERTYPE.Timeline:
+                    case Tween.MyCommon.WorkerType.Timeline:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText1;
                         break;
-                    case Tween.MyCommon.WORKERTYPE.Reply:
+                    case Tween.MyCommon.WorkerType.Reply:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText9;
                         break;
-                    case Tween.MyCommon.WORKERTYPE.DirectMessegeRcv:
+                    case Tween.MyCommon.WorkerType.DirectMessegeRcv:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText11;
                         break;
-                    case Tween.MyCommon.WORKERTYPE.DirectMessegeSnt:
+                    case Tween.MyCommon.WorkerType.DirectMessegeSnt:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText13;
                         break;
-                    case Tween.MyCommon.WORKERTYPE.FavAdd:
+                    case Tween.MyCommon.WorkerType.FavAdd:
                         break;
                     //進捗メッセージ残す
-                    case Tween.MyCommon.WORKERTYPE.FavRemove:
+                    case Tween.MyCommon.WorkerType.FavRemove:
                         break;
                     //進捗メッセージ残す
-                    case Tween.MyCommon.WORKERTYPE.Favorites:
+                    case Tween.MyCommon.WorkerType.Favorites:
                         smsg = Tween.My_Project.Resources.GetTimelineWorker_RunWorkerCompletedText20;
                         break;
-                    case Tween.MyCommon.WORKERTYPE.Follower:
+                    case Tween.MyCommon.WorkerType.Follower:
                         smsg = Tween.My_Project.Resources.UpdateFollowersMenuItem1_ClickText3;
                         break;
-                    case Tween.MyCommon.WORKERTYPE.Configuration:
+                    case Tween.MyCommon.WorkerType.Configuration:
                         break;
                     //進捗メッセージ残す
-                    case Tween.MyCommon.WORKERTYPE.PublicSearch:
+                    case Tween.MyCommon.WorkerType.PublicSearch:
                         smsg = "Search refreshed";
                         break;
-                    case Tween.MyCommon.WORKERTYPE.List:
+                    case Tween.MyCommon.WorkerType.List:
                         smsg = "List refreshed";
                         break;
-                    case Tween.MyCommon.WORKERTYPE.Related:
+                    case Tween.MyCommon.WorkerType.Related:
                         smsg = "Related refreshed";
                         break;
-                    case Tween.MyCommon.WORKERTYPE.UserTimeline:
+                    case Tween.MyCommon.WorkerType.UserTimeline:
                         smsg = "UserTimeline refreshed";
                         break;
-                    case Tween.MyCommon.WORKERTYPE.BlockIds:
+                    case Tween.MyCommon.WorkerType.BlockIds:
                         smsg = Tween.My_Project.Resources.UpdateBlockUserText3;
                         break;
                 }
@@ -3467,7 +3467,7 @@ namespace Tween
 
         private void GetTimelineWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            if (MyCommon._endingFlag)
+            if (MyCommon.IsEnding)
                 return;
             if (e.ProgressPercentage > 100)
             {
@@ -3493,7 +3493,7 @@ namespace Tween
 
         private void GetTimelineWorker_RunWorkerCompleted(System.Object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            if (MyCommon._endingFlag || e.Cancelled)
+            if (MyCommon.IsEnding || e.Cancelled)
                 return;
             //キャンセル
 
@@ -3513,7 +3513,7 @@ namespace Tween
 
             GetWorkerResult rslt = (GetWorkerResult)e.Result;
 
-            if (rslt.type == Tween.MyCommon.WORKERTYPE.OpenUri)
+            if (rslt.type == Tween.MyCommon.WorkerType.OpenUri)
                 return;
 
             //エラー
@@ -3523,10 +3523,10 @@ namespace Tween
                 StatusLabel.Text = rslt.retMsg;
             }
 
-            if (rslt.type == Tween.MyCommon.WORKERTYPE.ErrorState)
+            if (rslt.type == Tween.MyCommon.WorkerType.ErrorState)
                 return;
 
-            if (rslt.type == Tween.MyCommon.WORKERTYPE.FavRemove)
+            if (rslt.type == Tween.MyCommon.WorkerType.FavRemove)
             {
                 this.RemovePostFromFavTab(rslt.sIds.ToArray());
             }
@@ -3540,7 +3540,7 @@ namespace Tween
             //    End If
             //Next
             //If Not busy Then RefreshTimeline() 'background処理なければ、リスト反映
-            if (rslt.type == Tween.MyCommon.WORKERTYPE.Timeline || rslt.type == Tween.MyCommon.WORKERTYPE.Reply || rslt.type == Tween.MyCommon.WORKERTYPE.List || rslt.type == Tween.MyCommon.WORKERTYPE.PublicSearch || rslt.type == Tween.MyCommon.WORKERTYPE.DirectMessegeRcv || rslt.type == Tween.MyCommon.WORKERTYPE.DirectMessegeSnt || rslt.type == Tween.MyCommon.WORKERTYPE.Favorites || rslt.type == Tween.MyCommon.WORKERTYPE.Follower || rslt.type == Tween.MyCommon.WORKERTYPE.FavAdd || rslt.type == Tween.MyCommon.WORKERTYPE.FavRemove || rslt.type == Tween.MyCommon.WORKERTYPE.Related || rslt.type == Tween.MyCommon.WORKERTYPE.UserTimeline || rslt.type == Tween.MyCommon.WORKERTYPE.BlockIds || rslt.type == Tween.MyCommon.WORKERTYPE.Configuration)
+            if (rslt.type == Tween.MyCommon.WorkerType.Timeline || rslt.type == Tween.MyCommon.WorkerType.Reply || rslt.type == Tween.MyCommon.WorkerType.List || rslt.type == Tween.MyCommon.WorkerType.PublicSearch || rslt.type == Tween.MyCommon.WorkerType.DirectMessegeRcv || rslt.type == Tween.MyCommon.WorkerType.DirectMessegeSnt || rslt.type == Tween.MyCommon.WorkerType.Favorites || rslt.type == Tween.MyCommon.WorkerType.Follower || rslt.type == Tween.MyCommon.WorkerType.FavAdd || rslt.type == Tween.MyCommon.WorkerType.FavRemove || rslt.type == Tween.MyCommon.WorkerType.Related || rslt.type == Tween.MyCommon.WorkerType.UserTimeline || rslt.type == Tween.MyCommon.WorkerType.BlockIds || rslt.type == Tween.MyCommon.WorkerType.Configuration)
             {
                 RefreshTimeline(false);
                 //リスト反映
@@ -3548,32 +3548,32 @@ namespace Tween
 
             switch (rslt.type)
             {
-                case Tween.MyCommon.WORKERTYPE.Timeline:
+                case Tween.MyCommon.WorkerType.Timeline:
                     _waitTimeline = false;
                     if (!_initial)
                     {
                         //    'API使用時の取得調整は別途考える（カウント調整？）
                     }
                     break;
-                case Tween.MyCommon.WORKERTYPE.Reply:
+                case Tween.MyCommon.WorkerType.Reply:
                     _waitReply = false;
                     if (rslt.newDM && !_initial)
                     {
-                        GetTimeline(Tween.MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 0, "");
+                        GetTimeline(Tween.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
                     }
                     break;
-                case Tween.MyCommon.WORKERTYPE.Favorites:
+                case Tween.MyCommon.WorkerType.Favorites:
                     _waitFav = false;
                     break;
-                case Tween.MyCommon.WORKERTYPE.DirectMessegeRcv:
+                case Tween.MyCommon.WorkerType.DirectMessegeRcv:
                     _waitDm = false;
                     break;
-                case Tween.MyCommon.WORKERTYPE.FavAdd:
-                case Tween.MyCommon.WORKERTYPE.FavRemove:
+                case Tween.MyCommon.WorkerType.FavAdd:
+                case Tween.MyCommon.WorkerType.FavRemove:
                     if (_curList != null && _curTab != null)
                     {
                         _curList.BeginUpdate();
-                        if (rslt.type == Tween.MyCommon.WORKERTYPE.FavRemove && _statuses.Tabs[_curTab.Text].TabType == Tween.MyCommon.TabUsageType.Favorites)
+                        if (rslt.type == Tween.MyCommon.WorkerType.FavRemove && _statuses.Tabs[_curTab.Text].TabType == Tween.MyCommon.TabUsageType.Favorites)
                         {
                             //色変えは不要
                         }
@@ -3610,7 +3610,7 @@ namespace Tween
                         _curList.EndUpdate();
                     }
                     break;
-                case MyCommon.WORKERTYPE.PostMessage:
+                case MyCommon.WorkerType.PostMessage:
                     if (string.IsNullOrEmpty(rslt.retMsg) || rslt.retMsg.StartsWith("Outputz") || rslt.retMsg.StartsWith("OK:") || rslt.retMsg == "Warn:Status is a duplicate.")
                     {
                         _postTimestamps.Add(DateAndTime.Now);
@@ -3649,7 +3649,7 @@ namespace Tween
                             GetWorkerArg args = new GetWorkerArg();
                             args.page = 0;
                             args.endPage = 0;
-                            args.type = MyCommon.WORKERTYPE.PostMessage;
+                            args.type = MyCommon.WorkerType.PostMessage;
                             args.status = rslt.status;
                             RunAsync(args);
                         }
@@ -3670,11 +3670,11 @@ namespace Tween
                         }
                         else
                         {
-                            GetTimeline(MyCommon.WORKERTYPE.Timeline, 1, 0, "");
+                            GetTimeline(MyCommon.WorkerType.Timeline, 1, 0, "");
                         }
                     }
                     break;
-                case MyCommon.WORKERTYPE.Retweet:
+                case MyCommon.WorkerType.Retweet:
                     if (rslt.retMsg.Length == 0)
                     {
                         _postTimestamps.Add(DateAndTime.Now);
@@ -3687,17 +3687,17 @@ namespace Tween
                             }
                         }
                         if (!_isActiveUserstream && SettingDialog.PostAndGet)
-                            GetTimeline(MyCommon.WORKERTYPE.Timeline, 1, 0, "");
+                            GetTimeline(MyCommon.WorkerType.Timeline, 1, 0, "");
                     }
                     break;
-                case MyCommon.WORKERTYPE.Follower:
+                case MyCommon.WorkerType.Follower:
                     //_waitFollower = False
                     _itemCache = null;
                     _postCache = null;
                     if (_curList != null)
                         _curList.Refresh();
                     break;
-                case MyCommon.WORKERTYPE.Configuration:
+                case MyCommon.WorkerType.Configuration:
                     //_waitFollower = False
                     if (SettingDialog.TwitterConfiguration.PhotoSizeLimit != 0)
                     {
@@ -3708,16 +3708,16 @@ namespace Tween
                     if (_curList != null)
                         _curList.Refresh();
                     break;
-                case MyCommon.WORKERTYPE.PublicSearch:
+                case MyCommon.WorkerType.PublicSearch:
                     _waitPubSearch = false;
                     break;
-                case MyCommon.WORKERTYPE.UserTimeline:
+                case MyCommon.WorkerType.UserTimeline:
                     _waitUserTimeline = false;
                     break;
-                case MyCommon.WORKERTYPE.List:
+                case MyCommon.WorkerType.List:
                     _waitLists = false;
                     break;
-                case MyCommon.WORKERTYPE.Related:
+                case MyCommon.WorkerType.Related:
                     {
                         TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Related);
                         if (tb != null && tb.RelationTargetPost != null && tb.Contains(tb.RelationTargetPost.StatusId))
@@ -3810,9 +3810,9 @@ namespace Tween
         }
 
         readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_GetTimeline_lastTime_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        Dictionary<Tween.MyCommon.WORKERTYPE, DateTime> static_GetTimeline_lastTime;
+        Dictionary<Tween.MyCommon.WorkerType, DateTime> static_GetTimeline_lastTime;
 
-        private void GetTimeline(Tween.MyCommon.WORKERTYPE WkType, int fromPage, int toPage, string tabName)
+        private void GetTimeline(Tween.MyCommon.WorkerType WkType, int fromPage, int toPage, string tabName)
         {
             if (!this.IsNetworkAvailable())
                 return;
@@ -3829,7 +3829,7 @@ namespace Tween
                 {
                     if (InitStaticVariableHelper(static_GetTimeline_lastTime_Init))
                     {
-                        static_GetTimeline_lastTime = new Dictionary<MyCommon.WORKERTYPE, DateTime>();
+                        static_GetTimeline_lastTime = new Dictionary<MyCommon.WorkerType, DateTime>();
                     }
                 }
                 finally
@@ -3970,11 +3970,11 @@ namespace Tween
             args.tName = _curTab.Text;
             if (FavAdd)
             {
-                args.type = MyCommon.WORKERTYPE.FavAdd;
+                args.type = MyCommon.WorkerType.FavAdd;
             }
             else
             {
-                args.type = MyCommon.WORKERTYPE.FavRemove;
+                args.type = MyCommon.WorkerType.FavRemove;
             }
             foreach (int idx in _curList.SelectedIndices)
             {
@@ -4503,13 +4503,13 @@ namespace Tween
                 switch (_statuses.Tabs[_curTab.Text].TabType)
                 {
                     case MyCommon.TabUsageType.Mentions:
-                        GetTimeline(MyCommon.WORKERTYPE.Reply, 1, 0, "");
+                        GetTimeline(MyCommon.WorkerType.Reply, 1, 0, "");
                         break;
                     case MyCommon.TabUsageType.DirectMessage:
-                        GetTimeline(MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 0, "");
+                        GetTimeline(MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
                         break;
                     case MyCommon.TabUsageType.Favorites:
-                        GetTimeline(MyCommon.WORKERTYPE.Favorites, 1, 0, "");
+                        GetTimeline(MyCommon.WorkerType.Favorites, 1, 0, "");
                         break;
                     //Case TabUsageType.Profile
                     //' TODO
@@ -4520,11 +4520,11 @@ namespace Tween
                             if (string.IsNullOrEmpty(tb.SearchWords))
                                 return;
 
-                            GetTimeline(MyCommon.WORKERTYPE.PublicSearch, 1, 0, _curTab.Text);
+                            GetTimeline(MyCommon.WorkerType.PublicSearch, 1, 0, _curTab.Text);
                         }
                         break;
                     case MyCommon.TabUsageType.UserTimeline:
-                        GetTimeline(MyCommon.WORKERTYPE.UserTimeline, 1, 0, _curTab.Text);
+                        GetTimeline(MyCommon.WorkerType.UserTimeline, 1, 0, _curTab.Text);
                         break;
                     case MyCommon.TabUsageType.Lists:
                         {
@@ -4533,17 +4533,17 @@ namespace Tween
                             if (tb.ListInfo == null || tb.ListInfo.Id == 0)
                                 return;
 
-                            GetTimeline(MyCommon.WORKERTYPE.List, 1, 0, _curTab.Text);
+                            GetTimeline(MyCommon.WorkerType.List, 1, 0, _curTab.Text);
                         }
                         break;
                     default:
-                        GetTimeline(MyCommon.WORKERTYPE.Timeline, 1, 0, "");
+                        GetTimeline(MyCommon.WorkerType.Timeline, 1, 0, "");
                         break;
                 }
             }
             else
             {
-                GetTimeline(MyCommon.WORKERTYPE.Timeline, 1, 0, "");
+                GetTimeline(MyCommon.WorkerType.Timeline, 1, 0, "");
             }
         }
 
@@ -4555,13 +4555,13 @@ namespace Tween
                 switch (_statuses.Tabs[_curTab.Text].TabType)
                 {
                     case MyCommon.TabUsageType.Mentions:
-                        GetTimeline(MyCommon.WORKERTYPE.Reply, -1, 0, "");
+                        GetTimeline(MyCommon.WorkerType.Reply, -1, 0, "");
                         break;
                     case MyCommon.TabUsageType.DirectMessage:
-                        GetTimeline(MyCommon.WORKERTYPE.DirectMessegeRcv, -1, 0, "");
+                        GetTimeline(MyCommon.WorkerType.DirectMessegeRcv, -1, 0, "");
                         break;
                     case MyCommon.TabUsageType.Favorites:
-                        GetTimeline(MyCommon.WORKERTYPE.Favorites, -1, 0, "");
+                        GetTimeline(MyCommon.WorkerType.Favorites, -1, 0, "");
                         break;
                     case MyCommon.TabUsageType.Profile:
                         break;
@@ -4573,11 +4573,11 @@ namespace Tween
                             if (string.IsNullOrEmpty(tb.SearchWords))
                                 return;
 
-                            GetTimeline(MyCommon.WORKERTYPE.PublicSearch, -1, 0, _curTab.Text);
+                            GetTimeline(MyCommon.WorkerType.PublicSearch, -1, 0, _curTab.Text);
                         }
                         break;
                     case MyCommon.TabUsageType.UserTimeline:
-                        GetTimeline(MyCommon.WORKERTYPE.UserTimeline, -1, 0, _curTab.Text);
+                        GetTimeline(MyCommon.WorkerType.UserTimeline, -1, 0, _curTab.Text);
                         break;
                     case MyCommon.TabUsageType.Lists:
                         {
@@ -4586,17 +4586,17 @@ namespace Tween
                             if (tb.ListInfo == null || tb.ListInfo.Id == 0)
                                 return;
 
-                            GetTimeline(MyCommon.WORKERTYPE.List, -1, 0, _curTab.Text);
+                            GetTimeline(MyCommon.WorkerType.List, -1, 0, _curTab.Text);
                         }
                         break;
                     default:
-                        GetTimeline(MyCommon.WORKERTYPE.Timeline, -1, 0, "");
+                        GetTimeline(MyCommon.WorkerType.Timeline, -1, 0, "");
                         break;
                 }
             }
             else
             {
-                GetTimeline(MyCommon.WORKERTYPE.Timeline, -1, 0, "");
+                GetTimeline(MyCommon.WorkerType.Timeline, -1, 0, "");
             }
         }
 
@@ -4892,7 +4892,7 @@ namespace Tween
                 }
             }
 
-            Twitter.AccountState = MyCommon.ACCOUNT_STATE.Valid;
+            Twitter.AccountState = MyCommon.AccountState.Valid;
 
             this.TopMost = SettingDialog.AlwaysTop;
             SaveConfigsAll(false);
@@ -5059,7 +5059,7 @@ namespace Tween
             SaveConfigsTabs();
             //検索実行
 
-            GetTimeline(MyCommon.WORKERTYPE.UserTimeline, 1, 0, tabName);
+            GetTimeline(MyCommon.WorkerType.UserTimeline, 1, 0, tabName);
         }
 
         public bool AddNewTab(string tabName, bool startup, Tween.MyCommon.TabUsageType tabType, ListElement listInfo = null)
@@ -6636,8 +6636,8 @@ namespace Tween
         {
             ProcessStartInfo pinfo = new ProcessStartInfo();
             pinfo.UseShellExecute = true;
-            pinfo.WorkingDirectory = MyCommon.settingPath;
-            pinfo.FileName = Path.Combine(MyCommon.settingPath, "TweenUp3.exe");
+            pinfo.WorkingDirectory = MyCommon.SettingPath;
+            pinfo.FileName = Path.Combine(MyCommon.SettingPath, "TweenUp3.exe");
             pinfo.Arguments = "\"" + Application.StartupPath + "\"";
             try
             {
@@ -6685,7 +6685,7 @@ namespace Tween
                             if (retMsg.Length == 0)
                             {
                                 RunTweenUp();
-                                MyCommon._endingFlag = true;
+                                MyCommon.IsEnding = true;
                                 dialogAsShieldicon.Dispose();
                                 this.Close();
                                 return;
@@ -6712,7 +6712,7 @@ namespace Tween
                                 if (retMsg.Length == 0)
                                 {
                                     RunTweenUp();
-                                    MyCommon._endingFlag = true;
+                                    MyCommon.IsEnding = true;
                                     dialogAsShieldicon.Dispose();
                                     this.Close();
                                     return;
@@ -7113,10 +7113,10 @@ namespace Tween
                             DoRefresh();
                             return true;
                         case Keys.F6:
-                            GetTimeline(MyCommon.WORKERTYPE.Reply, 1, 0, "");
+                            GetTimeline(MyCommon.WorkerType.Reply, 1, 0, "");
                             return true;
                         case Keys.F7:
-                            GetTimeline(MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 0, "");
+                            GetTimeline(MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
                             return true;
                     }
                     if (Focused != FocusedControl.StatusText)
@@ -7420,10 +7420,10 @@ namespace Tween
                             DoRefreshMore();
                             return true;
                         case Keys.F6:
-                            GetTimeline(MyCommon.WORKERTYPE.Reply, -1, 0, "");
+                            GetTimeline(MyCommon.WorkerType.Reply, -1, 0, "");
                             return true;
                         case Keys.F7:
-                            GetTimeline(MyCommon.WORKERTYPE.DirectMessegeRcv, -1, 0, "");
+                            GetTimeline(MyCommon.WorkerType.DirectMessegeRcv, -1, 0, "");
                             return true;
                     }
                     //フォーカスStatusText以外
@@ -9490,12 +9490,12 @@ namespace Tween
             }
 
             TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Mentions);
-            if (SettingDialog.ReplyIconState != MyCommon.REPLY_ICONSTATE.None && tb != null && tb.UnreadCount > 0)
+            if (SettingDialog.ReplyIconState != MyCommon.ReplyIconState.None && tb != null && tb.UnreadCount > 0)
             {
                 if (static_RefreshTasktrayIcon_blinkCnt > 0)
                     return;
                 static_RefreshTasktrayIcon_blink = !static_RefreshTasktrayIcon_blink;
-                if (static_RefreshTasktrayIcon_blink || SettingDialog.ReplyIconState == MyCommon.REPLY_ICONSTATE.StaticIcon)
+                if (static_RefreshTasktrayIcon_blink || SettingDialog.ReplyIconState == MyCommon.ReplyIconState.StaticIcon)
                 {
                     NotifyIcon1.Icon = ReplyIcon;
                 }
@@ -9785,7 +9785,7 @@ namespace Tween
                     {
                         ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
                         ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
-                        GetTimeline(MyCommon.WORKERTYPE.List, 1, 0, tabName);
+                        GetTimeline(MyCommon.WorkerType.List, 1, 0, tabName);
                     }
                 }
             }
@@ -11596,7 +11596,7 @@ namespace Tween
         {
             Google.GASender.GetInstance().TrackPage("/open_url", tw.UserId);
             GetWorkerArg args = new GetWorkerArg();
-            args.type = MyCommon.WORKERTYPE.OpenUri;
+            args.type = MyCommon.WorkerType.OpenUri;
             args.url = UriString;
 
             RunAsync(args);
@@ -11710,7 +11710,7 @@ namespace Tween
         private void RunAsync(GetWorkerArg args)
         {
             BackgroundWorker bw = null;
-            if (args.type != MyCommon.WORKERTYPE.Follower)
+            if (args.type != MyCommon.WorkerType.Follower)
             {
                 for (int i = 0; i <= _bw.Length - 1; i++)
                 {
@@ -11797,36 +11797,36 @@ namespace Tween
 
             if (this.IsNetworkAvailable())
             {
-                GetTimeline(MyCommon.WORKERTYPE.BlockIds, 0, 0, "");
+                GetTimeline(MyCommon.WorkerType.BlockIds, 0, 0, "");
                 if (SettingDialog.StartupFollowers)
                 {
-                    GetTimeline(MyCommon.WORKERTYPE.Follower, 0, 0, "");
+                    GetTimeline(MyCommon.WorkerType.Follower, 0, 0, "");
                 }
-                GetTimeline(MyCommon.WORKERTYPE.Configuration, 0, 0, "");
+                GetTimeline(MyCommon.WorkerType.Configuration, 0, 0, "");
                 StartUserStream();
                 _waitTimeline = true;
-                GetTimeline(MyCommon.WORKERTYPE.Timeline, 1, 1, "");
+                GetTimeline(MyCommon.WorkerType.Timeline, 1, 1, "");
                 _waitReply = true;
-                GetTimeline(MyCommon.WORKERTYPE.Reply, 1, 1, "");
+                GetTimeline(MyCommon.WorkerType.Reply, 1, 1, "");
                 _waitDm = true;
-                GetTimeline(MyCommon.WORKERTYPE.DirectMessegeRcv, 1, 1, "");
+                GetTimeline(MyCommon.WorkerType.DirectMessegeRcv, 1, 1, "");
                 if (SettingDialog.GetFav)
                 {
                     _waitFav = true;
-                    GetTimeline(MyCommon.WORKERTYPE.Favorites, 1, 1, "");
+                    GetTimeline(MyCommon.WorkerType.Favorites, 1, 1, "");
                 }
                 _waitPubSearch = true;
-                GetTimeline(MyCommon.WORKERTYPE.PublicSearch, 1, 0, "");
+                GetTimeline(MyCommon.WorkerType.PublicSearch, 1, 0, "");
                 //tabname="":全タブ
                 _waitUserTimeline = true;
-                GetTimeline(MyCommon.WORKERTYPE.UserTimeline, 1, 0, "");
+                GetTimeline(MyCommon.WorkerType.UserTimeline, 1, 0, "");
                 //tabname="":全タブ
                 _waitLists = true;
-                GetTimeline(MyCommon.WORKERTYPE.List, 1, 0, "");
+                GetTimeline(MyCommon.WorkerType.List, 1, 0, "");
                 //tabname="":全タブ
                 int i = 0;
                 int j = 0;
-                while ((IsInitialRead()) && !MyCommon._endingFlag)
+                while ((IsInitialRead()) && !MyCommon.IsEnding)
                 {
                     System.Threading.Thread.Sleep(100);
                     Tween.My.MyProject.Application.DoEvents();
@@ -11837,7 +11837,7 @@ namespace Tween
                     // 120秒間初期処理が終了しなかったら強制的に打ち切る
                     if (i > 50)
                     {
-                        if (MyCommon._endingFlag)
+                        if (MyCommon.IsEnding)
                         {
                             return;
                         }
@@ -11845,7 +11845,7 @@ namespace Tween
                     }
                 }
 
-                if (MyCommon._endingFlag)
+                if (MyCommon.IsEnding)
                     return;
 
                 //バージョンチェック（引数：起動時チェックの場合はTrue･･･チェック結果のメッセージを表示しない）
@@ -11857,13 +11857,13 @@ namespace Tween
                 // 取得失敗の場合は再試行する
                 if (!tw.GetFollowersSuccess && SettingDialog.StartupFollowers)
                 {
-                    GetTimeline(MyCommon.WORKERTYPE.Follower, 0, 0, "");
+                    GetTimeline(MyCommon.WorkerType.Follower, 0, 0, "");
                 }
 
                 // 取得失敗の場合は再試行する
                 if (SettingDialog.TwitterConfiguration.PhotoSizeLimit == 0)
                 {
-                    GetTimeline(MyCommon.WORKERTYPE.Configuration, 0, 0, "");
+                    GetTimeline(MyCommon.WorkerType.Configuration, 0, 0, "");
                 }
 
                 // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
@@ -11887,7 +11887,7 @@ namespace Tween
 
         private void doGetFollowersMenu()
         {
-            GetTimeline(MyCommon.WORKERTYPE.Follower, 1, 0, "");
+            GetTimeline(MyCommon.WorkerType.Follower, 1, 0, "");
             DispSelectedPost(true);
         }
 
@@ -11979,7 +11979,7 @@ namespace Tween
                 args.ids = new List<long>();
                 args.sIds = new List<long>();
                 args.tName = _curTab.Text;
-                args.type = MyCommon.WORKERTYPE.Retweet;
+                args.type = MyCommon.WorkerType.Retweet;
                 foreach (int idx in _curList.SelectedIndices)
                 {
                     PostClass post = GetCurTabPost(idx);
@@ -12640,7 +12640,7 @@ namespace Tween
                 //検索条件の保存
             }
 
-            GetTimeline(MyCommon.WORKERTYPE.PublicSearch, 1, 0, tbName);
+            GetTimeline(MyCommon.WorkerType.PublicSearch, 1, 0, tbName);
             ((DetailsListView)ListTab.SelectedTab.Tag).Focus();
         }
 
@@ -13782,7 +13782,7 @@ namespace Tween
                     }
                 }
 
-                GetTimeline(MyCommon.WORKERTYPE.Related, 1, 1, tb.TabName);
+                GetTimeline(MyCommon.WorkerType.Related, 1, 1, tb.TabName);
             }
         }
 
@@ -14179,7 +14179,7 @@ namespace Tween
 
         private void TweenRestartMenuItem_Click(object sender, System.EventArgs e)
         {
-            MyCommon._endingFlag = true;
+            MyCommon.IsEnding = true;
             try
             {
                 this.Close();

@@ -85,9 +85,9 @@ namespace Tween
             }
         }
 
-        private Tween.MyCommon.EVENTTYPE ParseEventTypeFromTag()
+        private Tween.MyCommon.EventType ParseEventTypeFromTag()
         {
-            return (Tween.MyCommon.EVENTTYPE)Enum.Parse(typeof(Tween.MyCommon.EVENTTYPE), _curTab.Tag.ToString());
+            return (Tween.MyCommon.EventType)Enum.Parse(typeof(Tween.MyCommon.EventType), _curTab.Tag.ToString());
         }
 
         private bool IsFilterMatch(Twitter.FormattedEvent x)

@@ -110,7 +110,7 @@ namespace Tween
         private int _MyReplyPeriod;
         private Tween.MyCommon.UrlConverter _MyAutoShortUrlFirst;
         private bool _MyTabIconDisp;
-        private Tween.MyCommon.REPLY_ICONSTATE _MyReplyIconState;
+        private Tween.MyCommon.ReplyIconState _MyReplyIconState;
         private bool _MyReadOwnPost;
         private bool _MyGetFav;
         private bool _MyMonoSpace;
@@ -137,8 +137,8 @@ namespace Tween
         private bool _MyOpenUserTimeline;
         private bool _ValidationError = false;
         private bool _MyEventNotifyEnabled;
-        private Tween.MyCommon.EVENTTYPE _MyEventNotifyFlag;
-        private Tween.MyCommon.EVENTTYPE _isMyEventNotifyFlag;
+        private Tween.MyCommon.EventType _MyEventNotifyFlag;
+        private Tween.MyCommon.EventType _isMyEventNotifyFlag;
         private bool _MyForceEventNotify;
         private bool _MyFavEventUnread;
         private string _MyTranslateLanguage;
@@ -549,13 +549,13 @@ namespace Tween
                 switch (ReplyIconStateCombo.SelectedIndex)
                 {
                     case 0:
-                        _MyReplyIconState = Tween.MyCommon.REPLY_ICONSTATE.None;
+                        _MyReplyIconState = Tween.MyCommon.ReplyIconState.None;
                         break;
                     case 1:
-                        _MyReplyIconState = Tween.MyCommon.REPLY_ICONSTATE.StaticIcon;
+                        _MyReplyIconState = Tween.MyCommon.ReplyIconState.StaticIcon;
                         break;
                     case 2:
-                        _MyReplyIconState = Tween.MyCommon.REPLY_ICONSTATE.BlinkIcon;
+                        _MyReplyIconState = Tween.MyCommon.ReplyIconState.BlinkIcon;
                         break;
                 }
                 switch (LanguageCombo.SelectedIndex)
@@ -620,7 +620,7 @@ namespace Tween
 
         private void Setting_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
         {
-            if (MyCommon._endingFlag)
+            if (MyCommon.IsEnding)
                 return;
 
             if (this.DialogResult == System.Windows.Forms.DialogResult.Cancel)
@@ -930,13 +930,13 @@ namespace Tween
             TwitterSearchAPIText.Text = _MyTwitterSearchApiUrl;
             switch (_MyReplyIconState)
             {
-                case Tween.MyCommon.REPLY_ICONSTATE.None:
+                case Tween.MyCommon.ReplyIconState.None:
                     ReplyIconStateCombo.SelectedIndex = 0;
                     break;
-                case Tween.MyCommon.REPLY_ICONSTATE.StaticIcon:
+                case Tween.MyCommon.ReplyIconState.StaticIcon:
                     ReplyIconStateCombo.SelectedIndex = 1;
                     break;
-                case Tween.MyCommon.REPLY_ICONSTATE.BlinkIcon:
+                case Tween.MyCommon.ReplyIconState.BlinkIcon:
                     ReplyIconStateCombo.SelectedIndex = 2;
                     break;
             }
@@ -1873,7 +1873,7 @@ namespace Tween
             set { _MyTabIconDisp = value; }
         }
 
-        public Tween.MyCommon.REPLY_ICONSTATE ReplyIconState
+        public Tween.MyCommon.ReplyIconState ReplyIconState
         {
             get { return _MyReplyIconState; }
             set { _MyReplyIconState = value; }
@@ -2170,13 +2170,13 @@ namespace Tween
             set { _MyEventNotifyEnabled = value; }
         }
 
-        public Tween.MyCommon.EVENTTYPE EventNotifyFlag
+        public Tween.MyCommon.EventType EventNotifyFlag
         {
             get { return _MyEventNotifyFlag; }
             set { _MyEventNotifyFlag = value; }
         }
 
-        public Tween.MyCommon.EVENTTYPE IsMyEventNotifyFlag
+        public Tween.MyCommon.EventType IsMyEventNotifyFlag
         {
             get { return _isMyEventNotifyFlag; }
             set { _isMyEventNotifyFlag = value; }
@@ -2516,7 +2516,7 @@ namespace Tween
             {
                 if (MyCommon.TwitterApiInfo.MaxCount == -1)
                 {
-                    if (Twitter.AccountState == Tween.MyCommon.ACCOUNT_STATE.Valid)
+                    if (Twitter.AccountState == Tween.MyCommon.AccountState.Valid)
                     {
                         MyCommon.TwitterApiInfo.UsingCount = UsingApi;
                         var proc = new Thread(new System.Threading.ThreadStart(() =>
@@ -2810,7 +2810,7 @@ namespace Tween
         private class EventCheckboxTblElement
         {
             public CheckBox CheckBox;
-            public Tween.MyCommon.EVENTTYPE Type;
+            public Tween.MyCommon.EventType Type;
         }
 
         readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_GetEventCheckboxTable__eventCheckboxTable_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
@@ -2828,35 +2828,35 @@ namespace Tween
                         static_GetEventCheckboxTable__eventCheckboxTable = new EventCheckboxTblElement[]{
 							new EventCheckboxTblElement {
 								CheckBox = CheckFavoritesEvent,
-								Type = Tween.MyCommon.EVENTTYPE.Favorite
+								Type = Tween.MyCommon.EventType.Favorite
 							},
 							new EventCheckboxTblElement {
 								CheckBox = CheckUnfavoritesEvent,
-								Type = Tween.MyCommon.EVENTTYPE.Unfavorite
+								Type = Tween.MyCommon.EventType.Unfavorite
 							},
 							new EventCheckboxTblElement {
 								CheckBox = CheckFollowEvent,
-								Type = Tween.MyCommon.EVENTTYPE.Follow
+								Type = Tween.MyCommon.EventType.Follow
 							},
 							new EventCheckboxTblElement {
 								CheckBox = CheckListMemberAddedEvent,
-								Type = Tween.MyCommon.EVENTTYPE.ListMemberAdded
+								Type = Tween.MyCommon.EventType.ListMemberAdded
 							},
 							new EventCheckboxTblElement {
 								CheckBox = CheckListMemberRemovedEvent,
-								Type = Tween.MyCommon.EVENTTYPE.ListMemberRemoved
+								Type = Tween.MyCommon.EventType.ListMemberRemoved
 							},
 							new EventCheckboxTblElement {
 								CheckBox = CheckBlockEvent,
-								Type = Tween.MyCommon.EVENTTYPE.Block
+								Type = Tween.MyCommon.EventType.Block
 							},
 							new EventCheckboxTblElement {
 								CheckBox = CheckUserUpdateEvent,
-								Type = Tween.MyCommon.EVENTTYPE.UserUpdate
+								Type = Tween.MyCommon.EventType.UserUpdate
 							},
 							new EventCheckboxTblElement {
 								CheckBox = CheckListCreatedEvent,
-								Type = Tween.MyCommon.EVENTTYPE.ListCreated
+								Type = Tween.MyCommon.EventType.ListCreated
 							}
 						};
                     }
@@ -2870,10 +2870,10 @@ namespace Tween
             return static_GetEventCheckboxTable__eventCheckboxTable;
         }
 
-        private void GetEventNotifyFlag(ref Tween.MyCommon.EVENTTYPE eventnotifyflag, ref Tween.MyCommon.EVENTTYPE isMyeventnotifyflag)
+        private void GetEventNotifyFlag(ref Tween.MyCommon.EventType eventnotifyflag, ref Tween.MyCommon.EventType isMyeventnotifyflag)
         {
-            Tween.MyCommon.EVENTTYPE evt = Tween.MyCommon.EVENTTYPE.None;
-            Tween.MyCommon.EVENTTYPE myevt = Tween.MyCommon.EVENTTYPE.None;
+            Tween.MyCommon.EventType evt = Tween.MyCommon.EventType.None;
+            Tween.MyCommon.EventType myevt = Tween.MyCommon.EventType.None;
 
             foreach (EventCheckboxTblElement tbl in GetEventCheckboxTable())
             {
@@ -2895,7 +2895,7 @@ namespace Tween
             isMyeventnotifyflag = myevt;
         }
 
-        private void ApplyEventNotifyFlag(bool rootEnabled, Tween.MyCommon.EVENTTYPE eventnotifyflag, Tween.MyCommon.EVENTTYPE isMyeventnotifyflag)
+        private void ApplyEventNotifyFlag(bool rootEnabled, Tween.MyCommon.EventType eventnotifyflag, Tween.MyCommon.EventType isMyeventnotifyflag)
         {
             var evt = eventnotifyflag;
             var myevt = isMyeventnotifyflag;

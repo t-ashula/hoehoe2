@@ -151,7 +151,7 @@ namespace Tween
 
         public static string GetSettingFilePath(string FileId)
         {
-            return System.IO.Path.Combine(MyCommon.settingPath, typeof(T).Name + FileId + ".xml");
+            return System.IO.Path.Combine(MyCommon.SettingPath, typeof(T).Name + FileId + ".xml");
         }
     }
 }

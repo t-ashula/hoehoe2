@@ -138,19 +138,19 @@ namespace Tween.My
         {
             get
             {
-                if (MyCommon.cultureStr == null)
+                if (MyCommon.CultureStr == null)
                 {
                     SettingCommon cfgCommon = SettingCommon.Load();
-                    MyCommon.cultureStr = cfgCommon.Language;
-                    if (MyCommon.cultureStr == "OS")
+                    MyCommon.CultureStr = cfgCommon.Language;
+                    if (MyCommon.CultureStr == "OS")
                     {
                         if (!IsEqualCurrentCulture("ja") && !IsEqualCurrentCulture("en") && !IsEqualCurrentCulture("zh-CN"))
                         {
-                            MyCommon.cultureStr = "en";
+                            MyCommon.CultureStr = "en";
                         }
                     }
                 }
-                return MyCommon.cultureStr;
+                return MyCommon.CultureStr;
             }
         }
 
@@ -181,11 +181,11 @@ namespace Tween.My
         {
             if (File.Exists(Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "roaming")))
             {
-                MyCommon.settingPath = MySpecialPath.UserAppDataPath();
+                MyCommon.SettingPath = MySpecialPath.UserAppDataPath();
             }
             else
             {
-                MyCommon.settingPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+                MyCommon.SettingPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             }
         }
     }

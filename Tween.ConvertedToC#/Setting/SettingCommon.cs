@@ -121,8 +121,8 @@ namespace Tween
         public Tween.MyCommon.IconSizes IconSize = Tween.MyCommon.IconSizes.Icon16;
         public bool NewAllPop = true;
         public bool EventNotifyEnabled = true;
-        public Tween.MyCommon.EVENTTYPE EventNotifyFlag = Tween.MyCommon.EVENTTYPE.All;
-        public Tween.MyCommon.EVENTTYPE IsMyEventNotifyFlag = Tween.MyCommon.EVENTTYPE.All;
+        public Tween.MyCommon.EventType EventNotifyFlag = Tween.MyCommon.EventType.All;
+        public Tween.MyCommon.EventType IsMyEventNotifyFlag = Tween.MyCommon.EventType.All;
         public bool ForceEventNotify = false;
         public bool FavEventUnread = true;
         public string TranslateLanguage = Tween.My_Project.Resources.TranslateDefaultLanguage;
@@ -183,7 +183,7 @@ namespace Tween
         public bool RetweetNoConfirm = false;
         public bool LimitBalloon = false;
         public bool TabIconDisp = true;
-        public Tween.MyCommon.REPLY_ICONSTATE ReplyIconState = Tween.MyCommon.REPLY_ICONSTATE.StaticIcon;
+        public Tween.MyCommon.ReplyIconState ReplyIconState = Tween.MyCommon.ReplyIconState.StaticIcon;
         public bool WideSpaceConvert = true;
         public bool ReadOwnPost = false;
         public bool GetFav = true;
