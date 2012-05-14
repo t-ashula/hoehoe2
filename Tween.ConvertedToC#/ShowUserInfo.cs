@@ -24,6 +24,7 @@
 // Boston, MA 02110-1301, USA.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -36,47 +37,45 @@ namespace Tween
 {
     public partial class ShowUserInfo
     {
-        private TwitterDataModel.User userInfo = null;
+        private TwitterDataModel.User _userInfo;
         private UserInfo _info = new UserInfo();
-        private Image icondata = null;
-        private System.Collections.Generic.List<string> atlist = new System.Collections.Generic.List<string>();
-        private string descriptionTxt;
-        private string recentPostTxt;
-
-        private string ToolTipWeb;
+        private Image _icondata;
+        private List<string> _atList = new List<string>();
+        private string _descriptionTxt;
+        private string _recentPostTxt;        
         private const string Mainpath = "http://twitter.com/";
         private const string Followingpath = "/following";
         private const string Followerspath = "/followers";
-
         private const string Favpath = "/favorites";
-        private string Home;
-        private string Following;
-        private string Followers;
-        private string Favorites;
-        private TweenMain MyOwner;
-
-        private string FriendshipResult = "";
+        private string _home;
+        private string _following;
+        private string _followers;
+        private string _favorites;
+        private TweenMain _owner;
+        private string _friendshipResult = "";
 
         private void InitPath()
         {
-            Home = Mainpath + _info.ScreenName;
-            Following = Home + Followingpath;
-            Followers = Home + Followerspath;
-            Favorites = Home + Favpath;
+            _home = Mainpath + _info.ScreenName;
+            _following = _home + Followingpath;
+            _followers = _home + Followerspath;
+            _favorites = _home + Favpath;
         }
 
         private void InitTooltip()
         {
-            ToolTip1.SetToolTip(LinkLabelTweet, Home);
-            ToolTip1.SetToolTip(LinkLabelFollowing, Following);
-            ToolTip1.SetToolTip(LinkLabelFollowers, Followers);
-            ToolTip1.SetToolTip(LinkLabelFav, Favorites);
+            ToolTip1.SetToolTip(LinkLabelTweet, _home);
+            ToolTip1.SetToolTip(LinkLabelFollowing, _following);
+            ToolTip1.SetToolTip(LinkLabelFollowers, _followers);
+            ToolTip1.SetToolTip(LinkLabelFav, _favorites);
         }
 
         private bool AnalizeUserInfo(TwitterDataModel.User user)
         {
             if (user == null)
+            {
                 return false;
+            }
 
             try
             {
@@ -104,14 +103,13 @@ namespace Tween
                         _info.PostSource += "</a>";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     _info.RecentPost = null;
-                    //_info.PostCreatedAt = null;
                     _info.PostSource = null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -120,11 +118,9 @@ namespace Tween
 
         private void SetLinklabelWeb(string data)
         {
-            string webtext = null;
-            string jumpto = null;
-            webtext = MyOwner.TwitterInstance.PreProcessUrl("<a href=\"" + data + "\">Dummy</a>");
+            string webtext = _owner.TwitterInstance.PreProcessUrl("<a href=\"" + data + "\">Dummy</a>");
             webtext = ShortUrl.Resolve(webtext, false);
-            jumpto = Regex.Match(webtext, "<a href=\"(?<url>.*?)\"").Groups["url"].Value;
+            string jumpto = Regex.Match(webtext, "<a href=\"(?<url>.*?)\"").Groups["url"].Value;
             ToolTip1.SetToolTip(LinkLabelWeb, jumpto);
             LinkLabelWeb.Tag = jumpto;
             LinkLabelWeb.Text = data;
@@ -132,20 +128,18 @@ namespace Tween
 
         private string MakeDescriptionBrowserText(string data)
         {
-            descriptionTxt = MyOwner.createDetailHtml(MyOwner.TwitterInstance.CreateHtmlAnchor(data, atlist, null));
-            return descriptionTxt;
+            _descriptionTxt = _owner.createDetailHtml(_owner.TwitterInstance.CreateHtmlAnchor(data, _atList, null));
+            return _descriptionTxt;
         }
 
-        private void ShowUserInfo_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
+        private void ShowUserInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //TweenMain.TopMost = Not TweenMain.TopMost
-            //TweenMain.TopMost = Not TweenMain.TopMost
         }
 
-        private void ShowUserInfo_Load(System.Object sender, System.EventArgs e)
+        private void ShowUserInfo_Load(object sender, EventArgs e)
         {
-            MyOwner = (TweenMain)this.Owner;
-            if (!AnalizeUserInfo(userInfo))
+            _owner = (TweenMain)this.Owner;
+            if (!AnalizeUserInfo(_userInfo))
             {
                 MessageBox.Show(Tween.My_Project.Resources.ShowUserInfo1);
                 this.Close();
@@ -172,7 +166,7 @@ namespace Tween
             RecentPostBrowser.Visible = false;
             if (_info.RecentPost != null)
             {
-                recentPostTxt = MyOwner.createDetailHtml(MyOwner.TwitterInstance.CreateHtmlAnchor(ref _info.RecentPost, atlist, userInfo.Status.Entities, null) + " Posted at " + _info.PostCreatedAt.ToString() + " via " + _info.PostSource);
+                _recentPostTxt = _owner.createDetailHtml(_owner.TwitterInstance.CreateHtmlAnchor(ref _info.RecentPost, _atList, _userInfo.Status.Entities, null) + " Posted at " + _info.PostCreatedAt.ToString() + " via " + _info.PostSource);
             }
 
             LinkLabelFollowing.Text = _info.FriendsCount.ToString();
@@ -200,7 +194,7 @@ namespace Tween
                 LabelIsVerified.Text = Tween.My_Project.Resources.No;
             }
 
-            if (MyOwner.TwitterInstance.Username == _info.ScreenName)
+            if (_owner.TwitterInstance.Username == _info.ScreenName)
             {
                 ButtonEdit.Enabled = true;
                 ChangeIconToolStripMenuItem.Enabled = true;
@@ -218,48 +212,48 @@ namespace Tween
             }
         }
 
-        private void ButtonClose_Click(System.Object sender, System.EventArgs e)
+        private void ButtonClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        public TwitterDataModel.User User
+        public void SetUser(TwitterDataModel.User value)
         {
-            set { this.userInfo = value; }
+            this._userInfo = value;
         }
 
-        private void LinkLabelWeb_LinkClicked(System.Object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void LinkLabelWeb_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (_info.Url != null)
             {
-                MyOwner.OpenUriAsync(LinkLabelWeb.Text);
+                _owner.OpenUriAsync(LinkLabelWeb.Text);
             }
         }
 
-        private void LinkLabelFollowing_LinkClicked(System.Object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void LinkLabelFollowing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MyOwner.OpenUriAsync(Following);
+            _owner.OpenUriAsync(_following);
         }
 
-        private void LinkLabelFollowers_LinkClicked(System.Object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void LinkLabelFollowers_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MyOwner.OpenUriAsync(Followers);
+            _owner.OpenUriAsync(_followers);
         }
 
-        private void LinkLabelTweet_LinkClicked(System.Object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void LinkLabelTweet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MyOwner.OpenUriAsync(Home);
+            _owner.OpenUriAsync(_home);
         }
 
-        private void LinkLabelFav_LinkClicked(System.Object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void LinkLabelFav_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MyOwner.OpenUriAsync(Favorites);
+            _owner.OpenUriAsync(_favorites);
         }
 
-        private void ButtonFollow_Click(System.Object sender, System.EventArgs e)
+        private void ButtonFollow_Click(object sender, EventArgs e)
         {
-            string ret = MyOwner.TwitterInstance.PostFollowCommand(_info.ScreenName);
-            if (!string.IsNullOrEmpty(ret))
+            string ret = _owner.TwitterInstance.PostFollowCommand(_info.ScreenName);
+            if (!String.IsNullOrEmpty(ret))
             {
                 MessageBox.Show(Tween.My_Project.Resources.FRMessage2 + ret);
             }
@@ -272,12 +266,12 @@ namespace Tween
             }
         }
 
-        private void ButtonUnFollow_Click(System.Object sender, System.EventArgs e)
+        private void ButtonUnFollow_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonUnFollow_ClickText1, Tween.My_Project.Resources.ButtonUnFollow_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonUnFollow_ClickText1, Tween.My_Project.Resources.ButtonUnFollow_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                string ret = MyOwner.TwitterInstance.PostRemoveCommand(_info.ScreenName);
-                if (!string.IsNullOrEmpty(ret))
+                string ret = _owner.TwitterInstance.PostRemoveCommand(_info.ScreenName);
+                if (!String.IsNullOrEmpty(ret))
                 {
                     MessageBox.Show(Tween.My_Project.Resources.FRMessage2 + ret);
                 }
@@ -291,7 +285,7 @@ namespace Tween
             }
         }
 
-        private void ShowUserInfo_Activated(System.Object sender, System.EventArgs e)
+        private void ShowUserInfo_Activated(object sender, EventArgs e)
         {
             //画面が他画面の裏に隠れると、アイコン画像が再描画されない問題の対応
             if (UserPicture.Image != null)
@@ -300,42 +294,44 @@ namespace Tween
             }
         }
 
-        private void ShowUserInfo_FormClosing(System.Object sender, System.Windows.Forms.FormClosingEventArgs e)
+        private void ShowUserInfo_FormClosing(object sender, FormClosingEventArgs e)
         {
             UserPicture.Image = null;
-            if (icondata != null)
+            if (_icondata != null)
             {
-                icondata.Dispose();
+                _icondata.Dispose();
             }
         }
 
-        private void BackgroundWorkerImageLoader_DoWork(System.Object sender, System.ComponentModel.DoWorkEventArgs e)
+        private void BackgroundWorkerImageLoader_DoWork(object sender, DoWorkEventArgs e)
         {
             string name = _info.ImageUrl.ToString();
-            icondata = (new HttpVarious()).GetImage(name.Replace("_normal", "_bigger"));
-            if (MyOwner.TwitterInstance.Username == _info.ScreenName)
+            _icondata = (new HttpVarious()).GetImage(name.Replace("_normal", "_bigger"));
+            if (_owner.TwitterInstance.Username == _info.ScreenName)
+            {
                 return;
+            }
 
             _info.IsFollowing = false;
             _info.IsFollowed = false;
-            FriendshipResult = MyOwner.TwitterInstance.GetFriendshipInfo(_info.ScreenName, ref _info.IsFollowing, ref _info.IsFollowed);
+            _friendshipResult = _owner.TwitterInstance.GetFriendshipInfo(_info.ScreenName, ref _info.IsFollowing, ref _info.IsFollowed);
         }
 
-        private void BackgroundWorkerImageLoader_RunWorkerCompleted(System.Object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void BackgroundWorkerImageLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             try
             {
-                if (icondata != null)
+                if (_icondata != null)
                 {
-                    UserPicture.Image = icondata;
+                    UserPicture.Image = _icondata;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 UserPicture.Image = null;
             }
 
-            if (MyOwner.TwitterInstance.Username == _info.ScreenName)
+            if (_owner.TwitterInstance.Username == _info.ScreenName)
             {
                 // 自分の場合
                 LabelIsFollowing.Text = "";
@@ -345,7 +341,7 @@ namespace Tween
             }
             else
             {
-                if (string.IsNullOrEmpty(FriendshipResult))
+                if (String.IsNullOrEmpty(_friendshipResult))
                 {
                     if (_info.IsFollowing)
                     {
@@ -368,7 +364,7 @@ namespace Tween
                 }
                 else
                 {
-                    MessageBox.Show(FriendshipResult);
+                    MessageBox.Show(_friendshipResult);
                     ButtonUnFollow.Enabled = false;
                     ButtonFollow.Enabled = false;
                     LabelIsFollowed.Text = Tween.My_Project.Resources.GetFriendshipInfo6;
@@ -377,13 +373,13 @@ namespace Tween
             }
         }
 
-        private void ShowUserInfo_Shown(System.Object sender, System.EventArgs e)
+        private void ShowUserInfo_Shown(object sender, EventArgs e)
         {
-            DescriptionBrowser.DocumentText = descriptionTxt;
+            DescriptionBrowser.DocumentText = _descriptionTxt;
             DescriptionBrowser.Visible = true;
             if (_info.RecentPost != null)
             {
-                RecentPostBrowser.DocumentText = recentPostTxt;
+                RecentPostBrowser.DocumentText = _recentPostTxt;
                 RecentPostBrowser.Visible = true;
             }
             else
@@ -393,7 +389,7 @@ namespace Tween
             ButtonClose.Focus();
         }
 
-        private void WebBrowser_Navigating(System.Object sender, System.Windows.Forms.WebBrowserNavigatingEventArgs e)
+        private void WebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             if (e.Url.AbsoluteUri != "about:blank")
             {
@@ -404,40 +400,40 @@ namespace Tween
                     //ハッシュタグの場合は、タブで開く
                     string urlStr = HttpUtility.UrlDecode(e.Url.AbsoluteUri);
                     string hash = urlStr.Substring(urlStr.IndexOf("#"));
-                    MyOwner.HashSupl.AddItem(hash);
-                    MyOwner.HashMgr.AddHashToHistory(hash.Trim(), false);
-                    MyOwner.AddNewTabForSearch(hash);
+                    _owner.HashSupl.AddItem(hash);
+                    _owner.HashMgr.AddHashToHistory(hash.Trim(), false);
+                    _owner.AddNewTabForSearch(hash);
                     return;
                 }
                 else
                 {
                     Match m = Regex.Match(e.Url.AbsoluteUri, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
-                    if (AppendSettingDialog.Instance.OpenUserTimeline && m.Success && MyOwner.IsTwitterId(m.Result("${ScreenName}")))
+                    if (AppendSettingDialog.Instance.OpenUserTimeline && m.Success && _owner.IsTwitterId(m.Result("${ScreenName}")))
                     {
-                        MyOwner.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
+                        _owner.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
                     }
                     else
                     {
-                        MyOwner.OpenUriAsync(e.Url.OriginalString);
+                        _owner.OpenUriAsync(e.Url.OriginalString);
                     }
                 }
             }
         }
 
-        private void WebBrowser_StatusTextChanged(object sender, System.EventArgs e)
+        private void WebBrowser_StatusTextChanged(object sender, EventArgs e)
         {
-            WebBrowser ComponentInstance = (WebBrowser)sender;
-            if (ComponentInstance.StatusText.StartsWith("http"))
+            WebBrowser browser = (WebBrowser)sender;
+            if (browser.StatusText.StartsWith("http"))
             {
-                ToolTip1.Show(ComponentInstance.StatusText, this, PointToClient(MousePosition));
+                ToolTip1.Show(browser.StatusText, this, PointToClient(MousePosition));
             }
-            else if (string.IsNullOrEmpty(DescriptionBrowser.StatusText))
+            else if (String.IsNullOrEmpty(DescriptionBrowser.StatusText))
             {
                 ToolTip1.Hide(this);
             }
         }
 
-        private void SelectAllToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
+        private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
@@ -446,12 +442,12 @@ namespace Tween
             }
         }
 
-        private void SelectionCopyToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
+        private void SelectionCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
-                string _selText = MyOwner.WebBrowser_GetSelectionText(ref sc);
+                string _selText = _owner.WebBrowser_GetSelectionText(ref sc);
                 if (_selText != null)
                 {
                     try
@@ -466,12 +462,12 @@ namespace Tween
             }
         }
 
-        private void ContextMenuStrip1_Opening(System.Object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
-                string _selText = MyOwner.WebBrowser_GetSelectionText(ref sc);
+                string _selText = _owner.WebBrowser_GetSelectionText(ref sc);
                 if (_selText == null)
                 {
                     SelectionCopyToolStripMenuItem.Enabled = false;
@@ -483,41 +479,41 @@ namespace Tween
             }
         }
 
-        private void ShowUserInfo_MouseEnter(System.Object sender, System.EventArgs e)
+        private void ShowUserInfo_MouseEnter(object sender, EventArgs e)
         {
             ToolTip1.Hide(this);
         }
 
-        private void LinkLabel1_LinkClicked(System.Object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MyOwner.OpenUriAsync("http://support.twitter.com/groups/31-twitter-basics/topics/111-features/articles/268350-x8a8d-x8a3c-x6e08-x307f-x30a2-x30ab-x30a6-x30f3-x30c8-x306b-x3064-x3044-x3066");
+            _owner.OpenUriAsync("http://support.twitter.com/groups/31-twitter-basics/topics/111-features/articles/268350-x8a8d-x8a3c-x6e08-x307f-x30a2-x30ab-x30a6-x30f3-x30c8-x306b-x3064-x3044-x3066");
         }
 
-        private void LinkLabel2_LinkClicked(System.Object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MyOwner.OpenUriAsync("http://support.twitter.com/groups/31-twitter-basics/topics/107-my-profile-account-settings/articles/243055-x516c-x958b-x3001-x975e-x516c-x958b-x30a2-x30ab-x30a6-x30f3-x30c8-x306b-x3064-x3044-x3066");
+            _owner.OpenUriAsync("http://support.twitter.com/groups/31-twitter-basics/topics/107-my-profile-account-settings/articles/243055-x516c-x958b-x3001-x975e-x516c-x958b-x30a2-x30ab-x30a6-x30f3-x30c8-x306b-x3064-x3044-x3066");
         }
 
-        private void ButtonSearchPosts_Click(System.Object sender, System.EventArgs e)
+        private void ButtonSearchPosts_Click(object sender, EventArgs e)
         {
-            MyOwner.AddNewTabForUserTimeline(_info.ScreenName);
+            _owner.AddNewTabForUserTimeline(_info.ScreenName);
         }
 
-        private void UserPicture_DoubleClick(System.Object sender, System.EventArgs e)
+        private void UserPicture_DoubleClick(object sender, EventArgs e)
         {
             if (UserPicture.Image != null)
             {
                 string name = _info.ImageUrl.ToString();
-                MyOwner.OpenUriAsync(name.Remove(name.LastIndexOf("_normal"), 7));
+                _owner.OpenUriAsync(name.Remove(name.LastIndexOf("_normal"), 7));
             }
         }
 
-        private void UserPicture_MouseEnter(System.Object sender, System.EventArgs e)
+        private void UserPicture_MouseEnter(object sender, EventArgs e)
         {
             UserPicture.Cursor = Cursors.Hand;
         }
 
-        private void UserPicture_MouseLeave(System.Object sender, System.EventArgs e)
+        private void UserPicture_MouseLeave(object sender, EventArgs e)
         {
             UserPicture.Cursor = Cursors.Default;
         }
@@ -552,7 +548,7 @@ namespace Tween
         readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_ButtonEdit_Click_ButtonEditText_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
         string static_ButtonEdit_Click_ButtonEditText;
 
-        private void ButtonEdit_Click(System.Object sender, System.EventArgs e)
+        private void ButtonEdit_Click(object sender, EventArgs e)
         {
             lock (static_ButtonEdit_Click_IsEditing_Init)
             {
@@ -584,8 +580,10 @@ namespace Tween
             }
 
             // 自分以外のプロフィールは変更できない
-            if (MyOwner.TwitterInstance.Username != _info.ScreenName)
+            if (_owner.TwitterInstance.Username != _info.ScreenName)
+            {
                 return;
+            }
 
             if (!static_ButtonEdit_Click_IsEditing)
             {
@@ -596,7 +594,7 @@ namespace Tween
                 TextBoxName.Location = LabelName.Location;
                 TextBoxName.Height = LabelName.Height;
                 TextBoxName.Width = LabelName.Width;
-                TextBoxName.BackColor = MyOwner.InputBackColor;
+                TextBoxName.BackColor = _owner.InputBackColor;
                 TextBoxName.MaxLength = 20;
                 TextBoxName.Text = LabelName.Text;
                 TextBoxName.TabStop = true;
@@ -606,7 +604,7 @@ namespace Tween
                 TextBoxLocation.Location = LabelLocation.Location;
                 TextBoxLocation.Height = LabelLocation.Height;
                 TextBoxLocation.Width = LabelLocation.Width;
-                TextBoxLocation.BackColor = MyOwner.InputBackColor;
+                TextBoxLocation.BackColor = _owner.InputBackColor;
                 TextBoxLocation.MaxLength = 30;
                 TextBoxLocation.Text = LabelLocation.Text;
                 TextBoxLocation.TabStop = true;
@@ -616,7 +614,7 @@ namespace Tween
                 TextBoxWeb.Location = LinkLabelWeb.Location;
                 TextBoxWeb.Height = LinkLabelWeb.Height;
                 TextBoxWeb.Width = LinkLabelWeb.Width;
-                TextBoxWeb.BackColor = MyOwner.InputBackColor;
+                TextBoxWeb.BackColor = _owner.InputBackColor;
                 TextBoxWeb.MaxLength = 100;
                 TextBoxWeb.Text = _info.Url;
                 TextBoxWeb.TabStop = true;
@@ -626,7 +624,7 @@ namespace Tween
                 TextBoxDescription.Location = DescriptionBrowser.Location;
                 TextBoxDescription.Height = DescriptionBrowser.Height;
                 TextBoxDescription.Width = DescriptionBrowser.Width;
-                TextBoxDescription.BackColor = MyOwner.InputBackColor;
+                TextBoxDescription.BackColor = _owner.InputBackColor;
                 TextBoxDescription.MaxLength = 160;
                 TextBoxDescription.Text = _info.Description;
                 TextBoxDescription.Multiline = true;
@@ -646,7 +644,7 @@ namespace Tween
 
                 if (TextBoxName.Modified || TextBoxLocation.Modified || TextBoxWeb.Modified || TextBoxDescription.Modified)
                 {
-                    arg.tw = MyOwner.TwitterInstance;
+                    arg.tw = _owner.TwitterInstance;
                     arg.name = TextBoxName.Text.Trim();
                     arg.url = TextBoxWeb.Text.Trim();
                     arg.location = TextBoxLocation.Text.Trim();
@@ -655,7 +653,7 @@ namespace Tween
                     using (FormInfo dlg = new FormInfo(this, Tween.My_Project.Resources.UserInfoButtonEdit_ClickText2, UpdateProfile_Dowork, UpddateProfile_RunWorkerCompleted, arg))
                     {
                         dlg.ShowDialog();
-                        if (!string.IsNullOrEmpty(dlg.Result.ToString()))
+                        if (!String.IsNullOrEmpty(dlg.Result.ToString()))
                         {
                             return;
                         }
@@ -719,7 +717,7 @@ namespace Tween
 
             try
             {
-                res = MyOwner.TwitterInstance.GetUserInfo(_info.ScreenName, ref user);
+                res = _owner.TwitterInstance.GetUserInfo(_info.ScreenName, ref user);
                 Image img = (new HttpVarious()).GetImage(user.ProfileImageUrl);
                 if (img != null)
                 {
@@ -736,7 +734,7 @@ namespace Tween
             string res = "";
             UpdateProfileImageArgs arg = new UpdateProfileImageArgs
             {
-                tw = MyOwner.TwitterInstance,
+                tw = _owner.TwitterInstance,
                 FileName = filename
             };
 
@@ -744,7 +742,7 @@ namespace Tween
             {
                 dlg.ShowDialog();
                 res = dlg.Result as string;
-                if (!string.IsNullOrEmpty(res))
+                if (!String.IsNullOrEmpty(res))
                 {
                     // "Err:"が付いたエラーメッセージが返ってくる
                     MessageBox.Show(res + Constants.vbCrLf + Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText4);
@@ -756,15 +754,15 @@ namespace Tween
             }
         }
 
-        private void ChangeIconToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
+        private void ChangeIconToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialogIcon.Filter = Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText1;
             OpenFileDialogIcon.Title = Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText2;
             OpenFileDialogIcon.FileName = "";
 
-            System.Windows.Forms.DialogResult rslt = OpenFileDialogIcon.ShowDialog();
+            DialogResult rslt = OpenFileDialogIcon.ShowDialog();
 
-            if (rslt != System.Windows.Forms.DialogResult.OK)
+            if (rslt != DialogResult.OK)
             {
                 return;
             }
@@ -780,12 +778,12 @@ namespace Tween
             }
         }
 
-        private void ButtonBlock_Click(System.Object sender, System.EventArgs e)
+        private void ButtonBlock_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonBlock_ClickText1, Tween.My_Project.Resources.ButtonBlock_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonBlock_ClickText1, Tween.My_Project.Resources.ButtonBlock_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                string res = MyOwner.TwitterInstance.PostCreateBlock(_info.ScreenName);
-                if (!string.IsNullOrEmpty(res))
+                string res = _owner.TwitterInstance.PostCreateBlock(_info.ScreenName);
+                if (!String.IsNullOrEmpty(res))
                 {
                     MessageBox.Show(res + Environment.NewLine + Tween.My_Project.Resources.ButtonBlock_ClickText3);
                 }
@@ -796,12 +794,12 @@ namespace Tween
             }
         }
 
-        private void ButtonReportSpam_Click(System.Object sender, System.EventArgs e)
+        private void ButtonReportSpam_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonReportSpam_ClickText1, Tween.My_Project.Resources.ButtonReportSpam_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonReportSpam_ClickText1, Tween.My_Project.Resources.ButtonReportSpam_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                string res = MyOwner.TwitterInstance.PostReportSpam(_info.ScreenName);
-                if (!string.IsNullOrEmpty(res))
+                string res = _owner.TwitterInstance.PostReportSpam(_info.ScreenName);
+                if (!String.IsNullOrEmpty(res))
                 {
                     MessageBox.Show(res + Environment.NewLine + Tween.My_Project.Resources.ButtonReportSpam_ClickText3);
                 }
@@ -812,12 +810,12 @@ namespace Tween
             }
         }
 
-        private void ButtonBlockDestroy_Click(System.Object sender, System.EventArgs e)
+        private void ButtonBlockDestroy_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonBlockDestroy_ClickText1, Tween.My_Project.Resources.ButtonBlockDestroy_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonBlockDestroy_ClickText1, Tween.My_Project.Resources.ButtonBlockDestroy_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                string res = MyOwner.TwitterInstance.PostDestroyBlock(_info.ScreenName);
-                if (!string.IsNullOrEmpty(res))
+                string res = _owner.TwitterInstance.PostDestroyBlock(_info.ScreenName);
+                if (!String.IsNullOrEmpty(res))
                 {
                     MessageBox.Show(res + Environment.NewLine + Tween.My_Project.Resources.ButtonBlockDestroy_ClickText3);
                 }
@@ -839,7 +837,7 @@ namespace Tween
             return isValidExtension(ext) && info.Length < 700 * 1024 && !MyCommon.IsAnimatedGif(info.FullName);
         }
 
-        private void ShowUserInfo_DragOver(System.Object sender, System.Windows.Forms.DragEventArgs e)
+        private void ShowUserInfo_DragOver(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -858,7 +856,7 @@ namespace Tween
             }
         }
 
-        private void ShowUserInfo_DragDrop(System.Object sender, System.Windows.Forms.DragEventArgs e)
+        private void ShowUserInfo_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -869,14 +867,6 @@ namespace Tween
 
         public ShowUserInfo()
         {
-            DragDrop += ShowUserInfo_DragDrop;
-            DragOver += ShowUserInfo_DragOver;
-            MouseEnter += ShowUserInfo_MouseEnter;
-            Shown += ShowUserInfo_Shown;
-            FormClosing += ShowUserInfo_FormClosing;
-            Activated += ShowUserInfo_Activated;
-            Load += ShowUserInfo_Load;
-            FormClosed += ShowUserInfo_FormClosed;
             InitializeComponent();
         }
 

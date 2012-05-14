@@ -13178,7 +13178,7 @@ namespace Tween
             using (ShowUserInfo userinfo = new ShowUserInfo())
             {
                 userinfo.Owner = this;
-                userinfo.User = user;
+                userinfo.SetUser(user);
                 Google.GASender.GetInstance().TrackPage("/user_profile", tw.UserId);
                 userinfo.ShowDialog(this);
                 this.Activate();
