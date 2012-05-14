@@ -44,12 +44,6 @@ namespace Tween
             Source
         }
 
-        private SortOrder _order;
-        private ComparerMode _mode;
-        private Dictionary<long, PostClass> _statuses;
-
-        private Comparison<long> _CmpMethod;
-
         /// <summary>
         /// 昇順か降順か Setの際は同時に比較関数の切り替えを行う
         /// </summary>
@@ -59,9 +53,10 @@ namespace Tween
             set
             {
                 _order = value;
-                SetCmpMethod(_mode, _order);
+                setCompareMethod(_mode, _order);
             }
         }
+        private SortOrder _order;
 
         /// <summary>
         /// 並び替えの方法 Setの際は同時に比較関数の切り替えを行う
@@ -72,9 +67,10 @@ namespace Tween
             set
             {
                 _mode = value;
-                SetCmpMethod(_mode, _order);
+                setCompareMethod(_mode, _order);
             }
         }
+        private ComparerMode _mode;
 
         /// <summary>
         /// ListViewItemComparerクラスのコンストラクタ（引数付は未使用）
@@ -87,105 +83,105 @@ namespace Tween
         {
             _order = SortOrder.Ascending;
             _mode = ComparerMode.Id;
-            SetCmpMethod(_mode, _order);
+            setCompareMethod(_mode, _order);
         }
 
-        public Dictionary<long, PostClass> posts
-        {
-            get { return _statuses; }
-            set { _statuses = value; }
-        }
+        public Dictionary<long, PostClass> Posts { get; set; }
 
         // 指定したソートモードとソートオーダーに従い使用する比較関数のアドレスを返す
-        public Comparison<long> CmpMethod(ComparerMode _sortmode, SortOrder _sortorder)
+        public Comparison<long> GetCompareMethod(ComparerMode sortMode, SortOrder sortOrder)
         {
-            //get
+            Comparison<long> method = null;
+            if (sortOrder == SortOrder.Ascending)
             {
-                Comparison<long> _method = null;
-                if (_sortorder == SortOrder.Ascending)
+                // 昇順
+                switch (sortMode)
                 {
-                    // 昇順
-                    switch (_sortmode)
-                    {
-                        case ComparerMode.Data:
-                            _method = Compare_ModeData_Ascending;
-                            break;
-                        case ComparerMode.Id:
-                            _method = Compare_ModeId_Ascending;
-                            break;
-                        case ComparerMode.Name:
-                            _method = Compare_ModeName_Ascending;
-                            break;
-                        case ComparerMode.Nickname:
-                            _method = Compare_ModeNickName_Ascending;
-                            break;
-                        case ComparerMode.Source:
-                            _method = Compare_ModeSource_Ascending;
-                            break;
-                    }
+                    case ComparerMode.Data:
+                        method = Compare_ModeData_Ascending;
+                        break;
+                    case ComparerMode.Id:
+                        method = Compare_ModeId_Ascending;
+                        break;
+                    case ComparerMode.Name:
+                        method = Compare_ModeName_Ascending;
+                        break;
+                    case ComparerMode.Nickname:
+                        method = Compare_ModeNickName_Ascending;
+                        break;
+                    case ComparerMode.Source:
+                        method = Compare_ModeSource_Ascending;
+                        break;
                 }
-                else
-                {
-                    // 降順
-                    switch (_sortmode)
-                    {
-                        case ComparerMode.Data:
-                            _method = Compare_ModeData_Descending;
-                            break;
-                        case ComparerMode.Id:
-                            _method = Compare_ModeId_Descending;
-                            break;
-                        case ComparerMode.Name:
-                            _method = Compare_ModeName_Descending;
-                            break;
-                        case ComparerMode.Nickname:
-                            _method = Compare_ModeNickName_Descending;
-                            break;
-                        case ComparerMode.Source:
-                            _method = Compare_ModeSource_Descending;
-                            break;
-                    }
-                }
-                return _method;
             }
+            else
+            {
+                // 降順
+                switch (sortMode)
+                {
+                    case ComparerMode.Data:
+                        method = Compare_ModeData_Descending;
+                        break;
+                    case ComparerMode.Id:
+                        method = Compare_ModeId_Descending;
+                        break;
+                    case ComparerMode.Name:
+                        method = Compare_ModeName_Descending;
+                        break;
+                    case ComparerMode.Nickname:
+                        method = Compare_ModeNickName_Descending;
+                        break;
+                    case ComparerMode.Source:
+                        method = Compare_ModeSource_Descending;
+                        break;
+                }
+            }
+            return method;
         }
 
         // ソートモードとソートオーダーに従い使用する比較関数のアドレスを返す
         // (overload 現在の使用中の比較関数のアドレスを返す)
-        public Comparison<long> CmpMethod()
+        public Comparison<long> GetCompareMethod()
         {
-            { return _CmpMethod; }
+            return _compareMethod;
         }
 
         // ソートモードとソートオーダーに従い比較関数のアドレスを切り替え
-        private void SetCmpMethod(ComparerMode mode, SortOrder order)
+        private void setCompareMethod(ComparerMode mode, SortOrder order)
         {
-            _CmpMethod = this.CmpMethod(mode, order);
+            _compareMethod = this.GetCompareMethod(mode, order);
         }
+
+        private Comparison<long> _compareMethod;
 
         //xがyより小さいときはマイナスの数、大きいときはプラスの数、
         //同じときは0を返す (こちらは未使用 一応比較関数群呼び出しの形のまま残しておく)
         public int Compare(long x, long y)
         {
-            return _CmpMethod(x, y);
+            return _compareMethod(x, y);
         }
 
+        #region "比較用関数群"
         // 比較用関数群 いずれもステータスIDの順序を考慮する
         // 本文比較　昇順
         public int Compare_ModeData_Ascending(long x, long y)
         {
-            int result = string.Compare(_statuses[x].TextFromApi, _statuses[y].TextFromApi);
+            int result = String.Compare(Posts[x].TextFromApi, Posts[y].TextFromApi);
             if (result == 0)
+            {
                 result = x.CompareTo(y);
+            }
             return result;
         }
 
         // 本文比較　降順
         public int Compare_ModeData_Descending(long x, long y)
         {
-            int result = string.Compare(_statuses[y].TextFromApi, _statuses[x].TextFromApi);
+            int result = String.Compare(Posts[y].TextFromApi, Posts[x].TextFromApi);
             if (result == 0)
+            {
                 result = y.CompareTo(x);
+            }
             return result;
         }
 
@@ -204,55 +200,68 @@ namespace Tween
         // 表示名比較　昇順
         public int Compare_ModeName_Ascending(long x, long y)
         {
-            int result = string.Compare(_statuses[x].ScreenName, _statuses[y].ScreenName);
+            int result = String.Compare(Posts[x].ScreenName, Posts[y].ScreenName);
             if (result == 0)
+            {
                 result = x.CompareTo(y);
+            }
             return result;
         }
 
         // 表示名比較　降順
         public int Compare_ModeName_Descending(long x, long y)
         {
-            int result = string.Compare(_statuses[y].ScreenName, _statuses[x].ScreenName);
+            int result = String.Compare(Posts[y].ScreenName, Posts[x].ScreenName);
             if (result == 0)
+            {
                 result = y.CompareTo(x);
+            }
             return result;
         }
 
         // ユーザー名比較　昇順
         public int Compare_ModeNickName_Ascending(long x, long y)
         {
-            int result = string.Compare(_statuses[x].Nickname, _statuses[y].Nickname);
+            int result = String.Compare(Posts[x].Nickname, Posts[y].Nickname);
             if (result == 0)
+            {
                 result = x.CompareTo(y);
+            }
             return result;
         }
 
         // ユーザー名比較　降順
         public int Compare_ModeNickName_Descending(long x, long y)
         {
-            int result = string.Compare(_statuses[y].Nickname, _statuses[x].Nickname);
+            int result = String.Compare(Posts[y].Nickname, Posts[x].Nickname);
             if (result == 0)
+            {
                 result = y.CompareTo(x);
+            }
             return result;
         }
 
         // Source比較　昇順
         public int Compare_ModeSource_Ascending(long x, long y)
         {
-            int result = string.Compare(_statuses[x].Source, _statuses[y].Source);
+            int result = String.Compare(Posts[x].Source, Posts[y].Source);
             if (result == 0)
+            {
                 result = x.CompareTo(y);
+            }
             return result;
         }
 
         // Source比較　降順
         public int Compare_ModeSource_Descending(long x, long y)
         {
-            int result = string.Compare(_statuses[y].Source, _statuses[x].Source);
+            int result = String.Compare(Posts[y].Source, Posts[x].Source);
             if (result == 0)
+            {
                 result = y.CompareTo(x);
+            }
             return result;
         }
+        #endregion
     }
 }

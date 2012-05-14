@@ -211,11 +211,11 @@ namespace Tween
             ListInfo = list;
             if (IsInnerStorageTabType)
             {
-                _sorter.posts = Posts;
+                _sorter.Posts = Posts;
             }
             else
             {
-                _sorter.posts = TabInformations.GetInstance().Posts;
+                _sorter.Posts = TabInformations.GetInstance().Posts;
             }
         }
 
@@ -223,7 +223,7 @@ namespace Tween
         {
             if (_sorter.Mode == IdComparerClass.ComparerMode.Id)
             {
-                _ids.Sort(_sorter.CmpMethod());
+                _ids.Sort(_sorter.GetCompareMethod());
                 return;
             }
             long[] ar = null;
@@ -232,16 +232,16 @@ namespace Tween
                 switch (_sorter.Mode)
                 {
                     case IdComparerClass.ComparerMode.Data:
-                        ar = _ids.OrderBy(n => _sorter.posts[n].TextFromApi).ToArray();
+                        ar = _ids.OrderBy(n => _sorter.Posts[n].TextFromApi).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Name:
-                        ar = _ids.OrderBy(n => _sorter.posts[n].ScreenName).ToArray();
+                        ar = _ids.OrderBy(n => _sorter.Posts[n].ScreenName).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Nickname:
-                        ar = _ids.OrderBy(n => _sorter.posts[n].Nickname).ToArray();
+                        ar = _ids.OrderBy(n => _sorter.Posts[n].Nickname).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Source:
-                        ar = _ids.OrderBy(n => _sorter.posts[n].Source).ToArray();
+                        ar = _ids.OrderBy(n => _sorter.Posts[n].Source).ToArray();
                         break;
                 }
             }
@@ -250,16 +250,16 @@ namespace Tween
                 switch (_sorter.Mode)
                 {
                     case IdComparerClass.ComparerMode.Data:
-                        ar = _ids.OrderByDescending(n => _sorter.posts[n].TextFromApi).ToArray();
+                        ar = _ids.OrderByDescending(n => _sorter.Posts[n].TextFromApi).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Name:
-                        ar = _ids.OrderByDescending(n => _sorter.posts[n].ScreenName).ToArray();
+                        ar = _ids.OrderByDescending(n => _sorter.Posts[n].ScreenName).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Nickname:
-                        ar = _ids.OrderByDescending(n => _sorter.posts[n].Nickname).ToArray();
+                        ar = _ids.OrderByDescending(n => _sorter.Posts[n].Nickname).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Source:
-                        ar = _ids.OrderByDescending(n => _sorter.posts[n].Source).ToArray();
+                        ar = _ids.OrderByDescending(n => _sorter.Posts[n].Source).ToArray();
                         break;
                 }
             }
@@ -603,11 +603,11 @@ namespace Tween
                 _tabType = value;
                 if (IsInnerStorageTabType)
                 {
-                    _sorter.posts = Posts;
+                    _sorter.Posts = Posts;
                 }
                 else
                 {
-                    _sorter.posts = TabInformations.GetInstance().Posts;
+                    _sorter.Posts = TabInformations.GetInstance().Posts;
                 }
             }
         }
