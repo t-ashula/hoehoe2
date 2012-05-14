@@ -27,9 +27,9 @@ using System;
 
 namespace Tween
 {
-    public class nicoms
+    public static class nicoms
     {
-        private static string[] _nicovideo = {
+        private static string[] _nicovideoUrls = {
 			"www.nicovideo.jp/watch/",
 			"live.nicovideo.jp/watch/",
 			"live.nicovideo.jp/gate/",
@@ -56,25 +56,30 @@ namespace Tween
                 return url;
             }
 
-            foreach (string nv in _nicovideo)
+            foreach (string nv in _nicovideoUrls)
             {
                 if (url.StartsWith(nv))
-                    return string.Format("{0}{1}", "http://nico.ms/", url.Substring(nv.Length));
+                {
+                    return String.Format("{0}{1}", "http://nico.ms/", url.Substring(nv.Length));
+                }
             }
 
             int i = 0;
             i = url.IndexOf("nicovideo.jp/user/", StringComparison.OrdinalIgnoreCase);
             if (i == 0 || i == 4)
-                return string.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));
-
+            {
+                return String.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));
+            }
             i = url.IndexOf("nicovideo.jp/mylist/", StringComparison.OrdinalIgnoreCase);
             if (i == 0 || i == 4)
-                return string.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));
-
+            {
+                return String.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));
+            }
             i = url.IndexOf("seiga.nicovideo.jp/watch/", StringComparison.OrdinalIgnoreCase);
             if (i == 0)
-                return string.Format("{0}{1}", "http://nico.ms/", url.Substring(25));
-
+            {
+                return String.Format("{0}{1}", "http://nico.ms/", url.Substring(25));
+            }
             return "http://" + url;
         }
     }
