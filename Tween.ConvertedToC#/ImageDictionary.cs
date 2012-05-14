@@ -24,6 +24,7 @@
 // Boston, MA 02110-1301, USA.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
@@ -34,90 +35,89 @@ namespace Tween
 {
     public class ImageDictionary : IDictionary<string, Image>, IDisposable
     {
-        private readonly object lockObject = new object();
-        private MemoryCache innerDictionary;
-        private Stack<KeyValuePair<string, Action<Image>>> waitStack;
-        private CacheItemPolicy cachePolicy = new CacheItemPolicy();
-        private long removedCount = 0;
-
-        private Semaphore netSemaphore;
+        private readonly object _lockObject = new object();
+        private MemoryCache _innerDictionary;
+        private Stack<KeyValuePair<string, Action<Image>>> _waitStack;
+        private CacheItemPolicy _cachePolicy = new CacheItemPolicy();
+        private long _removedCount = 0;
+        private Semaphore _netSemaphore;
 
         public ImageDictionary(int cacheMemoryLimit)
         {
-            lock (this.lockObject)
+            lock (this._lockObject)
             {
                 //5Mb,80%
                 //キャッシュチェック間隔はデフォルト値（2分毎）
-                var nvc = new NameValueCollection() {
+                this._innerDictionary = new MemoryCache("imageCache", new NameValueCollection() {
                     { "CacheMemoryLimitMegabytes", cacheMemoryLimit.ToString() },
                     { "PhysicalMemoryLimitPercentage", "80" }
-                };
-                this.innerDictionary = new MemoryCache("imageCache", nvc);
-                this.waitStack = new Stack<KeyValuePair<string, Action<Image>>>();
-                this.cachePolicy.RemovedCallback = CacheRemoved;
-                this.cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30);
+                });
+                this._waitStack = new Stack<KeyValuePair<string, Action<Image>>>();
+                this._cachePolicy.RemovedCallback = CacheRemoved;
+                this._cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30);
                 //30分参照されなかったら削除
-                this.netSemaphore = new Semaphore(5, 5);
+                this._netSemaphore = new Semaphore(5, 5);
             }
         }
 
         public long CacheCount
         {
-            get { return innerDictionary.GetCount(); }
+            get { return _innerDictionary.GetCount(); }
         }
 
         public long CacheRemoveCount
         {
-            get { return removedCount; }
+            get { return _removedCount; }
         }
 
         public long CacheMemoryLimit
         {
-            get { return innerDictionary.CacheMemoryLimit; }
+            get { return _innerDictionary.CacheMemoryLimit; }
         }
 
         public long PhysicalMemoryLimit
         {
-            get { return innerDictionary.PhysicalMemoryLimit; }
+            get { return _innerDictionary.PhysicalMemoryLimit; }
         }
 
         public TimeSpan PollingInterval
         {
-            get { return innerDictionary.PollingInterval; }
+            get { return _innerDictionary.PollingInterval; }
         }
 
         private void CacheRemoved(CacheEntryRemovedArguments item)
         {
             ((Image)item.CacheItem.Value).Dispose();
-            removedCount += 1;
-            //System.Diagnostics.Debug.Print("cache delete")
+            _removedCount += 1;
         }
 
-        public void Add(System.Collections.Generic.KeyValuePair<string, Image> item)
+        public void Add(KeyValuePair<string, Image> item)
         {
             this.Add(item.Key, item.Value);
         }
 
         public void Add(string key, Image value)
         {
-            lock (this.lockObject)
+            lock (this._lockObject)
             {
-                if (this.innerDictionary.Contains(key))
+                if (this._innerDictionary.Contains(key))
+                {
                     return;
-                this.innerDictionary.Add(key, value, this.cachePolicy);
+                }
+                this._innerDictionary.Add(key, value, this._cachePolicy);
             }
         }
 
-        public bool Remove(System.Collections.Generic.KeyValuePair<string, Image> item)
+        public bool Remove(KeyValuePair<string, Image> item)
         {
             return this.Remove(item.Key);
         }
 
         public bool Remove(string key)
         {
-            lock (this.lockObject)
+            lock (this._lockObject)
             {
-                this.innerDictionary.Remove(key);
+                this._innerDictionary.Remove(key);
             }
             return true;
         }
@@ -126,19 +126,21 @@ namespace Tween
         {
             get
             {
-                lock (this.lockObject)
+                lock (this._lockObject)
                 {
                     if (force)
                     {
-                        this.innerDictionary.Remove(key);
+                        this._innerDictionary.Remove(key);
                     }
                     else
                     {
-                        if (this.innerDictionary.Contains(key))
-                            return (Image)this.innerDictionary[key];
+                        if (this._innerDictionary.Contains(key))
+                        {
+                            return (Image)this._innerDictionary[key];
+                        }
                     }
                     //スタックに積む
-                    this.waitStack.Push(new KeyValuePair<string, Action<Image>>(key, callBack));
+                    this._waitStack.Push(new KeyValuePair<string, Action<Image>>(key, callBack));
                 }
                 return null;
             }
@@ -148,17 +150,17 @@ namespace Tween
         {
             get
             {
-                lock (this.lockObject)
+                lock (this._lockObject)
                 {
-                    if (this.innerDictionary[key] != null)
+                    if (this._innerDictionary[key] != null)
                     {
                         try
                         {
-                            return (Image)this.innerDictionary[key];
+                            return (Image)this._innerDictionary[key];
                         }
                         catch (Exception ex)
                         {
-                            this.innerDictionary.Remove(key);
+                            this._innerDictionary.Remove(key);
                             return null;
                         }
                     }
@@ -170,33 +172,33 @@ namespace Tween
             }
             set
             {
-                lock (this.lockObject)
+                lock (this._lockObject)
                 {
-                    this.innerDictionary.Remove(key);
-                    this.innerDictionary.Add(key, value, this.cachePolicy);
+                    this._innerDictionary.Remove(key);
+                    this._innerDictionary.Add(key, value, this._cachePolicy);
                 }
             }
         }
 
         public void Clear()
         {
-            lock (this.lockObject)
+            lock (this._lockObject)
             {
-                this.innerDictionary.Trim(100);
+                this._innerDictionary.Trim(100);
             }
         }
 
-        public bool Contains(System.Collections.Generic.KeyValuePair<string, Image> item)
+        public bool Contains(KeyValuePair<string, Image> item)
         {
-            lock (this.lockObject)
+            lock (this._lockObject)
             {
-                return this.innerDictionary.Contains(item.Key) && object.ReferenceEquals(this.innerDictionary[item.Key], item.Value);
+                return this._innerDictionary.Contains(item.Key) && object.ReferenceEquals(this._innerDictionary[item.Key], item.Value);
             }
         }
 
-        public void CopyTo(System.Collections.Generic.KeyValuePair<string, Image>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<string, Image>[] array, int arrayIndex)
         {
-            lock (this.lockObject)
+            lock (this._lockObject)
             {
                 throw new NotImplementedException();
             }
@@ -206,9 +208,9 @@ namespace Tween
         {
             get
             {
-                lock (this.lockObject)
+                lock (this._lockObject)
                 {
-                    return Convert.ToInt32(this.innerDictionary.GetCount());
+                    return Convert.ToInt32(this._innerDictionary.GetCount());
                 }
             }
         }
@@ -220,14 +222,14 @@ namespace Tween
 
         public bool ContainsKey(string key)
         {
-            return this.innerDictionary.Contains(key);
+            return this._innerDictionary.Contains(key);
         }
 
-        public System.Collections.Generic.ICollection<string> Keys
+        public ICollection<string> Keys
         {
             get
             {
-                lock (this.lockObject)
+                lock (this._lockObject)
                 {
                     throw new NotImplementedException();
                 }
@@ -236,11 +238,11 @@ namespace Tween
 
         public bool TryGetValue(string key, out Image value)
         {
-            lock (this.lockObject)
+            lock (this._lockObject)
             {
-                if (this.innerDictionary.Contains(key))
+                if (this._innerDictionary.Contains(key))
                 {
-                    value = (Image)this.innerDictionary[key];
+                    value = (Image)this._innerDictionary[key];
                     return true;
                 }
                 else
@@ -251,38 +253,32 @@ namespace Tween
             }
         }
 
-        public System.Collections.Generic.ICollection<Image> Values
+        public ICollection<Image> Values
         {
-            get
-            {
-                lock (this.lockObject)
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            get { throw new NotImplementedException(); }
         }
 
-        public System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, Image>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, Image>> GetEnumerator()
         {
             throw new NotImplementedException();
         }
 
-        public System.Collections.IEnumerator GetEnumerator1()
+        public IEnumerator GetEnumerator1()
         {
             throw new NotImplementedException();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator1();
         }
 
         public void Dispose()
         {
-            lock (this.lockObject)
+            lock (this._lockObject)
             {
-                this.netSemaphore.Dispose();
-                this.innerDictionary.Dispose();
+                this._netSemaphore.Dispose();
+                this._innerDictionary.Dispose();
                 GC.SuppressFinalize(this);
             }
         }
@@ -290,55 +286,39 @@ namespace Tween
         //取得一時停止
         private bool _pauseGetImage = false;
 
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_PauseGetImage_popping_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-
-        bool static_PauseGetImage_popping;
+        private bool _pauseGetImage_popping = false;
 
         public bool PauseGetImage
         {
             get { return this._pauseGetImage; }
             set
             {
-                this._pauseGetImage = value;
-                lock (static_PauseGetImage_popping_Init)
+                if (!this._pauseGetImage && !_pauseGetImage_popping)
                 {
-                    try
-                    {
-                        if (InitStaticVariableHelper(static_PauseGetImage_popping_Init))
-                        {
-                            static_PauseGetImage_popping = false;
-                        }
-                    }
-                    finally
-                    {
-                        static_PauseGetImage_popping_Init.State = 1;
-                    }
-                }
-
-                if (!this._pauseGetImage && !static_PauseGetImage_popping)
-                {
-                    static_PauseGetImage_popping = true;
+                    _pauseGetImage_popping = true;
                     //最新から処理し
                     ThreadStart imgDlProc = null;
                     imgDlProc = () =>
                     {
                         while (!this._pauseGetImage)
                         {
-                            if (this.waitStack.Count > 0)
+                            if (this._waitStack.Count > 0)
                             {
                                 KeyValuePair<string, Action<Image>> req = default(KeyValuePair<string, Action<Image>>);
-                                lock (this.lockObject)
+                                lock (this._lockObject)
                                 {
-                                    req = this.waitStack.Pop();
+                                    req = this._waitStack.Pop();
                                 }
                                 if (AppendSettingDialog.Instance.IconSz == MyCommon.IconSizes.IconNone)
+                                {
                                     continue;
+                                }
                                 GetImageDelegate proc = new GetImageDelegate(GetImage);
                                 try
                                 {
-                                    this.netSemaphore.WaitOne();
+                                    this._netSemaphore.WaitOne();
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     //Disposed,Release漏れ
                                 }
@@ -349,7 +329,7 @@ namespace Tween
                                 Thread.Sleep(100);
                             }
                         }
-                        static_PauseGetImage_popping = false;
+                        _pauseGetImage_popping = false;
                     };
                     imgDlProc.BeginInvoke(null, null);
                 }
@@ -361,57 +341,44 @@ namespace Tween
         private void GetImage(KeyValuePair<string, Action<Image>> downloadAsyncInfo)
         {
             Image callbackImage = null;
-            lock (lockObject)
+            lock (_lockObject)
             {
-                if (this.innerDictionary[downloadAsyncInfo.Key] != null)
+                if (this._innerDictionary[downloadAsyncInfo.Key] != null)
                 {
-                    callbackImage = (Image)this.innerDictionary[downloadAsyncInfo.Key];
+                    callbackImage = (Image)this._innerDictionary[downloadAsyncInfo.Key];
                 }
             }
             if (callbackImage != null)
             {
                 if (downloadAsyncInfo.Value != null)
+                {
                     downloadAsyncInfo.Value.Invoke(callbackImage);
-                this.netSemaphore.Release();
+                }
+                this._netSemaphore.Release();
                 return;
             }
             HttpVarious hv = new HttpVarious();
             Image dlImage = hv.GetImage(downloadAsyncInfo.Key, 10000);
-            lock (lockObject)
+            lock (_lockObject)
             {
-                if (this.innerDictionary[downloadAsyncInfo.Key] == null)
+                if (this._innerDictionary[downloadAsyncInfo.Key] == null)
                 {
                     if (dlImage != null)
                     {
-                        this.innerDictionary.Add(downloadAsyncInfo.Key, dlImage, this.cachePolicy);
+                        this._innerDictionary.Add(downloadAsyncInfo.Key, dlImage, this._cachePolicy);
                         callbackImage = dlImage;
                     }
                 }
                 else
                 {
-                    callbackImage = (Image)this.innerDictionary[downloadAsyncInfo.Key];
+                    callbackImage = (Image)this._innerDictionary[downloadAsyncInfo.Key];
                 }
             }
             if (downloadAsyncInfo.Value != null)
+            {
                 downloadAsyncInfo.Value.Invoke(callbackImage);
-            this.netSemaphore.Release();
-        }
-
-        private static bool InitStaticVariableHelper(Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag flag)
-        {
-            if (flag.State == 0)
-            {
-                flag.State = 2;
-                return true;
             }
-            else if (flag.State == 2)
-            {
-                throw new Microsoft.VisualBasic.CompilerServices.IncompleteInitialization();
-            }
-            else
-            {
-                return false;
-            }
+            this._netSemaphore.Release();
         }
     }
 }
