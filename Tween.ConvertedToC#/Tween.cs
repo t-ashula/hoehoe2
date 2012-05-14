@@ -9742,7 +9742,7 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.TabName = _statuses.GetUniqueTabName();
-                inputName.IsShowUsage = true;
+                inputName.SetIsShowUsage(true);
                 inputName.ShowDialog();
                 if (inputName.DialogResult == System.Windows.Forms.DialogResult.Cancel)
                     return;
@@ -12198,8 +12198,8 @@ namespace Tween
         {
             using (InputTabName inputName = new InputTabName())
             {
-                inputName.FormTitle = "Follow";
-                inputName.FormDescription = Tween.My_Project.Resources.FRMessage1;
+                inputName.SetFormTitle("Follow");
+                inputName.SetFormDescription(Tween.My_Project.Resources.FRMessage1);
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
@@ -12252,8 +12252,8 @@ namespace Tween
             {
                 using (InputTabName inputName = new InputTabName())
                 {
-                    inputName.FormTitle = "Unfollow";
-                    inputName.FormDescription = Tween.My_Project.Resources.FRMessage1;
+                    inputName.SetFormTitle("Unfollow");
+                    inputName.SetFormDescription(Tween.My_Project.Resources.FRMessage1);
                     inputName.TabName = id;
                     if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                     {
@@ -12335,8 +12335,8 @@ namespace Tween
             args.tw = tw;
             using (InputTabName inputName = new InputTabName())
             {
-                inputName.FormTitle = "Show Friendships";
-                inputName.FormDescription = Tween.My_Project.Resources.FRMessage1;
+                inputName.SetFormTitle("Show Friendships");
+                inputName.SetFormDescription(Tween.My_Project.Resources.FRMessage1);
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
@@ -13127,8 +13127,8 @@ namespace Tween
             {
                 using (InputTabName inputName = new InputTabName())
                 {
-                    inputName.FormTitle = "Show UserStatus";
-                    inputName.FormDescription = Tween.My_Project.Resources.FRMessage1;
+                    inputName.SetFormTitle("Show UserStatus");
+                    inputName.SetFormDescription(Tween.My_Project.Resources.FRMessage1);
                     inputName.TabName = id;
                     if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                     {
@@ -14118,8 +14118,8 @@ namespace Tween
                 using (InputTabName inputForm = new InputTabName())
                 {
                     inputForm.TabName = static_TrackToolStripMenuItem_Click_inputTrack;
-                    inputForm.FormTitle = "Input track word";
-                    inputForm.FormDescription = "Track word";
+                    inputForm.SetFormTitle("Input track word");
+                    inputForm.SetFormDescription("Track word");
                     if (inputForm.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                     {
                         TrackToolStripMenuItem.Checked = false;
@@ -14269,8 +14269,8 @@ namespace Tween
             }
             using (InputTabName inputName = new InputTabName())
             {
-                inputName.FormTitle = caption;
-                inputName.FormDescription = Tween.My_Project.Resources.FRMessage1;
+                inputName.SetFormTitle(caption);
+                inputName.SetFormDescription(Tween.My_Project.Resources.FRMessage1);
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
                 {

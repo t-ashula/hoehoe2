@@ -957,7 +957,7 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.TabName = _sts.GetUniqueTabName();
-                inputName.IsShowUsage = true;
+                inputName.SetIsShowUsage(true);
                 inputName.ShowDialog();
                 if (inputName.DialogResult == System.Windows.Forms.DialogResult.Cancel)
                     return;

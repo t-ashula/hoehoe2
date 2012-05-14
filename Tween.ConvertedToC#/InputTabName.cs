@@ -23,17 +23,19 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+
 namespace Tween
 {
     public partial class InputTabName
     {
-        private void OK_Button_Click(System.Object sender, System.EventArgs e)
+        private void OkButton_Click(object sender, System.EventArgs e)
         {
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
 
-        private void Cancel_Button_Click(System.Object sender, System.EventArgs e)
+        private void cancelButton_Click(object sender, System.EventArgs e)
         {
             TextTabName.Text = "";
             this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -46,31 +48,26 @@ namespace Tween
             set { TextTabName.Text = value.Trim(); }
         }
 
-        public string FormTitle
+        public void SetFormTitle(string value)
         {
-            set { this.Text = value; }
+            this.Text = value;
         }
 
-        public string FormDescription
+        public void SetFormDescription(string value)
         {
-            set { this.LabelDescription.Text = value; }
+            this.LabelDescription.Text = value;
         }
 
         private bool _isShowUsage;
 
-        public bool IsShowUsage
+        public void SetIsShowUsage(bool value)
         {
-            set { _isShowUsage = value; }
+            _isShowUsage = value;
         }
 
-        private Tween.MyCommon.TabUsageType _usage;
+        public MyCommon.TabUsageType Usage { get; private set; }
 
-        public Tween.MyCommon.TabUsageType Usage
-        {
-            get { return _usage; }
-        }
-
-        private void InputTabName_Load(object sender, System.EventArgs e)
+        private void InputTabName_Load(object sender, EventArgs e)
         {
             this.LabelUsage.Visible = false;
             this.ComboUsage.Visible = false;
@@ -80,7 +77,7 @@ namespace Tween
             this.ComboUsage.SelectedIndex = 0;
         }
 
-        private void InputTabName_Shown(object sender, System.EventArgs e)
+        private void InputTabName_Shown(object sender, EventArgs e)
         {
             ActiveControl = TextTabName;
             if (_isShowUsage)
@@ -90,29 +87,27 @@ namespace Tween
             }
         }
 
-        private void ComboUsage_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        private void ComboUsage_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (ComboUsage.SelectedIndex)
             {
                 case 0:
-                    _usage = Tween.MyCommon.TabUsageType.UserDefined;
+                    Usage = Tween.MyCommon.TabUsageType.UserDefined;
                     break;
                 case 1:
-                    _usage = Tween.MyCommon.TabUsageType.Lists;
+                    Usage = Tween.MyCommon.TabUsageType.Lists;
                     break;
                 case 2:
-                    _usage = Tween.MyCommon.TabUsageType.PublicSearch;
+                    Usage = Tween.MyCommon.TabUsageType.PublicSearch;
                     break;
                 default:
-                    _usage = Tween.MyCommon.TabUsageType.Undefined;
+                    Usage = Tween.MyCommon.TabUsageType.Undefined;
                     break;
             }
         }
 
         public InputTabName()
         {
-            Shown += InputTabName_Shown;
-            Load += InputTabName_Load;
             InitializeComponent();
         }
     }
