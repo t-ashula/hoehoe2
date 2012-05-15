@@ -26,9 +26,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Tween
 {
@@ -38,10 +39,8 @@ namespace Tween
         private bool _directAdd;
         private TabInformations _sts;
         private string _cur;
-
-        private List<string> idlist = new List<string>();
-
-        private TabsDialog tabdialog = new TabsDialog(true);
+        private List<string> _idList = new List<string>();
+        private TabsDialog _tabDialog = new TabsDialog(true);
 
         private enum EDITMODE
         {
@@ -53,23 +52,30 @@ namespace Tween
         private void SetFilters(string tabName)
         {
             if (ListTabs.Items.Count == 0)
+            {
                 return;
+            }
 
             ListFilters.Items.Clear();
             ListFilters.Items.AddRange(_sts.Tabs[tabName].GetFilters());
             if (ListFilters.Items.Count > 0)
+            {
                 ListFilters.SelectedIndex = 0;
-
+            }
             CheckManageRead.Checked = _sts.Tabs[tabName].UnreadManage;
             CheckNotifyNew.Checked = _sts.Tabs[tabName].Notify;
 
             int idx = ComboSound.Items.IndexOf(_sts.Tabs[tabName].SoundFile);
             if (idx == -1)
+            {
                 idx = 0;
+            }
             ComboSound.SelectedIndex = idx;
 
             if (_directAdd)
+            {
                 return;
+            }
 
             ListTabs.Enabled = true;
             GroupTab.Enabled = true;
@@ -160,7 +166,7 @@ namespace Tween
             {
                 ButtonDeleteTab.Enabled = true;
             }
-            ButtonClose.Enabled = true;
+            closeButton.Enabled = true;
         }
 
         public void SetCurrent(string TabName)
@@ -178,7 +184,7 @@ namespace Tween
             ButtonRuleCopy.Enabled = false;
             ButtonRuleMove.Enabled = false;
             ButtonDelete.Enabled = false;
-            ButtonClose.Enabled = false;
+            closeButton.Enabled = false;
             EditFilterGroup.Enabled = true;
             ListTabs.Enabled = false;
             GroupTab.Enabled = false;
@@ -227,17 +233,17 @@ namespace Tween
             _directAdd = true;
         }
 
-        private void ButtonNew_Click(System.Object sender, System.EventArgs e)
+        private void ButtonNew_Click(object sender, EventArgs e)
         {
             ButtonNew.Enabled = false;
             ButtonEdit.Enabled = false;
-            ButtonClose.Enabled = false;
+            closeButton.Enabled = false;
             ButtonRuleUp.Enabled = false;
             ButtonRuleDown.Enabled = false;
             ButtonRuleCopy.Enabled = false;
             ButtonRuleMove.Enabled = false;
             ButtonDelete.Enabled = false;
-            ButtonClose.Enabled = false;
+            closeButton.Enabled = false;
             EditFilterGroup.Enabled = true;
             ListTabs.Enabled = false;
             GroupTab.Enabled = false;
@@ -279,10 +285,12 @@ namespace Tween
             _mode = EDITMODE.AddNew;
         }
 
-        private void ButtonEdit_Click(System.Object sender, System.EventArgs e)
+        private void ButtonEdit_Click(object sender, EventArgs e)
         {
             if (ListFilters.SelectedIndex == -1)
+            {
                 return;
+            }
 
             ShowDetail();
 
@@ -294,7 +302,7 @@ namespace Tween
             ButtonNew.Enabled = false;
             ButtonEdit.Enabled = false;
             ButtonDelete.Enabled = false;
-            ButtonClose.Enabled = false;
+            closeButton.Enabled = false;
             ButtonRuleUp.Enabled = false;
             ButtonRuleDown.Enabled = false;
             ButtonRuleCopy.Enabled = false;
@@ -306,27 +314,31 @@ namespace Tween
             _mode = EDITMODE.Edit;
         }
 
-        private void ButtonDelete_Click(System.Object sender, System.EventArgs e)
+        private void ButtonDelete_Click(object sender, EventArgs e)
         {
             if (ListFilters.SelectedIndex == -1)
+            {
                 return;
+            }
             string tmp = "";
-            System.Windows.Forms.DialogResult rslt = default(System.Windows.Forms.DialogResult);
+            DialogResult rslt = default(DialogResult);
 
             if (ListFilters.SelectedIndices.Count == 1)
             {
-                tmp = string.Format(Tween.My_Project.Resources.ButtonDelete_ClickText1, Constants.vbCrLf, ListFilters.SelectedItem.ToString());
+                tmp = String.Format(Tween.My_Project.Resources.ButtonDelete_ClickText1, Environment.NewLine, ListFilters.SelectedItem.ToString());
                 rslt = MessageBox.Show(tmp, Tween.My_Project.Resources.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             }
             else
             {
-                tmp = string.Format(Tween.My_Project.Resources.ButtonDelete_ClickText3, ListFilters.SelectedIndices.Count.ToString());
+                tmp = String.Format(Tween.My_Project.Resources.ButtonDelete_ClickText3, ListFilters.SelectedIndices.Count.ToString());
                 rslt = MessageBox.Show(tmp, Tween.My_Project.Resources.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             }
-            if (rslt == System.Windows.Forms.DialogResult.Cancel)
+            if (rslt == DialogResult.Cancel)
+            {
                 return;
+            }
 
-            for (int idx = ListFilters.Items.Count - 1; idx >= 0; idx += -1)
+            for (int idx = ListFilters.Items.Count - 1; idx >= 0; idx--)
             {
                 if (ListFilters.GetSelected(idx))
                 {
@@ -336,7 +348,7 @@ namespace Tween
             }
         }
 
-        private void ButtonCancel_Click(System.Object sender, System.EventArgs e)
+        private void ButtonCancel_Click(object sender, EventArgs e)
         {
             ListTabs.Enabled = true;
             GroupTab.Enabled = true;
@@ -366,7 +378,7 @@ namespace Tween
                 ButtonRuleCopy.Enabled = false;
                 ButtonRuleMove.Enabled = false;
             }
-            ButtonClose.Enabled = true;
+            closeButton.Enabled = true;
             if (_directAdd)
             {
                 this.Close();
@@ -376,7 +388,9 @@ namespace Tween
         private void ShowDetail()
         {
             if (_directAdd)
+            {
                 return;
+            }
 
             if (ListFilters.SelectedIndex > -1)
             {
@@ -474,7 +488,6 @@ namespace Tween
                     OptCopy.Checked = true;
                 }
                 CheckMark.Checked = fc.SetMark;
-
                 ButtonEdit.Enabled = true;
                 ButtonDelete.Enabled = true;
                 ButtonRuleUp.Enabled = true;
@@ -498,7 +511,6 @@ namespace Tween
                 CheckCaseSensitive.Checked = false;
                 CheckRetweet.Checked = false;
                 CheckLambda.Checked = false;
-
                 RadioExAnd.Checked = true;
                 RadioExPLUS.Checked = false;
                 ExUID.Enabled = true;
@@ -513,10 +525,8 @@ namespace Tween
                 CheckExCaseSensitive.Checked = false;
                 CheckExRetweet.Checked = false;
                 CheckExLambDa.Checked = false;
-
                 OptCopy.Checked = true;
                 CheckMark.Checked = true;
-
                 ButtonEdit.Enabled = false;
                 ButtonDelete.Enabled = false;
                 ButtonRuleUp.Enabled = false;
@@ -526,7 +536,7 @@ namespace Tween
             }
         }
 
-        private void RadioAND_CheckedChanged(System.Object sender, System.EventArgs e)
+        private void RadioAND_CheckedChanged(object sender, EventArgs e)
         {
             bool flg = RadioAND.Checked;
             UID.Enabled = flg;
@@ -534,7 +544,7 @@ namespace Tween
             MSG2.Enabled = !flg;
         }
 
-        private void ButtonOK_Click(System.Object sender, System.EventArgs e)
+        private void ButtonOK_Click(object sender, EventArgs e)
         {
             bool isBlankMatch = false;
             bool isBlankExclude = false;
@@ -550,13 +560,8 @@ namespace Tween
                 return;
             }
 
-            int i = ListFilters.SelectedIndex;
-            FiltersClass ft = null;
-
-            ft = new FiltersClass();
-
-            ft.MoveFrom = OptMove.Checked;
-            ft.SetMark = CheckMark.Checked;
+            int prevSelectedIndex = ListFilters.SelectedIndex;
+            FiltersClass ft = new FiltersClass() { MoveFrom = OptMove.Checked, SetMark = CheckMark.Checked };
 
             string bdy = "";
             if (RadioAND.Checked)
@@ -585,10 +590,10 @@ namespace Tween
             }
             else
             {
-                string[] bf = bdy.Trim().Split(Strings.Chr(32));
+                string[] bf = bdy.Trim().Split(' ');
                 foreach (string bfs in bf)
                 {
-                    if (!string.IsNullOrEmpty(bfs))
+                    if (!String.IsNullOrEmpty(bfs))
                         ft.BodyFilter.Add(bfs.Trim());
                 }
             }
@@ -620,11 +625,13 @@ namespace Tween
             }
             else
             {
-                string[] bf = bdy.Trim().Split(Strings.Chr(32));
+                string[] bf = bdy.Trim().Split(' ');
                 foreach (string bfs in bf)
                 {
-                    if (!string.IsNullOrEmpty(bfs))
+                    if (!String.IsNullOrEmpty(bfs))
+                    {
                         ft.ExBodyFilter.Add(bfs.Trim());
+                    }
                 }
             }
 
@@ -654,7 +661,7 @@ namespace Tween
             }
             else
             {
-                ListFilters.SelectedIndex = i;
+                ListFilters.SelectedIndex = prevSelectedIndex;
             }
             _mode = EDITMODE.None;
 
@@ -666,12 +673,13 @@ namespace Tween
 
         private bool IsValidLambdaExp(string text)
         {
-            if (string.IsNullOrEmpty(text))
+            if (String.IsNullOrEmpty(text))
+            {
                 return true;
+            }
             try
             {
-                LambdaExpression expr = null;
-                expr = DynamicExpression.ParseLambda<PostClass, bool>(text, new PostClass());
+                LambdaExpression expr = DynamicExpression.ParseLambda<PostClass, bool>(text, new PostClass());
             }
             catch (ParseException ex)
             {
@@ -685,7 +693,7 @@ namespace Tween
         {
             try
             {
-                System.Text.RegularExpressions.Regex rgx = new System.Text.RegularExpressions.Regex(text);
+                Regex rgx = new System.Text.RegularExpressions.Regex(text);
             }
             catch (Exception ex)
             {
@@ -704,9 +712,11 @@ namespace Tween
                 MSG1.Text = MSG1.Text.Trim();
                 UID.Text = UID.Text.Trim();
                 if (!CheckRegex.Checked && !CheckLambda.Checked)
+                {
                     MSG1.Text = MSG1.Text.Replace("　", " ");
+                }
 
-                if (string.IsNullOrEmpty(UID.Text) && string.IsNullOrEmpty(MSG1.Text) && string.IsNullOrEmpty(TextSource.Text) && CheckRetweet.Checked == false)
+                if (String.IsNullOrEmpty(UID.Text) && String.IsNullOrEmpty(MSG1.Text) && String.IsNullOrEmpty(TextSource.Text) && !CheckRetweet.Checked)
                 {
                     isBlank = true;
                     return true;
@@ -738,8 +748,10 @@ namespace Tween
             {
                 MSG2.Text = MSG2.Text.Trim();
                 if (!CheckRegex.Checked && !CheckLambda.Checked)
+                {
                     MSG2.Text = MSG2.Text.Replace("　", " ");
-                if (string.IsNullOrEmpty(MSG2.Text) && string.IsNullOrEmpty(TextSource.Text) && CheckRetweet.Checked == false)
+                }
+                if (String.IsNullOrEmpty(MSG2.Text) && String.IsNullOrEmpty(TextSource.Text) && !CheckRetweet.Checked)
                 {
                     isBlank = true;
                     return true;
@@ -769,9 +781,11 @@ namespace Tween
             {
                 ExMSG1.Text = ExMSG1.Text.Trim();
                 if (!CheckExRegex.Checked && !CheckExLambDa.Checked)
+                {
                     ExMSG1.Text = ExMSG1.Text.Replace("　", " ");
+                }
                 ExUID.Text = ExUID.Text.Trim();
-                if (string.IsNullOrEmpty(ExUID.Text) && string.IsNullOrEmpty(ExMSG1.Text) && string.IsNullOrEmpty(TextExSource.Text) && CheckExRetweet.Checked == false)
+                if (String.IsNullOrEmpty(ExUID.Text) && String.IsNullOrEmpty(ExMSG1.Text) && String.IsNullOrEmpty(TextExSource.Text) && !CheckExRetweet.Checked)
                 {
                     isBlank = true;
                     return true;
@@ -803,8 +817,10 @@ namespace Tween
             {
                 ExMSG2.Text = ExMSG2.Text.Trim();
                 if (!CheckExRegex.Checked && !CheckExLambDa.Checked)
+                {
                     ExMSG2.Text = ExMSG2.Text.Replace("　", " ");
-                if (string.IsNullOrEmpty(ExMSG2.Text) && string.IsNullOrEmpty(TextExSource.Text) && CheckExRetweet.Checked == false)
+                }
+                if (String.IsNullOrEmpty(ExMSG2.Text) && String.IsNullOrEmpty(TextExSource.Text) && !CheckExRetweet.Checked)
                 {
                     isBlank = true;
                     return true;
@@ -827,22 +843,22 @@ namespace Tween
             return true;
         }
 
-        private void ListFilters_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        private void ListFilters_SelectedIndexChanged(object sender, EventArgs e)
         {
             ShowDetail();
         }
 
-        private void ButtonClose_Click(System.Object sender, System.EventArgs e)
+        private void ButtonClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void FilterDialog_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
+        private void FilterDialog_FormClosed(object sender, FormClosedEventArgs e)
         {
             _directAdd = false;
         }
 
-        private void FilterDialog_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void FilterDialog_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
@@ -857,7 +873,7 @@ namespace Tween
             }
         }
 
-        private void ListFilters_DoubleClick(System.Object sender, System.EventArgs e)
+        private void ListFilters_DoubleClick(object sender, EventArgs e)
         {
             if (ListFilters.SelectedItem == null)
             {
@@ -876,7 +892,7 @@ namespace Tween
             ButtonEdit_Click(sender, e);
         }
 
-        private void FilterDialog_Shown(object sender, System.EventArgs e)
+        private void FilterDialog_Shown(object sender, EventArgs e)
         {
             _sts = TabInformations.GetInstance();
             ListTabs.Items.Clear();
@@ -888,40 +904,39 @@ namespace Tween
 
             ComboSound.Items.Clear();
             ComboSound.Items.Add("");
-            System.IO.DirectoryInfo oDir = new System.IO.DirectoryInfo(Tween.My.MyProject.Application.Info.DirectoryPath + System.IO.Path.DirectorySeparatorChar);
-            if (System.IO.Directory.Exists(System.IO.Path.Combine(Tween.My.MyProject.Application.Info.DirectoryPath, "Sounds")))
+            DirectoryInfo oDir = new DirectoryInfo(Tween.My.MyProject.Application.Info.DirectoryPath + Path.DirectorySeparatorChar);
+            if (Directory.Exists(Path.Combine(Tween.My.MyProject.Application.Info.DirectoryPath, "Sounds")))
             {
                 oDir = oDir.GetDirectories("Sounds")[0];
             }
-            foreach (System.IO.FileInfo oFile in oDir.GetFiles("*.wav"))
+            foreach (FileInfo oFile in oDir.GetFiles("*.wav"))
             {
                 ComboSound.Items.Add(oFile.Name);
             }
 
-            idlist.Clear();
+            _idList.Clear();
             foreach (string tmp in My.MyProject.Forms.TweenMain.AtIdSupl.GetItemList())
             {
-                idlist.Add(tmp.Remove(0, 1));
+                _idList.Add(tmp.Remove(0, 1));
                 // @文字削除
             }
             UID.AutoCompleteCustomSource.Clear();
-            UID.AutoCompleteCustomSource.AddRange(idlist.ToArray());
+            UID.AutoCompleteCustomSource.AddRange(_idList.ToArray());
 
             ExUID.AutoCompleteCustomSource.Clear();
-            ExUID.AutoCompleteCustomSource.AddRange(idlist.ToArray());
+            ExUID.AutoCompleteCustomSource.AddRange(_idList.ToArray());
 
             //選択タブ変更
             if (ListTabs.Items.Count > 0)
             {
                 if (_cur.Length > 0)
                 {
-                    for (int i = 0; i <= ListTabs.Items.Count - 1; i++)
+                    for (int i = 0; i < ListTabs.Items.Count; i++)
                     {
                         if (_cur == ListTabs.Items[i].ToString())
                         {
                             ListTabs.SelectedIndex = i;
-                            //tabdialog.TabList.Items.Remove(_cur)
-                            break; // TODO: might not be correct. Was : Exit For
+                            break; 
                         }
                     }
                 }
@@ -930,15 +945,17 @@ namespace Tween
 
         private void SetTabnamesToDialog()
         {
-            tabdialog.ClearTab();
+            _tabDialog.ClearTab();
             foreach (string key in _sts.Tabs.Keys)
             {
                 if (TabInformations.GetInstance().IsDistributableTab(key))
-                    tabdialog.AddTab(key);
+                {
+                    _tabDialog.AddTab(key);
+                }
             }
         }
 
-        private void ListTabs_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        private void ListTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ListTabs.SelectedIndex > -1)
             {
@@ -950,7 +967,7 @@ namespace Tween
             }
         }
 
-        private void ButtonAddTab_Click(System.Object sender, System.EventArgs e)
+        private void ButtonAddTab_Click(object sender, EventArgs e)
         {
             string tabName = null;
             MyCommon.TabUsageType tabType = default(MyCommon.TabUsageType);
@@ -959,34 +976,40 @@ namespace Tween
                 inputName.TabName = _sts.GetUniqueTabName();
                 inputName.SetIsShowUsage(true);
                 inputName.ShowDialog();
-                if (inputName.DialogResult == System.Windows.Forms.DialogResult.Cancel)
+                if (inputName.DialogResult == DialogResult.Cancel)
+                {
                     return;
+                }
                 tabName = inputName.TabName;
                 tabType = inputName.Usage;
             }
-            if (!string.IsNullOrEmpty(tabName))
+            if (!String.IsNullOrEmpty(tabName))
             {
                 //List対応
                 ListElement list = null;
                 if (tabType == MyCommon.TabUsageType.Lists)
                 {
                     string rslt = ((TweenMain)this.Owner).TwitterInstance.GetListsApi();
-                    if (!string.IsNullOrEmpty(rslt))
+                    if (!String.IsNullOrEmpty(rslt))
                     {
                         MessageBox.Show("Failed to get lists. (" + rslt + ")");
                     }
                     using (ListAvailable listAvail = new ListAvailable())
                     {
-                        if (listAvail.ShowDialog(this) == System.Windows.Forms.DialogResult.Cancel)
+                        if (listAvail.ShowDialog(this) == DialogResult.Cancel)
+                        {
                             return;
+                        }
                         if (listAvail.SelectedList == null)
+                        {
                             return;
+                        }
                         list = listAvail.SelectedList;
                     }
                 }
                 if (!_sts.AddTab(tabName, tabType, list) || !((TweenMain)this.Owner).AddNewTab(tabName, false, tabType, list))
                 {
-                    string tmp = string.Format(Tween.My_Project.Resources.AddTabMenuItem_ClickText1, tabName);
+                    string tmp = String.Format(Tween.My_Project.Resources.AddTabMenuItem_ClickText1, tabName);
                     MessageBox.Show(tmp, Tween.My_Project.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
@@ -999,9 +1022,9 @@ namespace Tween
             }
         }
 
-        private void ButtonDeleteTab_Click(System.Object sender, System.EventArgs e)
+        private void ButtonDeleteTab_Click(object sender, EventArgs e)
         {
-            if (ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > -1 && !String.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
                 string tb = ListTabs.SelectedItem.ToString();
                 int idx = ListTabs.SelectedIndex;
@@ -1010,16 +1033,18 @@ namespace Tween
                     ListTabs.Items.RemoveAt(idx);
                     idx -= 1;
                     if (idx < 0)
+                    {
                         idx = 0;
+                    }
                     ListTabs.SelectedIndex = idx;
                     SetTabnamesToDialog();
                 }
             }
         }
 
-        private void ButtonRenameTab_Click(System.Object sender, System.EventArgs e)
+        private void ButtonRenameTab_Click(object sender, EventArgs e)
         {
-            if (ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > -1 && !String.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
                 string tb = ListTabs.SelectedItem.ToString();
                 int idx = ListTabs.SelectedIndex;
@@ -1033,17 +1058,17 @@ namespace Tween
             }
         }
 
-        private void CheckManageRead_CheckedChanged(System.Object sender, System.EventArgs e)
+        private void CheckManageRead_CheckedChanged(object sender, EventArgs e)
         {
-            if (ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > -1 && !String.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
                 ((TweenMain)this.Owner).ChangeTabUnreadManage(ListTabs.SelectedItem.ToString(), CheckManageRead.Checked);
             }
         }
 
-        private void ButtonUp_Click(System.Object sender, System.EventArgs e)
+        private void ButtonUp_Click(object sender, EventArgs e)
         {
-            if (ListTabs.SelectedIndex > 0 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > 0 && !String.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
                 string selName = ListTabs.SelectedItem.ToString();
                 string tgtName = ListTabs.Items[ListTabs.SelectedIndex - 1].ToString();
@@ -1054,9 +1079,9 @@ namespace Tween
             }
         }
 
-        private void ButtonDown_Click(System.Object sender, System.EventArgs e)
+        private void ButtonDown_Click(object sender, EventArgs e)
         {
-            if (ListTabs.SelectedIndex > -1 && ListTabs.SelectedIndex < ListTabs.Items.Count - 1 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > -1 && ListTabs.SelectedIndex < ListTabs.Items.Count - 1 && !String.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
                 string selName = ListTabs.SelectedItem.ToString();
                 string tgtName = ListTabs.Items[ListTabs.SelectedIndex + 1].ToString();
@@ -1067,26 +1092,28 @@ namespace Tween
             }
         }
 
-        private void CheckNotifyNew_CheckedChanged(System.Object sender, System.EventArgs e)
+        private void CheckNotifyNew_CheckedChanged(object sender, EventArgs e)
         {
-            if (ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > -1 && !String.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
                 _sts.Tabs[ListTabs.SelectedItem.ToString()].Notify = CheckNotifyNew.Checked;
             }
         }
 
-        private void ComboSound_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        private void ComboSound_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > -1 && !String.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
                 string filename = "";
                 if (ComboSound.SelectedIndex > -1)
+                {
                     filename = ComboSound.SelectedItem.ToString();
+                }
                 _sts.Tabs[ListTabs.SelectedItem.ToString()].SoundFile = filename;
             }
         }
 
-        private void RadioExAnd_CheckedChanged(System.Object sender, System.EventArgs e)
+        private void RadioExAnd_CheckedChanged(object sender, EventArgs e)
         {
             bool flg = RadioExAnd.Checked;
             ExUID.Enabled = flg;
@@ -1094,12 +1121,12 @@ namespace Tween
             ExMSG2.Enabled = !flg;
         }
 
-        private void OptMove_CheckedChanged(System.Object sender, System.EventArgs e)
+        private void OptMove_CheckedChanged(object sender, EventArgs e)
         {
             CheckMark.Enabled = !OptMove.Checked;
         }
 
-        private void ButtonRuleUp_Click(System.Object sender, System.EventArgs e)
+        private void ButtonRuleUp_Click(object sender, EventArgs e)
         {
             if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null && ListFilters.SelectedIndex > 0)
             {
@@ -1114,7 +1141,7 @@ namespace Tween
             }
         }
 
-        private void ButtonRuleDown_Click(System.Object sender, System.EventArgs e)
+        private void ButtonRuleDown_Click(object sender, EventArgs e)
         {
             if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null && ListFilters.SelectedIndex < ListFilters.Items.Count - 1)
             {
@@ -1129,18 +1156,18 @@ namespace Tween
             }
         }
 
-        private void ButtonRuleCopy_Click(System.Object sender, System.EventArgs e)
+        private void ButtonRuleCopy_Click(object sender, EventArgs e)
         {
             if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null)
             {
-                tabdialog.Text = Tween.My_Project.Resources.ButtonRuleCopy_ClickText1;
-                if (tabdialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                _tabDialog.Text = Tween.My_Project.Resources.ButtonRuleCopy_ClickText1;
+                if (_tabDialog.ShowDialog() == DialogResult.Cancel)
                 {
                     return;
                 }
                 string tabname = ListTabs.SelectedItem.ToString();
-                StringCollection tabs = tabdialog.SelectedTabNames;
-                System.Collections.Generic.List<FiltersClass> filters = new System.Collections.Generic.List<FiltersClass>();
+                StringCollection tabs = _tabDialog.SelectedTabNames;
+                List<FiltersClass> filters = new List<FiltersClass>();
 
                 foreach (int idx in ListFilters.SelectedIndices)
                 {
@@ -1163,25 +1190,27 @@ namespace Tween
             }
         }
 
-        private void ButtonRuleMove_Click(System.Object sender, System.EventArgs e)
+        private void ButtonRuleMove_Click(object sender, EventArgs e)
         {
             if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null)
             {
-                tabdialog.Text = Tween.My_Project.Resources.ButtonRuleMove_ClickText1;
-                if (tabdialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                _tabDialog.Text = Tween.My_Project.Resources.ButtonRuleMove_ClickText1;
+                if (_tabDialog.ShowDialog() == DialogResult.Cancel)
                 {
                     return;
                 }
                 string tabname = ListTabs.SelectedItem.ToString();
-                StringCollection tabs = tabdialog.SelectedTabNames;
-                System.Collections.Generic.List<FiltersClass> filters = new System.Collections.Generic.List<FiltersClass>();
+                StringCollection tabs = _tabDialog.SelectedTabNames;
+                List<FiltersClass> filters = new List<FiltersClass>();
 
                 foreach (int idx in ListFilters.SelectedIndices)
                 {
                     filters.Add(_sts.Tabs[tabname].Filters[idx].CopyTo(new FiltersClass()));
                 }
                 if (tabs.Count == 1 && tabs[0] == tabname)
+                {
                     return;
+                }
                 foreach (string tb in tabs)
                 {
                     if (tb != tabname)
@@ -1207,7 +1236,7 @@ namespace Tween
             }
         }
 
-        private void FilterTextBox_KeyDown(System.Object sender, System.Windows.Forms.KeyEventArgs e)
+        private void FilterTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Space && e.Modifiers == (Keys.Shift | Keys.Control))
             {
@@ -1236,7 +1265,7 @@ namespace Tween
                         }
                         else
                         {
-                            break; // TODO: might not be correct. Was : Exit For
+                            break; 
                         }
                     }
                     e.Handled = true;
@@ -1244,20 +1273,18 @@ namespace Tween
             }
         }
 
-        private void FilterTextBox_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        private void FilterTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             TweenMain main = (TweenMain)this.Owner;
             TextBox tbox = (TextBox)sender;
             if (e.KeyChar == '@')
             {
-                //If Not SettingDialog.UseAtIdSupplement Then Exit Sub
                 //@マーク
                 main.ShowSuplDialog(tbox, main.AtIdSupl);
                 e.Handled = true;
             }
             else if (e.KeyChar == '#')
             {
-                //If Not SettingDialog.UseHashSupplement Then Exit Sub
                 main.ShowSuplDialog(tbox, main.HashSupl);
                 e.Handled = true;
             }
@@ -1265,9 +1292,6 @@ namespace Tween
 
         public FilterDialog()
         {
-            Shown += FilterDialog_Shown;
-            KeyDown += FilterDialog_KeyDown;
-            FormClosed += FilterDialog_FormClosed;
             InitializeComponent();
         }
     }
