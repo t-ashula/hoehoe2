@@ -31,38 +31,21 @@ namespace Tween
 {
     public class FavoriteQueue : IList<long>
     {
-        //Private Shared _instance As New FavoriteQueue
-        //Public Shared ReadOnly Property GetInstance As FavoriteQueue
-        //    Get
-        //        Return _instance
-        //    End Get
-        //End Property
-
-        private Twitter tw;
-
-        private List<long> FavoriteCache = new List<long>();
+        private Twitter _tw;
+        private List<long> _favoriteCache;
 
         public void AddRange(IEnumerable<long> stsIds)
         {
-            FavoriteCache.AddRange(stsIds);
+            _favoriteCache.AddRange(stsIds);
         }
-
-        //Public Sub FavoriteCacheAdd(ByVal statusId As Long, ByVal res As HttpStatusCode, Optional ByRef isMsg As Boolean = True)
-        //    'If Not SettingInfo.Instance.IsUseFavoriteQueue Then Exit Sub
-        //    Select Case res
-        //        Case HttpStatusCode.BadGateway, HttpStatusCode.BadRequest, HttpStatusCode.ServiceUnavailable, HttpStatusCode.InternalServerError, HttpStatusCode.RequestTimeout
-        //            isMsg = False
-        //            FavoriteCache.Add(statusId)
-        //    End Select
-        //End Sub
 
         public void FavoriteCacheStart()
         {
-            if (!(FavoriteCache.Count == 0))
+            if (_favoriteCache.Count != 0)
             {
-                List<long> _cacheList = new List<long>(FavoriteCache);
+                List<long> cacheList = new List<long>(_favoriteCache);
                 this.Clear();
-                Parallel.ForEach<long>(_cacheList, new Action<long>((long stsId) => { tw.PostFavAdd(stsId); }));
+                Parallel.ForEach<long>(cacheList, new Action<long>((long stsId) => { _tw.PostFavAdd(stsId); }));
             }
         }
 
@@ -70,29 +53,29 @@ namespace Tween
         {
             if (!this.Contains(item))
             {
-                FavoriteCache.Add(item);
+                _favoriteCache.Add(item);
             }
         }
 
         public void Clear()
         {
-            FavoriteCache.Clear();
-            FavoriteCache.TrimExcess();
+            _favoriteCache.Clear();
+            _favoriteCache.TrimExcess();
         }
 
         public bool Contains(long item)
         {
-            return FavoriteCache.Contains(item);
+            return _favoriteCache.Contains(item);
         }
 
         public void CopyTo(long[] array, int arrayIndex)
         {
-            FavoriteCache.CopyTo(array, arrayIndex);
+            _favoriteCache.CopyTo(array, arrayIndex);
         }
 
         public int Count
         {
-            get { return FavoriteCache.Count; }
+            get { return _favoriteCache.Count; }
         }
 
         public bool IsReadOnly
@@ -102,12 +85,12 @@ namespace Tween
 
         public bool Remove(long item)
         {
-            return FavoriteCache.Remove(item);
+            return _favoriteCache.Remove(item);
         }
 
         public System.Collections.Generic.IEnumerator<long> GetEnumerator()
         {
-            return FavoriteCache.GetEnumerator();
+            return _favoriteCache.GetEnumerator();
         }
 
         public System.Collections.IEnumerator GetEnumerator1()
@@ -122,28 +105,29 @@ namespace Tween
 
         public int IndexOf(long item)
         {
-            return FavoriteCache.IndexOf(item);
+            return _favoriteCache.IndexOf(item);
         }
 
         public void Insert(int index, long item)
         {
-            FavoriteCache.Insert(index, item);
+            _favoriteCache.Insert(index, item);
         }
 
         public long this[int index]
         {
-            get { return FavoriteCache[index]; }
-            set { FavoriteCache[index] = value; }
+            get { return _favoriteCache[index]; }
+            set { _favoriteCache[index] = value; }
         }
 
         public void RemoveAt(int index)
         {
-            FavoriteCache.RemoveAt(index);
+            _favoriteCache.RemoveAt(index);
         }
 
         public FavoriteQueue(Twitter twitter)
         {
-            this.tw = twitter;
+            this._favoriteCache = new List<long>();
+            this._tw = twitter;
         }
     }
 }
