@@ -571,7 +571,7 @@ namespace Tween
                 My.MyProject.Forms.TweenMain.AtIdSupl.AddItem("@" + ft.NameFilter);
                 if (cnt != My.MyProject.Forms.TweenMain.AtIdSupl.ItemCount)
                 {
-                    My.MyProject.Forms.TweenMain.ModifySettingAtId = true;
+                    My.MyProject.Forms.TweenMain.SetModifySettingAtId(true);
                 }
                 ft.SearchBoth = true;
                 bdy = MSG1.Text;
