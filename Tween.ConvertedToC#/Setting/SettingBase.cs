@@ -24,7 +24,10 @@
 // Boston, MA 02110-1301, USA.
 
 using System;
+using System.IO;
+using System.Threading;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Tween
 {
@@ -32,42 +35,42 @@ namespace Tween
     {
         private static object lockObj = new object();
 
-        protected static T LoadSettings(string FileId)
+        protected static T LoadSettings(string fileId)
         {
             try
             {
                 lock (lockObj)
                 {
-                    using (System.IO.FileStream fs = new System.IO.FileStream(GetSettingFilePath(FileId), System.IO.FileMode.Open))
+                    using (FileStream fs = new FileStream(GetSettingFilePath(fileId), FileMode.Open))
                     {
                         fs.Position = 0;
-                        System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(T));
+                        XmlSerializer xs = new XmlSerializer(typeof(T));
                         T instance = (T)xs.Deserialize(fs);
                         fs.Close();
                         return instance;
                     }
                 }
             }
-            catch (System.IO.FileNotFoundException ex)
+            catch (FileNotFoundException )
             {
                 return new T();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                string backupFile = System.IO.Path.Combine(System.IO.Path.Combine(Tween.My.MyProject.Application.Info.DirectoryPath, "TweenBackup1st"), typeof(T).Name + FileId + ".xml");
-                if (System.IO.File.Exists(backupFile))
+                string backupFile = Path.Combine(Path.Combine(Tween.My.MyProject.Application.Info.DirectoryPath, "TweenBackup1st"), typeof(T).Name + fileId + ".xml");
+                if (File.Exists(backupFile))
                 {
                     try
                     {
                         lock (lockObj)
                         {
-                            using (System.IO.FileStream fs = new System.IO.FileStream(backupFile, System.IO.FileMode.Open))
+                            using (FileStream fs = new FileStream(backupFile, FileMode.Open))
                             {
                                 fs.Position = 0;
-                                System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(T));
+                                XmlSerializer xs = new XmlSerializer(typeof(T));
                                 T instance = (T)xs.Deserialize(fs);
                                 fs.Close();
-                                MessageBox.Show("File: " + GetSettingFilePath(FileId) + Environment.NewLine + "Use old setting file, because application can't read this setting file.");
+                                MessageBox.Show("File: " + GetSettingFilePath(fileId) + Environment.NewLine + "Use old setting file, because application can't read this setting file.");
                                 return instance;
                             }
                         }
@@ -76,13 +79,8 @@ namespace Tween
                     {
                     }
                 }
-                MessageBox.Show("File: " + GetSettingFilePath(FileId) + Environment.NewLine + "Use default setting, because application can't read this setting file.");
+                MessageBox.Show("File: " + GetSettingFilePath(fileId) + Environment.NewLine + "Use default setting, because application can't read this setting file.");
                 return new T();
-                //ex.Data.Add("FilePath", GetSettingFilePath(FileId))
-                //Dim fi As New IO.FileInfo(GetSettingFilePath(FileId))
-                //ex.Data.Add("FileSize", fi.Length.ToString())
-                //ex.Data.Add("FileData", IO.File.ReadAllText(GetSettingFilePath(FileId)))
-                //Throw
             }
         }
 
@@ -91,13 +89,15 @@ namespace Tween
             return LoadSettings("");
         }
 
-        protected static void SaveSettings(T Instance, string FileId)
+        protected static void SaveSettings(T instance, string fileId)
         {
             int cnt = 0;
             bool err = false;
-            string fileName = GetSettingFilePath(FileId);
-            if (Instance == null)
+            string fileName = GetSettingFilePath(fileId);
+            if (instance == null)
+            {
                 return;
+            }
             do
             {
                 err = false;
@@ -106,52 +106,50 @@ namespace Tween
                 {
                     lock (lockObj)
                     {
-                        using (System.IO.FileStream fs = new System.IO.FileStream(fileName, System.IO.FileMode.Create))
+                        using (FileStream fs = new FileStream(fileName, FileMode.Create))
                         {
                             fs.Position = 0;
-                            System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(T));
-                            xs.Serialize(fs, Instance);
+                            XmlSerializer xs = new XmlSerializer(typeof(T));
+                            xs.Serialize(fs, instance);
                             fs.Flush();
                             fs.Close();
                         }
-                        System.IO.FileInfo fi = new System.IO.FileInfo(fileName);
+                        FileInfo fi = new FileInfo(fileName);
                         if (fi.Length == 0)
                         {
                             if (cnt > 3)
                             {
                                 throw new Exception();
-                                return;
                             }
-                            System.Threading.Thread.Sleep(1000);
+                            Thread.Sleep(1000);
                             err = true;
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
                     //検証エラー or 書き込みエラー
                     if (cnt > 3)
                     {
                         //リトライオーバー
                         MessageBox.Show("Can't write setting XML.(" + fileName + ")", "Save Settings", MessageBoxButtons.OK);
-                        //Throw New System.InvalidOperationException("Can't write setting XML.(" + fileName + ")")
                         return;
                     }
                     //リトライ
-                    System.Threading.Thread.Sleep(1000);
+                    Thread.Sleep(1000);
                     err = true;
                 }
             } while (err);
         }
 
-        protected static void SaveSettings(T Instance)
+        protected static void SaveSettings(T instance)
         {
-            SaveSettings(Instance, "");
+            SaveSettings(instance, "");
         }
 
-        public static string GetSettingFilePath(string FileId)
+        public static string GetSettingFilePath(string fileId)
         {
-            return System.IO.Path.Combine(MyCommon.SettingPath, typeof(T).Name + FileId + ".xml");
+            return Path.Combine(MyCommon.SettingPath, typeof(T).Name + fileId + ".xml");
         }
     }
 }
