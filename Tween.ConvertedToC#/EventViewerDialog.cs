@@ -30,7 +30,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Tween
 {
@@ -39,36 +38,28 @@ namespace Tween
         public List<Twitter.FormattedEvent> EventSource { get; set; }
 
         private Twitter.FormattedEvent[] _filterdEventSource;
-        private ListViewItem[] _ItemCache = null;
-
+        private ListViewItem[] _itemCache;
         private int _itemCacheIndex;
+        private TabPage _curTab;
 
-        private TabPage _curTab = null;
-
-        private void OK_Button_Click(System.Object sender, System.EventArgs e)
+        private void OK_Button_Click(object sender, EventArgs e)
         {
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void Cancel_Button_Click(System.Object sender, System.EventArgs e)
+        private void Cancel_Button_Click(object sender, EventArgs e)
         {
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
         private ListViewItem CreateListViewItem(Twitter.FormattedEvent source)
         {
-            string[] s = {
-				source.CreatedAt.ToString(),
-				source.Event.ToUpper(),
-				source.Username,
-				source.Target
-			};
-            return new ListViewItem(s);
+            return new ListViewItem(new [] { source.CreatedAt.ToString(), source.Event.ToUpper(), source.Username, source.Target });
         }
 
-        private void EventViewerDialog_Shown(object sender, System.EventArgs e)
+        private void EventViewerDialog_Shown(object sender, EventArgs e)
         {
             EventList.BeginUpdate();
             _curTab = TabEventType.SelectedTab;
@@ -77,7 +68,7 @@ namespace Tween
             this.TopMost = AppendSettingDialog.Instance.AlwaysTop;
         }
 
-        private void EventList_DoubleClick(System.Object sender, System.EventArgs e)
+        private void EventList_DoubleClick(object sender, EventArgs e)
         {
             if (!(EventList.SelectedIndices.Count == 0) && _filterdEventSource[EventList.SelectedIndices[0]] != null)
             {
@@ -85,36 +76,33 @@ namespace Tween
             }
         }
 
-        private Tween.MyCommon.EventType ParseEventTypeFromTag()
+        private MyCommon.EventType ParseEventTypeFromTag()
         {
             return (Tween.MyCommon.EventType)Enum.Parse(typeof(Tween.MyCommon.EventType), _curTab.Tag.ToString());
         }
 
         private bool IsFilterMatch(Twitter.FormattedEvent x)
         {
-            if (!CheckBoxFilter.Checked || string.IsNullOrEmpty(TextBoxKeyword.Text))
+            if (!CheckBoxFilter.Checked || String.IsNullOrEmpty(TextBoxKeyword.Text))
             {
                 return true;
             }
+            if (CheckRegex.Checked)
+            {
+                try
+                {
+                    Regex rx = new Regex(TextBoxKeyword.Text);
+                    return rx.Match(x.Username).Success || rx.Match(x.Target).Success;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(Tween.My_Project.Resources.ButtonOK_ClickText3 + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return false;
+                }
+            }
             else
             {
-                if (CheckRegex.Checked)
-                {
-                    try
-                    {
-                        Regex rx = new Regex(TextBoxKeyword.Text);
-                        return rx.Match(x.Username).Success || rx.Match(x.Target).Success;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(Tween.My_Project.Resources.ButtonOK_ClickText3 + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        return false;
-                    }
-                }
-                else
-                {
-                    return x.Username.Contains(TextBoxKeyword.Text) || x.Target.Contains(TextBoxKeyword.Text);
-                }
+                return x.Username.Contains(TextBoxKeyword.Text) || x.Target.Contains(TextBoxKeyword.Text);
             }
         }
 
@@ -123,9 +111,9 @@ namespace Tween
             if (EventSource != null && EventSource.Count > 0)
             {
                 _filterdEventSource = EventSource.FindAll(x => CheckExcludeMyEvent.Checked ? !x.IsMe : true && Convert.ToBoolean(x.Eventtype & ParseEventTypeFromTag()) && IsFilterMatch(x)).ToArray();
-                _ItemCache = null;
+                _itemCache = null;
                 EventList.VirtualListSize = _filterdEventSource.Count();
-                StatusLabelCount.Text = string.Format("{0} / {1}", _filterdEventSource.Count(), EventSource.Count);
+                StatusLabelCount.Text = String.Format("{0} / {1}", _filterdEventSource.Count(), EventSource.Count);
             }
             else
             {
@@ -133,22 +121,22 @@ namespace Tween
             }
         }
 
-        private void CheckExcludeMyEvent_CheckedChanged(System.Object sender, System.EventArgs e)
+        private void CheckExcludeMyEvent_CheckedChanged(object sender, EventArgs e)
         {
             CreateFilterdEventSource();
         }
 
-        private void ButtonRefresh_Click(System.Object sender, System.EventArgs e)
+        private void ButtonRefresh_Click(object sender, EventArgs e)
         {
             CreateFilterdEventSource();
         }
 
-        private void TabEventType_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        private void TabEventType_SelectedIndexChanged(object sender, EventArgs e)
         {
             CreateFilterdEventSource();
         }
 
-        private void TabEventType_Selecting(System.Object sender, System.Windows.Forms.TabControlCancelEventArgs e)
+        private void TabEventType_Selecting(object sender, TabControlCancelEventArgs e)
         {
             _curTab = e.TabPage;
             if (!e.TabPage.Controls.Contains(EventList))
@@ -157,21 +145,21 @@ namespace Tween
             }
         }
 
-        private void TextBoxKeyword_KeyPress(System.Object sender, System.Windows.Forms.KeyPressEventArgs e)
+        private void TextBoxKeyword_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == Strings.ChrW((int)Keys.Enter))
+            if (e.KeyChar == (char)Keys.Enter)
             {
                 CreateFilterdEventSource();
                 e.Handled = true;
             }
         }
 
-        private void EventList_RetrieveVirtualItem(System.Object sender, System.Windows.Forms.RetrieveVirtualItemEventArgs e)
+        private void EventList_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            if (_ItemCache != null && e.ItemIndex >= _itemCacheIndex && e.ItemIndex < _itemCacheIndex + _ItemCache.Length)
+            if (_itemCache != null && e.ItemIndex >= _itemCacheIndex && e.ItemIndex < _itemCacheIndex + _itemCache.Length)
             {
                 //キャッシュヒット
-                e.Item = _ItemCache[e.ItemIndex - _itemCacheIndex];
+                e.Item = _itemCache[e.ItemIndex - _itemCacheIndex];
             }
             else
             {
@@ -180,70 +168,71 @@ namespace Tween
             }
         }
 
-        private void EventList_CacheVirtualItems(System.Object sender, System.Windows.Forms.CacheVirtualItemsEventArgs e)
+        private void EventList_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
         {
             CreateCache(e.StartIndex, e.EndIndex);
         }
 
-        private void CreateCache(int StartIndex, int EndIndex)
+        private void CreateCache(int startIndex, int endIndex)
         {
             //キャッシュ要求（要求範囲±30を作成）
-            StartIndex -= 30;
-            if (StartIndex < 0)
-                StartIndex = 0;
-            EndIndex += 30;
-            if (EndIndex > _filterdEventSource.Count() - 1)
+            startIndex -= 30;
+            if (startIndex < 0)
             {
-                EndIndex = _filterdEventSource.Count() - 1;
+                startIndex = 0;
             }
-            _ItemCache = new ListViewItem[EndIndex - StartIndex + 1];
-            _itemCacheIndex = StartIndex;
-            for (int i = 0; i <= EndIndex - StartIndex; i++)
+            endIndex += 30;
+            if (endIndex > _filterdEventSource.Count() - 1)
             {
-                _ItemCache[i] = CreateListViewItem(_filterdEventSource[StartIndex + i]);
+                endIndex = _filterdEventSource.Count() - 1;
+            }
+            _itemCache = new ListViewItem[endIndex - startIndex + 1];
+            _itemCacheIndex = startIndex;
+            for (int i = 0; i <= endIndex - startIndex; i++)
+            {
+                _itemCache[i] = CreateListViewItem(_filterdEventSource[startIndex + i]);
             }
         }
 
-        private void SaveLogButton_Click(System.Object sender, System.EventArgs e)
+        private void SaveLogButton_Click(object sender, EventArgs e)
         {
             DialogResult rslt = MessageBox.Show(string.Format(Tween.My_Project.Resources.SaveLogMenuItem_ClickText5, Environment.NewLine), Tween.My_Project.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            string tabName = "";
             switch (rslt)
             {
-                case System.Windows.Forms.DialogResult.Yes:
-                    SaveFileDialog1.FileName = "TweenEvents" + _curTab.Tag.ToString() + Strings.Format(DateAndTime.Now, "yyMMdd-HHmmss") + ".tsv";
+                case DialogResult.Yes:
+                    tabName = _curTab.Tag.ToString();
                     break;
-                case System.Windows.Forms.DialogResult.No:
-                    SaveFileDialog1.FileName = "TweenEvents" + Strings.Format(DateAndTime.Now, "yyMMdd-HHmmss") + ".tsv";
+                case DialogResult.No:
                     break;
                 default:
                     return;
-
-                    break;
             }
-
+            SaveFileDialog1.FileName = String.Format("TweenEvents{0}{1:yyMMdd-HHmmss}.tsv", tabName, DateTime.Now);
             SaveFileDialog1.InitialDirectory = Tween.My.MyProject.Application.Info.DirectoryPath;
             SaveFileDialog1.Filter = Tween.My_Project.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
             SaveFileDialog1.Title = Tween.My_Project.Resources.SaveLogMenuItem_ClickText4;
             SaveFileDialog1.RestoreDirectory = true;
 
-            if (SaveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (!SaveFileDialog1.ValidateNames)
+                {
                     return;
+                }
                 using (StreamWriter sw = new StreamWriter(SaveFileDialog1.FileName, false, Encoding.UTF8))
                 {
                     switch (rslt)
                     {
-                        case System.Windows.Forms.DialogResult.Yes:
+                        case DialogResult.Yes:
                             SaveEventLog(_filterdEventSource.ToList(), sw);
                             break;
-                        case System.Windows.Forms.DialogResult.No:
+                        case DialogResult.No:
                             SaveEventLog(EventSource, sw);
                             break;
                         default:
                             break;
-                        //
                     }
                     sw.Close();
                     sw.Dispose();
@@ -254,15 +243,14 @@ namespace Tween
 
         private void SaveEventLog(List<Twitter.FormattedEvent> source, StreamWriter sw)
         {
-            foreach (Twitter.FormattedEvent _event in source)
+            foreach (Twitter.FormattedEvent ev in source)
             {
-                sw.WriteLine(_event.Eventtype.ToString() + Constants.vbTab + "\"" + _event.CreatedAt.ToString() + "\"" + Constants.vbTab + _event.Event + Constants.vbTab + _event.Username + Constants.vbTab + _event.Target + Constants.vbTab + _event.Id.ToString());
+                sw.WriteLine(String.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}", ev.Eventtype, ev.CreatedAt, ev.Event, ev.Username, ev.Target, ev.Id));
             }
         }
 
         public EventViewerDialog()
-        {
-            Shown += EventViewerDialog_Shown;
+        {            
             InitializeComponent();
         }
     }
