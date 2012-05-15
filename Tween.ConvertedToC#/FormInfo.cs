@@ -27,6 +27,7 @@ using System;
 
 using System.ComponentModel;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Tween
 {
@@ -57,33 +58,9 @@ namespace Tween
         }
 
         private string _msg;
+        private BackgroundWorkerServicer _bwServicer;
 
-        private object _arg = null;
-
-        private BackgroundWorkerServicer Servicer = new BackgroundWorkerServicer();
-
-        public FormInfo(System.Windows.Forms.Form owner, string Message, DoWorkEventHandler DoWork)
-        {
-            FormClosed += FormInfo_FormClosed;
-            Shown += FormInfo_Shown;
-            doInitialize(owner, Message, DoWork, null, null);
-        }
-
-        public FormInfo(System.Windows.Forms.Form owner, string Message, DoWorkEventHandler DoWork, RunWorkerCompletedEventHandler RunWorkerCompleted)
-        {
-            FormClosed += FormInfo_FormClosed;
-            Shown += FormInfo_Shown;
-            doInitialize(owner, Message, DoWork, RunWorkerCompleted, null);
-        }
-
-        public FormInfo(System.Windows.Forms.Form owner, string Message, DoWorkEventHandler DoWork, RunWorkerCompletedEventHandler RunWorkerCompleted, object Argument)
-        {
-            FormClosed += FormInfo_FormClosed;
-            Shown += FormInfo_Shown;
-            doInitialize(owner, Message, DoWork, RunWorkerCompleted, Argument);
-        }
-
-        private void doInitialize(System.Windows.Forms.Form owner, string Message, DoWorkEventHandler DoWork, RunWorkerCompletedEventHandler RunWorkerCompleted, object Argument)
+        public FormInfo(Form owner, string message, DoWorkEventHandler doWork, RunWorkerCompletedEventHandler runWorkerCompleted = null, object argument = null)
         {
             // この呼び出しはデザイナーで必要です。
             InitializeComponent();
@@ -91,18 +68,19 @@ namespace Tween
             // InitializeComponent() 呼び出しの後で初期化を追加します。
 
             this.Owner = owner;
-            this.InfoMessage = Message;
-            this.Servicer.DoWork += DoWork;
+            this.InfoMessage = message;
+            this._bwServicer = new BackgroundWorkerServicer();
+            this._bwServicer.DoWork += doWork;
 
-            if (RunWorkerCompleted != null)
+            if (runWorkerCompleted != null)
             {
-                this.Servicer.RunWorkerCompleted += RunWorkerCompleted;
+                this._bwServicer.RunWorkerCompleted += runWorkerCompleted;
             }
 
-            this.Argument = Argument;
+            this.Argument = argument;
         }
 
-        private void LabelInformation_TextChanged(System.Object sender, EventArgs e)
+        private void LabelInformation_TextChanged(object sender, EventArgs e)
         {
             LabelInformation.Refresh();
         }
@@ -127,11 +105,7 @@ namespace Tween
         ///</summary>
         ///<param name="args">Servicerへ渡すパラメータ</param>
         ///<returns>現在設定されているServicerへ渡すパラメータ</returns>
-        public object Argument
-        {
-            get { return _arg; }
-            set { _arg = value; }
-        }
+        public object Argument { get; set; }
 
         ///<summary>
         ///Servicerのe.Result
@@ -139,13 +113,13 @@ namespace Tween
         ///<returns>Servicerのe.Result</returns>
         public object Result
         {
-            get { return Servicer.Result; }
+            get { return _bwServicer.Result; }
         }
 
-        private void FormInfo_Shown(System.Object sender, EventArgs e)
+        private void FormInfo_Shown(object sender, EventArgs e)
         {
-            Servicer.RunWorkerAsync(_arg);
-            while (Servicer.IsBusy)
+            _bwServicer.RunWorkerAsync(Argument);
+            while (_bwServicer.IsBusy)
             {
                 Thread.Sleep(100);
                 Tween.My.MyProject.Application.DoEvents();
@@ -156,8 +130,7 @@ namespace Tween
         }
 
         // フォームを閉じたあとに親フォームが最前面にならない問題に対応
-
-        private void FormInfo_FormClosed(System.Object sender, System.Windows.Forms.FormClosedEventArgs e)
+        private void FormInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (Owner != null && Owner.Created)
             {
