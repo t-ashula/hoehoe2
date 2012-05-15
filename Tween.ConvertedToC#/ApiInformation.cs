@@ -32,10 +32,7 @@ namespace Tween
     {
         public ApiInfo ApiInfo = new ApiInfo();
     }
-}
 
-namespace Tween
-{
     public abstract class ApiInfoBase
     {
         protected static int _MaxCount = -1;
@@ -48,10 +45,7 @@ namespace Tween
         protected static DateTime _MediaResetTime = new DateTime();
         protected static int _MediaRemainCount = -1;
     }
-}
 
-namespace Tween
-{
     public enum ApiAccessLevel
     {
         None,
@@ -60,10 +54,7 @@ namespace Tween
         ReadWrite,
         ReadWriteAndDirectMessage
     }
-}
 
-namespace Tween
-{
     public class ApiInfo : ApiInfoBase
     {
         public int MaxCount;
@@ -90,14 +81,9 @@ namespace Tween
             this.MediaResetTime = _MediaResetTime;
         }
     }
-}
 
-namespace Tween
-{
     public class ApiInformation : ApiInfoBase
     {
-        //Private ReadOnly _lockobj As New Object 更新時にロックが必要かどうかは様子見
-
         public Dictionary<string, string> HttpHeaders = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
 
         public void Initialize()
@@ -185,7 +171,7 @@ namespace Tween
         {
             if (seconds >= 0)
             {
-                return System.TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(seconds));
+                return TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(seconds));
             }
             else
             {
@@ -208,7 +194,6 @@ namespace Tween
             _RemainCount = arg.ApiInfo.RemainCount;
             _ResetTime = arg.ApiInfo.ResetTime;
             _ResetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds;
-            //_UsingCount = arg.ApiInfo.UsingCount
         }
 
         public int MaxCount
@@ -348,8 +333,10 @@ namespace Tween
             get
             {
                 int result = 0;
-                if (string.IsNullOrEmpty(HttpHeaders["X-RateLimit-Remaining"]))
+                if (String.IsNullOrEmpty(HttpHeaders["X-RateLimit-Remaining"]))
+                {
                     return -1;
+                }
                 if (int.TryParse(HttpHeaders["X-RateLimit-Remaining"], out result))
                 {
                     return result;
@@ -364,7 +351,9 @@ namespace Tween
             {
                 int result = 0;
                 if (string.IsNullOrEmpty(HttpHeaders["X-RateLimit-Limit"]))
+                {
                     return -1;
+                }
                 if (int.TryParse(HttpHeaders["X-RateLimit-Limit"], out result))
                 {
                     return result;
@@ -382,7 +371,7 @@ namespace Tween
                 {
                     if (i >= 0)
                     {
-                        return System.TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i));
+                        return TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i));
                     }
                     else
                     {
@@ -416,8 +405,10 @@ namespace Tween
             get
             {
                 int result = 0;
-                if (string.IsNullOrEmpty(HttpHeaders["X-MediaRateLimit-Limit"]))
+                if (String.IsNullOrEmpty(HttpHeaders["X-MediaRateLimit-Limit"]))
+                {
                     return -1;
+                }
                 if (int.TryParse(HttpHeaders["X-MediaRateLimit-Limit"], out result))
                 {
                     return result;
@@ -435,7 +426,7 @@ namespace Tween
                 {
                     if (i >= 0)
                     {
-                        return System.TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i));
+                        return TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i));
                     }
                     else
                     {
