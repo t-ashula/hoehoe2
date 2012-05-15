@@ -23,15 +23,16 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
 using System.Collections.Generic;
+using System.Web;
 
 namespace Tween
 {
     public class Bing
     {
+        //TODO:
         private const string AppId = "8DFACAC0C4891D0F75F5728391C9D30664B797A1";
-
-
         private static readonly List<string> LanguageTable = new List<string> {
         #region "言語テーブル定義"
 			"af",
@@ -166,14 +167,14 @@ namespace Tween
 
         private const string TranslateUri = "http://api.microsofttranslator.com/v2/Http.svc/Translate?appId=" + AppId;
 
-        public bool Translate(string _from, string _to, string _text, ref string buf)
+        public bool Translate(string from, string to, string text, ref string buf)
         {
             HttpVarious http = new HttpVarious();
-            string apiurl = TranslateUri + "&text=" + System.Web.HttpUtility.UrlEncode(_text) + "&to=" + _to;
+            string apiurl = TranslateUri + "&text=" + HttpUtility.UrlEncode(text) + "&to=" + to;
             string content = "";
             if (http.GetData(apiurl, null, ref content))
             {
-                buf = string.Copy(content);
+                buf = String.Copy(content);
                 return true;
             }
             return false;
