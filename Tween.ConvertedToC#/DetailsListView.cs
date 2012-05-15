@@ -24,67 +24,31 @@
 // Boston, MA 02110-1301, USA.
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Tween.TweenCustomControl
 {
     public sealed class DetailsListView : ListView
     {
-        private Rectangle changeBounds;
-        private bool multiSelected;
+        private Rectangle _changeBounds;
+        private EventHandlerList _handlers = new EventHandlerList();
 
-        private System.ComponentModel.EventHandlerList _handlers = new System.ComponentModel.EventHandlerList();
+        public event EventHandler VScrolled;
 
-        public event System.EventHandler VScrolled;
-
-        public event System.EventHandler HScrolled;
+        public event EventHandler HScrolled;
 
         public DetailsListView()
         {
-            View = System.Windows.Forms.View.Details;
-            FullRowSelect = true;
-            HideSelection = false;
-            DoubleBuffered = true;
-            si.cbSize = Marshal.SizeOf(si);
-            si.fMask = (int)ScrollInfoMask.SIF_POS;
+            this.View = View.Details;
+            this.FullRowSelect = true;
+            this.HideSelection = false;
+            this.DoubleBuffered = true;
+            _si = new SCROLLINFO() { cbSize = Marshal.SizeOf(_si), fMask = (int)ScrollInfoMask.SIF_POS };
         }
-
-        //<System.ComponentModel.DefaultValue(0), _
-        // System.ComponentModel.RefreshProperties(System.ComponentModel.RefreshProperties.Repaint)> _
-        //Public Shadows Property VirtualListSize() As Integer
-        //    Get
-        //        Return MyBase.VirtualListSize
-        //    End Get
-        //    Set(ByVal value As Integer)
-        //        If value = MyBase.VirtualListSize Then Exit Property
-        //        If MyBase.VirtualListSize > 0 And value > 0 Then
-        //            Dim topIndex As Integer = 0
-        //            If Not Me.IsDisposed Then
-        //                If MyBase.VirtualListSize < value Then
-        //                    If Me.TopItem Is Nothing Then
-        //                        topIndex = 0
-        //                    Else
-        //                        topIndex = Me.TopItem.Index
-        //                    End If
-        //                    topIndex = Math.Min(topIndex, Math.Abs(value - 1))
-        //                    Me.TopItem = Me.Items(topIndex)
-        //                Else
-        //                    If Me.TopItem Is Nothing Then
-        //                        topIndex = 0
-        //                    Else
-
-        //                    End If
-        //                    Me.TopItem = Me.Items(0)
-        //                End If
-        //            End If
-        //        End If
-        //        MyBase.VirtualListSize = value
-        //    End Set
-        //End Property
 
         public void ChangeItemBackColor(int index, Color backColor)
         {
@@ -116,7 +80,7 @@ namespace Tween.TweenCustomControl
             this.Items[itemIndex].SubItems[subitemIndex].BackColor = backColor;
             SetUpdateBounds(itemIndex, subitemIndex);
             this.Update();
-            this.changeBounds = Rectangle.Empty;
+            this._changeBounds = Rectangle.Empty;
         }
 
         public void ChangeSubItemForeColor(int itemIndex, int subitemIndex, Color foreColor)
@@ -124,7 +88,7 @@ namespace Tween.TweenCustomControl
             this.Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
             SetUpdateBounds(itemIndex, subitemIndex);
             this.Update();
-            this.changeBounds = Rectangle.Empty;
+            this._changeBounds = Rectangle.Empty;
         }
 
         public void ChangeSubItemFont(int itemIndex, int subitemIndex, Font fnt)
@@ -132,7 +96,7 @@ namespace Tween.TweenCustomControl
             this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
             SetUpdateBounds(itemIndex, subitemIndex);
             this.Update();
-            this.changeBounds = Rectangle.Empty;
+            this._changeBounds = Rectangle.Empty;
         }
 
         public void ChangeSubItemFontAndColor(int itemIndex, int subitemIndex, Color foreColor, Font fnt)
@@ -141,7 +105,7 @@ namespace Tween.TweenCustomControl
             this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
             SetUpdateBounds(itemIndex, subitemIndex);
             this.Update();
-            this.changeBounds = Rectangle.Empty;
+            this._changeBounds = Rectangle.Empty;
         }
 
         public void ChangeSubItemStyles(int itemIndex, int subitemIndex, Color backColor, Color foreColor, Font fnt)
@@ -151,7 +115,7 @@ namespace Tween.TweenCustomControl
             this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
             SetUpdateBounds(itemIndex, subitemIndex);
             this.Update();
-            this.changeBounds = Rectangle.Empty;
+            this._changeBounds = Rectangle.Empty;
         }
 
         private void SetUpdateBounds(int itemIndex, int subItemIndex)
@@ -169,17 +133,17 @@ namespace Tween.TweenCustomControl
                 ListViewItem item = this.Items[itemIndex];
                 if (item.UseItemStyleForSubItems)
                 {
-                    this.changeBounds = item.Bounds;
+                    this._changeBounds = item.Bounds;
                 }
                 else
                 {
-                    this.changeBounds = this.GetSubItemBounds(itemIndex, subItemIndex);
+                    this._changeBounds = this.GetSubItemBounds(itemIndex, subItemIndex);
                 }
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 //タイミングによりBoundsプロパティが取れない？
-                this.changeBounds = Rectangle.Empty;
+                this._changeBounds = Rectangle.Empty;
             }
         }
 
@@ -230,11 +194,7 @@ namespace Tween.TweenCustomControl
         [DllImport("user32.dll")]
         private static extern int GetScrollInfo(IntPtr hWnd, ScrollBarDirection fnBar, ref SCROLLINFO lpsi);
 
-        private SCROLLINFO si;/* = new SCROLLINFO
-        {
-            cbSize = Marshal.SizeOf(si),
-            fMask = (int)ScrollInfoMask.SIF_POS
-        };*/
+        private SCROLLINFO _si;
 
         [DebuggerStepThrough()]
         protected override void WndProc(ref System.Windows.Forms.Message m)
@@ -256,17 +216,17 @@ namespace Tween.TweenCustomControl
             switch (m.Msg)
             {
                 case WM_ERASEBKGND:
-                    if (this.changeBounds != Rectangle.Empty)
+                    if (this._changeBounds != Rectangle.Empty)
                     {
                         m.Msg = 0;
                     }
                     break;
                 case WM_PAINT:
-                    if (this.changeBounds != Rectangle.Empty)
+                    if (this._changeBounds != Rectangle.Empty)
                     {
                         Win32Api.ValidateRect(this.Handle, IntPtr.Zero);
-                        this.Invalidate(this.changeBounds);
-                        this.changeBounds = Rectangle.Empty;
+                        this.Invalidate(this._changeBounds);
+                        this._changeBounds = Rectangle.Empty;
                     }
                     break;
                 case WM_HSCROLL:
@@ -286,13 +246,13 @@ namespace Tween.TweenCustomControl
                 case WM_MOUSEWHEEL:
                 case WM_MOUSEHWHEEL:
                 case WM_KEYDOWN:
-                    if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_VERT, ref si) != 0)
+                    if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_VERT, ref _si) != 0)
                     {
-                        vPos = si.nPos;
+                        vPos = _si.nPos;
                     }
-                    if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_HORZ, ref si) != 0)
+                    if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_HORZ, ref _si) != 0)
                     {
-                        hPos = si.nPos;
+                        hPos = _si.nPos;
                     }
                     break;
                 case LVM_SETITEMCOUNT:
@@ -304,20 +264,22 @@ namespace Tween.TweenCustomControl
             {
                 base.WndProc(ref m);
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (ArgumentOutOfRangeException)
             {
                 //Substringでlengthが0以下。アイコンサイズが影響？
             }
-            catch (AccessViolationException ex)
+            catch (AccessViolationException)
             {
                 //WndProcのさらに先で発生する。
             }
             if (this.IsDisposed)
+            {
                 return;
+            }
 
             if (vPos != -1)
             {
-                if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_VERT, ref si) != 0 && vPos != si.nPos)
+                if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_VERT, ref _si) != 0 && vPos != _si.nPos)
                 {
                     if (VScrolled != null)
                     {
@@ -327,7 +289,7 @@ namespace Tween.TweenCustomControl
             }
             if (hPos != -1)
             {
-                if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_HORZ, ref si) != 0 && hPos != si.nPos)
+                if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_HORZ, ref _si) != 0 && hPos != _si.nPos)
                 {
                     if (HScrolled != null)
                     {
