@@ -1,6 +1,3 @@
-using System;
-using System.Diagnostics;
-
 // Tween - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
@@ -26,7 +23,11 @@ using System.Diagnostics;
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Tween.My
@@ -40,9 +41,9 @@ namespace Tween.My
     // NetworkAvailabilityChanged: ネットワーク接続が接続されたとき、または切断されたときに発生します。
     internal partial class MyApplication
     {
-        private static System.Threading.Mutex mt;
+        private static Mutex mt;
 
-        private void MyApplication_Shutdown(object sender, System.EventArgs e)
+        private void MyApplication_Shutdown(object sender, EventArgs e)
         {
             try
             {
@@ -53,7 +54,7 @@ namespace Tween.My
                     mt = null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -63,9 +64,8 @@ namespace Tween.My
             CheckSettingFilePath();
             InitCulture();
 
-            //string pt = Application.Info.DirectoryPath.Replace("\\", "/") + "/" + Application.Info.ProductName;
-            string pt = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location).Replace("\\", "/") + "/" + Application.ProductName;
-            mt = new System.Threading.Mutex(false, pt);
+            string pt = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location).Replace("\\", "/") + "/" + Application.ProductName;
+            mt = new Mutex(false, pt);
             try
             {
                 if (!mt.WaitOne(0, false))
@@ -105,13 +105,13 @@ namespace Tween.My
                         mt.Close();
                         mt = null;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
                     return;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -131,7 +131,7 @@ namespace Tween.My
 
         private bool IsEqualCurrentCulture(string CultureName)
         {
-            return System.Threading.Thread.CurrentThread.CurrentUICulture.Name.StartsWith(CultureName);
+            return Thread.CurrentThread.CurrentUICulture.Name.StartsWith(CultureName);
         }
 
         public string CultureCode
@@ -160,7 +160,7 @@ namespace Tween.My
             {
                 ChangeUICulture(code);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
             }
         }
@@ -170,22 +170,24 @@ namespace Tween.My
             try
             {
                 if (this.CultureCode != "OS")
+                {
                     ChangeUICulture(this.CultureCode);
+                }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
             }
         }
 
         private void CheckSettingFilePath()
         {
-            if (File.Exists(Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "roaming")))
+            if (File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "roaming")))
             {
                 MyCommon.SettingPath = MySpecialPath.UserAppDataPath();
             }
             else
             {
-                MyCommon.SettingPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+                MyCommon.SettingPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             }
         }
     }
