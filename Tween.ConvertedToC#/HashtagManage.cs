@@ -231,7 +231,7 @@ namespace Tween
             if (e.KeyChar == '#')
             {
                 _hashSupl.ShowDialog();
-                if (!String.IsNullOrEmpty(_hashSupl.inputText))
+                if (!String.IsNullOrEmpty(_hashSupl.InputText))
                 {
                     string fHalf = "";
                     string eHalf = "";
@@ -244,8 +244,8 @@ namespace Tween
                     {
                         eHalf = UseHashText.Text.Substring(selStart);
                     }
-                    UseHashText.Text = fHalf + _hashSupl.inputText + eHalf;
-                    UseHashText.SelectionStart = selStart + _hashSupl.inputText.Length;
+                    UseHashText.Text = fHalf + _hashSupl.InputText + eHalf;
+                    UseHashText.SelectionStart = selStart + _hashSupl.InputText.Length;
                 }
                 e.Handled = true;
             }

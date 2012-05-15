@@ -23,6 +23,7 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -31,12 +32,11 @@ namespace Tween
 {
     public partial class AtIdSupplement
     {
-        public string inputText = "";
-        public bool isBack = false;
-        private string startChar = "";
-        //    Private tabkeyFix As Boolean = False
+        public string InputText = "";
+        public bool IsBack = false;
+        public string StartsWith { get; set; }
 
-        private string _StartsWith = "";
+        private string _startChar = "";
 
         public void AddItem(string id)
         {
@@ -57,7 +57,7 @@ namespace Tween
         public List<string> GetItemList()
         {
             List<string> ids = new List<string>();
-            for (int i = 0; i <= this.TextId.AutoCompleteCustomSource.Count - 1; i++)
+            for (int i = 0; i < this.TextId.AutoCompleteCustomSource.Count ; i++)
             {
                 ids.Add(this.TextId.AutoCompleteCustomSource[i]);
             }
@@ -69,35 +69,35 @@ namespace Tween
             get { return this.TextId.AutoCompleteCustomSource.Count; }
         }
 
-        private void ButtonOK_Click(System.Object sender, System.EventArgs e)
+        private void ButtonOK_Click(object sender, EventArgs e)
         {
-            inputText = this.TextId.Text;
-            isBack = false;
+            InputText = this.TextId.Text;
+            IsBack = false;
         }
 
-        private void ButtonCancel_Click(System.Object sender, System.EventArgs e)
+        private void ButtonCancel_Click(object sender, EventArgs e)
         {
-            inputText = "";
-            isBack = false;
+            InputText = "";
+            IsBack = false;
         }
 
-        private void TextId_KeyDown(System.Object sender, System.Windows.Forms.KeyEventArgs e)
+        private void TextId_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Back && string.IsNullOrEmpty(this.TextId.Text))
+            if (e.KeyCode == Keys.Back && String.IsNullOrEmpty(this.TextId.Text))
             {
-                inputText = "";
-                isBack = true;
+                InputText = "";
+                IsBack = true;
                 this.Close();
             }
             if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Tab)
             {
-                inputText = this.TextId.Text + " ";
-                isBack = false;
+                InputText = this.TextId.Text + " ";
+                IsBack = false;
                 this.Close();
             }
             if (e.Control && e.KeyCode == Keys.Delete)
             {
-                if (!string.IsNullOrEmpty(this.TextId.Text))
+                if (!String.IsNullOrEmpty(this.TextId.Text))
                 {
                     int idx = this.TextId.AutoCompleteCustomSource.IndexOf(this.TextId.Text);
                     if (idx > -1)
@@ -109,22 +109,22 @@ namespace Tween
             }
         }
 
-        private void AtIdSupplement_Load(object sender, System.EventArgs e)
+        private void AtIdSupplement_Load(object sender, EventArgs e)
         {
-            if (startChar == "#")
+            if (_startChar == "#")
             {
                 this.ClientSize = new Size(this.TextId.Width, this.TextId.Height);
                 //プロパティで切り替えできるように
-                this.TextId.ImeMode = System.Windows.Forms.ImeMode.Inherit;
+                this.TextId.ImeMode = ImeMode.Inherit;
             }
         }
 
-        private void AtIdSupplement_Shown(object sender, System.EventArgs e)
+        private void AtIdSupplement_Shown(object sender, EventArgs e)
         {
-            TextId.Text = startChar;
-            if (!string.IsNullOrEmpty(_StartsWith))
+            TextId.Text = _startChar;
+            if (!String.IsNullOrEmpty(StartsWith))
             {
-                TextId.Text += _StartsWith.Substring(0, _StartsWith.Length);
+                TextId.Text += StartsWith.Substring(0, StartsWith.Length);
             }
             TextId.SelectionStart = TextId.Text.Length;
             TextId.Focus();
@@ -132,59 +132,39 @@ namespace Tween
 
         public AtIdSupplement()
         {
-            FormClosed += AtIdSupplement_FormClosed;
-            Shown += AtIdSupplement_Shown;
-            Load += AtIdSupplement_Load;
             // この呼び出しは、Windows フォーム デザイナで必要です。
             InitializeComponent();
-
             // InitializeComponent() 呼び出しの後で初期化を追加します。
         }
 
         public AtIdSupplement(List<string> ItemList, string startCharacter)
         {
-            FormClosed += AtIdSupplement_FormClosed;
-            Shown += AtIdSupplement_Shown;
-            Load += AtIdSupplement_Load;
             // この呼び出しは、Windows フォーム デザイナで必要です。
             InitializeComponent();
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
 
-            for (int i = 0; i <= ItemList.Count - 1; i++)
+            for (int i = 0; i < ItemList.Count; i++)
             {
                 this.TextId.AutoCompleteCustomSource.Add(ItemList[i]);
             }
-            startChar = startCharacter;
+            _startChar = startCharacter;
         }
 
-        private void TextId_PreviewKeyDown(object sender, System.Windows.Forms.PreviewKeyDownEventArgs e)
+        private void TextId_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Tab)
             {
-                inputText = this.TextId.Text + " ";
-                isBack = false;
+                InputText = this.TextId.Text + " ";
+                IsBack = false;
                 this.Close();
             }
         }
 
-        public string StartsWith
+        private void AtIdSupplement_FormClosed(object sender, FormClosedEventArgs e)
         {
-            get { return _StartsWith; }
-            set { _StartsWith = value; }
-        }
-
-        private void AtIdSupplement_FormClosed(System.Object sender, System.Windows.Forms.FormClosedEventArgs e)
-        {
-            _StartsWith = "";
-            if (isBack)
-            {
-                this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            }
-            else
-            {
-                this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            }
+            StartsWith = "";
+            this.DialogResult = IsBack ? DialogResult.Cancel : DialogResult.OK;
         }
     }
 }

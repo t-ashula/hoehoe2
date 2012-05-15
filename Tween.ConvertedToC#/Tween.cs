@@ -5713,7 +5713,7 @@ namespace Tween
             string eHalf = "";
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
-                if (!string.IsNullOrEmpty(dialog.inputText))
+                if (!string.IsNullOrEmpty(dialog.InputText))
                 {
                     if (selStart > 0)
                     {
@@ -5723,8 +5723,8 @@ namespace Tween
                     {
                         eHalf = owner.Text.Substring(selStart);
                     }
-                    owner.Text = fHalf + dialog.inputText + eHalf;
-                    owner.SelectionStart = selStart + dialog.inputText.Length;
+                    owner.Text = fHalf + dialog.InputText + eHalf;
+                    owner.SelectionStart = selStart + dialog.InputText.Length;
                 }
             }
             else
