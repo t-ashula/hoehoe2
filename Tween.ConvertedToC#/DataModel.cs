@@ -31,7 +31,7 @@ namespace Tween
 {
     public class TwitterDataModel
     {
-        [DataContract()]
+        [DataContract]
         public class Annotations
         {
             [DataMember(Name = "ConversationRole", IsRequired = false)]
@@ -41,7 +41,7 @@ namespace Tween
             public string FromUser;
         }
 
-        [DataContract()]
+        [DataContract]
         public class SizeElement
         {
             [DataMember(Name = "w")]
@@ -54,7 +54,7 @@ namespace Tween
             public string Resize;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Sizes
         {
             [DataMember(Name = "large")]
@@ -70,7 +70,7 @@ namespace Tween
             public SizeElement Thumb;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Media
         {
             [DataMember(Name = "id")]
@@ -101,7 +101,7 @@ namespace Tween
             public int[] Indices = new int[3];
         }
 
-        [DataContract()]
+        [DataContract]
         public class Urls
         {
             [DataMember(Name = "url")]
@@ -117,7 +117,7 @@ namespace Tween
             public int[] Indices = new int[3];
         }
 
-        [DataContract()]
+        [DataContract]
         public class Hashtags
         {
             [DataMember(Name = "indices")]
@@ -127,7 +127,7 @@ namespace Tween
             public string Text;
         }
 
-        [DataContract()]
+        [DataContract]
         public class UserMentions
         {
             [DataMember(Name = "indices")]
@@ -143,7 +143,7 @@ namespace Tween
             public Int64 Id;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Entities
         {
             [DataMember(Name = "urls")]
@@ -159,7 +159,7 @@ namespace Tween
             public Media[] Media;
         }
 
-        [DataContract()]
+        [DataContract]
         public class User
         {
             [DataMember(Name = "statuses_count")]
@@ -268,7 +268,7 @@ namespace Tween
             public Status Status;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Coordinates
         {
             [DataMember(Name = "type", IsRequired = false)]
@@ -278,7 +278,7 @@ namespace Tween
             public double[] Coordinates_ = new double[3];
         }
 
-        [DataContract()]
+        [DataContract]
         public class Geo
         {
             [DataMember(Name = "type", IsRequired = false)]
@@ -288,7 +288,7 @@ namespace Tween
             public double[] Coordinates = new double[3];
         }
 
-        [DataContract()]
+        [DataContract]
         public class BoundingBox
         {
             [DataMember(Name = "type", IsRequired = false)]
@@ -298,14 +298,14 @@ namespace Tween
             public double[][][] Coordinates;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Attributes
         {
             [DataMember(Name = "street_address", IsRequired = false)]
             public string StreetAddress;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Place
         {
             [DataMember(Name = "url")]
@@ -337,7 +337,7 @@ namespace Tween
             public string PlaceType;
         }
 
-        [DataContract()]
+        [DataContract]
         public class RetweetedStatus
         {
             [DataMember(Name = "coordinates", IsRequired = false)]
@@ -389,7 +389,7 @@ namespace Tween
             public Entities Entities;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Status
         {
             [DataMember(Name = "in_reply_to_status_id_str")]
@@ -456,7 +456,7 @@ namespace Tween
             public Entities Entities;
         }
 
-        [DataContract()]
+        [DataContract]
         public class TargetObject : Status
         {
             [DataMember(Name = "mode")]
@@ -487,7 +487,7 @@ namespace Tween
             public bool Following;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Directmessage
         {
             [DataMember(Name = "created_at")]
@@ -524,14 +524,14 @@ namespace Tween
             public Entities Entities;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Friendsevent
         {
             [DataMember(Name = "friends")]
             public Int64[] Friends;
         }
 
-        [DataContract()]
+        [DataContract]
         public class DeletedStatusContent
         {
             [DataMember(Name = "id")]
@@ -541,56 +541,56 @@ namespace Tween
             public Int64 UserId;
         }
 
-        [DataContract()]
+        [DataContract]
         public class DeletedStatus
         {
             [DataMember(Name = "status")]
             public DeletedStatusContent Status;
         }
 
-        [DataContract()]
+        [DataContract]
         public class DeleteEvent
         {
             [DataMember(Name = "delete")]
             public DeletedStatus Event;
         }
 
-        [DataContract()]
+        [DataContract]
         public class DeletedDirectmessage
         {
             [DataMember(Name = "direct_message")]
             public DeletedStatusContent Directmessage;
         }
 
-        [DataContract()]
+        [DataContract]
         public class DeleteDirectmessageEvent
         {
             [DataMember(Name = "delete")]
             public DeletedDirectmessage Event;
         }
 
-        [DataContract()]
+        [DataContract]
         public class DirectmessageEvent
         {
             [DataMember(Name = "direct_message")]
             public Directmessage Directmessage;
         }
 
-        [DataContract()]
+        [DataContract]
         public class TrackCount
         {
             [DataMember(Name = "track")]
             public int Track;
         }
 
-        [DataContract()]
+        [DataContract]
         public class LimitEvent
         {
             [DataMember(Name = "limit")]
             public TrackCount Limit;
         }
 
-        [DataContract()]
+        [DataContract]
         public class EventData
         {
             [DataMember(Name = "target")]
@@ -609,7 +609,7 @@ namespace Tween
             public User Source;
         }
 
-        [DataContract()]
+        [DataContract]
         public class RelatedTweet
         {
             [DataMember(Name = "annotations")]
@@ -625,7 +625,7 @@ namespace Tween
             public Status Status;
         }
 
-        [DataContract()]
+        [DataContract]
         public class RelatedResult
         {
             [DataMember(Name = "annotations")]
@@ -644,7 +644,7 @@ namespace Tween
             public double Score;
         }
 
-        [DataContract()]
+        [DataContract]
         public class RelationshipResult
         {
             [DataMember(Name = "followed_by")]
@@ -654,7 +654,7 @@ namespace Tween
             public bool Following;
         }
 
-        [DataContract()]
+        [DataContract]
         public class RelationshipUsers
         {
             [DataMember(Name = "target")]
@@ -664,14 +664,14 @@ namespace Tween
             public RelationshipResult Source;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Relationship
         {
             [DataMember(Name = "relationship")]
             public RelationshipUsers Relationship_;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Ids
         {
             [DataMember(Name = "ids")]
@@ -684,7 +684,7 @@ namespace Tween
             public long PreviousCursor;
         }
 
-        [DataContract()]
+        [DataContract]
         public class RateLimitStatus
         {
             [DataMember(Name = "reset_time_in_seconds")]
@@ -700,7 +700,7 @@ namespace Tween
             public int HourlyLimit;
         }
 
-        [DataContract()]
+        [DataContract]
         public class ListElementData
         {
             [DataMember(Name = "mode")]
@@ -737,7 +737,7 @@ namespace Tween
             public long Id;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Lists
         {
             [DataMember(Name = "lists")]
@@ -750,7 +750,7 @@ namespace Tween
             public long PreviousCursor;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Users
         {
             [DataMember(Name = "users")]
@@ -763,7 +763,7 @@ namespace Tween
             public long PreviousCursor;
         }
 
-        [DataContract()]
+        [DataContract]
         public class ErrorResponse
         {
             [DataMember(Name = "request")]
@@ -773,7 +773,7 @@ namespace Tween
             public string ErrMsg;
         }
 
-        [DataContract()]
+        [DataContract]
         public class SearchResult
         {
             [DataMember(Name = "statuses")]
@@ -786,7 +786,7 @@ namespace Tween
             public string ErrMsg;
         }
 
-        [DataContract()]
+        [DataContract]
         public class PhotoSize
         {
             [DataMember(Name = "h")]
@@ -799,7 +799,7 @@ namespace Tween
             public string Resize;
         }
 
-        [DataContract()]
+        [DataContract]
         public class PhotoType
         {
             [DataMember(Name = "large")]
@@ -815,7 +815,7 @@ namespace Tween
             public PhotoSize ThumbSize;
         }
 
-        [DataContract()]
+        [DataContract]
         public class Configuration
         {
             [DataMember(Name = "characters_reserved_per_media")]
