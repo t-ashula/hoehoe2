@@ -25,6 +25,7 @@
 
 using System;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Tween
 {
@@ -36,9 +37,9 @@ namespace Tween
 
         public bool Auth { get; set; }
 
-        private InternetSecurityManager SecurityManager;
+        private InternetSecurityManager _securityManager;
 
-        private void AuthWebBrowser_DocumentCompleted(System.Object sender, System.Windows.Forms.WebBrowserDocumentCompletedEventArgs e)
+        private void AuthWebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             if (this.AuthWebBrowser.Url.OriginalString == "https://api.twitter.com/oauth/authorize")
             {
@@ -53,9 +54,9 @@ namespace Tween
             }
         }
 
-        private void AuthBrowser_Load(object sender, System.EventArgs e)
+        private void AuthBrowser_Load(object sender, EventArgs e)
         {
-            this.SecurityManager = new InternetSecurityManager(this.AuthWebBrowser);
+            this._securityManager = new InternetSecurityManager(this.AuthWebBrowser);
 
             this.AuthWebBrowser.Navigate(new Uri(UrlString));
             if (!Auth)
@@ -65,26 +66,25 @@ namespace Tween
             }
         }
 
-        private void AuthWebBrowser_Navigating(System.Object sender, System.Windows.Forms.WebBrowserNavigatingEventArgs e)
+        private void AuthWebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             this.AddressLabel.Text = e.Url.OriginalString;
         }
 
-        private void NextButton_Click(System.Object sender, System.EventArgs e)
+        private void NextButton_Click(object sender, EventArgs e)
         {
             PinString = PinText.Text.Trim();
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.DialogResult = DialogResult.OK;
         }
 
-        private void Cancel_Click(System.Object sender, System.EventArgs e)
+        private void Cancel_Click(object sender, EventArgs e)
         {
             PinString = "";
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.DialogResult = DialogResult.Cancel;
         }
 
         public AuthBrowser()
         {
-            Load += AuthBrowser_Load;
             InitializeComponent();
         }
     }
