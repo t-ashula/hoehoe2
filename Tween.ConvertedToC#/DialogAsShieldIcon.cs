@@ -24,6 +24,9 @@
 // Boston, MA 02110-1301, USA.
 
 using System.Windows.Forms;
+using System;
+using System.Drawing;
+using System.Threading;
 
 namespace Tween
 {
@@ -31,37 +34,36 @@ namespace Tween
     {
         //Private shield As New ShieldIcon
 
-        private DialogResult dResult = System.Windows.Forms.DialogResult.None;
+        private DialogResult dResult = DialogResult.None;
 
-        private void OK_Button_Click(System.Object sender, System.EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
-            this.dResult = System.Windows.Forms.DialogResult.OK;
+            this.dResult = DialogResult.OK;
             this.Hide();
         }
 
-        private void Cancel_Button_Click(System.Object sender, System.EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
-            this.dResult = System.Windows.Forms.DialogResult.Cancel;
+            this.dResult = DialogResult.Cancel;
             this.Hide();
         }
 
-        private void DialogAsShieldIcon_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        private void DialogAsShieldIcon_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (dResult == System.Windows.Forms.DialogResult.None)
+            if (dResult == DialogResult.None)
             {
                 e.Cancel = true;
-                dResult = System.Windows.Forms.DialogResult.Cancel;
+                dResult = DialogResult.Cancel;
                 this.Hide();
             }
         }
 
-        private void DialogAsShieldIcon_Load(System.Object sender, System.EventArgs e)
+        private void DialogAsShieldIcon_Load(object sender, EventArgs e)
         {
-            //OK_Button.Image = shield.Icon
-            PictureBox1.Image = System.Drawing.SystemIcons.Question.ToBitmap();
+            PictureBox1.Image = SystemIcons.Question.ToBitmap();
         }
 
-        public new System.Windows.Forms.DialogResult ShowDialog(string text, string detail = "", string caption = "DialogAsShieldIcon", System.Windows.Forms.MessageBoxButtons Buttons = MessageBoxButtons.OKCancel, System.Windows.Forms.MessageBoxIcon icon = MessageBoxIcon.Question)
+        public DialogResult ShowDialog(string text, string detail = "", string caption = "DialogAsShieldIcon", MessageBoxButtons Buttons = MessageBoxButtons.OKCancel, MessageBoxIcon icon = MessageBoxIcon.Question)
         {
             Label1.Text = text;
             this.Text = caption;
@@ -69,46 +71,41 @@ namespace Tween
             switch (Buttons)
             {
                 case MessageBoxButtons.OKCancel:
-                    OK_Button.Text = "OK";
-                    Cancel_Button.Text = "Cancel";
+                    okButton.Text = "OK";
+                    cancelButton.Text = "Cancel";
                     break;
                 case MessageBoxButtons.YesNo:
-                    OK_Button.Text = "Yes";
-                    Cancel_Button.Text = "No";
+                    okButton.Text = "Yes";
+                    cancelButton.Text = "No";
                     break;
                 default:
-                    OK_Button.Text = "OK";
-                    Cancel_Button.Text = "Cancel";
+                    okButton.Text = "OK";
+                    cancelButton.Text = "Cancel";
                     break;
             }
-            // とりあえずアイコンは処理しない（互換性のためパラメータだけ指定できる）
 
+            // とりあえずアイコンは処理しない（互換性のためパラメータだけ指定できる）
             base.ShowDialog(this.Owner);
-            while (this.dResult == System.Windows.Forms.DialogResult.None)
+            while (this.dResult == DialogResult.None)
             {
-                System.Threading.Thread.Sleep(200);
+                Thread.Sleep(200);
                 Application.DoEvents();
             }
             if (Buttons == MessageBoxButtons.YesNo)
             {
                 switch (dResult)
                 {
-                    case System.Windows.Forms.DialogResult.OK:
-                        return System.Windows.Forms.DialogResult.Yes;
-                    case System.Windows.Forms.DialogResult.Cancel:
-                        return System.Windows.Forms.DialogResult.No;
+                    case DialogResult.OK:
+                        return DialogResult.Yes;
+                    case DialogResult.Cancel:
+                        return DialogResult.No;
                 }
             }
-            //else
-            {
-                return dResult;
-            }
+            return dResult;
         }
 
         public DialogAsShieldIcon()
         {
-            Load += DialogAsShieldIcon_Load;
-            FormClosing += DialogAsShieldIcon_FormClosing;
             InitializeComponent();
         }
     }
