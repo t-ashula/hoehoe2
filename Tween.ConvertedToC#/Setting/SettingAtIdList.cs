@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace Tween
 {
-    [Serializable()]
+    [Serializable]
     public class SettingAtIdList : SettingBase<SettingAtIdList>
     {
         #region "Settingクラス基本"
