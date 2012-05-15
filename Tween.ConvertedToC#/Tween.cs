@@ -391,7 +391,6 @@ namespace Tween
         }
 
         private ImageListViewItem displayItem;
-        private AdsBrowser ab;
 
         //URL短縮のUndo用
         private struct urlUndo
