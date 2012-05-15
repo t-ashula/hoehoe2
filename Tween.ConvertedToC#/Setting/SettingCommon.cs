@@ -26,10 +26,11 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Tween
 {
-    [Serializable()]
+    [Serializable]
     public class SettingCommon : SettingBase<SettingCommon>
     {
         #region "Settingクラス基本"
@@ -47,10 +48,9 @@ namespace Tween
         #endregion "Settingクラス基本"
 
         public List<UserAccount> UserAccounts;
-
         public string UserName = "";
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [XmlIgnore]
         public string Password = "";
 
         public string EncryptPassword
@@ -61,7 +61,7 @@ namespace Tween
 
         public string Token = "";
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [XmlIgnore]
         public string TokenSecret = "";
 
         public string EncryptTokenSecret
@@ -72,15 +72,17 @@ namespace Tween
 
         private string Encrypt(string password)
         {
-            if (string.IsNullOrEmpty(password))
+            if (String.IsNullOrEmpty(password))
+            {
                 password = "";
+            }
             if (password.Length > 0)
             {
                 try
                 {
                     return MyCommon.EncryptString(password);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -93,8 +95,10 @@ namespace Tween
 
         private string Decrypt(string password)
         {
-            if (string.IsNullOrEmpty(password))
+            if (String.IsNullOrEmpty(password))
+            {
                 password = "";
+            }
             if (password.Length > 0)
             {
                 try
@@ -118,11 +122,11 @@ namespace Tween
         public int ListsPeriod = 180;
         public bool Read = true;
         public bool ListLock = false;
-        public Tween.MyCommon.IconSizes IconSize = Tween.MyCommon.IconSizes.Icon16;
+        public MyCommon.IconSizes IconSize = MyCommon.IconSizes.Icon16;
         public bool NewAllPop = true;
         public bool EventNotifyEnabled = true;
-        public Tween.MyCommon.EventType EventNotifyFlag = Tween.MyCommon.EventType.All;
-        public Tween.MyCommon.EventType IsMyEventNotifyFlag = Tween.MyCommon.EventType.All;
+        public MyCommon.EventType EventNotifyFlag = MyCommon.EventType.All;
+        public MyCommon.EventType IsMyEventNotifyFlag = MyCommon.EventType.All;
         public bool ForceEventNotify = false;
         public bool FavEventUnread = true;
         public string TranslateLanguage = Tween.My_Project.Resources.TranslateDefaultLanguage;
@@ -130,7 +134,7 @@ namespace Tween
         public bool PlaySound = false;
         public bool UnreadManage = true;
         public bool OneWayLove = true;
-        public Tween.MyCommon.NameBalloonEnum NameBalloon = Tween.MyCommon.NameBalloonEnum.NickName;
+        public MyCommon.NameBalloonEnum NameBalloon = MyCommon.NameBalloonEnum.NickName;
         public bool PostCtrlEnter = false;
         public bool PostShiftEnter = false;
         public int CountApi = 60;
@@ -139,7 +143,7 @@ namespace Tween
         public bool DispUsername = false;
         public bool MinimizeToTray = false;
         public bool CloseToExit = false;
-        public Tween.MyCommon.DispTitleEnum DispLatestPost = Tween.MyCommon.DispTitleEnum.Post;
+        public MyCommon.DispTitleEnum DispLatestPost = MyCommon.DispTitleEnum.Post;
         public bool SortOrderLock = false;
         public bool TinyUrlResolve = true;
         public bool ShortUrlForceResolve = false;
@@ -166,7 +170,7 @@ namespace Tween
 
         public bool PreviewEnable = true;
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [XmlIgnore]
         public string OutputzKey = "";
 
         public string EncryptOutputzKey
@@ -175,15 +179,15 @@ namespace Tween
             set { OutputzKey = Decrypt(value); }
         }
 
-        public Tween.MyCommon.OutputzUrlmode OutputzUrlMode = MyCommon.OutputzUrlmode.twittercom;
-        public Tween.MyCommon.UrlConverter AutoShortUrlFirst = Tween.MyCommon.UrlConverter.Bitly;
+        public MyCommon.OutputzUrlmode OutputzUrlMode = MyCommon.OutputzUrlmode.twittercom;
+        public MyCommon.UrlConverter AutoShortUrlFirst = MyCommon.UrlConverter.Bitly;
         public bool UseUnreadStyle = true;
         public string DateTimeFormat = "yyyy/MM/dd H:mm:ss";
         public int DefaultTimeOut = 20;
         public bool RetweetNoConfirm = false;
         public bool LimitBalloon = false;
         public bool TabIconDisp = true;
-        public Tween.MyCommon.ReplyIconState ReplyIconState = Tween.MyCommon.ReplyIconState.StaticIcon;
+        public MyCommon.ReplyIconState ReplyIconState = MyCommon.ReplyIconState.StaticIcon;
         public bool WideSpaceConvert = true;
         public bool ReadOwnPost = false;
         public bool GetFav = true;
@@ -232,65 +236,4 @@ namespace Tween
 
 namespace Tween
 {
-    public class UserAccount
-    {
-        public string Username = "";
-        public long UserId = 0;
-        public long GAFirst = 0;
-        public long GALast = 0;
-        public string Token = "";
-
-        [System.Xml.Serialization.XmlIgnore()]
-        public string TokenSecret = "";
-
-        public string EncryptTokenSecret
-        {
-            get { return Encrypt(TokenSecret); }
-            set { TokenSecret = Decrypt(value); }
-        }
-
-        private string Encrypt(string password)
-        {
-            if (string.IsNullOrEmpty(password))
-                password = "";
-            if (password.Length > 0)
-            {
-                try
-                {
-                    return MyCommon.EncryptString(password);
-                }
-                catch (Exception ex)
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        private string Decrypt(string password)
-        {
-            if (string.IsNullOrEmpty(password))
-                password = "";
-            if (password.Length > 0)
-            {
-                try
-                {
-                    password = MyCommon.DecryptString(password);
-                }
-                catch (Exception ex)
-                {
-                    password = "";
-                }
-            }
-            return password;
-        }
-
-        public override string ToString()
-        {
-            return this.Username;
-        }
-    }
 }
