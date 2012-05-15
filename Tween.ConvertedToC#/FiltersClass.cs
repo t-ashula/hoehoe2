@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 
 namespace Tween
 {
@@ -53,15 +54,10 @@ namespace Tween
         private bool _moveFrom = false;
         private bool _setMark = true;
         private bool _useLambda = false;
-
         private bool _exuseLambda = false;
-
-        // ラムダ式コンパイルキャッシュ
         private LambdaExpression _lambdaExp = null;
-
         private Delegate _lambdaExpDelegate = null;
         private LambdaExpression _exlambdaExp = null;
-
         private Delegate _exlambdaExpDelegate = null;
 
         public FiltersClass()
@@ -72,11 +68,11 @@ namespace Tween
         private string MakeSummary()
         {
             StringBuilder fs = new StringBuilder();
-            if (!string.IsNullOrEmpty(_name) || _body.Count > 0 || _isRt || !string.IsNullOrEmpty(_source))
+            if (!String.IsNullOrEmpty(_name) || _body.Count > 0 || _isRt || !String.IsNullOrEmpty(_source))
             {
                 if (_searchBoth)
                 {
-                    if (!string.IsNullOrEmpty(_name))
+                    if (!String.IsNullOrEmpty(_name))
                     {
                         fs.AppendFormat(Tween.My_Project.Resources.SetFiltersText1, _name);
                     }
@@ -125,20 +121,20 @@ namespace Tween
                 {
                     fs.Append("LambdaExp/");
                 }
-                if (!string.IsNullOrEmpty(_source))
+                if (!String.IsNullOrEmpty(_source))
                 {
                     fs.AppendFormat("Src…{0}/", _source);
                 }
                 fs.Length -= 1;
                 fs.Append(")");
             }
-            if (!string.IsNullOrEmpty(_exname) || _exbody.Count > 0 || _isExRt || !string.IsNullOrEmpty(_exSource))
+            if (!String.IsNullOrEmpty(_exname) || _exbody.Count > 0 || _isExRt || !String.IsNullOrEmpty(_exSource))
             {
                 //除外
                 fs.Append(Tween.My_Project.Resources.SetFiltersText12);
                 if (_exsearchBoth)
                 {
-                    if (!string.IsNullOrEmpty(_exname))
+                    if (!String.IsNullOrEmpty(_exname))
                     {
                         fs.AppendFormat(Tween.My_Project.Resources.SetFiltersText1, _exname);
                     }
@@ -187,7 +183,7 @@ namespace Tween
                 {
                     fs.Append("LambdaExp/");
                 }
-                if (!string.IsNullOrEmpty(_exSource))
+                if (!String.IsNullOrEmpty(_exSource))
                 {
                     fs.AppendFormat("Src…{0}/", _exSource);
                 }
@@ -230,7 +226,7 @@ namespace Tween
             set { _exname = value; }
         }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [XmlIgnore]
         public List<string> BodyFilter
         {
             get { return _body; }
@@ -255,7 +251,7 @@ namespace Tween
             }
         }
 
-        [System.Xml.Serialization.XmlIgnore()]
+        [XmlIgnore]
         public List<string> ExBodyFilter
         {
             get { return _exbody; }
@@ -427,8 +423,8 @@ namespace Tween
                 tSource = post.Source;
             }
             //検索オプション
-            System.StringComparison compOpt = default(System.StringComparison);
-            System.Text.RegularExpressions.RegexOptions rgOpt = default(System.Text.RegularExpressions.RegexOptions);
+            StringComparison compOpt = default(StringComparison);
+            RegexOptions rgOpt = default(RegexOptions);
             if (_caseSensitive)
             {
                 compOpt = StringComparison.Ordinal;
@@ -441,12 +437,14 @@ namespace Tween
             }
             if (_searchBoth)
             {
-                if (string.IsNullOrEmpty(_name) || (!_useRegex && (post.ScreenName.Equals(_name, compOpt) || post.RetweetedBy.Equals(_name, compOpt))) || (_useRegex && (Regex.IsMatch(post.ScreenName, _name, rgOpt) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, _name, rgOpt)))))
+                if (String.IsNullOrEmpty(_name) || (!_useRegex && (post.ScreenName.Equals(_name, compOpt) || post.RetweetedBy.Equals(_name, compOpt))) || (_useRegex && (Regex.IsMatch(post.ScreenName, _name, rgOpt) || (!String.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, _name, rgOpt)))))
                 {
                     if (_useLambda)
                     {
                         if (!ExecuteLambdaExpression(_body[0], post))
+                        {
                             bHit = false;
+                        }
                     }
                     else
                     {
@@ -455,23 +453,31 @@ namespace Tween
                             if (_useRegex)
                             {
                                 if (!Regex.IsMatch(tBody, fs, rgOpt))
+                                {
                                     bHit = false;
+                                }
                             }
                             else
                             {
                                 if (_caseSensitive)
                                 {
                                     if (!tBody.Contains(fs))
+                                    {
                                         bHit = false;
+                                    }
                                 }
                                 else
                                 {
                                     if (!tBody.ToLower().Contains(fs.ToLower()))
+                                    {
                                         bHit = false;
+                                    }
                                 }
                             }
                             if (!bHit)
-                                break; // TODO: might not be correct. Was : Exit For
+                            {
+                                break;
+                            }
                         }
                     }
                 }
@@ -485,7 +491,9 @@ namespace Tween
                 if (_useLambda)
                 {
                     if (!ExecuteLambdaExpression(_body[0], post))
+                    {
                         bHit = false;
+                    }
                 }
                 else
                 {
@@ -493,232 +501,277 @@ namespace Tween
                     {
                         if (_useRegex)
                         {
-                            if (!(Regex.IsMatch(post.ScreenName, fs, rgOpt) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) || Regex.IsMatch(tBody, fs, rgOpt)))
+                            if (!(Regex.IsMatch(post.ScreenName, fs, rgOpt) || (!String.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) || Regex.IsMatch(tBody, fs, rgOpt)))
+                            {
                                 bHit = false;
+                            }
                         }
                         else
                         {
                             if (_caseSensitive)
                             {
                                 if (!(post.ScreenName.Contains(fs) || post.RetweetedBy.Contains(fs) || tBody.Contains(fs)))
+                                {
                                     bHit = false;
+                                }
                             }
                             else
                             {
                                 if (!(post.ScreenName.ToLower().Contains(fs.ToLower()) || post.RetweetedBy.ToLower().Contains(fs.ToLower()) || tBody.ToLower().Contains(fs.ToLower())))
+                                {
                                     bHit = false;
+                                }
                             }
                         }
                         if (!bHit)
-                            break; // TODO: might not be correct. Was : Exit For
+                        {
+                            break;
+                        }
                     }
                 }
             }
             if (_isRt)
             {
                 if (post.RetweetedId == 0)
+                {
                     bHit = false;
+                }
             }
-            if (!string.IsNullOrEmpty(_source))
+            if (!String.IsNullOrEmpty(_source))
             {
                 if (_useRegex)
                 {
                     if (!Regex.IsMatch(tSource, _source, rgOpt))
+                    {
                         bHit = false;
+                    }
                 }
                 else
                 {
                     if (!tSource.Equals(_source, compOpt))
+                    {
                         bHit = false;
+                    }
                 }
             }
-            if (bHit)
+            if (!bHit)
             {
-                //除外判定
-                if (_exsearchUrl)
+                return Tween.MyCommon.HITRESULT.None;
+            }
+            //除外判定
+            if (_exsearchUrl)
+            {
+                tBody = post.Text;
+                tSource = post.SourceHtml;
+            }
+            else
+            {
+                tBody = post.TextFromApi;
+                tSource = post.Source;
+            }
+            bool exFlag = false;
+            if (!String.IsNullOrEmpty(_exname) || _exbody.Count > 0)
+            {
+                if (_excaseSensitive)
                 {
-                    tBody = post.Text;
-                    tSource = post.SourceHtml;
+                    compOpt = StringComparison.Ordinal;
+                    rgOpt = RegexOptions.None;
                 }
                 else
                 {
-                    tBody = post.TextFromApi;
-                    tSource = post.Source;
+                    compOpt = StringComparison.OrdinalIgnoreCase;
+                    rgOpt = RegexOptions.IgnoreCase;
                 }
-
-                bool exFlag = false;
-                if (!string.IsNullOrEmpty(_exname) || _exbody.Count > 0)
+                if (_exsearchBoth)
                 {
-                    if (_excaseSensitive)
+                    if (String.IsNullOrEmpty(_exname) || (!_exuseRegex && (post.ScreenName.Equals(_exname, compOpt) || post.RetweetedBy.Equals(_exname, compOpt))) || (_exuseRegex && (Regex.IsMatch(post.ScreenName, _exname, rgOpt) || (!String.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, _exname, rgOpt)))))
                     {
-                        compOpt = StringComparison.Ordinal;
-                        rgOpt = RegexOptions.None;
-                    }
-                    else
-                    {
-                        compOpt = StringComparison.OrdinalIgnoreCase;
-                        rgOpt = RegexOptions.IgnoreCase;
-                    }
-                    if (_exsearchBoth)
-                    {
-                        if (string.IsNullOrEmpty(_exname) || (!_exuseRegex && (post.ScreenName.Equals(_exname, compOpt) || post.RetweetedBy.Equals(_exname, compOpt))) || (_exuseRegex && (Regex.IsMatch(post.ScreenName, _exname, rgOpt) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, _exname, rgOpt)))))
+                        if (_exbody.Count > 0)
                         {
-                            if (_exbody.Count > 0)
+                            if (_exuseLambda)
                             {
-                                if (_exuseLambda)
+                                if (ExecuteExLambdaExpression(_exbody[0], post))
                                 {
-                                    if (ExecuteExLambdaExpression(_exbody[0], post))
-                                        exFlag = true;
-                                }
-                                else
-                                {
-                                    foreach (string fs in _exbody)
-                                    {
-                                        if (_exuseRegex)
-                                        {
-                                            if (Regex.IsMatch(tBody, fs, rgOpt))
-                                                exFlag = true;
-                                        }
-                                        else
-                                        {
-                                            if (_excaseSensitive)
-                                            {
-                                                if (tBody.Contains(fs))
-                                                    exFlag = true;
-                                            }
-                                            else
-                                            {
-                                                if (tBody.ToLower().Contains(fs.ToLower()))
-                                                    exFlag = true;
-                                            }
-                                        }
-                                        if (exFlag)
-                                            break; // TODO: might not be correct. Was : Exit For
-                                    }
+                                    exFlag = true;
                                 }
                             }
                             else
                             {
-                                exFlag = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (_exuseLambda)
-                        {
-                            if (ExecuteExLambdaExpression(_exbody[0], post))
-                                exFlag = true;
-                        }
-                        else
-                        {
-                            foreach (string fs in _exbody)
-                            {
-                                if (_exuseRegex)
+                                foreach (string fs in _exbody)
                                 {
-                                    if (Regex.IsMatch(post.ScreenName, fs, rgOpt) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) || Regex.IsMatch(tBody, fs, rgOpt))
-                                        exFlag = true;
-                                }
-                                else
-                                {
-                                    if (_excaseSensitive)
+                                    if (_exuseRegex)
                                     {
-                                        if (post.ScreenName.Contains(fs) || post.RetweetedBy.Contains(fs) || tBody.Contains(fs))
+                                        if (Regex.IsMatch(tBody, fs, rgOpt))
+                                        {
                                             exFlag = true;
+                                        }
                                     }
                                     else
                                     {
-                                        if (post.ScreenName.ToLower().Contains(fs.ToLower()) || post.RetweetedBy.ToLower().Contains(fs.ToLower()) || tBody.ToLower().Contains(fs.ToLower()))
-                                            exFlag = true;
+                                        if (_excaseSensitive)
+                                        {
+                                            if (tBody.Contains(fs))
+                                            {
+                                                exFlag = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (tBody.ToLower().Contains(fs.ToLower()))
+                                            {
+                                                exFlag = true;
+                                            }
+                                        }
+                                    }
+                                    if (exFlag)
+                                    {
+                                        break;
                                     }
                                 }
-                                if (exFlag)
-                                    break; // TODO: might not be correct. Was : Exit For
                             }
-                        }
-                    }
-                }
-                if (_isExRt)
-                {
-                    if (post.RetweetedId > 0)
-                        exFlag = true;
-                }
-                if (!string.IsNullOrEmpty(_exSource))
-                {
-                    if (_exuseRegex)
-                    {
-                        if (Regex.IsMatch(tSource, _exSource, rgOpt))
-                            exFlag = true;
-                    }
-                    else
-                    {
-                        if (tSource.Equals(_exSource, compOpt))
-                            exFlag = true;
-                    }
-                }
-
-                if (string.IsNullOrEmpty(_name) && _body.Count == 0 && !_isRt && string.IsNullOrEmpty(_source))
-                {
-                    bHit = false;
-                }
-                if (bHit)
-                {
-                    if (!exFlag)
-                    {
-                        if (_moveFrom)
-                        {
-                            return Tween.MyCommon.HITRESULT.Move;
                         }
                         else
                         {
-                            if (_setMark)
-                            {
-                                return Tween.MyCommon.HITRESULT.CopyAndMark;
-                            }
-                            return Tween.MyCommon.HITRESULT.Copy;
+                            exFlag = true;
                         }
-                    }
-                    else
-                    {
-                        return Tween.MyCommon.HITRESULT.Exclude;
                     }
                 }
                 else
                 {
-                    if (exFlag)
+                    if (_exuseLambda)
                     {
-                        return Tween.MyCommon.HITRESULT.Exclude;
+                        if (ExecuteExLambdaExpression(_exbody[0], post))
+                            exFlag = true;
                     }
                     else
                     {
-                        return Tween.MyCommon.HITRESULT.None;
+                        foreach (string fs in _exbody)
+                        {
+                            if (_exuseRegex)
+                            {
+                                if (Regex.IsMatch(post.ScreenName, fs, rgOpt) || (!String.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) || Regex.IsMatch(tBody, fs, rgOpt))
+                                {
+                                    exFlag = true;
+                                }
+                            }
+                            else
+                            {
+                                if (_excaseSensitive)
+                                {
+                                    if (post.ScreenName.Contains(fs) || post.RetweetedBy.Contains(fs) || tBody.Contains(fs))
+                                    {
+                                        exFlag = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (post.ScreenName.ToLower().Contains(fs.ToLower()) || post.RetweetedBy.ToLower().Contains(fs.ToLower()) || tBody.ToLower().Contains(fs.ToLower()))
+                                    {
+                                        exFlag = true;
+                                    }
+                                }
+                            }
+                            if (exFlag)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (_isExRt)
+            {
+                if (post.RetweetedId > 0)
+                {
+                    exFlag = true;
+                }
+            }
+            if (!String.IsNullOrEmpty(_exSource))
+            {
+                if (_exuseRegex)
+                {
+                    if (Regex.IsMatch(tSource, _exSource, rgOpt))
+                    {
+                        exFlag = true;
+                    }
+                }
+                else
+                {
+                    if (tSource.Equals(_exSource, compOpt))
+                    {
+                        exFlag = true;
+                    }
+                }
+            }
+            if (String.IsNullOrEmpty(_name) && _body.Count == 0 && !_isRt && String.IsNullOrEmpty(_source))
+            {
+                bHit = false;
+            }
+            if (bHit)
+            {
+                if (exFlag)
+                {
+                    return Tween.MyCommon.HITRESULT.Exclude;
+                }
+                else
+                {
+                    if (_moveFrom)
+                    {
+                        return Tween.MyCommon.HITRESULT.Move;
+                    }
+                    else
+                    {
+                        return _setMark ? Tween.MyCommon.HITRESULT.CopyAndMark : Tween.MyCommon.HITRESULT.Copy;
                     }
                 }
             }
             else
             {
-                return Tween.MyCommon.HITRESULT.None;
+                return exFlag ? Tween.MyCommon.HITRESULT.Exclude : Tween.MyCommon.HITRESULT.None;
             }
         }
 
         public bool Equals(FiltersClass other)
         {
             if (this.BodyFilter.Count != other.BodyFilter.Count)
+            {
                 return false;
+            }
             if (this.ExBodyFilter.Count != other.ExBodyFilter.Count)
+            {
                 return false;
-            for (int i = 0; i <= this.BodyFilter.Count - 1; i++)
+            }
+            for (int i = 0; i < this.BodyFilter.Count; i++)
             {
                 if (this.BodyFilter[i] != other.BodyFilter[i])
+                {
                     return false;
+                }
             }
-            for (int i = 0; i <= this.ExBodyFilter.Count - 1; i++)
+            for (int i = 0; i < this.ExBodyFilter.Count; i++)
             {
                 if (this.ExBodyFilter[i] != other.ExBodyFilter[i])
+                {
                     return false;
+                }
             }
 
-            return (this.MoveFrom == other.MoveFrom) & (this.SetMark == other.SetMark) & (this.NameFilter == other.NameFilter) & (this.SearchBoth == other.SearchBoth) & (this.SearchUrl == other.SearchUrl) & (this.UseRegex == other.UseRegex) & (this.ExNameFilter == other.ExNameFilter) & (this.ExSearchBoth == other.ExSearchBoth) & (this.ExSearchUrl == other.ExSearchUrl) & (this.ExUseRegex == other.ExUseRegex) & (this.IsRt == other.IsRt) & (this.Source == other.Source) & (this.IsExRt == other.IsExRt) & (this.ExSource == other.ExSource) & (this.UseLambda == other.UseLambda) & (this.ExUseLambda == other.ExUseLambda);
+            return (this.MoveFrom == other.MoveFrom)
+                && (this.SetMark == other.SetMark)
+                && (this.NameFilter == other.NameFilter)
+                && (this.SearchBoth == other.SearchBoth)
+                && (this.SearchUrl == other.SearchUrl)
+                && (this.UseRegex == other.UseRegex)
+                && (this.ExNameFilter == other.ExNameFilter)
+                && (this.ExSearchBoth == other.ExSearchBoth)
+                && (this.ExSearchUrl == other.ExSearchUrl)
+                && (this.ExUseRegex == other.ExUseRegex)
+                && (this.IsRt == other.IsRt)
+                && (this.Source == other.Source)
+                && (this.IsExRt == other.IsExRt)
+                && (this.ExSource == other.ExSource)
+                && (this.UseLambda == other.UseLambda)
+                && (this.ExUseLambda == other.ExUseLambda);
         }
 
         public FiltersClass CopyTo(FiltersClass destination)
@@ -761,13 +814,23 @@ namespace Tween
         public override bool Equals(object obj)
         {
             if ((obj == null) || (!object.ReferenceEquals(this.GetType(), obj.GetType())))
+            {
                 return false;
+            }
             return this.Equals((FiltersClass)obj);
         }
 
         public override int GetHashCode()
         {
-            return this.MoveFrom.GetHashCode() ^ this.SetMark.GetHashCode() ^ this.BodyFilter.GetHashCode() ^ this.NameFilter.GetHashCode() ^ this.SearchBoth.GetHashCode() ^ this.SearchUrl.GetHashCode() ^ this.UseRegex.GetHashCode() ^ this.ExBodyFilter.GetHashCode() ^ this.ExNameFilter.GetHashCode() ^ this.ExSearchBoth.GetHashCode() ^ this.ExSearchUrl.GetHashCode() ^ this.ExUseRegex.GetHashCode() ^ this.IsRt.GetHashCode() ^ this.Source.GetHashCode() ^ this.IsExRt.GetHashCode() ^ this.ExSource.GetHashCode() ^ this.UseLambda.GetHashCode() ^ this.ExUseLambda.GetHashCode();
+            return this.MoveFrom.GetHashCode() ^ this.SetMark.GetHashCode()
+                ^ this.BodyFilter.GetHashCode() ^ this.NameFilter.GetHashCode()
+                ^ this.SearchBoth.GetHashCode() ^ this.SearchUrl.GetHashCode()
+                ^ this.UseRegex.GetHashCode() ^ this.ExBodyFilter.GetHashCode()
+                ^ this.ExNameFilter.GetHashCode() ^ this.ExSearchBoth.GetHashCode()
+                ^ this.ExSearchUrl.GetHashCode() ^ this.ExUseRegex.GetHashCode()
+                ^ this.IsRt.GetHashCode() ^ this.Source.GetHashCode()
+                ^ this.IsExRt.GetHashCode() ^ this.ExSource.GetHashCode()
+                ^ this.UseLambda.GetHashCode() ^ this.ExUseLambda.GetHashCode();
         }
     }
 }
