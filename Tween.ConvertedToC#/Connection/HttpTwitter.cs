@@ -34,9 +34,8 @@ namespace Tween
     {
         //OAuth関連
         ///<summary>
-        ///OAuthのコンシューマー鍵
+        ///OAuthのコンシューマー鍵 : TODO
         ///</summary>
-
         private const string ConsumerKey = "tLbG3uS0BIIE8jm1mKzKOfZ6EgUOmWVM";
         ///<summary>
         ///OAuthの署名作成用秘密コンシューマーデータ
@@ -48,12 +47,9 @@ namespace Tween
         private const string AccessTokenUrlXAuth = "https://api.twitter.com/oauth/access_token";
         private const string RequestTokenUrl = "https://api.twitter.com/oauth/request_token";
         private const string AuthorizeUrl = "https://api.twitter.com/oauth/authorize";
-
         private const string AccessTokenUrl = "https://api.twitter.com/oauth/access_token";
-
         private static string _protocol = "http://";
         private const string PostMethod = "POST";
-
         private const string GetMethod = "GET";
 
         //HttpConnectionApi or HttpConnectionOAuth
@@ -140,61 +136,24 @@ namespace Tween
 
         public string AccessToken
         {
-            get
-            {
-                if (httpCon != null)
-                {
-                    return ((HttpConnectionOAuth)httpCon).AccessToken;
-                }
-                else
-                {
-                    return "";
-                }
-            }
+            get { return httpCon != null ? ((HttpConnectionOAuth)httpCon).AccessToken : ""; }
         }
 
         public string AccessTokenSecret
         {
-            get
-            {
-                if (httpCon != null)
-                {
-                    return ((HttpConnectionOAuth)httpCon).AccessTokenSecret;
-                }
-                else
-                {
-                    return "";
-                }
-            }
+            get { return httpCon != null ? ((HttpConnectionOAuth)httpCon).AccessTokenSecret : ""; }
         }
 
         public string AuthenticatedUsername
         {
-            get
-            {
-                if (httpCon != null)
-                {
-                    return httpCon.AuthUsername;
-                }
-                else
-                {
-                    return "";
-                }
-            }
+            get { return httpCon != null ? httpCon.AuthUsername : ""; }
         }
 
         public long AuthenticatedUserId
         {
             get
             {
-                if (httpCon != null)
-                {
-                    return httpCon.AuthUserId;
-                }
-                else
-                {
-                    return 0;
-                }
+                return httpCon != null ? httpCon.AuthUserId : 0;
             }
             set
             {
@@ -233,19 +192,9 @@ namespace Tween
             this.Initialize("", "", "", 0);
         }
 
-        public static bool UseSsl
+        public static void SetUseSsl(bool useSSL)
         {
-            set
-            {
-                if (value)
-                {
-                    _protocol = "https://";
-                }
-                else
-                {
-                    _protocol = "http://";
-                }
-            }
+            _protocol = useSSL ? "https://" : "http://";
         }
 
         public HttpStatusCode UpdateStatus(string status, long replyToId, ref string content)
@@ -253,10 +202,10 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("status", status);
             if (replyToId > 0)
+            {
                 param.Add("in_reply_to_status_id", replyToId.ToString());
+            }
             param.Add("include_entities", "true");
-            //If AppendSettingDialog.Instance.ShortenTco AndAlso AppendSettingDialog.Instance.UrlConvertAuto Then param.Add("wrap_links", "true")
-
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/update.json"), param, ref content, null, null);
         }
 
@@ -266,13 +215,12 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("status", status);
             if (replyToId > 0)
+            {
                 param.Add("in_reply_to_status_id", replyToId.ToString());
+            }
             param.Add("include_entities", "true");
-            //If AppendSettingDialog.Instance.ShortenTco AndAlso AppendSettingDialog.Instance.UrlConvertAuto Then param.Add("wrap_links", "true")
-
             List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media[]", mediaFile));
-
             return httpCon.GetContent(PostMethod, new Uri("https://upload.twitter.com/1/statuses/update_with_media.json"), param, binary, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -287,8 +235,6 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("text", status);
             param.Add("screen_name", sendto);
-            //If AppendSettingDialog.Instance.ShortenTco AndAlso AppendSettingDialog.Instance.UrlConvertAuto Then param.Add("wrap_links", "true")
-
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/direct_messages/new.json"), param, ref content, null, null);
         }
 
@@ -318,7 +264,6 @@ namespace Tween
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
-
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/friendships/create.json"), param, ref content, null, null);
         }
 
@@ -326,7 +271,6 @@ namespace Tween
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
-
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/friendships/destroy.json"), param, ref content, null, null);
         }
 
@@ -334,7 +278,6 @@ namespace Tween
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
-
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/blocks/create.json"), param, ref content, null, null);
         }
 
@@ -342,7 +285,6 @@ namespace Tween
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
-
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/blocks/destroy.json"), param, ref content, null, null);
         }
 
@@ -350,7 +292,6 @@ namespace Tween
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
-
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/report_spam.json"), param, ref content, null, null);
         }
 
@@ -359,7 +300,6 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("source_screen_name", souceScreenName);
             param.Add("target_screen_name", targetScreenName);
-
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/friendships/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -405,8 +345,10 @@ namespace Tween
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
 
-            if ((user_id == 0 && string.IsNullOrEmpty(screen_name)) || (user_id != 0 && !string.IsNullOrEmpty(screen_name)))
+            if ((user_id == 0 && String.IsNullOrEmpty(screen_name)) || (user_id != 0 && !String.IsNullOrEmpty(screen_name)))
+            {
                 return HttpStatusCode.BadRequest;
+            }
 
             if (user_id > 0)
             {
@@ -435,20 +377,20 @@ namespace Tween
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/user_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode PublicTimeline(int count, long max_id, long since_id, ref string content)
+        public HttpStatusCode PublicTimeline(int count, long maxId, long sinceId, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             if (count > 0)
             {
                 param.Add("count", count.ToString());
             }
-            if (max_id > 0)
+            if (maxId > 0)
             {
-                param.Add("max_id", max_id.ToString());
+                param.Add("max_id", maxId.ToString());
             }
-            if (since_id > 0)
+            if (sinceId > 0)
             {
-                param.Add("since_id", since_id.ToString());
+                param.Add("since_id", sinceId.ToString());
             }
 
             param.Add("include_entities", "true");
@@ -456,20 +398,20 @@ namespace Tween
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/public_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode Mentions(int count, long max_id, long since_id, ref string content)
+        public HttpStatusCode Mentions(int count, long maxId, long sinceId, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             if (count > 0)
             {
                 param.Add("count", count.ToString());
             }
-            if (max_id > 0)
+            if (maxId > 0)
             {
-                param.Add("max_id", max_id.ToString());
+                param.Add("max_id", maxId.ToString());
             }
-            if (since_id > 0)
+            if (sinceId > 0)
             {
-                param.Add("since_id", since_id.ToString());
+                param.Add("since_id", sinceId.ToString());
             }
 
             param.Add("include_entities", "true");
@@ -477,40 +419,40 @@ namespace Tween
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/mentions.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode DirectMessages(int count, long max_id, long since_id, ref string content)
+        public HttpStatusCode DirectMessages(int count, long maxId, long sinceId, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             if (count > 0)
             {
                 param.Add("count", count.ToString());
             }
-            if (max_id > 0)
+            if (maxId > 0)
             {
-                param.Add("max_id", max_id.ToString());
+                param.Add("max_id", maxId.ToString());
             }
-            if (since_id > 0)
+            if (sinceId > 0)
             {
-                param.Add("since_id", since_id.ToString());
+                param.Add("since_id", sinceId.ToString());
             }
             param.Add("include_entities", "true");
 
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/direct_messages.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode DirectMessagesSent(int count, long max_id, long since_id, ref string content)
+        public HttpStatusCode DirectMessagesSent(int count, long maxId, long sinceId, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             if (count > 0)
             {
                 param.Add("count", count.ToString());
             }
-            if (max_id > 0)
+            if (maxId > 0)
             {
-                param.Add("max_id", max_id.ToString());
+                param.Add("max_id", maxId.ToString());
             }
-            if (since_id > 0)
+            if (sinceId > 0)
             {
-                param.Add("since_id", since_id.ToString());
+                param.Add("since_id", sinceId.ToString());
             }
             param.Add("include_entities", "true");
 
@@ -557,21 +499,28 @@ namespace Tween
         public HttpStatusCode PhoenixSearch(string words, string lang, int rpp, int page, long sinceId, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(words))
+            if (!String.IsNullOrEmpty(words))
+            {
                 param.Add("q", words);
+            }
             param.Add("include_entities", "1");
             param.Add("contributor_details", "true");
-            if (!string.IsNullOrEmpty(lang))
+            if (!String.IsNullOrEmpty(lang))
+            {
                 param.Add("lang", lang);
+            }
             if (rpp > 0)
+            {
                 param.Add("rpp", rpp.ToString());
+            }
             if (page > 0)
+            {
                 param.Add("page", page.ToString());
+            }
             if (sinceId > 0)
+            {
                 param.Add("since_id", sinceId.ToString());
-
-            if (param.Count == 0)
-                return HttpStatusCode.BadRequest;
+            }
 
             return httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Tween");
         }
@@ -580,18 +529,30 @@ namespace Tween
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(words))
+            {
                 param.Add("q", words);
+            }
             if (!string.IsNullOrEmpty(lang))
+            {
                 param.Add("lang", lang);
+            }
             if (rpp > 0)
+            {
                 param.Add("rpp", rpp.ToString());
+            }
             if (page > 0)
+            {
                 param.Add("page", page.ToString());
+            }
             if (sinceId > 0)
+            {
                 param.Add("since_id", sinceId.ToString());
+            }
 
             if (param.Count == 0)
+            {
                 return HttpStatusCode.BadRequest;
+            }
 
             return httpConVar.GetContent(GetMethod, CreateTwitterSearchUri("/search.atom"), param, ref content, null, "Tween");
         }
@@ -605,7 +566,6 @@ namespace Tween
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("cursor", cursor.ToString());
-
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/followers/ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -613,7 +573,6 @@ namespace Tween
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("cursor", cursor.ToString());
-
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/friendships/no_retweet_ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -632,33 +591,28 @@ namespace Tween
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode UpdateListID(string user, string list_id, string name, bool isPrivate, string description, ref string content)
+        public HttpStatusCode UpdateListID(string user, string listId, string name, bool isPrivate, string description, ref string content)
         {
-            string mode = "public";
-            if (isPrivate)
-            {
-                mode = "private";
-            }
-
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", user);
-            param.Add("list_id", list_id);
+            param.Add("list_id", listId);
+            param.Add("mode", isPrivate ? "private" : "public");
             if (name != null)
+            {
                 param.Add("name", name);
-            if (mode != null)
-                param.Add("mode", mode);
+            }
             if (description != null)
+            {
                 param.Add("description", description);
-
+            }
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/update.json"), param, ref content, null, null);
         }
 
-        public HttpStatusCode DeleteListID(string user, string list_id, ref string content)
+        public HttpStatusCode DeleteListID(string user, string listId, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", user);
-            param.Add("list_id", list_id);
-
+            param.Add("list_id", listId);
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/destroy.json"), param, ref content, null, null);
         }
 
@@ -670,27 +624,27 @@ namespace Tween
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/subscriptions.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode GetListsStatuses(long userId, long list_id, int per_page, long max_id, long since_id, bool isRTinclude, ref string content)
+        public HttpStatusCode GetListsStatuses(long userId, long listId, int perPage, long maxId, long sinceId, bool isRTinclude, ref string content)
         {
             //認証なくても取得できるが、protectedユーザー分が抜ける
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("user_id", userId.ToString());
-            param.Add("list_id", list_id.ToString());
+            param.Add("list_id", listId.ToString());
             if (isRTinclude)
             {
                 param.Add("include_rts", "true");
             }
-            if (per_page > 0)
+            if (perPage > 0)
             {
-                param.Add("per_page", per_page.ToString());
+                param.Add("per_page", perPage.ToString());
             }
-            if (max_id > 0)
+            if (maxId > 0)
             {
-                param.Add("max_id", max_id.ToString());
+                param.Add("max_id", maxId.ToString());
             }
-            if (since_id > 0)
+            if (sinceId > 0)
             {
-                param.Add("since_id", since_id.ToString());
+                param.Add("since_id", sinceId.ToString());
             }
             param.Add("include_entities", "true");
 
@@ -699,105 +653,47 @@ namespace Tween
 
         public HttpStatusCode CreateLists(string listname, bool isPrivate, string description, ref string content)
         {
-            string mode = "public";
-            if (isPrivate)
-            {
-                mode = "private";
-            }
-
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("name", listname);
-            param.Add("mode", mode);
-            if (!string.IsNullOrEmpty(description))
+            param.Add("mode", isPrivate ? "private" : "public");
+            if (!String.IsNullOrEmpty(description))
             {
                 param.Add("description", description);
             }
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/create.json"), param, ref content, null, null);
         }
 
-        public HttpStatusCode GetListMembers(string user, string list_id, long cursor, ref string content)
+        public HttpStatusCode GetListMembers(string user, string listId, long cursor, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", user);
-            param.Add("list_id", list_id);
+            param.Add("list_id", listId);
             param.Add("cursor", cursor.ToString());
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/members.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode CreateListMembers(string list_id, string memberName, ref string content)
+        public HttpStatusCode CreateListMembers(string listId, string memberName, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
-            param.Add("list_id", list_id);
+            param.Add("list_id", listId);
             param.Add("screen_name", memberName);
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/members/create.json"), param, ref content, null, null);
         }
 
-        //Public Function CreateListMembers(ByVal user As String, ByVal list_id As String, ByVal memberName As String, ByRef content As String) As HttpStatusCode
-        //    '正常に動かないので旧APIで様子見
-        //    'Dim param As New Dictionary(Of String, String)
-        //    'param.Add("screen_name", user)
-        //    'param.Add("list_id", list_id)
-        //    'param.Add("member_screen_name", memberName)
-        //    'Return httpCon.GetContent(PostMethod, _
-        //    '                    CreateTwitterUri("/1/lists/members/create.json"), _
-        //    '                    param, _
-        //    '                    content, _
-        //    '                    Nothing, _
-        //    '                    Nothing)
-        //    Dim param As New Dictionary(Of String, String)
-        //    param.Add("id", memberName)
-        //    Return httpCon.GetContent(PostMethod, _
-        //                        CreateTwitterUri("/1/" + user + "/" + list_id + "/members.json"), _
-        //                        param, _
-        //                        content, _
-        //                        Nothing, _
-        //                        Nothing)
-        //End Function
-
-        public HttpStatusCode DeleteListMembers(string list_id, string memberName, ref string content)
+        public HttpStatusCode DeleteListMembers(string listId, string memberName, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", memberName);
-            param.Add("list_id", list_id);
+            param.Add("list_id", listId);
             return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/members/destroy.json"), param, ref content, null, null);
         }
 
-        //Public Function DeleteListMembers(ByVal user As String, ByVal list_id As String, ByVal memberName As String, ByRef content As String) As HttpStatusCode
-        //    'Dim param As New Dictionary(Of String, String)
-        //    'param.Add("screen_name", user)
-        //    'param.Add("list_id", list_id)
-        //    'param.Add("member_screen_name", memberName)
-        //    'Return httpCon.GetContent(PostMethod, _
-        //    '                    CreateTwitterUri("/1/lists/members/destroy.json"), _
-        //    '                    param, _
-        //    '                    content, _
-        //    '                    Nothing, _
-        //    '                    Nothing)
-        //    Dim param As New Dictionary(Of String, String)
-        //    param.Add("id", memberName)
-        //    param.Add("_method", "DELETE")
-        //    Return httpCon.GetContent(PostMethod, _
-        //                        CreateTwitterUri("/1/" + user + "/" + list_id + "/members.json"), _
-        //                        param, _
-        //                        content, _
-        //                        Nothing, _
-        //                        Nothing)
-        //End Function
-
-        public HttpStatusCode ShowListMember(string list_id, string memberName, ref string content)
+        public HttpStatusCode ShowListMember(string listId, string memberName, ref string content)
         {
-            //新APIがmember_screen_nameもmember_user_idも無視して、自分のIDを返してくる。
-            //正式にドキュメントに反映されるまで旧APIを使用する
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", memberName);
-            param.Add("list_id", list_id);
+            param.Add("list_id", listId);
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/members/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
-            //Return httpCon.GetContent(GetMethod, _
-            //                    CreateTwitterUri("/1/" + user + "/" + list_id + "/members/" + id + ".json"), _
-            //                    Nothing, _
-            //                    content, _
-            //                    TwitterApiInfo.HttpHeaders, _
-            //                    AddressOf GetApiCallback)
         }
 
         #endregion "Lists"
@@ -842,9 +738,7 @@ namespace Tween
         {
             //認証なくても取得できるが、protectedユーザー分が抜ける
             Dictionary<string, string> param = new Dictionary<string, string>();
-
             param.Add("include_entities", "true");
-
             return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/related_results/show/" + id.ToString() + ".json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -868,41 +762,37 @@ namespace Tween
         private static string _twitterUrl = "api.twitter.com";
         private static string _TwitterSearchUrl = "search.twitter.com";
         private static string _twitterUserStreamUrl = "userstream.twitter.com";
-
         private static string _twitterStreamUrl = "stream.twitter.com";
 
         private Uri CreateTwitterUri(string path)
         {
-            return new Uri(string.Format("{0}{1}{2}", _protocol, _twitterUrl, path));
+            return new Uri(String.Format("{0}{1}{2}", _protocol, _twitterUrl, path));
         }
 
         private Uri CreateTwitterSearchUri(string path)
         {
-            return new Uri(string.Format("{0}{1}{2}", _protocol, _TwitterSearchUrl, path));
+            return new Uri(String.Format("{0}{1}{2}", _protocol, _TwitterSearchUrl, path));
         }
 
         private Uri CreateTwitterUserStreamUri(string path)
         {
-            return new Uri(string.Format("{0}{1}{2}", "https://", _twitterUserStreamUrl, path));
+            return new Uri(String.Format("{0}{1}{2}", "https://", _twitterUserStreamUrl, path));
         }
 
         private Uri CreateTwitterStreamUri(string path)
         {
-            return new Uri(string.Format("{0}{1}{2}", "http://", _twitterStreamUrl, path));
+            return new Uri(String.Format("{0}{1}{2}", "http://", _twitterStreamUrl, path));
         }
 
-        public static string TwitterUrl
+        public static void SetTwitterUrl(string value)
         {
-            set
-            {
-                _twitterUrl = value;
-                HttpOAuthApiProxy.ProxyHost = value;
-            }
+            _twitterUrl = value;
+            HttpOAuthApiProxy.ProxyHost = value;
         }
 
-        public static string TwitterSearchUrl
+        public static void SetTwitterSearchUrl(string value)
         {
-            set { _TwitterSearchUrl = value; }
+            _TwitterSearchUrl = value;
         }
 
         #endregion "Proxy API"
@@ -937,9 +827,9 @@ namespace Tween
             //文中の日本語キーワードに反応せず、使えない（スペースで分かち書きしてないと反応しない）
             Dictionary<string, string> param = new Dictionary<string, string>();
 
-            if (!string.IsNullOrEmpty(trackwords))
+            if (!String.IsNullOrEmpty(trackwords))
             {
-                param.Add("track", string.Join(",", trackwords.Split(" ".ToCharArray())));
+                param.Add("track", String.Join(",", trackwords.Split(" ".ToCharArray())));
             }
 
             return httpCon.GetContent(PostMethod, CreateTwitterStreamUri("/1/statuses/filter.json"), param, ref content, userAgent);

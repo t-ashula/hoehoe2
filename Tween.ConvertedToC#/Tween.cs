@@ -927,8 +927,8 @@ namespace Tween
             sfTab.LineAlignment = StringAlignment.Center;
 
             //設定画面への反映
-            HttpTwitter.TwitterUrl = _cfgCommon.TwitterUrl;
-            HttpTwitter.TwitterSearchUrl = _cfgCommon.TwitterSearchUrl;
+            HttpTwitter.SetTwitterUrl(_cfgCommon.TwitterUrl);
+            HttpTwitter.SetTwitterSearchUrl(_cfgCommon.TwitterSearchUrl);
             SettingDialog.TwitterApiUrl = _cfgCommon.TwitterUrl;
             SettingDialog.TwitterSearchApiUrl = _cfgCommon.TwitterSearchUrl;
 
@@ -1303,8 +1303,8 @@ namespace Tween
             ShortUrl.IsForceResolve = SettingDialog.ShortUrlForceResolve;
             ShortUrl.SetBitlyId(SettingDialog.BitlyUser);
             ShortUrl.SetBitlyKey(SettingDialog.BitlyPwd);
-            HttpTwitter.TwitterUrl = _cfgCommon.TwitterUrl;
-            HttpTwitter.TwitterSearchUrl = _cfgCommon.TwitterSearchUrl;
+            HttpTwitter.SetTwitterUrl(_cfgCommon.TwitterUrl);
+            HttpTwitter.SetTwitterSearchUrl(_cfgCommon.TwitterSearchUrl);
             tw.TrackWord = _cfgCommon.TrackWord;
             TrackToolStripMenuItem.Checked = !String.IsNullOrEmpty(tw.TrackWord);
             tw.AllAtReply = _cfgCommon.AllAtReply;
@@ -4674,8 +4674,8 @@ namespace Tween
                     ShortUrl.IsForceResolve = SettingDialog.ShortUrlForceResolve;
                     ShortUrl.SetBitlyId(SettingDialog.BitlyUser);
                     ShortUrl.SetBitlyKey(SettingDialog.BitlyPwd);
-                    HttpTwitter.TwitterUrl = _cfgCommon.TwitterUrl;
-                    HttpTwitter.TwitterSearchUrl = _cfgCommon.TwitterSearchUrl;
+                    HttpTwitter.SetTwitterUrl(_cfgCommon.TwitterUrl);
+                    HttpTwitter.SetTwitterSearchUrl(_cfgCommon.TwitterSearchUrl);
 
                     HttpConnection.InitializeConnection(SettingDialog.DefaultTimeOut, SettingDialog.SelectedProxyType, SettingDialog.ProxyAddress, SettingDialog.ProxyPort, SettingDialog.ProxyUser, SettingDialog.ProxyPassword);
                     this.CreatePictureServices();

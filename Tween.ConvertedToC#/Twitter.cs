@@ -1682,7 +1682,7 @@ namespace Tween
 
         public void SetUseSsl(bool value)
         {
-            HttpTwitter.UseSsl = value;
+            HttpTwitter.SetUseSsl(value);
             _protocol = value ? "https://" : "http://";
         }
 
