@@ -29,9 +29,8 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Text;
-using Microsoft.VisualBasic;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Tween
 {
@@ -469,7 +468,9 @@ namespace Tween
             }
             if (!String.IsNullOrEmpty(header["Date"]))
             {
-                content += Environment.NewLine + "Check the Date & Time of this computer." + Environment.NewLine + "Server:" + Convert.ToDateTime(header["Date"]).ToString() + "  PC:" + DateAndTime.Now.ToString();
+                content += Environment.NewLine 
+                    + "Check the Date & Time of this computer." + Environment.NewLine 
+                    + "Server:" + Convert.ToDateTime(header["Date"]).ToString() + "  PC:" + DateTime.Now.ToString();
             }
             return responseCode;
         }
