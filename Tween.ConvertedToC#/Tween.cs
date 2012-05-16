@@ -1608,12 +1608,12 @@ namespace Tween
                     }
                 }
             }
-            foreach (var ua_loopVariable in SettingDialog.UserAccounts)
+            foreach (var ua in SettingDialog.UserAccounts)
             {
                 if (ua.UserId == 0 && ua.Username.ToLower() == tw.Username.ToLower())
                 {
                     ua.UserId = tw.UserId;
-                    break; // TODO: might not be correct. Was : Exit For
+                    break; 
                 }
             }
         }
@@ -7405,7 +7405,7 @@ namespace Tween
                                 return true;
                             case Keys.C:
                             case Keys.Insert:
-                                string selText = WebBrowser_GetSelectionText(ref withEventsField_PostBrowser);
+                                string selText = WebBrowser_GetSelectionText(ref PostBrowser);
                                 if (!String.IsNullOrEmpty(selText))
                                 {
                                     try
@@ -11454,7 +11454,7 @@ namespace Tween
             //発言詳細で「選択文字列をコピー」
             try
             {
-                Clipboard.SetDataObject(WebBrowser_GetSelectionText(ref withEventsField_PostBrowser), false, 5, 100);
+                Clipboard.SetDataObject(WebBrowser_GetSelectionText(ref PostBrowser), false, 5, 100);
             }
             catch (Exception ex)
             {
@@ -11465,7 +11465,7 @@ namespace Tween
         private void doSearchToolStrip(string url)
         {
             //発言詳細で「選択文字列で検索」（選択文字列取得）
-            string selText = WebBrowser_GetSelectionText(ref withEventsField_PostBrowser);
+            string selText = WebBrowser_GetSelectionText(ref PostBrowser);
 
             if (selText != null)
             {
@@ -11579,7 +11579,7 @@ namespace Tween
                 ListManageUserContextToolStripMenuItem.Enabled = false;
             }
             // 文字列選択されていないときは選択文字列関係の項目を非表示に
-            string _selText = WebBrowser_GetSelectionText(ref withEventsField_PostBrowser);
+            string _selText = WebBrowser_GetSelectionText(ref PostBrowser);
             if (_selText == null)
             {
                 SelectionSearchContextMenuItem.Enabled = false;
@@ -11613,7 +11613,7 @@ namespace Tween
         private void CurrentTabToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //発言詳細の選択文字列で現在のタブを検索
-            string _selText = WebBrowser_GetSelectionText(ref withEventsField_PostBrowser);
+            string _selText = WebBrowser_GetSelectionText(ref PostBrowser);
 
             if (_selText != null)
             {
@@ -13442,17 +13442,6 @@ namespace Tween
 
         public TweenMain()
         {
-            Deactivate += TweenMain_Deactivate;
-            Shown += TweenMain_Shown;
-            DragOver += TweenMain_DragOver;
-            DragDrop += TweenMain_DragDrop;
-            Resize += TweenMain_Resize;
-            LocationChanged += Tween_LocationChanged;
-            ClientSizeChanged += Tween_ClientSizeChanged;
-            FormClosing += Tween_FormClosing;
-            Load += Form1_Load;
-            Disposed += TweenMain_Disposed;
-            Activated += TweenMain_Activated;
             _hookGlobalHotkey = new HookGlobalHotkey(this);
             // この呼び出しは、Windows フォーム デザイナで必要です。
             InitializeComponent();
@@ -14344,7 +14333,7 @@ namespace Tween
 
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            doTranslation(WebBrowser_GetSelectionText(ref withEventsField_PostBrowser));
+            doTranslation(WebBrowser_GetSelectionText(ref PostBrowser));
         }
 
         private bool ExistCurrentPost
