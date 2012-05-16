@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
+using System.IO;
 
 namespace Tween
 {
@@ -42,16 +43,9 @@ namespace Tween
                 string data = "";
                 Dictionary<string, string> head = new Dictionary<string, string>();
                 HttpStatusCode ret = GetResponse(req, ref data, head, false);
-                if (head.ContainsKey("Location"))
-                {
-                    return head["Location"];
-                }
-                else
-                {
-                    return url;
-                }
+                return head.ContainsKey("Location") ? head["Location"] : url;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return url;
             }
@@ -94,13 +88,15 @@ namespace Tween
 
         private delegate Image CheckValidImageDelegate(Image img, int width, int height);
 
-        private Image GetImageInternal(CheckValidImageDelegate CheckImage, string url, string referer, int timeout, ref string errmsg)
+        private Image GetImageInternal(CheckValidImageDelegate checkImage, string url, string referer, int timeout, ref string errmsg)
         {
             try
             {
                 HttpWebRequest req = CreateRequest(GetMethod, new Uri(url), null, false);
-                if (!string.IsNullOrEmpty(referer))
+                if (!String.IsNullOrEmpty(referer))
+                {
                     req.Referer = referer;
+                }
                 if (timeout < 3000 || timeout > 30000)
                 {
                     req.Timeout = 10000;
@@ -123,9 +119,13 @@ namespace Tween
                     }
                 }
                 if (img != null)
+                {
                     img.Tag = url;
+                }
                 if (ret == HttpStatusCode.OK)
-                    return CheckImage(img, img.Width, img.Height);
+                {
+                    return checkImage(img, img.Width, img.Height);
+                }
                 return null;
             }
             catch (WebException ex)
@@ -136,67 +136,71 @@ namespace Tween
                 }
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return null;
             }
         }
 
-        public bool PostData(string Url, Dictionary<string, string> param)
+        public bool PostData(string url, Dictionary<string, string> param)
         {
             try
             {
-                HttpWebRequest req = CreateRequest(PostMethod, new Uri(Url), param, false);
-                HttpStatusCode res = this.GetResponse(req, null, false);
+                HttpWebRequest req = CreateRequest(PostMethod, new Uri(url), param, false);
+                HttpStatusCode res = GetResponse(req, null, false);
                 if (res == HttpStatusCode.OK)
+                {
                     return true;
+                }
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return false;
             }
         }
 
-        public bool PostData(string Url, Dictionary<string, string> param, ref string content)
+        public bool PostData(string url, Dictionary<string, string> param, ref string content)
         {
             try
             {
-                HttpWebRequest req = CreateRequest(PostMethod, new Uri(Url), param, false);
+                HttpWebRequest req = CreateRequest(PostMethod, new Uri(url), param, false);
                 HttpStatusCode res = this.GetResponse(req, ref content, null, false);
                 if (res == HttpStatusCode.OK)
+                {
                     return true;
+                }
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return false;
             }
         }
 
-        public bool GetData(string Url, Dictionary<string, string> param, ref string content, string userAgent)
+        public bool GetData(string url, Dictionary<string, string> param, ref string content, string userAgent)
         {
             string t = "";
-            return GetData(Url, param, ref content, 100000, ref t, userAgent);
+            return GetData(url, param, ref content, 100000, ref t, userAgent);
         }
 
-        public bool GetData(string Url, Dictionary<string, string> param, ref string content)
+        public bool GetData(string url, Dictionary<string, string> param, ref string content)
         {
             string t = "";
-            return GetData(Url, param, ref content, 100000, ref t, "");
+            return GetData(url, param, ref content, 100000, ref t, "");
         }
 
-        public bool GetData(string Url, Dictionary<string, string> param, ref string content, int timeout)
+        public bool GetData(string url, Dictionary<string, string> param, ref string content, int timeout)
         {
             string t = "";
-            return GetData(Url, param, ref content, timeout, ref t, "");
+            return GetData(url, param, ref content, timeout, ref t, "");
         }
 
-        public bool GetData(string Url, Dictionary<string, string> param, ref string content, int timeout, ref string errmsg, string userAgent)
+        public bool GetData(string url, Dictionary<string, string> param, ref string content, int timeout, ref string errmsg, string userAgent)
         {
             try
             {
-                HttpWebRequest req = CreateRequest(GetMethod, new Uri(Url), param, false);
+                HttpWebRequest req = CreateRequest(GetMethod, new Uri(url), param, false);
                 if (timeout < 3000 || timeout > 100000)
                 {
                     req.Timeout = 10000;
@@ -205,11 +209,15 @@ namespace Tween
                 {
                     req.Timeout = timeout;
                 }
-                if (!string.IsNullOrEmpty(userAgent))
+                if (!String.IsNullOrEmpty(userAgent))
+                {
                     req.UserAgent = userAgent;
+                }
                 HttpStatusCode res = this.GetResponse(req, ref content, null, false);
                 if (res == HttpStatusCode.OK)
+                {
                     return true;
+                }
                 if (errmsg != null)
                 {
                     errmsg = res.ToString();
@@ -226,39 +234,41 @@ namespace Tween
             }
         }
 
-        public HttpStatusCode GetContent(string method, Uri Url, Dictionary<string, string> param, ref string content, Dictionary<string, string> headerInfo, string userAgent)
+        public HttpStatusCode GetContent(string method, Uri url, Dictionary<string, string> param, ref string content, Dictionary<string, string> headerInfo, string userAgent)
         {
             //Searchで使用。呼び出し元で例外キャッチしている。
-            HttpWebRequest req = CreateRequest(method, Url, param, false);
+            HttpWebRequest req = CreateRequest(method, url, param, false);
             req.UserAgent = userAgent;
-            return this.GetResponse(req, ref content, headerInfo, false);
+            return GetResponse(req, ref content, headerInfo, false);
         }
 
-        public bool GetDataToFile(string Url, string savePath)
+        public bool GetDataToFile(string url, string savePath)
         {
             try
             {
-                HttpWebRequest req = CreateRequest(GetMethod, new Uri(Url), null, false);
+                HttpWebRequest req = CreateRequest(GetMethod, new Uri(url), null, false);
                 req.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
                 req.UserAgent = MyCommon.GetUserAgentString();
-                using (System.IO.FileStream strm = new System.IO.FileStream(savePath, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                using (FileStream strm = new FileStream(savePath, FileMode.Create, FileAccess.Write))
                 {
                     try
                     {
-                        HttpStatusCode res = this.GetResponse(req, strm, null, false);
+                        HttpStatusCode res = GetResponse(req, strm, null, false);
                         strm.Close();
                         if (res == HttpStatusCode.OK)
+                        {
                             return true;
+                        }
                         return false;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         strm.Close();
                         return false;
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -272,7 +282,9 @@ namespace Tween
         public Image CheckValidImage(Image img, int width, int height)
         {
             if (img == null)
+            {
                 return null;
+            }
             Bitmap bmp = new Bitmap(width, height);
             try
             {
@@ -285,7 +297,7 @@ namespace Tween
                 bmp.Tag = img.Tag;
                 return bmp;
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 bmp.Dispose();
                 bmp = new Bitmap(width, height);
