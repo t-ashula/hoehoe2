@@ -40,7 +40,6 @@ using System.Web;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
-using Microsoft.VisualBasic;
 
 namespace Tween
 {
@@ -371,7 +370,7 @@ namespace Tween
             string retStr = orgData;
             retStr = Regex.Replace(retStr, "<a [^>]*href=\"/", "<a href=\"" + _protocol + "twitter.com/");
             retStr = retStr.Replace("<a href=", "<a target=\"_self\" href=");
-            retStr = retStr.Replace(Constants.vbLf, "<br>");
+            retStr = retStr.Replace("\r\n", "<br>");
 
             //半角スペースを置換(Thanks @anis774)
             bool ret = false;
@@ -429,25 +428,10 @@ namespace Tween
             }
         }
 
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_IsPostRestricted__prev_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        PostInfo static_IsPostRestricted__prev;
+        PostInfo _prevPostInfo = new PostInfo("", "", "", "");
 
         private bool IsPostRestricted(TwitterDataModel.Status status)
         {
-            lock (static_IsPostRestricted__prev_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_IsPostRestricted__prev_Init))
-                    {
-                        static_IsPostRestricted__prev = new PostInfo("", "", "", "");
-                    }
-                }
-                finally
-                {
-                    static_IsPostRestricted__prev_Init.State = 1;
-                }
-            }
             PostInfo currentPost = new PostInfo("", "", "", "");
             currentPost.CreatedAt = status.CreatedAt;
             currentPost.Id = status.IdStr;
@@ -461,14 +445,14 @@ namespace Tween
             }
             currentPost.UserId = status.User.IdStr;
 
-            if (currentPost.Equals(static_IsPostRestricted__prev))
+            if (currentPost.Equals(_prevPostInfo))
             {
                 return true;
             }
-            static_IsPostRestricted__prev.CreatedAt = currentPost.CreatedAt;
-            static_IsPostRestricted__prev.Id = currentPost.Id;
-            static_IsPostRestricted__prev.Text = currentPost.Text;
-            static_IsPostRestricted__prev.UserId = currentPost.UserId;
+            _prevPostInfo.CreatedAt = currentPost.CreatedAt;
+            _prevPostInfo.Id = currentPost.Id;
+            _prevPostInfo.Text = currentPost.Text;
+            _prevPostInfo.UserId = currentPost.UserId;
 
             return false;
         }
@@ -1538,7 +1522,7 @@ namespace Tween
         public string GetVersionInfo()
         {
             string content = "";
-            if (!(new HttpVarious()).GetData("http://tween.sourceforge.jp/version.txt?" + DateAndTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), null, ref content, MyCommon.GetUserAgentString()))
+            if (!(new HttpVarious()).GetData("http://tween.sourceforge.jp/version.txt?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), null, ref content, MyCommon.GetUserAgentString()))
             {
                 throw new Exception("GetVersionInfo Failed");
             }
@@ -1550,7 +1534,7 @@ namespace Tween
             try
             {
                 //本体
-                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/Tween" + strVer + ".gz?" + DateAndTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenNew.exe")))
+                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/Tween" + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenNew.exe")))
                 {
                     return "Err:Download failed";
                 }
@@ -1559,7 +1543,7 @@ namespace Tween
                 {
                     Directory.CreateDirectory(Path.Combine(MyCommon.SettingPath, "en"));
                 }
-                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenResEn" + strVer + ".gz?" + DateAndTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, "en"), "Tween.resourcesNew.dll")))
+                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenResEn" + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, "en"), "Tween.resourcesNew.dll")))
                 {
                     return "Err:Download failed";
                 }
@@ -1588,7 +1572,7 @@ namespace Tween
                     {
                         Directory.CreateDirectory(Path.Combine(MyCommon.SettingPath, curCul));
                     }
-                    if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenRes" + curCul + strVer + ".gz?" + DateAndTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, curCul), "Tween.resourcesNew.dll")))
+                    if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenRes" + curCul + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, curCul), "Tween.resourcesNew.dll")))
                     {
                         //Return "Err:Download failed"
                     }
@@ -1617,19 +1601,19 @@ namespace Tween
                     {
                         Directory.CreateDirectory(Path.Combine(MyCommon.SettingPath, curCul2));
                     }
-                    if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenRes" + curCul2 + strVer + ".gz?" + DateAndTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, curCul2), "Tween.resourcesNew.dll")))
+                    if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenRes" + curCul2 + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, curCul2), "Tween.resourcesNew.dll")))
                     {
                         //Return "Err:Download failed"
                     }
                 }
 
                 //アップデータ
-                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenUp3.gz?" + DateAndTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenUp3.exe")))
+                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenUp3.gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenUp3.exe")))
                 {
                     return "Err:Download failed";
                 }
                 //シリアライザDLL
-                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenDll" + strVer + ".gz?" + DateAndTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenNew.XmlSerializers.dll")))
+                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenDll" + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenNew.XmlSerializers.dll")))
                 {
                     return "Err:Download failed";
                 }
@@ -2909,27 +2893,10 @@ namespace Tween
             return CreateDirectMessagesFromJson(content, gType, read);
         }
 
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_GetFavoritesApi_page_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-
-        int static_GetFavoritesApi_page;
+        int _prevFavPage = 1;
 
         public string GetFavoritesApi(bool read, Tween.MyCommon.WorkerType gType, bool more)
         {
-            lock (static_GetFavoritesApi_page_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_GetFavoritesApi_page_Init))
-                    {
-                        static_GetFavoritesApi_page = 1;
-                    }
-                }
-                finally
-                {
-                    static_GetFavoritesApi_page_Init.State = 1;
-                }
-            }
-
             if (Twitter.AccountState != MyCommon.AccountState.Valid)
             {
                 return "";
@@ -2951,16 +2918,16 @@ namespace Tween
             // 前ページ取得の場合はページカウンタをインクリメント、それ以外の場合はページカウンタリセット
             if (more)
             {
-                static_GetFavoritesApi_page += 1;
+                _prevFavPage += 1;
             }
             else
             {
-                static_GetFavoritesApi_page = 1;
+                _prevFavPage = 1;
             }
 
             try
             {
-                res = _twCon.Favorites(count, static_GetFavoritesApi_page, ref content);
+                res = _twCon.Favorites(count, _prevFavPage, ref content);
             }
             catch (Exception ex)
             {
@@ -4261,7 +4228,7 @@ namespace Tween
 
         public bool IsUserstreamDataReceived
         {
-            get { return DateAndTime.Now.Subtract(this._lastUserstreamDataReceived).TotalSeconds < 31; }
+            get { return DateTime.Now.Subtract(this._lastUserstreamDataReceived).TotalSeconds < 31; }
         }
 
         private void userStream_StatusArrived(string line)
@@ -4829,22 +4796,5 @@ namespace Tween
         {
             ApiInformationChanged += Twitter_ApiInformationChanged;
         }
-
-        private static bool InitStaticVariableHelper(Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag flag)
-        {
-            if (flag.State == 0)
-            {
-                flag.State = 2;
-                return true;
-            }
-            else if (flag.State == 2)
-            {
-                throw new Microsoft.VisualBasic.CompilerServices.IncompleteInitialization();
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
+   }
 }
