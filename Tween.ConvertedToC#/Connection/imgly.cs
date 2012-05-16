@@ -35,33 +35,30 @@ namespace Tween
     {
         //OAuth関連
         ///<summary>
-        ///OAuthのコンシューマー鍵
+        ///OAuthのコンシューマー鍵 : TODO
         ///</summary>
-
         private const string ConsumerKey = "tLbG3uS0BIIE8jm1mKzKOfZ6EgUOmWVM";
         ///<summary>
         ///OAuthの署名作成用秘密コンシューマーデータ
         ///</summary>
-
         private const string ConsumerSecretKey = "M0IMsbl2722iWa+CGPVcNeQmE+TFpJk8B/KW9UUTk3eLOl9Ij005r52JNxVukTzM";
 
-        private string[] pictureExt = {
-			".jpg",
-			".jpeg",
-			".gif",
-			".png"
-		};
+        private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
 
         private const long MaxFileSize = 4 * 1024 * 1024;
 
-        private Twitter tw;
+        private Twitter _tw;
 
-        public string Upload(ref string filePath, ref string message, long reply_to)
+        public string Upload(ref string filePath, ref string message, long replyTo)
         {
-            if (string.IsNullOrEmpty(filePath))
+            if (String.IsNullOrEmpty(filePath))
+            {
                 return "Err:File isn't specified.";
-            if (string.IsNullOrEmpty(message))
+            }
+            if (String.IsNullOrEmpty(message))
+            {
                 message = "";
+            }
             FileInfo mediaFile = null;
             try
             {
@@ -72,7 +69,9 @@ namespace Tween
                 return "Err:" + ex.Message;
             }
             if (mediaFile == null || !mediaFile.Exists)
+            {
                 return "Err:File isn't exists.";
+            }
 
             string content = "";
             HttpStatusCode ret = default(HttpStatusCode);
@@ -110,12 +109,16 @@ namespace Tween
             }
             //アップロードまでは成功
             filePath = "";
-            if (string.IsNullOrEmpty(url))
+            if (String.IsNullOrEmpty(url))
+            {
                 url = "";
+            }
             //Twitterへの投稿
             //投稿メッセージの再構成
-            if (string.IsNullOrEmpty(message))
+            if (String.IsNullOrEmpty(message))
+            {
                 message = "";
+            }
             if (message.Length + AppendSettingDialog.Instance.TwitterConfiguration.CharactersReservedPerMedia + 1 > 140)
             {
                 message = message.Substring(0, 140 - AppendSettingDialog.Instance.TwitterConfiguration.CharactersReservedPerMedia - 1) + " " + url;
@@ -124,19 +127,25 @@ namespace Tween
             {
                 message += " " + url;
             }
-            return tw.PostStatus(message, reply_to);
+            return _tw.PostStatus(message, replyTo);
         }
 
         private HttpStatusCode UploadFile(FileInfo mediaFile, string message, ref string content)
         {
             //Message必須
-            if (string.IsNullOrEmpty(message))
+            if (String.IsNullOrEmpty(message))
+            {
                 message = "";
+            }
             //Check filetype and size(Max 4MB)
-            if (!this.CheckValidExtension(mediaFile.Extension))
+            if (!CheckValidExtension(mediaFile.Extension))
+            {
                 throw new ArgumentException("Service don't support this filetype.");
-            if (!this.CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
+            }
+            if (!CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
+            {
                 throw new ArgumentException("File is too large.");
+            }
 
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("message", message);
@@ -150,11 +159,7 @@ namespace Tween
 
         public bool CheckValidExtension(string ext)
         {
-            if (Array.IndexOf(pictureExt, ext.ToLower()) > -1)
-            {
-                return true;
-            }
-            return false;
+            return Array.IndexOf(_pictureExts, ext.ToLower()) > -1;
         }
 
         public string GetFileOpenDialogFilter()
@@ -193,8 +198,8 @@ namespace Tween
         public imgly(Twitter twitter)
             : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.json"))
         {
-            tw = twitter;
-            Initialize(MyCommon.DecryptString(ConsumerKey), MyCommon.DecryptString(ConsumerSecretKey), tw.AccessToken, tw.AccessTokenSecret, "", "");
+            _tw = twitter;
+            Initialize(MyCommon.DecryptString(ConsumerKey), MyCommon.DecryptString(ConsumerSecretKey), _tw.AccessToken, _tw.AccessTokenSecret, "", "");
         }
     }
 }
