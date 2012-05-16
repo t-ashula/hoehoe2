@@ -34,17 +34,15 @@ Public Class HttpConnectionOAuthEcho
     Private _token As String
     Private _tokenSecret As String
 
-    Public WriteOnly Property Realm As Uri
-        Set(ByVal value As Uri)
-            _realm = value
-        End Set
-    End Property
+    public void SetRealm(Uri value)
+{
+    _realm = value;
+}
 
-    Public WriteOnly Property ServiceProvider As Uri
-        Set(ByVal value As Uri)
-            _serviceProvider = value
-        End Set
-    End Property
+    public void SetServiceProvider(Uri value)
+{
+    _serviceProvider = value;
+}
 
     Protected Overrides Sub AppendOAuthInfo(ByVal webRequest As HttpWebRequest, _
                                 ByVal query As Dictionary(Of String, String), _

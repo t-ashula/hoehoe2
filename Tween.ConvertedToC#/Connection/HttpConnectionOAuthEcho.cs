@@ -34,18 +34,17 @@ namespace Tween
     {
         private Uri _realm;
         private Uri _serviceProvider;
-        private string _token;
+        //private string _token;
+        //private string _tokenSecret;
 
-        private string _tokenSecret;
-
-        public Uri Realm
+        public void SetRealm(Uri value)
         {
-            set { _realm = value; }
+            _realm = value;
         }
 
-        public Uri ServiceProvider
+        public void SetServiceProvider(Uri value)
         {
-            set { _serviceProvider = value; }
+            _serviceProvider = value;
         }
 
         protected override void AppendOAuthInfo(HttpWebRequest webRequest, Dictionary<string, string> query, string token, string tokenSecret)
@@ -74,7 +73,7 @@ namespace Tween
                 }
             }
             webRequest.Headers.Add("X-Verify-Credentials-Authorization", sb.ToString());
-            webRequest.Headers.Add("X-Auth-Service-Provider", string.Format("{0}://{1}{2}", _serviceProvider.Scheme, _serviceProvider.Host, _serviceProvider.AbsolutePath));
+            webRequest.Headers.Add("X-Auth-Service-Provider", String.Format("{0}://{1}{2}", _serviceProvider.Scheme, _serviceProvider.Host, _serviceProvider.AbsolutePath));
         }
 
         public HttpConnectionOAuthEcho(Uri realm, Uri serviceProvider)
