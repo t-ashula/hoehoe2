@@ -27,7 +27,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Tween
 {
@@ -2223,14 +2222,14 @@ namespace Tween
         public void SetTextPos(int pos)
         {
             textPos = pos;
-            ch = textPos < textLen ? text[textPos] : Strings.ChrW(0);
+            ch = textPos < textLen ? text[textPos] : '\0';
         }
 
         public void NextChar()
         {
             if (textPos < textLen)
                 textPos += 1;
-            ch = textPos < textLen ? text[textPos] : Strings.ChrW(0);
+            ch = textPos < textLen ? text[textPos] : '\0';
         }
 
         public void NextToken()
