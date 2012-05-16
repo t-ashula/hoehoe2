@@ -34,8 +34,6 @@ namespace Tween
     {
         private Uri _realm;
         private Uri _serviceProvider;
-        //private string _token;
-        //private string _tokenSecret;
 
         public void SetRealm(Uri value)
         {

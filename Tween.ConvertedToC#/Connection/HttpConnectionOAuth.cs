@@ -31,6 +31,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using Microsoft.VisualBasic;
+using System.Security.Cryptography;
 
 namespace Tween
 {
@@ -45,57 +46,57 @@ namespace Tween
         ///<summary>
         ///OAuth署名のoauth_timestamp算出用基準日付（1970/1/1 00:00:00）
         ///</summary>
-
         private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
+
         ///<summary>
         ///OAuth署名のoauth_nonce算出用乱数クラス
         ///</summary>
-
         private static readonly Random NonceRandom = new Random();
+        
         ///<summary>
         ///OAuthのアクセストークン。永続化可能（ユーザー取り消しの可能性はある）。
         ///</summary>
-
         private string token = "";
+        
         ///<summary>
         ///OAuthの署名作成用秘密アクセストークン。永続化可能（ユーザー取り消しの可能性はある）。
         ///</summary>
-
         private string tokenSecret = "";
+        
         ///<summary>
         ///OAuthのコンシューマー鍵
         ///</summary>
 
         private string consumerKey;
+
         ///<summary>
         ///OAuthの署名作成用秘密コンシューマーデータ
         ///</summary>
-
         protected string consumerSecret;
+        
         ///<summary>
         ///認証成功時の応答でユーザー情報を取得する場合のキー。設定しない場合は、AuthUsernameもブランクのままとなる
         ///</summary>
-
         private string userIdentKey = "";
+        
         ///<summary>
         ///認証成功時の応答でユーザーID情報を取得する場合のキー。設定しない場合は、AuthUserIdもブランクのままとなる
         ///</summary>
-
         private string userIdIdentKey = "";
+        
         ///<summary>
         ///認証完了時の応答からuserIdentKey情報に基づいて取得するユーザー情報
         ///</summary>
-
         private string authorizedUsername = "";
+        
         ///<summary>
         ///認証完了時の応答からuserIdentKey情報に基づいて取得するユーザー情報
         ///</summary>
-
         private long authorizedUserId;
+        
         ///<summary>
         ///Stream用のHttpWebRequest
         ///</summary>
-
         private HttpWebRequest streamReq = null;
 
         ///<summary>
@@ -111,8 +112,10 @@ namespace Tween
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content, Dictionary<string, string> headerInfo, CallbackDelegate callback)
         {
             //認証済かチェック
-            if (string.IsNullOrEmpty(token))
+            if (String.IsNullOrEmpty(token))
+            {
                 return HttpStatusCode.Unauthorized;
+            }
 
             HttpWebRequest webReq = CreateRequest(method, requestUri, param, false);
             //OAuth認証ヘッダを付加
@@ -141,8 +144,10 @@ namespace Tween
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, List<KeyValuePair<string, FileInfo>> binary, ref string content, Dictionary<string, string> headerInfo, CallbackDelegate callback)
         {
             //認証済かチェック
-            if (string.IsNullOrEmpty(token))
+            if (String.IsNullOrEmpty(token))
+            {
                 return HttpStatusCode.Unauthorized;
+            }
 
             HttpWebRequest webReq = CreateRequest(method, requestUri, param, binary, false);
             //OAuth認証ヘッダを付加
@@ -176,18 +181,21 @@ namespace Tween
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref Stream content, string userAgent)
         {
             //認証済かチェック
-            if (string.IsNullOrEmpty(token))
+            if (String.IsNullOrEmpty(token))
+            {
                 return HttpStatusCode.Unauthorized;
+            }
 
             this.RequestAbort();
             streamReq = CreateRequest(method, requestUri, param, false);
             //User-Agent指定がある場合は付加
-            if (!string.IsNullOrEmpty(userAgent))
+            if (!String.IsNullOrEmpty(userAgent))
+            {
                 streamReq.UserAgent = userAgent;
+            }
 
             //OAuth認証ヘッダを付加
             AppendOAuthInfo(streamReq, param, token, tokenSecret);
-
             try
             {
                 HttpWebResponse webRes = (HttpWebResponse)streamReq.GetResponse();
@@ -215,7 +223,7 @@ namespace Tween
                     streamReq = null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
             }
         }
@@ -237,9 +245,7 @@ namespace Tween
         {
             //PIN-based flow
             authUri = GetAuthenticatePageUri(requestTokenUrl, authorizeUrl, ref requestToken);
-            if (authUri == null)
-                return false;
-            return true;
+            return authUri != null;
         }
 
         ///<summary>
@@ -255,15 +261,19 @@ namespace Tween
         public HttpStatusCode AuthenticatePinFlow(string accessTokenUrl, string requestToken, string pinCode)
         {
             //PIN-based flow
-            if (string.IsNullOrEmpty(requestToken))
+            if (String.IsNullOrEmpty(requestToken))
+            {
                 throw new Exception("Sequence error.(requestToken is blank)");
+            }
 
             //アクセストークン取得
             string content = "";
             NameValueCollection accessTokenData = null;
             HttpStatusCode httpCode = GetOAuthToken(new Uri(accessTokenUrl), pinCode, requestToken, null, ref content);
             if (httpCode != HttpStatusCode.OK)
+            {
                 return httpCode;
+            }
             accessTokenData = ParseQueryString(content);
 
             if (accessTokenData != null)
@@ -271,7 +281,7 @@ namespace Tween
                 token = accessTokenData["oauth_token"];
                 tokenSecret = accessTokenData["oauth_token_secret"];
                 //サービスごとの独自拡張対応
-                if (!string.IsNullOrEmpty(this.userIdentKey))
+                if (!String.IsNullOrEmpty(this.userIdentKey))
                 {
                     authorizedUsername = accessTokenData[this.userIdentKey];
                 }
@@ -279,7 +289,7 @@ namespace Tween
                 {
                     authorizedUsername = "";
                 }
-                if (!string.IsNullOrEmpty(this.userIdIdentKey))
+                if (!String.IsNullOrEmpty(this.userIdIdentKey))
                 {
                     try
                     {
@@ -294,8 +304,10 @@ namespace Tween
                 {
                     authorizedUserId = 0;
                 }
-                if (string.IsNullOrEmpty(token))
+                if (String.IsNullOrEmpty(token))
+                {
                     throw new InvalidDataException("Token is null.");
+                }
                 return HttpStatusCode.OK;
             }
             else
@@ -314,7 +326,7 @@ namespace Tween
         public HttpStatusCode AuthenticateXAuth(Uri accessTokenUrl, string username, string password, ref string content)
         {
             //ユーザー・パスワードチェック
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (String.IsNullOrEmpty(username) || String.IsNullOrEmpty(password))
             {
                 throw new Exception("Sequence error.(username or password is blank)");
             }
@@ -327,7 +339,9 @@ namespace Tween
             //アクセストークン取得
             HttpStatusCode httpCode = GetOAuthToken(accessTokenUrl, "", "", parameter, ref content);
             if (httpCode != HttpStatusCode.OK)
+            {
                 return httpCode;
+            }
             NameValueCollection accessTokenData = ParseQueryString(content);
 
             if (accessTokenData != null)
@@ -335,7 +349,7 @@ namespace Tween
                 token = accessTokenData["oauth_token"];
                 tokenSecret = accessTokenData["oauth_token_secret"];
                 //サービスごとの独自拡張対応
-                if (!string.IsNullOrEmpty(this.userIdentKey))
+                if (!String.IsNullOrEmpty(this.userIdentKey))
                 {
                     authorizedUsername = accessTokenData[this.userIdentKey];
                 }
@@ -343,13 +357,13 @@ namespace Tween
                 {
                     authorizedUsername = "";
                 }
-                if (!string.IsNullOrEmpty(this.userIdIdentKey))
+                if (!String.IsNullOrEmpty(this.userIdIdentKey))
                 {
                     try
                     {
                         authorizedUserId = Convert.ToInt64(accessTokenData[this.userIdIdentKey]);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         authorizedUserId = 0;
                     }
@@ -358,8 +372,11 @@ namespace Tween
                 {
                     authorizedUserId = 0;
                 }
-                if (string.IsNullOrEmpty(token))
+
+                if (String.IsNullOrEmpty(token))
+                {
                     throw new InvalidDataException("Token is null.");
+                }
                 return HttpStatusCode.OK;
             }
             else
@@ -417,15 +434,16 @@ namespace Tween
         {
             HttpWebRequest webReq = null;
             //HTTPリクエスト生成。PINコードもパラメータも未指定の場合はGETメソッドで通信。それ以外はPOST
-            if (string.IsNullOrEmpty(pinCode) && parameter == null)
+            if (String.IsNullOrEmpty(pinCode) && parameter == null)
             {
                 webReq = CreateRequest("GET", requestUri, null, false);
             }
             else
             {
-                webReq = CreateRequest("POST", requestUri, parameter, false);
                 //ボディに追加パラメータ書き込み
+                webReq = CreateRequest("POST", requestUri, parameter, false);
             }
+
             //OAuth関連パラメータ準備。追加パラメータがあれば追加
             Dictionary<string, string> query = new Dictionary<string, string>();
             if (parameter != null)
@@ -436,20 +454,23 @@ namespace Tween
                 }
             }
             //PINコードが指定されていればパラメータに追加
-            if (!string.IsNullOrEmpty(pinCode))
+            if (!String.IsNullOrEmpty(pinCode))
+            {
                 query.Add("oauth_verifier", pinCode);
+            }
             //OAuth関連情報をHTTPリクエストに追加
             AppendOAuthInfo(webReq, query, requestToken, "");
             //HTTP応答取得
-            Dictionary<string, string> header = new Dictionary<string, string> { {
-				"Date",
-				""
-			} };
+            Dictionary<string, string> header = new Dictionary<string, string> { { "Date", "" } };
             HttpStatusCode responseCode = GetResponse(webReq, ref content, header, false);
             if (responseCode == HttpStatusCode.OK)
+            {
                 return responseCode;
-            if (!string.IsNullOrEmpty(header["Date"]))
+            }
+            if (!String.IsNullOrEmpty(header["Date"]))
+            {
                 content += Environment.NewLine + "Check the Date & Time of this computer." + Environment.NewLine + "Server:" + Convert.ToDateTime(header["Date"]).ToString() + "  PC:" + DateAndTime.Now.ToString();
+            }
             return responseCode;
         }
 
@@ -501,13 +522,14 @@ namespace Tween
             Dictionary<string, string> parameter = new Dictionary<string, string>();
             parameter.Add("oauth_consumer_key", consumerKey);
             parameter.Add("oauth_signature_method", "HMAC-SHA1");
-            parameter.Add("oauth_timestamp", Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds).ToString());
-            //epoch秒
+            parameter.Add("oauth_timestamp", Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds).ToString());            //epoch秒
             parameter.Add("oauth_nonce", NonceRandom.Next(123400, 9999999).ToString());
             parameter.Add("oauth_version", "1.0");
-            if (!string.IsNullOrEmpty(token))
-                parameter.Add("oauth_token", token);
             //トークンがあれば追加
+            if (!String.IsNullOrEmpty(token))
+            {
+                parameter.Add("oauth_token", token);
+            }
             return parameter;
         }
 
@@ -531,13 +553,14 @@ namespace Tween
             string signatureBase = string.Format("{0}&{1}&{2}", method, UrlEncode(url), UrlEncode(paramString));
             //署名鍵の文字列をコンシューマー秘密鍵とアクセストークン秘密鍵から生成（&区切り。アクセストークン秘密鍵なくても&残すこと）
             string key = UrlEncode(consumerSecret) + "&";
-            if (!string.IsNullOrEmpty(tokenSecret))
-                key += UrlEncode(tokenSecret);
-            //鍵生成＆署名生成
-            using (System.Security.Cryptography.HMACSHA1 hmac = new System.Security.Cryptography.HMACSHA1(Encoding.ASCII.GetBytes(key)))
+            if (!String.IsNullOrEmpty(tokenSecret))
             {
-                byte[] hash = hmac.ComputeHash(Encoding.ASCII.GetBytes(signatureBase));
-                return Convert.ToBase64String(hash);
+                key += UrlEncode(tokenSecret);
+            }
+            //鍵生成＆署名生成
+            using (HMACSHA1 hmac = new HMACSHA1(Encoding.ASCII.GetBytes(key)))
+            {
+                return Convert.ToBase64String(hmac.ComputeHash(Encoding.ASCII.GetBytes(signatureBase)));
             }
         }
 
