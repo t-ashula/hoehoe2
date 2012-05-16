@@ -36,14 +36,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 using Tween.TweenCustomControl;
-using System.Runtime.InteropServices;
 
 namespace Tween
 {
@@ -1613,7 +1612,7 @@ namespace Tween
                 if (ua.UserId == 0 && ua.Username.ToLower() == tw.Username.ToLower())
                 {
                     ua.UserId = tw.UserId;
-                    break; 
+                    break;
                 }
             }
         }
@@ -1718,242 +1717,122 @@ namespace Tween
         private void TimerInterval_Changed(object sender, AppendSettingDialog.IntervalChangedEventArgs e)
         {
             if (!TimerTimeline.Enabled)
+            {
                 return;
+            }
             ResetTimers = e;
         }
 
         private AppendSettingDialog.IntervalChangedEventArgs ResetTimers = new AppendSettingDialog.IntervalChangedEventArgs();
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_TimerTimeline_Elapsed_homeCounter_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_TimerTimeline_Elapsed_homeCounter;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_TimerTimeline_Elapsed_mentionCounter_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_TimerTimeline_Elapsed_mentionCounter;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_TimerTimeline_Elapsed_dmCounter_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_TimerTimeline_Elapsed_dmCounter;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_TimerTimeline_Elapsed_pubSearchCounter_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_TimerTimeline_Elapsed_pubSearchCounter;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_TimerTimeline_Elapsed_userTimelineCounter_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_TimerTimeline_Elapsed_userTimelineCounter;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_TimerTimeline_Elapsed_listsCounter_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_TimerTimeline_Elapsed_listsCounter;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_TimerTimeline_Elapsed_usCounter_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_TimerTimeline_Elapsed_usCounter;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_TimerTimeline_Elapsed_ResumeWait_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_TimerTimeline_Elapsed_ResumeWait;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_TimerTimeline_Elapsed_refreshFollowers_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_TimerTimeline_Elapsed_refreshFollowers;
+        int _timerHomeCounter;
+        int _timerMentionCounter;
+        int _timerDmCounter;
+        int _timerPubSearchCounter;
+        int _timerUserTimelineCounter;
+        int _timerListsCounter;
+        int _timerUsCounter;
+        int _timerResumeWait;
+        int _timerRefreshFollowers;
 
         private void TimerTimeline_Elapsed(object sender, EventArgs e)
         {
-            lock (static_TimerTimeline_Elapsed_homeCounter_Init)
+            if (_timerHomeCounter > 0)
             {
-                try
-                {
-                    if (InitStaticVariableHelper(static_TimerTimeline_Elapsed_homeCounter_Init))
-                    {
-                        static_TimerTimeline_Elapsed_homeCounter = 0;
-                    }
-                }
-                finally
-                {
-                    static_TimerTimeline_Elapsed_homeCounter_Init.State = 1;
-                }
+                Interlocked.Decrement(ref _timerHomeCounter);
             }
-            lock (static_TimerTimeline_Elapsed_mentionCounter_Init)
+            if (_timerMentionCounter > 0)
             {
-                try
-                {
-                    if (InitStaticVariableHelper(static_TimerTimeline_Elapsed_mentionCounter_Init))
-                    {
-                        static_TimerTimeline_Elapsed_mentionCounter = 0;
-                    }
-                }
-                finally
-                {
-                    static_TimerTimeline_Elapsed_mentionCounter_Init.State = 1;
-                }
+                Interlocked.Decrement(ref _timerMentionCounter);
             }
-            lock (static_TimerTimeline_Elapsed_dmCounter_Init)
+            if (_timerDmCounter > 0)
             {
-                try
-                {
-                    if (InitStaticVariableHelper(static_TimerTimeline_Elapsed_dmCounter_Init))
-                    {
-                        static_TimerTimeline_Elapsed_dmCounter = 0;
-                    }
-                }
-                finally
-                {
-                    static_TimerTimeline_Elapsed_dmCounter_Init.State = 1;
-                }
+                Interlocked.Decrement(ref _timerDmCounter);
             }
-            lock (static_TimerTimeline_Elapsed_pubSearchCounter_Init)
+            if (_timerPubSearchCounter > 0)
             {
-                try
-                {
-                    if (InitStaticVariableHelper(static_TimerTimeline_Elapsed_pubSearchCounter_Init))
-                    {
-                        static_TimerTimeline_Elapsed_pubSearchCounter = 0;
-                    }
-                }
-                finally
-                {
-                    static_TimerTimeline_Elapsed_pubSearchCounter_Init.State = 1;
-                }
+                Interlocked.Decrement(ref _timerPubSearchCounter);
             }
-            lock (static_TimerTimeline_Elapsed_userTimelineCounter_Init)
+            if (_timerUserTimelineCounter > 0)
             {
-                try
-                {
-                    if (InitStaticVariableHelper(static_TimerTimeline_Elapsed_userTimelineCounter_Init))
-                    {
-                        static_TimerTimeline_Elapsed_userTimelineCounter = 0;
-                    }
-                }
-                finally
-                {
-                    static_TimerTimeline_Elapsed_userTimelineCounter_Init.State = 1;
-                }
+                Interlocked.Decrement(ref _timerUserTimelineCounter);
             }
-            lock (static_TimerTimeline_Elapsed_listsCounter_Init)
+            if (_timerListsCounter > 0)
             {
-                try
-                {
-                    if (InitStaticVariableHelper(static_TimerTimeline_Elapsed_listsCounter_Init))
-                    {
-                        static_TimerTimeline_Elapsed_listsCounter = 0;
-                    }
-                }
-                finally
-                {
-                    static_TimerTimeline_Elapsed_listsCounter_Init.State = 1;
-                }
+                Interlocked.Decrement(ref _timerListsCounter);
             }
-            lock (static_TimerTimeline_Elapsed_usCounter_Init)
+            if (_timerUsCounter > 0)
             {
-                try
-                {
-                    if (InitStaticVariableHelper(static_TimerTimeline_Elapsed_usCounter_Init))
-                    {
-                        static_TimerTimeline_Elapsed_usCounter = 0;
-                    }
-                }
-                finally
-                {
-                    static_TimerTimeline_Elapsed_usCounter_Init.State = 1;
-                }
+                Interlocked.Decrement(ref _timerUsCounter);
             }
-            lock (static_TimerTimeline_Elapsed_ResumeWait_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_TimerTimeline_Elapsed_ResumeWait_Init))
-                    {
-                        static_TimerTimeline_Elapsed_ResumeWait = 0;
-                    }
-                }
-                finally
-                {
-                    static_TimerTimeline_Elapsed_ResumeWait_Init.State = 1;
-                }
-            }
-            lock (static_TimerTimeline_Elapsed_refreshFollowers_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_TimerTimeline_Elapsed_refreshFollowers_Init))
-                    {
-                        static_TimerTimeline_Elapsed_refreshFollowers = 0;
-                    }
-                }
-                finally
-                {
-                    static_TimerTimeline_Elapsed_refreshFollowers_Init.State = 1;
-                }
-            }
-
-            if (static_TimerTimeline_Elapsed_homeCounter > 0)
-                Interlocked.Decrement(ref static_TimerTimeline_Elapsed_homeCounter);
-            if (static_TimerTimeline_Elapsed_mentionCounter > 0)
-                Interlocked.Decrement(ref static_TimerTimeline_Elapsed_mentionCounter);
-            if (static_TimerTimeline_Elapsed_dmCounter > 0)
-                Interlocked.Decrement(ref static_TimerTimeline_Elapsed_dmCounter);
-            if (static_TimerTimeline_Elapsed_pubSearchCounter > 0)
-                Interlocked.Decrement(ref static_TimerTimeline_Elapsed_pubSearchCounter);
-            if (static_TimerTimeline_Elapsed_userTimelineCounter > 0)
-                Interlocked.Decrement(ref static_TimerTimeline_Elapsed_userTimelineCounter);
-            if (static_TimerTimeline_Elapsed_listsCounter > 0)
-                Interlocked.Decrement(ref static_TimerTimeline_Elapsed_listsCounter);
-            if (static_TimerTimeline_Elapsed_usCounter > 0)
-                Interlocked.Decrement(ref static_TimerTimeline_Elapsed_usCounter);
-            Interlocked.Increment(ref static_TimerTimeline_Elapsed_refreshFollowers);
+            Interlocked.Increment(ref _timerRefreshFollowers);
 
             //'タイマー初期化
-            if (ResetTimers.Timeline || static_TimerTimeline_Elapsed_homeCounter <= 0 && SettingDialog.TimelinePeriodInt > 0)
+            if (ResetTimers.Timeline || _timerHomeCounter <= 0 && SettingDialog.TimelinePeriodInt > 0)
             {
-                Interlocked.Exchange(ref static_TimerTimeline_Elapsed_homeCounter, SettingDialog.TimelinePeriodInt);
+                Interlocked.Exchange(ref _timerHomeCounter, SettingDialog.TimelinePeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Timeline)
                 {
                     GetTimeline(Tween.MyCommon.WorkerType.Timeline, 1, 0, "");
                 }
                 ResetTimers.Timeline = false;
             }
-            if (ResetTimers.Reply || static_TimerTimeline_Elapsed_mentionCounter <= 0 && SettingDialog.ReplyPeriodInt > 0)
+            if (ResetTimers.Reply || _timerMentionCounter <= 0 && SettingDialog.ReplyPeriodInt > 0)
             {
-                Interlocked.Exchange(ref static_TimerTimeline_Elapsed_mentionCounter, SettingDialog.ReplyPeriodInt);
+                Interlocked.Exchange(ref _timerMentionCounter, SettingDialog.ReplyPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Reply)
                 {
                     GetTimeline(Tween.MyCommon.WorkerType.Reply, 1, 0, "");
                 }
                 ResetTimers.Reply = false;
             }
-            if (ResetTimers.DirectMessage || static_TimerTimeline_Elapsed_dmCounter <= 0 && SettingDialog.DMPeriodInt > 0)
+            if (ResetTimers.DirectMessage || _timerDmCounter <= 0 && SettingDialog.DMPeriodInt > 0)
             {
-                Interlocked.Exchange(ref static_TimerTimeline_Elapsed_dmCounter, SettingDialog.DMPeriodInt);
+                Interlocked.Exchange(ref _timerDmCounter, SettingDialog.DMPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.DirectMessage)
                 {
                     GetTimeline(Tween.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
                 }
                 ResetTimers.DirectMessage = false;
             }
-            if (ResetTimers.PublicSearch || static_TimerTimeline_Elapsed_pubSearchCounter <= 0 && SettingDialog.PubSearchPeriodInt > 0)
+            if (ResetTimers.PublicSearch || _timerPubSearchCounter <= 0 && SettingDialog.PubSearchPeriodInt > 0)
             {
-                Interlocked.Exchange(ref static_TimerTimeline_Elapsed_pubSearchCounter, SettingDialog.PubSearchPeriodInt);
+                Interlocked.Exchange(ref _timerPubSearchCounter, SettingDialog.PubSearchPeriodInt);
                 if (!ResetTimers.PublicSearch)
                 {
                     GetTimeline(Tween.MyCommon.WorkerType.PublicSearch, 1, 0, "");
                 }
                 ResetTimers.PublicSearch = false;
             }
-            if (ResetTimers.UserTimeline || static_TimerTimeline_Elapsed_userTimelineCounter <= 0 && SettingDialog.UserTimelinePeriodInt > 0)
+            if (ResetTimers.UserTimeline || _timerUserTimelineCounter <= 0 && SettingDialog.UserTimelinePeriodInt > 0)
             {
-                Interlocked.Exchange(ref static_TimerTimeline_Elapsed_userTimelineCounter, SettingDialog.UserTimelinePeriodInt);
+                Interlocked.Exchange(ref _timerUserTimelineCounter, SettingDialog.UserTimelinePeriodInt);
                 if (!ResetTimers.UserTimeline)
                 {
                     GetTimeline(Tween.MyCommon.WorkerType.UserTimeline, 1, 0, "");
                 }
                 ResetTimers.UserTimeline = false;
             }
-            if (ResetTimers.Lists || static_TimerTimeline_Elapsed_listsCounter <= 0 && SettingDialog.ListsPeriodInt > 0)
+            if (ResetTimers.Lists || _timerListsCounter <= 0 && SettingDialog.ListsPeriodInt > 0)
             {
-                Interlocked.Exchange(ref static_TimerTimeline_Elapsed_listsCounter, SettingDialog.ListsPeriodInt);
+                Interlocked.Exchange(ref _timerListsCounter, SettingDialog.ListsPeriodInt);
                 if (!ResetTimers.Lists)
                 {
                     GetTimeline(Tween.MyCommon.WorkerType.List, 1, 0, "");
                 }
                 ResetTimers.Lists = false;
             }
-            if (ResetTimers.UserStream || static_TimerTimeline_Elapsed_usCounter <= 0 && SettingDialog.UserstreamPeriodInt > 0)
+            if (ResetTimers.UserStream || _timerUsCounter <= 0 && SettingDialog.UserstreamPeriodInt > 0)
             {
-                Interlocked.Exchange(ref static_TimerTimeline_Elapsed_usCounter, SettingDialog.UserstreamPeriodInt);
+                Interlocked.Exchange(ref _timerUsCounter, SettingDialog.UserstreamPeriodInt);
                 if (this._isActiveUserstream)
                 {
                     RefreshTimeline(true);
                 }
                 ResetTimers.UserStream = false;
             }
-            if (static_TimerTimeline_Elapsed_refreshFollowers > 6 * 3600)
+            if (_timerRefreshFollowers > 6 * 3600)
             {
-                Interlocked.Exchange(ref static_TimerTimeline_Elapsed_refreshFollowers, 0);
+                Interlocked.Exchange(ref _timerRefreshFollowers, 0);
                 doGetFollowersMenu();
                 GetTimeline(Tween.MyCommon.WorkerType.Configuration, 0, 0, "");
                 if (InvokeRequired && !IsDisposed)
@@ -1963,11 +1842,11 @@ namespace Tween
             }
             if (_osResumed)
             {
-                Interlocked.Increment(ref static_TimerTimeline_Elapsed_ResumeWait);
-                if (static_TimerTimeline_Elapsed_ResumeWait > 30)
+                Interlocked.Increment(ref _timerResumeWait);
+                if (_timerResumeWait > 30)
                 {
                     _osResumed = false;
-                    Interlocked.Exchange(ref static_TimerTimeline_Elapsed_ResumeWait, 0);
+                    Interlocked.Exchange(ref _timerResumeWait, 0);
                     GetTimeline(Tween.MyCommon.WorkerType.Timeline, 1, 0, "");
                     GetTimeline(Tween.MyCommon.WorkerType.Reply, 1, 0, "");
                     GetTimeline(Tween.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
@@ -2456,9 +2335,9 @@ namespace Tween
                     {
                         dir = Path.Combine(dir, "Sounds");
                     }
-                    Tween.My.MyProject.Computer.Audio.Play(Path.Combine(dir, soundFile), AudioPlayMode.Background);
+                    Tween.My.MyProject.Computer.Audio.Play(Path.Combine(dir, soundFile));//TODO:Sharpen ,AudioPlayMode.Background);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
             }
@@ -2956,38 +2835,22 @@ namespace Tween
             this.BringToFront();
         }
 
-        static readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_CheckAccountValid_errorCount_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-
-        static int static_CheckAccountValid_errorCount;
+        static int _accountCheckErrorCount = 0;
 
         private static bool CheckAccountValid()
         {
-            lock (static_CheckAccountValid_errorCount_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_CheckAccountValid_errorCount_Init))
-                    {
-                        static_CheckAccountValid_errorCount = 0;
-                    }
-                }
-                finally
-                {
-                    static_CheckAccountValid_errorCount_Init.State = 1;
-                }
-            }
             if (Twitter.AccountState != Tween.MyCommon.AccountState.Valid)
             {
-                static_CheckAccountValid_errorCount += 1;
-                if (static_CheckAccountValid_errorCount > 5)
+                _accountCheckErrorCount += 1;
+                if (_accountCheckErrorCount > 5)
                 {
-                    static_CheckAccountValid_errorCount = 0;
+                    _accountCheckErrorCount = 0;
                     Twitter.AccountState = Tween.MyCommon.AccountState.Valid;
                     return true;
                 }
                 return false;
             }
-            static_CheckAccountValid_errorCount = 0;
+            _accountCheckErrorCount = 0;
             return true;
         }
 
@@ -3087,7 +2950,7 @@ namespace Tween
                                     args.SIds.Add(post.StatusId);
                                     post.IsFav = true;
                                     //リスト再描画必要
-                                    _favTimestamps.Add(DateAndTime.Now);
+                                    _favTimestamps.Add(DateTime.Now);
                                     if (String.IsNullOrEmpty(post.RelTabName))
                                     {
                                         //検索,リストUserTimeline.Relatedタブからのfavは、favタブへ追加せず。それ以外は追加
@@ -3330,7 +3193,7 @@ namespace Tween
             //時速表示用
             if (args.WorkerType == Tween.MyCommon.WorkerType.FavAdd)
             {
-                System.DateTime oneHour = DateAndTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                 for (int i = _favTimestamps.Count - 1; i >= 0; i += -1)
                 {
                     if (_favTimestamps[i].CompareTo(oneHour) < 0)
@@ -3343,7 +3206,7 @@ namespace Tween
             {
                 lock (_syncObject)
                 {
-                    DateTime tm = DateAndTime.Now;
+                    DateTime tm = DateTime.Now;
                     if (_tlTimestamps.ContainsKey(tm))
                     {
                         _tlTimestamps[tm] += rslt.AddCount;
@@ -3636,8 +3499,8 @@ namespace Tween
                 case MyCommon.WorkerType.PostMessage:
                     if (String.IsNullOrEmpty(rslt.RetMsg) || rslt.RetMsg.StartsWith("Outputz") || rslt.RetMsg.StartsWith("OK:") || rslt.RetMsg == "Warn:Status is a duplicate.")
                     {
-                        _postTimestamps.Add(DateAndTime.Now);
-                        System.DateTime oneHour = DateAndTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                        _postTimestamps.Add(DateTime.Now);
+                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                         for (int i = _postTimestamps.Count - 1; i >= 0; i += -1)
                         {
                             if (_postTimestamps[i].CompareTo(oneHour) < 0)
@@ -3695,8 +3558,8 @@ namespace Tween
                 case MyCommon.WorkerType.Retweet:
                     if (rslt.RetMsg.Length == 0)
                     {
-                        _postTimestamps.Add(DateAndTime.Now);
-                        System.DateTime oneHour = DateAndTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                        _postTimestamps.Add(DateTime.Now);
+                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                         for (int i = _postTimestamps.Count - 1; i >= 0; i--)
                         {
                             if (_postTimestamps[i].CompareTo(oneHour) < 0)
@@ -3833,45 +3696,30 @@ namespace Tween
             }
         }
 
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_GetTimeline_lastTime_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        Dictionary<Tween.MyCommon.WorkerType, DateTime> static_GetTimeline_lastTime;
+        Dictionary<Tween.MyCommon.WorkerType, DateTime> _lastTime;
 
-        private void GetTimeline(MyCommon.WorkerType WkType, int fromPage, int toPage, string tabName)
+        private void GetTimeline(MyCommon.WorkerType wkType, int fromPage, int toPage, string tabName)
         {
             if (!this.IsNetworkAvailable())
             {
                 return;
             }
 
+            if (_lastTime == null)
+            {
+                _lastTime = new Dictionary<MyCommon.WorkerType, DateTime>();
+            }
+
             //非同期実行引数設定
-            GetWorkerArg args = new GetWorkerArg();
-            args.Page = fromPage;
-            args.EndPage = toPage;
-            args.WorkerType = WkType;
-            args.TabName = tabName;
-            lock (static_GetTimeline_lastTime_Init)
+            if (!_lastTime.ContainsKey(wkType))
             {
-                try
-                {
-                    if (InitStaticVariableHelper(static_GetTimeline_lastTime_Init))
-                    {
-                        static_GetTimeline_lastTime = new Dictionary<MyCommon.WorkerType, DateTime>();
-                    }
-                }
-                finally
-                {
-                    static_GetTimeline_lastTime_Init.State = 1;
-                }
+                _lastTime.Add(wkType, new DateTime());
             }
-            if (!static_GetTimeline_lastTime.ContainsKey(WkType))
-            {
-                static_GetTimeline_lastTime.Add(WkType, new DateTime());
-            }
-            double period = DateAndTime.Now.Subtract(static_GetTimeline_lastTime[WkType]).TotalSeconds;
+            double period = DateTime.Now.Subtract(_lastTime[wkType]).TotalSeconds;
             if (period > 1 || period < -1)
             {
-                static_GetTimeline_lastTime[WkType] = DateAndTime.Now;
-                RunAsync(args);
+                _lastTime[wkType] = DateTime.Now;
+                RunAsync(new GetWorkerArg() { Page = fromPage, EndPage = toPage, WorkerType = wkType, TabName = tabName });
             }
         }
 
@@ -6379,7 +6227,7 @@ namespace Tween
                     }
                     catch (ArgumentException)
                     {
-                        Interaction.MsgBox(Tween.My_Project.Resources.DoTabSearchText1, MsgBoxStyle.Critical);
+                        MessageBox.Show(Tween.My_Project.Resources.DoTabSearchText1, "Tween", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }
@@ -6782,36 +6630,21 @@ namespace Tween
             DispSelectedPost(false);
         }
 
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_DispSelectedPost_displaypost_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        PostClass static_DispSelectedPost_displaypost;
+        PostClass _displayPost;
 
         private void DispSelectedPost(bool forceupdate)
         {
-            lock (static_DispSelectedPost_displaypost_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_DispSelectedPost_displaypost_Init))
-                    {
-                        static_DispSelectedPost_displaypost = new PostClass();
-                    }
-                }
-                finally
-                {
-                    static_DispSelectedPost_displaypost_Init.State = 1;
-                }
-            }
             if (_curList.SelectedIndices.Count == 0 || _curPost == null)
             {
                 return;
             }
 
-            if (!forceupdate && _curPost.Equals(static_DispSelectedPost_displaypost))
+            if (!forceupdate && _curPost.Equals(_displayPost))
             {
                 return;
             }
 
-            static_DispSelectedPost_displaypost = _curPost;
+            _displayPost = _curPost;
             if (displayItem != null)
             {
                 displayItem.ImageDownloaded -= this.DisplayItemImage_Downloaded;
@@ -8879,7 +8712,7 @@ namespace Tween
                 return;
             }
 
-            SaveFileDialog1.FileName = "TweenPosts" + Strings.Format(DateAndTime.Now, "yyMMdd-HHmmss") + ".tsv";
+            SaveFileDialog1.FileName = String.Format("TweenPosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
             SaveFileDialog1.InitialDirectory = Tween.My.MyProject.Application.Info.DirectoryPath;
             SaveFileDialog1.Filter = Tween.My_Project.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
@@ -8905,7 +8738,10 @@ namespace Tween
                             {
                                 protect = "Protect";
                             }
-                            sw.WriteLine(post.Nickname + Constants.vbTab + "\"" + post.TextFromApi.Replace(Constants.vbLf, "").Replace("\"", "\"\"") + "\"" + Constants.vbTab + post.CreatedAt.ToString() + Constants.vbTab + post.ScreenName + Constants.vbTab + post.StatusId.ToString() + Constants.vbTab + post.ImageUrl + Constants.vbTab + "\"" + post.Text.Replace(Constants.vbLf, "").Replace("\"", "\"\"") + "\"" + Constants.vbTab + protect);
+                            sw.WriteLine(String.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}",
+                                post.Nickname, post.TextFromApi.Replace("\n", "").Replace("\"", "\"\""),
+                                post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl,
+                                post.Text.Replace("\n", "").Replace("\"", "\"\""), protect));
                         }
                     }
                     else
@@ -8918,7 +8754,10 @@ namespace Tween
                             {
                                 protect = "Protect";
                             }
-                            sw.WriteLine(post.Nickname + Constants.vbTab + "\"" + post.TextFromApi.Replace(Constants.vbLf, "").Replace("\"", "\"\"") + "\"" + Constants.vbTab + post.CreatedAt.ToString() + Constants.vbTab + post.ScreenName + Constants.vbTab + post.StatusId.ToString() + Constants.vbTab + post.ImageUrl + Constants.vbTab + "\"" + post.Text.Replace(Constants.vbLf, "").Replace("\"", "\"\"") + "\"" + Constants.vbTab + protect);
+                            sw.WriteLine(String.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}",
+                                post.Nickname, post.TextFromApi.Replace("\n", "").Replace("\"", "\"\""),
+                                post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl,
+                                post.Text.Replace("\n", "").Replace("\"", "\"\""), protect));
                         }
                     }
                     sw.Close();
@@ -9011,7 +8850,7 @@ namespace Tween
                     {
                         this.RemoveSpecifiedTab(this.ListTab.TabPages[i].Text, true);
                         this.SaveConfigsTabs();
-                        break; 
+                        break;
                     }
                 }
             }
@@ -9080,7 +8919,7 @@ namespace Tween
                 {
                     tn = ListTab.TabPages[i].Text;
                     bef = spos.X <= (rect.Left + rect.Right) / 2;
-                    break; 
+                    break;
                 }
             }
 
@@ -9115,7 +8954,7 @@ namespace Tween
             ListTab.SuspendLayout();
 
             TabPage mTp = null;
-            for (int j = 0; j < ListTab.TabPages.Count ; j++)
+            for (int j = 0; j < ListTab.TabPages.Count; j++)
             {
                 if (ListTab.TabPages[j].Text == targetTabText)
                 {
@@ -9125,7 +8964,7 @@ namespace Tween
                     {
                         baseIndex -= 1;
                     }
-                    break; 
+                    break;
                 }
             }
             if (isBeforeBaseTab)
@@ -9445,85 +9284,29 @@ namespace Tween
             _tabDrag = false;
         }
 
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_RefreshTasktrayIcon_iconCnt_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_RefreshTasktrayIcon_iconCnt;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_RefreshTasktrayIcon_blinkCnt_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        int static_RefreshTasktrayIcon_blinkCnt;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_RefreshTasktrayIcon_blink_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        bool static_RefreshTasktrayIcon_blink;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_RefreshTasktrayIcon_idle_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        bool static_RefreshTasktrayIcon_idle;
+        int _iconCnt = 0;
+        int _blinkCnt = 0;
+        bool _beBlink;
+        bool _isIdle;
 
         private void RefreshTasktrayIcon(bool forceRefresh)
         {
             if (_colorize)
+            {
                 Colorize();
+            }
             if (!TimerRefreshIcon.Enabled)
+            {
                 return;
-            lock (static_RefreshTasktrayIcon_iconCnt_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_RefreshTasktrayIcon_iconCnt_Init))
-                    {
-                        static_RefreshTasktrayIcon_iconCnt = 0;
-                    }
-                }
-                finally
-                {
-                    static_RefreshTasktrayIcon_iconCnt_Init.State = 1;
-                }
-            }
-            lock (static_RefreshTasktrayIcon_blinkCnt_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_RefreshTasktrayIcon_blinkCnt_Init))
-                    {
-                        static_RefreshTasktrayIcon_blinkCnt = 0;
-                    }
-                }
-                finally
-                {
-                    static_RefreshTasktrayIcon_blinkCnt_Init.State = 1;
-                }
-            }
-            lock (static_RefreshTasktrayIcon_blink_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_RefreshTasktrayIcon_blink_Init))
-                    {
-                        static_RefreshTasktrayIcon_blink = false;
-                    }
-                }
-                finally
-                {
-                    static_RefreshTasktrayIcon_blink_Init.State = 1;
-                }
-            }
-            lock (static_RefreshTasktrayIcon_idle_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_RefreshTasktrayIcon_idle_Init))
-                    {
-                        static_RefreshTasktrayIcon_idle = false;
-                    }
-                }
-                finally
-                {
-                    static_RefreshTasktrayIcon_idle_Init.State = 1;
-                }
             }
 
             if (forceRefresh)
             {
-                static_RefreshTasktrayIcon_idle = false;
+                _isIdle = false;
             }
 
-            static_RefreshTasktrayIcon_iconCnt += 1;
-            static_RefreshTasktrayIcon_blinkCnt += 1;
+            _iconCnt += 1;
+            _blinkCnt += 1;
 
             bool busy = false;
             foreach (BackgroundWorker bw in this._bw)
@@ -9531,25 +9314,25 @@ namespace Tween
                 if (bw != null && bw.IsBusy)
                 {
                     busy = true;
-                    break; 
+                    break;
                 }
             }
 
-            if (static_RefreshTasktrayIcon_iconCnt > 3)
+            if (_iconCnt > 3)
             {
-                static_RefreshTasktrayIcon_iconCnt = 0;
+                _iconCnt = 0;
             }
-            if (static_RefreshTasktrayIcon_blinkCnt > 10)
+            if (_blinkCnt > 10)
             {
-                static_RefreshTasktrayIcon_blinkCnt = 0;
+                _blinkCnt = 0;
                 //未保存の変更を保存
                 SaveConfigsAll(true);
             }
 
             if (busy)
             {
-                NotifyIcon1.Icon = _NIconRefresh[static_RefreshTasktrayIcon_iconCnt];
-                static_RefreshTasktrayIcon_idle = false;
+                NotifyIcon1.Icon = _NIconRefresh[_iconCnt];
+                _isIdle = false;
                 _myStatusError = false;
                 return;
             }
@@ -9557,12 +9340,12 @@ namespace Tween
             TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Mentions);
             if (SettingDialog.ReplyIconState != MyCommon.ReplyIconState.None && tb != null && tb.UnreadCount > 0)
             {
-                if (static_RefreshTasktrayIcon_blinkCnt > 0)
+                if (_blinkCnt > 0)
                 {
                     return;
                 }
-                static_RefreshTasktrayIcon_blink = !static_RefreshTasktrayIcon_blink;
-                if (static_RefreshTasktrayIcon_blink || SettingDialog.ReplyIconState == MyCommon.ReplyIconState.StaticIcon)
+                _beBlink = !_beBlink;
+                if (_beBlink || SettingDialog.ReplyIconState == MyCommon.ReplyIconState.StaticIcon)
                 {
                     NotifyIcon1.Icon = _ReplyIcon;
                 }
@@ -9570,15 +9353,15 @@ namespace Tween
                 {
                     NotifyIcon1.Icon = _ReplyIconBlink;
                 }
-                static_RefreshTasktrayIcon_idle = false;
+                _isIdle = false;
                 return;
             }
 
-            if (static_RefreshTasktrayIcon_idle)
+            if (_isIdle)
             {
                 return;
             }
-            static_RefreshTasktrayIcon_idle = true;
+            _isIdle = true;
             //優先度：エラー→オフライン→アイドル
             //エラーは更新アイコンでクリアされる
             if (_myStatusError)
@@ -10235,7 +10018,7 @@ namespace Tween
             if (!move)
             {
                 //マークするか？
-                _tmp = String.Format(Tween.My_Project.Resources.IDRuleMenuItem_ClickText6, Constants.vbCrLf);
+                _tmp = String.Format(Tween.My_Project.Resources.IDRuleMenuItem_ClickText6, "\r\n");
                 if (MessageBox.Show(_tmp, Tween.My_Project.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     mark = true;
@@ -10285,7 +10068,7 @@ namespace Tween
 
             ListViewItem item = _curList.GetItemAt(0, 25);
             int idx1 = item == null ? 0 : item.Index;
-            
+
             item = _curList.GetItemAt(0, _curList.ClientSize.Height - 1);
             int idx2 = item == null ? _curList.VirtualListSize - 1 : item.Index;
 
@@ -10454,48 +10237,18 @@ namespace Tween
             SetStatusLabelUrl();
         }
 
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_SetMainWindowTitle_myVer_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
+        long _prevFollowerCount = 0;
 
         //メインウインドウタイトルの書き換え
-        string static_SetMainWindowTitle_myVer;
-
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_SetMainWindowTitle_followers_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        long static_SetMainWindowTitle_followers;
-
         private void SetMainWindowTitle()
         {
             StringBuilder ttl = new StringBuilder(256);
             int ur = 0;
             int al = 0;
-            lock (static_SetMainWindowTitle_myVer_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_SetMainWindowTitle_myVer_Init))
-                    {
-                        static_SetMainWindowTitle_myVer = MyCommon.fileVersion;
-                    }
-                }
-                finally
-                {
-                    static_SetMainWindowTitle_myVer_Init.State = 1;
-                }
-            }
-            lock (static_SetMainWindowTitle_followers_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_SetMainWindowTitle_followers_Init))
-                    {
-                        static_SetMainWindowTitle_followers = 0;
-                    }
-                }
-                finally
-                {
-                    static_SetMainWindowTitle_followers_Init.State = 1;
-                }
-            }
-            if (SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.None && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Post && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Ver && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.OwnStatus)
+            if (SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.None 
+                && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Post 
+                && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Ver 
+                && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.OwnStatus)
             {
                 foreach (string key in _statuses.Tabs.Keys)
                 {
@@ -10512,12 +10265,12 @@ namespace Tween
             switch (SettingDialog.DispLatestPost)
             {
                 case MyCommon.DispTitleEnum.Ver:
-                    ttl.Append("Ver:").Append(static_SetMainWindowTitle_myVer);
+                    ttl.Append("Ver:").Append(MyCommon.fileVersion);
                     break;
                 case MyCommon.DispTitleEnum.Post:
                     if (_history != null && _history.Count > 1)
                     {
-                        ttl.Append(_history[_history.Count - 2].Status.Replace(Constants.vbCrLf, ""));
+                        ttl.Append(_history[_history.Count - 2].Status.Replace("\r\n", ""));
                     }
                     break;
                 case MyCommon.DispTitleEnum.UnreadRepCount:
@@ -10533,11 +10286,11 @@ namespace Tween
                     ttl.AppendFormat(Tween.My_Project.Resources.SetMainWindowTitleText4, ur, al);
                     break;
                 case MyCommon.DispTitleEnum.OwnStatus:
-                    if (static_SetMainWindowTitle_followers == 0 && tw.FollowersCount > 0)
+                    if (_prevFollowerCount == 0 && tw.FollowersCount > 0)
                     {
-                        static_SetMainWindowTitle_followers = tw.FollowersCount;
+                        _prevFollowerCount = tw.FollowersCount;
                     }
-                    ttl.AppendFormat(Tween.My_Project.Resources.OwnStatusTitle, tw.StatusesCount, tw.FriendsCount, tw.FollowersCount, tw.FollowersCount - static_SetMainWindowTitle_followers);
+                    ttl.AppendFormat(Tween.My_Project.Resources.OwnStatusTitle, tw.StatusesCount, tw.FriendsCount, tw.FollowersCount, tw.FollowersCount - _prevFollowerCount);
                     break;
             }
 
@@ -10620,11 +10373,11 @@ namespace Tween
                     SetStatusLabelApi();
                 }
             }
-            catch (ObjectDisposedException )
+            catch (ObjectDisposedException)
             {
                 return;
             }
-            catch (InvalidOperationException )
+            catch (InvalidOperationException)
             {
                 return;
             }
@@ -10647,46 +10400,29 @@ namespace Tween
             StatusLabel.Text = text;
         }
 
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_SetNotifyIconText_ur_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        StringBuilder static_SetNotifyIconText_ur;
-
+        // タスクトレイアイコンのツールチップテキスト書き換え
+        // Tween [未読/@]
         private void SetNotifyIconText()
         {
-            lock (static_SetNotifyIconText_ur_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_SetNotifyIconText_ur_Init))
-                    {
-                        // タスクトレイアイコンのツールチップテキスト書き換え
-                        // Tween [未読/@]
-                        static_SetNotifyIconText_ur = new StringBuilder(64);
-                    }
-                }
-                finally
-                {
-                    static_SetNotifyIconText_ur_Init.State = 1;
-                }
-            }
-            static_SetNotifyIconText_ur.Remove(0, static_SetNotifyIconText_ur.Length);
+            StringBuilder ur = new StringBuilder(64);
             if (SettingDialog.DispUsername)
             {
-                static_SetNotifyIconText_ur.Append(tw.Username);
-                static_SetNotifyIconText_ur.Append(" - ");
+                ur.Append(tw.Username);
+                ur.Append(" - ");
             }
-            static_SetNotifyIconText_ur.Append("Tween");
+            ur.Append("Tween");
 #if DEBUG
 			static_SetNotifyIconText_ur.Append("(Debug Build)");
 #endif
             if (_unreadCounter != -1 && _unreadAtCounter != -1)
             {
-                static_SetNotifyIconText_ur.Append(" [");
-                static_SetNotifyIconText_ur.Append(_unreadCounter);
-                static_SetNotifyIconText_ur.Append("/@");
-                static_SetNotifyIconText_ur.Append(_unreadAtCounter);
-                static_SetNotifyIconText_ur.Append("]");
+                ur.Append(" [");
+                ur.Append(_unreadCounter);
+                ur.Append("/@");
+                ur.Append(_unreadAtCounter);
+                ur.Append("]");
             }
-            NotifyIcon1.Text = static_SetNotifyIconText_ur.ToString();
+            NotifyIcon1.Text = ur.ToString();
         }
 
         internal void CheckReplyTo(string StatusText)
@@ -10868,7 +10604,7 @@ namespace Tween
                     {
                         if (tb == null || !tb.Contains(_curPost.InReplyToStatusId))
                         {
-                            break; 
+                            break;
                         }
                         PostClass repPost = _statuses.Item(_curPost.InReplyToStatusId);
                         MessageBox.Show(repPost.ScreenName + " / " + repPost.Nickname + "   (" + repPost.CreatedAt.ToString() + ")" + Environment.NewLine + repPost.TextFromApi);
@@ -11315,13 +11051,13 @@ namespace Tween
             else
             {
                 int[] darr = new int[lst.Columns.Count];
-                for (int i = 0; i < lst.Columns.Count ; i++)
+                for (int i = 0; i < lst.Columns.Count; i++)
                 {
                     darr[lst.Columns[i].DisplayIndex] = i;
                 }
                 MyCommon.MoveArrayItem(darr, e.OldDisplayIndex, e.NewDisplayIndex);
 
-                for (int i = 0; i < lst.Columns.Count ; i++)
+                for (int i = 0; i < lst.Columns.Count; i++)
                 {
                     switch (darr[i])
                     {
@@ -11820,17 +11556,17 @@ namespace Tween
             BackgroundWorker bw = null;
             if (args.WorkerType != MyCommon.WorkerType.Follower)
             {
-                for (int i = 0; i < _bw.Length ; i++)
+                for (int i = 0; i < _bw.Length; i++)
                 {
                     if (_bw[i] != null && !_bw[i].IsBusy)
                     {
                         bw = _bw[i];
-                        break; 
+                        break;
                     }
                 }
                 if (bw == null)
                 {
-                    for (int i = 0; i < _bw.Length ; i++)
+                    for (int i = 0; i < _bw.Length; i++)
                     {
                         if (_bw[i] == null)
                         {
@@ -11841,7 +11577,7 @@ namespace Tween
                             bw.DoWork += GetTimelineWorker_DoWork;
                             bw.ProgressChanged += GetTimelineWorker_ProgressChanged;
                             bw.RunWorkerCompleted += GetTimelineWorker_RunWorkerCompleted;
-                            break; 
+                            break;
                         }
                     }
                 }
@@ -12090,9 +11826,12 @@ namespace Tween
                         }
                     }
                 }
-                GetWorkerArg args = new GetWorkerArg() { 
-                    Ids = new List<long>(), SIds = new List<long>(), 
-                    TabName = _curTab.Text, WorkerType = MyCommon.WorkerType.Retweet 
+                GetWorkerArg args = new GetWorkerArg()
+                {
+                    Ids = new List<long>(),
+                    SIds = new List<long>(),
+                    TabName = _curTab.Text,
+                    WorkerType = MyCommon.WorkerType.Retweet
                 };
                 foreach (int idx in _curList.SelectedIndices)
                 {
@@ -12161,7 +11900,7 @@ namespace Tween
             //<br>タグ除去
             if (StatusText.Multiline)
             {
-                status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", Constants.vbCrLf, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", "\r\n", RegexOptions.IgnoreCase | RegexOptions.Multiline);
             }
             else
             {
@@ -12466,7 +12205,7 @@ namespace Tween
                         {
                             result = Tween.My_Project.Resources.GetFriendshipInfo2 + System.Environment.NewLine;
                         }
-                        
+
                         if (args.ids[0].isFollowed)
                         {
                             result += Tween.My_Project.Resources.GetFriendshipInfo3;
@@ -12715,7 +12454,7 @@ namespace Tween
                 if (cnt > cmb.Text.Length - 4)
                 {
                     buf.Append(cmb.Text.Substring(cnt));
-                    break; 
+                    break;
                 }
                 if (c[cnt] == Convert.ToChar("\""))
                 {
@@ -12837,8 +12576,15 @@ namespace Tween
                 bool mk = false;
                 MoveOrCopy(ref mv, ref mk);
 
-                FiltersClass fc = new FiltersClass() { 
-                    NameFilter = name, SearchBoth = true, MoveFrom = mv, SetMark = mk, UseRegex = false, SearchUrl = false };
+                FiltersClass fc = new FiltersClass()
+                {
+                    NameFilter = name,
+                    SearchBoth = true,
+                    MoveFrom = mv,
+                    SetMark = mk,
+                    UseRegex = false,
+                    SearchUrl = false
+                };
                 _statuses.Tabs[tabName].AddFilter(fc);
 
                 try
@@ -12976,7 +12722,7 @@ namespace Tween
             {
                 rslt = HashMgr.ShowDialog();
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return;
             }
@@ -13133,7 +12879,7 @@ namespace Tween
             {
                 OpenRepSourceOpMenuItem.Enabled = true;
             }
-            
+
             if (!this.ExistCurrentPost || String.IsNullOrEmpty(_curPost.RetweetedBy))
             {
                 OpenRterHomeMenuItem.Enabled = false;
@@ -13566,7 +13312,7 @@ namespace Tween
                 ImagefilePathText.CausesValidation = false;
                 return;
             }
-            ImagefilePathText.Text = Strings.Trim(ImagefilePathText.Text);
+            ImagefilePathText.Text = (ImagefilePathText.Text).Trim();
             if (String.IsNullOrEmpty(ImagefilePathText.Text))
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
@@ -13582,7 +13328,7 @@ namespace Tween
         {
             try
             {
-                if (String.IsNullOrEmpty(Strings.Trim(ImagefilePathText.Text)) || String.IsNullOrEmpty(this.ImageService))
+                if (String.IsNullOrEmpty(ImagefilePathText.Text.Trim()) || String.IsNullOrEmpty(this.ImageService))
                 {
                     ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
                     ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
@@ -13590,7 +13336,7 @@ namespace Tween
                     return;
                 }
 
-                FileInfo fl = new FileInfo(Strings.Trim(ImagefilePathText.Text));
+                FileInfo fl = new FileInfo(ImagefilePathText.Text.Trim());
                 if (!this._pictureServices[this.ImageService].CheckValidExtension(fl.Extension))
                 {
                     //画像以外の形式
@@ -13874,13 +13620,13 @@ namespace Tween
                 TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Related);
                 tb.RelationTargetPost = _curPost;
                 this.ClearTab(tb.TabName, false);
-                for (int i = 0; i < ListTab.TabPages.Count ; i++)
+                for (int i = 0; i < ListTab.TabPages.Count; i++)
                 {
                     if (tb.TabName == ListTab.TabPages[i].Text)
                     {
                         ListTab.SelectedIndex = i;
                         ListTabSelect(ListTab.TabPages[i]);
-                        break; 
+                        break;
                     }
                 }
 
@@ -13891,10 +13637,10 @@ namespace Tween
         private void CacheInfoMenuItem_Click(object sender, EventArgs e)
         {
             StringBuilder buf = new StringBuilder();
-            buf.AppendFormat("キャッシュメモリ容量         : {0}bytes({1}MB)" + Constants.vbCrLf, ((ImageDictionary)_TIconDic).CacheMemoryLimit, ((ImageDictionary)_TIconDic).CacheMemoryLimit / 1048576);
-            buf.AppendFormat("物理メモリ使用割合           : {0}%" + Constants.vbCrLf, ((ImageDictionary)_TIconDic).PhysicalMemoryLimit);
-            buf.AppendFormat("キャッシュエントリ保持数     : {0}" + Constants.vbCrLf, ((ImageDictionary)_TIconDic).CacheCount);
-            buf.AppendFormat("キャッシュエントリ破棄数     : {0}" + Constants.vbCrLf, ((ImageDictionary)_TIconDic).CacheRemoveCount);
+            buf.AppendFormat("キャッシュメモリ容量         : {0}bytes({1}MB)" + "\r\n", ((ImageDictionary)_TIconDic).CacheMemoryLimit, ((ImageDictionary)_TIconDic).CacheMemoryLimit / 1048576);
+            buf.AppendFormat("物理メモリ使用割合           : {0}%" + "\r\n", ((ImageDictionary)_TIconDic).PhysicalMemoryLimit);
+            buf.AppendFormat("キャッシュエントリ保持数     : {0}" + "\r\n", ((ImageDictionary)_TIconDic).CacheCount);
+            buf.AppendFormat("キャッシュエントリ破棄数     : {0}" + "\r\n", ((ImageDictionary)_TIconDic).CacheRemoveCount);
             MessageBox.Show(buf.ToString(), "アイコンキャッシュ使用状況");
         }
 
@@ -13931,11 +13677,11 @@ namespace Tween
                     return;
                 }
             }
-            catch (ObjectDisposedException )
+            catch (ObjectDisposedException)
             {
                 return;
             }
-            catch (InvalidOperationException )
+            catch (InvalidOperationException)
             {
                 return;
             }
@@ -13993,11 +13739,11 @@ namespace Tween
                     return;
                 }
             }
-            catch (ObjectDisposedException )
+            catch (ObjectDisposedException)
             {
                 return;
             }
-            catch (InvalidOperationException )
+            catch (InvalidOperationException)
             {
                 return;
             }
@@ -14014,11 +13760,11 @@ namespace Tween
                     return;
                 }
             }
-            catch (ObjectDisposedException )
+            catch (ObjectDisposedException)
             {
                 return;
             }
-            catch (InvalidOperationException )
+            catch (InvalidOperationException)
             {
                 return;
             }
@@ -14042,11 +13788,11 @@ namespace Tween
                     return;
                 }
             }
-            catch (ObjectDisposedException )
+            catch (ObjectDisposedException)
             {
                 return;
             }
-            catch (InvalidOperationException )
+            catch (InvalidOperationException)
             {
                 return;
             }
@@ -14069,11 +13815,11 @@ namespace Tween
                     return;
                 }
             }
-            catch (ObjectDisposedException )
+            catch (ObjectDisposedException)
             {
                 return;
             }
-            catch (InvalidOperationException )
+            catch (InvalidOperationException)
             {
                 return;
             }
@@ -14160,9 +13906,9 @@ namespace Tween
                         {
                             dir = Path.Combine(dir, "Sounds");
                         }
-                        Tween.My.MyProject.Computer.Audio.Play(Path.Combine(dir, snd), AudioPlayMode.Background);
+                        Tween.My.MyProject.Computer.Audio.Play(Path.Combine(dir, snd));//TODO:, AudioPlayMode.Background);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
                 }
@@ -14187,31 +13933,14 @@ namespace Tween
             }
         }
 
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_TrackToolStripMenuItem_Click_inputTrack_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-
-        string static_TrackToolStripMenuItem_Click_inputTrack;
-
+        string _prevTrackWord;
         private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            lock (static_TrackToolStripMenuItem_Click_inputTrack_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_TrackToolStripMenuItem_Click_inputTrack_Init))
-                    {
-                        static_TrackToolStripMenuItem_Click_inputTrack = "";
-                    }
-                }
-                finally
-                {
-                    static_TrackToolStripMenuItem_Click_inputTrack_Init.State = 1;
-                }
-            }
             if (TrackToolStripMenuItem.Checked)
             {
                 using (InputTabName inputForm = new InputTabName())
                 {
-                    inputForm.TabName = static_TrackToolStripMenuItem_Click_inputTrack;
+                    inputForm.TabName = _prevTrackWord;
                     inputForm.SetFormTitle("Input track word");
                     inputForm.SetFormDescription("Track word");
                     if (inputForm.ShowDialog() != DialogResult.OK)
@@ -14219,13 +13948,13 @@ namespace Tween
                         TrackToolStripMenuItem.Checked = false;
                         return;
                     }
-                    static_TrackToolStripMenuItem_Click_inputTrack = inputForm.TabName.Trim();
+                    _prevTrackWord = inputForm.TabName.Trim();
                 }
-                if (!static_TrackToolStripMenuItem_Click_inputTrack.Equals(tw.TrackWord))
+                if (_prevTrackWord != tw.TrackWord)
                 {
-                    tw.TrackWord = static_TrackToolStripMenuItem_Click_inputTrack;
+                    tw.TrackWord = _prevTrackWord;
                     this._modifySettingCommon = true;
-                    TrackToolStripMenuItem.Checked = !String.IsNullOrEmpty(static_TrackToolStripMenuItem_Click_inputTrack);
+                    TrackToolStripMenuItem.Checked = !String.IsNullOrEmpty(_prevTrackWord);
                     tw.ReconnectUserStream();
                 }
             }
@@ -14279,7 +14008,7 @@ namespace Tween
                 this.Close();
                 Application.Restart();
             }
-            catch (Exception )
+            catch (Exception)
             {
                 MessageBox.Show("Failed to restart. Please run Tween manually.");
             }
@@ -14551,23 +14280,6 @@ namespace Tween
                             }
                         }
                     }));
-            }
-        }
-
-        private static bool InitStaticVariableHelper(Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag flag)
-        {
-            if (flag.State == 0)
-            {
-                flag.State = 2;
-                return true;
-            }
-            else if (flag.State == 2)
-            {
-                throw new Microsoft.VisualBasic.CompilerServices.IncompleteInitialization();
-            }
-            else
-            {
-                return false;
             }
         }
     }
