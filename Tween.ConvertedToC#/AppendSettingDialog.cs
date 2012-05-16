@@ -591,9 +591,9 @@ namespace Tween
                 {
                     HotkeyMod = HotkeyMod | Keys.LWin;
                 }
-                if (Microsoft.VisualBasic.Information.IsNumeric(HotkeyCode.Text))
                 {
-                    HotkeyValue = Convert.ToInt32(HotkeyCode.Text);
+                    int tmp = HotkeyValue;
+                    if (int.TryParse(HotkeyCode.Text, out tmp)) { HotkeyValue = tmp; }
                 }
                 HotkeyKey = (Keys)HotkeyText.Tag;
                 BlinkNewMentions = ChkNewMentionsBlink.Checked;
