@@ -30,34 +30,23 @@ namespace Tween
 {
     public class TwitterPhoto : IMultimediaShareService
     {
-        private string[] pictureExt = {
-			".jpg",
-			".jpeg",
-			".gif",
-			".png"
-		};
+        private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
 
-        private const Int64 MaxfilesizeDefault = 3145728;
-        // help/configurationにより取得されコンストラクタへ渡される
-
-        private Int64 _MaxFileSize = 3145728;
-
-        private Twitter tw;
+        private const Int64 MaxfilesizeDefault = 3145728;        // help/configurationにより取得されコンストラクタへ渡される
+        
+        private Int64 _maxFileSize = 3145728;
+        private Twitter _tw;
 
         public bool CheckValidExtension(string ext)
         {
-            if (Array.IndexOf(pictureExt, ext.ToLower()) > -1)
-            {
-                return true;
-            }
-            return false;
+            return Array.IndexOf(_pictureExts, ext.ToLower()) > -1;
         }
 
         public bool CheckValidFilesize(string ext, long fileSize)
         {
-            if (this.CheckValidExtension(ext))
+            if (CheckValidExtension(ext))
             {
-                return fileSize <= _MaxFileSize;
+                return fileSize <= _maxFileSize;
             }
             return false;
         }
@@ -66,30 +55,19 @@ namespace Tween
         {
             if (key == "MaxUploadFilesize")
             {
-                Int64 val = default(Int64);
                 try
                 {
-                    val = Convert.ToInt64(value);
-                    if (val > 0)
-                    {
-                        _MaxFileSize = val;
-                    }
-                    else
-                    {
-                        _MaxFileSize = MaxfilesizeDefault;
-                    }
+                    Int64 val = Convert.ToInt64(value);
+                    _maxFileSize = val > 0 ? val : MaxfilesizeDefault;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    _MaxFileSize = MaxfilesizeDefault;
-                    return false;
-                    //error
+                    _maxFileSize = MaxfilesizeDefault;
+                    return false;                    //error
                 }
-                return true;
-                // 正常に設定終了
+                return true; // 正常に設定終了
             }
-            return true;
-            // 設定項目がない場合はとりあえずエラー扱いにしない
+            return true;     // 設定項目がない場合はとりあえずエラー扱いにしない
         }
 
         public string GetFileOpenDialogFilter()
@@ -99,7 +77,7 @@ namespace Tween
 
         public MyCommon.UploadFileType GetFileType(string ext)
         {
-            if (this.CheckValidExtension(ext))
+            if (CheckValidExtension(ext))
             {
                 return MyCommon.UploadFileType.Picture;
             }
@@ -111,12 +89,16 @@ namespace Tween
             return type.Equals(MyCommon.UploadFileType.Picture);
         }
 
-        public string Upload(ref string filePath, ref string message, long reply_to)
+        public string Upload(ref string filePath, ref string message, long replyTo)
         {
-            if (string.IsNullOrEmpty(filePath))
+            if (String.IsNullOrEmpty(filePath))
+            {
                 return "Err:File isn't specified.";
-            if (string.IsNullOrEmpty(message))
+            }
+            if (String.IsNullOrEmpty(message))
+            {
                 message = "";
+            }
             FileInfo mediaFile = null;
             try
             {
@@ -127,16 +109,20 @@ namespace Tween
                 return "Err:" + ex.Message;
             }
             if (!mediaFile.Exists)
+            {
                 return "Err:File isn't exists.";
+            }
             if (MyCommon.IsAnimatedGif(filePath))
+            {
                 return "Err:Don't support animatedGIF.";
+            }
 
-            return tw.PostStatusWithMedia(message, reply_to, mediaFile);
+            return _tw.PostStatusWithMedia(message, replyTo, mediaFile);
         }
 
         public TwitterPhoto(Twitter twitter)
         {
-            tw = twitter;
+            _tw = twitter;
         }
     }
 }
