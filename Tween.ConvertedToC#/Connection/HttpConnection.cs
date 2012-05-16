@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Text;
 using Microsoft.VisualBasic;
@@ -46,23 +47,22 @@ namespace Tween
         ///<summary>
         ///プロキシ
         ///</summary>
-
         private static WebProxy proxy = null;
+
         ///<summary>
         ///ユーザーが選択したプロキシの方式
         ///</summary>
-
         private static ProxyType proxyKind = ProxyType.IE;
+
         ///<summary>
         ///クッキー保存用コンテナ
         ///</summary>
-
         private static CookieContainer cookieContainer = new CookieContainer();
+
         ///<summary>
         ///初期化済みフラグ
         ///</summary>
-
-        private static bool isInitialize = false;
+        private static bool isInitialize;
 
         public enum ProxyType
         {
@@ -73,7 +73,6 @@ namespace Tween
 
         protected const string PostMethod = "POST";
         protected const string GetMethod = "GET";
-
         protected const string HeadMethod = "HEAD";
 
         ///<summary>
@@ -92,7 +91,9 @@ namespace Tween
         protected HttpWebRequest CreateRequest(string method, Uri requestUri, Dictionary<string, string> param, bool withCookie)
         {
             if (!isInitialize)
+            {
                 throw new Exception("Sequence error.(not initialized)");
+            }
 
             //GETメソッドの場合はクエリとurlを結合
             UriBuilder ub = new UriBuilder(requestUri.AbsoluteUri);
@@ -102,14 +103,12 @@ namespace Tween
             }
 
             HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(ub.Uri);
-
-            webReq.ReadWriteTimeout = 90 * 1000;
-            //Streamの読み込みは90秒でタイムアウト（デフォルト5分）
-
+            webReq.ReadWriteTimeout = 90 * 1000;            //Streamの読み込みは90秒でタイムアウト（デフォルト5分）
             //プロキシ設定
             if (proxyKind != ProxyType.IE)
+            {
                 webReq.Proxy = proxy;
-
+            }
             webReq.Method = method;
             if (method == "POST" || method == "PUT")
             {
@@ -122,7 +121,9 @@ namespace Tween
             }
             //cookie設定
             if (withCookie)
+            {
                 webReq.CookieContainer = cookieContainer;
+            }
             //タイムアウト設定
             if (InstanceTimeout > 0)
             {
@@ -151,7 +152,9 @@ namespace Tween
         protected HttpWebRequest CreateRequest(string method, Uri requestUri, Dictionary<string, string> param, List<KeyValuePair<string, FileInfo>> binaryFileInfo, bool withCookie)
         {
             if (!isInitialize)
+            {
                 throw new Exception("Sequence error.(not initialized)");
+            }
 
             //methodはPOST,PUTのみ許可
             UriBuilder ub = new UriBuilder(requestUri.AbsoluteUri);
@@ -168,7 +171,9 @@ namespace Tween
 
             //プロキシ設定
             if (proxyKind != ProxyType.IE)
+            {
                 webReq.Proxy = proxy;
+            }
 
             webReq.Method = method;
             if (method == "POST" || method == "PUT")
@@ -183,7 +188,7 @@ namespace Tween
                         string postData = "";
                         foreach (KeyValuePair<string, string> kvp in param)
                         {
-                            postData += "--" + boundary + Constants.vbCrLf + "Content-Disposition: form-data; name=\"" + kvp.Key + "\"" + Constants.vbCrLf + Constants.vbCrLf + kvp.Value + Constants.vbCrLf;
+                            postData += String.Format("--{0}\r\nContent-Disposition: form-data; name=\"{1}\"\r\n\r\n{2}\r\n", boundary, kvp.Key, kvp.Value);
                         }
                         byte[] postBytes = Encoding.UTF8.GetBytes(postData);
                         reqStream.Write(postBytes, 0, postBytes.Length);
@@ -249,10 +254,12 @@ namespace Tween
                                     mime = "video/3gpp2";
                                     break;
                                 default:
-                                    mime = "application/octet-stream" + Constants.vbCrLf + "Content-Transfer-Encoding: binary";
+                                    mime = "application/octet-stream" + "\r\n" + "Content-Transfer-Encoding: binary";
                                     break;
                             }
-                            postData = "--" + boundary + Constants.vbCrLf + "Content-Disposition: form-data; name=\"" + kvp.Key + "\"; filename=\"" + kvp.Value.Name + "\"" + Constants.vbCrLf + "Content-Type: " + mime + Constants.vbCrLf + Constants.vbCrLf;
+                            postData = "--" + boundary + "\r\n"
+                                + "Content-Disposition: form-data; name=\"" + kvp.Key + "\"; filename=\"" + kvp.Value.Name + "\"" + "\r\n"
+                                + "Content-Type: " + mime + "\r\n" + "\r\n";
                             byte[] postBytes = Encoding.UTF8.GetBytes(postData);
                             reqStream.Write(postBytes, 0, postBytes.Length);
                             //ファイルを読み出してHTTPのストリームに書き込み
@@ -264,7 +271,9 @@ namespace Tween
                                 {
                                     readSize = fs.Read(readBytes, 0, readBytes.Length);
                                     if (readSize == 0)
-                                        break; // TODO: might not be correct. Was : Exit While
+                                    {
+                                        break; 
+                                    }
                                     reqStream.Write(readBytes, 0, readSize);
                                 }
                                 fs.Close();
@@ -273,14 +282,16 @@ namespace Tween
                         }
                     }
                     //終端
-                    byte[] endBytes = Encoding.UTF8.GetBytes("--" + boundary + "--" + Constants.vbCrLf);
+                    byte[] endBytes = Encoding.UTF8.GetBytes("--" + boundary + "--" + "\r\n");
                     reqStream.Write(endBytes, 0, endBytes.Length);
                     reqStream.Close();
                 }
             }
             //cookie設定
             if (withCookie)
+            {
                 webReq.CookieContainer = cookieContainer;
+            }
             //タイムアウト設定
             if (InstanceTimeout > 0)
             {
@@ -316,7 +327,9 @@ namespace Tween
                     HttpStatusCode statusCode = webRes.StatusCode;
                     //cookie保持
                     if (withCookie)
+                    {
                         SaveCookie(webRes.Cookies);
+                    }
                     //リダイレクト応答の場合は、リダイレクト先を設定
                     GetHeaderInfo(webRes, headerInfo);
                     //応答のストリームをコピーして戻す
@@ -328,15 +341,19 @@ namespace Tween
                             using (Stream stream = webRes.GetResponseStream())
                             {
                                 if (stream != null)
+                                {
                                     CopyStream(stream, contentStream);
+                                }
                             }
                         }
                         else
                         {
-                            using (Stream stream = new System.IO.Compression.GZipStream(webRes.GetResponseStream(), System.IO.Compression.CompressionMode.Decompress))
+                            using (Stream stream = new GZipStream(webRes.GetResponseStream(), CompressionMode.Decompress))
                             {
                                 if (stream != null)
+                                {
                                     CopyStream(stream, contentStream);
+                                }
                             }
                         }
                     }
@@ -377,12 +394,16 @@ namespace Tween
                     HttpStatusCode statusCode = webRes.StatusCode;
                     //cookie保持
                     if (withCookie)
+                    {
                         SaveCookie(webRes.Cookies);
+                    }
                     //リダイレクト応答の場合は、リダイレクト先を設定
                     GetHeaderInfo(webRes, headerInfo);
                     //応答のストリームをテキストに書き出し
                     if (contentText == null)
+                    {
                         throw new ArgumentNullException("contentText");
+                    }
                     using (StreamReader sr = new StreamReader(webRes.GetResponseStream()))
                     {
                         contentText = sr.ReadToEnd();
@@ -426,7 +447,9 @@ namespace Tween
                     HttpStatusCode statusCode = webRes.StatusCode;
                     //cookie保持
                     if (withCookie)
+                    {
                         SaveCookie(webRes.Cookies);
+                    }
                     //リダイレクト応答の場合は、リダイレクト先を設定
                     GetHeaderInfo(webRes, headerInfo);
                     return statusCode;
@@ -465,11 +488,12 @@ namespace Tween
                     HttpStatusCode statusCode = webRes.StatusCode;
                     //cookie保持
                     if (withCookie)
+                    {
                         SaveCookie(webRes.Cookies);
+                    }
                     //リダイレクト応答の場合は、リダイレクト先を設定
                     GetHeaderInfo(webRes, headerInfo);
                     //応答のストリームをBitmapにして戻す
-                    //If webRes.ContentLength > 0 Then contentBitmap = New Bitmap(webRes.GetResponseStream)
                     contentBitmap = new Bitmap(webRes.GetResponseStream());
                     return statusCode;
                 }
@@ -509,15 +533,25 @@ namespace Tween
         private void CopyStream(Stream inStream, Stream outStream)
         {
             if (inStream == null)
+            {
                 throw new ArgumentNullException("inStream");
+            }
             if (outStream == null)
+            {
                 throw new ArgumentNullException("outStream");
+            }
             if (!inStream.CanRead)
+            {
                 throw new ArgumentException("Input stream can not read.");
+            }
             if (!outStream.CanWrite)
+            {
                 throw new ArgumentException("Output stream can not write.");
+            }
             if (inStream.CanSeek && inStream.Length == 0)
+            {
                 throw new ArgumentException("Input stream do not have data.");
+            }
 
             do
             {
@@ -525,7 +559,9 @@ namespace Tween
                 int i = buffer.Length;
                 i = inStream.Read(buffer, 0, i);
                 if (i == 0)
-                    break; // TODO: might not be correct. Was : Exit Do
+                {
+                    break;
+                }
                 outStream.Write(buffer, 0, i);
             } while (true);
         }
@@ -539,7 +575,9 @@ namespace Tween
         private void GetHeaderInfo(HttpWebResponse webResponse, Dictionary<string, string> headerInfo)
         {
             if (headerInfo == null)
+            {
                 return;
+            }
 
             if (headerInfo.Count > 0)
             {
@@ -579,7 +617,9 @@ namespace Tween
         protected string CreateQueryString(IDictionary<string, string> param)
         {
             if (param == null || param.Count == 0)
-                return string.Empty;
+            {
+                return String.Empty;
+            }
 
             StringBuilder query = new StringBuilder();
             foreach (string key in param.Keys)
@@ -727,7 +767,7 @@ namespace Tween
                     break;
                 case ProxyType.Specified:
                     proxy = new WebProxy("http://" + proxyAddress + ":" + proxyPort.ToString());
-                    if (!string.IsNullOrEmpty(proxyUser) || !string.IsNullOrEmpty(proxyPassword))
+                    if (!String.IsNullOrEmpty(proxyUser) || !String.IsNullOrEmpty(proxyPassword))
                     {
                         proxy.Credentials = new NetworkCredential(proxyUser, proxyPassword);
                     }
