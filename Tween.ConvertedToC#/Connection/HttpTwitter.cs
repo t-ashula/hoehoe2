@@ -52,10 +52,12 @@ namespace Tween
         private const string PostMethod = "POST";
         private const string GetMethod = "GET";
 
-        //HttpConnectionApi or HttpConnectionOAuth
-        private IHttpConnection httpCon;
+        /// <summary>
+        /// HttpConnectionApi or HttpConnectionOAuth
+        /// </summary>        
+        private IHttpConnection _httpCon;
 
-        private HttpVarious httpConVar = new HttpVarious();
+        private HttpVarious _httpConVar = new HttpVarious();
 
         private enum AuthMethod
         {
@@ -63,105 +65,49 @@ namespace Tween
             Basic
         }
 
-        private AuthMethod connectionType = AuthMethod.Basic;
+        private AuthMethod _connectionType = AuthMethod.Basic;
 
-        private string requestToken;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_Initialize_tk_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
+        private string _requestToken;
 
         //for OAuth
-        string static_Initialize_tk;
-
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_Initialize_tks_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        string static_Initialize_tks;
-        readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_Initialize_un_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-        string static_Initialize_un;
-
+        private string _tk = "";
+        private string _tks = "";
+        private string _un = "";
         public void Initialize(string accessToken, string accessTokenSecret, string username, long userId)
         {
             HttpOAuthApiProxy con = new HttpOAuthApiProxy();
-            lock (static_Initialize_tk_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_Initialize_tk_Init))
-                    {
-                        static_Initialize_tk = "";
-                    }
-                }
-                finally
-                {
-                    static_Initialize_tk_Init.State = 1;
-                }
-            }
-            lock (static_Initialize_tks_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_Initialize_tks_Init))
-                    {
-                        static_Initialize_tks = "";
-                    }
-                }
-                finally
-                {
-                    static_Initialize_tks_Init.State = 1;
-                }
-            }
-            lock (static_Initialize_un_Init)
-            {
-                try
-                {
-                    if (InitStaticVariableHelper(static_Initialize_un_Init))
-                    {
-                        static_Initialize_un = "";
-                    }
-                }
-                finally
-                {
-                    static_Initialize_un_Init.State = 1;
-                }
-            }
-            if (static_Initialize_tk != accessToken || static_Initialize_tks != accessTokenSecret || static_Initialize_un != username || connectionType != AuthMethod.OAuth)
+            if (_tk != accessToken || _tks != accessTokenSecret || _un != username || _connectionType != AuthMethod.OAuth)
             {
                 // 以前の認証状態よりひとつでも変化があったらhttpヘッダより読み取ったカウントは初期化
-                static_Initialize_tk = accessToken;
-                static_Initialize_tks = accessTokenSecret;
-                static_Initialize_un = username;
+                _tk = accessToken;
+                _tks = accessTokenSecret;
+                _un = username;
             }
             con.Initialize(MyCommon.DecryptString(ConsumerKey), MyCommon.DecryptString(ConsumerSecret), accessToken, accessTokenSecret, username, userId, "screen_name", "user_id");
-            httpCon = con;
-            connectionType = AuthMethod.OAuth;
-            requestToken = "";
+            _httpCon = con;
+            _connectionType = AuthMethod.OAuth;
+            _requestToken = "";
         }
 
         public string AccessToken
         {
-            get { return httpCon != null ? ((HttpConnectionOAuth)httpCon).AccessToken : ""; }
+            get { return _httpCon != null ? ((HttpConnectionOAuth)_httpCon).AccessToken : ""; }
         }
 
         public string AccessTokenSecret
         {
-            get { return httpCon != null ? ((HttpConnectionOAuth)httpCon).AccessTokenSecret : ""; }
+            get { return _httpCon != null ? ((HttpConnectionOAuth)_httpCon).AccessTokenSecret : ""; }
         }
 
         public string AuthenticatedUsername
         {
-            get { return httpCon != null ? httpCon.AuthUsername : ""; }
+            get { return _httpCon != null ? _httpCon.AuthUsername : ""; }
         }
 
         public long AuthenticatedUserId
         {
-            get
-            {
-                return httpCon != null ? httpCon.AuthUserId : 0;
-            }
-            set
-            {
-                if (httpCon != null)
-                {
-                    httpCon.AuthUserId = value;
-                }
-            }
+            get { return _httpCon != null ? _httpCon.AuthUserId : 0; }
+            set { if (_httpCon != null) { _httpCon.AuthUserId = value; } }
         }
 
         public string Password
@@ -172,19 +118,19 @@ namespace Tween
         public bool AuthGetRequestToken(ref string content)
         {
             Uri authUri = null;
-            bool result = ((HttpOAuthApiProxy)httpCon).AuthenticatePinFlowRequest(RequestTokenUrl, AuthorizeUrl, ref requestToken, ref authUri);
+            bool result = ((HttpOAuthApiProxy)_httpCon).AuthenticatePinFlowRequest(RequestTokenUrl, AuthorizeUrl, ref _requestToken, ref authUri);
             content = authUri.ToString();
             return result;
         }
 
         public HttpStatusCode AuthGetAccessToken(string pin)
         {
-            return ((HttpOAuthApiProxy)httpCon).AuthenticatePinFlow(AccessTokenUrl, requestToken, pin);
+            return ((HttpOAuthApiProxy)_httpCon).AuthenticatePinFlow(AccessTokenUrl, _requestToken, pin);
         }
 
         public HttpStatusCode AuthUserAndPass(string username, string password, ref string content)
         {
-            return httpCon.Authenticate(new Uri(AccessTokenUrlXAuth), username, password, ref content);
+            return _httpCon.Authenticate(new Uri(AccessTokenUrlXAuth), username, password, ref content);
         }
 
         public void ClearAuthInfo()
@@ -206,7 +152,7 @@ namespace Tween
                 param.Add("in_reply_to_status_id", replyToId.ToString());
             }
             param.Add("include_entities", "true");
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/update.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/update.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode UpdateStatusWithMedia(string status, long replyToId, FileInfo mediaFile, ref string content)
@@ -221,13 +167,13 @@ namespace Tween
             param.Add("include_entities", "true");
             List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media[]", mediaFile));
-            return httpCon.GetContent(PostMethod, new Uri("https://upload.twitter.com/1/statuses/update_with_media.json"), param, binary, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(PostMethod, new Uri("https://upload.twitter.com/1/statuses/update_with_media.json"), param, binary, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode DestroyStatus(long id)
         {
             string t = "";
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/destroy/" + id.ToString() + ".json"), null, ref t, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/destroy/" + id.ToString() + ".json"), null, ref t, null, null);
         }
 
         public HttpStatusCode SendDirectMessage(string status, string sendto, ref string content)
@@ -235,13 +181,13 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("text", status);
             param.Add("screen_name", sendto);
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/direct_messages/new.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/direct_messages/new.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyDirectMessage(long id)
         {
             string t = "";
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/direct_messages/destroy/" + id.ToString() + ".json"), null, ref t, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/direct_messages/destroy/" + id.ToString() + ".json"), null, ref t, null, null);
         }
 
         public HttpStatusCode RetweetStatus(long id, ref string content)
@@ -249,7 +195,7 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("include_entities", "true");
 
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/retweet/" + id.ToString() + ".json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/retweet/" + id.ToString() + ".json"), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowUserInfo(string screenName, ref string content)
@@ -257,42 +203,42 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
             param.Add("include_entities", "true");
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/users/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/users/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateFriendships(string screenName, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/friendships/create.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/friendships/create.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyFriendships(string screenName, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/friendships/destroy.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/friendships/destroy.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode CreateBlock(string screenName, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/blocks/create.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/blocks/create.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyBlock(string screenName, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/blocks/destroy.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/blocks/destroy.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode ReportSpam(string screenName, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", screenName);
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/report_spam.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/report_spam.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowFriendships(string souceScreenName, string targetScreenName, ref string content)
@@ -300,24 +246,24 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("source_screen_name", souceScreenName);
             param.Add("target_screen_name", targetScreenName);
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/friendships/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/friendships/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode ShowStatuses(long id, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("include_entities", "true");
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/show/" + id.ToString() + ".json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/show/" + id.ToString() + ".json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateFavorites(long id, ref string content)
         {
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/favorites/create/" + id.ToString() + ".json"), null, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/favorites/create/" + id.ToString() + ".json"), null, ref content, null, null);
         }
 
         public HttpStatusCode DestroyFavorites(long id, ref string content)
         {
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/favorites/destroy/" + id.ToString() + ".json"), null, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/favorites/destroy/" + id.ToString() + ".json"), null, ref content, null, null);
         }
 
         public HttpStatusCode HomeTimeline(int count, long max_id, long since_id, ref string content)
@@ -338,7 +284,7 @@ namespace Tween
 
             param.Add("include_entities", "true");
 
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/home_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/home_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode UserTimeline(long user_id, string screen_name, int count, long max_id, long since_id, ref string content)
@@ -374,7 +320,7 @@ namespace Tween
             param.Add("include_rts", "true");
             param.Add("include_entities", "true");
 
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/user_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/user_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode PublicTimeline(int count, long maxId, long sinceId, ref string content)
@@ -395,7 +341,7 @@ namespace Tween
 
             param.Add("include_entities", "true");
 
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/public_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/public_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode Mentions(int count, long maxId, long sinceId, ref string content)
@@ -416,7 +362,7 @@ namespace Tween
 
             param.Add("include_entities", "true");
 
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/mentions.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/mentions.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode DirectMessages(int count, long maxId, long sinceId, ref string content)
@@ -436,7 +382,7 @@ namespace Tween
             }
             param.Add("include_entities", "true");
 
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/direct_messages.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/direct_messages.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode DirectMessagesSent(int count, long maxId, long sinceId, ref string content)
@@ -456,7 +402,7 @@ namespace Tween
             }
             param.Add("include_entities", "true");
 
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/direct_messages/sent.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/direct_messages/sent.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode Favorites(int count, int page, ref string content)
@@ -472,7 +418,7 @@ namespace Tween
 
             param.Add("include_entities", "true");
 
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/favorites.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/favorites.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode PhoenixSearch(string querystr, ref string content)
@@ -493,7 +439,7 @@ namespace Tween
                 param.Add(paramstr[0], paramstr[1]);
             }
 
-            return httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Tween");
+            return _httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Tween");
         }
 
         public HttpStatusCode PhoenixSearch(string words, string lang, int rpp, int page, long sinceId, ref string content)
@@ -522,7 +468,7 @@ namespace Tween
                 param.Add("since_id", sinceId.ToString());
             }
 
-            return httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Tween");
+            return _httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Tween");
         }
 
         public HttpStatusCode Search(string words, string lang, int rpp, int page, long sinceId, ref string content)
@@ -554,31 +500,31 @@ namespace Tween
                 return HttpStatusCode.BadRequest;
             }
 
-            return httpConVar.GetContent(GetMethod, CreateTwitterSearchUri("/search.atom"), param, ref content, null, "Tween");
+            return _httpConVar.GetContent(GetMethod, CreateTwitterSearchUri("/search.atom"), param, ref content, null, "Tween");
         }
 
         public HttpStatusCode SavedSearches(ref string content)
         {
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/saved_searches.json"), null, ref content, null, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/saved_searches.json"), null, ref content, null, GetApiCallback);
         }
 
         public HttpStatusCode FollowerIds(long cursor, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("cursor", cursor.ToString());
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/followers/ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/followers/ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode NoRetweetIds(long cursor, ref string content)
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("cursor", cursor.ToString());
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/friendships/no_retweet_ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/friendships/no_retweet_ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode RateLimitStatus(ref string content)
         {
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/account/rate_limit_status.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/account/rate_limit_status.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         #region "Lists"
@@ -588,7 +534,7 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", user);
             param.Add("cursor", cursor.ToString());
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode UpdateListID(string user, string listId, string name, bool isPrivate, string description, ref string content)
@@ -605,7 +551,7 @@ namespace Tween
             {
                 param.Add("description", description);
             }
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/update.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/update.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DeleteListID(string user, string listId, ref string content)
@@ -613,7 +559,7 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", user);
             param.Add("list_id", listId);
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/destroy.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/destroy.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode GetListsSubscriptions(string user, long cursor, ref string content)
@@ -621,7 +567,7 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", user);
             param.Add("cursor", cursor.ToString());
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/subscriptions.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/subscriptions.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode GetListsStatuses(long userId, long listId, int perPage, long maxId, long sinceId, bool isRTinclude, ref string content)
@@ -648,7 +594,7 @@ namespace Tween
             }
             param.Add("include_entities", "true");
 
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/statuses.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/statuses.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateLists(string listname, bool isPrivate, string description, ref string content)
@@ -660,7 +606,7 @@ namespace Tween
             {
                 param.Add("description", description);
             }
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/create.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/create.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode GetListMembers(string user, string listId, long cursor, ref string content)
@@ -669,7 +615,7 @@ namespace Tween
             param.Add("screen_name", user);
             param.Add("list_id", listId);
             param.Add("cursor", cursor.ToString());
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/members.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/members.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateListMembers(string listId, string memberName, ref string content)
@@ -677,7 +623,7 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("list_id", listId);
             param.Add("screen_name", memberName);
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/members/create.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/members/create.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DeleteListMembers(string listId, string memberName, ref string content)
@@ -685,7 +631,7 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", memberName);
             param.Add("list_id", listId);
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/members/destroy.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/members/destroy.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowListMember(string listId, string memberName, ref string content)
@@ -693,7 +639,7 @@ namespace Tween
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("screen_name", memberName);
             param.Add("list_id", listId);
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/members/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/members/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         #endregion "Lists"
@@ -710,7 +656,7 @@ namespace Tween
                 param.Add("page", page.ToString());
             }
 
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/" + statusid.ToString() + "/retweeted_by/ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/" + statusid.ToString() + "/retweeted_by/ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode UpdateProfile(string name, string url, string location, string description, ref string content)
@@ -723,7 +669,7 @@ namespace Tween
             param.Add("description", description);
             param.Add("include_entities", "true");
 
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/account/update_profile.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/account/update_profile.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode UpdateProfileImage(FileInfo imageFile, ref string content)
@@ -731,7 +677,7 @@ namespace Tween
             List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("image", imageFile));
 
-            return httpCon.GetContent(PostMethod, CreateTwitterUri("/1/account/update_profile_image.json"), null, binary, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/account/update_profile_image.json"), null, binary, ref content, null, null);
         }
 
         public HttpStatusCode GetRelatedResults(long id, ref string content)
@@ -739,22 +685,22 @@ namespace Tween
             //認証なくても取得できるが、protectedユーザー分が抜ける
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("include_entities", "true");
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/related_results/show/" + id.ToString() + ".json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/related_results/show/" + id.ToString() + ".json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode GetBlockUserIds(ref string content)
         {
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/blocks/blocking/ids.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/blocks/blocking/ids.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode GetConfiguration(ref string content)
         {
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/help/configuration.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/help/configuration.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode VerifyCredentials(ref string content)
         {
-            return httpCon.GetContent(GetMethod, CreateTwitterUri("/1/account/verify_credentials.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/account/verify_credentials.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         #region "Proxy API"
@@ -819,7 +765,7 @@ namespace Tween
                 param.Add("track", trackwords);
             }
 
-            return httpCon.GetContent(GetMethod, CreateTwitterUserStreamUri("/2/user.json"), param, ref content, userAgent);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUserStreamUri("/2/user.json"), param, ref content, userAgent);
         }
 
         public HttpStatusCode FilterStream(ref Stream content, string trackwords, string userAgent)
@@ -832,12 +778,12 @@ namespace Tween
                 param.Add("track", String.Join(",", trackwords.Split(" ".ToCharArray())));
             }
 
-            return httpCon.GetContent(PostMethod, CreateTwitterStreamUri("/1/statuses/filter.json"), param, ref content, userAgent);
+            return _httpCon.GetContent(PostMethod, CreateTwitterStreamUri("/1/statuses/filter.json"), param, ref content, userAgent);
         }
 
         public void RequestAbort()
         {
-            httpCon.RequestAbort();
+            _httpCon.RequestAbort();
         }
 
         public object Clone()
@@ -845,23 +791,6 @@ namespace Tween
             HttpTwitter myCopy = new HttpTwitter();
             myCopy.Initialize(this.AccessToken, this.AccessTokenSecret, this.AuthenticatedUsername, this.AuthenticatedUserId);
             return myCopy;
-        }
-
-        private static bool InitStaticVariableHelper(Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag flag)
-        {
-            if (flag.State == 0)
-            {
-                flag.State = 2;
-                return true;
-            }
-            else if (flag.State == 2)
-            {
-                throw new Microsoft.VisualBasic.CompilerServices.IncompleteInitialization();
-            }
-            else
-            {
-                return false;
-            }
         }
     }
 }
