@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Tween
@@ -35,19 +36,9 @@ namespace Tween
 
         private static string _proxyHost = "";
 
-        static internal string ProxyHost
+        internal static void SetProxyHost(string value)
         {
-            set
-            {
-                if (string.IsNullOrEmpty(value) || value == _apiHost)
-                {
-                    _proxyHost = "";
-                }
-                else
-                {
-                    _proxyHost = value;
-                }
-            }
+            _proxyHost = (String.IsNullOrEmpty(value) || value == _apiHost) ? "" : value;
         }
 
         protected override string CreateSignature(string tokenSecret, string method, Uri uri, Dictionary<string, string> parameter)
@@ -59,7 +50,7 @@ namespace Tween
             //アクセス先URLの整形
             string url = string.Format("{0}://{1}{2}", uri.Scheme, uri.Host, uri.AbsolutePath);
             //本来のアクセス先URLに再設定（api.twitter.com固定）
-            if (!string.IsNullOrEmpty(_proxyHost) && url.StartsWith(uri.Scheme + "://" + _proxyHost))
+            if (!String.IsNullOrEmpty(_proxyHost) && url.StartsWith(uri.Scheme + "://" + _proxyHost))
             {
                 url = url.Replace(uri.Scheme + "://" + _proxyHost, uri.Scheme + "://" + _apiHost);
             }
@@ -67,13 +58,14 @@ namespace Tween
             string signatureBase = string.Format("{0}&{1}&{2}", method, UrlEncode(url), UrlEncode(paramString));
             //署名鍵の文字列をコンシューマー秘密鍵とアクセストークン秘密鍵から生成（&区切り。アクセストークン秘密鍵なくても&残すこと）
             string key = UrlEncode(consumerSecret) + "&";
-            if (!string.IsNullOrEmpty(tokenSecret))
-                key += UrlEncode(tokenSecret);
-            //鍵生成＆署名生成
-            using (System.Security.Cryptography.HMACSHA1 hmac = new System.Security.Cryptography.HMACSHA1(Encoding.ASCII.GetBytes(key)))
+            if (!String.IsNullOrEmpty(tokenSecret))
             {
-                byte[] hash = hmac.ComputeHash(Encoding.ASCII.GetBytes(signatureBase));
-                return Convert.ToBase64String(hash);
+                key += UrlEncode(tokenSecret);
+            }
+            //鍵生成＆署名生成
+            using (HMACSHA1 hmac = new HMACSHA1(Encoding.ASCII.GetBytes(key)))
+            {
+                return Convert.ToBase64String(hmac.ComputeHash(Encoding.ASCII.GetBytes(signatureBase)));
             }
         }
     }

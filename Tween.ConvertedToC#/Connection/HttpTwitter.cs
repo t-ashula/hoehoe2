@@ -787,7 +787,7 @@ namespace Tween
         public static void SetTwitterUrl(string value)
         {
             _twitterUrl = value;
-            HttpOAuthApiProxy.ProxyHost = value;
+            HttpOAuthApiProxy.SetProxyHost(value);
         }
 
         public static void SetTwitterSearchUrl(string value)
