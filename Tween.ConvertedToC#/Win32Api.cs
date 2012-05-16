@@ -606,33 +606,17 @@ namespace Tween
         [DllImport("kernel32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         private static extern int GlobalDeleteAtom(int nAtom);
 
-        static readonly Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag static_RegisterGlobalHotKey_count_Init = new Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag();
-
         // register a global hot key
         // use the GlobalAddAtom API to get a unique ID (as suggested by MSDN docs)
-        static int static_RegisterGlobalHotKey_count;
+        static int _registeredGlobalHotKeyCount;
 
         public static int RegisterGlobalHotKey(int hotkeyValue, int modifiers, Form targetForm)
         {
             int hotkeyID = 0;
             try
             {
-                lock (static_RegisterGlobalHotKey_count_Init)
-                {
-                    try
-                    {
-                        if (InitStaticVariableHelper(static_RegisterGlobalHotKey_count_Init))
-                        {
-                            static_RegisterGlobalHotKey_count = 0;
-                        }
-                    }
-                    finally
-                    {
-                        static_RegisterGlobalHotKey_count_Init.State = 1;
-                    }
-                }
-                static_RegisterGlobalHotKey_count += 1;
-                string atomName = Thread.CurrentThread.ManagedThreadId.ToString("X8") + targetForm.Name + static_RegisterGlobalHotKey_count.ToString();
+                _registeredGlobalHotKeyCount += 1;
+                string atomName = Thread.CurrentThread.ManagedThreadId.ToString("X8") + targetForm.Name + _registeredGlobalHotKeyCount.ToString();
                 hotkeyID = GlobalAddAtom(atomName);
                 if (hotkeyID == 0)
                 {
@@ -646,7 +630,7 @@ namespace Tween
                 }
                 return hotkeyID;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // clean up if hotkey registration failed
                 UnregisterGlobalHotKey(hotkeyID, targetForm);
@@ -800,23 +784,6 @@ namespace Tween
             }
             RefreshProxySettings(proxy);
             RefreshProxyAccount(username, password);
-        }
-
-        private static bool InitStaticVariableHelper(Microsoft.VisualBasic.CompilerServices.StaticLocalInitFlag flag)
-        {
-            if (flag.State == 0)
-            {
-                flag.State = 2;
-                return true;
-            }
-            else if (flag.State == 2)
-            {
-                throw new Microsoft.VisualBasic.CompilerServices.IncompleteInitialization();
-            }
-            else
-            {
-                return false;
-            }
         }
 
         #endregion "プロセスのProxy設定"
