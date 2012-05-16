@@ -31,7 +31,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
-using Microsoft.VisualBasic;
 
 namespace Tween
 {
@@ -199,7 +198,7 @@ namespace Tween
                         foreach (KeyValuePair<string, FileInfo> kvp in binaryFileInfo)
                         {
                             string postData = "";
-                            byte[] crlfByte = Encoding.UTF8.GetBytes(Constants.vbCrLf);
+                            byte[] crlfByte = Encoding.UTF8.GetBytes("\r\n");
                             //コンテンツタイプの指定
                             string mime = "";
                             switch (kvp.Value.Extension.ToLower())
@@ -666,9 +665,9 @@ namespace Tween
 
             foreach (byte b in bytes)
             {
-                if (UnreservedChars.IndexOf(Strings.Chr(b)) != -1)
+                if (UnreservedChars.IndexOf((char)b) != -1)
                 {
-                    sb.Append(Strings.Chr(b));
+                    sb.Append((char)b);
                 }
                 else
                 {
