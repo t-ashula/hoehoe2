@@ -5881,7 +5881,7 @@ namespace Tween
                 pLen -= HashMgr.UseHash.Length + 1;
             }
 
-            foreach (Match m in Regex.Matches(StatusText.Text, Twitter.rgUrl, RegexOptions.IgnoreCase))
+            foreach (Match m in Regex.Matches(StatusText.Text, Twitter.RgUrl, RegexOptions.IgnoreCase))
             {
                 pLen += m.Result("${url}").Length - SettingDialog.TwitterConfiguration.ShortUrlLength;
             }

@@ -57,23 +57,25 @@ namespace Tween
         private const string HASHTAG_TERMINATOR = "[^a-z0-9_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
         public const string HASHTAG = "(" + HASHTAG_BOUNDARY + ")(#|＃)(" + HASHTAG_ALPHANUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHANUMERIC + "*)(?=" + HASHTAG_TERMINATOR + "|" + HASHTAG_BOUNDARY + ")";
         //URL正規表現
-        private const string url_valid_domain = "(?<domain>(?:[^\\p{P}\\s][\\.\\-_](?=[^\\p{P}\\s])|[^\\p{P}\\s]){1,}\\.[a-z]{2,}(?::[0-9]+)?)";
-        private const string url_valid_general_path_chars = "[a-z0-9!*';:=+$/%#\\[\\]\\-_&,~]";
-        private const string url_balance_parens = "(?:\\(" + url_valid_general_path_chars + "+\\))";
-        private const string url_valid_url_path_ending_chars = "(?:[a-z0-9=_#/\\-\\+]+|" + url_balance_parens + ")";
-        private const string pth = "(?:" + url_balance_parens + "|@" + url_valid_general_path_chars + "+/" + "|[.,]?" + url_valid_general_path_chars + "+" + ")";
-        private const string pth2 = "(/(?:" + pth + "+" + url_valid_url_path_ending_chars + "|" + pth + "+" + url_valid_url_path_ending_chars + "?|" + url_valid_url_path_ending_chars + ")?)?";
-        private const string qry = "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\[\\]\\-_.,~]*[a-z0-9_&=#])?";
-        public const string rgUrl = "(?<before>(?:[^\\\"':!=#]|^|\\:/))" + "(?<url>(?<protocol>https?://)" + url_valid_domain + pth2 + qry + ")";
+        private const string URL_VALID_DOMAIN = "(?<domain>(?:[^\\p{P}\\s][\\.\\-_](?=[^\\p{P}\\s])|[^\\p{P}\\s]){1,}\\.[a-z]{2,}(?::[0-9]+)?)";
+        private const string URL_VALID_GENERAL_PATH_CHARS = "[a-z0-9!*';:=+$/%#\\[\\]\\-_&,~]";
+        private const string URL_BALANCE_PARENS = "(?:\\(" + URL_VALID_GENERAL_PATH_CHARS + "+\\))";
+        private const string URL_VALID_URL_PATH_ENDING_CHARS = "(?:[a-z0-9=_#/\\-\\+]+|" + URL_BALANCE_PARENS + ")";
+        private const string PTH = "(?:" + URL_BALANCE_PARENS + "|@" + URL_VALID_GENERAL_PATH_CHARS + "+/" + "|[.,]?" + URL_VALID_GENERAL_PATH_CHARS + "+" + ")";
+        private const string PTH2 = "(/(?:" + PTH + "+" + URL_VALID_URL_PATH_ENDING_CHARS + "|" + PTH + "+" + URL_VALID_URL_PATH_ENDING_CHARS + "?|" + URL_VALID_URL_PATH_ENDING_CHARS + ")?)?";
+        private const string QRY = "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\[\\]\\-_.,~]*[a-z0-9_&=#])?";
+
+        public const string RgUrl = "(?<before>(?:[^\\\"':!=#]|^|\\:/))" + "(?<url>(?<protocol>https?://)" + URL_VALID_DOMAIN + PTH2 + QRY + ")";
         public delegate void GetIconImageDelegate(PostClass post);
-        private readonly object LockObj = new object();
-        private List<long> followerId = new List<long>();
-        private bool _GetFollowerResult = false;
-        private List<long> noRTId = new List<long>();
-        private bool _GetNoRetweetResult = false;
-        private int _followersCount = 0;
-        private int _friendsCount = 0;
-        private int _statusesCount = 0;
+
+        private readonly object _lockObj = new object();
+        private List<long> _followerIds = new List<long>();
+        private bool _getFollowerResult;
+        private List<long> noRTIds = new List<long>();
+        private bool _getNoRetweetResult;
+        private int _followersCount;
+        private int _friendsCount;
+        private int _statusesCount;
         private string _location = "";
         private string _bio = "";
         private string _protocol = "https://";
@@ -86,22 +88,22 @@ namespace Tween
         private IDictionary<string, Image> _dIcon;
         private bool _tinyUrlResolve;
         private bool _restrictFavCheck;
-        private string _hubServer;
+        //private string _hubServer;
         private bool _readOwnPost;
         private List<string> _hashList = new List<string>();
 
         //共通で使用する状態
-        private int _remainCountApi = -1;
+        //private int _remainCountApi = -1;
 
-        private Outputz op = new Outputz();
+        private Outputz _outputz = new Outputz();
 
         //max_idで古い発言を取得するために保持（lists分は個別タブで管理）
-        private long minHomeTimeline = long.MaxValue;
+        private long _minHomeTimeline = long.MaxValue;
 
-        private long minMentions = long.MaxValue;
-        private long minDirectmessage = long.MaxValue;
-        private long minDirectmessageSent = long.MaxValue;
-        private HttpTwitter twCon = new HttpTwitter();
+        private long _minMentions = long.MaxValue;
+        private long _minDirectmessage = long.MaxValue;
+        private long _minDirectmessageSent = long.MaxValue;
+        private HttpTwitter _twCon = new HttpTwitter();
 
         public event UserIdChangedEventHandler UserIdChanged;
 
@@ -111,11 +113,10 @@ namespace Tween
         {
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
-
             MyCommon.TwitterApiInfo.Initialize();
             try
             {
-                res = twCon.AuthUserAndPass(username, password, ref content);
+                res = _twCon.AuthUserAndPass(username, password, ref content);
             }
             catch (Exception ex)
             {
@@ -136,7 +137,7 @@ namespace Tween
                     {
                         Twitter.AccountState = MyCommon.AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
-                        if (string.IsNullOrEmpty(errMsg))
+                        if (String.IsNullOrEmpty(errMsg))
                         {
                             return Tween.My_Project.Resources.Unauthorized + Environment.NewLine + content;
                         }
@@ -148,7 +149,7 @@ namespace Tween
                 case HttpStatusCode.Forbidden:
                     {
                         string errMsg = GetErrorMessageJson(content);
-                        if (string.IsNullOrEmpty(errMsg))
+                        if (String.IsNullOrEmpty(errMsg))
                         {
                             return "Err:Forbidden";
                         }
@@ -169,9 +170,9 @@ namespace Tween
             MyCommon.TwitterApiInfo.Initialize();
             try
             {
-                res = twCon.AuthGetRequestToken(ref pinPageUrl);
+                res = _twCon.AuthGetRequestToken(ref pinPageUrl);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "Err:" + "Failed to access auth server.";
             }
@@ -187,9 +188,9 @@ namespace Tween
             MyCommon.TwitterApiInfo.Initialize();
             try
             {
-                res = twCon.AuthGetAccessToken(pinCode);
+                res = _twCon.AuthGetAccessToken(pinCode);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "Err:" + "Failed to access auth acc server.";
             }
@@ -208,7 +209,7 @@ namespace Tween
                     {
                         Twitter.AccountState = MyCommon.AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
-                        if (string.IsNullOrEmpty(errMsg))
+                        if (String.IsNullOrEmpty(errMsg))
                         {
                             return "Check the PIN or retry." + Environment.NewLine + content;
                         }
@@ -220,7 +221,7 @@ namespace Tween
                 case HttpStatusCode.Forbidden:
                     {
                         string errMsg = GetErrorMessageJson(content);
-                        if (string.IsNullOrEmpty(errMsg))
+                        if (String.IsNullOrEmpty(errMsg))
                         {
                             return "Err:Forbidden";
                         }
@@ -238,19 +239,18 @@ namespace Tween
         {
             Twitter.AccountState = MyCommon.AccountState.Invalid;
             MyCommon.TwitterApiInfo.Initialize();
-            twCon.ClearAuthInfo();
+            _twCon.ClearAuthInfo();
         }
 
         public void VerifyCredentials()
         {
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
-
             try
             {
-                res = twCon.VerifyCredentials(ref content);
+                res = _twCon.VerifyCredentials(ref content);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }
@@ -263,11 +263,11 @@ namespace Tween
                 {
                     user = MyCommon.CreateDataFromJson<TwitterDataModel.User>(content);
                 }
-                catch (SerializationException ex)
+                catch (SerializationException)
                 {
                     return;
                 }
-                twCon.AuthenticatedUserId = user.Id;
+                _twCon.AuthenticatedUserId = user.Id;
             }
         }
 
@@ -275,19 +275,12 @@ namespace Tween
         {
             try
             {
-                if (!string.IsNullOrEmpty(content))
+                if (!String.IsNullOrEmpty(content))
                 {
-                    using (XmlDictionaryReader jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(content), XmlDictionaryReaderQuotas.Max))
+                    using (var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(content), XmlDictionaryReaderQuotas.Max))
                     {
                         XElement xElm = XElement.Load(jsonReader);
-                        if (xElm.Element("error") != null)
-                        {
-                            return xElm.Element("error").Value;
-                        }
-                        else
-                        {
-                            return "";
-                        }
+                        return xElm.Element("error") != null ? xElm.Element("error").Value : "";
                     }
                 }
                 else
@@ -295,7 +288,7 @@ namespace Tween
                     return "";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }
@@ -304,12 +297,12 @@ namespace Tween
         public void Initialize(string token, string tokenSecret, string username, long userId)
         {
             //OAuth認証
-            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(tokenSecret) || string.IsNullOrEmpty(username))
+            if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(tokenSecret) || String.IsNullOrEmpty(username))
             {
                 Twitter.AccountState = MyCommon.AccountState.Invalid;
             }
             MyCommon.TwitterApiInfo.Initialize();
-            twCon.Initialize(token, tokenSecret, username, userId);
+            _twCon.Initialize(token, tokenSecret, username, userId);
             _uname = username.ToLower();
             if (AppendSettingDialog.Instance.UserstreamStartup)
             {
@@ -394,7 +387,7 @@ namespace Tween
         {
             //半角スペースを置換(Thanks @anis774)
             bool isTag = false;
-            for (int i = 0; i <= html.Length - 1; i++)
+            for (int i = 0; i < html.Length; i++)
             {
                 if (html[i] == '<')
                 {
@@ -415,31 +408,24 @@ namespace Tween
             return true;
         }
 
-        private struct PostInfo
+        private class PostInfo
         {
             public string CreatedAt;
             public string Id;
             public string Text;
             public string UserId;
 
-            public PostInfo(string Created, string IdStr, string txt, string uid)
+            public PostInfo(string created, string idStr, string txt, string uid)
             {
-                CreatedAt = Created;
-                Id = IdStr;
-                Text = txt;
-                UserId = uid;
+                this.CreatedAt = created;
+                this.Id = idStr;
+                this.Text = txt;
+                this.UserId = uid;
             }
 
-            public new bool Equals(PostInfo dst)
+            public bool Equals(PostInfo dst)
             {
-                if (this.CreatedAt == dst.CreatedAt && this.Id == dst.Id && this.Text == dst.Text && this.UserId == dst.UserId)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return this.CreatedAt == dst.CreatedAt && this.Id == dst.Id && this.Text == dst.Text && this.UserId == dst.UserId;
             }
         }
 
@@ -462,33 +448,32 @@ namespace Tween
                     static_IsPostRestricted__prev_Init.State = 1;
                 }
             }
-            PostInfo _current = new PostInfo("", "", "", "");
-
-            _current.CreatedAt = status.CreatedAt;
-            _current.Id = status.IdStr;
+            PostInfo currentPost = new PostInfo("", "", "", "");
+            currentPost.CreatedAt = status.CreatedAt;
+            currentPost.Id = status.IdStr;
             if (status.Text == null)
             {
-                _current.Text = "";
+                currentPost.Text = "";
             }
             else
             {
-                _current.Text = status.Text;
+                currentPost.Text = status.Text;
             }
-            _current.UserId = status.User.IdStr;
+            currentPost.UserId = status.User.IdStr;
 
-            if (_current.Equals(static_IsPostRestricted__prev))
+            if (currentPost.Equals(static_IsPostRestricted__prev))
             {
                 return true;
             }
-            static_IsPostRestricted__prev.CreatedAt = _current.CreatedAt;
-            static_IsPostRestricted__prev.Id = _current.Id;
-            static_IsPostRestricted__prev.Text = _current.Text;
-            static_IsPostRestricted__prev.UserId = _current.UserId;
+            static_IsPostRestricted__prev.CreatedAt = currentPost.CreatedAt;
+            static_IsPostRestricted__prev.Id = currentPost.Id;
+            static_IsPostRestricted__prev.Text = currentPost.Text;
+            static_IsPostRestricted__prev.UserId = currentPost.UserId;
 
             return false;
         }
 
-        public string PostStatus(string postStr, long reply_to)
+        public string PostStatus(string postStr, long replyToId)
         {
             if (MyCommon.IsEnding)
             {
@@ -511,7 +496,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.UpdateStatus(postStr, reply_to, ref content);
+                res = _twCon.UpdateStatus(postStr, replyToId, ref content);
             }
             catch (Exception ex)
             {
@@ -547,14 +532,14 @@ namespace Tween
                     {
                         return "OK:Delaying?";
                     }
-                    return op.Post(postStr.Length) ? "" : "Outputz:Failed";
+                    return _outputz.Post(postStr.Length) ? "" : "Outputz:Failed";
                 case HttpStatusCode.NotFound:
                     return "";
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.BadRequest:
                     {
                         string errMsg = GetErrorMessageJson(content);
-                        return string.IsNullOrEmpty(errMsg) ? "Warn:" + res.ToString() : "Warn:" + errMsg;
+                        return String.IsNullOrEmpty(errMsg) ? "Warn:" + res.ToString() : "Warn:" + errMsg;
                     }
                 case HttpStatusCode.Conflict:
                 case HttpStatusCode.ExpectationFailed:
@@ -574,14 +559,14 @@ namespace Tween
                     {
                         Twitter.AccountState = MyCommon.AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
-                        return string.IsNullOrEmpty(errMsg) ? Tween.My_Project.Resources.Unauthorized : "Auth err:" + errMsg;
+                        return String.IsNullOrEmpty(errMsg) ? Tween.My_Project.Resources.Unauthorized : "Auth err:" + errMsg;
                     }
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
-        public string PostStatusWithMedia(string postStr, long reply_to, FileInfo mediaFile)
+        public string PostStatusWithMedia(string postStr, long replyToId, FileInfo mediaFile)
         {
             if (MyCommon.IsEnding)
             {
@@ -599,7 +584,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.UpdateStatusWithMedia(postStr, reply_to, mediaFile, ref content);
+                res = _twCon.UpdateStatusWithMedia(postStr, replyToId, mediaFile, ref content);
             }
             catch (Exception ex)
             {
@@ -635,14 +620,14 @@ namespace Tween
                     {
                         return "OK:Delaying?";
                     }
-                    return op.Post(postStr.Length) ? "" : "Outputz:Failed";
+                    return _outputz.Post(postStr.Length) ? "" : "Outputz:Failed";
                 case HttpStatusCode.NotFound:
                     return "";
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.BadRequest:
                     {
                         string errMsg = GetErrorMessageJson(content);
-                        return string.IsNullOrEmpty(errMsg) ? "Warn:" + res.ToString() : "Warn:" + errMsg;
+                        return String.IsNullOrEmpty(errMsg) ? "Warn:" + res.ToString() : "Warn:" + errMsg;
                     }
                 case HttpStatusCode.Conflict:
                 case HttpStatusCode.ExpectationFailed:
@@ -662,7 +647,7 @@ namespace Tween
                     {
                         Twitter.AccountState = MyCommon.AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
-                        return string.IsNullOrEmpty(errMsg) ? Tween.My_Project.Resources.Unauthorized : "Auth err:" + errMsg;
+                        return String.IsNullOrEmpty(errMsg) ? Tween.My_Project.Resources.Unauthorized : "Auth err:" + errMsg;
                     }
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
@@ -694,7 +679,7 @@ namespace Tween
             Match mc = Regex.Match(postStr, "^DM? +(?<id>[a-zA-Z0-9_]+) +(?<body>.+)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
             try
             {
-                res = twCon.SendDirectMessage(mc.Groups["body"].Value, mc.Groups["id"].Value, ref content);
+                res = _twCon.SendDirectMessage(mc.Groups["body"].Value, mc.Groups["id"].Value, ref content);
             }
             catch (Exception ex)
             {
@@ -725,12 +710,12 @@ namespace Tween
                     _statusesCount = status.Sender.StatusesCount;
                     _location = status.Sender.Location;
                     _bio = status.Sender.Description;
-                    return op.Post(postStr.Length) ? "" : "Outputz:Failed";
+                    return _outputz.Post(postStr.Length) ? "" : "Outputz:Failed";
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.BadRequest:
                     {
                         string errMsg = GetErrorMessageJson(content);
-                        return string.IsNullOrEmpty(errMsg) ? "Warn:" + res.ToString() : "Warn:" + errMsg;
+                        return String.IsNullOrEmpty(errMsg) ? "Warn:" + res.ToString() : "Warn:" + errMsg;
                     }
                 case HttpStatusCode.Conflict:
                 case HttpStatusCode.ExpectationFailed:
@@ -751,7 +736,7 @@ namespace Tween
                     {
                         Twitter.AccountState = MyCommon.AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
-                        return string.IsNullOrEmpty(errMsg) ? Tween.My_Project.Resources.Unauthorized : "Auth err:" + errMsg;
+                        return String.IsNullOrEmpty(errMsg) ? Tween.My_Project.Resources.Unauthorized : "Auth err:" + errMsg;
                     }
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
@@ -773,7 +758,7 @@ namespace Tween
             HttpStatusCode res = default(HttpStatusCode);
             try
             {
-                res = twCon.DestroyStatus(id);
+                res = _twCon.DestroyStatus(id);
             }
             catch (Exception ex)
             {
@@ -823,7 +808,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.RetweetStatus(target, ref content);
+                res = _twCon.RetweetStatus(target, ref content);
             }
             catch (Exception ex)
             {
@@ -864,7 +849,7 @@ namespace Tween
             }
 
             //二重取得回避
-            lock (LockObj)
+            lock (_lockObj)
             {
                 if (TabInformations.GetInstance().ContainsKey(post.StatusId))
                 {
@@ -915,7 +900,7 @@ namespace Tween
             HttpStatusCode res = default(HttpStatusCode);
             try
             {
-                res = twCon.DestroyDirectMessage(id);
+                res = _twCon.DestroyDirectMessage(id);
             }
             catch (Exception ex)
             {
@@ -953,7 +938,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.CreateFriendships(screenName, ref content);
+                res = _twCon.CreateFriendships(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -970,7 +955,7 @@ namespace Tween
                     return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return String.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -992,7 +977,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.DestroyFriendships(screenName, ref content);
+                res = _twCon.DestroyFriendships(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1009,7 +994,7 @@ namespace Tween
                     return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return String.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -1031,7 +1016,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.CreateBlock(screenName, ref content);
+                res = _twCon.CreateBlock(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1048,7 +1033,7 @@ namespace Tween
                     return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return String.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -1070,7 +1055,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.DestroyBlock(screenName, ref content);
+                res = _twCon.DestroyBlock(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1087,7 +1072,7 @@ namespace Tween
                     return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return String.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -1109,7 +1094,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.ReportSpam(screenName, ref content);
+                res = _twCon.ReportSpam(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1126,7 +1111,7 @@ namespace Tween
                     return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return String.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -1148,7 +1133,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.ShowFriendships(_uname, screenName, ref content);
+                res = _twCon.ShowFriendships(_uname, screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1202,7 +1187,7 @@ namespace Tween
             user = null;
             try
             {
-                res = twCon.ShowUserInfo(screenName, ref content);
+                res = _twCon.ShowUserInfo(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1233,13 +1218,13 @@ namespace Tween
                 case HttpStatusCode.Unauthorized:
                     Twitter.AccountState = MyCommon.AccountState.Invalid;
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? Tween.My_Project.Resources.Unauthorized : "Auth err:" + errMsg;
+                    return String.IsNullOrEmpty(errMsg) ? Tween.My_Project.Resources.Unauthorized : "Auth err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
         }
 
-        public string GetStatus_Retweeted_Count(long StatusId, ref int retweeted_count)
+        public string GetStatus_Retweeted_Count(long statusId, ref int retweetedCount)
         {
             if (MyCommon.IsEnding)
             {
@@ -1253,12 +1238,12 @@ namespace Tween
 
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
-            retweeted_count = 0;
+            retweetedCount = 0;
             for (int i = 1; i <= 100; i++)
             {
                 try
                 {
-                    res = twCon.Statusid_retweeted_by_ids(StatusId, 100, i, ref content);
+                    res = _twCon.Statusid_retweeted_by_ids(statusId, 100, i, ref content);
                 }
                 catch (Exception ex)
                 {
@@ -1271,7 +1256,7 @@ namespace Tween
                         try
                         {
                             Int64[] ids = MyCommon.CreateDataFromJson<long[]>(content);
-                            retweeted_count += ids.Length;
+                            retweetedCount += ids.Length;
                             if (ids.Length < 100)
                             {
                                 break;
@@ -1279,26 +1264,26 @@ namespace Tween
                         }
                         catch (SerializationException ex)
                         {
-                            retweeted_count = -1;
+                            retweetedCount = -1;
                             MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
                             return "Err:Json Parse Error(DataContractJsonSerializer)";
                         }
                         catch (Exception ex)
                         {
-                            retweeted_count = -1;
+                            retweetedCount = -1;
                             MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                             return "Err:Invalid Json!";
                         }
                         break;
                     case HttpStatusCode.BadRequest:
-                        retweeted_count = -1;
+                        retweetedCount = -1;
                         return "Err:API Limits?";
                     case HttpStatusCode.Unauthorized:
-                        retweeted_count = -1;
+                        retweetedCount = -1;
                         Twitter.AccountState = MyCommon.AccountState.Invalid;
                         return Tween.My_Project.Resources.Unauthorized;
                     default:
-                        retweeted_count = -1;
+                        retweetedCount = -1;
                         return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                 }
             }
@@ -1321,7 +1306,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.CreateFavorites(id, ref content);
+                res = _twCon.CreateFavorites(id, ref content);
             }
             catch (Exception ex)
             {
@@ -1342,7 +1327,7 @@ namespace Tween
                     return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return String.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -1351,7 +1336,7 @@ namespace Tween
             content = "";
             try
             {
-                res = twCon.ShowStatuses(id, ref content);
+                res = _twCon.ShowStatuses(id, ref content);
             }
             catch (Exception ex)
             {
@@ -1399,11 +1384,12 @@ namespace Tween
             {
                 return "";
             }
+
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
             try
             {
-                res = twCon.DestroyFavorites(id, ref content);
+                res = _twCon.DestroyFavorites(id, ref content);
             }
             catch (Exception ex)
             {
@@ -1420,7 +1406,7 @@ namespace Tween
                     return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return String.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -1442,7 +1428,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.UpdateProfile(name, url, location, description, ref content);
+                res = _twCon.UpdateProfile(name, url, location, description, ref content);
             }
             catch (Exception ex)
             {
@@ -1459,7 +1445,7 @@ namespace Tween
                     return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return String.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -1481,7 +1467,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.UpdateProfileImage(new FileInfo(filename), ref content);
+                res = _twCon.UpdateProfileImage(new FileInfo(filename), ref content);
             }
             catch (Exception ex)
             {
@@ -1498,7 +1484,7 @@ namespace Tween
                     return Tween.My_Project.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return String.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -1506,17 +1492,17 @@ namespace Tween
 
         public string Username
         {
-            get { return twCon.AuthenticatedUsername; }
+            get { return _twCon.AuthenticatedUsername; }
         }
 
         public long UserId
         {
-            get { return twCon.AuthenticatedUserId; }
+            get { return _twCon.AuthenticatedUserId; }
         }
 
         public string Password
         {
-            get { return twCon.Password; }
+            get { return _twCon.Password; }
         }
 
         private static MyCommon.AccountState _accountState = MyCommon.AccountState.Valid;
@@ -1547,7 +1533,7 @@ namespace Tween
             _iconSz = value;
         }
 
-        #region "バージョンアップ"
+        #region "TODO:バージョンアップ"
 
         public string GetVersionInfo()
         {
@@ -1596,7 +1582,7 @@ namespace Tween
                 {
                     curCul = Thread.CurrentThread.CurrentUICulture.Name;
                 }
-                if (!string.IsNullOrEmpty(curCul) && curCul != "en" && curCul != "ja")
+                if (!String.IsNullOrEmpty(curCul) && curCul != "en" && curCul != "ja")
                 {
                     if (!Directory.Exists(Path.Combine(MyCommon.SettingPath, curCul)))
                     {
@@ -1625,7 +1611,7 @@ namespace Tween
                 {
                     curCul2 = Thread.CurrentThread.CurrentCulture.Name;
                 }
-                if (!string.IsNullOrEmpty(curCul2) && curCul2 != "en" && curCul2 != curCul)
+                if (!String.IsNullOrEmpty(curCul2) && curCul2 != "en" && curCul2 != curCul)
                 {
                     if (!Directory.Exists(Path.Combine(MyCommon.SettingPath, curCul2)))
                     {
@@ -1649,7 +1635,7 @@ namespace Tween
                 }
                 return "";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "Err:Download failed";
             }
@@ -1700,7 +1686,7 @@ namespace Tween
             _protocol = value ? "https://" : "http://";
         }
 
-        public string GetTimelineApi(bool read, Tween.MyCommon.WorkerType gType, bool more, bool startup)
+        public string GetTimelineApi(bool read, MyCommon.WorkerType gType, bool more, bool startup)
         {
             if (Twitter.AccountState != MyCommon.AccountState.Valid)
             {
@@ -1736,22 +1722,22 @@ namespace Tween
                 {
                     if (more)
                     {
-                        res = twCon.HomeTimeline(count, this.minHomeTimeline, 0, ref content);
+                        res = _twCon.HomeTimeline(count, this._minHomeTimeline, 0, ref content);
                     }
                     else
                     {
-                        res = twCon.HomeTimeline(count, 0, 0, ref content);
+                        res = _twCon.HomeTimeline(count, 0, 0, ref content);
                     }
                 }
                 else
                 {
                     if (more)
                     {
-                        res = twCon.Mentions(count, this.minMentions, 0, ref content);
+                        res = _twCon.Mentions(count, this._minMentions, 0, ref content);
                     }
                     else
                     {
-                        res = twCon.Mentions(count, 0, 0, ref content);
+                        res = _twCon.Mentions(count, 0, 0, ref content);
                     }
                 }
             }
@@ -1773,14 +1759,9 @@ namespace Tween
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            if (gType == MyCommon.WorkerType.Timeline)
-            {
-                return CreatePostsFromJson(content, gType, null, read, count, ref this.minHomeTimeline);
-            }
-            else
-            {
-                return CreatePostsFromJson(content, gType, null, read, count, ref this.minMentions);
-            }
+            return gType == MyCommon.WorkerType.Timeline ? 
+                CreatePostsFromJson(content, gType, null, read, count, ref this._minHomeTimeline) : 
+                CreatePostsFromJson(content, gType, null, read, count, ref this._minMentions);            
         }
 
         public string GetUserTimelineApi(bool read, int count, string userName, TabClass tab, bool more)
@@ -1803,25 +1784,25 @@ namespace Tween
             }
             try
             {
-                if (string.IsNullOrEmpty(userName))
+                if (String.IsNullOrEmpty(userName))
                 {
                     string target = tab.User;
-                    if (string.IsNullOrEmpty(target))
+                    if (String.IsNullOrEmpty(target))
                     {
                         return "";
                     }
                     userName = target;
-                    res = twCon.UserTimeline(0, target, count, 0, 0, ref content);
+                    res = _twCon.UserTimeline(0, target, count, 0, 0, ref content);
                 }
                 else
                 {
                     if (more)
                     {
-                        res = twCon.UserTimeline(0, userName, count, tab.OldestId, 0, ref content);
+                        res = _twCon.UserTimeline(0, userName, count, tab.OldestId, 0, ref content);
                     }
                     else
                     {
-                        res = twCon.UserTimeline(0, userName, count, 0, 0, ref content);
+                        res = _twCon.UserTimeline(0, userName, count, 0, 0, ref content);
                     }
                 }
             }
@@ -1902,7 +1883,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.ShowStatuses(id, ref content);
+                res = _twCon.ShowStatuses(id, ref content);
             }
             catch (Exception ex)
             {
@@ -1958,7 +1939,7 @@ namespace Tween
         {
             PostClass post = null;
             string r = this.GetStatusApi(read, id, ref post);
-            if (string.IsNullOrEmpty(r))
+            if (String.IsNullOrEmpty(r))
             {
                 if (tab != null)
                 {
@@ -2073,9 +2054,9 @@ namespace Tween
             }
             else
             {
-                if (followerId.Count > 0)
+                if (_followerIds.Count > 0)
                 {
-                    post.IsOwl = !followerId.Contains(post.UserId);
+                    post.IsOwl = !_followerIds.Contains(post.UserId);
                 }
             }
             post.IsDm = false;
@@ -2114,7 +2095,7 @@ namespace Tween
                     minimumId = post.StatusId;
                 }
                 //二重取得回避
-                lock (LockObj)
+                lock (_lockObj)
                 {
                     if (tab == null)
                     {
@@ -2133,7 +2114,7 @@ namespace Tween
                 }
 
                 //RT禁止ユーザーによるもの
-                if (post.RetweetedId > 0 && this.noRTId.Contains(post.RetweetedByUserId))
+                if (post.RetweetedId > 0 && this.noRTIds.Contains(post.RetweetedByUserId))
                 {
                     continue;
                 }
@@ -2176,8 +2157,7 @@ namespace Tween
 
             foreach (TwitterDataModel.Status status in items.Statuses)
             {
-                PostClass post = null;
-                post = CreatePostsFromStatusData(status);
+                PostClass post = CreatePostsFromStatusData(status);
                 if (post == null)
                 {
                     continue;
@@ -2188,7 +2168,7 @@ namespace Tween
                     minimumId = post.StatusId;
                 }
                 //二重取得回避
-                lock (LockObj)
+                lock (_lockObj)
                 {
                     if (tab == null)
                     {
@@ -2220,7 +2200,7 @@ namespace Tween
                 TabInformations.GetInstance().AddPost(post);
             }
 
-            return string.IsNullOrEmpty(items.ErrMsg) ? "" : "Err:" + items.ErrMsg;
+            return String.IsNullOrEmpty(items.ErrMsg) ? "" : "Err:" + items.ErrMsg;
         }
 
         public string GetListStatus(bool read, TabClass tab, bool more, bool startup)
@@ -2260,11 +2240,11 @@ namespace Tween
             {
                 if (more)
                 {
-                    res = twCon.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, tab.OldestId, 0, AppendSettingDialog.Instance.IsListStatusesIncludeRts, ref content);
+                    res = _twCon.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, tab.OldestId, 0, AppendSettingDialog.Instance.IsListStatusesIncludeRts, ref content);
                 }
                 else
                 {
-                    res = twCon.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, 0, 0, AppendSettingDialog.Instance.IsListStatusesIncludeRts, ref content);
+                    res = _twCon.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, 0, 0, AppendSettingDialog.Instance.IsListStatusesIncludeRts, ref content);
                 }
             }
             catch (Exception ex)
@@ -2325,7 +2305,7 @@ namespace Tween
                 else
                 {
                     rslt = this.GetStatusApi(read, tab.RelationTargetPost.StatusId, ref p);
-                    if (!string.IsNullOrEmpty(rslt))
+                    if (!String.IsNullOrEmpty(rslt))
                     {
                         return rslt;
                     }
@@ -2337,7 +2317,7 @@ namespace Tween
             do
             {
                 rslt = this.GetRelatedResultsApi(read, tmpPost, tab, relPosts);
-                if (!string.IsNullOrEmpty(rslt))
+                if (!String.IsNullOrEmpty(rslt))
                 {
                     break;
                 }
@@ -2365,11 +2345,11 @@ namespace Tween
             {
                 if (post.RetweetedId > 0)
                 {
-                    res = twCon.GetRelatedResults(post.RetweetedId, ref content);
+                    res = _twCon.GetRelatedResults(post.RetweetedId, ref content);
                 }
                 else
                 {
-                    res = twCon.GetRelatedResults(post.StatusId, ref content);
+                    res = _twCon.GetRelatedResults(post.StatusId, ref content);
                 }
             }
             catch (Exception ex)
@@ -2465,9 +2445,8 @@ namespace Tween
             else if (targetItem.InReplyToStatusId > 0 && !replyAdded)
             {
                 PostClass p = null;
-                string rslt = "";
-                rslt = GetStatusApi(read, targetItem.InReplyToStatusId, ref p);
-                if (string.IsNullOrEmpty(rslt))
+                string rslt = GetStatusApi(read, targetItem.InReplyToStatusId, ref p);
+                if (String.IsNullOrEmpty(rslt))
                 {
                     p.IsRead = read;
                     p.RelTabName = tab.TabName;
@@ -2478,20 +2457,20 @@ namespace Tween
 
             //MRTとかに対応のためツイート内にあるツイートを指すURLを取り込む
             MatchCollection ma = Regex.Matches(tab.RelationTargetPost.Text, "title=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/(?<StatusId>[0-9]+))\"");
-            foreach (Match _match in ma)
+            foreach (Match m in ma)
             {
-                Int64 _statusId = default(Int64);
-                if (Int64.TryParse(_match.Groups["StatusId"].Value, out _statusId))
+                Int64 statusId;
+                if (Int64.TryParse(m.Groups["StatusId"].Value, out statusId))
                 {
                     PostClass p = null;
-                    PostClass _post = TabInformations.GetInstance().Item(_statusId);
-                    if (_post == null)
+                    PostClass p2 = TabInformations.GetInstance().Item(statusId);
+                    if (p2 == null)
                     {
-                        var rslt = this.GetStatusApi(read, _statusId, ref p);
+                        GetStatusApi(read, statusId, ref p);
                     }
                     else
                     {
-                        p = _post.Copy();
+                        p = p2.Copy();
                     }
                     if (p != null)
                     {
@@ -2536,7 +2515,7 @@ namespace Tween
 
             try
             {
-                res = twCon.Search(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content);
+                res = _twCon.Search(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content);
             }
             catch (Exception ex)
             {
@@ -2674,7 +2653,7 @@ namespace Tween
             if (more)
             {
                 page = tab.GetSearchPage(count);
-                if (!string.IsNullOrEmpty(tab.NextPageQuery))
+                if (!String.IsNullOrEmpty(tab.NextPageQuery))
                 {
                     querystr = tab.NextPageQuery;
                 }
@@ -2686,13 +2665,13 @@ namespace Tween
 
             try
             {
-                if (string.IsNullOrEmpty(querystr))
+                if (String.IsNullOrEmpty(querystr))
                 {
-                    res = twCon.PhoenixSearch(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content);
+                    res = _twCon.PhoenixSearch(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content);
                 }
                 else
                 {
-                    res = twCon.PhoenixSearch(querystr, ref content);
+                    res = _twCon.PhoenixSearch(querystr, ref content);
                 }
             }
             catch (Exception ex)
@@ -2767,22 +2746,22 @@ namespace Tween
                     {
                         if (gType == MyCommon.WorkerType.DirectMessegeRcv)
                         {
-                            if (minDirectmessage > post.StatusId)
+                            if (_minDirectmessage > post.StatusId)
                             {
-                                minDirectmessage = post.StatusId;
+                                _minDirectmessage = post.StatusId;
                             }
                         }
                         else
                         {
-                            if (minDirectmessageSent > post.StatusId)
+                            if (_minDirectmessageSent > post.StatusId)
                             {
-                                minDirectmessageSent = post.StatusId;
+                                _minDirectmessageSent = post.StatusId;
                             }
                         }
                     }
 
                     //二重取得回避
-                    lock (LockObj)
+                    lock (_lockObj)
                     {
                         if (TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.DirectMessage).Contains(post.StatusId))
                         {
@@ -2804,7 +2783,7 @@ namespace Tween
                     TwitterDataModel.User user = null;
                     if (gType == MyCommon.WorkerType.UserStream)
                     {
-                        if (twCon.AuthenticatedUsername.Equals(message.Recipient.ScreenName, StringComparison.CurrentCultureIgnoreCase))
+                        if (_twCon.AuthenticatedUsername.Equals(message.Recipient.ScreenName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             user = message.Sender;
                             post.IsMe = false;
@@ -2883,29 +2862,28 @@ namespace Tween
 
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
-
             try
             {
                 if (gType == MyCommon.WorkerType.DirectMessegeRcv)
                 {
                     if (more)
                     {
-                        res = twCon.DirectMessages(20, minDirectmessage, 0, ref content);
+                        res = _twCon.DirectMessages(20, _minDirectmessage, 0, ref content);
                     }
                     else
                     {
-                        res = twCon.DirectMessages(20, 0, 0, ref content);
+                        res = _twCon.DirectMessages(20, 0, 0, ref content);
                     }
                 }
                 else
                 {
                     if (more)
                     {
-                        res = twCon.DirectMessagesSent(20, minDirectmessageSent, 0, ref content);
+                        res = _twCon.DirectMessagesSent(20, _minDirectmessageSent, 0, ref content);
                     }
                     else
                     {
-                        res = twCon.DirectMessagesSent(20, 0, 0, ref content);
+                        res = _twCon.DirectMessagesSent(20, 0, 0, ref content);
                     }
                 }
             }
@@ -2982,7 +2960,7 @@ namespace Tween
 
             try
             {
-                res = twCon.Favorites(count, static_GetFavoritesApi_page, ref content);
+                res = _twCon.Favorites(count, static_GetFavoritesApi_page, ref content);
             }
             catch (Exception ex)
             {
@@ -3029,7 +3007,7 @@ namespace Tween
                 {
                     post.StatusId = status.Id;
                     //二重取得回避
-                    lock (LockObj)
+                    lock (_lockObj)
                     {
                         if (TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).Contains(post.StatusId))
                         {
@@ -3103,9 +3081,9 @@ namespace Tween
                     }
                     else
                     {
-                        if (followerId.Count > 0)
+                        if (_followerIds.Count > 0)
                         {
-                            post.IsOwl = !followerId.Contains(post.UserId);
+                            post.IsOwl = !_followerIds.Contains(post.UserId);
                         }
                     }
 
@@ -3129,10 +3107,9 @@ namespace Tween
             {
                 if (entities.Urls != null)
                 {
-                    foreach (TwitterDataModel.Urls m_loopVariable in entities.Urls)
+                    foreach (var m in entities.Urls)
                     {
-                        var m = m_loopVariable;
-                        if (!string.IsNullOrEmpty(m.DisplayUrl))
+                        if (!String.IsNullOrEmpty(m.DisplayUrl))
                         {
                             text = text.Replace(m.Url, m.DisplayUrl);
                         }
@@ -3140,10 +3117,9 @@ namespace Tween
                 }
                 if (entities.Media != null)
                 {
-                    foreach (TwitterDataModel.Media m_loopVariable in entities.Media)
+                    foreach (var m in entities.Media)
                     {
-                        var m = m_loopVariable;
-                        if (!string.IsNullOrEmpty(m.DisplayUrl))
+                        if (!String.IsNullOrEmpty(m.DisplayUrl))
                         {
                             text = text.Replace(m.Url, m.DisplayUrl);
                         }
@@ -3161,29 +3137,29 @@ namespace Tween
             }
 
             long cursor = -1;
-            List<long> tmpFollower = new List<long>(followerId);
-            followerId.Clear();
+            List<long> tmpFollower = new List<long>(_followerIds);
+            _followerIds.Clear();
             do
             {
                 string ret = FollowerApi(ref cursor);
-                if (!string.IsNullOrEmpty(ret))
+                if (!String.IsNullOrEmpty(ret))
                 {
-                    followerId.Clear();
-                    followerId.AddRange(tmpFollower);
-                    _GetFollowerResult = false;
+                    _followerIds.Clear();
+                    _followerIds.AddRange(tmpFollower);
+                    _getFollowerResult = false;
                     return ret;
                 }
             } while (cursor > 0);
 
-            TabInformations.GetInstance().RefreshOwl(followerId);
+            TabInformations.GetInstance().RefreshOwl(_followerIds);
 
-            _GetFollowerResult = true;
+            _getFollowerResult = true;
             return "";
         }
 
         public bool GetFollowersSuccess
         {
-            get { return _GetFollowerResult; }
+            get { return _getFollowerResult; }
         }
 
         private string FollowerApi(ref long cursor)
@@ -3197,7 +3173,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.FollowerIds(cursor, ref content);
+                res = _twCon.FollowerIds(cursor, ref content);
             }
             catch (Exception ex)
             {
@@ -3221,7 +3197,7 @@ namespace Tween
             try
             {
                 var followers = MyCommon.CreateDataFromJson<TwitterDataModel.Ids>(content);
-                followerId.AddRange(followers.Id);
+                _followerIds.AddRange(followers.Id);
                 cursor = followers.NextCursor;
                 return "";
             }
@@ -3245,21 +3221,21 @@ namespace Tween
             }
 
             long cursor = -1;
-            List<long> tmpIds = new List<long>(noRTId);
-            noRTId.Clear();
+            List<long> tmpIds = new List<long>(noRTIds);
+            noRTIds.Clear();
             do
             {
                 string ret = NoRetweetApi(ref cursor);
-                if (!string.IsNullOrEmpty(ret))
+                if (!String.IsNullOrEmpty(ret))
                 {
-                    noRTId.Clear();
-                    noRTId.AddRange(tmpIds);
-                    _GetNoRetweetResult = false;
+                    noRTIds.Clear();
+                    noRTIds.AddRange(tmpIds);
+                    _getNoRetweetResult = false;
                     return ret;
                 }
             } while (cursor > 0);
 
-            _GetNoRetweetResult = true;
+            _getNoRetweetResult = true;
             return "";
         }
 
@@ -3274,7 +3250,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.NoRetweetIds(cursor, ref content);
+                res = _twCon.NoRetweetIds(cursor, ref content);
             }
             catch (Exception ex)
             {
@@ -3298,7 +3274,7 @@ namespace Tween
             try
             {
                 var ids = MyCommon.CreateDataFromJson<long[]>(content);
-                noRTId.AddRange(ids);
+                noRTIds.AddRange(ids);
                 cursor = 0;
                 //0より小さければ何でも良い。
                 return "";
@@ -3317,7 +3293,7 @@ namespace Tween
 
         public bool GetNoRetweetSuccess
         {
-            get { return _GetNoRetweetResult; }
+            get { return _getNoRetweetResult; }
         }
 
         public string ConfigurationApi()
@@ -3326,7 +3302,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.GetConfiguration(ref content);
+                res = _twCon.GetConfiguration(ref content);
             }
             catch (Exception ex)
             {
@@ -3379,7 +3355,7 @@ namespace Tween
             {
                 try
                 {
-                    res = twCon.GetLists(this.Username, cursor, ref content);
+                    res = _twCon.GetLists(this.Username, cursor, ref content);
                 }
                 catch (Exception ex)
                 {
@@ -3424,7 +3400,7 @@ namespace Tween
             {
                 try
                 {
-                    res = twCon.GetListsSubscriptions(this.Username, cursor, ref content);
+                    res = _twCon.GetListsSubscriptions(this.Username, cursor, ref content);
                 }
                 catch (Exception ex)
                 {
@@ -3467,14 +3443,14 @@ namespace Tween
             return "";
         }
 
-        public string DeleteList(string list_id)
+        public string DeleteList(string listId)
         {
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
 
             try
             {
-                res = twCon.DeleteListID(this.Username, list_id, ref content);
+                res = _twCon.DeleteListID(this.Username, listId, ref content);
             }
             catch (Exception ex)
             {
@@ -3498,14 +3474,14 @@ namespace Tween
             return "";
         }
 
-        public string EditList(string list_id, string new_name, bool isPrivate, string description, ref ListElement list)
+        public string EditList(string listId, string newName, bool isPrivate, string description, ref ListElement list)
         {
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
 
             try
             {
-                res = twCon.UpdateListID(this.Username, list_id, new_name, isPrivate, description, ref content);
+                res = _twCon.UpdateListID(this.Username, listId, newName, isPrivate, description, ref content);
             }
             catch (Exception ex)
             {
@@ -3554,7 +3530,7 @@ namespace Tween
             }
         }
 
-        public string GetListMembers(string list_id, List<UserInfo> lists, ref long cursor)
+        public string GetListMembers(string listId, List<UserInfo> lists, ref long cursor)
         {
             if (Twitter.AccountState != MyCommon.AccountState.Valid)
             {
@@ -3565,7 +3541,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.GetListMembers(this.Username, list_id, cursor, ref content);
+                res = _twCon.GetListMembers(this.Username, listId, cursor, ref content);
             }
             catch (Exception ex)
             {
@@ -3616,7 +3592,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.CreateLists(listName, isPrivate, description, ref content);
+                res = _twCon.CreateLists(listName, isPrivate, description, ref content);
             }
             catch (Exception ex)
             {
@@ -3668,7 +3644,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = this.twCon.ShowListMember(listId, user, ref content);
+                res = this._twCon.ShowListMember(listId, user, ref content);
             }
             catch (Exception ex)
             {
@@ -3698,7 +3674,7 @@ namespace Tween
                 value = true;
                 return "";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 value = false;
                 return "";
@@ -3711,7 +3687,7 @@ namespace Tween
             HttpStatusCode res = default(HttpStatusCode);
             try
             {
-                res = twCon.CreateListMembers(listId, user, ref content);
+                res = _twCon.CreateListMembers(listId, user, ref content);
             }
             catch (Exception ex)
             {
@@ -3741,7 +3717,7 @@ namespace Tween
             HttpStatusCode res = default(HttpStatusCode);
             try
             {
-                res = twCon.DeleteListMembers(listId, user, ref content);
+                res = _twCon.DeleteListMembers(listId, user, ref content);
             }
             catch (Exception ex)
             {
@@ -3777,13 +3753,15 @@ namespace Tween
             }
         }
 
-        public string CreateHtmlAnchor(string Text, List<string> AtList, Dictionary<string, string> media)
+        public string CreateHtmlAnchor(string text, List<string> atList, Dictionary<string, string> media)
         {
-            if (Text == null)
+            if (text == null)
+            {
                 return null;
-            string retStr = Text.Replace("&gt;", "<<<<<tweenだいなり>>>>>").Replace("&lt;", "<<<<<tweenしょうなり>>>>>");
+            }
+            string retStr = text.Replace("&gt;", "<<<<<tweenだいなり>>>>>").Replace("&lt;", "<<<<<tweenしょうなり>>>>>");
             //絶対パス表現のUriをリンクに置換
-            retStr = Regex.Replace(retStr, rgUrl, new MatchEvaluator((Match mu) =>
+            retStr = Regex.Replace(retStr, RgUrl, new MatchEvaluator((Match mu) =>
             {
                 StringBuilder sb = new StringBuilder(mu.Result("${before}<a href=\""));
                 string url = mu.Result("${url}");
@@ -3805,9 +3783,9 @@ namespace Tween
             Match m = Regex.Match(retStr, "(^|[^a-zA-Z0-9_])[@＠]([a-zA-Z0-9_]{1,20})");
             while (m.Success)
             {
-                if (!AtList.Contains(m.Result("$2").ToLower()))
+                if (!atList.Contains(m.Result("$2").ToLower()))
                 {
-                    AtList.Add(m.Result("$2").ToLower());
+                    atList.Add(m.Result("$2").ToLower());
                 }
                 m = m.NextMatch();
             }
@@ -3839,7 +3817,7 @@ namespace Tween
                         return mh.Result("$0");
                     }
                 }
-                lock (LockObj)
+                lock (_lockObj)
                 {
                     _hashList.Add("#" + mh.Result("$3"));
                 }
@@ -3866,9 +3844,9 @@ namespace Tween
             public string Display { get; set; }
         }
 
-        public string CreateHtmlAnchor(ref string Text, List<string> AtList, TwitterDataModel.Entities entities, Dictionary<string, string> media)
+        public string CreateHtmlAnchor(ref string text, List<string> atList, TwitterDataModel.Entities entities, Dictionary<string, string> media)
         {
-            string ret = Text;
+            string ret = text;
 
             if (entities != null)
             {
@@ -3876,10 +3854,9 @@ namespace Tween
                 //URL
                 if (entities.Urls != null)
                 {
-                    foreach (TwitterDataModel.Urls ent_loopVariable in entities.Urls)
+                    foreach (var ent in entities.Urls)
                     {
-                        var ent = ent_loopVariable;
-                        if (string.IsNullOrEmpty(ent.DisplayUrl))
+                        if (String.IsNullOrEmpty(ent.DisplayUrl))
                         {
                             etInfo.Add(ent.Indices[0], new EntityInfo
                             {
@@ -3910,10 +3887,9 @@ namespace Tween
 
                 if (entities.Hashtags != null)
                 {
-                    foreach (TwitterDataModel.Hashtags ent_loopVariable in entities.Hashtags)
+                    foreach (var ent in entities.Hashtags)
                     {
-                        var ent = ent_loopVariable;
-                        string hash = Text.Substring(ent.Indices[0], ent.Indices[1] - ent.Indices[0]);
+                        string hash = text.Substring(ent.Indices[0], ent.Indices[1] - ent.Indices[0]);
                         etInfo.Add(ent.Indices[0], new EntityInfo
                         {
                             StartIndex = ent.Indices[0],
@@ -3921,7 +3897,7 @@ namespace Tween
                             Text = hash,
                             Html = "<a href=\"" + _protocol + "twitter.com/search?q=%23" + ent.Text + "\">" + hash + "</a>"
                         });
-                        lock (LockObj)
+                        lock (_lockObj)
                         {
                             _hashList.Add("#" + ent.Text);
                         }
@@ -3930,10 +3906,9 @@ namespace Tween
 
                 if (entities.UserMentions != null)
                 {
-                    foreach (TwitterDataModel.UserMentions ent_loopVariable in entities.UserMentions)
+                    foreach (var ent in entities.UserMentions)
                     {
-                        var ent = ent_loopVariable;
-                        string screenName = Text.Substring(ent.Indices[0] + 1, ent.Indices[1] - ent.Indices[0] - 1);
+                        string screenName = text.Substring(ent.Indices[0] + 1, ent.Indices[1] - ent.Indices[0] - 1);
                         etInfo.Add(ent.Indices[0] + 1, new EntityInfo
                         {
                             StartIndex = ent.Indices[0] + 1,
@@ -3941,18 +3916,17 @@ namespace Tween
                             Text = ent.ScreenName,
                             Html = "<a href=\"/" + ent.ScreenName + "\">" + screenName + "</a>"
                         });
-                        if (!AtList.Contains(ent.ScreenName.ToLower()))
+                        if (!atList.Contains(ent.ScreenName.ToLower()))
                         {
-                            AtList.Add(ent.ScreenName.ToLower());
+                            atList.Add(ent.ScreenName.ToLower());
                         }
                     }
                 }
 
                 if (entities.Media != null)
                 {
-                    foreach (TwitterDataModel.Media ent_loopVariable in entities.Media)
+                    foreach (var ent  in entities.Media)
                     {
-                        var ent = ent_loopVariable;
                         if (ent.Type == "photo")
                         {
                             etInfo.Add(ent.Indices[0], new EntityInfo
@@ -3975,18 +3949,16 @@ namespace Tween
                     {
                         int idx = 0;
                         ret = "";
-                        foreach (KeyValuePair<int, Twitter.EntityInfo> et_loopVariable in etInfo)
-                        {
-                            var et = et_loopVariable;
-                            ret += Text.Substring(idx, et.Key - idx) + et.Value.Html;
+                        foreach (var et  in etInfo)
+                        {   ret += text.Substring(idx, et.Key - idx) + et.Value.Html;
                             idx = et.Value.EndIndex;
                         }
-                        ret += Text.Substring(idx);
+                        ret += text.Substring(idx);
                     }
-                    catch (ArgumentOutOfRangeException ex)
+                    catch (ArgumentOutOfRangeException)
                     {
                         //Twitterのバグで不正なエンティティ（Index指定範囲が重なっている）が返ってくる場合の対応
-                        ret = Text;
+                        ret = text;
                         entities = null;
                         if (media != null)
                         {
@@ -4055,9 +4027,9 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.RateLimitStatus(ref content);
+                res = _twCon.RateLimitStatus(ref content);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MyCommon.TwitterApiInfo.Initialize();
                 return false;
@@ -4111,7 +4083,7 @@ namespace Tween
             string content = "";
             try
             {
-                res = twCon.GetBlockUserIds(ref content);
+                res = _twCon.GetBlockUserIds(ref content);
             }
             catch (Exception ex)
             {
@@ -4134,12 +4106,12 @@ namespace Tween
 
             try
             {
-                var Ids = MyCommon.CreateDataFromJson<List<long>>(content);
-                if (Ids.Contains(this.UserId))
+                var ids = MyCommon.CreateDataFromJson<List<long>>(content);
+                if (ids.Contains(this.UserId))
                 {
-                    Ids.Remove(this.UserId);
+                    ids.Remove(this.UserId);
                 }
-                TabInformations.GetInstance().BlockIds.AddRange(Ids);
+                TabInformations.GetInstance().BlockIds.AddRange(ids);
                 return ("");
             }
             catch (SerializationException ex)
@@ -4157,7 +4129,7 @@ namespace Tween
         public string[] GetHashList()
         {
             string[] hashArray = null;
-            lock (LockObj)
+            lock (_lockObj)
             {
                 hashArray = _hashList.ToArray();
                 _hashList.Clear();
@@ -4167,12 +4139,12 @@ namespace Tween
 
         public string AccessToken
         {
-            get { return twCon.AccessToken; }
+            get { return _twCon.AccessToken; }
         }
 
         public string AccessTokenSecret
         {
-            get { return twCon.AccessTokenSecret; }
+            get { return _twCon.AccessTokenSecret; }
         }
 
         public event ApiInformationChangedEventHandler ApiInformationChanged;
@@ -4201,7 +4173,7 @@ namespace Tween
 
         public delegate void UserStreamStoppedEventHandler();
 
-        public event UserStreamGetFriendsListEventHandler UserStreamGetFriendsList;
+        //public event UserStreamGetFriendsListEventHandler UserStreamGetFriendsList;
 
         public delegate void UserStreamGetFriendsListEventHandler();
 
@@ -4282,9 +4254,9 @@ namespace Tween
 			new EventTypeTableElement("list_updated", MyCommon.EventType.ListUpdated)
 		};
 
-        public MyCommon.EventType EventNameToEventType(string EventName)
+        public MyCommon.EventType EventNameToEventType(string eventName)
         {
-            return (from tbl in EventTable where tbl.Name.Equals(EventName) select tbl.Type).FirstOrDefault();
+            return (from tbl in EventTable where tbl.Name.Equals(eventName) select tbl.Type).FirstOrDefault();
         }
 
         public bool IsUserstreamDataReceived
@@ -4294,8 +4266,8 @@ namespace Tween
 
         private void userStream_StatusArrived(string line)
         {
-            this._lastUserstreamDataReceived = DateAndTime.Now;
-            if (string.IsNullOrEmpty(line))
+            this._lastUserstreamDataReceived = DateTime.Now;
+            if (String.IsNullOrEmpty(line))
             {
                 return;
             }
@@ -4311,7 +4283,7 @@ namespace Tween
                         Debug.Print("friends");
                         return;
                     }
-                    else if (xElm.Element("delete") != null)
+                    if (xElm.Element("delete") != null)
                     {
                         Debug.Print("delete");
                         Int64 id = default(Int64);
@@ -4336,7 +4308,7 @@ namespace Tween
                             MyCommon.TraceOut("delete:" + line);
                             return;
                         }
-                        for (int i = this.StoredEvent.Count - 1; i >= 0; i += -1)
+                        for (int i = this.StoredEvent.Count - 1; i >= 0; i--)
                         {
                             FormattedEvent sEvt = this.StoredEvent[i];
                             if (sEvt.Id == id && (sEvt.Event == "favorite" || sEvt.Event == "unfavorite"))
@@ -4346,18 +4318,18 @@ namespace Tween
                         }
                         return;
                     }
-                    else if (xElm.Element("limit") != null)
+                    if (xElm.Element("limit") != null)
                     {
                         Debug.Print(line);
                         return;
                     }
-                    else if (xElm.Element("event") != null)
+                    if (xElm.Element("event") != null)
                     {
                         Debug.Print("event: " + xElm.Element("event").Value);
                         CreateEventFromJson(line);
                         return;
                     }
-                    else if (xElm.Element("direct_message") != null)
+                    if (xElm.Element("direct_message") != null)
                     {
                         Debug.Print("direct_message");
                         isDm = true;
@@ -4368,7 +4340,7 @@ namespace Tween
                         {
                             TabInformations.GetInstance().ScrubGeoReserve(long.Parse(xElm.Element("scrub_geo").Element("user_id").Value), long.Parse(xElm.Element("scrub_geo").Element("up_to_status_id").Value));
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             MyCommon.TraceOut("scrub_geo:" + line);
                         }
@@ -4392,7 +4364,7 @@ namespace Tween
                     CreatePostsFromJson(res.ToString(), MyCommon.WorkerType.Timeline, null, false, 0, ref t);
                 }
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 MyCommon.TraceOut("NullRef StatusArrived: " + line);
             }
@@ -4432,8 +4404,8 @@ namespace Tween
                 case "follow":
                     if (eventData.Target.ScreenName.ToLower().Equals(_uname))
                     {
-                        if (!this.followerId.Contains(eventData.Source.Id))
-                            this.followerId.Add(eventData.Source.Id);
+                        if (!this._followerIds.Contains(eventData.Source.Id))
+                            this._followerIds.Add(eventData.Source.Id);
                     }
                     else
                     {
@@ -4493,7 +4465,9 @@ namespace Tween
                             {
                                 post.FavoritedCount -= 1;
                                 if (post.FavoritedCount < 0)
+                                {
                                     post.FavoritedCount = 0;
+                                }
                             }
                         }
                     }
@@ -4505,12 +4479,16 @@ namespace Tween
                     break;
                 case "block":
                     if (!TabInformations.GetInstance().BlockIds.Contains(eventData.Target.Id))
+                    {
                         TabInformations.GetInstance().BlockIds.Add(eventData.Target.Id);
+                    }
                     evt.Target = "";
                     break;
                 case "unblock":
                     if (TabInformations.GetInstance().BlockIds.Contains(eventData.Target.Id))
+                    {
                         TabInformations.GetInstance().BlockIds.Remove(eventData.Target.Id);
+                    }
                     evt.Target = "";
                     break;
                 case "user_update":
@@ -4557,20 +4535,24 @@ namespace Tween
             {
                 StopUserStream();
             }
-            userStream = new TwitterUserstream(twCon);
+            userStream = new TwitterUserstream(_twCon);
             userStream.Start(this.AllAtReply, this.TrackWord);
         }
 
         public void StopUserStream()
         {
             if (userStream != null)
+            {
                 userStream.Dispose();
+            }
             userStream = null;
             if (!MyCommon.IsEnding)
+            {
                 if (UserStreamStopped != null)
                 {
                     UserStreamStopped();
                 }
+            }
         }
 
         public void ReconnectUserStream()
@@ -4595,16 +4577,15 @@ namespace Tween
 
             public delegate void StartedEventHandler();
 
-            private HttpTwitter twCon;
+            private HttpTwitter _twCon;
             private Thread _streamThread;
             private bool _streamActive;
-            private bool _allAtreplies = false;
-
+            private bool _allAtreplies;
             private string _trackwords = "";
 
             public TwitterUserstream(HttpTwitter twitterConnection)
             {
-                twCon = (HttpTwitter)twitterConnection.Clone();
+                _twCon = (HttpTwitter)twitterConnection.Clone();
             }
 
             public void Start(bool allAtReplies, string trackwords)
@@ -4658,7 +4639,7 @@ namespace Tween
                         {
                             Started();
                         }
-                        HttpStatusCode res = twCon.UserStream(ref st, _allAtreplies, _trackwords, MyCommon.GetUserAgentString());
+                        HttpStatusCode res = _twCon.UserStream(ref st, _allAtreplies, _trackwords, MyCommon.GetUserAgentString());
                         switch (res)
                         {
                             case HttpStatusCode.OK:
@@ -4689,7 +4670,6 @@ namespace Tween
                         if (sr.EndOfStream || Twitter.AccountState == MyCommon.AccountState.Invalid)
                         {
                             sleepSec = 30;
-
                             continue;
                         }
                         break;
@@ -4709,11 +4689,11 @@ namespace Tween
                             sleepSec = 30;
                         }
                     }
-                    catch (ThreadAbortException ex)
+                    catch (ThreadAbortException)
                     {
                         break;
                     }
-                    catch (IOException ex)
+                    catch (IOException)
                     {
                         sleepSec = 30;
                     }
@@ -4739,7 +4719,7 @@ namespace Tween
                                 Stopped();
                             }
                         }
-                        twCon.RequestAbort();
+                        _twCon.RequestAbort();
                         if (sr != null)
                         {
                             sr.Close();
@@ -4843,6 +4823,8 @@ namespace Tween
             GC.SuppressFinalize(this);
         }
 
+        #endregion "IDisposable Support"
+
         public Twitter()
         {
             ApiInformationChanged += Twitter_ApiInformationChanged;
@@ -4864,7 +4846,5 @@ namespace Tween
                 return false;
             }
         }
-
-        #endregion "IDisposable Support"
     }
 }
