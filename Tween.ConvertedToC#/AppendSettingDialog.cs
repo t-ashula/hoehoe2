@@ -225,7 +225,7 @@ namespace Tween
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (My.MyProject.Forms.TweenMain.IsNetworkAvailable()
+            if (MyCommon.IsNetworkAvailable()
                 && (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Tween.MyCommon.UrlConverter.Bitly
                 || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Tween.MyCommon.UrlConverter.Jmp)
                 && (!String.IsNullOrEmpty(TextBitlyId.Text) || !String.IsNullOrEmpty(TextBitlyPw.Text)))
@@ -2751,21 +2751,22 @@ namespace Tween
             public CheckBox CheckBox;
             public Tween.MyCommon.EventType Type;
         }
+
         private EventCheckboxTblElement[] eventCheckboxTableElements = null;
 
         private EventCheckboxTblElement[] GetEventCheckboxTable()
         {
             if (eventCheckboxTableElements == null)
             {
-                eventCheckboxTableElements = new EventCheckboxTblElement[] { 
-                    new EventCheckboxTblElement { CheckBox = CheckFavoritesEvent, Type = Tween.MyCommon.EventType.Favorite }, 
-                    new EventCheckboxTblElement { CheckBox = CheckUnfavoritesEvent, Type = Tween.MyCommon.EventType.Unfavorite }, 
-                    new EventCheckboxTblElement { CheckBox = CheckFollowEvent, Type = Tween.MyCommon.EventType.Follow }, 
+                eventCheckboxTableElements = new EventCheckboxTblElement[] {
+                    new EventCheckboxTblElement { CheckBox = CheckFavoritesEvent, Type = Tween.MyCommon.EventType.Favorite },
+                    new EventCheckboxTblElement { CheckBox = CheckUnfavoritesEvent, Type = Tween.MyCommon.EventType.Unfavorite },
+                    new EventCheckboxTblElement { CheckBox = CheckFollowEvent, Type = Tween.MyCommon.EventType.Follow },
                     new EventCheckboxTblElement { CheckBox = CheckListMemberAddedEvent, Type = Tween.MyCommon.EventType.ListMemberAdded },
                     new EventCheckboxTblElement { CheckBox = CheckListMemberRemovedEvent, Type = Tween.MyCommon.EventType.ListMemberRemoved },
-                    new EventCheckboxTblElement { CheckBox = CheckBlockEvent, Type = Tween.MyCommon.EventType.Block }, 
-                    new EventCheckboxTblElement { CheckBox = CheckUserUpdateEvent, Type = Tween.MyCommon.EventType.UserUpdate }, 
-                    new EventCheckboxTblElement { CheckBox = CheckListCreatedEvent, Type = Tween.MyCommon.EventType.ListCreated } 
+                    new EventCheckboxTblElement { CheckBox = CheckBlockEvent, Type = Tween.MyCommon.EventType.Block },
+                    new EventCheckboxTblElement { CheckBox = CheckUserUpdateEvent, Type = Tween.MyCommon.EventType.UserUpdate },
+                    new EventCheckboxTblElement { CheckBox = CheckListCreatedEvent, Type = Tween.MyCommon.EventType.ListCreated }
                 };
             }
             return eventCheckboxTableElements;

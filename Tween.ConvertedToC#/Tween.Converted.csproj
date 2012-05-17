@@ -42,8 +42,7 @@
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile />
-    <NoWarn>
-    </NoWarn>
+    <NoWarn>649</NoWarn>
     <WarningsAsErrors>
     </WarningsAsErrors>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>

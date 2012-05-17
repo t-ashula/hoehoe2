@@ -39,10 +39,10 @@ namespace Tween.My
 			this.ShutdownStyle = global::Microsoft.VisualBasic.ApplicationServices.ShutdownMode.AfterMainFormCloses;
 		}
 
-		[System.Diagnostics.DebuggerStepThroughAttribute()]
+		//[System.Diagnostics.DebuggerStepThroughAttribute()]
 		protected override void OnCreateMainForm()
 		{
-			this.MainForm = My.MyProject.Forms.TweenMain;
+            this.MainForm = new TweenMain();
 		}
 	}
 }

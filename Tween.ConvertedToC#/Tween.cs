@@ -189,6 +189,7 @@ namespace Tween
 
         public HashtagManage HashMgr;
 
+        private TweenAboutBox _AboutBox;
         private EventViewerDialog evtDialog;
 
         //表示フォント、色、アイコン
@@ -302,6 +303,7 @@ namespace Tween
 
         //時速表示用
         private List<DateTime> _postTimestamps = new List<DateTime>();
+
         private List<DateTime> _favTimestamps = new List<DateTime>();
         private Dictionary<DateTime, int> _tlTimestamps = new Dictionary<DateTime, int>();
 
@@ -489,6 +491,7 @@ namespace Tween
 
             //画像投稿サービス名
             public string ImageService = "";
+
             public string ImagePath = "";
 
             public PostingStatus()
@@ -1624,12 +1627,12 @@ namespace Tween
                 this._pictureServices.Clear();
             }
             this._pictureServices = null;
-            this._pictureServices = new Dictionary<string, IMultimediaShareService> { 
-                { "TwitPic", new TwitPic(tw) }, 
-                { "img.ly", new imgly(tw) }, 
-                { "yfrog", new yfrog(tw) }, 
-                { "lockerz", new Plixi(tw) }, 
-                { "Twitter", new TwitterPhoto(tw) } 
+            this._pictureServices = new Dictionary<string, IMultimediaShareService> {
+                { "TwitPic", new TwitPic(tw) },
+                { "img.ly", new imgly(tw) },
+                { "yfrog", new yfrog(tw) },
+                { "lockerz", new Plixi(tw) },
+                { "Twitter", new TwitterPhoto(tw) }
             };
         }
 
@@ -3488,7 +3491,6 @@ namespace Tween
                                             //選択アイテム再表示
                                             DispSelectedPost(true);
                                         }
-
                                     }
                                 }
                             }
@@ -3700,7 +3702,7 @@ namespace Tween
 
         private void GetTimeline(MyCommon.WorkerType wkType, int fromPage, int toPage, string tabName)
         {
-            if (!this.IsNetworkAvailable())
+            if (!MyCommon.IsNetworkAvailable())
             {
                 return;
             }
@@ -6340,7 +6342,11 @@ namespace Tween
 
         private void AboutMenuItem_Click(object sender, EventArgs e)
         {
-            My.MyProject.Forms.TweenAboutBox.ShowDialog();
+            if (_AboutBox == null)
+            {
+                _AboutBox = new TweenAboutBox();
+            }
+            _AboutBox.ShowDialog();
             this.TopMost = SettingDialog.AlwaysTop;
         }
 
@@ -9369,7 +9375,7 @@ namespace Tween
                 NotifyIcon1.Icon = _NIconAtRed;
                 return;
             }
-            if (_myStatusOnline)
+            if (MyCommon.IsNetworkAvailable())
             {
                 NotifyIcon1.Icon = _NIconAt;
             }
@@ -10245,9 +10251,9 @@ namespace Tween
             StringBuilder ttl = new StringBuilder(256);
             int ur = 0;
             int al = 0;
-            if (SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.None 
-                && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Post 
-                && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Ver 
+            if (SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.None
+                && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Post
+                && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Ver
                 && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.OwnStatus)
             {
                 foreach (string key in _statuses.Tabs.Keys)
@@ -11432,11 +11438,6 @@ namespace Tween
             }
         }
 
-        public bool IsNetworkAvailable()
-        {
-            return _myStatusOnline = MyCommon.IsNetworkAvailable();
-        }
-
         public void OpenUriAsync(string uri)
         {
             RunAsync(new GetWorkerArg() { WorkerType = MyCommon.WorkerType.OpenUri, Url = uri });
@@ -11643,7 +11644,7 @@ namespace Tween
             NotifyIcon1.Visible = true;
             tw.UserIdChanged += tw_UserIdChanged;
 
-            if (this.IsNetworkAvailable())
+            if (MyCommon.IsNetworkAvailable())
             {
                 GetTimeline(MyCommon.WorkerType.BlockIds, 0, 0, "");
                 if (SettingDialog.StartupFollowers)
@@ -13934,6 +13935,7 @@ namespace Tween
         }
 
         string _prevTrackWord;
+
         private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (TrackToolStripMenuItem.Checked)
@@ -13977,7 +13979,6 @@ namespace Tween
         {
             if (evtDialog == null || evtDialog.IsDisposed)
             {
-                evtDialog = null;
                 evtDialog = new EventViewerDialog();
                 evtDialog.Owner = this;
                 //親の中央に表示

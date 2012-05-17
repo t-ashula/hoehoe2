@@ -544,6 +544,8 @@ namespace Tween
             MSG2.Enabled = !flg;
         }
 
+        private TweenMain TwMain { get { return (TweenMain)this.Owner; } }
+
         private void ButtonOK_Click(object sender, EventArgs e)
         {
             bool isBlankMatch = false;
@@ -567,11 +569,11 @@ namespace Tween
             if (RadioAND.Checked)
             {
                 ft.NameFilter = UID.Text;
-                int cnt = My.MyProject.Forms.TweenMain.AtIdSupl.ItemCount;
-                My.MyProject.Forms.TweenMain.AtIdSupl.AddItem("@" + ft.NameFilter);
-                if (cnt != My.MyProject.Forms.TweenMain.AtIdSupl.ItemCount)
+                int cnt = TwMain.AtIdSupl.ItemCount;
+                TwMain.AtIdSupl.AddItem("@" + ft.NameFilter);
+                if (cnt != TwMain.AtIdSupl.ItemCount)
                 {
-                    My.MyProject.Forms.TweenMain.SetModifySettingAtId(true);
+                    TwMain.SetModifySettingAtId(true);
                 }
                 ft.SearchBoth = true;
                 bdy = MSG1.Text;
@@ -594,7 +596,9 @@ namespace Tween
                 foreach (string bfs in bf)
                 {
                     if (!String.IsNullOrEmpty(bfs))
+                    {
                         ft.BodyFilter.Add(bfs.Trim());
+                    }
                 }
             }
 
@@ -915,7 +919,7 @@ namespace Tween
             }
 
             _idList.Clear();
-            foreach (string tmp in My.MyProject.Forms.TweenMain.AtIdSupl.GetItemList())
+            foreach (string tmp in TwMain.AtIdSupl.GetItemList())
             {
                 _idList.Add(tmp.Remove(0, 1));
                 // @文字削除
@@ -936,7 +940,7 @@ namespace Tween
                         if (_cur == ListTabs.Items[i].ToString())
                         {
                             ListTabs.SelectedIndex = i;
-                            break; 
+                            break;
                         }
                     }
                 }
@@ -1265,7 +1269,7 @@ namespace Tween
                         }
                         else
                         {
-                            break; 
+                            break;
                         }
                     }
                     e.Handled = true;

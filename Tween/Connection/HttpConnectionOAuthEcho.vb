@@ -34,16 +34,6 @@ Public Class HttpConnectionOAuthEcho
     Private _token As String
     Private _tokenSecret As String
 
-    public void SetRealm(Uri value)
-{
-    _realm = value;
-}
-
-    public void SetServiceProvider(Uri value)
-{
-    _serviceProvider = value;
-}
-
     Protected Overrides Sub AppendOAuthInfo(ByVal webRequest As HttpWebRequest, _
                                 ByVal query As Dictionary(Of String, String), _
                                 ByVal token As String, _

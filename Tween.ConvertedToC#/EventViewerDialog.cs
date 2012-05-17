@@ -56,7 +56,7 @@ namespace Tween
 
         private ListViewItem CreateListViewItem(Twitter.FormattedEvent source)
         {
-            return new ListViewItem(new [] { source.CreatedAt.ToString(), source.Event.ToUpper(), source.Username, source.Target });
+            return new ListViewItem(new[] { source.CreatedAt.ToString(), source.Event.ToUpper(), source.Username, source.Target });
         }
 
         private void EventViewerDialog_Shown(object sender, EventArgs e)
@@ -72,7 +72,7 @@ namespace Tween
         {
             if (!(EventList.SelectedIndices.Count == 0) && _filterdEventSource[EventList.SelectedIndices[0]] != null)
             {
-                My.MyProject.Forms.TweenMain.OpenUriAsync("http://twitter.com/" + _filterdEventSource[EventList.SelectedIndices[0]].Username);
+                ((TweenMain)this.Owner).OpenUriAsync("http://twitter.com/" + _filterdEventSource[EventList.SelectedIndices[0]].Username);
             }
         }
 
@@ -250,7 +250,7 @@ namespace Tween
         }
 
         public EventViewerDialog()
-        {            
+        {
             InitializeComponent();
         }
     }
