@@ -209,7 +209,7 @@ namespace Tween
                     return;
             }
             SaveFileDialog1.FileName = String.Format("TweenEvents{0}{1:yyMMdd-HHmmss}.tsv", tabName, DateTime.Now);
-            SaveFileDialog1.InitialDirectory = Tween.My.MyProject.Application.Info.DirectoryPath;
+            SaveFileDialog1.InitialDirectory = MyCommon.GetAppDir();
             SaveFileDialog1.Filter = Tween.My_Project.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
             SaveFileDialog1.Title = Tween.My_Project.Resources.SaveLogMenuItem_ClickText4;

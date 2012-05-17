@@ -843,7 +843,8 @@ namespace Tween
             Microsoft.Win32.SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
 
             VerUpMenuItem.Image = _shield.Icon;
-            if (!(Tween.My.MyProject.Application.CommandLineArgs.Count == 0) && Tween.My.MyProject.Application.CommandLineArgs.Contains("/d"))
+            var cmdArgs = System.Environment.GetCommandLineArgs().Skip(1).ToArray();
+            if (!(cmdArgs.Length == 0) && cmdArgs.Contains("/d"))
             {
                 MyCommon.TraceFlag = true;
             }
@@ -951,7 +952,7 @@ namespace Tween
             SettingDialog.UserTimelinePeriodInt = _cfgCommon.UserTimelinePeriod;
             SettingDialog.ListsPeriodInt = _cfgCommon.ListsPeriod;
             //不正値チェック
-            if (!Tween.My.MyProject.Application.CommandLineArgs.Contains("nolimit"))
+            if (!cmdArgs.Contains("nolimit"))
             {
                 if (SettingDialog.TimelinePeriodInt < 15 && SettingDialog.TimelinePeriodInt > 0)
                 {
@@ -2334,7 +2335,7 @@ namespace Tween
             {
                 try
                 {
-                    string dir = Tween.My.MyProject.Application.Info.DirectoryPath;
+                    string dir = MyCommon.GetAppDir();
                     if (Directory.Exists(Path.Combine(dir, "Sounds")))
                     {
                         dir = Path.Combine(dir, "Sounds");
@@ -8721,7 +8722,7 @@ namespace Tween
             }
 
             SaveFileDialog1.FileName = String.Format("TweenPosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
-            SaveFileDialog1.InitialDirectory = Tween.My.MyProject.Application.Info.DirectoryPath;
+            SaveFileDialog1.InitialDirectory = MyCommon.GetAppDir();
             SaveFileDialog1.Filter = Tween.My_Project.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
             SaveFileDialog1.Title = Tween.My_Project.Resources.SaveLogMenuItem_ClickText4;
@@ -9430,8 +9431,8 @@ namespace Tween
             this.SoundFileTbComboBox.Items.Clear();
             SoundFileComboBox.Items.Add("");
             this.SoundFileTbComboBox.Items.Add("");
-            DirectoryInfo oDir = new DirectoryInfo(Tween.My.MyProject.Application.Info.DirectoryPath + Path.DirectorySeparatorChar);
-            if (Directory.Exists(Path.Combine(Tween.My.MyProject.Application.Info.DirectoryPath, "Sounds")))
+            DirectoryInfo oDir = new DirectoryInfo(MyCommon.GetAppDir() + Path.DirectorySeparatorChar);
+            if (Directory.Exists(Path.Combine(MyCommon.GetAppDir(), "Sounds")))
             {
                 oDir = oDir.GetDirectories("Sounds")[0];
             }
@@ -11680,11 +11681,13 @@ namespace Tween
                 while ((IsInitialRead()) && !MyCommon.IsEnding)
                 {
                     Thread.Sleep(100);
-                    Tween.My.MyProject.Application.DoEvents();
+                    Application.DoEvents();
                     i += 1;
                     j += 1;
                     if (j > 1200)
-                        break; // TODO: might not be correct. Was : Exit Do
+                    {
+                        break; 
+                    }
                     // 120秒間初期処理が終了しなかったら強制的に打ち切る
                     if (i > 50)
                     {
@@ -13909,7 +13912,7 @@ namespace Tween
                 {
                     try
                     {
-                        string dir = Tween.My.MyProject.Application.Info.DirectoryPath;
+                        string dir = MyCommon.GetAppDir();
                         if (Directory.Exists(Path.Combine(dir, "Sounds")))
                         {
                             dir = Path.Combine(dir, "Sounds");

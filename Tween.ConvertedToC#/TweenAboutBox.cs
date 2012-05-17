@@ -23,31 +23,42 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Reflection;
+using System.IO;
+
 namespace Tween
 {
     public sealed partial class TweenAboutBox
     {
+        public static T getAppAssemblyCustomeAttr<T>() where T : Attribute
+        {
+            return (T)Attribute.GetCustomAttribute(AppAssembly, typeof(T));
+        }
+
+        public static Assembly AppAssembly { get { return Assembly.GetExecutingAssembly(); } }
+        public static string AppTitle { get { return getAppAssemblyCustomeAttr<AssemblyTitleAttribute>().Title; } }
+        public static string AppAssemblyDescription { get { return getAppAssemblyCustomeAttr<AssemblyDescriptionAttribute>().Description; } }
+        public static string AppAssemblyCompanyName { get { return getAppAssemblyCustomeAttr<AssemblyCompanyAttribute>().Company; } }
+        public static string AppAssemblyCopyright { get { return getAppAssemblyCustomeAttr<AssemblyCopyrightAttribute>().Copyright; } }
+        public static string AppAssemblyProductName { get { return getAppAssemblyCustomeAttr<AssemblyProductAttribute>().Product; } }
+        public static string AppAssemblyName { get { return AppAssembly.GetName().Name; } }
+        public static Version AppVersion { get { return AppAssembly.GetName().Version; } }
+        public static string AppFileVersion { get { return getAppAssemblyCustomeAttr<AssemblyFileVersionAttribute>().Version; } }
+
         private void TweenAboutBox_Load(System.Object sender, System.EventArgs e)
         {
             // フォームのタイトルを設定します。
-            string ApplicationTitle = null;
-            if (!string.IsNullOrEmpty(Tween.My.MyProject.Application.Info.Title))
-            {
-                ApplicationTitle = Tween.My.MyProject.Application.Info.Title;
-            }
-            else
-            {
-                ApplicationTitle = System.IO.Path.GetFileNameWithoutExtension(Tween.My.MyProject.Application.Info.AssemblyName);
-            }
-            this.Text = string.Format(Tween.My_Project.Resources.TweenAboutBox_LoadText1, ApplicationTitle);
+            string applicationTitle = !String.IsNullOrEmpty(AppTitle) ? AppTitle : Path.GetFileNameWithoutExtension(AppAssemblyName);
+            this.Text = String.Format(Tween.My_Project.Resources.TweenAboutBox_LoadText1, applicationTitle);
             // バージョン情報ボックスに表示されたテキストをすべて初期化します。
             // TODO: [プロジェクト] メニューの下にある [プロジェクト プロパティ] ダイアログの [アプリケーション] ペインで、アプリケーションのアセンブリ情報を
             //    カスタマイズします。
-            this.LabelProductName.Text = Tween.My.MyProject.Application.Info.ProductName;
-            this.LabelVersion.Text = string.Format(Tween.My_Project.Resources.TweenAboutBox_LoadText2, MyCommon.fileVersion + "(" + Tween.My.MyProject.Application.Info.Version.ToString() + ")");
-            this.LabelCopyright.Text = Tween.My.MyProject.Application.Info.Copyright;
-            this.LabelCompanyName.Text = Tween.My.MyProject.Application.Info.CompanyName;
-            this.TextBoxDescription.Text = Tween.My.MyProject.Application.Info.Description;
+            this.LabelProductName.Text = AppAssemblyProductName;
+            this.LabelVersion.Text = String.Format(Tween.My_Project.Resources.TweenAboutBox_LoadText2, MyCommon.fileVersion + "(" + AppVersion.ToString() + ")");
+            this.LabelCopyright.Text = AppAssemblyCopyright;
+            this.LabelCompanyName.Text = AppAssemblyCompanyName;
+            this.TextBoxDescription.Text = AppAssemblyDescription;
             this.ChangeLog.Text = Tween.My_Project.Resources.ChangeLog;
             this.TextBoxDescription.Text = Tween.My_Project.Resources.Description;
         }

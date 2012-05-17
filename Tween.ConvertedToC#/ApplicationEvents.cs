@@ -160,7 +160,7 @@ namespace Tween.My
             {
                 ChangeUICulture(code);
             }
-            catch (Exception )
+            catch (Exception)
             {
             }
         }
@@ -174,7 +174,7 @@ namespace Tween.My
                     ChangeUICulture(this.CultureCode);
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
             }
         }

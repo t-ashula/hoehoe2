@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -2841,8 +2842,8 @@ namespace Tween
             }
             ComboBoxEventNotifySound.Items.Clear();
             ComboBoxEventNotifySound.Items.Add("");
-            DirectoryInfo oDir = new DirectoryInfo(Tween.My.MyProject.Application.Info.DirectoryPath + Path.DirectorySeparatorChar);
-            if (Directory.Exists(Path.Combine(Tween.My.MyProject.Application.Info.DirectoryPath, "Sounds")))
+            DirectoryInfo oDir = new DirectoryInfo(MyCommon.GetAppDir() + Path.DirectorySeparatorChar);
+            if (Directory.Exists(Path.Combine(MyCommon.GetAppDir(), "Sounds")))
             {
                 oDir = oDir.GetDirectories("Sounds")[0];
             }

@@ -57,7 +57,7 @@ namespace Tween
             }
             catch (Exception )
             {
-                string backupFile = Path.Combine(Path.Combine(Tween.My.MyProject.Application.Info.DirectoryPath, "TweenBackup1st"), typeof(T).Name + fileId + ".xml");
+                string backupFile = Path.Combine(Path.Combine(MyCommon.GetAppDir(), "TweenBackup1st"), typeof(T).Name + fileId + ".xml");
                 if (File.Exists(backupFile))
                 {
                     try

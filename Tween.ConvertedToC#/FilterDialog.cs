@@ -908,8 +908,8 @@ namespace Tween
 
             ComboSound.Items.Clear();
             ComboSound.Items.Add("");
-            DirectoryInfo oDir = new DirectoryInfo(Tween.My.MyProject.Application.Info.DirectoryPath + Path.DirectorySeparatorChar);
-            if (Directory.Exists(Path.Combine(Tween.My.MyProject.Application.Info.DirectoryPath, "Sounds")))
+            DirectoryInfo oDir = new DirectoryInfo(MyCommon.GetAppDir() + Path.DirectorySeparatorChar);
+            if (Directory.Exists(Path.Combine(MyCommon.GetAppDir(), "Sounds")))
             {
                 oDir = oDir.GetDirectories("Sounds")[0];
             }
