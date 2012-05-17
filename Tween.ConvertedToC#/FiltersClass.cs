@@ -74,44 +74,44 @@ namespace Tween
                 {
                     if (!String.IsNullOrEmpty(_name))
                     {
-                        fs.AppendFormat(Tween.My_Project.Resources.SetFiltersText1, _name);
+                        fs.AppendFormat(Tween.Properties.Resources.SetFiltersText1, _name);
                     }
                     else
                     {
-                        fs.Append(Tween.My_Project.Resources.SetFiltersText2);
+                        fs.Append(Tween.Properties.Resources.SetFiltersText2);
                     }
                 }
                 if (_body.Count > 0)
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText3);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText3);
                     foreach (string bf in _body)
                     {
                         fs.Append(bf);
                         fs.Append(" ");
                     }
                     fs.Length -= 1;
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText4);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText4);
                 }
                 fs.Append("(");
                 if (_searchBoth)
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText5);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText5);
                 }
                 else
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText6);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText6);
                 }
                 if (_useRegex)
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText7);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText7);
                 }
                 if (_searchUrl)
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText8);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText8);
                 }
                 if (_caseSensitive)
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText13);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText13);
                 }
                 if (_isRt)
                 {
@@ -131,49 +131,49 @@ namespace Tween
             if (!String.IsNullOrEmpty(_exname) || _exbody.Count > 0 || _isExRt || !String.IsNullOrEmpty(_exSource))
             {
                 //除外
-                fs.Append(Tween.My_Project.Resources.SetFiltersText12);
+                fs.Append(Tween.Properties.Resources.SetFiltersText12);
                 if (_exsearchBoth)
                 {
                     if (!String.IsNullOrEmpty(_exname))
                     {
-                        fs.AppendFormat(Tween.My_Project.Resources.SetFiltersText1, _exname);
+                        fs.AppendFormat(Tween.Properties.Resources.SetFiltersText1, _exname);
                     }
                     else
                     {
-                        fs.Append(Tween.My_Project.Resources.SetFiltersText2);
+                        fs.Append(Tween.Properties.Resources.SetFiltersText2);
                     }
                 }
                 if (_exbody.Count > 0)
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText3);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText3);
                     foreach (string bf in _exbody)
                     {
                         fs.Append(bf);
                         fs.Append(" ");
                     }
                     fs.Length -= 1;
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText4);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText4);
                 }
                 fs.Append("(");
                 if (_exsearchBoth)
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText5);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText5);
                 }
                 else
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText6);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText6);
                 }
                 if (_exuseRegex)
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText7);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText7);
                 }
                 if (_exsearchUrl)
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText8);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText8);
                 }
                 if (_excaseSensitive)
                 {
-                    fs.Append(Tween.My_Project.Resources.SetFiltersText13);
+                    fs.Append(Tween.Properties.Resources.SetFiltersText13);
                 }
                 if (_isExRt)
                 {
@@ -194,15 +194,15 @@ namespace Tween
             fs.Append("(");
             if (_moveFrom)
             {
-                fs.Append(Tween.My_Project.Resources.SetFiltersText9);
+                fs.Append(Tween.Properties.Resources.SetFiltersText9);
             }
             else
             {
-                fs.Append(Tween.My_Project.Resources.SetFiltersText11);
+                fs.Append(Tween.Properties.Resources.SetFiltersText11);
             }
             if (!_moveFrom && _setMark)
             {
-                fs.Append(Tween.My_Project.Resources.SetFiltersText10);
+                fs.Append(Tween.Properties.Resources.SetFiltersText10);
             }
             else if (!_moveFrom)
             {

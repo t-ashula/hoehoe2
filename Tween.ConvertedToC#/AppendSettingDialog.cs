@@ -233,7 +233,7 @@ namespace Tween
             {
                 if (!BitlyValidation(TextBitlyId.Text, TextBitlyPw.Text))
                 {
-                    MessageBox.Show(Tween.My_Project.Resources.SettingSave_ClickText1);
+                    MessageBox.Show(Tween.Properties.Resources.SettingSave_ClickText1);
                     _ValidationError = true;
                     TreeViewSetting.SelectedNode.Name = "TweetActNode";
                     // 動作タブを選択
@@ -620,7 +620,7 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.Save_ClickText3);
+                MessageBox.Show(Tween.Properties.Resources.Save_ClickText3);
                 this.DialogResult = DialogResult.Cancel;
                 return;
             }
@@ -667,7 +667,7 @@ namespace Tween
 
             if (_tw != null && String.IsNullOrEmpty(_tw.Username) && e.CloseReason == CloseReason.None)
             {
-                if (MessageBox.Show(Tween.My_Project.Resources.Setting_FormClosing1, "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                if (MessageBox.Show(Tween.Properties.Resources.Setting_FormClosing1, "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                 {
                     e.Cancel = true;
                 }
@@ -1023,14 +1023,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.UserstreamPeriod_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.UserstreamPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd < 0 || prd > 60)
             {
-                MessageBox.Show(Tween.My_Project.Resources.UserstreamPeriod_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.UserstreamPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
@@ -1046,14 +1046,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TimelinePeriod_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.TimelinePeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 15 || prd > 6000))
             {
-                MessageBox.Show(Tween.My_Project.Resources.TimelinePeriod_ValidatingText2);
+                MessageBox.Show(Tween.Properties.Resources.TimelinePeriod_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -1069,14 +1069,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TimelinePeriod_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.TimelinePeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 15 || prd > 6000))
             {
-                MessageBox.Show(Tween.My_Project.Resources.TimelinePeriod_ValidatingText2);
+                MessageBox.Show(Tween.Properties.Resources.TimelinePeriod_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -1092,14 +1092,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.DMPeriod_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 15 || prd > 6000))
             {
-                MessageBox.Show(Tween.My_Project.Resources.DMPeriod_ValidatingText2);
+                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -1115,14 +1115,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.PubSearchPeriod_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.PubSearchPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 30 || prd > 6000))
             {
-                MessageBox.Show(Tween.My_Project.Resources.PubSearchPeriod_ValidatingText2);
+                MessageBox.Show(Tween.Properties.Resources.PubSearchPeriod_ValidatingText2);
                 e.Cancel = true;
             }
         }
@@ -1136,14 +1136,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.DMPeriod_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 15 || prd > 6000))
             {
-                MessageBox.Show(Tween.My_Project.Resources.DMPeriod_ValidatingText2);
+                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -1159,14 +1159,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.DMPeriod_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 15 || prd > 6000))
             {
-                MessageBox.Show(Tween.My_Project.Resources.DMPeriod_ValidatingText2);
+                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -1947,9 +1947,9 @@ namespace Tween
         {
             using (OpenFileDialog filedlg = new OpenFileDialog())
             {
-                filedlg.Filter = Tween.My_Project.Resources.Button3_ClickText1;
+                filedlg.Filter = Tween.Properties.Resources.Button3_ClickText1;
                 filedlg.FilterIndex = 1;
-                filedlg.Title = Tween.My_Project.Resources.Button3_ClickText2;
+                filedlg.Title = Tween.Properties.Resources.Button3_ClickText2;
                 filedlg.RestoreDirectory = true;
 
                 if (filedlg.ShowDialog() == DialogResult.OK)
@@ -1981,13 +1981,13 @@ namespace Tween
             }
             if (!int.TryParse(TextProxyPort.Text.Trim(), out port))
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextProxyPort_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.TextProxyPort_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
             if (port < 0 | port > 65535)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextProxyPort_ValidatingText2);
+                MessageBox.Show(Tween.Properties.Resources.TextProxyPort_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -2018,7 +2018,7 @@ namespace Tween
                 TextBoxOutputzKey.Text = TextBoxOutputzKey.Text.Trim();
                 if (TextBoxOutputzKey.Text.Length == 0)
                 {
-                    MessageBox.Show(Tween.My_Project.Resources.TextBoxOutputzKey_Validating);
+                    MessageBox.Show(Tween.Properties.Resources.TextBoxOutputzKey_Validating);
                     e.Cancel = true;
                     return;
                 }
@@ -2033,7 +2033,7 @@ namespace Tween
             }
             catch (FormatException)
             {
-                LabelDateTimeFormatApplied.Text = Tween.My_Project.Resources.CreateDateTimeFormatSampleText1;
+                LabelDateTimeFormatApplied.Text = Tween.Properties.Resources.CreateDateTimeFormatSampleText1;
                 return false;
             }
             return true;
@@ -2053,7 +2053,7 @@ namespace Tween
         {
             if (!CreateDateTimeFormatSample())
             {
-                MessageBox.Show(Tween.My_Project.Resources.CmbDateTimeFormat_Validating);
+                MessageBox.Show(Tween.Properties.Resources.CmbDateTimeFormat_Validating);
                 e.Cancel = true;
             }
         }
@@ -2067,14 +2067,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.ConnectionTimeOut_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.ConnectionTimeOut_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (tm < (int)Tween.MyCommon.HttpTimeOut.MinValue || tm > (int)Tween.MyCommon.HttpTimeOut.MaxValue)
             {
-                MessageBox.Show(Tween.My_Project.Resources.ConnectionTimeOut_ValidatingText1);
+                MessageBox.Show(Tween.Properties.Resources.ConnectionTimeOut_ValidatingText1);
                 e.Cancel = true;
             }
         }
@@ -2093,14 +2093,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (cnt < 20 || cnt > 200)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2115,14 +2115,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (cnt < 20 || cnt > 200)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2298,7 +2298,7 @@ namespace Tween
             }
             else
             {
-                MessageBox.Show(Tween.My_Project.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
+                MessageBox.Show(Tween.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
                 return false;
             }
         }
@@ -2309,7 +2309,7 @@ namespace Tween
             string rslt = _tw.Authenticate(pin);
             if (String.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(Tween.My_Project.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
+                MessageBox.Show(Tween.Properties.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
                 int idx = -1;
                 var user = new UserAccount
                 {
@@ -2340,7 +2340,7 @@ namespace Tween
             }
             else
             {
-                MessageBox.Show(Tween.My_Project.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
+                MessageBox.Show(Tween.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
                 return false;
             }
         }
@@ -2377,11 +2377,11 @@ namespace Tween
         {
             if (MyCommon.TwitterApiInfo.MaxCount > -1)
             {
-                LabelApiUsing.Text = string.Format(Tween.My_Project.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, MyCommon.TwitterApiInfo.MaxCount);
+                LabelApiUsing.Text = string.Format(Tween.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, MyCommon.TwitterApiInfo.MaxCount);
             }
             else
             {
-                LabelApiUsing.Text = string.Format(Tween.My_Project.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, "???");
+                LabelApiUsing.Text = string.Format(Tween.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, "???");
             }
         }
 
@@ -2479,19 +2479,19 @@ namespace Tween
                     }
                     else
                     {
-                        LabelApiUsing.Text = string.Format(Tween.My_Project.Resources.SettingAPIUse1, usingApi, "???");
+                        LabelApiUsing.Text = string.Format(Tween.Properties.Resources.SettingAPIUse1, usingApi, "???");
                     }
                 }
                 else
                 {
-                    LabelApiUsing.Text = string.Format(Tween.My_Project.Resources.SettingAPIUse1, usingApi, MyCommon.TwitterApiInfo.MaxCount);
+                    LabelApiUsing.Text = string.Format(Tween.Properties.Resources.SettingAPIUse1, usingApi, MyCommon.TwitterApiInfo.MaxCount);
                 }
             }
 
             LabelPostAndGet.Visible = CheckPostAndGet.Checked && !_tw.UserStreamEnabled;
             LabelUserStreamActive.Visible = _tw.UserStreamEnabled;
 
-            LabelApiUsingUserStreamEnabled.Text = String.Format(Tween.My_Project.Resources.SettingAPIUse2, (apiLists + apiUserTimeline).ToString());
+            LabelApiUsingUserStreamEnabled.Text = String.Format(Tween.Properties.Resources.SettingAPIUse2, (apiLists + apiUserTimeline).ToString());
             LabelApiUsingUserStreamEnabled.Visible = _tw.UserStreamEnabled;
         }
 
@@ -2608,14 +2608,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 200))
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2646,14 +2646,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 200))
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2668,14 +2668,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextSearchCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextSearchCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 100))
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextSearchCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextSearchCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2690,14 +2690,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 200))
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2712,14 +2712,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 200))
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2734,14 +2734,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 200))
             {
-                MessageBox.Show(Tween.My_Project.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2920,7 +2920,7 @@ namespace Tween
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
 
-            this.Icon = Tween.My_Project.Resources.MIcon;
+            this.Icon = Tween.Properties.Resources.MIcon;
         }
 
         private void CheckAutoConvertUrl_CheckedChanged(object sender, EventArgs e)

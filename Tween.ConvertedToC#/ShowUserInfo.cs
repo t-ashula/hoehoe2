@@ -141,7 +141,7 @@ namespace Tween
             _owner = (TweenMain)this.Owner;
             if (!AnalizeUserInfo(_userInfo))
             {
-                MessageBox.Show(Tween.My_Project.Resources.ShowUserInfo1);
+                MessageBox.Show(Tween.Properties.Resources.ShowUserInfo1);
                 this.Close();
                 return;
             }
@@ -178,20 +178,20 @@ namespace Tween
 
             if (_info.Protect)
             {
-                LabelIsProtected.Text = Tween.My_Project.Resources.Yes;
+                LabelIsProtected.Text = Tween.Properties.Resources.Yes;
             }
             else
             {
-                LabelIsProtected.Text = Tween.My_Project.Resources.No;
+                LabelIsProtected.Text = Tween.Properties.Resources.No;
             }
 
             if (_info.Verified)
             {
-                LabelIsVerified.Text = Tween.My_Project.Resources.Yes;
+                LabelIsVerified.Text = Tween.Properties.Resources.Yes;
             }
             else
             {
-                LabelIsVerified.Text = Tween.My_Project.Resources.No;
+                LabelIsVerified.Text = Tween.Properties.Resources.No;
             }
 
             if (_owner.TwitterInstance.Username == _info.ScreenName)
@@ -255,12 +255,12 @@ namespace Tween
             string ret = _owner.TwitterInstance.PostFollowCommand(_info.ScreenName);
             if (!String.IsNullOrEmpty(ret))
             {
-                MessageBox.Show(Tween.My_Project.Resources.FRMessage2 + ret);
+                MessageBox.Show(Tween.Properties.Resources.FRMessage2 + ret);
             }
             else
             {
-                MessageBox.Show(Tween.My_Project.Resources.FRMessage3);
-                LabelIsFollowing.Text = Tween.My_Project.Resources.GetFriendshipInfo1;
+                MessageBox.Show(Tween.Properties.Resources.FRMessage3);
+                LabelIsFollowing.Text = Tween.Properties.Resources.GetFriendshipInfo1;
                 ButtonFollow.Enabled = false;
                 ButtonUnFollow.Enabled = true;
             }
@@ -268,17 +268,17 @@ namespace Tween
 
         private void ButtonUnFollow_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonUnFollow_ClickText1, Tween.My_Project.Resources.ButtonUnFollow_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + Tween.Properties.Resources.ButtonUnFollow_ClickText1, Tween.Properties.Resources.ButtonUnFollow_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 string ret = _owner.TwitterInstance.PostRemoveCommand(_info.ScreenName);
                 if (!String.IsNullOrEmpty(ret))
                 {
-                    MessageBox.Show(Tween.My_Project.Resources.FRMessage2 + ret);
+                    MessageBox.Show(Tween.Properties.Resources.FRMessage2 + ret);
                 }
                 else
                 {
-                    MessageBox.Show(Tween.My_Project.Resources.FRMessage3);
-                    LabelIsFollowing.Text = Tween.My_Project.Resources.GetFriendshipInfo2;
+                    MessageBox.Show(Tween.Properties.Resources.FRMessage3);
+                    LabelIsFollowing.Text = Tween.Properties.Resources.GetFriendshipInfo2;
                     ButtonFollow.Enabled = true;
                     ButtonUnFollow.Enabled = false;
                 }
@@ -345,20 +345,20 @@ namespace Tween
                 {
                     if (_info.IsFollowing)
                     {
-                        LabelIsFollowing.Text = Tween.My_Project.Resources.GetFriendshipInfo1;
+                        LabelIsFollowing.Text = Tween.Properties.Resources.GetFriendshipInfo1;
                     }
                     else
                     {
-                        LabelIsFollowing.Text = Tween.My_Project.Resources.GetFriendshipInfo2;
+                        LabelIsFollowing.Text = Tween.Properties.Resources.GetFriendshipInfo2;
                     }
                     ButtonFollow.Enabled = !_info.IsFollowing;
                     if (_info.IsFollowed)
                     {
-                        LabelIsFollowed.Text = Tween.My_Project.Resources.GetFriendshipInfo3;
+                        LabelIsFollowed.Text = Tween.Properties.Resources.GetFriendshipInfo3;
                     }
                     else
                     {
-                        LabelIsFollowed.Text = Tween.My_Project.Resources.GetFriendshipInfo4;
+                        LabelIsFollowed.Text = Tween.Properties.Resources.GetFriendshipInfo4;
                     }
                     ButtonUnFollow.Enabled = _info.IsFollowing;
                 }
@@ -367,8 +367,8 @@ namespace Tween
                     MessageBox.Show(_friendshipResult);
                     ButtonUnFollow.Enabled = false;
                     ButtonFollow.Enabled = false;
-                    LabelIsFollowed.Text = Tween.My_Project.Resources.GetFriendshipInfo6;
-                    LabelIsFollowing.Text = Tween.My_Project.Resources.GetFriendshipInfo6;
+                    LabelIsFollowed.Text = Tween.Properties.Resources.GetFriendshipInfo6;
+                    LabelIsFollowing.Text = Tween.Properties.Resources.GetFriendshipInfo6;
                 }
             }
         }
@@ -384,7 +384,7 @@ namespace Tween
             }
             else
             {
-                LabelRecentPost.Text = Tween.My_Project.Resources.ShowUserInfo2;
+                LabelRecentPost.Text = Tween.Properties.Resources.ShowUserInfo2;
             }
             ButtonClose.Focus();
         }
@@ -555,7 +555,7 @@ namespace Tween
             if (!isEditing)
             {
                 buttonEditText = ButtonEdit.Text;
-                ButtonEdit.Text = Tween.My_Project.Resources.UserInfoButtonEdit_ClickText1;
+                ButtonEdit.Text = Tween.Properties.Resources.UserInfoButtonEdit_ClickText1;
 
                 //座標初期化,プロパティ設定
                 TextBoxName.Location = LabelName.Location;
@@ -617,7 +617,7 @@ namespace Tween
                     arg.Location = TextBoxLocation.Text.Trim();
                     arg.Description = TextBoxDescription.Text.Trim();
 
-                    using (FormInfo dlg = new FormInfo(this, Tween.My_Project.Resources.UserInfoButtonEdit_ClickText2, UpdateProfile_Dowork, UpddateProfile_RunWorkerCompleted, arg))
+                    using (FormInfo dlg = new FormInfo(this, Tween.Properties.Resources.UserInfoButtonEdit_ClickText2, UpdateProfile_Dowork, UpddateProfile_RunWorkerCompleted, arg))
                     {
                         dlg.ShowDialog();
                         if (!String.IsNullOrEmpty(dlg.Result.ToString()))
@@ -705,26 +705,26 @@ namespace Tween
                 FileName = filename
             };
 
-            using (FormInfo dlg = new FormInfo(this, Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText3, UpdateProfileImage_Dowork, UpdateProfileImage_RunWorkerCompleted, arg))
+            using (FormInfo dlg = new FormInfo(this, Tween.Properties.Resources.ChangeIconToolStripMenuItem_ClickText3, UpdateProfileImage_Dowork, UpdateProfileImage_RunWorkerCompleted, arg))
             {
                 dlg.ShowDialog();
                 res = dlg.Result as string;
                 if (!String.IsNullOrEmpty(res))
                 {
                     // "Err:"が付いたエラーメッセージが返ってくる
-                    MessageBox.Show(res + System.Environment.NewLine + Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText4);
+                    MessageBox.Show(res + System.Environment.NewLine + Tween.Properties.Resources.ChangeIconToolStripMenuItem_ClickText4);
                 }
                 else
                 {
-                    MessageBox.Show(Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText5);
+                    MessageBox.Show(Tween.Properties.Resources.ChangeIconToolStripMenuItem_ClickText5);
                 }
             }
         }
 
         private void ChangeIconToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialogIcon.Filter = Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText1;
-            OpenFileDialogIcon.Title = Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText2;
+            OpenFileDialogIcon.Filter = Tween.Properties.Resources.ChangeIconToolStripMenuItem_ClickText1;
+            OpenFileDialogIcon.Title = Tween.Properties.Resources.ChangeIconToolStripMenuItem_ClickText2;
             OpenFileDialogIcon.FileName = "";
 
             DialogResult rslt = OpenFileDialogIcon.ShowDialog();
@@ -741,54 +741,54 @@ namespace Tween
             }
             else
             {
-                MessageBox.Show(Tween.My_Project.Resources.ChangeIconToolStripMenuItem_ClickText6);
+                MessageBox.Show(Tween.Properties.Resources.ChangeIconToolStripMenuItem_ClickText6);
             }
         }
 
         private void ButtonBlock_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonBlock_ClickText1, Tween.My_Project.Resources.ButtonBlock_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + Tween.Properties.Resources.ButtonBlock_ClickText1, Tween.Properties.Resources.ButtonBlock_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 string res = _owner.TwitterInstance.PostCreateBlock(_info.ScreenName);
                 if (!String.IsNullOrEmpty(res))
                 {
-                    MessageBox.Show(res + Environment.NewLine + Tween.My_Project.Resources.ButtonBlock_ClickText3);
+                    MessageBox.Show(res + Environment.NewLine + Tween.Properties.Resources.ButtonBlock_ClickText3);
                 }
                 else
                 {
-                    MessageBox.Show(Tween.My_Project.Resources.ButtonBlock_ClickText4);
+                    MessageBox.Show(Tween.Properties.Resources.ButtonBlock_ClickText4);
                 }
             }
         }
 
         private void ButtonReportSpam_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonReportSpam_ClickText1, Tween.My_Project.Resources.ButtonReportSpam_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + Tween.Properties.Resources.ButtonReportSpam_ClickText1, Tween.Properties.Resources.ButtonReportSpam_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 string res = _owner.TwitterInstance.PostReportSpam(_info.ScreenName);
                 if (!String.IsNullOrEmpty(res))
                 {
-                    MessageBox.Show(res + Environment.NewLine + Tween.My_Project.Resources.ButtonReportSpam_ClickText3);
+                    MessageBox.Show(res + Environment.NewLine + Tween.Properties.Resources.ButtonReportSpam_ClickText3);
                 }
                 else
                 {
-                    MessageBox.Show(Tween.My_Project.Resources.ButtonReportSpam_ClickText4);
+                    MessageBox.Show(Tween.Properties.Resources.ButtonReportSpam_ClickText4);
                 }
             }
         }
 
         private void ButtonBlockDestroy_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_info.ScreenName + Tween.My_Project.Resources.ButtonBlockDestroy_ClickText1, Tween.My_Project.Resources.ButtonBlockDestroy_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + Tween.Properties.Resources.ButtonBlockDestroy_ClickText1, Tween.Properties.Resources.ButtonBlockDestroy_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 string res = _owner.TwitterInstance.PostDestroyBlock(_info.ScreenName);
                 if (!String.IsNullOrEmpty(res))
                 {
-                    MessageBox.Show(res + Environment.NewLine + Tween.My_Project.Resources.ButtonBlockDestroy_ClickText3);
+                    MessageBox.Show(res + Environment.NewLine + Tween.Properties.Resources.ButtonBlockDestroy_ClickText3);
                 }
                 else
                 {
-                    MessageBox.Show(Tween.My_Project.Resources.ButtonBlockDestroy_ClickText4);
+                    MessageBox.Show(Tween.Properties.Resources.ButtonBlockDestroy_ClickText4);
                 }
             }
         }

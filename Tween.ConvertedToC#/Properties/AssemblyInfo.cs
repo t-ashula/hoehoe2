@@ -1,5 +1,3 @@
-using System;
-
 // Tween - Client of Twitter
 // Copyright (c) 2007-2009 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2009 Moz (@syo68k) <http://iddy.jp/profile/moz/>
@@ -23,6 +21,7 @@ using System;
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 

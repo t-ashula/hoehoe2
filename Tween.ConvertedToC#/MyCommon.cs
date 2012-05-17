@@ -228,13 +228,13 @@ namespace Tween
                 using (var writer = new StreamWriter(fileName))
                 {
                     writer.WriteLine("**** TraceOut: {0} ****", now.ToString());
-                    writer.WriteLine(Tween.My_Project.Resources.TraceOutText1);
-                    writer.WriteLine(Tween.My_Project.Resources.TraceOutText2);
+                    writer.WriteLine(Tween.Properties.Resources.TraceOutText1);
+                    writer.WriteLine(Tween.Properties.Resources.TraceOutText2);
                     writer.WriteLine();
-                    writer.WriteLine(Tween.My_Project.Resources.TraceOutText3);
-                    writer.WriteLine(Tween.My_Project.Resources.TraceOutText4, Environment.OSVersion.VersionString);
-                    writer.WriteLine(Tween.My_Project.Resources.TraceOutText5, Environment.Version.ToString());
-                    writer.WriteLine(Tween.My_Project.Resources.TraceOutText6, fileVersion);
+                    writer.WriteLine(Tween.Properties.Resources.TraceOutText3);
+                    writer.WriteLine(Tween.Properties.Resources.TraceOutText4, Environment.OSVersion.VersionString);
+                    writer.WriteLine(Tween.Properties.Resources.TraceOutText5, Environment.Version.ToString());
+                    writer.WriteLine(Tween.Properties.Resources.TraceOutText6, fileVersion);
                     writer.WriteLine(message);
                     writer.WriteLine();
                 }
@@ -253,7 +253,7 @@ namespace Tween
             }
 
             StringBuilder buf = new StringBuilder();
-            buf.AppendFormat(Tween.My_Project.Resources.UnhandledExceptionText8, ex.GetType().FullName, ex.Message);
+            buf.AppendFormat(Tween.Properties.Resources.UnhandledExceptionText8, ex.GetType().FullName, ex.Message);
             buf.AppendLine();
             if (ex.Data != null)
             {
@@ -288,7 +288,7 @@ namespace Tween
             {
                 buf.AppendFormat("-----InnerException[{0}]-----" + Environment.NewLine, nesting);
                 buf.AppendLine();
-                buf.AppendFormat(Tween.My_Project.Resources.UnhandledExceptionText8, innerEx.GetType().FullName, innerEx.Message);
+                buf.AppendFormat(Tween.Properties.Resources.UnhandledExceptionText8, innerEx.GetType().FullName, innerEx.Message);
                 buf.AppendLine();
                 if (innerEx.Data != null)
                 {
@@ -334,24 +334,24 @@ namespace Tween
                     WindowsIdentity ident = WindowsIdentity.GetCurrent();
                     WindowsPrincipal princ = new WindowsPrincipal(ident);
 
-                    writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText1, DateTime.Now.ToString());
-                    writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText2);
-                    writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText3);
+                    writer.WriteLine(Tween.Properties.Resources.UnhandledExceptionText1, DateTime.Now.ToString());
+                    writer.WriteLine(Tween.Properties.Resources.UnhandledExceptionText2);
+                    writer.WriteLine(Tween.Properties.Resources.UnhandledExceptionText3);
                     // 権限書き出し
-                    writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText11 + princ.IsInRole(WindowsBuiltInRole.Administrator).ToString());
-                    writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText12 + princ.IsInRole(WindowsBuiltInRole.User).ToString());
+                    writer.WriteLine(Tween.Properties.Resources.UnhandledExceptionText11 + princ.IsInRole(WindowsBuiltInRole.Administrator).ToString());
+                    writer.WriteLine(Tween.Properties.Resources.UnhandledExceptionText12 + princ.IsInRole(WindowsBuiltInRole.User).ToString());
                     writer.WriteLine();
                     // OSVersion,AppVersion書き出し
-                    writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText4);
-                    writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText5, Environment.OSVersion.VersionString);
-                    writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText6, Environment.Version.ToString());
-                    writer.WriteLine(Tween.My_Project.Resources.UnhandledExceptionText7, fileVersion);
+                    writer.WriteLine(Tween.Properties.Resources.UnhandledExceptionText4);
+                    writer.WriteLine(Tween.Properties.Resources.UnhandledExceptionText5, Environment.OSVersion.VersionString);
+                    writer.WriteLine(Tween.Properties.Resources.UnhandledExceptionText6, Environment.Version.ToString());
+                    writer.WriteLine(Tween.Properties.Resources.UnhandledExceptionText7, fileVersion);
 
                     writer.Write(ExceptionOutMessage(ex, ref isTerminatePermission));
                     writer.Flush();
                 }
 
-                switch (MessageBox.Show(String.Format(Tween.My_Project.Resources.UnhandledExceptionText9, fileName, Environment.NewLine), Tween.My_Project.Resources.UnhandledExceptionText10, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error))
+                switch (MessageBox.Show(String.Format(Tween.Properties.Resources.UnhandledExceptionText9, fileName, Environment.NewLine), Tween.Properties.Resources.UnhandledExceptionText10, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error))
                 {
                     case DialogResult.Yes:
                         Process.Start(fileName);

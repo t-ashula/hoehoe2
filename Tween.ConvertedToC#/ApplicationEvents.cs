@@ -88,13 +88,13 @@ namespace Tween.My
                             if (!rslt)
                             {
                                 // 警告を表示（見つからない、またはその他の原因で失敗）
-                                MessageBox.Show(Tween.My_Project.Resources.StartupText1, Tween.My_Project.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show(Tween.Properties.Resources.StartupText1, Tween.Properties.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                         }
                         else
                         {
                             // 警告を表示（プロセス見つからない場合）
-                            MessageBox.Show(Tween.My_Project.Resources.StartupText1, Tween.My_Project.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(Tween.Properties.Resources.StartupText1, Tween.Properties.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     //起動キャンセル
