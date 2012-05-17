@@ -2869,7 +2869,7 @@ namespace Tween
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
-            Tween.My.MyProject.Application.InitCulture();
+            //Tween.My.MyProject.Application.InitCulture(); // TODO: Need this here?
 
             string ret = "";
             GetWorkerResult rslt = new GetWorkerResult();

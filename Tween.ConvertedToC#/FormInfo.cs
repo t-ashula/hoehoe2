@@ -122,7 +122,7 @@ namespace Tween
             while (_bwServicer.IsBusy)
             {
                 Thread.Sleep(100);
-                Tween.My.MyProject.Application.DoEvents();
+                Application.DoEvents();
             }
             this.TopMost = false;
             // MessageBoxが裏に隠れる問題に対応
