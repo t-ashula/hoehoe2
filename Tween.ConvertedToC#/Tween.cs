@@ -43,6 +43,7 @@ using System.Threading;
 using System.Web;
 using System.Windows.Forms;
 using Tween.TweenCustomControl;
+using System.Media;
 
 namespace Tween
 {
@@ -2338,7 +2339,7 @@ namespace Tween
                     {
                         dir = Path.Combine(dir, "Sounds");
                     }
-                    Tween.My.MyProject.Computer.Audio.Play(Path.Combine(dir, soundFile));//TODO:Sharpen ,AudioPlayMode.Background);
+                    new SoundPlayer(Path.Combine(dir, soundFile)).Play();
                 }
                 catch (Exception)
                 {
@@ -2610,15 +2611,15 @@ namespace Tween
             }
 
             bool isCutOff = false;
-            bool isRemoveFooter = Tween.My.MyProject.Computer.Keyboard.ShiftKeyDown;
+            bool isRemoveFooter = isKeyDown(Keys.Shift);
             if (StatusText.Multiline && !SettingDialog.PostCtrlEnter)
             {
                 //複数行でEnter投稿の場合、Ctrlも押されていたらフッタ付加しない
-                isRemoveFooter = Tween.My.MyProject.Computer.Keyboard.CtrlKeyDown;
+                isRemoveFooter = isKeyDown(Keys.Control);
             }
             if (SettingDialog.PostShiftEnter)
             {
-                isRemoveFooter = Tween.My.MyProject.Computer.Keyboard.CtrlKeyDown;
+                isRemoveFooter = isKeyDown(Keys.Control);
             }
             if (!isRemoveFooter && (StatusText.Text.Contains("RT @") || StatusText.Text.Contains("QT @")))
             {
@@ -2629,7 +2630,6 @@ namespace Tween
                 if (MessageBox.Show(Tween.My_Project.Resources.PostLengthOverMessage1, Tween.My_Project.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
                 {
                     isCutOff = true;
-                    //If Not SettingDialog.UrlConvertAuto Then UrlConvertAutoToolStripMenuItem_Click(Nothing, Nothing)
                     if (GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
                     {
                         isRemoveFooter = true;
@@ -4838,7 +4838,7 @@ namespace Tween
                         // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
                         if (SettingDialog.OpenUserTimeline)
                         {
-                            if (Tween.My.MyProject.Computer.Keyboard.CtrlKeyDown)
+                            if (isKeyDown(Keys.Control))
                             {
                                 OpenUriAsync(e.Url.OriginalString);
                             }
@@ -4849,7 +4849,7 @@ namespace Tween
                         }
                         else
                         {
-                            if (Tween.My.MyProject.Computer.Keyboard.CtrlKeyDown)
+                            if (isKeyDown(Keys.Control))
                             {
                                 this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
                             }
@@ -5715,7 +5715,9 @@ namespace Tween
             {
                 return pLen;
             }
-            if ((isAuto && !Tween.My.MyProject.Computer.Keyboard.CtrlKeyDown && SettingDialog.PostShiftEnter) || (isAuto && !Tween.My.MyProject.Computer.Keyboard.ShiftKeyDown && !SettingDialog.PostShiftEnter) || (!isAuto && isAddFooter))
+            if ((isAuto && !isKeyDown(Keys.Control) && SettingDialog.PostShiftEnter)
+                || (isAuto && !isKeyDown(Keys.Shift) && !SettingDialog.PostShiftEnter)
+                || (!isAuto && isAddFooter))
             {
                 if (SettingDialog.UseRecommendStatus)
                 {
@@ -6474,7 +6476,7 @@ namespace Tween
             string retMsg = "";
             string strVer = "";
             string strDetail = "";
-            bool forceUpdate = Tween.My.MyProject.Computer.Keyboard.ShiftKeyDown;
+            bool forceUpdate = isKeyDown(Keys.Shift);
 
             try
             {
@@ -10594,9 +10596,9 @@ namespace Tween
         {
             if (this.ExistCurrentPost && _curPost.InReplyToUser != null && _curPost.InReplyToStatusId > 0)
             {
-                if (Tween.My.MyProject.Computer.Keyboard.ShiftKeyDown)
+                if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
                 {
-                    OpenUriAsync("http://twitter.com/" + _curPost.InReplyToUser + "/status/" + _curPost.InReplyToStatusId.ToString());
+                    OpenUriAsync(String.Format("https://twitter.com/{0}/status/{1}", _curPost.InReplyToUser, _curPost.InReplyToStatusId));
                     return;
                 }
                 if (_statuses.ContainsKey(_curPost.InReplyToStatusId))
@@ -11923,9 +11925,14 @@ namespace Tween
             }
         }
 
+        private bool isKeyDown(Keys key)
+        {
+            return (Control.ModifierKeys & key) == key;
+        }
+
         private void MenuItemHelp_DropDownOpening(object sender, EventArgs e)
         {
-            if (MyCommon.DebugBuild || Tween.My.MyProject.Computer.Keyboard.CapsLock && Tween.My.MyProject.Computer.Keyboard.CtrlKeyDown && Tween.My.MyProject.Computer.Keyboard.ShiftKeyDown)
+            if (MyCommon.DebugBuild || isKeyDown(Keys.CapsLock) && isKeyDown(Keys.Control) && isKeyDown(Keys.Shift))
             {
                 DebugModeToolStripMenuItem.Visible = true;
             }
@@ -13906,8 +13913,8 @@ namespace Tween
                         if (Directory.Exists(Path.Combine(dir, "Sounds")))
                         {
                             dir = Path.Combine(dir, "Sounds");
-                        }
-                        Tween.My.MyProject.Computer.Audio.Play(Path.Combine(dir, snd));//TODO:, AudioPlayMode.Background);
+                        }                        
+                        new SoundPlayer(Path.Combine(dir, snd)).Play();
                     }
                     catch (Exception)
                     {

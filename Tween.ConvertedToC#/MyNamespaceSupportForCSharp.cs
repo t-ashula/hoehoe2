@@ -27,20 +27,6 @@ namespace Tween.My
                 return application;
             }
         }
-
-        [ThreadStatic]
-        static MyComputer computer;
-
-        public static MyComputer Computer
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                if (computer == null)
-                    computer = new MyComputer();
-                return computer;
-            }
-        }
     }
 
     partial class MyApplication : WindowsFormsApplicationBase
@@ -51,9 +37,5 @@ namespace Tween.My
             Application.SetCompatibleTextRenderingDefault(UseCompatibleTextRendering);
             MyProject.Application.Run(args);
         }
-    }
-
-    partial class MyComputer : Computer
-    {
-    }
+    }    
 }
