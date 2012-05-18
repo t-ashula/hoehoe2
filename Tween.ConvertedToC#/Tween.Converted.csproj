@@ -125,7 +125,7 @@
     <Compile Include="Forms\AuthBrowser.Designer.cs">
       <DependentUpon>AuthBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="bing.cs" />
+    <Compile Include="WebServices\bing.cs" />
     <Compile Include="Connection\HttpConnection.cs" />
     <Compile Include="Connection\HttpConnectionOAuth.cs" />
     <Compile Include="Connection\HttpConnectionOAuthEcho.cs" />
