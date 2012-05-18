@@ -180,10 +180,10 @@
     <Compile Include="Forms\HashtagManage.Designer.cs">
       <DependentUpon>HashtagManage.cs</DependentUpon>
     </Compile>
-    <Compile Include="HookGlobalHotkey.cs" />
+    <Compile Include="Forms\HookGlobalHotkey.cs" />
     <Compile Include="IdComparerClass.cs" />
     <Compile Include="ImageDictionary.cs" />
-    <Compile Include="ImageListViewItem.cs" />
+    <Compile Include="Forms\ImageListViewItem.cs" />
     <Compile Include="Forms\InputTabName.cs">
       <SubType>Form</SubType>
     </Compile>
