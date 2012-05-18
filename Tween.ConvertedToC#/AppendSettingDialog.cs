@@ -2532,6 +2532,7 @@ namespace Hoehoe
                 return false;
             }
 
+            /// TODO: BitlyApi
             string req = "http://api.bit.ly/v3/validate";
             string content = "";
             Dictionary<string, string> param = new Dictionary<string, string>();

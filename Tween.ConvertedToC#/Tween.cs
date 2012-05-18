@@ -50,6 +50,14 @@ namespace Hoehoe
 {
     public partial class TweenMain
     {
+        /// <summary>
+        /// TODO: hoehoe webpage
+        /// </summary>
+        private const string ApplicationHelpWebPageUrl = "http://sourceforge.jp/projects/tween/wiki/FrontPage";
+        /// <summary>
+        /// TODO: hoehoe webpage
+        /// </summary>
+        private const string ApplicationShortcutKeyHelpWebPageUrl = "http://sourceforge.jp/projects/tween/wiki/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E3%82%AD%E3%83%BC";
         //各種設定
         //画面サイズ
         private Size _mySize;
@@ -6826,16 +6834,14 @@ namespace Hoehoe
             }
         }
 
-        // TODO: to hoehoe
         private void MatomeMenuItem_Click(object sender, EventArgs e)
         {
-            OpenUriAsync("http://sourceforge.jp/projects/tween/wiki/FrontPage");
+            OpenUriAsync(ApplicationHelpWebPageUrl);
         }
 
-        // TODO: to hoehoe
         private void ShortcutKeyListMenuItem_Click(object sender, EventArgs e)
         {
-            OpenUriAsync("http://sourceforge.jp/projects/tween/wiki/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E3%82%AD%E3%83%BC");
+            OpenUriAsync(ApplicationShortcutKeyHelpWebPageUrl);
         }
 
         private void ListTab_KeyDown(object sender, KeyEventArgs e)
@@ -6952,8 +6958,7 @@ namespace Hoehoe
                     switch (keyCode)
                     {
                         case Keys.F1:
-                            // todo hoehoe2
-                            OpenUriAsync("http://sourceforge.jp/projects/tween/wiki/FrontPage");
+                            OpenUriAsync(ApplicationHelpWebPageUrl);
                             return true;
                         case Keys.F3:
                             MenuItemSearchNext_Click(null, null);

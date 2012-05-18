@@ -32,7 +32,9 @@ namespace Hoehoe
 {
     public class Bing
     {
-        //TODO:
+        /// <summary>
+        /// TODO:BingAppID 
+        /// </summary>
         private const string AppId = "8DFACAC0C4891D0F75F5728391C9D30664B797A1";
         private static readonly List<string> LanguageTable = new List<string> {
         #region "言語テーブル定義"
