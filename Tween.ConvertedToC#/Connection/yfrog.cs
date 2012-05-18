@@ -36,14 +36,18 @@ namespace Hoehoe
     {
         //OAuth関連
         ///<summary>
-        ///OAuthのコンシューマー鍵 : TODO
+        ///OAuthのコンシューマー鍵 
         ///</summary>
-        private const string ConsumerKey = "tLbG3uS0BIIE8jm1mKzKOfZ6EgUOmWVM";
+        private const string ConsumerKey = "BIazYuf0scya8pyhLjkdg";
         
         ///<summary>
         ///OAuthの署名作成用秘密コンシューマーデータ
         ///</summary>
-        private const string ConsumerSecretKey = "M0IMsbl2722iWa+CGPVcNeQmE+TFpJk8B/KW9UUTk3eLOl9Ij005r52JNxVukTzM";
+        private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
+        
+        /// <summary>
+        /// yfrog api key : TODO
+        /// </summary>
         private const string ApiKey = "03HJKOWY93b7d7b7a5fa015890f8259cf939e144";
 
         private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
@@ -196,7 +200,7 @@ namespace Hoehoe
             : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.xml"))
         {
             _tw = twitter;
-            Initialize(MyCommon.DecryptString(ConsumerKey), MyCommon.DecryptString(ConsumerSecretKey), _tw.AccessToken, _tw.AccessTokenSecret, "", "");
+            Initialize(ConsumerKey, ConsumerSecretKey, _tw.AccessToken, _tw.AccessTokenSecret, "", "");
         }
 
         public bool Configuration(string key, object value)

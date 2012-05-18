@@ -35,13 +35,13 @@ namespace Hoehoe
     {
         //OAuth関連
         ///<summary>
-        ///OAuthのコンシューマー鍵 : TODO
+        ///OAuthのコンシューマー鍵 : 
         ///</summary>
-        private const string ConsumerKey = "tLbG3uS0BIIE8jm1mKzKOfZ6EgUOmWVM";
+        private const string ConsumerKey = "BIazYuf0scya8pyhLjkdg";
         ///<summary>
         ///OAuthの署名作成用秘密コンシューマーデータ
         ///</summary>
-        private const string ConsumerSecret = "M0IMsbl2722iWa+CGPVcNeQmE+TFpJk8B/KW9UUTk3eLOl9Ij005r52JNxVukTzM";
+        private const string ConsumerSecret = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
         ///<summary>
         ///OAuthのアクセストークン取得先URI
         ///</summary>
@@ -84,7 +84,7 @@ namespace Hoehoe
                 _tks = accessTokenSecret;
                 _un = username;
             }
-            con.Initialize(MyCommon.DecryptString(ConsumerKey), MyCommon.DecryptString(ConsumerSecret), accessToken, accessTokenSecret, username, userId, "screen_name", "user_id");
+            con.Initialize(ConsumerKey,ConsumerSecret, accessToken, accessTokenSecret, username, userId, "screen_name", "user_id");
             _httpCon = con;
             _connectionType = AuthMethod.OAuth;
             _requestToken = "";
