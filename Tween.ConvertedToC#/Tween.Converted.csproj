@@ -172,7 +172,7 @@
       <DependentUpon>FormInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="WebServices\Foursquare.cs" />
-    <Compile Include="Google.cs" />
+    <Compile Include="WebServices\Google.cs" />
     <Compile Include="Growl.cs" />
     <Compile Include="Forms\HashtagManage.cs">
       <SubType>Form</SubType>
