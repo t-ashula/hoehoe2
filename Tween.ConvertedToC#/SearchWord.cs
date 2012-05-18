@@ -1,12 +1,13 @@
-// Tween - Client of Twitter
+// Hoehoe - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
 //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
 //           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
 //           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
-// All rights reserved.
+//           (c) 2011- t.ashula (@t_ashula) <office@ashula.info>
 //
-// This file is part of Tween.
+// All rights reserved.
+// This file is part of Hoehoe.
 //
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by the Free
