@@ -224,7 +224,7 @@
       <DependentUpon>MyLists.cs</DependentUpon>
     </Compile>
     <Compile Include="MySpecialPath.cs" />
-    <Compile Include="nicoms.cs" />
+    <Compile Include="WebServices\nicoms.cs" />
     <Compile Include="Forms\OpenURL.cs">
       <SubType>Form</SubType>
     </Compile>
