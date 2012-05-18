@@ -133,30 +133,6 @@ namespace Hoehoe.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;html&gt;&lt;head&gt;
-        ///&lt;script type=&apos;text/javascript&apos; src=&apos;http://partner.googleadservices.com/gampad/google_service.js&apos;&gt;
-        ///&lt;/script&gt;
-        ///&lt;script type=&apos;text/javascript&apos;&gt;
-        ///GS_googleAddAdSenseService(&quot;ca-pub-6759700347268706&quot;);
-        ///GS_googleEnableAllServices();
-        ///&lt;/script&gt;
-        ///&lt;script type=&apos;text/javascript&apos;&gt;
-        ///GA_googleAddSlot(&quot;ca-pub-6759700347268706&quot;, &quot;Tween_HomePage_728x90&quot;);
-        ///&lt;/script&gt;
-        ///&lt;script type=&apos;text/javascript&apos;&gt;
-        ///GA_googleFetchAds();
-        ///&lt;/script&gt;
-        ///&lt;!-- &lt;meta http-equiv=&quot;refresh&quot; content=&quot;45&quot;&gt; --&gt;
-        ///&lt;/head&gt;
-        ///&lt;body style=&quot;te [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string ads {
-            get {
-                return ResourceManager.GetString("ads", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to REST API上限 : .
         /// </summary>
         internal static string ApiInfo1 {
@@ -871,8 +847,8 @@ namespace Hoehoe.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Client of Twitter. Free software(GPLv3)
         ///&lt;Contacts&gt;
-        ///Twitter: @kiri_feather
-        ///Mail: kiri_feather@users.sourceforge.jp.
+        ///Twitter: @t_ashula
+        ///Mail: t.ashula@gmail.com.
         /// </summary>
         internal static string Description {
             get {

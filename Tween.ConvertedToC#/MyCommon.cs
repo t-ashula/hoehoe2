@@ -224,7 +224,7 @@ namespace Hoehoe
                     return;
                 }
                 DateTime now = DateTime.Now;
-                string fileName = String.Format("TweenTrace-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+                string fileName = String.Format("HoehoeTrace-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 
                 using (var writer = new StreamWriter(fileName))
                 {
@@ -328,7 +328,7 @@ namespace Hoehoe
             {
                 bool isTerminatePermission = true;
                 DateTime now = DateTime.Now;
-                string fileName = String.Format("Tween-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+                string fileName = String.Format("Hoehoe-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 
                 using (var writer = new StreamWriter(fileName))
                 {
@@ -635,7 +635,7 @@ namespace Hoehoe
             {
                 throw new Exception("fileversion is not Initialized.");
             }
-            return "Tween/" + fileVersion;
+            return "Hoehoe/" + fileVersion;
         }
 
         public static ApiInformation TwitterApiInfo = new ApiInformation();

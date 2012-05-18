@@ -523,7 +523,6 @@
     <None Include="Resources\5r.ico" />
     <None Include="Resources\5y.ico" />
     <None Include="Resources\6g.ico" />
-    <None Include="Resources\ads.txt" />
     <None Include="Resources\ChangeLog.txt" />
     <None Include="Resources\InitialImage.png" />
     <None Include="Resources\MultiMediaImage.png" />

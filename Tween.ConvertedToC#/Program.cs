@@ -96,7 +96,7 @@ namespace Hoehoe
                             //プロセス特定は出来たが、ウィンドウハンドルが取得できなかった（アイコン化されている）
                             //タスクトレイアイコンのクリックをエミュレート
                             //注：アイコン特定はTooltipの文字列で行うため、多重起動時は先に見つけた物がアクティブになる
-                            bool rslt = Win32Api.ClickTasktrayIcon("Tween");
+                            bool rslt = Win32Api.ClickTasktrayIcon("Hoehoe");
                             if (!rslt)
                             {
                                 // 警告を表示（見つからない、またはその他の原因で失敗）

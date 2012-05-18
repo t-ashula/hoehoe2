@@ -430,17 +430,14 @@ namespace Hoehoe
             if (string.IsNullOrEmpty(querystr))
                 return HttpStatusCode.BadRequest;
 
-            tmp = querystr.Split(new char[] {
-				'?',
-				'&'
-			}, StringSplitOptions.RemoveEmptyEntries);
+            tmp = querystr.Split(new char[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string tmp2 in tmp)
             {
                 paramstr = tmp2.Split(new char[] { '=' });
                 param.Add(paramstr[0], paramstr[1]);
             }
 
-            return _httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Tween");
+            return _httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Hoehoe");
         }
 
         public HttpStatusCode PhoenixSearch(string words, string lang, int rpp, int page, long sinceId, ref string content)
@@ -469,7 +466,7 @@ namespace Hoehoe
                 param.Add("since_id", sinceId.ToString());
             }
 
-            return _httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Tween");
+            return _httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Hoehoe");
         }
 
         public HttpStatusCode Search(string words, string lang, int rpp, int page, long sinceId, ref string content)
@@ -501,7 +498,7 @@ namespace Hoehoe
                 return HttpStatusCode.BadRequest;
             }
 
-            return _httpConVar.GetContent(GetMethod, CreateTwitterSearchUri("/search.atom"), param, ref content, null, "Tween");
+            return _httpConVar.GetContent(GetMethod, CreateTwitterSearchUri("/search.atom"), param, ref content, null, "Hoehoe");
         }
 
         public HttpStatusCode SavedSearches(ref string content)

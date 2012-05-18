@@ -32,18 +32,18 @@ using System.Runtime.InteropServices;
 
 // アセンブリ属性の値を確認します。
 
-[assembly: AssemblyTitle("Tween")]
+[assembly: AssemblyTitle("Hoehoe")]
 [assembly: AssemblyDescription("Client of Twitter. Free software(GPLv3)")]
-[assembly: AssemblyCompany("Tween")]
-[assembly: AssemblyProduct("Tween")]
-[assembly: AssemblyCopyright("(C) kiri_feather 2007 - 2011")]
+[assembly: AssemblyCompany("Hoehoe")]
+[assembly: AssemblyProduct("Hoehoe")]
+[assembly: AssemblyCopyright("(C) kiri_feather 2007 - 2011/t.ashula 2011-")]
 
 [assembly: AssemblyTrademark("")]
 
 [assembly: ComVisible(false)]
 //このプロジェクトが COM に公開される場合、次の GUID がタイプ ライブラリの ID になります。
 
-[assembly: Guid("247a7ec4-c90f-48ed-90d2-a85c39bd3a78")]
+[assembly: Guid("052287B9-54F7-4133-8B1F-6DCE4D313785")]
 // アセンブリのバージョン情報は、以下の 4 つの値で構成されています:
 //
 //      Major Version

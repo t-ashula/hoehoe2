@@ -209,7 +209,7 @@ namespace Hoehoe
                 default:
                     return;
             }
-            SaveFileDialog1.FileName = String.Format("TweenEvents{0}{1:yyMMdd-HHmmss}.tsv", tabName, DateTime.Now);
+            SaveFileDialog1.FileName = String.Format("HoehoeEvents{0}{1:yyMMdd-HHmmss}.tsv", tabName, DateTime.Now);
             SaveFileDialog1.InitialDirectory = MyCommon.GetAppDir();
             SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;

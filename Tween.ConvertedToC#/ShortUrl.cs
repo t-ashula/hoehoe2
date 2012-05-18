@@ -344,7 +344,7 @@ namespace Hoehoe
                     break;
                 case Hoehoe.MyCommon.UrlConverter.Bitly:
                 case Hoehoe.MyCommon.UrlConverter.Jmp:
-                    const string BitlyLogin = "tweenapi";
+                    const string BitlyLogin = "tweenapi"; // TODO: Hoehoenize
                     const string BitlyApiKey = "R_c5ee0e30bdfff88723c4457cc331886b";
                     const string BitlyApiVersion = "3";
                     if (srcUrl.StartsWith("http"))

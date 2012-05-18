@@ -210,7 +210,7 @@ namespace Hoehoe
 
             ListElement list = (ListElement)this.ListsList.SelectedItem;
             UserInfo user = (UserInfo)this.UserList.SelectedItem;
-            if (MessageBox.Show(Hoehoe.Properties.Resources.ListManageDeleteUser1, "Tween", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (MessageBox.Show(Hoehoe.Properties.Resources.ListManageDeleteUser1, "Hoehoe", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 string rslt = this._tw.RemoveUserToList(list.Id.ToString(), user.Id.ToString());
 
@@ -237,7 +237,7 @@ namespace Hoehoe
             }
             ListElement list = (ListElement)this.ListsList.SelectedItem;
 
-            if (MessageBox.Show(Hoehoe.Properties.Resources.ListManageDeleteLists1, "Tween", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (MessageBox.Show(Hoehoe.Properties.Resources.ListManageDeleteLists1, "Hoehoe", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 string rslt = "";
 

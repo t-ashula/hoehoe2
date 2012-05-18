@@ -129,7 +129,7 @@ namespace Hoehoe
         private Twitter tw = new Twitter();
 
         //Growl呼び出し部
-        private GrowlHelper withEventsField_gh = new GrowlHelper("Tween");
+        private GrowlHelper withEventsField_gh = new GrowlHelper("Hoehoe");
 
         private GrowlHelper gh
         {
@@ -2212,7 +2212,7 @@ namespace Hoehoe
                             }
                             if (dm)
                             {
-                                title.Append("Tween [DM] ");
+                                title.Append("Hoehoe [DM] ");
                                 title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText1);
                                 title.Append(" ");
                                 title.Append(addCount);
@@ -2221,7 +2221,7 @@ namespace Hoehoe
                             }
                             else if (reply)
                             {
-                                title.Append("Tween [Reply!] ");
+                                title.Append("Hoehoe [Reply!] ");
                                 title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
                                 title.Append(" ");
                                 title.Append(addCount);
@@ -2230,7 +2230,7 @@ namespace Hoehoe
                             }
                             else
                             {
-                                title.Append("Tween ");
+                                title.Append("Hoehoe ");
                                 title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
                                 title.Append(" ");
                                 title.Append(addCount);
@@ -2291,7 +2291,7 @@ namespace Hoehoe
                         if (dm)
                         {
                             ntIcon = ToolTipIcon.Warning;
-                            title.Append("Tween [DM] ");
+                            title.Append("Hoehoe [DM] ");
                             title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText1);
                             title.Append(" ");
                             title.Append(addCount);
@@ -2301,7 +2301,7 @@ namespace Hoehoe
                         else if (reply)
                         {
                             ntIcon = ToolTipIcon.Warning;
-                            title.Append("Tween [Reply!] ");
+                            title.Append("Hoehoe [Reply!] ");
                             title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
                             title.Append(" ");
                             title.Append(addCount);
@@ -2311,7 +2311,7 @@ namespace Hoehoe
                         else
                         {
                             ntIcon = ToolTipIcon.Info;
-                            title.Append("Tween ");
+                            title.Append("Hoehoe ");
                             title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
                             title.Append(" ");
                             title.Append(addCount);
@@ -6233,7 +6233,7 @@ namespace Hoehoe
                     }
                     catch (ArgumentException)
                     {
-                        MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText1, "Tween", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText1, "Hoehoe", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }
@@ -8722,7 +8722,7 @@ namespace Hoehoe
                 return;
             }
 
-            SaveFileDialog1.FileName = String.Format("TweenPosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
+            SaveFileDialog1.FileName = String.Format("HoehoePosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
             SaveFileDialog1.InitialDirectory = MyCommon.GetAppDir();
             SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
@@ -10271,7 +10271,7 @@ namespace Hoehoe
             {
                 ttl.Append(tw.Username).Append(" - ");
             }
-            ttl.Append("Tween  ");
+            ttl.Append("Hoehoe  ");
             switch (SettingDialog.DispLatestPost)
             {
                 case MyCommon.DispTitleEnum.Ver:
@@ -10420,7 +10420,7 @@ namespace Hoehoe
                 ur.Append(tw.Username);
                 ur.Append(" - ");
             }
-            ur.Append("Tween");
+            ur.Append("Hoehoe");
 #if DEBUG
 			static_SetNotifyIconText_ur.Append("(Debug Build)");
 #endif
@@ -13869,7 +13869,7 @@ namespace Hoehoe
                 {
                     //title.Clear()
                 }
-                title.Append("Tween [");
+                title.Append("Hoehoe [");
                 title.Append(ev.Event.ToUpper());
                 title.Append("] by ");
                 if (!String.IsNullOrEmpty(ev.Username))
