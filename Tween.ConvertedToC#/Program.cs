@@ -1,4 +1,4 @@
-// Tween - Client of Twitter
+﻿// Tween - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
 //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
@@ -24,26 +24,37 @@
 // Boston, MA 02110-1301, USA.
 
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Threading;
 using System.IO;
 using System.Reflection;
-using System.Threading;
-using System.Windows.Forms;
+using System.Diagnostics;
+using Tween.Properties;
 
-namespace Tween.My
+namespace Tween
 {
-    // 次のイベントは MyApplication に対して利用できます:
-    //
-    // Startup: アプリケーションが開始されたとき、スタートアップ フォームが作成される前に発生します。
-    // Shutdown: アプリケーション フォームがすべて閉じられた後に発生します。このイベントは、通常の終了以外の方法でアプリケーションが終了されたときには発生しません。
-    // UnhandledException: ハンドルされていない例外がアプリケーションで発生したときに発生するイベントです。
-    // StartupNextInstance: 単一インスタンス アプリケーションが起動され、それが既にアクティブであるときに発生します。
-    // NetworkAvailabilityChanged: ネットワーク接続が接続されたとき、または切断されたときに発生します。
-    internal partial class MyApplication
+    static class Program
     {
+        [STAThread]
+        public static void Main(string[] args)
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);//UseCompatibleTextRendering);
+            Application.ThreadException += MyApplication_UnhandledException;
+            Application.ApplicationExit += (_, __) => { RelaseMutex(); Settings.Default.Save(); };
+            if (!MyApplication_Startup())
+            {
+                return;
+            }
+            //this.ShutdownStyle = global::Microsoft.VisualBasic.ApplicationServices.ShutdownMode.AfterMainFormCloses;
+            Application.Run(new TweenMain());
+        }
         private static Mutex mt;
 
-        private void MyApplication_Shutdown(object sender, EventArgs e)
+        private static void RelaseMutex()
         {
             try
             {
@@ -59,10 +70,10 @@ namespace Tween.My
             }
         }
 
-        private void MyApplication_Startup(object sender, Microsoft.VisualBasic.ApplicationServices.StartupEventArgs e)
+        private static bool MyApplication_Startup()
         {
             CheckSettingFilePath();
-            InitCulture();
+            //InitCulture(Application.CurrentCulture.Name);
 
             string pt = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location).Replace("\\", "/") + "/" + Application.ProductName;
             mt = new Mutex(false, pt);
@@ -88,53 +99,47 @@ namespace Tween.My
                             if (!rslt)
                             {
                                 // 警告を表示（見つからない、またはその他の原因で失敗）
-                                MessageBox.Show(Tween.Properties.Resources.StartupText1, Tween.Properties.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show(Resources.StartupText1, Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                         }
                         else
                         {
                             // 警告を表示（プロセス見つからない場合）
-                            MessageBox.Show(Tween.Properties.Resources.StartupText1, Tween.Properties.Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(Resources.StartupText1, Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     //起動キャンセル
-                    e.Cancel = true;
-                    try
-                    {
-                        mt.ReleaseMutex();
-                        mt.Close();
-                        mt = null;
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    return;
+                    RelaseMutex();
+                    return false;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.Write("application startup:" + ex);
+                return false;
             }
+            return true;
         }
 
-        private void MyApplication_UnhandledException(object sender, Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs e)
+        private static void MyApplication_UnhandledException(object sender, ThreadExceptionEventArgs e)
         {
+            System.Diagnostics.Debug.Write("UnhandledException:" + e);
             //GDI+のエラー原因を特定したい
             if (e.Exception.Message != "A generic error occurred in GDI+." && e.Exception.Message != "GDI+ で汎用エラーが発生しました。")
             {
-                e.ExitApplication = MyCommon.ExceptionOut(e.Exception);
-            }
-            else
-            {
-                e.ExitApplication = false;
+                if (MyCommon.ExceptionOut(e.Exception))
+                {
+                    Application.Exit();
+                }
             }
         }
 
-        private bool IsEqualCurrentCulture(string CultureName)
+        private static bool IsEqualCurrentCulture(string CultureName)
         {
             return Thread.CurrentThread.CurrentUICulture.Name.StartsWith(CultureName);
         }
 
-        public string CultureCode
+        public static string CultureCode
         {
             get
             {
@@ -154,7 +159,20 @@ namespace Tween.My
             }
         }
 
-        public void InitCulture(string code)
+        private static void CheckSettingFilePath()
+        {
+            if (File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "roaming")))
+            {
+                MyCommon.SettingPath = MySpecialPath.UserAppDataPath();
+            }
+            else
+            {
+                MyCommon.SettingPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            }
+        }
+
+#if not
+        public static void InitCulture(string code)
         {
             try
             {
@@ -165,7 +183,7 @@ namespace Tween.My
             }
         }
 
-        public void InitCulture()
+        public static void InitCulture()
         {
             try
             {
@@ -178,17 +196,10 @@ namespace Tween.My
             {
             }
         }
-
-        private void CheckSettingFilePath()
+        private static void ChangeUICulture(string code)
         {
-            if (File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "roaming")))
-            {
-                MyCommon.SettingPath = MySpecialPath.UserAppDataPath();
-            }
-            else
-            {
-                MyCommon.SettingPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            }
+            //
         }
+#endif
     }
 }
