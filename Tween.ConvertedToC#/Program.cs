@@ -25,14 +25,11 @@
 // Boston, MA 02110-1301, USA.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Threading;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Diagnostics;
+using System.Threading;
+using System.Windows.Forms;
 using Hoehoe.Properties;
 
 namespace Hoehoe

@@ -25,8 +25,6 @@
 // Boston, MA 02110-1301, USA.
 
 using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace Hoehoe

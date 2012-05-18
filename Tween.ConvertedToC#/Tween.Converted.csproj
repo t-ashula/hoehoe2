@@ -149,7 +149,7 @@
     <Compile Include="Forms\DialogAsShieldIcon.Designer.cs">
       <DependentUpon>DialogAsShieldIcon.cs</DependentUpon>
     </Compile>
-    <Compile Include="DoubleClickCopyCanceller.cs" />
+    <Compile Include="Forms\DoubleClickCopyCanceller.cs" />
     <Compile Include="Dynamic.cs" />
     <Compile Include="Forms\EventViewerDialog.cs">
       <SubType>Form</SubType>
@@ -265,29 +265,29 @@
     </Compile>
     <Compile Include="TabClass.cs" />
     <Compile Include="TabInformations.cs" />
-    <Compile Include="TabsDialog.cs">
+    <Compile Include="Forms\TabsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TabsDialog.Designer.cs">
+    <Compile Include="Forms\TabsDialog.Designer.cs">
       <DependentUpon>TabsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Thumbnail.cs" />
-    <Compile Include="ToolStripAPIGauge.cs">
+    <Compile Include="Forms\ToolStripAPIGauge.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ToolStripLabelHistory.cs">
+    <Compile Include="Forms\ToolStripLabelHistory.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Tween.cs">
+    <Compile Include="Forms\Tween.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Tween.Designer.cs">
+    <Compile Include="Forms\Tween.Designer.cs">
       <DependentUpon>Tween.cs</DependentUpon>
     </Compile>
-    <Compile Include="TweenAboutBox.cs">
+    <Compile Include="Forms\TweenAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TweenAboutBox.Designer.cs">
+    <Compile Include="Forms\TweenAboutBox.Designer.cs">
       <DependentUpon>TweenAboutBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Twitter.cs" />
@@ -467,39 +467,39 @@
       <DependentUpon>ShowUserInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="TabsDialog.en.resx">
+    <EmbeddedResource Include="Forms\TabsDialog.en.resx">
       <DependentUpon>TabsDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="TabsDialog.resx">
+    <EmbeddedResource Include="Forms\TabsDialog.resx">
       <DependentUpon>TabsDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="TabsDialog.zh-CHS.resx">
+    <EmbeddedResource Include="Forms\TabsDialog.zh-CHS.resx">
       <DependentUpon>TabsDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tween.en.resx">
+    <EmbeddedResource Include="Forms\Tween.en.resx">
       <DependentUpon>Tween.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tween.resx">
+    <EmbeddedResource Include="Forms\Tween.resx">
       <DependentUpon>Tween.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tween.zh-CHS.resx">
+    <EmbeddedResource Include="Forms\Tween.zh-CHS.resx">
       <DependentUpon>Tween.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="TweenAboutBox.en.resx">
+    <EmbeddedResource Include="Forms\TweenAboutBox.en.resx">
       <DependentUpon>TweenAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="TweenAboutBox.resx">
+    <EmbeddedResource Include="Forms\TweenAboutBox.resx">
       <SubType>Designer</SubType>
       <DependentUpon>TweenAboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TweenAboutBox.zh-CHS.resx">
+    <EmbeddedResource Include="Forms\TweenAboutBox.zh-CHS.resx">
       <DependentUpon>TweenAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
