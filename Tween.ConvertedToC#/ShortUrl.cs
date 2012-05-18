@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace Tween
+namespace Hoehoe
 {
     public class ShortUrl
     {
@@ -281,7 +281,7 @@ namespace Tween
 
             switch (converterType)
             {
-                case Tween.MyCommon.UrlConverter.TinyUrl:
+                case Hoehoe.MyCommon.UrlConverter.TinyUrl:
                     //tinyurl
                     if (srcUrl.StartsWith("http"))
                     {
@@ -301,7 +301,7 @@ namespace Tween
                         return "Can't convert";
                     }
                     break;
-                case Tween.MyCommon.UrlConverter.Isgd:
+                case Hoehoe.MyCommon.UrlConverter.Isgd:
                     if (srcUrl.StartsWith("http"))
                     {
                         if ("http://is.gd/xxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
@@ -320,7 +320,7 @@ namespace Tween
                         return "Can't convert";
                     }
                     break;
-                case Tween.MyCommon.UrlConverter.Twurl:
+                case Hoehoe.MyCommon.UrlConverter.Twurl:
                     if (srcUrl.StartsWith("http"))
                     {
                         if ("http://twurl.nl/xxxxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
@@ -341,8 +341,8 @@ namespace Tween
                         return "Can't convert";
                     }
                     break;
-                case Tween.MyCommon.UrlConverter.Bitly:
-                case Tween.MyCommon.UrlConverter.Jmp:
+                case Hoehoe.MyCommon.UrlConverter.Bitly:
+                case Hoehoe.MyCommon.UrlConverter.Jmp:
                     const string BitlyLogin = "tweenapi";
                     const string BitlyApiKey = "R_c5ee0e30bdfff88723c4457cc331886b";
                     const string BitlyApiVersion = "3";
@@ -360,7 +360,7 @@ namespace Tween
                         {
                             req += "&x_login=" + _bitlyId + "&x_apiKey=" + _bitlyKey;
                         }
-                        if (converterType == Tween.MyCommon.UrlConverter.Jmp)
+                        if (converterType == Hoehoe.MyCommon.UrlConverter.Jmp)
                         {
                             req += "&domain=j.mp";
                         }
@@ -370,7 +370,7 @@ namespace Tween
                         }
                     }
                     break;
-                case Tween.MyCommon.UrlConverter.Uxnu:
+                case Hoehoe.MyCommon.UrlConverter.Uxnu:
                     if (srcUrl.StartsWith("http"))
                     {
                         if ("http://ux.nx/xxxxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))

@@ -28,7 +28,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     public static class DynamicQueryable
     {
@@ -138,7 +138,7 @@ namespace Tween
     }
 }
 
-namespace Tween
+namespace Hoehoe
 {
     public abstract class DynamicClass
     {
@@ -163,7 +163,7 @@ namespace Tween
     }
 }
 
-namespace Tween
+namespace Hoehoe
 {
     public class DynamicProperty
     {
@@ -193,7 +193,7 @@ namespace Tween
     }
 }
 
-namespace Tween
+namespace Hoehoe
 {
     public static class DynamicExpression
     {
@@ -231,7 +231,7 @@ namespace Tween
     }
 }
 
-namespace Tween
+namespace Hoehoe
 {
     internal class DynamicOrdering
     {
@@ -240,7 +240,7 @@ namespace Tween
     }
 }
 
-namespace Tween
+namespace Hoehoe
 {
     internal class Signature : IEquatable<Signature>
     {
@@ -285,7 +285,7 @@ namespace Tween
     }
 }
 
-namespace Tween
+namespace Hoehoe
 {
     internal class ClassFactory
     {
@@ -461,7 +461,7 @@ namespace Tween
     }
 }
 
-namespace Tween
+namespace Hoehoe
 {
     public sealed class ParseException : Exception
     {
@@ -485,7 +485,7 @@ namespace Tween
     }
 }
 
-namespace Tween
+namespace Hoehoe
 {
     internal class ExpressionParser
     {
@@ -2508,7 +2508,7 @@ namespace Tween
     }
 }
 
-namespace Tween
+namespace Hoehoe
 {
     internal class Res
     {

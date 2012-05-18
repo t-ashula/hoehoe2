@@ -32,7 +32,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Tween
+namespace Hoehoe
 {
     ///<summary>
     ///OAuth認証を使用するHTTP通信。HMAC-SHA1固定

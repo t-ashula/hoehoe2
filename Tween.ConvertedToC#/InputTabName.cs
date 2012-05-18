@@ -25,7 +25,7 @@
 
 using System;
 
-namespace Tween
+namespace Hoehoe
 {
     public partial class InputTabName
     {
@@ -71,7 +71,7 @@ namespace Tween
         {
             this.LabelUsage.Visible = false;
             this.ComboUsage.Visible = false;
-            this.ComboUsage.Items.Add(Tween.Properties.Resources.InputTabName_Load1);
+            this.ComboUsage.Items.Add(Hoehoe.Properties.Resources.InputTabName_Load1);
             this.ComboUsage.Items.Add("Lists");
             this.ComboUsage.Items.Add("PublicSearch");
             this.ComboUsage.SelectedIndex = 0;
@@ -92,16 +92,16 @@ namespace Tween
             switch (ComboUsage.SelectedIndex)
             {
                 case 0:
-                    Usage = Tween.MyCommon.TabUsageType.UserDefined;
+                    Usage = Hoehoe.MyCommon.TabUsageType.UserDefined;
                     break;
                 case 1:
-                    Usage = Tween.MyCommon.TabUsageType.Lists;
+                    Usage = Hoehoe.MyCommon.TabUsageType.Lists;
                     break;
                 case 2:
-                    Usage = Tween.MyCommon.TabUsageType.PublicSearch;
+                    Usage = Hoehoe.MyCommon.TabUsageType.PublicSearch;
                     break;
                 default:
-                    Usage = Tween.MyCommon.TabUsageType.Undefined;
+                    Usage = Hoehoe.MyCommon.TabUsageType.Undefined;
                     break;
             }
         }

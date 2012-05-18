@@ -31,7 +31,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     public partial class EventViewerDialog
     {
@@ -78,7 +78,7 @@ namespace Tween
 
         private MyCommon.EventType ParseEventTypeFromTag()
         {
-            return (Tween.MyCommon.EventType)Enum.Parse(typeof(Tween.MyCommon.EventType), _curTab.Tag.ToString());
+            return (Hoehoe.MyCommon.EventType)Enum.Parse(typeof(Hoehoe.MyCommon.EventType), _curTab.Tag.ToString());
         }
 
         private bool IsFilterMatch(Twitter.FormattedEvent x)
@@ -96,7 +96,7 @@ namespace Tween
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(Tween.Properties.Resources.ButtonOK_ClickText3 + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(Hoehoe.Properties.Resources.ButtonOK_ClickText3 + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return false;
                 }
             }
@@ -196,7 +196,7 @@ namespace Tween
 
         private void SaveLogButton_Click(object sender, EventArgs e)
         {
-            DialogResult rslt = MessageBox.Show(string.Format(Tween.Properties.Resources.SaveLogMenuItem_ClickText5, Environment.NewLine), Tween.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText5, Environment.NewLine), Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             string tabName = "";
             switch (rslt)
             {
@@ -210,9 +210,9 @@ namespace Tween
             }
             SaveFileDialog1.FileName = String.Format("TweenEvents{0}{1:yyMMdd-HHmmss}.tsv", tabName, DateTime.Now);
             SaveFileDialog1.InitialDirectory = MyCommon.GetAppDir();
-            SaveFileDialog1.Filter = Tween.Properties.Resources.SaveLogMenuItem_ClickText3;
+            SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
-            SaveFileDialog1.Title = Tween.Properties.Resources.SaveLogMenuItem_ClickText4;
+            SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
             SaveFileDialog1.RestoreDirectory = true;
 
             if (SaveFileDialog1.ShowDialog() == DialogResult.OK)

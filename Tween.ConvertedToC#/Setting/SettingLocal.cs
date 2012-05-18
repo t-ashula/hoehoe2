@@ -27,7 +27,7 @@ using System;
 using System.Drawing;
 using System.Xml.Serialization;
 
-namespace Tween
+namespace Hoehoe
 {
     [Serializable]
     public class SettingLocal : SettingBase<SettingLocal>

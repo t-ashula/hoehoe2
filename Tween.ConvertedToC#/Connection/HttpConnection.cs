@@ -32,7 +32,7 @@ using System.IO.Compression;
 using System.Net;
 using System.Text;
 
-namespace Tween
+namespace Hoehoe
 {
     ///<summary>
     ///HttpWebRequest,HttpWebResponseを使用した基本的な通信機能を提供する

@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Tween.TweenCustomControl
+namespace Hoehoe.TweenCustomControl
 {
     public sealed class ToolStripLabelHistory : ToolStripStatusLabel
     {

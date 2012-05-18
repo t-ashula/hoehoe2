@@ -29,7 +29,7 @@ using System.Net;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
-namespace Tween
+namespace Hoehoe
 {
     public class Foursquare : HttpConnection
     {

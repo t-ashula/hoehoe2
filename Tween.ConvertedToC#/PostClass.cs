@@ -26,7 +26,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Tween
+namespace Hoehoe
 {
     public sealed class PostClass : ICloneable
     {

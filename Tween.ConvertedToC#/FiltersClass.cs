@@ -30,7 +30,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
-namespace Tween
+namespace Hoehoe
 {
     [Serializable]
     public sealed class FiltersClass : System.IEquatable<FiltersClass>
@@ -74,44 +74,44 @@ namespace Tween
                 {
                     if (!String.IsNullOrEmpty(_name))
                     {
-                        fs.AppendFormat(Tween.Properties.Resources.SetFiltersText1, _name);
+                        fs.AppendFormat(Hoehoe.Properties.Resources.SetFiltersText1, _name);
                     }
                     else
                     {
-                        fs.Append(Tween.Properties.Resources.SetFiltersText2);
+                        fs.Append(Hoehoe.Properties.Resources.SetFiltersText2);
                     }
                 }
                 if (_body.Count > 0)
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText3);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText3);
                     foreach (string bf in _body)
                     {
                         fs.Append(bf);
                         fs.Append(" ");
                     }
                     fs.Length -= 1;
-                    fs.Append(Tween.Properties.Resources.SetFiltersText4);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText4);
                 }
                 fs.Append("(");
                 if (_searchBoth)
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText5);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText5);
                 }
                 else
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText6);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText6);
                 }
                 if (_useRegex)
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText7);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText7);
                 }
                 if (_searchUrl)
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText8);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText8);
                 }
                 if (_caseSensitive)
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText13);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText13);
                 }
                 if (_isRt)
                 {
@@ -131,49 +131,49 @@ namespace Tween
             if (!String.IsNullOrEmpty(_exname) || _exbody.Count > 0 || _isExRt || !String.IsNullOrEmpty(_exSource))
             {
                 //除外
-                fs.Append(Tween.Properties.Resources.SetFiltersText12);
+                fs.Append(Hoehoe.Properties.Resources.SetFiltersText12);
                 if (_exsearchBoth)
                 {
                     if (!String.IsNullOrEmpty(_exname))
                     {
-                        fs.AppendFormat(Tween.Properties.Resources.SetFiltersText1, _exname);
+                        fs.AppendFormat(Hoehoe.Properties.Resources.SetFiltersText1, _exname);
                     }
                     else
                     {
-                        fs.Append(Tween.Properties.Resources.SetFiltersText2);
+                        fs.Append(Hoehoe.Properties.Resources.SetFiltersText2);
                     }
                 }
                 if (_exbody.Count > 0)
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText3);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText3);
                     foreach (string bf in _exbody)
                     {
                         fs.Append(bf);
                         fs.Append(" ");
                     }
                     fs.Length -= 1;
-                    fs.Append(Tween.Properties.Resources.SetFiltersText4);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText4);
                 }
                 fs.Append("(");
                 if (_exsearchBoth)
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText5);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText5);
                 }
                 else
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText6);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText6);
                 }
                 if (_exuseRegex)
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText7);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText7);
                 }
                 if (_exsearchUrl)
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText8);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText8);
                 }
                 if (_excaseSensitive)
                 {
-                    fs.Append(Tween.Properties.Resources.SetFiltersText13);
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText13);
                 }
                 if (_isExRt)
                 {
@@ -194,15 +194,15 @@ namespace Tween
             fs.Append("(");
             if (_moveFrom)
             {
-                fs.Append(Tween.Properties.Resources.SetFiltersText9);
+                fs.Append(Hoehoe.Properties.Resources.SetFiltersText9);
             }
             else
             {
-                fs.Append(Tween.Properties.Resources.SetFiltersText11);
+                fs.Append(Hoehoe.Properties.Resources.SetFiltersText11);
             }
             if (!_moveFrom && _setMark)
             {
-                fs.Append(Tween.Properties.Resources.SetFiltersText10);
+                fs.Append(Hoehoe.Properties.Resources.SetFiltersText10);
             }
             else if (!_moveFrom)
             {
@@ -407,7 +407,7 @@ namespace Tween
             return ((bool)_exlambdaExpDelegate.DynamicInvoke(post));
         }
 
-        public Tween.MyCommon.HITRESULT IsHit(PostClass post)
+        public Hoehoe.MyCommon.HITRESULT IsHit(PostClass post)
         {
             bool bHit = true;
             string tBody = null;
@@ -556,7 +556,7 @@ namespace Tween
             }
             if (!bHit)
             {
-                return Tween.MyCommon.HITRESULT.None;
+                return Hoehoe.MyCommon.HITRESULT.None;
             }
             //除外判定
             if (_exsearchUrl)
@@ -711,23 +711,23 @@ namespace Tween
             {
                 if (exFlag)
                 {
-                    return Tween.MyCommon.HITRESULT.Exclude;
+                    return Hoehoe.MyCommon.HITRESULT.Exclude;
                 }
                 else
                 {
                     if (_moveFrom)
                     {
-                        return Tween.MyCommon.HITRESULT.Move;
+                        return Hoehoe.MyCommon.HITRESULT.Move;
                     }
                     else
                     {
-                        return _setMark ? Tween.MyCommon.HITRESULT.CopyAndMark : Tween.MyCommon.HITRESULT.Copy;
+                        return _setMark ? Hoehoe.MyCommon.HITRESULT.CopyAndMark : Hoehoe.MyCommon.HITRESULT.Copy;
                     }
                 }
             }
             else
             {
-                return exFlag ? Tween.MyCommon.HITRESULT.Exclude : Tween.MyCommon.HITRESULT.None;
+                return exFlag ? Hoehoe.MyCommon.HITRESULT.Exclude : Hoehoe.MyCommon.HITRESULT.None;
             }
         }
 

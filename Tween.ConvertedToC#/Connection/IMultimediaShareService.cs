@@ -23,15 +23,15 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-namespace Tween
+namespace Hoehoe
 {
     public interface IMultimediaShareService
     {
         string Upload(ref string filePath, ref string message, long replyTo);
         bool CheckValidExtension(string ext);
         string GetFileOpenDialogFilter();
-        Tween.MyCommon.UploadFileType GetFileType(string ext);
-        bool IsSupportedFileType(Tween.MyCommon.UploadFileType type);
+        Hoehoe.MyCommon.UploadFileType GetFileType(string ext);
+        bool IsSupportedFileType(Hoehoe.MyCommon.UploadFileType type);
         bool CheckValidFilesize(string ext, long fileSize);
         bool Configuration(string key, object value);
     }

@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
-namespace Tween
+namespace Hoehoe
 {
     [Serializable]
     public class SettingCommon : SettingBase<SettingCommon>
@@ -129,7 +129,7 @@ namespace Tween
         public MyCommon.EventType IsMyEventNotifyFlag = MyCommon.EventType.All;
         public bool ForceEventNotify = false;
         public bool FavEventUnread = true;
-        public string TranslateLanguage = Tween.Properties.Resources.TranslateDefaultLanguage;
+        public string TranslateLanguage = Hoehoe.Properties.Resources.TranslateDefaultLanguage;
         public string EventSoundFile = "";
         public bool PlaySound = false;
         public bool UnreadManage = true;
@@ -234,6 +234,6 @@ namespace Tween
     }
 }
 
-namespace Tween
+namespace Hoehoe
 {
 }

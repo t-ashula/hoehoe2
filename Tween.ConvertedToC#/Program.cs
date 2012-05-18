@@ -32,9 +32,9 @@ using System.Threading;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
-using Tween.Properties;
+using Hoehoe.Properties;
 
-namespace Tween
+namespace Hoehoe
 {
     static class Program
     {

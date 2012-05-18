@@ -29,7 +29,7 @@ using System.IO;
 using System.Net;
 using System.Xml;
 
-namespace Tween
+namespace Hoehoe
 {
     public class yfrog : HttpConnectionOAuthEcho, IMultimediaShareService
     {

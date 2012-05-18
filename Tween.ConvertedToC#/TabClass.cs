@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     [Serializable]
     public sealed class TabClass

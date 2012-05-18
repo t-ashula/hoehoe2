@@ -31,7 +31,7 @@ using System.Drawing;
 using System.Runtime.Caching;
 using System.Threading;
 
-namespace Tween
+namespace Hoehoe
 {
     public class ImageDictionary : IDictionary<string, Image>, IDisposable
     {

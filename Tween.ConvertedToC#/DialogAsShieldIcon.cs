@@ -28,7 +28,7 @@ using System;
 using System.Drawing;
 using System.Threading;
 
-namespace Tween
+namespace Hoehoe
 {
     public partial class DialogAsShieldIcon
     {

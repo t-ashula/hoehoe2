@@ -29,7 +29,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     ///<summary>
     ///タスクサービス機能付きプログレスバー

@@ -26,7 +26,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace Tween.TweenCustomControl
+namespace Hoehoe.TweenCustomControl
 {
     public class PictureBoxEx : PictureBox
     {

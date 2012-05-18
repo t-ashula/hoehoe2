@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Tween
+namespace Hoehoe
 {
     public class FavoriteQueue : IList<long>
     {

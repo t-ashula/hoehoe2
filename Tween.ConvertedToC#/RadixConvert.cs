@@ -26,7 +26,7 @@
 using System;
 using System.Text;
 
-namespace Tween
+namespace Hoehoe
 {
     public static class RadixConvert
     {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-namespace Tween
+namespace Hoehoe
 {
     partial class TweenMain : System.Windows.Forms.Form
     {
@@ -37,7 +37,7 @@ namespace Tween
             this.ToolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
             this.StatusLabelUrl = new System.Windows.Forms.ToolStripStatusLabel();
-            this.StatusLabel = new Tween.TweenCustomControl.ToolStripLabelHistory();
+            this.StatusLabel = new Hoehoe.TweenCustomControl.ToolStripLabelHistory();
             this.ToolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.HashStripSplitButton = new System.Windows.Forms.ToolStripSplitButton();
             this.ContextMenuPostMode = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -71,7 +71,7 @@ namespace Tween
             this.DeleteTabMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabImage = new System.Windows.Forms.ImageList(this.components);
             this.ImageSelectionPanel = new System.Windows.Forms.Panel();
-            this.ImageSelectedPicture = new Tween.TweenCustomControl.PictureBoxEx();
+            this.ImageSelectedPicture = new Hoehoe.TweenCustomControl.PictureBoxEx();
             this.ImagePathPanel = new System.Windows.Forms.Panel();
             this.ImagefilePathText = new System.Windows.Forms.TextBox();
             this.FilePickButton = new System.Windows.Forms.Button();
@@ -83,7 +83,7 @@ namespace Tween
             this.SplitContainer3 = new System.Windows.Forms.SplitContainer();
             this.SplitContainer2 = new System.Windows.Forms.SplitContainer();
             this.TableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.UserPicture = new Tween.TweenCustomControl.PictureBoxEx();
+            this.UserPicture = new Hoehoe.TweenCustomControl.PictureBoxEx();
             this.ContextMenuUserPicture = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.FollowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UnFollowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -133,7 +133,7 @@ namespace Tween
             this.StatusText = new System.Windows.Forms.TextBox();
             this.lblLen = new System.Windows.Forms.Label();
             this.PostButton = new System.Windows.Forms.Button();
-            this.PreviewPicture = new Tween.TweenCustomControl.PictureBoxEx();
+            this.PreviewPicture = new Hoehoe.TweenCustomControl.PictureBoxEx();
             this.PreviewScrollBar = new System.Windows.Forms.VScrollBar();
             this.MenuStrip1 = new System.Windows.Forms.MenuStrip();
             this.MenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -2654,7 +2654,7 @@ namespace Tween
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator22;
         internal System.Windows.Forms.ToolStripMenuItem PublicSearchQueryMenuItem;
         internal System.Windows.Forms.ToolStripMenuItem UseHashtagMenuItem;
-        internal Tween.TweenCustomControl.ToolStripLabelHistory StatusLabel;
+        internal Hoehoe.TweenCustomControl.ToolStripLabelHistory StatusLabel;
         internal System.Windows.Forms.ToolStripSplitButton HashStripSplitButton;
         internal System.Windows.Forms.ToolStripMenuItem HashToggleMenuItem;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator8;

@@ -24,7 +24,7 @@
 // Boston, MA 02110-1301, USA.
 using System;
 
-namespace Tween
+namespace Hoehoe
 {
     public partial class SearchWord
     {

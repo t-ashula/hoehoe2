@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.ComponentModel;
-namespace Tween
+namespace Hoehoe
 {
     partial class ListManage : System.Windows.Forms.Form
     {

@@ -33,7 +33,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     public partial class AppendSettingDialog
     {
@@ -45,7 +45,7 @@ namespace Tween
         private int _MyListsPeriod;
         private int _MyUserTimelinePeriod;
         private bool _MyReaded;
-        private Tween.MyCommon.IconSizes _MyIconSize;
+        private Hoehoe.MyCommon.IconSizes _MyIconSize;
         private string _MyStatusText;
         private string _MyRecommendStatusText;
         private bool _MyUnreadManage;
@@ -72,7 +72,7 @@ namespace Tween
         private Color _clDetailBackcolor;
         private Color _clDetail;
         private Color _clDetailLink;
-        private Tween.MyCommon.NameBalloonEnum _myNameBalloon;
+        private Hoehoe.MyCommon.NameBalloonEnum _myNameBalloon;
         private bool _myPostCtrlEnter;
         private bool _myPostShiftEnter;
         private bool _usePostMethod;
@@ -81,7 +81,7 @@ namespace Tween
         private string _browserpath;
         private bool _myUseRecommendStatus;
         private bool _myDispUsername;
-        private Tween.MyCommon.DispTitleEnum _MyDispLatestPost;
+        private Hoehoe.MyCommon.DispTitleEnum _MyDispLatestPost;
         private bool _MySortOrderLock;
         private bool _MyMinimizeToTray;
         private bool _MyCloseToExit;
@@ -101,7 +101,7 @@ namespace Tween
         private bool _MyShortenTco;
         private bool _MyOutputz;
         private string _MyOutputzKey;
-        private Tween.MyCommon.OutputzUrlmode _MyOutputzUrlmode;
+        private Hoehoe.MyCommon.OutputzUrlmode _MyOutputzUrlmode;
         private bool _MyNicoms;
         private bool _MyUnreadStyle;
         private string _MyDateTimeFormat;
@@ -109,9 +109,9 @@ namespace Tween
         private bool _MyLimitBalloon;
         private bool _MyPostAndGet;
         private int _MyReplyPeriod;
-        private Tween.MyCommon.UrlConverter _MyAutoShortUrlFirst;
+        private Hoehoe.MyCommon.UrlConverter _MyAutoShortUrlFirst;
         private bool _MyTabIconDisp;
-        private Tween.MyCommon.ReplyIconState _MyReplyIconState;
+        private Hoehoe.MyCommon.ReplyIconState _MyReplyIconState;
         private bool _MyReadOwnPost;
         private bool _MyGetFav;
         private bool _MyMonoSpace;
@@ -138,8 +138,8 @@ namespace Tween
         private bool _MyOpenUserTimeline;
         private bool _ValidationError = false;
         private bool _MyEventNotifyEnabled;
-        private Tween.MyCommon.EventType _MyEventNotifyFlag;
-        private Tween.MyCommon.EventType _isMyEventNotifyFlag;
+        private Hoehoe.MyCommon.EventType _MyEventNotifyFlag;
+        private Hoehoe.MyCommon.EventType _isMyEventNotifyFlag;
         private bool _MyForceEventNotify;
         private bool _MyFavEventUnread;
         private string _MyTranslateLanguage;
@@ -227,13 +227,13 @@ namespace Tween
         private void Save_Click(object sender, EventArgs e)
         {
             if (MyCommon.IsNetworkAvailable()
-                && (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Tween.MyCommon.UrlConverter.Bitly
-                || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Tween.MyCommon.UrlConverter.Jmp)
+                && (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Hoehoe.MyCommon.UrlConverter.Bitly
+                || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Hoehoe.MyCommon.UrlConverter.Jmp)
                 && (!String.IsNullOrEmpty(TextBitlyId.Text) || !String.IsNullOrEmpty(TextBitlyPw.Text)))
             {
                 if (!BitlyValidation(TextBitlyId.Text, TextBitlyPw.Text))
                 {
-                    MessageBox.Show(Tween.Properties.Resources.SettingSave_ClickText1);
+                    MessageBox.Show(Hoehoe.Properties.Resources.SettingSave_ClickText1);
                     _ValidationError = true;
                     TreeViewSetting.SelectedNode.Name = "TweetActNode";
                     // 動作タブを選択
@@ -361,19 +361,19 @@ namespace Tween
                 switch (IconSize.SelectedIndex)
                 {
                     case 0:
-                        _MyIconSize = Tween.MyCommon.IconSizes.IconNone;
+                        _MyIconSize = Hoehoe.MyCommon.IconSizes.IconNone;
                         break;
                     case 1:
-                        _MyIconSize = Tween.MyCommon.IconSizes.Icon16;
+                        _MyIconSize = Hoehoe.MyCommon.IconSizes.Icon16;
                         break;
                     case 2:
-                        _MyIconSize = Tween.MyCommon.IconSizes.Icon24;
+                        _MyIconSize = Hoehoe.MyCommon.IconSizes.Icon24;
                         break;
                     case 3:
-                        _MyIconSize = Tween.MyCommon.IconSizes.Icon48;
+                        _MyIconSize = Hoehoe.MyCommon.IconSizes.Icon48;
                         break;
                     case 4:
-                        _MyIconSize = Tween.MyCommon.IconSizes.Icon48_2;
+                        _MyIconSize = Hoehoe.MyCommon.IconSizes.Icon48_2;
                         break;
                 }
                 _MyStatusText = StatusText.Text;
@@ -407,13 +407,13 @@ namespace Tween
                 switch (cmbNameBalloon.SelectedIndex)
                 {
                     case 0:
-                        _myNameBalloon = Tween.MyCommon.NameBalloonEnum.None;
+                        _myNameBalloon = Hoehoe.MyCommon.NameBalloonEnum.None;
                         break;
                     case 1:
-                        _myNameBalloon = Tween.MyCommon.NameBalloonEnum.UserID;
+                        _myNameBalloon = Hoehoe.MyCommon.NameBalloonEnum.UserID;
                         break;
                     case 2:
-                        _myNameBalloon = Tween.MyCommon.NameBalloonEnum.NickName;
+                        _myNameBalloon = Hoehoe.MyCommon.NameBalloonEnum.NickName;
                         break;
                 }
 
@@ -445,35 +445,35 @@ namespace Tween
                 {
                     case 0:
                         //None
-                        _MyDispLatestPost = Tween.MyCommon.DispTitleEnum.None;
+                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.None;
                         break;
                     case 1:
                         //Ver
-                        _MyDispLatestPost = Tween.MyCommon.DispTitleEnum.Ver;
+                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.Ver;
                         break;
                     case 2:
                         //Post
-                        _MyDispLatestPost = Tween.MyCommon.DispTitleEnum.Post;
+                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.Post;
                         break;
                     case 3:
                         //RepCount
-                        _MyDispLatestPost = Tween.MyCommon.DispTitleEnum.UnreadRepCount;
+                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.UnreadRepCount;
                         break;
                     case 4:
                         //AllCount
-                        _MyDispLatestPost = Tween.MyCommon.DispTitleEnum.UnreadAllCount;
+                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.UnreadAllCount;
                         break;
                     case 5:
                         //Rep+All
-                        _MyDispLatestPost = Tween.MyCommon.DispTitleEnum.UnreadAllRepCount;
+                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.UnreadAllRepCount;
                         break;
                     case 6:
                         //Unread/All
-                        _MyDispLatestPost = Tween.MyCommon.DispTitleEnum.UnreadCountAllCount;
+                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.UnreadCountAllCount;
                         break;
                     case 7:
                         //Count of Status/Follow/Follower
-                        _MyDispLatestPost = Tween.MyCommon.DispTitleEnum.OwnStatus;
+                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.OwnStatus;
                         break;
                 }
                 _MySortOrderLock = CheckSortOrderLock.Checked;
@@ -510,10 +510,10 @@ namespace Tween
                 switch (ComboBoxOutputzUrlmode.SelectedIndex)
                 {
                     case 0:
-                        _MyOutputzUrlmode = Tween.MyCommon.OutputzUrlmode.twittercom;
+                        _MyOutputzUrlmode = Hoehoe.MyCommon.OutputzUrlmode.twittercom;
                         break;
                     case 1:
-                        _MyOutputzUrlmode = Tween.MyCommon.OutputzUrlmode.twittercomWithUsername;
+                        _MyOutputzUrlmode = Hoehoe.MyCommon.OutputzUrlmode.twittercomWithUsername;
                         break;
                 }
 
@@ -529,7 +529,7 @@ namespace Tween
                 _MyFavEventUnread = CheckFavEventUnread.Checked;
                 _MyTranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(ComboBoxTranslateLanguage.SelectedIndex);
                 _MyEventSoundFile = Convert.ToString(ComboBoxEventNotifySound.SelectedItem);
-                _MyAutoShortUrlFirst = (Tween.MyCommon.UrlConverter)ComboBoxAutoShortUrlFirst.SelectedIndex;
+                _MyAutoShortUrlFirst = (Hoehoe.MyCommon.UrlConverter)ComboBoxAutoShortUrlFirst.SelectedIndex;
                 _MyTabIconDisp = chkTabIconDisp.Checked;
                 _MyReadOwnPost = chkReadOwnPost.Checked;
                 _MyGetFav = chkGetFav.Checked;
@@ -547,13 +547,13 @@ namespace Tween
                 switch (ReplyIconStateCombo.SelectedIndex)
                 {
                     case 0:
-                        _MyReplyIconState = Tween.MyCommon.ReplyIconState.None;
+                        _MyReplyIconState = Hoehoe.MyCommon.ReplyIconState.None;
                         break;
                     case 1:
-                        _MyReplyIconState = Tween.MyCommon.ReplyIconState.StaticIcon;
+                        _MyReplyIconState = Hoehoe.MyCommon.ReplyIconState.StaticIcon;
                         break;
                     case 2:
-                        _MyReplyIconState = Tween.MyCommon.ReplyIconState.BlinkIcon;
+                        _MyReplyIconState = Hoehoe.MyCommon.ReplyIconState.BlinkIcon;
                         break;
                 }
                 switch (LanguageCombo.SelectedIndex)
@@ -620,7 +620,7 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.Save_ClickText3);
+                MessageBox.Show(Hoehoe.Properties.Resources.Save_ClickText3);
                 this.DialogResult = DialogResult.Cancel;
                 return;
             }
@@ -667,7 +667,7 @@ namespace Tween
 
             if (_tw != null && String.IsNullOrEmpty(_tw.Username) && e.CloseReason == CloseReason.None)
             {
-                if (MessageBox.Show(Tween.Properties.Resources.Setting_FormClosing1, "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                if (MessageBox.Show(Hoehoe.Properties.Resources.Setting_FormClosing1, "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                 {
                     e.Cancel = true;
                 }
@@ -726,19 +726,19 @@ namespace Tween
             StartupReaded.Checked = _MyReaded;
             switch (_MyIconSize)
             {
-                case Tween.MyCommon.IconSizes.IconNone:
+                case Hoehoe.MyCommon.IconSizes.IconNone:
                     IconSize.SelectedIndex = 0;
                     break;
-                case Tween.MyCommon.IconSizes.Icon16:
+                case Hoehoe.MyCommon.IconSizes.Icon16:
                     IconSize.SelectedIndex = 1;
                     break;
-                case Tween.MyCommon.IconSizes.Icon24:
+                case Hoehoe.MyCommon.IconSizes.Icon24:
                     IconSize.SelectedIndex = 2;
                     break;
-                case Tween.MyCommon.IconSizes.Icon48:
+                case Hoehoe.MyCommon.IconSizes.Icon48:
                     IconSize.SelectedIndex = 3;
                     break;
-                case Tween.MyCommon.IconSizes.Icon48_2:
+                case Hoehoe.MyCommon.IconSizes.Icon48_2:
                     IconSize.SelectedIndex = 4;
                     break;
             }
@@ -772,13 +772,13 @@ namespace Tween
 
             switch (_myNameBalloon)
             {
-                case Tween.MyCommon.NameBalloonEnum.None:
+                case Hoehoe.MyCommon.NameBalloonEnum.None:
                     cmbNameBalloon.SelectedIndex = 0;
                     break;
-                case Tween.MyCommon.NameBalloonEnum.UserID:
+                case Hoehoe.MyCommon.NameBalloonEnum.UserID:
                     cmbNameBalloon.SelectedIndex = 1;
                     break;
-                case Tween.MyCommon.NameBalloonEnum.NickName:
+                case Hoehoe.MyCommon.NameBalloonEnum.NickName:
                     cmbNameBalloon.SelectedIndex = 2;
                     break;
             }
@@ -806,28 +806,28 @@ namespace Tween
             CheckMinimizeToTray.Checked = _MyMinimizeToTray;
             switch (_MyDispLatestPost)
             {
-                case Tween.MyCommon.DispTitleEnum.None:
+                case Hoehoe.MyCommon.DispTitleEnum.None:
                     ComboDispTitle.SelectedIndex = 0;
                     break;
-                case Tween.MyCommon.DispTitleEnum.Ver:
+                case Hoehoe.MyCommon.DispTitleEnum.Ver:
                     ComboDispTitle.SelectedIndex = 1;
                     break;
-                case Tween.MyCommon.DispTitleEnum.Post:
+                case Hoehoe.MyCommon.DispTitleEnum.Post:
                     ComboDispTitle.SelectedIndex = 2;
                     break;
-                case Tween.MyCommon.DispTitleEnum.UnreadRepCount:
+                case Hoehoe.MyCommon.DispTitleEnum.UnreadRepCount:
                     ComboDispTitle.SelectedIndex = 3;
                     break;
-                case Tween.MyCommon.DispTitleEnum.UnreadAllCount:
+                case Hoehoe.MyCommon.DispTitleEnum.UnreadAllCount:
                     ComboDispTitle.SelectedIndex = 4;
                     break;
-                case Tween.MyCommon.DispTitleEnum.UnreadAllRepCount:
+                case Hoehoe.MyCommon.DispTitleEnum.UnreadAllRepCount:
                     ComboDispTitle.SelectedIndex = 5;
                     break;
-                case Tween.MyCommon.DispTitleEnum.UnreadCountAllCount:
+                case Hoehoe.MyCommon.DispTitleEnum.UnreadCountAllCount:
                     ComboDispTitle.SelectedIndex = 6;
                     break;
-                case Tween.MyCommon.DispTitleEnum.OwnStatus:
+                case Hoehoe.MyCommon.DispTitleEnum.OwnStatus:
                     ComboDispTitle.SelectedIndex = 7;
                     break;
             }
@@ -874,10 +874,10 @@ namespace Tween
 
             switch (_MyOutputzUrlmode)
             {
-                case Tween.MyCommon.OutputzUrlmode.twittercom:
+                case Hoehoe.MyCommon.OutputzUrlmode.twittercom:
                     ComboBoxOutputzUrlmode.SelectedIndex = 0;
                     break;
-                case Tween.MyCommon.OutputzUrlmode.twittercomWithUsername:
+                case Hoehoe.MyCommon.OutputzUrlmode.twittercomWithUsername:
                     ComboBoxOutputzUrlmode.SelectedIndex = 1;
                     break;
             }
@@ -913,13 +913,13 @@ namespace Tween
             TwitterSearchAPIText.Text = _MyTwitterSearchApiUrl;
             switch (_MyReplyIconState)
             {
-                case Tween.MyCommon.ReplyIconState.None:
+                case Hoehoe.MyCommon.ReplyIconState.None:
                     ReplyIconStateCombo.SelectedIndex = 0;
                     break;
-                case Tween.MyCommon.ReplyIconState.StaticIcon:
+                case Hoehoe.MyCommon.ReplyIconState.StaticIcon:
                     ReplyIconStateCombo.SelectedIndex = 1;
                     break;
-                case Tween.MyCommon.ReplyIconState.BlinkIcon:
+                case Hoehoe.MyCommon.ReplyIconState.BlinkIcon:
                     ReplyIconStateCombo.SelectedIndex = 2;
                     break;
             }
@@ -1023,14 +1023,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.UserstreamPeriod_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd < 0 || prd > 60)
             {
-                MessageBox.Show(Tween.Properties.Resources.UserstreamPeriod_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
@@ -1046,14 +1046,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.TimelinePeriod_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 15 || prd > 6000))
             {
-                MessageBox.Show(Tween.Properties.Resources.TimelinePeriod_ValidatingText2);
+                MessageBox.Show(Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -1069,14 +1069,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.TimelinePeriod_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 15 || prd > 6000))
             {
-                MessageBox.Show(Tween.Properties.Resources.TimelinePeriod_ValidatingText2);
+                MessageBox.Show(Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -1092,14 +1092,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 15 || prd > 6000))
             {
-                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText2);
+                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -1115,14 +1115,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.PubSearchPeriod_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 30 || prd > 6000))
             {
-                MessageBox.Show(Tween.Properties.Resources.PubSearchPeriod_ValidatingText2);
+                MessageBox.Show(Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText2);
                 e.Cancel = true;
             }
         }
@@ -1136,14 +1136,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 15 || prd > 6000))
             {
-                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText2);
+                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -1159,14 +1159,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
             if (prd != 0 && (prd < 15 || prd > 6000))
             {
-                MessageBox.Show(Tween.Properties.Resources.DMPeriod_ValidatingText2);
+                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -1406,7 +1406,7 @@ namespace Tween
             set { _MyReaded = value; }
         }
 
-        public Tween.MyCommon.IconSizes IconSz
+        public Hoehoe.MyCommon.IconSizes IconSz
         {
             get { return _MyIconSize; }
             set { _MyIconSize = value; }
@@ -1565,7 +1565,7 @@ namespace Tween
             set { _clDetailBackcolor = value; }
         }
 
-        public Tween.MyCommon.NameBalloonEnum NameBalloon
+        public Hoehoe.MyCommon.NameBalloonEnum NameBalloon
         {
             get { return _myNameBalloon; }
             set { _myNameBalloon = value; }
@@ -1667,7 +1667,7 @@ namespace Tween
             set { _MyMinimizeToTray = value; }
         }
 
-        public Tween.MyCommon.DispTitleEnum DispLatestPost
+        public Hoehoe.MyCommon.DispTitleEnum DispLatestPost
         {
             get { return _MyDispLatestPost; }
             set { _MyDispLatestPost = value; }
@@ -1793,7 +1793,7 @@ namespace Tween
             set { _MyOutputzKey = value; }
         }
 
-        public Tween.MyCommon.OutputzUrlmode OutputzUrlmode
+        public Hoehoe.MyCommon.OutputzUrlmode OutputzUrlmode
         {
             get { return _MyOutputzUrlmode; }
             set { _MyOutputzUrlmode = value; }
@@ -1805,7 +1805,7 @@ namespace Tween
             set { _MyNicoms = value; }
         }
 
-        public Tween.MyCommon.UrlConverter AutoShortUrlFirst
+        public Hoehoe.MyCommon.UrlConverter AutoShortUrlFirst
         {
             get { return _MyAutoShortUrlFirst; }
             set { _MyAutoShortUrlFirst = value; }
@@ -1841,7 +1841,7 @@ namespace Tween
             set { _MyTabIconDisp = value; }
         }
 
-        public Tween.MyCommon.ReplyIconState ReplyIconState
+        public Hoehoe.MyCommon.ReplyIconState ReplyIconState
         {
             get { return _MyReplyIconState; }
             set { _MyReplyIconState = value; }
@@ -1947,9 +1947,9 @@ namespace Tween
         {
             using (OpenFileDialog filedlg = new OpenFileDialog())
             {
-                filedlg.Filter = Tween.Properties.Resources.Button3_ClickText1;
+                filedlg.Filter = Hoehoe.Properties.Resources.Button3_ClickText1;
                 filedlg.FilterIndex = 1;
-                filedlg.Title = Tween.Properties.Resources.Button3_ClickText2;
+                filedlg.Title = Hoehoe.Properties.Resources.Button3_ClickText2;
                 filedlg.RestoreDirectory = true;
 
                 if (filedlg.ShowDialog() == DialogResult.OK)
@@ -1981,13 +1981,13 @@ namespace Tween
             }
             if (!int.TryParse(TextProxyPort.Text.Trim(), out port))
             {
-                MessageBox.Show(Tween.Properties.Resources.TextProxyPort_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextProxyPort_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
             if (port < 0 | port > 65535)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextProxyPort_ValidatingText2);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextProxyPort_ValidatingText2);
                 e.Cancel = true;
                 return;
             }
@@ -2018,7 +2018,7 @@ namespace Tween
                 TextBoxOutputzKey.Text = TextBoxOutputzKey.Text.Trim();
                 if (TextBoxOutputzKey.Text.Length == 0)
                 {
-                    MessageBox.Show(Tween.Properties.Resources.TextBoxOutputzKey_Validating);
+                    MessageBox.Show(Hoehoe.Properties.Resources.TextBoxOutputzKey_Validating);
                     e.Cancel = true;
                     return;
                 }
@@ -2033,7 +2033,7 @@ namespace Tween
             }
             catch (FormatException)
             {
-                LabelDateTimeFormatApplied.Text = Tween.Properties.Resources.CreateDateTimeFormatSampleText1;
+                LabelDateTimeFormatApplied.Text = Hoehoe.Properties.Resources.CreateDateTimeFormatSampleText1;
                 return false;
             }
             return true;
@@ -2053,7 +2053,7 @@ namespace Tween
         {
             if (!CreateDateTimeFormatSample())
             {
-                MessageBox.Show(Tween.Properties.Resources.CmbDateTimeFormat_Validating);
+                MessageBox.Show(Hoehoe.Properties.Resources.CmbDateTimeFormat_Validating);
                 e.Cancel = true;
             }
         }
@@ -2067,14 +2067,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.ConnectionTimeOut_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
 
-            if (tm < (int)Tween.MyCommon.HttpTimeOut.MinValue || tm > (int)Tween.MyCommon.HttpTimeOut.MaxValue)
+            if (tm < (int)Hoehoe.MyCommon.HttpTimeOut.MinValue || tm > (int)Hoehoe.MyCommon.HttpTimeOut.MaxValue)
             {
-                MessageBox.Show(Tween.Properties.Resources.ConnectionTimeOut_ValidatingText1);
+                MessageBox.Show(Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1);
                 e.Cancel = true;
             }
         }
@@ -2093,14 +2093,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (cnt < 20 || cnt > 200)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2115,14 +2115,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (cnt < 20 || cnt > 200)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2140,13 +2140,13 @@ namespace Tween
             set { _MyEventNotifyEnabled = value; }
         }
 
-        public Tween.MyCommon.EventType EventNotifyFlag
+        public Hoehoe.MyCommon.EventType EventNotifyFlag
         {
             get { return _MyEventNotifyFlag; }
             set { _MyEventNotifyFlag = value; }
         }
 
-        public Tween.MyCommon.EventType IsMyEventNotifyFlag
+        public Hoehoe.MyCommon.EventType IsMyEventNotifyFlag
         {
             get { return _isMyEventNotifyFlag; }
             set { _isMyEventNotifyFlag = value; }
@@ -2194,7 +2194,7 @@ namespace Tween
 
         private void ComboBoxAutoShortUrlFirst_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Tween.MyCommon.UrlConverter.Bitly || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Tween.MyCommon.UrlConverter.Jmp)
+            if (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Hoehoe.MyCommon.UrlConverter.Bitly || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Hoehoe.MyCommon.UrlConverter.Jmp)
             {
                 Label76.Enabled = true;
                 Label77.Enabled = true;
@@ -2298,7 +2298,7 @@ namespace Tween
             }
             else
             {
-                MessageBox.Show(Tween.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
+                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
                 return false;
             }
         }
@@ -2309,7 +2309,7 @@ namespace Tween
             string rslt = _tw.Authenticate(pin);
             if (String.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(Tween.Properties.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
+                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
                 int idx = -1;
                 var user = new UserAccount
                 {
@@ -2340,7 +2340,7 @@ namespace Tween
             }
             else
             {
-                MessageBox.Show(Tween.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
+                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
                 return false;
             }
         }
@@ -2377,11 +2377,11 @@ namespace Tween
         {
             if (MyCommon.TwitterApiInfo.MaxCount > -1)
             {
-                LabelApiUsing.Text = string.Format(Tween.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, MyCommon.TwitterApiInfo.MaxCount);
+                LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, MyCommon.TwitterApiInfo.MaxCount);
             }
             else
             {
-                LabelApiUsing.Text = string.Format(Tween.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, "???");
+                LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, "???");
             }
         }
 
@@ -2391,7 +2391,7 @@ namespace Tween
             try
             {
                 // 初回起動時などにNothingの場合あり
-                listsTabNum = TabInformations.GetInstance().GetTabsByType(Tween.MyCommon.TabUsageType.Lists).Count;
+                listsTabNum = TabInformations.GetInstance().GetTabsByType(Hoehoe.MyCommon.TabUsageType.Lists).Count;
             }
             catch (Exception)
             {
@@ -2402,7 +2402,7 @@ namespace Tween
             try
             {
                 // 初回起動時などにNothingの場合あり
-                userTimelineTabNum = TabInformations.GetInstance().GetTabsByType(Tween.MyCommon.TabUsageType.UserTimeline).Count;
+                userTimelineTabNum = TabInformations.GetInstance().GetTabsByType(Hoehoe.MyCommon.TabUsageType.UserTimeline).Count;
             }
             catch (Exception)
             {
@@ -2464,7 +2464,7 @@ namespace Tween
             {
                 if (MyCommon.TwitterApiInfo.MaxCount == -1)
                 {
-                    if (Twitter.AccountState == Tween.MyCommon.AccountState.Valid)
+                    if (Twitter.AccountState == Hoehoe.MyCommon.AccountState.Valid)
                     {
                         MyCommon.TwitterApiInfo.UsingCount = usingApi;
                         var proc = new Thread(new System.Threading.ThreadStart(() =>
@@ -2479,19 +2479,19 @@ namespace Tween
                     }
                     else
                     {
-                        LabelApiUsing.Text = string.Format(Tween.Properties.Resources.SettingAPIUse1, usingApi, "???");
+                        LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, "???");
                     }
                 }
                 else
                 {
-                    LabelApiUsing.Text = string.Format(Tween.Properties.Resources.SettingAPIUse1, usingApi, MyCommon.TwitterApiInfo.MaxCount);
+                    LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, MyCommon.TwitterApiInfo.MaxCount);
                 }
             }
 
             LabelPostAndGet.Visible = CheckPostAndGet.Checked && !_tw.UserStreamEnabled;
             LabelUserStreamActive.Visible = _tw.UserStreamEnabled;
 
-            LabelApiUsingUserStreamEnabled.Text = String.Format(Tween.Properties.Resources.SettingAPIUse2, (apiLists + apiUserTimeline).ToString());
+            LabelApiUsingUserStreamEnabled.Text = String.Format(Hoehoe.Properties.Resources.SettingAPIUse2, (apiLists + apiUserTimeline).ToString());
             LabelApiUsingUserStreamEnabled.Visible = _tw.UserStreamEnabled;
         }
 
@@ -2608,14 +2608,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 200))
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2646,14 +2646,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 200))
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2668,14 +2668,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextSearchCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextSearchCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 100))
             {
-                MessageBox.Show(Tween.Properties.Resources.TextSearchCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextSearchCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2690,14 +2690,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 200))
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2712,14 +2712,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 200))
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2734,14 +2734,14 @@ namespace Tween
             }
             catch (Exception)
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
 
             if (!(cnt == 0) && (cnt < 20 || cnt > 200))
             {
-                MessageBox.Show(Tween.Properties.Resources.TextCountApi_Validating1);
+                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
                 return;
             }
@@ -2750,7 +2750,7 @@ namespace Tween
         private class EventCheckboxTblElement
         {
             public CheckBox CheckBox;
-            public Tween.MyCommon.EventType Type;
+            public Hoehoe.MyCommon.EventType Type;
         }
 
         private EventCheckboxTblElement[] eventCheckboxTableElements = null;
@@ -2760,20 +2760,20 @@ namespace Tween
             if (eventCheckboxTableElements == null)
             {
                 eventCheckboxTableElements = new EventCheckboxTblElement[] {
-                    new EventCheckboxTblElement { CheckBox = CheckFavoritesEvent, Type = Tween.MyCommon.EventType.Favorite },
-                    new EventCheckboxTblElement { CheckBox = CheckUnfavoritesEvent, Type = Tween.MyCommon.EventType.Unfavorite },
-                    new EventCheckboxTblElement { CheckBox = CheckFollowEvent, Type = Tween.MyCommon.EventType.Follow },
-                    new EventCheckboxTblElement { CheckBox = CheckListMemberAddedEvent, Type = Tween.MyCommon.EventType.ListMemberAdded },
-                    new EventCheckboxTblElement { CheckBox = CheckListMemberRemovedEvent, Type = Tween.MyCommon.EventType.ListMemberRemoved },
-                    new EventCheckboxTblElement { CheckBox = CheckBlockEvent, Type = Tween.MyCommon.EventType.Block },
-                    new EventCheckboxTblElement { CheckBox = CheckUserUpdateEvent, Type = Tween.MyCommon.EventType.UserUpdate },
-                    new EventCheckboxTblElement { CheckBox = CheckListCreatedEvent, Type = Tween.MyCommon.EventType.ListCreated }
+                    new EventCheckboxTblElement { CheckBox = CheckFavoritesEvent, Type = Hoehoe.MyCommon.EventType.Favorite },
+                    new EventCheckboxTblElement { CheckBox = CheckUnfavoritesEvent, Type = Hoehoe.MyCommon.EventType.Unfavorite },
+                    new EventCheckboxTblElement { CheckBox = CheckFollowEvent, Type = Hoehoe.MyCommon.EventType.Follow },
+                    new EventCheckboxTblElement { CheckBox = CheckListMemberAddedEvent, Type = Hoehoe.MyCommon.EventType.ListMemberAdded },
+                    new EventCheckboxTblElement { CheckBox = CheckListMemberRemovedEvent, Type = Hoehoe.MyCommon.EventType.ListMemberRemoved },
+                    new EventCheckboxTblElement { CheckBox = CheckBlockEvent, Type = Hoehoe.MyCommon.EventType.Block },
+                    new EventCheckboxTblElement { CheckBox = CheckUserUpdateEvent, Type = Hoehoe.MyCommon.EventType.UserUpdate },
+                    new EventCheckboxTblElement { CheckBox = CheckListCreatedEvent, Type = Hoehoe.MyCommon.EventType.ListCreated }
                 };
             }
             return eventCheckboxTableElements;
         }
 
-        private void GetEventNotifyFlag(ref Tween.MyCommon.EventType eventnotifyflag, ref Tween.MyCommon.EventType isMyeventnotifyflag)
+        private void GetEventNotifyFlag(ref Hoehoe.MyCommon.EventType eventnotifyflag, ref Hoehoe.MyCommon.EventType isMyeventnotifyflag)
         {
             MyCommon.EventType evt = MyCommon.EventType.None;
             MyCommon.EventType myevt = MyCommon.EventType.None;
@@ -2798,7 +2798,7 @@ namespace Tween
             isMyeventnotifyflag = myevt;
         }
 
-        private void ApplyEventNotifyFlag(bool rootEnabled, Tween.MyCommon.EventType eventnotifyflag, Tween.MyCommon.EventType isMyeventnotifyflag)
+        private void ApplyEventNotifyFlag(bool rootEnabled, Hoehoe.MyCommon.EventType eventnotifyflag, Hoehoe.MyCommon.EventType isMyeventnotifyflag)
         {
             var evt = eventnotifyflag;
             var myevt = isMyeventnotifyflag;
@@ -2920,7 +2920,7 @@ namespace Tween
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
 
-            this.Icon = Tween.Properties.Resources.MIcon;
+            this.Icon = Hoehoe.Properties.Resources.MIcon;
         }
 
         private void CheckAutoConvertUrl_CheckedChanged(object sender, EventArgs e)

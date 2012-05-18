@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
-namespace Tween
+namespace Hoehoe
 {
     public interface IHttpConnection
     {

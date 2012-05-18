@@ -42,10 +42,10 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using System.Windows.Forms;
-using Tween.TweenCustomControl;
+using Hoehoe.TweenCustomControl;
 using System.Media;
 
-namespace Tween
+namespace Hoehoe
 {
     public partial class TweenMain
     {
@@ -429,7 +429,7 @@ namespace Tween
             public int EndPage;
 
             //処理種別
-            public Tween.MyCommon.WorkerType WorkerType;
+            public Hoehoe.MyCommon.WorkerType WorkerType;
 
             //新規取得したアイコンイメージ
             public Dictionary<string, Image> Imgs;
@@ -458,7 +458,7 @@ namespace Tween
             public int EndPage;
 
             //処理種別
-            public Tween.MyCommon.WorkerType WorkerType;
+            public Hoehoe.MyCommon.WorkerType WorkerType;
 
             //URLをブラウザで開くときのアドレス
             public string Url = "";
@@ -700,17 +700,17 @@ namespace Tween
             //タスクトレイ通常時アイコン
             string dir = Application.StartupPath;
 
-            _NIconAt = Tween.Properties.Resources.At;
-            _NIconAtRed = Tween.Properties.Resources.AtRed;
-            _NIconAtSmoke = Tween.Properties.Resources.AtSmoke;
-            _NIconRefresh[0] = Tween.Properties.Resources.Refresh;
-            _NIconRefresh[1] = Tween.Properties.Resources.Refresh2;
-            _NIconRefresh[2] = Tween.Properties.Resources.Refresh3;
-            _NIconRefresh[3] = Tween.Properties.Resources.Refresh4;
-            _TabIcon = Tween.Properties.Resources.TabIcon;
-            _MainIcon = Tween.Properties.Resources.MIcon;
-            _ReplyIcon = Tween.Properties.Resources.Reply;
-            _ReplyIconBlink = Tween.Properties.Resources.ReplyBlink;
+            _NIconAt = Hoehoe.Properties.Resources.At;
+            _NIconAtRed = Hoehoe.Properties.Resources.AtRed;
+            _NIconAtSmoke = Hoehoe.Properties.Resources.AtSmoke;
+            _NIconRefresh[0] = Hoehoe.Properties.Resources.Refresh;
+            _NIconRefresh[1] = Hoehoe.Properties.Resources.Refresh2;
+            _NIconRefresh[2] = Hoehoe.Properties.Resources.Refresh3;
+            _NIconRefresh[3] = Hoehoe.Properties.Resources.Refresh4;
+            _TabIcon = Hoehoe.Properties.Resources.TabIcon;
+            _MainIcon = Hoehoe.Properties.Resources.MIcon;
+            _ReplyIcon = Hoehoe.Properties.Resources.Reply;
+            _ReplyIconBlink = Hoehoe.Properties.Resources.ReplyBlink;
 
             if (!Directory.Exists(Path.Combine(dir, "Icons")))
             {
@@ -748,19 +748,19 @@ namespace Tween
         private void InitColumnText()
         {
             _columnTexts[0] = "";
-            _columnTexts[1] = Tween.Properties.Resources.AddNewTabText2;
-            _columnTexts[2] = Tween.Properties.Resources.AddNewTabText3;
-            _columnTexts[3] = Tween.Properties.Resources.AddNewTabText4_2;
-            _columnTexts[4] = Tween.Properties.Resources.AddNewTabText5;
+            _columnTexts[1] = Hoehoe.Properties.Resources.AddNewTabText2;
+            _columnTexts[2] = Hoehoe.Properties.Resources.AddNewTabText3;
+            _columnTexts[3] = Hoehoe.Properties.Resources.AddNewTabText4_2;
+            _columnTexts[4] = Hoehoe.Properties.Resources.AddNewTabText5;
             _columnTexts[5] = "";
             _columnTexts[6] = "";
             _columnTexts[7] = "Source";
 
             _columnOrgTexts[0] = "";
-            _columnOrgTexts[1] = Tween.Properties.Resources.AddNewTabText2;
-            _columnOrgTexts[2] = Tween.Properties.Resources.AddNewTabText3;
-            _columnOrgTexts[3] = Tween.Properties.Resources.AddNewTabText4_2;
-            _columnOrgTexts[4] = Tween.Properties.Resources.AddNewTabText5;
+            _columnOrgTexts[1] = Hoehoe.Properties.Resources.AddNewTabText2;
+            _columnOrgTexts[2] = Hoehoe.Properties.Resources.AddNewTabText3;
+            _columnOrgTexts[3] = Hoehoe.Properties.Resources.AddNewTabText4_2;
+            _columnOrgTexts[4] = Hoehoe.Properties.Resources.AddNewTabText5;
             _columnOrgTexts[5] = "";
             _columnOrgTexts[6] = "";
             _columnOrgTexts[7] = "Source";
@@ -1073,7 +1073,7 @@ namespace Tween
             //廃止サービスが選択されていた場合bit.lyへ読み替え
             if (_cfgCommon.AutoShortUrlFirst < 0)
             {
-                _cfgCommon.AutoShortUrlFirst = Tween.MyCommon.UrlConverter.Bitly;
+                _cfgCommon.AutoShortUrlFirst = Hoehoe.MyCommon.UrlConverter.Bitly;
             }
 
             SettingDialog.AutoShortUrlFirst = _cfgCommon.AutoShortUrlFirst;
@@ -1318,10 +1318,10 @@ namespace Tween
             Outputz.Enabled = SettingDialog.OutputzEnabled;
             switch (SettingDialog.OutputzUrlmode)
             {
-                case Tween.MyCommon.OutputzUrlmode.twittercom:
+                case Hoehoe.MyCommon.OutputzUrlmode.twittercom:
                     Outputz.OutUrl = "http://twitter.com/";
                     break;
-                case Tween.MyCommon.OutputzUrlmode.twittercomWithUsername:
+                case Hoehoe.MyCommon.OutputzUrlmode.twittercomWithUsername:
                     Outputz.OutUrl = "http://twitter.com/" + tw.Username;
                     break;
             }
@@ -1453,19 +1453,19 @@ namespace Tween
 
             switch (SettingDialog.IconSz)
             {
-                case Tween.MyCommon.IconSizes.IconNone:
+                case Hoehoe.MyCommon.IconSizes.IconNone:
                     _iconSz = 0;
                     break;
-                case Tween.MyCommon.IconSizes.Icon16:
+                case Hoehoe.MyCommon.IconSizes.Icon16:
                     _iconSz = 16;
                     break;
-                case Tween.MyCommon.IconSizes.Icon24:
+                case Hoehoe.MyCommon.IconSizes.Icon24:
                     _iconSz = 26;
                     break;
-                case Tween.MyCommon.IconSizes.Icon48:
+                case Hoehoe.MyCommon.IconSizes.Icon48:
                     _iconSz = 48;
                     break;
-                case Tween.MyCommon.IconSizes.Icon48_2:
+                case Hoehoe.MyCommon.IconSizes.Icon48_2:
                     _iconSz = 48;
                     _iconCol = true;
                     break;
@@ -1491,7 +1491,7 @@ namespace Tween
 
             tw.DetailIcon = _TIconDic;
 
-            StatusLabel.Text = Tween.Properties.Resources.Form1_LoadText1;
+            StatusLabel.Text = Hoehoe.Properties.Resources.Form1_LoadText1;
             //画面右下の状態表示を変更
             StatusLabelUrl.Text = "";
             //画面左下のリンク先URL表示部を初期化
@@ -1504,59 +1504,59 @@ namespace Tween
 
             //<<<<<<<<タブ関連>>>>>>>
             //デフォルトタブの存在チェック、ない場合には追加
-            if (_statuses.GetTabByType(Tween.MyCommon.TabUsageType.Home) == null)
+            if (_statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.Home) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(Tween.MyCommon.DEFAULTTAB.RECENT))
+                if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.RECENT))
                 {
-                    _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.RECENT, Tween.MyCommon.TabUsageType.Home, null);
+                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.RECENT, Hoehoe.MyCommon.TabUsageType.Home, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Tween.MyCommon.DEFAULTTAB.RECENT].TabType = Tween.MyCommon.TabUsageType.Home;
+                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.RECENT].TabType = Hoehoe.MyCommon.TabUsageType.Home;
                 }
             }
-            if (_statuses.GetTabByType(Tween.MyCommon.TabUsageType.Mentions) == null)
+            if (_statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.Mentions) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(Tween.MyCommon.DEFAULTTAB.REPLY))
+                if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.REPLY))
                 {
-                    _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.REPLY, Tween.MyCommon.TabUsageType.Mentions, null);
+                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, Hoehoe.MyCommon.TabUsageType.Mentions, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Tween.MyCommon.DEFAULTTAB.REPLY].TabType = Tween.MyCommon.TabUsageType.Mentions;
+                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.REPLY].TabType = Hoehoe.MyCommon.TabUsageType.Mentions;
                 }
             }
-            if (_statuses.GetTabByType(Tween.MyCommon.TabUsageType.DirectMessage) == null)
+            if (_statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.DirectMessage) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(Tween.MyCommon.DEFAULTTAB.DM))
+                if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.DM))
                 {
-                    _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.DM, Tween.MyCommon.TabUsageType.DirectMessage, null);
+                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, Hoehoe.MyCommon.TabUsageType.DirectMessage, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Tween.MyCommon.DEFAULTTAB.DM].TabType = Tween.MyCommon.TabUsageType.DirectMessage;
+                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.DM].TabType = Hoehoe.MyCommon.TabUsageType.DirectMessage;
                 }
             }
-            if (_statuses.GetTabByType(Tween.MyCommon.TabUsageType.Favorites) == null)
+            if (_statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.Favorites) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(Tween.MyCommon.DEFAULTTAB.FAV))
+                if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.FAV))
                 {
-                    _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.FAV, Tween.MyCommon.TabUsageType.Favorites, null);
+                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, Hoehoe.MyCommon.TabUsageType.Favorites, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Tween.MyCommon.DEFAULTTAB.FAV].TabType = Tween.MyCommon.TabUsageType.Favorites;
+                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.FAV].TabType = Hoehoe.MyCommon.TabUsageType.Favorites;
                 }
             }
             foreach (string tn in _statuses.Tabs.Keys)
             {
-                if (_statuses.Tabs[tn].TabType == Tween.MyCommon.TabUsageType.Undefined)
+                if (_statuses.Tabs[tn].TabType == Hoehoe.MyCommon.TabUsageType.Undefined)
                 {
-                    _statuses.Tabs[tn].TabType = Tween.MyCommon.TabUsageType.UserDefined;
+                    _statuses.Tabs[tn].TabType = Hoehoe.MyCommon.TabUsageType.UserDefined;
                 }
                 if (!AddNewTab(tn, true, _statuses.Tabs[tn].TabType, _statuses.Tabs[tn].ListInfo))
                 {
-                    throw new Exception(Tween.Properties.Resources.TweenMain_LoadText1);
+                    throw new Exception(Hoehoe.Properties.Resources.TweenMain_LoadText1);
                 }
             }
 
@@ -1712,10 +1712,10 @@ namespace Tween
             }
             if (_statuses.Tabs.Count == 0)
             {
-                _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.RECENT, Tween.MyCommon.TabUsageType.Home, null);
-                _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.REPLY, Tween.MyCommon.TabUsageType.Mentions, null);
-                _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.DM, Tween.MyCommon.TabUsageType.DirectMessage, null);
-                _statuses.AddTab(Tween.MyCommon.DEFAULTTAB.FAV, Tween.MyCommon.TabUsageType.Favorites, null);
+                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.RECENT, Hoehoe.MyCommon.TabUsageType.Home, null);
+                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, Hoehoe.MyCommon.TabUsageType.Mentions, null);
+                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, Hoehoe.MyCommon.TabUsageType.DirectMessage, null);
+                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, Hoehoe.MyCommon.TabUsageType.Favorites, null);
             }
         }
 
@@ -1777,7 +1777,7 @@ namespace Tween
                 Interlocked.Exchange(ref _timerHomeCounter, SettingDialog.TimelinePeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Timeline)
                 {
-                    GetTimeline(Tween.MyCommon.WorkerType.Timeline, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.Timeline, 1, 0, "");
                 }
                 ResetTimers.Timeline = false;
             }
@@ -1786,7 +1786,7 @@ namespace Tween
                 Interlocked.Exchange(ref _timerMentionCounter, SettingDialog.ReplyPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Reply)
                 {
-                    GetTimeline(Tween.MyCommon.WorkerType.Reply, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.Reply, 1, 0, "");
                 }
                 ResetTimers.Reply = false;
             }
@@ -1795,7 +1795,7 @@ namespace Tween
                 Interlocked.Exchange(ref _timerDmCounter, SettingDialog.DMPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.DirectMessage)
                 {
-                    GetTimeline(Tween.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
                 }
                 ResetTimers.DirectMessage = false;
             }
@@ -1804,7 +1804,7 @@ namespace Tween
                 Interlocked.Exchange(ref _timerPubSearchCounter, SettingDialog.PubSearchPeriodInt);
                 if (!ResetTimers.PublicSearch)
                 {
-                    GetTimeline(Tween.MyCommon.WorkerType.PublicSearch, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.PublicSearch, 1, 0, "");
                 }
                 ResetTimers.PublicSearch = false;
             }
@@ -1813,7 +1813,7 @@ namespace Tween
                 Interlocked.Exchange(ref _timerUserTimelineCounter, SettingDialog.UserTimelinePeriodInt);
                 if (!ResetTimers.UserTimeline)
                 {
-                    GetTimeline(Tween.MyCommon.WorkerType.UserTimeline, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.UserTimeline, 1, 0, "");
                 }
                 ResetTimers.UserTimeline = false;
             }
@@ -1822,7 +1822,7 @@ namespace Tween
                 Interlocked.Exchange(ref _timerListsCounter, SettingDialog.ListsPeriodInt);
                 if (!ResetTimers.Lists)
                 {
-                    GetTimeline(Tween.MyCommon.WorkerType.List, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.List, 1, 0, "");
                 }
                 ResetTimers.Lists = false;
             }
@@ -1839,7 +1839,7 @@ namespace Tween
             {
                 Interlocked.Exchange(ref _timerRefreshFollowers, 0);
                 doGetFollowersMenu();
-                GetTimeline(Tween.MyCommon.WorkerType.Configuration, 0, 0, "");
+                GetTimeline(Hoehoe.MyCommon.WorkerType.Configuration, 0, 0, "");
                 if (InvokeRequired && !IsDisposed)
                 {
                     this.Invoke(new MethodInvoker(this.TrimPostChain));
@@ -1852,14 +1852,14 @@ namespace Tween
                 {
                     _osResumed = false;
                     Interlocked.Exchange(ref _timerResumeWait, 0);
-                    GetTimeline(Tween.MyCommon.WorkerType.Timeline, 1, 0, "");
-                    GetTimeline(Tween.MyCommon.WorkerType.Reply, 1, 0, "");
-                    GetTimeline(Tween.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
-                    GetTimeline(Tween.MyCommon.WorkerType.PublicSearch, 1, 0, "");
-                    GetTimeline(Tween.MyCommon.WorkerType.UserTimeline, 1, 0, "");
-                    GetTimeline(Tween.MyCommon.WorkerType.List, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.Timeline, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.Reply, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.PublicSearch, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.UserTimeline, 1, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.List, 1, 0, "");
                     doGetFollowersMenu();
-                    GetTimeline(Tween.MyCommon.WorkerType.Configuration, 0, 0, "");
+                    GetTimeline(Hoehoe.MyCommon.WorkerType.Configuration, 0, 0, "");
                     if (InvokeRequired && !IsDisposed)
                     {
                         this.Invoke(new MethodInvoker(this.TrimPostChain));
@@ -1886,7 +1886,7 @@ namespace Tween
             SaveSelectedStatus(selId, focusedId);
 
             //mentionsの更新前件数を保持
-            int dmCount = _statuses.GetTabByType(Tween.MyCommon.TabUsageType.DirectMessage).AllCount;
+            int dmCount = _statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.DirectMessage).AllCount;
 
             //更新確定
             PostClass[] notifyPosts = null;
@@ -1993,7 +1993,7 @@ namespace Tween
             }
 
             //新着通知
-            NotifyNewPosts(notifyPosts, soundFile, addCount, isMention || dmCount != _statuses.GetTabByType(Tween.MyCommon.TabUsageType.DirectMessage).AllCount);
+            NotifyNewPosts(notifyPosts, soundFile, addCount, isMention || dmCount != _statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.DirectMessage).AllCount);
 
             SetMainWindowTitle();
             if (!StatusLabelUrl.Text.StartsWith("http"))
@@ -2123,12 +2123,12 @@ namespace Tween
 
         private bool BalloonRequired()
         {
-            return BalloonRequired(new Twitter.FormattedEvent { Eventtype = Tween.MyCommon.EventType.None });
+            return BalloonRequired(new Twitter.FormattedEvent { Eventtype = Hoehoe.MyCommon.EventType.None });
         }
 
-        private bool IsEventNotifyAsEventType(Tween.MyCommon.EventType type)
+        private bool IsEventNotifyAsEventType(Hoehoe.MyCommon.EventType type)
         {
-            return SettingDialog.EventNotifyEnabled && Convert.ToBoolean(type & SettingDialog.EventNotifyFlag) || type == Tween.MyCommon.EventType.None;
+            return SettingDialog.EventNotifyEnabled && Convert.ToBoolean(type & SettingDialog.EventNotifyFlag) || type == Hoehoe.MyCommon.EventType.None;
         }
 
         private bool IsMyEventNotityAsEventType(Twitter.FormattedEvent ev)
@@ -2138,7 +2138,7 @@ namespace Tween
 
         private bool BalloonRequired(Twitter.FormattedEvent ev)
         {
-            return IsEventNotifyAsEventType(ev.Eventtype) && IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (SettingDialog.ForceEventNotify && ev.Eventtype != Tween.MyCommon.EventType.None)) && !_initial && ((SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !SettingDialog.LimitBalloon) && !Win32Api.IsScreenSaverRunning();
+            return IsEventNotifyAsEventType(ev.Eventtype) && IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (SettingDialog.ForceEventNotify && ev.Eventtype != Hoehoe.MyCommon.EventType.None)) && !_initial && ((SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !SettingDialog.LimitBalloon) && !Win32Api.IsScreenSaverRunning();
         }
 
         private void NotifyNewPosts(PostClass[] notifyPosts, string soundFile, int addCount, bool newMentions)
@@ -2182,10 +2182,10 @@ namespace Tween
                             }
                             switch (SettingDialog.NameBalloon)
                             {
-                                case Tween.MyCommon.NameBalloonEnum.UserID:
+                                case Hoehoe.MyCommon.NameBalloonEnum.UserID:
                                     sb.Append(post.ScreenName).Append(" : ");
                                     break;
-                                case Tween.MyCommon.NameBalloonEnum.NickName:
+                                case Hoehoe.MyCommon.NameBalloonEnum.NickName:
                                     sb.Append(post.Nickname).Append(" : ");
                                     break;
                             }
@@ -2212,28 +2212,28 @@ namespace Tween
                             if (dm)
                             {
                                 title.Append("Tween [DM] ");
-                                title.Append(Tween.Properties.Resources.RefreshDirectMessageText1);
+                                title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText1);
                                 title.Append(" ");
                                 title.Append(addCount);
-                                title.Append(Tween.Properties.Resources.RefreshDirectMessageText2);
+                                title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText2);
                                 nt = GrowlHelper.NotifyType.DirectMessage;
                             }
                             else if (reply)
                             {
                                 title.Append("Tween [Reply!] ");
-                                title.Append(Tween.Properties.Resources.RefreshTimelineText1);
+                                title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
                                 title.Append(" ");
                                 title.Append(addCount);
-                                title.Append(Tween.Properties.Resources.RefreshTimelineText2);
+                                title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
                                 nt = GrowlHelper.NotifyType.Reply;
                             }
                             else
                             {
                                 title.Append("Tween ");
-                                title.Append(Tween.Properties.Resources.RefreshTimelineText1);
+                                title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
                                 title.Append(" ");
                                 title.Append(addCount);
-                                title.Append(Tween.Properties.Resources.RefreshTimelineText2);
+                                title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
                                 nt = GrowlHelper.NotifyType.Notify;
                             }
                             string bText = sb.ToString();
@@ -2265,10 +2265,10 @@ namespace Tween
                             }
                             switch (SettingDialog.NameBalloon)
                             {
-                                case Tween.MyCommon.NameBalloonEnum.UserID:
+                                case Hoehoe.MyCommon.NameBalloonEnum.UserID:
                                     sb.Append(post.ScreenName).Append(" : ");
                                     break;
-                                case Tween.MyCommon.NameBalloonEnum.NickName:
+                                case Hoehoe.MyCommon.NameBalloonEnum.NickName:
                                     sb.Append(post.Nickname).Append(" : ");
                                     break;
                             }
@@ -2291,30 +2291,30 @@ namespace Tween
                         {
                             ntIcon = ToolTipIcon.Warning;
                             title.Append("Tween [DM] ");
-                            title.Append(Tween.Properties.Resources.RefreshDirectMessageText1);
+                            title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText1);
                             title.Append(" ");
                             title.Append(addCount);
-                            title.Append(Tween.Properties.Resources.RefreshDirectMessageText2);
+                            title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText2);
                             nt = GrowlHelper.NotifyType.DirectMessage;
                         }
                         else if (reply)
                         {
                             ntIcon = ToolTipIcon.Warning;
                             title.Append("Tween [Reply!] ");
-                            title.Append(Tween.Properties.Resources.RefreshTimelineText1);
+                            title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
                             title.Append(" ");
                             title.Append(addCount);
-                            title.Append(Tween.Properties.Resources.RefreshTimelineText2);
+                            title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
                             nt = GrowlHelper.NotifyType.Reply;
                         }
                         else
                         {
                             ntIcon = ToolTipIcon.Info;
                             title.Append("Tween ");
-                            title.Append(Tween.Properties.Resources.RefreshTimelineText1);
+                            title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
                             title.Append(" ");
                             title.Append(addCount);
-                            title.Append(Tween.Properties.Resources.RefreshTimelineText2);
+                            title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
                             nt = GrowlHelper.NotifyType.Notify;
                         }
                         string bText = sb.ToString();
@@ -2350,7 +2350,7 @@ namespace Tween
             //mentions新着時に画面ブリンク
             if (!_initial && SettingDialog.BlinkNewMentions && newMentions && Form.ActiveForm == null)
             {
-                Win32Api.FlashMyWindow(this.Handle, Tween.Win32Api.FlashSpecification.FlashTray, 3);
+                Win32Api.FlashMyWindow(this.Handle, Hoehoe.Win32Api.FlashSpecification.FlashTray, 3);
             }
         }
 
@@ -2569,7 +2569,7 @@ namespace Tween
 
             if (this.ExistCurrentPost && StatusText.Text.Trim() == string.Format("RT @{0}: {1}", _curPost.ScreenName, _curPost.TextFromApi))
             {
-                DialogResult rtResult = MessageBox.Show(string.Format(Tween.Properties.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult rtResult = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (rtResult)
                 {
                     case DialogResult.Yes:
@@ -2586,11 +2586,11 @@ namespace Tween
             if (SettingDialog.Nicoms)
             {
                 StatusText.SelectionStart = StatusText.Text.Length;
-                UrlConvert(Tween.MyCommon.UrlConverter.Nicoms);
+                UrlConvert(Hoehoe.MyCommon.UrlConverter.Nicoms);
             }
 
             StatusText.SelectionStart = StatusText.Text.Length;
-            GetWorkerArg args = new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = Tween.MyCommon.WorkerType.PostMessage };
+            GetWorkerArg args = new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = Hoehoe.MyCommon.WorkerType.PostMessage };
             CheckReplyTo(StatusText.Text);
 
             //整形によって増加する文字数を取得
@@ -2628,7 +2628,7 @@ namespace Tween
             }
             if (GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
             {
-                if (MessageBox.Show(Tween.Properties.Resources.PostLengthOverMessage1, Tween.Properties.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
+                if (MessageBox.Show(Hoehoe.Properties.Resources.PostLengthOverMessage1, Hoehoe.Properties.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
                 {
                     isCutOff = true;
                     if (GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
@@ -2748,7 +2748,7 @@ namespace Tween
                 //画像投稿
                 if (!object.ReferenceEquals(ImageSelectedPicture.Image, ImageSelectedPicture.InitialImage) && ImageServiceCombo.SelectedIndex > -1 && !String.IsNullOrEmpty(ImagefilePathText.Text))
                 {
-                    if (MessageBox.Show(Tween.Properties.Resources.PostPictureConfirm1, Tween.Properties.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Cancel)
+                    if (MessageBox.Show(Hoehoe.Properties.Resources.PostPictureConfirm1, Hoehoe.Properties.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Cancel)
                     {
                         TimelinePanel.Visible = true;
                         TimelinePanel.Enabled = true;
@@ -2775,7 +2775,7 @@ namespace Tween
                 }
                 else
                 {
-                    MessageBox.Show(Tween.Properties.Resources.PostPictureWarn1, Tween.Properties.Resources.PostPictureWarn2);
+                    MessageBox.Show(Hoehoe.Properties.Resources.PostPictureWarn1, Hoehoe.Properties.Resources.PostPictureWarn2);
                     return;
                 }
             }
@@ -2785,7 +2785,7 @@ namespace Tween
             //Google検索（試験実装）
             if (StatusText.Text.StartsWith("Google:", StringComparison.OrdinalIgnoreCase) && StatusText.Text.Trim().Length > 7)
             {
-                string tmp = string.Format(Tween.Properties.Resources.SearchItem2Url, HttpUtility.UrlEncode(StatusText.Text.Substring(7)));
+                string tmp = string.Format(Hoehoe.Properties.Resources.SearchItem2Url, HttpUtility.UrlEncode(StatusText.Text.Substring(7)));
                 OpenUriAsync(tmp);
             }
 
@@ -2843,13 +2843,13 @@ namespace Tween
 
         private static bool CheckAccountValid()
         {
-            if (Twitter.AccountState != Tween.MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != Hoehoe.MyCommon.AccountState.Valid)
             {
                 _accountCheckErrorCount += 1;
                 if (_accountCheckErrorCount > 5)
                 {
                     _accountCheckErrorCount = 0;
-                    Twitter.AccountState = Tween.MyCommon.AccountState.Valid;
+                    Twitter.AccountState = Hoehoe.MyCommon.AccountState.Valid;
                     return true;
                 }
                 return false;
@@ -2885,43 +2885,43 @@ namespace Tween
             if (!CheckAccountValid())
             {
                 rslt.RetMsg = "Auth error. Check your account";
-                rslt.WorkerType = Tween.MyCommon.WorkerType.ErrorState;
+                rslt.WorkerType = Hoehoe.MyCommon.WorkerType.ErrorState;
                 //エラー表示のみ行ない、後処理キャンセル
                 rslt.TabName = args.TabName;
                 e.Result = rslt;
                 return;
             }
 
-            if (args.WorkerType != Tween.MyCommon.WorkerType.OpenUri)
+            if (args.WorkerType != Hoehoe.MyCommon.WorkerType.OpenUri)
             {
                 bw.ReportProgress(0, "");
             }
             //Notifyアイコンアニメーション開始
             switch (args.WorkerType)
             {
-                case Tween.MyCommon.WorkerType.Timeline:
-                case Tween.MyCommon.WorkerType.Reply:
+                case Hoehoe.MyCommon.WorkerType.Timeline:
+                case Hoehoe.MyCommon.WorkerType.Reply:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetTimelineApi(read, args.WorkerType, args.Page == -1, _initial);
                     //新着時未読クリア
-                    if (String.IsNullOrEmpty(ret) && args.WorkerType == Tween.MyCommon.WorkerType.Timeline && SettingDialog.ReadOldPosts)
+                    if (String.IsNullOrEmpty(ret) && args.WorkerType == Hoehoe.MyCommon.WorkerType.Timeline && SettingDialog.ReadOldPosts)
                     {
                         _statuses.SetRead();
                     }
                     //振り分け
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WorkerType.DirectMessegeRcv:
+                case Hoehoe.MyCommon.WorkerType.DirectMessegeRcv:
                     //送信分もまとめて取得
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
-                    ret = tw.GetDirectMessageApi(read, Tween.MyCommon.WorkerType.DirectMessegeRcv, args.Page == -1);
+                    ret = tw.GetDirectMessageApi(read, Hoehoe.MyCommon.WorkerType.DirectMessegeRcv, args.Page == -1);
                     if (String.IsNullOrEmpty(ret))
                     {
-                        ret = tw.GetDirectMessageApi(read, Tween.MyCommon.WorkerType.DirectMessegeSnt, args.Page == -1);
+                        ret = tw.GetDirectMessageApi(read, Hoehoe.MyCommon.WorkerType.DirectMessegeSnt, args.Page == -1);
                     }
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WorkerType.FavAdd:
+                case Hoehoe.MyCommon.WorkerType.FavAdd:
                     //スレッド処理はしない
                     if (_statuses.Tabs.ContainsKey(args.TabName))
                     {
@@ -2958,7 +2958,7 @@ namespace Tween
                                     if (String.IsNullOrEmpty(post.RelTabName))
                                     {
                                         //検索,リストUserTimeline.Relatedタブからのfavは、favタブへ追加せず。それ以外は追加
-                                        _statuses.GetTabByType(Tween.MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                        _statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
                                     }
                                     else
                                     {
@@ -2967,11 +2967,11 @@ namespace Tween
                                         {
                                             PostClass postTl = _statuses.Item(post.StatusId);
                                             postTl.IsFav = true;
-                                            _statuses.GetTabByType(Tween.MyCommon.TabUsageType.Favorites).Add(postTl.StatusId, postTl.IsRead, false);
+                                            _statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.Favorites).Add(postTl.StatusId, postTl.IsRead, false);
                                         }
                                     }
                                     //検索,リスト,UserTimeline,Relatedの各タブに反映
-                                    foreach (TabClass tb in _statuses.GetTabsByType(Tween.MyCommon.TabUsageType.PublicSearch | Tween.MyCommon.TabUsageType.Lists | Tween.MyCommon.TabUsageType.UserTimeline | Tween.MyCommon.TabUsageType.Related))
+                                    foreach (TabClass tb in _statuses.GetTabsByType(Hoehoe.MyCommon.TabUsageType.PublicSearch | Hoehoe.MyCommon.TabUsageType.Lists | Hoehoe.MyCommon.TabUsageType.UserTimeline | Hoehoe.MyCommon.TabUsageType.Related))
                                     {
                                         if (tb.Contains(post.StatusId))
                                         {
@@ -2984,7 +2984,7 @@ namespace Tween
                     }
                     rslt.SIds = args.SIds;
                     break;
-                case Tween.MyCommon.WorkerType.FavRemove:
+                case Hoehoe.MyCommon.WorkerType.FavRemove:
                     //スレッド処理はしない
                     if (_statuses.Tabs.ContainsKey(args.TabName))
                     {
@@ -3007,7 +3007,7 @@ namespace Tween
                                         _statuses.Item(post.StatusId).IsFav = false;
                                     }
                                     //検索,リスト,UserTimeline,Relatedの各タブに反映
-                                    foreach (TabClass tb in _statuses.GetTabsByType(Tween.MyCommon.TabUsageType.PublicSearch | Tween.MyCommon.TabUsageType.Lists | Tween.MyCommon.TabUsageType.UserTimeline | Tween.MyCommon.TabUsageType.Related))
+                                    foreach (TabClass tb in _statuses.GetTabsByType(Hoehoe.MyCommon.TabUsageType.PublicSearch | Hoehoe.MyCommon.TabUsageType.Lists | Hoehoe.MyCommon.TabUsageType.UserTimeline | Hoehoe.MyCommon.TabUsageType.Related))
                                     {
                                         if (tb.Contains(post.StatusId))
                                             tb.Posts[post.StatusId].IsFav = false;
@@ -3018,14 +3018,14 @@ namespace Tween
                     }
                     rslt.SIds = args.SIds;
                     break;
-                case Tween.MyCommon.WorkerType.PostMessage:
+                case Hoehoe.MyCommon.WorkerType.PostMessage:
                     bw.ReportProgress(200);
                     if (String.IsNullOrEmpty(args.PStatus.ImagePath))
                     {
                         for (int i = 0; i <= 1; i++)
                         {
                             ret = tw.PostStatus(args.PStatus.Status, args.PStatus.InReplyToId);
-                            if (String.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.PStatus.Status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.PStatus.Status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != Tween.MyCommon.AccountState.Valid)
+                            if (String.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.PStatus.Status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.PStatus.Status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != Hoehoe.MyCommon.AccountState.Valid)
                             {
                                 break;
                             }
@@ -3038,7 +3038,7 @@ namespace Tween
                     bw.ReportProgress(300);
                     rslt.PStatus = args.PStatus;
                     break;
-                case Tween.MyCommon.WorkerType.Retweet:
+                case Hoehoe.MyCommon.WorkerType.Retweet:
                     bw.ReportProgress(200);
                     for (int i = 0; i < args.Ids.Count; i++)
                     {
@@ -3046,18 +3046,18 @@ namespace Tween
                     }
                     bw.ReportProgress(300);
                     break;
-                case Tween.MyCommon.WorkerType.Follower:
-                    bw.ReportProgress(50, Tween.Properties.Resources.UpdateFollowersMenuItem1_ClickText1);
+                case Hoehoe.MyCommon.WorkerType.Follower:
+                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText1);
                     ret = tw.GetFollowersApi();
                     if (String.IsNullOrEmpty(ret))
                     {
                         ret = tw.GetNoRetweetIdsApi();
                     }
                     break;
-                case Tween.MyCommon.WorkerType.Configuration:
+                case Hoehoe.MyCommon.WorkerType.Configuration:
                     ret = tw.ConfigurationApi();
                     break;
-                case Tween.MyCommon.WorkerType.OpenUri:
+                case Hoehoe.MyCommon.WorkerType.OpenUri:
                     string myPath = Convert.ToString(args.Url);
 
                     try
@@ -3090,16 +3090,16 @@ namespace Tween
                     {
                     }
                     break;
-                case Tween.MyCommon.WorkerType.Favorites:
+                case Hoehoe.MyCommon.WorkerType.Favorites:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetFavoritesApi(read, args.WorkerType, args.Page == -1);
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WorkerType.PublicSearch:
+                case Hoehoe.MyCommon.WorkerType.PublicSearch:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (String.IsNullOrEmpty(args.TabName))
                     {
-                        foreach (TabClass tb in _statuses.GetTabsByType(Tween.MyCommon.TabUsageType.PublicSearch))
+                        foreach (TabClass tb in _statuses.GetTabsByType(Hoehoe.MyCommon.TabUsageType.PublicSearch))
                         {
                             if (!String.IsNullOrEmpty(tb.SearchWords))
                             {
@@ -3122,14 +3122,14 @@ namespace Tween
                     //振り分け
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WorkerType.UserTimeline:
+                case Hoehoe.MyCommon.WorkerType.UserTimeline:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     int count = 20;
                     if (SettingDialog.UseAdditionalCount)
                         count = SettingDialog.UserTimelineCountApi;
                     if (String.IsNullOrEmpty(args.TabName))
                     {
-                        foreach (TabClass tb in _statuses.GetTabsByType(Tween.MyCommon.TabUsageType.UserTimeline))
+                        foreach (TabClass tb in _statuses.GetTabsByType(Hoehoe.MyCommon.TabUsageType.UserTimeline))
                         {
                             if (!String.IsNullOrEmpty(tb.User))
                             {
@@ -3148,12 +3148,12 @@ namespace Tween
                     //振り分け
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WorkerType.List:
+                case Hoehoe.MyCommon.WorkerType.List:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (String.IsNullOrEmpty(args.TabName))
                     {
                         //定期更新
-                        foreach (TabClass tb in _statuses.GetTabsByType(Tween.MyCommon.TabUsageType.Lists))
+                        foreach (TabClass tb in _statuses.GetTabsByType(Hoehoe.MyCommon.TabUsageType.Lists))
                         {
                             if (tb.ListInfo != null && tb.ListInfo.Id != 0)
                             {
@@ -3173,13 +3173,13 @@ namespace Tween
                     //振り分け
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WorkerType.Related:
+                case Hoehoe.MyCommon.WorkerType.Related:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetRelatedResult(read, _statuses.GetTabByName(args.TabName));
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Tween.MyCommon.WorkerType.BlockIds:
-                    bw.ReportProgress(50, Tween.Properties.Resources.UpdateBlockUserText1);
+                case Hoehoe.MyCommon.WorkerType.BlockIds:
+                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateBlockUserText1);
                     ret = tw.GetBlockUserIds();
                     if (TabInformations.GetInstance().BlockIds.Count == 0)
                     {
@@ -3195,7 +3195,7 @@ namespace Tween
             }
 
             //時速表示用
-            if (args.WorkerType == Tween.MyCommon.WorkerType.FavAdd)
+            if (args.WorkerType == Hoehoe.MyCommon.WorkerType.FavAdd)
             {
                 System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                 for (int i = _favTimestamps.Count - 1; i >= 0; i += -1)
@@ -3206,7 +3206,7 @@ namespace Tween
                     }
                 }
             }
-            if (args.WorkerType == Tween.MyCommon.WorkerType.Timeline && !_initial)
+            if (args.WorkerType == Hoehoe.MyCommon.WorkerType.Timeline && !_initial)
             {
                 lock (_syncObject)
                 {
@@ -3242,7 +3242,7 @@ namespace Tween
             }
 
             //終了ステータス
-            if (args.WorkerType != Tween.MyCommon.WorkerType.OpenUri)
+            if (args.WorkerType != Hoehoe.MyCommon.WorkerType.OpenUri)
             {
                 bw.ReportProgress(100, MakeStatusMessage(args, true));
             }
@@ -3251,7 +3251,7 @@ namespace Tween
             rslt.RetMsg = ret;
             rslt.WorkerType = args.WorkerType;
             rslt.TabName = args.TabName;
-            if (args.WorkerType == Tween.MyCommon.WorkerType.DirectMessegeRcv || args.WorkerType == Tween.MyCommon.WorkerType.DirectMessegeSnt || args.WorkerType == Tween.MyCommon.WorkerType.Reply || args.WorkerType == Tween.MyCommon.WorkerType.Timeline || args.WorkerType == Tween.MyCommon.WorkerType.Favorites)
+            if (args.WorkerType == Hoehoe.MyCommon.WorkerType.DirectMessegeRcv || args.WorkerType == Hoehoe.MyCommon.WorkerType.DirectMessegeSnt || args.WorkerType == Hoehoe.MyCommon.WorkerType.Reply || args.WorkerType == Hoehoe.MyCommon.WorkerType.Timeline || args.WorkerType == Hoehoe.MyCommon.WorkerType.Favorites)
             {
                 rslt.Page = args.Page - 1;
                 //値が正しいか後でチェック。10ページ毎の継続確認
@@ -3268,34 +3268,34 @@ namespace Tween
                 //継続中メッセージ
                 switch (AsyncArg.WorkerType)
                 {
-                    case Tween.MyCommon.WorkerType.Timeline:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText5 + AsyncArg.Page.ToString() + Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
+                    case Hoehoe.MyCommon.WorkerType.Timeline:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText5 + AsyncArg.Page.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case Tween.MyCommon.WorkerType.Reply:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText4 + AsyncArg.Page.ToString() + Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
+                    case Hoehoe.MyCommon.WorkerType.Reply:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText4 + AsyncArg.Page.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case Tween.MyCommon.WorkerType.DirectMessegeRcv:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText8 + AsyncArg.Page.ToString() + Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
+                    case Hoehoe.MyCommon.WorkerType.DirectMessegeRcv:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText8 + AsyncArg.Page.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case Tween.MyCommon.WorkerType.FavAdd:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText15 + AsyncArg.Page.ToString() + "/" + AsyncArg.Ids.Count.ToString() + Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText16 + (AsyncArg.Page - AsyncArg.SIds.Count - 1).ToString();
+                    case Hoehoe.MyCommon.WorkerType.FavAdd:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText15 + AsyncArg.Page.ToString() + "/" + AsyncArg.Ids.Count.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText16 + (AsyncArg.Page - AsyncArg.SIds.Count - 1).ToString();
                         break;
-                    case Tween.MyCommon.WorkerType.FavRemove:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText17 + AsyncArg.Page.ToString() + "/" + AsyncArg.Ids.Count.ToString() + Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText18 + (AsyncArg.Page - AsyncArg.SIds.Count - 1).ToString();
+                    case Hoehoe.MyCommon.WorkerType.FavRemove:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText17 + AsyncArg.Page.ToString() + "/" + AsyncArg.Ids.Count.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText18 + (AsyncArg.Page - AsyncArg.SIds.Count - 1).ToString();
                         break;
-                    case Tween.MyCommon.WorkerType.Favorites:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText19;
+                    case Hoehoe.MyCommon.WorkerType.Favorites:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText19;
                         break;
-                    case Tween.MyCommon.WorkerType.PublicSearch:
+                    case Hoehoe.MyCommon.WorkerType.PublicSearch:
                         smsg = "Search refreshing...";
                         break;
-                    case Tween.MyCommon.WorkerType.List:
+                    case Hoehoe.MyCommon.WorkerType.List:
                         smsg = "List refreshing...";
                         break;
-                    case Tween.MyCommon.WorkerType.Related:
+                    case Hoehoe.MyCommon.WorkerType.Related:
                         smsg = "Related refreshing...";
                         break;
-                    case Tween.MyCommon.WorkerType.UserTimeline:
+                    case Hoehoe.MyCommon.WorkerType.UserTimeline:
                         smsg = "UserTimeline refreshing...";
                         break;
                 }
@@ -3305,47 +3305,47 @@ namespace Tween
                 //完了メッセージ
                 switch (AsyncArg.WorkerType)
                 {
-                    case Tween.MyCommon.WorkerType.Timeline:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText1;
+                    case Hoehoe.MyCommon.WorkerType.Timeline:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText1;
                         break;
-                    case Tween.MyCommon.WorkerType.Reply:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText9;
+                    case Hoehoe.MyCommon.WorkerType.Reply:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText9;
                         break;
-                    case Tween.MyCommon.WorkerType.DirectMessegeRcv:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText11;
+                    case Hoehoe.MyCommon.WorkerType.DirectMessegeRcv:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText11;
                         break;
-                    case Tween.MyCommon.WorkerType.DirectMessegeSnt:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText13;
+                    case Hoehoe.MyCommon.WorkerType.DirectMessegeSnt:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText13;
                         break;
-                    case Tween.MyCommon.WorkerType.FavAdd:
-                        break;
-                    //進捗メッセージ残す
-                    case Tween.MyCommon.WorkerType.FavRemove:
+                    case Hoehoe.MyCommon.WorkerType.FavAdd:
                         break;
                     //進捗メッセージ残す
-                    case Tween.MyCommon.WorkerType.Favorites:
-                        smsg = Tween.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText20;
-                        break;
-                    case Tween.MyCommon.WorkerType.Follower:
-                        smsg = Tween.Properties.Resources.UpdateFollowersMenuItem1_ClickText3;
-                        break;
-                    case Tween.MyCommon.WorkerType.Configuration:
+                    case Hoehoe.MyCommon.WorkerType.FavRemove:
                         break;
                     //進捗メッセージ残す
-                    case Tween.MyCommon.WorkerType.PublicSearch:
+                    case Hoehoe.MyCommon.WorkerType.Favorites:
+                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText20;
+                        break;
+                    case Hoehoe.MyCommon.WorkerType.Follower:
+                        smsg = Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText3;
+                        break;
+                    case Hoehoe.MyCommon.WorkerType.Configuration:
+                        break;
+                    //進捗メッセージ残す
+                    case Hoehoe.MyCommon.WorkerType.PublicSearch:
                         smsg = "Search refreshed";
                         break;
-                    case Tween.MyCommon.WorkerType.List:
+                    case Hoehoe.MyCommon.WorkerType.List:
                         smsg = "List refreshed";
                         break;
-                    case Tween.MyCommon.WorkerType.Related:
+                    case Hoehoe.MyCommon.WorkerType.Related:
                         smsg = "Related refreshed";
                         break;
-                    case Tween.MyCommon.WorkerType.UserTimeline:
+                    case Hoehoe.MyCommon.WorkerType.UserTimeline:
                         smsg = "UserTimeline refreshed";
                         break;
-                    case Tween.MyCommon.WorkerType.BlockIds:
-                        smsg = Tween.Properties.Resources.UpdateBlockUserText3;
+                    case Hoehoe.MyCommon.WorkerType.BlockIds:
+                        smsg = Hoehoe.Properties.Resources.UpdateBlockUserText3;
                         break;
                 }
             }
@@ -3369,7 +3369,7 @@ namespace Tween
                 //終了
                 if (e.ProgressPercentage == 300)
                 {
-                    StatusLabel.Text = Tween.Properties.Resources.PostWorker_RunWorkerCompletedText4;
+                    StatusLabel.Text = Hoehoe.Properties.Resources.PostWorker_RunWorkerCompletedText4;
                 }
             }
             else
@@ -3405,7 +3405,7 @@ namespace Tween
 
             GetWorkerResult rslt = (GetWorkerResult)e.Result;
 
-            if (rslt.WorkerType == Tween.MyCommon.WorkerType.OpenUri)
+            if (rslt.WorkerType == Hoehoe.MyCommon.WorkerType.OpenUri)
             {
                 return;
             }
@@ -3417,17 +3417,17 @@ namespace Tween
                 StatusLabel.Text = rslt.RetMsg;
             }
 
-            if (rslt.WorkerType == Tween.MyCommon.WorkerType.ErrorState)
+            if (rslt.WorkerType == Hoehoe.MyCommon.WorkerType.ErrorState)
             {
                 return;
             }
 
-            if (rslt.WorkerType == Tween.MyCommon.WorkerType.FavRemove)
+            if (rslt.WorkerType == Hoehoe.MyCommon.WorkerType.FavRemove)
             {
                 this.RemovePostFromFavTab(rslt.SIds.ToArray());
             }
 
-            if (rslt.WorkerType == Tween.MyCommon.WorkerType.Timeline || rslt.WorkerType == Tween.MyCommon.WorkerType.Reply || rslt.WorkerType == Tween.MyCommon.WorkerType.List || rslt.WorkerType == Tween.MyCommon.WorkerType.PublicSearch || rslt.WorkerType == Tween.MyCommon.WorkerType.DirectMessegeRcv || rslt.WorkerType == Tween.MyCommon.WorkerType.DirectMessegeSnt || rslt.WorkerType == Tween.MyCommon.WorkerType.Favorites || rslt.WorkerType == Tween.MyCommon.WorkerType.Follower || rslt.WorkerType == Tween.MyCommon.WorkerType.FavAdd || rslt.WorkerType == Tween.MyCommon.WorkerType.FavRemove || rslt.WorkerType == Tween.MyCommon.WorkerType.Related || rslt.WorkerType == Tween.MyCommon.WorkerType.UserTimeline || rslt.WorkerType == Tween.MyCommon.WorkerType.BlockIds || rslt.WorkerType == Tween.MyCommon.WorkerType.Configuration)
+            if (rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Timeline || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Reply || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.List || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.PublicSearch || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.DirectMessegeRcv || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.DirectMessegeSnt || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Favorites || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Follower || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.FavAdd || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.FavRemove || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Related || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.UserTimeline || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.BlockIds || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Configuration)
             {
                 RefreshTimeline(false);
                 //リスト反映
@@ -3435,32 +3435,32 @@ namespace Tween
 
             switch (rslt.WorkerType)
             {
-                case Tween.MyCommon.WorkerType.Timeline:
+                case Hoehoe.MyCommon.WorkerType.Timeline:
                     _waitTimeline = false;
                     if (!_initial)
                     {
                         //    'API使用時の取得調整は別途考える（カウント調整？）
                     }
                     break;
-                case Tween.MyCommon.WorkerType.Reply:
+                case Hoehoe.MyCommon.WorkerType.Reply:
                     _waitReply = false;
                     if (rslt.NewDM && !_initial)
                     {
-                        GetTimeline(Tween.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
+                        GetTimeline(Hoehoe.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
                     }
                     break;
-                case Tween.MyCommon.WorkerType.Favorites:
+                case Hoehoe.MyCommon.WorkerType.Favorites:
                     _waitFav = false;
                     break;
-                case Tween.MyCommon.WorkerType.DirectMessegeRcv:
+                case Hoehoe.MyCommon.WorkerType.DirectMessegeRcv:
                     _waitDm = false;
                     break;
-                case Tween.MyCommon.WorkerType.FavAdd:
-                case Tween.MyCommon.WorkerType.FavRemove:
+                case Hoehoe.MyCommon.WorkerType.FavAdd:
+                case Hoehoe.MyCommon.WorkerType.FavRemove:
                     if (_curList != null && _curTab != null)
                     {
                         _curList.BeginUpdate();
-                        if (rslt.WorkerType == Tween.MyCommon.WorkerType.FavRemove && _statuses.Tabs[_curTab.Text].TabType == Tween.MyCommon.TabUsageType.Favorites)
+                        if (rslt.WorkerType == Hoehoe.MyCommon.WorkerType.FavRemove && _statuses.Tabs[_curTab.Text].TabType == Hoehoe.MyCommon.TabUsageType.Favorites)
                         {
                             //色変えは不要
                         }
@@ -3527,7 +3527,7 @@ namespace Tween
                         DialogResult retry = default(DialogResult);
                         try
                         {
-                            retry = MessageBox.Show(string.Format("{0}   --->   [ " + rslt.RetMsg + " ]" + Environment.NewLine + "\"" + rslt.PStatus.Status + "\"" + Environment.NewLine + "{1}", Tween.Properties.Resources.StatusUpdateFailed1, Tween.Properties.Resources.StatusUpdateFailed2), "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
+                            retry = MessageBox.Show(string.Format("{0}   --->   [ " + rslt.RetMsg + " ]" + Environment.NewLine + "\"" + rslt.PStatus.Status + "\"" + Environment.NewLine + "{1}", Hoehoe.Properties.Resources.StatusUpdateFailed1, Hoehoe.Properties.Resources.StatusUpdateFailed2), "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
                         }
                         catch (Exception)
                         {
@@ -3699,7 +3699,7 @@ namespace Tween
             }
         }
 
-        Dictionary<Tween.MyCommon.WorkerType, DateTime> _lastTime;
+        Dictionary<Hoehoe.MyCommon.WorkerType, DateTime> _lastTime;
 
         private void GetTimeline(MyCommon.WorkerType wkType, int fromPage, int toPage, string tabName)
         {
@@ -3805,7 +3805,7 @@ namespace Tween
             //複数fav確認msg
             if (_curList.SelectedIndices.Count > 250 && isFavAdd)
             {
-                MessageBox.Show(Tween.Properties.Resources.FavoriteLimitCountText);
+                MessageBox.Show(Hoehoe.Properties.Resources.FavoriteLimitCountText);
                 _DoFavRetweetFlags = false;
                 return;
             }
@@ -3813,12 +3813,12 @@ namespace Tween
             {
                 if (isFavAdd)
                 {
-                    string QuestionText = Tween.Properties.Resources.FavAddToolStripMenuItem_ClickText1;
+                    string QuestionText = Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText1;
                     if (_DoFavRetweetFlags)
                     {
-                        QuestionText = Tween.Properties.Resources.FavoriteRetweetQuestionText3;
+                        QuestionText = Hoehoe.Properties.Resources.FavoriteRetweetQuestionText3;
                     }
-                    if (MessageBox.Show(QuestionText, Tween.Properties.Resources.FavAddToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                    if (MessageBox.Show(QuestionText, Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                     {
                         _DoFavRetweetFlags = false;
                         return;
@@ -3826,7 +3826,7 @@ namespace Tween
                 }
                 else
                 {
-                    if (MessageBox.Show(Tween.Properties.Resources.FavRemoveToolStripMenuItem_ClickText1, Tween.Properties.Resources.FavRemoveToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                    if (MessageBox.Show(Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText1, Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                     {
                         return;
                     }
@@ -3862,11 +3862,11 @@ namespace Tween
             {
                 if (isFavAdd)
                 {
-                    StatusLabel.Text = Tween.Properties.Resources.FavAddToolStripMenuItem_ClickText4;
+                    StatusLabel.Text = Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText4;
                 }
                 else
                 {
-                    StatusLabel.Text = Tween.Properties.Resources.FavRemoveToolStripMenuItem_ClickText4;
+                    StatusLabel.Text = Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText4;
                 }
                 return;
             }
@@ -4048,7 +4048,7 @@ namespace Tween
                 ReadedStripMenuItem.Enabled = true;
                 UnreadStripMenuItem.Enabled = true;
             }
-            DeleteStripMenuItem.Text = Tween.Properties.Resources.DeleteMenuText1;
+            DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
             if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.DirectMessage || !this.ExistCurrentPost || _curPost.IsDm)
             {
                 FavAddToolStripMenuItem.Enabled = false;
@@ -4086,11 +4086,11 @@ namespace Tween
                     FavoriteRetweetContextMenu.Enabled = false;
                     if (String.IsNullOrEmpty(_curPost.RetweetedBy))
                     {
-                        DeleteStripMenuItem.Text = Tween.Properties.Resources.DeleteMenuText1;
+                        DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
                     }
                     else
                     {
-                        DeleteStripMenuItem.Text = Tween.Properties.Resources.DeleteMenuText2;
+                        DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
                     }
                     DeleteStripMenuItem.Enabled = true;
                 }
@@ -4098,11 +4098,11 @@ namespace Tween
                 {
                     if (String.IsNullOrEmpty(_curPost.RetweetedBy))
                     {
-                        DeleteStripMenuItem.Text = Tween.Properties.Resources.DeleteMenuText1;
+                        DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
                     }
                     else
                     {
-                        DeleteStripMenuItem.Text = Tween.Properties.Resources.DeleteMenuText2;
+                        DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
                     }
                     DeleteStripMenuItem.Enabled = false;
                     if (_curPost.IsProtect)
@@ -4181,9 +4181,9 @@ namespace Tween
                 }
             }
 
-            string tmp = string.Format(Tween.Properties.Resources.DeleteStripMenuItem_ClickText1, Environment.NewLine);
+            string tmp = string.Format(Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText1, Environment.NewLine);
 
-            if (MessageBox.Show(tmp, Tween.Properties.Resources.DeleteStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+            if (MessageBox.Show(tmp, Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
             {
                 return;
             }
@@ -4238,12 +4238,12 @@ namespace Tween
 
                 if (rslt)
                 {
-                    StatusLabel.Text = Tween.Properties.Resources.DeleteStripMenuItem_ClickText4;
+                    StatusLabel.Text = Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText4;
                     //成功
                 }
                 else
                 {
-                    StatusLabel.Text = Tween.Properties.Resources.DeleteStripMenuItem_ClickText3;
+                    StatusLabel.Text = Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText3;
                     //失敗
                 }
 
@@ -4966,7 +4966,7 @@ namespace Tween
             GetTimeline(MyCommon.WorkerType.UserTimeline, 1, 0, tabName);
         }
 
-        public bool AddNewTab(string tabName, bool startup, Tween.MyCommon.TabUsageType tabType, ListElement listInfo = null)
+        public bool AddNewTab(string tabName, bool startup, Hoehoe.MyCommon.TabUsageType tabType, ListElement listInfo = null)
         {
             //重複チェック
             foreach (TabPage tb in ListTab.TabPages)
@@ -4978,7 +4978,7 @@ namespace Tween
             }
 
             //新規タブ名チェック
-            if (tabName == Tween.Properties.Resources.AddNewTabText1)
+            if (tabName == Hoehoe.Properties.Resources.AddNewTabText1)
             {
                 return false;
             }
@@ -5329,8 +5329,8 @@ namespace Tween
 
             if (confirm)
             {
-                string tmp = string.Format(Tween.Properties.Resources.RemoveSpecifiedTabText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, TabName + " " + Tween.Properties.Resources.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Cancel)
+                string tmp = string.Format(Hoehoe.Properties.Resources.RemoveSpecifiedTabText1, Environment.NewLine);
+                if (MessageBox.Show(tmp, TabName + " " + Hoehoe.Properties.Resources.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Cancel)
                 {
                     return false;
                 }
@@ -5771,7 +5771,7 @@ namespace Tween
             else
             {
                 //A cache miss, so create a new ListViewItem and pass it back.
-                TabPage tb = (TabPage)((Tween.TweenCustomControl.DetailsListView)sender).Parent;
+                TabPage tb = (TabPage)((Hoehoe.TweenCustomControl.DetailsListView)sender).Parent;
                 try
                 {
                     e.Item = CreateItem(tb, _statuses.Item(tb.Text, e.ItemIndex), e.ItemIndex);
@@ -6136,7 +6136,7 @@ namespace Tween
         {
             if (_curList.VirtualListSize == 0)
             {
-                MessageBox.Show(Tween.Properties.Resources.DoTabSearchText2, Tween.Properties.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText2, Hoehoe.Properties.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             int cidx = 0;
@@ -6232,7 +6232,7 @@ namespace Tween
                     }
                     catch (ArgumentException)
                     {
-                        MessageBox.Show(Tween.Properties.Resources.DoTabSearchText1, "Tween", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText1, "Tween", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }
@@ -6280,7 +6280,7 @@ namespace Tween
             catch (ArgumentOutOfRangeException)
             {
             }
-            MessageBox.Show(Tween.Properties.Resources.DoTabSearchText2, Tween.Properties.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText2, Hoehoe.Properties.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void MenuItemSubSearch_Click(object sender, EventArgs e)
@@ -6444,7 +6444,7 @@ namespace Tween
             if (_curList.SelectedIndices.Count > 0)
             {
                 PostClass post = _statuses.Item(_curTab.Text, _curList.SelectedIndices[0]);
-                OpenUriAsync(Tween.Properties.Resources.FavstarUrl + "users/" + post.ScreenName + "/recent");
+                OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + post.ScreenName + "/recent");
             }
         }
 
@@ -6485,10 +6485,10 @@ namespace Tween
             }
             catch (Exception)
             {
-                StatusLabel.Text = Tween.Properties.Resources.CheckNewVersionText9;
+                StatusLabel.Text = Hoehoe.Properties.Resources.CheckNewVersionText9;
                 if (!startup)
                 {
-                    MessageBox.Show(Tween.Properties.Resources.CheckNewVersionText10, Tween.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                    MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText10, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                 }
                 return;
             }
@@ -6501,10 +6501,10 @@ namespace Tween
                 }
                 if (!String.IsNullOrEmpty(MyCommon.fileVersion) && strVer.CompareTo(MyCommon.fileVersion.Replace(".", "")) > 0)
                 {
-                    string tmp = string.Format(Tween.Properties.Resources.CheckNewVersionText3, strVer);
+                    string tmp = string.Format(Hoehoe.Properties.Resources.CheckNewVersionText3, strVer);
                     using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                     {
-                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Tween.Properties.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Hoehoe.Properties.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             retMsg = tw.GetTweenBinary(strVer);
                             if (retMsg.Length == 0)
@@ -6519,7 +6519,7 @@ namespace Tween
                             {
                                 if (!startup)
                                 {
-                                    MessageBox.Show(Tween.Properties.Resources.CheckNewVersionText5 + Environment.NewLine + retMsg, Tween.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText5 + Environment.NewLine + retMsg, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 }
                             }
                         }
@@ -6530,10 +6530,10 @@ namespace Tween
                 {
                     if (forceUpdate)
                     {
-                        string tmp = string.Format(Tween.Properties.Resources.CheckNewVersionText6, strVer);
+                        string tmp = string.Format(Hoehoe.Properties.Resources.CheckNewVersionText6, strVer);
                         using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                         {
-                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Tween.Properties.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Hoehoe.Properties.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 retMsg = tw.GetTweenBinary(strVer);
                                 if (retMsg.Length == 0)
@@ -6548,7 +6548,7 @@ namespace Tween
                                 {
                                     if (!startup)
                                     {
-                                        MessageBox.Show(Tween.Properties.Resources.CheckNewVersionText5 + Environment.NewLine + retMsg, Tween.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                        MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText5 + Environment.NewLine + retMsg, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     }
                                 }
                             }
@@ -6557,16 +6557,16 @@ namespace Tween
                     }
                     else if (!startup)
                     {
-                        MessageBox.Show(Tween.Properties.Resources.CheckNewVersionText7 + MyCommon.fileVersion.Replace(".", "") + Tween.Properties.Resources.CheckNewVersionText8 + strVer, Tween.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText7 + MyCommon.fileVersion.Replace(".", "") + Hoehoe.Properties.Resources.CheckNewVersionText8 + strVer, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             else
             {
-                StatusLabel.Text = Tween.Properties.Resources.CheckNewVersionText9;
+                StatusLabel.Text = Hoehoe.Properties.Resources.CheckNewVersionText9;
                 if (!startup)
                 {
-                    MessageBox.Show(Tween.Properties.Resources.CheckNewVersionText10, Tween.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText10, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
         }
@@ -7695,7 +7695,7 @@ namespace Tween
             {
                 //MessageBox.Show(My.Resources.CopyStotText1)
                 MessageForm w = new MessageForm();
-                w.ShowDialog(Tween.Properties.Resources.CopyStotText1);
+                w.ShowDialog(Hoehoe.Properties.Resources.CopyStotText1);
             }
             if (sb.Length > 0)
             {
@@ -8715,7 +8715,7 @@ namespace Tween
 
         private void SaveLogMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult rslt = MessageBox.Show(string.Format(Tween.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Tween.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (rslt == DialogResult.Cancel)
             {
                 return;
@@ -8723,9 +8723,9 @@ namespace Tween
 
             SaveFileDialog1.FileName = String.Format("TweenPosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
             SaveFileDialog1.InitialDirectory = MyCommon.GetAppDir();
-            SaveFileDialog1.Filter = Tween.Properties.Resources.SaveLogMenuItem_ClickText3;
+            SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
-            SaveFileDialog1.Title = Tween.Properties.Resources.SaveLogMenuItem_ClickText4;
+            SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
             SaveFileDialog1.RestoreDirectory = true;
 
             if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -8813,8 +8813,8 @@ namespace Tween
             {
                 if (ListTab.TabPages[i].Text == newTabText)
                 {
-                    string tmp = string.Format(Tween.Properties.Resources.Tabs_DoubleClickText1, newTabText);
-                    MessageBox.Show(tmp, Tween.Properties.Resources.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string tmp = string.Format(Hoehoe.Properties.Resources.Tabs_DoubleClickText1, newTabText);
+                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return false;
                 }
             }
@@ -9655,8 +9655,8 @@ namespace Tween
                 }
                 if (!_statuses.AddTab(tabName, tabUsage, list) || !AddNewTab(tabName, false, tabUsage, list))
                 {
-                    string tmp = string.Format(Tween.Properties.Resources.AddTabMenuItem_ClickText1, tabName);
-                    MessageBox.Show(tmp, Tween.Properties.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string tmp = string.Format(Hoehoe.Properties.Resources.AddTabMenuItem_ClickText1, tabName);
+                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
                 {
@@ -9976,7 +9976,7 @@ namespace Tween
 
                 ListTab.SelectedTab.Focus();
                 //新規タブを選択→タブ作成
-                if (tabName == Tween.Properties.Resources.IDRuleMenuItem_ClickText1)
+                if (tabName == Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText1)
                 {
                     using (InputTabName inputName = new InputTabName())
                     {
@@ -9994,8 +9994,8 @@ namespace Tween
                     {
                         if (!_statuses.AddTab(tabName, MyCommon.TabUsageType.UserDefined, null) || !AddNewTab(tabName, false, MyCommon.TabUsageType.UserDefined))
                         {
-                            string tmp = string.Format(Tween.Properties.Resources.IDRuleMenuItem_ClickText2, tabName);
-                            MessageBox.Show(tmp, Tween.Properties.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText2, tabName);
+                            MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             //もう一度タブ名入力
                         }
                         else
@@ -10015,8 +10015,8 @@ namespace Tween
         private void MoveOrCopy(ref bool move, ref bool mark)
         {
             //移動するか？
-            string _tmp = String.Format(Tween.Properties.Resources.IDRuleMenuItem_ClickText4, Environment.NewLine);
-            if (MessageBox.Show(_tmp, Tween.Properties.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            string _tmp = String.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText4, Environment.NewLine);
+            if (MessageBox.Show(_tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 move = false;
             }
@@ -10027,8 +10027,8 @@ namespace Tween
             if (!move)
             {
                 //マークするか？
-                _tmp = String.Format(Tween.Properties.Resources.IDRuleMenuItem_ClickText6, "\r\n");
-                if (MessageBox.Show(_tmp, Tween.Properties.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                _tmp = String.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText6, "\r\n");
+                if (MessageBox.Show(_tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     mark = true;
                 }
@@ -10210,8 +10210,8 @@ namespace Tween
         {
             if (showWarning)
             {
-                string tmp = string.Format(Tween.Properties.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, tabName + " " + Tween.Properties.Resources.ClearTabMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                string tmp = string.Format(Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
+                if (MessageBox.Show(tmp, tabName + " " + Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                 {
                     return;
                 }
@@ -10283,23 +10283,23 @@ namespace Tween
                     }
                     break;
                 case MyCommon.DispTitleEnum.UnreadRepCount:
-                    ttl.AppendFormat(Tween.Properties.Resources.SetMainWindowTitleText1, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText1, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
                     break;
                 case MyCommon.DispTitleEnum.UnreadAllCount:
-                    ttl.AppendFormat(Tween.Properties.Resources.SetMainWindowTitleText2, ur);
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText2, ur);
                     break;
                 case MyCommon.DispTitleEnum.UnreadAllRepCount:
-                    ttl.AppendFormat(Tween.Properties.Resources.SetMainWindowTitleText3, ur, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText3, ur, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
                     break;
                 case MyCommon.DispTitleEnum.UnreadCountAllCount:
-                    ttl.AppendFormat(Tween.Properties.Resources.SetMainWindowTitleText4, ur, al);
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText4, ur, al);
                     break;
                 case MyCommon.DispTitleEnum.OwnStatus:
                     if (_prevFollowerCount == 0 && tw.FollowersCount > 0)
                     {
                         _prevFollowerCount = tw.FollowersCount;
                     }
-                    ttl.AppendFormat(Tween.Properties.Resources.OwnStatusTitle, tw.StatusesCount, tw.FriendsCount, tw.FollowersCount, tw.FollowersCount - _prevFollowerCount);
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.OwnStatusTitle, tw.StatusesCount, tw.FriendsCount, tw.FollowersCount, tw.FollowersCount - _prevFollowerCount);
                     break;
             }
 
@@ -10355,14 +10355,14 @@ namespace Tween
             _unreadCounter = ur;
             _unreadAtCounter = urat;
 
-            slbl.AppendFormat(Tween.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, _postTimestamps.Count, _favTimestamps.Count, _tlCount);
+            slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, _postTimestamps.Count, _favTimestamps.Count, _tlCount);
             if (SettingDialog.TimelinePeriodInt == 0)
             {
-                slbl.Append(Tween.Properties.Resources.SetStatusLabelText2);
+                slbl.Append(Hoehoe.Properties.Resources.SetStatusLabelText2);
             }
             else
             {
-                slbl.Append(SettingDialog.TimelinePeriodInt.ToString() + Tween.Properties.Resources.SetStatusLabelText3);
+                slbl.Append(SettingDialog.TimelinePeriodInt.ToString() + Hoehoe.Properties.Resources.SetStatusLabelText3);
             }
             return slbl.ToString();
         }
@@ -10650,13 +10650,13 @@ namespace Tween
                         else
                         {
                             this.IconNameToolStripMenuItem.Enabled = false;
-                            this.IconNameToolStripMenuItem.Text = Tween.Properties.Resources.ContextMenuStrip3_OpeningText1;
+                            this.IconNameToolStripMenuItem.Text = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText1;
                         }
                     }
                     else
                     {
                         this.IconNameToolStripMenuItem.Enabled = false;
-                        this.IconNameToolStripMenuItem.Text = Tween.Properties.Resources.ContextMenuStrip3_OpeningText1;
+                        this.IconNameToolStripMenuItem.Text = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText1;
                     }
                     if (this._TIconDic[_curPost.ImageUrl] != null)
                     {
@@ -10671,14 +10671,14 @@ namespace Tween
                 {
                     this.IconNameToolStripMenuItem.Enabled = false;
                     this.SaveIconPictureToolStripMenuItem.Enabled = false;
-                    this.IconNameToolStripMenuItem.Text = Tween.Properties.Resources.ContextMenuStrip3_OpeningText1;
+                    this.IconNameToolStripMenuItem.Text = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText1;
                 }
             }
             else
             {
                 this.IconNameToolStripMenuItem.Enabled = false;
                 this.SaveIconPictureToolStripMenuItem.Enabled = false;
-                this.IconNameToolStripMenuItem.Text = Tween.Properties.Resources.ContextMenuStrip3_OpeningText2;
+                this.IconNameToolStripMenuItem.Text = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText2;
             }
             if (NameLabel.Tag != null)
             {
@@ -10821,7 +10821,7 @@ namespace Tween
             _modifySettingLocal = true;
         }
 
-        private bool UrlConvert(Tween.MyCommon.UrlConverter urlCoonverterType)
+        private bool UrlConvert(Hoehoe.MyCommon.UrlConverter urlCoonverterType)
         {
             //t.coで投稿時自動短縮する場合は、外部サービスでの短縮禁止
             //If SettingDialog.UrlConvertAuto AndAlso SettingDialog.ShortenTco Then Exit Function
@@ -11214,7 +11214,7 @@ namespace Tween
 
             if (selText != null)
             {
-                if (url == Tween.Properties.Resources.SearchItem4Url)
+                if (url == Hoehoe.Properties.Resources.SearchItem4Url)
                 {
                     //公式検索
                     AddNewTabForSearch(selText);
@@ -11234,22 +11234,22 @@ namespace Tween
 
         private void SearchWikipediaContextMenuItem_Click(object sender, EventArgs e)
         {
-            doSearchToolStrip(Tween.Properties.Resources.SearchItem1Url);
+            doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem1Url);
         }
 
         private void SearchGoogleContextMenuItem_Click(object sender, EventArgs e)
         {
-            doSearchToolStrip(Tween.Properties.Resources.SearchItem2Url);
+            doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem2Url);
         }
 
         private void SearchYatsContextMenuItem_Click(object sender, EventArgs e)
         {
-            doSearchToolStrip(Tween.Properties.Resources.SearchItem3Url);
+            doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem3Url);
         }
 
         private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
         {
-            doSearchToolStrip(Tween.Properties.Resources.SearchItem4Url);
+            doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem4Url);
         }
 
         private void UrlCopyContextMenuItem_Click(object sender, EventArgs e)
@@ -11725,7 +11725,7 @@ namespace Tween
                 // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
                 if (MyCommon.TwitterApiInfo.AccessLevel == ApiAccessLevel.ReadWrite)
                 {
-                    MessageBox.Show(Tween.Properties.Resources.ReAuthorizeText);
+                    MessageBox.Show(Hoehoe.Properties.Resources.ReAuthorizeText);
                     SettingStripMenuItem_Click(null, null);
                 }
 
@@ -11792,16 +11792,16 @@ namespace Tween
                 }
                 if (_curList.SelectedIndices.Count > 15)
                 {
-                    MessageBox.Show(Tween.Properties.Resources.RetweetLimitText);
+                    MessageBox.Show(Hoehoe.Properties.Resources.RetweetLimitText);
                     _DoFavRetweetFlags = false;
                     return;
                 }
                 else if (_curList.SelectedIndices.Count > 1)
                 {
-                    string QuestionText = Tween.Properties.Resources.RetweetQuestion2;
+                    string QuestionText = Hoehoe.Properties.Resources.RetweetQuestion2;
                     if (_DoFavRetweetFlags)
                     {
-                        QuestionText = Tween.Properties.Resources.FavoriteRetweetQuestionText1;
+                        QuestionText = Hoehoe.Properties.Resources.FavoriteRetweetQuestionText1;
                     }
                     switch (MessageBox.Show(QuestionText, "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                     {
@@ -11820,10 +11820,10 @@ namespace Tween
                     }
                     if (!SettingDialog.RetweetNoConfirm)
                     {
-                        string Questiontext = Tween.Properties.Resources.RetweetQuestion1;
+                        string Questiontext = Hoehoe.Properties.Resources.RetweetQuestion1;
                         if (_DoFavRetweetFlags)
                         {
-                            Questiontext = Tween.Properties.Resources.FavoritesRetweetQuestionText2;
+                            Questiontext = Hoehoe.Properties.Resources.FavoritesRetweetQuestionText2;
                         }
                         if (isConfirm && MessageBox.Show(Questiontext, "Retweet", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                         {
@@ -12006,32 +12006,32 @@ namespace Tween
             };
 
             StringBuilder tmp = new StringBuilder();
-            using (FormInfo dlg = new FormInfo(this, Tween.Properties.Resources.ApiInfo6, GetApiInfo_Dowork, null, args))
+            using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ApiInfo6, GetApiInfo_Dowork, null, args))
             {
                 dlg.ShowDialog();
                 if (Convert.ToBoolean(dlg.Result))
                 {
-                    tmp.AppendLine(Tween.Properties.Resources.ApiInfo1 + args.Info.MaxCount.ToString());
-                    tmp.AppendLine(Tween.Properties.Resources.ApiInfo2 + args.Info.RemainCount.ToString());
-                    tmp.AppendLine(Tween.Properties.Resources.ApiInfo3 + args.Info.ResetTime.ToString());
-                    tmp.AppendLine(Tween.Properties.Resources.ApiInfo7 + (tw.UserStreamEnabled ? Tween.Properties.Resources.Enable : Tween.Properties.Resources.Disable).ToString());
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo1 + args.Info.MaxCount.ToString());
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo2 + args.Info.RemainCount.ToString());
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo3 + args.Info.ResetTime.ToString());
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo7 + (tw.UserStreamEnabled ? Hoehoe.Properties.Resources.Enable : Hoehoe.Properties.Resources.Disable).ToString());
 
                     tmp.AppendLine();
-                    tmp.AppendLine(Tween.Properties.Resources.ApiInfo8 + args.Info.AccessLevel.ToString());
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo8 + args.Info.AccessLevel.ToString());
                     SetStatusLabelUrl();
 
                     tmp.AppendLine();
-                    tmp.AppendLine(Tween.Properties.Resources.ApiInfo9 + (args.Info.MediaMaxCount < 0 ? Tween.Properties.Resources.ApiInfo91 : args.Info.MediaMaxCount.ToString()));
-                    tmp.AppendLine(Tween.Properties.Resources.ApiInfo10 + (args.Info.MediaRemainCount < 0 ? Tween.Properties.Resources.ApiInfo91 : args.Info.MediaRemainCount.ToString()));
-                    tmp.AppendLine(Tween.Properties.Resources.ApiInfo11 + (args.Info.MediaResetTime == new DateTime() ? Tween.Properties.Resources.ApiInfo91 : args.Info.MediaResetTime.ToString()));
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo9 + (args.Info.MediaMaxCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaMaxCount.ToString()));
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo10 + (args.Info.MediaRemainCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaRemainCount.ToString()));
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo11 + (args.Info.MediaResetTime == new DateTime() ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaResetTime.ToString()));
                 }
                 else
                 {
-                    tmp.Append(Tween.Properties.Resources.ApiInfo5);
+                    tmp.Append(Hoehoe.Properties.Resources.ApiInfo5);
                 }
             }
 
-            MessageBox.Show(tmp.ToString(), Tween.Properties.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(tmp.ToString(), Hoehoe.Properties.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void FollowCommandMenuItem_Click(object sender, EventArgs e)
@@ -12055,24 +12055,24 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.SetFormTitle("Follow");
-                inputName.SetFormDescription(Tween.Properties.Resources.FRMessage1);
+                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
                     FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs();
                     arg.Tw = tw;
                     arg.Id = inputName.TabName.Trim();
-                    using (FormInfo info = new FormInfo(this, Tween.Properties.Resources.FollowCommandText1, FollowCommand_DoWork, null, arg))
+                    using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.FollowCommandText1, FollowCommand_DoWork, null, arg))
                     {
                         info.ShowDialog();
                         string ret = (string)info.Result;
                         if (!String.IsNullOrEmpty(ret))
                         {
-                            MessageBox.Show(Tween.Properties.Resources.FRMessage2 + ret);
+                            MessageBox.Show(Hoehoe.Properties.Resources.FRMessage2 + ret);
                         }
                         else
                         {
-                            MessageBox.Show(Tween.Properties.Resources.FRMessage3);
+                            MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
                         }
                     }
                 }
@@ -12109,7 +12109,7 @@ namespace Tween
                 using (InputTabName inputName = new InputTabName())
                 {
                     inputName.SetFormTitle("Unfollow");
-                    inputName.SetFormDescription(Tween.Properties.Resources.FRMessage1);
+                    inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
                     inputName.TabName = id;
                     if (inputName.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(inputName.TabName.Trim()))
                     {
@@ -12123,17 +12123,17 @@ namespace Tween
                 }
             }
 
-            using (FormInfo info = new FormInfo(this, Tween.Properties.Resources.RemoveCommandText1, RemoveCommand_DoWork, null, arg))
+            using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.RemoveCommandText1, RemoveCommand_DoWork, null, arg))
             {
                 info.ShowDialog();
                 string ret = (string)info.Result;
                 if (!String.IsNullOrEmpty(ret))
                 {
-                    MessageBox.Show(Tween.Properties.Resources.FRMessage2 + ret);
+                    MessageBox.Show(Hoehoe.Properties.Resources.FRMessage2 + ret);
                 }
                 else
                 {
-                    MessageBox.Show(Tween.Properties.Resources.FRMessage3);
+                    MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
                 }
             }
         }
@@ -12194,13 +12194,13 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.SetFormTitle("Show Friendships");
-                inputName.SetFormDescription(Tween.Properties.Resources.FRMessage1);
+                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
                     string ret = "";
                     args.ids.Add(new ShowFriendshipArgs.FriendshipInfo(inputName.TabName.Trim()));
-                    using (FormInfo _info = new FormInfo(this, Tween.Properties.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
+                    using (FormInfo _info = new FormInfo(this, Hoehoe.Properties.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
                     {
                         _info.ShowDialog();
                         ret = (string)_info.Result;
@@ -12210,22 +12210,22 @@ namespace Tween
                     {
                         if (args.ids[0].isFollowing)
                         {
-                            result = Tween.Properties.Resources.GetFriendshipInfo1 + System.Environment.NewLine;
+                            result = Hoehoe.Properties.Resources.GetFriendshipInfo1 + System.Environment.NewLine;
                         }
                         else
                         {
-                            result = Tween.Properties.Resources.GetFriendshipInfo2 + System.Environment.NewLine;
+                            result = Hoehoe.Properties.Resources.GetFriendshipInfo2 + System.Environment.NewLine;
                         }
 
                         if (args.ids[0].isFollowed)
                         {
-                            result += Tween.Properties.Resources.GetFriendshipInfo3;
+                            result += Hoehoe.Properties.Resources.GetFriendshipInfo3;
                         }
                         else
                         {
-                            result += Tween.Properties.Resources.GetFriendshipInfo4;
+                            result += Hoehoe.Properties.Resources.GetFriendshipInfo4;
                         }
-                        result = args.ids[0].id + Tween.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine + result;
+                        result = args.ids[0].id + Hoehoe.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine + result;
                     }
                     else
                     {
@@ -12244,7 +12244,7 @@ namespace Tween
                 ShowFriendshipArgs args = new ShowFriendshipArgs();
                 args.Tw = tw;
                 args.ids.Add(new ShowFriendshipArgs.FriendshipInfo(id.Trim()));
-                using (FormInfo _info = new FormInfo(this, Tween.Properties.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
+                using (FormInfo _info = new FormInfo(this, Hoehoe.Properties.Resources.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
                 {
                     _info.ShowDialog();
                     ret = (string)_info.Result;
@@ -12257,25 +12257,25 @@ namespace Tween
                     ff = "  ";
                     if (fInfo.isFollowing)
                     {
-                        ff += Tween.Properties.Resources.GetFriendshipInfo1;
+                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo1;
                     }
                     else
                     {
-                        ff += Tween.Properties.Resources.GetFriendshipInfo2;
+                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo2;
                     }
                     ff += System.Environment.NewLine + "  ";
                     if (fInfo.isFollowed)
                     {
-                        ff += Tween.Properties.Resources.GetFriendshipInfo3;
+                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo3;
                     }
                     else
                     {
-                        ff += Tween.Properties.Resources.GetFriendshipInfo4;
+                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo4;
                     }
-                    result += fInfo.id + Tween.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine + ff;
+                    result += fInfo.id + Hoehoe.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine + ff;
                     if (fInfo.isFollowing)
                     {
-                        if (MessageBox.Show(Tween.Properties.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result, Tween.Properties.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                        if (MessageBox.Show(Hoehoe.Properties.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result, Hoehoe.Properties.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                         {
                             RemoveCommand(fInfo.id, true);
                         }
@@ -12984,7 +12984,7 @@ namespace Tween
 
         private class GetUserInfoArgs
         {
-            public Tween.Twitter tw;
+            public Hoehoe.Twitter tw;
             public string id;
             public TwitterDataModel.User user;
         }
@@ -13003,13 +13003,13 @@ namespace Tween
                 using (InputTabName inputName = new InputTabName())
                 {
                     inputName.SetFormTitle("Show UserStatus");
-                    inputName.SetFormDescription(Tween.Properties.Resources.FRMessage1);
+                    inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
                     inputName.TabName = id;
                     if (inputName.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(inputName.TabName.Trim()))
                     {
                         id = inputName.TabName.Trim();
                         GetUserInfoArgs args = new GetUserInfoArgs() { tw = tw, id = id, user = user };
-                        using (FormInfo info = new FormInfo(this, Tween.Properties.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
+                        using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
                         {
                             info.ShowDialog();
                             string ret = (string)info.Result;
@@ -13028,7 +13028,7 @@ namespace Tween
             else
             {
                 GetUserInfoArgs args = new GetUserInfoArgs() { tw = tw, id = id, user = user };
-                using (FormInfo info = new FormInfo(this, Tween.Properties.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
+                using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
                 {
                     info.ShowDialog();
                     string ret = (string)info.Result;
@@ -13159,7 +13159,7 @@ namespace Tween
         {
             if (this.ExistCurrentPost)
             {
-                using (FormInfo _info = new FormInfo(this, Tween.Properties.Resources.RtCountMenuItem_ClickText1, GetRetweet_DoWork))
+                using (FormInfo _info = new FormInfo(this, Hoehoe.Properties.Resources.RtCountMenuItem_ClickText1, GetRetweet_DoWork))
                 {
                     int retweet_count = 0;
 
@@ -13168,11 +13168,11 @@ namespace Tween
                     retweet_count = Convert.ToInt32(_info.Result);
                     if (retweet_count < 0)
                     {
-                        MessageBox.Show(Tween.Properties.Resources.RtCountText2);
+                        MessageBox.Show(Hoehoe.Properties.Resources.RtCountText2);
                     }
                     else
                     {
-                        MessageBox.Show(retweet_count.ToString() + Tween.Properties.Resources.RtCountText1);
+                        MessageBox.Show(retweet_count.ToString() + Hoehoe.Properties.Resources.RtCountText1);
                     }
                 }
             }
@@ -13296,7 +13296,7 @@ namespace Tween
                 return;
             }
             OpenFileDialog1.Filter = this._pictureServices[this.ImageService].GetFileOpenDialogFilter();
-            OpenFileDialog1.Title = Tween.Properties.Resources.PickPictureDialog1;
+            OpenFileDialog1.Title = Hoehoe.Properties.Resources.PickPictureDialog1;
             OpenFileDialog1.FileName = "";
 
             try
@@ -13386,7 +13386,7 @@ namespace Tween
                         ImageSelectedPicture.Tag = MyCommon.UploadFileType.Picture;
                         break;
                     case MyCommon.UploadFileType.MultiMedia:
-                        ImageSelectedPicture.Image = Tween.Properties.Resources.MultiMediaImage;
+                        ImageSelectedPicture.Image = Hoehoe.Properties.Resources.MultiMediaImage;
                         ImageSelectedPicture.Tag = MyCommon.UploadFileType.MultiMedia;
                         break;
                     default:
@@ -14029,7 +14029,7 @@ namespace Tween
         {
             if (!String.IsNullOrEmpty(tw.Username))
             {
-                OpenUriAsync(Tween.Properties.Resources.FavstarUrl + "users/" + tw.Username + "/recent");
+                OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + tw.Username + "/recent");
             }
         }
 
@@ -14101,7 +14101,7 @@ namespace Tween
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.SetFormTitle(caption);
-                inputName.SetFormDescription(Tween.Properties.Resources.FRMessage1);
+                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
                 inputName.TabName = id;
                 if (inputName.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
@@ -14129,7 +14129,7 @@ namespace Tween
             string id = GetUserIdFromCurPostOrInput("Show Favstar");
             if (!String.IsNullOrEmpty(id))
             {
-                OpenUriAsync(Tween.Properties.Resources.FavstarUrl + "users/" + id + "/recent");
+                OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + id + "/recent");
             }
         }
 

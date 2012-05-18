@@ -29,7 +29,7 @@ using System.Drawing;
 using System.Net;
 using System.IO;
 
-namespace Tween
+namespace Hoehoe
 {
     public class HttpVarious : HttpConnection
     {

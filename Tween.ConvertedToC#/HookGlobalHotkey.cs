@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     //フォームのコンストラクタでこのクラスのインスタンス作成すること
     //インスタンス変数はwitheventsで宣言し、HotkeyPressedイベントを受け取ること

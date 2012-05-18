@@ -29,7 +29,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
-namespace Tween
+namespace Hoehoe
 {
     public abstract class SettingBase<T> where T : class, new()
     {

@@ -26,7 +26,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Tween
+namespace Hoehoe
 {
     [Serializable()]
     public class SettingFollower : SettingBase<SettingFollower>

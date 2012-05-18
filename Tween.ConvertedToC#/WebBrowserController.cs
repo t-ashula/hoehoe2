@@ -29,7 +29,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     #region "WebBrowserAPI"
 

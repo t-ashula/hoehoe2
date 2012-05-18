@@ -29,7 +29,7 @@ using System.IO;
 using System.Net;
 using System.Xml;
 
-namespace Tween
+namespace Hoehoe
 {
     public class imgly : HttpConnectionOAuthEcho, IMultimediaShareService
     {
@@ -167,18 +167,18 @@ namespace Tween
             return "Image Files(*.gif;*.jpg;*.jpeg;*.png)|*.gif;*.jpg;*.jpeg;*.png";
         }
 
-        public Tween.MyCommon.UploadFileType GetFileType(string ext)
+        public Hoehoe.MyCommon.UploadFileType GetFileType(string ext)
         {
             if (this.CheckValidExtension(ext))
             {
-                return Tween.MyCommon.UploadFileType.Picture;
+                return Hoehoe.MyCommon.UploadFileType.Picture;
             }
-            return Tween.MyCommon.UploadFileType.Invalid;
+            return Hoehoe.MyCommon.UploadFileType.Invalid;
         }
 
-        public bool IsSupportedFileType(Tween.MyCommon.UploadFileType type)
+        public bool IsSupportedFileType(Hoehoe.MyCommon.UploadFileType type)
         {
-            return type.Equals(Tween.MyCommon.UploadFileType.Picture);
+            return type.Equals(Hoehoe.MyCommon.UploadFileType.Picture);
         }
 
         public bool CheckValidFilesize(string ext, long fileSize)

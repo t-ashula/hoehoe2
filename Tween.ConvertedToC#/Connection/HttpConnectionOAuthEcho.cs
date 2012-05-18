@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace Tween
+namespace Hoehoe
 {
     public class HttpConnectionOAuthEcho : HttpConnectionOAuth
     {

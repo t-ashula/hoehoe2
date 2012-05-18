@@ -27,13 +27,13 @@ using System;
 using System.Collections.Specialized;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     public partial class TabsDialog
     {
         private bool _multiSelect = false;
 
-        private string _newtabItem = Tween.Properties.Resources.AddNewTabText1;
+        private string _newtabItem = Hoehoe.Properties.Resources.AddNewTabText1;
 
         public TabsDialog()
         {
@@ -154,7 +154,7 @@ namespace Tween
                 if (value)
                 {
                     this.TabList.SelectionMode = SelectionMode.MultiExtended;
-                    if (this.TabList.Items[0].ToString() == Tween.Properties.Resources.AddNewTabText1)
+                    if (this.TabList.Items[0].ToString() == Hoehoe.Properties.Resources.AddNewTabText1)
                     {
                         this.TabList.Items.RemoveAt(0);
                     }
@@ -162,9 +162,9 @@ namespace Tween
                 else
                 {
                     this.TabList.SelectionMode = SelectionMode.One;
-                    if (this.TabList.Items[0].ToString() != Tween.Properties.Resources.AddNewTabText1)
+                    if (this.TabList.Items[0].ToString() != Hoehoe.Properties.Resources.AddNewTabText1)
                     {
-                        this.TabList.Items.Insert(0, Tween.Properties.Resources.AddNewTabText1);
+                        this.TabList.Items.Insert(0, Hoehoe.Properties.Resources.AddNewTabText1);
                     }
                 }
             }

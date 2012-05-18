@@ -27,7 +27,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace Tween
+namespace Hoehoe
 {
     public class ShieldIcon
     {

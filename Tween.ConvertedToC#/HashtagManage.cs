@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     public partial class HashtagManage
     {
@@ -89,7 +89,7 @@ namespace Tween
             {
                 return;
             }
-            if (MessageBox.Show(Tween.Properties.Resources.DeleteHashtagsMessage1, "Delete Hashtags", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+            if (MessageBox.Show(Hoehoe.Properties.Resources.DeleteHashtagsMessage1, "Delete Hashtags", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
             {
                 return;
             }

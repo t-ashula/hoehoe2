@@ -25,7 +25,7 @@
 
 using System;
 
-namespace Tween
+namespace Hoehoe
 {
     public class UserInfo
     {

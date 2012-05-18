@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     //ソート比較クラス：ID比較のみ
     public sealed class IdComparerClass : IComparer<long>

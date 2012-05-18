@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     partial class SearchWord : System.Windows.Forms.Form
     {

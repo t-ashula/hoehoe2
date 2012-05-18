@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Tween
+namespace Hoehoe
 {
     public class HttpOAuthApiProxy : HttpConnectionOAuth
     {

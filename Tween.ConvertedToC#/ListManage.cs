@@ -28,7 +28,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Tween
+namespace Hoehoe
 {
     public partial class ListManage
     {
@@ -88,7 +88,7 @@ namespace Tween
                 this.UserList.Items.Add(user);
             }
 
-            this.GetMoreUsersButton.Text = (this.UserList.Items.Count > 0 ? Tween.Properties.Resources.ListManageGetMoreUsers2 : Tween.Properties.Resources.ListManageGetMoreUsers1).ToString();
+            this.GetMoreUsersButton.Text = (this.UserList.Items.Count > 0 ? Hoehoe.Properties.Resources.ListManageGetMoreUsers2 : Hoehoe.Properties.Resources.ListManageGetMoreUsers1).ToString();
         }
 
         private void EditCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -127,7 +127,7 @@ namespace Tween
 
             if (String.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                MessageBox.Show(Tween.Properties.Resources.ListManageOKButton1);
+                MessageBox.Show(Hoehoe.Properties.Resources.ListManageOKButton1);
                 return;
             }
 
@@ -139,7 +139,7 @@ namespace Tween
 
             if (!String.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(String.Format(Tween.Properties.Resources.ListManageOKButton2, rslt));
+                MessageBox.Show(String.Format(Hoehoe.Properties.Resources.ListManageOKButton2, rslt));
                 return;
             }
 
@@ -192,11 +192,11 @@ namespace Tween
             if (result == this.ListsList.SelectedItem.ToString())
             {
                 this.ListsList_SelectedIndexChanged(this.ListsList, EventArgs.Empty);
-                this.GetMoreUsersButton.Text = Tween.Properties.Resources.ListManageGetMoreUsers1;
+                this.GetMoreUsersButton.Text = Hoehoe.Properties.Resources.ListManageGetMoreUsers1;
             }
             else
             {
-                MessageBox.Show(String.Format(Tween.Properties.Resources.ListManageGetListMembersCallback1, result));
+                MessageBox.Show(String.Format(Hoehoe.Properties.Resources.ListManageGetListMembersCallback1, result));
             }
         }
 
@@ -209,13 +209,13 @@ namespace Tween
 
             ListElement list = (ListElement)this.ListsList.SelectedItem;
             UserInfo user = (UserInfo)this.UserList.SelectedItem;
-            if (MessageBox.Show(Tween.Properties.Resources.ListManageDeleteUser1, "Tween", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (MessageBox.Show(Hoehoe.Properties.Resources.ListManageDeleteUser1, "Tween", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 string rslt = this._tw.RemoveUserToList(list.Id.ToString(), user.Id.ToString());
 
                 if (!String.IsNullOrEmpty(rslt))
                 {
-                    MessageBox.Show(String.Format(Tween.Properties.Resources.ListManageDeleteUser2, rslt));
+                    MessageBox.Show(String.Format(Hoehoe.Properties.Resources.ListManageDeleteUser2, rslt));
                     return;
                 }
                 int idx = ListsList.SelectedIndex;
@@ -236,7 +236,7 @@ namespace Tween
             }
             ListElement list = (ListElement)this.ListsList.SelectedItem;
 
-            if (MessageBox.Show(Tween.Properties.Resources.ListManageDeleteLists1, "Tween", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (MessageBox.Show(Hoehoe.Properties.Resources.ListManageDeleteLists1, "Tween", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 string rslt = "";
 
@@ -244,7 +244,7 @@ namespace Tween
 
                 if (!String.IsNullOrEmpty(rslt))
                 {
-                    MessageBox.Show(Tween.Properties.Resources.ListManageOKButton2, rslt);
+                    MessageBox.Show(Hoehoe.Properties.Resources.ListManageOKButton2, rslt);
                     return;
                 }
 
@@ -252,7 +252,7 @@ namespace Tween
 
                 if (!String.IsNullOrEmpty(rslt))
                 {
-                    MessageBox.Show(Tween.Properties.Resources.ListsDeleteFailed, rslt);
+                    MessageBox.Show(Hoehoe.Properties.Resources.ListsDeleteFailed, rslt);
                     return;
                 }
 
@@ -336,12 +336,12 @@ namespace Tween
 
         private void RefreshLists()
         {
-            using (FormInfo dlg = new FormInfo(this, Tween.Properties.Resources.ListsGetting, RefreshLists_Dowork))
+            using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ListsGetting, RefreshLists_Dowork))
             {
                 dlg.ShowDialog();
                 if (!String.IsNullOrEmpty((string)dlg.Result))
                 {
-                    MessageBox.Show(String.Format(Tween.Properties.Resources.ListsDeleteFailed, (string)dlg.Result));
+                    MessageBox.Show(String.Format(Hoehoe.Properties.Resources.ListsDeleteFailed, (string)dlg.Result));
                     return;
                 }
             }

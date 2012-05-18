@@ -30,7 +30,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Tween.TweenCustomControl
+namespace Hoehoe.TweenCustomControl
 {
     public sealed class DetailsListView : ListView
     {

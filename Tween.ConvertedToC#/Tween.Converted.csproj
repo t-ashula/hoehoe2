@@ -7,9 +7,10 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{70D3FB04-5204-443A-9234-285614329737}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>Tween.Program</StartupObject>
-    <RootNamespace>Tween</RootNamespace>
-    <AssemblyName>Tween</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <RootNamespace>Hoehoe</RootNamespace>
+    <AssemblyName>Hoehoe</AssemblyName>
     <MyType>WindowsForms</MyType>
     <ApplicationIcon>Resources\4b.ico</ApplicationIcon>
     <FileUpgradeFlags />

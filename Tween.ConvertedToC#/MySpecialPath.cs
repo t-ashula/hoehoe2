@@ -28,7 +28,7 @@ using System.IO;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace Tween
+namespace Hoehoe
 {
     public static class MySpecialPath
     {
