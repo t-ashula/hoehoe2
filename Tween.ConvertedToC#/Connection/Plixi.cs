@@ -45,9 +45,9 @@ namespace Hoehoe
         ///</summary>
         private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
         /// <summary>
-        /// plixi api key : TODO
+        /// plixi api key 
         /// </summary>
-        private const string ApiKey = "c0263958-f32c-4704-9dac-cdc806b1249c";
+        private const string ApiKey = "5b8e2b03-e6f6-4f81-9b65-80b57a8ddbfc";
 
         private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
 

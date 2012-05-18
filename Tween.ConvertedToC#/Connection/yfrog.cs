@@ -46,9 +46,9 @@ namespace Hoehoe
         private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
         
         /// <summary>
-        /// yfrog api key : TODO
+        /// yfrog api key 
         /// </summary>
-        private const string ApiKey = "03HJKOWY93b7d7b7a5fa015890f8259cf939e144";
+        private const string ApiKey = "069IKPSW75e293f35ab00d91a1b862c5a654c46b";
 
         private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
 

@@ -45,9 +45,9 @@ namespace Hoehoe
         ///</summary>
         private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
         /// <summary>
-        /// Twitpic API Key : TODO
+        /// Twitpic API Key 
         /// </summary>
-        private const string ApiKey = "287b60562aea3cab9f58fa54015848e8";
+        private const string ApiKey = "63c1dbc8deba169cf8b3e199130c916b";
 
         private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
         private string[] _multimediaExts = {
