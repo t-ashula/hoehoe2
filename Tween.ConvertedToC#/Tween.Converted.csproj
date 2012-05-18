@@ -232,7 +232,7 @@
       <DependentUpon>OpenURL.cs</DependentUpon>
     </Compile>
     <Compile Include="OpenUrlItem.cs" />
-    <Compile Include="Outputz.cs" />
+    <Compile Include="WebServices\Outputz.cs" />
     <Compile Include="Forms\PictureBoxEx.cs">
       <SubType>Component</SubType>
     </Compile>
