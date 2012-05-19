@@ -181,7 +181,7 @@ namespace Hoehoe
         }
 
         public MyCommon.OutputzUrlmode OutputzUrlMode = MyCommon.OutputzUrlmode.twittercom;
-        public MyCommon.UrlConverter AutoShortUrlFirst = MyCommon.UrlConverter.Bitly;
+        public UrlConverter AutoShortUrlFirst = UrlConverter.Bitly;
         public bool UseUnreadStyle = true;
         public string DateTimeFormat = "yyyy/MM/dd H:mm:ss";
         public int DefaultTimeOut = 20;

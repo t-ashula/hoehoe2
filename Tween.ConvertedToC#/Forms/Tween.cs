@@ -1083,7 +1083,7 @@ namespace Hoehoe
             //廃止サービスが選択されていた場合bit.lyへ読み替え
             if (_cfgCommon.AutoShortUrlFirst < 0)
             {
-                _cfgCommon.AutoShortUrlFirst = Hoehoe.MyCommon.UrlConverter.Bitly;
+                _cfgCommon.AutoShortUrlFirst = UrlConverter.Bitly;
             }
 
             SettingDialog.AutoShortUrlFirst = _cfgCommon.AutoShortUrlFirst;
@@ -2596,7 +2596,7 @@ namespace Hoehoe
             if (SettingDialog.Nicoms)
             {
                 StatusText.SelectionStart = StatusText.Text.Length;
-                UrlConvert(Hoehoe.MyCommon.UrlConverter.Nicoms);
+                UrlConvert(UrlConverter.Nicoms);
             }
 
             StatusText.SelectionStart = StatusText.Text.Length;
@@ -10828,7 +10828,7 @@ namespace Hoehoe
             _modifySettingLocal = true;
         }
 
-        private bool UrlConvert(Hoehoe.MyCommon.UrlConverter urlCoonverterType)
+        private bool UrlConvert(UrlConverter urlCoonverterType)
         {
             //t.coで投稿時自動短縮する場合は、外部サービスでの短縮禁止
             //If SettingDialog.UrlConvertAuto AndAlso SettingDialog.ShortenTco Then Exit Function
@@ -10855,7 +10855,7 @@ namespace Hoehoe
                     {
                         result = nicoms.Shorten(tmp);
                     }
-                    else if (urlCoonverterType != MyCommon.UrlConverter.Nicoms)
+                    else if (urlCoonverterType != UrlConverter.Nicoms)
                     {
                         //短縮URL変換 日本語を含むかもしれないのでURLエンコードする
                         result = ShortUrl.Make(urlCoonverterType, tmp);
@@ -10909,7 +10909,7 @@ namespace Hoehoe
                     {
                         result = nicoms.Shorten(tmp);
                     }
-                    else if (urlCoonverterType != MyCommon.UrlConverter.Nicoms)
+                    else if (urlCoonverterType != UrlConverter.Nicoms)
                     {
                         //短縮URL変換 日本語を含むかもしれないのでURLエンコードする
                         result = ShortUrl.Make(urlCoonverterType, tmp);
@@ -10962,35 +10962,35 @@ namespace Hoehoe
 
         private void TinyURLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(MyCommon.UrlConverter.TinyUrl);
+            UrlConvert(UrlConverter.TinyUrl);
         }
 
         private void IsgdToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(MyCommon.UrlConverter.Isgd);
+            UrlConvert(UrlConverter.Isgd);
         }
 
         private void TwurlnlToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(MyCommon.UrlConverter.Twurl);
+            UrlConvert(UrlConverter.Twurl);
         }
 
         private void UxnuMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(MyCommon.UrlConverter.Uxnu);
+            UrlConvert(UrlConverter.Uxnu);
         }
 
         private void UrlConvertAutoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!UrlConvert(SettingDialog.AutoShortUrlFirst))
             {
-                MyCommon.UrlConverter svc = SettingDialog.AutoShortUrlFirst;
+                UrlConverter svc = SettingDialog.AutoShortUrlFirst;
                 Random rnd = new Random();
                 // 前回使用した短縮URLサービス以外を選択する
                 do
                 {
-                    svc = (MyCommon.UrlConverter)rnd.Next(System.Enum.GetNames(typeof(MyCommon.UrlConverter)).Length);
-                } while (!(svc != SettingDialog.AutoShortUrlFirst && svc != MyCommon.UrlConverter.Nicoms && svc != MyCommon.UrlConverter.Unu));
+                    svc = (UrlConverter)rnd.Next(System.Enum.GetNames(typeof(UrlConverter)).Length);
+                } while (!(svc != SettingDialog.AutoShortUrlFirst && svc != UrlConverter.Nicoms && svc != UrlConverter.Unu));
                 UrlConvert(svc);
             }
         }
@@ -11984,12 +11984,12 @@ namespace Hoehoe
 
         private void BitlyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(MyCommon.UrlConverter.Bitly);
+            UrlConvert(UrlConverter.Bitly);
         }
 
         private void JmpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(MyCommon.UrlConverter.Jmp);
+            UrlConvert(UrlConverter.Jmp);
         }
 
         private class GetApiInfoArgs

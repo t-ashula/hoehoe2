@@ -67,4 +67,18 @@ namespace Hoehoe
         Picture,
         MultiMedia
     }
+
+    public enum UrlConverter
+    {
+        TinyUrl,
+        Isgd,
+        Twurl,
+        Bitly,
+        Jmp,
+        Uxnu,
+        //特殊
+        Nicoms,
+        //廃止
+        Unu = -1
+    }
 }

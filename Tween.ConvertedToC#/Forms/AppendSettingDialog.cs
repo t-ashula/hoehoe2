@@ -110,7 +110,7 @@ namespace Hoehoe
         private bool _MyLimitBalloon;
         private bool _MyPostAndGet;
         private int _MyReplyPeriod;
-        private Hoehoe.MyCommon.UrlConverter _MyAutoShortUrlFirst;
+        private UrlConverter _MyAutoShortUrlFirst;
         private bool _MyTabIconDisp;
         private Hoehoe.MyCommon.ReplyIconState _MyReplyIconState;
         private bool _MyReadOwnPost;
@@ -228,8 +228,8 @@ namespace Hoehoe
         private void Save_Click(object sender, EventArgs e)
         {
             if (MyCommon.IsNetworkAvailable()
-                && (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Hoehoe.MyCommon.UrlConverter.Bitly
-                || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Hoehoe.MyCommon.UrlConverter.Jmp)
+                && (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly
+                || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp)
                 && (!String.IsNullOrEmpty(TextBitlyId.Text) || !String.IsNullOrEmpty(TextBitlyPw.Text)))
             {
                 if (!BitlyValidation(TextBitlyId.Text, TextBitlyPw.Text))
@@ -530,7 +530,7 @@ namespace Hoehoe
                 _MyFavEventUnread = CheckFavEventUnread.Checked;
                 _MyTranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(ComboBoxTranslateLanguage.SelectedIndex);
                 _MyEventSoundFile = Convert.ToString(ComboBoxEventNotifySound.SelectedItem);
-                _MyAutoShortUrlFirst = (Hoehoe.MyCommon.UrlConverter)ComboBoxAutoShortUrlFirst.SelectedIndex;
+                _MyAutoShortUrlFirst = (UrlConverter)ComboBoxAutoShortUrlFirst.SelectedIndex;
                 _MyTabIconDisp = chkTabIconDisp.Checked;
                 _MyReadOwnPost = chkReadOwnPost.Checked;
                 _MyGetFav = chkGetFav.Checked;
@@ -1806,7 +1806,7 @@ namespace Hoehoe
             set { _MyNicoms = value; }
         }
 
-        public Hoehoe.MyCommon.UrlConverter AutoShortUrlFirst
+        public UrlConverter AutoShortUrlFirst
         {
             get { return _MyAutoShortUrlFirst; }
             set { _MyAutoShortUrlFirst = value; }
@@ -2195,7 +2195,7 @@ namespace Hoehoe
 
         private void ComboBoxAutoShortUrlFirst_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Hoehoe.MyCommon.UrlConverter.Bitly || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)Hoehoe.MyCommon.UrlConverter.Jmp)
+            if (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp)
             {
                 Label76.Enabled = true;
                 Label77.Enabled = true;

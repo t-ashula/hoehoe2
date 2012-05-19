@@ -249,7 +249,7 @@ namespace Hoehoe
             return orgData;
         }
 
-        public static string Make(MyCommon.UrlConverter converterType, string srcUrl)
+        public static string Make(UrlConverter converterType, string srcUrl)
         {
             string src = "";
             try
@@ -282,7 +282,7 @@ namespace Hoehoe
 
             switch (converterType)
             {
-                case Hoehoe.MyCommon.UrlConverter.TinyUrl:
+                case UrlConverter.TinyUrl:
                     //tinyurl
                     if (srcUrl.StartsWith("http"))
                     {
@@ -302,7 +302,7 @@ namespace Hoehoe
                         return "Can't convert";
                     }
                     break;
-                case Hoehoe.MyCommon.UrlConverter.Isgd:
+                case UrlConverter.Isgd:
                     if (srcUrl.StartsWith("http"))
                     {
                         if ("http://is.gd/xxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
@@ -321,7 +321,7 @@ namespace Hoehoe
                         return "Can't convert";
                     }
                     break;
-                case Hoehoe.MyCommon.UrlConverter.Twurl:
+                case UrlConverter.Twurl:
                     if (srcUrl.StartsWith("http"))
                     {
                         if ("http://twurl.nl/xxxxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
@@ -342,8 +342,8 @@ namespace Hoehoe
                         return "Can't convert";
                     }
                     break;
-                case Hoehoe.MyCommon.UrlConverter.Bitly:
-                case Hoehoe.MyCommon.UrlConverter.Jmp:
+                case UrlConverter.Bitly:
+                case UrlConverter.Jmp:
                     const string BitlyLogin = "tweenapi"; // TODO: Hoehoenize
                     const string BitlyApiKey = "R_c5ee0e30bdfff88723c4457cc331886b";
                     const string BitlyApiVersion = "3";
@@ -361,7 +361,7 @@ namespace Hoehoe
                         {
                             req += "&x_login=" + _bitlyId + "&x_apiKey=" + _bitlyKey;
                         }
-                        if (converterType == Hoehoe.MyCommon.UrlConverter.Jmp)
+                        if (converterType == UrlConverter.Jmp)
                         {
                             req += "&domain=j.mp";
                         }
@@ -371,7 +371,7 @@ namespace Hoehoe
                         }
                     }
                     break;
-                case Hoehoe.MyCommon.UrlConverter.Uxnu:
+                case UrlConverter.Uxnu:
                     if (srcUrl.StartsWith("http"))
                     {
                         if ("http://ux.nx/xxxxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
