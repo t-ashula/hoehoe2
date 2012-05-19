@@ -129,4 +129,10 @@ namespace Hoehoe
         Configuration,      //Twitter Configuration読み込み
         ErrorState          //エラー表示のみで後処理終了(認証エラー時など)
     }
+
+    public enum AccountState
+    {
+        Valid,
+        Invalid
+    }
 }

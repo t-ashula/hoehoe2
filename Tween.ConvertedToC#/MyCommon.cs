@@ -69,12 +69,6 @@ namespace Hoehoe
         public static bool DebugBuild = false;
 #endif
 
-        public enum AccountState
-        {
-            Valid,
-            Invalid
-        }
-
         public enum ReplyIconState
         {
             None,

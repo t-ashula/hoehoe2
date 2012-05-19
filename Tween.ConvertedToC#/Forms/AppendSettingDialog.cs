@@ -2465,7 +2465,7 @@ namespace Hoehoe
             {
                 if (MyCommon.TwitterApiInfo.MaxCount == -1)
                 {
-                    if (Twitter.AccountState == Hoehoe.MyCommon.AccountState.Valid)
+                    if (Twitter.AccountState == AccountState.Valid)
                     {
                         MyCommon.TwitterApiInfo.UsingCount = usingApi;
                         var proc = new Thread(new System.Threading.ThreadStart(() =>

@@ -128,7 +128,7 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     _uname = username.ToLower();
                     if (AppendSettingDialog.Instance.UserstreamStartup)
                     {
@@ -137,7 +137,7 @@ namespace Hoehoe
                     return "";
                 case HttpStatusCode.Unauthorized:
                     {
-                        Twitter.AccountState = MyCommon.AccountState.Invalid;
+                        Twitter.AccountState = AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
                         if (String.IsNullOrEmpty(errMsg))
                         {
@@ -200,7 +200,7 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     _uname = Username.ToLower();
                     if (AppendSettingDialog.Instance.UserstreamStartup)
                     {
@@ -209,7 +209,7 @@ namespace Hoehoe
                     return "";
                 case HttpStatusCode.Unauthorized:
                     {
-                        Twitter.AccountState = MyCommon.AccountState.Invalid;
+                        Twitter.AccountState = AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
                         if (String.IsNullOrEmpty(errMsg))
                         {
@@ -239,7 +239,7 @@ namespace Hoehoe
 
         public void ClearAuthInfo()
         {
-            Twitter.AccountState = MyCommon.AccountState.Invalid;
+            Twitter.AccountState = AccountState.Invalid;
             MyCommon.TwitterApiInfo.Initialize();
             _twCon.ClearAuthInfo();
         }
@@ -259,7 +259,7 @@ namespace Hoehoe
 
             if (res == HttpStatusCode.OK)
             {
-                Twitter.AccountState = MyCommon.AccountState.Valid;
+                Twitter.AccountState = AccountState.Valid;
                 TwitterDataModel.User user = null;
                 try
                 {
@@ -301,7 +301,7 @@ namespace Hoehoe
             //OAuth認証
             if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(tokenSecret) || String.IsNullOrEmpty(username))
             {
-                Twitter.AccountState = MyCommon.AccountState.Invalid;
+                Twitter.AccountState = AccountState.Invalid;
             }
             MyCommon.TwitterApiInfo.Initialize();
             _twCon.Initialize(token, tokenSecret, username, userId);
@@ -467,7 +467,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -493,7 +493,7 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     TwitterDataModel.Status status = null;
                     try
                     {
@@ -544,7 +544,7 @@ namespace Hoehoe
                     return "Warn:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                 case HttpStatusCode.Unauthorized:
                     {
-                        Twitter.AccountState = MyCommon.AccountState.Invalid;
+                        Twitter.AccountState = AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
                         return String.IsNullOrEmpty(errMsg) ? Hoehoe.Properties.Resources.Unauthorized : "Auth err:" + errMsg;
                     }
@@ -560,7 +560,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -581,7 +581,7 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     TwitterDataModel.Status status = null;
                     try
                     {
@@ -632,7 +632,7 @@ namespace Hoehoe
                     return "Warn:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                 case HttpStatusCode.Unauthorized:
                     {
-                        Twitter.AccountState = MyCommon.AccountState.Invalid;
+                        Twitter.AccountState = AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
                         return String.IsNullOrEmpty(errMsg) ? Hoehoe.Properties.Resources.Unauthorized : "Auth err:" + errMsg;
                     }
@@ -648,7 +648,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -676,7 +676,7 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     TwitterDataModel.Directmessage status = null;
                     try
                     {
@@ -721,7 +721,7 @@ namespace Hoehoe
                     return "Warn:" + res.ToString();
                 case HttpStatusCode.Unauthorized:
                     {
-                        Twitter.AccountState = MyCommon.AccountState.Invalid;
+                        Twitter.AccountState = AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
                         return String.IsNullOrEmpty(errMsg) ? Hoehoe.Properties.Resources.Unauthorized : "Auth err:" + errMsg;
                     }
@@ -737,7 +737,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -755,10 +755,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.NotFound:
                     return "";
@@ -773,7 +773,7 @@ namespace Hoehoe
             {
                 return "";
             }
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -811,7 +811,7 @@ namespace Hoehoe
                 return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            Twitter.AccountState = MyCommon.AccountState.Valid;
+            Twitter.AccountState = AccountState.Valid;
             TwitterDataModel.Status status = null;
             try
             {
@@ -871,7 +871,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -897,10 +897,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.NotFound:
                     return "";
@@ -916,7 +916,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -935,10 +935,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
@@ -955,7 +955,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -974,10 +974,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
@@ -994,7 +994,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1013,10 +1013,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
@@ -1033,7 +1033,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1052,10 +1052,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
@@ -1072,7 +1072,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1091,10 +1091,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
@@ -1111,7 +1111,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1150,7 +1150,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 default:
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
@@ -1164,7 +1164,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1184,7 +1184,7 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     try
                     {
                         user = MyCommon.CreateDataFromJson<TwitterDataModel.User>(content);
@@ -1203,7 +1203,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     string errMsg = GetErrorMessageJson(content);
                     return String.IsNullOrEmpty(errMsg) ? Hoehoe.Properties.Resources.Unauthorized : "Auth err:" + errMsg;
                 default:
@@ -1218,7 +1218,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1267,7 +1267,7 @@ namespace Hoehoe
                         return "Err:API Limits?";
                     case HttpStatusCode.Unauthorized:
                         retweetedCount = -1;
-                        Twitter.AccountState = MyCommon.AccountState.Invalid;
+                        Twitter.AccountState = AccountState.Invalid;
                         return Hoehoe.Properties.Resources.Unauthorized;
                     default:
                         retweetedCount = -1;
@@ -1284,7 +1284,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1303,14 +1303,14 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     if (!_restrictFavCheck)
                     {
                         return "";
                     }
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
@@ -1333,7 +1333,7 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     TwitterDataModel.Status status = null;
                     try
                     {
@@ -1351,7 +1351,7 @@ namespace Hoehoe
                     }
                     return status.Favorited ? "" : "NG(Restricted?)";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -1367,7 +1367,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1386,10 +1386,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
@@ -1406,7 +1406,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1425,10 +1425,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
@@ -1445,7 +1445,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1464,10 +1464,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "";
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
@@ -1492,9 +1492,9 @@ namespace Hoehoe
             get { return _twCon.Password; }
         }
 
-        private static MyCommon.AccountState _accountState = MyCommon.AccountState.Valid;
+        private static AccountState _accountState = AccountState.Valid;
 
-        public static MyCommon.AccountState AccountState
+        public static AccountState AccountState
         {
             get { return _accountState; }
             set { _accountState = value; }
@@ -1675,7 +1675,7 @@ namespace Hoehoe
 
         public string GetTimelineApi(bool read, WorkerType gType, bool more, bool startup)
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1735,10 +1735,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -1753,7 +1753,7 @@ namespace Hoehoe
 
         public string GetUserTimelineApi(bool read, int count, string userName, TabClass tab, bool more)
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1800,10 +1800,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return "Err:@" + userName + "'s Tweets are protected.";
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -1856,7 +1856,7 @@ namespace Hoehoe
 
         public string GetStatusApi(bool read, Int64 id, ref PostClass post)
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -1879,10 +1879,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -2241,10 +2241,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -2316,7 +2316,7 @@ namespace Hoehoe
 
         private string GetRelatedResultsApi(bool read, PostClass post, TabClass tab, List<PostClass> relatedPosts)
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -2346,10 +2346,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -2834,7 +2834,7 @@ namespace Hoehoe
                 return "";
             }
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -2882,10 +2882,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -2900,7 +2900,7 @@ namespace Hoehoe
 
         public string GetFavoritesApi(bool read, WorkerType gType, bool more)
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -2940,10 +2940,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -3134,7 +3134,7 @@ namespace Hoehoe
 
         private string FollowerApi(ref long cursor)
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -3153,10 +3153,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -3211,7 +3211,7 @@ namespace Hoehoe
 
         private string NoRetweetApi(ref long cursor)
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -3230,10 +3230,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -3282,10 +3282,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -3312,7 +3312,7 @@ namespace Hoehoe
 
         public string GetListsApi()
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -3335,10 +3335,10 @@ namespace Hoehoe
                 switch (res)
                 {
                     case HttpStatusCode.OK:
-                        Twitter.AccountState = MyCommon.AccountState.Valid;
+                        Twitter.AccountState = AccountState.Valid;
                         break;
                     case HttpStatusCode.Unauthorized:
-                        Twitter.AccountState = MyCommon.AccountState.Invalid;
+                        Twitter.AccountState = AccountState.Invalid;
                         return Hoehoe.Properties.Resources.Unauthorized;
                     case HttpStatusCode.BadRequest:
                         return "Err:API Limits?";
@@ -3380,10 +3380,10 @@ namespace Hoehoe
                 switch (res)
                 {
                     case HttpStatusCode.OK:
-                        Twitter.AccountState = MyCommon.AccountState.Valid;
+                        Twitter.AccountState = AccountState.Valid;
                         break;
                     case HttpStatusCode.Unauthorized:
-                        Twitter.AccountState = MyCommon.AccountState.Invalid;
+                        Twitter.AccountState = AccountState.Invalid;
                         return Hoehoe.Properties.Resources.Unauthorized;
                     case HttpStatusCode.BadRequest:
                         return "Err:API Limits?";
@@ -3430,10 +3430,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -3461,10 +3461,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -3502,7 +3502,7 @@ namespace Hoehoe
 
         public string GetListMembers(string listId, List<UserInfo> lists, ref long cursor)
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -3521,10 +3521,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -3553,7 +3553,7 @@ namespace Hoehoe
 
         public string CreateListApi(string listName, bool isPrivate, string description)
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -3572,10 +3572,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -3605,7 +3605,7 @@ namespace Hoehoe
         {
             value = false;
 
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -3624,10 +3624,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -3667,10 +3667,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:" + GetErrorMessageJson(content);
@@ -3697,10 +3697,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:" + GetErrorMessageJson(content);
@@ -3984,7 +3984,7 @@ namespace Hoehoe
 
         public bool GetInfoApi(ApiInfo info)
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return true;
             }
@@ -4045,7 +4045,7 @@ namespace Hoehoe
 
         public string GetBlockUserIds()
         {
-            if (Twitter.AccountState != MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
@@ -4064,10 +4064,10 @@ namespace Hoehoe
             switch (res)
             {
                 case HttpStatusCode.OK:
-                    Twitter.AccountState = MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     break;
                 case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = MyCommon.AccountState.Invalid;
+                    Twitter.AccountState = AccountState.Invalid;
                     return Hoehoe.Properties.Resources.Unauthorized;
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
@@ -4614,10 +4614,10 @@ namespace Hoehoe
                         switch (res)
                         {
                             case HttpStatusCode.OK:
-                                Twitter.AccountState = MyCommon.AccountState.Valid;
+                                Twitter.AccountState = AccountState.Valid;
                                 break;
                             case HttpStatusCode.Unauthorized:
-                                Twitter.AccountState = MyCommon.AccountState.Invalid;
+                                Twitter.AccountState = AccountState.Invalid;
                                 sleepSec = 120;
                                 continue;
                         }
@@ -4630,7 +4630,7 @@ namespace Hoehoe
 
                         sr = new StreamReader(st);
 
-                        while (_streamActive && !sr.EndOfStream && Twitter.AccountState == MyCommon.AccountState.Valid)
+                        while (_streamActive && !sr.EndOfStream && Twitter.AccountState == AccountState.Valid)
                         {
                             if (StatusArrived != null)
                             {
@@ -4638,7 +4638,7 @@ namespace Hoehoe
                             }
                         }
 
-                        if (sr.EndOfStream || Twitter.AccountState == MyCommon.AccountState.Invalid)
+                        if (sr.EndOfStream || Twitter.AccountState == AccountState.Invalid)
                         {
                             sleepSec = 30;
                             continue;

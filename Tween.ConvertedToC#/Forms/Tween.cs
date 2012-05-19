@@ -2853,13 +2853,13 @@ namespace Hoehoe
 
         private static bool CheckAccountValid()
         {
-            if (Twitter.AccountState != Hoehoe.MyCommon.AccountState.Valid)
+            if (Twitter.AccountState != AccountState.Valid)
             {
                 _accountCheckErrorCount += 1;
                 if (_accountCheckErrorCount > 5)
                 {
                     _accountCheckErrorCount = 0;
-                    Twitter.AccountState = Hoehoe.MyCommon.AccountState.Valid;
+                    Twitter.AccountState = AccountState.Valid;
                     return true;
                 }
                 return false;
@@ -3035,7 +3035,7 @@ namespace Hoehoe
                         for (int i = 0; i <= 1; i++)
                         {
                             ret = tw.PostStatus(args.PStatus.Status, args.PStatus.InReplyToId);
-                            if (String.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.PStatus.Status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.PStatus.Status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != Hoehoe.MyCommon.AccountState.Valid)
+                            if (String.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.PStatus.Status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.PStatus.Status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != AccountState.Valid)
                             {
                                 break;
                             }
@@ -4806,7 +4806,7 @@ namespace Hoehoe
                 }
             }
 
-            Twitter.AccountState = MyCommon.AccountState.Valid;
+            Twitter.AccountState = AccountState.Valid;
 
             this.TopMost = SettingDialog.AlwaysTop;
             SaveConfigsAll(false);
