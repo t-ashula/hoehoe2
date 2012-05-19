@@ -36,7 +36,7 @@ namespace Hoehoe
     {
         //OAuth関連
         ///<summary>
-        ///OAuthのコンシューマー鍵 
+        ///OAuthのコンシューマー鍵
         ///</summary>
         private const string ConsumerKey = "BIazYuf0scya8pyhLjkdg";
         ///<summary>
@@ -168,18 +168,18 @@ namespace Hoehoe
             return "Image Files(*.gif;*.jpg;*.jpeg;*.png)|*.gif;*.jpg;*.jpeg;*.png";
         }
 
-        public Hoehoe.MyCommon.UploadFileType GetFileType(string ext)
+        public Hoehoe.UploadFileType GetFileType(string ext)
         {
             if (this.CheckValidExtension(ext))
             {
-                return Hoehoe.MyCommon.UploadFileType.Picture;
+                return Hoehoe.UploadFileType.Picture;
             }
-            return Hoehoe.MyCommon.UploadFileType.Invalid;
+            return Hoehoe.UploadFileType.Invalid;
         }
 
-        public bool IsSupportedFileType(Hoehoe.MyCommon.UploadFileType type)
+        public bool IsSupportedFileType(Hoehoe.UploadFileType type)
         {
-            return type.Equals(Hoehoe.MyCommon.UploadFileType.Picture);
+            return type.Equals(Hoehoe.UploadFileType.Picture);
         }
 
         public bool CheckValidFilesize(string ext, long fileSize)

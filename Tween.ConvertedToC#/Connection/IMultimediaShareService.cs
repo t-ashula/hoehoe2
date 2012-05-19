@@ -29,11 +29,17 @@ namespace Hoehoe
     public interface IMultimediaShareService
     {
         string Upload(ref string filePath, ref string message, long replyTo);
+
         bool CheckValidExtension(string ext);
+
         string GetFileOpenDialogFilter();
-        Hoehoe.MyCommon.UploadFileType GetFileType(string ext);
-        bool IsSupportedFileType(Hoehoe.MyCommon.UploadFileType type);
+
+        Hoehoe.UploadFileType GetFileType(string ext);
+
+        bool IsSupportedFileType(Hoehoe.UploadFileType type);
+
         bool CheckValidFilesize(string ext, long fileSize);
+
         bool Configuration(string key, object value);
     }
 }

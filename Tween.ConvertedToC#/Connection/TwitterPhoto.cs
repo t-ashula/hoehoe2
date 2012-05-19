@@ -34,7 +34,7 @@ namespace Hoehoe
         private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
 
         private const Int64 MaxfilesizeDefault = 3145728;        // help/configurationにより取得されコンストラクタへ渡される
-        
+
         private Int64 _maxFileSize = 3145728;
         private Twitter _tw;
 
@@ -76,18 +76,18 @@ namespace Hoehoe
             return "Image Files(*.gif;*.jpg;*.jpeg;*.png)|*.gif;*.jpg;*.jpeg;*.png";
         }
 
-        public MyCommon.UploadFileType GetFileType(string ext)
+        public UploadFileType GetFileType(string ext)
         {
             if (CheckValidExtension(ext))
             {
-                return MyCommon.UploadFileType.Picture;
+                return UploadFileType.Picture;
             }
-            return MyCommon.UploadFileType.Invalid;
+            return UploadFileType.Invalid;
         }
 
-        public bool IsSupportedFileType(MyCommon.UploadFileType type)
+        public bool IsSupportedFileType(UploadFileType type)
         {
-            return type.Equals(MyCommon.UploadFileType.Picture);
+            return type.Equals(UploadFileType.Picture);
         }
 
         public string Upload(ref string filePath, ref string message, long replyTo)

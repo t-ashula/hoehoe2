@@ -52,13 +52,6 @@ namespace Hoehoe
         public static string CultureStr = null;
         public static string SettingPath;
 
-        public enum UploadFileType
-        {
-            Invalid,
-            Picture,
-            MultiMedia
-        }
-
         public enum UrlConverter
         {
             TinyUrl,

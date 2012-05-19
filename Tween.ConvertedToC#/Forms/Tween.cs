@@ -13334,7 +13334,7 @@ namespace Hoehoe
             if (String.IsNullOrEmpty(ImagefilePathText.Text))
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
+                ImageSelectedPicture.Tag = UploadFileType.Invalid;
             }
             else
             {
@@ -13349,7 +13349,7 @@ namespace Hoehoe
                 if (String.IsNullOrEmpty(ImagefilePathText.Text.Trim()) || String.IsNullOrEmpty(this.ImageService))
                 {
                     ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                    ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
+                    ImageSelectedPicture.Tag = UploadFileType.Invalid;
                     ImagefilePathText.Text = "";
                     return;
                 }
@@ -13359,7 +13359,7 @@ namespace Hoehoe
                 {
                     //画像以外の形式
                     ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                    ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
+                    ImageSelectedPicture.Tag = UploadFileType.Invalid;
                     ImagefilePathText.Text = "";
                     return;
                 }
@@ -13368,7 +13368,7 @@ namespace Hoehoe
                 {
                     // ファイルサイズが大きすぎる
                     ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                    ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
+                    ImageSelectedPicture.Tag = UploadFileType.Invalid;
                     ImagefilePathText.Text = "";
                     MessageBox.Show("File is too large.");
                     return;
@@ -13376,12 +13376,12 @@ namespace Hoehoe
 
                 switch (this._pictureServices[this.ImageService].GetFileType(fl.Extension))
                 {
-                    case MyCommon.UploadFileType.Invalid:
+                    case UploadFileType.Invalid:
                         ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                        ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
+                        ImageSelectedPicture.Tag = UploadFileType.Invalid;
                         ImagefilePathText.Text = "";
                         break;
-                    case MyCommon.UploadFileType.Picture:
+                    case UploadFileType.Picture:
                         Image img = null;
                         using (FileStream fs = new FileStream(ImagefilePathText.Text, FileMode.Open, FileAccess.Read))
                         {
@@ -13390,15 +13390,15 @@ namespace Hoehoe
                         }
 
                         ImageSelectedPicture.Image = (new HttpVarious()).CheckValidImage(img, img.Width, img.Height);
-                        ImageSelectedPicture.Tag = MyCommon.UploadFileType.Picture;
+                        ImageSelectedPicture.Tag = UploadFileType.Picture;
                         break;
-                    case MyCommon.UploadFileType.MultiMedia:
+                    case UploadFileType.MultiMedia:
                         ImageSelectedPicture.Image = Hoehoe.Properties.Resources.MultiMediaImage;
-                        ImageSelectedPicture.Tag = MyCommon.UploadFileType.MultiMedia;
+                        ImageSelectedPicture.Tag = UploadFileType.MultiMedia;
                         break;
                     default:
                         ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                        ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
+                        ImageSelectedPicture.Tag = UploadFileType.Invalid;
                         ImagefilePathText.Text = "";
                         break;
                 }
@@ -13406,14 +13406,14 @@ namespace Hoehoe
             catch (FileNotFoundException ex)
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
+                ImageSelectedPicture.Tag = UploadFileType.Invalid;
                 ImagefilePathText.Text = "";
                 MessageBox.Show("File not found.");
             }
             catch (Exception ex)
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
+                ImageSelectedPicture.Tag = UploadFileType.Invalid;
                 ImagefilePathText.Text = "";
                 MessageBox.Show("The type of this file is not image.");
             }
@@ -13424,7 +13424,7 @@ namespace Hoehoe
             if (e.KeyCode == Keys.Escape)
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
+                ImageSelectedPicture.Tag = UploadFileType.Invalid;
                 TimelinePanel.Visible = true;
                 TimelinePanel.Enabled = true;
                 ImageSelectionPanel.Visible = false;
@@ -13508,7 +13508,7 @@ namespace Hoehoe
                     {
                         ImagefilePathText.Text = "";
                         ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                        ImageSelectedPicture.Tag = MyCommon.UploadFileType.Invalid;
+                        ImageSelectedPicture.Tag = UploadFileType.Invalid;
                     }
                 }
                 catch (Exception ex)

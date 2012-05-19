@@ -60,4 +60,11 @@ namespace Hoehoe
         Hour,
         Day
     }
+
+    public enum UploadFileType
+    {
+        Invalid,
+        Picture,
+        MultiMedia
+    }
 }

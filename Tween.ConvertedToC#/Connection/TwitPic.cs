@@ -36,20 +36,21 @@ namespace Hoehoe
     {
         //OAuth関連
         ///<summary>
-        ///OAuthのコンシューマー鍵 : 
+        ///OAuthのコンシューマー鍵 :
         ///</summary>
         private const string ConsumerKey = "BIazYuf0scya8pyhLjkdg";
 
         ///<summary>
-        ///OAuthの署名作成用秘密コンシューマーデータ 
+        ///OAuthの署名作成用秘密コンシューマーデータ
         ///</summary>
         private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
         /// <summary>
-        /// Twitpic API Key 
+        /// Twitpic API Key
         /// </summary>
         private const string ApiKey = "63c1dbc8deba169cf8b3e199130c916b";
 
         private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
+
         private string[] _multimediaExts = {
 			".avi",
 			".wmv",
@@ -173,7 +174,7 @@ namespace Hoehoe
             param.Add("message", message);
             List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
-            if (this.GetFileType(mediaFile.Extension) == MyCommon.UploadFileType.Picture)
+            if (this.GetFileType(mediaFile.Extension) == UploadFileType.Picture)
             {
                 this.InstanceTimeout = 60000; //タイムアウト60秒
             }
@@ -195,22 +196,22 @@ namespace Hoehoe
             return String.Format("Image Files(*{0})|*{0}|Videos(*{1})|*{1}", String.Join(";*", _pictureExts), String.Join(";*", _multimediaExts));
         }
 
-        public MyCommon.UploadFileType GetFileType(string ext)
+        public UploadFileType GetFileType(string ext)
         {
             if (Array.IndexOf(_pictureExts, ext.ToLower()) > -1)
             {
-                return MyCommon.UploadFileType.Picture;
+                return UploadFileType.Picture;
             }
             if (Array.IndexOf(_multimediaExts, ext.ToLower()) > -1)
             {
-                return MyCommon.UploadFileType.MultiMedia;
+                return UploadFileType.MultiMedia;
             }
-            return MyCommon.UploadFileType.Invalid;
+            return UploadFileType.Invalid;
         }
 
-        public bool IsSupportedFileType(MyCommon.UploadFileType type)
+        public bool IsSupportedFileType(UploadFileType type)
         {
-            return !type.Equals(MyCommon.UploadFileType.Invalid);
+            return !type.Equals(UploadFileType.Invalid);
         }
 
         public bool CheckValidFilesize(string ext, long fileSize)
