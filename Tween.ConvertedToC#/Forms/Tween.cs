@@ -439,7 +439,7 @@ namespace Hoehoe
             public int EndPage;
 
             //処理種別
-            public Hoehoe.MyCommon.WorkerType WorkerType;
+            public WorkerType WorkerType;
 
             //新規取得したアイコンイメージ
             public Dictionary<string, Image> Imgs;
@@ -468,7 +468,7 @@ namespace Hoehoe
             public int EndPage;
 
             //処理種別
-            public Hoehoe.MyCommon.WorkerType WorkerType;
+            public WorkerType WorkerType;
 
             //URLをブラウザで開くときのアドレス
             public string Url = "";
@@ -1787,7 +1787,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref _timerHomeCounter, SettingDialog.TimelinePeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Timeline)
                 {
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.Timeline, 1, 0, "");
+                    GetTimeline(WorkerType.Timeline, 1, 0, "");
                 }
                 ResetTimers.Timeline = false;
             }
@@ -1796,7 +1796,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref _timerMentionCounter, SettingDialog.ReplyPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Reply)
                 {
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.Reply, 1, 0, "");
+                    GetTimeline(WorkerType.Reply, 1, 0, "");
                 }
                 ResetTimers.Reply = false;
             }
@@ -1805,7 +1805,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref _timerDmCounter, SettingDialog.DMPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.DirectMessage)
                 {
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
+                    GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
                 }
                 ResetTimers.DirectMessage = false;
             }
@@ -1814,7 +1814,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref _timerPubSearchCounter, SettingDialog.PubSearchPeriodInt);
                 if (!ResetTimers.PublicSearch)
                 {
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.PublicSearch, 1, 0, "");
+                    GetTimeline(WorkerType.PublicSearch, 1, 0, "");
                 }
                 ResetTimers.PublicSearch = false;
             }
@@ -1823,7 +1823,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref _timerUserTimelineCounter, SettingDialog.UserTimelinePeriodInt);
                 if (!ResetTimers.UserTimeline)
                 {
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.UserTimeline, 1, 0, "");
+                    GetTimeline(WorkerType.UserTimeline, 1, 0, "");
                 }
                 ResetTimers.UserTimeline = false;
             }
@@ -1832,7 +1832,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref _timerListsCounter, SettingDialog.ListsPeriodInt);
                 if (!ResetTimers.Lists)
                 {
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.List, 1, 0, "");
+                    GetTimeline(WorkerType.List, 1, 0, "");
                 }
                 ResetTimers.Lists = false;
             }
@@ -1849,7 +1849,7 @@ namespace Hoehoe
             {
                 Interlocked.Exchange(ref _timerRefreshFollowers, 0);
                 doGetFollowersMenu();
-                GetTimeline(Hoehoe.MyCommon.WorkerType.Configuration, 0, 0, "");
+                GetTimeline(WorkerType.Configuration, 0, 0, "");
                 if (InvokeRequired && !IsDisposed)
                 {
                     this.Invoke(new MethodInvoker(this.TrimPostChain));
@@ -1862,14 +1862,14 @@ namespace Hoehoe
                 {
                     _osResumed = false;
                     Interlocked.Exchange(ref _timerResumeWait, 0);
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.Timeline, 1, 0, "");
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.Reply, 1, 0, "");
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.PublicSearch, 1, 0, "");
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.UserTimeline, 1, 0, "");
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.List, 1, 0, "");
+                    GetTimeline(WorkerType.Timeline, 1, 0, "");
+                    GetTimeline(WorkerType.Reply, 1, 0, "");
+                    GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
+                    GetTimeline(WorkerType.PublicSearch, 1, 0, "");
+                    GetTimeline(WorkerType.UserTimeline, 1, 0, "");
+                    GetTimeline(WorkerType.List, 1, 0, "");
                     doGetFollowersMenu();
-                    GetTimeline(Hoehoe.MyCommon.WorkerType.Configuration, 0, 0, "");
+                    GetTimeline(WorkerType.Configuration, 0, 0, "");
                     if (InvokeRequired && !IsDisposed)
                     {
                         this.Invoke(new MethodInvoker(this.TrimPostChain));
@@ -2600,7 +2600,7 @@ namespace Hoehoe
             }
 
             StatusText.SelectionStart = StatusText.Text.Length;
-            GetWorkerArg args = new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = Hoehoe.MyCommon.WorkerType.PostMessage };
+            GetWorkerArg args = new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage };
             CheckReplyTo(StatusText.Text);
 
             //整形によって増加する文字数を取得
@@ -2895,43 +2895,43 @@ namespace Hoehoe
             if (!CheckAccountValid())
             {
                 rslt.RetMsg = "Auth error. Check your account";
-                rslt.WorkerType = Hoehoe.MyCommon.WorkerType.ErrorState;
+                rslt.WorkerType = WorkerType.ErrorState;
                 //エラー表示のみ行ない、後処理キャンセル
                 rslt.TabName = args.TabName;
                 e.Result = rslt;
                 return;
             }
 
-            if (args.WorkerType != Hoehoe.MyCommon.WorkerType.OpenUri)
+            if (args.WorkerType != WorkerType.OpenUri)
             {
                 bw.ReportProgress(0, "");
             }
             //Notifyアイコンアニメーション開始
             switch (args.WorkerType)
             {
-                case Hoehoe.MyCommon.WorkerType.Timeline:
-                case Hoehoe.MyCommon.WorkerType.Reply:
+                case WorkerType.Timeline:
+                case WorkerType.Reply:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetTimelineApi(read, args.WorkerType, args.Page == -1, _initial);
                     //新着時未読クリア
-                    if (String.IsNullOrEmpty(ret) && args.WorkerType == Hoehoe.MyCommon.WorkerType.Timeline && SettingDialog.ReadOldPosts)
+                    if (String.IsNullOrEmpty(ret) && args.WorkerType == WorkerType.Timeline && SettingDialog.ReadOldPosts)
                     {
                         _statuses.SetRead();
                     }
                     //振り分け
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Hoehoe.MyCommon.WorkerType.DirectMessegeRcv:
+                case WorkerType.DirectMessegeRcv:
                     //送信分もまとめて取得
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
-                    ret = tw.GetDirectMessageApi(read, Hoehoe.MyCommon.WorkerType.DirectMessegeRcv, args.Page == -1);
+                    ret = tw.GetDirectMessageApi(read, WorkerType.DirectMessegeRcv, args.Page == -1);
                     if (String.IsNullOrEmpty(ret))
                     {
-                        ret = tw.GetDirectMessageApi(read, Hoehoe.MyCommon.WorkerType.DirectMessegeSnt, args.Page == -1);
+                        ret = tw.GetDirectMessageApi(read, WorkerType.DirectMessegeSnt, args.Page == -1);
                     }
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Hoehoe.MyCommon.WorkerType.FavAdd:
+                case WorkerType.FavAdd:
                     //スレッド処理はしない
                     if (_statuses.Tabs.ContainsKey(args.TabName))
                     {
@@ -2994,7 +2994,7 @@ namespace Hoehoe
                     }
                     rslt.SIds = args.SIds;
                     break;
-                case Hoehoe.MyCommon.WorkerType.FavRemove:
+                case WorkerType.FavRemove:
                     //スレッド処理はしない
                     if (_statuses.Tabs.ContainsKey(args.TabName))
                     {
@@ -3028,7 +3028,7 @@ namespace Hoehoe
                     }
                     rslt.SIds = args.SIds;
                     break;
-                case Hoehoe.MyCommon.WorkerType.PostMessage:
+                case WorkerType.PostMessage:
                     bw.ReportProgress(200);
                     if (String.IsNullOrEmpty(args.PStatus.ImagePath))
                     {
@@ -3048,7 +3048,7 @@ namespace Hoehoe
                     bw.ReportProgress(300);
                     rslt.PStatus = args.PStatus;
                     break;
-                case Hoehoe.MyCommon.WorkerType.Retweet:
+                case WorkerType.Retweet:
                     bw.ReportProgress(200);
                     for (int i = 0; i < args.Ids.Count; i++)
                     {
@@ -3056,7 +3056,7 @@ namespace Hoehoe
                     }
                     bw.ReportProgress(300);
                     break;
-                case Hoehoe.MyCommon.WorkerType.Follower:
+                case WorkerType.Follower:
                     bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText1);
                     ret = tw.GetFollowersApi();
                     if (String.IsNullOrEmpty(ret))
@@ -3064,10 +3064,10 @@ namespace Hoehoe
                         ret = tw.GetNoRetweetIdsApi();
                     }
                     break;
-                case Hoehoe.MyCommon.WorkerType.Configuration:
+                case WorkerType.Configuration:
                     ret = tw.ConfigurationApi();
                     break;
-                case Hoehoe.MyCommon.WorkerType.OpenUri:
+                case WorkerType.OpenUri:
                     string myPath = Convert.ToString(args.Url);
 
                     try
@@ -3100,12 +3100,12 @@ namespace Hoehoe
                     {
                     }
                     break;
-                case Hoehoe.MyCommon.WorkerType.Favorites:
+                case WorkerType.Favorites:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetFavoritesApi(read, args.WorkerType, args.Page == -1);
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Hoehoe.MyCommon.WorkerType.PublicSearch:
+                case WorkerType.PublicSearch:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (String.IsNullOrEmpty(args.TabName))
                     {
@@ -3132,7 +3132,7 @@ namespace Hoehoe
                     //振り分け
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Hoehoe.MyCommon.WorkerType.UserTimeline:
+                case WorkerType.UserTimeline:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     int count = 20;
                     if (SettingDialog.UseAdditionalCount)
@@ -3158,7 +3158,7 @@ namespace Hoehoe
                     //振り分け
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Hoehoe.MyCommon.WorkerType.List:
+                case WorkerType.List:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (String.IsNullOrEmpty(args.TabName))
                     {
@@ -3183,12 +3183,12 @@ namespace Hoehoe
                     //振り分け
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Hoehoe.MyCommon.WorkerType.Related:
+                case WorkerType.Related:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = tw.GetRelatedResult(read, _statuses.GetTabByName(args.TabName));
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
-                case Hoehoe.MyCommon.WorkerType.BlockIds:
+                case WorkerType.BlockIds:
                     bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateBlockUserText1);
                     ret = tw.GetBlockUserIds();
                     if (TabInformations.GetInstance().BlockIds.Count == 0)
@@ -3205,7 +3205,7 @@ namespace Hoehoe
             }
 
             //時速表示用
-            if (args.WorkerType == Hoehoe.MyCommon.WorkerType.FavAdd)
+            if (args.WorkerType == WorkerType.FavAdd)
             {
                 System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                 for (int i = _favTimestamps.Count - 1; i >= 0; i += -1)
@@ -3216,7 +3216,7 @@ namespace Hoehoe
                     }
                 }
             }
-            if (args.WorkerType == Hoehoe.MyCommon.WorkerType.Timeline && !_initial)
+            if (args.WorkerType == WorkerType.Timeline && !_initial)
             {
                 lock (_syncObject)
                 {
@@ -3252,7 +3252,7 @@ namespace Hoehoe
             }
 
             //終了ステータス
-            if (args.WorkerType != Hoehoe.MyCommon.WorkerType.OpenUri)
+            if (args.WorkerType != WorkerType.OpenUri)
             {
                 bw.ReportProgress(100, MakeStatusMessage(args, true));
             }
@@ -3261,7 +3261,7 @@ namespace Hoehoe
             rslt.RetMsg = ret;
             rslt.WorkerType = args.WorkerType;
             rslt.TabName = args.TabName;
-            if (args.WorkerType == Hoehoe.MyCommon.WorkerType.DirectMessegeRcv || args.WorkerType == Hoehoe.MyCommon.WorkerType.DirectMessegeSnt || args.WorkerType == Hoehoe.MyCommon.WorkerType.Reply || args.WorkerType == Hoehoe.MyCommon.WorkerType.Timeline || args.WorkerType == Hoehoe.MyCommon.WorkerType.Favorites)
+            if (args.WorkerType == WorkerType.DirectMessegeRcv || args.WorkerType == WorkerType.DirectMessegeSnt || args.WorkerType == WorkerType.Reply || args.WorkerType == WorkerType.Timeline || args.WorkerType == WorkerType.Favorites)
             {
                 rslt.Page = args.Page - 1;
                 //値が正しいか後でチェック。10ページ毎の継続確認
@@ -3278,34 +3278,34 @@ namespace Hoehoe
                 //継続中メッセージ
                 switch (AsyncArg.WorkerType)
                 {
-                    case Hoehoe.MyCommon.WorkerType.Timeline:
+                    case WorkerType.Timeline:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText5 + AsyncArg.Page.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case Hoehoe.MyCommon.WorkerType.Reply:
+                    case WorkerType.Reply:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText4 + AsyncArg.Page.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case Hoehoe.MyCommon.WorkerType.DirectMessegeRcv:
+                    case WorkerType.DirectMessegeRcv:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText8 + AsyncArg.Page.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
                         break;
-                    case Hoehoe.MyCommon.WorkerType.FavAdd:
+                    case WorkerType.FavAdd:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText15 + AsyncArg.Page.ToString() + "/" + AsyncArg.Ids.Count.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText16 + (AsyncArg.Page - AsyncArg.SIds.Count - 1).ToString();
                         break;
-                    case Hoehoe.MyCommon.WorkerType.FavRemove:
+                    case WorkerType.FavRemove:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText17 + AsyncArg.Page.ToString() + "/" + AsyncArg.Ids.Count.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText18 + (AsyncArg.Page - AsyncArg.SIds.Count - 1).ToString();
                         break;
-                    case Hoehoe.MyCommon.WorkerType.Favorites:
+                    case WorkerType.Favorites:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText19;
                         break;
-                    case Hoehoe.MyCommon.WorkerType.PublicSearch:
+                    case WorkerType.PublicSearch:
                         smsg = "Search refreshing...";
                         break;
-                    case Hoehoe.MyCommon.WorkerType.List:
+                    case WorkerType.List:
                         smsg = "List refreshing...";
                         break;
-                    case Hoehoe.MyCommon.WorkerType.Related:
+                    case WorkerType.Related:
                         smsg = "Related refreshing...";
                         break;
-                    case Hoehoe.MyCommon.WorkerType.UserTimeline:
+                    case WorkerType.UserTimeline:
                         smsg = "UserTimeline refreshing...";
                         break;
                 }
@@ -3315,46 +3315,46 @@ namespace Hoehoe
                 //完了メッセージ
                 switch (AsyncArg.WorkerType)
                 {
-                    case Hoehoe.MyCommon.WorkerType.Timeline:
+                    case WorkerType.Timeline:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText1;
                         break;
-                    case Hoehoe.MyCommon.WorkerType.Reply:
+                    case WorkerType.Reply:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText9;
                         break;
-                    case Hoehoe.MyCommon.WorkerType.DirectMessegeRcv:
+                    case WorkerType.DirectMessegeRcv:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText11;
                         break;
-                    case Hoehoe.MyCommon.WorkerType.DirectMessegeSnt:
+                    case WorkerType.DirectMessegeSnt:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText13;
                         break;
-                    case Hoehoe.MyCommon.WorkerType.FavAdd:
+                    case WorkerType.FavAdd:
                         break;
                     //進捗メッセージ残す
-                    case Hoehoe.MyCommon.WorkerType.FavRemove:
+                    case WorkerType.FavRemove:
                         break;
                     //進捗メッセージ残す
-                    case Hoehoe.MyCommon.WorkerType.Favorites:
+                    case WorkerType.Favorites:
                         smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText20;
                         break;
-                    case Hoehoe.MyCommon.WorkerType.Follower:
+                    case WorkerType.Follower:
                         smsg = Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText3;
                         break;
-                    case Hoehoe.MyCommon.WorkerType.Configuration:
+                    case WorkerType.Configuration:
                         break;
                     //進捗メッセージ残す
-                    case Hoehoe.MyCommon.WorkerType.PublicSearch:
+                    case WorkerType.PublicSearch:
                         smsg = "Search refreshed";
                         break;
-                    case Hoehoe.MyCommon.WorkerType.List:
+                    case WorkerType.List:
                         smsg = "List refreshed";
                         break;
-                    case Hoehoe.MyCommon.WorkerType.Related:
+                    case WorkerType.Related:
                         smsg = "Related refreshed";
                         break;
-                    case Hoehoe.MyCommon.WorkerType.UserTimeline:
+                    case WorkerType.UserTimeline:
                         smsg = "UserTimeline refreshed";
                         break;
-                    case Hoehoe.MyCommon.WorkerType.BlockIds:
+                    case WorkerType.BlockIds:
                         smsg = Hoehoe.Properties.Resources.UpdateBlockUserText3;
                         break;
                 }
@@ -3415,7 +3415,7 @@ namespace Hoehoe
 
             GetWorkerResult rslt = (GetWorkerResult)e.Result;
 
-            if (rslt.WorkerType == Hoehoe.MyCommon.WorkerType.OpenUri)
+            if (rslt.WorkerType == WorkerType.OpenUri)
             {
                 return;
             }
@@ -3427,17 +3427,17 @@ namespace Hoehoe
                 StatusLabel.Text = rslt.RetMsg;
             }
 
-            if (rslt.WorkerType == Hoehoe.MyCommon.WorkerType.ErrorState)
+            if (rslt.WorkerType == WorkerType.ErrorState)
             {
                 return;
             }
 
-            if (rslt.WorkerType == Hoehoe.MyCommon.WorkerType.FavRemove)
+            if (rslt.WorkerType == WorkerType.FavRemove)
             {
                 this.RemovePostFromFavTab(rslt.SIds.ToArray());
             }
 
-            if (rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Timeline || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Reply || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.List || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.PublicSearch || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.DirectMessegeRcv || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.DirectMessegeSnt || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Favorites || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Follower || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.FavAdd || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.FavRemove || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Related || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.UserTimeline || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.BlockIds || rslt.WorkerType == Hoehoe.MyCommon.WorkerType.Configuration)
+            if (rslt.WorkerType == WorkerType.Timeline || rslt.WorkerType == WorkerType.Reply || rslt.WorkerType == WorkerType.List || rslt.WorkerType == WorkerType.PublicSearch || rslt.WorkerType == WorkerType.DirectMessegeRcv || rslt.WorkerType == WorkerType.DirectMessegeSnt || rslt.WorkerType == WorkerType.Favorites || rslt.WorkerType == WorkerType.Follower || rslt.WorkerType == WorkerType.FavAdd || rslt.WorkerType == WorkerType.FavRemove || rslt.WorkerType == WorkerType.Related || rslt.WorkerType == WorkerType.UserTimeline || rslt.WorkerType == WorkerType.BlockIds || rslt.WorkerType == WorkerType.Configuration)
             {
                 RefreshTimeline(false);
                 //リスト反映
@@ -3445,32 +3445,32 @@ namespace Hoehoe
 
             switch (rslt.WorkerType)
             {
-                case Hoehoe.MyCommon.WorkerType.Timeline:
+                case WorkerType.Timeline:
                     _waitTimeline = false;
                     if (!_initial)
                     {
                         //    'API使用時の取得調整は別途考える（カウント調整？）
                     }
                     break;
-                case Hoehoe.MyCommon.WorkerType.Reply:
+                case WorkerType.Reply:
                     _waitReply = false;
                     if (rslt.NewDM && !_initial)
                     {
-                        GetTimeline(Hoehoe.MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
+                        GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
                     }
                     break;
-                case Hoehoe.MyCommon.WorkerType.Favorites:
+                case WorkerType.Favorites:
                     _waitFav = false;
                     break;
-                case Hoehoe.MyCommon.WorkerType.DirectMessegeRcv:
+                case WorkerType.DirectMessegeRcv:
                     _waitDm = false;
                     break;
-                case Hoehoe.MyCommon.WorkerType.FavAdd:
-                case Hoehoe.MyCommon.WorkerType.FavRemove:
+                case WorkerType.FavAdd:
+                case WorkerType.FavRemove:
                     if (_curList != null && _curTab != null)
                     {
                         _curList.BeginUpdate();
-                        if (rslt.WorkerType == Hoehoe.MyCommon.WorkerType.FavRemove && _statuses.Tabs[_curTab.Text].TabType == Hoehoe.MyCommon.TabUsageType.Favorites)
+                        if (rslt.WorkerType == WorkerType.FavRemove && _statuses.Tabs[_curTab.Text].TabType == Hoehoe.MyCommon.TabUsageType.Favorites)
                         {
                             //色変えは不要
                         }
@@ -3509,7 +3509,7 @@ namespace Hoehoe
                         _curList.EndUpdate();
                     }
                     break;
-                case MyCommon.WorkerType.PostMessage:
+                case WorkerType.PostMessage:
                     if (String.IsNullOrEmpty(rslt.RetMsg) || rslt.RetMsg.StartsWith("Outputz") || rslt.RetMsg.StartsWith("OK:") || rslt.RetMsg == "Warn:Status is a duplicate.")
                     {
                         _postTimestamps.Add(DateTime.Now);
@@ -3545,7 +3545,7 @@ namespace Hoehoe
                         }
                         if (retry == DialogResult.Retry)
                         {
-                            RunAsync(new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = MyCommon.WorkerType.PostMessage, PStatus = rslt.PStatus });
+                            RunAsync(new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage, PStatus = rslt.PStatus });
                         }
                         else
                         {
@@ -3564,11 +3564,11 @@ namespace Hoehoe
                         }
                         else
                         {
-                            GetTimeline(MyCommon.WorkerType.Timeline, 1, 0, "");
+                            GetTimeline(WorkerType.Timeline, 1, 0, "");
                         }
                     }
                     break;
-                case MyCommon.WorkerType.Retweet:
+                case WorkerType.Retweet:
                     if (rslt.RetMsg.Length == 0)
                     {
                         _postTimestamps.Add(DateTime.Now);
@@ -3582,11 +3582,11 @@ namespace Hoehoe
                         }
                         if (!_isActiveUserstream && SettingDialog.PostAndGet)
                         {
-                            GetTimeline(MyCommon.WorkerType.Timeline, 1, 0, "");
+                            GetTimeline(WorkerType.Timeline, 1, 0, "");
                         }
                     }
                     break;
-                case MyCommon.WorkerType.Follower:
+                case WorkerType.Follower:
                     _itemCache = null;
                     _postCache = null;
                     if (_curList != null)
@@ -3594,7 +3594,7 @@ namespace Hoehoe
                         _curList.Refresh();
                     }
                     break;
-                case MyCommon.WorkerType.Configuration:
+                case WorkerType.Configuration:
                     //_waitFollower = False
                     if (SettingDialog.TwitterConfiguration.PhotoSizeLimit != 0)
                     {
@@ -3607,16 +3607,16 @@ namespace Hoehoe
                         _curList.Refresh();
                     }
                     break;
-                case MyCommon.WorkerType.PublicSearch:
+                case WorkerType.PublicSearch:
                     _waitPubSearch = false;
                     break;
-                case MyCommon.WorkerType.UserTimeline:
+                case WorkerType.UserTimeline:
                     _waitUserTimeline = false;
                     break;
-                case MyCommon.WorkerType.List:
+                case WorkerType.List:
                     _waitLists = false;
                     break;
-                case MyCommon.WorkerType.Related:
+                case WorkerType.Related:
                     {
                         TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Related);
                         if (tb != null && tb.RelationTargetPost != null && tb.Contains(tb.RelationTargetPost.StatusId))
@@ -3709,9 +3709,9 @@ namespace Hoehoe
             }
         }
 
-        Dictionary<Hoehoe.MyCommon.WorkerType, DateTime> _lastTime;
+        Dictionary<WorkerType, DateTime> _lastTime;
 
-        private void GetTimeline(MyCommon.WorkerType wkType, int fromPage, int toPage, string tabName)
+        private void GetTimeline(WorkerType wkType, int fromPage, int toPage, string tabName)
         {
             if (!MyCommon.IsNetworkAvailable())
             {
@@ -3720,7 +3720,7 @@ namespace Hoehoe
 
             if (_lastTime == null)
             {
-                _lastTime = new Dictionary<MyCommon.WorkerType, DateTime>();
+                _lastTime = new Dictionary<WorkerType, DateTime>();
             }
 
             //非同期実行引数設定
@@ -3848,7 +3848,7 @@ namespace Hoehoe
                 Ids = new List<long>(),
                 SIds = new List<long>(),
                 TabName = _curTab.Text,
-                WorkerType = isFavAdd ? MyCommon.WorkerType.FavAdd : MyCommon.WorkerType.FavRemove
+                WorkerType = isFavAdd ? WorkerType.FavAdd : WorkerType.FavRemove
             };
             foreach (int idx in _curList.SelectedIndices)
             {
@@ -4400,13 +4400,13 @@ namespace Hoehoe
                 switch (_statuses.Tabs[_curTab.Text].TabType)
                 {
                     case MyCommon.TabUsageType.Mentions:
-                        GetTimeline(MyCommon.WorkerType.Reply, 1, 0, "");
+                        GetTimeline(WorkerType.Reply, 1, 0, "");
                         break;
                     case MyCommon.TabUsageType.DirectMessage:
-                        GetTimeline(MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
+                        GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
                         break;
                     case MyCommon.TabUsageType.Favorites:
-                        GetTimeline(MyCommon.WorkerType.Favorites, 1, 0, "");
+                        GetTimeline(WorkerType.Favorites, 1, 0, "");
                         break;
                     //Case TabUsageType.Profile
                     //' TODO
@@ -4418,11 +4418,11 @@ namespace Hoehoe
                             {
                                 return;
                             }
-                            GetTimeline(MyCommon.WorkerType.PublicSearch, 1, 0, _curTab.Text);
+                            GetTimeline(WorkerType.PublicSearch, 1, 0, _curTab.Text);
                         }
                         break;
                     case MyCommon.TabUsageType.UserTimeline:
-                        GetTimeline(MyCommon.WorkerType.UserTimeline, 1, 0, _curTab.Text);
+                        GetTimeline(WorkerType.UserTimeline, 1, 0, _curTab.Text);
                         break;
                     case MyCommon.TabUsageType.Lists:
                         {
@@ -4433,17 +4433,17 @@ namespace Hoehoe
                                 return;
                             }
 
-                            GetTimeline(MyCommon.WorkerType.List, 1, 0, _curTab.Text);
+                            GetTimeline(WorkerType.List, 1, 0, _curTab.Text);
                         }
                         break;
                     default:
-                        GetTimeline(MyCommon.WorkerType.Timeline, 1, 0, "");
+                        GetTimeline(WorkerType.Timeline, 1, 0, "");
                         break;
                 }
             }
             else
             {
-                GetTimeline(MyCommon.WorkerType.Timeline, 1, 0, "");
+                GetTimeline(WorkerType.Timeline, 1, 0, "");
             }
         }
 
@@ -4455,13 +4455,13 @@ namespace Hoehoe
                 switch (_statuses.Tabs[_curTab.Text].TabType)
                 {
                     case MyCommon.TabUsageType.Mentions:
-                        GetTimeline(MyCommon.WorkerType.Reply, -1, 0, "");
+                        GetTimeline(WorkerType.Reply, -1, 0, "");
                         break;
                     case MyCommon.TabUsageType.DirectMessage:
-                        GetTimeline(MyCommon.WorkerType.DirectMessegeRcv, -1, 0, "");
+                        GetTimeline(WorkerType.DirectMessegeRcv, -1, 0, "");
                         break;
                     case MyCommon.TabUsageType.Favorites:
-                        GetTimeline(MyCommon.WorkerType.Favorites, -1, 0, "");
+                        GetTimeline(WorkerType.Favorites, -1, 0, "");
                         break;
                     case MyCommon.TabUsageType.Profile:
                         break;
@@ -4474,11 +4474,11 @@ namespace Hoehoe
                             {
                                 return;
                             }
-                            GetTimeline(MyCommon.WorkerType.PublicSearch, -1, 0, _curTab.Text);
+                            GetTimeline(WorkerType.PublicSearch, -1, 0, _curTab.Text);
                         }
                         break;
                     case MyCommon.TabUsageType.UserTimeline:
-                        GetTimeline(MyCommon.WorkerType.UserTimeline, -1, 0, _curTab.Text);
+                        GetTimeline(WorkerType.UserTimeline, -1, 0, _curTab.Text);
                         break;
                     case MyCommon.TabUsageType.Lists:
                         {
@@ -4488,17 +4488,17 @@ namespace Hoehoe
                             {
                                 return;
                             }
-                            GetTimeline(MyCommon.WorkerType.List, -1, 0, _curTab.Text);
+                            GetTimeline(WorkerType.List, -1, 0, _curTab.Text);
                         }
                         break;
                     default:
-                        GetTimeline(MyCommon.WorkerType.Timeline, -1, 0, "");
+                        GetTimeline(WorkerType.Timeline, -1, 0, "");
                         break;
                 }
             }
             else
             {
-                GetTimeline(MyCommon.WorkerType.Timeline, -1, 0, "");
+                GetTimeline(WorkerType.Timeline, -1, 0, "");
             }
         }
 
@@ -4973,7 +4973,7 @@ namespace Hoehoe
             ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
             SaveConfigsTabs();
             //検索実行
-            GetTimeline(MyCommon.WorkerType.UserTimeline, 1, 0, tabName);
+            GetTimeline(WorkerType.UserTimeline, 1, 0, tabName);
         }
 
         public bool AddNewTab(string tabName, bool startup, Hoehoe.MyCommon.TabUsageType tabType, ListElement listInfo = null)
@@ -6968,10 +6968,10 @@ namespace Hoehoe
                             DoRefresh();
                             return true;
                         case Keys.F6:
-                            GetTimeline(MyCommon.WorkerType.Reply, 1, 0, "");
+                            GetTimeline(WorkerType.Reply, 1, 0, "");
                             return true;
                         case Keys.F7:
-                            GetTimeline(MyCommon.WorkerType.DirectMessegeRcv, 1, 0, "");
+                            GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
                             return true;
                     }
                     if (focusedControl != FocusedControl.StatusText)
@@ -7285,10 +7285,10 @@ namespace Hoehoe
                             DoRefreshMore();
                             return true;
                         case Keys.F6:
-                            GetTimeline(MyCommon.WorkerType.Reply, -1, 0, "");
+                            GetTimeline(WorkerType.Reply, -1, 0, "");
                             return true;
                         case Keys.F7:
-                            GetTimeline(MyCommon.WorkerType.DirectMessegeRcv, -1, 0, "");
+                            GetTimeline(WorkerType.DirectMessegeRcv, -1, 0, "");
                             return true;
                     }
                     //フォーカスStatusText以外
@@ -9679,7 +9679,7 @@ namespace Hoehoe
                     {
                         ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
                         ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
-                        GetTimeline(MyCommon.WorkerType.List, 1, 0, tabName);
+                        GetTimeline(WorkerType.List, 1, 0, tabName);
                     }
                 }
             }
@@ -11450,7 +11450,7 @@ namespace Hoehoe
 
         public void OpenUriAsync(string uri)
         {
-            RunAsync(new GetWorkerArg() { WorkerType = MyCommon.WorkerType.OpenUri, Url = uri });
+            RunAsync(new GetWorkerArg() { WorkerType = WorkerType.OpenUri, Url = uri });
         }
 
         private void ListTabSelect(TabPage tab)
@@ -11565,7 +11565,7 @@ namespace Hoehoe
         private void RunAsync(GetWorkerArg args)
         {
             BackgroundWorker bw = null;
-            if (args.WorkerType != MyCommon.WorkerType.Follower)
+            if (args.WorkerType != WorkerType.Follower)
             {
                 for (int i = 0; i < _bw.Length; i++)
                 {
@@ -11656,32 +11656,32 @@ namespace Hoehoe
 
             if (MyCommon.IsNetworkAvailable())
             {
-                GetTimeline(MyCommon.WorkerType.BlockIds, 0, 0, "");
+                GetTimeline(WorkerType.BlockIds, 0, 0, "");
                 if (SettingDialog.StartupFollowers)
                 {
-                    GetTimeline(MyCommon.WorkerType.Follower, 0, 0, "");
+                    GetTimeline(WorkerType.Follower, 0, 0, "");
                 }
-                GetTimeline(MyCommon.WorkerType.Configuration, 0, 0, "");
+                GetTimeline(WorkerType.Configuration, 0, 0, "");
                 StartUserStream();
                 _waitTimeline = true;
-                GetTimeline(MyCommon.WorkerType.Timeline, 1, 1, "");
+                GetTimeline(WorkerType.Timeline, 1, 1, "");
                 _waitReply = true;
-                GetTimeline(MyCommon.WorkerType.Reply, 1, 1, "");
+                GetTimeline(WorkerType.Reply, 1, 1, "");
                 _waitDm = true;
-                GetTimeline(MyCommon.WorkerType.DirectMessegeRcv, 1, 1, "");
+                GetTimeline(WorkerType.DirectMessegeRcv, 1, 1, "");
                 if (SettingDialog.GetFav)
                 {
                     _waitFav = true;
-                    GetTimeline(MyCommon.WorkerType.Favorites, 1, 1, "");
+                    GetTimeline(WorkerType.Favorites, 1, 1, "");
                 }
                 _waitPubSearch = true;
-                GetTimeline(MyCommon.WorkerType.PublicSearch, 1, 0, "");
+                GetTimeline(WorkerType.PublicSearch, 1, 0, "");
                 //tabname="":全タブ
                 _waitUserTimeline = true;
-                GetTimeline(MyCommon.WorkerType.UserTimeline, 1, 0, "");
+                GetTimeline(WorkerType.UserTimeline, 1, 0, "");
                 //tabname="":全タブ
                 _waitLists = true;
-                GetTimeline(MyCommon.WorkerType.List, 1, 0, "");
+                GetTimeline(WorkerType.List, 1, 0, "");
                 //tabname="":全タブ
                 int i = 0;
                 int j = 0;
@@ -11720,13 +11720,13 @@ namespace Hoehoe
                 // 取得失敗の場合は再試行する
                 if (!tw.GetFollowersSuccess && SettingDialog.StartupFollowers)
                 {
-                    GetTimeline(MyCommon.WorkerType.Follower, 0, 0, "");
+                    GetTimeline(WorkerType.Follower, 0, 0, "");
                 }
 
                 // 取得失敗の場合は再試行する
                 if (SettingDialog.TwitterConfiguration.PhotoSizeLimit == 0)
                 {
-                    GetTimeline(MyCommon.WorkerType.Configuration, 0, 0, "");
+                    GetTimeline(WorkerType.Configuration, 0, 0, "");
                 }
 
                 // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
@@ -11750,7 +11750,7 @@ namespace Hoehoe
 
         private void doGetFollowersMenu()
         {
-            GetTimeline(MyCommon.WorkerType.Follower, 1, 0, "");
+            GetTimeline(WorkerType.Follower, 1, 0, "");
             DispSelectedPost(true);
         }
 
@@ -11844,7 +11844,7 @@ namespace Hoehoe
                     Ids = new List<long>(),
                     SIds = new List<long>(),
                     TabName = _curTab.Text,
-                    WorkerType = MyCommon.WorkerType.Retweet
+                    WorkerType = WorkerType.Retweet
                 };
                 foreach (int idx in _curList.SelectedIndices)
                 {
@@ -12517,7 +12517,7 @@ namespace Hoehoe
                 //検索条件の保存
             }
 
-            GetTimeline(MyCommon.WorkerType.PublicSearch, 1, 0, tbName);
+            GetTimeline(WorkerType.PublicSearch, 1, 0, tbName);
             ((DetailsListView)ListTab.SelectedTab.Tag).Focus();
         }
 
@@ -13648,7 +13648,7 @@ namespace Hoehoe
                     }
                 }
 
-                GetTimeline(MyCommon.WorkerType.Related, 1, 1, tb.TabName);
+                GetTimeline(WorkerType.Related, 1, 1, tb.TabName);
             }
         }
 

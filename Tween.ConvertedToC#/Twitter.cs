@@ -88,8 +88,10 @@ namespace Hoehoe
         private IDictionary<string, Image> _dIcon;
         private bool _tinyUrlResolve;
         private bool _restrictFavCheck;
+
         //private string _hubServer;
         private bool _readOwnPost;
+
         private List<string> _hashList = new List<string>();
 
         //共通で使用する状態
@@ -1626,7 +1628,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion "バージョンアップ"
+        #endregion "TODO:バージョンアップ"
 
         public IDictionary<string, Image> DetailIcon
         {
@@ -1671,7 +1673,7 @@ namespace Hoehoe
             _protocol = value ? "https://" : "http://";
         }
 
-        public string GetTimelineApi(bool read, MyCommon.WorkerType gType, bool more, bool startup)
+        public string GetTimelineApi(bool read, WorkerType gType, bool more, bool startup)
         {
             if (Twitter.AccountState != MyCommon.AccountState.Valid)
             {
@@ -1686,7 +1688,7 @@ namespace Hoehoe
             HttpStatusCode res = default(HttpStatusCode);
             string content = "";
             int count = AppendSettingDialog.Instance.CountApi;
-            if (gType == MyCommon.WorkerType.Reply)
+            if (gType == WorkerType.Reply)
             {
                 count = AppendSettingDialog.Instance.CountApiReply;
             }
@@ -1696,14 +1698,14 @@ namespace Hoehoe
                 {
                     count = AppendSettingDialog.Instance.MoreCountApi;
                 }
-                else if (startup && AppendSettingDialog.Instance.FirstCountApi != 0 && gType == MyCommon.WorkerType.Timeline)
+                else if (startup && AppendSettingDialog.Instance.FirstCountApi != 0 && gType == WorkerType.Timeline)
                 {
                     count = AppendSettingDialog.Instance.FirstCountApi;
                 }
             }
             try
             {
-                if (gType == MyCommon.WorkerType.Timeline)
+                if (gType == WorkerType.Timeline)
                 {
                     if (more)
                     {
@@ -1744,9 +1746,9 @@ namespace Hoehoe
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            return gType == MyCommon.WorkerType.Timeline ? 
-                CreatePostsFromJson(content, gType, null, read, count, ref this._minHomeTimeline) : 
-                CreatePostsFromJson(content, gType, null, read, count, ref this._minMentions);            
+            return gType == WorkerType.Timeline ?
+                CreatePostsFromJson(content, gType, null, read, count, ref this._minHomeTimeline) :
+                CreatePostsFromJson(content, gType, null, read, count, ref this._minMentions);
         }
 
         public string GetUserTimelineApi(bool read, int count, string userName, TabClass tab, bool more)
@@ -2048,7 +2050,7 @@ namespace Hoehoe
             return post;
         }
 
-        private string CreatePostsFromJson(string content, MyCommon.WorkerType gType, TabClass tab, bool read, int count, ref long minimumId)
+        private string CreatePostsFromJson(string content, WorkerType gType, TabClass tab, bool read, int count, ref long minimumId)
         {
             List<TwitterDataModel.Status> items = null;
             try
@@ -2120,7 +2122,7 @@ namespace Hoehoe
             return "";
         }
 
-        private string CreatePostsFromPhoenixSearch(string content, MyCommon.WorkerType gType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
+        private string CreatePostsFromPhoenixSearch(string content, WorkerType gType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
         {
             TwitterDataModel.SearchResult items = null;
             try
@@ -2251,7 +2253,7 @@ namespace Hoehoe
             }
 
             var t = tab.OldestId;
-            var ret = CreatePostsFromJson(content, MyCommon.WorkerType.List, tab, read, count, ref t);
+            var ret = CreatePostsFromJson(content, WorkerType.List, tab, read, count, ref t);
             tab.OldestId = t;
             return ret;
         }
@@ -2685,18 +2687,18 @@ namespace Hoehoe
 
             var oid = tab.OldestId;
             var npq = tab.NextPageQuery;
-            var ret = CreatePostsFromPhoenixSearch(content, MyCommon.WorkerType.PublicSearch, tab, read, count, ref oid, ref npq);
+            var ret = CreatePostsFromPhoenixSearch(content, WorkerType.PublicSearch, tab, read, count, ref oid, ref npq);
             tab.OldestId = oid;
             tab.NextPageQuery = npq;
             return ret;
         }
 
-        private string CreateDirectMessagesFromJson(string content, MyCommon.WorkerType gType, bool read)
+        private string CreateDirectMessagesFromJson(string content, WorkerType gType, bool read)
         {
             List<TwitterDataModel.Directmessage> item = null;
             try
             {
-                if (gType == MyCommon.WorkerType.UserStream)
+                if (gType == WorkerType.UserStream)
                 {
                     List<TwitterDataModel.DirectmessageEvent> itm = MyCommon.CreateDataFromJson<List<TwitterDataModel.DirectmessageEvent>>(content);
                     item = new List<TwitterDataModel.Directmessage>();
@@ -2727,9 +2729,9 @@ namespace Hoehoe
                 try
                 {
                     post.StatusId = message.Id;
-                    if (gType != MyCommon.WorkerType.UserStream)
+                    if (gType != WorkerType.UserStream)
                     {
-                        if (gType == MyCommon.WorkerType.DirectMessegeRcv)
+                        if (gType == WorkerType.DirectMessegeRcv)
                         {
                             if (_minDirectmessage > post.StatusId)
                             {
@@ -2766,7 +2768,7 @@ namespace Hoehoe
 
                     //以下、ユーザー情報
                     TwitterDataModel.User user = null;
-                    if (gType == MyCommon.WorkerType.UserStream)
+                    if (gType == WorkerType.UserStream)
                     {
                         if (_twCon.AuthenticatedUsername.Equals(message.Recipient.ScreenName, StringComparison.CurrentCultureIgnoreCase))
                         {
@@ -2783,7 +2785,7 @@ namespace Hoehoe
                     }
                     else
                     {
-                        if (gType == MyCommon.WorkerType.DirectMessegeRcv)
+                        if (gType == WorkerType.DirectMessegeRcv)
                         {
                             user = message.Sender;
                             post.IsMe = false;
@@ -2825,7 +2827,7 @@ namespace Hoehoe
             return "";
         }
 
-        public string GetDirectMessageApi(bool read, Hoehoe.MyCommon.WorkerType gType, bool more)
+        public string GetDirectMessageApi(bool read, WorkerType gType, bool more)
         {
             if (MyCommon.IsEnding)
             {
@@ -2849,7 +2851,7 @@ namespace Hoehoe
             string content = "";
             try
             {
-                if (gType == MyCommon.WorkerType.DirectMessegeRcv)
+                if (gType == WorkerType.DirectMessegeRcv)
                 {
                     if (more)
                     {
@@ -2896,7 +2898,7 @@ namespace Hoehoe
 
         int _prevFavPage = 1;
 
-        public string GetFavoritesApi(bool read, Hoehoe.MyCommon.WorkerType gType, bool more)
+        public string GetFavoritesApi(bool read, WorkerType gType, bool more)
         {
             if (Twitter.AccountState != MyCommon.AccountState.Valid)
             {
@@ -3893,7 +3895,7 @@ namespace Hoehoe
 
                 if (entities.Media != null)
                 {
-                    foreach (var ent  in entities.Media)
+                    foreach (var ent in entities.Media)
                     {
                         if (ent.Type == "photo")
                         {
@@ -3917,8 +3919,9 @@ namespace Hoehoe
                     {
                         int idx = 0;
                         ret = "";
-                        foreach (var et  in etInfo)
-                        {   ret += text.Substring(idx, et.Key - idx) + et.Value.Html;
+                        foreach (var et in etInfo)
+                        {
+                            ret += text.Substring(idx, et.Key - idx) + et.Value.Html;
                             idx = et.Value.EndIndex;
                         }
                         ret += text.Substring(idx);
@@ -4324,12 +4327,12 @@ namespace Hoehoe
 
                 if (isDm)
                 {
-                    CreateDirectMessagesFromJson(res.ToString(), MyCommon.WorkerType.UserStream, false);
+                    CreateDirectMessagesFromJson(res.ToString(), WorkerType.UserStream, false);
                 }
                 else
                 {
                     long t = -1;
-                    CreatePostsFromJson(res.ToString(), MyCommon.WorkerType.Timeline, null, false, 0, ref t);
+                    CreatePostsFromJson(res.ToString(), WorkerType.Timeline, null, false, 0, ref t);
                 }
             }
             catch (NullReferenceException)
@@ -4797,5 +4800,5 @@ namespace Hoehoe
         {
             ApiInformationChanged += Twitter_ApiInformationChanged;
         }
-   }
+    }
 }
