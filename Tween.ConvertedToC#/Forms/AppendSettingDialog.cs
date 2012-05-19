@@ -82,7 +82,7 @@ namespace Hoehoe
         private string _browserpath;
         private bool _myUseRecommendStatus;
         private bool _myDispUsername;
-        private Hoehoe.MyCommon.DispTitleEnum _MyDispLatestPost;
+        private DispTitleEnum _MyDispLatestPost;
         private bool _MySortOrderLock;
         private bool _MyMinimizeToTray;
         private bool _MyCloseToExit;
@@ -446,35 +446,35 @@ namespace Hoehoe
                 {
                     case 0:
                         //None
-                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.None;
+                        _MyDispLatestPost = DispTitleEnum.None;
                         break;
                     case 1:
                         //Ver
-                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.Ver;
+                        _MyDispLatestPost = DispTitleEnum.Ver;
                         break;
                     case 2:
                         //Post
-                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.Post;
+                        _MyDispLatestPost = DispTitleEnum.Post;
                         break;
                     case 3:
                         //RepCount
-                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.UnreadRepCount;
+                        _MyDispLatestPost = DispTitleEnum.UnreadRepCount;
                         break;
                     case 4:
                         //AllCount
-                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.UnreadAllCount;
+                        _MyDispLatestPost = DispTitleEnum.UnreadAllCount;
                         break;
                     case 5:
                         //Rep+All
-                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.UnreadAllRepCount;
+                        _MyDispLatestPost = DispTitleEnum.UnreadAllRepCount;
                         break;
                     case 6:
                         //Unread/All
-                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.UnreadCountAllCount;
+                        _MyDispLatestPost = DispTitleEnum.UnreadCountAllCount;
                         break;
                     case 7:
                         //Count of Status/Follow/Follower
-                        _MyDispLatestPost = Hoehoe.MyCommon.DispTitleEnum.OwnStatus;
+                        _MyDispLatestPost = DispTitleEnum.OwnStatus;
                         break;
                 }
                 _MySortOrderLock = CheckSortOrderLock.Checked;
@@ -807,28 +807,28 @@ namespace Hoehoe
             CheckMinimizeToTray.Checked = _MyMinimizeToTray;
             switch (_MyDispLatestPost)
             {
-                case Hoehoe.MyCommon.DispTitleEnum.None:
+                case DispTitleEnum.None:
                     ComboDispTitle.SelectedIndex = 0;
                     break;
-                case Hoehoe.MyCommon.DispTitleEnum.Ver:
+                case DispTitleEnum.Ver:
                     ComboDispTitle.SelectedIndex = 1;
                     break;
-                case Hoehoe.MyCommon.DispTitleEnum.Post:
+                case DispTitleEnum.Post:
                     ComboDispTitle.SelectedIndex = 2;
                     break;
-                case Hoehoe.MyCommon.DispTitleEnum.UnreadRepCount:
+                case DispTitleEnum.UnreadRepCount:
                     ComboDispTitle.SelectedIndex = 3;
                     break;
-                case Hoehoe.MyCommon.DispTitleEnum.UnreadAllCount:
+                case DispTitleEnum.UnreadAllCount:
                     ComboDispTitle.SelectedIndex = 4;
                     break;
-                case Hoehoe.MyCommon.DispTitleEnum.UnreadAllRepCount:
+                case DispTitleEnum.UnreadAllRepCount:
                     ComboDispTitle.SelectedIndex = 5;
                     break;
-                case Hoehoe.MyCommon.DispTitleEnum.UnreadCountAllCount:
+                case DispTitleEnum.UnreadCountAllCount:
                     ComboDispTitle.SelectedIndex = 6;
                     break;
-                case Hoehoe.MyCommon.DispTitleEnum.OwnStatus:
+                case DispTitleEnum.OwnStatus:
                     ComboDispTitle.SelectedIndex = 7;
                     break;
             }
@@ -1668,7 +1668,7 @@ namespace Hoehoe
             set { _MyMinimizeToTray = value; }
         }
 
-        public Hoehoe.MyCommon.DispTitleEnum DispLatestPost
+        public DispTitleEnum DispLatestPost
         {
             get { return _MyDispLatestPost; }
             set { _MyDispLatestPost = value; }

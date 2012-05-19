@@ -144,7 +144,7 @@ namespace Hoehoe
         public bool DispUsername = false;
         public bool MinimizeToTray = false;
         public bool CloseToExit = false;
-        public MyCommon.DispTitleEnum DispLatestPost = MyCommon.DispTitleEnum.Post;
+        public DispTitleEnum DispLatestPost = DispTitleEnum.Post;
         public bool SortOrderLock = false;
         public bool TinyUrlResolve = true;
         public bool ShortUrlForceResolve = false;

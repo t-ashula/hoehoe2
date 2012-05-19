@@ -52,18 +52,6 @@ namespace Hoehoe
         public static string CultureStr = null;
         public static string SettingPath;
 
-        public enum DispTitleEnum
-        {
-            None,
-            Ver,
-            Post,
-            UnreadRepCount,
-            UnreadAllCount,
-            UnreadAllRepCount,
-            UnreadCountAllCount,
-            OwnStatus
-        }
-
         public enum LogUnitEnum
         {
             Minute,

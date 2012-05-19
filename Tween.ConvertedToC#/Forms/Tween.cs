@@ -6586,7 +6586,7 @@ namespace Hoehoe
             _colorize = false;
             DispSelectedPost();
             //件数関連の場合、タイトル即時書き換え
-            if (SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.None && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Post && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Ver && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.OwnStatus)
+            if (SettingDialog.DispLatestPost != DispTitleEnum.None && SettingDialog.DispLatestPost != DispTitleEnum.Post && SettingDialog.DispLatestPost != DispTitleEnum.Ver && SettingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
             {
                 SetMainWindowTitle();
             }
@@ -10261,10 +10261,10 @@ namespace Hoehoe
             StringBuilder ttl = new StringBuilder(256);
             int ur = 0;
             int al = 0;
-            if (SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.None
-                && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Post
-                && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.Ver
-                && SettingDialog.DispLatestPost != MyCommon.DispTitleEnum.OwnStatus)
+            if (SettingDialog.DispLatestPost != DispTitleEnum.None
+                && SettingDialog.DispLatestPost != DispTitleEnum.Post
+                && SettingDialog.DispLatestPost != DispTitleEnum.Ver
+                && SettingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
             {
                 foreach (string key in _statuses.Tabs.Keys)
                 {
@@ -10280,28 +10280,28 @@ namespace Hoehoe
             ttl.Append("Hoehoe  ");
             switch (SettingDialog.DispLatestPost)
             {
-                case MyCommon.DispTitleEnum.Ver:
+                case DispTitleEnum.Ver:
                     ttl.Append("Ver:").Append(MyCommon.fileVersion);
                     break;
-                case MyCommon.DispTitleEnum.Post:
+                case DispTitleEnum.Post:
                     if (_history != null && _history.Count > 1)
                     {
                         ttl.Append(_history[_history.Count - 2].Status.Replace("\r\n", ""));
                     }
                     break;
-                case MyCommon.DispTitleEnum.UnreadRepCount:
+                case DispTitleEnum.UnreadRepCount:
                     ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText1, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
                     break;
-                case MyCommon.DispTitleEnum.UnreadAllCount:
+                case DispTitleEnum.UnreadAllCount:
                     ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText2, ur);
                     break;
-                case MyCommon.DispTitleEnum.UnreadAllRepCount:
+                case DispTitleEnum.UnreadAllRepCount:
                     ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText3, ur, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
                     break;
-                case MyCommon.DispTitleEnum.UnreadCountAllCount:
+                case DispTitleEnum.UnreadCountAllCount:
                     ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText4, ur, al);
                     break;
-                case MyCommon.DispTitleEnum.OwnStatus:
+                case DispTitleEnum.OwnStatus:
                     if (_prevFollowerCount == 0 && tw.FollowersCount > 0)
                     {
                         _prevFollowerCount = tw.FollowersCount;

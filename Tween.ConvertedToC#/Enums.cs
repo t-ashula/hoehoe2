@@ -41,4 +41,16 @@ namespace Hoehoe
         UserID,
         NickName
     }
+
+    public enum DispTitleEnum
+    {
+        None,
+        Ver,
+        Post,
+        UnreadRepCount,
+        UnreadAllCount,
+        UnreadAllRepCount,
+        UnreadCountAllCount,
+        OwnStatus
+    }
 }
