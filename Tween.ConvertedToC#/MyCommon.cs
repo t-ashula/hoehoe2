@@ -42,7 +42,7 @@ using System.Windows.Forms;
 
 namespace Hoehoe
 {
-    public sealed class MyCommon
+    public sealed partial class MyCommon
     {
         private static readonly object _lockObj = new object();
 
@@ -51,15 +51,6 @@ namespace Hoehoe
 
         public static string CultureStr = null;
         public static string SettingPath;
-
-        public enum IconSizes
-        {
-            IconNone = 0,
-            Icon16 = 1,
-            Icon24 = 2,
-            Icon48 = 3,
-            Icon48_2 = 4
-        }
 
         public enum NameBalloonEnum
         {
@@ -727,7 +718,5 @@ namespace Hoehoe
         {
             return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
-
-
     }
 }

@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiInformation.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Forms\AppendSettingDialog.cs">
       <SubType>Form</SubType>
     </Compile>
