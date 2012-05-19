@@ -52,13 +52,6 @@ namespace Hoehoe
         public static string CultureStr = null;
         public static string SettingPath;
 
-        public enum LogUnitEnum
-        {
-            Minute,
-            Hour,
-            Day
-        }
-
         public enum UploadFileType
         {
             Invalid,

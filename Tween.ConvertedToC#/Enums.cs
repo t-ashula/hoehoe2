@@ -53,4 +53,11 @@ namespace Hoehoe
         UnreadCountAllCount,
         OwnStatus
     }
+
+    public enum LogUnitEnum
+    {
+        Minute,
+        Hour,
+        Day
+    }
 }
