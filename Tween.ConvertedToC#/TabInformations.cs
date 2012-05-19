@@ -709,19 +709,19 @@ namespace Hoehoe
                 //通知リスト追加フラグ
                 bool mv = false;
                 //移動フラグ（Recent追加有無）
-                MyCommon.HITRESULT rslt = MyCommon.HITRESULT.None;
+                HITRESULT rslt = HITRESULT.None;
                 post.IsExcludeReply = false;
                 foreach (string tn in _tabs.Keys)
                 {
                     rslt = _tabs[tn].AddFiltered(post);
-                    if (rslt != MyCommon.HITRESULT.None && rslt != MyCommon.HITRESULT.Exclude)
+                    if (rslt != HITRESULT.None && rslt != HITRESULT.Exclude)
                     {
-                        if (rslt == MyCommon.HITRESULT.CopyAndMark)
+                        if (rslt == HITRESULT.CopyAndMark)
                         {
                             post.IsMark = true;
                         }
                         //マークあり
-                        if (rslt == MyCommon.HITRESULT.Move)
+                        if (rslt == HITRESULT.Move)
                         {
                             mv = true; //移動
                             post.IsMark = false;
@@ -740,7 +740,7 @@ namespace Hoehoe
                     }
                     else
                     {
-                        if (rslt == MyCommon.HITRESULT.Exclude && _tabs[tn].TabType == MyCommon.TabUsageType.Mentions)
+                        if (rslt == HITRESULT.Exclude && _tabs[tn].TabType == MyCommon.TabUsageType.Mentions)
                         {
                             post.IsExcludeReply = true;
                         }
@@ -1412,24 +1412,24 @@ namespace Hoehoe
                             {
                                 continue;
                             }
-                            MyCommon.HITRESULT rslt = MyCommon.HITRESULT.None;
+                            HITRESULT rslt = HITRESULT.None;
                             rslt = tb.AddFiltered(post);
                             switch (rslt)
                             {
-                                case MyCommon.HITRESULT.CopyAndMark:
+                                case HITRESULT.CopyAndMark:
                                     post.IsMark = true;             //マークあり
                                     post.FilterHit = true;
                                     break;
-                                case MyCommon.HITRESULT.Move:
+                                case HITRESULT.Move:
                                     tbr.Remove(post.StatusId, post.IsRead);
                                     post.IsMark = false;
                                     post.FilterHit = true;
                                     break;
-                                case MyCommon.HITRESULT.Copy:
+                                case HITRESULT.Copy:
                                     post.IsMark = false;
                                     post.FilterHit = true;
                                     break;
-                                case MyCommon.HITRESULT.Exclude:
+                                case HITRESULT.Exclude:
                                     if (tb.TabName == replyTab.TabName && post.IsReply)
                                     {
                                         post.IsExcludeReply = true;
@@ -1440,7 +1440,7 @@ namespace Hoehoe
                                     }
                                     post.FilterHit = false;
                                     break;
-                                case MyCommon.HITRESULT.None:
+                                case HITRESULT.None:
                                     if (tb.TabName == replyTab.TabName && post.IsReply)
                                     {
                                         replyTab.Add(post.StatusId, post.IsRead, true);

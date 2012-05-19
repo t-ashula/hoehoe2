@@ -87,4 +87,13 @@ namespace Hoehoe
         twittercom,
         twittercomWithUsername
     }
+
+    public enum HITRESULT
+    {
+        None,
+        Copy,
+        CopyAndMark,
+        Move,
+        Exclude
+    }
 }

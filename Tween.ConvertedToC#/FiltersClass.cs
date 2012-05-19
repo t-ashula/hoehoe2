@@ -408,7 +408,7 @@ namespace Hoehoe
             return ((bool)_exlambdaExpDelegate.DynamicInvoke(post));
         }
 
-        public Hoehoe.MyCommon.HITRESULT IsHit(PostClass post)
+        public HITRESULT IsHit(PostClass post)
         {
             bool bHit = true;
             string tBody = null;
@@ -557,7 +557,7 @@ namespace Hoehoe
             }
             if (!bHit)
             {
-                return Hoehoe.MyCommon.HITRESULT.None;
+                return HITRESULT.None;
             }
             //除外判定
             if (_exsearchUrl)
@@ -712,23 +712,23 @@ namespace Hoehoe
             {
                 if (exFlag)
                 {
-                    return Hoehoe.MyCommon.HITRESULT.Exclude;
+                    return HITRESULT.Exclude;
                 }
                 else
                 {
                     if (_moveFrom)
                     {
-                        return Hoehoe.MyCommon.HITRESULT.Move;
+                        return HITRESULT.Move;
                     }
                     else
                     {
-                        return _setMark ? Hoehoe.MyCommon.HITRESULT.CopyAndMark : Hoehoe.MyCommon.HITRESULT.Copy;
+                        return _setMark ? HITRESULT.CopyAndMark : HITRESULT.Copy;
                     }
                 }
             }
             else
             {
-                return exFlag ? Hoehoe.MyCommon.HITRESULT.Exclude : Hoehoe.MyCommon.HITRESULT.None;
+                return exFlag ? HITRESULT.Exclude : HITRESULT.None;
             }
         }
 

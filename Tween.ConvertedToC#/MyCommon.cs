@@ -52,15 +52,6 @@ namespace Hoehoe
         public static string CultureStr = null;
         public static string SettingPath;
 
-        public enum HITRESULT
-        {
-            None,
-            Copy,
-            CopyAndMark,
-            Move,
-            Exclude
-        }
-
         public enum HttpTimeOut
         {
             MinValue = 10,

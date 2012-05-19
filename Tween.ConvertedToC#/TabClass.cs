@@ -319,13 +319,13 @@ namespace Hoehoe
         }
 
         //フィルタに合致したら追加
-        public MyCommon.HITRESULT AddFiltered(PostClass post)
+        public HITRESULT AddFiltered(PostClass post)
         {
             if (IsInnerStorageTabType)
             {
-                return MyCommon.HITRESULT.None;
+                return HITRESULT.None;
             }
-            MyCommon.HITRESULT rslt = MyCommon.HITRESULT.None;
+            HITRESULT rslt = HITRESULT.None;
             //全フィルタ評価（優先順位あり）
             lock (this._lockObj)
             {
@@ -336,22 +336,22 @@ namespace Hoehoe
                         switch (ft.IsHit(post))
                         {
                             //フィルタクラスでヒット判定
-                            case MyCommon.HITRESULT.None:
+                            case HITRESULT.None:
                                 break;
-                            case MyCommon.HITRESULT.Copy:
-                                if (rslt != MyCommon.HITRESULT.CopyAndMark)
+                            case HITRESULT.Copy:
+                                if (rslt != HITRESULT.CopyAndMark)
                                 {
-                                    rslt = MyCommon.HITRESULT.Copy;
+                                    rslt = HITRESULT.Copy;
                                 }
                                 break;
-                            case MyCommon.HITRESULT.CopyAndMark:
-                                rslt = MyCommon.HITRESULT.CopyAndMark;
+                            case HITRESULT.CopyAndMark:
+                                rslt = HITRESULT.CopyAndMark;
                                 break;
-                            case MyCommon.HITRESULT.Move:
-                                rslt = MyCommon.HITRESULT.Move;
+                            case HITRESULT.Move:
+                                rslt = HITRESULT.Move;
                                 break;
-                            case MyCommon.HITRESULT.Exclude:
-                                rslt = MyCommon.HITRESULT.Exclude;
+                            case HITRESULT.Exclude:
+                                rslt = HITRESULT.Exclude;
                                 break;
                         }
                     }
@@ -359,12 +359,12 @@ namespace Hoehoe
                     {
                         //IsHitでNullRef出る場合あり。暫定対応
                         MyCommon.TraceOut("IsHitでNullRef: " + ft.ToString());
-                        rslt = MyCommon.HITRESULT.None;
+                        rslt = HITRESULT.None;
                     }
                 }
             }
 
-            if (rslt != MyCommon.HITRESULT.None && rslt != MyCommon.HITRESULT.Exclude)
+            if (rslt != HITRESULT.None && rslt != HITRESULT.Exclude)
             {
                 _tmpIds.Add(new TemporaryId(post.StatusId, post.IsRead));
             }
