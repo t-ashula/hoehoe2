@@ -180,7 +180,7 @@ namespace Hoehoe
             set { OutputzKey = Decrypt(value); }
         }
 
-        public MyCommon.OutputzUrlmode OutputzUrlMode = MyCommon.OutputzUrlmode.twittercom;
+        public OutputzUrlmode OutputzUrlMode = OutputzUrlmode.twittercom;
         public UrlConverter AutoShortUrlFirst = UrlConverter.Bitly;
         public bool UseUnreadStyle = true;
         public string DateTimeFormat = "yyyy/MM/dd H:mm:ss";

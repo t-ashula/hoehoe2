@@ -52,12 +52,6 @@ namespace Hoehoe
         public static string CultureStr = null;
         public static string SettingPath;
 
-        public enum OutputzUrlmode
-        {
-            twittercom,
-            twittercomWithUsername
-        }
-
         public enum HITRESULT
         {
             None,

@@ -102,7 +102,7 @@ namespace Hoehoe
         private bool _MyShortenTco;
         private bool _MyOutputz;
         private string _MyOutputzKey;
-        private Hoehoe.MyCommon.OutputzUrlmode _MyOutputzUrlmode;
+        private OutputzUrlmode _MyOutputzUrlmode;
         private bool _MyNicoms;
         private bool _MyUnreadStyle;
         private string _MyDateTimeFormat;
@@ -511,10 +511,10 @@ namespace Hoehoe
                 switch (ComboBoxOutputzUrlmode.SelectedIndex)
                 {
                     case 0:
-                        _MyOutputzUrlmode = Hoehoe.MyCommon.OutputzUrlmode.twittercom;
+                        _MyOutputzUrlmode = OutputzUrlmode.twittercom;
                         break;
                     case 1:
-                        _MyOutputzUrlmode = Hoehoe.MyCommon.OutputzUrlmode.twittercomWithUsername;
+                        _MyOutputzUrlmode = OutputzUrlmode.twittercomWithUsername;
                         break;
                 }
 
@@ -875,10 +875,10 @@ namespace Hoehoe
 
             switch (_MyOutputzUrlmode)
             {
-                case Hoehoe.MyCommon.OutputzUrlmode.twittercom:
+                case OutputzUrlmode.twittercom:
                     ComboBoxOutputzUrlmode.SelectedIndex = 0;
                     break;
-                case Hoehoe.MyCommon.OutputzUrlmode.twittercomWithUsername:
+                case OutputzUrlmode.twittercomWithUsername:
                     ComboBoxOutputzUrlmode.SelectedIndex = 1;
                     break;
             }
@@ -1794,7 +1794,7 @@ namespace Hoehoe
             set { _MyOutputzKey = value; }
         }
 
-        public Hoehoe.MyCommon.OutputzUrlmode OutputzUrlmode
+        public OutputzUrlmode OutputzUrlmode
         {
             get { return _MyOutputzUrlmode; }
             set { _MyOutputzUrlmode = value; }

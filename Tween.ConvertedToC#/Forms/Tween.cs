@@ -1328,10 +1328,10 @@ namespace Hoehoe
             Outputz.Enabled = SettingDialog.OutputzEnabled;
             switch (SettingDialog.OutputzUrlmode)
             {
-                case Hoehoe.MyCommon.OutputzUrlmode.twittercom:
+                case OutputzUrlmode.twittercom:
                     Outputz.OutUrl = "http://twitter.com/";
                     break;
-                case Hoehoe.MyCommon.OutputzUrlmode.twittercomWithUsername:
+                case OutputzUrlmode.twittercomWithUsername:
                     Outputz.OutUrl = "http://twitter.com/" + tw.Username;
                     break;
             }
@@ -4753,10 +4753,10 @@ namespace Hoehoe
                     Outputz.Enabled = SettingDialog.OutputzEnabled;
                     switch (SettingDialog.OutputzUrlmode)
                     {
-                        case MyCommon.OutputzUrlmode.twittercom:
+                        case OutputzUrlmode.twittercom:
                             Outputz.OutUrl = "http://twitter.com/";
                             break;
-                        case MyCommon.OutputzUrlmode.twittercomWithUsername:
+                        case OutputzUrlmode.twittercomWithUsername:
                             Outputz.OutUrl = "http://twitter.com/" + tw.Username;
                             break;
                     }

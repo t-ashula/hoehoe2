@@ -81,4 +81,10 @@ namespace Hoehoe
         //廃止
         Unu = -1
     }
+
+    public enum OutputzUrlmode
+    {
+        twittercom,
+        twittercomWithUsername
+    }
 }
