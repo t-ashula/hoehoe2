@@ -9354,14 +9354,14 @@ namespace Hoehoe
             }
 
             TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Mentions);
-            if (SettingDialog.ReplyIconState != MyCommon.ReplyIconState.None && tb != null && tb.UnreadCount > 0)
+            if (SettingDialog.ReplyIconState != ReplyIconState.None && tb != null && tb.UnreadCount > 0)
             {
                 if (_blinkCnt > 0)
                 {
                     return;
                 }
                 _beBlink = !_beBlink;
-                if (_beBlink || SettingDialog.ReplyIconState == MyCommon.ReplyIconState.StaticIcon)
+                if (_beBlink || SettingDialog.ReplyIconState == ReplyIconState.StaticIcon)
                 {
                     NotifyIcon1.Icon = _ReplyIcon;
                 }

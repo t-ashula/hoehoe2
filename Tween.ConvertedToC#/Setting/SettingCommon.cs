@@ -188,7 +188,7 @@ namespace Hoehoe
         public bool RetweetNoConfirm = false;
         public bool LimitBalloon = false;
         public bool TabIconDisp = true;
-        public MyCommon.ReplyIconState ReplyIconState = MyCommon.ReplyIconState.StaticIcon;
+        public ReplyIconState ReplyIconState = ReplyIconState.StaticIcon;
         public bool WideSpaceConvert = true;
         public bool ReadOwnPost = false;
         public bool GetFav = true;

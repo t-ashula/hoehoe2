@@ -112,7 +112,7 @@ namespace Hoehoe
         private int _MyReplyPeriod;
         private UrlConverter _MyAutoShortUrlFirst;
         private bool _MyTabIconDisp;
-        private Hoehoe.MyCommon.ReplyIconState _MyReplyIconState;
+        private ReplyIconState _MyReplyIconState;
         private bool _MyReadOwnPost;
         private bool _MyGetFav;
         private bool _MyMonoSpace;
@@ -548,13 +548,13 @@ namespace Hoehoe
                 switch (ReplyIconStateCombo.SelectedIndex)
                 {
                     case 0:
-                        _MyReplyIconState = Hoehoe.MyCommon.ReplyIconState.None;
+                        _MyReplyIconState = ReplyIconState.None;
                         break;
                     case 1:
-                        _MyReplyIconState = Hoehoe.MyCommon.ReplyIconState.StaticIcon;
+                        _MyReplyIconState = ReplyIconState.StaticIcon;
                         break;
                     case 2:
-                        _MyReplyIconState = Hoehoe.MyCommon.ReplyIconState.BlinkIcon;
+                        _MyReplyIconState = ReplyIconState.BlinkIcon;
                         break;
                 }
                 switch (LanguageCombo.SelectedIndex)
@@ -914,13 +914,13 @@ namespace Hoehoe
             TwitterSearchAPIText.Text = _MyTwitterSearchApiUrl;
             switch (_MyReplyIconState)
             {
-                case Hoehoe.MyCommon.ReplyIconState.None:
+                case ReplyIconState.None:
                     ReplyIconStateCombo.SelectedIndex = 0;
                     break;
-                case Hoehoe.MyCommon.ReplyIconState.StaticIcon:
+                case ReplyIconState.StaticIcon:
                     ReplyIconStateCombo.SelectedIndex = 1;
                     break;
-                case Hoehoe.MyCommon.ReplyIconState.BlinkIcon:
+                case ReplyIconState.BlinkIcon:
                     ReplyIconStateCombo.SelectedIndex = 2;
                     break;
             }
@@ -1842,7 +1842,7 @@ namespace Hoehoe
             set { _MyTabIconDisp = value; }
         }
 
-        public Hoehoe.MyCommon.ReplyIconState ReplyIconState
+        public ReplyIconState ReplyIconState
         {
             get { return _MyReplyIconState; }
             set { _MyReplyIconState = value; }

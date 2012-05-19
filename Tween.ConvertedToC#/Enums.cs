@@ -135,4 +135,11 @@ namespace Hoehoe
         Valid,
         Invalid
     }
+
+    public enum ReplyIconState
+    {
+        None,
+        StaticIcon,
+        BlinkIcon
+    }
 }

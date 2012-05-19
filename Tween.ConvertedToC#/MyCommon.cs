@@ -69,13 +69,6 @@ namespace Hoehoe
         public static bool DebugBuild = false;
 #endif
 
-        public enum ReplyIconState
-        {
-            None,
-            StaticIcon,
-            BlinkIcon
-        }
-
         [Flags]
         public enum EventType
         {
