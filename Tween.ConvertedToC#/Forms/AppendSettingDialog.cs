@@ -73,7 +73,7 @@ namespace Hoehoe
         private Color _clDetailBackcolor;
         private Color _clDetail;
         private Color _clDetailLink;
-        private Hoehoe.MyCommon.NameBalloonEnum _myNameBalloon;
+        private NameBalloonEnum _myNameBalloon;
         private bool _myPostCtrlEnter;
         private bool _myPostShiftEnter;
         private bool _usePostMethod;
@@ -408,13 +408,13 @@ namespace Hoehoe
                 switch (cmbNameBalloon.SelectedIndex)
                 {
                     case 0:
-                        _myNameBalloon = Hoehoe.MyCommon.NameBalloonEnum.None;
+                        _myNameBalloon = NameBalloonEnum.None;
                         break;
                     case 1:
-                        _myNameBalloon = Hoehoe.MyCommon.NameBalloonEnum.UserID;
+                        _myNameBalloon = NameBalloonEnum.UserID;
                         break;
                     case 2:
-                        _myNameBalloon = Hoehoe.MyCommon.NameBalloonEnum.NickName;
+                        _myNameBalloon = NameBalloonEnum.NickName;
                         break;
                 }
 
@@ -773,13 +773,13 @@ namespace Hoehoe
 
             switch (_myNameBalloon)
             {
-                case Hoehoe.MyCommon.NameBalloonEnum.None:
+                case NameBalloonEnum.None:
                     cmbNameBalloon.SelectedIndex = 0;
                     break;
-                case Hoehoe.MyCommon.NameBalloonEnum.UserID:
+                case NameBalloonEnum.UserID:
                     cmbNameBalloon.SelectedIndex = 1;
                     break;
-                case Hoehoe.MyCommon.NameBalloonEnum.NickName:
+                case NameBalloonEnum.NickName:
                     cmbNameBalloon.SelectedIndex = 2;
                     break;
             }
@@ -1566,7 +1566,7 @@ namespace Hoehoe
             set { _clDetailBackcolor = value; }
         }
 
-        public Hoehoe.MyCommon.NameBalloonEnum NameBalloon
+        public NameBalloonEnum NameBalloon
         {
             get { return _myNameBalloon; }
             set { _myNameBalloon = value; }

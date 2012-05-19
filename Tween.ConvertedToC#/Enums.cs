@@ -34,4 +34,11 @@ namespace Hoehoe
         Icon48 = 3,
         Icon48_2 = 4
     }
+
+    public enum NameBalloonEnum
+    {
+        None,
+        UserID,
+        NickName
+    }
 }

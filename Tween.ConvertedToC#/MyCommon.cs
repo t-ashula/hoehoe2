@@ -52,13 +52,6 @@ namespace Hoehoe
         public static string CultureStr = null;
         public static string SettingPath;
 
-        public enum NameBalloonEnum
-        {
-            None,
-            UserID,
-            NickName
-        }
-
         public enum DispTitleEnum
         {
             None,

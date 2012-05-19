@@ -2192,10 +2192,10 @@ namespace Hoehoe
                             }
                             switch (SettingDialog.NameBalloon)
                             {
-                                case Hoehoe.MyCommon.NameBalloonEnum.UserID:
+                                case NameBalloonEnum.UserID:
                                     sb.Append(post.ScreenName).Append(" : ");
                                     break;
-                                case Hoehoe.MyCommon.NameBalloonEnum.NickName:
+                                case NameBalloonEnum.NickName:
                                     sb.Append(post.Nickname).Append(" : ");
                                     break;
                             }
@@ -2275,10 +2275,10 @@ namespace Hoehoe
                             }
                             switch (SettingDialog.NameBalloon)
                             {
-                                case Hoehoe.MyCommon.NameBalloonEnum.UserID:
+                                case NameBalloonEnum.UserID:
                                     sb.Append(post.ScreenName).Append(" : ");
                                     break;
-                                case Hoehoe.MyCommon.NameBalloonEnum.NickName:
+                                case NameBalloonEnum.NickName:
                                     sb.Append(post.Nickname).Append(" : ");
                                     break;
                             }

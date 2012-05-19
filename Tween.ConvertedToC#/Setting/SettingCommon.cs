@@ -135,7 +135,7 @@ namespace Hoehoe
         public bool PlaySound = false;
         public bool UnreadManage = true;
         public bool OneWayLove = true;
-        public MyCommon.NameBalloonEnum NameBalloon = MyCommon.NameBalloonEnum.NickName;
+        public NameBalloonEnum NameBalloon = NameBalloonEnum.NickName;
         public bool PostCtrlEnter = false;
         public bool PostShiftEnter = false;
         public int CountApi = 60;
