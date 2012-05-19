@@ -310,7 +310,7 @@ namespace Hoehoe
                                 {
                                     req = this._waitStack.Pop();
                                 }
-                                if (AppendSettingDialog.Instance.IconSz == MyCommon.IconSizes.IconNone)
+                                if (AppendSettingDialog.Instance.IconSz == IconSizes.IconNone)
                                 {
                                     continue;
                                 }

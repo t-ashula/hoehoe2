@@ -26,15 +26,12 @@
 
 namespace Hoehoe
 {
-    public sealed partial class MyCommon
+    public enum IconSizes
     {
-        public enum IconSizes
-        {
-            IconNone = 0,
-            Icon16 = 1,
-            Icon24 = 2,
-            Icon48 = 3,
-            Icon48_2 = 4
-        }
+        IconNone = 0,
+        Icon16 = 1,
+        Icon24 = 2,
+        Icon48 = 3,
+        Icon48_2 = 4
     }
 }

@@ -123,7 +123,7 @@ namespace Hoehoe
         public int ListsPeriod = 180;
         public bool Read = true;
         public bool ListLock = false;
-        public MyCommon.IconSizes IconSize = MyCommon.IconSizes.Icon16;
+        public IconSizes IconSize = IconSizes.Icon16;
         public bool NewAllPop = true;
         public bool EventNotifyEnabled = true;
         public MyCommon.EventType EventNotifyFlag = MyCommon.EventType.All;

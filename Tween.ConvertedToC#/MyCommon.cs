@@ -42,7 +42,7 @@ using System.Windows.Forms;
 
 namespace Hoehoe
 {
-    public sealed partial class MyCommon
+    public sealed class MyCommon
     {
         private static readonly object _lockObj = new object();
 

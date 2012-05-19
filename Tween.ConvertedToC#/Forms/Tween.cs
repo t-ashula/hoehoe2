@@ -36,6 +36,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -44,7 +45,6 @@ using System.Threading;
 using System.Web;
 using System.Windows.Forms;
 using Hoehoe.TweenCustomControl;
-using System.Media;
 
 namespace Hoehoe
 {
@@ -58,6 +58,7 @@ namespace Hoehoe
         /// TODO: hoehoe webpage
         /// </summary>
         private const string ApplicationShortcutKeyHelpWebPageUrl = "http://sourceforge.jp/projects/tween/wiki/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E3%82%AD%E3%83%BC";
+
         //各種設定
         //画面サイズ
         private Size _mySize;
@@ -1462,19 +1463,19 @@ namespace Hoehoe
 
             switch (SettingDialog.IconSz)
             {
-                case Hoehoe.MyCommon.IconSizes.IconNone:
+                case IconSizes.IconNone:
                     _iconSz = 0;
                     break;
-                case Hoehoe.MyCommon.IconSizes.Icon16:
+                case IconSizes.Icon16:
                     _iconSz = 16;
                     break;
-                case Hoehoe.MyCommon.IconSizes.Icon24:
+                case IconSizes.Icon24:
                     _iconSz = 26;
                     break;
-                case Hoehoe.MyCommon.IconSizes.Icon48:
+                case IconSizes.Icon48:
                     _iconSz = 48;
                     break;
-                case Hoehoe.MyCommon.IconSizes.Icon48_2:
+                case IconSizes.Icon48_2:
                     _iconSz = 48;
                     _iconCol = true;
                     break;
@@ -11692,7 +11693,7 @@ namespace Hoehoe
                     j += 1;
                     if (j > 1200)
                     {
-                        break; 
+                        break;
                     }
                     // 120秒間初期処理が終了しなかったら強制的に打ち切る
                     if (i > 50)
@@ -13922,7 +13923,7 @@ namespace Hoehoe
                         if (Directory.Exists(Path.Combine(dir, "Sounds")))
                         {
                             dir = Path.Combine(dir, "Sounds");
-                        }                        
+                        }
                         new SoundPlayer(Path.Combine(dir, snd)).Play();
                     }
                     catch (Exception)

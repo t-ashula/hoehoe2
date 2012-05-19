@@ -46,7 +46,7 @@ namespace Hoehoe
         private int _MyListsPeriod;
         private int _MyUserTimelinePeriod;
         private bool _MyReaded;
-        private Hoehoe.MyCommon.IconSizes _MyIconSize;
+        private Hoehoe.IconSizes _MyIconSize;
         private string _MyStatusText;
         private string _MyRecommendStatusText;
         private bool _MyUnreadManage;
@@ -362,19 +362,19 @@ namespace Hoehoe
                 switch (IconSize.SelectedIndex)
                 {
                     case 0:
-                        _MyIconSize = Hoehoe.MyCommon.IconSizes.IconNone;
+                        _MyIconSize = Hoehoe.IconSizes.IconNone;
                         break;
                     case 1:
-                        _MyIconSize = Hoehoe.MyCommon.IconSizes.Icon16;
+                        _MyIconSize = Hoehoe.IconSizes.Icon16;
                         break;
                     case 2:
-                        _MyIconSize = Hoehoe.MyCommon.IconSizes.Icon24;
+                        _MyIconSize = Hoehoe.IconSizes.Icon24;
                         break;
                     case 3:
-                        _MyIconSize = Hoehoe.MyCommon.IconSizes.Icon48;
+                        _MyIconSize = Hoehoe.IconSizes.Icon48;
                         break;
                     case 4:
-                        _MyIconSize = Hoehoe.MyCommon.IconSizes.Icon48_2;
+                        _MyIconSize = Hoehoe.IconSizes.Icon48_2;
                         break;
                 }
                 _MyStatusText = StatusText.Text;
@@ -727,19 +727,19 @@ namespace Hoehoe
             StartupReaded.Checked = _MyReaded;
             switch (_MyIconSize)
             {
-                case Hoehoe.MyCommon.IconSizes.IconNone:
+                case Hoehoe.IconSizes.IconNone:
                     IconSize.SelectedIndex = 0;
                     break;
-                case Hoehoe.MyCommon.IconSizes.Icon16:
+                case Hoehoe.IconSizes.Icon16:
                     IconSize.SelectedIndex = 1;
                     break;
-                case Hoehoe.MyCommon.IconSizes.Icon24:
+                case Hoehoe.IconSizes.Icon24:
                     IconSize.SelectedIndex = 2;
                     break;
-                case Hoehoe.MyCommon.IconSizes.Icon48:
+                case Hoehoe.IconSizes.Icon48:
                     IconSize.SelectedIndex = 3;
                     break;
-                case Hoehoe.MyCommon.IconSizes.Icon48_2:
+                case Hoehoe.IconSizes.Icon48_2:
                     IconSize.SelectedIndex = 4;
                     break;
             }
@@ -1407,7 +1407,7 @@ namespace Hoehoe
             set { _MyReaded = value; }
         }
 
-        public Hoehoe.MyCommon.IconSizes IconSz
+        public IconSizes IconSz
         {
             get { return _MyIconSize; }
             set { _MyIconSize = value; }
