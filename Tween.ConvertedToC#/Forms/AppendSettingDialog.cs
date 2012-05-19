@@ -2073,7 +2073,7 @@ namespace Hoehoe
                 return;
             }
 
-            if (tm < (int)Hoehoe.MyCommon.HttpTimeOut.MinValue || tm > (int)Hoehoe.MyCommon.HttpTimeOut.MaxValue)
+            if (tm < (int)HttpTimeOut.MinValue || tm > (int)HttpTimeOut.MaxValue)
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1);
                 e.Cancel = true;

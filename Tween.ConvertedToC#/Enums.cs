@@ -96,4 +96,11 @@ namespace Hoehoe
         Move,
         Exclude
     }
+
+    public enum HttpTimeOut
+    {
+        MinValue = 10,
+        MaxValue = 120,
+        DefaultValue = 20
+    }
 }

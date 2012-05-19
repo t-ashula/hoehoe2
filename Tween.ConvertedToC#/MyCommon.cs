@@ -52,13 +52,6 @@ namespace Hoehoe
         public static string CultureStr = null;
         public static string SettingPath;
 
-        public enum HttpTimeOut
-        {
-            MinValue = 10,
-            MaxValue = 120,
-            DefaultValue = 20
-        }
-
         //Backgroundworkerへ処理種別を通知するための引数用Enum
         public enum WorkerType
         {
