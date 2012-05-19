@@ -139,8 +139,8 @@ namespace Hoehoe
         private bool _MyOpenUserTimeline;
         private bool _ValidationError = false;
         private bool _MyEventNotifyEnabled;
-        private Hoehoe.MyCommon.EventType _MyEventNotifyFlag;
-        private Hoehoe.MyCommon.EventType _isMyEventNotifyFlag;
+        private EventType _MyEventNotifyFlag;
+        private EventType _isMyEventNotifyFlag;
         private bool _MyForceEventNotify;
         private bool _MyFavEventUnread;
         private string _MyTranslateLanguage;
@@ -2141,13 +2141,13 @@ namespace Hoehoe
             set { _MyEventNotifyEnabled = value; }
         }
 
-        public Hoehoe.MyCommon.EventType EventNotifyFlag
+        public EventType EventNotifyFlag
         {
             get { return _MyEventNotifyFlag; }
             set { _MyEventNotifyFlag = value; }
         }
 
-        public Hoehoe.MyCommon.EventType IsMyEventNotifyFlag
+        public EventType IsMyEventNotifyFlag
         {
             get { return _isMyEventNotifyFlag; }
             set { _isMyEventNotifyFlag = value; }
@@ -2752,7 +2752,7 @@ namespace Hoehoe
         private class EventCheckboxTblElement
         {
             public CheckBox CheckBox;
-            public Hoehoe.MyCommon.EventType Type;
+            public EventType Type;
         }
 
         private EventCheckboxTblElement[] eventCheckboxTableElements = null;
@@ -2762,23 +2762,23 @@ namespace Hoehoe
             if (eventCheckboxTableElements == null)
             {
                 eventCheckboxTableElements = new EventCheckboxTblElement[] {
-                    new EventCheckboxTblElement { CheckBox = CheckFavoritesEvent, Type = Hoehoe.MyCommon.EventType.Favorite },
-                    new EventCheckboxTblElement { CheckBox = CheckUnfavoritesEvent, Type = Hoehoe.MyCommon.EventType.Unfavorite },
-                    new EventCheckboxTblElement { CheckBox = CheckFollowEvent, Type = Hoehoe.MyCommon.EventType.Follow },
-                    new EventCheckboxTblElement { CheckBox = CheckListMemberAddedEvent, Type = Hoehoe.MyCommon.EventType.ListMemberAdded },
-                    new EventCheckboxTblElement { CheckBox = CheckListMemberRemovedEvent, Type = Hoehoe.MyCommon.EventType.ListMemberRemoved },
-                    new EventCheckboxTblElement { CheckBox = CheckBlockEvent, Type = Hoehoe.MyCommon.EventType.Block },
-                    new EventCheckboxTblElement { CheckBox = CheckUserUpdateEvent, Type = Hoehoe.MyCommon.EventType.UserUpdate },
-                    new EventCheckboxTblElement { CheckBox = CheckListCreatedEvent, Type = Hoehoe.MyCommon.EventType.ListCreated }
+                    new EventCheckboxTblElement { CheckBox = CheckFavoritesEvent, Type = EventType.Favorite },
+                    new EventCheckboxTblElement { CheckBox = CheckUnfavoritesEvent, Type = EventType.Unfavorite },
+                    new EventCheckboxTblElement { CheckBox = CheckFollowEvent, Type = EventType.Follow },
+                    new EventCheckboxTblElement { CheckBox = CheckListMemberAddedEvent, Type = EventType.ListMemberAdded },
+                    new EventCheckboxTblElement { CheckBox = CheckListMemberRemovedEvent, Type = EventType.ListMemberRemoved },
+                    new EventCheckboxTblElement { CheckBox = CheckBlockEvent, Type = EventType.Block },
+                    new EventCheckboxTblElement { CheckBox = CheckUserUpdateEvent, Type = EventType.UserUpdate },
+                    new EventCheckboxTblElement { CheckBox = CheckListCreatedEvent, Type = EventType.ListCreated }
                 };
             }
             return eventCheckboxTableElements;
         }
 
-        private void GetEventNotifyFlag(ref Hoehoe.MyCommon.EventType eventnotifyflag, ref Hoehoe.MyCommon.EventType isMyeventnotifyflag)
+        private void GetEventNotifyFlag(ref EventType eventnotifyflag, ref EventType isMyeventnotifyflag)
         {
-            MyCommon.EventType evt = MyCommon.EventType.None;
-            MyCommon.EventType myevt = MyCommon.EventType.None;
+            EventType evt = EventType.None;
+            EventType myevt = EventType.None;
 
             foreach (EventCheckboxTblElement tbl in GetEventCheckboxTable())
             {
@@ -2800,7 +2800,7 @@ namespace Hoehoe
             isMyeventnotifyflag = myevt;
         }
 
-        private void ApplyEventNotifyFlag(bool rootEnabled, Hoehoe.MyCommon.EventType eventnotifyflag, Hoehoe.MyCommon.EventType isMyeventnotifyflag)
+        private void ApplyEventNotifyFlag(bool rootEnabled, EventType eventnotifyflag, EventType isMyeventnotifyflag)
         {
             var evt = eventnotifyflag;
             var myevt = isMyeventnotifyflag;

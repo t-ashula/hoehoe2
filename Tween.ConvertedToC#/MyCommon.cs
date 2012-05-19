@@ -69,25 +69,6 @@ namespace Hoehoe
         public static bool DebugBuild = false;
 #endif
 
-        [Flags]
-        public enum EventType
-        {
-            None = 0,
-            Favorite = 1,
-            Unfavorite = 2,
-            Follow = 4,
-            ListMemberAdded = 8,
-            ListMemberRemoved = 16,
-            Block = 32,
-            Unblock = 64,
-            UserUpdate = 128,
-            Deleted = 256,
-            ListCreated = 512,
-            ListUpdated = 1024,
-
-            All = (None | Favorite | Unfavorite | Follow | ListMemberAdded | ListMemberRemoved | Block | Unblock | UserUpdate | Deleted | ListCreated | ListUpdated)
-        }
-
         public static void TraceOut(Exception ex, string message)
         {
             bool a = true;

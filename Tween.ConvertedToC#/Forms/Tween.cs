@@ -2133,12 +2133,12 @@ namespace Hoehoe
 
         private bool BalloonRequired()
         {
-            return BalloonRequired(new Twitter.FormattedEvent { Eventtype = Hoehoe.MyCommon.EventType.None });
+            return BalloonRequired(new Twitter.FormattedEvent { Eventtype = EventType.None });
         }
 
-        private bool IsEventNotifyAsEventType(Hoehoe.MyCommon.EventType type)
+        private bool IsEventNotifyAsEventType(EventType type)
         {
-            return SettingDialog.EventNotifyEnabled && Convert.ToBoolean(type & SettingDialog.EventNotifyFlag) || type == Hoehoe.MyCommon.EventType.None;
+            return SettingDialog.EventNotifyEnabled && Convert.ToBoolean(type & SettingDialog.EventNotifyFlag) || type == EventType.None;
         }
 
         private bool IsMyEventNotityAsEventType(Twitter.FormattedEvent ev)
@@ -2148,7 +2148,7 @@ namespace Hoehoe
 
         private bool BalloonRequired(Twitter.FormattedEvent ev)
         {
-            return IsEventNotifyAsEventType(ev.Eventtype) && IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (SettingDialog.ForceEventNotify && ev.Eventtype != Hoehoe.MyCommon.EventType.None)) && !_initial && ((SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !SettingDialog.LimitBalloon) && !Win32Api.IsScreenSaverRunning();
+            return IsEventNotifyAsEventType(ev.Eventtype) && IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (SettingDialog.ForceEventNotify && ev.Eventtype != EventType.None)) && !_initial && ((SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !SettingDialog.LimitBalloon) && !Win32Api.IsScreenSaverRunning();
         }
 
         private void NotifyNewPosts(PostClass[] notifyPosts, string soundFile, int addCount, bool newMentions)

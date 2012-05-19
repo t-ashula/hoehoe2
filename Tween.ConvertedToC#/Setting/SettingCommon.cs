@@ -126,8 +126,8 @@ namespace Hoehoe
         public IconSizes IconSize = IconSizes.Icon16;
         public bool NewAllPop = true;
         public bool EventNotifyEnabled = true;
-        public MyCommon.EventType EventNotifyFlag = MyCommon.EventType.All;
-        public MyCommon.EventType IsMyEventNotifyFlag = MyCommon.EventType.All;
+        public EventType EventNotifyFlag = EventType.All;
+        public EventType IsMyEventNotifyFlag = EventType.All;
         public bool ForceEventNotify = false;
         public bool FavEventUnread = true;
         public string TranslateLanguage = Hoehoe.Properties.Resources.TranslateDefaultLanguage;

@@ -77,9 +77,9 @@ namespace Hoehoe
             }
         }
 
-        private MyCommon.EventType ParseEventTypeFromTag()
+        private EventType ParseEventTypeFromTag()
         {
-            return (Hoehoe.MyCommon.EventType)Enum.Parse(typeof(Hoehoe.MyCommon.EventType), _curTab.Tag.ToString());
+            return (EventType)Enum.Parse(typeof(EventType), _curTab.Tag.ToString());
         }
 
         private bool IsFilterMatch(Twitter.FormattedEvent x)

@@ -4181,7 +4181,7 @@ namespace Hoehoe
 
         public class FormattedEvent
         {
-            public Hoehoe.MyCommon.EventType Eventtype { get; set; }
+            public EventType Eventtype { get; set; }
 
             public DateTime CreatedAt { get; set; }
 
@@ -4202,9 +4202,9 @@ namespace Hoehoe
         {
             public string Name;
 
-            public Hoehoe.MyCommon.EventType Type;
+            public EventType Type;
 
-            public EventTypeTableElement(string name, Hoehoe.MyCommon.EventType type)
+            public EventTypeTableElement(string name, EventType type)
             {
                 this.Name = name;
                 this.Type = type;
@@ -4212,20 +4212,20 @@ namespace Hoehoe
         }
 
         private EventTypeTableElement[] EventTable = {
-			new EventTypeTableElement("favorite", MyCommon.EventType.Favorite),
-			new EventTypeTableElement("unfavorite", MyCommon.EventType.Unfavorite),
-			new EventTypeTableElement("follow", MyCommon.EventType.Follow),
-			new EventTypeTableElement("list_member_added", MyCommon.EventType.ListMemberAdded),
-			new EventTypeTableElement("list_member_removed", MyCommon.EventType.ListMemberRemoved),
-			new EventTypeTableElement("block",MyCommon. EventType.Block),
-			new EventTypeTableElement("unblock",MyCommon. EventType.Unblock),
-			new EventTypeTableElement("user_update",MyCommon. EventType.UserUpdate),
-			new EventTypeTableElement("deleted", MyCommon.EventType.Deleted),
-			new EventTypeTableElement("list_created", MyCommon.EventType.ListCreated),
-			new EventTypeTableElement("list_updated", MyCommon.EventType.ListUpdated)
+			new EventTypeTableElement("favorite", EventType.Favorite),
+			new EventTypeTableElement("unfavorite", EventType.Unfavorite),
+			new EventTypeTableElement("follow", EventType.Follow),
+			new EventTypeTableElement("list_member_added", EventType.ListMemberAdded),
+			new EventTypeTableElement("list_member_removed", EventType.ListMemberRemoved),
+			new EventTypeTableElement("block",EventType.Block),
+			new EventTypeTableElement("unblock",EventType.Unblock),
+			new EventTypeTableElement("user_update",EventType.UserUpdate),
+			new EventTypeTableElement("deleted", EventType.Deleted),
+			new EventTypeTableElement("list_created", EventType.ListCreated),
+			new EventTypeTableElement("list_updated", EventType.ListUpdated)
 		};
 
-        public MyCommon.EventType EventNameToEventType(string eventName)
+        public EventType EventNameToEventType(string eventName)
         {
             return (from tbl in EventTable where tbl.Name.Equals(eventName) select tbl.Type).FirstOrDefault();
         }

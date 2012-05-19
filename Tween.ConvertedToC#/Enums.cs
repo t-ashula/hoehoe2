@@ -24,6 +24,8 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+
 namespace Hoehoe
 {
     public enum IconSizes
@@ -141,5 +143,24 @@ namespace Hoehoe
         None,
         StaticIcon,
         BlinkIcon
+    }
+
+    [Flags]
+    public enum EventType
+    {
+        None = 0,
+        Favorite = 1,
+        Unfavorite = 2,
+        Follow = 4,
+        ListMemberAdded = 8,
+        ListMemberRemoved = 16,
+        Block = 32,
+        Unblock = 64,
+        UserUpdate = 128,
+        Deleted = 256,
+        ListCreated = 512,
+        ListUpdated = 1024,
+
+        All = (None | Favorite | Unfavorite | Follow | ListMemberAdded | ListMemberRemoved | Block | Unblock | UserUpdate | Deleted | ListCreated | ListUpdated)
     }
 }
