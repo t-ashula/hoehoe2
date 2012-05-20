@@ -60,8 +60,6 @@ namespace Hoehoe
             public const string FAV = "Favorites";
         }
 
-        public const object Block = null;
-
         public static bool TraceFlag = false;
 #if DEBUG
 		public static bool DebugBuild = true;
@@ -346,12 +344,6 @@ namespace Hoehoe
             }
 
             values[toIndex] = movedValue;
-        }
-
-        public static bool IsNT6()
-        {
-            //NT6 kernelかどうか検査
-            return Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major == 6;
         }
 
         public static string fileVersion = "";

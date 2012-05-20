@@ -60,7 +60,7 @@ namespace Hoehoe
         public ShieldIcon()
         {
             //NT6 kernelかどうか検査
-            if (!MyCommon.IsNT6())
+            if (!IsNT6())
             {
                 icondata = null;
                 return;
@@ -78,6 +78,12 @@ namespace Hoehoe
             {
                 icondata = null;
             }
+        }
+
+        private static bool IsNT6()
+        {
+            //NT6 kernelかどうか検査
+            return Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major == 6;
         }
 
         public void Dispose()
