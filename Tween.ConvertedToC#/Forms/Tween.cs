@@ -864,7 +864,7 @@ namespace Hoehoe
 
             Regex.CacheSize = 100;
 
-            MyCommon.fileVersion = ((AssemblyFileVersionAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
+            //MyCommon.fileVersion = ((AssemblyFileVersionAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
             InitializeTraceFrag();
             LoadIcons();
             // アイコン読み込み
@@ -11071,7 +11071,7 @@ namespace Hoehoe
                 {
                     darr[lst.Columns[i].DisplayIndex] = i;
                 }
-                MyCommon.MoveArrayItem(darr, e.OldDisplayIndex, e.NewDisplayIndex);
+                MoveArrayItem(darr, e.OldDisplayIndex, e.NewDisplayIndex);
 
                 for (int i = 0; i < lst.Columns.Count; i++)
                 {

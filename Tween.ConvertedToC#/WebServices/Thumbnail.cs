@@ -2772,7 +2772,7 @@ namespace Hoehoe
 
                 try
                 {
-                    res = MyCommon.CreateDataFromJson<PicPlzDataModel.ResultData>(src);
+                    res = TwitterDataModel.CreateDataFromJson<PicPlzDataModel.ResultData>(src);
                 }
                 catch (Exception)
                 {

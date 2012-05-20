@@ -25,41 +25,26 @@
 // Boston, MA 02110-1301, USA.
 
 using System;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
 
 namespace Hoehoe
 {
     public sealed partial class TweenAboutBox
     {
-        public static T getAppAssemblyCustomeAttr<T>() where T : Attribute
-        {
-            return (T)Attribute.GetCustomAttribute(AppAssembly, typeof(T));
-        }
-
-        public static Assembly AppAssembly { get { return Assembly.GetExecutingAssembly(); } }
-        public static string AppTitle { get { return getAppAssemblyCustomeAttr<AssemblyTitleAttribute>().Title; } }
-        public static string AppAssemblyDescription { get { return getAppAssemblyCustomeAttr<AssemblyDescriptionAttribute>().Description; } }
-        public static string AppAssemblyCompanyName { get { return getAppAssemblyCustomeAttr<AssemblyCompanyAttribute>().Company; } }
-        public static string AppAssemblyCopyright { get { return getAppAssemblyCustomeAttr<AssemblyCopyrightAttribute>().Copyright; } }
-        public static string AppAssemblyProductName { get { return getAppAssemblyCustomeAttr<AssemblyProductAttribute>().Product; } }
-        public static string AppAssemblyName { get { return AppAssembly.GetName().Name; } }
-        public static Version AppVersion { get { return AppAssembly.GetName().Version; } }
-        public static string AppFileVersion { get { return getAppAssemblyCustomeAttr<AssemblyFileVersionAttribute>().Version; } }
-
         private void TweenAboutBox_Load(System.Object sender, System.EventArgs e)
         {
             // フォームのタイトルを設定します。
-            string applicationTitle = !String.IsNullOrEmpty(AppTitle) ? AppTitle : Path.GetFileNameWithoutExtension(AppAssemblyName);
+            string applicationTitle = !String.IsNullOrEmpty(MyCommon.AppTitle) ? MyCommon.AppTitle : Path.GetFileNameWithoutExtension(MyCommon.AppAssemblyName);
             this.Text = String.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText1, applicationTitle);
             // バージョン情報ボックスに表示されたテキストをすべて初期化します。
             // TODO: [プロジェクト] メニューの下にある [プロジェクト プロパティ] ダイアログの [アプリケーション] ペインで、アプリケーションのアセンブリ情報を
             //    カスタマイズします。
-            this.LabelProductName.Text = AppAssemblyProductName;
-            this.LabelVersion.Text = String.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText2, MyCommon.fileVersion + "(" + AppVersion.ToString() + ")");
-            this.LabelCopyright.Text = AppAssemblyCopyright;
-            this.LabelCompanyName.Text = AppAssemblyCompanyName;
-            this.TextBoxDescription.Text = AppAssemblyDescription;
+            this.LabelProductName.Text = MyCommon.AppAssemblyProductName;
+            this.LabelVersion.Text = String.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText2, MyCommon.fileVersion + "(" + MyCommon.AppVersion.ToString() + ")");
+            this.LabelCopyright.Text = MyCommon.AppAssemblyCopyright;
+            this.LabelCompanyName.Text = MyCommon.AppAssemblyCompanyName;
+            this.TextBoxDescription.Text = MyCommon.AppAssemblyDescription;
             this.ChangeLog.Text = Hoehoe.Properties.Resources.ChangeLog;
             this.TextBoxDescription.Text = Hoehoe.Properties.Resources.Description;
         }

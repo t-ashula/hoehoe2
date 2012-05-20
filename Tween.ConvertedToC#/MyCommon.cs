@@ -33,7 +33,6 @@ using System.Globalization;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Runtime.Serialization.Json;
 using System.Security.Principal;
 using System.Text;
 using System.Web;
@@ -65,6 +64,8 @@ namespace Hoehoe
 #else
         public static bool DebugBuild = false;
 #endif
+
+        public static ApiInformation TwitterApiInfo = new ApiInformation();
 
         public static void TraceOut(Exception ex, string message)
         {
@@ -328,7 +329,7 @@ namespace Hoehoe
             return input.Replace("://" + domain, "://" + asciiDomain);
         }
 
-        public static string fileVersion = "";
+        public static string fileVersion { get { return AppFileVersion; } }
 
         public static string GetUserAgentString()
         {
@@ -338,8 +339,6 @@ namespace Hoehoe
             }
             return "Hoehoe/" + fileVersion;
         }
-
-        public static ApiInformation TwitterApiInfo = new ApiInformation();
 
         public static bool IsAnimatedGif(string filename)
         {
@@ -393,19 +392,6 @@ namespace Hoehoe
             return new DateTime();
         }
 
-        public static T CreateDataFromJson<T>(string content)
-        {
-            T data = default(T);
-            using (MemoryStream stream = new MemoryStream())
-            {
-                byte[] buf = Encoding.Unicode.GetBytes(content);
-                stream.Write(Encoding.Unicode.GetBytes(content), offset: 0, count: buf.Length);
-                stream.Seek(offset: 0, loc: SeekOrigin.Begin);
-                data = (T)(new DataContractJsonSerializer(typeof(T))).ReadObject(stream);
-            }
-            return data;
-        }
-
         public static bool IsNetworkAvailable()
         {
             try
@@ -422,5 +408,28 @@ namespace Hoehoe
         {
             return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
+
+        public static T getAppAssemblyCustomeAttr<T>() where T : Attribute
+        {
+            return (T)Attribute.GetCustomAttribute(AppAssembly, typeof(T));
+        }
+
+        public static Assembly AppAssembly { get { return Assembly.GetExecutingAssembly(); } }
+
+        public static string AppTitle { get { return getAppAssemblyCustomeAttr<AssemblyTitleAttribute>().Title; } }
+
+        public static string AppAssemblyDescription { get { return getAppAssemblyCustomeAttr<AssemblyDescriptionAttribute>().Description; } }
+
+        public static string AppAssemblyCompanyName { get { return getAppAssemblyCustomeAttr<AssemblyCompanyAttribute>().Company; } }
+
+        public static string AppAssemblyCopyright { get { return getAppAssemblyCustomeAttr<AssemblyCopyrightAttribute>().Copyright; } }
+
+        public static string AppAssemblyProductName { get { return getAppAssemblyCustomeAttr<AssemblyProductAttribute>().Product; } }
+
+        public static string AppAssemblyName { get { return AppAssembly.GetName().Name; } }
+
+        public static Version AppVersion { get { return AppAssembly.GetName().Version; } }
+
+        public static string AppFileVersion { get { return getAppAssemblyCustomeAttr<AssemblyFileVersionAttribute>().Version; } }
     }
 }

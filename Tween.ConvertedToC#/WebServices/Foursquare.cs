@@ -82,7 +82,7 @@ namespace Hoehoe
                     FourSquareDataModel.FourSquareData curData = null;
                     try
                     {
-                        curData = MyCommon.CreateDataFromJson<FourSquareDataModel.FourSquareData>(content);
+                        curData = TwitterDataModel.CreateDataFromJson<FourSquareDataModel.FourSquareData>(content);
                     }
                     catch (Exception ex)
                     {

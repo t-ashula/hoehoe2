@@ -227,7 +227,7 @@ namespace Hoehoe
 
                 try
                 {
-                    res = MyCommon.CreateDataFromJson<TranslateResponse>(content);
+                    res = TwitterDataModel.CreateDataFromJson<TranslateResponse>(content);
                 }
                 catch (Exception)
                 {
@@ -263,7 +263,7 @@ namespace Hoehoe
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(LanguageDetectResponse));
                 try
                 {
-                    LanguageDetectResponse res = MyCommon.CreateDataFromJson<LanguageDetectResponse>(content);
+                    LanguageDetectResponse res = TwitterDataModel.CreateDataFromJson<LanguageDetectResponse>(content);
                     return res.ResponseData.Language;
                 }
                 catch (Exception)

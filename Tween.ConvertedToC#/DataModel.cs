@@ -26,7 +26,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text;
 
 namespace Hoehoe
 {
@@ -839,6 +842,19 @@ namespace Hoehoe
 
             [DataMember(Name = "max_media_per_upload")]
             public int MaxMediaPerUpload;
+        }
+
+        public static T CreateDataFromJson<T>(string content)
+        {
+            T data = default(T);
+            using (MemoryStream stream = new MemoryStream())
+            {
+                byte[] buf = Encoding.Unicode.GetBytes(content);
+                stream.Write(Encoding.Unicode.GetBytes(content), offset: 0, count: buf.Length);
+                stream.Seek(offset: 0, loc: SeekOrigin.Begin);
+                data = (T)(new DataContractJsonSerializer(typeof(T))).ReadObject(stream);
+            }
+            return data;
         }
     }
 }
