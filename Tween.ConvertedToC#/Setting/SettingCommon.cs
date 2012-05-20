@@ -81,7 +81,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    return MyCommon.EncryptString(password);
+                    return CryptoUtils.EncryptString(password);
                 }
                 catch (Exception)
                 {
@@ -104,7 +104,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    password = MyCommon.DecryptString(password);
+                    password = CryptoUtils.DecryptString(password);
                 }
                 catch (Exception ex)
                 {
@@ -233,8 +233,4 @@ namespace Hoehoe
         public bool IsRemoveSameEvent = false;
         public bool IsUseNotifyGrowl = false;
     }
-}
-
-namespace Hoehoe
-{
 }

@@ -44,9 +44,9 @@ namespace Hoehoe
         /// <summary>
         /// 4SQ Api Key : TODO
         /// </summary>
-        private Dictionary<string, string> _authKey = new Dictionary<string, string> { 
+        private Dictionary<string, string> _authKey = new Dictionary<string, string> {
             { "client_id", "VWVC5NMXB1T5HKOYAKARCXKZDOHDNYSRLEMDDQYJNSJL2SUU" },
-            { "client_secret", MyCommon.DecryptString("eXXMGYXZyuDxz/lJ9nLApihoUeEGXNLEO0ZDCAczvwdKgGRExZl1Xyac/ezNTwHFOLUZqaA8tbA=") } 
+            { "client_secret", CryptoUtils.DecryptString("eXXMGYXZyuDxz/lJ9nLApihoUeEGXNLEO0ZDCAczvwdKgGRExZl1Xyac/ezNTwHFOLUZqaA8tbA=") }
         };
 
         private Dictionary<string, Google.GlobalLocation> CheckInUrlsVenueCollection = new Dictionary<string, Google.GlobalLocation>();

@@ -286,7 +286,7 @@ namespace Hoehoe
                 {
                     try
                     {
-                        return MyCommon.EncryptString(pwd);
+                        return CryptoUtils.EncryptString(pwd);
                     }
                     catch (Exception)
                     {
@@ -309,7 +309,7 @@ namespace Hoehoe
                 {
                     try
                     {
-                        pwd = MyCommon.DecryptString(pwd);
+                        pwd = CryptoUtils.DecryptString(pwd);
                     }
                     catch (Exception)
                     {
