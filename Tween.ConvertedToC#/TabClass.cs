@@ -39,7 +39,7 @@ namespace Hoehoe
         private int _unreadCount = 0;
         private List<long> _ids;
         private List<TemporaryId> _tmpIds = new List<TemporaryId>();
-        private MyCommon.TabUsageType _tabType = MyCommon.TabUsageType.Undefined;
+        private TabUsageType _tabType = TabUsageType.Undefined;
         private IdComparerClass _sorter = new IdComparerClass();
         private readonly object _lockObj = new object();
 
@@ -194,11 +194,11 @@ namespace Hoehoe
             _unreadManage = true;
             _ids = new List<long>();
             this.OldestUnreadId = -1;
-            _tabType = MyCommon.TabUsageType.Undefined;
+            _tabType = TabUsageType.Undefined;
             _listInfo = null;
         }
 
-        public TabClass(string tabName, MyCommon.TabUsageType tabType, ListElement list)
+        public TabClass(string tabName, TabUsageType tabType, ListElement list)
         {
             Posts = new Dictionary<long, PostClass>();
             TabName = tabName;
@@ -393,7 +393,7 @@ namespace Hoehoe
             _tmpIds.Sort((TemporaryId x, TemporaryId y) => x.Id.CompareTo(y.Id));
             foreach (TemporaryId tId in _tmpIds)
             {
-                if (this.TabType == MyCommon.TabUsageType.Mentions && TabInformations.GetInstance().Item(tId.Id).IsReply)
+                if (this.TabType == TabUsageType.Mentions && TabInformations.GetInstance().Item(tId.Id).IsReply)
                 {
                     isMentionIncluded = true;
                 }
@@ -596,7 +596,7 @@ namespace Hoehoe
 
         public string TabName { get; set; }
 
-        public MyCommon.TabUsageType TabType
+        public TabUsageType TabType
         {
             get { return _tabType; }
             set
@@ -617,7 +617,7 @@ namespace Hoehoe
         {
             get
             {
-                return _tabType == MyCommon.TabUsageType.PublicSearch || _tabType == MyCommon.TabUsageType.DirectMessage || _tabType == MyCommon.TabUsageType.Lists || _tabType == MyCommon.TabUsageType.UserTimeline || _tabType == MyCommon.TabUsageType.Related;
+                return _tabType == TabUsageType.PublicSearch || _tabType == TabUsageType.DirectMessage || _tabType == TabUsageType.Lists || _tabType == TabUsageType.UserTimeline || _tabType == TabUsageType.Related;
             }
         }
     }

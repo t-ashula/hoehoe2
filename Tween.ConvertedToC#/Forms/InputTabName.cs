@@ -66,7 +66,7 @@ namespace Hoehoe
             _isShowUsage = value;
         }
 
-        public MyCommon.TabUsageType Usage { get; private set; }
+        public TabUsageType Usage { get; private set; }
 
         private void InputTabName_Load(object sender, EventArgs e)
         {
@@ -93,16 +93,16 @@ namespace Hoehoe
             switch (ComboUsage.SelectedIndex)
             {
                 case 0:
-                    Usage = Hoehoe.MyCommon.TabUsageType.UserDefined;
+                    Usage = TabUsageType.UserDefined;
                     break;
                 case 1:
-                    Usage = Hoehoe.MyCommon.TabUsageType.Lists;
+                    Usage = TabUsageType.Lists;
                     break;
                 case 2:
-                    Usage = Hoehoe.MyCommon.TabUsageType.PublicSearch;
+                    Usage = TabUsageType.PublicSearch;
                     break;
                 default:
-                    Usage = Hoehoe.MyCommon.TabUsageType.Undefined;
+                    Usage = TabUsageType.Undefined;
                     break;
             }
         }

@@ -76,7 +76,7 @@ namespace Hoehoe
             {
                 if (value != null && value.Count > 0)
                 {
-                    foreach (TabClass tb in this.GetTabsByType(MyCommon.TabUsageType.Lists))
+                    foreach (TabClass tb in this.GetTabsByType(TabUsageType.Lists))
                     {
                         foreach (ListElement list in value)
                         {
@@ -92,7 +92,7 @@ namespace Hoehoe
             }
         }
 
-        public bool AddTab(string tabName, MyCommon.TabUsageType tabType, ListElement list)
+        public bool AddTab(string tabName, TabUsageType tabType, ListElement list)
         {
             if (_tabs.ContainsKey(tabName))
             {
@@ -115,8 +115,8 @@ namespace Hoehoe
                 //念のため
                 if (!_tabs[tabName].IsInnerStorageTabType)
                 {
-                    TabClass homeTab = GetTabByType(MyCommon.TabUsageType.Home);
-                    string dmName = GetTabByType(MyCommon.TabUsageType.DirectMessage).TabName;
+                    TabClass homeTab = GetTabByType(TabUsageType.Home);
+                    string dmName = GetTabByType(TabUsageType.DirectMessage).TabName;
 
                     for (int idx = 0; idx < _tabs[tabName].AllCount; idx++)
                     {
@@ -253,13 +253,13 @@ namespace Hoehoe
             lock (_lockObj)
             {
                 PostClass post = null;
-                TabClass tab = this.GetTabByType(MyCommon.TabUsageType.Favorites);
+                TabClass tab = this.GetTabByType(TabUsageType.Favorites);
                 string tn = tab.TabName;
                 if (_statuses.ContainsKey(id))
                 {
                     post = _statuses[id];
                     //指定タブから該当ID削除
-                    MyCommon.TabUsageType tType = tab.TabType;
+                    TabUsageType tType = tab.TabType;
                     if (tab.Contains(id))
                     {
                         //未読管理
@@ -274,7 +274,7 @@ namespace Hoehoe
                         tab.Remove(id);
                     }
                     //FavタブからRetweet発言を削除する場合は、他の同一参照Retweetも削除
-                    if (tType == MyCommon.TabUsageType.Favorites && post.RetweetedId > 0)
+                    if (tType == TabUsageType.Favorites && post.RetweetedId > 0)
                     {
                         for (int i = 0; i < tab.AllCount; i++)
                         {
@@ -698,10 +698,10 @@ namespace Hoehoe
             //各タブのフィルターと照合。合致したらタブにID追加
             //通知メッセージ用に、表示必要な発言リストと再生サウンドを返す
             //notifyPosts = New List(Of PostClass)
-            TabClass homeTab = GetTabByType(MyCommon.TabUsageType.Home);
-            TabClass replyTab = GetTabByType(MyCommon.TabUsageType.Mentions);
-            TabClass dmTab = GetTabByType(MyCommon.TabUsageType.DirectMessage);
-            TabClass favTab = GetTabByType(MyCommon.TabUsageType.Favorites);
+            TabClass homeTab = GetTabByType(TabUsageType.Home);
+            TabClass replyTab = GetTabByType(TabUsageType.Mentions);
+            TabClass dmTab = GetTabByType(TabUsageType.DirectMessage);
+            TabClass favTab = GetTabByType(TabUsageType.Favorites);
             foreach (long id in _addedIds)
             {
                 PostClass post = _statuses[id];
@@ -740,7 +740,7 @@ namespace Hoehoe
                     }
                     else
                     {
-                        if (rslt == HITRESULT.Exclude && _tabs[tn].TabType == MyCommon.TabUsageType.Mentions)
+                        if (rslt == HITRESULT.Exclude && _tabs[tn].TabType == TabUsageType.Mentions)
                         {
                             post.IsExcludeReply = true;
                         }
@@ -827,7 +827,7 @@ namespace Hoehoe
                             }
                             if (!String.IsNullOrEmpty(tb.SoundFile))
                             {
-                                if (tb.TabType == MyCommon.TabUsageType.DirectMessage || String.IsNullOrEmpty(_soundFile))
+                                if (tb.TabType == TabUsageType.DirectMessage || String.IsNullOrEmpty(_soundFile))
                                 {
                                     _soundFile = tb.SoundFile;
                                 }
@@ -901,7 +901,7 @@ namespace Hoehoe
                     else
                     {
                         //DM
-                        TabClass tb = this.GetTabByType(MyCommon.TabUsageType.DirectMessage);
+                        TabClass tb = this.GetTabByType(TabUsageType.DirectMessage);
                         if (tb.Contains(item.StatusId))
                         {
                             return;
@@ -1196,7 +1196,7 @@ namespace Hoehoe
 
         public void SetRead()
         {
-            TabClass tb = GetTabByType(MyCommon.TabUsageType.Home);
+            TabClass tb = GetTabByType(TabUsageType.Home);
             if (!tb.UnreadManage)
             {
                 return;
@@ -1394,8 +1394,8 @@ namespace Hoehoe
         {
             lock (_lockObj)
             {
-                TabClass tbr = GetTabByType(MyCommon.TabUsageType.Home);
-                TabClass replyTab = GetTabByType(MyCommon.TabUsageType.Mentions);
+                TabClass tbr = GetTabByType(TabUsageType.Home);
+                TabClass replyTab = GetTabByType(TabUsageType.Mentions);
                 foreach (TabClass tb in _tabs.Values.ToArray())
                 {
                     if (tb.FilterModified)
@@ -1436,7 +1436,7 @@ namespace Hoehoe
                                     }
                                     if (post.IsFav)
                                     {
-                                        GetTabByType(MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
+                                        GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
                                     }
                                     post.FilterHit = false;
                                     break;
@@ -1447,7 +1447,7 @@ namespace Hoehoe
                                     }
                                     if (post.IsFav)
                                     {
-                                        GetTabByType(MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
+                                        GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
                                     }
                                     post.FilterHit = false;
                                     break;
@@ -1621,7 +1621,7 @@ namespace Hoehoe
             }
         }
 
-        public TabClass GetTabByType(MyCommon.TabUsageType tabType)
+        public TabClass GetTabByType(TabUsageType tabType)
         {
             //Home,Mentions,DM,Favは1つに制限する
             //その他のタイプを指定されたら、最初に合致したものを返す
@@ -1639,7 +1639,7 @@ namespace Hoehoe
             }
         }
 
-        public List<TabClass> GetTabsByType(MyCommon.TabUsageType tabType)
+        public List<TabClass> GetTabsByType(TabUsageType tabType)
         {
             //合致したタブをListで返す
             //合致しなければ空のListを返す
@@ -1690,7 +1690,7 @@ namespace Hoehoe
         // デフォルトタブの判定処理
         public bool IsDefaultTab(string tabName)
         {
-            if (tabName != null && _tabs.ContainsKey(tabName) && (_tabs[tabName].TabType == MyCommon.TabUsageType.Home || _tabs[tabName].TabType == MyCommon.TabUsageType.Mentions || _tabs[tabName].TabType == MyCommon.TabUsageType.DirectMessage || _tabs[tabName].TabType == MyCommon.TabUsageType.Favorites))
+            if (tabName != null && _tabs.ContainsKey(tabName) && (_tabs[tabName].TabType == TabUsageType.Home || _tabs[tabName].TabType == TabUsageType.Mentions || _tabs[tabName].TabType == TabUsageType.DirectMessage || _tabs[tabName].TabType == TabUsageType.Favorites))
             {
                 return true;
             }
@@ -1703,7 +1703,7 @@ namespace Hoehoe
         //振り分け可能タブの判定処理
         public bool IsDistributableTab(string tabName)
         {
-            return tabName != null && this._tabs.ContainsKey(tabName) && (_tabs[tabName].TabType == MyCommon.TabUsageType.Mentions || _tabs[tabName].TabType == MyCommon.TabUsageType.UserDefined);
+            return tabName != null && this._tabs.ContainsKey(tabName) && (_tabs[tabName].TabType == TabUsageType.Mentions || _tabs[tabName].TabType == TabUsageType.UserDefined);
         }
 
         public string GetUniqueTabName()

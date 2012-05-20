@@ -1514,55 +1514,55 @@ namespace Hoehoe
 
             //<<<<<<<<タブ関連>>>>>>>
             //デフォルトタブの存在チェック、ない場合には追加
-            if (_statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.Home) == null)
+            if (_statuses.GetTabByType(TabUsageType.Home) == null)
             {
                 if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.RECENT))
                 {
-                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.RECENT, Hoehoe.MyCommon.TabUsageType.Home, null);
+                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.RECENT, TabUsageType.Home, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.RECENT].TabType = Hoehoe.MyCommon.TabUsageType.Home;
+                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.RECENT].TabType = TabUsageType.Home;
                 }
             }
-            if (_statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.Mentions) == null)
+            if (_statuses.GetTabByType(TabUsageType.Mentions) == null)
             {
                 if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.REPLY))
                 {
-                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, Hoehoe.MyCommon.TabUsageType.Mentions, null);
+                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.REPLY].TabType = Hoehoe.MyCommon.TabUsageType.Mentions;
+                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.REPLY].TabType = TabUsageType.Mentions;
                 }
             }
-            if (_statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.DirectMessage) == null)
+            if (_statuses.GetTabByType(TabUsageType.DirectMessage) == null)
             {
                 if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.DM))
                 {
-                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, Hoehoe.MyCommon.TabUsageType.DirectMessage, null);
+                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.DM].TabType = Hoehoe.MyCommon.TabUsageType.DirectMessage;
+                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.DM].TabType = TabUsageType.DirectMessage;
                 }
             }
-            if (_statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.Favorites) == null)
+            if (_statuses.GetTabByType(TabUsageType.Favorites) == null)
             {
                 if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.FAV))
                 {
-                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, Hoehoe.MyCommon.TabUsageType.Favorites, null);
+                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, TabUsageType.Favorites, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.FAV].TabType = Hoehoe.MyCommon.TabUsageType.Favorites;
+                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.FAV].TabType = TabUsageType.Favorites;
                 }
             }
             foreach (string tn in _statuses.Tabs.Keys)
             {
-                if (_statuses.Tabs[tn].TabType == Hoehoe.MyCommon.TabUsageType.Undefined)
+                if (_statuses.Tabs[tn].TabType == TabUsageType.Undefined)
                 {
-                    _statuses.Tabs[tn].TabType = Hoehoe.MyCommon.TabUsageType.UserDefined;
+                    _statuses.Tabs[tn].TabType = TabUsageType.UserDefined;
                 }
                 if (!AddNewTab(tn, true, _statuses.Tabs[tn].TabType, _statuses.Tabs[tn].ListInfo))
                 {
@@ -1722,10 +1722,10 @@ namespace Hoehoe
             }
             if (_statuses.Tabs.Count == 0)
             {
-                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.RECENT, Hoehoe.MyCommon.TabUsageType.Home, null);
-                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, Hoehoe.MyCommon.TabUsageType.Mentions, null);
-                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, Hoehoe.MyCommon.TabUsageType.DirectMessage, null);
-                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, Hoehoe.MyCommon.TabUsageType.Favorites, null);
+                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.RECENT, TabUsageType.Home, null);
+                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
+                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
+                _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, TabUsageType.Favorites, null);
             }
         }
 
@@ -1896,7 +1896,7 @@ namespace Hoehoe
             SaveSelectedStatus(selId, focusedId);
 
             //mentionsの更新前件数を保持
-            int dmCount = _statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.DirectMessage).AllCount;
+            int dmCount = _statuses.GetTabByType(TabUsageType.DirectMessage).AllCount;
 
             //更新確定
             PostClass[] notifyPosts = null;
@@ -2003,7 +2003,7 @@ namespace Hoehoe
             }
 
             //新着通知
-            NotifyNewPosts(notifyPosts, soundFile, addCount, isMention || dmCount != _statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.DirectMessage).AllCount);
+            NotifyNewPosts(notifyPosts, soundFile, addCount, isMention || dmCount != _statuses.GetTabByType(TabUsageType.DirectMessage).AllCount);
 
             SetMainWindowTitle();
             if (!StatusLabelUrl.Text.StartsWith("http"))
@@ -2968,7 +2968,7 @@ namespace Hoehoe
                                     if (String.IsNullOrEmpty(post.RelTabName))
                                     {
                                         //検索,リストUserTimeline.Relatedタブからのfavは、favタブへ追加せず。それ以外は追加
-                                        _statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                        _statuses.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
                                     }
                                     else
                                     {
@@ -2977,11 +2977,11 @@ namespace Hoehoe
                                         {
                                             PostClass postTl = _statuses.Item(post.StatusId);
                                             postTl.IsFav = true;
-                                            _statuses.GetTabByType(Hoehoe.MyCommon.TabUsageType.Favorites).Add(postTl.StatusId, postTl.IsRead, false);
+                                            _statuses.GetTabByType(TabUsageType.Favorites).Add(postTl.StatusId, postTl.IsRead, false);
                                         }
                                     }
                                     //検索,リスト,UserTimeline,Relatedの各タブに反映
-                                    foreach (TabClass tb in _statuses.GetTabsByType(Hoehoe.MyCommon.TabUsageType.PublicSearch | Hoehoe.MyCommon.TabUsageType.Lists | Hoehoe.MyCommon.TabUsageType.UserTimeline | Hoehoe.MyCommon.TabUsageType.Related))
+                                    foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
                                     {
                                         if (tb.Contains(post.StatusId))
                                         {
@@ -3017,7 +3017,7 @@ namespace Hoehoe
                                         _statuses.Item(post.StatusId).IsFav = false;
                                     }
                                     //検索,リスト,UserTimeline,Relatedの各タブに反映
-                                    foreach (TabClass tb in _statuses.GetTabsByType(Hoehoe.MyCommon.TabUsageType.PublicSearch | Hoehoe.MyCommon.TabUsageType.Lists | Hoehoe.MyCommon.TabUsageType.UserTimeline | Hoehoe.MyCommon.TabUsageType.Related))
+                                    foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
                                     {
                                         if (tb.Contains(post.StatusId))
                                             tb.Posts[post.StatusId].IsFav = false;
@@ -3109,7 +3109,7 @@ namespace Hoehoe
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (String.IsNullOrEmpty(args.TabName))
                     {
-                        foreach (TabClass tb in _statuses.GetTabsByType(Hoehoe.MyCommon.TabUsageType.PublicSearch))
+                        foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.PublicSearch))
                         {
                             if (!String.IsNullOrEmpty(tb.SearchWords))
                             {
@@ -3139,7 +3139,7 @@ namespace Hoehoe
                         count = SettingDialog.UserTimelineCountApi;
                     if (String.IsNullOrEmpty(args.TabName))
                     {
-                        foreach (TabClass tb in _statuses.GetTabsByType(Hoehoe.MyCommon.TabUsageType.UserTimeline))
+                        foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.UserTimeline))
                         {
                             if (!String.IsNullOrEmpty(tb.User))
                             {
@@ -3163,7 +3163,7 @@ namespace Hoehoe
                     if (String.IsNullOrEmpty(args.TabName))
                     {
                         //定期更新
-                        foreach (TabClass tb in _statuses.GetTabsByType(Hoehoe.MyCommon.TabUsageType.Lists))
+                        foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.Lists))
                         {
                             if (tb.ListInfo != null && tb.ListInfo.Id != 0)
                             {
@@ -3470,7 +3470,7 @@ namespace Hoehoe
                     if (_curList != null && _curTab != null)
                     {
                         _curList.BeginUpdate();
-                        if (rslt.WorkerType == WorkerType.FavRemove && _statuses.Tabs[_curTab.Text].TabType == Hoehoe.MyCommon.TabUsageType.Favorites)
+                        if (rslt.WorkerType == WorkerType.FavRemove && _statuses.Tabs[_curTab.Text].TabType == TabUsageType.Favorites)
                         {
                             //色変えは不要
                         }
@@ -3487,7 +3487,7 @@ namespace Hoehoe
                                         if (tb != null)
                                         {
                                             PostClass post = null;
-                                            if (tb.TabType == MyCommon.TabUsageType.Lists || tb.TabType == MyCommon.TabUsageType.PublicSearch)
+                                            if (tb.TabType == TabUsageType.Lists || tb.TabType == TabUsageType.PublicSearch)
                                             {
                                                 post = tb.Posts[rslt.SIds[i]];
                                             }
@@ -3618,7 +3618,7 @@ namespace Hoehoe
                     break;
                 case WorkerType.Related:
                     {
-                        TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Related);
+                        TabClass tb = _statuses.GetTabByType(TabUsageType.Related);
                         if (tb != null && tb.RelationTargetPost != null && tb.Contains(tb.RelationTargetPost.StatusId))
                         {
                             foreach (TabPage tp in ListTab.TabPages)
@@ -3638,7 +3638,7 @@ namespace Hoehoe
 
         private void RemovePostFromFavTab(Int64[] ids)
         {
-            string favTabName = _statuses.GetTabByType(MyCommon.TabUsageType.Favorites).TabName;
+            string favTabName = _statuses.GetTabByType(TabUsageType.Favorites).TabName;
             int fidx = 0;
             if (_curTab.Text.Equals(favTabName))
             {
@@ -3807,7 +3807,7 @@ namespace Hoehoe
         private void FavoriteChange(bool isFavAdd, bool multiFavoriteChangeDialogEnable = true)
         {
             //TrueでFavAdd,FalseでFavRemove
-            if (_statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage || _curList.SelectedIndices.Count == 0 || !this.ExistCurrentPost)
+            if (_statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage || _curList.SelectedIndices.Count == 0 || !this.ExistCurrentPost)
             {
                 return;
             }
@@ -4059,7 +4059,7 @@ namespace Hoehoe
                 UnreadStripMenuItem.Enabled = true;
             }
             DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
-            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.DirectMessage || !this.ExistCurrentPost || _curPost.IsDm)
+            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || _curPost.IsDm)
             {
                 FavAddToolStripMenuItem.Enabled = false;
                 FavRemoveToolStripMenuItem.Enabled = false;
@@ -4133,7 +4133,7 @@ namespace Hoehoe
                     }
                 }
             }
-            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch || !this.ExistCurrentPost || !(_curPost.InReplyToStatusId > 0))
+            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(_curPost.InReplyToStatusId > 0))
             {
                 RepliedStatusOpenMenuItem.Enabled = false;
             }
@@ -4167,7 +4167,7 @@ namespace Hoehoe
             {
                 return;
             }
-            if (_statuses.Tabs[_curTab.Text].TabType != MyCommon.TabUsageType.DirectMessage)
+            if (_statuses.Tabs[_curTab.Text].TabType != TabUsageType.DirectMessage)
             {
                 bool myPost = false;
                 foreach (int idx in _curList.SelectedIndices)
@@ -4220,7 +4220,7 @@ namespace Hoehoe
                 foreach (long id in _statuses.GetId(_curTab.Text, _curList.SelectedIndices))
                 {
                     string rtn = "";
-                    if (_statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage)
+                    if (_statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage)
                     {
                         rtn = tw.RemoveDirectMessage(id, _statuses.Item(id));
                     }
@@ -4399,18 +4399,18 @@ namespace Hoehoe
             {
                 switch (_statuses.Tabs[_curTab.Text].TabType)
                 {
-                    case MyCommon.TabUsageType.Mentions:
+                    case TabUsageType.Mentions:
                         GetTimeline(WorkerType.Reply, 1, 0, "");
                         break;
-                    case MyCommon.TabUsageType.DirectMessage:
+                    case TabUsageType.DirectMessage:
                         GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
                         break;
-                    case MyCommon.TabUsageType.Favorites:
+                    case TabUsageType.Favorites:
                         GetTimeline(WorkerType.Favorites, 1, 0, "");
                         break;
                     //Case TabUsageType.Profile
                     //' TODO
-                    case MyCommon.TabUsageType.PublicSearch:
+                    case TabUsageType.PublicSearch:
                         {
                             //' TODO
                             TabClass tb = _statuses.Tabs[_curTab.Text];
@@ -4421,10 +4421,10 @@ namespace Hoehoe
                             GetTimeline(WorkerType.PublicSearch, 1, 0, _curTab.Text);
                         }
                         break;
-                    case MyCommon.TabUsageType.UserTimeline:
+                    case TabUsageType.UserTimeline:
                         GetTimeline(WorkerType.UserTimeline, 1, 0, _curTab.Text);
                         break;
-                    case MyCommon.TabUsageType.Lists:
+                    case TabUsageType.Lists:
                         {
                             //' TODO
                             TabClass tb = _statuses.Tabs[_curTab.Text];
@@ -4454,19 +4454,19 @@ namespace Hoehoe
             {
                 switch (_statuses.Tabs[_curTab.Text].TabType)
                 {
-                    case MyCommon.TabUsageType.Mentions:
+                    case TabUsageType.Mentions:
                         GetTimeline(WorkerType.Reply, -1, 0, "");
                         break;
-                    case MyCommon.TabUsageType.DirectMessage:
+                    case TabUsageType.DirectMessage:
                         GetTimeline(WorkerType.DirectMessegeRcv, -1, 0, "");
                         break;
-                    case MyCommon.TabUsageType.Favorites:
+                    case TabUsageType.Favorites:
                         GetTimeline(WorkerType.Favorites, -1, 0, "");
                         break;
-                    case MyCommon.TabUsageType.Profile:
+                    case TabUsageType.Profile:
                         break;
                     //' TODO
-                    case MyCommon.TabUsageType.PublicSearch:
+                    case TabUsageType.PublicSearch:
                         {
                             // TODO
                             TabClass tb = _statuses.Tabs[_curTab.Text];
@@ -4477,10 +4477,10 @@ namespace Hoehoe
                             GetTimeline(WorkerType.PublicSearch, -1, 0, _curTab.Text);
                         }
                         break;
-                    case MyCommon.TabUsageType.UserTimeline:
+                    case TabUsageType.UserTimeline:
                         GetTimeline(WorkerType.UserTimeline, -1, 0, _curTab.Text);
                         break;
-                    case MyCommon.TabUsageType.Lists:
+                    case TabUsageType.Lists:
                         {
                             //' TODO
                             TabClass tb = _statuses.Tabs[_curTab.Text];
@@ -4881,7 +4881,7 @@ namespace Hoehoe
         public void AddNewTabForSearch(string searchWord)
         {
             //同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
-            foreach (TabClass tb in _statuses.GetTabsByType(MyCommon.TabUsageType.PublicSearch))
+            foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.PublicSearch))
             {
                 if (tb.SearchWords == searchWord && String.IsNullOrEmpty(tb.SearchLang))
                 {
@@ -4909,8 +4909,8 @@ namespace Hoehoe
                 }
             }
             //タブ追加
-            _statuses.AddTab(tabName, MyCommon.TabUsageType.PublicSearch, null);
-            AddNewTab(tabName, false, MyCommon.TabUsageType.PublicSearch);
+            _statuses.AddTab(tabName, TabUsageType.PublicSearch, null);
+            AddNewTab(tabName, false, TabUsageType.PublicSearch);
             //追加したタブをアクティブに
             ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
             //検索条件の設定
@@ -4945,7 +4945,7 @@ namespace Hoehoe
         public void AddNewTabForUserTimeline(string user)
         {
             //同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
-            foreach (TabClass tb in _statuses.GetTabsByType(MyCommon.TabUsageType.UserTimeline))
+            foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.UserTimeline))
             {
                 if (tb.User == user)
                 {
@@ -4966,9 +4966,9 @@ namespace Hoehoe
                 tabName += "_";
             }
             //タブ追加
-            _statuses.AddTab(tabName, MyCommon.TabUsageType.UserTimeline, null);
+            _statuses.AddTab(tabName, TabUsageType.UserTimeline, null);
             _statuses.Tabs[tabName].User = user;
-            AddNewTab(tabName, false, MyCommon.TabUsageType.UserTimeline);
+            AddNewTab(tabName, false, TabUsageType.UserTimeline);
             //追加したタブをアクティブに
             ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
             SaveConfigsTabs();
@@ -4976,7 +4976,7 @@ namespace Hoehoe
             GetTimeline(WorkerType.UserTimeline, 1, 0, tabName);
         }
 
-        public bool AddNewTab(string tabName, bool startup, Hoehoe.MyCommon.TabUsageType tabType, ListElement listInfo = null)
+        public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
         {
             //重複チェック
             foreach (TabPage tb in ListTab.TabPages)
@@ -4996,7 +4996,7 @@ namespace Hoehoe
             //タブタイプ重複チェック
             if (!startup)
             {
-                if (tabType == MyCommon.TabUsageType.DirectMessage || tabType == MyCommon.TabUsageType.Favorites || tabType == MyCommon.TabUsageType.Home || tabType == MyCommon.TabUsageType.Mentions || tabType == MyCommon.TabUsageType.Related)
+                if (tabType == TabUsageType.DirectMessage || tabType == TabUsageType.Favorites || tabType == TabUsageType.Home || tabType == TabUsageType.Mentions || tabType == TabUsageType.Related)
                 {
                     if (_statuses.GetTabByType(tabType) != null)
                     {
@@ -5030,12 +5030,12 @@ namespace Hoehoe
 
             /// UserTimeline関連
             Label label = null;
-            if (tabType == MyCommon.TabUsageType.UserTimeline || tabType == MyCommon.TabUsageType.Lists)
+            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
             {
                 label = new Label();
                 label.Dock = DockStyle.Top;
                 label.Name = "labelUser";
-                label.Text = tabType == MyCommon.TabUsageType.Lists ? listInfo.ToString() : _statuses.Tabs[tabName].User + "'s Timeline";
+                label.Text = tabType == TabUsageType.Lists ? listInfo.ToString() : _statuses.Tabs[tabName].User + "'s Timeline";
                 label.TextAlign = ContentAlignment.MiddleLeft;
                 using (ComboBox tmpComboBox = new ComboBox())
                 {
@@ -5046,7 +5046,7 @@ namespace Hoehoe
 
             /// 検索関連の準備
             Panel pnl = null;
-            if (tabType == MyCommon.TabUsageType.PublicSearch)
+            if (tabType == TabUsageType.PublicSearch)
             {
                 pnl = new Panel();
 
@@ -5133,11 +5133,11 @@ namespace Hoehoe
             this.ListTab.Controls.Add(tabPage);
             tabPage.Controls.Add(listCustom);
 
-            if (tabType == MyCommon.TabUsageType.PublicSearch)
+            if (tabType == TabUsageType.PublicSearch)
             {
                 tabPage.Controls.Add(pnl);
             }
-            if (tabType == MyCommon.TabUsageType.UserTimeline || tabType == MyCommon.TabUsageType.Lists)
+            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
             {
                 tabPage.Controls.Add(label);
             }
@@ -5304,7 +5304,7 @@ namespace Hoehoe
                 }
             }
 
-            if (tabType == MyCommon.TabUsageType.PublicSearch)
+            if (tabType == TabUsageType.PublicSearch)
             {
                 pnl.ResumeLayout(false);
             }
@@ -5349,7 +5349,7 @@ namespace Hoehoe
             SetListProperty();
             //他のタブに列幅等を反映
 
-            MyCommon.TabUsageType tabType = _statuses.Tabs[TabName].TabType;
+            TabUsageType tabType = _statuses.Tabs[TabName].TabType;
 
             //オブジェクトインスタンスの削除
             this.SplitContainer1.Panel1.SuspendLayout();
@@ -5371,7 +5371,7 @@ namespace Hoehoe
             this.ListTab.Controls.Remove(tabPage);
 
             Control pnl = null;
-            if (tabType == MyCommon.TabUsageType.PublicSearch)
+            if (tabType == TabUsageType.PublicSearch)
             {
                 pnl = tabPage.Controls["panelSearch"];
                 foreach (Control ctrl in pnl.Controls)
@@ -6441,7 +6441,7 @@ namespace Hoehoe
 
         private void StatusOpenMenuItem_Click(object sender, EventArgs e)
         {
-            if (_curList.SelectedIndices.Count > 0 && _statuses.Tabs[_curTab.Text].TabType != MyCommon.TabUsageType.DirectMessage)
+            if (_curList.SelectedIndices.Count > 0 && _statuses.Tabs[_curTab.Text].TabType != TabUsageType.DirectMessage)
             {
                 PostClass post = _statuses.Item(_curTab.Text, _curList.SelectedIndices[0]);
                 var sid = post.RetweetedId == 0 ? post.StatusId : post.RetweetedId;
@@ -6707,11 +6707,11 @@ namespace Hoehoe
             }
             SourceLinkLabel.TabStop = false;
 
-            if (_statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage && !_curPost.IsOwl)
+            if (_statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage && !_curPost.IsOwl)
             {
                 NameLabel.Text = "DM TO -> ";
             }
-            else if (_statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage)
+            else if (_statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage)
             {
                 NameLabel.Text = "DM FROM <- ";
             }
@@ -6747,7 +6747,7 @@ namespace Hoehoe
 
             NameLabel.ForeColor = SystemColors.ControlText;
             DateTimeLabel.Text = _curPost.CreatedAt.ToString();
-            if (_curPost.IsOwl && (SettingDialog.OneWayLove || _statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage))
+            if (_curPost.IsOwl && (SettingDialog.OneWayLove || _statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage))
             {
                 NameLabel.ForeColor = _clOWL;
             }
@@ -6849,7 +6849,7 @@ namespace Hoehoe
         {
             if (ListTab.SelectedTab != null)
             {
-                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch)
+                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
                 {
                     Control pnl = ListTab.SelectedTab.Controls["panelSearch"];
                     if (pnl.Controls["comboSearch"].Focused || pnl.Controls["comboLang"].Focused || pnl.Controls["buttonSearch"].Focused)
@@ -7057,8 +7057,8 @@ namespace Hoehoe
                             case Keys.Escape:
                                 if (ListTab.SelectedTab != null)
                                 {
-                                    MyCommon.TabUsageType tabtype = _statuses.Tabs[ListTab.SelectedTab.Text].TabType;
-                                    if (tabtype == MyCommon.TabUsageType.Related || tabtype == MyCommon.TabUsageType.UserTimeline || tabtype == MyCommon.TabUsageType.PublicSearch)
+                                    TabUsageType tabtype = _statuses.Tabs[ListTab.SelectedTab.Text].TabType;
+                                    if (tabtype == TabUsageType.Related || tabtype == TabUsageType.UserTimeline || tabtype == TabUsageType.PublicSearch)
                                     {
                                         TabPage relTp = ListTab.SelectedTab;
                                         RemoveSpecifiedTab(relTp.Text, false);
@@ -7395,7 +7395,7 @@ namespace Hoehoe
                         case Keys.F:
                             if (ListTab.SelectedTab != null)
                             {
-                                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch)
+                                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
                                 {
                                     ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
                                     return true;
@@ -7668,7 +7668,7 @@ namespace Hoehoe
             bool isDm = false;
             if (this._curTab != null && this._statuses.GetTabByName(this._curTab.Text) != null)
             {
-                isDm = this._statuses.GetTabByName(this._curTab.Text).TabType == MyCommon.TabUsageType.DirectMessage;
+                isDm = this._statuses.GetTabByName(this._curTab.Text).TabType == TabUsageType.DirectMessage;
             }
             foreach (int idx in _curList.SelectedIndices)
             {
@@ -7730,7 +7730,7 @@ namespace Hoehoe
             {
                 return;
             }
-            if (this._statuses.GetTabByName(this._curTab.Text).TabType == MyCommon.TabUsageType.DirectMessage)
+            if (this._statuses.GetTabByName(this._curTab.Text).TabType == TabUsageType.DirectMessage)
             {
                 return;
             }
@@ -7827,7 +7827,7 @@ namespace Hoehoe
             int stp = 1;
             long targetId = 0;
 
-            if (_statuses.Tabs[_curTab.Text].TabType == MyCommon.TabUsageType.DirectMessage)
+            if (_statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage)
             {
                 return;
             }
@@ -7872,7 +7872,7 @@ namespace Hoehoe
             bool found = false;
             for (int tabidx = fIdx; tabidx <= toIdx; tabidx += stp)
             {
-                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType == MyCommon.TabUsageType.DirectMessage)
+                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType == TabUsageType.DirectMessage)
                     continue;
                 // Directタブは対象外
                 for (int idx = 0; idx <= ((DetailsListView)ListTab.TabPages[tabidx].Tag).VirtualListSize - 1; idx++)
@@ -8109,7 +8109,7 @@ namespace Hoehoe
 
             TabClass curTabClass = _statuses.Tabs[_curTab.Text];
 
-            if (curTabClass.TabType == MyCommon.TabUsageType.PublicSearch && _curPost.InReplyToStatusId == 0 && _curPost.TextFromApi.Contains("@"))
+            if (curTabClass.TabType == TabUsageType.PublicSearch && _curPost.InReplyToStatusId == 0 && _curPost.TextFromApi.Contains("@"))
             {
                 PostClass post = null;
                 string r = tw.GetStatusApi(false, _curPost.StatusId, ref post);
@@ -8377,7 +8377,7 @@ namespace Hoehoe
             }
             for (int tabidx = 0; tabidx <= ListTab.TabCount - 1; tabidx++)
             {
-                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType != MyCommon.TabUsageType.DirectMessage && _statuses.Tabs[ListTab.TabPages[tabidx].Text].Contains(statusId))
+                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType != TabUsageType.DirectMessage && _statuses.Tabs[ListTab.TabPages[tabidx].Text].Contains(statusId))
                 {
                     var idx = _statuses.Tabs[ListTab.TabPages[tabidx].Text].IndexOf(statusId);
                     ListTab.SelectedIndex = tabidx;
@@ -8398,7 +8398,7 @@ namespace Hoehoe
             }
             for (int tabidx = 0; tabidx < ListTab.TabCount; tabidx++)
             {
-                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType == MyCommon.TabUsageType.DirectMessage && _statuses.Tabs[ListTab.TabPages[tabidx].Text].Contains(statusId))
+                if (_statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType == TabUsageType.DirectMessage && _statuses.Tabs[ListTab.TabPages[tabidx].Text].Contains(statusId))
                 {
                     var idx = _statuses.Tabs[ListTab.TabPages[tabidx].Text].IndexOf(statusId);
                     ListTab.SelectedIndex = tabidx;
@@ -8712,7 +8712,7 @@ namespace Hoehoe
             SettingTabs tabSetting = new SettingTabs();
             for (int i = 0; i < ListTab.TabPages.Count; i++)
             {
-                if (_statuses.Tabs[ListTab.TabPages[i].Text].TabType != MyCommon.TabUsageType.Related)
+                if (_statuses.Tabs[ListTab.TabPages[i].Text].TabType != TabUsageType.Related)
                 {
                     tabSetting.Tabs.Add(_statuses.Tabs[ListTab.TabPages[i].Text]);
                 }
@@ -9028,7 +9028,7 @@ namespace Hoehoe
                 if (_curList.SelectedIndices.Count == 1 && !isAll && this.ExistCurrentPost)
                 {
                     // 単独ユーザー宛リプライまたはDM
-                    if ((_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.DirectMessage && isAuto) || (!isAuto && !isReply))
+                    if ((_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage && isAuto) || (!isAuto && !isReply))
                     {
                         // ダイレクトメッセージ
                         StatusText.Text = "D " + _curPost.ScreenName + " " + StatusText.Text;
@@ -9353,7 +9353,7 @@ namespace Hoehoe
                 return;
             }
 
-            TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Mentions);
+            TabClass tb = _statuses.GetTabByType(TabUsageType.Mentions);
             if (SettingDialog.ReplyIconState != ReplyIconState.None && tb != null && tb.UnreadCount > 0)
             {
                 if (_blinkCnt > 0)
@@ -9464,14 +9464,14 @@ namespace Hoehoe
 
         private void TabMenuControl(string tabName)
         {
-            if (_statuses.Tabs[tabName].TabType != MyCommon.TabUsageType.Mentions && _statuses.IsDefaultTab(tabName))
+            if (_statuses.Tabs[tabName].TabType != TabUsageType.Mentions && _statuses.IsDefaultTab(tabName))
             {
                 FilterEditMenuItem.Enabled = true;
                 this.EditRuleTbMenuItem.Enabled = true;
                 DeleteTabMenuItem.Enabled = false;
                 this.DeleteTbMenuItem.Enabled = false;
             }
-            else if (_statuses.Tabs[tabName].TabType == MyCommon.TabUsageType.Mentions)
+            else if (_statuses.Tabs[tabName].TabType == TabUsageType.Mentions)
             {
                 FilterEditMenuItem.Enabled = true;
                 this.EditRuleTbMenuItem.Enabled = true;
@@ -9582,7 +9582,7 @@ namespace Hoehoe
         {
             if (String.IsNullOrEmpty(_rclickTabName))
             {
-                _rclickTabName = _statuses.GetTabByType(MyCommon.TabUsageType.Home).TabName;
+                _rclickTabName = _statuses.GetTabByType(TabUsageType.Home).TabName;
             }
             fltDialog.SetCurrent(_rclickTabName);
             fltDialog.ShowDialog();
@@ -9627,7 +9627,7 @@ namespace Hoehoe
         private void AddTabMenuItem_Click(object sender, EventArgs e)
         {
             string tabName = null;
-            MyCommon.TabUsageType tabUsage = default(MyCommon.TabUsageType);
+            TabUsageType tabUsage = default(TabUsageType);
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.TabName = _statuses.GetUniqueTabName();
@@ -9645,7 +9645,7 @@ namespace Hoehoe
             {
                 //List対応
                 ListElement list = null;
-                if (tabUsage == MyCommon.TabUsageType.Lists)
+                if (tabUsage == TabUsageType.Lists)
                 {
                     using (ListAvailable listAvail = new ListAvailable())
                     {
@@ -9669,13 +9669,13 @@ namespace Hoehoe
                 {
                     //成功
                     SaveConfigsTabs();
-                    if (tabUsage == MyCommon.TabUsageType.PublicSearch)
+                    if (tabUsage == TabUsageType.PublicSearch)
                     {
                         ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
                         ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
                         ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
                     }
-                    if (tabUsage == MyCommon.TabUsageType.Lists)
+                    if (tabUsage == TabUsageType.Lists)
                     {
                         ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
                         ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
@@ -9853,7 +9853,7 @@ namespace Hoehoe
                         return true;
                     }
                 }
-                else if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch && (ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focused || ListTab.SelectedTab.Controls["panelSearch"].Controls["comboLang"].Focused))
+                else if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch && (ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focused || ListTab.SelectedTab.Controls["panelSearch"].Controls["comboLang"].Focused))
                 {
                     this.SearchButton_Click(ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
                     return true;
@@ -9999,7 +9999,7 @@ namespace Hoehoe
                     this.TopMost = SettingDialog.AlwaysTop;
                     if (!String.IsNullOrEmpty(tabName))
                     {
-                        if (!_statuses.AddTab(tabName, MyCommon.TabUsageType.UserDefined, null) || !AddNewTab(tabName, false, MyCommon.TabUsageType.UserDefined))
+                        if (!_statuses.AddTab(tabName, TabUsageType.UserDefined, null) || !AddNewTab(tabName, false, TabUsageType.UserDefined))
                         {
                             string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText2, tabName);
                             MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -10290,13 +10290,13 @@ namespace Hoehoe
                     }
                     break;
                 case DispTitleEnum.UnreadRepCount:
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText1, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText1, _statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
                     break;
                 case DispTitleEnum.UnreadAllCount:
                     ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText2, ur);
                     break;
                 case DispTitleEnum.UnreadAllRepCount:
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText3, ur, _statuses.GetTabByType(MyCommon.TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage).UnreadCount);
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText3, ur, _statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
                     break;
                 case DispTitleEnum.UnreadCountAllCount:
                     ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText4, ur, al);
@@ -10329,8 +10329,8 @@ namespace Hoehoe
             {
                 return "";
             }
-            TabClass tbRep = _statuses.GetTabByType(MyCommon.TabUsageType.Mentions);
-            TabClass tbDm = _statuses.GetTabByType(MyCommon.TabUsageType.DirectMessage);
+            TabClass tbRep = _statuses.GetTabByType(TabUsageType.Mentions);
+            TabClass tbDm = _statuses.GetTabByType(TabUsageType.DirectMessage);
             if (tbRep == null || tbDm == null)
             {
                 return "";
@@ -10616,7 +10616,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    foreach (TabClass tb in _statuses.GetTabsByType(MyCommon.TabUsageType.Lists | MyCommon.TabUsageType.PublicSearch))
+                    foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.Lists | TabUsageType.PublicSearch))
                     {
                         if (tb == null || !tb.Contains(_curPost.InReplyToStatusId))
                         {
@@ -12706,7 +12706,7 @@ namespace Hoehoe
         {
             if (ListTab.SelectedTab != null)
             {
-                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType != MyCommon.TabUsageType.PublicSearch)
+                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType != TabUsageType.PublicSearch)
                 {
                     return;
                 }
@@ -12826,7 +12826,7 @@ namespace Hoehoe
                 this.UnreadOpMenuItem.Enabled = true;
             }
 
-            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.DirectMessage || !this.ExistCurrentPost || _curPost.IsDm)
+            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || _curPost.IsDm)
             {
                 this.FavOpMenuItem.Enabled = false;
                 this.UnFavOpMenuItem.Enabled = false;
@@ -12880,7 +12880,7 @@ namespace Hoehoe
                 }
             }
 
-            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType != MyCommon.TabUsageType.Favorites)
+            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType != TabUsageType.Favorites)
             {
                 this.RefreshPrevOpMenuItem.Enabled = true;
             }
@@ -12889,7 +12889,7 @@ namespace Hoehoe
                 this.RefreshPrevOpMenuItem.Enabled = false;
             }
 
-            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch || !this.ExistCurrentPost || !(_curPost.InReplyToStatusId > 0))
+            if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(_curPost.InReplyToStatusId > 0))
             {
                 OpenRepSourceOpMenuItem.Enabled = false;
             }
@@ -12939,7 +12939,7 @@ namespace Hoehoe
             }
             if (ListTab.SelectedTab != null)
             {
-                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == MyCommon.TabUsageType.PublicSearch)
+                if (_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
                 {
                     PublicSearchQueryMenuItem.Enabled = true;
                 }
@@ -13611,31 +13611,31 @@ namespace Hoehoe
             if (this.ExistCurrentPost && !_curPost.IsDm)
             {
                 //PublicSearchも除外した方がよい？
-                if (_statuses.GetTabByType(MyCommon.TabUsageType.Related) == null)
+                if (_statuses.GetTabByType(TabUsageType.Related) == null)
                 {
                     const string TabName = "Related Tweets";
                     string tName = TabName;
-                    if (!this.AddNewTab(tName, false, MyCommon.TabUsageType.Related))
+                    if (!this.AddNewTab(tName, false, TabUsageType.Related))
                     {
                         for (int i = 2; i <= 100; i++)
                         {
                             tName = TabName + i.ToString();
-                            if (this.AddNewTab(tName, false, MyCommon.TabUsageType.Related))
+                            if (this.AddNewTab(tName, false, TabUsageType.Related))
                             {
-                                _statuses.AddTab(tName, MyCommon.TabUsageType.Related, null);
+                                _statuses.AddTab(tName, TabUsageType.Related, null);
                                 break;
                             }
                         }
                     }
                     else
                     {
-                        _statuses.AddTab(tName, MyCommon.TabUsageType.Related, null);
+                        _statuses.AddTab(tName, TabUsageType.Related, null);
                     }
                     _statuses.GetTabByName(tName).UnreadManage = false;
                     _statuses.GetTabByName(tName).Notify = false;
                 }
 
-                TabClass tb = _statuses.GetTabByType(MyCommon.TabUsageType.Related);
+                TabClass tb = _statuses.GetTabByType(TabUsageType.Related);
                 tb.RelationTargetPost = _curPost;
                 this.ClearTab(tb.TabName, false);
                 for (int i = 0; i < ListTab.TabPages.Count; i++)

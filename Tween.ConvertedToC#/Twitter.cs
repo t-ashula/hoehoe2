@@ -1960,7 +1960,7 @@ namespace Hoehoe
                 { long t; long.TryParse(status.InReplyToUserId, out t); post.InReplyToUserId = t; }
 
                 //幻覚fav対策
-                TabClass tc = TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites);
+                TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
                 post.IsFav = tc.Contains(post.RetweetedId);
 
                 if (retweeted.Geo != null)
@@ -2023,7 +2023,7 @@ namespace Hoehoe
                 post.IsMe = post.ScreenName.ToLower().Equals(_uname);
 
                 //幻覚fav対策
-                TabClass tc = TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites);
+                TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
                 post.IsFav = tc.Contains(post.StatusId) && TabInformations.GetInstance().Item(post.StatusId).IsFav;
             }
             //HTMLに整形
@@ -2750,7 +2750,7 @@ namespace Hoehoe
                     //二重取得回避
                     lock (_lockObj)
                     {
-                        if (TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.DirectMessage).Contains(post.StatusId))
+                        if (TabInformations.GetInstance().GetTabByType(TabUsageType.DirectMessage).Contains(post.StatusId))
                         {
                             continue;
                         }
@@ -2979,7 +2979,7 @@ namespace Hoehoe
                     //二重取得回避
                     lock (_lockObj)
                     {
-                        if (TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).Contains(post.StatusId))
+                        if (TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Contains(post.StatusId))
                         {
                             continue;
                         }
@@ -4404,24 +4404,24 @@ namespace Hoehoe
                             if (evt.Username.ToLower().Equals(_uname))
                             {
                                 post.IsFav = true;
-                                TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
                             }
                             else
                             {
                                 post.FavoritedCount += 1;
-                                if (!TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).Contains(post.StatusId))
+                                if (!TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Contains(post.StatusId))
                                 {
                                     if (AppendSettingDialog.Instance.FavEventUnread && post.IsRead)
                                     {
                                         post.IsRead = false;
                                     }
-                                    TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                    TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
                                 }
                                 else
                                 {
                                     if (AppendSettingDialog.Instance.FavEventUnread)
                                     {
-                                        TabInformations.GetInstance().SetRead(false, TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).TabName, TabInformations.GetInstance().GetTabByType(MyCommon.TabUsageType.Favorites).IndexOf(post.StatusId));
+                                        TabInformations.GetInstance().SetRead(false, TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).TabName, TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).IndexOf(post.StatusId));
                                     }
                                 }
                             }

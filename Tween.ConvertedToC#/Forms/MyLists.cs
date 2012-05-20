@@ -65,7 +65,7 @@ namespace Hoehoe
 
                 foreach (TabClass tab in TabInformations.GetInstance().Tabs.Values)
                 {
-                    if (tab.TabType == MyCommon.TabUsageType.Lists)
+                    if (tab.TabType == TabUsageType.Lists)
                     {
                         if (listItem.Id == tab.ListInfo.Id)
                         {

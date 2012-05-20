@@ -88,13 +88,13 @@ namespace Hoehoe
             EditFilterGroup.Enabled = false;
             switch (TabInformations.GetInstance().Tabs[tabName].TabType)
             {
-                case MyCommon.TabUsageType.Home:
-                case MyCommon.TabUsageType.DirectMessage:
-                case MyCommon.TabUsageType.Favorites:
-                case MyCommon.TabUsageType.PublicSearch:
-                case MyCommon.TabUsageType.Lists:
-                case MyCommon.TabUsageType.Related:
-                case MyCommon.TabUsageType.UserTimeline:
+                case TabUsageType.Home:
+                case TabUsageType.DirectMessage:
+                case TabUsageType.Favorites:
+                case TabUsageType.PublicSearch:
+                case TabUsageType.Lists:
+                case TabUsageType.Related:
+                case TabUsageType.UserTimeline:
                     ButtonNew.Enabled = false;
                     ButtonEdit.Enabled = false;
                     ButtonDelete.Enabled = false;
@@ -127,31 +127,31 @@ namespace Hoehoe
             }
             switch (TabInformations.GetInstance().Tabs[tabName].TabType)
             {
-                case MyCommon.TabUsageType.Home:
+                case TabUsageType.Home:
                     LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_Home;
                     break;
-                case MyCommon.TabUsageType.Mentions:
+                case TabUsageType.Mentions:
                     LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_Mentions;
                     break;
-                case MyCommon.TabUsageType.DirectMessage:
+                case TabUsageType.DirectMessage:
                     LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_DirectMessage;
                     break;
-                case MyCommon.TabUsageType.Favorites:
+                case TabUsageType.Favorites:
                     LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_Favorites;
                     break;
-                case MyCommon.TabUsageType.UserDefined:
+                case TabUsageType.UserDefined:
                     LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_UserDefined;
                     break;
-                case MyCommon.TabUsageType.PublicSearch:
+                case TabUsageType.PublicSearch:
                     LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_PublicSearch;
                     break;
-                case MyCommon.TabUsageType.Lists:
+                case TabUsageType.Lists:
                     LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_Lists;
                     break;
-                case MyCommon.TabUsageType.Related:
+                case TabUsageType.Related:
                     LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_Related;
                     break;
-                case MyCommon.TabUsageType.UserTimeline:
+                case TabUsageType.UserTimeline:
                     LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_UserTimeline;
                     break;
                 default:
@@ -975,7 +975,7 @@ namespace Hoehoe
         private void ButtonAddTab_Click(object sender, EventArgs e)
         {
             string tabName = null;
-            MyCommon.TabUsageType tabType = default(MyCommon.TabUsageType);
+            TabUsageType tabType = default(TabUsageType);
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.TabName = _sts.GetUniqueTabName();
@@ -992,7 +992,7 @@ namespace Hoehoe
             {
                 //List対応
                 ListElement list = null;
-                if (tabType == MyCommon.TabUsageType.Lists)
+                if (tabType == TabUsageType.Lists)
                 {
                     string rslt = ((TweenMain)this.Owner).TwitterInstance.GetListsApi();
                     if (!String.IsNullOrEmpty(rslt))

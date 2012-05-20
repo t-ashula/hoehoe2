@@ -163,4 +163,21 @@ namespace Hoehoe
 
         All = (None | Favorite | Unfavorite | Follow | ListMemberAdded | ListMemberRemoved | Block | Unblock | UserUpdate | Deleted | ListCreated | ListUpdated)
     }
+
+    [Flags]
+    public enum TabUsageType
+    {
+        Undefined = 0,
+        Home = 1,            //Unique
+        Mentions = 2,            //Unique
+        DirectMessage = 4,            //Unique
+        Favorites = 8,            //Unique
+        UserDefined = 16,
+        LocalQuery = 32,            //Pin(no save/no save query/distribute/no update(normal update))
+        Profile = 64,            //Pin(save/no distribute/manual update)
+        PublicSearch = 128,            //Pin(save/no distribute/auto update)
+        Lists = 256,
+        Related = 512,
+        UserTimeline = 1024
+    }
 }
