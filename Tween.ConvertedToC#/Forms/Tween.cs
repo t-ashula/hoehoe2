@@ -14300,5 +14300,22 @@ namespace Hoehoe
                     }));
             }
         }
+
+        private static void MoveArrayItem(int[] values, int fromIndex, int toIndex)
+        {
+            int movedValue = values[fromIndex];
+            int numMoved = Math.Abs(fromIndex - toIndex);
+
+            if (toIndex < fromIndex)
+            {
+                Array.Copy(values, toIndex, values, toIndex + 1, numMoved);
+            }
+            else
+            {
+                Array.Copy(values, fromIndex + 1, values, fromIndex, numMoved);
+            }
+
+            values[toIndex] = movedValue;
+        }
     }
 }
