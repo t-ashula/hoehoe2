@@ -5,20 +5,20 @@
 //            (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
 //            (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
 //            (c) 2011- t.ashula (@t_ashula) <office@ashula.info>
-// 
+//
 //  All rights reserved.
 //  This file is part of Hoehoe.
-// 
+//
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
 //  Software Foundation; either version 3 of the License, or (at your option)
 //  any later version.
-// 
+//
 //  This program is distributed in the hope that it will be useful, but
 //  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 //  or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 //  for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License along
 //  with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 //  the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
@@ -28,36 +28,37 @@
 // "c:\Program Files\Microsoft.NET\SDK\v2.0\Bin\sgen.exe" /f /a:"$(TargetPath)"
 // "C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\Bin\sgen.exe" /f /a:"$(TargetPath)"
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Media;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Web;
-using System.Windows.Forms;
-using Hoehoe.TweenCustomControl;
-using Hoehoe.DataModels;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.IO;
+    using System.Linq;
+    using System.Media;
+    using System.Reflection;
+    using System.Runtime.InteropServices;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Threading;
+    using System.Web;
+    using System.Windows.Forms;
+    using Hoehoe.DataModels;
+    using Hoehoe.TweenCustomControl;
+
     public partial class TweenMain
     {
-        // / <summary>
-        // / TODO: hoehoe webpage
-        // / </summary>
+        /// <summary>
+        /// TODO: hoehoe webpage
+        /// </summary>
         private const string ApplicationHelpWebPageUrl = "http://sourceforge.jp/projects/tween/wiki/FrontPage";
-        // / <summary>
-        // / TODO: hoehoe webpage
-        // / </summary>
+
+        /// <summary>
+        /// TODO: hoehoe webpage
+        /// </summary>
         private const string ApplicationShortcutKeyHelpWebPageUrl = "http://sourceforge.jp/projects/tween/wiki/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E3%82%AD%E3%83%BC";
 
         // 各種設定
@@ -128,6 +129,7 @@ namespace Hoehoe
 
         // 設定ファイル関連
         private SettingLocal _cfgLocal;
+
         private SettingCommon _cfgCommon;
         private bool _modifySettingLocal;
         private bool _modifySettingCommon;
@@ -141,7 +143,11 @@ namespace Hoehoe
 
         private GrowlHelper GrowlHelper
         {
-            get { return withEventsField_gh; }
+            get
+            {
+                return withEventsField_gh;
+            }
+
             set
             {
                 if (withEventsField_gh != null)
@@ -162,7 +168,11 @@ namespace Hoehoe
 
         private AppendSettingDialog SettingDialog
         {
-            get { return withEventsField_SettingDialog; }
+            get
+            {
+                return withEventsField_SettingDialog;
+            }
+
             set
             {
                 if (withEventsField_SettingDialog != null)
@@ -174,14 +184,14 @@ namespace Hoehoe
                 {
                     withEventsField_SettingDialog.IntervalChanged += TimerInterval_Changed;
                 }
-            }            
+            }
         }
 
         private TabsDialog TabDialog = new TabsDialog();      //  タブ選択ダイアログインスタンス
         private SearchWord SearchDialog = new SearchWord();   //  検索画面インスタンス
         private FilterDialog fltDialog = new FilterDialog();  //  フィルター編集画面
         private OpenURL UrlDialog = new OpenURL();
-        private DialogAsShieldIcon dialogAsShieldicon;         //  シールドアイコン付きダイアログ        
+        private DialogAsShieldIcon dialogAsShieldicon;         //  シールドアイコン付きダイアログ
         public AtIdSupplement AtIdSupl; //  @id補助
         public AtIdSupplement HashSupl;        // Hashtag補助
         public HashtagManage HashMgr;
@@ -193,61 +203,61 @@ namespace Hoehoe
         private Font _fntUnread;
 
         //  未読用文字色
-        private Color _clUnread;
+        private Color clrUnread;
 
         //  既読用フォント
         private Font _fntReaded;
 
         //  既読用文字色
-        private Color _clReaded;
+        private Color clrRead;
 
         //  Fav用文字色
-        private Color _clFav;
+        private Color clrFav;
 
         //  片思い用文字色
-        private Color _clOWL;
+        private Color clrOWL;
 
         //  Retweet用文字色
-        private Color _clRetweet;
+        private Color clrRetweet;
 
         //  発言詳細部用フォント
         private Font _fntDetail;
 
         //  発言詳細部用色
-        private Color _clDetail;
+        private Color clrDetail;
 
         //  発言詳細部用リンク文字色
-        private Color _clDetailLink;
+        private Color clrDetailLink;
 
         //  発言詳細部用背景色
-        private Color _clDetailBackcolor;
+        private Color clrDetailBackcolor;
 
         //  自分の発言用背景色
-        private Color _clSelf;
+        private Color clrSelf;
 
         //  自分宛返信用背景色
-        private Color _clAtSelf;
+        private Color clrAtSelf;
 
         //  選択発言者の他の発言用背景色
-        private Color _clTarget;
+        private Color clrTarget;
 
         //  選択発言中の返信先用背景色
-        private Color _clAtTarget;
+        private Color clrAtTarget;
 
         //  選択発言者への返信発言用背景色
-        private Color _clAtFromTarget;
+        private Color clrAtFromTarget;
 
         //  選択発言の唯一＠先
-        private Color _clAtTo;
+        private Color clrAtTo;
 
         //  リスト部通常発言背景色
-        private Color _clListBackcolor;
+        private Color clrListBackcolor;
 
         //  入力欄背景色
-        private Color _clInputBackcolor;
+        private Color clrInputBackcolor;
 
         //  入力欄文字色
-        private Color _clInputFont;
+        private Color clrInputForecolor;
 
         //  入力欄フォント
         private Font _fntInputFont;
@@ -327,7 +337,7 @@ namespace Hoehoe
 
         private StringFormat sfTab = new StringFormat();
 
-        // /''''''''''''''''''''''''''''''''''''''''''''''''''
+        ///''''''''''''''''''''''''''''''''''''''''''''''''''
         private ToolStripAPIGauge _apiGauge = new ToolStripAPIGauge();
 
         private TabInformations _statuses;
@@ -347,7 +357,7 @@ namespace Hoehoe
         private bool _waitUserTimeline = false;
         private bool _waitLists = false;
         private BackgroundWorker[] _bw = new BackgroundWorker[19];
-        private BackgroundWorker _bwFollower;
+        private BackgroundWorker followerFetchWorker;
         private int _cMode;
         private ShieldIcon _shield = new ShieldIcon();
         private InternetSecurityManager _securityManager;
@@ -365,7 +375,11 @@ namespace Hoehoe
 
         private System.Timers.Timer TimerTimeline
         {
-            get { return withEventsField_TimerTimeline; }
+            get
+            {
+                return withEventsField_TimerTimeline;
+            }
+
             set
             {
                 if (withEventsField_TimerTimeline != null)
@@ -659,9 +673,9 @@ namespace Hoehoe
                     bw.Dispose();
                 }
             }
-            if (_bwFollower != null)
+            if (followerFetchWorker != null)
             {
-                _bwFollower.Dispose();
+                followerFetchWorker.Dispose();
             }
             this._apiGauge.Dispose();
             if (_TIconDic != null)
@@ -886,40 +900,40 @@ namespace Hoehoe
 
             //  フォント＆文字色＆背景色保持
             _fntUnread = _cfgLocal.FontUnread;
-            _clUnread = _cfgLocal.ColorUnread;
+            clrUnread = _cfgLocal.ColorUnread;
             _fntReaded = _cfgLocal.FontRead;
-            _clReaded = _cfgLocal.ColorRead;
-            _clFav = _cfgLocal.ColorFav;
-            _clOWL = _cfgLocal.ColorOWL;
-            _clRetweet = _cfgLocal.ColorRetweet;
+            clrRead = _cfgLocal.ColorRead;
+            clrFav = _cfgLocal.ColorFav;
+            clrOWL = _cfgLocal.ColorOWL;
+            clrRetweet = _cfgLocal.ColorRetweet;
             _fntDetail = _cfgLocal.FontDetail;
-            _clDetail = _cfgLocal.ColorDetail;
-            _clDetailLink = _cfgLocal.ColorDetailLink;
-            _clDetailBackcolor = _cfgLocal.ColorDetailBackcolor;
-            _clSelf = _cfgLocal.ColorSelf;
-            _clAtSelf = _cfgLocal.ColorAtSelf;
-            _clTarget = _cfgLocal.ColorTarget;
-            _clAtTarget = _cfgLocal.ColorAtTarget;
-            _clAtFromTarget = _cfgLocal.ColorAtFromTarget;
-            _clAtTo = _cfgLocal.ColorAtTo;
-            _clListBackcolor = _cfgLocal.ColorListBackcolor;
-            _clInputBackcolor = _cfgLocal.ColorInputBackcolor;
-            _clInputFont = _cfgLocal.ColorInputFont;
+            clrDetail = _cfgLocal.ColorDetail;
+            clrDetailLink = _cfgLocal.ColorDetailLink;
+            clrDetailBackcolor = _cfgLocal.ColorDetailBackcolor;
+            clrSelf = _cfgLocal.ColorSelf;
+            clrAtSelf = _cfgLocal.ColorAtSelf;
+            clrTarget = _cfgLocal.ColorTarget;
+            clrAtTarget = _cfgLocal.ColorAtTarget;
+            clrAtFromTarget = _cfgLocal.ColorAtFromTarget;
+            clrAtTo = _cfgLocal.ColorAtTo;
+            clrListBackcolor = _cfgLocal.ColorListBackcolor;
+            clrInputBackcolor = _cfgLocal.ColorInputBackcolor;
+            clrInputForecolor = _cfgLocal.ColorInputFont;
             _fntInputFont = _cfgLocal.FontInputFont;
 
-            _brsForeColorUnread = new SolidBrush(_clUnread);
-            _brsForeColorReaded = new SolidBrush(_clReaded);
-            _brsForeColorFav = new SolidBrush(_clFav);
-            _brsForeColorOWL = new SolidBrush(_clOWL);
-            _brsForeColorRetweet = new SolidBrush(_clRetweet);
-            _brsBackColorMine = new SolidBrush(_clSelf);
-            _brsBackColorAt = new SolidBrush(_clAtSelf);
-            _brsBackColorYou = new SolidBrush(_clTarget);
-            _brsBackColorAtYou = new SolidBrush(_clAtTarget);
-            _brsBackColorAtFromTarget = new SolidBrush(_clAtFromTarget);
-            _brsBackColorAtTo = new SolidBrush(_clAtTo);
+            _brsForeColorUnread = new SolidBrush(clrUnread);
+            _brsForeColorReaded = new SolidBrush(clrRead);
+            _brsForeColorFav = new SolidBrush(clrFav);
+            _brsForeColorOWL = new SolidBrush(clrOWL);
+            _brsForeColorRetweet = new SolidBrush(clrRetweet);
+            _brsBackColorMine = new SolidBrush(clrSelf);
+            _brsBackColorAt = new SolidBrush(clrAtSelf);
+            _brsBackColorYou = new SolidBrush(clrTarget);
+            _brsBackColorAtYou = new SolidBrush(clrAtTarget);
+            _brsBackColorAtFromTarget = new SolidBrush(clrAtFromTarget);
+            _brsBackColorAtTo = new SolidBrush(clrAtTo);
             //  _brsBackColorNone = New SolidBrush(Color.FromKnownColor(KnownColor.Window))
-            _brsBackColorNone = new SolidBrush(_clListBackcolor);
+            _brsBackColorNone = new SolidBrush(clrListBackcolor);
 
             //  StringFormatオブジェクトへの事前設定
             sfTab.Alignment = StringAlignment.Center;
@@ -993,25 +1007,25 @@ namespace Hoehoe
             SettingDialog.OneWayLove = _cfgCommon.OneWayLove;
             //  フォント＆文字色＆背景色
             SettingDialog.FontUnread = _fntUnread;
-            SettingDialog.ColorUnread = _clUnread;
+            SettingDialog.ColorUnread = clrUnread;
             SettingDialog.FontReaded = _fntReaded;
-            SettingDialog.ColorReaded = _clReaded;
-            SettingDialog.ColorFav = _clFav;
-            SettingDialog.ColorOWL = _clOWL;
-            SettingDialog.ColorRetweet = _clRetweet;
+            SettingDialog.ColorReaded = clrRead;
+            SettingDialog.ColorFav = clrFav;
+            SettingDialog.ColorOWL = clrOWL;
+            SettingDialog.ColorRetweet = clrRetweet;
             SettingDialog.FontDetail = _fntDetail;
-            SettingDialog.ColorDetail = _clDetail;
-            SettingDialog.ColorDetailLink = _clDetailLink;
-            SettingDialog.ColorDetailBackcolor = _clDetailBackcolor;
-            SettingDialog.ColorSelf = _clSelf;
-            SettingDialog.ColorAtSelf = _clAtSelf;
-            SettingDialog.ColorTarget = _clTarget;
-            SettingDialog.ColorAtTarget = _clAtTarget;
-            SettingDialog.ColorAtFromTarget = _clAtFromTarget;
-            SettingDialog.ColorAtTo = _clAtTo;
-            SettingDialog.ColorListBackcolor = _clListBackcolor;
-            SettingDialog.ColorInputBackcolor = _clInputBackcolor;
-            SettingDialog.ColorInputFont = _clInputFont;
+            SettingDialog.ColorDetail = clrDetail;
+            SettingDialog.ColorDetailLink = clrDetailLink;
+            SettingDialog.ColorDetailBackcolor = clrDetailBackcolor;
+            SettingDialog.ColorSelf = clrSelf;
+            SettingDialog.ColorAtSelf = clrAtSelf;
+            SettingDialog.ColorTarget = clrTarget;
+            SettingDialog.ColorAtTarget = clrAtTarget;
+            SettingDialog.ColorAtFromTarget = clrAtFromTarget;
+            SettingDialog.ColorAtTo = clrAtTo;
+            SettingDialog.ColorListBackcolor = clrListBackcolor;
+            SettingDialog.ColorInputBackcolor = clrInputBackcolor;
+            SettingDialog.ColorInputFont = clrInputForecolor;
             SettingDialog.FontInputFont = _fntInputFont;
             SettingDialog.NameBalloon = _cfgCommon.NameBalloon;
             SettingDialog.PostCtrlEnter = _cfgCommon.PostCtrlEnter;
@@ -1098,7 +1112,7 @@ namespace Hoehoe
                 _detailHtmlFormatHeader = DetailHtmlFormat1;
                 _detailHtmlFormatFooter = DetailHtmlFormat7;
             }
-            _detailHtmlFormatHeader += _fntDetail.Name + DetailHtmlFormat2 + _fntDetail.Size.ToString() + DetailHtmlFormat3 + _clDetail.R.ToString() + "," + _clDetail.G.ToString() + "," + _clDetail.B.ToString() + DetailHtmlFormat4 + _clDetailLink.R.ToString() + "," + _clDetailLink.G.ToString() + "," + _clDetailLink.B.ToString() + DetailHtmlFormat5 + _clDetailBackcolor.R.ToString() + "," + _clDetailBackcolor.G.ToString() + "," + _clDetailBackcolor.B.ToString();
+            _detailHtmlFormatHeader += _fntDetail.Name + DetailHtmlFormat2 + _fntDetail.Size.ToString() + DetailHtmlFormat3 + clrDetail.R.ToString() + "," + clrDetail.G.ToString() + "," + clrDetail.B.ToString() + DetailHtmlFormat4 + clrDetailLink.R.ToString() + "," + clrDetailLink.G.ToString() + "," + clrDetailLink.B.ToString() + DetailHtmlFormat5 + clrDetailBackcolor.R.ToString() + "," + clrDetailBackcolor.G.ToString() + "," + clrDetailBackcolor.B.ToString();
             if (SettingDialog.IsMonospace)
             {
                 _detailHtmlFormatHeader += DetailHtmlFormatMono6;
@@ -1201,36 +1215,36 @@ namespace Hoehoe
                 //  新しい設定を反映
                 //  フォント＆文字色＆背景色保持
                 _fntUnread = SettingDialog.FontUnread;
-                _clUnread = SettingDialog.ColorUnread;
+                clrUnread = SettingDialog.ColorUnread;
                 _fntReaded = SettingDialog.FontReaded;
-                _clReaded = SettingDialog.ColorReaded;
-                _clFav = SettingDialog.ColorFav;
-                _clOWL = SettingDialog.ColorOWL;
-                _clRetweet = SettingDialog.ColorRetweet;
+                clrRead = SettingDialog.ColorReaded;
+                clrFav = SettingDialog.ColorFav;
+                clrOWL = SettingDialog.ColorOWL;
+                clrRetweet = SettingDialog.ColorRetweet;
                 _fntDetail = SettingDialog.FontDetail;
-                _clDetail = SettingDialog.ColorDetail;
-                _clDetailLink = SettingDialog.ColorDetailLink;
-                _clDetailBackcolor = SettingDialog.ColorDetailBackcolor;
-                _clSelf = SettingDialog.ColorSelf;
-                _clAtSelf = SettingDialog.ColorAtSelf;
-                _clTarget = SettingDialog.ColorTarget;
-                _clAtTarget = SettingDialog.ColorAtTarget;
-                _clAtFromTarget = SettingDialog.ColorAtFromTarget;
-                _clAtTo = SettingDialog.ColorAtTo;
-                _clListBackcolor = SettingDialog.ColorListBackcolor;
-                _clInputBackcolor = SettingDialog.ColorInputBackcolor;
-                _clInputFont = SettingDialog.ColorInputFont;
+                clrDetail = SettingDialog.ColorDetail;
+                clrDetailLink = SettingDialog.ColorDetailLink;
+                clrDetailBackcolor = SettingDialog.ColorDetailBackcolor;
+                clrSelf = SettingDialog.ColorSelf;
+                clrAtSelf = SettingDialog.ColorAtSelf;
+                clrTarget = SettingDialog.ColorTarget;
+                clrAtTarget = SettingDialog.ColorAtTarget;
+                clrAtFromTarget = SettingDialog.ColorAtFromTarget;
+                clrAtTo = SettingDialog.ColorAtTo;
+                clrListBackcolor = SettingDialog.ColorListBackcolor;
+                clrInputBackcolor = SettingDialog.ColorInputBackcolor;
+                clrInputForecolor = SettingDialog.ColorInputFont;
                 _fntInputFont = SettingDialog.FontInputFont;
                 _brsForeColorUnread.Dispose();
                 _brsForeColorReaded.Dispose();
                 _brsForeColorFav.Dispose();
                 _brsForeColorOWL.Dispose();
                 _brsForeColorRetweet.Dispose();
-                _brsForeColorUnread = new SolidBrush(_clUnread);
-                _brsForeColorReaded = new SolidBrush(_clReaded);
-                _brsForeColorFav = new SolidBrush(_clFav);
-                _brsForeColorOWL = new SolidBrush(_clOWL);
-                _brsForeColorRetweet = new SolidBrush(_clRetweet);
+                _brsForeColorUnread = new SolidBrush(clrUnread);
+                _brsForeColorReaded = new SolidBrush(clrRead);
+                _brsForeColorFav = new SolidBrush(clrFav);
+                _brsForeColorOWL = new SolidBrush(clrOWL);
+                _brsForeColorRetweet = new SolidBrush(clrRetweet);
                 _brsBackColorMine.Dispose();
                 _brsBackColorAt.Dispose();
                 _brsBackColorYou.Dispose();
@@ -1238,13 +1252,13 @@ namespace Hoehoe
                 _brsBackColorAtFromTarget.Dispose();
                 _brsBackColorAtTo.Dispose();
                 _brsBackColorNone.Dispose();
-                _brsBackColorMine = new SolidBrush(_clSelf);
-                _brsBackColorAt = new SolidBrush(_clAtSelf);
-                _brsBackColorYou = new SolidBrush(_clTarget);
-                _brsBackColorAtYou = new SolidBrush(_clAtTarget);
-                _brsBackColorAtFromTarget = new SolidBrush(_clAtFromTarget);
-                _brsBackColorAtTo = new SolidBrush(_clAtTo);
-                _brsBackColorNone = new SolidBrush(_clListBackcolor);
+                _brsBackColorMine = new SolidBrush(clrSelf);
+                _brsBackColorAt = new SolidBrush(clrAtSelf);
+                _brsBackColorYou = new SolidBrush(clrTarget);
+                _brsBackColorAtYou = new SolidBrush(clrAtTarget);
+                _brsBackColorAtFromTarget = new SolidBrush(clrAtFromTarget);
+                _brsBackColorAtTo = new SolidBrush(clrAtTo);
+                _brsBackColorNone = new SolidBrush(clrListBackcolor);
 
                 if (SettingDialog.IsMonospace)
                 {
@@ -1256,7 +1270,7 @@ namespace Hoehoe
                     _detailHtmlFormatHeader = DetailHtmlFormat1;
                     _detailHtmlFormatFooter = DetailHtmlFormat7;
                 }
-                _detailHtmlFormatHeader += _fntDetail.Name + DetailHtmlFormat2 + _fntDetail.Size.ToString() + DetailHtmlFormat3 + _clDetail.R.ToString() + "," + _clDetail.G.ToString() + "," + _clDetail.B.ToString() + DetailHtmlFormat4 + _clDetailLink.R.ToString() + "," + _clDetailLink.G.ToString() + "," + _clDetailLink.B.ToString() + DetailHtmlFormat5 + _clDetailBackcolor.R.ToString() + "," + _clDetailBackcolor.G.ToString() + "," + _clDetailBackcolor.B.ToString();
+                _detailHtmlFormatHeader += _fntDetail.Name + DetailHtmlFormat2 + _fntDetail.Size.ToString() + DetailHtmlFormat3 + clrDetail.R.ToString() + "," + clrDetail.G.ToString() + "," + clrDetail.B.ToString() + DetailHtmlFormat4 + clrDetailLink.R.ToString() + "," + clrDetailLink.G.ToString() + "," + clrDetailLink.B.ToString() + DetailHtmlFormat5 + clrDetailBackcolor.R.ToString() + "," + clrDetailBackcolor.G.ToString() + "," + clrDetailBackcolor.B.ToString();
                 if (SettingDialog.IsMonospace)
                 {
                     _detailHtmlFormatHeader += DetailHtmlFormatMono6;
@@ -1347,7 +1361,7 @@ namespace Hoehoe
                         if (!Rectangle.Intersect(tbarRect, scr.Bounds).IsEmpty)
                         {
                             outOfScreen = false;
-                            break; 
+                            break;
                         }
                     }
                     if (outOfScreen)
@@ -1377,7 +1391,7 @@ namespace Hoehoe
             this.PlaySoundFileMenuItem.Checked = SettingDialog.PlaySound;
             //  入力欄
             StatusText.Font = _fntInputFont;
-            StatusText.ForeColor = _clInputFont;
+            StatusText.ForeColor = clrInputForecolor;
 
             //  全新着通知のチェック状態により、Reply＆DMの新着通知有効無効切り替え（タブ別設定にするため削除予定）
             if (SettingDialog.UnreadManage == false)
@@ -1409,7 +1423,7 @@ namespace Hoehoe
             //  文字カウンタ初期化
             lblLen.Text = GetRestStatusCount(true, false).ToString();
 
-            // /'''''''''''''''''''''''''''''''''''''
+            ///'''''''''''''''''''''''''''''''''''''
             _statuses.SortOrder = (SortOrder)_cfgCommon.SortOrder;
             IdComparerClass.ComparerMode mode = default(IdComparerClass.ComparerMode);
             switch (_cfgCommon.SortColumn)
@@ -1444,7 +1458,7 @@ namespace Hoehoe
                     break;
             }
             _statuses.SortMode = mode;
-            // /'''''''''''''''''''''''''''''''''''''
+            ///'''''''''''''''''''''''''''''''''''''
 
             switch (SettingDialog.IconSz)
             {
@@ -1624,7 +1638,8 @@ namespace Hoehoe
                 this._pictureServices.Clear();
             }
             this._pictureServices = null;
-            this._pictureServices = new Dictionary<string, IMultimediaShareService> {
+            this._pictureServices = new Dictionary<string, IMultimediaShareService> 
+            {
                 { "TwitPic", new TwitPic(tw) },
                 { "img.ly", new imgly(tw) },
                 { "yfrog", new yfrog(tw) },
@@ -2366,7 +2381,7 @@ namespace Hoehoe
             {
                 _curPost = GetCurTabPost(_curItemIndex);
             }
-            catch (ArgumentException )
+            catch (ArgumentException)
             {
                 return;
             }
@@ -2420,23 +2435,23 @@ namespace Hoehoe
             Color cl = default(Color);
             if (post.IsFav)
             {
-                cl = _clFav;
+                cl = clrFav;
             }
             else if (post.RetweetedId > 0)
             {
-                cl = _clRetweet;
+                cl = clrRetweet;
             }
             else if (post.IsOwl && (post.IsDm || SettingDialog.OneWayLove))
             {
-                cl = _clOWL;
+                cl = clrOWL;
             }
             else if (read || !SettingDialog.UseUnreadStyle)
             {
-                cl = _clReaded;
+                cl = clrRead;
             }
             else
             {
-                cl = _clUnread;
+                cl = clrUnread;
             }
             if (dlView == null || lvItem.Index == -1)
             {
@@ -2483,7 +2498,7 @@ namespace Hoehoe
                     _curList.ChangeItemBackColor(_itemCacheIndex + cnt, JudgeColor(post, _postCache[cnt]));
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
             }
         }
@@ -2516,37 +2531,37 @@ namespace Hoehoe
             if (targetPost.StatusId == basePost.InReplyToStatusId)
             {
                 //  @先
-                cl = _clAtTo;
+                cl = clrAtTo;
             }
             else if (targetPost.IsMe)
             {
                 //  自分=発言者
-                cl = _clSelf;
+                cl = clrSelf;
             }
             else if (targetPost.IsReply)
             {
                 //  自分宛返信
-                cl = _clAtSelf;
+                cl = clrAtSelf;
             }
             else if (basePost.ReplyToList.Contains(targetPost.ScreenName.ToLower()))
             {
                 //  返信先
-                cl = _clAtFromTarget;
+                cl = clrAtFromTarget;
             }
             else if (targetPost.ReplyToList.Contains(basePost.ScreenName.ToLower()))
             {
                 //  その人への返信
-                cl = _clAtTarget;
+                cl = clrAtTarget;
             }
             else if (targetPost.ScreenName.Equals(basePost.ScreenName, StringComparison.OrdinalIgnoreCase))
             {
                 //  発言者
-                cl = _clTarget;
+                cl = clrTarget;
             }
             else
             {
                 //  その他
-                cl = _clListBackcolor;
+                cl = clrListBackcolor;
             }
             return cl;
         }
@@ -3005,7 +3020,9 @@ namespace Hoehoe
                                     foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
                                     {
                                         if (tb.Contains(post.StatusId))
+                                        {
                                             tb.Posts[post.StatusId].IsFav = false;
+                                        }
                                     }
                                 }
                             }
@@ -3121,7 +3138,9 @@ namespace Hoehoe
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     int count = 20;
                     if (SettingDialog.UseAdditionalCount)
+                    {
                         count = SettingDialog.UserTimelineCountApi;
+                    }
                     if (String.IsNullOrEmpty(args.TabName))
                     {
                         foreach (TabClass tb in _statuses.GetTabsByType(TabUsageType.UserTimeline))
@@ -3674,7 +3693,9 @@ namespace Hoehoe
                 do
                 {
                     _curList.SelectedIndices.Clear();
-                } while (_curList.SelectedIndices.Count > 0);
+                } 
+                while (_curList.SelectedIndices.Count > 0);
+                
                 if (_statuses.Tabs[favTabName].AllCount > 0)
                 {
                     if (_statuses.Tabs[favTabName].AllCount - 1 > fidx && fidx > -1)
@@ -3685,6 +3706,7 @@ namespace Hoehoe
                     {
                         _curList.SelectedIndices.Add(_statuses.Tabs[favTabName].AllCount - 1);
                     }
+
                     if (_curList.SelectedIndices.Count > 0)
                     {
                         _curList.EnsureVisible(_curList.SelectedIndices[0]);
@@ -3713,6 +3735,7 @@ namespace Hoehoe
             {
                 _lastTime.Add(wkType, new DateTime());
             }
+
             double period = DateTime.Now.Subtract(_lastTime[wkType]).TotalSeconds;
             if (period > 1 || period < -1)
             {
@@ -4598,34 +4621,34 @@ namespace Hoehoe
                     PlaySoundMenuItem.Checked = SettingDialog.PlaySound;
                     this.PlaySoundFileMenuItem.Checked = SettingDialog.PlaySound;
                     _fntUnread = SettingDialog.FontUnread;
-                    _clUnread = SettingDialog.ColorUnread;
+                    clrUnread = SettingDialog.ColorUnread;
                     _fntReaded = SettingDialog.FontReaded;
-                    _clReaded = SettingDialog.ColorReaded;
-                    _clFav = SettingDialog.ColorFav;
-                    _clOWL = SettingDialog.ColorOWL;
-                    _clRetweet = SettingDialog.ColorRetweet;
+                    clrRead = SettingDialog.ColorReaded;
+                    clrFav = SettingDialog.ColorFav;
+                    clrOWL = SettingDialog.ColorOWL;
+                    clrRetweet = SettingDialog.ColorRetweet;
                     _fntDetail = SettingDialog.FontDetail;
-                    _clDetail = SettingDialog.ColorDetail;
-                    _clDetailLink = SettingDialog.ColorDetailLink;
-                    _clDetailBackcolor = SettingDialog.ColorDetailBackcolor;
-                    _clSelf = SettingDialog.ColorSelf;
-                    _clAtSelf = SettingDialog.ColorAtSelf;
-                    _clTarget = SettingDialog.ColorTarget;
-                    _clAtTarget = SettingDialog.ColorAtTarget;
-                    _clAtFromTarget = SettingDialog.ColorAtFromTarget;
-                    _clAtTo = SettingDialog.ColorAtTo;
-                    _clListBackcolor = SettingDialog.ColorListBackcolor;
-                    _clInputBackcolor = SettingDialog.ColorInputBackcolor;
-                    _clInputFont = SettingDialog.ColorInputFont;
+                    clrDetail = SettingDialog.ColorDetail;
+                    clrDetailLink = SettingDialog.ColorDetailLink;
+                    clrDetailBackcolor = SettingDialog.ColorDetailBackcolor;
+                    clrSelf = SettingDialog.ColorSelf;
+                    clrAtSelf = SettingDialog.ColorAtSelf;
+                    clrTarget = SettingDialog.ColorTarget;
+                    clrAtTarget = SettingDialog.ColorAtTarget;
+                    clrAtFromTarget = SettingDialog.ColorAtFromTarget;
+                    clrAtTo = SettingDialog.ColorAtTo;
+                    clrListBackcolor = SettingDialog.ColorListBackcolor;
+                    clrInputBackcolor = SettingDialog.ColorInputBackcolor;
+                    clrInputForecolor = SettingDialog.ColorInputFont;
                     _fntInputFont = SettingDialog.FontInputFont;
                     try
                     {
                         if (StatusText.Focused)
                         {
-                            StatusText.BackColor = _clInputBackcolor;
+                            StatusText.BackColor = clrInputBackcolor;
                         }
                         StatusText.Font = _fntInputFont;
-                        StatusText.ForeColor = _clInputFont;
+                        StatusText.ForeColor = clrInputForecolor;
                     }
                     catch (Exception ex)
                     {
@@ -4637,11 +4660,11 @@ namespace Hoehoe
                     _brsForeColorFav.Dispose();
                     _brsForeColorOWL.Dispose();
                     _brsForeColorRetweet.Dispose();
-                    _brsForeColorUnread = new SolidBrush(_clUnread);
-                    _brsForeColorReaded = new SolidBrush(_clReaded);
-                    _brsForeColorFav = new SolidBrush(_clFav);
-                    _brsForeColorOWL = new SolidBrush(_clOWL);
-                    _brsForeColorRetweet = new SolidBrush(_clRetweet);
+                    _brsForeColorUnread = new SolidBrush(clrUnread);
+                    _brsForeColorReaded = new SolidBrush(clrRead);
+                    _brsForeColorFav = new SolidBrush(clrFav);
+                    _brsForeColorOWL = new SolidBrush(clrOWL);
+                    _brsForeColorRetweet = new SolidBrush(clrRetweet);
                     _brsBackColorMine.Dispose();
                     _brsBackColorAt.Dispose();
                     _brsBackColorYou.Dispose();
@@ -4649,13 +4672,13 @@ namespace Hoehoe
                     _brsBackColorAtFromTarget.Dispose();
                     _brsBackColorAtTo.Dispose();
                     _brsBackColorNone.Dispose();
-                    _brsBackColorMine = new SolidBrush(_clSelf);
-                    _brsBackColorAt = new SolidBrush(_clAtSelf);
-                    _brsBackColorYou = new SolidBrush(_clTarget);
-                    _brsBackColorAtYou = new SolidBrush(_clAtTarget);
-                    _brsBackColorAtFromTarget = new SolidBrush(_clAtFromTarget);
-                    _brsBackColorAtTo = new SolidBrush(_clAtTo);
-                    _brsBackColorNone = new SolidBrush(_clListBackcolor);
+                    _brsBackColorMine = new SolidBrush(clrSelf);
+                    _brsBackColorAt = new SolidBrush(clrAtSelf);
+                    _brsBackColorYou = new SolidBrush(clrTarget);
+                    _brsBackColorAtYou = new SolidBrush(clrAtTarget);
+                    _brsBackColorAtFromTarget = new SolidBrush(clrAtFromTarget);
+                    _brsBackColorAtTo = new SolidBrush(clrAtTo);
+                    _brsBackColorNone = new SolidBrush(clrListBackcolor);
                     try
                     {
                         if (SettingDialog.IsMonospace)
@@ -4668,7 +4691,7 @@ namespace Hoehoe
                             _detailHtmlFormatHeader = DetailHtmlFormat1;
                             _detailHtmlFormatFooter = DetailHtmlFormat7;
                         }
-                        _detailHtmlFormatHeader += _fntDetail.Name + DetailHtmlFormat2 + _fntDetail.Size.ToString() + DetailHtmlFormat3 + _clDetail.R.ToString() + "," + _clDetail.G.ToString() + "," + _clDetail.B.ToString() + DetailHtmlFormat4 + _clDetailLink.R.ToString() + "," + _clDetailLink.G.ToString() + "," + _clDetailLink.B.ToString() + DetailHtmlFormat5 + _clDetailBackcolor.R.ToString() + "," + _clDetailBackcolor.G.ToString() + "," + _clDetailBackcolor.B.ToString();
+                        _detailHtmlFormatHeader += _fntDetail.Name + DetailHtmlFormat2 + _fntDetail.Size.ToString() + DetailHtmlFormat3 + clrDetail.R.ToString() + "," + clrDetail.G.ToString() + "," + clrDetail.B.ToString() + DetailHtmlFormat4 + clrDetailLink.R.ToString() + "," + clrDetailLink.G.ToString() + "," + clrDetailLink.B.ToString() + DetailHtmlFormat5 + clrDetailBackcolor.R.ToString() + "," + clrDetailBackcolor.G.ToString() + "," + clrDetailBackcolor.B.ToString();
                         if (SettingDialog.IsMonospace)
                         {
                             _detailHtmlFormatHeader += DetailHtmlFormatMono6;
@@ -4713,7 +4736,7 @@ namespace Hoehoe
                             if (tb.Tag != null && tb.Controls.Count > 0)
                             {
                                 ((DetailsListView)tb.Tag).Font = _fntReaded;
-                                ((DetailsListView)tb.Tag).BackColor = _clListBackcolor;
+                                ((DetailsListView)tb.Tag).BackColor = clrListBackcolor;
                             }
                         }
                     }
@@ -4749,7 +4772,7 @@ namespace Hoehoe
                     _hookGlobalHotkey.UnregisterAllOriginalHotkey();
                     if (SettingDialog.HotkeyEnabled)
                     {
-                        // /グローバルホットキーの登録。設定で変更可能にするかも
+                        ///グローバルホットキーの登録。設定で変更可能にするかも
                         HookGlobalHotkey.ModKeys modKey = HookGlobalHotkey.ModKeys.None;
                         if ((SettingDialog.HotkeyMod & Keys.Alt) == Keys.Alt)
                         {
@@ -5003,7 +5026,7 @@ namespace Hoehoe
 
             int cnt = ListTab.TabPages.Count;
 
-            // /ToDo:Create and set controls follow tabtypes
+            ///ToDo:Create and set controls follow tabtypes
 
             this.SplitContainer1.Panel1.SuspendLayout();
             this.SplitContainer1.Panel2.SuspendLayout();
@@ -5013,7 +5036,7 @@ namespace Hoehoe
 
             tabPage.SuspendLayout();
 
-            // / UserTimeline関連
+            /// UserTimeline関連
             Label label = null;
             if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
             {
@@ -5029,7 +5052,7 @@ namespace Hoehoe
                 tabPage.Controls.Add(label);
             }
 
-            // / 検索関連の準備
+            /// 検索関連の準備
             Panel pnl = null;
             if (tabType == TabUsageType.PublicSearch)
             {
@@ -5157,7 +5180,7 @@ namespace Hoehoe
             listCustom.OwnerDraw = true;
             listCustom.VirtualMode = true;
             listCustom.Font = _fntReaded;
-            listCustom.BackColor = _clListBackcolor;
+            listCustom.BackColor = clrListBackcolor;
             listCustom.GridLines = SettingDialog.ShowGrid;
             listCustom.AllowDrop = true;
             listCustom.SelectedIndexChanged += MyList_SelectedIndexChanged;
@@ -5559,7 +5582,7 @@ namespace Hoehoe
                     SetStatusLabelUrl();
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
             }
         }
@@ -5694,7 +5717,7 @@ namespace Hoehoe
             }
             else
             {
-                StatusText.ForeColor = _clInputFont;
+                StatusText.ForeColor = clrInputForecolor;
             }
             if (String.IsNullOrEmpty(StatusText.Text))
             {
@@ -5887,27 +5910,27 @@ namespace Hoehoe
             {
                 SolidBrush brs2 = null;
                 var cl = e.Item.BackColor;
-                if (cl == _clSelf)
+                if (cl == clrSelf)
                 {
                     brs2 = _brsBackColorMine;
                 }
-                else if (cl == _clAtSelf)
+                else if (cl == clrAtSelf)
                 {
                     brs2 = _brsBackColorAt;
                 }
-                else if (cl == _clTarget)
+                else if (cl == clrTarget)
                 {
                     brs2 = _brsBackColorYou;
                 }
-                else if (cl == _clAtTarget)
+                else if (cl == clrAtTarget)
                 {
                     brs2 = _brsBackColorAtYou;
                 }
-                else if (cl == _clAtFromTarget)
+                else if (cl == clrAtFromTarget)
                 {
                     brs2 = _brsBackColorAtFromTarget;
                 }
-                else if (cl == _clAtTo)
+                else if (cl == clrAtTo)
                 {
                     brs2 = _brsBackColorAtTo;
                 }
@@ -5978,23 +6001,23 @@ namespace Hoehoe
                     SolidBrush brs = null;
                     bool flg = false;
                     var cl = e.Item.ForeColor;
-                    if (cl == _clUnread)
+                    if (cl == clrUnread)
                     {
                         brs = _brsForeColorUnread;
                     }
-                    else if (cl == _clReaded)
+                    else if (cl == clrRead)
                     {
                         brs = _brsForeColorReaded;
                     }
-                    else if (cl == _clFav)
+                    else if (cl == clrFav)
                     {
                         brs = _brsForeColorFav;
                     }
-                    else if (cl == _clOWL)
+                    else if (cl == clrOWL)
                     {
                         brs = _brsForeColorOWL;
                     }
-                    else if (cl == _clRetweet)
+                    else if (cl == clrRetweet)
                     {
                         brs = _brsForeColorRetweet;
                     }
@@ -6734,15 +6757,15 @@ namespace Hoehoe
             DateTimeLabel.Text = _curPost.CreatedAt.ToString();
             if (_curPost.IsOwl && (SettingDialog.OneWayLove || _statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage))
             {
-                NameLabel.ForeColor = _clOWL;
+                NameLabel.ForeColor = clrOWL;
             }
             if (_curPost.RetweetedId > 0)
             {
-                NameLabel.ForeColor = _clRetweet;
+                NameLabel.ForeColor = clrRetweet;
             }
             if (_curPost.IsFav)
             {
-                NameLabel.ForeColor = _clFav;
+                NameLabel.ForeColor = clrFav;
             }
 
             if (DumpPostClassToolStripMenuItem.Checked)
@@ -8289,7 +8312,7 @@ namespace Hoehoe
                             {
                                 ListTab.SelectTab(chainHead.OriginalTab);
                             }
-                            catch (Exception )
+                            catch (Exception)
                             {
                                 _replyChains = null;
                             }
@@ -8405,13 +8428,13 @@ namespace Hoehoe
         {
             //  フォーカスの戻り先を StatusText に設定
             this.Tag = StatusText;
-            StatusText.BackColor = _clInputBackcolor;
+            StatusText.BackColor = clrInputBackcolor;
         }
 
         public Color InputBackColor
         {
-            get { return _clInputBackcolor; }
-            set { _clInputBackcolor = value; }
+            get { return clrInputBackcolor; }
+            set { clrInputBackcolor = value; }
         }
 
         private void StatusText_Leave(object sender, EventArgs e)
@@ -8656,25 +8679,25 @@ namespace Hoehoe
                 _cfgLocal.StatusText = SettingDialog.Status;
 
                 _cfgLocal.FontUnread = _fntUnread;
-                _cfgLocal.ColorUnread = _clUnread;
+                _cfgLocal.ColorUnread = clrUnread;
                 _cfgLocal.FontRead = _fntReaded;
-                _cfgLocal.ColorRead = _clReaded;
+                _cfgLocal.ColorRead = clrRead;
                 _cfgLocal.FontDetail = _fntDetail;
-                _cfgLocal.ColorDetail = _clDetail;
-                _cfgLocal.ColorDetailBackcolor = _clDetailBackcolor;
-                _cfgLocal.ColorDetailLink = _clDetailLink;
-                _cfgLocal.ColorFav = _clFav;
-                _cfgLocal.ColorOWL = _clOWL;
-                _cfgLocal.ColorRetweet = _clRetweet;
-                _cfgLocal.ColorSelf = _clSelf;
-                _cfgLocal.ColorAtSelf = _clAtSelf;
-                _cfgLocal.ColorTarget = _clTarget;
-                _cfgLocal.ColorAtTarget = _clAtTarget;
-                _cfgLocal.ColorAtFromTarget = _clAtFromTarget;
-                _cfgLocal.ColorAtTo = _clAtTo;
-                _cfgLocal.ColorListBackcolor = _clListBackcolor;
-                _cfgLocal.ColorInputBackcolor = _clInputBackcolor;
-                _cfgLocal.ColorInputFont = _clInputFont;
+                _cfgLocal.ColorDetail = clrDetail;
+                _cfgLocal.ColorDetailBackcolor = clrDetailBackcolor;
+                _cfgLocal.ColorDetailLink = clrDetailLink;
+                _cfgLocal.ColorFav = clrFav;
+                _cfgLocal.ColorOWL = clrOWL;
+                _cfgLocal.ColorRetweet = clrRetweet;
+                _cfgLocal.ColorSelf = clrSelf;
+                _cfgLocal.ColorAtSelf = clrAtSelf;
+                _cfgLocal.ColorTarget = clrTarget;
+                _cfgLocal.ColorAtTarget = clrAtTarget;
+                _cfgLocal.ColorAtFromTarget = clrAtFromTarget;
+                _cfgLocal.ColorAtTo = clrAtTo;
+                _cfgLocal.ColorListBackcolor = clrListBackcolor;
+                _cfgLocal.ColorInputBackcolor = clrInputBackcolor;
+                _cfgLocal.ColorInputFont = clrInputForecolor;
                 _cfgLocal.FontInputFont = _fntInputFont;
 
                 _cfgLocal.BrowserPath = SettingDialog.BrowserPath;
@@ -11580,10 +11603,10 @@ namespace Hoehoe
             }
             else
             {
-                if (_bwFollower == null)
+                if (followerFetchWorker == null)
                 {
-                    _bwFollower = new BackgroundWorker();
-                    bw = _bwFollower;
+                    followerFetchWorker = new BackgroundWorker();
+                    bw = followerFetchWorker;
                     bw.WorkerReportsProgress = true;
                     bw.WorkerSupportsCancellation = true;
                     bw.DoWork += GetTimelineWorker_DoWork;
@@ -11592,9 +11615,9 @@ namespace Hoehoe
                 }
                 else
                 {
-                    if (_bwFollower.IsBusy == false)
+                    if (followerFetchWorker.IsBusy == false)
                     {
-                        bw = _bwFollower;
+                        bw = followerFetchWorker;
                     }
                 }
             }
@@ -11721,7 +11744,7 @@ namespace Hoehoe
                     SettingStripMenuItem_Click(null, null);
                 }
 
-                // 
+                //
             }
             _initial = false;
 
@@ -13388,14 +13411,14 @@ namespace Hoehoe
                         break;
                 }
             }
-            catch (FileNotFoundException )
+            catch (FileNotFoundException)
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
                 ImageSelectedPicture.Tag = UploadFileType.Invalid;
                 ImagefilePathText.Text = "";
                 MessageBox.Show("File not found.");
             }
-            catch (Exception )
+            catch (Exception)
             {
                 ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
                 ImageSelectedPicture.Tag = UploadFileType.Invalid;
@@ -13496,7 +13519,7 @@ namespace Hoehoe
                         ImageSelectedPicture.Tag = UploadFileType.Invalid;
                     }
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                 }
                 _modifySettingCommon = true;
