@@ -23,26 +23,28 @@
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
-
 namespace Hoehoe
 {
+    using System.Windows.Forms;
+
     public partial class MessageForm
     {
-        public new System.Windows.Forms.DialogResult ShowDialog(string message)
-        {
-            Label1.Text = message;
-
-            // ラベルコントロールをセンタリング
-            Label1.Left = (this.ClientSize.Width - Label1.Size.Width) / 2;
-
-            Label1.Refresh();
-            Label1.Visible = true;
-            return base.ShowDialog();
-        }
-
+        #region constructor
         public MessageForm()
         {
             InitializeComponent();
         }
+        #endregion
+
+        #region public methods
+        public DialogResult ShowDialog(string message)
+        {
+            Label1.Text = message;
+            Label1.Left = (this.ClientSize.Width - Label1.Size.Width) / 2; // ラベルコントロールをセンタリング
+            Label1.Refresh();
+            Label1.Visible = true;
+            return this.ShowDialog();
+        }
+        #endregion
     }
 }
