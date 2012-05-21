@@ -24,16 +24,27 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.ComponentModel;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.ComponentModel;
+    using System.Windows.Forms;
+
     public partial class ListAvailable
     {
-        public ListElement SelectedList { get; private set; }
+        #region constructor
+        public ListAvailable()
+        {
+            this.SelectedList = null;
+            InitializeComponent();
+        }
+        #endregion
 
+        #region properties
+        public ListElement SelectedList { get; private set; }
+        #endregion
+
+        #region event handler
         private void OkButton_Click(object sender, EventArgs e)
         {
             if (this.ListsList.SelectedIndex > -1)
@@ -57,6 +68,7 @@ namespace Hoehoe
             {
                 this.RefreshLists();
             }
+
             this.ListsList.Items.AddRange(TabInformations.GetInstance().SubscribableLists.ToArray());
             if (this.ListsList.Items.Count > 0)
             {
@@ -64,7 +76,7 @@ namespace Hoehoe
             }
             else
             {
-                clearListInfo();
+                this.ClearListInfo();
             }
         }
 
@@ -72,32 +84,12 @@ namespace Hoehoe
         {
             if (this.ListsList.SelectedIndex > -1)
             {
-                setListInfo((ListElement)this.ListsList.SelectedItem);
+                this.SetListInfo((ListElement)this.ListsList.SelectedItem);
             }
             else
             {
-                clearListInfo();
+                this.ClearListInfo();
             }
-        }
-
-        private void clearListInfo()
-        {
-            this.UsernameLabel.Text = "";
-            this.NameLabel.Text = "";
-            this.StatusLabel.Text = "";
-            this.MemberCountLabel.Text = "0";
-            this.SubscriberCountLabel.Text = "0";
-            this.DescriptionText.Text = "";
-        }
-
-        private void setListInfo(ListElement lst)
-        {
-            this.UsernameLabel.Text = String.Format("{0} / {1}", lst.Username, lst.Nickname);
-            this.NameLabel.Text = lst.Name;
-            this.StatusLabel.Text = lst.IsPublic ? "Public" : "Private";
-            this.MemberCountLabel.Text = lst.MemberCount.ToString("#,##0");
-            this.SubscriberCountLabel.Text = lst.SubscriberCount.ToString("#,##0");
-            this.DescriptionText.Text = lst.Description;
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
@@ -108,19 +100,6 @@ namespace Hoehoe
             if (this.ListsList.Items.Count > 0)
             {
                 this.ListsList.SelectedIndex = 0;
-            }
-        }
-
-        private void RefreshLists()
-        {
-            using (FormInfo dlg = new FormInfo(this, "Getting Lists...", RefreshLists_DoWork))
-            {
-                dlg.ShowDialog();
-                if (!String.IsNullOrEmpty((string)dlg.Result))
-                {
-                    MessageBox.Show("Failed to get lists. (" + (string)dlg.Result + ")");
-                    return;
-                }
             }
         }
 
@@ -135,11 +114,41 @@ namespace Hoehoe
                 return;
             }
         }
+        #endregion
 
-        public ListAvailable()
+        #region private methods
+        private void ClearListInfo()
         {
-            SelectedList = null;
-            InitializeComponent();
+            this.UsernameLabel.Text = string.Empty;
+            this.NameLabel.Text = string.Empty;
+            this.StatusLabel.Text = string.Empty;
+            this.MemberCountLabel.Text = "0";
+            this.SubscriberCountLabel.Text = "0";
+            this.DescriptionText.Text = string.Empty;
         }
+
+        private void SetListInfo(ListElement lst)
+        {
+            this.UsernameLabel.Text = string.Format("{0} / {1}", lst.Username, lst.Nickname);
+            this.NameLabel.Text = lst.Name;
+            this.StatusLabel.Text = lst.IsPublic ? "Public" : "Private";
+            this.MemberCountLabel.Text = lst.MemberCount.ToString("#,##0");
+            this.SubscriberCountLabel.Text = lst.SubscriberCount.ToString("#,##0");
+            this.DescriptionText.Text = lst.Description;
+        }
+
+        private void RefreshLists()
+        {
+            using (FormInfo dlg = new FormInfo(this, "Getting Lists...", this.RefreshLists_DoWork))
+            {
+                dlg.ShowDialog();
+                if (!string.IsNullOrEmpty((string)dlg.Result))
+                {
+                    MessageBox.Show("Failed to get lists. (" + (string)dlg.Result + ")");
+                    return;
+                }
+            }
+        }
+        #endregion
     }
 }
