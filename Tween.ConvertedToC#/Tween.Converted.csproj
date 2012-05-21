@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="ApiInformation.cs" />
     <Compile Include="CryptoUtils.cs" />
+    <Compile Include="DataModels\D.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Forms\AppendSettingDialog.cs">
       <SubType>Form</SubType>
@@ -141,7 +142,7 @@
     <Compile Include="Connection\TwitPic.cs" />
     <Compile Include="Connection\TwitterPhoto.cs" />
     <Compile Include="Connection\yfrog.cs" />
-    <Compile Include="DataModel.cs" />
+    <Compile Include="DataModels\DataModel.cs" />
     <Compile Include="Forms\DetailsListView.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -34,6 +34,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Hoehoe.DataModels;
 
 namespace Hoehoe
 {
@@ -2772,7 +2773,7 @@ namespace Hoehoe
 
                 try
                 {
-                    res = TwitterDataModel.CreateDataFromJson<PicPlzDataModel.ResultData>(src);
+                    res = D.CreateDataFromJson<PicPlzDataModel.ResultData>(src);
                 }
                 catch (Exception)
                 {

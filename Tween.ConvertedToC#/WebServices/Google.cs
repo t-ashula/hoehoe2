@@ -30,6 +30,7 @@ using System.Net;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Web;
+using Hoehoe.DataModels;
 
 namespace Hoehoe
 {
@@ -227,7 +228,7 @@ namespace Hoehoe
 
                 try
                 {
-                    res = TwitterDataModel.CreateDataFromJson<TranslateResponse>(content);
+                    res = D.CreateDataFromJson<TranslateResponse>(content);
                 }
                 catch (Exception)
                 {
@@ -263,7 +264,7 @@ namespace Hoehoe
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(LanguageDetectResponse));
                 try
                 {
-                    LanguageDetectResponse res = TwitterDataModel.CreateDataFromJson<LanguageDetectResponse>(content);
+                    LanguageDetectResponse res = D.CreateDataFromJson<LanguageDetectResponse>(content);
                     return res.ResponseData.Language;
                 }
                 catch (Exception)

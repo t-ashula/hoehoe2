@@ -41,6 +41,7 @@ using System.Web;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
+using Hoehoe.DataModels;
 
 namespace Hoehoe
 {
@@ -263,7 +264,7 @@ namespace Hoehoe
                 TwitterDataModel.User user = null;
                 try
                 {
-                    user = TwitterDataModel.CreateDataFromJson<TwitterDataModel.User>(content);
+                    user = D.CreateDataFromJson<TwitterDataModel.User>(content);
                 }
                 catch (SerializationException)
                 {
@@ -497,7 +498,7 @@ namespace Hoehoe
                     TwitterDataModel.Status status = null;
                     try
                     {
-                        status = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Status>(content);
+                        status = D.CreateDataFromJson<TwitterDataModel.Status>(content);
                     }
                     catch (SerializationException ex)
                     {
@@ -585,7 +586,7 @@ namespace Hoehoe
                     TwitterDataModel.Status status = null;
                     try
                     {
-                        status = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Status>(content);
+                        status = D.CreateDataFromJson<TwitterDataModel.Status>(content);
                     }
                     catch (SerializationException ex)
                     {
@@ -680,7 +681,7 @@ namespace Hoehoe
                     TwitterDataModel.Directmessage status = null;
                     try
                     {
-                        status = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Directmessage>(content);
+                        status = D.CreateDataFromJson<TwitterDataModel.Directmessage>(content);
                     }
                     catch (SerializationException ex)
                     {
@@ -815,7 +816,7 @@ namespace Hoehoe
             TwitterDataModel.Status status = null;
             try
             {
-                status = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Status>(content);
+                status = D.CreateDataFromJson<TwitterDataModel.Status>(content);
             }
             catch (SerializationException ex)
             {
@@ -1132,7 +1133,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     try
                     {
-                        var relation = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Relationship>(content);
+                        var relation = D.CreateDataFromJson<TwitterDataModel.Relationship>(content);
                         isFollowing = relation.Relationship_.Source.Following;
                         isFollowed = relation.Relationship_.Source.FollowedBy;
                         return "";
@@ -1187,7 +1188,7 @@ namespace Hoehoe
                     Twitter.AccountState = AccountState.Valid;
                     try
                     {
-                        user = TwitterDataModel.CreateDataFromJson<TwitterDataModel.User>(content);
+                        user = D.CreateDataFromJson<TwitterDataModel.User>(content);
                     }
                     catch (SerializationException ex)
                     {
@@ -1242,7 +1243,7 @@ namespace Hoehoe
                     case HttpStatusCode.OK:
                         try
                         {
-                            Int64[] ids = TwitterDataModel.CreateDataFromJson<long[]>(content);
+                            Int64[] ids = D.CreateDataFromJson<long[]>(content);
                             retweetedCount += ids.Length;
                             if (ids.Length < 100)
                             {
@@ -1337,7 +1338,7 @@ namespace Hoehoe
                     TwitterDataModel.Status status = null;
                     try
                     {
-                        status = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Status>(content);
+                        status = D.CreateDataFromJson<TwitterDataModel.Status>(content);
                     }
                     catch (SerializationException ex)
                     {
@@ -1814,7 +1815,7 @@ namespace Hoehoe
             List<TwitterDataModel.Status> items = null;
             try
             {
-                items = TwitterDataModel.CreateDataFromJson<List<TwitterDataModel.Status>>(content);
+                items = D.CreateDataFromJson<List<TwitterDataModel.Status>>(content);
             }
             catch (SerializationException ex)
             {
@@ -1895,7 +1896,7 @@ namespace Hoehoe
             TwitterDataModel.Status status = null;
             try
             {
-                status = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Status>(content);
+                status = D.CreateDataFromJson<TwitterDataModel.Status>(content);
             }
             catch (SerializationException ex)
             {
@@ -2055,7 +2056,7 @@ namespace Hoehoe
             List<TwitterDataModel.Status> items = null;
             try
             {
-                items = TwitterDataModel.CreateDataFromJson<List<TwitterDataModel.Status>>(content);
+                items = D.CreateDataFromJson<List<TwitterDataModel.Status>>(content);
             }
             catch (SerializationException ex)
             {
@@ -2127,7 +2128,7 @@ namespace Hoehoe
             TwitterDataModel.SearchResult items = null;
             try
             {
-                items = TwitterDataModel.CreateDataFromJson<TwitterDataModel.SearchResult>(content);
+                items = D.CreateDataFromJson<TwitterDataModel.SearchResult>(content);
             }
             catch (SerializationException ex)
             {
@@ -2360,7 +2361,7 @@ namespace Hoehoe
             List<TwitterDataModel.RelatedResult> items = null;
             try
             {
-                items = TwitterDataModel.CreateDataFromJson<List<TwitterDataModel.RelatedResult>>(content);
+                items = D.CreateDataFromJson<List<TwitterDataModel.RelatedResult>>(content);
             }
             catch (SerializationException ex)
             {
@@ -2700,7 +2701,7 @@ namespace Hoehoe
             {
                 if (gType == WorkerType.UserStream)
                 {
-                    List<TwitterDataModel.DirectmessageEvent> itm = TwitterDataModel.CreateDataFromJson<List<TwitterDataModel.DirectmessageEvent>>(content);
+                    List<TwitterDataModel.DirectmessageEvent> itm = D.CreateDataFromJson<List<TwitterDataModel.DirectmessageEvent>>(content);
                     item = new List<TwitterDataModel.Directmessage>();
                     foreach (TwitterDataModel.DirectmessageEvent dat in itm)
                     {
@@ -2709,7 +2710,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    item = TwitterDataModel.CreateDataFromJson<List<TwitterDataModel.Directmessage>>(content);
+                    item = D.CreateDataFromJson<List<TwitterDataModel.Directmessage>>(content);
                 }
             }
             catch (SerializationException ex)
@@ -2955,7 +2956,7 @@ namespace Hoehoe
             List<TwitterDataModel.Status> item = null;
             try
             {
-                item = TwitterDataModel.CreateDataFromJson<List<TwitterDataModel.Status>>(content);
+                item = D.CreateDataFromJson<List<TwitterDataModel.Status>>(content);
             }
             catch (SerializationException ex)
             {
@@ -3166,7 +3167,7 @@ namespace Hoehoe
 
             try
             {
-                var followers = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Ids>(content);
+                var followers = D.CreateDataFromJson<TwitterDataModel.Ids>(content);
                 _followerIds.AddRange(followers.Id);
                 cursor = followers.NextCursor;
                 return "";
@@ -3243,7 +3244,7 @@ namespace Hoehoe
 
             try
             {
-                var ids = TwitterDataModel.CreateDataFromJson<long[]>(content);
+                var ids = D.CreateDataFromJson<long[]>(content);
                 noRTIds.AddRange(ids);
                 cursor = 0;
                 //0より小さければ何でも良い。
@@ -3295,7 +3296,7 @@ namespace Hoehoe
 
             try
             {
-                AppendSettingDialog.Instance.TwitterConfiguration = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Configuration>(content);
+                AppendSettingDialog.Instance.TwitterConfiguration = D.CreateDataFromJson<TwitterDataModel.Configuration>(content);
                 return "";
             }
             catch (SerializationException ex)
@@ -3348,7 +3349,7 @@ namespace Hoehoe
 
                 try
                 {
-                    var lst = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Lists>(content);
+                    var lst = D.CreateDataFromJson<TwitterDataModel.Lists>(content);
                     lists.AddRange(from le in lst.Lists_ select new ListElement(le, this));
                     cursor = lst.NextCursor;
                 }
@@ -3393,7 +3394,7 @@ namespace Hoehoe
 
                 try
                 {
-                    var lst = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Lists>(content);
+                    var lst = D.CreateDataFromJson<TwitterDataModel.Lists>(content);
                     lists.AddRange(from le in lst.Lists_ select new ListElement(le, this));
                     cursor = lst.NextCursor;
                 }
@@ -3474,7 +3475,7 @@ namespace Hoehoe
 
             try
             {
-                var le = TwitterDataModel.CreateDataFromJson<TwitterDataModel.ListElementData>(content);
+                var le = D.CreateDataFromJson<TwitterDataModel.ListElementData>(content);
                 ListElement newList = new ListElement(le, this);
                 list.Description = newList.Description;
                 list.Id = newList.Id;
@@ -3534,7 +3535,7 @@ namespace Hoehoe
 
             try
             {
-                var users = TwitterDataModel.CreateDataFromJson<TwitterDataModel.Users>(content);
+                var users = D.CreateDataFromJson<TwitterDataModel.Users>(content);
                 Array.ForEach<TwitterDataModel.User>(users.users, new Action<TwitterDataModel.User>(u => { lists.Add(new UserInfo(u)); }));
                 cursor = users.NextCursor;
                 return "";
@@ -3585,7 +3586,7 @@ namespace Hoehoe
 
             try
             {
-                var le = TwitterDataModel.CreateDataFromJson<TwitterDataModel.ListElementData>(content);
+                var le = D.CreateDataFromJson<TwitterDataModel.ListElementData>(content);
                 TabInformations.GetInstance().SubscribableLists.Add(new ListElement(le, this));
                 return "";
             }
@@ -3640,7 +3641,7 @@ namespace Hoehoe
 
             try
             {
-                var u = TwitterDataModel.CreateDataFromJson<TwitterDataModel.User>(content);
+                var u = D.CreateDataFromJson<TwitterDataModel.User>(content);
                 value = true;
                 return "";
             }
@@ -4013,7 +4014,7 @@ namespace Hoehoe
 
             try
             {
-                var limit = TwitterDataModel.CreateDataFromJson<TwitterDataModel.RateLimitStatus>(content);
+                var limit = D.CreateDataFromJson<TwitterDataModel.RateLimitStatus>(content);
                 ApiInformationChangedEventArgs arg = new ApiInformationChangedEventArgs();
                 arg.ApiInfo.MaxCount = limit.HourlyLimit;
                 arg.ApiInfo.RemainCount = limit.RemainingHits;
@@ -4077,7 +4078,7 @@ namespace Hoehoe
 
             try
             {
-                var ids = TwitterDataModel.CreateDataFromJson<List<long>>(content);
+                var ids = D.CreateDataFromJson<List<long>>(content);
                 if (ids.Contains(this.UserId))
                 {
                     ids.Remove(this.UserId);
@@ -4351,7 +4352,7 @@ namespace Hoehoe
             TwitterDataModel.EventData eventData = null;
             try
             {
-                eventData = TwitterDataModel.CreateDataFromJson<TwitterDataModel.EventData>(content);
+                eventData = D.CreateDataFromJson<TwitterDataModel.EventData>(content);
             }
             catch (SerializationException ex)
             {

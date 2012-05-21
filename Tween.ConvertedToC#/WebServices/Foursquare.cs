@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using Hoehoe.DataModels;
 
 namespace Hoehoe
 {
@@ -82,7 +83,7 @@ namespace Hoehoe
                     FourSquareDataModel.FourSquareData curData = null;
                     try
                     {
-                        curData = TwitterDataModel.CreateDataFromJson<FourSquareDataModel.FourSquareData>(content);
+                        curData = D.CreateDataFromJson<FourSquareDataModel.FourSquareData>(content);
                     }
                     catch (Exception ex)
                     {
