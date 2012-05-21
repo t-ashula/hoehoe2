@@ -24,45 +24,32 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Windows.Forms;
+
     public partial class OpenURL
     {
-        private string _selUrl;
+        #region private
+        private string selectedUrl;
+        #endregion
 
-        private void OkButton_Click(object sender, EventArgs e)
+        #region constructor
+        public OpenURL()
         {
-            SelectUrlOrCancelDialog();
+            InitializeComponent();
         }
+        #endregion
 
-        private void SelectUrlOrCancelDialog()
+        #region properties
+        public string SelectedUrl
         {
-            if (UrlList.SelectedItems.Count == 0)
-            {
-                CloseWithCancel();
-            }
-            else
-            {
-                _selUrl = UrlList.SelectedItem.ToString();
-                this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                this.Close();
-            }
+            get { return UrlList.SelectedItems.Count == 1 ? this.selectedUrl : string.Empty; }
         }
+        #endregion
 
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            CloseWithCancel();
-        }
-
-        private void CloseWithCancel()
-        {
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Close();
-        }
-
+        #region public methods
         public void ClearUrl()
         {
             UrlList.Items.Clear();
@@ -72,10 +59,17 @@ namespace Hoehoe
         {
             UrlList.Items.Add(openUrlItem);
         }
+        #endregion
 
-        public string SelectedUrl
+        #region event handler
+        private void OkButton_Click(object sender, EventArgs e)
         {
-            get { return UrlList.SelectedItems.Count == 1 ? _selUrl : ""; }
+            this.SelectUrlOrCancelDialog();
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            this.CloseWithCancel();
         }
 
         private void OpenURL_Shown(object sender, EventArgs e)
@@ -103,7 +97,8 @@ namespace Hoehoe
             {
                 return;
             }
-            SelectUrlOrCancelDialog();
+
+            this.SelectUrlOrCancelDialog();
         }
 
         private void UrlList_KeyDown(object sender, KeyEventArgs e)
@@ -113,21 +108,41 @@ namespace Hoehoe
                 e.SuppressKeyPress = true;
                 UrlList.SelectedIndex += 1;
             }
+
             if (e.KeyCode == Keys.K && UrlList.SelectedIndex > 0)
             {
                 e.SuppressKeyPress = true;
                 UrlList.SelectedIndex -= 1;
             }
+
             if (e.Control && e.KeyCode == Keys.Oem4)
             {
                 e.SuppressKeyPress = true;
-                CloseWithCancel();
+                this.CloseWithCancel();
+            }
+        }
+        #endregion
+
+        #region private methods
+        private void SelectUrlOrCancelDialog()
+        {
+            if (UrlList.SelectedItems.Count == 0)
+            {
+                this.CloseWithCancel();
+            }
+            else
+            {
+                this.selectedUrl = UrlList.SelectedItem.ToString();
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
         }
 
-        public OpenURL()
+        private void CloseWithCancel()
         {
-            InitializeComponent();
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
         }
+        #endregion
     }
 }
