@@ -24,15 +24,28 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-
 namespace Hoehoe.TweenCustomControl
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Windows.Forms;
+
     public sealed class ToolStripLabelHistory : ToolStripStatusLabel
     {
+        #region private
+        private const int MAXCNT = 20;
+        private LinkedList<LogEntry> logEntries;
+        #endregion
+
+        #region constructor
+        public ToolStripLabelHistory()
+        {
+            this.logEntries = new LinkedList<LogEntry>();
+        }
+        #endregion
+
+        #region enums
         public enum LogLevel
         {
             Lowest = 0,
@@ -44,67 +57,24 @@ namespace Hoehoe.TweenCustomControl
             Fatal = 255,
             Highest = 256
         }
+        #endregion
 
-        public class LogEntry
-        {
-            private readonly LogLevel _logLevel;
-            private readonly DateTime _timestamp;
-            private readonly string _summary;
-            private readonly string _detail;
-
-            public LogLevel LogLevel
-            {
-                get { return _logLevel; }
-            }
-
-            public DateTime Timestamp
-            {
-                get { return _timestamp; }
-            }
-
-            public string Summary
-            {
-                get { return _summary; }
-            }
-
-            public string Detail
-            {
-                get { return _detail; }
-            }
-
-            public LogEntry(LogLevel logLevel, DateTime timestamp, string summary, string detail)
-            {
-                _logLevel = logLevel;
-                _timestamp = timestamp;
-                _summary = summary;
-                _detail = detail;
-            }
-
-            public LogEntry(DateTime timestamp, string summary)
-                : this(LogLevel.Debug, timestamp, summary, summary)
-            {
-            }
-
-            public override string ToString()
-            {
-                return String.Format("{0:T}: {1}", Timestamp, Summary);
-            }
-        }
-
-        private LinkedList<LogEntry> _logs;
-
-        private const int MAXCNT = 20;
-
+        #region properties
         public override string Text
         {
-            get { return base.Text; }
+            get
+            {
+                return base.Text;
+            }
+
             set
             {
-                _logs.AddLast(new LogEntry(DateTime.Now, value));
-                while (_logs.Count > MAXCNT)
+                this.logEntries.AddLast(new LogEntry(DateTime.Now, value));
+                while (this.logEntries.Count > MAXCNT)
                 {
-                    _logs.RemoveFirst();
+                    this.logEntries.RemoveFirst();
                 }
+
                 base.Text = value;
             }
         }
@@ -114,17 +84,45 @@ namespace Hoehoe.TweenCustomControl
             get
             {
                 StringBuilder sb = new StringBuilder();
-                foreach (LogEntry e in _logs)
+                foreach (LogEntry e in this.logEntries)
                 {
                     sb.AppendLine(e.ToString());
                 }
+
                 return sb.ToString();
             }
         }
+        #endregion
 
-        public ToolStripLabelHistory()
+        #region inner class
+        public class LogEntry
         {
-            _logs = new LinkedList<LogEntry>();
+            public LogEntry(LogLevel logLevel, DateTime timestamp, string summary, string detail)
+            {
+                this.LogLevel = logLevel;
+                this.Timestamp = timestamp;
+                this.Summary = summary;
+                this.Detail = detail;
+            }
+
+            public LogEntry(DateTime timestamp, string summary)
+                : this(LogLevel.Debug, timestamp, summary, summary)
+            {
+            }
+
+            public LogLevel LogLevel { get; private set; }
+
+            public DateTime Timestamp { get; private set; }
+
+            public string Summary { get; private set; }
+
+            public string Detail { get; private set; }
+
+            public override string ToString()
+            {
+                return string.Format("{0:T}: {1}", this.Timestamp, this.Summary);
+            }
         }
+        #endregion
     }
 }
