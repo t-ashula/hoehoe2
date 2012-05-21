@@ -24,77 +24,60 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System.Windows.Forms;
-using System;
-using System.Drawing;
-using System.Threading;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Drawing;
+    using System.Threading;
+    using System.Windows.Forms;
+
     public partial class DialogAsShieldIcon
     {
-        //Private shield As New ShieldIcon
+        #region privates
+        private DialogResult result;
+        #endregion
 
-        private DialogResult dResult = DialogResult.None;
-
-        private void OkButton_Click(object sender, EventArgs e)
+        #region constructor
+        public DialogAsShieldIcon()
         {
-            this.dResult = DialogResult.OK;
-            this.Hide();
+            this.InitializeComponent();
+            this.result = DialogResult.None;
         }
+        #endregion
 
-        private void CancelButton_Click(object sender, EventArgs e)
+        #region public methods
+        public DialogResult ShowDialog(string text, string detail = "", string caption = "DialogAsShieldIcon", MessageBoxButtons buttons = MessageBoxButtons.OKCancel, MessageBoxIcon icon = MessageBoxIcon.Question)
         {
-            this.dResult = DialogResult.Cancel;
-            this.Hide();
-        }
-
-        private void DialogAsShieldIcon_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (dResult == DialogResult.None)
-            {
-                e.Cancel = true;
-                dResult = DialogResult.Cancel;
-                this.Hide();
-            }
-        }
-
-        private void DialogAsShieldIcon_Load(object sender, EventArgs e)
-        {
-            PictureBox1.Image = SystemIcons.Question.ToBitmap();
-        }
-
-        public DialogResult ShowDialog(string text, string detail = "", string caption = "DialogAsShieldIcon", MessageBoxButtons Buttons = MessageBoxButtons.OKCancel, MessageBoxIcon icon = MessageBoxIcon.Question)
-        {
-            Label1.Text = text;
+            this.Label1.Text = text;
             this.Text = caption;
             this.TextDetail.Text = detail;
-            switch (Buttons)
+            switch (buttons)
             {
                 case MessageBoxButtons.OKCancel:
-                    okButton.Text = "OK";
-                    cancelButton.Text = "Cancel";
+                    this.okButton.Text = "OK";
+                    this.cancelButton.Text = "Cancel";
                     break;
                 case MessageBoxButtons.YesNo:
-                    okButton.Text = "Yes";
-                    cancelButton.Text = "No";
+                    this.okButton.Text = "Yes";
+                    this.cancelButton.Text = "No";
                     break;
                 default:
-                    okButton.Text = "OK";
-                    cancelButton.Text = "Cancel";
+                    this.okButton.Text = "OK";
+                    this.cancelButton.Text = "Cancel";
                     break;
             }
 
             // とりあえずアイコンは処理しない（互換性のためパラメータだけ指定できる）
-            base.ShowDialog(this.Owner);
-            while (this.dResult == DialogResult.None)
+            this.ShowDialog(this.Owner);
+            while (this.result == DialogResult.None)
             {
                 Thread.Sleep(200);
                 Application.DoEvents();
             }
-            if (Buttons == MessageBoxButtons.YesNo)
+
+            if (buttons == MessageBoxButtons.YesNo)
             {
-                switch (dResult)
+                switch (this.result)
                 {
                     case DialogResult.OK:
                         return DialogResult.Yes;
@@ -102,12 +85,38 @@ namespace Hoehoe
                         return DialogResult.No;
                 }
             }
-            return dResult;
+
+            return this.result;
+        }
+        #endregion
+
+        #region event handler
+        private void OkButton_Click(object sender, EventArgs e)
+        {
+            this.result = DialogResult.OK;
+            this.Hide();
         }
 
-        public DialogAsShieldIcon()
+        private void CancelButton_Click(object sender, EventArgs e)
         {
-            InitializeComponent();
+            this.result = DialogResult.Cancel;
+            this.Hide();
         }
+
+        private void DialogAsShieldIcon_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (this.result == DialogResult.None)
+            {
+                e.Cancel = true;
+                this.result = DialogResult.Cancel;
+                this.Hide();
+            }
+        }
+
+        private void DialogAsShieldIcon_Load(object sender, EventArgs e)
+        {
+            this.PictureBox1.Image = SystemIcons.Question.ToBitmap();
+        }
+        #endregion 
     }
 }

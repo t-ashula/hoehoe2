@@ -1,33 +1,38 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 namespace Hoehoe
 {
-	partial class DialogAsShieldIcon : System.Windows.Forms.Form
-	{
-		//フォームがコンポーネントの一覧をクリーンアップするために dispose をオーバーライドします。
-		[System.Diagnostics.DebuggerNonUserCode()]
-		protected override void Dispose(bool disposing)
-		{
-			try {
-				if (disposing && components != null) {
-					components.Dispose();
-				}
-			} finally {
-				base.Dispose(disposing);
-			}
-		}
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Windows.Forms;
 
-		//Windows フォーム デザイナで必要です。
-		private System.ComponentModel.IContainer components;
+    partial class DialogAsShieldIcon : System.Windows.Forms.Form
+    {
+        //フォームがコンポーネントの一覧をクリーンアップするために dispose をオーバーライドします。
+        [System.Diagnostics.DebuggerNonUserCode()]
+        protected override void Dispose(bool disposing)
+        {
+            try
+            {
+                if (disposing && components != null)
+                {
+                    components.Dispose();
+                }
+            }
+            finally
+            {
+                base.Dispose(disposing);
+            }
+        }
+
+        //Windows フォーム デザイナで必要です。
+        private System.ComponentModel.IContainer components;
 
         //メモ: 以下のプロシージャは Windows フォーム デザイナで必要です。
-		//Windows フォーム デザイナを使用して変更できます。  
-		//コード エディタを使って変更しないでください。
-		private void InitializeComponent()
-		{
+        //Windows フォーム デザイナを使用して変更できます。  
+        //コード エディタを使って変更しないでください。
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogAsShieldIcon));
             this.TableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.okButton = new System.Windows.Forms.Button();
@@ -99,12 +104,12 @@ namespace Hoehoe
             this.ResumeLayout(false);
             this.PerformLayout();
 
-		}
-		internal System.Windows.Forms.TableLayoutPanel TableLayoutPanel1;
+        }
+        internal System.Windows.Forms.TableLayoutPanel TableLayoutPanel1;
         internal System.Windows.Forms.Button okButton;
         internal System.Windows.Forms.Button cancelButton;
-		internal System.Windows.Forms.PictureBox PictureBox1;
-		internal System.Windows.Forms.Label Label1;
-		internal System.Windows.Forms.TextBox TextDetail;
-	}
+        internal System.Windows.Forms.PictureBox PictureBox1;
+        internal System.Windows.Forms.Label Label1;
+        internal System.Windows.Forms.TextBox TextDetail;
+    }
 }
