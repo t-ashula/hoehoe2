@@ -311,9 +311,8 @@ namespace Hoehoe
         private List<DateTime> _postTimestamps = new List<DateTime>();
 
         private List<DateTime> _favTimestamps = new List<DateTime>();
-        private Dictionary<DateTime, int> _tlTimestamps = new Dictionary<DateTime, int>();
-
-        private int _tlCount;
+        private Dictionary<DateTime, int> timeLineTimestamps = new Dictionary<DateTime, int>();
+        private int timeLineCount;
 
         //  以下DrawItem関連
 
@@ -335,7 +334,7 @@ namespace Hoehoe
         //  Listにフォーカスないときの選択行の背景色
         private SolidBrush _brsDeactiveSelection = new SolidBrush(Color.FromKnownColor(KnownColor.ButtonFace));
 
-        private StringFormat sfTab = new StringFormat();
+        private StringFormat tabStringFormat = new StringFormat();
 
         ///''''''''''''''''''''''''''''''''''''''''''''''''''
         private ToolStripAPIGauge _apiGauge = new ToolStripAPIGauge();
@@ -366,7 +365,7 @@ namespace Hoehoe
         private string[] _columnOrgTexts = new string[9];
         private string[] _columnTexts = new string[9];
         private bool _DoFavRetweetFlags = false;
-        private bool _osResumed = false;
+        private bool isOsResumed = false;
         private Dictionary<string, IMultimediaShareService> _pictureServices;
         private string _postBrowserStatusText = "";
         private bool _colorize = false;
@@ -664,7 +663,7 @@ namespace Hoehoe
                 _brsDeactiveSelection.Dispose();
             }
             _shield.Dispose();
-            sfTab.Dispose();
+            tabStringFormat.Dispose();
             foreach (BackgroundWorker bw in _bw)
             {
                 if (bw != null)
@@ -935,8 +934,8 @@ namespace Hoehoe
             _brsBackColorNone = new SolidBrush(clrListBackcolor);
 
             //  StringFormatオブジェクトへの事前設定
-            sfTab.Alignment = StringAlignment.Center;
-            sfTab.LineAlignment = StringAlignment.Center;
+            tabStringFormat.Alignment = StringAlignment.Center;
+            tabStringFormat.LineAlignment = StringAlignment.Center;
 
             //  設定画面への反映
             HttpTwitter.SetTwitterUrl(_cfgCommon.TwitterUrl);
@@ -1685,7 +1684,7 @@ namespace Hoehoe
             {
                 fore = SystemBrushes.ControlText;
             }
-            e.Graphics.DrawString(txt, e.Font, fore, e.Bounds, sfTab);
+            e.Graphics.DrawString(txt, e.Font, fore, e.Bounds, tabStringFormat);
         }
 
         private void LoadConfig()
@@ -1854,12 +1853,12 @@ namespace Hoehoe
                     this.Invoke(new MethodInvoker(this.TrimPostChain));
                 }
             }
-            if (_osResumed)
+            if (isOsResumed)
             {
                 Interlocked.Increment(ref _timerResumeWait);
                 if (_timerResumeWait > 30)
                 {
-                    _osResumed = false;
+                    isOsResumed = false;
                     Interlocked.Exchange(ref _timerResumeWait, 0);
                     GetTimeline(WorkerType.Timeline, 1, 0, "");
                     GetTimeline(WorkerType.Reply, 1, 0, "");
@@ -1895,7 +1894,7 @@ namespace Hoehoe
             SaveSelectedStatus(selId, focusedId);
 
             //  mentionsの更新前件数を保持
-            int dmCount = _statuses.GetTabByType(TabUsageType.DirectMessage).AllCount;
+            int dmessageCount = _statuses.GetTabByType(TabUsageType.DirectMessage).AllCount;
 
             //  更新確定
             PostClass[] notifyPosts = null;
@@ -2002,7 +2001,7 @@ namespace Hoehoe
             }
 
             //  新着通知
-            NotifyNewPosts(notifyPosts, soundFile, addCount, isMention || dmCount != _statuses.GetTabByType(TabUsageType.DirectMessage).AllCount);
+            NotifyNewPosts(notifyPosts, soundFile, addCount, isMention || dmessageCount != _statuses.GetTabByType(TabUsageType.DirectMessage).AllCount);
 
             SetMainWindowTitle();
             if (!StatusLabelUrl.Text.StartsWith("http"))
@@ -2245,12 +2244,12 @@ namespace Hoehoe
                                 title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
                                 nt = GrowlHelper.NotifyType.Notify;
                             }
-                            string bText = sb.ToString();
-                            if (String.IsNullOrEmpty(bText))
+                            string notifyText = sb.ToString();
+                            if (String.IsNullOrEmpty(notifyText))
                             {
                                 return;
                             }
-                            GrowlHelper.Notify(nt, post.StatusId.ToString(), title.ToString(), bText, this._TIconDic[post.ImageUrl], post.ImageUrl);
+                            GrowlHelper.Notify(nt, post.StatusId.ToString(), title.ToString(), notifyText, this._TIconDic[post.ImageUrl], post.ImageUrl);
                         }
                     }
                     else
@@ -2285,7 +2284,7 @@ namespace Hoehoe
                         }
 
                         StringBuilder title = new StringBuilder();
-                        ToolTipIcon ntIcon = default(ToolTipIcon);
+                        ToolTipIcon notifyIcon = default(ToolTipIcon);
                         GrowlHelper.NotifyType nt = default(GrowlHelper.NotifyType);
                         if (SettingDialog.DispUsername)
                         {
@@ -2298,7 +2297,7 @@ namespace Hoehoe
 
                         if (dm)
                         {
-                            ntIcon = ToolTipIcon.Warning;
+                            notifyIcon = ToolTipIcon.Warning;
                             title.Append("Hoehoe [DM] ");
                             title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText1);
                             title.Append(" ");
@@ -2308,7 +2307,7 @@ namespace Hoehoe
                         }
                         else if (reply)
                         {
-                            ntIcon = ToolTipIcon.Warning;
+                            notifyIcon = ToolTipIcon.Warning;
                             title.Append("Hoehoe [Reply!] ");
                             title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
                             title.Append(" ");
@@ -2318,7 +2317,7 @@ namespace Hoehoe
                         }
                         else
                         {
-                            ntIcon = ToolTipIcon.Info;
+                            notifyIcon = ToolTipIcon.Info;
                             title.Append("Hoehoe ");
                             title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
                             title.Append(" ");
@@ -2326,14 +2325,14 @@ namespace Hoehoe
                             title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
                             nt = GrowlHelper.NotifyType.Notify;
                         }
-                        string bText = sb.ToString();
-                        if (String.IsNullOrEmpty(bText))
+                        string notifyText = sb.ToString();
+                        if (String.IsNullOrEmpty(notifyText))
                         {
                             return;
                         }
                         NotifyIcon1.BalloonTipTitle = title.ToString();
-                        NotifyIcon1.BalloonTipText = bText;
-                        NotifyIcon1.BalloonTipIcon = ntIcon;
+                        NotifyIcon1.BalloonTipText = notifyText;
+                        NotifyIcon1.BalloonTipIcon = notifyIcon;
                         NotifyIcon1.ShowBalloonTip(500);
                     }
                 }
@@ -2425,11 +2424,11 @@ namespace Hoehoe
             ChangeItemStyleRead(read, itm, post, (DetailsListView)tab.Tag);
         }
 
-        private void ChangeItemStyleRead(bool read, ListViewItem lvItem, PostClass post, DetailsListView dlView)
+        private void ChangeItemStyleRead(bool read, ListViewItem item, PostClass post, DetailsListView listView)
         {
             //  フォント
             Font fnt = read ? _fntReaded : _fntUnread;
-            lvItem.SubItems[5].Text = read ? "" : "★";
+            item.SubItems[5].Text = read ? "" : "★";
             //  文字色
             Color cl = default(Color);
             if (post.IsFav)
@@ -2452,24 +2451,24 @@ namespace Hoehoe
             {
                 cl = clrUnread;
             }
-            if (dlView == null || lvItem.Index == -1)
+            if (listView == null || item.Index == -1)
             {
-                lvItem.ForeColor = cl;
+                item.ForeColor = cl;
                 if (SettingDialog.UseUnreadStyle)
                 {
-                    lvItem.Font = fnt;
+                    item.Font = fnt;
                 }
             }
             else
             {
-                dlView.Update();
+                listView.Update();
                 if (SettingDialog.UseUnreadStyle)
                 {
-                    dlView.ChangeItemFontAndColor(lvItem.Index, cl, fnt);
+                    listView.ChangeItemFontAndColor(item.Index, cl, fnt);
                 }
                 else
                 {
-                    dlView.ChangeItemForeColor(lvItem.Index, cl);
+                    listView.ChangeItemForeColor(item.Index, cl);
                 }
             }
         }
@@ -2502,25 +2501,23 @@ namespace Hoehoe
             }
         }
 
-        private void ColorizeList(ListViewItem lvItem, int index)
+        private void ColorizeList(ListViewItem item, int index)
         {
-            //  Index:更新対象のListviewItem.Index。Colorを返す。
-            //  -1は全キャッシュ。Colorは返さない（ダミーを戻す）
+            // Index:更新対象のListviewItem.Index。Colorを返す。-1は全キャッシュ。Colorは返さない（ダミーを戻す）
             PostClass post = _anchorFlag ? _anchorPost : _curPost;
-            PostClass tPost = GetCurTabPost(index);
-
+            PostClass target = GetCurTabPost(index);
             if (post == null)
             {
                 return;
             }
 
-            if (lvItem.Index == -1)
+            if (item.Index == -1)
             {
-                lvItem.BackColor = JudgeColor(post, tPost);
+                item.BackColor = JudgeColor(post, target);
             }
             else
             {
-                _curList.ChangeItemBackColor(lvItem.Index, JudgeColor(post, tPost));
+                _curList.ChangeItemBackColor(item.Index, JudgeColor(post, target));
             }
         }
 
@@ -2578,8 +2575,8 @@ namespace Hoehoe
 
             if (this.ExistCurrentPost && StatusText.Text.Trim() == string.Format("RT @{0}: {1}", _curPost.ScreenName, _curPost.TextFromApi))
             {
-                DialogResult rtResult = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                switch (rtResult)
+                DialogResult res = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                switch (res)
                 {
                     case DialogResult.Yes:
                         doReTweetOfficial(false);
@@ -3224,18 +3221,18 @@ namespace Hoehoe
                 lock (_syncObject)
                 {
                     DateTime tm = DateTime.Now;
-                    if (_tlTimestamps.ContainsKey(tm))
+                    if (timeLineTimestamps.ContainsKey(tm))
                     {
-                        _tlTimestamps[tm] += rslt.AddCount;
+                        timeLineTimestamps[tm] += rslt.AddCount;
                     }
                     else
                     {
-                        _tlTimestamps.Add(tm, rslt.AddCount);
+                        timeLineTimestamps.Add(tm, rslt.AddCount);
                     }
                     DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                     List<DateTime> keys = new List<DateTime>();
-                    _tlCount = 0;
-                    foreach (DateTime key in _tlTimestamps.Keys)
+                    timeLineCount = 0;
+                    foreach (DateTime key in timeLineTimestamps.Keys)
                     {
                         if (key.CompareTo(oneHour) < 0)
                         {
@@ -3243,12 +3240,12 @@ namespace Hoehoe
                         }
                         else
                         {
-                            _tlCount += _tlTimestamps[key];
+                            timeLineCount += timeLineTimestamps[key];
                         }
                     }
                     foreach (DateTime key in keys)
                     {
-                        _tlTimestamps.Remove(key);
+                        timeLineTimestamps.Remove(key);
                     }
                     keys.Clear();
                 }
@@ -3717,7 +3714,7 @@ namespace Hoehoe
 
         Dictionary<WorkerType, DateTime> _lastTime;
 
-        private void GetTimeline(WorkerType wkType, int fromPage, int toPage, string tabName)
+        private void GetTimeline(WorkerType workerType, int fromPage, int toPage, string tabName)
         {
             if (!MyCommon.IsNetworkAvailable())
             {
@@ -3730,16 +3727,16 @@ namespace Hoehoe
             }
 
             //  非同期実行引数設定
-            if (!_lastTime.ContainsKey(wkType))
+            if (!_lastTime.ContainsKey(workerType))
             {
-                _lastTime.Add(wkType, new DateTime());
+                _lastTime.Add(workerType, new DateTime());
             }
 
-            double period = DateTime.Now.Subtract(_lastTime[wkType]).TotalSeconds;
+            double period = DateTime.Now.Subtract(_lastTime[workerType]).TotalSeconds;
             if (period > 1 || period < -1)
             {
-                _lastTime[wkType] = DateTime.Now;
-                RunAsync(new GetWorkerArg() { Page = fromPage, EndPage = toPage, WorkerType = wkType, TabName = tabName });
+                _lastTime[workerType] = DateTime.Now;
+                RunAsync(new GetWorkerArg() { Page = fromPage, EndPage = toPage, WorkerType = workerType, TabName = tabName });
             }
         }
 
@@ -5637,21 +5634,21 @@ namespace Hoehoe
             }
             this.TopMost = SettingDialog.AlwaysTop;
             int selStart = owner.SelectionStart;
-            string fHalf = "";
-            string eHalf = "";
+            string frontHalf = "";
+            string lastHalf = "";
             if (dialog.DialogResult == DialogResult.OK)
             {
                 if (!String.IsNullOrEmpty(dialog.InputText))
                 {
                     if (selStart > 0)
                     {
-                        fHalf = owner.Text.Substring(0, selStart - offset);
+                        frontHalf = owner.Text.Substring(0, selStart - offset);
                     }
                     if (selStart < owner.Text.Length)
                     {
-                        eHalf = owner.Text.Substring(selStart);
+                        lastHalf = owner.Text.Substring(selStart);
                     }
-                    owner.Text = fHalf + dialog.InputText + eHalf;
+                    owner.Text = frontHalf + dialog.InputText + lastHalf;
                     owner.SelectionStart = selStart + dialog.InputText.Length;
                 }
             }
@@ -5659,13 +5656,13 @@ namespace Hoehoe
             {
                 if (selStart > 0)
                 {
-                    fHalf = owner.Text.Substring(0, selStart);
+                    frontHalf = owner.Text.Substring(0, selStart);
                 }
                 if (selStart < owner.Text.Length)
                 {
-                    eHalf = owner.Text.Substring(selStart);
+                    lastHalf = owner.Text.Substring(selStart);
                 }
-                owner.Text = fHalf + eHalf;
+                owner.Text = frontHalf + lastHalf;
                 if (selStart > 0)
                 {
                     owner.SelectionStart = selStart;
@@ -5708,9 +5705,9 @@ namespace Hoehoe
         private void StatusText_TextChanged(object sender, EventArgs e)
         {
             // 文字数カウント
-            int pLen = GetRestStatusCount(true, false);
-            lblLen.Text = pLen.ToString();
-            if (pLen < 0)
+            int len = GetRestStatusCount(true, false);
+            lblLen.Text = len.ToString();
+            if (len < 0)
             {
                 StatusText.ForeColor = Color.Red;
             }
@@ -5718,6 +5715,7 @@ namespace Hoehoe
             {
                 StatusText.ForeColor = clrInputForecolor;
             }
+
             if (String.IsNullOrEmpty(StatusText.Text))
             {
                 _replyToId = 0;
@@ -5728,10 +5726,10 @@ namespace Hoehoe
         private int GetRestStatusCount(bool isAuto, bool isAddFooter)
         {
             // 文字数カウント
-            int pLen = 140 - StatusText.Text.Length;
+            int len = 140 - StatusText.Text.Length;
             if (this.NotifyIcon1 == null || !this.NotifyIcon1.Visible)
             {
-                return pLen;
+                return len;
             }
             if ((isAuto && !isKeyDown(Keys.Control) && SettingDialog.PostShiftEnter)
                 || (isAuto && !isKeyDown(Keys.Shift) && !SettingDialog.PostShiftEnter)
@@ -5739,27 +5737,27 @@ namespace Hoehoe
             {
                 if (SettingDialog.UseRecommendStatus)
                 {
-                    pLen -= SettingDialog.RecommendStatusText.Length;
+                    len -= SettingDialog.RecommendStatusText.Length;
                 }
                 else if (SettingDialog.Status.Length > 0)
                 {
-                    pLen -= SettingDialog.Status.Length + 1;
+                    len -= SettingDialog.Status.Length + 1;
                 }
             }
             if (!String.IsNullOrEmpty(HashMgr.UseHash))
             {
-                pLen -= HashMgr.UseHash.Length + 1;
+                len -= HashMgr.UseHash.Length + 1;
             }
 
             foreach (Match m in Regex.Matches(StatusText.Text, Twitter.RgUrl, RegexOptions.IgnoreCase))
             {
-                pLen += m.Result("${url}").Length - SettingDialog.TwitterConfiguration.ShortUrlLength;
+                len += m.Result("${url}").Length - SettingDialog.TwitterConfiguration.ShortUrlLength;
             }
             if (ImageSelectionPanel.Visible && ImageSelectedPicture.Tag != null && !String.IsNullOrEmpty(this.ImageService))
             {
-                pLen -= SettingDialog.TwitterConfiguration.CharactersReservedPerMedia;
+                len -= SettingDialog.TwitterConfiguration.CharactersReservedPerMedia;
             }
-            return pLen;
+            return len;
         }
 
         private void MyList_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
@@ -6679,7 +6677,7 @@ namespace Hoehoe
             displayItem = (ImageListViewItem)_curList.Items[_curList.SelectedIndices[0]];
             displayItem.ImageDownloaded += this.DisplayItemImage_Downloaded;
 
-            string dTxt = createDetailHtml(_curPost.IsDeleted ? "(DELETED)" : _curPost.Text);
+            string detailText = createDetailHtml(_curPost.IsDeleted ? "(DELETED)" : _curPost.Text);
             if (_curPost.IsDm)
             {
                 SourceLinkLabel.Tag = null;
@@ -6814,12 +6812,12 @@ namespace Hoehoe
             {
                 try
                 {
-                    if (PostBrowser.DocumentText != dTxt)
+                    if (PostBrowser.DocumentText != detailText)
                     {
                         PostBrowser.Visible = false;
-                        PostBrowser.DocumentText = dTxt;
+                        PostBrowser.DocumentText = detailText;
                         List<string> lnks = new List<string>();
-                        foreach (Match lnk in Regex.Matches(dTxt, "<a target=\"_self\" href=\"(?<url>http[^\"]+)\"", RegexOptions.IgnoreCase))
+                        foreach (Match lnk in Regex.Matches(detailText, "<a target=\"_self\" href=\"(?<url>http[^\"]+)\"", RegexOptions.IgnoreCase))
                         {
                             lnks.Add(lnk.Result("${url}"));
                         }
@@ -6833,7 +6831,7 @@ namespace Hoehoe
                 }
                 catch (UriFormatException)
                 {
-                    PostBrowser.DocumentText = dTxt;
+                    PostBrowser.DocumentText = detailText;
                 }
                 finally
                 {
@@ -6881,18 +6879,18 @@ namespace Hoehoe
             }
         }
 
-        private ModifierState GetModifierState(bool sControl, bool sShift, bool sAlt)
+        private ModifierState GetModifierState(bool isCtrl, bool isShift, bool isAlt)
         {
             ModifierState state = ModifierState.None;
-            if (sControl)
+            if (isCtrl)
             {
                 state = state | ModifierState.Ctrl;
             }
-            if (sShift)
+            if (isShift)
             {
                 state = state | ModifierState.Shift;
             }
-            if (sAlt)
+            if (isAlt)
             {
                 state = state | ModifierState.Alt;
             }
@@ -10369,7 +10367,7 @@ namespace Hoehoe
             _unreadCounter = ur;
             _unreadAtCounter = urat;
 
-            slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, _postTimestamps.Count, _favTimestamps.Count, _tlCount);
+            slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, _postTimestamps.Count, _favTimestamps.Count, timeLineCount);
             if (SettingDialog.TimelinePeriodInt == 0)
             {
                 slbl.Append(Hoehoe.Properties.Resources.SetStatusLabelText2);
@@ -13724,18 +13722,18 @@ namespace Hoehoe
             lock (_syncObject)
             {
                 DateTime tm = DateTime.Now;
-                if (_tlTimestamps.ContainsKey(tm))
+                if (timeLineTimestamps.ContainsKey(tm))
                 {
-                    _tlTimestamps[tm] += rsltAddCount;
+                    timeLineTimestamps[tm] += rsltAddCount;
                 }
                 else
                 {
-                    _tlTimestamps.Add(tm, rsltAddCount);
+                    timeLineTimestamps.Add(tm, rsltAddCount);
                 }
                 DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                 List<DateTime> keys = new List<DateTime>();
-                _tlCount = 0;
-                foreach (System.DateTime key in _tlTimestamps.Keys)
+                timeLineCount = 0;
+                foreach (System.DateTime key in timeLineTimestamps.Keys)
                 {
                     if (key.CompareTo(oneHour) < 0)
                     {
@@ -13743,12 +13741,12 @@ namespace Hoehoe
                     }
                     else
                     {
-                        _tlCount += _tlTimestamps[key];
+                        timeLineCount += timeLineTimestamps[key];
                     }
                 }
                 foreach (DateTime key in keys)
                 {
-                    _tlTimestamps.Remove(key);
+                    timeLineTimestamps.Remove(key);
                 }
                 keys.Clear();
             }
@@ -14151,7 +14149,7 @@ namespace Hoehoe
         {
             if (e.Mode == Microsoft.Win32.PowerModes.Resume)
             {
-                _osResumed = true;
+                isOsResumed = true;
             }
         }
 
