@@ -24,93 +24,112 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Drawing;
+    using System.Windows.Forms;
+
     public class ToolStripAPIGauge : ToolStripControlHost
     {
+        #region private
         private Size originalSize;
+        private int gaugeHeight;
+        private int maxCount = 350;
+        private int remainCount;
+        private DateTime resetTime;
+        #endregion
 
+        #region constructor
         public ToolStripAPIGauge()
             : base(new Control())
         {
             this.AutoToolTip = true;
-            this.Control.Paint += Draw;
-            this.Control.TextChanged += Control_TextChanged;
-            this.Control.SizeChanged += Control_SizeChanged;
+            this.Control.Paint += this.Draw;
+            this.Control.TextChanged += this.Control_TextChanged;
+            this.Control.SizeChanged += this.Control_SizeChanged;
         }
+        #endregion
 
-        private int _gaugeHeight;
-
+        #region properties
         public int GaugeHeight
         {
-            get { return _gaugeHeight; }
+            get
+            {
+                return this.gaugeHeight;
+            }
+
             set
             {
-                this._gaugeHeight = value;
+                this.gaugeHeight = value;
                 if (this.Control != null && !this.Control.IsDisposed)
                 {
                     this.Control.Refresh();
                 }
             }
         }
-
-        private int _maxCount = 350;
 
         public int MaxCount
         {
-            get { return this._maxCount; }
+            get
+            {
+                return this.maxCount;
+            }
+
             set
             {
-                this._maxCount = value;
+                this.maxCount = value;
                 if (this.Control != null && !this.Control.IsDisposed)
                 {
-                    this.SetText(this._remainCount, this._maxCount);
+                    this.SetText(this.remainCount, this.maxCount);
                     this.Control.Refresh();
                 }
             }
         }
-
-        private int _remainCount;
 
         public int RemainCount
         {
-            get { return this._remainCount; }
+            get
+            {
+                return this.remainCount;
+            }
+
             set
             {
-                this._remainCount = value;
+                this.remainCount = value;
                 if (this.Control != null && !this.Control.IsDisposed)
                 {
-                    this.SetText(this._remainCount, this._maxCount);
+                    this.SetText(this.remainCount, this.maxCount);
                     this.Control.Refresh();
                 }
             }
         }
-
-        private DateTime _resetTime;
 
         public DateTime ResetTime
         {
-            get { return this._resetTime; }
+            get
+            {
+                return this.resetTime;
+            }
+
             set
             {
-                this._resetTime = value;
+                this.resetTime = value;
                 if (this.Control != null && !this.Control.IsDisposed)
                 {
-                    this.SetText(this._remainCount, this._maxCount);
+                    this.SetText(this.remainCount, this.maxCount);
                     this.Control.Refresh();
                 }
             }
         }
+        #endregion
 
+        #region event handler
         private void Draw(object sender, PaintEventArgs e)
         {
             double minute = (this.ResetTime - DateTime.Now).TotalMinutes;
-            Rectangle apiGaugeBounds = new Rectangle(0, Convert.ToInt32((this.Control.Height - (this._gaugeHeight * 2)) / 2), Convert.ToInt32(this.Control.Width * (this.RemainCount / this._maxCount)), this._gaugeHeight);
-            Rectangle timeGaugeBounds = new Rectangle(0, apiGaugeBounds.Top + this._gaugeHeight, Convert.ToInt32(this.Control.Width * (minute / 60)), this._gaugeHeight);
+            Rectangle apiGaugeBounds = new Rectangle(0, Convert.ToInt32((this.Control.Height - (this.gaugeHeight * 2)) / 2), Convert.ToInt32(this.Control.Width * (this.RemainCount / this.maxCount)), this.gaugeHeight);
+            Rectangle timeGaugeBounds = new Rectangle(0, apiGaugeBounds.Top + this.gaugeHeight, Convert.ToInt32(this.Control.Width * (minute / 60)), this.gaugeHeight);
             e.Graphics.FillRectangle(Brushes.LightBlue, apiGaugeBounds);
             e.Graphics.FillRectangle(Brushes.LightPink, timeGaugeBounds);
             e.Graphics.DrawString(this.Control.Text, this.Control.Font, SystemBrushes.ControlText, 0, Convert.ToSingle(timeGaugeBounds.Top - (this.Control.Font.Height / 2)));
@@ -123,6 +142,7 @@ namespace Hoehoe
             {
                 this.Control.Size = new Size(Convert.ToInt32(Math.Max(g.MeasureString(this.Control.Text, this.Control.Font).Width, this.originalSize.Width)), this.Control.Size.Height);
             }
+
             this.Control.SizeChanged += this.Control_SizeChanged;
         }
 
@@ -130,26 +150,27 @@ namespace Hoehoe
         {
             this.originalSize = this.Control.Size;
         }
+        #endregion
 
+        #region private methods
         private void SetText(int remain, int max)
         {
             string textFormat = "API {0}/{1}";
             string toolTipTextFormat = "API rest {0}/{1}" + Environment.NewLine + "(reset after {2} minutes)";
-
-            if (this._remainCount > -1 && this._maxCount > -1)
+            if (this.remainCount > -1 && this.maxCount > -1)
             {
                 // 正常
-                this.Control.Text = string.Format(textFormat, this._remainCount, this._maxCount);
+                this.Control.Text = string.Format(textFormat, this.remainCount, this.maxCount);
             }
             else if (this.RemainCount > -1)
             {
                 // uppercount不正
-                this.Control.Text = string.Format(textFormat, this._remainCount, "???");
+                this.Control.Text = string.Format(textFormat, this.remainCount, "???");
             }
-            else if (this._maxCount < -1)
+            else if (this.maxCount < -1)
             {
                 // remaincount不正
-                this.Control.Text = string.Format(textFormat, "???", this._maxCount);
+                this.Control.Text = string.Format(textFormat, "???", this.maxCount);
             }
             else
             {
@@ -159,8 +180,8 @@ namespace Hoehoe
 
             double minute = Math.Ceiling((this.ResetTime - DateTime.Now).TotalMinutes);
             string minuteText = minute >= 0 ? minute.ToString() : "???";
-
-            this.ToolTipText = string.Format(toolTipTextFormat, this._remainCount, this._maxCount, minuteText);
+            this.ToolTipText = string.Format(toolTipTextFormat, this.remainCount, this.maxCount, minuteText);
         }
+        #endregion
     }
 }
