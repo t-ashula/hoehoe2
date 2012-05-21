@@ -24,155 +24,45 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-
 namespace Hoehoe.TweenCustomControl
 {
+    using System;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.Runtime.InteropServices;
+    using System.Windows.Forms;
+
     public sealed class DetailsListView : ListView
     {
-        private Rectangle _changeBounds;
-        private EventHandlerList _handlers = new EventHandlerList();
+        #region private fields
+        private Rectangle changeBounds;
+        private EventHandlerList handlers = new EventHandlerList();
+        private SCROLLINFO scrollInfo;
+        #endregion
 
-        public event EventHandler VScrolled;
-
-        public event EventHandler HScrolled;
-
+        #region constructor
         public DetailsListView()
         {
             this.View = View.Details;
             this.FullRowSelect = true;
             this.HideSelection = false;
             this.DoubleBuffered = true;
-            _si = new SCROLLINFO() { cbSize = Marshal.SizeOf(_si), fMask = (int)ScrollInfoMask.SIF_POS };
-        }
-
-        public void ChangeItemBackColor(int index, Color backColor)
-        {
-            ChangeSubItemBackColor(index, 0, backColor);
-        }
-
-        public void ChangeItemForeColor(int index, Color foreColor)
-        {
-            ChangeSubItemForeColor(index, 0, foreColor);
-        }
-
-        public void ChangeItemFont(int index, Font fnt)
-        {
-            ChangeSubItemFont(index, 0, fnt);
-        }
-
-        public void ChangeItemFontAndColor(int index, Color foreColor, Font fnt)
-        {
-            ChangeSubItemStyles(index, 0, BackColor, foreColor, fnt);
-        }
-
-        public void ChangeItemStyles(int index, Color backColor, Color foreColor, Font fnt)
-        {
-            ChangeSubItemStyles(index, 0, backColor, foreColor, fnt);
-        }
-
-        public void ChangeSubItemBackColor(int itemIndex, int subitemIndex, Color backColor)
-        {
-            this.Items[itemIndex].SubItems[subitemIndex].BackColor = backColor;
-            SetUpdateBounds(itemIndex, subitemIndex);
-            this.Update();
-            this._changeBounds = Rectangle.Empty;
-        }
-
-        public void ChangeSubItemForeColor(int itemIndex, int subitemIndex, Color foreColor)
-        {
-            this.Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
-            SetUpdateBounds(itemIndex, subitemIndex);
-            this.Update();
-            this._changeBounds = Rectangle.Empty;
-        }
-
-        public void ChangeSubItemFont(int itemIndex, int subitemIndex, Font fnt)
-        {
-            this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
-            SetUpdateBounds(itemIndex, subitemIndex);
-            this.Update();
-            this._changeBounds = Rectangle.Empty;
-        }
-
-        public void ChangeSubItemFontAndColor(int itemIndex, int subitemIndex, Color foreColor, Font fnt)
-        {
-            this.Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
-            this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
-            SetUpdateBounds(itemIndex, subitemIndex);
-            this.Update();
-            this._changeBounds = Rectangle.Empty;
-        }
-
-        public void ChangeSubItemStyles(int itemIndex, int subitemIndex, Color backColor, Color foreColor, Font fnt)
-        {
-            this.Items[itemIndex].SubItems[subitemIndex].BackColor = backColor;
-            this.Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
-            this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
-            SetUpdateBounds(itemIndex, subitemIndex);
-            this.Update();
-            this._changeBounds = Rectangle.Empty;
-        }
-
-        private void SetUpdateBounds(int itemIndex, int subItemIndex)
-        {
-            try
+            this.scrollInfo = new SCROLLINFO()
             {
-                if (itemIndex > this.Items.Count)
-                {
-                    throw new ArgumentOutOfRangeException("itemIndex");
-                }
-                if (subItemIndex > this.Columns.Count)
-                {
-                    throw new ArgumentOutOfRangeException("subItemIndex");
-                }
-                ListViewItem item = this.Items[itemIndex];
-                if (item.UseItemStyleForSubItems)
-                {
-                    this._changeBounds = item.Bounds;
-                }
-                else
-                {
-                    this._changeBounds = this.GetSubItemBounds(itemIndex, subItemIndex);
-                }
-            }
-            catch (ArgumentException)
-            {
-                //タイミングによりBoundsプロパティが取れない？
-                this._changeBounds = Rectangle.Empty;
-            }
+                cbSize = (uint)Marshal.SizeOf(this.scrollInfo),
+                fMask = (uint)ScrollInfoMask.SIF_POS
+            };
         }
+        #endregion
 
-        private Rectangle GetSubItemBounds(int itemIndex, int subitemIndex)
-        {
-            ListViewItem item = this.Items[itemIndex];
-            if (subitemIndex == 0 & this.Columns.Count > 0)
-            {
-                Rectangle col0 = item.Bounds;
-                return new Rectangle(col0.Left, col0.Top, item.SubItems[1].Bounds.X + 1, col0.Height);
-            }
-            else
-            {
-                return item.SubItems[subitemIndex].Bounds;
-            }
-        }
+        #region events
+        public event EventHandler VScrolled;
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct SCROLLINFO
-        {
-            public int cbSize;
-            public int fMask;
-            public int nMin;
-            public int nMax;
-            public int nPage;
-            public int nPos;
-            public int nTrackPos;
-        }
+        public event EventHandler HScrolled;
+        #endregion
+
+        #region enums
 
         private enum ScrollBarDirection
         {
@@ -192,12 +82,82 @@ namespace Hoehoe.TweenCustomControl
             SIF_ALL = (SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS)
         }
 
-        [DllImport("user32.dll")]
-        private static extern int GetScrollInfo(IntPtr hWnd, ScrollBarDirection fnBar, ref SCROLLINFO lpsi);
+        #endregion
 
-        private SCROLLINFO _si;
+        #region public methods
+        
+        public void ChangeItemBackColor(int index, Color backColor)
+        {
+            this.ChangeSubItemBackColor(index, 0, backColor);
+        }
 
-        [DebuggerStepThrough()]
+        public void ChangeItemForeColor(int index, Color foreColor)
+        {
+            this.ChangeSubItemForeColor(index, 0, foreColor);
+        }
+
+        public void ChangeItemFont(int index, Font fnt)
+        {
+            this.ChangeSubItemFont(index, 0, fnt);
+        }
+
+        public void ChangeItemFontAndColor(int index, Color foreColor, Font fnt)
+        {
+            this.ChangeSubItemStyles(index, 0, this.BackColor, foreColor, fnt);
+        }
+
+        public void ChangeItemStyles(int index, Color backColor, Color foreColor, Font fnt)
+        {
+            this.ChangeSubItemStyles(index, 0, backColor, foreColor, fnt);
+        }
+
+        public void ChangeSubItemBackColor(int itemIndex, int subitemIndex, Color backColor)
+        {
+            this.Items[itemIndex].SubItems[subitemIndex].BackColor = backColor;
+            this.SetUpdateBounds(itemIndex, subitemIndex);
+            this.Update();
+            this.changeBounds = Rectangle.Empty;
+        }
+
+        public void ChangeSubItemForeColor(int itemIndex, int subitemIndex, Color foreColor)
+        {
+            this.Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
+            this.SetUpdateBounds(itemIndex, subitemIndex);
+            this.Update();
+            this.changeBounds = Rectangle.Empty;
+        }
+
+        public void ChangeSubItemFont(int itemIndex, int subitemIndex, Font fnt)
+        {
+            this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
+            this.SetUpdateBounds(itemIndex, subitemIndex);
+            this.Update();
+            this.changeBounds = Rectangle.Empty;
+        }
+
+        public void ChangeSubItemFontAndColor(int itemIndex, int subitemIndex, Color foreColor, Font fnt)
+        {
+            this.Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
+            this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
+            this.SetUpdateBounds(itemIndex, subitemIndex);
+            this.Update();
+            this.changeBounds = Rectangle.Empty;
+        }
+
+        public void ChangeSubItemStyles(int itemIndex, int subitemIndex, Color backColor, Color foreColor, Font fnt)
+        {
+            this.Items[itemIndex].SubItems[subitemIndex].BackColor = backColor;
+            this.Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
+            this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
+            this.SetUpdateBounds(itemIndex, subitemIndex);
+            this.Update();
+            this.changeBounds = Rectangle.Empty;
+        }
+
+        #endregion
+
+        #region protected method
+        [DebuggerStepThrough]
         protected override void WndProc(ref System.Windows.Forms.Message m)
         {
             const int WM_ERASEBKGND = 0x14;
@@ -211,50 +171,46 @@ namespace Hoehoe.TweenCustomControl
             const long LVSICF_NOSCROLL = 0x2;
             const long LVSICF_NOINVALIDATEALL = 0x1;
 
-            int hPos = -1;
-            int vPos = -1;
+            int horizontalPos = -1;
+            int verticalPos = -1;
 
             switch (m.Msg)
             {
                 case WM_ERASEBKGND:
-                    if (this._changeBounds != Rectangle.Empty)
+                    if (this.changeBounds != Rectangle.Empty)
                     {
                         m.Msg = 0;
                     }
+
                     break;
                 case WM_PAINT:
-                    if (this._changeBounds != Rectangle.Empty)
+                    if (this.changeBounds != Rectangle.Empty)
                     {
                         Win32Api.ValidateRect(this.Handle, IntPtr.Zero);
-                        this.Invalidate(this._changeBounds);
-                        this._changeBounds = Rectangle.Empty;
+                        this.Invalidate(this.changeBounds);
+                        this.changeBounds = Rectangle.Empty;
                     }
+
                     break;
                 case WM_HSCROLL:
-                    if (HScrolled != null)
-                    {
-                        HScrolled(this, EventArgs.Empty);
-                    }
-
+                    this.OnHScrolled(this, EventArgs.Empty);
                     break;
                 case WM_VSCROLL:
-                    if (VScrolled != null)
-                    {
-                        VScrolled(this, EventArgs.Empty);
-                    }
-
+                    this.OnVScrolled(this, EventArgs.Empty);
                     break;
                 case WM_MOUSEWHEEL:
                 case WM_MOUSEHWHEEL:
                 case WM_KEYDOWN:
-                    if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_VERT, ref _si) != 0)
+                    if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_VERT, ref this.scrollInfo) != 0)
                     {
-                        vPos = _si.nPos;
+                        verticalPos = this.scrollInfo.nPos;
                     }
-                    if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_HORZ, ref _si) != 0)
+
+                    if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_HORZ, ref this.scrollInfo) != 0)
                     {
-                        hPos = _si.nPos;
+                        horizontalPos = this.scrollInfo.nPos;
                     }
+
                     break;
                 case LVM_SETITEMCOUNT:
                     m.LParam = new IntPtr(LVSICF_NOSCROLL | LVSICF_NOINVALIDATEALL);
@@ -267,37 +223,115 @@ namespace Hoehoe.TweenCustomControl
             }
             catch (ArgumentOutOfRangeException)
             {
-                //Substringでlengthが0以下。アイコンサイズが影響？
+                // Substringでlengthが0以下。アイコンサイズが影響？
             }
             catch (AccessViolationException)
             {
-                //WndProcのさらに先で発生する。
+                // WndProcのさらに先で発生する。
             }
+
             if (this.IsDisposed)
             {
                 return;
             }
 
-            if (vPos != -1)
+            if (verticalPos != -1)
             {
-                if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_VERT, ref _si) != 0 && vPos != _si.nPos)
+                if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_VERT, ref this.scrollInfo) != 0 && verticalPos != this.scrollInfo.nPos)
                 {
-                    if (VScrolled != null)
-                    {
-                        VScrolled(this, EventArgs.Empty);
-                    }
+                    this.OnVScrolled(this, EventArgs.Empty);
                 }
             }
-            if (hPos != -1)
+
+            if (horizontalPos != -1)
             {
-                if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_HORZ, ref _si) != 0 && hPos != _si.nPos)
+                if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_HORZ, ref this.scrollInfo) != 0 && horizontalPos != this.scrollInfo.nPos)
                 {
-                    if (HScrolled != null)
-                    {
-                        HScrolled(this, EventArgs.Empty);
-                    }
+                    this.OnHScrolled(this, EventArgs.Empty);
                 }
             }
         }
+        #endregion
+
+        #region private methods
+
+        [DllImport("user32.dll")]
+        private static extern int GetScrollInfo(IntPtr hWnd, ScrollBarDirection fnBar, ref SCROLLINFO lpsi);
+
+        private void OnHScrolled(object sender, EventArgs e)
+        {
+            if (this.HScrolled != null)
+            {
+                this.HScrolled(this, e);
+            }
+        }
+
+        private void OnVScrolled(object sender, EventArgs e)
+        {
+            if (this.VScrolled != null)
+            {
+                this.VScrolled(this, e);
+            }
+        }
+
+        private void SetUpdateBounds(int itemIndex, int subItemIndex)
+        {
+            try
+            {
+                if (itemIndex > this.Items.Count)
+                {
+                    throw new ArgumentOutOfRangeException("itemIndex");
+                }
+
+                if (subItemIndex > this.Columns.Count)
+                {
+                    throw new ArgumentOutOfRangeException("subItemIndex");
+                }
+                
+                ListViewItem item = this.Items[itemIndex];
+                if (item.UseItemStyleForSubItems)
+                {
+                    this.changeBounds = item.Bounds;
+                }
+                else
+                {
+                    this.changeBounds = this.GetSubItemBounds(itemIndex, subItemIndex);
+                }
+            }
+            catch (ArgumentException)
+            {
+                // タイミングによりBoundsプロパティが取れない？
+                this.changeBounds = Rectangle.Empty;
+            }
+        }
+
+        private Rectangle GetSubItemBounds(int itemIndex, int subitemIndex)
+        {
+            ListViewItem item = this.Items[itemIndex];
+            if (subitemIndex == 0 & this.Columns.Count > 0)
+            {
+                Rectangle col0 = item.Bounds;
+                return new Rectangle(col0.Left, col0.Top, item.SubItems[1].Bounds.X + 1, col0.Height);
+            }
+            else
+            {
+                return item.SubItems[subitemIndex].Bounds;
+            }
+        }
+        #endregion
+
+        #region inner types
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SCROLLINFO
+        {
+            public uint cbSize;
+            public uint fMask;
+            public int nMin;
+            public int nMax;
+            public int nPage;
+            public int nPos;
+            public int nTrackPos;
+        }
+        #endregion
     }
 }
