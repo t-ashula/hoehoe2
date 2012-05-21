@@ -24,132 +24,47 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Windows.Forms;
+
     public partial class MyLists
     {
-        private string _contextUserName;
-        private Twitter _tw;
+        #region private
+        private string contextUserName;
+        private Twitter twitter;
+        #endregion
 
+        #region constructor
         public MyLists(string userName, Twitter tw)
         {
-            InitializeComponent();
-
-            this._contextUserName = userName;
-            this._tw = tw;
-            this.Text = this._contextUserName + Hoehoe.Properties.Resources.MyLists1;
+            this.InitializeComponent();
+            this.contextUserName = userName;
+            this.twitter = tw;
+            this.Text = this.contextUserName + Hoehoe.Properties.Resources.MyLists1;
         }
+        #endregion
 
+        #region eventhandler
         private void MyLists_Load(object sender, EventArgs e)
         {
-            LoadList();
-        }
-
-        private void LoadList()
-        {
-            this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
-
-            this.ListsCheckedListBox.Items.AddRange(TabInformations.GetInstance().SubscribableLists.FindAll(item => item.Username == this._tw.Username).ToArray());
-
-            for (int i = 0; i < this.ListsCheckedListBox.Items.Count; i++)
-            {
-                ListElement listItem = (ListElement)this.ListsCheckedListBox.Items[i];
-
-                List<PostClass> listPost = new List<PostClass>();
-                List<PostClass> otherPost = new List<PostClass>();
-
-                foreach (TabClass tab in TabInformations.GetInstance().Tabs.Values)
-                {
-                    if (tab.TabType == TabUsageType.Lists)
-                    {
-                        if (listItem.Id == tab.ListInfo.Id)
-                        {
-                            listPost.AddRange(tab.Posts.Values);
-                        }
-                        else
-                        {
-                            otherPost.AddRange(tab.Posts.Values);
-                        }
-                    }
-                }
-
-                //リストが空の場合は推定不能
-                if (listPost.Count == 0)
-                {
-                    this.ListsCheckedListBox.SetItemCheckState(i, CheckState.Indeterminate);
-                    continue;
-                }
-
-                //リストに該当ユーザーのポストが含まれていれば、リストにユーザーが含まれているとする。
-                if (listPost.Exists(item => item.ScreenName == _contextUserName))
-                {
-                    this.ListsCheckedListBox.SetItemChecked(i, true);
-                    continue;
-                }
-
-                List<long> listPostUserIDs = new List<long>();
-                List<string> listPostUserNames = new List<string>();
-                DateTime listOlderPostCreatedAt = DateTime.MaxValue;
-                DateTime listNewistPostCreatedAt = DateTime.MinValue;
-
-                foreach (PostClass post in listPost)
-                {
-                    if (post.UserId > 0 && !listPostUserIDs.Contains(post.UserId))
-                    {
-                        listPostUserIDs.Add(post.UserId);
-                    }
-                    if (post.ScreenName != null && !listPostUserNames.Contains(post.ScreenName))
-                    {
-                        listPostUserNames.Add(post.ScreenName);
-                    }
-                    if (post.CreatedAt < listOlderPostCreatedAt)
-                    {
-                        listOlderPostCreatedAt = post.CreatedAt;
-                    }
-                    if (post.CreatedAt > listNewistPostCreatedAt)
-                    {
-                        listNewistPostCreatedAt = post.CreatedAt;
-                    }
-                }
-
-                //リスト中のユーザーの人数がlistItem.MemberCount以上で、かつ該当のユーザーが含まれていなければ、リストにユーザーは含まれていないとする。
-                if (listItem.MemberCount > 0 && listItem.MemberCount <= listPostUserIDs.Count && (!listPostUserNames.Contains(_contextUserName)))
-                {
-                    this.ListsCheckedListBox.SetItemChecked(i, false);
-                    continue;
-                }
-
-                otherPost.AddRange(TabInformations.GetInstance().Posts.Values);
-
-                //リストに該当ユーザーのポストが含まれていないのにリスト以外で取得したポストの中にリストに含まれるべきポストがある場合は、リストにユーザーは含まれていないとする。
-                if (otherPost.Exists(item => (item.ScreenName == this._contextUserName) && (item.CreatedAt > listOlderPostCreatedAt) && (item.CreatedAt < listNewistPostCreatedAt) && ((!item.IsReply) || listPostUserNames.Contains(item.InReplyToUser))))
-                {
-                    this.ListsCheckedListBox.SetItemChecked(i, false);
-                    continue;
-                }
-
-                this.ListsCheckedListBox.SetItemCheckState(i, CheckState.Indeterminate);
-            }
-
-            this.ListsCheckedListBox.ItemCheck += this.ListsCheckedListBox_ItemCheck;
+            this.LoadList();
         }
 
         private void ListRefreshButton_Click(object sender, EventArgs e)
         {
-            string rslt = this._tw.GetListsApi();
-            if (!String.IsNullOrEmpty(rslt))
+            string rslt = this.twitter.GetListsApi();
+            if (!string.IsNullOrEmpty(rslt))
             {
                 MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListsDeleteFailed, rslt));
             }
             else
             {
                 this.ListsCheckedListBox.Items.Clear();
-                LoadList();
+                this.LoadList();
             }
         }
 
@@ -162,7 +77,7 @@ namespace Hoehoe
                         ListElement listItem = (ListElement)this.ListsCheckedListBox.Items[e.Index];
 
                         bool ret = false;
-                        string rslt = this._tw.ContainsUserAtList(listItem.Id.ToString(), _contextUserName, ref ret);
+                        string rslt = this.twitter.ContainsUserAtList(listItem.Id.ToString(), this.contextUserName, ref ret);
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListManageOKButton2, rslt));
@@ -180,28 +95,31 @@ namespace Hoehoe
                             }
                         }
                     }
+
                     break;
                 case CheckState.Unchecked:
                     {
                         ListElement list = (ListElement)this.ListsCheckedListBox.Items[e.Index];
-                        string rslt = this._tw.AddUserToList(list.Id.ToString(), this._contextUserName.ToString());
+                        string rslt = this.twitter.AddUserToList(list.Id.ToString(), this.contextUserName.ToString());
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListManageOKButton2, rslt));
                             e.NewValue = CheckState.Indeterminate;
                         }
                     }
+
                     break;
                 case CheckState.Checked:
                     {
                         ListElement list = (ListElement)this.ListsCheckedListBox.Items[e.Index];
-                        string rslt = this._tw.RemoveUserToList(list.Id.ToString(), this._contextUserName.ToString());
+                        string rslt = this.twitter.RemoveUserToList(list.Id.ToString(), this.contextUserName.ToString());
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListManageOKButton2, rslt));
                             e.NewValue = CheckState.Indeterminate;
                         }
                     }
+
                     break;
             }
         }
@@ -240,7 +158,7 @@ namespace Hoehoe
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    //項目が無い部分をクリックしても、選択されている項目のチェック状態が変更されてしまうので、その対策
+                    // 項目が無い部分をクリックしても、選択されている項目のチェック状態が変更されてしまうので、その対策
                     for (int index = 0; index < ListsCheckedListBox.Items.Count; index++)
                     {
                         if (this.ListsCheckedListBox.GetItemRectangle(index).Contains(e.Location))
@@ -252,7 +170,7 @@ namespace Hoehoe
                     this.ListsCheckedListBox.SelectedItem = null;
                     break;
                 case MouseButtons.Right:
-                    //コンテキストメニューの項目実行時にSelectedItemプロパティを利用出来るように
+                    // コンテキストメニューの項目実行時にSelectedItemプロパティを利用出来るように
                     for (int index = 0; index < ListsCheckedListBox.Items.Count; index++)
                     {
                         if (this.ListsCheckedListBox.GetItemRectangle(index).Contains(e.Location))
@@ -271,5 +189,100 @@ namespace Hoehoe
         {
             this.Close();
         }
+        #endregion
+
+        #region private method
+        private void LoadList()
+        {
+            this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
+
+            this.ListsCheckedListBox.Items.AddRange(TabInformations.GetInstance().SubscribableLists.FindAll(item => item.Username == this.twitter.Username).ToArray());
+
+            for (int i = 0; i < this.ListsCheckedListBox.Items.Count; i++)
+            {
+                ListElement listItem = (ListElement)this.ListsCheckedListBox.Items[i];
+
+                List<PostClass> listPost = new List<PostClass>();
+                List<PostClass> otherPost = new List<PostClass>();
+
+                foreach (TabClass tab in TabInformations.GetInstance().Tabs.Values)
+                {
+                    if (tab.TabType == TabUsageType.Lists)
+                    {
+                        if (listItem.Id == tab.ListInfo.Id)
+                        {
+                            listPost.AddRange(tab.Posts.Values);
+                        }
+                        else
+                        {
+                            otherPost.AddRange(tab.Posts.Values);
+                        }
+                    }
+                }
+
+                // リストが空の場合は推定不能
+                if (listPost.Count == 0)
+                {
+                    this.ListsCheckedListBox.SetItemCheckState(i, CheckState.Indeterminate);
+                    continue;
+                }
+
+                // リストに該当ユーザーのポストが含まれていれば、リストにユーザーが含まれているとする。
+                if (listPost.Exists(item => item.ScreenName == this.contextUserName))
+                {
+                    this.ListsCheckedListBox.SetItemChecked(i, true);
+                    continue;
+                }
+
+                List<long> listPostUserIDs = new List<long>();
+                List<string> listPostUserNames = new List<string>();
+                DateTime listOlderPostCreatedAt = DateTime.MaxValue;
+                DateTime listNewistPostCreatedAt = DateTime.MinValue;
+
+                foreach (PostClass post in listPost)
+                {
+                    if (post.UserId > 0 && !listPostUserIDs.Contains(post.UserId))
+                    {
+                        listPostUserIDs.Add(post.UserId);
+                    }
+
+                    if (post.ScreenName != null && !listPostUserNames.Contains(post.ScreenName))
+                    {
+                        listPostUserNames.Add(post.ScreenName);
+                    }
+
+                    if (post.CreatedAt < listOlderPostCreatedAt)
+                    {
+                        listOlderPostCreatedAt = post.CreatedAt;
+                    }
+
+                    if (post.CreatedAt > listNewistPostCreatedAt)
+                    {
+                        listNewistPostCreatedAt = post.CreatedAt;
+                    }
+                }
+
+                // リスト中のユーザーの人数がlistItem.MemberCount以上で、かつ該当のユーザーが含まれていなければ、リストにユーザーは含まれていないとする。
+                if (listItem.MemberCount > 0 && listItem.MemberCount <= listPostUserIDs.Count && (!listPostUserNames.Contains(this.contextUserName)))
+                {
+                    this.ListsCheckedListBox.SetItemChecked(i, false);
+                    continue;
+                }
+
+                otherPost.AddRange(TabInformations.GetInstance().Posts.Values);
+
+                // リストに該当ユーザーのポストが含まれていないのにリスト以外で取得したポストの中にリストに含まれるべきポストがある場合は、リストにユーザーは含まれていないとする。
+                if (otherPost.Exists(item => (item.ScreenName == this.contextUserName) && (item.CreatedAt > listOlderPostCreatedAt) && (item.CreatedAt < listNewistPostCreatedAt) && ((!item.IsReply) || listPostUserNames.Contains(item.InReplyToUser))))
+                {
+                    this.ListsCheckedListBox.SetItemChecked(i, false);
+                    continue;
+                }
+
+                this.ListsCheckedListBox.SetItemCheckState(i, CheckState.Indeterminate);
+            }
+
+            this.ListsCheckedListBox.ItemCheck += this.ListsCheckedListBox_ItemCheck;
+        }
+        #endregion
     }
 }
