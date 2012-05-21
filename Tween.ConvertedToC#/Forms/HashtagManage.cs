@@ -24,26 +24,143 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows.Forms;
+
     public partial class HashtagManage
     {
-        //入力補助画面
-        private AtIdSupplement _hashSupl;
+        private AtIdSupplement hashSupl;       // 入力補助画面
+        private string useHash = string.Empty; // I/F用
+        private bool isPermanent = false;
+        private bool isHead = false;
+        private bool isNotAddToAtReply = true;
+        private bool isAdd; // 編集モード
 
-        //I/F用
-        private string _useHash = "";
+        public HashtagManage(AtIdSupplement hashSuplForm, string[] history, string permanentHash, bool isPermanent, bool isHead, bool isNotAddToAtReply)
+        {
+            // この呼び出しは、Windows フォーム デザイナで必要です。
+            InitializeComponent();
 
-        private bool _isPermanent = false;
-        private bool _isHead = false;
-        private bool _isNotAddToAtReply = true;
+            // InitializeComponent() 呼び出しの後で初期化を追加します。
+            this.hashSupl = hashSuplForm;
+            HistoryHashList.Items.AddRange(history);
+            this.useHash = permanentHash;
+            this.isPermanent = isPermanent;
+            this.isHead = isHead;
+            this.isNotAddToAtReply = isNotAddToAtReply;
+        }
 
-        //編集モード
-        private bool _isAdd = false;
+        public List<string> HashHistories
+        {
+            get
+            {
+                List<string> hash = new List<string>();
+                foreach (string item in HistoryHashList.Items)
+                {
+                    hash.Add(item);
+                }
+
+                return hash;
+            }
+        }
+
+        public string UseHash
+        {
+            get { return this.useHash; }
+        }
+
+        public bool IsPermanent
+        {
+            get { return this.isPermanent; }
+        }
+
+        public bool IsHead
+        {
+            get { return this.isHead; }
+        }
+
+        public bool IsNotAddToAtReply
+        {
+            get { return this.isNotAddToAtReply; }
+        }
+
+        public void AddHashToHistory(string hash, bool isIgnorePermanent)
+        {
+            hash = hash.Trim();
+            if (!string.IsNullOrEmpty(hash))
+            {
+                if (isIgnorePermanent || !this.isPermanent)
+                {
+                    // 無条件に先頭に挿入
+                    int idx = this.GetIndexOf(HistoryHashList.Items, hash);
+                    if (idx != -1)
+                    {
+                        HistoryHashList.Items.RemoveAt(idx);
+                    }
+
+                    HistoryHashList.Items.Insert(0, hash);
+                }
+                else
+                {
+                    // 固定されていたら2行目に挿入
+                    int idx = this.GetIndexOf(HistoryHashList.Items, hash);
+                    if (this.isPermanent)
+                    {
+                        if (idx > 0)
+                        {
+                            // 重複アイテムが2行目以降にあれば2行目へ
+                            HistoryHashList.Items.RemoveAt(idx);
+                            HistoryHashList.Items.Insert(1, hash);
+                        }
+                        else if (idx == -1)
+                        {
+                            // 重複アイテムなし
+                            if (HistoryHashList.Items.Count == 0)
+                            {
+                                // リストが空なら追加
+                                HistoryHashList.Items.Add(hash);
+                            }
+                            else
+                            {
+                                // リストにアイテムがあれば2行目へ
+                                HistoryHashList.Items.Insert(1, hash);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ToggleHash()
+        {
+            if (string.IsNullOrEmpty(this.useHash))
+            {
+                if (this.HistoryHashList.Items.Count > 0)
+                {
+                    this.useHash = this.HistoryHashList.Items[0].ToString();
+                }
+            }
+            else
+            {
+                this.useHash = string.Empty;
+            }
+        }
+
+        public void ClearHashtag()
+        {
+            this.useHash = string.Empty;
+        }
+
+        public void SetPermanentHash(string hash)
+        {
+            // 固定ハッシュタグの変更
+            this.useHash = hash.Trim();
+            this.AddHashToHistory(this.useHash, false);
+            this.isPermanent = true;
+        }
 
         private void ChangeMode(bool isEdit)
         {
@@ -60,7 +177,7 @@ namespace Hoehoe
             }
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
@@ -68,9 +185,9 @@ namespace Hoehoe
 
         private void AddButton_Click(object sender, EventArgs e)
         {
-            this.UseHashText.Text = "";
-            ChangeMode(true);
-            _isAdd = true;
+            this.UseHashText.Text = string.Empty;
+            this.ChangeMode(true);
+            this.isAdd = true;
         }
 
         private void EditButton_Click(object sender, EventArgs e)
@@ -79,9 +196,10 @@ namespace Hoehoe
             {
                 return;
             }
+
             this.UseHashText.Text = this.HistoryHashList.SelectedItems[0].ToString();
-            ChangeMode(true);
-            _isAdd = false;
+            this.ChangeMode(true);
+            this.isAdd = false;
         }
 
         private void DeleteButton_Click(object sender, EventArgs e)
@@ -90,18 +208,22 @@ namespace Hoehoe
             {
                 return;
             }
+
             if (MessageBox.Show(Hoehoe.Properties.Resources.DeleteHashtagsMessage1, "Delete Hashtags", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
             {
                 return;
             }
+            
             for (int i = 0; i < HistoryHashList.SelectedIndices.Count; i++)
             {
                 if (UseHashText.Text == HistoryHashList.SelectedItems[0].ToString())
                 {
-                    UseHashText.Text = "";
+                    UseHashText.Text = string.Empty;
                 }
+
                 HistoryHashList.Items.RemoveAt(HistoryHashList.SelectedIndices[0]);
             }
+
             if (HistoryHashList.Items.Count > 0)
             {
                 HistoryHashList.SelectedIndex = 0;
@@ -113,30 +235,32 @@ namespace Hoehoe
             do
             {
                 HistoryHashList.SelectedIndices.Clear();
-            } while (HistoryHashList.SelectedIndices.Count > 0);
+            }
+            while (HistoryHashList.SelectedIndices.Count > 0);
         }
 
         private int GetIndexOf(ListBox.ObjectCollection list, string value)
         {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 return -1;
             }
 
             int idx = 0;
-
             foreach (object l in list)
             {
                 string src = l as string;
-                if (String.IsNullOrEmpty(src))
+                if (string.IsNullOrEmpty(src))
                 {
                     idx++;
                     continue;
                 }
-                if (String.Compare(src, value, true) == 0)
+                
+                if (string.Compare(src, value, true) == 0)
                 {
                     return idx;
                 }
+
                 idx++;
             }
 
@@ -144,63 +268,17 @@ namespace Hoehoe
             return -1;
         }
 
-        public void AddHashToHistory(string hash, bool isIgnorePermanent)
-        {
-            hash = hash.Trim();
-            if (!String.IsNullOrEmpty(hash))
-            {
-                if (isIgnorePermanent || !_isPermanent)
-                {
-                    //無条件に先頭に挿入
-                    int idx = GetIndexOf(HistoryHashList.Items, hash);
-
-                    if (idx != -1)
-                    {
-                        HistoryHashList.Items.RemoveAt(idx);
-                    }
-                    HistoryHashList.Items.Insert(0, hash);
-                }
-                else
-                {
-                    //固定されていたら2行目に挿入
-                    int idx = GetIndexOf(HistoryHashList.Items, hash);
-                    if (_isPermanent)
-                    {
-                        if (idx > 0)
-                        {
-                            //重複アイテムが2行目以降にあれば2行目へ
-                            HistoryHashList.Items.RemoveAt(idx);
-                            HistoryHashList.Items.Insert(1, hash);
-                        }
-                        else if (idx == -1)
-                        {
-                            //重複アイテムなし
-                            if (HistoryHashList.Items.Count == 0)
-                            {
-                                //リストが空なら追加
-                                HistoryHashList.Items.Add(hash);
-                            }
-                            else
-                            {
-                                //リストにアイテムがあれば2行目へ
-                                HistoryHashList.Items.Insert(1, hash);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         private void HashtagManage_Shown(object sender, System.EventArgs e)
         {
-            //オプション
-            this.CheckPermanent.Checked = this._isPermanent;
-            this.RadioHead.Checked = this._isHead;
-            this.RadioLast.Checked = !this._isHead;
-            //リスト選択
-            if (this.HistoryHashList.Items.Contains(this._useHash))
+            // オプション
+            this.CheckPermanent.Checked = this.isPermanent;
+            this.RadioHead.Checked = this.isHead;
+            this.RadioLast.Checked = !this.isHead;
+
+            // リスト選択
+            if (this.HistoryHashList.Items.Contains(this.useHash))
             {
-                this.HistoryHashList.SelectedItem = this._useHash;
+                this.HistoryHashList.SelectedItem = this.useHash;
             }
             else
             {
@@ -209,45 +287,34 @@ namespace Hoehoe
                     this.HistoryHashList.SelectedIndex = 0;
                 }
             }
+
             this.ChangeMode(false);
-        }
-
-        public HashtagManage(AtIdSupplement hashSuplForm, string[] history, string permanentHash, bool isPermanent, bool isHead, bool isNotAddToAtReply)
-        {
-            // この呼び出しは、Windows フォーム デザイナで必要です。
-            InitializeComponent();
-
-            // InitializeComponent() 呼び出しの後で初期化を追加します。
-
-            _hashSupl = hashSuplForm;
-            HistoryHashList.Items.AddRange(history);
-            _useHash = permanentHash;
-            _isPermanent = isPermanent;
-            _isHead = isHead;
-            _isNotAddToAtReply = isNotAddToAtReply;
         }
 
         private void UseHashText_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '#')
             {
-                _hashSupl.ShowDialog();
-                if (!String.IsNullOrEmpty(_hashSupl.InputText))
+                this.hashSupl.ShowDialog();
+                if (!string.IsNullOrEmpty(this.hashSupl.InputText))
                 {
-                    string fHalf = "";
-                    string eHalf = "";
+                    string front = string.Empty;
+                    string last = string.Empty;
                     int selStart = UseHashText.SelectionStart;
                     if (selStart > 0)
                     {
-                        fHalf = UseHashText.Text.Substring(0, selStart);
+                        front = UseHashText.Text.Substring(0, selStart);
                     }
+                    
                     if (selStart < UseHashText.Text.Length)
                     {
-                        eHalf = UseHashText.Text.Substring(selStart);
+                        last = UseHashText.Text.Substring(selStart);
                     }
-                    UseHashText.Text = fHalf + _hashSupl.InputText + eHalf;
-                    UseHashText.SelectionStart = selStart + _hashSupl.InputText.Length;
+
+                    UseHashText.Text = front + this.hashSupl.InputText + last;
+                    UseHashText.SelectionStart = selStart + this.hashSupl.InputText.Length;
                 }
+
                 e.Handled = true;
             }
         }
@@ -257,70 +324,9 @@ namespace Hoehoe
             this.OkButton_Click(null, null);
         }
 
-        public void ToggleHash()
-        {
-            if (String.IsNullOrEmpty(this._useHash))
-            {
-                if (this.HistoryHashList.Items.Count > 0)
-                {
-                    this._useHash = this.HistoryHashList.Items[0].ToString();
-                }
-            }
-            else
-            {
-                this._useHash = "";
-            }
-        }
-
-        public List<string> HashHistories
-        {
-            get
-            {
-                List<string> hash = new List<string>();
-                foreach (string item in HistoryHashList.Items)
-                {
-                    hash.Add(item);
-                }
-                return hash;
-            }
-        }
-
-        public string UseHash
-        {
-            get { return _useHash; }
-        }
-
-        public void ClearHashtag()
-        {
-            this._useHash = "";
-        }
-
-        public void SetPermanentHash(string hash)
-        {
-            //固定ハッシュタグの変更
-            _useHash = hash.Trim();
-            this.AddHashToHistory(_useHash, false);
-            this._isPermanent = true;
-        }
-
-        public bool IsPermanent
-        {
-            get { return _isPermanent; }
-        }
-
-        public bool IsHead
-        {
-            get { return _isHead; }
-        }
-
-        public bool IsNotAddToAtReply
-        {
-            get { return _isNotAddToAtReply; }
-        }
-
         private void PermOkButton_Click(object sender, EventArgs e)
         {
-            //ハッシュタグの整形
+            // ハッシュタグの整形
             string hashStr = UseHashText.Text;
             if (!this.AdjustHashtags(ref hashStr, true))
             {
@@ -329,14 +335,15 @@ namespace Hoehoe
 
             UseHashText.Text = hashStr;
             int idx = 0;
-            if (!this._isAdd && this.HistoryHashList.SelectedIndices.Count > 0)
+            if (!this.isAdd && this.HistoryHashList.SelectedIndices.Count > 0)
             {
                 idx = this.HistoryHashList.SelectedIndices[0];
                 this.HistoryHashList.Items.RemoveAt(idx);
                 do
                 {
                     this.HistoryHashList.SelectedIndices.Clear();
-                } while (this.HistoryHashList.SelectedIndices.Count > 0);
+                } 
+                while (this.HistoryHashList.SelectedIndices.Count > 0);
                 this.HistoryHashList.Items.Insert(idx, hashStr);
                 this.HistoryHashList.SelectedIndex = idx;
             }
@@ -346,11 +353,12 @@ namespace Hoehoe
                 do
                 {
                     this.HistoryHashList.SelectedIndices.Clear();
-                } while (this.HistoryHashList.SelectedIndices.Count > 0);
+                }
+                while (this.HistoryHashList.SelectedIndices.Count > 0);
                 this.HistoryHashList.SelectedIndex = this.HistoryHashList.Items.IndexOf(hashStr);
             }
 
-            ChangeMode(false);
+            this.ChangeMode(false);
         }
 
         private void PermCancelButton_Click(object sender, EventArgs e)
@@ -361,10 +369,10 @@ namespace Hoehoe
             }
             else
             {
-                this.UseHashText.Text = "";
+                this.UseHashText.Text = string.Empty;
             }
 
-            ChangeMode(false);
+            this.ChangeMode(false);
         }
 
         private void HistoryHashList_KeyDown(object sender, KeyEventArgs e)
@@ -381,19 +389,21 @@ namespace Hoehoe
 
         private bool AdjustHashtags(ref string hashtag, bool isShowWarn)
         {
-            //ハッシュタグの整形
+            // ハッシュタグの整形
             hashtag = hashtag.Trim();
-            if (String.IsNullOrEmpty(hashtag))
+            if (string.IsNullOrEmpty(hashtag))
             {
                 if (isShowWarn)
                 {
                     MessageBox.Show("emply hashtag.", "Hashtag warning", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 }
+
                 return false;
             }
+
             hashtag = hashtag.Replace("＃", "#");
             hashtag = hashtag.Replace("　", " ");
-            string adjust = "";
+            string adjust = string.Empty;
             foreach (string hash in hashtag.Split(' '))
             {
                 if (hash.Length > 0)
@@ -404,44 +414,49 @@ namespace Hoehoe
                         {
                             MessageBox.Show("Invalid hashtag. -> " + hash, "Hashtag warning", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                         }
+
                         return false;
                     }
+
                     if (hash.Length == 1)
                     {
                         if (isShowWarn)
                         {
                             MessageBox.Show("empty hashtag.", "Hashtag warning", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                         }
+
                         return false;
                     }
-                    //使用不可の文字チェックはしない
+                    
                     adjust += hash + " ";
                 }
             }
+
             hashtag = adjust.Trim();
             return true;
         }
 
         private void OkButton_Click(object sender, EventArgs e)
         {
-            string hash = "";
+            string hash = string.Empty;
             foreach (string hs in this.HistoryHashList.SelectedItems)
             {
                 hash += hs + " ";
             }
+
             hash = hash.Trim();
-            if (!String.IsNullOrEmpty(hash))
+            if (!string.IsNullOrEmpty(hash))
             {
                 this.AddHashToHistory(hash, true);
-                this._isPermanent = this.CheckPermanent.Checked;
+                this.isPermanent = this.CheckPermanent.Checked;
             }
             else
             {
-                //使用ハッシュが未選択ならば、固定オプション外す
-                this._isPermanent = false;
+                this.isPermanent = false; // 使用ハッシュが未選択ならば、固定オプション外す
             }
-            this._isHead = this.RadioHead.Checked;
-            this._useHash = hash;
+
+            this.isHead = this.RadioHead.Checked;
+            this.useHash = hash;
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -470,14 +485,14 @@ namespace Hoehoe
                 }
                 else
                 {
-                    this.cancelButton_Click(null, null);
+                    this.CancelButton_Click(null, null);
                 }
             }
         }
 
         private void CheckNotAddToAtReply_CheckedChanged(object sender, EventArgs e)
         {
-            _isNotAddToAtReply = CheckNotAddToAtReply.Checked;
+            this.isNotAddToAtReply = CheckNotAddToAtReply.Checked;
         }
     }
 }
