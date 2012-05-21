@@ -24,34 +24,45 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
-    //フォームのコンストラクタでこのクラスのインスタンス作成すること
-    //インスタンス変数はwitheventsで宣言し、HotkeyPressedイベントを受け取ること
-    //グローバルホットキーはRegisterOriginalHotkeyで登録。複数種類登録できるが、重複チェックはしていないので注意。
-    //再設定前にはUnregisterAllOriginalHotkeyを呼ぶこと
+    using System;
+    using System.Collections.Generic;
+    using System.Windows.Forms;
 
+    /// <summary>
+    /// フォームのコンストラクタでこのクラスのインスタンス作成すること
+    /// インスタンス変数はwitheventsで宣言し、HotkeyPressedイベントを受け取ること
+    /// グローバルホットキーはRegisterOriginalHotkeyで登録。複数種類登録できるが、重複チェックはしていないので注意。
+    /// 再設定前にはUnregisterAllOriginalHotkeyを呼ぶこと
+    /// </summary>
     public class HookGlobalHotkey : NativeWindow, IDisposable
     {
-        public event KeyEventHandler HotkeyPressed;
-
-        private class KeyEventValue
+        #region privates
+        private Form targetForm;
+        private Dictionary<int, KeyEventValue> hotkeyIds;
+        private bool disposedValue = false; // 重複する呼び出しを検出するには
+        #endregion
+        #region constructor
+        public HookGlobalHotkey(Form targetForm)
         {
-            public KeyEventValue(KeyEventArgs keyEvent, int value)
-            {
-                KeyEvent = keyEvent;
-                Value = value;
-            }
-
-            public KeyEventArgs KeyEvent { get; private set; }
-
-            public int Value { get; private set; }
+            this.hotkeyIds = new Dictionary<int, KeyEventValue>();
+            this.targetForm = targetForm;
+            this.targetForm.HandleCreated += this.OnHandleCreated;
+            this.targetForm.HandleDestroyed += this.OnHandleDestroyed;
         }
 
+        ~HookGlobalHotkey()
+        {
+            this.Dispose(false);
+        }
+        #endregion
+
+        #region event
+        public event KeyEventHandler HotkeyPressed;
+        #endregion
+
+        #region enums
         [Flags]
         public enum ModKeys : int
         {
@@ -61,40 +72,12 @@ namespace Hoehoe
             Shift = 0x4,
             Win = 0x8
         }
+        #endregion
 
-        private Form _targetForm;
-        private Dictionary<int, KeyEventValue> _hotkeyID;
-
-        protected override void WndProc(ref System.Windows.Forms.Message m)
-        {
-            const int WM_HOTKEY = 0x312;
-            if (m.Msg == WM_HOTKEY)
-            {
-                int mwParam = m.WParam.ToInt32();
-                if (_hotkeyID.ContainsKey(mwParam))
-                {
-                    if (HotkeyPressed != null)
-                    {
-                        HotkeyPressed(this, _hotkeyID[mwParam].KeyEvent);
-                    }
-                }
-                return;
-            }
-            base.WndProc(ref m);
-        }
-
-        public HookGlobalHotkey(Form targetForm)
-        {
-            _targetForm = targetForm;
-            _hotkeyID = new Dictionary<int, KeyEventValue>();
-
-            _targetForm.HandleCreated += this.OnHandleCreated;
-            _targetForm.HandleDestroyed += this.OnHandleDestroyed;
-        }
-
+        #region public methods
         public void OnHandleCreated(object sender, EventArgs e)
         {
-            this.AssignHandle(_targetForm.Handle);
+            this.AssignHandle(this.targetForm.Handle);
         }
 
         public void OnHandleDestroyed(object sender, EventArgs e)
@@ -109,47 +92,85 @@ namespace Hoehoe
             {
                 modKey = modKey | Keys.Alt;
             }
+
             if ((modifiers & ModKeys.Ctrl) == ModKeys.Ctrl)
             {
                 modKey = modKey | Keys.Control;
             }
+
             if ((modifiers & ModKeys.Shift) == ModKeys.Shift)
             {
                 modKey = modKey | Keys.Shift;
             }
+
             if ((modifiers & ModKeys.Win) == ModKeys.Win)
             {
                 modKey = modKey | Keys.LWin;
             }
+
             KeyEventArgs key = new KeyEventArgs(hotkey | modKey);
-            foreach (KeyValuePair<int, KeyEventValue> kvp in this._hotkeyID)
+            foreach (KeyValuePair<int, KeyEventValue> kvp in this.hotkeyIds)
             {
-                //登録済みなら正常終了
+                // 登録済みなら正常終了
                 if (kvp.Value.KeyEvent.KeyData == key.KeyData && kvp.Value.Value == hotkeyValue)
                 {
                     return true;
                 }
             }
-            int hotkeyId = Win32Api.RegisterGlobalHotKey(hotkeyValue, (int)modifiers, this._targetForm);
+
+            int hotkeyId = Win32Api.RegisterGlobalHotKey(hotkeyValue, (int)modifiers, this.targetForm);
             if (hotkeyId > 0)
             {
-                this._hotkeyID.Add(hotkeyId, new KeyEventValue(key, hotkeyValue));
+                this.hotkeyIds.Add(hotkeyId, new KeyEventValue(key, hotkeyValue));
                 return true;
             }
+
             return false;
         }
 
         public void UnregisterAllOriginalHotkey()
         {
-            foreach (int hotkeyId in this._hotkeyID.Keys)
+            foreach (int hotkeyId in this.hotkeyIds.Keys)
             {
-                Win32Api.UnregisterGlobalHotKey(hotkeyId, this._targetForm);
+                Win32Api.UnregisterGlobalHotKey(hotkeyId, this.targetForm);
             }
-            this._hotkeyID.Clear();
+
+            this.hotkeyIds.Clear();
         }
 
-        // 重複する呼び出しを検出するには
-        private bool disposedValue = false;
+        #region " IDisposable Support "
+
+        // このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion " IDisposable Support "
+        #endregion
+
+        #region protected methods
+        protected override void WndProc(ref System.Windows.Forms.Message m)
+        {
+            const int WM_HOTKEY = 0x312;
+            if (m.Msg == WM_HOTKEY)
+            {
+                int wparam = m.WParam.ToInt32();
+                if (this.hotkeyIds.ContainsKey(wparam))
+                {
+                    if (this.HotkeyPressed != null)
+                    {
+                        this.HotkeyPressed(this, this.hotkeyIds[wparam].KeyEvent);
+                    }
+                }
+
+                return;
+            }
+
+            base.WndProc(ref m);
+        }
 
         // IDisposable
         protected virtual void Dispose(bool disposing)
@@ -162,32 +183,31 @@ namespace Hoehoe
                 }
 
                 // TODO: 共有のアンマネージ リソースを解放します
-                if (this._targetForm != null && !this._targetForm.IsDisposed)
+                if (this.targetForm != null && !this.targetForm.IsDisposed)
                 {
                     this.UnregisterAllOriginalHotkey();
-                    _targetForm.HandleCreated -= this.OnHandleCreated;
-                    _targetForm.HandleDestroyed -= this.OnHandleDestroyed;
+                    this.targetForm.HandleCreated -= this.OnHandleCreated;
+                    this.targetForm.HandleDestroyed -= this.OnHandleDestroyed;
                 }
             }
+
             this.disposedValue = true;
         }
+        #endregion
 
-        #region " IDisposable Support "
-
-        // このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
-        public void Dispose()
+        #region inner classes
+        private class KeyEventValue
         {
-            // このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+            public KeyEventValue(KeyEventArgs keyEvent, int value)
+            {
+                this.KeyEvent = keyEvent;
+                this.Value = value;
+            }
 
-        #endregion " IDisposable Support "
+            public KeyEventArgs KeyEvent { get; private set; }
 
-        protected override void Finalize()
-        {
-            this.Dispose(false);
-            //base.Finalize();
+            public int Value { get; private set; }
         }
+        #endregion
     }
 }
