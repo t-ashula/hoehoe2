@@ -24,118 +24,30 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Linq;
+    using System.Windows.Forms;
+
     public partial class AtIdSupplement
     {
+        #region private field
+        private string startChar = string.Empty;
+        #endregion
+
         #region constructor
-        public AtIdSupplement()
+
+        public AtIdSupplement(List<string> itemList, string startCharacter)
         {
-            // この呼び出しは、Windows フォーム デザイナで必要です。
-            InitializeComponent();
-            // InitializeComponent() 呼び出しの後で初期化を追加します。
-        }
-
-        public AtIdSupplement(List<string> ItemList, string startCharacter)
-        {
-            // この呼び出しは、Windows フォーム デザイナで必要です。
-            InitializeComponent();
-
-            // InitializeComponent() 呼び出しの後で初期化を追加します。
-
-            for (int i = 0; i < ItemList.Count; i++)
-            {
-                this.TextId.AutoCompleteCustomSource.Add(ItemList[i]);
-            }
-            _startChar = startCharacter;
+            this.InitializeComponent();
+            this.startChar = startCharacter;
+            this.TextId.AutoCompleteCustomSource.AddRange(itemList.ToArray());
         }
         #endregion
 
-        #region event handler
-
-        private void ButtonOK_Click(object sender, EventArgs e)
-        {
-            InputText = this.TextId.Text;
-            IsBack = false;
-        }
-
-        private void ButtonCancel_Click(object sender, EventArgs e)
-        {
-            InputText = "";
-            IsBack = false;
-        }
-
-        private void TextId_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Back && String.IsNullOrEmpty(this.TextId.Text))
-            {
-                InputText = "";
-                IsBack = true;
-                this.Close();
-            }
-            if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Tab)
-            {
-                InputText = this.TextId.Text + " ";
-                IsBack = false;
-                this.Close();
-            }
-            if (e.Control && e.KeyCode == Keys.Delete)
-            {
-                if (!String.IsNullOrEmpty(this.TextId.Text))
-                {
-                    int idx = this.TextId.AutoCompleteCustomSource.IndexOf(this.TextId.Text);
-                    if (idx > -1)
-                    {
-                        this.TextId.Text = "";
-                        this.TextId.AutoCompleteCustomSource.RemoveAt(idx);
-                    }
-                }
-            }
-        }
-
-        private void AtIdSupplement_Load(object sender, EventArgs e)
-        {
-            if (_startChar == "#")
-            {
-                this.ClientSize = new Size(this.TextId.Width, this.TextId.Height);
-                //プロパティで切り替えできるように
-                this.TextId.ImeMode = ImeMode.Inherit;
-            }
-        }
-
-        private void AtIdSupplement_Shown(object sender, EventArgs e)
-        {
-            TextId.Text = _startChar;
-            if (!String.IsNullOrEmpty(StartsWith))
-            {
-                TextId.Text += StartsWith.Substring(0, StartsWith.Length);
-            }
-            TextId.SelectionStart = TextId.Text.Length;
-            TextId.Focus();
-        }
-
-        private void TextId_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            if (e.KeyCode == Keys.Tab)
-            {
-                InputText = this.TextId.Text + " ";
-                IsBack = false;
-                this.Close();
-            }
-        }
-
-        private void AtIdSupplement_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            StartsWith = "";
-            this.DialogResult = IsBack ? DialogResult.Cancel : DialogResult.OK;
-        }
-
-        #endregion
         #region properties
 
         public string StartsWith { get; set; }
@@ -144,12 +56,14 @@ namespace Hoehoe
         {
             get { return this.TextId.AutoCompleteCustomSource.Count; }
         }
+
+        public string InputText { get; private set; }
+
+        public bool IsBack { get; private set; }
+
         #endregion
 
         #region public
-        public string InputText = "";
-        public bool IsBack = false;
-
         public void AddItem(string id)
         {
             if (!this.TextId.AutoCompleteCustomSource.Contains(id))
@@ -168,17 +82,90 @@ namespace Hoehoe
 
         public List<string> GetItemList()
         {
-            List<string> ids = new List<string>();
-            for (int i = 0; i < this.TextId.AutoCompleteCustomSource.Count; i++)
-            {
-                ids.Add(this.TextId.AutoCompleteCustomSource[i]);
-            }
-            return ids;
+            return this.TextId.AutoCompleteCustomSource.Cast<string>().ToList();
         }
         #endregion
+        #region event handler
 
-        #region private
-        private string _startChar = "";
+        private void ButtonOK_Click(object sender, EventArgs e)
+        {
+            this.InputText = this.TextId.Text;
+            this.IsBack = false;
+        }
+
+        private void ButtonCancel_Click(object sender, EventArgs e)
+        {
+            this.InputText = string.Empty;
+            this.IsBack = false;
+        }
+
+        private void TextId_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Back && string.IsNullOrEmpty(this.TextId.Text))
+            {
+                this.InputText = string.Empty;
+                this.IsBack = true;
+                this.Close();
+            }
+
+            if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Tab)
+            {
+                this.InputText = this.TextId.Text + " ";
+                this.IsBack = false;
+                this.Close();
+            }
+
+            if (e.Control && e.KeyCode == Keys.Delete)
+            {
+                if (!string.IsNullOrEmpty(this.TextId.Text))
+                {
+                    int idx = this.TextId.AutoCompleteCustomSource.IndexOf(this.TextId.Text);
+                    if (idx > -1)
+                    {
+                        this.TextId.Text = string.Empty;
+                        this.TextId.AutoCompleteCustomSource.RemoveAt(idx);
+                    }
+                }
+            }
+        }
+
+        private void AtIdSupplement_Load(object sender, EventArgs e)
+        {
+            if (this.startChar == "#")
+            {
+                this.ClientSize = new Size(this.TextId.Width, this.TextId.Height);
+                this.TextId.ImeMode = ImeMode.Inherit;
+            }
+        }
+
+        private void AtIdSupplement_Shown(object sender, EventArgs e)
+        {
+            this.TextId.Text = this.startChar;
+            if (!string.IsNullOrEmpty(this.StartsWith))
+            {
+                this.TextId.Text += this.StartsWith.Substring(0, this.StartsWith.Length);
+            }
+
+            this.TextId.SelectionStart = this.TextId.Text.Length;
+            this.TextId.Focus();
+        }
+
+        private void TextId_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Tab)
+            {
+                this.InputText = this.TextId.Text + " ";
+                this.IsBack = false;
+                this.Close();
+            }
+        }
+
+        private void AtIdSupplement_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.StartsWith = string.Empty;
+            this.DialogResult = this.IsBack ? DialogResult.Cancel : DialogResult.OK;
+        }
+
         #endregion
     }
 }
