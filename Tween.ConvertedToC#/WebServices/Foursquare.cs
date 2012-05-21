@@ -30,6 +30,7 @@ using System.Net;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using Hoehoe.DataModels;
+using Hoehoe.DataModels.FourSquareDataModel;
 
 namespace Hoehoe
 {
@@ -71,7 +72,7 @@ namespace Hoehoe
             return mc.Success ? mc.Result("${venueId}") : "";
         }
 
-        private FourSquareDataModel.Venue GetVenueInfo(string venueId)
+        private Venue GetVenueInfo(string venueId)
         {
             string content = "";
             try
@@ -80,10 +81,10 @@ namespace Hoehoe
 
                 if (res == HttpStatusCode.OK)
                 {
-                    FourSquareDataModel.FourSquareData curData = null;
+                    FourSquareData curData = null;
                     try
                     {
-                        curData = D.CreateDataFromJson<FourSquareDataModel.FourSquareData>(content);
+                        curData = D.CreateDataFromJson<FourSquareData>(content);
                     }
                     catch (Exception ex)
                     {
@@ -118,7 +119,7 @@ namespace Hoehoe
                 return (new Google()).CreateGoogleStaticMapsUri(CheckInUrlsVenueCollection[urlId]);
             }
 
-            FourSquareDataModel.Venue curVenue = null;
+            Venue curVenue = null;
             string venueId = GetVenueId(url);
             if (String.IsNullOrEmpty(venueId))
             {
@@ -146,7 +147,7 @@ namespace Hoehoe
             return (new Google()).CreateGoogleStaticMapsUri(curLocation);
         }
 
-        private string CreateVenueInfoText(FourSquareDataModel.Venue info)
+        private string CreateVenueInfoText(Venue info)
         {
             return info.Name + Environment.NewLine
                 + info.Stats.UsersCount.ToString() + "/" + info.Stats.CheckinsCount.ToString() + Environment.NewLine
