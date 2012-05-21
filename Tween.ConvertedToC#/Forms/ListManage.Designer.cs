@@ -1,11 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using System.ComponentModel;
 namespace Hoehoe
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Windows.Forms;
+    using System.ComponentModel;
+
     partial class ListManage : System.Windows.Forms.Form
     {
 
@@ -444,7 +445,7 @@ namespace Hoehoe
         internal System.Windows.Forms.GroupBox UserGroup;
         internal System.Windows.Forms.Button AddListButton;
         internal System.Windows.Forms.Button DeleteListButton;
-        internal System.Windows.Forms.Button GetMoreUsersButton; 
+        internal System.Windows.Forms.Button GetMoreUsersButton;
         internal System.Windows.Forms.Button DeleteUserButton;
         internal System.Windows.Forms.TextBox NameTextBox;
         internal System.Windows.Forms.TextBox UsernameTextBox;

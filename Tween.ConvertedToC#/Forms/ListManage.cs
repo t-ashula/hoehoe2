@@ -24,23 +24,28 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.ComponentModel;
+    using System.Drawing;
+    using System.Windows.Forms;
+
     public partial class ListManage
     {
-        private Twitter _tw;
+        #region private
+        private Twitter twitter;
+        #endregion
 
+        #region constructor
         public ListManage(Twitter tw)
         {
-            InitializeComponent();
-            this._tw = tw;
+            this.InitializeComponent();
+            this.twitter = tw;
         }
+        #endregion
 
+        #region eventhandler
         private void ListManage_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && this.EditCheckBox.Checked)
@@ -56,14 +61,17 @@ namespace Hoehoe
             {
                 this.RefreshLists();
             }
-            foreach (ListElement listItem in TabInformations.GetInstance().SubscribableLists.FindAll(i => i.Username == this._tw.Username))
+
+            foreach (ListElement listItem in TabInformations.GetInstance().SubscribableLists.FindAll(i => i.Username == this.twitter.Username))
             {
                 this.ListsList.Items.Add(listItem);
             }
+
             if (this.ListsList.Items.Count > 0)
             {
                 this.ListsList.SelectedIndex = 0;
             }
+
             this.ListsList.Focus();
         }
 
@@ -82,7 +90,6 @@ namespace Hoehoe
             this.MemberCountTextBox.Text = list.MemberCount.ToString();
             this.SubscriberCountTextBox.Text = list.SubscriberCount.ToString();
             this.DescriptionText.Text = list.Description;
-
             this.UserList.Items.Clear();
             foreach (UserInfo user in list.Members)
             {
@@ -124,9 +131,10 @@ namespace Hoehoe
             {
                 return;
             }
+
             ListElement listItem = (ListElement)this.ListsList.SelectedItem;
 
-            if (String.IsNullOrEmpty(this.NameTextBox.Text))
+            if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.ListManageOKButton1);
                 return;
@@ -138,9 +146,9 @@ namespace Hoehoe
 
             string rslt = listItem.Refresh();
 
-            if (!String.IsNullOrEmpty(rslt))
+            if (!string.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(String.Format(Hoehoe.Properties.Resources.ListManageOKButton2, rslt));
+                MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListManageOKButton2, rslt));
                 return;
             }
 
@@ -173,6 +181,7 @@ namespace Hoehoe
             {
                 return;
             }
+
             this.UserList.Items.Clear();
             Action<ListElement> dlgt = new Action<ListElement>(lElement => { this.Invoke(new Action<string>(GetListMembersCallback), lElement.RefreshMembers()); });
             dlgt.BeginInvoke((ListElement)this.ListsList.SelectedItem, null, null);
@@ -184,23 +193,10 @@ namespace Hoehoe
             {
                 return;
             }
+
             Action<ListElement> dlgt = new Action<ListElement>(lElement => { this.Invoke(new Action<string>(GetListMembersCallback), lElement.GetMoreMembers()); });
             dlgt.BeginInvoke((ListElement)this.ListsList.SelectedItem, null, null);
         }
-
-        private void GetListMembersCallback(string result)
-        {
-            if (result == this.ListsList.SelectedItem.ToString())
-            {
-                this.ListsList_SelectedIndexChanged(this.ListsList, EventArgs.Empty);
-                this.GetMoreUsersButton.Text = Hoehoe.Properties.Resources.ListManageGetMoreUsers1;
-            }
-            else
-            {
-                MessageBox.Show(String.Format(Hoehoe.Properties.Resources.ListManageGetListMembersCallback1, result));
-            }
-        }
-
         private void DeleteUserButton_Click(object sender, EventArgs e)
         {
             if (this.ListsList.SelectedItem == null || this.UserList.SelectedItem == null)
@@ -212,13 +208,14 @@ namespace Hoehoe
             UserInfo user = (UserInfo)this.UserList.SelectedItem;
             if (MessageBox.Show(Hoehoe.Properties.Resources.ListManageDeleteUser1, "Hoehoe", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
-                string rslt = this._tw.RemoveUserToList(list.Id.ToString(), user.Id.ToString());
+                string rslt = this.twitter.RemoveUserToList(list.Id.ToString(), user.Id.ToString());
 
-                if (!String.IsNullOrEmpty(rslt))
+                if (!string.IsNullOrEmpty(rslt))
                 {
-                    MessageBox.Show(String.Format(Hoehoe.Properties.Resources.ListManageDeleteUser2, rslt));
+                    MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListManageDeleteUser2, rslt));
                     return;
                 }
+
                 int idx = ListsList.SelectedIndex;
                 list.Members.Remove(user);
                 this.ListsList_SelectedIndexChanged(this.ListsList, EventArgs.Empty);
@@ -235,23 +232,21 @@ namespace Hoehoe
             {
                 return;
             }
-            ListElement list = (ListElement)this.ListsList.SelectedItem;
 
+            ListElement list = (ListElement)this.ListsList.SelectedItem;
             if (MessageBox.Show(Hoehoe.Properties.Resources.ListManageDeleteLists1, "Hoehoe", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
-                string rslt = "";
+                string rslt = this.twitter.DeleteList(list.Id.ToString());
 
-                rslt = this._tw.DeleteList(list.Id.ToString());
-
-                if (!String.IsNullOrEmpty(rslt))
+                if (!string.IsNullOrEmpty(rslt))
                 {
                     MessageBox.Show(Hoehoe.Properties.Resources.ListManageOKButton2, rslt);
                     return;
                 }
 
-                rslt = this._tw.GetListsApi();
+                rslt = this.twitter.GetListsApi();
 
-                if (!String.IsNullOrEmpty(rslt))
+                if (!string.IsNullOrEmpty(rslt))
                 {
                     MessageBox.Show(Hoehoe.Properties.Resources.ListsDeleteFailed, rslt);
                     return;
@@ -264,7 +259,7 @@ namespace Hoehoe
 
         private void AddListButton_Click(object sender, EventArgs e)
         {
-            NewListElement newList = new NewListElement(this._tw);
+            NewListElement newList = new NewListElement(this.twitter);
             this.ListsList.Items.Add(newList);
             this.ListsList.SelectedItem = newList;
             this.EditCheckBox.Checked = true;
@@ -280,14 +275,15 @@ namespace Hoehoe
                     this.UserIcon.Image.Dispose();
                     this.UserIcon.Image = null;
                 }
-                this.UserLocation.Text = "";
-                this.UserWeb.Text = "";
+
+                this.UserLocation.Text = string.Empty;
+                this.UserWeb.Text = string.Empty;
                 this.UserFollowNum.Text = "0";
                 this.UserFollowerNum.Text = "0";
                 this.UserPostsNum.Text = "0";
-                this.UserProfile.Text = "";
-                this.UserTweetDateTime.Text = "";
-                this.UserTweet.Text = "";
+                this.UserProfile.Text = string.Empty;
+                this.UserTweetDateTime.Text = string.Empty;
+                this.UserTweet.Text = string.Empty;
                 this.DeleteUserButton.Enabled = false;
             }
             else
@@ -299,32 +295,20 @@ namespace Hoehoe
                 this.UserFollowerNum.Text = user.FollowersCount.ToString("#,###,##0");
                 this.UserPostsNum.Text = user.StatusesCount.ToString("#,###,##0");
                 this.UserProfile.Text = user.Description;
-                if (!String.IsNullOrEmpty(user.RecentPost))
+                if (!string.IsNullOrEmpty(user.RecentPost))
                 {
                     this.UserTweetDateTime.Text = user.PostCreatedAt.ToString("yy/MM/dd HH:mm");
                     this.UserTweet.Text = user.RecentPost;
                 }
                 else
                 {
-                    this.UserTweetDateTime.Text = "";
-                    this.UserTweet.Text = "";
+                    this.UserTweetDateTime.Text = string.Empty;
+                    this.UserTweet.Text = string.Empty;
                 }
-                this.DeleteUserButton.Enabled = true;
 
+                this.DeleteUserButton.Enabled = true;
                 Action<Uri> a = new Action<Uri>(url => { this.Invoke(new Action<Image>(DisplayIcon), (new HttpVarious()).GetImage(url)); });
                 a.BeginInvoke(user.ImageUrl, null, null);
-            }
-        }
-
-        private void DisplayIcon(Image img)
-        {
-            if (img == null || this.UserList.SelectedItem == null)
-            {
-                return;
-            }
-            if (((UserInfo)this.UserList.SelectedItem).ImageUrl.ToString() == (string)img.Tag)
-            {
-                this.UserIcon.Image = img;
             }
         }
 
@@ -335,22 +319,9 @@ namespace Hoehoe
             this.ListManage_Load(null, EventArgs.Empty);
         }
 
-        private void RefreshLists()
-        {
-            using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ListsGetting, RefreshLists_Dowork))
-            {
-                dlg.ShowDialog();
-                if (!String.IsNullOrEmpty((string)dlg.Result))
-                {
-                    MessageBox.Show(String.Format(Hoehoe.Properties.Resources.ListsDeleteFailed, (string)dlg.Result));
-                    return;
-                }
-            }
-        }
-
         private void RefreshLists_Dowork(object sender, DoWorkEventArgs e)
         {
-            e.Result = _tw.GetListsApi();
+            e.Result = this.twitter.GetListsApi();
         }
 
         private void UserWeb_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -369,7 +340,50 @@ namespace Hoehoe
                 this.CancelButton.PerformClick();
             }
         }
+        #endregion
 
+        #region private methods
+        private void GetListMembersCallback(string result)
+        {
+            if (result == this.ListsList.SelectedItem.ToString())
+            {
+                this.ListsList_SelectedIndexChanged(this.ListsList, EventArgs.Empty);
+                this.GetMoreUsersButton.Text = Hoehoe.Properties.Resources.ListManageGetMoreUsers1;
+            }
+            else
+            {
+                MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListManageGetListMembersCallback1, result));
+            }
+        }
+
+        private void DisplayIcon(Image img)
+        {
+            if (img == null || this.UserList.SelectedItem == null)
+            {
+                return;
+            }
+
+            if (((UserInfo)this.UserList.SelectedItem).ImageUrl.ToString() == (string)img.Tag)
+            {
+                this.UserIcon.Image = img;
+            }
+        }
+
+        private void RefreshLists()
+        {
+            using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ListsGetting, this.RefreshLists_Dowork))
+            {
+                dlg.ShowDialog();
+                if (!string.IsNullOrEmpty((string)dlg.Result))
+                {
+                    MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListsDeleteFailed, (string)dlg.Result));
+                    return;
+                }
+            }
+        }
+        #endregion
+
+        #region inner class
         private class NewListElement : ListElement
         {
             public NewListElement(Twitter tw)
@@ -378,23 +392,25 @@ namespace Hoehoe
                 this.IsCreated = false;
             }
 
+            public bool IsCreated { get; private set; }
+
             public override string Refresh()
             {
-                if (IsCreated)
+                if (this.IsCreated)
                 {
                     return base.Refresh();
                 }
+
                 string rslt = this._tw.CreateListApi(this.Name, !this.IsPublic, this.Description);
-                this.IsCreated = String.IsNullOrEmpty(rslt);
+                this.IsCreated = string.IsNullOrEmpty(rslt);
                 return rslt;
             }
 
-            public bool IsCreated { get; private set; }
-
             public override string ToString()
             {
-                return IsCreated ? base.ToString() : "NewList";
+                return this.IsCreated ? base.ToString() : "NewList";
             }
         }
+        #endregion
     }
 }
