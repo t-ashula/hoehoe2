@@ -24,12 +24,12 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.IO;
-using System.Reflection;
-
 namespace Hoehoe
 {
+    using System;
+    using System.IO;
+    using System.Reflection;
+
     public partial class TweenAboutBox
     {
         #region constructor        
@@ -42,7 +42,7 @@ namespace Hoehoe
         #region event handler        
         private void TweenAboutBox_Load(object sender, EventArgs e)
         {
-            SetAboutInfoStrings();
+            this.SetAboutInfoStrings();
         }
 
         private void OKButton_Click(object sender, EventArgs e)
@@ -60,13 +60,10 @@ namespace Hoehoe
         private void SetAboutInfoStrings()
         {
             // フォームのタイトルを設定します。
-            string applicationTitle = !String.IsNullOrEmpty(MyCommon.AppTitle) ? MyCommon.AppTitle : Path.GetFileNameWithoutExtension(MyCommon.AppAssemblyName);
-            this.Text = String.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText1, applicationTitle);
-            // バージョン情報ボックスに表示されたテキストをすべて初期化します。
-            // TODO: [プロジェクト] メニューの下にある [プロジェクト プロパティ] ダイアログの [アプリケーション] ペインで、アプリケーションのアセンブリ情報を
-            //    カスタマイズします。
+            string applicationTitle = !string.IsNullOrEmpty(MyCommon.AppTitle) ? MyCommon.AppTitle : Path.GetFileNameWithoutExtension(MyCommon.AppAssemblyName);
+            this.Text = string.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText1, applicationTitle);
             this.LabelProductName.Text = MyCommon.AppAssemblyProductName;
-            this.LabelVersion.Text = String.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText2, MyCommon.fileVersion + "(" + MyCommon.AppVersion.ToString() + ")");
+            this.LabelVersion.Text = string.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText2, MyCommon.fileVersion + "(" + MyCommon.AppVersion.ToString() + ")");
             this.LabelCopyright.Text = MyCommon.AppAssemblyCopyright;
             this.LabelCompanyName.Text = MyCommon.AppAssemblyCompanyName;
             this.TextBoxDescription.Text = MyCommon.AppAssemblyDescription;

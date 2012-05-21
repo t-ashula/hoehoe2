@@ -1,10 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 namespace Hoehoe
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Windows.Forms;
+
     partial class TweenAboutBox : System.Windows.Forms.Form
     {
 
@@ -33,9 +34,11 @@ namespace Hoehoe
         internal System.Windows.Forms.TextBox TextBoxDescription;
         internal System.Windows.Forms.Button OKButton;
         internal System.Windows.Forms.Label LabelCopyright;
-        //Windows フォーム デザイナで必要です。
+        internal System.Windows.Forms.TextBox ChangeLog;
 
+        //Windows フォーム デザイナで必要です。
         private System.ComponentModel.IContainer components;
+
         //メモ: 以下のプロシージャは Windows フォーム デザイナで必要です。
         //Windows フォーム デザイナを使用して変更できます。  
         //コード エディタを使って変更しないでください。
@@ -141,7 +144,5 @@ namespace Hoehoe
             this.ResumeLayout(false);
 
         }
-
-        internal System.Windows.Forms.TextBox ChangeLog;
     }
 }
