@@ -1,10 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 namespace Hoehoe
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Windows.Forms;
+
     partial class InputTabName : System.Windows.Forms.Form
     {
         //フォームがコンポーネントの一覧をクリーンアップするために dispose をオーバーライドします。
@@ -61,7 +62,7 @@ namespace Hoehoe
             resources.ApplyResources(this.cancelButton, "cancelButton");
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // LabelDescription
             // 

@@ -24,31 +24,35 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Windows.Forms;
+
     public partial class InputTabName
     {
-        private void OkButton_Click(object sender, System.EventArgs e)
-        {
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Close();
-        }
+        #region privates
+        private bool isShowUsage;
+        #endregion
 
-        private void cancelButton_Click(object sender, System.EventArgs e)
+        #region constructor
+        public InputTabName()
         {
-            TextTabName.Text = "";
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Close();
+            InitializeComponent();
         }
+        #endregion
 
+        #region properties
         public string TabName
         {
             get { return this.TextTabName.Text.Trim(); }
             set { TextTabName.Text = value.Trim(); }
         }
 
+        public TabUsageType Usage { get; private set; }
+        #endregion
+
+        #region public methods
         public void SetFormTitle(string value)
         {
             this.Text = value;
@@ -59,14 +63,25 @@ namespace Hoehoe
             this.LabelDescription.Text = value;
         }
 
-        private bool _isShowUsage;
-
         public void SetIsShowUsage(bool value)
         {
-            _isShowUsage = value;
+            this.isShowUsage = value;
+        }
+        #endregion
+
+        #region event handler
+        private void OkButton_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
-        public TabUsageType Usage { get; private set; }
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            TextTabName.Text = string.Empty;
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
 
         private void InputTabName_Load(object sender, EventArgs e)
         {
@@ -81,7 +96,7 @@ namespace Hoehoe
         private void InputTabName_Shown(object sender, EventArgs e)
         {
             ActiveControl = TextTabName;
-            if (_isShowUsage)
+            if (this.isShowUsage)
             {
                 this.LabelUsage.Visible = true;
                 this.ComboUsage.Visible = true;
@@ -93,23 +108,19 @@ namespace Hoehoe
             switch (ComboUsage.SelectedIndex)
             {
                 case 0:
-                    Usage = TabUsageType.UserDefined;
+                    this.Usage = TabUsageType.UserDefined;
                     break;
                 case 1:
-                    Usage = TabUsageType.Lists;
+                    this.Usage = TabUsageType.Lists;
                     break;
                 case 2:
-                    Usage = TabUsageType.PublicSearch;
+                    this.Usage = TabUsageType.PublicSearch;
                     break;
                 default:
-                    Usage = TabUsageType.Undefined;
+                    this.Usage = TabUsageType.Undefined;
                     break;
             }
         }
-
-        public InputTabName()
-        {
-            InitializeComponent();
-        }
+        #endregion
     }
 }
