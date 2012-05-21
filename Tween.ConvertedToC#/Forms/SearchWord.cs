@@ -23,24 +23,22 @@
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
-using System;
 
 namespace Hoehoe
 {
+    using System;
+    using System.Windows.Forms;
+
     public partial class SearchWord
     {
-        private void OK_Button_Click(object sender, EventArgs e)
+        #region constructor
+        public SearchWord()
         {
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Close();
+            InitializeComponent();
         }
+        #endregion
 
-        private void Cancel_Button_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Close();
-        }
-
+        #region properties
         public string SWord
         {
             get { return SWordText.Text; }
@@ -58,16 +56,26 @@ namespace Hoehoe
             get { return CheckSearchRegex.Checked; }
             set { CheckSearchRegex.Checked = value; }
         }
+        #endregion
+
+        #region event handler
+        private void OK_Button_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void Cancel_Button_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
 
         private void SearchWord_Shown(object sender, EventArgs e)
         {
             SWordText.SelectAll();
             SWordText.Focus();
         }
-
-        public SearchWord()
-        {
-            InitializeComponent();
-        }
+        #endregion
     }
 }
