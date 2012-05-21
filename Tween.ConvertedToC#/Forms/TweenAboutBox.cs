@@ -30,9 +30,34 @@ using System.Reflection;
 
 namespace Hoehoe
 {
-    public sealed partial class TweenAboutBox
+    public partial class TweenAboutBox
     {
-        private void TweenAboutBox_Load(System.Object sender, System.EventArgs e)
+        #region constructor        
+        public TweenAboutBox()
+        {
+            InitializeComponent();
+        }
+        #endregion
+
+        #region event handler        
+        private void TweenAboutBox_Load(object sender, EventArgs e)
+        {
+            SetAboutInfoStrings();
+        }
+
+        private void OKButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void TweenAboutBox_Shown(object sender, EventArgs e)
+        {
+            OKButton.Focus();
+        }
+        #endregion
+
+        #region privates
+        private void SetAboutInfoStrings()
         {
             // フォームのタイトルを設定します。
             string applicationTitle = !String.IsNullOrEmpty(MyCommon.AppTitle) ? MyCommon.AppTitle : Path.GetFileNameWithoutExtension(MyCommon.AppAssemblyName);
@@ -48,20 +73,6 @@ namespace Hoehoe
             this.ChangeLog.Text = Hoehoe.Properties.Resources.ChangeLog;
             this.TextBoxDescription.Text = Hoehoe.Properties.Resources.Description;
         }
-
-        private void OKButton_Click(System.Object sender, System.EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void TweenAboutBox_Shown(object sender, System.EventArgs e)
-        {
-            OKButton.Focus();
-        }
-
-        public TweenAboutBox()
-        {
-            InitializeComponent();
-        }
+        #endregion
     }
 }

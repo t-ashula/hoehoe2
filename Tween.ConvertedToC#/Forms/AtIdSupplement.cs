@@ -33,42 +33,30 @@ namespace Hoehoe
 {
     public partial class AtIdSupplement
     {
-        public string InputText = "";
-        public bool IsBack = false;
-        public string StartsWith { get; set; }
-
-        private string _startChar = "";
-
-        public void AddItem(string id)
+        #region constructor
+        public AtIdSupplement()
         {
-            if (!this.TextId.AutoCompleteCustomSource.Contains(id))
+            // この呼び出しは、Windows フォーム デザイナで必要です。
+            InitializeComponent();
+            // InitializeComponent() 呼び出しの後で初期化を追加します。
+        }
+
+        public AtIdSupplement(List<string> ItemList, string startCharacter)
+        {
+            // この呼び出しは、Windows フォーム デザイナで必要です。
+            InitializeComponent();
+
+            // InitializeComponent() 呼び出しの後で初期化を追加します。
+
+            for (int i = 0; i < ItemList.Count; i++)
             {
-                this.TextId.AutoCompleteCustomSource.Add(id);
+                this.TextId.AutoCompleteCustomSource.Add(ItemList[i]);
             }
+            _startChar = startCharacter;
         }
+        #endregion
 
-        public void AddRangeItem(string[] ids)
-        {
-            foreach (string id in ids)
-            {
-                this.AddItem(id);
-            }
-        }
-
-        public List<string> GetItemList()
-        {
-            List<string> ids = new List<string>();
-            for (int i = 0; i < this.TextId.AutoCompleteCustomSource.Count ; i++)
-            {
-                ids.Add(this.TextId.AutoCompleteCustomSource[i]);
-            }
-            return ids;
-        }
-
-        public int ItemCount
-        {
-            get { return this.TextId.AutoCompleteCustomSource.Count; }
-        }
+        #region event handler
 
         private void ButtonOK_Click(object sender, EventArgs e)
         {
@@ -131,27 +119,6 @@ namespace Hoehoe
             TextId.Focus();
         }
 
-        public AtIdSupplement()
-        {
-            // この呼び出しは、Windows フォーム デザイナで必要です。
-            InitializeComponent();
-            // InitializeComponent() 呼び出しの後で初期化を追加します。
-        }
-
-        public AtIdSupplement(List<string> ItemList, string startCharacter)
-        {
-            // この呼び出しは、Windows フォーム デザイナで必要です。
-            InitializeComponent();
-
-            // InitializeComponent() 呼び出しの後で初期化を追加します。
-
-            for (int i = 0; i < ItemList.Count; i++)
-            {
-                this.TextId.AutoCompleteCustomSource.Add(ItemList[i]);
-            }
-            _startChar = startCharacter;
-        }
-
         private void TextId_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Tab)
@@ -167,5 +134,51 @@ namespace Hoehoe
             StartsWith = "";
             this.DialogResult = IsBack ? DialogResult.Cancel : DialogResult.OK;
         }
+
+        #endregion
+        #region properties
+
+        public string StartsWith { get; set; }
+
+        public int ItemCount
+        {
+            get { return this.TextId.AutoCompleteCustomSource.Count; }
+        }
+        #endregion
+
+        #region public
+        public string InputText = "";
+        public bool IsBack = false;
+
+        public void AddItem(string id)
+        {
+            if (!this.TextId.AutoCompleteCustomSource.Contains(id))
+            {
+                this.TextId.AutoCompleteCustomSource.Add(id);
+            }
+        }
+
+        public void AddRangeItem(string[] ids)
+        {
+            foreach (string id in ids)
+            {
+                this.AddItem(id);
+            }
+        }
+
+        public List<string> GetItemList()
+        {
+            List<string> ids = new List<string>();
+            for (int i = 0; i < this.TextId.AutoCompleteCustomSource.Count; i++)
+            {
+                ids.Add(this.TextId.AutoCompleteCustomSource[i]);
+            }
+            return ids;
+        }
+        #endregion
+
+        #region private
+        private string _startChar = "";
+        #endregion
     }
 }

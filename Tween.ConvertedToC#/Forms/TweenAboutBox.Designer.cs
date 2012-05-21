@@ -42,7 +42,6 @@ namespace Hoehoe
         [System.Diagnostics.DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TweenAboutBox));
             this.TableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.LogoPictureBox = new System.Windows.Forms.PictureBox();
