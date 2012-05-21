@@ -22,46 +22,55 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Windows.Forms;
+
     public class DoubleClickCopyCanceller : NativeWindow, IDisposable
     {
-        const int WM_GETTEXTLENGTH = 0xe;
-        const int WM_GETTEXT = 0xd;
-        const int WM_LBUTTONDBLCLK = 0x203;
+        #region privates
+        private bool doubleClick;
+        #endregion
 
-        bool _doubleClick = false;
-
+        #region constructor
         public DoubleClickCopyCanceller(Control control)
         {
             this.AssignHandle(control.Handle);
         }
+        #endregion
 
-        protected override void WndProc(ref System.Windows.Forms.Message m)
-        {
-            if (m.Msg == WM_LBUTTONDBLCLK)
-            {
-                _doubleClick = true;
-            }
-            if (_doubleClick)
-            {
-                if (m.Msg == WM_GETTEXTLENGTH)
-                {
-                    _doubleClick = false;
-                    m.Result = (IntPtr)0;
-                    return;
-                }
-            }
-            base.WndProc(ref m);
-        }
-
+        #region public methods
         public void Dispose()
         {
             this.ReleaseHandle();
             GC.SuppressFinalize(this);
         }
+        #endregion
+
+        #region protected methods
+        protected override void WndProc(ref System.Windows.Forms.Message m)
+        {
+            const int WM_GETTEXTLENGTH = 0xe;
+            const int WM_LBUTTONDBLCLK = 0x203;
+
+            if (m.Msg == WM_LBUTTONDBLCLK)
+            {
+                this.doubleClick = true;
+            }
+
+            if (this.doubleClick)
+            {
+                if (m.Msg == WM_GETTEXTLENGTH)
+                {
+                    this.doubleClick = false;
+                    m.Result = IntPtr.Zero; // (IntPtr)0;
+                    return;
+                }
+            }
+
+            base.WndProc(ref m);
+        }
+        #endregion
     }
 }
