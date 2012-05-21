@@ -35,7 +35,7 @@ namespace Hoehoe
         {
         }
 
-        public UserInfo(TwitterDataModel.User user)
+        public UserInfo(DataModels.Twitter.User user)
         {
             this.Id = user.Id;
             this.Name = user.Name.Trim();

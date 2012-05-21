@@ -59,7 +59,7 @@ namespace Hoehoe
         {
         }
 
-        public ListElement(TwitterDataModel.ListElementData listElementData, Twitter tw)
+        public ListElement(DataModels.Twitter.ListElementData listElementData, Twitter tw)
         {
             this.Description = listElementData.Description;
             this.Id = listElementData.Id;

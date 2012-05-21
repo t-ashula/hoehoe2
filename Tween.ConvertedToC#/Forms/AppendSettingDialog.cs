@@ -172,7 +172,7 @@ namespace Hoehoe
 
         public bool IsNotifyUseGrowl { get; set; }
 
-        public TwitterDataModel.Configuration TwitterConfiguration { get; set; }
+        public DataModels.Twitter.Configuration TwitterConfiguration { get; set; }
 
         private string _pin;
 

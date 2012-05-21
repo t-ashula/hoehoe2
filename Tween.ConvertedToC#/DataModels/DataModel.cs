@@ -30,7 +30,7 @@ using System.Runtime.Serialization;
 
 namespace Hoehoe.DataModels
 {
-    public class TwitterDataModel
+    namespace Twitter
     {
         [DataContract]
         public class Annotations

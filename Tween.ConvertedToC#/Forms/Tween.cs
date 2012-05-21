@@ -12994,7 +12994,7 @@ namespace Hoehoe
         {
             public Hoehoe.Twitter tw;
             public string id;
-            public TwitterDataModel.User user;
+            public DataModels.Twitter.User user;
         }
 
         private void GetUserInfo_DoWork(object sender, DoWorkEventArgs e)
@@ -13005,7 +13005,7 @@ namespace Hoehoe
 
         private void doShowUserStatus(string id, bool ShowInputDialog)
         {
-            TwitterDataModel.User user = null;
+            DataModels.Twitter.User user = null;
             if (ShowInputDialog)
             {
                 using (InputTabName inputName = new InputTabName())
@@ -13052,7 +13052,7 @@ namespace Hoehoe
             }
         }
 
-        private void doShowUserStatus(TwitterDataModel.User user)
+        private void doShowUserStatus(DataModels.Twitter.User user)
         {
             using (ShowUserInfo userinfo = new ShowUserInfo())
             {

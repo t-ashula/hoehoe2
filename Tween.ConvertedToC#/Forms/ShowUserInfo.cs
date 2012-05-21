@@ -43,7 +43,7 @@ namespace Hoehoe
         private const string Followerspath = "/followers";
         private const string Favpath = "/favorites";
 
-        private TwitterDataModel.User _userInfo;
+        private DataModels.Twitter.User _userInfo;
         private UserInfo _info = new UserInfo();
         private Image _icondata;
         private List<string> _atList = new List<string>();
@@ -72,7 +72,7 @@ namespace Hoehoe
             ToolTip1.SetToolTip(LinkLabelFav, _favorites);
         }
 
-        private bool AnalizeUserInfo(TwitterDataModel.User user)
+        private bool AnalizeUserInfo(DataModels.Twitter.User user)
         {
             if (user == null)
             {
@@ -219,7 +219,7 @@ namespace Hoehoe
             this.Close();
         }
 
-        public void SetUser(TwitterDataModel.User value)
+        public void SetUser(DataModels.Twitter.User value)
         {
             this._userInfo = value;
         }
@@ -674,7 +674,7 @@ namespace Hoehoe
         private void UpdateProfileImage_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             string res = "";
-            TwitterDataModel.User user = null;
+            DataModels.Twitter.User user = null;
 
             if (e.Result == null)
             {
