@@ -139,7 +139,7 @@ namespace Hoehoe
         // Growl呼び出し部
         private GrowlHelper withEventsField_gh = new GrowlHelper("Hoehoe");
 
-        private GrowlHelper gh
+        private GrowlHelper GrowlHelper
         {
             get { return withEventsField_gh; }
             set
@@ -1388,7 +1388,7 @@ namespace Hoehoe
 
             if (SettingDialog.IsNotifyUseGrowl)
             {
-                gh.RegisterGrowl();
+                GrowlHelper.RegisterGrowl();
             }
 
             //  タイマー設定
@@ -2236,7 +2236,7 @@ namespace Hoehoe
                             {
                                 return;
                             }
-                            gh.Notify(nt, post.StatusId.ToString(), title.ToString(), bText, this._TIconDic[post.ImageUrl], post.ImageUrl);
+                            GrowlHelper.Notify(nt, post.StatusId.ToString(), title.ToString(), bText, this._TIconDic[post.ImageUrl], post.ImageUrl);
                         }
                     }
                     else
@@ -4779,7 +4779,7 @@ namespace Hoehoe
                     SetImageServiceCombo();
                     if (SettingDialog.IsNotifyUseGrowl)
                     {
-                        gh.RegisterGrowl();
+                        GrowlHelper.RegisterGrowl();
                     }
                     try
                     {
@@ -13885,7 +13885,7 @@ namespace Hoehoe
                 // NotifyIcon1.ShowBalloonTip(500)
                 if (SettingDialog.IsNotifyUseGrowl)
                 {
-                    gh.Notify(GrowlHelper.NotifyType.UserStreamEvent, ev.Id.ToString(), title.ToString(), text);
+                    GrowlHelper.Notify(GrowlHelper.NotifyType.UserStreamEvent, ev.Id.ToString(), title.ToString(), text);
                 }
                 else
                 {
