@@ -26,8 +26,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Web;
 using Hoehoe.DataModels;
