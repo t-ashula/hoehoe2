@@ -2285,7 +2285,7 @@ namespace Hoehoe
             {
                 using (var ab = new AuthBrowser())
                 {
-                    ab.Auth = true;
+                    ab.IsAuthorized = true;
                     ab.UrlString = pinPageUrl;
                     if (ab.ShowDialog(this) == DialogResult.OK)
                     {

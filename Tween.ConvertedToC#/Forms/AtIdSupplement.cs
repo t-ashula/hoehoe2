@@ -34,7 +34,7 @@ namespace Hoehoe
 
     public partial class AtIdSupplement
     {
-        #region private field
+        #region private fields
         private string startChar = string.Empty;
         #endregion
 

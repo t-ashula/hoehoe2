@@ -24,22 +24,34 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Text.RegularExpressions;
+    using System.Windows.Forms;
+
     public partial class AuthBrowser
     {
+        #region private fields
+        private InternetSecurityManager securityManager;
+        #endregion
+
+        #region constructor
+        public AuthBrowser()
+        {
+            this.InitializeComponent();
+        }
+        #endregion
+
+        #region properties
         public string UrlString { get; set; }
 
         public string PinString { get; set; }
 
-        public bool Auth { get; set; }
+        public bool IsAuthorized { get; set; }
+        #endregion
 
-        private InternetSecurityManager _securityManager;
-
+        #region event handler
         private void AuthWebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             if (this.AuthWebBrowser.Url.OriginalString == "https://api.twitter.com/oauth/authorize")
@@ -48,19 +60,17 @@ namespace Hoehoe
                 Match m = rg.Match(this.AuthWebBrowser.DocumentText);
                 if (m.Success)
                 {
-                    PinString = m.Result("${1}");
-                    PinText.Text = m.Result("${1}");
-                    PinText.Focus();
+                    this.PinText.Text = this.PinString = m.Result("${1}");
+                    this.PinText.Focus();
                 }
             }
         }
 
         private void AuthBrowser_Load(object sender, EventArgs e)
         {
-            this._securityManager = new InternetSecurityManager(this.AuthWebBrowser);
-
-            this.AuthWebBrowser.Navigate(new Uri(UrlString));
-            if (!Auth)
+            this.securityManager = new InternetSecurityManager(this.AuthWebBrowser);
+            this.AuthWebBrowser.Navigate(new Uri(this.UrlString));
+            if (!this.IsAuthorized)
             {
                 this.Label1.Visible = false;
                 this.PinText.Visible = false;
@@ -74,19 +84,15 @@ namespace Hoehoe
 
         private void NextButton_Click(object sender, EventArgs e)
         {
-            PinString = PinText.Text.Trim();
+            this.PinString = this.PinText.Text.Trim();
             this.DialogResult = DialogResult.OK;
         }
 
         private void Cancel_Click(object sender, EventArgs e)
         {
-            PinString = "";
+            this.PinString = string.Empty;
             this.DialogResult = DialogResult.Cancel;
         }
-
-        public AuthBrowser()
-        {
-            InitializeComponent();
-        }
+        #endregion
     }
 }
