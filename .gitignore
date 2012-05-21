@@ -8,3 +8,4 @@ Tween/bin/*
 TweenUp/bin/*
 TweenUp/obj/*
 *.user
+*.Cache
