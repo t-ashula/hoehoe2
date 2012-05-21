@@ -26,133 +26,123 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
-using Hoehoe.DataModels;
 
-namespace Hoehoe.DataModels
+namespace Hoehoe.DataModels.FourSquare
 {
-    #region "FourSquare DataModel"
-
-    namespace FourSquare
+    [DataContract]
+    public class FourSquareData
     {
-        [DataContract]
-        public class FourSquareData
-        {
-            [DataMember(Name = "meta", IsRequired = false)]
-            public Meta Meta;
+        [DataMember(Name = "meta", IsRequired = false)]
+        public Meta Meta;
 
-            [DataMember(Name = "response", IsRequired = false)]
-            public Response Response;
-        }
-
-        [DataContract]
-        public class Response
-        {
-            [DataMember(Name = "venue", IsRequired = false)]
-            public Venue Venue;
-        }
-
-        [DataContract]
-        public class Venue
-        {
-            [DataMember(Name = "id")]
-            public string Id;
-
-            [DataMember(Name = "name")]
-            public string Name;
-
-            [DataMember(Name = "location")]
-            public Location Location;
-
-            [DataMember(Name = "verified")]
-            public bool Verified;
-
-            [DataMember(Name = "stats")]
-            public Stats Stats;
-
-            [DataMember(Name = "mayor")]
-            public Mayor Mayor;
-
-            [DataMember(Name = "shortUrl")]
-            public string ShortUrl;
-
-            [DataMember(Name = "timeZone")]
-            public string TimeZone;
-        }
-
-        [DataContract]
-        public class Location
-        {
-            [DataMember(Name = "address")]
-            public string Address;
-
-            [DataMember(Name = "city")]
-            public string City;
-
-            [DataMember(Name = "state")]
-            public string State;
-
-            [DataMember(Name = "lat")]
-            public double Latitude;
-
-            [DataMember(Name = "lng")]
-            public double Longitude;
-        }
-
-        [DataContract]
-        public class Stats
-        {
-            [DataMember(Name = "checkinsCount")]
-            public int CheckinsCount;
-
-            [DataMember(Name = "usersCount")]
-            public int UsersCount;
-        }
-
-        [DataContract]
-        public class Mayor
-        {
-            [DataMember(Name = "count")]
-            public int Count;
-
-            [DataMember(Name = "user", IsRequired = false)]
-            public FoursquareUser User;
-        }
-
-        [DataContract]
-        public class FoursquareUser
-        {
-            [DataMember(Name = "id")]
-            public int Id;
-
-            [DataMember(Name = "firstName")]
-            public string FirstName;
-
-            [DataMember(Name = "photo")]
-            public string Photo;
-
-            [DataMember(Name = "gender")]
-            public string Gender;
-
-            [DataMember(Name = "homeCity")]
-            public string HomeCity;
-        }
-
-        [DataContract]
-        public class Meta
-        {
-            [DataMember(Name = "code")]
-            public int Code;
-
-            [DataMember(Name = "errorType", IsRequired = false)]
-            public string ErrorType;
-
-            [DataMember(Name = "errorDetail", IsRequired = false)]
-            public string ErrorDetail;
-        }
+        [DataMember(Name = "response", IsRequired = false)]
+        public Response Response;
     }
 
-    #endregion "FourSquare DataModel"
+    [DataContract]
+    public class Response
+    {
+        [DataMember(Name = "venue", IsRequired = false)]
+        public Venue Venue;
+    }
+
+    [DataContract]
+    public class Venue
+    {
+        [DataMember(Name = "id")]
+        public string Id;
+
+        [DataMember(Name = "name")]
+        public string Name;
+
+        [DataMember(Name = "location")]
+        public Location Location;
+
+        [DataMember(Name = "verified")]
+        public bool Verified;
+
+        [DataMember(Name = "stats")]
+        public Stats Stats;
+
+        [DataMember(Name = "mayor")]
+        public Mayor Mayor;
+
+        [DataMember(Name = "shortUrl")]
+        public string ShortUrl;
+
+        [DataMember(Name = "timeZone")]
+        public string TimeZone;
+    }
+
+    [DataContract]
+    public class Location
+    {
+        [DataMember(Name = "address")]
+        public string Address;
+
+        [DataMember(Name = "city")]
+        public string City;
+
+        [DataMember(Name = "state")]
+        public string State;
+
+        [DataMember(Name = "lat")]
+        public double Latitude;
+
+        [DataMember(Name = "lng")]
+        public double Longitude;
+    }
+
+    [DataContract]
+    public class Stats
+    {
+        [DataMember(Name = "checkinsCount")]
+        public int CheckinsCount;
+
+        [DataMember(Name = "usersCount")]
+        public int UsersCount;
+    }
+
+    [DataContract]
+    public class Mayor
+    {
+        [DataMember(Name = "count")]
+        public int Count;
+
+        [DataMember(Name = "user", IsRequired = false)]
+        public FoursquareUser User;
+    }
+
+    [DataContract]
+    public class FoursquareUser
+    {
+        [DataMember(Name = "id")]
+        public int Id;
+
+        [DataMember(Name = "firstName")]
+        public string FirstName;
+
+        [DataMember(Name = "photo")]
+        public string Photo;
+
+        [DataMember(Name = "gender")]
+        public string Gender;
+
+        [DataMember(Name = "homeCity")]
+        public string HomeCity;
+    }
+
+    [DataContract]
+    public class Meta
+    {
+        [DataMember(Name = "code")]
+        public int Code;
+
+        [DataMember(Name = "errorType", IsRequired = false)]
+        public string ErrorType;
+
+        [DataMember(Name = "errorDetail", IsRequired = false)]
+        public string ErrorDetail;
+    }
 }
