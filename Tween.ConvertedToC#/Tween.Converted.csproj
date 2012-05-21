@@ -110,6 +110,7 @@
     <Compile Include="CryptoUtils.cs" />
     <Compile Include="DataModels\D.cs" />
     <Compile Include="DataModels\FourSquare.cs" />
+    <Compile Include="DataModels\Google.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Forms\AppendSettingDialog.cs">
       <SubType>Form</SubType>

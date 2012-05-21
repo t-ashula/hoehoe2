@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Web;
 using Hoehoe.DataModels;
+using Hoehoe.DataModels.Google;
 
 namespace Hoehoe
 {
@@ -159,52 +160,6 @@ namespace Hoehoe
 			#endregion "言語テーブル定義"
 		};
 
-        [DataContract]
-        public class TranslateResponseData
-        {
-            [DataMember(Name = "translatedText")]
-            public string TranslatedText;
-        }
-
-        [DataContract]
-        private class TranslateResponse
-        {
-            [DataMember(Name = "responseData")]
-            public TranslateResponseData ResponseData;
-
-            [DataMember(Name = "responseDetails")]
-            public string ResponseDetails;
-
-            [DataMember(Name = "responseStatus")]
-            public HttpStatusCode ResponseStatus;
-        }
-
-        [DataContract]
-        public class LanguageDetectResponseData
-        {
-            [DataMember(Name = "language")]
-            public string Language;
-
-            [DataMember(Name = "isReliable")]
-            public bool IsReliable;
-
-            [DataMember(Name = "confidence")]
-            public double Confidence;
-        }
-
-        [DataContract]
-        private class LanguageDetectResponse
-        {
-            [DataMember(Name = "responseData")]
-            public LanguageDetectResponseData ResponseData;
-
-            [DataMember(Name = "responseDetails")]
-            public string ResponseDetails;
-
-            [DataMember(Name = "responseStatus")]
-            public HttpStatusCode ResponseStatus;
-        }
-
         public bool Translate(string srclng, string dstlng, string source, ref string destination, ref string ErrMsg)
         {
             ErrMsg = "";
@@ -291,18 +246,6 @@ namespace Hoehoe
 
         // http://code.google.com/intl/ja/apis/urlshortener/v1/getting_started.html
         // Google URL Shortener API
-
-        [DataContract]
-        private class UrlShortenerParameter
-        {
-            [DataMember(Name = "longUrl")]
-            string LongUrl;
-        }
-
-        [DataContract]
-        private class UrlShortenerResponse
-        {
-        }
 
         public string Shorten(string source)
         {
