@@ -35,7 +35,7 @@ namespace Hoehoe.DataModels
 {
     #region "FourSquare DataModel"
 
-    namespace FourSquareDataModel
+    namespace FourSquare
     {
         [DataContract]
         public class FourSquareData
