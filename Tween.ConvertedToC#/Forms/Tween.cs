@@ -108,16 +108,16 @@ namespace Hoehoe
         // ロック用
         private readonly object _syncObject = new object();
 
-        private const string detailHtmlFormatMono1 = "<html><head><style type=\"text/css\"><!-- pre {font-family: \"";
-        private const string detailHtmlFormat2 = "\", sans-serif; font-size: ";
-        private const string detailHtmlFormat3 = "pt; word-wrap: break-word; color:rgb(";
-        private const string detailHtmlFormat4 = ");} a:link, a:visited, a:active, a:hover {color:rgb(";
-        private const string detailHtmlFormat5 = "); } --></style></head><body style=\"margin:0px; background-color:rgb(";
-        private const string detailHtmlFormatMono6 = ");\"><pre>";
-        private const string detailHtmlFormatMono7 = "</pre></body></html>";
-        private const string detailHtmlFormat1 = "<html><head><style type=\"text/css\"><!-- p {font-family: \"";
-        private const string detailHtmlFormat6 = ");\"><p>";
-        private const string detailHtmlFormat7 = "</p></body></html>";
+        private const string DetailHtmlFormatMono1 = "<html><head><style type=\"text/css\"><!-- pre {font-family: \"";
+        private const string DetailHtmlFormat2 = "\", sans-serif; font-size: ";
+        private const string DetailHtmlFormat3 = "pt; word-wrap: break-word; color:rgb(";
+        private const string DetailHtmlFormat4 = ");} a:link, a:visited, a:active, a:hover {color:rgb(";
+        private const string DetailHtmlFormat5 = "); } --></style></head><body style=\"margin:0px; background-color:rgb(";
+        private const string DetailHtmlFormatMono6 = ");\"><pre>";
+        private const string DetailHtmlFormatMono7 = "</pre></body></html>";
+        private const string DetailHtmlFormat1 = "<html><head><style type=\"text/css\"><!-- p {font-family: \"";
+        private const string DetailHtmlFormat6 = ");\"><p>";
+        private const string DetailHtmlFormat7 = "</p></body></html>";
         private string _detailHtmlFormatHeader;
         private string _detailHtmlFormatFooter;
         private bool _myStatusError;
@@ -1090,22 +1090,22 @@ namespace Hoehoe
             SettingDialog.IsMonospace = _cfgCommon.IsMonospace;
             if (SettingDialog.IsMonospace)
             {
-                _detailHtmlFormatHeader = detailHtmlFormatMono1;
-                _detailHtmlFormatFooter = detailHtmlFormatMono7;
+                _detailHtmlFormatHeader = DetailHtmlFormatMono1;
+                _detailHtmlFormatFooter = DetailHtmlFormatMono7;
             }
             else
             {
-                _detailHtmlFormatHeader = detailHtmlFormat1;
-                _detailHtmlFormatFooter = detailHtmlFormat7;
+                _detailHtmlFormatHeader = DetailHtmlFormat1;
+                _detailHtmlFormatFooter = DetailHtmlFormat7;
             }
-            _detailHtmlFormatHeader += _fntDetail.Name + detailHtmlFormat2 + _fntDetail.Size.ToString() + detailHtmlFormat3 + _clDetail.R.ToString() + "," + _clDetail.G.ToString() + "," + _clDetail.B.ToString() + detailHtmlFormat4 + _clDetailLink.R.ToString() + "," + _clDetailLink.G.ToString() + "," + _clDetailLink.B.ToString() + detailHtmlFormat5 + _clDetailBackcolor.R.ToString() + "," + _clDetailBackcolor.G.ToString() + "," + _clDetailBackcolor.B.ToString();
+            _detailHtmlFormatHeader += _fntDetail.Name + DetailHtmlFormat2 + _fntDetail.Size.ToString() + DetailHtmlFormat3 + _clDetail.R.ToString() + "," + _clDetail.G.ToString() + "," + _clDetail.B.ToString() + DetailHtmlFormat4 + _clDetailLink.R.ToString() + "," + _clDetailLink.G.ToString() + "," + _clDetailLink.B.ToString() + DetailHtmlFormat5 + _clDetailBackcolor.R.ToString() + "," + _clDetailBackcolor.G.ToString() + "," + _clDetailBackcolor.B.ToString();
             if (SettingDialog.IsMonospace)
             {
-                _detailHtmlFormatHeader += detailHtmlFormatMono6;
+                _detailHtmlFormatHeader += DetailHtmlFormatMono6;
             }
             else
             {
-                _detailHtmlFormatHeader += detailHtmlFormat6;
+                _detailHtmlFormatHeader += DetailHtmlFormat6;
             }
             this.IdeographicSpaceToSpaceToolStripMenuItem.Checked = _cfgCommon.WideSpaceConvert;
             this.ToolStripFocusLockMenuItem.Checked = _cfgCommon.FocusLockToStatusText;
@@ -1248,22 +1248,22 @@ namespace Hoehoe
 
                 if (SettingDialog.IsMonospace)
                 {
-                    _detailHtmlFormatHeader = detailHtmlFormatMono1;
-                    _detailHtmlFormatFooter = detailHtmlFormatMono7;
+                    _detailHtmlFormatHeader = DetailHtmlFormatMono1;
+                    _detailHtmlFormatFooter = DetailHtmlFormatMono7;
                 }
                 else
                 {
-                    _detailHtmlFormatHeader = detailHtmlFormat1;
-                    _detailHtmlFormatFooter = detailHtmlFormat7;
+                    _detailHtmlFormatHeader = DetailHtmlFormat1;
+                    _detailHtmlFormatFooter = DetailHtmlFormat7;
                 }
-                _detailHtmlFormatHeader += _fntDetail.Name + detailHtmlFormat2 + _fntDetail.Size.ToString() + detailHtmlFormat3 + _clDetail.R.ToString() + "," + _clDetail.G.ToString() + "," + _clDetail.B.ToString() + detailHtmlFormat4 + _clDetailLink.R.ToString() + "," + _clDetailLink.G.ToString() + "," + _clDetailLink.B.ToString() + detailHtmlFormat5 + _clDetailBackcolor.R.ToString() + "," + _clDetailBackcolor.G.ToString() + "," + _clDetailBackcolor.B.ToString();
+                _detailHtmlFormatHeader += _fntDetail.Name + DetailHtmlFormat2 + _fntDetail.Size.ToString() + DetailHtmlFormat3 + _clDetail.R.ToString() + "," + _clDetail.G.ToString() + "," + _clDetail.B.ToString() + DetailHtmlFormat4 + _clDetailLink.R.ToString() + "," + _clDetailLink.G.ToString() + "," + _clDetailLink.B.ToString() + DetailHtmlFormat5 + _clDetailBackcolor.R.ToString() + "," + _clDetailBackcolor.G.ToString() + "," + _clDetailBackcolor.B.ToString();
                 if (SettingDialog.IsMonospace)
                 {
-                    _detailHtmlFormatHeader += detailHtmlFormatMono6;
+                    _detailHtmlFormatHeader += DetailHtmlFormatMono6;
                 }
                 else
                 {
-                    _detailHtmlFormatHeader += detailHtmlFormat6;
+                    _detailHtmlFormatHeader += DetailHtmlFormat6;
                 }
                 //  他の設定項目は、随時設定画面で保持している値を読み出して使用
             }
@@ -4660,22 +4660,22 @@ namespace Hoehoe
                     {
                         if (SettingDialog.IsMonospace)
                         {
-                            _detailHtmlFormatHeader = detailHtmlFormatMono1;
-                            _detailHtmlFormatFooter = detailHtmlFormatMono7;
+                            _detailHtmlFormatHeader = DetailHtmlFormatMono1;
+                            _detailHtmlFormatFooter = DetailHtmlFormatMono7;
                         }
                         else
                         {
-                            _detailHtmlFormatHeader = detailHtmlFormat1;
-                            _detailHtmlFormatFooter = detailHtmlFormat7;
+                            _detailHtmlFormatHeader = DetailHtmlFormat1;
+                            _detailHtmlFormatFooter = DetailHtmlFormat7;
                         }
-                        _detailHtmlFormatHeader += _fntDetail.Name + detailHtmlFormat2 + _fntDetail.Size.ToString() + detailHtmlFormat3 + _clDetail.R.ToString() + "," + _clDetail.G.ToString() + "," + _clDetail.B.ToString() + detailHtmlFormat4 + _clDetailLink.R.ToString() + "," + _clDetailLink.G.ToString() + "," + _clDetailLink.B.ToString() + detailHtmlFormat5 + _clDetailBackcolor.R.ToString() + "," + _clDetailBackcolor.G.ToString() + "," + _clDetailBackcolor.B.ToString();
+                        _detailHtmlFormatHeader += _fntDetail.Name + DetailHtmlFormat2 + _fntDetail.Size.ToString() + DetailHtmlFormat3 + _clDetail.R.ToString() + "," + _clDetail.G.ToString() + "," + _clDetail.B.ToString() + DetailHtmlFormat4 + _clDetailLink.R.ToString() + "," + _clDetailLink.G.ToString() + "," + _clDetailLink.B.ToString() + DetailHtmlFormat5 + _clDetailBackcolor.R.ToString() + "," + _clDetailBackcolor.G.ToString() + "," + _clDetailBackcolor.B.ToString();
                         if (SettingDialog.IsMonospace)
                         {
-                            _detailHtmlFormatHeader += detailHtmlFormatMono6;
+                            _detailHtmlFormatHeader += DetailHtmlFormatMono6;
                         }
                         else
                         {
-                            _detailHtmlFormatHeader += detailHtmlFormat6;
+                            _detailHtmlFormatHeader += DetailHtmlFormat6;
                         }
                     }
                     catch (Exception ex)
