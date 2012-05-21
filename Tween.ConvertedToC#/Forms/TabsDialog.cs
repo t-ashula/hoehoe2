@@ -24,21 +24,23 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Specialized;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Specialized;
+    using System.Windows.Forms;
+
     public partial class TabsDialog
     {
-        private bool _multiSelect = false;
+        #region private
+        private bool multiSelect = false;
+        private string newtabItem = Hoehoe.Properties.Resources.AddNewTabText1;
+        #endregion
 
-        private string _newtabItem = Hoehoe.Properties.Resources.AddNewTabText1;
-
+        #region constructor
         public TabsDialog()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         public TabsDialog(bool multiselect)
@@ -46,83 +48,14 @@ namespace Hoehoe
             InitializeComponent();
             this.MultiSelect = true;
         }
+        #endregion
 
-        private void OK_Button_Click(System.Object sender, System.EventArgs e)
-        {
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Close();
-        }
-
-        private void Cancel_Button_Click(System.Object sender, System.EventArgs e)
-        {
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Close();
-        }
-
-        private void TabsDialog_Load(System.Object sender, System.EventArgs e)
-        {
-            if (_multiSelect)
-            {
-                TabList.SelectedIndex = -1;
-            }
-            else
-            {
-                if (TabList.SelectedIndex == -1)
-                    TabList.SelectedIndex = 0;
-            }
-        }
-
-        public void AddTab(string tabName)
-        {
-            foreach (string obj in TabList.Items)
-            {
-                if (obj == tabName)
-                {
-                    return;
-                }
-            }
-            TabList.Items.Add(tabName);
-        }
-
-        public void RemoveTab(string tabName)
-        {
-            for (int i = 0; i < TabList.Items.Count; i++)
-            {
-                if (Convert.ToString(TabList.Items[i]) == tabName)
-                {
-                    TabList.Items.RemoveAt(i);
-                    return;
-                }
-            }
-        }
-
-        public void ClearTab()
-        {
-            int startidx = 1;
-
-            if (_multiSelect)
-            {
-                startidx = 0;
-            }
-
-            for (int i = startidx; i < TabList.Items.Count; i++)
-            {
-                TabList.Items.RemoveAt(0);
-            }
-        }
-
+        #region properties
         public string SelectedTabName
         {
             get
             {
-                if (TabList.SelectedIndex == -1)
-                {
-                    return "";
-                }
-                else
-                {
-                    return Convert.ToString(TabList.SelectedItem);
-                }
+                return TabList.SelectedIndex == -1 ? string.Empty : Convert.ToString(TabList.SelectedItem);
             }
         }
 
@@ -134,24 +67,27 @@ namespace Hoehoe
                 {
                     return null;
                 }
-                else
+
+                StringCollection ret = new StringCollection();
+                foreach (object selitem in TabList.SelectedItems)
                 {
-                    StringCollection ret = new StringCollection();
-                    foreach (object selitem in TabList.SelectedItems)
-                    {
-                        ret.Add(Convert.ToString(selitem));
-                    }
-                    return ret;
+                    ret.Add(Convert.ToString(selitem));
                 }
+
+                return ret;
             }
         }
 
         public bool MultiSelect
         {
-            get { return _multiSelect; }
+            get
+            {
+                return this.multiSelect;
+            }
+
             set
             {
-                _multiSelect = value;
+                this.multiSelect = value;
                 if (value)
                 {
                     this.TabList.SelectionMode = SelectionMode.MultiExtended;
@@ -170,12 +106,82 @@ namespace Hoehoe
                 }
             }
         }
+        #endregion
 
-        private void TabList_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        #region public methods
+        public void AddTab(string tabName)
+        {
+            foreach (string obj in TabList.Items)
+            {
+                if (obj == tabName)
+                {
+                    return;
+                }
+            }
+
+            TabList.Items.Add(tabName);
+        }
+
+        public void RemoveTab(string tabName)
+        {
+            for (int i = 0; i < TabList.Items.Count; i++)
+            {
+                if (Convert.ToString(TabList.Items[i]) == tabName)
+                {
+                    TabList.Items.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
+        public void ClearTab()
+        {
+            int startidx = 1;
+            if (this.multiSelect)
+            {
+                startidx = 0;
+            }
+
+            for (int i = startidx; i < TabList.Items.Count; i++)
+            {
+                TabList.Items.RemoveAt(0);
+            }
+        }
+        #endregion
+
+        #region event handler
+        private void OK_Button_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void Cancel_Button_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void TabsDialog_Load(object sender, EventArgs e)
+        {
+            if (this.multiSelect)
+            {
+                TabList.SelectedIndex = -1;
+            }
+            else
+            {
+                if (TabList.SelectedIndex == -1)
+                {
+                    TabList.SelectedIndex = 0;
+                }
+            }
+        }
+
+        private void TabList_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
 
-        private void TabList_DoubleClick(System.Object sender, System.EventArgs e)
+        private void TabList_DoubleClick(object sender, EventArgs e)
         {
             if (TabList.SelectedItem == null)
             {
@@ -187,13 +193,14 @@ namespace Hoehoe
                 return;
             }
 
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void TabsDialog_Shown(object sender, System.EventArgs e)
+        private void TabsDialog_Shown(object sender, EventArgs e)
         {
             TabList.Focus();
         }
+        #endregion
     }
 }
