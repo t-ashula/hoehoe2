@@ -1,10 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 namespace Hoehoe
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Windows.Forms;
+
     partial class FormInfo : System.Windows.Forms.Form
     {
 
