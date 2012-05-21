@@ -358,7 +358,6 @@ namespace Hoehoe
         private bool _waitLists = false;
         private BackgroundWorker[] _bw = new BackgroundWorker[19];
         private BackgroundWorker followerFetchWorker;
-        private int _cMode;
         private ShieldIcon _shield = new ShieldIcon();
         private InternetSecurityManager _securityManager;
         private Thumbnail _thumbnail;
@@ -397,13 +396,13 @@ namespace Hoehoe
         private ImageListViewItem displayItem;
 
         //  URL短縮のUndo用
-        private struct urlUndo
+        private struct UrlUndoInfo
         {
             public string Before;
             public string After;
         }
 
-        private List<urlUndo> urlUndoBuffer = null;
+        private List<UrlUndoInfo> urlUndoBuffer = null;
 
         private class ReplyChain
         {
@@ -859,7 +858,7 @@ namespace Hoehoe
             }
 
             this._spaceKeyCanceler = new SpaceKeyCanceler(this.PostButton);
-            this._spaceKeyCanceler.SpaceCancel += spaceKeyCanceler_SpaceCancel;
+            this._spaceKeyCanceler.SpaceCancel += SpaceKeyCanceler_SpaceCancel;
 
             Regex.CacheSize = 100;
 
@@ -1648,7 +1647,7 @@ namespace Hoehoe
             };
         }
 
-        private void spaceKeyCanceler_SpaceCancel(object sender, EventArgs e)
+        private void SpaceKeyCanceler_SpaceCancel(object sender, EventArgs e)
         {
             JumpUnreadMenuItem_Click(null, null);
         }
@@ -10886,11 +10885,11 @@ namespace Hoehoe
                         // undoバッファにセット
                         if (urlUndoBuffer == null)
                         {
-                            urlUndoBuffer = new List<urlUndo>();
+                            urlUndoBuffer = new List<UrlUndoInfo>();
                             UrlUndoToolStripMenuItem.Enabled = true;
                         }
 
-                        urlUndoBuffer.Add(new urlUndo() { Before = tmp, After = result });
+                        urlUndoBuffer.Add(new UrlUndoInfo() { Before = tmp, After = result });
                     }
                 }
             }
@@ -10939,11 +10938,11 @@ namespace Hoehoe
                         // undoバッファにセット
                         if (urlUndoBuffer == null)
                         {
-                            urlUndoBuffer = new List<urlUndo>();
+                            urlUndoBuffer = new List<UrlUndoInfo>();
                             UrlUndoToolStripMenuItem.Enabled = true;
                         }
 
-                        urlUndoBuffer.Add(new urlUndo() { Before = mt.Result("${url}"), After = result });
+                        urlUndoBuffer.Add(new UrlUndoInfo() { Before = mt.Result("${url}"), After = result });
                     }
                 }
             }
@@ -10956,7 +10955,7 @@ namespace Hoehoe
             if (urlUndoBuffer != null)
             {
                 string tmp = StatusText.Text;
-                foreach (urlUndo data in urlUndoBuffer)
+                foreach (UrlUndoInfo data in urlUndoBuffer)
                 {
                     tmp = tmp.Replace(data.After, data.Before);
                 }
