@@ -58,7 +58,7 @@ namespace Hoehoe
             }
             catch (Exception )
             {
-                string backupFile = Path.Combine(Path.Combine(MyCommon.GetAppDir(), "TweenBackup1st"), typeof(T).Name + fileId + ".xml");
+                string backupFile = Path.Combine(Path.Combine(MyCommon.AppDir, "TweenBackup1st"), typeof(T).Name + fileId + ".xml");
                 if (File.Exists(backupFile))
                 {
                     try

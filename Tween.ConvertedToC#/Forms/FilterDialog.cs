@@ -909,8 +909,8 @@ namespace Hoehoe
 
             ComboSound.Items.Clear();
             ComboSound.Items.Add("");
-            DirectoryInfo oDir = new DirectoryInfo(MyCommon.GetAppDir() + Path.DirectorySeparatorChar);
-            if (Directory.Exists(Path.Combine(MyCommon.GetAppDir(), "Sounds")))
+            DirectoryInfo oDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
+            if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
             {
                 oDir = oDir.GetDirectories("Sounds")[0];
             }

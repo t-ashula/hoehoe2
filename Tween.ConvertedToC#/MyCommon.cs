@@ -404,9 +404,12 @@ namespace Hoehoe
             }
         }
 
-        public static string GetAppDir()
+        public static string AppDir
         {
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            get
+            {
+                return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            }
         }
 
         public static T getAppAssemblyCustomeAttr<T>() where T : Attribute

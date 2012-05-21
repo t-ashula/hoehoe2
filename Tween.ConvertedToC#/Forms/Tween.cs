@@ -2345,7 +2345,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    string dir = MyCommon.GetAppDir();
+                    string dir = MyCommon.AppDir;
                     if (Directory.Exists(Path.Combine(dir, "Sounds")))
                     {
                         dir = Path.Combine(dir, "Sounds");
@@ -8729,7 +8729,7 @@ namespace Hoehoe
             }
 
             SaveFileDialog1.FileName = String.Format("HoehoePosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
-            SaveFileDialog1.InitialDirectory = MyCommon.GetAppDir();
+            SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
             SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
             SaveFileDialog1.FilterIndex = 0;
             SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
@@ -9438,8 +9438,8 @@ namespace Hoehoe
             this.SoundFileTbComboBox.Items.Clear();
             SoundFileComboBox.Items.Add("");
             this.SoundFileTbComboBox.Items.Add("");
-            DirectoryInfo oDir = new DirectoryInfo(MyCommon.GetAppDir() + Path.DirectorySeparatorChar);
-            if (Directory.Exists(Path.Combine(MyCommon.GetAppDir(), "Sounds")))
+            DirectoryInfo oDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
+            if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
             {
                 oDir = oDir.GetDirectories("Sounds")[0];
             }
@@ -13919,7 +13919,7 @@ namespace Hoehoe
                 {
                     try
                     {
-                        string dir = MyCommon.GetAppDir();
+                        string dir = MyCommon.AppDir;
                         if (Directory.Exists(Path.Combine(dir, "Sounds")))
                         {
                             dir = Path.Combine(dir, "Sounds");
