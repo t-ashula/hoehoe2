@@ -24,22 +24,20 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Drawing;
+    using System.Windows.Forms;
+
     public class ImageListViewItem : ListViewItem
     {
-        //Public Property Image As Image = Nothing
-        public event ImageDownloadedEventHandler ImageDownloaded;
+        #region privates
+        private ImageDictionary images;
+        private string imageUrl;
+        #endregion
 
-        public delegate void ImageDownloadedEventHandler(object sender, EventArgs e);
-
-        private ImageDictionary _imageDict = null;
-        private string _imageUrl;
-
+        #region constructor
         public ImageListViewItem(string[] items, string imageKey)
             : base(items, imageKey)
         {
@@ -48,48 +46,68 @@ namespace Hoehoe
         public ImageListViewItem(string[] items, ImageDictionary imageDictionary, string imageKey)
             : base(items, imageKey)
         {
-            this._imageDict = imageDictionary;
-            this._imageUrl = imageKey;
+            this.images = imageDictionary;
+            this.imageUrl = imageKey;
             Image dummy = this.GetImage(false);
         }
+        #endregion
 
+        #region delegates
+        public delegate void ImageDownloadedEventHandler(object sender, EventArgs e);
+        #endregion
+
+        #region events
+        public event ImageDownloadedEventHandler ImageDownloaded;
+        #endregion
+
+        #region properties
+        public Image Image
+        {
+            get
+            {
+                return string.IsNullOrEmpty(this.imageUrl) ? null : this.images[this.imageUrl];
+            }
+        }
+        #endregion
+
+        #region public methods
+        public void RegetImage()
+        {
+            Image dummy = this.GetImage(true);
+        }
+        #endregion
+
+        #region private methods
         private Image GetImage(bool force)
         {
-            return this._imageDict[this._imageUrl, force, getImg =>
+            return this.images[this.imageUrl, force, new Action<Image>(img =>
             {
-                if (getImg == null)
+                if (img == null)
                 {
                     return;
                 }
+
                 if (this.ListView != null && this.ListView.Created && !this.ListView.IsDisposed)
                 {
                     this.ListView.Invoke(new Action(() =>
                     {
                         if (this.Index < this.ListView.VirtualListSize)
                         {
-                            this.ListView.RedrawItems(this.Index, this.Index, true); OnImageDownloaded();
+                            this.ListView.RedrawItems(this.Index, this.Index, true);
+                            OnImageDownloaded();
                         }
                     }));
                 }
-            }];
+            })];
         }
 
         private void OnImageDownloaded()
         {
-            if (ImageDownloaded != null)
+            if (this.ImageDownloaded != null)
             {
-                ImageDownloaded(this, EventArgs.Empty);
+                this.ImageDownloaded(this, EventArgs.Empty);
             }
         }
-
-        public Image Image
-        {
-            get { return String.IsNullOrEmpty(this._imageUrl) ? null : this._imageDict[this._imageUrl]; }
-        }
-
-        public void RegetImage()
-        {
-            Image dummy = GetImage(true);
-        }
+        #endregion
     }
 }
