@@ -79,6 +79,11 @@ namespace Hoehoe
         private const string DetailHtmlFormat6 = ");\"><p>";
         private const string DetailHtmlFormat7 = "</p></body></html>";
 
+        private static int accountCheckErrorCount = 0;
+
+        // ロック用
+        private readonly object syncObject = new object();
+
         // 各種設定
         // 画面サイズ
         private Size mySize;
@@ -123,9 +128,6 @@ namespace Hoehoe
 
         // 右クリックしたタブの名前（Tabコントロール機能不足対応）
         private string rclickTabName;
-
-        // ロック用
-        private readonly object syncObject = new object();
 
         private string detailHtmlFormatHeader;
         private string detailHtmlFormatFooter;
@@ -3979,8 +3981,6 @@ namespace Hoehoe
             this.Activate();
             this.BringToFront();
         }
-
-        private static int accountCheckErrorCount = 0;
 
         private static bool CheckAccountValid()
         {
