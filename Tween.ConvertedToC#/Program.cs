@@ -24,33 +24,55 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-using System.Windows.Forms;
-using Hoehoe.Properties;
-
 namespace Hoehoe
 {
-    static class Program
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Reflection;
+    using System.Threading;
+    using System.Windows.Forms;
+    using Hoehoe.Properties;
+
+    internal static class Program
     {
+        private static Mutex mt;
+
+        public static string CultureCode
+        {
+            get
+            {
+                if (MyCommon.CultureStr == null)
+                {
+                    SettingCommon cfgCommon = SettingCommon.Load();
+                    MyCommon.CultureStr = cfgCommon.Language;
+                    if (MyCommon.CultureStr == "OS")
+                    {
+                        if (!IsEqualCurrentCulture("ja") && !IsEqualCurrentCulture("en") && !IsEqualCurrentCulture("zh-CN"))
+                        {
+                            MyCommon.CultureStr = "en";
+                        }
+                    }
+                }
+
+                return MyCommon.CultureStr;
+            }
+        }
+
         [STAThread]
         public static void Main(string[] args)
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);//UseCompatibleTextRendering);
+            Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += MyApplication_UnhandledException;
             Application.ApplicationExit += (_, __) => { RelaseMutex(); Settings.Default.Save(); };
             if (!MyApplication_Startup())
             {
                 return;
             }
-            //this.ShutdownStyle = global::Microsoft.VisualBasic.ApplicationServices.ShutdownMode.AfterMainFormCloses;
+            //// this.ShutdownStyle = global::Microsoft.VisualBasic.ApplicationServices.ShutdownMode.AfterMainFormCloses;
             Application.Run(new TweenMain());
         }
-        private static Mutex mt;
 
         private static void RelaseMutex()
         {
@@ -71,7 +93,7 @@ namespace Hoehoe
         private static bool MyApplication_Startup()
         {
             CheckSettingFilePath();
-            //InitCulture(Application.CurrentCulture.Name);
+            //// InitCulture(Application.CurrentCulture.Name);
 
             string pt = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location).Replace("\\", "/") + "/" + Application.ProductName;
             mt = new Mutex(false, pt);
@@ -90,9 +112,9 @@ namespace Hoehoe
                     {
                         if (prevProcess != null)
                         {
-                            //プロセス特定は出来たが、ウィンドウハンドルが取得できなかった（アイコン化されている）
-                            //タスクトレイアイコンのクリックをエミュレート
-                            //注：アイコン特定はTooltipの文字列で行うため、多重起動時は先に見つけた物がアクティブになる
+                            // プロセス特定は出来たが、ウィンドウハンドルが取得できなかった（アイコン化されている）
+                            // タスクトレイアイコンのクリックをエミュレート
+                            // 注：アイコン特定はTooltipの文字列で行うため、多重起動時は先に見つけた物がアクティブになる
                             bool rslt = Win32Api.ClickTasktrayIcon("Hoehoe");
                             if (!rslt)
                             {
@@ -106,7 +128,8 @@ namespace Hoehoe
                             MessageBox.Show(Resources.StartupText1, Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
-                    //起動キャンセル
+
+                    // 起動キャンセル
                     RelaseMutex();
                     return false;
                 }
@@ -116,15 +139,16 @@ namespace Hoehoe
                 System.Diagnostics.Debug.Write("application startup:" + ex);
                 return false;
             }
+
             return true;
         }
 
         private static void MyApplication_UnhandledException(object sender, ThreadExceptionEventArgs e)
         {
             System.Diagnostics.Debug.Write("UnhandledException:" + e);
-            //GDI+のエラー原因を特定したい
             if (e.Exception.Message != "A generic error occurred in GDI+." && e.Exception.Message != "GDI+ で汎用エラーが発生しました。")
             {
+                // GDI+のエラー原因を特定したい
                 if (MyCommon.ExceptionOut(e.Exception))
                 {
                     Application.Exit();
@@ -132,29 +156,9 @@ namespace Hoehoe
             }
         }
 
-        private static bool IsEqualCurrentCulture(string CultureName)
+        private static bool IsEqualCurrentCulture(string cultureName)
         {
-            return Thread.CurrentThread.CurrentUICulture.Name.StartsWith(CultureName);
-        }
-
-        public static string CultureCode
-        {
-            get
-            {
-                if (MyCommon.CultureStr == null)
-                {
-                    SettingCommon cfgCommon = SettingCommon.Load();
-                    MyCommon.CultureStr = cfgCommon.Language;
-                    if (MyCommon.CultureStr == "OS")
-                    {
-                        if (!IsEqualCurrentCulture("ja") && !IsEqualCurrentCulture("en") && !IsEqualCurrentCulture("zh-CN"))
-                        {
-                            MyCommon.CultureStr = "en";
-                        }
-                    }
-                }
-                return MyCommon.CultureStr;
-            }
+            return Thread.CurrentThread.CurrentUICulture.Name.StartsWith(cultureName);
         }
 
         private static void CheckSettingFilePath()
