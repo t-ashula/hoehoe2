@@ -230,7 +230,7 @@ namespace Hoehoe
             if (MyCommon.IsNetworkAvailable()
                 && (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly
                 || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp)
-                && (!String.IsNullOrEmpty(TextBitlyId.Text) || !String.IsNullOrEmpty(TextBitlyPw.Text)))
+                && (!string.IsNullOrEmpty(TextBitlyId.Text) || !string.IsNullOrEmpty(TextBitlyPw.Text)))
             {
                 if (!this.BitlyValidation(TextBitlyId.Text, TextBitlyPw.Text))
                 {
@@ -274,7 +274,7 @@ namespace Hoehoe
             else
             {
                 this._tw.ClearAuthInfo();
-                this._tw.Initialize("", "", "", 0);
+                this._tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
             }
 
 #if UA // = True
@@ -658,11 +658,11 @@ namespace Hoehoe
                 if (!userSet)
                 {
                     this._tw.ClearAuthInfo();
-                    this._tw.Initialize("", "", "", 0);
+                    this._tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
                 }
             }
 
-            if (this._tw != null && String.IsNullOrEmpty(this._tw.Username) && e.CloseReason == CloseReason.None)
+            if (this._tw != null && string.IsNullOrEmpty(this._tw.Username) && e.CloseReason == CloseReason.None)
             {
                 if (MessageBox.Show(Hoehoe.Properties.Resources.Setting_FormClosing1, "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                 {
@@ -1971,7 +1971,7 @@ namespace Hoehoe
         private void TextProxyPort_Validating(object sender, CancelEventArgs e)
         {
             int port = 0;
-            if (String.IsNullOrEmpty(TextProxyPort.Text.Trim()))
+            if (string.IsNullOrEmpty(TextProxyPort.Text.Trim()))
             {
                 TextProxyPort.Text = "0";
             }
@@ -2272,10 +2272,10 @@ namespace Hoehoe
             HttpConnection.InitializeConnection(20, ptype, padr, pport, pusr, ppw);
             HttpTwitter.SetTwitterUrl(TwitterAPIText.Text.Trim());
             HttpTwitter.SetTwitterSearchUrl(TwitterSearchAPIText.Text.Trim());
-            this._tw.Initialize("", "", "", 0);
-            string pinPageUrl = "";
+            this._tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
+            string pinPageUrl = string.Empty;
             string rslt = this._tw.StartAuthentication(ref pinPageUrl);
-            if (String.IsNullOrEmpty(rslt))
+            if (string.IsNullOrEmpty(rslt))
             {
                 using (var ab = new AuthBrowser())
                 {
@@ -2303,7 +2303,7 @@ namespace Hoehoe
         {
             string pin = this._pin;
             string rslt = this._tw.Authenticate(pin);
-            if (String.IsNullOrEmpty(rslt))
+            if (string.IsNullOrEmpty(rslt))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
                 int idx = -1;
@@ -2487,7 +2487,7 @@ namespace Hoehoe
             LabelPostAndGet.Visible = CheckPostAndGet.Checked && !this._tw.UserStreamEnabled;
             LabelUserStreamActive.Visible = this._tw.UserStreamEnabled;
 
-            LabelApiUsingUserStreamEnabled.Text = String.Format(Hoehoe.Properties.Resources.SettingAPIUse2, (apiLists + apiUserTimeline).ToString());
+            LabelApiUsingUserStreamEnabled.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse2, apiLists + apiUserTimeline);
             LabelApiUsingUserStreamEnabled.Visible = this._tw.UserStreamEnabled;
         }
 
@@ -2505,7 +2505,8 @@ namespace Hoehoe
                 {
                     return;
                 }
-            } while (!(this.IsHandleCreated));
+            }
+            while (!this.IsHandleCreated);
             this.TopMost = this.AlwaysTop;
             this.CalcApiUsing();
         }
@@ -2522,7 +2523,7 @@ namespace Hoehoe
 
         private bool BitlyValidation(string id, string apikey)
         {
-            if (String.IsNullOrEmpty(id) || String.IsNullOrEmpty(apikey))
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(apikey))
             {
                 return false;
             }
@@ -2832,12 +2833,12 @@ namespace Hoehoe
 
         private void SoundFileListup()
         {
-            if (this._MyEventSoundFile == null)
+            if (string.IsNullOrEmpty(this._MyEventSoundFile))
             {
-                this._MyEventSoundFile = "";
+                this._MyEventSoundFile = string.Empty;
             }
             ComboBoxEventNotifySound.Items.Clear();
-            ComboBoxEventNotifySound.Items.Add("");
+            ComboBoxEventNotifySound.Items.Add(string.Empty);
             DirectoryInfo oDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
             if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
             {
@@ -2857,7 +2858,7 @@ namespace Hoehoe
 
         private void UserAppointUrlText_Validating(object sender, CancelEventArgs e)
         {
-            if (!UserAppointUrlText.Text.StartsWith("http") && !String.IsNullOrEmpty(UserAppointUrlText.Text))
+            if (!UserAppointUrlText.Text.StartsWith("http") && !string.IsNullOrEmpty(UserAppointUrlText.Text))
             {
                 MessageBox.Show("Text Error:正しいURLではありません");
             }
@@ -2874,7 +2875,7 @@ namespace Hoehoe
             string path = this.BrowserPathText.Text;
             try
             {
-                if (!String.IsNullOrEmpty(this.BrowserPath))
+                if (!string.IsNullOrEmpty(this.BrowserPath))
                 {
                     if (path.StartsWith("\"") && path.Length > 2 && path.IndexOf("\"", 2) > -1)
                     {
