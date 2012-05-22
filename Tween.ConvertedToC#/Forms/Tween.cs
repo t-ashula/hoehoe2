@@ -383,6 +383,35 @@ namespace Hoehoe
         public delegate void SetStatusLabelApiDelegate();
         #endregion
 
+        #region enums
+        // 検索処理タイプ
+        private enum SEARCHTYPE
+        {
+            DialogSearch,
+            NextSearch,
+            PrevSearch
+        }
+
+        [Flags]
+        private enum ModifierState : int
+        {
+            None = 0,
+            Alt = 1,
+            Shift = 2,
+            Ctrl = 4,
+            NotFlags = 8
+        }
+
+        private enum FocusedControl : int
+        {
+            None,
+            ListTab,
+            StatusText,
+            PostBrowser
+        }
+
+        #endregion
+
         private AppendSettingDialog SettingDialog
         {
             get
@@ -532,14 +561,6 @@ namespace Hoehoe
 
             // Fav追加・削除時のタブ名
             public string TabName = string.Empty;
-        }
-
-        // 検索処理タイプ
-        private enum SEARCHTYPE
-        {
-            DialogSearch,
-            NextSearch,
-            PrevSearch
         }
 
         private class PostingStatus
@@ -7194,24 +7215,6 @@ namespace Hoehoe
             }
 
             return state;
-        }
-
-        [Flags]
-        private enum ModifierState : int
-        {
-            None = 0,
-            Alt = 1,
-            Shift = 2,
-            Ctrl = 4,
-            NotFlags = 8
-        }
-
-        private enum FocusedControl : int
-        {
-            None,
-            ListTab,
-            StatusText,
-            PostBrowser
         }
 
         private bool CommonKeyDown(Keys keyCode, FocusedControl focusedControl, ModifierState modifierState)
