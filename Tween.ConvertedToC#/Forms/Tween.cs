@@ -878,7 +878,7 @@ namespace Hoehoe
 
             SettingDialog.Owner = this;
             SearchDialog.Owner = this;
-            fltDialog.Owner = this;
+            this.fltDialog.Owner = this;
             TabDialog.Owner = this;
             UrlDialog.Owner = this;
 
@@ -3759,7 +3759,7 @@ namespace Hoehoe
                     MakeReplyOrDirectStatus();
                     break;
                 case 1:
-                    FavoriteChange(true);
+                    this.FavoriteChange(true);
                     break;
                 case 2:
                     if (this._curPost != null)
@@ -3787,22 +3787,22 @@ namespace Hoehoe
 
         private void FavAddToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FavoriteChange(true);
+            this.FavoriteChange(true);
         }
 
         private void FavRemoveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FavoriteChange(false);
+            this.FavoriteChange(false);
         }
 
         private void FavoriteRetweetMenuItem_Click(object sender, EventArgs e)
         {
-            FavoritesRetweetOriginal();
+            this.FavoritesRetweetOriginal();
         }
 
         private void FavoriteRetweetUnofficialMenuItem_Click(object sender, EventArgs e)
         {
-            FavoritesRetweetUnofficial();
+            this.FavoritesRetweetUnofficial();
         }
 
         private void FavoriteChange(bool isFavAdd, bool multiFavoriteChangeDialogEnable = true)
@@ -7071,7 +7071,7 @@ namespace Hoehoe
                             MakeReplyOrDirectStatus(false, false);
                             return true;
                         case Keys.S:
-                            FavoriteChange(true);
+                            this.FavoriteChange(true);
                             return true;
                         case Keys.I:
                             this.doRepliedStatusOpen();
@@ -7390,7 +7390,7 @@ namespace Hoehoe
                             }
                             break;
                         case Keys.S:
-                            FavoriteChange(false);
+                            this.FavoriteChange(false);
                             return true;
                         case Keys.B:
                             UnreadStripMenuItem_Click(null, null);
@@ -7405,7 +7405,7 @@ namespace Hoehoe
                             this.doMoveToRTHome();
                             return true;
                         case Keys.O:
-                            FavorareMenuItem_Click(null, null);
+                            this.FavorareMenuItem_Click(null, null);
                             return true;
                     }
                     if (focusedControl == FocusedControl.StatusText)
@@ -7518,12 +7518,12 @@ namespace Hoehoe
                 case ModifierState.Ctrl | ModifierState.Alt:
                     if (keyCode == Keys.S)
                     {
-                        FavoritesRetweetOriginal();
+                        this.FavoritesRetweetOriginal();
                         return true;
                     }
                     else if (keyCode == Keys.R)
                     {
-                        FavoritesRetweetUnofficial();
+                        this.FavoritesRetweetUnofficial();
                         return true;
                     }
                     else if (keyCode == Keys.H)
@@ -9571,8 +9571,8 @@ namespace Hoehoe
             {
                 this._rclickTabName = this._statuses.GetTabByType(TabUsageType.Home).TabName;
             }
-            fltDialog.SetCurrent(this._rclickTabName);
-            fltDialog.ShowDialog();
+            this.fltDialog.SetCurrent(this._rclickTabName);
+            this.fltDialog.ShowDialog();
             this.TopMost = SettingDialog.AlwaysTop;
 
             try
@@ -9684,17 +9684,17 @@ namespace Hoehoe
                     return;
                 }
 
-                fltDialog.SetCurrent(tabName);
+                this.fltDialog.SetCurrent(tabName);
                 PostClass statusesItem = this._statuses.Item(this._curTab.Text, idx);
                 if (statusesItem.RetweetedId == 0)
                 {
-                    fltDialog.AddNewFilter(statusesItem.ScreenName, statusesItem.TextFromApi);
+                    this.fltDialog.AddNewFilter(statusesItem.ScreenName, statusesItem.TextFromApi);
                 }
                 else
                 {
-                    fltDialog.AddNewFilter(statusesItem.RetweetedBy, statusesItem.TextFromApi);
+                    this.fltDialog.AddNewFilter(statusesItem.RetweetedBy, statusesItem.TextFromApi);
                 }
-                fltDialog.ShowDialog();
+                this.fltDialog.ShowDialog();
                 this.TopMost = SettingDialog.AlwaysTop;
             }
 
@@ -11582,10 +11582,10 @@ namespace Hoehoe
             }
             else
             {
-                if (followerFetchWorker == null)
+                if (this.followerFetchWorker == null)
                 {
-                    followerFetchWorker = new BackgroundWorker();
-                    bw = followerFetchWorker;
+                    this.followerFetchWorker = new BackgroundWorker();
+                    bw = this.followerFetchWorker;
                     bw.WorkerReportsProgress = true;
                     bw.WorkerSupportsCancellation = true;
                     bw.DoWork += GetTimelineWorker_DoWork;
@@ -11594,9 +11594,9 @@ namespace Hoehoe
                 }
                 else
                 {
-                    if (followerFetchWorker.IsBusy == false)
+                    if (this.followerFetchWorker.IsBusy == false)
                     {
-                        bw = followerFetchWorker;
+                        bw = this.followerFetchWorker;
                     }
                 }
             }
@@ -11861,7 +11861,7 @@ namespace Hoehoe
             if (this._DoFavRetweetFlags)
             {
                 this._DoFavRetweetFlags = false;
-                FavoriteChange(true, false);
+                this.FavoriteChange(true, false);
             }
         }
 
@@ -11870,7 +11870,7 @@ namespace Hoehoe
             if (this.ExistCurrentPost && !this._curPost.IsDm)
             {
                 this._DoFavRetweetFlags = true;
-                FavoriteChange(true);
+                this.FavoriteChange(true);
                 if (!this._curPost.IsProtect && this._DoFavRetweetFlags)
                 {
                     this._DoFavRetweetFlags = false;
@@ -12035,7 +12035,7 @@ namespace Hoehoe
             {
                 id = this._curPost.ScreenName;
             }
-            FollowCommand(id);
+            this.FollowCommand(id);
         }
 
         private void FollowCommand_DoWork(object sender, DoWorkEventArgs e)
@@ -12056,7 +12056,7 @@ namespace Hoehoe
                     FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs();
                     arg.Tw = tw;
                     arg.Id = inputName.TabName.Trim();
-                    using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.FollowCommandText1, FollowCommand_DoWork, null, arg))
+                    using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.FollowCommandText1, this.FollowCommand_DoWork, null, arg))
                     {
                         info.ShowDialog();
                         string ret = (string)info.Result;
@@ -12324,7 +12324,7 @@ namespace Hoehoe
             string name = GetUserId();
             if (name != null)
             {
-                FollowCommand(name);
+                this.FollowCommand(name);
             }
         }
 
@@ -13067,7 +13067,7 @@ namespace Hoehoe
                 string id = (string)NameLabel.Tag;
                 if (id != tw.Username)
                 {
-                    FollowCommand(id);
+                    this.FollowCommand(id);
                 }
             }
         }
