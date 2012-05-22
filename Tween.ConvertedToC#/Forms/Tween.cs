@@ -1439,6 +1439,117 @@ namespace Hoehoe
             this.replyToName = string.Empty;
         }
 
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            // TextBox1でEnterを押してもビープ音が鳴らないようにする
+            if ((keyData & Keys.KeyCode) == Keys.Enter)
+            {
+                if (StatusText.Focused)
+                {
+                    bool doNewLine = false;
+                    bool doPost = false;
+
+                    // Ctrl+Enter投稿時
+                    if (this.SettingDialog.PostCtrlEnter)
+                    {
+                        if (StatusText.Multiline)
+                        {
+                            if ((keyData & Keys.Shift) == Keys.Shift && (keyData & Keys.Control) != Keys.Control)
+                            {
+                                doNewLine = true;
+                            }
+
+                            if ((keyData & Keys.Control) == Keys.Control)
+                            {
+                                doPost = true;
+                            }
+                        }
+                        else
+                        {
+                            if ((keyData & Keys.Control) == Keys.Control)
+                            {
+                                doPost = true;
+                            }
+                        }
+
+                        // SHift+Enter投稿時
+                    }
+                    else if (this.SettingDialog.PostShiftEnter)
+                    {
+                        if (StatusText.Multiline)
+                        {
+                            if ((keyData & Keys.Control) == Keys.Control && (keyData & Keys.Shift) != Keys.Shift)
+                            {
+                                doNewLine = true;
+                            }
+
+                            if ((keyData & Keys.Shift) == Keys.Shift)
+                            {
+                                doPost = true;
+                            }
+                        }
+                        else
+                        {
+                            if ((keyData & Keys.Shift) == Keys.Shift)
+                            {
+                                doPost = true;
+                            }
+                        }
+
+                        // Enter投稿時
+                    }
+                    else
+                    {
+                        if (StatusText.Multiline)
+                        {
+                            if ((keyData & Keys.Shift) == Keys.Shift && (keyData & Keys.Control) != Keys.Control)
+                            {
+                                doNewLine = true;
+                            }
+
+                            if (((keyData & Keys.Control) != Keys.Control && (keyData & Keys.Shift) != Keys.Shift) || ((keyData & Keys.Control) == Keys.Control && (keyData & Keys.Shift) == Keys.Shift))
+                            {
+                                doPost = true;
+                            }
+                        }
+                        else
+                        {
+                            if (((keyData & Keys.Shift) == Keys.Shift) || (((keyData & Keys.Control) != Keys.Control) && ((keyData & Keys.Shift) != Keys.Shift)))
+                            {
+                                doPost = true;
+                            }
+                        }
+                    }
+
+                    if (doNewLine)
+                    {
+                        int pos1 = StatusText.SelectionStart;
+                        if (StatusText.SelectionLength > 0)
+                        {
+                            // 選択状態文字列削除
+                            StatusText.Text = StatusText.Text.Remove(pos1, StatusText.SelectionLength);
+                        }
+
+                        StatusText.Text = StatusText.Text.Insert(pos1, Environment.NewLine); // 改行挿入
+                        StatusText.SelectionStart = pos1 + Environment.NewLine.Length;       // カーソルを改行の次の文字へ移動
+                        return true;
+                    }
+                    else if (doPost)
+                    {
+                        this.PostButton_Click(null, null);
+                        return true;
+                    }
+                }
+                else if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch && (ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focused || ListTab.SelectedTab.Controls["panelSearch"].Controls["comboLang"].Focused))
+                {
+                    this.SearchButton_Click(ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
+                    return true;
+                }
+            }
+
+            return base.ProcessDialogKey(keyData);
+        }
+
         private void TweenMain_Activated(object sender, EventArgs e)
         {
             // 画面がアクティブになったら、発言欄の背景色戻す
@@ -10230,117 +10341,6 @@ namespace Hoehoe
             }
         }
         
-        protected override bool ProcessDialogKey(Keys keyData)
-        {
-            // TextBox1でEnterを押してもビープ音が鳴らないようにする
-            if ((keyData & Keys.KeyCode) == Keys.Enter)
-            {
-                if (StatusText.Focused)
-                {
-                    bool doNewLine = false;
-                    bool doPost = false;
-
-                    // Ctrl+Enter投稿時
-                    if (this.SettingDialog.PostCtrlEnter)
-                    {
-                        if (StatusText.Multiline)
-                        {
-                            if ((keyData & Keys.Shift) == Keys.Shift && (keyData & Keys.Control) != Keys.Control)
-                            {
-                                doNewLine = true;
-                            }
-
-                            if ((keyData & Keys.Control) == Keys.Control)
-                            {
-                                doPost = true;
-                            }
-                        }
-                        else
-                        {
-                            if ((keyData & Keys.Control) == Keys.Control)
-                            {
-                                doPost = true;
-                            }
-                        }
-
-                        // SHift+Enter投稿時
-                    }
-                    else if (this.SettingDialog.PostShiftEnter)
-                    {
-                        if (StatusText.Multiline)
-                        {
-                            if ((keyData & Keys.Control) == Keys.Control && (keyData & Keys.Shift) != Keys.Shift)
-                            {
-                                doNewLine = true;
-                            }
-
-                            if ((keyData & Keys.Shift) == Keys.Shift)
-                            {
-                                doPost = true;
-                            }
-                        }
-                        else
-                        {
-                            if ((keyData & Keys.Shift) == Keys.Shift)
-                            {
-                                doPost = true;
-                            }
-                        }
-
-                        // Enter投稿時
-                    }
-                    else
-                    {
-                        if (StatusText.Multiline)
-                        {
-                            if ((keyData & Keys.Shift) == Keys.Shift && (keyData & Keys.Control) != Keys.Control)
-                            {
-                                doNewLine = true;
-                            }
-
-                            if (((keyData & Keys.Control) != Keys.Control && (keyData & Keys.Shift) != Keys.Shift) || ((keyData & Keys.Control) == Keys.Control && (keyData & Keys.Shift) == Keys.Shift))
-                            {
-                                doPost = true;
-                            }
-                        }
-                        else
-                        {
-                            if (((keyData & Keys.Shift) == Keys.Shift) || (((keyData & Keys.Control) != Keys.Control) && ((keyData & Keys.Shift) != Keys.Shift)))
-                            {
-                                doPost = true;
-                            }
-                        }
-                    }
-
-                    if (doNewLine)
-                    {
-                        int pos1 = StatusText.SelectionStart;
-                        if (StatusText.SelectionLength > 0)
-                        {
-                            // 選択状態文字列削除
-                            StatusText.Text = StatusText.Text.Remove(pos1, StatusText.SelectionLength);
-                        }
-
-                        StatusText.Text = StatusText.Text.Insert(pos1, Environment.NewLine); // 改行挿入
-                        StatusText.SelectionStart = pos1 + Environment.NewLine.Length;       // カーソルを改行の次の文字へ移動
-                        return true;
-                    }
-                    else if (doPost)
-                    {
-                        this.PostButton_Click(null, null);
-                        return true;
-                    }
-                }
-                else if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch && (ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focused || ListTab.SelectedTab.Controls["panelSearch"].Controls["comboLang"].Focused))
-                {
-                    this.SearchButton_Click(ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
-                    return true;
-                }
-            }
-
-            return base.ProcessDialogKey(keyData);
-        }
-
         private void ReplyAllStripMenuItem_Click(object sender, EventArgs e)
         {
             this.MakeReplyOrDirectStatus(false, true, true);
