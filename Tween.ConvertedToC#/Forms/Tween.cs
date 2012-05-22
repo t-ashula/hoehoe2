@@ -861,7 +861,7 @@ namespace Hoehoe
             Regex.CacheSize = 100;
 
             // MyCommon.fileVersion = ((AssemblyFileVersionAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
-            InitializeTraceFrag();
+            this.InitializeTraceFrag();
             LoadIcons();
             // アイコン読み込み
 
@@ -1850,12 +1850,12 @@ namespace Hoehoe
                     this.Invoke(new MethodInvoker(this.TrimPostChain));
                 }
             }
-            if (isOsResumed)
+            if (this.isOsResumed)
             {
                 Interlocked.Increment(ref this._timerResumeWait);
                 if (this._timerResumeWait > 30)
                 {
-                    isOsResumed = false;
+                    this.isOsResumed = false;
                     Interlocked.Exchange(ref this._timerResumeWait, 0);
                     this.GetTimeline(WorkerType.Timeline, 1, 0, "");
                     this.GetTimeline(WorkerType.Reply, 1, 0, "");
@@ -2144,7 +2144,7 @@ namespace Hoehoe
 
         private bool BalloonRequired(Twitter.FormattedEvent ev)
         {
-            return IsEventNotifyAsEventType(ev.Eventtype) && IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (SettingDialog.ForceEventNotify && ev.Eventtype != EventType.None)) && !this._initial && ((SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !SettingDialog.LimitBalloon) && !Win32Api.IsScreenSaverRunning();
+            return this.IsEventNotifyAsEventType(ev.Eventtype) && this.IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (SettingDialog.ForceEventNotify && ev.Eventtype != EventType.None)) && !this._initial && ((SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !SettingDialog.LimitBalloon) && !Win32Api.IsScreenSaverRunning();
         }
 
         private void NotifyNewPosts(PostClass[] notifyPosts, string soundFile, int addCount, bool newMentions)
@@ -2615,15 +2615,15 @@ namespace Hoehoe
             }
 
             bool isCutOff = false;
-            bool isRemoveFooter = isKeyDown(Keys.Shift);
+            bool isRemoveFooter = this.isKeyDown(Keys.Shift);
             if (StatusText.Multiline && !SettingDialog.PostCtrlEnter)
             {
                 // 複数行でEnter投稿の場合、Ctrlも押されていたらフッタ付加しない
-                isRemoveFooter = isKeyDown(Keys.Control);
+                isRemoveFooter = this.isKeyDown(Keys.Control);
             }
             if (SettingDialog.PostShiftEnter)
             {
-                isRemoveFooter = isKeyDown(Keys.Control);
+                isRemoveFooter = this.isKeyDown(Keys.Control);
             }
             if (!isRemoveFooter && (StatusText.Text.Contains("RT @") || StatusText.Text.Contains("QT @")))
             {
@@ -3980,7 +3980,7 @@ namespace Hoehoe
                 }
             }
             this._statuses.ToggleSortOrder(mode);
-            InitColumnText();
+            this.InitColumnText();
 
             if (this._iconCol)
             {
@@ -4845,12 +4845,12 @@ namespace Hoehoe
                 else
                 {
                     Match m = Regex.Match(e.Url.AbsoluteUri, "^https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
-                    if (m.Success && IsTwitterId(m.Result("${ScreenName}")))
+                    if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
                     {
                         // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
                         if (SettingDialog.OpenUserTimeline)
                         {
-                            if (isKeyDown(Keys.Control))
+                            if (this.isKeyDown(Keys.Control))
                             {
                                 OpenUriAsync(e.Url.OriginalString);
                             }
@@ -4861,7 +4861,7 @@ namespace Hoehoe
                         }
                         else
                         {
-                            if (isKeyDown(Keys.Control))
+                            if (this.isKeyDown(Keys.Control))
                             {
                                 this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
                             }
@@ -5191,7 +5191,7 @@ namespace Hoehoe
             listCustom.DrawSubItem += MyList_DrawSubItem;
             listCustom.HScrolled += MyList_HScrolled;
 
-            InitColumnText();
+            this.InitColumnText();
             colHd1.Text = this._columnTexts[0];
             colHd1.Width = 48;
             colHd2.Text = this._columnTexts[1];
@@ -5728,8 +5728,8 @@ namespace Hoehoe
             {
                 return len;
             }
-            if ((isAuto && !isKeyDown(Keys.Control) && SettingDialog.PostShiftEnter)
-                || (isAuto && !isKeyDown(Keys.Shift) && !SettingDialog.PostShiftEnter)
+            if ((isAuto && !this.isKeyDown(Keys.Control) && SettingDialog.PostShiftEnter)
+                || (isAuto && !this.isKeyDown(Keys.Shift) && !SettingDialog.PostShiftEnter)
                 || (!isAuto && isAddFooter))
             {
                 if (SettingDialog.UseRecommendStatus)
@@ -6473,7 +6473,7 @@ namespace Hoehoe
             string retMsg = "";
             string strVer = "";
             string strDetail = "";
-            bool forceUpdate = isKeyDown(Keys.Shift);
+            bool forceUpdate = this.isKeyDown(Keys.Shift);
 
             try
             {
@@ -7399,7 +7399,7 @@ namespace Hoehoe
                             this.HashToggleMenuItem_Click(null, null);
                             return true;
                         case Keys.P:
-                            ImageSelectMenuItem_Click(null, null);
+                            this.ImageSelectMenuItem_Click(null, null);
                             return true;
                         case Keys.H:
                             this.doMoveToRTHome();
@@ -10179,7 +10179,7 @@ namespace Hoehoe
                     return;
                 }
                 Match m = Regex.Match(openUrlStr, "^https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
-                if (SettingDialog.OpenUserTimeline && m.Success && IsTwitterId(m.Result("${ScreenName}")))
+                if (SettingDialog.OpenUserTimeline && m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
                 {
                     this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
                 }
@@ -11382,7 +11382,7 @@ namespace Hoehoe
                 TimelinePanel.Visible = false;
                 TimelinePanel.Enabled = false;
                 ImagefilePathText.Text = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-                ImageFromSelectedFile();
+                this.ImageFromSelectedFile();
                 this.Activate();
                 this.BringToFront();
                 StatusText.Focus();
@@ -11672,7 +11672,7 @@ namespace Hoehoe
                 // tabname="":全タブ
                 int i = 0;
                 int j = 0;
-                while (IsInitialRead() && !MyCommon.IsEnding)
+                while (this.IsInitialRead() && !MyCommon.IsEnding)
                 {
                     Thread.Sleep(100);
                     Application.DoEvents();
@@ -11929,7 +11929,7 @@ namespace Hoehoe
 
         private void MenuItemHelp_DropDownOpening(object sender, EventArgs e)
         {
-            if (MyCommon.DebugBuild || isKeyDown(Keys.CapsLock) && isKeyDown(Keys.Control) && isKeyDown(Keys.Shift))
+            if (MyCommon.DebugBuild || this.isKeyDown(Keys.CapsLock) && this.isKeyDown(Keys.Control) && this.isKeyDown(Keys.Shift))
             {
                 DebugModeToolStripMenuItem.Visible = true;
             }
@@ -12309,7 +12309,7 @@ namespace Hoehoe
         private string GetUserId()
         {
             Match m = Regex.Match(this._postBrowserStatusText, "^https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?$");
-            if (m.Success && IsTwitterId(m.Result("${ScreenName}")))
+            if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
             {
                 return m.Result("${ScreenName}");
             }
@@ -13307,7 +13307,7 @@ namespace Hoehoe
             }
 
             ImagefilePathText.Text = OpenFileDialog1.FileName;
-            ImageFromSelectedFile();
+            this.ImageFromSelectedFile();
         }
 
         private void ImagefilePathText_Validating(object sender, CancelEventArgs e)
@@ -13325,7 +13325,7 @@ namespace Hoehoe
             }
             else
             {
-                ImageFromSelectedFile();
+                this.ImageFromSelectedFile();
             }
         }
 
@@ -13902,7 +13902,7 @@ namespace Hoehoe
             string snd = SettingDialog.EventSoundFile;
             if (!this._initial && SettingDialog.PlaySound && !String.IsNullOrEmpty(snd))
             {
-                if (Convert.ToBoolean(ev.Eventtype & SettingDialog.EventNotifyFlag) && IsMyEventNotityAsEventType(ev))
+                if (Convert.ToBoolean(ev.Eventtype & SettingDialog.EventNotifyFlag) && this.IsMyEventNotityAsEventType(ev))
                 {
                     try
                     {
@@ -14131,7 +14131,7 @@ namespace Hoehoe
         {
             if (e.Mode == Microsoft.Win32.PowerModes.Resume)
             {
-                isOsResumed = true;
+                this.isOsResumed = true;
             }
         }
 
