@@ -1645,7 +1645,7 @@ namespace Hoehoe
 
         private void SpaceKeyCanceler_SpaceCancel(object sender, EventArgs e)
         {
-            JumpUnreadMenuItem_Click(null, null);
+            this.JumpUnreadMenuItem_Click(null, null);
         }
 
         private void ListTab_DrawItem(object sender, DrawItemEventArgs e)
@@ -2490,7 +2490,7 @@ namespace Hoehoe
             {
                 for (int cnt = 0; cnt < this._itemCache.Length; cnt++)
                 {
-                    this._curList.ChangeItemBackColor(this._itemCacheIndex + cnt, JudgeColor(post, this._postCache[cnt]));
+                    this._curList.ChangeItemBackColor(this._itemCacheIndex + cnt, this.JudgeColor(post, this._postCache[cnt]));
                 }
             }
             catch (Exception)
@@ -2510,11 +2510,11 @@ namespace Hoehoe
 
             if (item.Index == -1)
             {
-                item.BackColor = JudgeColor(post, target);
+                item.BackColor = this.JudgeColor(post, target);
             }
             else
             {
-                this._curList.ChangeItemBackColor(item.Index, JudgeColor(post, target));
+                this._curList.ChangeItemBackColor(item.Index, this.JudgeColor(post, target));
             }
         }
 
@@ -5692,7 +5692,7 @@ namespace Hoehoe
                     {
                         e.Handled = true;
                         StatusText.Text = "";
-                        JumpUnreadMenuItem_Click(null, null);
+                        this.JumpUnreadMenuItem_Click(null, null);
                     }
                 }
             }
@@ -6971,7 +6971,7 @@ namespace Hoehoe
                                 {
                                     this.anchorFlag = false;
                                 }
-                                JumpUnreadMenuItem_Click(null, null);
+                                this.JumpUnreadMenuItem_Click(null, null);
                                 return true;
                             case Keys.G:
                                 if (focusedControl == FocusedControl.ListTab)
