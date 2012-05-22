@@ -13981,24 +13981,24 @@ namespace Hoehoe
 
         private void EventViewerMenuItem_Click(object sender, EventArgs e)
         {
-            if (evtDialog == null || evtDialog.IsDisposed)
+            if (this.evtDialog == null || this.evtDialog.IsDisposed)
             {
-                evtDialog = new EventViewerDialog();
-                evtDialog.Owner = this;
+                this.evtDialog = new EventViewerDialog();
+                this.evtDialog.Owner = this;
                 // 親の中央に表示
-                Point pos = evtDialog.Location;
-                pos.X = Convert.ToInt32(this.Location.X + this.Size.Width / 2 - evtDialog.Size.Width / 2);
-                pos.Y = Convert.ToInt32(this.Location.Y + this.Size.Height / 2 - evtDialog.Size.Height / 2);
-                evtDialog.Location = pos;
+                Point pos = this.evtDialog.Location;
+                pos.X = Convert.ToInt32(this.Location.X + this.Size.Width / 2 - this.evtDialog.Size.Width / 2);
+                pos.Y = Convert.ToInt32(this.Location.Y + this.Size.Height / 2 - this.evtDialog.Size.Height / 2);
+                this.evtDialog.Location = pos;
             }
-            evtDialog.EventSource = tw.StoredEvent;
-            if (!evtDialog.Visible)
+            this.evtDialog.EventSource = tw.StoredEvent;
+            if (!this.evtDialog.Visible)
             {
-                evtDialog.Show(this);
+                this.evtDialog.Show(this);
             }
             else
             {
-                evtDialog.Activate();
+                this.evtDialog.Activate();
             }
             this.TopMost = this.SettingDialog.AlwaysTop;
         }
@@ -14244,7 +14244,7 @@ namespace Hoehoe
 
         private void ContextMenuSource_Opening(object sender, CancelEventArgs e)
         {
-            if (this._curPost == null || !ExistCurrentPost || this._curPost.IsDm)
+            if (this._curPost == null || !this.ExistCurrentPost || this._curPost.IsDm)
             {
                 SourceCopyMenuItem.Enabled = false;
                 SourceUrlCopyMenuItem.Enabled = false;
