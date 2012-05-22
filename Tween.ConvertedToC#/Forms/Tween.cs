@@ -519,11 +519,17 @@ namespace Hoehoe
                 this.AssignHandle(control.Handle);
             }
 
+            public event EventHandler SpaceCancel;
+
+            public void Dispose()
+            {
+                this.ReleaseHandle();
+            }
+
             protected override void WndProc(ref Message m)
             {
                 const int WM_KEYDOWN = 0x100;
                 const int VK_SPACE = 0x20;
-
                 if ((m.Msg == WM_KEYDOWN) && (Convert.ToInt32(m.WParam) == VK_SPACE))
                 {
                     if (this.SpaceCancel != null)
@@ -535,13 +541,6 @@ namespace Hoehoe
                 }
 
                 base.WndProc(ref m);
-            }
-
-            public event EventHandler SpaceCancel;
-
-            public void Dispose()
-            {
-                this.ReleaseHandle();
             }
         }
 
@@ -12663,6 +12662,7 @@ namespace Hoehoe
         private class ShowFriendshipArgs
         {
             public Twitter Tw;
+            public List<FriendshipInfo> Ids = new List<FriendshipInfo>();
 
             public class FriendshipInfo
             {
@@ -12676,8 +12676,6 @@ namespace Hoehoe
                     this.Id = id;
                 }
             }
-
-            public List<FriendshipInfo> Ids = new List<FriendshipInfo>();
         }
 
         private void ShowFriendship_DoWork(object sender, DoWorkEventArgs e)
@@ -14878,5 +14876,8 @@ namespace Hoehoe
 
             values[toIndex] = movedValue;
         }
+        #region inner types
+
+        #endregion
     }
 }
