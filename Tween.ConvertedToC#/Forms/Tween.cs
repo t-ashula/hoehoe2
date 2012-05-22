@@ -418,6 +418,32 @@ namespace Hoehoe
 
         #endregion
 
+        public Color InputBackColor
+        {
+            get { return this.clrInputBackcolor; }
+            set { this.clrInputBackcolor = value; }
+        }
+
+        public Twitter TwitterInstance
+        {
+            get { return this.tw; }
+        }
+
+        public PostClass CurPost
+        {
+            get { return this.curPost; }
+        }
+
+        public bool IsPreviewEnable
+        {
+            get { return this.SettingDialog.PreviewEnable; }
+        }
+
+        public bool FavEventChangeUnread
+        {
+            get { return this.SettingDialog.FavEventUnread; }
+        }
+
         private AppendSettingDialog SettingDialog
         {
             get
@@ -9104,12 +9130,6 @@ namespace Hoehoe
             StatusText.BackColor  = this.clrInputBackcolor;
         }
 
-        public Color InputBackColor
-        {
-            get { return this.clrInputBackcolor; }
-            set { this.clrInputBackcolor = value; }
-        }
-
         private void StatusText_Leave(object sender, EventArgs e)
         {
             // フォーカスがメニューに遷移しないならばフォーカスはタブに移ることを期待
@@ -13359,11 +13379,6 @@ namespace Hoehoe
             this.ContextMenuTabProperty_Opening(sender, null);
         }
 
-        public Twitter TwitterInstance
-        {
-            get { return this.tw; }
-        }
-
         private void SplitContainer3_SplitterMoved(object sender, SplitterEventArgs e)
         {
             if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
@@ -13671,16 +13686,6 @@ namespace Hoehoe
         private void SplitContainer2_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.MultiLineMenuItem.PerformClick();
-        }
-
-        public PostClass CurPost
-        {
-            get { return this.curPost; }
-        }
-
-        public bool IsPreviewEnable
-        {
-            get { return this.SettingDialog.PreviewEnable; }
         }
 
         #region "画像投稿"
@@ -14481,11 +14486,6 @@ namespace Hoehoe
         private void ShowUserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ShowUserTimeline();
-        }
-
-        public bool FavEventChangeUnread
-        {
-            get { return this.SettingDialog.FavEventUnread; }
         }
 
         private string GetUserIdFromCurPostOrInput(string caption)
