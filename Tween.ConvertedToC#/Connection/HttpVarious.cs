@@ -24,16 +24,18 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Net;
-using System.IO;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.IO;
+    using System.Net;
+
     public class HttpVarious : HttpConnection
     {
+        private delegate Image CheckValidImageDelegate(Image img, int width, int height);
+
         public string GetRedirectTo(string url)
         {
             try
@@ -41,7 +43,7 @@ namespace Hoehoe
                 HttpWebRequest req = CreateRequest(HeadMethod, new Uri(url), null, false);
                 req.Timeout = 5000;
                 req.AllowAutoRedirect = false;
-                string data = "";
+                string data = string.Empty;
                 Dictionary<string, string> head = new Dictionary<string, string>();
                 HttpStatusCode ret = GetResponse(req, ref data, head, false);
                 return head.ContainsKey("Location") ? head["Location"] : url;
@@ -54,93 +56,37 @@ namespace Hoehoe
 
         public Image GetImage(Uri url)
         {
-            string t = "";
-            return GetImage(url.ToString(), "", 10000, ref t);
+            string t = string.Empty;
+            return this.GetImage(url.ToString(), string.Empty, 10000, ref t);
         }
 
         public Image GetImage(string url)
         {
-            string t = "";
-            return GetImage(url, "", 10000, ref t);
+            string t = string.Empty;
+            return this.GetImage(url, string.Empty, 10000, ref t);
         }
 
         public Image GetImage(string url, int timeout)
         {
-            string t = "";
-            return GetImage(url, "", timeout, ref t);
+            string t = string.Empty;
+            return this.GetImage(url, string.Empty, timeout, ref t);
         }
 
         public Image GetImage(string url, string referer)
         {
-            string t = "";
-            return GetImage(url, referer, 10000, ref t);
+            string t = string.Empty;
+            return this.GetImage(url, referer, 10000, ref t);
         }
 
         public Image GetImage(string url, string referer, int timeout, ref string errmsg)
         {
-            return GetImageInternal(CheckValidImage, url, referer, timeout, ref errmsg);
+            return this.GetImageInternal(this.CheckValidImage, url, referer, timeout, ref errmsg);
         }
 
         public Image GetIconImage(string url, int timeout)
         {
-            string t = "";
-            return GetImageInternal(CheckValidIconImage, url, "", timeout, ref t);
-        }
-
-        private delegate Image CheckValidImageDelegate(Image img, int width, int height);
-
-        private Image GetImageInternal(CheckValidImageDelegate checkImage, string url, string referer, int timeout, ref string errmsg)
-        {
-            try
-            {
-                HttpWebRequest req = CreateRequest(GetMethod, new Uri(url), null, false);
-                if (!String.IsNullOrEmpty(referer))
-                {
-                    req.Referer = referer;
-                }
-                if (timeout < 3000 || timeout > 30000)
-                {
-                    req.Timeout = 10000;
-                }
-                else
-                {
-                    req.Timeout = timeout;
-                }
-                Bitmap img = null;
-                HttpStatusCode ret = GetResponse(req, ref img, null, false);
-                if (errmsg != null)
-                {
-                    if (ret == HttpStatusCode.OK)
-                    {
-                        errmsg = "";
-                    }
-                    else
-                    {
-                        errmsg = ret.ToString();
-                    }
-                }
-                if (img != null)
-                {
-                    img.Tag = url;
-                }
-                if (ret == HttpStatusCode.OK)
-                {
-                    return checkImage(img, img.Width, img.Height);
-                }
-                return null;
-            }
-            catch (WebException ex)
-            {
-                if (errmsg != null)
-                {
-                    errmsg = ex.Message;
-                }
-                return null;
-            }
-            catch (Exception )
-            {
-                return null;
-            }
+            string t = string.Empty;
+            return this.GetImageInternal(this.CheckValidIconImage, url, string.Empty, timeout, ref t);
         }
 
         public bool PostData(string url, Dictionary<string, string> param)
@@ -149,13 +95,9 @@ namespace Hoehoe
             {
                 HttpWebRequest req = CreateRequest(PostMethod, new Uri(url), param, false);
                 HttpStatusCode res = GetResponse(req, null, false);
-                if (res == HttpStatusCode.OK)
-                {
-                    return true;
-                }
-                return false;
+                return res == HttpStatusCode.OK;
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return false;
             }
@@ -167,13 +109,9 @@ namespace Hoehoe
             {
                 HttpWebRequest req = CreateRequest(PostMethod, new Uri(url), param, false);
                 HttpStatusCode res = this.GetResponse(req, ref content, null, false);
-                if (res == HttpStatusCode.OK)
-                {
-                    return true;
-                }
-                return false;
+                return res == HttpStatusCode.OK;
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return false;
             }
@@ -181,20 +119,20 @@ namespace Hoehoe
 
         public bool GetData(string url, Dictionary<string, string> param, ref string content, string userAgent)
         {
-            string t = "";
-            return GetData(url, param, ref content, 100000, ref t, userAgent);
+            string t = string.Empty;
+            return this.GetData(url, param, ref content, 100000, ref t, userAgent);
         }
 
         public bool GetData(string url, Dictionary<string, string> param, ref string content)
         {
-            string t = "";
-            return GetData(url, param, ref content, 100000, ref t, "");
+            string t = string.Empty;
+            return this.GetData(url, param, ref content, 100000, ref t, string.Empty);
         }
 
         public bool GetData(string url, Dictionary<string, string> param, ref string content, int timeout)
         {
-            string t = "";
-            return GetData(url, param, ref content, timeout, ref t, "");
+            string t = string.Empty;
+            return this.GetData(url, param, ref content, timeout, ref t, string.Empty);
         }
 
         public bool GetData(string url, Dictionary<string, string> param, ref string content, int timeout, ref string errmsg, string userAgent)
@@ -210,19 +148,23 @@ namespace Hoehoe
                 {
                     req.Timeout = timeout;
                 }
-                if (!String.IsNullOrEmpty(userAgent))
+
+                if (!string.IsNullOrEmpty(userAgent))
                 {
                     req.UserAgent = userAgent;
                 }
+                
                 HttpStatusCode res = this.GetResponse(req, ref content, null, false);
                 if (res == HttpStatusCode.OK)
                 {
                     return true;
                 }
+                
                 if (errmsg != null)
                 {
                     errmsg = res.ToString();
                 }
+                
                 return false;
             }
             catch (Exception ex)
@@ -231,16 +173,17 @@ namespace Hoehoe
                 {
                     errmsg = ex.Message;
                 }
+                
                 return false;
             }
         }
 
         public HttpStatusCode GetContent(string method, Uri url, Dictionary<string, string> param, ref string content, Dictionary<string, string> headerInfo, string userAgent)
         {
-            //Searchで使用。呼び出し元で例外キャッチしている。
+            // Searchで使用。呼び出し元で例外キャッチしている。
             HttpWebRequest req = CreateRequest(method, url, param, false);
             req.UserAgent = userAgent;
-            return GetResponse(req, ref content, headerInfo, false);
+            return this.GetResponse(req, ref content, headerInfo, false);
         }
 
         public bool GetDataToFile(string url, string savePath)
@@ -256,11 +199,7 @@ namespace Hoehoe
                     {
                         HttpStatusCode res = GetResponse(req, strm, null, false);
                         strm.Close();
-                        if (res == HttpStatusCode.OK)
-                        {
-                            return true;
-                        }
-                        return false;
+                        return res == HttpStatusCode.OK;
                     }
                     catch (Exception)
                     {
@@ -275,17 +214,13 @@ namespace Hoehoe
             }
         }
 
-        private Image CheckValidIconImage(Image img, int width, int height)
-        {
-            return CheckValidImage(img, 48, 48);
-        }
-
         public Image CheckValidImage(Image img, int width, int height)
         {
             if (img == null)
             {
                 return null;
             }
+
             Bitmap bmp = new Bitmap(width, height);
             try
             {
@@ -295,10 +230,11 @@ namespace Hoehoe
                     g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
                     g.DrawImage(img, 0, 0, width, height);
                 }
+
                 bmp.Tag = img.Tag;
                 return bmp;
             }
-            catch (Exception )
+            catch (Exception)
             {
                 bmp.Dispose();
                 bmp = new Bitmap(width, height);
@@ -309,6 +245,71 @@ namespace Hoehoe
             {
                 img.Dispose();
             }
+        }
+
+        private Image GetImageInternal(CheckValidImageDelegate checkImage, string url, string referer, int timeout, ref string errmsg)
+        {
+            try
+            {
+                HttpWebRequest req = CreateRequest(GetMethod, new Uri(url), null, false);
+                if (!string.IsNullOrEmpty(referer))
+                {
+                    req.Referer = referer;
+                }
+
+                if (timeout < 3000 || timeout > 30000)
+                {
+                    req.Timeout = 10000;
+                }
+                else
+                {
+                    req.Timeout = timeout;
+                }
+
+                Bitmap img = null;
+                HttpStatusCode ret = GetResponse(req, ref img, null, false);
+                if (errmsg != null)
+                {
+                    if (ret == HttpStatusCode.OK)
+                    {
+                        errmsg = string.Empty;
+                    }
+                    else
+                    {
+                        errmsg = ret.ToString();
+                    }
+                }
+
+                if (img != null)
+                {
+                    img.Tag = url;
+                }
+
+                if (ret == HttpStatusCode.OK)
+                {
+                    return checkImage(img, img.Width, img.Height);
+                }
+
+                return null;
+            }
+            catch (WebException ex)
+            {
+                if (errmsg != null)
+                {
+                    errmsg = ex.Message;
+                }
+
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private Image CheckValidIconImage(Image img, int width, int height)
+        {
+            return this.CheckValidImage(img, 48, 48);
         }
     }
 }

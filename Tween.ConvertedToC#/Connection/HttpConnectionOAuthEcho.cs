@@ -24,33 +24,40 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Text;
+
     public class HttpConnectionOAuthEcho : HttpConnectionOAuth
     {
-        private Uri _realm;
-        private Uri _serviceProvider;
+        private Uri realm;
+        private Uri serviceProvider;
+
+        public HttpConnectionOAuthEcho(Uri realm, Uri serviceProvider)
+        {
+            this.realm = realm;
+            this.serviceProvider = serviceProvider;
+        }
 
         public void SetRealm(Uri value)
         {
-            _realm = value;
+            this.realm = value;
         }
 
         public void SetServiceProvider(Uri value)
         {
-            _serviceProvider = value;
+            this.serviceProvider = value;
         }
 
         protected override void AppendOAuthInfo(HttpWebRequest webRequest, Dictionary<string, string> query, string token, string tokenSecret)
         {
-            //OAuth共通情報取得
+            // OAuth共通情報取得
             Dictionary<string, string> parameter = GetOAuthParameter(token);
-            //OAuth共通情報にquery情報を追加
+
+            // OAuth共通情報にquery情報を追加
             if (query != null)
             {
                 foreach (KeyValuePair<string, string> item in query)
@@ -58,27 +65,24 @@ namespace Hoehoe
                     parameter.Add(item.Key, item.Value);
                 }
             }
-            //署名の作成・追加(GETメソッド固定。ServiceProvider呼び出し用の署名作成)
-            parameter.Add("oauth_signature", CreateSignature(tokenSecret, GetMethod, _serviceProvider, parameter));
-            //HTTPリクエストのヘッダに追加
+
+            // 署名の作成・追加(GETメソッド固定。ServiceProvider呼び出し用の署名作成)
+            parameter.Add("oauth_signature", this.CreateSignature(tokenSecret, HttpConnection.GetMethod, this.serviceProvider, parameter));
+
+            // HTTPリクエストのヘッダに追加
             StringBuilder sb = new StringBuilder("OAuth ");
-            sb.AppendFormat("realm=\"{0}://{1}{2}\",", _realm.Scheme, _realm.Host, _realm.AbsolutePath);
+            sb.AppendFormat("realm=\"{0}://{1}{2}\",", this.realm.Scheme, this.realm.Host, this.realm.AbsolutePath);
             foreach (KeyValuePair<string, string> item in parameter)
             {
-                //各種情報のうち、oauth_で始まる情報のみ、ヘッダに追加する。各情報はカンマ区切り、データはダブルクォーテーションで括る
+                // 各種情報のうち、oauth_で始まる情報のみ、ヘッダに追加する。各情報はカンマ区切り、データはダブルクォーテーションで括る
                 if (item.Key.StartsWith("oauth_"))
                 {
-                    sb.AppendFormat("{0}=\"{1}\",", item.Key, UrlEncode(item.Value));
+                    sb.AppendFormat("{0}=\"{1}\",", item.Key, this.UrlEncode(item.Value));
                 }
             }
-            webRequest.Headers.Add("X-Verify-Credentials-Authorization", sb.ToString());
-            webRequest.Headers.Add("X-Auth-Service-Provider", String.Format("{0}://{1}{2}", _serviceProvider.Scheme, _serviceProvider.Host, _serviceProvider.AbsolutePath));
-        }
 
-        public HttpConnectionOAuthEcho(Uri realm, Uri serviceProvider)
-        {
-            _realm = realm;
-            _serviceProvider = serviceProvider;
+            webRequest.Headers.Add("X-Verify-Credentials-Authorization", sb.ToString());
+            webRequest.Headers.Add("X-Auth-Service-Provider", string.Format("{0}://{1}{2}", this.serviceProvider.Scheme, this.serviceProvider.Host, this.serviceProvider.AbsolutePath));
         }
     }
 }

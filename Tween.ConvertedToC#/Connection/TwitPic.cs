@@ -24,63 +24,60 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Xml;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Xml;
+
     public class TwitPic : HttpConnectionOAuthEcho, IMultimediaShareService
     {
-        //OAuth関連
-        ///<summary>
-        ///OAuthのコンシューマー鍵 :
-        ///</summary>
+        /// <summary>
+        /// OAuthのコンシューマー鍵 :
+        /// </summary>
         private const string ConsumerKey = "BIazYuf0scya8pyhLjkdg";
 
-        ///<summary>
-        ///OAuthの署名作成用秘密コンシューマーデータ
-        ///</summary>
+        /// <summary>
+        /// OAuthの署名作成用秘密コンシューマーデータ
+        /// </summary>
         private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
+        
         /// <summary>
         /// Twitpic API Key
         /// </summary>
         private const string ApiKey = "63c1dbc8deba169cf8b3e199130c916b";
 
-        private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
-
-        private string[] _multimediaExts = {
-			".avi",
-			".wmv",
-			".flv",
-			".m4v",
-			".mov",
-			".mp4",
-			".rm",
-			".mpeg",
-			".mpg",
-			".3gp",
-			".3g2"
-		};
-
-        //Image only
+        // Image only // Multimedia filesize limit unknown. But length limit is 1:30.
         private const long MaxFileSize = 10 * 1024 * 1024;
-        //Multimedia filesize limit unknown. But length limit is 1:30.
+        
+        private string[] pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
 
-        private Twitter _tw;
+        private string[] multimediaExts = { ".avi", ".wmv", ".flv", ".m4v", ".mov", ".mp4", ".rm", ".mpeg", ".mpg", ".3gp", ".3g2" };
+
+        private Twitter tw;
+
+        public TwitPic(Twitter twitter)
+            : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.json"))
+        {
+            this.tw = twitter;
+            this.Initialize(ConsumerKey, ConsumerSecretKey, this.tw.AccessToken, this.tw.AccessTokenSecret, string.Empty, string.Empty);
+        }
 
         public string Upload(ref string filePath, ref string message, long replyTo)
         {
-            if (String.IsNullOrEmpty(filePath))
+            if (string.IsNullOrEmpty(filePath))
             {
                 return "Err:File isn't specified.";
             }
-            if (String.IsNullOrEmpty(message))
+
+            if (string.IsNullOrEmpty(message))
             {
-                message = "";
+                message = string.Empty;
             }
+            
             FileInfo mediaFile = null;
             try
             {
@@ -90,57 +87,61 @@ namespace Hoehoe
             {
                 return "Err:" + ex.Message;
             }
+            
             if (mediaFile == null || !mediaFile.Exists)
             {
                 return "Err:File isn't exists.";
             }
 
-            string content = "";
+            string content = string.Empty;
             HttpStatusCode ret = default(HttpStatusCode);
-            //TwitPicへの投稿
             try
             {
-                ret = UploadFile(mediaFile, message, ref content);
+                // TwitPicへの投稿
+                ret = this.UploadFile(mediaFile, message, ref content);
             }
             catch (Exception ex)
             {
                 return "Err:" + ex.Message;
             }
-            string url = "";
+            
+            string url = string.Empty;
             if (ret == HttpStatusCode.OK)
             {
                 XmlDocument xd = new XmlDocument();
                 try
                 {
+                    // URLの取得
                     xd.LoadXml(content);
-                    //URLの取得
                     url = xd.SelectSingleNode("/image/url").InnerText;
                 }
                 catch (XmlException ex)
                 {
                     return "Err:" + ex.Message;
                 }
-                catch (Exception Ex)
+                catch (Exception ex)
                 {
-                    return "Err:" + Ex.Message;
+                    return "Err:" + ex.Message;
                 }
             }
             else
             {
                 return "Err:" + ret.ToString();
             }
-            //アップロードまでは成功
-            filePath = "";
-            if (String.IsNullOrEmpty(message))
+
+            // アップロードまでは成功
+            filePath = string.Empty;
+            if (string.IsNullOrEmpty(message))
             {
-                message = "";
+                message = string.Empty;
             }
-            if (String.IsNullOrEmpty(url))
+
+            if (string.IsNullOrEmpty(url))
             {
-                url = "";
+                url = string.Empty;
             }
-            //Twitterへの投稿
-            //投稿メッセージの再構成
+
+            // Twitterへの投稿 / 投稿メッセージの再構成
             if (message.Length + AppendSettingDialog.Instance.TwitterConfiguration.CharactersReservedPerMedia + 1 > 140)
             {
                 message = message.Substring(0, 140 - AppendSettingDialog.Instance.TwitterConfiguration.CharactersReservedPerMedia - 1) + " " + url;
@@ -149,21 +150,75 @@ namespace Hoehoe
             {
                 message += " " + url;
             }
-            return _tw.PostStatus(message, 0);
+            
+            return this.tw.PostStatus(message, 0);
+        }
+
+        public bool CheckValidExtension(string ext)
+        {
+            return this.pictureExts.Contains(ext.ToLower()) || this.multimediaExts.Contains(ext.ToLower());
+        }
+
+        public string GetFileOpenDialogFilter()
+        {
+            return string.Format("Image Files(*{0})|*{0}|Videos(*{1})|*{1}", string.Join(";*", this.pictureExts), string.Join(";*", this.multimediaExts));
+        }
+
+        public UploadFileType GetFileType(string ext)
+        {
+            if (Array.IndexOf(this.pictureExts, ext.ToLower()) > -1)
+            {
+                return UploadFileType.Picture;
+            }
+            
+            if (Array.IndexOf(this.multimediaExts, ext.ToLower()) > -1)
+            {
+                return UploadFileType.MultiMedia;
+            }
+            
+            return UploadFileType.Invalid;
+        }
+
+        public bool IsSupportedFileType(UploadFileType type)
+        {
+            return !type.Equals(UploadFileType.Invalid);
+        }
+
+        public bool CheckValidFilesize(string ext, long fileSize)
+        {
+            if (Array.IndexOf(this.pictureExts, ext.ToLower()) > -1)
+            {
+                return fileSize <= MaxFileSize;
+            }
+
+            if (Array.IndexOf(this.multimediaExts, ext.ToLower()) > -1)
+            {
+                // Multimedia : no check
+                return true;
+            }
+            
+            return false;
+        }
+
+        public bool Configuration(string key, object value)
+        {
+            return true;
         }
 
         private HttpStatusCode UploadFile(FileInfo mediaFile, string message, ref string content)
         {
-            //Message必須
+            // Message必須
             if (string.IsNullOrEmpty(message))
             {
-                message = "";
+                message = string.Empty;
             }
-            //Check filetype and size(Max 5MB)
+            
+            // Check filetype and size(Max 5MB)
             if (!this.CheckValidExtension(mediaFile.Extension))
             {
                 throw new ArgumentException("Service don't support this filetype.");
             }
+            
             if (!this.CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
             {
                 throw new ArgumentException("File is too large.");
@@ -176,68 +231,14 @@ namespace Hoehoe
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
             if (this.GetFileType(mediaFile.Extension) == UploadFileType.Picture)
             {
-                this.InstanceTimeout = 60000; //タイムアウト60秒
+                this.InstanceTimeout = 60000; // タイムアウト60秒
             }
             else
             {
                 this.InstanceTimeout = 120000;
             }
 
-            return GetContent(PostMethod, new Uri("http://api.twitpic.com/2/upload.xml"), param, binary, ref content, null, null);
-        }
-
-        public bool CheckValidExtension(string ext)
-        {
-            return Array.IndexOf(_pictureExts, ext.ToLower()) > -1 || Array.IndexOf(_multimediaExts, ext.ToLower()) > -1;
-        }
-
-        public string GetFileOpenDialogFilter()
-        {
-            return String.Format("Image Files(*{0})|*{0}|Videos(*{1})|*{1}", String.Join(";*", _pictureExts), String.Join(";*", _multimediaExts));
-        }
-
-        public UploadFileType GetFileType(string ext)
-        {
-            if (Array.IndexOf(_pictureExts, ext.ToLower()) > -1)
-            {
-                return UploadFileType.Picture;
-            }
-            if (Array.IndexOf(_multimediaExts, ext.ToLower()) > -1)
-            {
-                return UploadFileType.MultiMedia;
-            }
-            return UploadFileType.Invalid;
-        }
-
-        public bool IsSupportedFileType(UploadFileType type)
-        {
-            return !type.Equals(UploadFileType.Invalid);
-        }
-
-        public bool CheckValidFilesize(string ext, long fileSize)
-        {
-            if (Array.IndexOf(_pictureExts, ext.ToLower()) > -1)
-            {
-                return fileSize <= MaxFileSize;
-            }
-            if (Array.IndexOf(_multimediaExts, ext.ToLower()) > -1)
-            {
-                return true;
-            }
-            //Multimedia : no check
-            return false;
-        }
-
-        public bool Configuration(string key, object value)
-        {
-            return true;
-        }
-
-        public TwitPic(Twitter twitter)
-            : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.json"))
-        {
-            _tw = twitter;
-            Initialize((ConsumerKey), (ConsumerSecretKey), _tw.AccessToken, _tw.AccessTokenSecret, "", "");
+            return this.GetContent(HttpConnection.PostMethod, new Uri("http://api.twitpic.com/2/upload.xml"), param, binary, ref content, null, null);
         }
     }
 }

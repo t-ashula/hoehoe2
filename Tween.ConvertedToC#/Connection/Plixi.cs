@@ -24,47 +24,56 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Xml;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net;
+    using System.Xml;
+    
     public class Plixi : HttpConnectionOAuthEcho, IMultimediaShareService
     {
-        //OAuth関連
-        ///<summary>
-        ///OAuthのコンシューマー鍵 :
-        ///</summary>
+        /// <summary>
+        /// OAuthのコンシューマー鍵 :
+        /// </summary>
         private const string ConsumerKey = "BIazYuf0scya8pyhLjkdg";
 
-        ///<summary>
-        ///OAuthの署名作成用秘密コンシューマーデータ
-        ///</summary>
+        /// <summary>
+        /// OAuthの署名作成用秘密コンシューマーデータ
+        /// </summary>
         private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
+        
         /// <summary>
         /// plixi api key
         /// </summary>
         private const string ApiKey = "5b8e2b03-e6f6-4f81-9b65-80b57a8ddbfc";
 
-        private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
-
         private const long MaxFileSize = 5 * 1024 * 1024;
 
-        private Twitter _tw;
+        private string[] pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
+
+        private Twitter tw;
+
+        public Plixi(Twitter twitter)
+            : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.json"))
+        {
+            this.tw = twitter;
+            this.Initialize(ConsumerKey, ConsumerSecretKey, this.tw.AccessToken, this.tw.AccessTokenSecret, string.Empty, string.Empty);
+        }
 
         public string Upload(ref string filePath, ref string message, long replyTo)
         {
-            if (String.IsNullOrEmpty(filePath))
+            if (string.IsNullOrEmpty(filePath))
             {
                 return "Err:File isn't specified.";
             }
-            if (String.IsNullOrEmpty(message))
+
+            if (string.IsNullOrEmpty(message))
             {
-                message = "";
+                message = string.Empty;
             }
+
             FileInfo mediaFile = null;
             try
             {
@@ -74,57 +83,61 @@ namespace Hoehoe
             {
                 return "Err:" + ex.Message;
             }
+
             if (mediaFile == null || !mediaFile.Exists)
             {
                 return "Err:File isn't exists.";
             }
 
-            string content = "";
+            string content = string.Empty;
             HttpStatusCode ret = default(HttpStatusCode);
-            //Plixiへの投稿
             try
             {
-                ret = UploadFile(mediaFile, message, ref content);
+                // Plixiへの投稿
+                ret = this.UploadFile(mediaFile, message, ref content);
             }
             catch (Exception ex)
             {
                 return "Err:" + ex.Message;
             }
-            string url = "";
+
+            string url = string.Empty;
             if (ret == HttpStatusCode.Created)
             {
                 XmlDocument xd = new XmlDocument();
                 try
                 {
+                    // MediaUrlの取得
                     xd.LoadXml(content);
-                    //MediaUrlの取得
                     url = xd.ChildNodes[0].ChildNodes[2].InnerText;
                 }
                 catch (XmlException ex)
                 {
                     return "Err:" + ex.Message;
                 }
-                catch (Exception Ex)
+                catch (Exception ex)
                 {
-                    return "Err:" + Ex.Message;
+                    return "Err:" + ex.Message;
                 }
             }
             else
             {
                 return "Err:" + ret.ToString();
             }
-            //アップロードまでは成功
-            filePath = "";
-            if (String.IsNullOrEmpty(url))
+
+            // アップロードまでは成功
+            filePath = string.Empty;
+            if (string.IsNullOrEmpty(url))
             {
-                url = "";
+                url = string.Empty;
             }
-            if (String.IsNullOrEmpty(message))
+
+            if (string.IsNullOrEmpty(message))
             {
-                message = "";
+                message = string.Empty;
             }
-            //Twitterへの投稿
-            //投稿メッセージの再構成
+
+            // Twitterへの投稿 /投稿メッセージの再構成
             if (message.Length + AppendSettingDialog.Instance.TwitterConfiguration.CharactersReservedPerMedia + 1 > 140)
             {
                 message = message.Substring(0, 140 - AppendSettingDialog.Instance.TwitterConfiguration.CharactersReservedPerMedia - 1) + " " + url;
@@ -133,22 +146,55 @@ namespace Hoehoe
             {
                 message += " " + url;
             }
-            return _tw.PostStatus(message, replyTo);
+
+            return this.tw.PostStatus(message, replyTo);
+        }
+
+        public bool CheckValidExtension(string ext)
+        {
+            return Array.IndexOf(this.pictureExts, ext.ToLower()) > -1;
+        }
+
+        public string GetFileOpenDialogFilter()
+        {
+            return "Image Files(*.gif;*.jpg;*.jpeg;*.png)|*.gif;*.jpg;*.jpeg;*.png";
+        }
+
+        public Hoehoe.UploadFileType GetFileType(string ext)
+        {
+            return this.CheckValidExtension(ext) ? Hoehoe.UploadFileType.Picture : Hoehoe.UploadFileType.Invalid;
+        }
+
+        public bool IsSupportedFileType(Hoehoe.UploadFileType type)
+        {
+            return type.Equals(Hoehoe.UploadFileType.Picture);
+        }
+
+        public bool CheckValidFilesize(string ext, long fileSize)
+        {
+            return this.CheckValidExtension(ext) && fileSize <= MaxFileSize;
+        }
+
+        public bool Configuration(string key, object value)
+        {
+            return true;
         }
 
         private HttpStatusCode UploadFile(FileInfo mediaFile, string message, ref string content)
         {
-            //Message必須
-            if (String.IsNullOrEmpty(message))
+            // Message必須
+            if (string.IsNullOrEmpty(message))
             {
-                message = "";
+                message = string.Empty;
             }
-            //Check filetype and size(Max 5MB)
-            if (!CheckValidExtension(mediaFile.Extension))
+
+            // Check filetype and size(Max 5MB)
+            if (!this.CheckValidExtension(mediaFile.Extension))
             {
                 throw new ArgumentException("Service don't support this filetype.");
             }
-            if (!CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
+
+            if (!this.CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
             {
                 throw new ArgumentException("File is too large.");
             }
@@ -159,55 +205,8 @@ namespace Hoehoe
             param.Add("isoauth", "true");
             List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
-            this.InstanceTimeout = 60000;
-            //タイムアウト60秒
-
-            return GetContent(PostMethod, new Uri("http://api.plixi.com/api/upload.aspx"), param, binary, ref content, null, null);
-        }
-
-        public bool CheckValidExtension(string ext)
-        {
-            return Array.IndexOf(_pictureExts, ext.ToLower()) > -1;
-        }
-
-        public string GetFileOpenDialogFilter()
-        {
-            return "Image Files(*.gif;*.jpg;*.jpeg;*.png)|*.gif;*.jpg;*.jpeg;*.png";
-        }
-
-        public Hoehoe.UploadFileType GetFileType(string ext)
-        {
-            if (CheckValidExtension(ext))
-            {
-                return Hoehoe.UploadFileType.Picture;
-            }
-            return Hoehoe.UploadFileType.Invalid;
-        }
-
-        public bool IsSupportedFileType(Hoehoe.UploadFileType type)
-        {
-            return type.Equals(Hoehoe.UploadFileType.Picture);
-        }
-
-        public bool CheckValidFilesize(string ext, long fileSize)
-        {
-            if (CheckValidExtension(ext))
-            {
-                return fileSize <= MaxFileSize;
-            }
-            return false;
-        }
-
-        public bool Configuration(string key, object value)
-        {
-            return true;
-        }
-
-        public Plixi(Twitter twitter)
-            : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.json"))
-        {
-            _tw = twitter;
-            Initialize((ConsumerKey), (ConsumerSecretKey), _tw.AccessToken, _tw.AccessTokenSecret, "", "");
+            this.InstanceTimeout = 60000; // タイムアウト60秒
+            return this.GetContent(HttpConnection.PostMethod, new Uri("http://api.plixi.com/api/upload.aspx"), param, binary, ref content, null, null);
         }
     }
 }

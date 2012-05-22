@@ -24,46 +24,52 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Security.Cryptography;
+    using System.Text;
+
     public class HttpOAuthApiProxy : HttpConnectionOAuth
     {
-        private const string _apiHost = "api.twitter.com";
+        private const string ApiHost = "api.twitter.com";
 
-        private static string _proxyHost = "";
+        private static string proxyHost = string.Empty;
 
         internal static void SetProxyHost(string value)
         {
-            _proxyHost = (String.IsNullOrEmpty(value) || value == _apiHost) ? "" : value;
+            proxyHost = (string.IsNullOrEmpty(value) || value == ApiHost) ? string.Empty : value;
         }
 
         protected override string CreateSignature(string tokenSecret, string method, Uri uri, Dictionary<string, string> parameter)
         {
-            //パラメタをソート済みディクショナリに詰替（OAuthの仕様）
+            // パラメタをソート済みディクショナリに詰替（OAuthの仕様）
             SortedDictionary<string, string> sorted = new SortedDictionary<string, string>(parameter);
-            //URLエンコード済みのクエリ形式文字列に変換
+
+            // URLエンコード済みのクエリ形式文字列に変換
             string paramString = CreateQueryString(sorted);
-            //アクセス先URLの整形
+
+            // アクセス先URLの整形
             string url = string.Format("{0}://{1}{2}", uri.Scheme, uri.Host, uri.AbsolutePath);
-            //本来のアクセス先URLに再設定（api.twitter.com固定）
-            if (!String.IsNullOrEmpty(_proxyHost) && url.StartsWith(uri.Scheme + "://" + _proxyHost))
+
+            // 本来のアクセス先URLに再設定（api.twitter.com固定）
+            if (!string.IsNullOrEmpty(proxyHost) && url.StartsWith(uri.Scheme + "://" + proxyHost))
             {
-                url = url.Replace(uri.Scheme + "://" + _proxyHost, uri.Scheme + "://" + _apiHost);
+                url = url.Replace(uri.Scheme + "://" + proxyHost, uri.Scheme + "://" + ApiHost);
             }
-            //署名のベース文字列生成（&区切り）。クエリ形式文字列は再エンコードする
+
+            // 署名のベース文字列生成（&区切り）。クエリ形式文字列は再エンコードする
             string signatureBase = string.Format("{0}&{1}&{2}", method, UrlEncode(url), UrlEncode(paramString));
-            //署名鍵の文字列をコンシューマー秘密鍵とアクセストークン秘密鍵から生成（&区切り。アクセストークン秘密鍵なくても&残すこと）
-            string key = UrlEncode(consumerSecret) + "&";
-            if (!String.IsNullOrEmpty(tokenSecret))
+
+            // 署名鍵の文字列をコンシューマー秘密鍵とアクセストークン秘密鍵から生成（&区切り。アクセストークン秘密鍵なくても&残すこと）
+            string key = UrlEncode(ConsumerSecret) + "&";
+            if (!string.IsNullOrEmpty(tokenSecret))
             {
-                key += UrlEncode(tokenSecret);
+                key += this.UrlEncode(tokenSecret);
             }
-            //鍵生成＆署名生成
+
+            // 鍵生成＆署名生成
             using (HMACSHA1 hmac = new HMACSHA1(Encoding.ASCII.GetBytes(key)))
             {
                 return Convert.ToBase64String(hmac.ComputeHash(Encoding.ASCII.GetBytes(signatureBase)));

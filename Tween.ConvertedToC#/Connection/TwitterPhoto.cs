@@ -24,31 +24,35 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.IO;
-
 namespace Hoehoe
 {
+    using System;
+    using System.IO;
+
     public class TwitterPhoto : IMultimediaShareService
     {
-        private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
+        private const long MaxfilesizeDefault = 3145728;        // help/configurationにより取得されコンストラクタへ渡される
+        private string[] pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
+        private long maxFileSize = 3145728;
+        private Twitter tw;
 
-        private const Int64 MaxfilesizeDefault = 3145728;        // help/configurationにより取得されコンストラクタへ渡される
-
-        private Int64 _maxFileSize = 3145728;
-        private Twitter _tw;
+        public TwitterPhoto(Twitter twitter)
+        {
+            this.tw = twitter;
+        }
 
         public bool CheckValidExtension(string ext)
         {
-            return Array.IndexOf(_pictureExts, ext.ToLower()) > -1;
+            return Array.IndexOf(this.pictureExts, ext.ToLower()) > -1;
         }
 
         public bool CheckValidFilesize(string ext, long fileSize)
         {
-            if (CheckValidExtension(ext))
+            if (this.CheckValidExtension(ext))
             {
-                return fileSize <= _maxFileSize;
+                return fileSize <= this.maxFileSize;
             }
+
             return false;
         }
 
@@ -58,16 +62,18 @@ namespace Hoehoe
             {
                 try
                 {
-                    Int64 val = Convert.ToInt64(value);
-                    _maxFileSize = val > 0 ? val : MaxfilesizeDefault;
+                    long val = Convert.ToInt64(value);
+                    this.maxFileSize = val > 0 ? val : MaxfilesizeDefault;
                 }
                 catch (Exception)
                 {
-                    _maxFileSize = MaxfilesizeDefault;
-                    return false;                    //error
+                    this.maxFileSize = MaxfilesizeDefault;
+                    return false; // error
                 }
+
                 return true; // 正常に設定終了
             }
+
             return true;     // 設定項目がない場合はとりあえずエラー扱いにしない
         }
 
@@ -78,11 +84,7 @@ namespace Hoehoe
 
         public UploadFileType GetFileType(string ext)
         {
-            if (CheckValidExtension(ext))
-            {
-                return UploadFileType.Picture;
-            }
-            return UploadFileType.Invalid;
+            return this.CheckValidExtension(ext) ? UploadFileType.Picture : UploadFileType.Invalid;            
         }
 
         public bool IsSupportedFileType(UploadFileType type)
@@ -92,14 +94,16 @@ namespace Hoehoe
 
         public string Upload(ref string filePath, ref string message, long replyTo)
         {
-            if (String.IsNullOrEmpty(filePath))
+            if (string.IsNullOrEmpty(filePath))
             {
                 return "Err:File isn't specified.";
             }
-            if (String.IsNullOrEmpty(message))
+
+            if (string.IsNullOrEmpty(message))
             {
-                message = "";
+                message = string.Empty;
             }
+            
             FileInfo mediaFile = null;
             try
             {
@@ -109,21 +113,18 @@ namespace Hoehoe
             {
                 return "Err:" + ex.Message;
             }
+            
             if (!mediaFile.Exists)
             {
                 return "Err:File isn't exists.";
             }
+            
             if (MyCommon.IsAnimatedGif(filePath))
             {
                 return "Err:Don't support animatedGIF.";
             }
 
-            return _tw.PostStatusWithMedia(message, replyTo, mediaFile);
-        }
-
-        public TwitterPhoto(Twitter twitter)
-        {
-            _tw = twitter;
+            return this.tw.PostStatusWithMedia(message, replyTo, mediaFile);
         }
     }
 }

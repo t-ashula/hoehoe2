@@ -24,42 +24,51 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Xml;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net;
+    using System.Xml;
+
     public class imgly : HttpConnectionOAuthEcho, IMultimediaShareService
     {
-        //OAuth関連
-        ///<summary>
-        ///OAuthのコンシューマー鍵
-        ///</summary>
+        /// <summary>
+        /// OAuthのコンシューマー鍵
+        /// </summary>
         private const string ConsumerKey = "BIazYuf0scya8pyhLjkdg";
-        ///<summary>
-        ///OAuthの署名作成用秘密コンシューマーデータ
-        ///</summary>
-        private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
 
-        private string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
+        /// <summary>
+        /// OAuthの署名作成用秘密コンシューマーデータ
+        /// </summary>
+        private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
 
         private const long MaxFileSize = 4 * 1024 * 1024;
 
-        private Twitter _tw;
+        private string[] pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
+
+        private Twitter tw;
+
+        public imgly(Twitter twitter)
+            : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.json"))
+        {
+            this.tw = twitter;
+            this.Initialize(ConsumerKey, ConsumerSecretKey, this.tw.AccessToken, this.tw.AccessTokenSecret, string.Empty, string.Empty);
+        }
 
         public string Upload(ref string filePath, ref string message, long replyTo)
         {
-            if (String.IsNullOrEmpty(filePath))
+            if (string.IsNullOrEmpty(filePath))
             {
                 return "Err:File isn't specified.";
             }
-            if (String.IsNullOrEmpty(message))
+
+            if (string.IsNullOrEmpty(message))
             {
-                message = "";
+                message = string.Empty;
             }
+            
             FileInfo mediaFile = null;
             try
             {
@@ -69,30 +78,32 @@ namespace Hoehoe
             {
                 return "Err:" + ex.Message;
             }
+            
             if (mediaFile == null || !mediaFile.Exists)
             {
                 return "Err:File isn't exists.";
             }
 
-            string content = "";
+            string content = string.Empty;
             HttpStatusCode ret = default(HttpStatusCode);
-            //img.lyへの投稿
             try
             {
-                ret = UploadFile(mediaFile, message, ref content);
+                // img.lyへの投稿
+                ret = this.UploadFile(mediaFile, message, ref content);
             }
             catch (Exception ex)
             {
                 return "Err:" + ex.Message;
             }
-            string url = "";
+            
+            string url = string.Empty;
             if (ret == HttpStatusCode.OK)
             {
                 XmlDocument xd = new XmlDocument();
                 try
                 {
+                    // URLの取得
                     xd.LoadXml(content);
-                    //URLの取得
                     url = xd.SelectSingleNode("/image/url").InnerText;
                 }
                 catch (XmlException ex)
@@ -108,18 +119,20 @@ namespace Hoehoe
             {
                 return "Err:" + ret.ToString();
             }
-            //アップロードまでは成功
-            filePath = "";
-            if (String.IsNullOrEmpty(url))
+
+            // アップロードまでは成功
+            filePath = string.Empty;
+            if (string.IsNullOrEmpty(url))
             {
-                url = "";
+                url = string.Empty;
             }
-            //Twitterへの投稿
-            //投稿メッセージの再構成
-            if (String.IsNullOrEmpty(message))
+
+            // Twitterへの投稿/投稿メッセージの再構成
+            if (string.IsNullOrEmpty(message))
             {
-                message = "";
+                message = string.Empty;
             }
+
             if (message.Length + AppendSettingDialog.Instance.TwitterConfiguration.CharactersReservedPerMedia + 1 > 140)
             {
                 message = message.Substring(0, 140 - AppendSettingDialog.Instance.TwitterConfiguration.CharactersReservedPerMedia - 1) + " " + url;
@@ -128,39 +141,13 @@ namespace Hoehoe
             {
                 message += " " + url;
             }
-            return _tw.PostStatus(message, replyTo);
-        }
 
-        private HttpStatusCode UploadFile(FileInfo mediaFile, string message, ref string content)
-        {
-            //Message必須
-            if (String.IsNullOrEmpty(message))
-            {
-                message = "";
-            }
-            //Check filetype and size(Max 4MB)
-            if (!CheckValidExtension(mediaFile.Extension))
-            {
-                throw new ArgumentException("Service don't support this filetype.");
-            }
-            if (!CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
-            {
-                throw new ArgumentException("File is too large.");
-            }
-
-            Dictionary<string, string> param = new Dictionary<string, string>();
-            param.Add("message", message);
-            List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
-            binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
-            this.InstanceTimeout = 60000;
-            //タイムアウト60秒
-
-            return GetContent(PostMethod, new Uri("http://img.ly/api/2/upload.xml"), param, binary, ref content, null, null);
+            return this.tw.PostStatus(message, replyTo);
         }
 
         public bool CheckValidExtension(string ext)
         {
-            return Array.IndexOf(_pictureExts, ext.ToLower()) > -1;
+            return Array.IndexOf(this.pictureExts, ext.ToLower()) > -1;
         }
 
         public string GetFileOpenDialogFilter()
@@ -170,11 +157,7 @@ namespace Hoehoe
 
         public Hoehoe.UploadFileType GetFileType(string ext)
         {
-            if (this.CheckValidExtension(ext))
-            {
-                return Hoehoe.UploadFileType.Picture;
-            }
-            return Hoehoe.UploadFileType.Invalid;
+            return this.CheckValidExtension(ext) ? Hoehoe.UploadFileType.Picture : Hoehoe.UploadFileType.Invalid;            
         }
 
         public bool IsSupportedFileType(Hoehoe.UploadFileType type)
@@ -184,11 +167,7 @@ namespace Hoehoe
 
         public bool CheckValidFilesize(string ext, long fileSize)
         {
-            if (this.CheckValidExtension(ext))
-            {
-                return fileSize <= MaxFileSize;
-            }
-            return false;
+            return this.CheckValidExtension(ext) && fileSize <= MaxFileSize;
         }
 
         public bool Configuration(string key, object value)
@@ -196,11 +175,31 @@ namespace Hoehoe
             return true;
         }
 
-        public imgly(Twitter twitter)
-            : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.json"))
+        private HttpStatusCode UploadFile(FileInfo mediaFile, string message, ref string content)
         {
-            _tw = twitter;
-            Initialize((ConsumerKey), (ConsumerSecretKey), _tw.AccessToken, _tw.AccessTokenSecret, "", "");
+            // Message必須
+            if (string.IsNullOrEmpty(message))
+            {
+                message = string.Empty;
+            }
+            
+            // Check filetype and size(Max 4MB)
+            if (!this.CheckValidExtension(mediaFile.Extension))
+            {
+                throw new ArgumentException("Service don't support this filetype.");
+            }
+
+            if (!this.CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
+            {
+                throw new ArgumentException("File is too large.");
+            }
+
+            Dictionary<string, string> param = new Dictionary<string, string>();
+            param.Add("message", message);
+            List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
+            binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
+            this.InstanceTimeout = 60000; // タイムアウト60秒
+            return this.GetContent(HttpConnection.PostMethod, new Uri("http://img.ly/api/2/upload.xml"), param, binary, ref content, null, null);
         }
     }
 }
