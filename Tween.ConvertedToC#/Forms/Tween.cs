@@ -53,7 +53,7 @@ namespace Hoehoe
     {
         #region public fields
         public AtIdSupplement AtIdSupl; // @id補助
-        public AtIdSupplement HashSupl;        // Hashtag補助
+        public AtIdSupplement HashSupl; // Hashtag補助
         public HashtagManage HashMgr;
         #endregion
 
@@ -14727,16 +14727,18 @@ namespace Hoehoe
 
         private class ReplyChain
         {
-            public long OriginalId;
-            public long InReplyToId;
-            public TabPage OriginalTab;
-
             public ReplyChain(long originalId, long inReplyToId, TabPage originalTab)
             {
                 this.OriginalId = originalId;
                 this.InReplyToId = inReplyToId;
                 this.OriginalTab = originalTab;
             }
+
+            public long OriginalId { get; private set; }
+
+            public long InReplyToId { get; private set; }
+
+            public TabPage OriginalTab { get; private set; }
         }
 
         // Backgroundworkerの処理結果通知用引数構造体
