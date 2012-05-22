@@ -1843,7 +1843,7 @@ namespace Hoehoe
             if (this._timerRefreshFollowers > 6 * 3600)
             {
                 Interlocked.Exchange(ref this._timerRefreshFollowers, 0);
-                doGetFollowersMenu();
+                this.doGetFollowersMenu();
                 GetTimeline(WorkerType.Configuration, 0, 0, "");
                 if (InvokeRequired && !IsDisposed)
                 {
@@ -1863,7 +1863,7 @@ namespace Hoehoe
                     GetTimeline(WorkerType.PublicSearch, 1, 0, "");
                     GetTimeline(WorkerType.UserTimeline, 1, 0, "");
                     GetTimeline(WorkerType.List, 1, 0, "");
-                    doGetFollowersMenu();
+                    this.doGetFollowersMenu();
                     GetTimeline(WorkerType.Configuration, 0, 0, "");
                     if (InvokeRequired && !IsDisposed)
                     {
@@ -2565,7 +2565,7 @@ namespace Hoehoe
             {
                 if (!ImageSelectionPanel.Enabled)
                 {
-                    DoRefresh();
+                    this.DoRefresh();
                     return;
                 }
             }
@@ -2576,7 +2576,7 @@ namespace Hoehoe
                 switch (res)
                 {
                     case DialogResult.Yes:
-                        doReTweetOfficial(false);
+                        this.doReTweetOfficial(false);
                         StatusText.Text = "";
                         return;
                     case DialogResult.Cancel:
@@ -3497,7 +3497,7 @@ namespace Hoehoe
                                         if (idx == this._curItemIndex)
                                         {
                                             // 選択アイテム再表示
-                                            DispSelectedPost(true);
+                                            this.DispSelectedPost(true);
                                         }
                                     }
                                 }
@@ -4314,7 +4314,7 @@ namespace Hoehoe
 
         private void DeleteStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoStatusDelete();
+            this.DoStatusDelete();
         }
 
         private void ReadedStripMenuItem_Click(object sender, EventArgs e)
@@ -4391,7 +4391,7 @@ namespace Hoehoe
 
         private void RefreshStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoRefresh();
+            this.DoRefresh();
         }
 
         private void DoRefresh()
@@ -4817,7 +4817,7 @@ namespace Hoehoe
         {
             if (e.Url.AbsoluteUri != "about:blank")
             {
-                DispSelectedPost();
+                this.DispSelectedPost();
                 OpenUriAsync(e.Url.OriginalString);
             }
         }
@@ -5506,7 +5506,7 @@ namespace Hoehoe
         private void ListTab_SelectedIndexChanged(object sender, EventArgs e)
         {
             // this._curList.Refresh()
-            DispSelectedPost();
+            this.DispSelectedPost();
             SetMainWindowTitle();
             SetStatusLabelUrl();
             if (ListTab.Focused || ((Control)ListTab.SelectedTab.Tag).Focused)
@@ -5769,7 +5769,7 @@ namespace Hoehoe
             // Now we need to rebuild the cache.
             if (this._curList.Equals(sender))
             {
-                CreateCache(e.StartIndex, e.EndIndex);
+                this.CreateCache(e.StartIndex, e.EndIndex);
             }
         }
 
@@ -5786,7 +5786,7 @@ namespace Hoehoe
                 TabPage tb = (TabPage)((Hoehoe.TweenCustomControl.DetailsListView)sender).Parent;
                 try
                 {
-                    e.Item = CreateItem(tb, this._statuses.Item(tb.Text, e.ItemIndex), e.ItemIndex);
+                    e.Item = this.CreateItem(tb, this._statuses.Item(tb.Text, e.ItemIndex), e.ItemIndex);
                 }
                 catch (Exception)
                 {
@@ -5818,7 +5818,7 @@ namespace Hoehoe
                 this._itemCache = new ListViewItem[this._postCache.Length];
                 for (int i = 0; i <= this._postCache.Length - 1; i++)
                 {
-                    this._itemCache[i] = CreateItem(this._curTab, this._postCache[i], startIndex + i);
+                    this._itemCache[i] = this.CreateItem(this._curTab, this._postCache[i], startIndex + i);
                 }
             }
             catch (Exception)
@@ -6292,7 +6292,7 @@ namespace Hoehoe
 
             if (!String.IsNullOrEmpty(SearchDialog.SWord))
             {
-                DoTabSearch(SearchDialog.SWord, SearchDialog.CheckCaseSensitive, SearchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
+                this.DoTabSearch(SearchDialog.SWord, SearchDialog.CheckCaseSensitive, SearchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
             }
         }
 
@@ -6311,11 +6311,11 @@ namespace Hoehoe
                 {
                     return;
                 }
-                DoTabSearch(SearchDialog.SWord, SearchDialog.CheckCaseSensitive, SearchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
+                this.DoTabSearch(SearchDialog.SWord, SearchDialog.CheckCaseSensitive, SearchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
             }
             else
             {
-                DoTabSearch(SearchDialog.SWord, SearchDialog.CheckCaseSensitive, SearchDialog.CheckRegex, SEARCHTYPE.NextSearch);
+                this.DoTabSearch(SearchDialog.SWord, SearchDialog.CheckCaseSensitive, SearchDialog.CheckRegex, SEARCHTYPE.NextSearch);
             }
         }
 
@@ -6336,7 +6336,7 @@ namespace Hoehoe
                 }
             }
 
-            DoTabSearch(SearchDialog.SWord, SearchDialog.CheckCaseSensitive, SearchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
+            this.DoTabSearch(SearchDialog.SWord, SearchDialog.CheckCaseSensitive, SearchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
         }
 
         private void AboutMenuItem_Click(object sender, EventArgs e)
@@ -6570,7 +6570,7 @@ namespace Hoehoe
         private void Colorize()
         {
             this._colorize = false;
-            DispSelectedPost();
+            this.DispSelectedPost();
             // 件数関連の場合、タイトル即時書き換え
             if (SettingDialog.DispLatestPost != DispTitleEnum.None && SettingDialog.DispLatestPost != DispTitleEnum.Post && SettingDialog.DispLatestPost != DispTitleEnum.Ver && SettingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
             {
@@ -6606,17 +6606,17 @@ namespace Hoehoe
 
         private void DisplayItemImage_Downloaded(object sender, EventArgs e)
         {
-            if (sender.Equals(displayItem))
+            if (sender.Equals(this.displayItem))
             {
                 if (UserPicture.Image != null)
                 {
                     UserPicture.Image.Dispose();
                 }
-                if (displayItem.Image != null)
+                if (this.displayItem.Image != null)
                 {
                     try
                     {
-                        UserPicture.Image = new Bitmap(displayItem.Image);
+                        UserPicture.Image = new Bitmap(this.displayItem.Image);
                     }
                     catch (Exception)
                     {
@@ -6632,7 +6632,7 @@ namespace Hoehoe
 
         private void DispSelectedPost()
         {
-            DispSelectedPost(false);
+            this.DispSelectedPost(false);
         }
 
         PostClass _displayPost;
@@ -6650,15 +6650,15 @@ namespace Hoehoe
             }
 
             this._displayPost = this._curPost;
-            if (displayItem != null)
+            if (this.displayItem != null)
             {
-                displayItem.ImageDownloaded -= this.DisplayItemImage_Downloaded;
-                displayItem = null;
+                this.displayItem.ImageDownloaded -= this.DisplayItemImage_Downloaded;
+                this.displayItem = null;
             }
-            displayItem = (ImageListViewItem)this._curList.Items[this._curList.SelectedIndices[0]];
-            displayItem.ImageDownloaded += this.DisplayItemImage_Downloaded;
+            this.displayItem = (ImageListViewItem)this._curList.Items[this._curList.SelectedIndices[0]];
+            this.displayItem.ImageDownloaded += this.DisplayItemImage_Downloaded;
 
-            string detailText = CreateDetailHtml(this._curPost.IsDeleted ? "(DELETED)" : this._curPost.Text);
+            string detailText = this.CreateDetailHtml(this._curPost.IsDeleted ? "(DELETED)" : this._curPost.Text);
             if (this._curPost.IsDm)
             {
                 SourceLinkLabel.Tag = null;
@@ -6951,7 +6951,7 @@ namespace Hoehoe
                             MenuItemSearchNext_Click(null, null);
                             return true;
                         case Keys.F5:
-                            DoRefresh();
+                            this.DoRefresh();
                             return true;
                         case Keys.F6:
                             GetTimeline(WorkerType.Reply, 1, 0, "");
@@ -7009,7 +7009,7 @@ namespace Hoehoe
                                 MakeReplyOrDirectStatus();
                                 return true;
                             case Keys.R:
-                                DoRefresh();
+                                this.DoRefresh();
                                 return true;
                         }
 
@@ -7065,7 +7065,7 @@ namespace Hoehoe
                             MakeReplyOrDirectStatus(false, true);
                             return true;
                         case Keys.D:
-                            DoStatusDelete();
+                            this.DoStatusDelete();
                             return true;
                         case Keys.M:
                             MakeReplyOrDirectStatus(false, false);
@@ -7074,10 +7074,10 @@ namespace Hoehoe
                             FavoriteChange(true);
                             return true;
                         case Keys.I:
-                            doRepliedStatusOpen();
+                            this.doRepliedStatusOpen();
                             return true;
                         case Keys.Q:
-                            doQuote();
+                            this.doQuote();
                             return true;
                         case Keys.B:
                             ReadedStripMenuItem_Click(null, null);
@@ -7145,7 +7145,7 @@ namespace Hoehoe
                                 GoNextTab(false);
                                 return true;
                             case Keys.C:
-                                CopyStot();
+                                this.CopyStot();
                                 return true;
                             case Keys.D1:
                             case Keys.D2:
@@ -7269,7 +7269,7 @@ namespace Hoehoe
                             MenuItemSearchPrev_Click(null, null);
                             return true;
                         case Keys.F5:
-                            DoRefreshMore();
+                            this.DoRefreshMore();
                             return true;
                         case Keys.F6:
                             GetTimeline(WorkerType.Reply, -1, 0, "");
@@ -7283,7 +7283,7 @@ namespace Hoehoe
                     {
                         if (keyCode == Keys.R)
                         {
-                            DoRefreshMore();
+                            this.DoRefreshMore();
                             return true;
                         }
                     }
@@ -7333,12 +7333,12 @@ namespace Hoehoe
                     switch (keyCode)
                     {
                         case Keys.R:
-                            doReTweetOfficial(true);
+                            this.doReTweetOfficial(true);
                             return true;
                         case Keys.P:
                             if (this._curPost != null)
                             {
-                                doShowUserStatus(this._curPost.ScreenName, false);
+                                this.doShowUserStatus(this._curPost.ScreenName, false);
                                 return true;
                             }
                             break;
@@ -7377,7 +7377,7 @@ namespace Hoehoe
                             MakeReplyOrDirectStatus(false, true, true);
                             return true;
                         case Keys.C:
-                            CopyIdUri();
+                            this.CopyIdUri();
                             return true;
                         case Keys.F:
                             if (ListTab.SelectedTab != null)
@@ -7402,7 +7402,7 @@ namespace Hoehoe
                             ImageSelectMenuItem_Click(null, null);
                             return true;
                         case Keys.H:
-                            doMoveToRTHome();
+                            this.doMoveToRTHome();
                             return true;
                         case Keys.O:
                             FavorareMenuItem_Click(null, null);
@@ -7537,11 +7537,11 @@ namespace Hoehoe
                     {
                         if (keyCode == Keys.R)
                         {
-                            doReTweetUnofficial();
+                            this.doReTweetUnofficial();
                         }
                         else if (keyCode == Keys.C)
                         {
-                            CopyUserId();
+                            this.CopyUserId();
                         }
                         return true;
                     }
@@ -7552,13 +7552,13 @@ namespace Hoehoe
                             {
                                 return functionReturnValue;
                             }
-                            doTranslation(this._curPost.TextFromApi);
+                            this.doTranslation(this._curPost.TextFromApi);
                             return true;
                         case Keys.R:
-                            doReTweetUnofficial();
+                            this.doReTweetUnofficial();
                             return true;
                         case Keys.C:
-                            CopyUserId();
+                            this.CopyUserId();
                             return true;
                         case Keys.Up:
                             this._thumbnail.ScrollThumbnail(false);
@@ -8412,8 +8412,8 @@ namespace Hoehoe
 
         public Color InputBackColor
         {
-            get { return clrInputBackcolor; }
-            set { clrInputBackcolor = value; }
+            get { return this.clrInputBackcolor; }
+            set { this.clrInputBackcolor = value; }
         }
 
         private void StatusText_Leave(object sender, EventArgs e)
@@ -8433,7 +8433,7 @@ namespace Hoehoe
             {
                 return;
             }
-            if (CommonKeyDown(e.KeyCode, FocusedControl.StatusText, State))
+            if (this.CommonKeyDown(e.KeyCode, FocusedControl.StatusText, State))
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -8776,7 +8776,7 @@ namespace Hoehoe
             {
                 return;
             }
-            bool KeyRes = CommonKeyDown(e.KeyCode, FocusedControl.PostBrowser, State);
+            bool KeyRes = this.CommonKeyDown(e.KeyCode, FocusedControl.PostBrowser, State);
             if (KeyRes)
             {
                 e.IsInputKey = true;
@@ -10620,7 +10620,7 @@ namespace Hoehoe
 
         private void RepliedStatusOpenMenuItem_Click(object sender, EventArgs e)
         {
-            doRepliedStatusOpen();
+            this.doRepliedStatusOpen();
         }
 
         private void ContextMenuUserPicture_Opening(object sender, CancelEventArgs e)
@@ -10984,7 +10984,7 @@ namespace Hoehoe
 
         private void UrlUndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            doUrlUndo();
+            this.doUrlUndo();
         }
 
         private void NewPostPopMenuItem_CheckStateChanged(object sender, EventArgs e)
@@ -11228,22 +11228,22 @@ namespace Hoehoe
 
         private void SearchWikipediaContextMenuItem_Click(object sender, EventArgs e)
         {
-            doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem1Url);
+            this.doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem1Url);
         }
 
         private void SearchGoogleContextMenuItem_Click(object sender, EventArgs e)
         {
-            doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem2Url);
+            this.doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem2Url);
         }
 
         private void SearchYatsContextMenuItem_Click(object sender, EventArgs e)
         {
-            doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem3Url);
+            this.doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem3Url);
         }
 
         private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
         {
-            doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem4Url);
+            this.doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem4Url);
         }
 
         private void UrlCopyContextMenuItem_Click(object sender, EventArgs e)
@@ -11360,7 +11360,7 @@ namespace Hoehoe
                 SearchDialog.CheckCaseSensitive = false;
                 SearchDialog.CheckRegex = false;
 
-                DoTabSearch(SearchDialog.SWord, SearchDialog.CheckCaseSensitive, SearchDialog.CheckRegex, SEARCHTYPE.NextSearch);
+                this.DoTabSearch(SearchDialog.SWord, SearchDialog.CheckCaseSensitive, SearchDialog.CheckRegex, SEARCHTYPE.NextSearch);
             }
         }
 
@@ -11738,12 +11738,12 @@ namespace Hoehoe
         private void doGetFollowersMenu()
         {
             GetTimeline(WorkerType.Follower, 1, 0, "");
-            DispSelectedPost(true);
+            this.DispSelectedPost(true);
         }
 
         private void GetFollowersAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            doGetFollowersMenu();
+            this.doGetFollowersMenu();
         }
 
         private void doReTweetUnofficial()
@@ -11761,7 +11761,7 @@ namespace Hoehoe
                     MessageBox.Show("Protected.");
                     return;
                 }
-                string rtdata = CreateRetweetUnofficial(this._curPost.Text);
+                string rtdata = this.CreateRetweetUnofficial(this._curPost.Text);
                 StatusText.Text = "RT @" + this._curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
                 StatusText.SelectionStart = 0;
                 StatusText.Focus();
@@ -11770,7 +11770,7 @@ namespace Hoehoe
 
         private void ReTweetStripMenuItem_Click(object sender, EventArgs e)
         {
-            doReTweetUnofficial();
+            this.doReTweetUnofficial();
         }
 
         private void doReTweetOfficial(bool isConfirm)
@@ -11847,7 +11847,7 @@ namespace Hoehoe
 
         private void ReTweetOriginalStripMenuItem_Click(object sender, EventArgs e)
         {
-            doReTweetOfficial(true);
+            this.doReTweetOfficial(true);
         }
 
         private void FavoritesRetweetOriginal()
@@ -11857,7 +11857,7 @@ namespace Hoehoe
                 return;
             }
             this._DoFavRetweetFlags = true;
-            doReTweetOfficial(true);
+            this.doReTweetOfficial(true);
             if (this._DoFavRetweetFlags)
             {
                 this._DoFavRetweetFlags = false;
@@ -11874,7 +11874,7 @@ namespace Hoehoe
                 if (!this._curPost.IsProtect && this._DoFavRetweetFlags)
                 {
                     this._DoFavRetweetFlags = false;
-                    doReTweetUnofficial();
+                    this.doReTweetUnofficial();
                 }
             }
         }
@@ -11918,7 +11918,7 @@ namespace Hoehoe
         {
             if (this._curPost != null)
             {
-                DispSelectedPost(true);
+                this.DispSelectedPost(true);
             }
         }
 
@@ -12288,7 +12288,7 @@ namespace Hoehoe
 
         private void OwnStatusMenuItem_Click(object sender, EventArgs e)
         {
-            doShowUserStatus(tw.Username, false);
+            this.doShowUserStatus(tw.Username, false);
         }
 
         // TwitterIDでない固定文字列を調べる（文字列検証のみ　実際に取得はしない）
@@ -12413,7 +12413,7 @@ namespace Hoehoe
                     MessageBox.Show("Protected.");
                     return;
                 }
-                string rtdata = CreateRetweetUnofficial(this._curPost.Text);
+                string rtdata = this.CreateRetweetUnofficial(this._curPost.Text);
 
                 StatusText.Text = " QT @" + this._curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
                 if (this._curPost.RetweetedId == 0)
@@ -12433,7 +12433,7 @@ namespace Hoehoe
 
         private void QuoteStripMenuItem_Click(object sender, EventArgs e)
         {
-            doQuote();
+            this.doQuote();
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
@@ -12511,7 +12511,7 @@ namespace Hoehoe
         private void RefreshMoreStripMenuItem_Click(object sender, EventArgs e)
         {
             // もっと前を取得
-            DoRefreshMore();
+            this.DoRefreshMore();
         }
 
         private void UndoRemoveTabMenuItem_Click(object sender, EventArgs e)
@@ -12555,7 +12555,7 @@ namespace Hoehoe
 
         private void MoveToRTHomeMenuItem_Click(object sender, EventArgs e)
         {
-            doMoveToRTHome();
+            this.doMoveToRTHome();
         }
 
         private void IdFilterAddMenuItem_Click(object sender, EventArgs e)
@@ -12897,7 +12897,7 @@ namespace Hoehoe
 
         private void MenuItemTab_DropDownOpening(object sender, EventArgs e)
         {
-            ContextMenuTabProperty_Opening(sender, null);
+            this.ContextMenuTabProperty_Opening(sender, null);
         }
 
         public Twitter TwitterInstance
@@ -13009,7 +13009,7 @@ namespace Hoehoe
                             string ret = (string)info.Result;
                             if (String.IsNullOrEmpty(ret))
                             {
-                                doShowUserStatus(args.user);
+                                this.doShowUserStatus(args.user);
                             }
                             else
                             {
@@ -13028,7 +13028,7 @@ namespace Hoehoe
                     string ret = (string)info.Result;
                     if (String.IsNullOrEmpty(ret))
                     {
-                        doShowUserStatus(args.user);
+                        this.doShowUserStatus(args.user);
                     }
                     else
                     {
@@ -13052,12 +13052,12 @@ namespace Hoehoe
 
         private void ShowUserStatus(string id, bool ShowInputDialog)
         {
-            doShowUserStatus(id, ShowInputDialog);
+            this.doShowUserStatus(id, ShowInputDialog);
         }
 
         private void ShowUserStatus(string id)
         {
-            doShowUserStatus(id, true);
+            this.doShowUserStatus(id, true);
         }
 
         private void FollowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -13572,7 +13572,7 @@ namespace Hoehoe
 
         private void CopyUserIdStripMenuItem_Click(object sender, EventArgs e)
         {
-            CopyUserId();
+            this.CopyUserId();
         }
 
         private void CopyUserId()
@@ -14045,7 +14045,7 @@ namespace Hoehoe
             string msg = "";
             if (srclng != dstlng && bing.Translate("", dstlng, str, ref buf))
             {
-                PostBrowser.DocumentText = CreateDetailHtml(buf);
+                PostBrowser.DocumentText = this.CreateDetailHtml(buf);
             }
             else
             {
@@ -14062,12 +14062,12 @@ namespace Hoehoe
             {
                 return;
             }
-            doTranslation(this._curPost.TextFromApi);
+            this.doTranslation(this._curPost.TextFromApi);
         }
 
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            doTranslation(WebBrowser_GetSelectionText(ref PostBrowser));
+            this.doTranslation(WebBrowser_GetSelectionText(ref PostBrowser));
         }
 
         private bool ExistCurrentPost
