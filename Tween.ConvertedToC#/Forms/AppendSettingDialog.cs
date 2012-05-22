@@ -165,6 +165,11 @@ namespace Hoehoe
 
         public event IntervalChangedEventHandler IntervalChanged;
 
+        public static AppendSettingDialog Instance
+        {
+            get { return _instance; }
+        }
+
         public bool HideDuplicatedRetweets { get; set; }
 
         public bool IsPreviewFoursquare { get; set; }
@@ -2521,11 +2526,6 @@ namespace Hoehoe
         private void ButtonApiCalc_Click(object sender, EventArgs e)
         {
             this.CalcApiUsing();
-        }
-
-        public static AppendSettingDialog Instance
-        {
-            get { return _instance; }
         }
 
         private bool BitlyValidation(string id, string apikey)
