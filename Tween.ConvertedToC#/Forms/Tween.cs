@@ -122,7 +122,6 @@ namespace Hoehoe
         private string detailHtmlFormatHeader;
         private string detailHtmlFormatFooter;
         private bool myStatusError;
-        private bool myStatusOnline;
         private bool soundfileListup;
 
         private SpaceKeyCanceler spaceKeyCanceler;
@@ -191,7 +190,6 @@ namespace Hoehoe
         private SearchWord searchDialog = new SearchWord();   // 検索画面インスタンス
         private FilterDialog fltDialog = new FilterDialog();  // フィルター編集画面
         private OpenURL urlDialog = new OpenURL();
-        private DialogAsShieldIcon dialogAsShieldicon;         // シールドアイコン付きダイアログ
         public AtIdSupplement AtIdSupl; // @id補助
         public AtIdSupplement HashSupl;        // Hashtag補助
         public HashtagManage HashMgr;
@@ -2283,7 +2281,6 @@ namespace Hoehoe
 
                         StringBuilder title = new StringBuilder();
                         ToolTipIcon notifyIcon = default(ToolTipIcon);
-                        GrowlHelper.NotifyType nt = default(GrowlHelper.NotifyType);
                         if (this.SettingDialog.DispUsername)
                         {
                             title.Append(this.tw.Username);
@@ -2301,7 +2298,6 @@ namespace Hoehoe
                             title.Append(" ");
                             title.Append(addCount);
                             title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText2);
-                            nt = GrowlHelper.NotifyType.DirectMessage;
                         }
                         else if (reply)
                         {
@@ -2311,7 +2307,6 @@ namespace Hoehoe
                             title.Append(" ");
                             title.Append(addCount);
                             title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
-                            nt = GrowlHelper.NotifyType.Reply;
                         }
                         else
                         {
@@ -2321,7 +2316,6 @@ namespace Hoehoe
                             title.Append(" ");
                             title.Append(addCount);
                             title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
-                            nt = GrowlHelper.NotifyType.Notify;
                         }
                         string notifyText = sb.ToString();
                         if (string.IsNullOrEmpty(notifyText))
@@ -8741,10 +8735,7 @@ namespace Hoehoe
                             {
                                 protect = "Protect";
                             }
-                            sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}",
-                                post.Nickname, post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""),
-                                post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl,
-                                post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""), protect));
+                            sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}", post.Nickname, post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""), post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl, post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""), protect));
                         }
                     }
                     else
@@ -8757,10 +8748,7 @@ namespace Hoehoe
                             {
                                 protect = "Protect";
                             }
-                            sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}",
-                                post.Nickname, post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""),
-                                post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl,
-                                post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""), protect));
+                            sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}", post.Nickname, post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""), post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl, post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""), protect));
                         }
                     }
                     sw.Close();
@@ -9737,7 +9725,7 @@ namespace Hoehoe
                 this.curPost = this.statuses.Item(this.ListTab.SelectedTab.Text, ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices[0]);
             }
         }
-
+        
         protected override bool ProcessDialogKey(Keys keyData)
         {
             // TextBox1でEnterを押してもビープ音が鳴らないようにする
@@ -11722,11 +11710,8 @@ namespace Hoehoe
                     MessageBox.Show(Hoehoe.Properties.Resources.ReAuthorizeText);
                     this.SettingStripMenuItem_Click(null, null);
                 }
-
-                //
             }
             this.isInitializing = false;
-
             this.TimerTimeline.Enabled = true;
         }
 
