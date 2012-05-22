@@ -1345,7 +1345,7 @@ namespace Hoehoe
                     modKey = modKey | HookGlobalHotkey.ModKeys.Win;
                 }
 
-                this._hookGlobalHotkey.RegisterOriginalHotkey(this.SettingDialog.HotkeyKey, this.SettingDialog.HotkeyValue, modKey);
+                this.HookGlobalHotkey.RegisterOriginalHotkey(this.SettingDialog.HotkeyKey, this.SettingDialog.HotkeyValue, modKey);
             }
 
             // Twitter用通信クラス初期化
@@ -2939,7 +2939,7 @@ namespace Hoehoe
             else
             {
                 // Google.GASender.GetInstance().TrackEventWithCategory("post", "end", this.tw.UserId)
-                this._hookGlobalHotkey.UnregisterAllOriginalHotkey();
+                this.HookGlobalHotkey.UnregisterAllOriginalHotkey();
                 this.ignoreConfigSave = true;
                 MyCommon.IsEnding = true;
                 this.TimerTimeline.Enabled = false;
@@ -4959,7 +4959,7 @@ namespace Hoehoe
                             break;
                     }
 
-                    this._hookGlobalHotkey.UnregisterAllOriginalHotkey();
+                    this.HookGlobalHotkey.UnregisterAllOriginalHotkey();
                     if (this.SettingDialog.HotkeyEnabled)
                     {
                         ///グローバルホットキーの登録。設定で変更可能にするかも
@@ -4984,7 +4984,7 @@ namespace Hoehoe
                             modKey = modKey | HookGlobalHotkey.ModKeys.Win;
                         }
 
-                        this._hookGlobalHotkey.RegisterOriginalHotkey(this.SettingDialog.HotkeyKey, this.SettingDialog.HotkeyValue, modKey);
+                        this.HookGlobalHotkey.RegisterOriginalHotkey(this.SettingDialog.HotkeyKey, this.SettingDialog.HotkeyValue, modKey);
                     }
 
                     if (uid != this.tw.Username)
@@ -13724,26 +13724,26 @@ namespace Hoehoe
             }
         }
 
-        private HookGlobalHotkey __hookGlobalHotkey;
+        private HookGlobalHotkey hookGlobalHotkey;
 
-        private HookGlobalHotkey _hookGlobalHotkey
+        private HookGlobalHotkey HookGlobalHotkey
         {
             get
             {
-                return this.__hookGlobalHotkey;
+                return this.hookGlobalHotkey;
             }
 
             set
             {
-                if (this.__hookGlobalHotkey != null)
+                if (this.hookGlobalHotkey != null)
                 {
-                    this.__hookGlobalHotkey.HotkeyPressed -= this._hookGlobalHotkey_HotkeyPressed;
+                    this.hookGlobalHotkey.HotkeyPressed -= this.HookGlobalHotkey_HotkeyPressed;
                 }
 
-                this.__hookGlobalHotkey = value;
-                if (this.__hookGlobalHotkey != null)
+                this.hookGlobalHotkey = value;
+                if (this.hookGlobalHotkey != null)
                 {
-                    this.__hookGlobalHotkey.HotkeyPressed += this._hookGlobalHotkey_HotkeyPressed;
+                    this.hookGlobalHotkey.HotkeyPressed += this.HookGlobalHotkey_HotkeyPressed;
                 }
             }
         }
@@ -13754,7 +13754,7 @@ namespace Hoehoe
             InitializeComponent();
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
-            this._hookGlobalHotkey = new HookGlobalHotkey(this);
+            this.HookGlobalHotkey = new HookGlobalHotkey(this);
             this.apiGauge.Control.Size = new Size(70, 22);
             this.apiGauge.Control.Margin = new Padding(0, 3, 0, 2);
             this.apiGauge.GaugeHeight = 8;
@@ -13762,7 +13762,7 @@ namespace Hoehoe
             this.StatusStrip1.Items.Insert(2, this.apiGauge);
         }
 
-        private void _hookGlobalHotkey_HotkeyPressed(object sender, KeyEventArgs e)
+        private void HookGlobalHotkey_HotkeyPressed(object sender, KeyEventArgs e)
         {
             if ((this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized) && this.Visible && object.ReferenceEquals(Form.ActiveForm, this))
             {
@@ -14496,7 +14496,7 @@ namespace Hoehoe
             }
         }
 
-        private string _prevTrackWord;
+        private string prevTrackWord;
 
         private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -14504,7 +14504,7 @@ namespace Hoehoe
             {
                 using (InputTabName inputForm = new InputTabName())
                 {
-                    inputForm.TabName = this._prevTrackWord;
+                    inputForm.TabName = this.prevTrackWord;
                     inputForm.SetFormTitle("Input track word");
                     inputForm.SetFormDescription("Track word");
                     if (inputForm.ShowDialog() != DialogResult.OK)
@@ -14513,14 +14513,14 @@ namespace Hoehoe
                         return;
                     }
 
-                    this._prevTrackWord = inputForm.TabName.Trim();
+                    this.prevTrackWord = inputForm.TabName.Trim();
                 }
 
-                if (this._prevTrackWord != this.tw.TrackWord)
+                if (this.prevTrackWord != this.tw.TrackWord)
                 {
-                    this.tw.TrackWord = this._prevTrackWord;
+                    this.tw.TrackWord = this.prevTrackWord;
                     this.modifySettingCommon = true;
-                    TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this._prevTrackWord);
+                    TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.prevTrackWord);
                     this.tw.ReconnectUserStream();
                 }
             }
