@@ -1841,7 +1841,7 @@ namespace Hoehoe
             Interlocked.Increment(ref this.timerRefreshFollowers);
 
             // 'タイマー初期化
-            if (this.resetTimers.Timeline || this.timerHomeCounter <= 0 && this.SettingDialog.TimelinePeriodInt > 0)
+            if (this.resetTimers.Timeline || (this.timerHomeCounter <= 0 && this.SettingDialog.TimelinePeriodInt > 0))
             {
                 Interlocked.Exchange(ref this.timerHomeCounter, this.SettingDialog.TimelinePeriodInt);
                 if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.Timeline)
@@ -1852,7 +1852,7 @@ namespace Hoehoe
                 this.resetTimers.Timeline = false;
             }
             
-            if (this.resetTimers.Reply || this.timerMentionCounter <= 0 && this.SettingDialog.ReplyPeriodInt > 0)
+            if (this.resetTimers.Reply || (this.timerMentionCounter <= 0 && this.SettingDialog.ReplyPeriodInt > 0))
             {
                 Interlocked.Exchange(ref this.timerMentionCounter, this.SettingDialog.ReplyPeriodInt);
                 if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.Reply)
@@ -1863,7 +1863,7 @@ namespace Hoehoe
                 this.resetTimers.Reply = false;
             }
             
-            if (this.resetTimers.DirectMessage || this.timerDmCounter <= 0 && this.SettingDialog.DMPeriodInt > 0)
+            if (this.resetTimers.DirectMessage || (this.timerDmCounter <= 0 && this.SettingDialog.DMPeriodInt > 0))
             {
                 Interlocked.Exchange(ref this.timerDmCounter, this.SettingDialog.DMPeriodInt);
                 if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.DirectMessage)
@@ -1874,7 +1874,7 @@ namespace Hoehoe
                 this.resetTimers.DirectMessage = false;
             }
             
-            if (this.resetTimers.PublicSearch || this.timerPubSearchCounter <= 0 && this.SettingDialog.PubSearchPeriodInt > 0)
+            if (this.resetTimers.PublicSearch || (this.timerPubSearchCounter <= 0 && this.SettingDialog.PubSearchPeriodInt > 0))
             {
                 Interlocked.Exchange(ref this.timerPubSearchCounter, this.SettingDialog.PubSearchPeriodInt);
                 if (!this.resetTimers.PublicSearch)
@@ -1885,7 +1885,7 @@ namespace Hoehoe
                 this.resetTimers.PublicSearch = false;
             }
             
-            if (this.resetTimers.UserTimeline || this.timerUserTimelineCounter <= 0 && this.SettingDialog.UserTimelinePeriodInt > 0)
+            if (this.resetTimers.UserTimeline || (this.timerUserTimelineCounter <= 0 && this.SettingDialog.UserTimelinePeriodInt > 0))
             {
                 Interlocked.Exchange(ref this.timerUserTimelineCounter, this.SettingDialog.UserTimelinePeriodInt);
                 if (!this.resetTimers.UserTimeline)
@@ -1896,7 +1896,7 @@ namespace Hoehoe
                 this.resetTimers.UserTimeline = false;
             }
             
-            if (this.resetTimers.Lists || this.timerListsCounter <= 0 && this.SettingDialog.ListsPeriodInt > 0)
+            if (this.resetTimers.Lists || (this.timerListsCounter <= 0 && this.SettingDialog.ListsPeriodInt > 0))
             {
                 Interlocked.Exchange(ref this.timerListsCounter, this.SettingDialog.ListsPeriodInt);
                 if (!this.resetTimers.Lists)
@@ -1906,15 +1906,15 @@ namespace Hoehoe
             
                 this.resetTimers.Lists = false;
             }
-            
-            if (this.resetTimers.UserStream || this.timerUsCounter <= 0 && this.SettingDialog.UserstreamPeriodInt > 0)
+
+            if (this.resetTimers.UserStream || (this.timerUsCounter <= 0 && this.SettingDialog.UserstreamPeriodInt > 0))
             {
                 Interlocked.Exchange(ref this.timerUsCounter, this.SettingDialog.UserstreamPeriodInt);
                 if (this.isActiveUserstream)
                 {
                     this.RefreshTimeline(true);
                 }
-            
+
                 this.resetTimers.UserStream = false;
             }
 
@@ -2227,7 +2227,7 @@ namespace Hoehoe
 
         private bool IsEventNotifyAsEventType(EventType type)
         {
-            return this.SettingDialog.EventNotifyEnabled && Convert.ToBoolean(type & this.SettingDialog.EventNotifyFlag) || type == EventType.None;
+            return (this.SettingDialog.EventNotifyEnabled && Convert.ToBoolean(type & this.SettingDialog.EventNotifyFlag)) || type == EventType.None;
         }
 
         private bool IsMyEventNotityAsEventType(Twitter.FormattedEvent ev)
@@ -6662,7 +6662,7 @@ namespace Hoehoe
                 this.SelectListItem(lst, idx);
                 if (this.statuses.SortMode == IdComparerClass.ComparerMode.Id)
                 {
-                    if (this.statuses.SortOrder == SortOrder.Ascending && lst.Items[idx].Position.Y > lst.ClientSize.Height - this.iconSz - 10 || this.statuses.SortOrder == SortOrder.Descending && lst.Items[idx].Position.Y < this.iconSz + 10)
+                    if ((this.statuses.SortOrder == SortOrder.Ascending && lst.Items[idx].Position.Y > lst.ClientSize.Height - this.iconSz - 10) || (this.statuses.SortOrder == SortOrder.Descending && lst.Items[idx].Position.Y < this.iconSz + 10))
                     {
                         this.MoveTop();
                     }
@@ -8835,7 +8835,7 @@ namespace Hoehoe
 
         private void SaveConfigsAtId()
         {
-            if (this.ignoreConfigSave || !this.SettingDialog.UseAtIdSupplement && this.AtIdSupl == null)
+            if (this.ignoreConfigSave || (!this.SettingDialog.UseAtIdSupplement && this.AtIdSupl == null))
             {
                 return;
             }
@@ -10434,7 +10434,8 @@ namespace Hoehoe
                     // 既存タブを選択
                     return true;
                 }
-            } while (true);
+            }
+            while (true);
         }
 
         private void MoveOrCopy(ref bool move, ref bool mark)
@@ -11293,7 +11294,6 @@ namespace Hoehoe
         /// <returns></returns>
         private bool UrlConvert(UrlConverter urlCoonverterType)
         {
-
             string result = string.Empty;
 
             const string NicoUrlPattern = "^https?:// [a-z]+\\.(nicovideo|niconicommons|nicolive)\\.jp/[a-z]+/[a-z0-9]+$";
@@ -12443,7 +12443,7 @@ namespace Hoehoe
 
         private void MenuItemHelp_DropDownOpening(object sender, EventArgs e)
         {
-            if (MyCommon.DebugBuild || this.IsKeyDown(Keys.CapsLock) && this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift))
+            if (MyCommon.DebugBuild || (this.IsKeyDown(Keys.CapsLock) && this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift)))
             {
                 DebugModeToolStripMenuItem.Visible = true;
             }
@@ -13728,7 +13728,11 @@ namespace Hoehoe
 
         private HookGlobalHotkey _hookGlobalHotkey
         {
-            get { return this.__hookGlobalHotkey; }
+            get
+            {
+                return this.__hookGlobalHotkey;
+            }
+
             set
             {
                 if (this.__hookGlobalHotkey != null)
@@ -13997,7 +14001,10 @@ namespace Hoehoe
         {
             string svc = string.Empty;
             if (ImageServiceCombo.SelectedIndex > -1)
+            {
                 svc = ImageServiceCombo.SelectedItem.ToString();
+            }
+
             ImageServiceCombo.Items.Clear();
             ImageServiceCombo.Items.Add("TwitPic");
             ImageServiceCombo.Items.Add("img.ly");
@@ -14542,8 +14549,8 @@ namespace Hoehoe
                 
                 // 親の中央に表示
                 Point pos = this.evtDialog.Location;
-                pos.X = Convert.ToInt32(this.Location.X + this.Size.Width / 2 - this.evtDialog.Size.Width / 2);
-                pos.Y = Convert.ToInt32(this.Location.Y + this.Size.Height / 2 - this.evtDialog.Size.Height / 2);
+                pos.X = Convert.ToInt32(this.Location.X + ((this.Size.Width - this.evtDialog.Size.Width) / 2));
+                pos.Y = Convert.ToInt32(this.Location.Y + ((this.Size.Height - this.evtDialog.Size.Height) / 2));
                 this.evtDialog.Location = pos;
             }
 
