@@ -379,6 +379,10 @@ namespace Hoehoe
         }
         #endregion
 
+        #region delegates 
+        public delegate void SetStatusLabelApiDelegate();
+        #endregion
+
         private AppendSettingDialog SettingDialog
         {
             get
@@ -10837,8 +10841,6 @@ namespace Hoehoe
             
             return slbl.ToString();
         }
-
-        public delegate void SetStatusLabelApiDelegate();
 
         private void SetStatusLabelApiHandler(object sender, ApiInformationChangedEventArgs e)
         {
