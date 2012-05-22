@@ -515,8 +515,8 @@ namespace Hoehoe
 
         private class SpaceKeyCanceler : NativeWindow, IDisposable
         {
-            int WM_KEYDOWN = 0x100;
-            int VK_SPACE = 0x20;
+            const int WM_KEYDOWN = 0x100;
+            const int VK_SPACE = 0x20;
 
             public SpaceKeyCanceler(Control control)
             {
@@ -527,9 +527,9 @@ namespace Hoehoe
             {
                 if ((m.Msg == WM_KEYDOWN) && (Convert.ToInt32(m.WParam) == VK_SPACE))
                 {
-                    if (SpaceCancel != null)
+                    if (this.SpaceCancel != null)
                     {
-                        SpaceCancel(this, EventArgs.Empty);
+                        this.SpaceCancel(this, EventArgs.Empty);
                     }
                     return;
                 }
