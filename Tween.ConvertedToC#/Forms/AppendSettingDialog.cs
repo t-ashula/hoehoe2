@@ -39,16 +39,19 @@ namespace Hoehoe
 
     public partial class AppendSettingDialog
     {
-        private static AppendSettingDialog _instance = new AppendSettingDialog();
-        private Twitter _tw;
-        private bool _ValidationError = false;
-        private EventType _MyEventNotifyFlag;
-        private EventType _isMyEventNotifyFlag;
-        private string _MyTranslateLanguage;
-        private long _InitialUserId;
-        private string _pin;
+        #region privates
+        private static AppendSettingDialog instance = new AppendSettingDialog();
+        private Twitter tw;
+        private bool validationError;
+        private EventType myEventNotifyFlag;
+        private EventType isMyEventNotifyFlag;
+        private string myTranslateLanguage;
+        private long initialUserId;
+        private string pin;
         private EventCheckboxTblElement[] eventCheckboxTableElements = null;
+        #endregion
 
+        #region constructor
         public AppendSettingDialog()
         {
             // この呼び出しはデザイナーで必要です。
@@ -57,14 +60,20 @@ namespace Hoehoe
             // InitializeComponent() 呼び出しの後で初期化を追加します。
             this.Icon = Hoehoe.Properties.Resources.MIcon;
         }
+        #endregion
 
+        #region delegates
         public delegate void IntervalChangedEventHandler(object sender, IntervalChangedEventArgs e);
+        #endregion
 
+        #region events 
         public event IntervalChangedEventHandler IntervalChanged;
+        #endregion
 
+        #region properties
         public static AppendSettingDialog Instance
         {
-            get { return _instance; }
+            get { return instance; }
         }
 
         public bool HideDuplicatedRetweets { get; set; }
@@ -289,14 +298,14 @@ namespace Hoehoe
 
         public EventType EventNotifyFlag
         {
-            get { return this._MyEventNotifyFlag; }
-            set { this._MyEventNotifyFlag = value; }
+            get { return this.myEventNotifyFlag; }
+            set { this.myEventNotifyFlag = value; }
         }
 
         public EventType IsMyEventNotifyFlag
         {
-            get { return this._isMyEventNotifyFlag; }
-            set { this._isMyEventNotifyFlag = value; }
+            get { return this.isMyEventNotifyFlag; }
+            set { this.isMyEventNotifyFlag = value; }
         }
 
         public bool ForceEventNotify { get; set; }
@@ -305,10 +314,14 @@ namespace Hoehoe
 
         public string TranslateLanguage
         {
-            get { return this._MyTranslateLanguage; }
+            get
+            {
+                return this.myTranslateLanguage;
+            }
+            
             set
             {
-                this._MyTranslateLanguage = value;
+                this.myTranslateLanguage = value;
                 ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(value);
             }
         }
@@ -328,17 +341,12 @@ namespace Hoehoe
         public Keys HotkeyMod { get; set; }
 
         public bool BlinkNewMentions { get; set; }
+        #endregion
 
+        #region event handler
         private void CheckUseRecommendStatus_CheckedChanged(object sender, EventArgs e)
         {
-            if (CheckUseRecommendStatus.Checked == true)
-            {
-                StatusText.Enabled = false;
-            }
-            else
-            {
-                StatusText.Enabled = true;
-            }
+            StatusText.Enabled = !CheckUseRecommendStatus.Checked;
         }
 
         private void TreeViewSetting_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -347,11 +355,13 @@ namespace Hoehoe
             {
                 return;
             }
+            
             var pnl = (Panel)this.TreeViewSetting.SelectedNode.Tag;
             if (pnl == null)
             {
                 return;
             }
+            
             pnl.Enabled = false;
             pnl.Visible = false;
         }
@@ -362,11 +372,13 @@ namespace Hoehoe
             {
                 return;
             }
+            
             var pnl = (Panel)e.Node.Tag;
             if (pnl == null)
             {
                 return;
             }
+            
             pnl.Enabled = true;
             pnl.Visible = true;
 
@@ -386,19 +398,19 @@ namespace Hoehoe
                 if (!this.BitlyValidation(TextBitlyId.Text, TextBitlyPw.Text))
                 {
                     MessageBox.Show(Hoehoe.Properties.Resources.SettingSave_ClickText1);
-                    this._ValidationError = true;
+                    this.validationError = true;
                     TreeViewSetting.SelectedNode.Name = "TweetActNode"; // 動作タブを選択
                     TextBitlyId.Focus();
                     return;
                 }
                 else
                 {
-                    this._ValidationError = false;
+                    this.validationError = false;
                 }
             }
             else
             {
-                this._ValidationError = false;
+                this.validationError = false;
             }
 
             this.UserAccounts.Clear();
@@ -406,49 +418,30 @@ namespace Hoehoe
             {
                 this.UserAccounts.Add((UserAccount)u);
             }
+            
             if (this.AuthUserCombo.SelectedIndex > -1)
             {
                 foreach (UserAccount u in this.UserAccounts)
                 {
                     if (u.Username.ToLower() == ((UserAccount)this.AuthUserCombo.SelectedItem).Username.ToLower())
                     {
-                        this._tw.Initialize(u.Token, u.TokenSecret, u.Username, u.UserId);
+                        this.tw.Initialize(u.Token, u.TokenSecret, u.Username, u.UserId);
                         if (u.UserId == 0)
                         {
-                            this._tw.VerifyCredentials();
-                            u.UserId = this._tw.UserId;
+                            this.tw.VerifyCredentials();
+                            u.UserId = this.tw.UserId;
                         }
+
                         break;
                     }
                 }
             }
             else
             {
-                this._tw.ClearAuthInfo();
-                this._tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
+                this.tw.ClearAuthInfo();
+                this.tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
             }
 
-#if UA // = True
-			//フォロー
-			if (this.FollowCheckBox.Checked) {
-				//現在の設定内容で通信
-				HttpConnection.ProxyType ptype = default(HttpConnection.ProxyType);
-				if (RadioProxyNone.Checked) {
-					ptype = HttpConnection.ProxyType.None;
-				} else if (RadioProxyIE.Checked) {
-					ptype = HttpConnection.ProxyType.IE;
-				} else {
-					ptype = HttpConnection.ProxyType.Specified;
-				}
-				string padr = TextProxyAddress.Text.Trim();
-				int pport = int.Parse(TextProxyPort.Text.Trim());
-				string pusr = TextProxyUser.Text.Trim();
-				string ppw = TextProxyPassword.Text.Trim();
-				HttpConnection.InitializeConnection(20, ptype, padr, pport, pusr, ppw);
-
-				string ret = tw.PostFollowCommand("TweenApp");
-			}
-#endif
             IntervalChangedEventArgs arg = new IntervalChangedEventArgs();
             bool isIntervalChanged = false;
 
@@ -462,18 +455,21 @@ namespace Hoehoe
                     arg.UserStream = true;
                     isIntervalChanged = true;
                 }
+                
                 if (this.TimelinePeriodInt != Convert.ToInt32(TimelinePeriod.Text))
                 {
                     this.TimelinePeriodInt = Convert.ToInt32(TimelinePeriod.Text);
                     arg.Timeline = true;
                     isIntervalChanged = true;
                 }
+                
                 if (this.DMPeriodInt != Convert.ToInt32(DMPeriod.Text))
                 {
                     this.DMPeriodInt = Convert.ToInt32(DMPeriod.Text);
                     arg.DirectMessage = true;
                     isIntervalChanged = true;
                 }
+                
                 if (this.PubSearchPeriodInt != Convert.ToInt32(PubSearchPeriod.Text))
                 {
                     this.PubSearchPeriodInt = Convert.ToInt32(PubSearchPeriod.Text);
@@ -487,12 +483,14 @@ namespace Hoehoe
                     arg.Lists = true;
                     isIntervalChanged = true;
                 }
+                
                 if (this.ReplyPeriodInt != Convert.ToInt32(ReplyPeriod.Text))
                 {
                     this.ReplyPeriodInt = Convert.ToInt32(ReplyPeriod.Text);
                     arg.Reply = true;
                     isIntervalChanged = true;
                 }
+                
                 if (this.UserTimelinePeriodInt != Convert.ToInt32(UserTimelinePeriod.Text))
                 {
                     this.UserTimelinePeriodInt = Convert.ToInt32(UserTimelinePeriod.Text);
@@ -527,6 +525,7 @@ namespace Hoehoe
                         this.IconSz = Hoehoe.IconSizes.Icon48_2;
                         break;
                 }
+                
                 this.Status = StatusText.Text;
                 this.PlaySound = PlaySnd.Checked;
                 this.UnreadManage = UReadMng.Checked;
@@ -580,6 +579,7 @@ namespace Hoehoe
                         this.PostShiftEnter = false;
                         break;
                 }
+                
                 this.CountApi = Convert.ToInt32(TextCountApi.Text);
                 this.CountApiReply = Convert.ToInt32(TextCountApiReply.Text);
                 this.BrowserPath = BrowserPathText.Text.Trim();
@@ -623,6 +623,7 @@ namespace Hoehoe
                         this.DispLatestPost = DispTitleEnum.OwnStatus;
                         break;
                 }
+                
                 this.SortOrderLock = CheckSortOrderLock.Checked;
                 this.TinyUrlResolve = CheckTinyURL.Checked;
                 this.ShortUrlForceResolve = CheckForceResolve.Checked;
@@ -640,6 +641,7 @@ namespace Hoehoe
                 {
                     this.SelectedProxyType = HttpConnection.ProxyType.Specified;
                 }
+                
                 this.ProxyAddress = TextProxyAddress.Text.Trim();
                 this.ProxyPort = int.Parse(TextProxyPort.Text.Trim());
                 this.ProxyUser = TextProxyUser.Text.Trim();
@@ -671,10 +673,10 @@ namespace Hoehoe
                 this.RetweetNoConfirm = CheckRetweetNoConfirm.Checked;
                 this.LimitBalloon = CheckBalloonLimit.Checked;
                 this.EventNotifyEnabled = CheckEventNotify.Checked;
-                this.GetEventNotifyFlag(ref this._MyEventNotifyFlag, ref this._isMyEventNotifyFlag);
+                this.GetEventNotifyFlag(ref this.myEventNotifyFlag, ref this.isMyEventNotifyFlag);
                 this.ForceEventNotify = CheckForceEventNotify.Checked;
                 this.FavEventUnread = CheckFavEventUnread.Checked;
-                this._MyTranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(ComboBoxTranslateLanguage.SelectedIndex);
+                this.myTranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(ComboBoxTranslateLanguage.SelectedIndex);
                 this.EventSoundFile = Convert.ToString(ComboBoxEventNotifySound.SelectedItem);
                 this.AutoShortUrlFirst = (UrlConverter)ComboBoxAutoShortUrlFirst.SelectedIndex;
                 this.TabIconDisp = chkTabIconDisp.Checked;
@@ -703,6 +705,7 @@ namespace Hoehoe
                         this.ReplyIconState = ReplyIconState.BlinkIcon;
                         break;
                 }
+                
                 switch (LanguageCombo.SelectedIndex)
                 {
                     case 0:
@@ -721,28 +724,37 @@ namespace Hoehoe
                         this.Language = "en";
                         break;
                 }
+                
                 this.HotkeyEnabled = this.HotkeyCheck.Checked;
                 this.HotkeyMod = Keys.None;
                 if (this.HotkeyAlt.Checked)
                 {
                     this.HotkeyMod = this.HotkeyMod | Keys.Alt;
                 }
+                
                 if (this.HotkeyShift.Checked)
                 {
                     this.HotkeyMod = this.HotkeyMod | Keys.Shift;
                 }
+                
                 if (this.HotkeyCtrl.Checked)
                 {
                     this.HotkeyMod = this.HotkeyMod | Keys.Control;
                 }
+                
                 if (this.HotkeyWin.Checked)
                 {
                     this.HotkeyMod = this.HotkeyMod | Keys.LWin;
                 }
+                
                 {
                     int tmp = this.HotkeyValue;
-                    if (int.TryParse(HotkeyCode.Text, out tmp)) { this.HotkeyValue = tmp; }
+                    if (int.TryParse(HotkeyCode.Text, out tmp))
+                    {
+                        this.HotkeyValue = tmp;
+                    }
                 }
+
                 this.HotkeyKey = (Keys)HotkeyText.Tag;
                 this.BlinkNewMentions = ChkNewMentionsBlink.Checked;
                 this.UseAdditionalCount = UseChangeGetCount.Checked;
@@ -792,13 +804,13 @@ namespace Hoehoe
 
                 // アクティブユーザーを起動時のアカウントに戻す（起動時アカウントなければ何もしない）
                 bool userSet = false;
-                if (this._InitialUserId > 0)
+                if (this.initialUserId > 0)
                 {
                     foreach (UserAccount u in this.UserAccounts)
                     {
-                        if (u.UserId == this._InitialUserId)
+                        if (u.UserId == this.initialUserId)
                         {
-                            this._tw.Initialize(u.Token, u.TokenSecret, u.Username, u.UserId);
+                            this.tw.Initialize(u.Token, u.TokenSecret, u.Username, u.UserId);
                             userSet = true;
                             break;
                         }
@@ -808,22 +820,24 @@ namespace Hoehoe
                 // 認証済みアカウントが削除されていた場合、もしくは起動時アカウントがなかった場合は、アクティブユーザーなしとして初期化
                 if (!userSet)
                 {
-                    this._tw.ClearAuthInfo();
-                    this._tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
+                    this.tw.ClearAuthInfo();
+                    this.tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
                 }
             }
 
-            if (this._tw != null && string.IsNullOrEmpty(this._tw.Username) && e.CloseReason == CloseReason.None)
+            if (this.tw != null && string.IsNullOrEmpty(this.tw.Username) && e.CloseReason == CloseReason.None)
             {
                 if (MessageBox.Show(Hoehoe.Properties.Resources.Setting_FormClosing1, "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                 {
                     e.Cancel = true;
                 }
             }
-            if (this._ValidationError)
+
+            if (this.validationError)
             {
                 e.Cancel = true;
             }
+            
             if (!e.Cancel && TreeViewSetting.SelectedNode != null)
             {
                 Panel curPanel = (Panel)TreeViewSetting.SelectedNode.Tag;
@@ -839,11 +853,11 @@ namespace Hoehoe
 #else
             this.GroupBox2.Visible = false;
 #endif
-            this._tw = ((TweenMain)this.Owner).TwitterInstance;
-            string uname = this._tw.Username;
-            string pw = this._tw.Password;
-            string tk = this._tw.AccessToken;
-            string tks = this._tw.AccessTokenSecret;
+            this.tw = ((TweenMain)this.Owner).TwitterInstance;
+            string uname = this.tw.Username;
+            string pw = this.tw.Password;
+            string tk = this.tw.AccessToken;
+            string tks = this.tw.AccessTokenSecret;
 
             this.AuthClearButton.Enabled = true;
 
@@ -853,10 +867,10 @@ namespace Hoehoe
                 this.AuthUserCombo.Items.AddRange(this.UserAccounts.ToArray());
                 foreach (UserAccount u in this.UserAccounts)
                 {
-                    if (u.UserId == this._tw.UserId)
+                    if (u.UserId == this.tw.UserId)
                     {
                         this.AuthUserCombo.SelectedItem = u;
-                        this._InitialUserId = u.UserId;
+                        this.initialUserId = u.UserId;
                         break;
                     }
                 }
@@ -890,6 +904,7 @@ namespace Hoehoe
                     IconSize.SelectedIndex = 4;
                     break;
             }
+
             StatusText.Text = this.Status;
             UReadMng.Checked = this.UnreadManage;
             StartupReaded.Enabled = this.UnreadManage != false;
@@ -979,6 +994,7 @@ namespace Hoehoe
                     ComboDispTitle.SelectedIndex = 7;
                     break;
             }
+
             CheckSortOrderLock.Checked = this.SortOrderLock;
             CheckTinyURL.Checked = this.TinyUrlResolve;
             CheckForceResolve.Checked = this.ShortUrlForceResolve;
@@ -994,6 +1010,7 @@ namespace Hoehoe
                     RadioProxySpecified.Checked = true;
                     break;
             }
+
             bool chk = RadioProxySpecified.Checked;
             LabelProxyAddress.Enabled = chk;
             TextProxyAddress.Enabled = chk;
@@ -1037,10 +1054,10 @@ namespace Hoehoe
             CheckRetweetNoConfirm.Checked = this.RetweetNoConfirm;
             CheckBalloonLimit.Checked = this.LimitBalloon;
 
-            this.ApplyEventNotifyFlag(this.EventNotifyEnabled, this._MyEventNotifyFlag, this._isMyEventNotifyFlag);
+            this.ApplyEventNotifyFlag(this.EventNotifyEnabled, this.myEventNotifyFlag, this.isMyEventNotifyFlag);
             CheckForceEventNotify.Checked = this.ForceEventNotify;
             CheckFavEventUnread.Checked = this.FavEventUnread;
-            ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this._MyTranslateLanguage);
+            ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this.myTranslateLanguage);
             this.SoundFileListup();
             ComboBoxAutoShortUrlFirst.SelectedIndex = (int)this.AutoShortUrlFirst;
             chkTabIconDisp.Checked = this.TabIconDisp;
@@ -1071,6 +1088,7 @@ namespace Hoehoe
                     ReplyIconStateCombo.SelectedIndex = 2;
                     break;
             }
+
             switch (this.Language)
             {
                 case "OS":
@@ -1089,6 +1107,7 @@ namespace Hoehoe
                     LanguageCombo.SelectedIndex = 0;
                     break;
             }
+
             HotkeyCheck.Checked = this.HotkeyEnabled;
             HotkeyAlt.Checked = (this.HotkeyMod & Keys.Alt) == Keys.Alt;
             HotkeyCtrl.Checked = (this.HotkeyMod & Keys.Control) == Keys.Control;
@@ -1182,6 +1201,7 @@ namespace Hoehoe
                 e.Cancel = true;
                 return;
             }
+
             this.CalcApiUsing();
         }
 
@@ -1205,6 +1225,7 @@ namespace Hoehoe
                 e.Cancel = true;
                 return;
             }
+
             this.CalcApiUsing();
         }
 
@@ -1228,6 +1249,7 @@ namespace Hoehoe
                 e.Cancel = true;
                 return;
             }
+
             this.CalcApiUsing();
         }
 
@@ -1251,6 +1273,7 @@ namespace Hoehoe
                 e.Cancel = true;
                 return;
             }
+
             this.CalcApiUsing();
         }
 
@@ -1295,6 +1318,7 @@ namespace Hoehoe
                 e.Cancel = true;
                 return;
             }
+
             this.CalcApiUsing();
         }
 
@@ -1318,6 +1342,7 @@ namespace Hoehoe
                 e.Cancel = true;
                 return;
             }
+
             this.CalcApiUsing();
         }
 
@@ -1328,7 +1353,7 @@ namespace Hoehoe
 
         private void ButtonFontAndColor_Click(object sender, EventArgs e)
         {
-            Button Btn = (Button)sender;
+            Button btn = (Button)sender;
             DialogResult rtn = default(DialogResult);
 
             FontDialog1.AllowVerticalFonts = false;
@@ -1342,7 +1367,7 @@ namespace Hoehoe
             FontDialog1.ShowEffects = true;
             FontDialog1.ShowColor = true;
 
-            switch (Btn.Name)
+            switch (btn.Name)
             {
                 case "btnUnread":
                     FontDialog1.Color = lblUnread.ForeColor;
@@ -1377,7 +1402,7 @@ namespace Hoehoe
                 return;
             }
 
-            switch (Btn.Name)
+            switch (btn.Name)
             {
                 case "btnUnread":
                     lblUnread.ForeColor = FontDialog1.Color;
@@ -1400,7 +1425,7 @@ namespace Hoehoe
 
         private void ButtonColor_Click(object sender, EventArgs e)
         {
-            Button Btn = (Button)sender;
+            Button btn = (Button)sender;
             DialogResult rtn = default(DialogResult);
 
             ColorDialog1.AllowFullOpen = true;
@@ -1408,7 +1433,7 @@ namespace Hoehoe
             ColorDialog1.FullOpen = false;
             ColorDialog1.SolidColorOnly = false;
 
-            switch (Btn.Name)
+            switch (btn.Name)
             {
                 case "btnSelf":
                     ColorDialog1.Color = lblSelf.BackColor;
@@ -1452,11 +1477,12 @@ namespace Hoehoe
             }
 
             rtn = ColorDialog1.ShowDialog();
-
             if (rtn == DialogResult.Cancel)
+            {
                 return;
+            }
 
-            switch (Btn.Name)
+            switch (btn.Name)
             {
                 case "btnSelf":
                     lblSelf.BackColor = ColorDialog1.Color;
@@ -1536,12 +1562,14 @@ namespace Hoehoe
             {
                 TextProxyPort.Text = "0";
             }
+            
             if (!int.TryParse(TextProxyPort.Text.Trim(), out port))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.TextProxyPort_ValidatingText1);
                 e.Cancel = true;
                 return;
             }
+
             if (port < 0 | port > 65535)
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.TextProxyPort_ValidatingText2);
@@ -1580,20 +1608,6 @@ namespace Hoehoe
                     return;
                 }
             }
-        }
-
-        private bool CreateDateTimeFormatSample()
-        {
-            try
-            {
-                LabelDateTimeFormatApplied.Text = DateTime.Now.ToString(CmbDateTimeFormat.Text);
-            }
-            catch (FormatException)
-            {
-                LabelDateTimeFormatApplied.Text = Hoehoe.Properties.Resources.CreateDateTimeFormatSampleText1;
-                return false;
-            }
-            return true;
         }
 
         private void CmbDateTimeFormat_TextUpdate(object sender, EventArgs e)
@@ -1744,100 +1758,6 @@ namespace Hoehoe
             lblRetweet.ForeColor = Color.FromKnownColor(KnownColor.Green);
         }
 
-        private bool StartAuth()
-        {
-            // 現在の設定内容で通信
-            HttpConnection.ProxyType ptype = default(HttpConnection.ProxyType);
-            if (RadioProxyNone.Checked)
-            {
-                ptype = HttpConnection.ProxyType.None;
-            }
-            else if (RadioProxyIE.Checked)
-            {
-                ptype = HttpConnection.ProxyType.IE;
-            }
-            else
-            {
-                ptype = HttpConnection.ProxyType.Specified;
-            }
-            string padr = TextProxyAddress.Text.Trim();
-            int pport = int.Parse(TextProxyPort.Text.Trim());
-            string pusr = TextProxyUser.Text.Trim();
-            string ppw = TextProxyPassword.Text.Trim();
-
-            // 通信基底クラス初期化
-            HttpConnection.InitializeConnection(20, ptype, padr, pport, pusr, ppw);
-            HttpTwitter.SetTwitterUrl(TwitterAPIText.Text.Trim());
-            HttpTwitter.SetTwitterSearchUrl(TwitterSearchAPIText.Text.Trim());
-            this._tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
-            string pinPageUrl = string.Empty;
-            string rslt = this._tw.StartAuthentication(ref pinPageUrl);
-            if (string.IsNullOrEmpty(rslt))
-            {
-                using (var ab = new AuthBrowser())
-                {
-                    ab.IsAuthorized = true;
-                    ab.UrlString = pinPageUrl;
-                    if (ab.ShowDialog(this) == DialogResult.OK)
-                    {
-                        this._pin = ab.PinString;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
-                return false;
-            }
-        }
-
-        private bool PinAuth()
-        {
-            string pin = this._pin;
-            string rslt = this._tw.Authenticate(pin);
-            if (string.IsNullOrEmpty(rslt))
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
-                int idx = -1;
-                var user = new UserAccount
-                {
-                    Username = this._tw.Username,
-                    UserId = this._tw.UserId,
-                    Token = this._tw.AccessToken,
-                    TokenSecret = this._tw.AccessTokenSecret
-                };
-                foreach (var u in this.AuthUserCombo.Items)
-                {
-                    if (((UserAccount)u).Username.ToLower() == this._tw.Username.ToLower())
-                    {
-                        idx = this.AuthUserCombo.Items.IndexOf(u);
-                        break;
-                    }
-                }
-                if (idx > -1)
-                {
-                    this.AuthUserCombo.Items.RemoveAt(idx);
-                    this.AuthUserCombo.Items.Insert(idx, user);
-                    this.AuthUserCombo.SelectedIndex = idx;
-                }
-                else
-                {
-                    this.AuthUserCombo.SelectedIndex = this.AuthUserCombo.Items.Add(user);
-                }
-                return true;
-            }
-            else
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
-                return false;
-            }
-        }
-
         private void StartAuthButton_Click(object sender, EventArgs e)
         {
             if (this.StartAuth())
@@ -1863,129 +1783,8 @@ namespace Hoehoe
                     this.AuthUserCombo.SelectedIndex = -1;
                 }
             }
+
             this.CalcApiUsing();
-        }
-
-        private void DisplayApiMaxCount()
-        {
-            if (MyCommon.TwitterApiInfo.MaxCount > -1)
-            {
-                LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, MyCommon.TwitterApiInfo.MaxCount);
-            }
-            else
-            {
-                LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, "???");
-            }
-        }
-
-        private void CalcApiUsing()
-        {
-            int listsTabNum = 0;
-            try
-            {
-                // 初回起動時などにNothingの場合あり
-                listsTabNum = TabInformations.GetInstance().GetTabsByType(TabUsageType.Lists).Count;
-            }
-            catch (Exception)
-            {
-                return;
-            }
-
-            int userTimelineTabNum = 0;
-            try
-            {
-                // 初回起動時などにNothingの場合あり
-                userTimelineTabNum = TabInformations.GetInstance().GetTabsByType(TabUsageType.UserTimeline).Count;
-            }
-            catch (Exception)
-            {
-                return;
-            }
-
-            // Recent計算 0は手動更新
-            int tmp = 0;
-            int usingApi = 0;
-            if (int.TryParse(TimelinePeriod.Text, out tmp))
-            {
-                if (tmp != 0)
-                {
-                    usingApi += 3600 / tmp;
-                }
-            }
-
-            // Reply計算 0は手動更新
-            if (int.TryParse(ReplyPeriod.Text, out tmp))
-            {
-                if (tmp != 0)
-                {
-                    usingApi += 3600 / tmp;
-                }
-            }
-
-            // DM計算 0は手動更新 送受信両方
-            if (int.TryParse(DMPeriod.Text, out tmp))
-            {
-                if (tmp != 0)
-                {
-                    usingApi += (3600 / tmp) * 2;
-                }
-            }
-
-            // Listsタブ計算 0は手動更新
-            int apiLists = 0;
-            if (int.TryParse(ListsPeriod.Text, out tmp))
-            {
-                if (tmp != 0)
-                {
-                    apiLists = (3600 / tmp) * listsTabNum;
-                    usingApi += apiLists;
-                }
-            }
-
-            // UserTimelineタブ計算 0は手動更新
-            int apiUserTimeline = 0;
-            if (int.TryParse(UserTimelinePeriod.Text, out tmp))
-            {
-                if (tmp != 0)
-                {
-                    apiUserTimeline = (3600 / tmp) * userTimelineTabNum;
-                    usingApi += apiUserTimeline;
-                }
-            }
-
-            if (this._tw != null)
-            {
-                if (MyCommon.TwitterApiInfo.MaxCount == -1)
-                {
-                    if (Twitter.AccountState == AccountState.Valid)
-                    {
-                        MyCommon.TwitterApiInfo.UsingCount = usingApi;
-                        var proc = new Thread(new System.Threading.ThreadStart(() =>
-                        {
-                            this._tw.GetInfoApi(null); // 取得エラー時はinfoCountは初期状態（値：-1）
-                            if (this.IsHandleCreated && this.IsDisposed)
-                            {
-                                Invoke(new MethodInvoker(DisplayApiMaxCount));
-                            }
-                        }));
-                        proc.Start();
-                    }
-                    else
-                    {
-                        LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, "???");
-                    }
-                }
-                else
-                {
-                    LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, MyCommon.TwitterApiInfo.MaxCount);
-                }
-            }
-
-            LabelPostAndGet.Visible = CheckPostAndGet.Checked && !this._tw.UserStreamEnabled;
-            LabelUserStreamActive.Visible = this._tw.UserStreamEnabled;
-
-            LabelApiUsingUserStreamEnabled.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse2, apiLists + apiUserTimeline);
-            LabelApiUsingUserStreamEnabled.Visible = this._tw.UserStreamEnabled;
         }
 
         private void CheckPostAndGet_CheckedChanged(object sender, EventArgs e)
@@ -2013,49 +1812,9 @@ namespace Hoehoe
             this.CalcApiUsing();
         }
 
-        private bool BitlyValidation(string id, string apikey)
-        {
-            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(apikey))
-            {
-                return false;
-            }
-
-            /// TODO: BitlyApi
-            string req = "http://api.bit.ly/v3/validate";
-            string content = string.Empty;
-            Dictionary<string, string> param = new Dictionary<string, string>();
-
-            param.Add("login", "tweenapi");
-            param.Add("apiKey", "R_c5ee0e30bdfff88723c4457cc331886b");
-            param.Add("x_login", id);
-            param.Add("x_apiKey", apikey);
-            param.Add("format", "txt");
-
-            if (!(new HttpVarious()).PostData(req, param, ref content))
-            {
-                // 通信エラーの場合はとりあえずチェックを通ったことにする
-                return true;
-            }
-            else if (content.Trim() == "1")
-            {
-                // 検証成功
-                return true;
-            }
-            else if (content.Trim() == "0")
-            {
-                // 検証失敗 APIキーとIDの組み合わせが違う
-                return false;
-            }
-            else
-            {
-                // 規定外応答：通信エラーの可能性があるためとりあえずチェックを通ったことにする
-                return true;
-            }
-        }
-
         private void Cancel_Click(object sender, EventArgs e)
         {
-            this._ValidationError = false;
+            this.validationError = false;
         }
 
         private void HotkeyText_KeyDown(object sender, KeyEventArgs e)
@@ -2226,6 +1985,314 @@ namespace Hoehoe
             }
         }
 
+        private void CheckEventNotify_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (EventCheckboxTblElement tbl in this.GetEventCheckboxTable())
+            {
+                tbl.CheckBox.Enabled = CheckEventNotify.Checked;
+            }
+        }
+
+        private void UserAppointUrlText_Validating(object sender, CancelEventArgs e)
+        {
+            if (!UserAppointUrlText.Text.StartsWith("http") && !string.IsNullOrEmpty(UserAppointUrlText.Text))
+            {
+                MessageBox.Show("Text Error:正しいURLではありません");
+            }
+        }
+
+        private void IsPreviewFoursquareCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            FoursquareGroupBox.Enabled = IsPreviewFoursquareCheckBox.Checked;
+        }
+
+        private void CreateAccountButton_Click(object sender, EventArgs e)
+        {
+            this.OpenUrl("https://twitter.com/signup");
+        }
+
+        private void CheckAutoConvertUrl_CheckedChanged(object sender, EventArgs e)
+        {
+            ShortenTcoCheck.Enabled = CheckAutoConvertUrl.Checked;
+        }
+        #endregion
+
+        #region private methods
+        private bool CreateDateTimeFormatSample()
+        {
+            try
+            {
+                LabelDateTimeFormatApplied.Text = DateTime.Now.ToString(CmbDateTimeFormat.Text);
+            }
+            catch (FormatException)
+            {
+                LabelDateTimeFormatApplied.Text = Hoehoe.Properties.Resources.CreateDateTimeFormatSampleText1;
+                return false;
+            }
+            
+            return true;
+        }
+
+        private bool StartAuth()
+        {
+            // 現在の設定内容で通信
+            HttpConnection.ProxyType ptype = default(HttpConnection.ProxyType);
+            if (RadioProxyNone.Checked)
+            {
+                ptype = HttpConnection.ProxyType.None;
+            }
+            else if (RadioProxyIE.Checked)
+            {
+                ptype = HttpConnection.ProxyType.IE;
+            }
+            else
+            {
+                ptype = HttpConnection.ProxyType.Specified;
+            }
+
+            string padr = TextProxyAddress.Text.Trim();
+            int pport = int.Parse(TextProxyPort.Text.Trim());
+            string pusr = TextProxyUser.Text.Trim();
+            string ppw = TextProxyPassword.Text.Trim();
+
+            // 通信基底クラス初期化
+            HttpConnection.InitializeConnection(20, ptype, padr, pport, pusr, ppw);
+            HttpTwitter.SetTwitterUrl(TwitterAPIText.Text.Trim());
+            HttpTwitter.SetTwitterSearchUrl(TwitterSearchAPIText.Text.Trim());
+            this.tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
+            string pinPageUrl = string.Empty;
+            string rslt = this.tw.StartAuthentication(ref pinPageUrl);
+            if (string.IsNullOrEmpty(rslt))
+            {
+                using (var ab = new AuthBrowser())
+                {
+                    ab.IsAuthorized = true;
+                    ab.UrlString = pinPageUrl;
+                    if (ab.ShowDialog(this) == DialogResult.OK)
+                    {
+                        this.pin = ab.PinString;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
+                return false;
+            }
+        }
+
+        private bool PinAuth()
+        {
+            string pin = this.pin;
+            string rslt = this.tw.Authenticate(pin);
+            if (string.IsNullOrEmpty(rslt))
+            {
+                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
+                int idx = -1;
+                var user = new UserAccount
+                {
+                    Username = this.tw.Username,
+                    UserId = this.tw.UserId,
+                    Token = this.tw.AccessToken,
+                    TokenSecret = this.tw.AccessTokenSecret
+                };
+                
+                foreach (var u in this.AuthUserCombo.Items)
+                {
+                    if (((UserAccount)u).Username.ToLower() == this.tw.Username.ToLower())
+                    {
+                        idx = this.AuthUserCombo.Items.IndexOf(u);
+                        break;
+                    }
+                }
+                
+                if (idx > -1)
+                {
+                    this.AuthUserCombo.Items.RemoveAt(idx);
+                    this.AuthUserCombo.Items.Insert(idx, user);
+                    this.AuthUserCombo.SelectedIndex = idx;
+                }
+                else
+                {
+                    this.AuthUserCombo.SelectedIndex = this.AuthUserCombo.Items.Add(user);
+                }
+
+                return true;
+            }
+            else
+            {
+                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
+                return false;
+            }
+        }
+
+        private void DisplayApiMaxCount()
+        {
+            if (MyCommon.TwitterApiInfo.MaxCount > -1)
+            {
+                LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, MyCommon.TwitterApiInfo.MaxCount);
+            }
+            else
+            {
+                LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, "???");
+            }
+        }
+
+        private void CalcApiUsing()
+        {
+            int listsTabNum = 0;
+            try
+            {
+                // 初回起動時などにNothingの場合あり
+                listsTabNum = TabInformations.GetInstance().GetTabsByType(TabUsageType.Lists).Count;
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            int userTimelineTabNum = 0;
+            try
+            {
+                // 初回起動時などにNothingの場合あり
+                userTimelineTabNum = TabInformations.GetInstance().GetTabsByType(TabUsageType.UserTimeline).Count;
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            // Recent計算 0は手動更新
+            int tmp = 0;
+            int usingApi = 0;
+            if (int.TryParse(TimelinePeriod.Text, out tmp))
+            {
+                if (tmp != 0)
+                {
+                    usingApi += 3600 / tmp;
+                }
+            }
+
+            // Reply計算 0は手動更新
+            if (int.TryParse(ReplyPeriod.Text, out tmp))
+            {
+                if (tmp != 0)
+                {
+                    usingApi += 3600 / tmp;
+                }
+            }
+
+            // DM計算 0は手動更新 送受信両方
+            if (int.TryParse(DMPeriod.Text, out tmp))
+            {
+                if (tmp != 0)
+                {
+                    usingApi += (3600 / tmp) * 2;
+                }
+            }
+
+            // Listsタブ計算 0は手動更新
+            int apiLists = 0;
+            if (int.TryParse(ListsPeriod.Text, out tmp))
+            {
+                if (tmp != 0)
+                {
+                    apiLists = (3600 / tmp) * listsTabNum;
+                    usingApi += apiLists;
+                }
+            }
+
+            // UserTimelineタブ計算 0は手動更新
+            int apiUserTimeline = 0;
+            if (int.TryParse(UserTimelinePeriod.Text, out tmp))
+            {
+                if (tmp != 0)
+                {
+                    apiUserTimeline = (3600 / tmp) * userTimelineTabNum;
+                    usingApi += apiUserTimeline;
+                }
+            }
+
+            if (this.tw != null)
+            {
+                if (MyCommon.TwitterApiInfo.MaxCount == -1)
+                {
+                    if (Twitter.AccountState == AccountState.Valid)
+                    {
+                        MyCommon.TwitterApiInfo.UsingCount = usingApi;
+                        var proc = new Thread(new System.Threading.ThreadStart(() =>
+                        {
+                            this.tw.GetInfoApi(null); // 取得エラー時はinfoCountは初期状態（値：-1）
+                            if (this.IsHandleCreated && this.IsDisposed)
+                            {
+                                Invoke(new MethodInvoker(DisplayApiMaxCount));
+                            }
+                        }));
+                        proc.Start();
+                    }
+                    else
+                    {
+                        LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, "???");
+                    }
+                }
+                else
+                {
+                    LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, MyCommon.TwitterApiInfo.MaxCount);
+                }
+            }
+
+            LabelPostAndGet.Visible = CheckPostAndGet.Checked && !this.tw.UserStreamEnabled;
+            LabelUserStreamActive.Visible = this.tw.UserStreamEnabled;
+
+            LabelApiUsingUserStreamEnabled.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse2, apiLists + apiUserTimeline);
+            LabelApiUsingUserStreamEnabled.Visible = this.tw.UserStreamEnabled;
+        }
+
+        private bool BitlyValidation(string id, string apikey)
+        {
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(apikey))
+            {
+                return false;
+            }
+
+            /// TODO: BitlyApi
+            string req = "http://api.bit.ly/v3/validate";
+            string content = string.Empty;
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            param.Add("login", "tweenapi");
+            param.Add("apiKey", "R_c5ee0e30bdfff88723c4457cc331886b");
+            param.Add("x_login", id);
+            param.Add("x_apiKey", apikey);
+            param.Add("format", "txt");
+
+            if (!(new HttpVarious()).PostData(req, param, ref content))
+            {
+                // 通信エラーの場合はとりあえずチェックを通ったことにする
+                return true;
+            }
+            else if (content.Trim() == "1")
+            {
+                // 検証成功
+                return true;
+            }
+            else if (content.Trim() == "0")
+            {
+                // 検証失敗 APIキーとIDの組み合わせが違う
+                return false;
+            }
+            else
+            {
+                // 規定外応答：通信エラーの可能性があるためとりあえずチェックを通ったことにする
+                return true;
+            }
+        }
+
         private EventCheckboxTblElement[] GetEventCheckboxTable()
         {
             if (this.eventCheckboxTableElements == null)
@@ -2242,6 +2309,7 @@ namespace Hoehoe
                     new EventCheckboxTblElement { CheckBox = CheckListCreatedEvent, Type = EventType.ListCreated }
                 };
             }
+
             return this.eventCheckboxTableElements;
         }
 
@@ -2265,6 +2333,7 @@ namespace Hoehoe
                         break;
                 }
             }
+
             eventnotifyflag = evt;
             isMyeventnotifyflag = myevt;
         }
@@ -2293,15 +2362,8 @@ namespace Hoehoe
                 {
                     tbl.CheckBox.CheckState = CheckState.Unchecked;
                 }
+                
                 tbl.CheckBox.Enabled = rootEnabled;
-            }
-        }
-
-        private void CheckEventNotify_CheckedChanged(object sender, EventArgs e)
-        {
-            foreach (EventCheckboxTblElement tbl in this.GetEventCheckboxTable())
-            {
-                tbl.CheckBox.Enabled = CheckEventNotify.Checked;
             }
         }
 
@@ -2311,6 +2373,7 @@ namespace Hoehoe
             {
                 this.EventSoundFile = string.Empty;
             }
+            
             ComboBoxEventNotifySound.Items.Clear();
             ComboBoxEventNotifySound.Items.Add(string.Empty);
             DirectoryInfo dir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
@@ -2318,29 +2381,19 @@ namespace Hoehoe
             {
                 dir = dir.GetDirectories("Sounds")[0];
             }
+            
             foreach (FileInfo file in dir.GetFiles("*.wav"))
             {
                 ComboBoxEventNotifySound.Items.Add(file.Name);
             }
+            
             int idx = ComboBoxEventNotifySound.Items.IndexOf(this.EventSoundFile);
             if (idx == -1)
             {
                 idx = 0;
             }
+
             ComboBoxEventNotifySound.SelectedIndex = idx;
-        }
-
-        private void UserAppointUrlText_Validating(object sender, CancelEventArgs e)
-        {
-            if (!UserAppointUrlText.Text.StartsWith("http") && !string.IsNullOrEmpty(UserAppointUrlText.Text))
-            {
-                MessageBox.Show("Text Error:正しいURLではありません");
-            }
-        }
-
-        private void IsPreviewFoursquareCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            FoursquareGroupBox.Enabled = IsPreviewFoursquareCheckBox.Checked;
         }
 
         private void OpenUrl(string url)
@@ -2360,6 +2413,7 @@ namespace Hoehoe
                         {
                             arg = path.Substring(sep + 1);
                         }
+
                         myPath = arg + " " + myPath;
                         Process.Start(browserPath, myPath);
                     }
@@ -2377,17 +2431,9 @@ namespace Hoehoe
             {
             }
         }
+        #endregion
 
-        private void CreateAccountButton_Click(object sender, EventArgs e)
-        {
-            this.OpenUrl("https://twitter.com/signup");
-        }
-
-        private void CheckAutoConvertUrl_CheckedChanged(object sender, EventArgs e)
-        {
-            ShortenTcoCheck.Enabled = CheckAutoConvertUrl.Checked;
-        }
-
+        #region inner class
         public class IntervalChangedEventArgs : EventArgs
         {
             public bool UserStream;
@@ -2404,5 +2450,6 @@ namespace Hoehoe
             public CheckBox CheckBox;
             public EventType Type;
         }
+        #endregion
     }
 }
