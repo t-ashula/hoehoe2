@@ -148,6 +148,18 @@ namespace Hoehoe
         private int _MyUserstreamPeriod;
         private int _MyDoubleClickAction;
         private string _UserAppointUrl;
+        private long _InitialUserId;
+        private string _pin;
+        private EventCheckboxTblElement[] eventCheckboxTableElements = null;
+
+        public AppendSettingDialog()
+        {
+            // この呼び出しはデザイナーで必要です。
+            InitializeComponent();
+
+            // InitializeComponent() 呼び出しの後で初期化を追加します。
+            this.Icon = Hoehoe.Properties.Resources.MIcon;
+        }
 
         public bool HideDuplicatedRetweets { get; set; }
 
@@ -163,8 +175,6 @@ namespace Hoehoe
 
         public List<UserAccount> UserAccounts { get; set; }
 
-        private long _InitialUserId;
-
         public bool TabMouseLock { get; set; }
 
         public bool IsRemoveSameEvent { get; set; }
@@ -172,8 +182,6 @@ namespace Hoehoe
         public bool IsNotifyUseGrowl { get; set; }
 
         public DataModels.Twitter.Configuration TwitterConfiguration { get; set; }
-
-        private string _pin;
 
         public event IntervalChangedEventHandler IntervalChanged;
 
@@ -2733,8 +2741,6 @@ namespace Hoehoe
             }
         }
 
-        private EventCheckboxTblElement[] eventCheckboxTableElements = null;
-
         private EventCheckboxTblElement[] GetEventCheckboxTable()
         {
             if (this.eventCheckboxTableElements == null)
@@ -2890,15 +2896,6 @@ namespace Hoehoe
         private void CreateAccountButton_Click(object sender, EventArgs e)
         {
             this.OpenUrl("https://twitter.com/signup");
-        }
-
-        public AppendSettingDialog()
-        {
-            // この呼び出しはデザイナーで必要です。
-            InitializeComponent();
-
-            // InitializeComponent() 呼び出しの後で初期化を追加します。
-            this.Icon = Hoehoe.Properties.Resources.MIcon;
         }
 
         private void CheckAutoConvertUrl_CheckedChanged(object sender, EventArgs e)
