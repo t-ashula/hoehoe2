@@ -293,6 +293,11 @@ namespace Hoehoe
             return (this.Nickname == other.Nickname) && (this.TextFromApi == other.TextFromApi) && (this.ImageUrl == other.ImageUrl) && (this.ScreenName == other.ScreenName) && (this.CreatedAt == other.CreatedAt) && (this.StatusId == other.StatusId) && (this.IsFav == other.IsFav) && (this.Text == other.Text) && (this.IsRead == other.IsRead) && (this.IsReply == other.IsReply) && (this.IsExcludeReply == other.IsExcludeReply) && (this.IsProtect == other.IsProtect) && (this.IsOwl == other.IsOwl) && (this.IsMark == other.IsMark) && (this.InReplyToUser == other.InReplyToUser) && (this.InReplyToStatusId == other.InReplyToStatusId) && (this.Source == other.Source) && (this.SourceHtml == other.SourceHtml) && (this.ReplyToList.Equals(other.ReplyToList)) && (this.IsMe == other.IsMe) && (this.IsDm == other.IsDm) && (this.UserId == other.UserId) && (this.FilterHit == other.FilterHit) && (this.RetweetedBy == other.RetweetedBy) && (this.RetweetedId == other.RetweetedId) && (this.RelTabName == other.RelTabName) && (this.IsDeleted == other.IsDeleted) && (this.InReplyToUserId == other.InReplyToUserId);
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         #region "IClonable.Clone"
 
         public object Clone()
