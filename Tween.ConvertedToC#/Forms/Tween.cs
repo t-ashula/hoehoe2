@@ -421,6 +421,7 @@ namespace Hoehoe
 
         #endregion
 
+        #region properties
         public Color InputBackColor
         {
             get { return this.clrInputBackcolor; }
@@ -544,7 +545,9 @@ namespace Hoehoe
         {
             get { return this.curPost != null && !this.curPost.IsDeleted; }
         }
+        #endregion
 
+        #region public methods
         public void AddNewTabForSearch(string searchWord)
         {
             // 同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
@@ -1384,7 +1387,9 @@ namespace Hoehoe
         {
             this.modifySettingAtId = value;
         }
+        #endregion
 
+        #region internal methods
         internal void CheckReplyTo(string statusText)
         {
             // ハッシュタグの保存
@@ -1467,7 +1472,9 @@ namespace Hoehoe
             this.replyToId = 0;
             this.replyToName = string.Empty;
         }
+        #endregion
 
+        #region protected methods
         protected override bool ProcessDialogKey(Keys keyData)
         {
             // TextBox1でEnterを押してもビープ音が鳴らないようにする
@@ -1578,7 +1585,9 @@ namespace Hoehoe
 
             return base.ProcessDialogKey(keyData);
         }
-        
+        #endregion
+
+        #region private methods
         private static bool CheckAccountValid()
         {
             if (Twitter.AccountState != AccountState.Valid)
@@ -14716,9 +14725,12 @@ namespace Hoehoe
                     }));
             }
         }
+        #endregion
 
         #region inner types
-        // URL短縮のUndo用
+        /// <summary>
+        /// URL短縮のUndo用
+        /// </summary>
         private class UrlUndoInfo
         {
             public string Before;
@@ -14741,7 +14753,9 @@ namespace Hoehoe
             public TabPage OriginalTab { get; private set; }
         }
 
-        // Backgroundworkerの処理結果通知用引数構造体
+        /// <summary>
+        /// Backgroundworkerの処理結果通知用引数構造体
+        /// </summary>
         private class GetWorkerResult
         {
             // 処理結果詳細メッセージ。エラー時に値がセットされる
@@ -14773,7 +14787,9 @@ namespace Hoehoe
             public PostingStatus PStatus;
         }
 
-        // Backgroundworkerへ処理内容を通知するための引数用構造体
+        /// <summary>
+        /// Backgroundworkerへ処理内容を通知するための引数用構造体
+        /// </summary>
         private class GetWorkerArg
         {
             // 処理対象ページ番号
