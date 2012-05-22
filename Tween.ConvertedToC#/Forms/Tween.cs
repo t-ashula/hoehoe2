@@ -177,12 +177,12 @@ namespace Hoehoe
             {
                 if (withEventsField_SettingDialog != null)
                 {
-                    withEventsField_SettingDialog.IntervalChanged -= TimerInterval_Changed;
+                    withEventsField_SettingDialog.IntervalChanged -= this.TimerInterval_Changed;
                 }
                 withEventsField_SettingDialog = value;
                 if (withEventsField_SettingDialog != null)
                 {
-                    withEventsField_SettingDialog.IntervalChanged += TimerInterval_Changed;
+                    withEventsField_SettingDialog.IntervalChanged += this.TimerInterval_Changed;
                 }
             }
         }
@@ -381,12 +381,12 @@ namespace Hoehoe
             {
                 if (withEventsField_TimerTimeline != null)
                 {
-                    withEventsField_TimerTimeline.Elapsed -= TimerTimeline_Elapsed;
+                    withEventsField_TimerTimeline.Elapsed -= this.TimerTimeline_Elapsed;
                 }
                 withEventsField_TimerTimeline = value;
                 if (withEventsField_TimerTimeline != null)
                 {
-                    withEventsField_TimerTimeline.Elapsed += TimerTimeline_Elapsed;
+                    withEventsField_TimerTimeline.Elapsed += this.TimerTimeline_Elapsed;
                 }
             }
         }
@@ -879,7 +879,7 @@ namespace Hoehoe
             this.SettingDialog.Owner = this;
             this.SearchDialog.Owner = this;
             this.fltDialog.Owner = this;
-            TabDialog.Owner = this;
+            this.TabDialog.Owner = this;
             UrlDialog.Owner = this;
 
             this._history.Add(new PostingStatus());
@@ -946,7 +946,7 @@ namespace Hoehoe
             {
                 this._cfgCommon.UserName = "";
             }
-            tw.Initialize(this._cfgCommon.Token, this._cfgCommon.TokenSecret, this._cfgCommon.UserName, this._cfgCommon.UserId);
+            this.tw.Initialize(this._cfgCommon.Token, this._cfgCommon.TokenSecret, this._cfgCommon.UserName, this._cfgCommon.UserId);
 
             this.SettingDialog.UserAccounts = this._cfgCommon.UserAccounts;
             this.SettingDialog.TimelinePeriodInt = this._cfgCommon.TimelinePeriod;
@@ -1190,7 +1190,7 @@ namespace Hoehoe
 
             bool saveRequired = false;
             // ユーザー名、パスワードが未設定なら設定画面を表示（初回起動時など）
-            if (String.IsNullOrEmpty(tw.Username))
+            if (String.IsNullOrEmpty(this.tw.Username))
             {
                 saveRequired = true;
                 // 設定せずにキャンセルされた場合はプログラム終了
@@ -1201,7 +1201,7 @@ namespace Hoehoe
                     return;
                 }
                 // 設定されたが、依然ユーザー名とパスワードが未設定ならプログラム終了
-                if (String.IsNullOrEmpty(tw.Username))
+                if (String.IsNullOrEmpty(this.tw.Username))
                 {
                     // 強制終了
                     Application.Exit();
@@ -1304,19 +1304,19 @@ namespace Hoehoe
             // Twitter用通信クラス初期化
             HttpConnection.InitializeConnection(this.SettingDialog.DefaultTimeOut, this.SettingDialog.SelectedProxyType, this.SettingDialog.ProxyAddress, this.SettingDialog.ProxyPort, this.SettingDialog.ProxyUser, this.SettingDialog.ProxyPassword);
 
-            tw.SetRestrictFavCheck(this.SettingDialog.RestrictFavCheck);
-            tw.ReadOwnPost = this.SettingDialog.ReadOwnPost;
-            tw.SetUseSsl(this.SettingDialog.UseSsl);
+            this.tw.SetRestrictFavCheck(this.SettingDialog.RestrictFavCheck);
+            this.tw.ReadOwnPost = this.SettingDialog.ReadOwnPost;
+            this.tw.SetUseSsl(this.SettingDialog.UseSsl);
             ShortUrl.IsResolve = this.SettingDialog.TinyUrlResolve;
             ShortUrl.IsForceResolve = this.SettingDialog.ShortUrlForceResolve;
             ShortUrl.SetBitlyId(this.SettingDialog.BitlyUser);
             ShortUrl.SetBitlyKey(this.SettingDialog.BitlyPwd);
             HttpTwitter.SetTwitterUrl(this._cfgCommon.TwitterUrl);
             HttpTwitter.SetTwitterSearchUrl(this._cfgCommon.TwitterSearchUrl);
-            tw.TrackWord = this._cfgCommon.TrackWord;
-            TrackToolStripMenuItem.Checked = !String.IsNullOrEmpty(tw.TrackWord);
-            tw.AllAtReply = this._cfgCommon.AllAtReply;
-            AllrepliesToolStripMenuItem.Checked = tw.AllAtReply;
+            this.tw.TrackWord = this._cfgCommon.TrackWord;
+            TrackToolStripMenuItem.Checked = !String.IsNullOrEmpty(this.tw.TrackWord);
+            this.tw.AllAtReply = this._cfgCommon.AllAtReply;
+            AllrepliesToolStripMenuItem.Checked = this.tw.AllAtReply;
 
             Outputz.Key = this.SettingDialog.OutputzKey;
             Outputz.Enabled = this.SettingDialog.OutputzEnabled;
@@ -1326,7 +1326,7 @@ namespace Hoehoe
                     Outputz.OutUrl = "http://twitter.com/";
                     break;
                 case OutputzUrlmode.twittercomWithUsername:
-                    Outputz.OutUrl = "http://twitter.com/" + tw.Username;
+                    Outputz.OutUrl = "http://twitter.com/" + this.tw.Username;
                     break;
             }
 
@@ -1401,15 +1401,15 @@ namespace Hoehoe
             }
 
             // タイマー設定
-            TimerTimeline.AutoReset = true;
-            TimerTimeline.SynchronizingObject = this;
+            this.TimerTimeline.AutoReset = true;
+            this.TimerTimeline.SynchronizingObject = this;
             // Recent取得間隔
-            TimerTimeline.Interval = 1000;
-            TimerTimeline.Enabled = true;
+            this.TimerTimeline.Interval = 1000;
+            this.TimerTimeline.Enabled = true;
 
             // 更新中アイコンアニメーション間隔
-            TimerRefreshIcon.Interval = 200;
-            TimerRefreshIcon.Enabled = true;
+            this.TimerRefreshIcon.Interval = 200;
+            this.TimerRefreshIcon.Enabled = true;
 
             // 状態表示部の初期化（画面右下）
             StatusLabel.Text = "";
@@ -1476,14 +1476,14 @@ namespace Hoehoe
             }
             if (this._iconSz == 0)
             {
-                tw.SetGetIcon(false);
+                this.tw.SetGetIcon(false);
             }
             else
             {
-                tw.SetGetIcon(true);
-                tw.SetIconSize(this._iconSz);
+                this.tw.SetGetIcon(true);
+                this.tw.SetIconSize(this._iconSz);
             }
-            tw.SetTinyUrlResolve(this.SettingDialog.TinyUrlResolve);
+            this.tw.SetTinyUrlResolve(this.SettingDialog.TinyUrlResolve);
             ShortUrl.IsForceResolve = this.SettingDialog.ShortUrlForceResolve;
 
             // 発言詳細部アイコンをリストアイコンにサイズ変更
@@ -1493,7 +1493,7 @@ namespace Hoehoe
                 sz = 16;
             }
 
-            tw.DetailIcon = this._TIconDic;
+            this.tw.DetailIcon = this._TIconDic;
 
             StatusLabel.Text = Hoehoe.Properties.Resources.Form1_LoadText1;
             // 画面右下の状態表示を変更
@@ -1604,23 +1604,23 @@ namespace Hoehoe
                 this.SaveConfigsAll(false);
             }
 
-            if (tw.UserId == 0)
+            if (this.tw.UserId == 0)
             {
-                tw.VerifyCredentials();
+                this.tw.VerifyCredentials();
                 foreach (var ua in this._cfgCommon.UserAccounts)
                 {
-                    if (ua.Username.ToLower() == tw.Username.ToLower())
+                    if (ua.Username.ToLower() == this.tw.Username.ToLower())
                     {
-                        ua.UserId = tw.UserId;
+                        ua.UserId = this.tw.UserId;
                         break;
                     }
                 }
             }
             foreach (var ua in this.SettingDialog.UserAccounts)
             {
-                if (ua.UserId == 0 && ua.Username.ToLower() == tw.Username.ToLower())
+                if (ua.UserId == 0 && ua.Username.ToLower() == this.tw.Username.ToLower())
                 {
-                    ua.UserId = tw.UserId;
+                    ua.UserId = this.tw.UserId;
                     break;
                 }
             }
@@ -1635,11 +1635,11 @@ namespace Hoehoe
             this._pictureServices = null;
             this._pictureServices = new Dictionary<string, IMultimediaShareService> 
             {
-                { "TwitPic", new TwitPic(tw) },
-                { "img.ly", new imgly(tw) },
-                { "yfrog", new yfrog(tw) },
-                { "lockerz", new Plixi(tw) },
-                { "Twitter", new TwitterPhoto(tw) }
+                { "TwitPic", new TwitPic(this.tw) },
+                { "img.ly", new imgly(this.tw) },
+                { "yfrog", new yfrog(this.tw) },
+                { "lockerz", new Plixi(this.tw) },
+                { "Twitter", new TwitterPhoto(this.tw) }
             };
         }
 
@@ -1681,7 +1681,7 @@ namespace Hoehoe
             {
                 fore = SystemBrushes.ControlText;
             }
-            e.Graphics.DrawString(txt, e.Font, fore, e.Bounds, tabStringFormat);
+            e.Graphics.DrawString(txt, e.Font, fore, e.Bounds, this.tabStringFormat);
         }
 
         private void LoadConfig()
@@ -1726,7 +1726,7 @@ namespace Hoehoe
 
         private void TimerInterval_Changed(object sender, AppendSettingDialog.IntervalChangedEventArgs e)
         {
-            if (!TimerTimeline.Enabled)
+            if (!this.TimerTimeline.Enabled)
             {
                 return;
             }
@@ -1780,7 +1780,7 @@ namespace Hoehoe
             if (this.ResetTimers.Timeline || this._timerHomeCounter <= 0 && this.SettingDialog.TimelinePeriodInt > 0)
             {
                 Interlocked.Exchange(ref this._timerHomeCounter, this.SettingDialog.TimelinePeriodInt);
-                if (!tw.IsUserstreamDataReceived && !this.ResetTimers.Timeline)
+                if (!this.tw.IsUserstreamDataReceived && !this.ResetTimers.Timeline)
                 {
                     this.GetTimeline(WorkerType.Timeline, 1, 0, "");
                 }
@@ -1789,7 +1789,7 @@ namespace Hoehoe
             if (this.ResetTimers.Reply || this._timerMentionCounter <= 0 && this.SettingDialog.ReplyPeriodInt > 0)
             {
                 Interlocked.Exchange(ref this._timerMentionCounter, this.SettingDialog.ReplyPeriodInt);
-                if (!tw.IsUserstreamDataReceived && !this.ResetTimers.Reply)
+                if (!this.tw.IsUserstreamDataReceived && !this.ResetTimers.Reply)
                 {
                     this.GetTimeline(WorkerType.Reply, 1, 0, "");
                 }
@@ -1798,7 +1798,7 @@ namespace Hoehoe
             if (this.ResetTimers.DirectMessage || this._timerDmCounter <= 0 && this.SettingDialog.DMPeriodInt > 0)
             {
                 Interlocked.Exchange(ref this._timerDmCounter, this.SettingDialog.DMPeriodInt);
-                if (!tw.IsUserstreamDataReceived && !this.ResetTimers.DirectMessage)
+                if (!this.tw.IsUserstreamDataReceived && !this.ResetTimers.DirectMessage)
                 {
                     this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
                 }
@@ -2007,7 +2007,7 @@ namespace Hoehoe
                 this.SetStatusLabelUrl();
             }
 
-            this.HashSupl.AddRangeItem(tw.GetHashList());
+            this.HashSupl.AddRangeItem(this.tw.GetHashList());
         }
 
         private long GetScrollPos(ref int smode)
@@ -2149,7 +2149,7 @@ namespace Hoehoe
 
         private void NotifyNewPosts(PostClass[] notifyPosts, string soundFile, int addCount, bool newMentions)
         {
-            if (notifyPosts != null && notifyPosts.Count() > 0 && this.SettingDialog.ReadOwnPost && notifyPosts.All(post => post.UserId == tw.UserId || post.ScreenName == tw.Username))
+            if (notifyPosts != null && notifyPosts.Count() > 0 && this.SettingDialog.ReadOwnPost && notifyPosts.All(post => post.UserId == this.tw.UserId || post.ScreenName == this.tw.Username))
             {
                 return;
             }
@@ -2208,7 +2208,7 @@ namespace Hoehoe
                             GrowlHelper.NotifyType nt = default(GrowlHelper.NotifyType);
                             if (this.SettingDialog.DispUsername)
                             {
-                                title.Append(tw.Username);
+                                title.Append(this.tw.Username);
                                 title.Append(" - ");
                             }
                             else
@@ -2286,7 +2286,7 @@ namespace Hoehoe
                         GrowlHelper.NotifyType nt = default(GrowlHelper.NotifyType);
                         if (this.SettingDialog.DispUsername)
                         {
-                            title.Append(tw.Username);
+                            title.Append(this.tw.Username);
                             title.Append(" - ");
                         }
                         else
@@ -2822,12 +2822,12 @@ namespace Hoehoe
             }
             else
             {
-                // Google.GASender.GetInstance().TrackEventWithCategory("post", "end", tw.UserId)
+                // Google.GASender.GetInstance().TrackEventWithCategory("post", "end", this.tw.UserId)
                 this._hookGlobalHotkey.UnregisterAllOriginalHotkey();
                 this._ignoreConfigSave = true;
                 MyCommon.IsEnding = true;
-                TimerTimeline.Enabled = false;
-                TimerRefreshIcon.Enabled = false;
+                this.TimerTimeline.Enabled = false;
+                this.TimerRefreshIcon.Enabled = false;
             }
         }
 
@@ -2905,7 +2905,7 @@ namespace Hoehoe
                 case WorkerType.Timeline:
                 case WorkerType.Reply:
                     bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = tw.GetTimelineApi(read, args.WorkerType, args.Page == -1, this._initial);
+                    ret = this.tw.GetTimelineApi(read, args.WorkerType, args.Page == -1, this._initial);
                     // 新着時未読クリア
                     if (String.IsNullOrEmpty(ret) && args.WorkerType == WorkerType.Timeline && this.SettingDialog.ReadOldPosts)
                     {
@@ -2917,10 +2917,10 @@ namespace Hoehoe
                 case WorkerType.DirectMessegeRcv:
                     // 送信分もまとめて取得
                     bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = tw.GetDirectMessageApi(read, WorkerType.DirectMessegeRcv, args.Page == -1);
+                    ret = this.tw.GetDirectMessageApi(read, WorkerType.DirectMessegeRcv, args.Page == -1);
                     if (String.IsNullOrEmpty(ret))
                     {
-                        ret = tw.GetDirectMessageApi(read, WorkerType.DirectMessegeSnt, args.Page == -1);
+                        ret = this.tw.GetDirectMessageApi(read, WorkerType.DirectMessegeSnt, args.Page == -1);
                     }
                     rslt.AddCount = this._statuses.DistributePosts();
                     break;
@@ -2946,11 +2946,11 @@ namespace Hoehoe
                             {
                                 if (post.RetweetedId == 0)
                                 {
-                                    ret = tw.PostFavAdd(post.StatusId);
+                                    ret = this.tw.PostFavAdd(post.StatusId);
                                 }
                                 else
                                 {
-                                    ret = tw.PostFavAdd(post.RetweetedId);
+                                    ret = this.tw.PostFavAdd(post.RetweetedId);
                                 }
                                 if (ret.Length == 0)
                                 {
@@ -2999,7 +2999,7 @@ namespace Hoehoe
                             bw.ReportProgress(50, this.MakeStatusMessage(args, false));
                             if (post.IsFav)
                             {
-                                ret = post.RetweetedId == 0 ? tw.PostFavRemove(post.StatusId) : tw.PostFavRemove(post.RetweetedId);
+                                ret = post.RetweetedId == 0 ? this.tw.PostFavRemove(post.StatusId) : this.tw.PostFavRemove(post.RetweetedId);
                                 if (ret.Length == 0)
                                 {
                                     args.SIds.Add(post.StatusId);
@@ -3029,7 +3029,7 @@ namespace Hoehoe
                     {
                         for (int i = 0; i <= 1; i++)
                         {
-                            ret = tw.PostStatus(args.PStatus.Status, args.PStatus.InReplyToId);
+                            ret = this.tw.PostStatus(args.PStatus.Status, args.PStatus.InReplyToId);
                             if (String.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.PStatus.Status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.PStatus.Status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != AccountState.Valid)
                             {
                                 break;
@@ -3047,20 +3047,20 @@ namespace Hoehoe
                     bw.ReportProgress(200);
                     for (int i = 0; i < args.Ids.Count; i++)
                     {
-                        ret = tw.PostRetweet(args.Ids[i], read);
+                        ret = this.tw.PostRetweet(args.Ids[i], read);
                     }
                     bw.ReportProgress(300);
                     break;
                 case WorkerType.Follower:
                     bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText1);
-                    ret = tw.GetFollowersApi();
+                    ret = this.tw.GetFollowersApi();
                     if (String.IsNullOrEmpty(ret))
                     {
-                        ret = tw.GetNoRetweetIdsApi();
+                        ret = this.tw.GetNoRetweetIdsApi();
                     }
                     break;
                 case WorkerType.Configuration:
-                    ret = tw.ConfigurationApi();
+                    ret = this.tw.ConfigurationApi();
                     break;
                 case WorkerType.OpenUri:
                     string myPath = Convert.ToString(args.Url);
@@ -3097,7 +3097,7 @@ namespace Hoehoe
                     break;
                 case WorkerType.Favorites:
                     bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = tw.GetFavoritesApi(read, args.WorkerType, args.Page == -1);
+                    ret = this.tw.GetFavoritesApi(read, args.WorkerType, args.Page == -1);
                     rslt.AddCount = this._statuses.DistributePosts();
                     break;
                 case WorkerType.PublicSearch:
@@ -3108,7 +3108,7 @@ namespace Hoehoe
                         {
                             if (!String.IsNullOrEmpty(tb.SearchWords))
                             {
-                                ret = tw.GetSearch(read, tb, false);
+                                ret = this.tw.GetSearch(read, tb, false);
                             }
                         }
                     }
@@ -3117,10 +3117,10 @@ namespace Hoehoe
                         TabClass tb = this._statuses.GetTabByName(args.TabName);
                         if (tb != null)
                         {
-                            ret = tw.GetSearch(read, tb, false);
+                            ret = this.tw.GetSearch(read, tb, false);
                             if (String.IsNullOrEmpty(ret) && args.Page == -1)
                             {
-                                ret = tw.GetSearch(read, tb, true);
+                                ret = this.tw.GetSearch(read, tb, true);
                             }
                         }
                     }
@@ -3140,7 +3140,7 @@ namespace Hoehoe
                         {
                             if (!String.IsNullOrEmpty(tb.User))
                             {
-                                ret = tw.GetUserTimelineApi(read, count, tb.User, tb, false);
+                                ret = this.tw.GetUserTimelineApi(read, count, tb.User, tb, false);
                             }
                         }
                     }
@@ -3149,7 +3149,7 @@ namespace Hoehoe
                         TabClass tb = this._statuses.GetTabByName(args.TabName);
                         if (tb != null)
                         {
-                            ret = tw.GetUserTimelineApi(read, count, tb.User, tb, args.Page == -1);
+                            ret = this.tw.GetUserTimelineApi(read, count, tb.User, tb, args.Page == -1);
                         }
                     }
                     // 振り分け
@@ -3164,7 +3164,7 @@ namespace Hoehoe
                         {
                             if (tb.ListInfo != null && tb.ListInfo.Id != 0)
                             {
-                                ret = tw.GetListStatus(read, tb, false, this._initial);
+                                ret = this.tw.GetListStatus(read, tb, false, this._initial);
                             }
                         }
                     }
@@ -3174,7 +3174,7 @@ namespace Hoehoe
                         TabClass tb = this._statuses.GetTabByName(args.TabName);
                         if (tb != null)
                         {
-                            ret = tw.GetListStatus(read, tb, args.Page == -1, this._initial);
+                            ret = this.tw.GetListStatus(read, tb, args.Page == -1, this._initial);
                         }
                     }
                     // 振り分け
@@ -3182,15 +3182,15 @@ namespace Hoehoe
                     break;
                 case WorkerType.Related:
                     bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = tw.GetRelatedResult(read, this._statuses.GetTabByName(args.TabName));
+                    ret = this.tw.GetRelatedResult(read, this._statuses.GetTabByName(args.TabName));
                     rslt.AddCount = this._statuses.DistributePosts();
                     break;
                 case WorkerType.BlockIds:
                     bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateBlockUserText1);
-                    ret = tw.GetBlockUserIds();
+                    ret = this.tw.GetBlockUserIds();
                     if (TabInformations.GetInstance().BlockIds.Count == 0)
                     {
-                        tw.GetBlockUserIds();
+                        this.tw.GetBlockUserIds();
                     }
                     break;
             }
@@ -3218,18 +3218,18 @@ namespace Hoehoe
                 lock (this._syncObject)
                 {
                     DateTime tm = DateTime.Now;
-                    if (timeLineTimestamps.ContainsKey(tm))
+                    if (this.timeLineTimestamps.ContainsKey(tm))
                     {
-                        timeLineTimestamps[tm] += rslt.AddCount;
+                        this.timeLineTimestamps[tm] += rslt.AddCount;
                     }
                     else
                     {
-                        timeLineTimestamps.Add(tm, rslt.AddCount);
+                        this.timeLineTimestamps.Add(tm, rslt.AddCount);
                     }
                     DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                     List<DateTime> keys = new List<DateTime>();
-                    timeLineCount = 0;
-                    foreach (DateTime key in timeLineTimestamps.Keys)
+                    this.timeLineCount = 0;
+                    foreach (DateTime key in this.timeLineTimestamps.Keys)
                     {
                         if (key.CompareTo(oneHour) < 0)
                         {
@@ -3237,12 +3237,12 @@ namespace Hoehoe
                         }
                         else
                         {
-                            timeLineCount += timeLineTimestamps[key];
+                            this.timeLineCount += this.timeLineTimestamps[key];
                         }
                     }
                     foreach (DateTime key in keys)
                     {
-                        timeLineTimestamps.Remove(key);
+                        this.timeLineTimestamps.Remove(key);
                     }
                     keys.Clear();
                 }
@@ -4173,7 +4173,7 @@ namespace Hoehoe
                 bool myPost = false;
                 foreach (int idx in this._curList.SelectedIndices)
                 {
-                    if (this.GetCurTabPost(idx).IsMe || this.GetCurTabPost(idx).RetweetedBy.ToLower() == tw.Username.ToLower())
+                    if (this.GetCurTabPost(idx).IsMe || this.GetCurTabPost(idx).RetweetedBy.ToLower() == this.tw.Username.ToLower())
                     {
                         myPost = true;
                         break;
@@ -4223,13 +4223,13 @@ namespace Hoehoe
                     string rtn = "";
                     if (this._statuses.Tabs[this._curTab.Text].TabType == TabUsageType.DirectMessage)
                     {
-                        rtn = tw.RemoveDirectMessage(id, this._statuses.Item(id));
+                        rtn = this.tw.RemoveDirectMessage(id, this._statuses.Item(id));
                     }
                     else
                     {
-                        if (this._statuses.Item(id).IsMe || this._statuses.Item(id).RetweetedBy.ToLower() == tw.Username.ToLower())
+                        if (this._statuses.Item(id).IsMe || this._statuses.Item(id).RetweetedBy.ToLower() == this.tw.Username.ToLower())
                         {
-                            rtn = tw.RemoveStatus(id);
+                            rtn = this.tw.RemoveStatus(id);
                         }
                         else
                         {
@@ -4506,10 +4506,10 @@ namespace Hoehoe
         private void SettingStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult result = default(DialogResult);
-            string uid = tw.Username.ToLower();
+            string uid = this.tw.Username.ToLower();
             foreach (UserAccount u in this.SettingDialog.UserAccounts)
             {
-                if (u.UserId == tw.UserId)
+                if (u.UserId == this.tw.UserId)
                 {
                     break;
                 }
@@ -4528,10 +4528,10 @@ namespace Hoehoe
             {
                 lock (this._syncObject)
                 {
-                    tw.SetTinyUrlResolve(this.SettingDialog.TinyUrlResolve);
-                    tw.SetRestrictFavCheck(this.SettingDialog.RestrictFavCheck);
-                    tw.ReadOwnPost = this.SettingDialog.ReadOwnPost;
-                    tw.SetUseSsl(this.SettingDialog.UseSsl);
+                    this.tw.SetTinyUrlResolve(this.SettingDialog.TinyUrlResolve);
+                    this.tw.SetRestrictFavCheck(this.SettingDialog.RestrictFavCheck);
+                    this.tw.ReadOwnPost = this.SettingDialog.ReadOwnPost;
+                    this.tw.SetUseSsl(this.SettingDialog.UseSsl);
                     ShortUrl.IsResolve = this.SettingDialog.TinyUrlResolve;
                     ShortUrl.IsForceResolve = this.SettingDialog.ShortUrlForceResolve;
                     ShortUrl.SetBitlyId(this.SettingDialog.BitlyUser);
@@ -4758,7 +4758,7 @@ namespace Hoehoe
                             Outputz.OutUrl = "http:// twitter.com/";
                             break;
                         case OutputzUrlmode.twittercomWithUsername:
-                            Outputz.OutUrl = "http:// twitter.com/" + tw.Username;
+                            Outputz.OutUrl = "http:// twitter.com/" + this.tw.Username;
                             break;
                     }
 
@@ -4787,7 +4787,7 @@ namespace Hoehoe
                         this._hookGlobalHotkey.RegisterOriginalHotkey(this.SettingDialog.HotkeyKey, this.SettingDialog.HotkeyValue, modKey);
                     }
 
-                    if (uid != tw.Username)
+                    if (uid != this.tw.Username)
                     {
                         this.doGetFollowersMenu();
                     }
@@ -5180,8 +5180,8 @@ namespace Hoehoe
             listCustom.MouseDoubleClick += this.MyList_MouseDoubleClick;
             listCustom.ColumnClick += this.MyList_ColumnClick;
             listCustom.DrawColumnHeader += this.MyList_DrawColumnHeader;
-            listCustom.DragDrop += TweenMain_DragDrop;
-            listCustom.DragOver += TweenMain_DragOver;
+            listCustom.DragDrop += this.TweenMain_DragDrop;
+            listCustom.DragOver += this.TweenMain_DragOver;
             listCustom.DrawItem += this.MyList_DrawItem;
             listCustom.MouseClick += this.MyList_MouseClick;
             listCustom.ColumnReordered += this.MyList_ColumnReordered;
@@ -5211,7 +5211,7 @@ namespace Hoehoe
 
             if (this._statuses.IsDistributableTab(tabName))
             {
-                TabDialog.AddTab(tabName);
+                this.TabDialog.AddTab(tabName);
             }
 
             listCustom.SmallImageList = new ImageList();
@@ -5397,8 +5397,8 @@ namespace Hoehoe
             listCustom.MouseDoubleClick -= this.MyList_MouseDoubleClick;
             listCustom.ColumnClick -= this.MyList_ColumnClick;
             listCustom.DrawColumnHeader -= this.MyList_DrawColumnHeader;
-            listCustom.DragDrop -= TweenMain_DragDrop;
-            listCustom.DragOver -= TweenMain_DragOver;
+            listCustom.DragDrop -= this.TweenMain_DragDrop;
+            listCustom.DragOver -= this.TweenMain_DragOver;
             listCustom.DrawItem -= this.MyList_DrawItem;
             listCustom.MouseClick -= this.MyList_MouseClick;
             listCustom.ColumnReordered -= this.MyList_ColumnReordered;
@@ -5408,7 +5408,7 @@ namespace Hoehoe
             listCustom.DrawSubItem -= this.MyList_DrawSubItem;
             listCustom.HScrolled -= this.MyList_HScrolled;
 
-            TabDialog.RemoveTab(TabName);
+            this.TabDialog.RemoveTab(TabName);
 
             listCustom.SmallImageList = null;
             listCustom.ListViewItemSorter = null;
@@ -5513,7 +5513,7 @@ namespace Hoehoe
             {
                 this.Tag = ListTab.Tag;
             }
-            TabMenuControl(ListTab.SelectedTab.Text);
+            this.TabMenuControl(ListTab.SelectedTab.Text);
             this.PushSelectPostChain();
         }
 
@@ -6477,7 +6477,7 @@ namespace Hoehoe
 
             try
             {
-                retMsg = tw.GetVersionInfo();
+                retMsg = this.tw.GetVersionInfo();
             }
             catch (Exception)
             {
@@ -6502,7 +6502,7 @@ namespace Hoehoe
                     {
                         if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Hoehoe.Properties.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
-                            retMsg = tw.GetTweenBinary(strVer);
+                            retMsg = this.tw.GetTweenBinary(strVer);
                             if (retMsg.Length == 0)
                             {
                                 this.RunTweenUp();
@@ -6531,7 +6531,7 @@ namespace Hoehoe
                         {
                             if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Hoehoe.Properties.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
-                                retMsg = tw.GetTweenBinary(strVer);
+                                retMsg = this.tw.GetTweenBinary(strVer);
                                 if (retMsg.Length == 0)
                                 {
                                     this.RunTweenUp();
@@ -8099,7 +8099,7 @@ namespace Hoehoe
             if (curTabClass.TabType == TabUsageType.PublicSearch && this._curPost.InReplyToStatusId == 0 && this._curPost.TextFromApi.Contains("@"))
             {
                 PostClass post = null;
-                string r = tw.GetStatusApi(false, this._curPost.StatusId, ref post);
+                string r = this.tw.GetStatusApi(false, this._curPost.StatusId, ref post);
                 if (String.IsNullOrEmpty(r) && post != null)
                 {
                     this._curPost.InReplyToStatusId = post.InReplyToStatusId;
@@ -8157,7 +8157,7 @@ namespace Hoehoe
             catch (InvalidOperationException)
             {
                 PostClass post = null;
-                string r = tw.GetStatusApi(false, this._curPost.InReplyToStatusId, ref post);
+                string r = this.tw.GetStatusApi(false, this._curPost.InReplyToStatusId, ref post);
                 if (String.IsNullOrEmpty(r) && post != null)
                 {
                     post.IsRead = true;
@@ -8490,11 +8490,11 @@ namespace Hoehoe
             this._modifySettingCommon = false;
             lock (this._syncObject)
             {
-                this._cfgCommon.UserName = tw.Username;
-                this._cfgCommon.UserId = tw.UserId;
-                this._cfgCommon.Password = tw.Password;
-                this._cfgCommon.Token = tw.AccessToken;
-                this._cfgCommon.TokenSecret = tw.AccessTokenSecret;
+                this._cfgCommon.UserName = this.tw.Username;
+                this._cfgCommon.UserId = this.tw.UserId;
+                this._cfgCommon.Password = this.tw.Password;
+                this._cfgCommon.Token = this.tw.AccessToken;
+                this._cfgCommon.TokenSecret = this.tw.AccessTokenSecret;
                 this._cfgCommon.UserAccounts = this.SettingDialog.UserAccounts;
                 this._cfgCommon.UserstreamStartup = this.SettingDialog.UserstreamStartup;
                 this._cfgCommon.UserstreamPeriod = this.SettingDialog.UserstreamPeriodInt;
@@ -8618,8 +8618,8 @@ namespace Hoehoe
                 this._cfgCommon.SearchCountApi = this.SettingDialog.SearchCountApi;
                 this._cfgCommon.FavoritesCountApi = this.SettingDialog.FavoritesCountApi;
                 this._cfgCommon.UserTimelineCountApi = this.SettingDialog.UserTimelineCountApi;
-                this._cfgCommon.TrackWord = tw.TrackWord;
-                this._cfgCommon.AllAtReply = tw.AllAtReply;
+                this._cfgCommon.TrackWord = this.tw.TrackWord;
+                this._cfgCommon.AllAtReply = this.tw.AllAtReply;
                 this._cfgCommon.OpenUserTimeline = this.SettingDialog.OpenUserTimeline;
                 this._cfgCommon.ListCountApi = this.SettingDialog.ListCountApi;
                 this._cfgCommon.UseImageService = ImageServiceCombo.SelectedIndex;
@@ -8817,7 +8817,7 @@ namespace Hoehoe
             {
                 if (this._statuses.IsDistributableTab(ListTab.TabPages[i].Text))
                 {
-                    TabDialog.RemoveTab(ListTab.TabPages[i].Text);
+                    this.TabDialog.RemoveTab(ListTab.TabPages[i].Text);
                 }
                 if (ListTab.TabPages[i].Text == tabName)
                 {
@@ -8833,7 +8833,7 @@ namespace Hoehoe
                     {
                         ListTab.TabPages[i].Text = newTabText;
                     }
-                    TabDialog.AddTab(ListTab.TabPages[i].Text);
+                    this.TabDialog.AddTab(ListTab.TabPages[i].Text);
                 }
             }
             this.SaveConfigsCommon();
@@ -8862,7 +8862,7 @@ namespace Hoehoe
         private void Tabs_DoubleClick(object sender, MouseEventArgs e)
         {
             string tn = ListTab.SelectedTab.Text;
-            TabRename(ref tn);
+            this.TabRename(ref tn);
         }
 
         private void Tabs_MouseDown(object sender, MouseEventArgs e)
@@ -9160,7 +9160,7 @@ namespace Hoehoe
                             for (int cnt = 0; cnt <= this._curList.SelectedIndices.Count - 1; cnt++)
                             {
                                 PostClass post = this._statuses.Item(this._curTab.Text, this._curList.SelectedIndices[cnt]);
-                                if (!ids.Contains("@" + post.ScreenName + " ") && !post.ScreenName.Equals(tw.Username, StringComparison.CurrentCultureIgnoreCase))
+                                if (!ids.Contains("@" + post.ScreenName + " ") && !post.ScreenName.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
                                 {
                                     ids += "@" + post.ScreenName + " ";
                                 }
@@ -9168,7 +9168,7 @@ namespace Hoehoe
                                 {
                                     foreach (string nm in post.ReplyToList)
                                     {
-                                        if (!ids.Contains("@" + nm + " ") && !nm.Equals(tw.Username, StringComparison.CurrentCultureIgnoreCase))
+                                        if (!ids.Contains("@" + nm + " ") && !nm.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
                                         {
                                             Match m = Regex.Match(post.TextFromApi, "[@＠](?<id>" + nm + ")([^a-zA-Z0-9]|$)", RegexOptions.IgnoreCase);
                                             if (m.Success)
@@ -9214,13 +9214,13 @@ namespace Hoehoe
                             string ids = "";
                             int sidx = StatusText.SelectionStart;
                             PostClass post = this._curPost;
-                            if (!ids.Contains("@" + post.ScreenName + " ") && !post.ScreenName.Equals(tw.Username, StringComparison.CurrentCultureIgnoreCase))
+                            if (!ids.Contains("@" + post.ScreenName + " ") && !post.ScreenName.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
                             {
                                 ids += "@" + post.ScreenName + " ";
                             }
                             foreach (string nm in post.ReplyToList)
                             {
-                                if (!ids.Contains("@" + nm + " ") && !nm.Equals(tw.Username, StringComparison.CurrentCultureIgnoreCase))
+                                if (!ids.Contains("@" + nm + " ") && !nm.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
                                 {
                                     Match m = Regex.Match(post.TextFromApi, "[@＠](?<id>" + nm + ")([^a-zA-Z0-9]|$)", RegexOptions.IgnoreCase);
                                     if (m.Success)
@@ -9235,7 +9235,7 @@ namespace Hoehoe
                             }
                             if (!String.IsNullOrEmpty(post.RetweetedBy))
                             {
-                                if (!ids.Contains("@" + post.RetweetedBy + " ") && !post.RetweetedBy.Equals(tw.Username, StringComparison.CurrentCultureIgnoreCase))
+                                if (!ids.Contains("@" + post.RetweetedBy + " ") && !post.RetweetedBy.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
                                 {
                                     ids += "@" + post.RetweetedBy + " ";
                                 }
@@ -9446,7 +9446,7 @@ namespace Hoehoe
             UreadManageMenuItem.Checked = tb.UnreadManage;
             this.UnreadMngTbMenuItem.Checked = tb.UnreadManage;
 
-            TabMenuControl(this._rclickTabName);
+            this.TabMenuControl(this._rclickTabName);
         }
 
         private void TabMenuControl(string tabName)
@@ -9960,13 +9960,13 @@ namespace Hoehoe
             do
             {
                 // 振り分け先タブ選択
-                if (TabDialog.ShowDialog() == DialogResult.Cancel)
+                if (this.TabDialog.ShowDialog() == DialogResult.Cancel)
                 {
                     this.TopMost = this.SettingDialog.AlwaysTop;
                     return false;
                 }
                 this.TopMost = this.SettingDialog.AlwaysTop;
-                tabName = TabDialog.SelectedTabName;
+                tabName = this.TabDialog.SelectedTabName;
 
                 ListTab.SelectedTab.Focus();
                 // 新規タブを選択→タブ作成
@@ -10262,7 +10262,7 @@ namespace Hoehoe
 
             if (this.SettingDialog.DispUsername)
             {
-                ttl.Append(tw.Username).Append(" - ");
+                ttl.Append(this.tw.Username).Append(" - ");
             }
             ttl.Append("Hoehoe  ");
             switch (this.SettingDialog.DispLatestPost)
@@ -10289,11 +10289,11 @@ namespace Hoehoe
                     ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText4, ur, al);
                     break;
                 case DispTitleEnum.OwnStatus:
-                    if (this._prevFollowerCount == 0 && tw.FollowersCount > 0)
+                    if (this._prevFollowerCount == 0 && this.tw.FollowersCount > 0)
                     {
-                        this._prevFollowerCount = tw.FollowersCount;
+                        this._prevFollowerCount = this.tw.FollowersCount;
                     }
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.OwnStatusTitle, tw.StatusesCount, tw.FriendsCount, tw.FollowersCount, tw.FollowersCount - this._prevFollowerCount);
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.OwnStatusTitle, this.tw.StatusesCount, this.tw.FriendsCount, this.tw.FollowersCount, this.tw.FollowersCount - this._prevFollowerCount);
                     break;
             }
 
@@ -10349,7 +10349,7 @@ namespace Hoehoe
             this._unreadCounter = ur;
             this._unreadAtCounter = urat;
 
-            slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, this._postTimestamps.Count, this._favTimestamps.Count, timeLineCount);
+            slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, this._postTimestamps.Count, this._favTimestamps.Count, this.timeLineCount);
             if (this.SettingDialog.TimelinePeriodInt == 0)
             {
                 slbl.Append(Hoehoe.Properties.Resources.SetStatusLabelText2);
@@ -10410,7 +10410,7 @@ namespace Hoehoe
             StringBuilder ur = new StringBuilder(64);
             if (this.SettingDialog.DispUsername)
             {
-                ur.Append(tw.Username);
+                ur.Append(this.tw.Username);
                 ur.Append(" - ");
             }
             ur.Append("Hoehoe");
@@ -10677,7 +10677,7 @@ namespace Hoehoe
             if (NameLabel.Tag != null)
             {
                 string id = (string)NameLabel.Tag;
-                if (id == tw.Username)
+                if (id == this.tw.Username)
                 {
                     FollowToolStripMenuItem.Enabled = false;
                     UnFollowToolStripMenuItem.Enabled = false;
@@ -11336,7 +11336,7 @@ namespace Hoehoe
             bool fAllFlag = false;
             foreach (Match mu in ma)
             {
-                if (mu.Result("${ScreenName}").ToLower() != tw.Username.ToLower())
+                if (mu.Result("${ScreenName}").ToLower() != this.tw.Username.ToLower())
                 {
                     fAllFlag = true;
                     break; // TODO: might not be correct. Was : Exit For
@@ -11610,11 +11610,11 @@ namespace Hoehoe
 
         private void StartUserStream()
         {
-            tw.NewPostFromStream += tw_NewPostFromStream;
-            tw.UserStreamStarted += tw_UserStreamStarted;
-            tw.UserStreamStopped += tw_UserStreamStopped;
-            tw.PostDeleted += tw_PostDeleted;
-            tw.UserStreamEventReceived += tw_UserStreamEventArrived;
+            this.tw.NewPostFromStream += this.tw_NewPostFromStream;
+            this.tw.UserStreamStarted += this.tw_UserStreamStarted;
+            this.tw.UserStreamStopped += this.tw_UserStreamStopped;
+            this.tw.PostDeleted += this.tw_PostDeleted;
+            this.tw.UserStreamEventReceived += this.tw_UserStreamEventArrived;
 
             MenuItemUserStream.Text = "&UserStream ■";
             MenuItemUserStream.Enabled = true;
@@ -11622,7 +11622,7 @@ namespace Hoehoe
             StopToolStripMenuItem.Enabled = true;
             if (this.SettingDialog.UserstreamStartup)
             {
-                tw.StartUserStream();
+                this.tw.StartUserStream();
             }
         }
 
@@ -11639,7 +11639,7 @@ namespace Hoehoe
             }
 
             NotifyIcon1.Visible = true;
-            tw.UserIdChanged += tw_UserIdChanged;
+            this.tw.UserIdChanged += this.tw_UserIdChanged;
 
             if (MyCommon.IsNetworkAvailable())
             {
@@ -11705,7 +11705,7 @@ namespace Hoehoe
                 }
 
                 // 取得失敗の場合は再試行する
-                if (!tw.GetFollowersSuccess && this.SettingDialog.StartupFollowers)
+                if (!this.tw.GetFollowersSuccess && this.SettingDialog.StartupFollowers)
                 {
                     this.GetTimeline(WorkerType.Follower, 0, 0, "");
                 }
@@ -11727,7 +11727,7 @@ namespace Hoehoe
             }
             this._initial = false;
 
-            TimerTimeline.Enabled = true;
+            this.TimerTimeline.Enabled = true;
         }
 
         private bool IsInitialRead()
@@ -11966,7 +11966,7 @@ namespace Hoehoe
             {
                 return;
             }
-            TabRename(ref this._rclickTabName);
+            this.TabRename(ref this._rclickTabName);
         }
 
         private void BitlyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -11988,14 +11988,14 @@ namespace Hoehoe
         private void GetApiInfo_Dowork(object sender, DoWorkEventArgs e)
         {
             GetApiInfoArgs args = (GetApiInfoArgs)e.Argument;
-            e.Result = tw.GetInfoApi(args.Info);
+            e.Result = this.tw.GetInfoApi(args.Info);
         }
 
         private void ApiInfoMenuItem_Click(object sender, EventArgs e)
         {
             GetApiInfoArgs args = new GetApiInfoArgs
             {
-                Tw = tw,
+                Tw = this.tw,
                 Info = new ApiInfo()
             };
 
@@ -12008,7 +12008,7 @@ namespace Hoehoe
                     tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo1 + args.Info.MaxCount.ToString());
                     tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo2 + args.Info.RemainCount.ToString());
                     tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo3 + args.Info.ResetTime.ToString());
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo7 + (tw.UserStreamEnabled ? Hoehoe.Properties.Resources.Enable : Hoehoe.Properties.Resources.Disable).ToString());
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo7 + (this.tw.UserStreamEnabled ? Hoehoe.Properties.Resources.Enable : Hoehoe.Properties.Resources.Disable).ToString());
 
                     tmp.AppendLine();
                     tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo8 + args.Info.AccessLevel.ToString());
@@ -12054,7 +12054,7 @@ namespace Hoehoe
                 if (inputName.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(inputName.TabName.Trim()))
                 {
                     FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs();
-                    arg.Tw = tw;
+                    arg.Tw = this.tw;
                     arg.Id = inputName.TabName.Trim();
                     using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.FollowCommandText1, this.FollowCommand_DoWork, null, arg))
                     {
@@ -12097,7 +12097,7 @@ namespace Hoehoe
 
         private void RemoveCommand(string id, bool skipInput)
         {
-            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs() { Tw = tw, Id = id };
+            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs() { Tw = this.tw, Id = id };
             if (!skipInput)
             {
                 using (InputTabName inputName = new InputTabName())
@@ -12107,7 +12107,7 @@ namespace Hoehoe
                     inputName.TabName = id;
                     if (inputName.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(inputName.TabName.Trim()))
                     {
-                        arg.Tw = tw;
+                        arg.Tw = this.tw;
                         arg.Id = inputName.TabName.Trim();
                     }
                     else
@@ -12184,7 +12184,7 @@ namespace Hoehoe
         private void ShowFriendship(string id)
         {
             ShowFriendshipArgs args = new ShowFriendshipArgs();
-            args.Tw = tw;
+            args.Tw = this.tw;
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.SetFormTitle("Show Friendships");
@@ -12236,7 +12236,7 @@ namespace Hoehoe
             {
                 string ret = "";
                 ShowFriendshipArgs args = new ShowFriendshipArgs();
-                args.Tw = tw;
+                args.Tw = this.tw;
                 args.ids.Add(new ShowFriendshipArgs.FriendshipInfo(id.Trim()));
                 using (FormInfo _info = new FormInfo(this, Hoehoe.Properties.Resources.ShowFriendshipText1, this.ShowFriendship_DoWork, null, args))
                 {
@@ -12288,7 +12288,7 @@ namespace Hoehoe
 
         private void OwnStatusMenuItem_Click(object sender, EventArgs e)
         {
-            this.doShowUserStatus(tw.Username, false);
+            this.doShowUserStatus(this.tw.Username, false);
         }
 
         // TwitterIDでない固定文字列を調べる（文字列検証のみ　実際に取得はしない）
@@ -12352,7 +12352,7 @@ namespace Hoehoe
             List<string> ids = new List<string>();
             foreach (Match mu in ma)
             {
-                if (mu.Result("${ScreenName}").ToLower() != tw.Username.ToLower())
+                if (mu.Result("${ScreenName}").ToLower() != this.tw.Username.ToLower())
                 {
                     ids.Add(mu.Result("${ScreenName}"));
                 }
@@ -12902,7 +12902,7 @@ namespace Hoehoe
 
         public Twitter TwitterInstance
         {
-            get { return tw; }
+            get { return this.tw; }
         }
 
         private void SplitContainer3_SplitterMoved(object sender, SplitterEventArgs e)
@@ -13002,7 +13002,7 @@ namespace Hoehoe
                     if (inputName.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(inputName.TabName.Trim()))
                     {
                         id = inputName.TabName.Trim();
-                        GetUserInfoArgs args = new GetUserInfoArgs() { tw = tw, id = id, user = user };
+                        GetUserInfoArgs args = new GetUserInfoArgs() { tw = this.tw, id = id, user = user };
                         using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
                         {
                             info.ShowDialog();
@@ -13021,7 +13021,7 @@ namespace Hoehoe
             }
             else
             {
-                GetUserInfoArgs args = new GetUserInfoArgs() { tw = tw, id = id, user = user };
+                GetUserInfoArgs args = new GetUserInfoArgs() { tw = this.tw, id = id, user = user };
                 using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
                 {
                     info.ShowDialog();
@@ -13065,7 +13065,7 @@ namespace Hoehoe
             if (NameLabel.Tag != null)
             {
                 string id = (string)NameLabel.Tag;
-                if (id != tw.Username)
+                if (id != this.tw.Username)
                 {
                     this.FollowCommand(id);
                 }
@@ -13077,7 +13077,7 @@ namespace Hoehoe
             if (NameLabel.Tag != null)
             {
                 string id = (string)NameLabel.Tag;
-                if (id != tw.Username)
+                if (id != this.tw.Username)
                 {
                     this.RemoveCommand(id, false);
                 }
@@ -13089,7 +13089,7 @@ namespace Hoehoe
             if (NameLabel.Tag != null)
             {
                 string id = (string)NameLabel.Tag;
-                if (id != tw.Username)
+                if (id != this.tw.Username)
                 {
                     this.ShowFriendship(id);
                 }
@@ -13144,7 +13144,7 @@ namespace Hoehoe
             {
                 statusid = this._curPost.StatusId;
             }
-            tw.GetStatus_Retweeted_Count(statusid, ref counter);
+            this.tw.GetStatus_Retweeted_Count(statusid, ref counter);
 
             e.Result = counter;
         }
@@ -13514,7 +13514,7 @@ namespace Hoehoe
 
         private void ListManageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (ListManage form = new ListManage(tw))
+            using (ListManage form = new ListManage(this.tw))
             {
                 form.ShowDialog(this);
             }
@@ -13704,18 +13704,18 @@ namespace Hoehoe
             lock (this._syncObject)
             {
                 DateTime tm = DateTime.Now;
-                if (timeLineTimestamps.ContainsKey(tm))
+                if (this.timeLineTimestamps.ContainsKey(tm))
                 {
-                    timeLineTimestamps[tm] += rsltAddCount;
+                    this.timeLineTimestamps[tm] += rsltAddCount;
                 }
                 else
                 {
-                    timeLineTimestamps.Add(tm, rsltAddCount);
+                    this.timeLineTimestamps.Add(tm, rsltAddCount);
                 }
                 DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                 List<DateTime> keys = new List<DateTime>();
-                timeLineCount = 0;
-                foreach (System.DateTime key in timeLineTimestamps.Keys)
+                this.timeLineCount = 0;
+                foreach (System.DateTime key in this.timeLineTimestamps.Keys)
                 {
                     if (key.CompareTo(oneHour) < 0)
                     {
@@ -13723,12 +13723,12 @@ namespace Hoehoe
                     }
                     else
                     {
-                        timeLineCount += timeLineTimestamps[key];
+                        this.timeLineCount += this.timeLineTimestamps[key];
                     }
                 }
                 foreach (DateTime key in keys)
                 {
-                    timeLineTimestamps.Remove(key);
+                    this.timeLineTimestamps.Remove(key);
                 }
                 keys.Clear();
             }
@@ -13761,7 +13761,7 @@ namespace Hoehoe
             {
                 if (InvokeRequired && !IsDisposed)
                 {
-                    Invoke(new MethodInvoker(tw_UserStreamStarted));
+                    Invoke(new MethodInvoker(this.tw_UserStreamStarted));
                     return;
                 }
             }
@@ -13789,7 +13789,7 @@ namespace Hoehoe
             {
                 if (InvokeRequired && !IsDisposed)
                 {
-                    Invoke(new MethodInvoker(tw_UserStreamStopped));
+                    Invoke(new MethodInvoker(this.tw_UserStreamStopped));
                     return;
                 }
             }
@@ -13816,7 +13816,7 @@ namespace Hoehoe
             {
                 if (InvokeRequired && !IsDisposed)
                 {
-                    Invoke(new Action<Twitter.FormattedEvent>(tw_UserStreamEventArrived), ev);
+                    Invoke(new Action<Twitter.FormattedEvent>(this.tw_UserStreamEventArrived), ev);
                     return;
                 }
             }
@@ -13839,7 +13839,7 @@ namespace Hoehoe
                     this._postCache = null;
                     ((DetailsListView)this._curTab.Tag).Update();
                 }
-                if (ev.Event == "unfavorite" && ev.Username.ToLower().Equals(tw.Username.ToLower()))
+                if (ev.Event == "unfavorite" && ev.Username.ToLower().Equals(this.tw.Username.ToLower()))
                 {
                     this.RemovePostFromFavTab(new Int64[] { ev.Id });
                 }
@@ -13855,7 +13855,7 @@ namespace Hoehoe
                 StringBuilder title = new StringBuilder();
                 if (this.SettingDialog.DispUsername)
                 {
-                    title.Append(tw.Username);
+                    title.Append(this.tw.Username);
                     title.Append(" - ");
                 }
                 else
@@ -13930,11 +13930,11 @@ namespace Hoehoe
             }
             if (this._isActiveUserstream)
             {
-                tw.StopUserStream();
+                this.tw.StopUserStream();
             }
             else
             {
-                tw.StartUserStream();
+                this.tw.StartUserStream();
             }
         }
 
@@ -13956,27 +13956,27 @@ namespace Hoehoe
                     }
                     this._prevTrackWord = inputForm.TabName.Trim();
                 }
-                if (this._prevTrackWord != tw.TrackWord)
+                if (this._prevTrackWord != this.tw.TrackWord)
                 {
-                    tw.TrackWord = this._prevTrackWord;
+                    this.tw.TrackWord = this._prevTrackWord;
                     this._modifySettingCommon = true;
                     TrackToolStripMenuItem.Checked = !String.IsNullOrEmpty(this._prevTrackWord);
-                    tw.ReconnectUserStream();
+                    this.tw.ReconnectUserStream();
                 }
             }
             else
             {
-                tw.TrackWord = "";
-                tw.ReconnectUserStream();
+                this.tw.TrackWord = "";
+                this.tw.ReconnectUserStream();
             }
             this._modifySettingCommon = true;
         }
 
         private void AllrepliesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            tw.AllAtReply = AllrepliesToolStripMenuItem.Checked;
+            this.tw.AllAtReply = AllrepliesToolStripMenuItem.Checked;
             this._modifySettingCommon = true;
-            tw.ReconnectUserStream();
+            this.tw.ReconnectUserStream();
         }
 
         private void EventViewerMenuItem_Click(object sender, EventArgs e)
@@ -13991,7 +13991,7 @@ namespace Hoehoe
                 pos.Y = Convert.ToInt32(this.Location.Y + this.Size.Height / 2 - this.evtDialog.Size.Height / 2);
                 this.evtDialog.Location = pos;
             }
-            this.evtDialog.EventSource = tw.StoredEvent;
+            this.evtDialog.EventSource = this.tw.StoredEvent;
             if (!this.evtDialog.Visible)
             {
                 this.evtDialog.Show(this);
@@ -14021,15 +14021,15 @@ namespace Hoehoe
 
         private void OpenOwnFavedMenuItem_Click(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(tw.Username))
+            if (!String.IsNullOrEmpty(this.tw.Username))
             {
-                this.OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + tw.Username + "/recent");
+                this.OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + this.tw.Username + "/recent");
             }
         }
 
         private void OpenOwnHomeMenuItem_Click(object sender, EventArgs e)
         {
-            this.OpenUriAsync("http://twitter.com/" + tw.Username);
+            this.OpenUriAsync("http://twitter.com/" + this.tw.Username);
         }
 
         private void doTranslation(string str)
@@ -14139,18 +14139,18 @@ namespace Hoehoe
         {
             if (isEnable)
             {
-                tw.StartUserStream();
+                this.tw.StartUserStream();
             }
             else
             {
-                tw.StopUserStream();
+                this.tw.StopUserStream();
             }
-            TimerTimeline.Enabled = isEnable;
+            this.TimerTimeline.Enabled = isEnable;
         }
 
         private void StopRefreshAllMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            TimelineRefreshEnableChange(!StopRefreshAllMenuItem.Checked);
+            this.TimelineRefreshEnableChange(!StopRefreshAllMenuItem.Checked);
         }
 
         private void OpenUserAppointUrl()
