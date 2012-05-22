@@ -41,113 +41,10 @@ namespace Hoehoe
     {
         private static AppendSettingDialog _instance = new AppendSettingDialog();
         private Twitter _tw;
-        private int _MytimelinePeriod;
-        private int _MyDMPeriod;
-        private int _MyPubSearchPeriod;
-        private int _MyListsPeriod;
-        private int _MyUserTimelinePeriod;
-        private bool _MyReaded;
-        private Hoehoe.IconSizes _MyIconSize;
-        private string _MyStatusText;
-        private string _MyRecommendStatusText;
-        private bool _MyUnreadManage;
-        private bool _MyPlaySound;
-        private bool _MyOneWayLove;
-        private Font _fntUnread;
-        private Color _clrUnread;
-        private Font _fntReaded;
-        private Color _clrReaded;
-        private Color _clrFav;
-        private Color _clrOWL;
-        private Color _clrRetweet;
-        private Font _fntDetail;
-        private Color _clrSelf;
-        private Color _clrAtSelf;
-        private Color _clrTarget;
-        private Color _clrAtTarget;
-        private Color _clrAtFromTarget;
-        private Color _clrAtTo;
-        private Color _clrInputBackcolor;
-        private Color _clrInputFont;
-        private Font _fntInputFont;
-        private Color _clrListBackcolor;
-        private Color _clrDetailBackcolor;
-        private Color _clrDetail;
-        private Color _clrDetailLink;
-        private NameBalloonEnum _myNameBalloon;
-        private bool _myPostCtrlEnter;
-        private bool _myPostShiftEnter;
-        private int _countApi;
-        private int _countApiReply;
-        private string _browserpath;
-        private bool _myUseRecommendStatus;
-        private bool _myDispUsername;
-        private DispTitleEnum _MyDispLatestPost;
-        private bool _MySortOrderLock;
-        private bool _MyMinimizeToTray;
-        private bool _MyCloseToExit;
-        private bool _MyTinyUrlResolve;
-        private bool _MyShortUrlForceResolve;
-        private HttpConnection.ProxyType _MyProxyType;
-        private string _MyProxyAddress;
-        private int _MyProxyPort;
-        private string _MyProxyUser;
-        private string _MyProxyPassword;
-        private bool _MyPeriodAdjust;
-        private bool _MyStartupVersion;
-        private bool _MyStartupFollowers;
-        private bool _MyRestrictFavCheck;
-        private bool _MyAlwaysTop;
-        private bool _MyUrlConvertAuto;
-        private bool _MyShortenTco;
-        private bool _MyOutputz;
-        private string _MyOutputzKey;
-        private OutputzUrlmode _MyOutputzUrlmode;
-        private bool _MyNicoms;
-        private bool _MyUnreadStyle;
-        private string _MyDateTimeFormat;
-        private int _MyDefaultTimeOut;
-        private bool _MyLimitBalloon;
-        private bool _MyPostAndGet;
-        private int _MyReplyPeriod;
-        private UrlConverter _MyAutoShortUrlFirst;
-        private bool _MyTabIconDisp;
-        private ReplyIconState _MyReplyIconState;
-        private bool _MyReadOwnPost;
-        private bool _MyGetFav;
-        private bool _MyMonoSpace;
-        private bool _MyReadOldPosts;
-        private bool _MyUseSsl;
-        private string _MyBitlyId;
-        private string _MyBitlyPw;
-        private bool _MyShowGrid;
-        private bool _MyUseAtIdSupplement;
-        private bool _MyUseHashSupplement;
-        private string _MyLanguage;
-        private string _MyTwitterApiUrl;
-        private string _MyTwitterSearchApiUrl;
-        private bool _MyPreviewEnable;
-        private int _MoreCountApi;
-        private int _FirstCountApi;
-        private bool _MyUseAdditonalCount;
-        private int _SearchCountApi;
-        private int _FavoritesCountApi;
-        private int _UserTimelineCountApi;
-        private int _ListCountApi;
-        private bool _MyRetweetNoConfirm;
-        private bool _MyUserstreamStartup;
-        private bool _MyOpenUserTimeline;
         private bool _ValidationError = false;
-        private bool _MyEventNotifyEnabled;
         private EventType _MyEventNotifyFlag;
         private EventType _isMyEventNotifyFlag;
-        private bool _MyForceEventNotify;
-        private bool _MyFavEventUnread;
         private string _MyTranslateLanguage;
-        private string _MyEventSoundFile;
-        private int _MyUserstreamPeriod;
-        private int _MyDoubleClickAction;
-        private string _UserAppointUrl;
         private long _InitialUserId;
         private string _pin;
         private EventCheckboxTblElement[] eventCheckboxTableElements = null;
@@ -192,595 +89,203 @@ namespace Hoehoe
 
         public DataModels.Twitter.Configuration TwitterConfiguration { get; set; }
 
-        public int UserstreamPeriodInt
-        {
-            get { return this._MyUserstreamPeriod; }
-            set { this._MyUserstreamPeriod = value; }
-        }
+        public int UserstreamPeriodInt { get; set; }
 
-        public bool UserstreamStartup
-        {
-            get { return this._MyUserstreamStartup; }
-            set { this._MyUserstreamStartup = value; }
-        }
+        public bool UserstreamStartup { get; set; }
 
-        public int TimelinePeriodInt
-        {
-            get { return this._MytimelinePeriod; }
-            set { this._MytimelinePeriod = value; }
-        }
+        public int TimelinePeriodInt { get; set; }
 
-        public int ReplyPeriodInt
-        {
-            get { return this._MyReplyPeriod; }
-            set { this._MyReplyPeriod = value; }
-        }
+        public int ReplyPeriodInt { get; set; }
 
-        public int DMPeriodInt
-        {
-            get { return this._MyDMPeriod; }
-            set { this._MyDMPeriod = value; }
-        }
+        public int DMPeriodInt { get; set; }
 
-        public int PubSearchPeriodInt
-        {
-            get { return this._MyPubSearchPeriod; }
-            set { this._MyPubSearchPeriod = value; }
-        }
+        public int PubSearchPeriodInt { get; set; }
 
-        public int ListsPeriodInt
-        {
-            get { return this._MyListsPeriod; }
-            set { this._MyListsPeriod = value; }
-        }
+        public int ListsPeriodInt { get; set; }
 
-        public int UserTimelinePeriodInt
-        {
-            get { return this._MyUserTimelinePeriod; }
-            set { this._MyUserTimelinePeriod = value; }
-        }
+        public int UserTimelinePeriodInt { get; set; }
 
-        public bool Readed
-        {
-            get { return this._MyReaded; }
-            set { this._MyReaded = value; }
-        }
+        public bool Readed { get; set; }
 
-        public IconSizes IconSz
-        {
-            get { return this._MyIconSize; }
-            set { this._MyIconSize = value; }
-        }
+        public IconSizes IconSz { get; set; }
 
-        public string Status
-        {
-            get { return this._MyStatusText; }
-            set { this._MyStatusText = value; }
-        }
+        public string Status { get; set; }
 
-        public bool UnreadManage
-        {
-            get { return this._MyUnreadManage; }
-            set { this._MyUnreadManage = value; }
-        }
+        public bool UnreadManage { get; set; }
 
-        public bool PlaySound
-        {
-            get { return this._MyPlaySound; }
-            set { this._MyPlaySound = value; }
-        }
+        public bool PlaySound { get; set; }
 
-        public bool OneWayLove
-        {
-            get { return this._MyOneWayLove; }
-            set { this._MyOneWayLove = value; }
-        }
+        public bool OneWayLove { get; set; }
 
         // 未使用
-        public Font FontUnread
-        {
-            get { return this._fntUnread; }
-            set { this._fntUnread = value; }
-        }
+        public Font FontUnread { get; set; }
 
-        public Color ColorUnread
-        {
-            get { return this._clrUnread; }
-            set { this._clrUnread = value; }
-        }
+        public Color ColorUnread { get; set; }
 
         // リストフォントとして使用
-        public Font FontReaded
-        {
-            get { return this._fntReaded; }
-            set { this._fntReaded = value; }
-        }
-
-        public Color ColorReaded
-        {
-            get { return this._clrReaded; }
-            set { this._clrReaded = value; }
-        }
-
-        public Color ColorFav
-        {
-            get { return this._clrFav; }
-            set { this._clrFav = value; }
-        }
-
-        public Color ColorOWL
-        {
-            get { return this._clrOWL; }
-            set { this._clrOWL = value; }
-        }
-
-        public Color ColorRetweet
-        {
-            get { return this._clrRetweet; }
-            set { this._clrRetweet = value; }
-        }
-
-        public Font FontDetail
-        {
-            get { return this._fntDetail; }
-            set { this._fntDetail = value; }
-        }
-
-        public Color ColorDetail
-        {
-            get { return this._clrDetail; }
-            set { this._clrDetail = value; }
-        }
-
-        public Color ColorDetailLink
-        {
-            get { return this._clrDetailLink; }
-            set { this._clrDetailLink = value; }
-        }
-
-        public Color ColorSelf
-        {
-            get { return this._clrSelf; }
-            set { this._clrSelf = value; }
-        }
-
-        public Color ColorAtSelf
-        {
-            get { return this._clrAtSelf; }
-            set { this._clrAtSelf = value; }
-        }
-
-        public Color ColorTarget
-        {
-            get { return this._clrTarget; }
-            set { this._clrTarget = value; }
-        }
-
-        public Color ColorAtTarget
-        {
-            get { return this._clrAtTarget; }
-            set { this._clrAtTarget = value; }
-        }
-
-        public Color ColorAtFromTarget
-        {
-            get { return this._clrAtFromTarget; }
-            set { this._clrAtFromTarget = value; }
-        }
-
-        public Color ColorAtTo
-        {
-            get { return this._clrAtTo; }
-            set { this._clrAtTo = value; }
-        }
-
-        public Color ColorInputBackcolor
-        {
-            get { return this._clrInputBackcolor; }
-            set { this._clrInputBackcolor = value; }
-        }
-
-        public Color ColorInputFont
-        {
-            get { return this._clrInputFont; }
-            set { this._clrInputFont = value; }
-        }
-
-        public Font FontInputFont
-        {
-            get { return this._fntInputFont; }
-            set { this._fntInputFont = value; }
-        }
-
-        public Color ColorListBackcolor
-        {
-            get { return this._clrListBackcolor; }
-            set { this._clrListBackcolor = value; }
-        }
-
-        public Color ColorDetailBackcolor
-        {
-            get { return this._clrDetailBackcolor; }
-            set { this._clrDetailBackcolor = value; }
-        }
-
-        public NameBalloonEnum NameBalloon
-        {
-            get { return this._myNameBalloon; }
-            set { this._myNameBalloon = value; }
-        }
-
-        public bool PostCtrlEnter
-        {
-            get { return this._myPostCtrlEnter; }
-            set { this._myPostCtrlEnter = value; }
-        }
-
-        public bool PostShiftEnter
-        {
-            get { return this._myPostShiftEnter; }
-            set { this._myPostShiftEnter = value; }
-        }
-
-        public int CountApi
-        {
-            get { return this._countApi; }
-            set { this._countApi = value; }
-        }
-
-        public int CountApiReply
-        {
-            get { return this._countApiReply; }
-            set { this._countApiReply = value; }
-        }
-
-        public int MoreCountApi
-        {
-            get { return this._MoreCountApi; }
-            set { this._MoreCountApi = value; }
-        }
-
-        public int FirstCountApi
-        {
-            get { return this._FirstCountApi; }
-            set { this._FirstCountApi = value; }
-        }
-
-        public int SearchCountApi
-        {
-            get { return this._SearchCountApi; }
-            set { this._SearchCountApi = value; }
-        }
-
-        public int FavoritesCountApi
-        {
-            get { return this._FavoritesCountApi; }
-            set { this._FavoritesCountApi = value; }
-        }
-
-        public int UserTimelineCountApi
-        {
-            get { return this._UserTimelineCountApi; }
-            set { this._UserTimelineCountApi = value; }
-        }
-
-        public int ListCountApi
-        {
-            get { return this._ListCountApi; }
-            set { this._ListCountApi = value; }
-        }
-
-        public bool PostAndGet
-        {
-            get { return this._MyPostAndGet; }
-            set { this._MyPostAndGet = value; }
-        }
-
-        public bool UseRecommendStatus
-        {
-            get { return this._myUseRecommendStatus; }
-            set { this._myUseRecommendStatus = value; }
-        }
-
-        public string RecommendStatusText
-        {
-            get { return this._MyRecommendStatusText; }
-            set { this._MyRecommendStatusText = value; }
-        }
-
-        public bool DispUsername
-        {
-            get { return this._myDispUsername; }
-            set { this._myDispUsername = value; }
-        }
-
-        public bool CloseToExit
-        {
-            get { return this._MyCloseToExit; }
-            set { this._MyCloseToExit = value; }
-        }
-
-        public bool MinimizeToTray
-        {
-            get { return this._MyMinimizeToTray; }
-            set { this._MyMinimizeToTray = value; }
-        }
-
-        public DispTitleEnum DispLatestPost
-        {
-            get { return this._MyDispLatestPost; }
-            set { this._MyDispLatestPost = value; }
-        }
-
-        public string BrowserPath
-        {
-            get { return this._browserpath; }
-            set { this._browserpath = value; }
-        }
-
-        public bool TinyUrlResolve
-        {
-            get { return this._MyTinyUrlResolve; }
-            set { this._MyTinyUrlResolve = value; }
-        }
-
-        public bool ShortUrlForceResolve
-        {
-            get { return this._MyShortUrlForceResolve; }
-            set { this._MyShortUrlForceResolve = value; }
-        }
-
-        public bool SortOrderLock
-        {
-            get { return this._MySortOrderLock; }
-            set { this._MySortOrderLock = value; }
-        }
-
-        public HttpConnection.ProxyType SelectedProxyType
-        {
-            get { return this._MyProxyType; }
-            set { this._MyProxyType = value; }
-        }
-
-        public string ProxyAddress
-        {
-            get { return this._MyProxyAddress; }
-            set { this._MyProxyAddress = value; }
-        }
-
-        public int ProxyPort
-        {
-            get { return this._MyProxyPort; }
-            set { this._MyProxyPort = value; }
-        }
-
-        public string ProxyUser
-        {
-            get { return this._MyProxyUser; }
-            set { this._MyProxyUser = value; }
-        }
-
-        public string ProxyPassword
-        {
-            get { return this._MyProxyPassword; }
-            set { this._MyProxyPassword = value; }
-        }
-
-        public bool PeriodAdjust
-        {
-            get { return this._MyPeriodAdjust; }
-            set { this._MyPeriodAdjust = value; }
-        }
-
-        public bool StartupVersion
-        {
-            get { return this._MyStartupVersion; }
-            set { this._MyStartupVersion = value; }
-        }
-
-        public bool StartupFollowers
-        {
-            get { return this._MyStartupFollowers; }
-            set { this._MyStartupFollowers = value; }
-        }
-
-        public bool RestrictFavCheck
-        {
-            get { return this._MyRestrictFavCheck; }
-            set { this._MyRestrictFavCheck = value; }
-        }
-
-        public bool AlwaysTop
-        {
-            get { return this._MyAlwaysTop; }
-            set { this._MyAlwaysTop = value; }
-        }
-
-        public bool UrlConvertAuto
-        {
-            get { return this._MyUrlConvertAuto; }
-            set { this._MyUrlConvertAuto = value; }
-        }
-
-        public bool ShortenTco
-        {
-            get { return this._MyShortenTco; }
-            set { this._MyShortenTco = value; }
-        }
-
-        public bool OutputzEnabled
-        {
-            get { return this._MyOutputz; }
-            set { this._MyOutputz = value; }
-        }
-
-        public string OutputzKey
-        {
-            get { return this._MyOutputzKey; }
-            set { this._MyOutputzKey = value; }
-        }
-
-        public OutputzUrlmode OutputzUrlmode
-        {
-            get { return this._MyOutputzUrlmode; }
-            set { this._MyOutputzUrlmode = value; }
-        }
-
-        public bool Nicoms
-        {
-            get { return this._MyNicoms; }
-            set { this._MyNicoms = value; }
-        }
-
-        public UrlConverter AutoShortUrlFirst
-        {
-            get { return this._MyAutoShortUrlFirst; }
-            set { this._MyAutoShortUrlFirst = value; }
-        }
-
-        public bool UseUnreadStyle
-        {
-            get { return this._MyUnreadStyle; }
-            set { this._MyUnreadStyle = value; }
-        }
-
-        public string DateTimeFormat
-        {
-            get { return this._MyDateTimeFormat; }
-            set { this._MyDateTimeFormat = value; }
-        }
-
-        public int DefaultTimeOut
-        {
-            get { return this._MyDefaultTimeOut; }
-            set { this._MyDefaultTimeOut = value; }
-        }
-
-        public bool RetweetNoConfirm
-        {
-            get { return this._MyRetweetNoConfirm; }
-            set { this._MyRetweetNoConfirm = value; }
-        }
-
-        public bool TabIconDisp
-        {
-            get { return this._MyTabIconDisp; }
-            set { this._MyTabIconDisp = value; }
-        }
-
-        public ReplyIconState ReplyIconState
-        {
-            get { return this._MyReplyIconState; }
-            set { this._MyReplyIconState = value; }
-        }
-
-        public bool ReadOwnPost
-        {
-            get { return this._MyReadOwnPost; }
-            set { this._MyReadOwnPost = value; }
-        }
-
-        public bool GetFav
-        {
-            get { return this._MyGetFav; }
-            set { this._MyGetFav = value; }
-        }
-
-        public bool IsMonospace
-        {
-            get { return this._MyMonoSpace; }
-            set { this._MyMonoSpace = value; }
-        }
-
-        public bool ReadOldPosts
-        {
-            get { return this._MyReadOldPosts; }
-            set { this._MyReadOldPosts = value; }
-        }
-
-        public bool UseSsl
-        {
-            get { return this._MyUseSsl; }
-            set { this._MyUseSsl = value; }
-        }
-
-        public string BitlyUser
-        {
-            get { return this._MyBitlyId; }
-            set { this._MyBitlyId = value; }
-        }
-
-        public string BitlyPwd
-        {
-            get { return this._MyBitlyPw; }
-            set { this._MyBitlyPw = value; }
-        }
-
-        public bool ShowGrid
-        {
-            get { return this._MyShowGrid; }
-            set { this._MyShowGrid = value; }
-        }
-
-        public bool UseAtIdSupplement
-        {
-            get { return this._MyUseAtIdSupplement; }
-            set { this._MyUseAtIdSupplement = value; }
-        }
-
-        public bool UseHashSupplement
-        {
-            get { return this._MyUseHashSupplement; }
-            set { this._MyUseHashSupplement = value; }
-        }
-
-        public bool PreviewEnable
-        {
-            get { return this._MyPreviewEnable; }
-            set { this._MyPreviewEnable = value; }
-        }
-
-        public bool UseAdditionalCount
-        {
-            get { return this._MyUseAdditonalCount; }
-            set { this._MyUseAdditonalCount = value; }
-        }
-
-        public bool OpenUserTimeline
-        {
-            get { return this._MyOpenUserTimeline; }
-            set { this._MyOpenUserTimeline = value; }
-        }
-
-        public string TwitterApiUrl
-        {
-            get { return this._MyTwitterApiUrl; }
-            set { this._MyTwitterApiUrl = value; }
-        }
-
-        public string TwitterSearchApiUrl
-        {
-            get { return this._MyTwitterSearchApiUrl; }
-            set { this._MyTwitterSearchApiUrl = value; }
-        }
-
-        public string Language
-        {
-            get { return this._MyLanguage; }
-            set { this._MyLanguage = value; }
-        }
-
-        public bool LimitBalloon
-        {
-            get { return this._MyLimitBalloon; }
-            set { this._MyLimitBalloon = value; }
-        }
-
-        public bool EventNotifyEnabled
-        {
-            get { return this._MyEventNotifyEnabled; }
-            set { this._MyEventNotifyEnabled = value; }
-        }
+        public Font FontReaded { get; set; }
+
+        public Color ColorReaded { get; set; }
+
+        public Color ColorFav { get; set; }
+
+        public Color ColorOWL { get; set; }
+
+        public Color ColorRetweet { get; set; }
+
+        public Font FontDetail { get; set; }
+
+        public Color ColorDetail { get; set; }
+
+        public Color ColorDetailLink { get; set; }
+
+        public Color ColorSelf { get; set; }
+
+        public Color ColorAtSelf { get; set; }
+
+        public Color ColorTarget { get; set; }
+
+        public Color ColorAtTarget { get; set; }
+
+        public Color ColorAtFromTarget { get; set; }
+
+        public Color ColorAtTo { get; set; }
+
+        public Color ColorInputBackcolor { get; set; }
+
+        public Color ColorInputFont { get; set; }
+
+        public Font FontInputFont { get; set; }
+
+        public Color ColorListBackcolor { get; set; }
+
+        public Color ColorDetailBackcolor { get; set; }
+
+        public NameBalloonEnum NameBalloon { get; set; }
+
+        public bool PostCtrlEnter { get; set; }
+
+        public bool PostShiftEnter { get; set; }
+
+        public int CountApi { get; set; }
+
+        public int CountApiReply { get; set; }
+
+        public int MoreCountApi { get; set; }
+
+        public int FirstCountApi { get; set; }
+
+        public int SearchCountApi { get; set; }
+
+        public int FavoritesCountApi { get; set; }
+
+        public int UserTimelineCountApi { get; set; }
+
+        public int ListCountApi { get; set; }
+
+        public bool PostAndGet { get; set; }
+
+        public bool UseRecommendStatus { get; set; }
+
+        public string RecommendStatusText { get; set; }
+
+        public bool DispUsername { get; set; }
+
+        public bool CloseToExit { get; set; }
+
+        public bool MinimizeToTray { get; set; }
+
+        public DispTitleEnum DispLatestPost { get; set; }
+
+        public string BrowserPath { get; set; }
+
+        public bool TinyUrlResolve { get; set; }
+
+        public bool ShortUrlForceResolve { get; set; }
+
+        public bool SortOrderLock { get; set; }
+
+        public HttpConnection.ProxyType SelectedProxyType { get; set; }
+
+        public string ProxyAddress { get; set; }
+
+        public int ProxyPort { get; set; }
+
+        public string ProxyUser { get; set; }
+
+        public string ProxyPassword { get; set; }
+
+        public bool PeriodAdjust { get; set; }
+
+        public bool StartupVersion { get; set; }
+
+        public bool StartupFollowers { get; set; }
+
+        public bool RestrictFavCheck { get; set; }
+
+        public bool AlwaysTop { get; set; }
+
+        public bool UrlConvertAuto { get; set; }
+
+        public bool ShortenTco { get; set; }
+
+        public bool OutputzEnabled { get; set; }
+
+        public string OutputzKey { get; set; }
+
+        public OutputzUrlmode OutputzUrlmode { get; set; }
+
+        public bool Nicoms { get; set; }
+
+        public UrlConverter AutoShortUrlFirst { get; set; }
+
+        public bool UseUnreadStyle { get; set; }
+
+        public string DateTimeFormat { get; set; }
+
+        public int DefaultTimeOut { get; set; }
+
+        public bool RetweetNoConfirm { get; set; }
+
+        public bool TabIconDisp { get; set; }
+
+        public ReplyIconState ReplyIconState { get; set; }
+
+        public bool ReadOwnPost { get; set; }
+
+        public bool GetFav { get; set; }
+
+        public bool IsMonospace { get; set; }
+
+        public bool ReadOldPosts { get; set; }
+
+        public bool UseSsl { get; set; }
+
+        public string BitlyUser { get; set; }
+
+        public string BitlyPwd { get; set; }
+
+        public bool ShowGrid { get; set; }
+
+        public bool UseAtIdSupplement { get; set; }
+
+        public bool UseHashSupplement { get; set; }
+
+        public bool PreviewEnable { get; set; }
+
+        public bool UseAdditionalCount { get; set; }
+
+        public bool OpenUserTimeline { get; set; }
+
+        public string TwitterApiUrl { get; set; }
+
+        public string TwitterSearchApiUrl { get; set; }
+
+        public string Language { get; set; }
+
+        public bool LimitBalloon { get; set; }
+
+        public bool EventNotifyEnabled { get; set; }
 
         public EventType EventNotifyFlag
         {
@@ -794,17 +299,9 @@ namespace Hoehoe
             set { this._isMyEventNotifyFlag = value; }
         }
 
-        public bool ForceEventNotify
-        {
-            get { return this._MyForceEventNotify; }
-            set { this._MyForceEventNotify = value; }
-        }
+        public bool ForceEventNotify { get; set; }
 
-        public bool FavEventUnread
-        {
-            get { return this._MyFavEventUnread; }
-            set { this._MyFavEventUnread = value; }
-        }
+        public bool FavEventUnread { get; set; }
 
         public string TranslateLanguage
         {
@@ -816,23 +313,11 @@ namespace Hoehoe
             }
         }
 
-        public string EventSoundFile
-        {
-            get { return this._MyEventSoundFile; }
-            set { this._MyEventSoundFile = value; }
-        }
+        public string EventSoundFile { get; set; }
 
-        public int ListDoubleClickAction
-        {
-            get { return this._MyDoubleClickAction; }
-            set { this._MyDoubleClickAction = value; }
-        }
+        public int ListDoubleClickAction { get; set; }
 
-        public string UserAppointUrl
-        {
-            get { return this._UserAppointUrl; }
-            set { this._UserAppointUrl = value; }
-        }
+        public string UserAppointUrl { get; set; }
 
         public bool HotkeyEnabled { get; set; }
 
@@ -969,48 +454,48 @@ namespace Hoehoe
 
             try
             {
-                this._MyUserstreamStartup = this.StartupUserstreamCheck.Checked;
+                this.UserstreamStartup = this.StartupUserstreamCheck.Checked;
 
-                if (this._MyUserstreamPeriod != Convert.ToInt32(UserstreamPeriod.Text))
+                if (this.UserstreamPeriodInt != Convert.ToInt32(UserstreamPeriod.Text))
                 {
-                    this._MyUserstreamPeriod = Convert.ToInt32(UserstreamPeriod.Text);
+                    this.UserstreamPeriodInt = Convert.ToInt32(UserstreamPeriod.Text);
                     arg.UserStream = true;
                     isIntervalChanged = true;
                 }
-                if (this._MytimelinePeriod != Convert.ToInt32(TimelinePeriod.Text))
+                if (this.TimelinePeriodInt != Convert.ToInt32(TimelinePeriod.Text))
                 {
-                    this._MytimelinePeriod = Convert.ToInt32(TimelinePeriod.Text);
+                    this.TimelinePeriodInt = Convert.ToInt32(TimelinePeriod.Text);
                     arg.Timeline = true;
                     isIntervalChanged = true;
                 }
-                if (this._MyDMPeriod != Convert.ToInt32(DMPeriod.Text))
+                if (this.DMPeriodInt != Convert.ToInt32(DMPeriod.Text))
                 {
-                    this._MyDMPeriod = Convert.ToInt32(DMPeriod.Text);
+                    this.DMPeriodInt = Convert.ToInt32(DMPeriod.Text);
                     arg.DirectMessage = true;
                     isIntervalChanged = true;
                 }
-                if (this._MyPubSearchPeriod != Convert.ToInt32(PubSearchPeriod.Text))
+                if (this.PubSearchPeriodInt != Convert.ToInt32(PubSearchPeriod.Text))
                 {
-                    this._MyPubSearchPeriod = Convert.ToInt32(PubSearchPeriod.Text);
+                    this.PubSearchPeriodInt = Convert.ToInt32(PubSearchPeriod.Text);
                     arg.PublicSearch = true;
                     isIntervalChanged = true;
                 }
 
-                if (this._MyListsPeriod != Convert.ToInt32(ListsPeriod.Text))
+                if (this.ListsPeriodInt != Convert.ToInt32(ListsPeriod.Text))
                 {
-                    this._MyListsPeriod = Convert.ToInt32(ListsPeriod.Text);
+                    this.ListsPeriodInt = Convert.ToInt32(ListsPeriod.Text);
                     arg.Lists = true;
                     isIntervalChanged = true;
                 }
-                if (this._MyReplyPeriod != Convert.ToInt32(ReplyPeriod.Text))
+                if (this.ReplyPeriodInt != Convert.ToInt32(ReplyPeriod.Text))
                 {
-                    this._MyReplyPeriod = Convert.ToInt32(ReplyPeriod.Text);
+                    this.ReplyPeriodInt = Convert.ToInt32(ReplyPeriod.Text);
                     arg.Reply = true;
                     isIntervalChanged = true;
                 }
-                if (this._MyUserTimelinePeriod != Convert.ToInt32(UserTimelinePeriod.Text))
+                if (this.UserTimelinePeriodInt != Convert.ToInt32(UserTimelinePeriod.Text))
                 {
-                    this._MyUserTimelinePeriod = Convert.ToInt32(UserTimelinePeriod.Text);
+                    this.UserTimelinePeriodInt = Convert.ToInt32(UserTimelinePeriod.Text);
                     arg.UserTimeline = true;
                     isIntervalChanged = true;
                 }
@@ -1023,217 +508,217 @@ namespace Hoehoe
                     }
                 }
 
-                this._MyReaded = StartupReaded.Checked;
+                this.Readed = StartupReaded.Checked;
                 switch (IconSize.SelectedIndex)
                 {
                     case 0:
-                        this._MyIconSize = Hoehoe.IconSizes.IconNone;
+                        this.IconSz = Hoehoe.IconSizes.IconNone;
                         break;
                     case 1:
-                        this._MyIconSize = Hoehoe.IconSizes.Icon16;
+                        this.IconSz = Hoehoe.IconSizes.Icon16;
                         break;
                     case 2:
-                        this._MyIconSize = Hoehoe.IconSizes.Icon24;
+                        this.IconSz = Hoehoe.IconSizes.Icon24;
                         break;
                     case 3:
-                        this._MyIconSize = Hoehoe.IconSizes.Icon48;
+                        this.IconSz = Hoehoe.IconSizes.Icon48;
                         break;
                     case 4:
-                        this._MyIconSize = Hoehoe.IconSizes.Icon48_2;
+                        this.IconSz = Hoehoe.IconSizes.Icon48_2;
                         break;
                 }
-                this._MyStatusText = StatusText.Text;
-                this._MyPlaySound = PlaySnd.Checked;
-                this._MyUnreadManage = UReadMng.Checked;
-                this._MyOneWayLove = OneWayLv.Checked;
-                this._fntUnread = lblUnread.Font;                // 未使用
-                this._clrUnread = lblUnread.ForeColor;
-                this._fntReaded = lblListFont.Font;              // リストフォントとして使用
-                this._clrReaded = lblListFont.ForeColor;
-                this._clrFav = lblFav.ForeColor;
-                this._clrOWL = lblOWL.ForeColor;
-                this._clrRetweet = lblRetweet.ForeColor;
-                this._fntDetail = lblDetail.Font;
-                this._clrSelf = lblSelf.BackColor;
-                this._clrAtSelf = lblAtSelf.BackColor;
-                this._clrTarget = lblTarget.BackColor;
-                this._clrAtTarget = lblAtTarget.BackColor;
-                this._clrAtFromTarget = lblAtFromTarget.BackColor;
-                this._clrAtTo = lblAtTo.BackColor;
-                this._clrInputBackcolor = lblInputBackcolor.BackColor;
-                this._clrInputFont = lblInputFont.ForeColor;
-                this._clrListBackcolor = lblListBackcolor.BackColor;
-                this._clrDetailBackcolor = lblDetailBackcolor.BackColor;
-                this._clrDetail = lblDetail.ForeColor;
-                this._clrDetailLink = lblDetailLink.ForeColor;
-                this._fntInputFont = lblInputFont.Font;
+                this.Status = StatusText.Text;
+                this.PlaySound = PlaySnd.Checked;
+                this.UnreadManage = UReadMng.Checked;
+                this.OneWayLove = OneWayLv.Checked;
+                this.FontUnread = lblUnread.Font;                // 未使用
+                this.ColorUnread = lblUnread.ForeColor;
+                this.FontReaded = lblListFont.Font;              // リストフォントとして使用
+                this.ColorReaded = lblListFont.ForeColor;
+                this.ColorFav = lblFav.ForeColor;
+                this.ColorOWL = lblOWL.ForeColor;
+                this.ColorRetweet = lblRetweet.ForeColor;
+                this.FontDetail = lblDetail.Font;
+                this.ColorSelf = lblSelf.BackColor;
+                this.ColorAtSelf = lblAtSelf.BackColor;
+                this.ColorTarget = lblTarget.BackColor;
+                this.ColorAtTarget = lblAtTarget.BackColor;
+                this.ColorAtFromTarget = lblAtFromTarget.BackColor;
+                this.ColorAtTo = lblAtTo.BackColor;
+                this.ColorInputBackcolor = lblInputBackcolor.BackColor;
+                this.ColorInputFont = lblInputFont.ForeColor;
+                this.ColorListBackcolor = lblListBackcolor.BackColor;
+                this.ColorDetailBackcolor = lblDetailBackcolor.BackColor;
+                this.ColorDetail = lblDetail.ForeColor;
+                this.ColorDetailLink = lblDetailLink.ForeColor;
+                this.FontInputFont = lblInputFont.Font;
                 switch (cmbNameBalloon.SelectedIndex)
                 {
                     case 0:
-                        this._myNameBalloon = NameBalloonEnum.None;
+                        this.NameBalloon = NameBalloonEnum.None;
                         break;
                     case 1:
-                        this._myNameBalloon = NameBalloonEnum.UserID;
+                        this.NameBalloon = NameBalloonEnum.UserID;
                         break;
                     case 2:
-                        this._myNameBalloon = NameBalloonEnum.NickName;
+                        this.NameBalloon = NameBalloonEnum.NickName;
                         break;
                 }
 
                 switch (ComboBoxPostKeySelect.SelectedIndex)
                 {
                     case 2:
-                        this._myPostShiftEnter = true;
-                        this._myPostCtrlEnter = false;
+                        this.PostShiftEnter = true;
+                        this.PostCtrlEnter = false;
                         break;
                     case 1:
-                        this._myPostCtrlEnter = true;
-                        this._myPostShiftEnter = false;
+                        this.PostCtrlEnter = true;
+                        this.PostShiftEnter = false;
                         break;
                     case 0:
-                        this._myPostCtrlEnter = false;
-                        this._myPostShiftEnter = false;
+                        this.PostCtrlEnter = false;
+                        this.PostShiftEnter = false;
                         break;
                 }
-                this._countApi = Convert.ToInt32(TextCountApi.Text);
-                this._countApiReply = Convert.ToInt32(TextCountApiReply.Text);
-                this._browserpath = BrowserPathText.Text.Trim();
-                this._MyPostAndGet = CheckPostAndGet.Checked;
-                this._myUseRecommendStatus = CheckUseRecommendStatus.Checked;
-                this._myDispUsername = CheckDispUsername.Checked;
-                this._MyCloseToExit = CheckCloseToExit.Checked;
-                this._MyMinimizeToTray = CheckMinimizeToTray.Checked;
+                this.CountApi = Convert.ToInt32(TextCountApi.Text);
+                this.CountApiReply = Convert.ToInt32(TextCountApiReply.Text);
+                this.BrowserPath = BrowserPathText.Text.Trim();
+                this.PostAndGet = CheckPostAndGet.Checked;
+                this.UseRecommendStatus = CheckUseRecommendStatus.Checked;
+                this.DispUsername = CheckDispUsername.Checked;
+                this.CloseToExit = CheckCloseToExit.Checked;
+                this.MinimizeToTray = CheckMinimizeToTray.Checked;
                 switch (ComboDispTitle.SelectedIndex)
                 {
                     case 0:
                         // None
-                        this._MyDispLatestPost = DispTitleEnum.None;
+                        this.DispLatestPost = DispTitleEnum.None;
                         break;
                     case 1:
                         // Ver
-                        this._MyDispLatestPost = DispTitleEnum.Ver;
+                        this.DispLatestPost = DispTitleEnum.Ver;
                         break;
                     case 2:
                         // Post
-                        this._MyDispLatestPost = DispTitleEnum.Post;
+                        this.DispLatestPost = DispTitleEnum.Post;
                         break;
                     case 3:
                         // RepCount
-                        this._MyDispLatestPost = DispTitleEnum.UnreadRepCount;
+                        this.DispLatestPost = DispTitleEnum.UnreadRepCount;
                         break;
                     case 4:
                         // AllCount
-                        this._MyDispLatestPost = DispTitleEnum.UnreadAllCount;
+                        this.DispLatestPost = DispTitleEnum.UnreadAllCount;
                         break;
                     case 5:
                         // Rep+All
-                        this._MyDispLatestPost = DispTitleEnum.UnreadAllRepCount;
+                        this.DispLatestPost = DispTitleEnum.UnreadAllRepCount;
                         break;
                     case 6:
                         // Unread/All
-                        this._MyDispLatestPost = DispTitleEnum.UnreadCountAllCount;
+                        this.DispLatestPost = DispTitleEnum.UnreadCountAllCount;
                         break;
                     case 7:
                         // Count of Status/Follow/Follower
-                        this._MyDispLatestPost = DispTitleEnum.OwnStatus;
+                        this.DispLatestPost = DispTitleEnum.OwnStatus;
                         break;
                 }
-                this._MySortOrderLock = CheckSortOrderLock.Checked;
-                this._MyTinyUrlResolve = CheckTinyURL.Checked;
-                this._MyShortUrlForceResolve = CheckForceResolve.Checked;
-                ShortUrl.IsResolve = this._MyTinyUrlResolve;
-                ShortUrl.IsForceResolve = this._MyShortUrlForceResolve;
+                this.SortOrderLock = CheckSortOrderLock.Checked;
+                this.TinyUrlResolve = CheckTinyURL.Checked;
+                this.ShortUrlForceResolve = CheckForceResolve.Checked;
+                ShortUrl.IsResolve = this.TinyUrlResolve;
+                ShortUrl.IsForceResolve = this.ShortUrlForceResolve;
                 if (RadioProxyNone.Checked)
                 {
-                    this._MyProxyType = HttpConnection.ProxyType.None;
+                    this.SelectedProxyType = HttpConnection.ProxyType.None;
                 }
                 else if (RadioProxyIE.Checked)
                 {
-                    this._MyProxyType = HttpConnection.ProxyType.IE;
+                    this.SelectedProxyType = HttpConnection.ProxyType.IE;
                 }
                 else
                 {
-                    this._MyProxyType = HttpConnection.ProxyType.Specified;
+                    this.SelectedProxyType = HttpConnection.ProxyType.Specified;
                 }
-                this._MyProxyAddress = TextProxyAddress.Text.Trim();
-                this._MyProxyPort = int.Parse(TextProxyPort.Text.Trim());
-                this._MyProxyUser = TextProxyUser.Text.Trim();
-                this._MyProxyPassword = TextProxyPassword.Text.Trim();
-                this._MyPeriodAdjust = CheckPeriodAdjust.Checked;
-                this._MyStartupVersion = CheckStartupVersion.Checked;
-                this._MyStartupFollowers = CheckStartupFollowers.Checked;
-                this._MyRestrictFavCheck = CheckFavRestrict.Checked;
-                this._MyAlwaysTop = CheckAlwaysTop.Checked;
-                this._MyUrlConvertAuto = CheckAutoConvertUrl.Checked;
-                this._MyShortenTco = ShortenTcoCheck.Checked;
-                this._MyOutputz = CheckOutputz.Checked;
-                this._MyOutputzKey = TextBoxOutputzKey.Text.Trim();
+                this.ProxyAddress = TextProxyAddress.Text.Trim();
+                this.ProxyPort = int.Parse(TextProxyPort.Text.Trim());
+                this.ProxyUser = TextProxyUser.Text.Trim();
+                this.ProxyPassword = TextProxyPassword.Text.Trim();
+                this.PeriodAdjust = CheckPeriodAdjust.Checked;
+                this.StartupVersion = CheckStartupVersion.Checked;
+                this.StartupFollowers = CheckStartupFollowers.Checked;
+                this.RestrictFavCheck = CheckFavRestrict.Checked;
+                this.AlwaysTop = CheckAlwaysTop.Checked;
+                this.UrlConvertAuto = CheckAutoConvertUrl.Checked;
+                this.ShortenTco = ShortenTcoCheck.Checked;
+                this.OutputzEnabled = CheckOutputz.Checked;
+                this.OutputzKey = TextBoxOutputzKey.Text.Trim();
 
                 switch (ComboBoxOutputzUrlmode.SelectedIndex)
                 {
                     case 0:
-                        this._MyOutputzUrlmode = OutputzUrlmode.twittercom;
+                        this.OutputzUrlmode = OutputzUrlmode.twittercom;
                         break;
                     case 1:
-                        this._MyOutputzUrlmode = OutputzUrlmode.twittercomWithUsername;
+                        this.OutputzUrlmode = OutputzUrlmode.twittercomWithUsername;
                         break;
                 }
 
-                this._MyNicoms = CheckNicoms.Checked;
-                this._MyUnreadStyle = chkUnreadStyle.Checked;
-                this._MyDateTimeFormat = CmbDateTimeFormat.Text;
-                this._MyDefaultTimeOut = Convert.ToInt32(ConnectionTimeOut.Text);
-                this._MyRetweetNoConfirm = CheckRetweetNoConfirm.Checked;
-                this._MyLimitBalloon = CheckBalloonLimit.Checked;
-                this._MyEventNotifyEnabled = CheckEventNotify.Checked;
+                this.Nicoms = CheckNicoms.Checked;
+                this.UseUnreadStyle = chkUnreadStyle.Checked;
+                this.DateTimeFormat = CmbDateTimeFormat.Text;
+                this.DefaultTimeOut = Convert.ToInt32(ConnectionTimeOut.Text);
+                this.RetweetNoConfirm = CheckRetweetNoConfirm.Checked;
+                this.LimitBalloon = CheckBalloonLimit.Checked;
+                this.EventNotifyEnabled = CheckEventNotify.Checked;
                 this.GetEventNotifyFlag(ref this._MyEventNotifyFlag, ref this._isMyEventNotifyFlag);
-                this._MyForceEventNotify = CheckForceEventNotify.Checked;
-                this._MyFavEventUnread = CheckFavEventUnread.Checked;
+                this.ForceEventNotify = CheckForceEventNotify.Checked;
+                this.FavEventUnread = CheckFavEventUnread.Checked;
                 this._MyTranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(ComboBoxTranslateLanguage.SelectedIndex);
-                this._MyEventSoundFile = Convert.ToString(ComboBoxEventNotifySound.SelectedItem);
-                this._MyAutoShortUrlFirst = (UrlConverter)ComboBoxAutoShortUrlFirst.SelectedIndex;
-                this._MyTabIconDisp = chkTabIconDisp.Checked;
-                this._MyReadOwnPost = chkReadOwnPost.Checked;
-                this._MyGetFav = chkGetFav.Checked;
-                this._MyMonoSpace = CheckMonospace.Checked;
-                this._MyReadOldPosts = CheckReadOldPosts.Checked;
-                this._MyUseSsl = CheckUseSsl.Checked;
-                this._MyBitlyId = TextBitlyId.Text;
-                this._MyBitlyPw = TextBitlyPw.Text;
-                this._MyShowGrid = CheckShowGrid.Checked;
-                this._MyUseAtIdSupplement = CheckAtIdSupple.Checked;
-                this._MyUseHashSupplement = CheckHashSupple.Checked;
-                this._MyPreviewEnable = CheckPreviewEnable.Checked;
-                this._MyTwitterApiUrl = TwitterAPIText.Text.Trim();
-                this._MyTwitterSearchApiUrl = TwitterSearchAPIText.Text.Trim();
+                this.EventSoundFile = Convert.ToString(ComboBoxEventNotifySound.SelectedItem);
+                this.AutoShortUrlFirst = (UrlConverter)ComboBoxAutoShortUrlFirst.SelectedIndex;
+                this.TabIconDisp = chkTabIconDisp.Checked;
+                this.ReadOwnPost = chkReadOwnPost.Checked;
+                this.GetFav = chkGetFav.Checked;
+                this.IsMonospace = CheckMonospace.Checked;
+                this.ReadOldPosts = CheckReadOldPosts.Checked;
+                this.UseSsl = CheckUseSsl.Checked;
+                this.BitlyUser = TextBitlyId.Text;
+                this.BitlyPwd = TextBitlyPw.Text;
+                this.ShowGrid = CheckShowGrid.Checked;
+                this.UseAtIdSupplement = CheckAtIdSupple.Checked;
+                this.UseHashSupplement = CheckHashSupple.Checked;
+                this.PreviewEnable = CheckPreviewEnable.Checked;
+                this.TwitterApiUrl = TwitterAPIText.Text.Trim();
+                this.TwitterSearchApiUrl = TwitterSearchAPIText.Text.Trim();
                 switch (ReplyIconStateCombo.SelectedIndex)
                 {
                     case 0:
-                        this._MyReplyIconState = ReplyIconState.None;
+                        this.ReplyIconState = ReplyIconState.None;
                         break;
                     case 1:
-                        this._MyReplyIconState = ReplyIconState.StaticIcon;
+                        this.ReplyIconState = ReplyIconState.StaticIcon;
                         break;
                     case 2:
-                        this._MyReplyIconState = ReplyIconState.BlinkIcon;
+                        this.ReplyIconState = ReplyIconState.BlinkIcon;
                         break;
                 }
                 switch (LanguageCombo.SelectedIndex)
                 {
                     case 0:
-                        this._MyLanguage = "OS";
+                        this.Language = "OS";
                         break;
                     case 1:
-                        this._MyLanguage = "ja";
+                        this.Language = "ja";
                         break;
                     case 2:
-                        this._MyLanguage = "en";
+                        this.Language = "en";
                         break;
                     case 3:
-                        this._MyLanguage = "zh-CN";
+                        this.Language = "zh-CN";
                         break;
                     default:
-                        this._MyLanguage = "en";
+                        this.Language = "en";
                         break;
                 }
                 this.HotkeyEnabled = this.HotkeyCheck.Checked;
@@ -1260,16 +745,16 @@ namespace Hoehoe
                 }
                 this.HotkeyKey = (Keys)HotkeyText.Tag;
                 this.BlinkNewMentions = ChkNewMentionsBlink.Checked;
-                this._MyUseAdditonalCount = UseChangeGetCount.Checked;
-                this._MoreCountApi = Convert.ToInt32(GetMoreTextCountApi.Text);
-                this._FirstCountApi = Convert.ToInt32(FirstTextCountApi.Text);
-                this._SearchCountApi = Convert.ToInt32(SearchTextCountApi.Text);
-                this._FavoritesCountApi = Convert.ToInt32(FavoritesTextCountApi.Text);
-                this._UserTimelineCountApi = Convert.ToInt32(UserTimelineTextCountApi.Text);
-                this._ListCountApi = Convert.ToInt32(ListTextCountApi.Text);
-                this._MyOpenUserTimeline = CheckOpenUserTimeline.Checked;
-                this._MyDoubleClickAction = ListDoubleClickActionComboBox.SelectedIndex;
-                this._UserAppointUrl = UserAppointUrlText.Text;
+                this.UseAdditionalCount = UseChangeGetCount.Checked;
+                this.MoreCountApi = Convert.ToInt32(GetMoreTextCountApi.Text);
+                this.FirstCountApi = Convert.ToInt32(FirstTextCountApi.Text);
+                this.SearchCountApi = Convert.ToInt32(SearchTextCountApi.Text);
+                this.FavoritesCountApi = Convert.ToInt32(FavoritesTextCountApi.Text);
+                this.UserTimelineCountApi = Convert.ToInt32(UserTimelineTextCountApi.Text);
+                this.ListCountApi = Convert.ToInt32(ListTextCountApi.Text);
+                this.OpenUserTimeline = CheckOpenUserTimeline.Checked;
+                this.ListDoubleClickAction = ListDoubleClickActionComboBox.SelectedIndex;
+                this.UserAppointUrl = UserAppointUrlText.Text;
                 this.HideDuplicatedRetweets = this.HideDuplicatedRetweetsCheck.Checked;
                 this.IsPreviewFoursquare = this.IsPreviewFoursquareCheckBox.Checked;
                 this.FoursquarePreviewHeight = Convert.ToInt32(this.FoursquarePreviewHeightTextBox.Text);
@@ -1377,17 +862,17 @@ namespace Hoehoe
                 }
             }
 
-            this.StartupUserstreamCheck.Checked = this._MyUserstreamStartup;
-            UserstreamPeriod.Text = this._MyUserstreamPeriod.ToString();
-            TimelinePeriod.Text = this._MytimelinePeriod.ToString();
-            ReplyPeriod.Text = this._MyReplyPeriod.ToString();
-            DMPeriod.Text = this._MyDMPeriod.ToString();
-            PubSearchPeriod.Text = this._MyPubSearchPeriod.ToString();
-            ListsPeriod.Text = this._MyListsPeriod.ToString();
-            UserTimelinePeriod.Text = this._MyUserTimelinePeriod.ToString();
+            this.StartupUserstreamCheck.Checked = this.UserstreamStartup;
+            UserstreamPeriod.Text = this.UserstreamPeriodInt.ToString();
+            TimelinePeriod.Text = this.TimelinePeriodInt.ToString();
+            ReplyPeriod.Text = this.ReplyPeriodInt.ToString();
+            DMPeriod.Text = this.DMPeriodInt.ToString();
+            PubSearchPeriod.Text = this.PubSearchPeriodInt.ToString();
+            ListsPeriod.Text = this.ListsPeriodInt.ToString();
+            UserTimelinePeriod.Text = this.UserTimelinePeriodInt.ToString();
 
-            StartupReaded.Checked = this._MyReaded;
-            switch (this._MyIconSize)
+            StartupReaded.Checked = this.Readed;
+            switch (this.IconSz)
             {
                 case Hoehoe.IconSizes.IconNone:
                     IconSize.SelectedIndex = 0;
@@ -1405,35 +890,35 @@ namespace Hoehoe
                     IconSize.SelectedIndex = 4;
                     break;
             }
-            StatusText.Text = this._MyStatusText;
-            UReadMng.Checked = this._MyUnreadManage;
-            StartupReaded.Enabled = this._MyUnreadManage != false;
-            PlaySnd.Checked = this._MyPlaySound;
-            OneWayLv.Checked = this._MyOneWayLove;
+            StatusText.Text = this.Status;
+            UReadMng.Checked = this.UnreadManage;
+            StartupReaded.Enabled = this.UnreadManage != false;
+            PlaySnd.Checked = this.PlaySound;
+            OneWayLv.Checked = this.OneWayLove;
 
-            lblListFont.Font = this._fntReaded;
-            lblUnread.Font = this._fntUnread;
-            lblUnread.ForeColor = this._clrUnread;
-            lblListFont.ForeColor = this._clrReaded;
-            lblFav.ForeColor = this._clrFav;
-            lblOWL.ForeColor = this._clrOWL;
-            lblRetweet.ForeColor = this._clrRetweet;
-            lblDetail.Font = this._fntDetail;
-            lblSelf.BackColor = this._clrSelf;
-            lblAtSelf.BackColor = this._clrAtSelf;
-            lblTarget.BackColor = this._clrTarget;
-            lblAtTarget.BackColor = this._clrAtTarget;
-            lblAtFromTarget.BackColor = this._clrAtFromTarget;
-            lblAtTo.BackColor = this._clrAtTo;
-            lblInputBackcolor.BackColor = this._clrInputBackcolor;
-            lblInputFont.ForeColor = this._clrInputFont;
-            lblInputFont.Font = this._fntInputFont;
-            lblListBackcolor.BackColor = this._clrListBackcolor;
-            lblDetailBackcolor.BackColor = this._clrDetailBackcolor;
-            lblDetail.ForeColor = this._clrDetail;
-            lblDetailLink.ForeColor = this._clrDetailLink;
+            lblListFont.Font = this.FontReaded;
+            lblUnread.Font = this.FontUnread;
+            lblUnread.ForeColor = this.ColorUnread;
+            lblListFont.ForeColor = this.ColorReaded;
+            lblFav.ForeColor = this.ColorFav;
+            lblOWL.ForeColor = this.ColorOWL;
+            lblRetweet.ForeColor = this.ColorRetweet;
+            lblDetail.Font = this.FontDetail;
+            lblSelf.BackColor = this.ColorSelf;
+            lblAtSelf.BackColor = this.ColorAtSelf;
+            lblTarget.BackColor = this.ColorTarget;
+            lblAtTarget.BackColor = this.ColorAtTarget;
+            lblAtFromTarget.BackColor = this.ColorAtFromTarget;
+            lblAtTo.BackColor = this.ColorAtTo;
+            lblInputBackcolor.BackColor = this.ColorInputBackcolor;
+            lblInputFont.ForeColor = this.ColorInputFont;
+            lblInputFont.Font = this.FontInputFont;
+            lblListBackcolor.BackColor = this.ColorListBackcolor;
+            lblDetailBackcolor.BackColor = this.ColorDetailBackcolor;
+            lblDetail.ForeColor = this.ColorDetail;
+            lblDetailLink.ForeColor = this.ColorDetailLink;
 
-            switch (this._myNameBalloon)
+            switch (this.NameBalloon)
             {
                 case NameBalloonEnum.None:
                     cmbNameBalloon.SelectedIndex = 0;
@@ -1446,11 +931,11 @@ namespace Hoehoe
                     break;
             }
 
-            if (this._myPostCtrlEnter)
+            if (this.PostCtrlEnter)
             {
                 ComboBoxPostKeySelect.SelectedIndex = 1;
             }
-            else if (this._myPostShiftEnter)
+            else if (this.PostShiftEnter)
             {
                 ComboBoxPostKeySelect.SelectedIndex = 2;
             }
@@ -1459,15 +944,15 @@ namespace Hoehoe
                 ComboBoxPostKeySelect.SelectedIndex = 0;
             }
 
-            TextCountApi.Text = this._countApi.ToString();
-            TextCountApiReply.Text = this._countApiReply.ToString();
-            BrowserPathText.Text = this._browserpath;
-            CheckPostAndGet.Checked = this._MyPostAndGet;
-            CheckUseRecommendStatus.Checked = this._myUseRecommendStatus;
-            CheckDispUsername.Checked = this._myDispUsername;
-            CheckCloseToExit.Checked = this._MyCloseToExit;
-            CheckMinimizeToTray.Checked = this._MyMinimizeToTray;
-            switch (this._MyDispLatestPost)
+            TextCountApi.Text = this.CountApi.ToString();
+            TextCountApiReply.Text = this.CountApiReply.ToString();
+            BrowserPathText.Text = this.BrowserPath;
+            CheckPostAndGet.Checked = this.PostAndGet;
+            CheckUseRecommendStatus.Checked = this.UseRecommendStatus;
+            CheckDispUsername.Checked = this.DispUsername;
+            CheckCloseToExit.Checked = this.CloseToExit;
+            CheckMinimizeToTray.Checked = this.MinimizeToTray;
+            switch (this.DispLatestPost)
             {
                 case DispTitleEnum.None:
                     ComboDispTitle.SelectedIndex = 0;
@@ -1494,10 +979,10 @@ namespace Hoehoe
                     ComboDispTitle.SelectedIndex = 7;
                     break;
             }
-            CheckSortOrderLock.Checked = this._MySortOrderLock;
-            CheckTinyURL.Checked = this._MyTinyUrlResolve;
-            CheckForceResolve.Checked = this._MyShortUrlForceResolve;
-            switch (this._MyProxyType)
+            CheckSortOrderLock.Checked = this.SortOrderLock;
+            CheckTinyURL.Checked = this.TinyUrlResolve;
+            CheckForceResolve.Checked = this.ShortUrlForceResolve;
+            switch (this.SelectedProxyType)
             {
                 case HttpConnection.ProxyType.None:
                     RadioProxyNone.Checked = true;
@@ -1519,23 +1004,23 @@ namespace Hoehoe
             LabelProxyPassword.Enabled = chk;
             TextProxyPassword.Enabled = chk;
 
-            TextProxyAddress.Text = this._MyProxyAddress;
-            TextProxyPort.Text = this._MyProxyPort.ToString();
-            TextProxyUser.Text = this._MyProxyUser;
-            TextProxyPassword.Text = this._MyProxyPassword;
+            TextProxyAddress.Text = this.ProxyAddress;
+            TextProxyPort.Text = this.ProxyPort.ToString();
+            TextProxyUser.Text = this.ProxyUser;
+            TextProxyPassword.Text = this.ProxyPassword;
 
-            CheckPeriodAdjust.Checked = this._MyPeriodAdjust;
-            CheckStartupVersion.Checked = this._MyStartupVersion;
-            CheckStartupFollowers.Checked = this._MyStartupFollowers;
-            CheckFavRestrict.Checked = this._MyRestrictFavCheck;
-            CheckAlwaysTop.Checked = this._MyAlwaysTop;
-            CheckAutoConvertUrl.Checked = this._MyUrlConvertAuto;
-            ShortenTcoCheck.Checked = this._MyShortenTco;
+            CheckPeriodAdjust.Checked = this.PeriodAdjust;
+            CheckStartupVersion.Checked = this.StartupVersion;
+            CheckStartupFollowers.Checked = this.StartupFollowers;
+            CheckFavRestrict.Checked = this.RestrictFavCheck;
+            CheckAlwaysTop.Checked = this.AlwaysTop;
+            CheckAutoConvertUrl.Checked = this.UrlConvertAuto;
+            ShortenTcoCheck.Checked = this.ShortenTco;
             ShortenTcoCheck.Enabled = CheckAutoConvertUrl.Checked;
-            CheckOutputz.Checked = this._MyOutputz;
-            TextBoxOutputzKey.Text = this._MyOutputzKey;
+            CheckOutputz.Checked = this.OutputzEnabled;
+            TextBoxOutputzKey.Text = this.OutputzKey;
 
-            switch (this._MyOutputzUrlmode)
+            switch (this.OutputzUrlmode)
             {
                 case OutputzUrlmode.twittercom:
                     ComboBoxOutputzUrlmode.SelectedIndex = 0;
@@ -1545,36 +1030,36 @@ namespace Hoehoe
                     break;
             }
 
-            CheckNicoms.Checked = this._MyNicoms;
-            chkUnreadStyle.Checked = this._MyUnreadStyle;
-            CmbDateTimeFormat.Text = this._MyDateTimeFormat;
-            ConnectionTimeOut.Text = this._MyDefaultTimeOut.ToString();
-            CheckRetweetNoConfirm.Checked = this._MyRetweetNoConfirm;
-            CheckBalloonLimit.Checked = this._MyLimitBalloon;
+            CheckNicoms.Checked = this.Nicoms;
+            chkUnreadStyle.Checked = this.UseUnreadStyle;
+            CmbDateTimeFormat.Text = this.DateTimeFormat;
+            ConnectionTimeOut.Text = this.DefaultTimeOut.ToString();
+            CheckRetweetNoConfirm.Checked = this.RetweetNoConfirm;
+            CheckBalloonLimit.Checked = this.LimitBalloon;
 
-            this.ApplyEventNotifyFlag(this._MyEventNotifyEnabled, this._MyEventNotifyFlag, this._isMyEventNotifyFlag);
-            CheckForceEventNotify.Checked = this._MyForceEventNotify;
-            CheckFavEventUnread.Checked = this._MyFavEventUnread;
+            this.ApplyEventNotifyFlag(this.EventNotifyEnabled, this._MyEventNotifyFlag, this._isMyEventNotifyFlag);
+            CheckForceEventNotify.Checked = this.ForceEventNotify;
+            CheckFavEventUnread.Checked = this.FavEventUnread;
             ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this._MyTranslateLanguage);
             this.SoundFileListup();
-            ComboBoxAutoShortUrlFirst.SelectedIndex = (int)this._MyAutoShortUrlFirst;
-            chkTabIconDisp.Checked = this._MyTabIconDisp;
-            chkReadOwnPost.Checked = this._MyReadOwnPost;
-            chkGetFav.Checked = this._MyGetFav;
-            CheckMonospace.Checked = this._MyMonoSpace;
-            CheckReadOldPosts.Checked = this._MyReadOldPosts;
-            CheckUseSsl.Checked = this._MyUseSsl;
-            TextBitlyId.Text = this._MyBitlyId;
-            TextBitlyPw.Text = this._MyBitlyPw;
+            ComboBoxAutoShortUrlFirst.SelectedIndex = (int)this.AutoShortUrlFirst;
+            chkTabIconDisp.Checked = this.TabIconDisp;
+            chkReadOwnPost.Checked = this.ReadOwnPost;
+            chkGetFav.Checked = this.GetFav;
+            CheckMonospace.Checked = this.IsMonospace;
+            CheckReadOldPosts.Checked = this.ReadOldPosts;
+            CheckUseSsl.Checked = this.UseSsl;
+            TextBitlyId.Text = this.BitlyUser;
+            TextBitlyPw.Text = this.BitlyPwd;
             TextBitlyId.Modified = false;
             TextBitlyPw.Modified = false;
-            CheckShowGrid.Checked = this._MyShowGrid;
-            CheckAtIdSupple.Checked = this._MyUseAtIdSupplement;
-            CheckHashSupple.Checked = this._MyUseHashSupplement;
-            CheckPreviewEnable.Checked = this._MyPreviewEnable;
-            TwitterAPIText.Text = this._MyTwitterApiUrl;
-            TwitterSearchAPIText.Text = this._MyTwitterSearchApiUrl;
-            switch (this._MyReplyIconState)
+            CheckShowGrid.Checked = this.ShowGrid;
+            CheckAtIdSupple.Checked = this.UseAtIdSupplement;
+            CheckHashSupple.Checked = this.UseHashSupplement;
+            CheckPreviewEnable.Checked = this.PreviewEnable;
+            TwitterAPIText.Text = this.TwitterApiUrl;
+            TwitterSearchAPIText.Text = this.TwitterSearchApiUrl;
+            switch (this.ReplyIconState)
             {
                 case ReplyIconState.None:
                     ReplyIconStateCombo.SelectedIndex = 0;
@@ -1586,7 +1071,7 @@ namespace Hoehoe
                     ReplyIconStateCombo.SelectedIndex = 2;
                     break;
             }
-            switch (this._MyLanguage)
+            switch (this.Language)
             {
                 case "OS":
                     LanguageCombo.SelectedIndex = 0;
@@ -1622,13 +1107,13 @@ namespace Hoehoe
 
             this.CheckOutputz_CheckedChanged(sender, e);
 
-            GetMoreTextCountApi.Text = this._MoreCountApi.ToString();
-            FirstTextCountApi.Text = this._FirstCountApi.ToString();
-            SearchTextCountApi.Text = this._SearchCountApi.ToString();
-            FavoritesTextCountApi.Text = this._FavoritesCountApi.ToString();
-            UserTimelineTextCountApi.Text = this._UserTimelineCountApi.ToString();
-            ListTextCountApi.Text = this._ListCountApi.ToString();
-            UseChangeGetCount.Checked = this._MyUseAdditonalCount;
+            GetMoreTextCountApi.Text = this.MoreCountApi.ToString();
+            FirstTextCountApi.Text = this.FirstCountApi.ToString();
+            SearchTextCountApi.Text = this.SearchCountApi.ToString();
+            FavoritesTextCountApi.Text = this.FavoritesCountApi.ToString();
+            UserTimelineTextCountApi.Text = this.UserTimelineCountApi.ToString();
+            ListTextCountApi.Text = this.ListCountApi.ToString();
+            UseChangeGetCount.Checked = this.UseAdditionalCount;
             Label28.Enabled = UseChangeGetCount.Checked;
             Label30.Enabled = UseChangeGetCount.Checked;
             Label53.Enabled = UseChangeGetCount.Checked;
@@ -1641,9 +1126,9 @@ namespace Hoehoe
             FavoritesTextCountApi.Enabled = UseChangeGetCount.Checked;
             UserTimelineTextCountApi.Enabled = UseChangeGetCount.Checked;
             ListTextCountApi.Enabled = UseChangeGetCount.Checked;
-            CheckOpenUserTimeline.Checked = this._MyOpenUserTimeline;
-            ListDoubleClickActionComboBox.SelectedIndex = this._MyDoubleClickAction;
-            UserAppointUrlText.Text = this._UserAppointUrl;
+            CheckOpenUserTimeline.Checked = this.OpenUserTimeline;
+            ListDoubleClickActionComboBox.SelectedIndex = this.ListDoubleClickAction;
+            UserAppointUrlText.Text = this.UserAppointUrl;
             this.HideDuplicatedRetweetsCheck.Checked = this.HideDuplicatedRetweets;
             this.IsPreviewFoursquareCheckBox.Checked = this.IsPreviewFoursquare;
             this.FoursquarePreviewHeightTextBox.Text = this.FoursquarePreviewHeight.ToString();
@@ -2822,22 +2307,22 @@ namespace Hoehoe
 
         private void SoundFileListup()
         {
-            if (string.IsNullOrEmpty(this._MyEventSoundFile))
+            if (string.IsNullOrEmpty(this.EventSoundFile))
             {
-                this._MyEventSoundFile = string.Empty;
+                this.EventSoundFile = string.Empty;
             }
             ComboBoxEventNotifySound.Items.Clear();
             ComboBoxEventNotifySound.Items.Add(string.Empty);
-            DirectoryInfo oDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
+            DirectoryInfo dir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
             if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
             {
-                oDir = oDir.GetDirectories("Sounds")[0];
+                dir = dir.GetDirectories("Sounds")[0];
             }
-            foreach (FileInfo oFile in oDir.GetFiles("*.wav"))
+            foreach (FileInfo file in dir.GetFiles("*.wav"))
             {
-                ComboBoxEventNotifySound.Items.Add(oFile.Name);
+                ComboBoxEventNotifySound.Items.Add(file.Name);
             }
-            int idx = ComboBoxEventNotifySound.Items.IndexOf(this._MyEventSoundFile);
+            int idx = ComboBoxEventNotifySound.Items.IndexOf(this.EventSoundFile);
             if (idx == -1)
             {
                 idx = 0;
