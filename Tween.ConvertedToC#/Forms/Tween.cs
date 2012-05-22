@@ -723,32 +723,32 @@ namespace Hoehoe
                 return;
             }
 
-            LoadIcon(ref this._NIconAt, "Icons\\At.ico");
+            this.LoadIcon(ref this._NIconAt, "Icons\\At.ico");
 
             // タスクトレイエラー時アイコン
-            LoadIcon(ref this._NIconAtRed, "Icons\\AtRed.ico");
+            this.LoadIcon(ref this._NIconAtRed, "Icons\\AtRed.ico");
 
             // タスクトレイオフライン時アイコン
-            LoadIcon(ref this._NIconAtSmoke, "Icons\\AtSmoke.ico");
+            this.LoadIcon(ref this._NIconAtSmoke, "Icons\\AtSmoke.ico");
 
             // タスクトレイ更新中アイコン
             // アニメーション対応により4種類読み込み
-            LoadIcon(ref this._NIconRefresh[0], "Icons\\Refresh.ico");
-            LoadIcon(ref this._NIconRefresh[1], "Icons\\Refresh2.ico");
-            LoadIcon(ref this._NIconRefresh[2], "Icons\\Refresh3.ico");
-            LoadIcon(ref this._NIconRefresh[3], "Icons\\Refresh4.ico");
+            this.LoadIcon(ref this._NIconRefresh[0], "Icons\\Refresh.ico");
+            this.LoadIcon(ref this._NIconRefresh[1], "Icons\\Refresh2.ico");
+            this.LoadIcon(ref this._NIconRefresh[2], "Icons\\Refresh3.ico");
+            this.LoadIcon(ref this._NIconRefresh[3], "Icons\\Refresh4.ico");
 
             // タブ見出し未読表示アイコン
-            LoadIcon(ref this._TabIcon, "Icons\\Tab.ico");
+            this.LoadIcon(ref this._TabIcon, "Icons\\Tab.ico");
 
             // 画面のアイコン
-            LoadIcon(ref this._MainIcon, "Icons\\MIcon.ico");
+            this.LoadIcon(ref this._MainIcon, "Icons\\MIcon.ico");
 
             // Replyのアイコン
-            LoadIcon(ref this._ReplyIcon, "Icons\\Reply.ico");
+            this.LoadIcon(ref this._ReplyIcon, "Icons\\Reply.ico");
 
             // Reply点滅のアイコン
-            LoadIcon(ref this._ReplyIconBlink, "Icons\\ReplyBlink.ico");
+            this.LoadIcon(ref this._ReplyIconBlink, "Icons\\ReplyBlink.ico");
         }
 
         private void InitColumnText()
@@ -862,7 +862,7 @@ namespace Hoehoe
 
             // MyCommon.fileVersion = ((AssemblyFileVersionAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
             this.InitializeTraceFrag();
-            LoadIcons();
+            this.LoadIcons();
             // アイコン読み込み
 
             // 発言保持クラス
@@ -889,7 +889,7 @@ namespace Hoehoe
 
             // <<<<<<<<<設定関連>>>>>>>>>
             // '設定読み出し
-            LoadConfig();
+            this.LoadConfig();
 
             // 新着バルーン通知のチェック状態設定
             NewPostPopMenuItem.Checked = this._cfgCommon.NewAllPop;
@@ -1586,7 +1586,7 @@ namespace Hoehoe
             else
             {
                 ListTab.DrawMode = TabDrawMode.OwnerDrawFixed;
-                ListTab.DrawItem += ListTab_DrawItem;
+                ListTab.DrawItem += this.ListTab_DrawItem;
                 ListTab.ImageList = null;
             }
 
@@ -4550,14 +4550,14 @@ namespace Hoehoe
                     {
                         if (SettingDialog.TabIconDisp)
                         {
-                            ListTab.DrawItem -= ListTab_DrawItem;
+                            ListTab.DrawItem -= this.ListTab_DrawItem;
                             ListTab.DrawMode = TabDrawMode.Normal;
                             ListTab.ImageList = this.TabImage;
                         }
                         else
                         {
-                            ListTab.DrawItem -= ListTab_DrawItem;
-                            ListTab.DrawItem += ListTab_DrawItem;
+                            ListTab.DrawItem -= this.ListTab_DrawItem;
+                            ListTab.DrawItem += this.ListTab_DrawItem;
                             ListTab.DrawMode = TabDrawMode.OwnerDrawFixed;
                             ListTab.ImageList = null;
                         }
@@ -7162,11 +7162,11 @@ namespace Hoehoe
                                     return functionReturnValue;
                                 }
                                 ListTab.SelectedIndex = tabNo;
-                                ListTabSelect(ListTab.TabPages[tabNo]);
+                                this.ListTabSelect(ListTab.TabPages[tabNo]);
                                 return true;
                             case Keys.D9:
                                 ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
-                                ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
+                                this.ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
                                 return true;
                         }
                     }
@@ -7644,7 +7644,7 @@ namespace Hoehoe
                 }
             }
             ListTab.SelectedIndex = idx;
-            ListTabSelect(ListTab.TabPages[idx]);
+            this.ListTabSelect(ListTab.TabPages[idx]);
         }
 
         private void CopyStot()
@@ -7867,7 +7867,7 @@ namespace Hoehoe
                     if (this._statuses.Item(ListTab.TabPages[tabidx].Text, idx).StatusId == targetId)
                     {
                         ListTab.SelectedIndex = tabidx;
-                        ListTabSelect(ListTab.TabPages[tabidx]);
+                        this.ListTabSelect(ListTab.TabPages[tabidx]);
                         SelectListItem(this._curList, idx);
                         this._curList.EnsureVisible(idx);
                         found = true;
@@ -8368,7 +8368,7 @@ namespace Hoehoe
                 {
                     var idx = this._statuses.Tabs[ListTab.TabPages[tabidx].Text].IndexOf(statusId);
                     ListTab.SelectedIndex = tabidx;
-                    ListTabSelect(ListTab.TabPages[tabidx]);
+                    this.ListTabSelect(ListTab.TabPages[tabidx]);
                     SelectListItem(this._curList, idx);
                     this._curList.EnsureVisible(idx);
                     return true;
@@ -8389,7 +8389,7 @@ namespace Hoehoe
                 {
                     var idx = this._statuses.Tabs[ListTab.TabPages[tabidx].Text].IndexOf(statusId);
                     ListTab.SelectedIndex = tabidx;
-                    ListTabSelect(ListTab.TabPages[tabidx]);
+                    this.ListTabSelect(ListTab.TabPages[tabidx]);
                     SelectListItem(this._curList, idx);
                     this._curList.EnsureVisible(idx);
                     return true;
@@ -9659,13 +9659,13 @@ namespace Hoehoe
                     if (tabUsage == TabUsageType.PublicSearch)
                     {
                         ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
-                        ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
+                        this.ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
                         ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
                     }
                     if (tabUsage == TabUsageType.Lists)
                     {
                         ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
-                        ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
+                        this.ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
                         this.GetTimeline(WorkerType.List, 1, 0, tabName);
                     }
                 }
@@ -11479,7 +11479,7 @@ namespace Hoehoe
 
         private void ListTab_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            ListTabSelect(e.TabPage);
+            this.ListTabSelect(e.TabPage);
         }
 
         private void SelectListItem(DetailsListView dlView, int index)
@@ -13630,7 +13630,7 @@ namespace Hoehoe
                     if (tb.TabName == ListTab.TabPages[i].Text)
                     {
                         ListTab.SelectedIndex = i;
-                        ListTabSelect(ListTab.TabPages[i]);
+                        this.ListTabSelect(ListTab.TabPages[i]);
                         break;
                     }
                 }
