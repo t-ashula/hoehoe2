@@ -51,6 +51,12 @@ namespace Hoehoe
 
     public partial class TweenMain
     {
+        #region public fields
+        public AtIdSupplement AtIdSupl; // @id補助
+        public AtIdSupplement HashSupl;        // Hashtag補助
+        public HashtagManage HashMgr;
+        #endregion
+
         #region private fields
         /// <summary>
         /// TODO: hoehoe webpage
@@ -456,10 +462,6 @@ namespace Hoehoe
             }
         }
 
-        public AtIdSupplement AtIdSupl; // @id補助
-        public AtIdSupplement HashSupl;        // Hashtag補助
-        public HashtagManage HashMgr;
-
         private System.Timers.Timer TimerTimeline
         {
             get
@@ -480,6 +482,38 @@ namespace Hoehoe
                     this.timerTimeline.Elapsed += this.TimerTimeline_Elapsed;
                 }
             }
+        }
+
+        private HookGlobalHotkey HookGlobalHotkey
+        {
+            get
+            {
+                return this.hookGlobalHotkey;
+            }
+
+            set
+            {
+                if (this.hookGlobalHotkey != null)
+                {
+                    this.hookGlobalHotkey.HotkeyPressed -= this.HookGlobalHotkey_HotkeyPressed;
+                }
+
+                this.hookGlobalHotkey = value;
+                if (this.hookGlobalHotkey != null)
+                {
+                    this.hookGlobalHotkey.HotkeyPressed += this.HookGlobalHotkey_HotkeyPressed;
+                }
+            }
+        }
+
+        private string ImageService
+        {
+            get { return Convert.ToString(ImageServiceCombo.SelectedItem); }
+        }
+
+        private bool ExistCurrentPost
+        {
+            get { return this.curPost != null && !this.curPost.IsDeleted; }
         }
 
         private void TweenMain_Activated(object sender, EventArgs e)
@@ -13580,28 +13614,6 @@ namespace Hoehoe
             }
         }
 
-        private HookGlobalHotkey HookGlobalHotkey
-        {
-            get
-            {
-                return this.hookGlobalHotkey;
-            }
-
-            set
-            {
-                if (this.hookGlobalHotkey != null)
-                {
-                    this.hookGlobalHotkey.HotkeyPressed -= this.HookGlobalHotkey_HotkeyPressed;
-                }
-
-                this.hookGlobalHotkey = value;
-                if (this.hookGlobalHotkey != null)
-                {
-                    this.hookGlobalHotkey.HotkeyPressed += this.HookGlobalHotkey_HotkeyPressed;
-                }
-            }
-        }
-
         private void HookGlobalHotkey_HotkeyPressed(object sender, KeyEventArgs e)
         {
             if ((this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized) && this.Visible && object.ReferenceEquals(Form.ActiveForm, this))
@@ -13868,11 +13880,6 @@ namespace Hoehoe
                     ImageServiceCombo.SelectedIndex = idx;
                 }
             }
-        }
-
-        private string ImageService
-        {
-            get { return Convert.ToString(ImageServiceCombo.SelectedItem); }
         }
 
         private void ImageCancelButton_Click(object sender, EventArgs e)
@@ -14469,11 +14476,6 @@ namespace Hoehoe
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.DoTranslation(this.WebBrowser_GetSelectionText(ref PostBrowser));
-        }
-
-        private bool ExistCurrentPost
-        {
-            get { return this.curPost != null && !this.curPost.IsDeleted; }
         }
 
         private void ShowUserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
