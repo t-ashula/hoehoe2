@@ -482,142 +482,6 @@ namespace Hoehoe
             }
         }
 
-        // URL短縮のUndo用
-        private class UrlUndoInfo
-        {
-            public string Before;
-            public string After;
-        }
-
-        private class ReplyChain
-        {
-            public long OriginalId;
-            public long InReplyToId;
-            public TabPage OriginalTab;
-
-            public ReplyChain(long originalId, long inReplyToId, TabPage originalTab)
-            {
-                this.OriginalId = originalId;
-                this.InReplyToId = inReplyToId;
-                this.OriginalTab = originalTab;
-            }
-        }
-
-        // Backgroundworkerの処理結果通知用引数構造体
-        private class GetWorkerResult
-        {
-            // 処理結果詳細メッセージ。エラー時に値がセットされる
-            public string RetMsg = string.Empty;
-
-            // 取得対象ページ番号
-            public int Page;
-
-            // 取得終了ページ番号（継続可能ならインクリメントされて返る。pageと比較して継続判定）
-            public int EndPage;
-
-            // 処理種別
-            public WorkerType WorkerType;
-
-            // 新規取得したアイコンイメージ
-            public Dictionary<string, Image> Imgs;
-
-            // Fav追加・削除時のタブ名
-            public string TabName = string.Empty;
-
-            // Fav追加・削除時のID
-            public List<long> Ids;
-
-            // Fav追加・削除成功分のID
-            public List<long> SIds;
-
-            public bool NewDM;
-            public int AddCount;
-            public PostingStatus PStatus;
-        }
-
-        // Backgroundworkerへ処理内容を通知するための引数用構造体
-        private class GetWorkerArg
-        {
-            // 処理対象ページ番号
-            public int Page;
-
-            // 処理終了ページ番号（起動時の読み込みページ数。通常時はpageと同じ値をセット）
-            public int EndPage;
-
-            // 処理種別
-            public WorkerType WorkerType;
-
-            // URLをブラウザで開くときのアドレス
-            public string Url = string.Empty;
-
-            // 発言POST時の発言内容
-            public PostingStatus PStatus = new PostingStatus();
-
-            // Fav追加・削除時のItemIndex
-            public List<long> Ids;
-
-            // Fav追加・削除成功分のItemIndex
-            public List<long> SIds;
-
-            // Fav追加・削除時のタブ名
-            public string TabName = string.Empty;
-        }
-
-        private class PostingStatus
-        {
-            public string Status = string.Empty;
-            public long InReplyToId = 0;
-            public string InReplyToName = string.Empty;
-
-            // 画像投稿サービス名
-            public string ImageService = string.Empty;
-
-            public string ImagePath = string.Empty;
-
-            public PostingStatus()
-            {
-            }
-
-            public PostingStatus(string status, long replyToId, string replyToName)
-            {
-                this.Status = status;
-                this.InReplyToId = replyToId;
-                this.InReplyToName = replyToName;
-            }
-        }
-
-        private class SpaceKeyCanceler : NativeWindow, IDisposable
-        {
-            public SpaceKeyCanceler(Control control)
-            {
-                this.AssignHandle(control.Handle);
-            }
-
-            public event EventHandler SpaceCancel;
-
-            public void Dispose()
-            {
-                this.ReleaseHandle();
-            }
-
-            protected override void WndProc(ref Message m)
-            {
-                const int WM_KEYDOWN = 0x100;
-                const int VK_SPACE = 0x20;
-                if ((m.Msg == WM_KEYDOWN) && (Convert.ToInt32(m.WParam) == VK_SPACE))
-                {
-                    if (this.SpaceCancel != null)
-                    {
-                        this.SpaceCancel(this, EventArgs.Empty);
-                    }
-
-                    return;
-                }
-
-                base.WndProc(ref m);
-            }
-        }
-
         private void TweenMain_Activated(object sender, EventArgs e)
         {
             // 画面がアクティブになったら、発言欄の背景色戻す
@@ -12525,12 +12389,6 @@ namespace Hoehoe
             this.UrlConvert(UrlConverter.Jmp);
         }
 
-        private class GetApiInfoArgs
-        {
-            public Twitter Tw;
-            public ApiInfo Info;
-        }
-
         private void GetApiInfo_Dowork(object sender, DoWorkEventArgs e)
         {
             GetApiInfoArgs args = (GetApiInfoArgs)e.Argument;
@@ -12631,12 +12489,6 @@ namespace Hoehoe
             this.RemoveCommand(id, false);
         }
 
-        private class FollowRemoveCommandArgs
-        {
-            public Twitter Tw;
-            public string Id;
-        }
-
         private void RemoveCommand_DoWork(object sender, DoWorkEventArgs e)
         {
             FollowRemoveCommandArgs arg = (FollowRemoveCommandArgs)e.Argument;
@@ -12689,25 +12541,6 @@ namespace Hoehoe
             }
 
             this.ShowFriendship(id);
-        }
-
-        private class ShowFriendshipArgs
-        {
-            public Twitter Tw;
-            public List<FriendshipInfo> Ids = new List<FriendshipInfo>();
-
-            public class FriendshipInfo
-            {
-                public string Id = string.Empty;
-                public bool IsFollowing = false;
-                public bool IsFollowed = false;
-                public bool IsError = false;
-
-                public FriendshipInfo(string id)
-                {
-                    this.Id = id;
-                }
-            }
         }
 
         private void ShowFriendship_DoWork(object sender, DoWorkEventArgs e)
@@ -13555,13 +13388,6 @@ namespace Hoehoe
             }
 
             this.ShowUserStatus(id);
-        }
-
-        private class GetUserInfoArgs
-        {
-            public Hoehoe.Twitter Tw;
-            public string Id;
-            public DataModels.Twitter.User User;
         }
 
         private void GetUserInfo_DoWork(object sender, DoWorkEventArgs e)
@@ -14888,7 +14714,179 @@ namespace Hoehoe
             values[toIndex] = movedValue;
         }
         #region inner types
+        // URL短縮のUndo用
+        private class UrlUndoInfo
+        {
+            public string Before;
+            public string After;
+        }
 
+        private class ReplyChain
+        {
+            public long OriginalId;
+            public long InReplyToId;
+            public TabPage OriginalTab;
+
+            public ReplyChain(long originalId, long inReplyToId, TabPage originalTab)
+            {
+                this.OriginalId = originalId;
+                this.InReplyToId = inReplyToId;
+                this.OriginalTab = originalTab;
+            }
+        }
+
+        // Backgroundworkerの処理結果通知用引数構造体
+        private class GetWorkerResult
+        {
+            // 処理結果詳細メッセージ。エラー時に値がセットされる
+            public string RetMsg = string.Empty;
+
+            // 取得対象ページ番号
+            public int Page;
+
+            // 取得終了ページ番号（継続可能ならインクリメントされて返る。pageと比較して継続判定）
+            public int EndPage;
+
+            // 処理種別
+            public WorkerType WorkerType;
+
+            // 新規取得したアイコンイメージ
+            public Dictionary<string, Image> Imgs;
+
+            // Fav追加・削除時のタブ名
+            public string TabName = string.Empty;
+
+            // Fav追加・削除時のID
+            public List<long> Ids;
+
+            // Fav追加・削除成功分のID
+            public List<long> SIds;
+
+            public bool NewDM;
+            public int AddCount;
+            public PostingStatus PStatus;
+        }
+
+        // Backgroundworkerへ処理内容を通知するための引数用構造体
+        private class GetWorkerArg
+        {
+            // 処理対象ページ番号
+            public int Page;
+
+            // 処理終了ページ番号（起動時の読み込みページ数。通常時はpageと同じ値をセット）
+            public int EndPage;
+
+            // 処理種別
+            public WorkerType WorkerType;
+
+            // URLをブラウザで開くときのアドレス
+            public string Url = string.Empty;
+
+            // 発言POST時の発言内容
+            public PostingStatus PStatus = new PostingStatus();
+
+            // Fav追加・削除時のItemIndex
+            public List<long> Ids;
+
+            // Fav追加・削除成功分のItemIndex
+            public List<long> SIds;
+
+            // Fav追加・削除時のタブ名
+            public string TabName = string.Empty;
+        }
+
+        private class PostingStatus
+        {
+            public string Status = string.Empty;
+            public long InReplyToId = 0;
+            public string InReplyToName = string.Empty;
+
+            // 画像投稿サービス名
+            public string ImageService = string.Empty;
+
+            public string ImagePath = string.Empty;
+
+            public PostingStatus()
+            {
+            }
+
+            public PostingStatus(string status, long replyToId, string replyToName)
+            {
+                this.Status = status;
+                this.InReplyToId = replyToId;
+                this.InReplyToName = replyToName;
+            }
+        }
+
+        private class SpaceKeyCanceler : NativeWindow, IDisposable
+        {
+            public SpaceKeyCanceler(Control control)
+            {
+                this.AssignHandle(control.Handle);
+            }
+
+            public event EventHandler SpaceCancel;
+
+            public void Dispose()
+            {
+                this.ReleaseHandle();
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                const int WM_KEYDOWN = 0x100;
+                const int VK_SPACE = 0x20;
+                if ((m.Msg == WM_KEYDOWN) && (Convert.ToInt32(m.WParam) == VK_SPACE))
+                {
+                    if (this.SpaceCancel != null)
+                    {
+                        this.SpaceCancel(this, EventArgs.Empty);
+                    }
+
+                    return;
+                }
+
+                base.WndProc(ref m);
+            }
+        }
+
+        private class GetApiInfoArgs
+        {
+            public Twitter Tw;
+            public ApiInfo Info;
+        }
+
+        private class FollowRemoveCommandArgs
+        {
+            public Twitter Tw;
+            public string Id;
+        }
+
+        private class ShowFriendshipArgs
+        {
+            public Twitter Tw;
+            public List<FriendshipInfo> Ids = new List<FriendshipInfo>();
+
+            public class FriendshipInfo
+            {
+                public string Id = string.Empty;
+                public bool IsFollowing = false;
+                public bool IsFollowed = false;
+                public bool IsError = false;
+
+                public FriendshipInfo(string id)
+                {
+                    this.Id = id;
+                }
+            }
+        }
+
+        private class GetUserInfoArgs
+        {
+            public Hoehoe.Twitter Tw;
+            public string Id;
+            public DataModels.Twitter.User User;
+        }
         #endregion
     }
 }
