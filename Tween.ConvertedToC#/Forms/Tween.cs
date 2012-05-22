@@ -1843,7 +1843,7 @@ namespace Hoehoe
             if (this._timerRefreshFollowers > 6 * 3600)
             {
                 Interlocked.Exchange(ref this._timerRefreshFollowers, 0);
-                this.doGetFollowersMenu();
+                this.DoGetFollowersMenu();
                 this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
                 if (InvokeRequired && !IsDisposed)
                 {
@@ -1863,7 +1863,7 @@ namespace Hoehoe
                     this.GetTimeline(WorkerType.PublicSearch, 1, 0, string.Empty);
                     this.GetTimeline(WorkerType.UserTimeline, 1, 0, string.Empty);
                     this.GetTimeline(WorkerType.List, 1, 0, string.Empty);
-                    this.doGetFollowersMenu();
+                    this.DoGetFollowersMenu();
                     this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
                     if (InvokeRequired && !IsDisposed)
                     {
@@ -2576,7 +2576,7 @@ namespace Hoehoe
                 switch (res)
                 {
                     case DialogResult.Yes:
-                        this.doReTweetOfficial(false);
+                        this.DoReTweetOfficial(false);
                         StatusText.Text = string.Empty;
                         return;
                     case DialogResult.Cancel:
@@ -2615,15 +2615,15 @@ namespace Hoehoe
             }
 
             bool isCutOff = false;
-            bool isRemoveFooter = this.isKeyDown(Keys.Shift);
+            bool isRemoveFooter = this.IsKeyDown(Keys.Shift);
             if (StatusText.Multiline && !this.SettingDialog.PostCtrlEnter)
             {
                 // 複数行でEnter投稿の場合、Ctrlも押されていたらフッタ付加しない
-                isRemoveFooter = this.isKeyDown(Keys.Control);
+                isRemoveFooter = this.IsKeyDown(Keys.Control);
             }
             if (this.SettingDialog.PostShiftEnter)
             {
-                isRemoveFooter = this.isKeyDown(Keys.Control);
+                isRemoveFooter = this.IsKeyDown(Keys.Control);
             }
             if (!isRemoveFooter && (StatusText.Text.Contains("RT @") || StatusText.Text.Contains("QT @")))
             {
@@ -4789,7 +4789,7 @@ namespace Hoehoe
 
                     if (uid != this.tw.Username)
                     {
-                        this.doGetFollowersMenu();
+                        this.DoGetFollowersMenu();
                     }
 
                     this.SetImageServiceCombo();
@@ -4850,7 +4850,7 @@ namespace Hoehoe
                         // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
                         if (this.SettingDialog.OpenUserTimeline)
                         {
-                            if (this.isKeyDown(Keys.Control))
+                            if (this.IsKeyDown(Keys.Control))
                             {
                                 this.OpenUriAsync(e.Url.OriginalString);
                             }
@@ -4861,7 +4861,7 @@ namespace Hoehoe
                         }
                         else
                         {
-                            if (this.isKeyDown(Keys.Control))
+                            if (this.IsKeyDown(Keys.Control))
                             {
                                 this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
                             }
@@ -5728,8 +5728,8 @@ namespace Hoehoe
             {
                 return len;
             }
-            if ((isAuto && !this.isKeyDown(Keys.Control) && this.SettingDialog.PostShiftEnter)
-                || (isAuto && !this.isKeyDown(Keys.Shift) && !this.SettingDialog.PostShiftEnter)
+            if ((isAuto && !this.IsKeyDown(Keys.Control) && this.SettingDialog.PostShiftEnter)
+                || (isAuto && !this.IsKeyDown(Keys.Shift) && !this.SettingDialog.PostShiftEnter)
                 || (!isAuto && isAddFooter))
             {
                 if (this.SettingDialog.UseRecommendStatus)
@@ -6473,7 +6473,7 @@ namespace Hoehoe
             string retMsg = string.Empty;
             string strVer = string.Empty;
             string strDetail = string.Empty;
-            bool forceUpdate = this.isKeyDown(Keys.Shift);
+            bool forceUpdate = this.IsKeyDown(Keys.Shift);
 
             try
             {
@@ -7074,10 +7074,10 @@ namespace Hoehoe
                             this.FavoriteChange(true);
                             return true;
                         case Keys.I:
-                            this.doRepliedStatusOpen();
+                            this.DoRepliedStatusOpen();
                             return true;
                         case Keys.Q:
-                            this.doQuote();
+                            this.DoQuote();
                             return true;
                         case Keys.B:
                             this.ReadedStripMenuItem_Click(null, null);
@@ -7333,12 +7333,12 @@ namespace Hoehoe
                     switch (keyCode)
                     {
                         case Keys.R:
-                            this.doReTweetOfficial(true);
+                            this.DoReTweetOfficial(true);
                             return true;
                         case Keys.P:
                             if (this._curPost != null)
                             {
-                                this.doShowUserStatus(this._curPost.ScreenName, false);
+                                this.DoShowUserStatus(this._curPost.ScreenName, false);
                                 return true;
                             }
                             break;
@@ -7402,7 +7402,7 @@ namespace Hoehoe
                             this.ImageSelectMenuItem_Click(null, null);
                             return true;
                         case Keys.H:
-                            this.doMoveToRTHome();
+                            this.DoMoveToRTHome();
                             return true;
                         case Keys.O:
                             this.FavorareMenuItem_Click(null, null);
@@ -7537,7 +7537,7 @@ namespace Hoehoe
                     {
                         if (keyCode == Keys.R)
                         {
-                            this.doReTweetUnofficial();
+                            this.DoReTweetUnofficial();
                         }
                         else if (keyCode == Keys.C)
                         {
@@ -7552,10 +7552,10 @@ namespace Hoehoe
                             {
                                 return functionReturnValue;
                             }
-                            this.doTranslation(this._curPost.TextFromApi);
+                            this.DoTranslation(this._curPost.TextFromApi);
                             return true;
                         case Keys.R:
-                            this.doReTweetUnofficial();
+                            this.DoReTweetUnofficial();
                             return true;
                         case Keys.C:
                             this.CopyUserId();
@@ -10587,7 +10587,7 @@ namespace Hoehoe
             }
         }
 
-        private void doRepliedStatusOpen()
+        private void DoRepliedStatusOpen()
         {
             if (this.ExistCurrentPost && this._curPost.InReplyToUser != null && this._curPost.InReplyToStatusId > 0)
             {
@@ -10620,7 +10620,7 @@ namespace Hoehoe
 
         private void RepliedStatusOpenMenuItem_Click(object sender, EventArgs e)
         {
-            this.doRepliedStatusOpen();
+            this.DoRepliedStatusOpen();
         }
 
         private void ContextMenuUserPicture_Opening(object sender, CancelEventArgs e)
@@ -10827,7 +10827,7 @@ namespace Hoehoe
 
             string result = string.Empty;
 
-            const string nico = "^https?:// [a-z]+\\.(nicovideo|niconicommons|nicolive)\\.jp/[a-z]+/[a-z0-9]+$";
+            const string NicoUrlPattern = "^https?:// [a-z]+\\.(nicovideo|niconicommons|nicolive)\\.jp/[a-z]+/[a-z0-9]+$";
 
             if (StatusText.SelectionLength > 0)
             {
@@ -10838,7 +10838,7 @@ namespace Hoehoe
                     // 文字列が選択されている場合はその文字列について処理
 
                     // nico.ms使用、nicovideoにマッチしたら変換
-                    if (this.SettingDialog.Nicoms && Regex.IsMatch(tmp, nico))
+                    if (this.SettingDialog.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
                     {
                         result = nicoms.Shorten(tmp);
                     }
@@ -10875,9 +10875,9 @@ namespace Hoehoe
             }
             else
             {
-                const string url = "(?<before>(?:[^\\\"':!=]|^|\\:))" + "(?<url>(?<protocol>https?:// )" + "(?<domain>(?:[\\.-]|[^\\p{P}\\s])+\\.[a-z]{2,}(?::[0-9]+)?)" + "(?<path>/[a-z0-9!*'();:&=+$/%#\\-_.,~@]*[a-z0-9)=#/]?)?" + "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\-_.,~@?]*[a-z0-9_&=#/])?)";
+                const string UrlPattern = "(?<before>(?:[^\\\"':!=]|^|\\:))" + "(?<url>(?<protocol>https?:// )" + "(?<domain>(?:[\\.-]|[^\\p{P}\\s])+\\.[a-z]{2,}(?::[0-9]+)?)" + "(?<path>/[a-z0-9!*'();:&=+$/%#\\-_.,~@]*[a-z0-9)=#/]?)?" + "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\-_.,~@?]*[a-z0-9_&=#/])?)";
                 // 正規表現にマッチしたURL文字列をtinyurl化
-                foreach (Match mt in Regex.Matches(StatusText.Text, url, RegexOptions.IgnoreCase))
+                foreach (Match mt in Regex.Matches(StatusText.Text, UrlPattern, RegexOptions.IgnoreCase))
                 {
                     if (StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal) == -1)
                     {
@@ -10892,7 +10892,7 @@ namespace Hoehoe
                     StatusText.Select(StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
 
                     // nico.ms使用、nicovideoにマッチしたら変換
-                    if (this.SettingDialog.Nicoms && Regex.IsMatch(tmp, nico))
+                    if (this.SettingDialog.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
                     {
                         result = nicoms.Shorten(tmp);
                     }
@@ -10930,7 +10930,7 @@ namespace Hoehoe
             return true;
         }
 
-        private void doUrlUndo()
+        private void DoUrlUndo()
         {
             if (this.urlUndoBuffer != null)
             {
@@ -10984,7 +10984,7 @@ namespace Hoehoe
 
         private void UrlUndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.doUrlUndo();
+            this.DoUrlUndo();
         }
 
         private void NewPostPopMenuItem_CheckStateChanged(object sender, EventArgs e)
@@ -11201,7 +11201,7 @@ namespace Hoehoe
             }
         }
 
-        private void doSearchToolStrip(string url)
+        private void DoSearchToolStrip(string url)
         {
             // 発言詳細で「選択文字列で検索」（選択文字列取得）
             string selText = this.WebBrowser_GetSelectionText(ref PostBrowser);
@@ -11228,22 +11228,22 @@ namespace Hoehoe
 
         private void SearchWikipediaContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem1Url);
+            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem1Url);
         }
 
         private void SearchGoogleContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem2Url);
+            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem2Url);
         }
 
         private void SearchYatsContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem3Url);
+            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem3Url);
         }
 
         private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.doSearchToolStrip(Hoehoe.Properties.Resources.SearchItem4Url);
+            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem4Url);
         }
 
         private void UrlCopyContextMenuItem_Click(object sender, EventArgs e)
@@ -11610,11 +11610,11 @@ namespace Hoehoe
 
         private void StartUserStream()
         {
-            this.tw.NewPostFromStream += this.tw_NewPostFromStream;
-            this.tw.UserStreamStarted += this.tw_UserStreamStarted;
-            this.tw.UserStreamStopped += this.tw_UserStreamStopped;
-            this.tw.PostDeleted += this.tw_PostDeleted;
-            this.tw.UserStreamEventReceived += this.tw_UserStreamEventArrived;
+            this.tw.NewPostFromStream += this.Tw_NewPostFromStream;
+            this.tw.UserStreamStarted += this.Tw_UserStreamStarted;
+            this.tw.UserStreamStopped += this.Tw_UserStreamStopped;
+            this.tw.PostDeleted += this.Tw_PostDeleted;
+            this.tw.UserStreamEventReceived += this.Tw_UserStreamEventArrived;
 
             MenuItemUserStream.Text = "&UserStream ■";
             MenuItemUserStream.Enabled = true;
@@ -11639,7 +11639,7 @@ namespace Hoehoe
             }
 
             NotifyIcon1.Visible = true;
-            this.tw.UserIdChanged += this.tw_UserIdChanged;
+            this.tw.UserIdChanged += this.Tw_UserIdChanged;
 
             if (MyCommon.IsNetworkAvailable())
             {
@@ -11735,7 +11735,7 @@ namespace Hoehoe
             return this._waitTimeline || this._waitReply || this._waitDm || this._waitFav || this._waitPubSearch || this._waitUserTimeline || this._waitLists;
         }
 
-        private void doGetFollowersMenu()
+        private void DoGetFollowersMenu()
         {
             this.GetTimeline(WorkerType.Follower, 1, 0, string.Empty);
             this.DispSelectedPost(true);
@@ -11743,10 +11743,10 @@ namespace Hoehoe
 
         private void GetFollowersAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.doGetFollowersMenu();
+            this.DoGetFollowersMenu();
         }
 
-        private void doReTweetUnofficial()
+        private void DoReTweetUnofficial()
         {
             // RT @id:内容
             if (this.ExistCurrentPost)
@@ -11770,10 +11770,10 @@ namespace Hoehoe
 
         private void ReTweetStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.doReTweetUnofficial();
+            this.DoReTweetUnofficial();
         }
 
-        private void doReTweetOfficial(bool isConfirm)
+        private void DoReTweetOfficial(bool isConfirm)
         {
             // 公式RT
             if (this.ExistCurrentPost)
@@ -11847,7 +11847,7 @@ namespace Hoehoe
 
         private void ReTweetOriginalStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.doReTweetOfficial(true);
+            this.DoReTweetOfficial(true);
         }
 
         private void FavoritesRetweetOriginal()
@@ -11857,7 +11857,7 @@ namespace Hoehoe
                 return;
             }
             this._DoFavRetweetFlags = true;
-            this.doReTweetOfficial(true);
+            this.DoReTweetOfficial(true);
             if (this._DoFavRetweetFlags)
             {
                 this._DoFavRetweetFlags = false;
@@ -11874,7 +11874,7 @@ namespace Hoehoe
                 if (!this._curPost.IsProtect && this._DoFavRetweetFlags)
                 {
                     this._DoFavRetweetFlags = false;
-                    this.doReTweetUnofficial();
+                    this.DoReTweetUnofficial();
                 }
             }
         }
@@ -11922,14 +11922,14 @@ namespace Hoehoe
             }
         }
 
-        private bool isKeyDown(Keys key)
+        private bool IsKeyDown(Keys key)
         {
             return (Control.ModifierKeys & key) == key;
         }
 
         private void MenuItemHelp_DropDownOpening(object sender, EventArgs e)
         {
-            if (MyCommon.DebugBuild || this.isKeyDown(Keys.CapsLock) && this.isKeyDown(Keys.Control) && this.isKeyDown(Keys.Shift))
+            if (MyCommon.DebugBuild || this.IsKeyDown(Keys.CapsLock) && this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift))
             {
                 DebugModeToolStripMenuItem.Visible = true;
             }
@@ -12288,7 +12288,7 @@ namespace Hoehoe
 
         private void OwnStatusMenuItem_Click(object sender, EventArgs e)
         {
-            this.doShowUserStatus(this.tw.Username, false);
+            this.DoShowUserStatus(this.tw.Username, false);
         }
 
         // TwitterIDでない固定文字列を調べる（文字列検証のみ　実際に取得はしない）
@@ -12397,7 +12397,7 @@ namespace Hoehoe
             this._modifySettingCommon = true;
         }
 
-        private void doQuote()
+        private void DoQuote()
         {
             // QT @id:内容
             // 返信先情報付加
@@ -12433,7 +12433,7 @@ namespace Hoehoe
 
         private void QuoteStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.doQuote();
+            this.DoQuote();
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
@@ -12541,7 +12541,7 @@ namespace Hoehoe
             }
         }
 
-        private void doMoveToRTHome()
+        private void DoMoveToRTHome()
         {
             if (this._curList.SelectedIndices.Count > 0)
             {
@@ -12555,7 +12555,7 @@ namespace Hoehoe
 
         private void MoveToRTHomeMenuItem_Click(object sender, EventArgs e)
         {
-            this.doMoveToRTHome();
+            this.DoMoveToRTHome();
         }
 
         private void IdFilterAddMenuItem_Click(object sender, EventArgs e)
@@ -12989,7 +12989,7 @@ namespace Hoehoe
             e.Result = args.tw.GetUserInfo(args.id, ref args.user);
         }
 
-        private void doShowUserStatus(string id, bool ShowInputDialog)
+        private void DoShowUserStatus(string id, bool ShowInputDialog)
         {
             DataModels.Twitter.User user = null;
             if (ShowInputDialog)
@@ -13009,7 +13009,7 @@ namespace Hoehoe
                             string ret = (string)info.Result;
                             if (string.IsNullOrEmpty(ret))
                             {
-                                this.doShowUserStatus(args.user);
+                                this.DoShowUserStatus(args.user);
                             }
                             else
                             {
@@ -13028,7 +13028,7 @@ namespace Hoehoe
                     string ret = (string)info.Result;
                     if (string.IsNullOrEmpty(ret))
                     {
-                        this.doShowUserStatus(args.user);
+                        this.DoShowUserStatus(args.user);
                     }
                     else
                     {
@@ -13038,7 +13038,7 @@ namespace Hoehoe
             }
         }
 
-        private void doShowUserStatus(DataModels.Twitter.User user)
+        private void DoShowUserStatus(DataModels.Twitter.User user)
         {
             using (ShowUserInfo userinfo = new ShowUserInfo())
             {
@@ -13052,12 +13052,12 @@ namespace Hoehoe
 
         private void ShowUserStatus(string id, bool ShowInputDialog)
         {
-            this.doShowUserStatus(id, ShowInputDialog);
+            this.DoShowUserStatus(id, ShowInputDialog);
         }
 
         private void ShowUserStatus(string id)
         {
-            this.doShowUserStatus(id, true);
+            this.DoShowUserStatus(id, true);
         }
 
         private void FollowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -13649,7 +13649,7 @@ namespace Hoehoe
             MessageBox.Show(buf.ToString(), "アイコンキャッシュ使用状況");
         }
 
-        private void tw_UserIdChanged()
+        private void Tw_UserIdChanged()
         {
             this._modifySettingCommon = true;
         }
@@ -13658,7 +13658,7 @@ namespace Hoehoe
 
         private bool _isActiveUserstream = false;
 
-        private void tw_PostDeleted(long id)
+        private void Tw_PostDeleted(long id)
         {
             try
             {
@@ -13692,7 +13692,7 @@ namespace Hoehoe
             }
         }
 
-        private void tw_NewPostFromStream()
+        private void Tw_NewPostFromStream()
         {
             if (this.SettingDialog.ReadOldPosts)
             {
@@ -13754,14 +13754,14 @@ namespace Hoehoe
             }
         }
 
-        private void tw_UserStreamStarted()
+        private void Tw_UserStreamStarted()
         {
             this._isActiveUserstream = true;
             try
             {
                 if (InvokeRequired && !IsDisposed)
                 {
-                    Invoke(new MethodInvoker(this.tw_UserStreamStarted));
+                    Invoke(new MethodInvoker(this.Tw_UserStreamStarted));
                     return;
                 }
             }
@@ -13782,14 +13782,14 @@ namespace Hoehoe
             StatusLabel.Text = "UserStream Started.";
         }
 
-        private void tw_UserStreamStopped()
+        private void Tw_UserStreamStopped()
         {
             this._isActiveUserstream = false;
             try
             {
                 if (InvokeRequired && !IsDisposed)
                 {
-                    Invoke(new MethodInvoker(this.tw_UserStreamStopped));
+                    Invoke(new MethodInvoker(this.Tw_UserStreamStopped));
                     return;
                 }
             }
@@ -13810,13 +13810,13 @@ namespace Hoehoe
             StatusLabel.Text = "UserStream Stopped.";
         }
 
-        private void tw_UserStreamEventArrived(Twitter.FormattedEvent ev)
+        private void Tw_UserStreamEventArrived(Twitter.FormattedEvent ev)
         {
             try
             {
                 if (InvokeRequired && !IsDisposed)
                 {
-                    Invoke(new Action<Twitter.FormattedEvent>(this.tw_UserStreamEventArrived), ev);
+                    Invoke(new Action<Twitter.FormattedEvent>(this.Tw_UserStreamEventArrived), ev);
                     return;
                 }
             }
@@ -14032,7 +14032,7 @@ namespace Hoehoe
             this.OpenUriAsync("http://twitter.com/" + this.tw.Username);
         }
 
-        private void doTranslation(string str)
+        private void DoTranslation(string str)
         {
             Bing bing = new Bing();
             string buf = string.Empty;
@@ -14062,12 +14062,12 @@ namespace Hoehoe
             {
                 return;
             }
-            this.doTranslation(this._curPost.TextFromApi);
+            this.DoTranslation(this._curPost.TextFromApi);
         }
 
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.doTranslation(this.WebBrowser_GetSelectionText(ref PostBrowser));
+            this.DoTranslation(this.WebBrowser_GetSelectionText(ref PostBrowser));
         }
 
         private bool ExistCurrentPost
