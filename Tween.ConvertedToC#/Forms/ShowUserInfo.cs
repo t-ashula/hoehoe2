@@ -105,7 +105,7 @@ namespace Hoehoe
             RecentPostBrowser.Visible = false;
             if (this.info.RecentPost != null)
             {
-                this.recentPostTxt = this.owner.createDetailHtml(this.owner.TwitterInstance.CreateHtmlAnchor(ref this.info.RecentPost, this.atidList, this.userInfo.Status.Entities, null)
+                this.recentPostTxt = this.owner.CreateDetailHtml(this.owner.TwitterInstance.CreateHtmlAnchor(ref this.info.RecentPost, this.atidList, this.userInfo.Status.Entities, null)
                     + " Posted at " + this.info.PostCreatedAt.ToString() + " via " + this.info.PostSource);
             }
 
@@ -759,7 +759,7 @@ namespace Hoehoe
 
         private string MakeDescriptionBrowserText(string data)
         {
-            this.descriptionTxt = this.owner.createDetailHtml(this.owner.TwitterInstance.CreateHtmlAnchor(data, this.atidList, null));
+            this.descriptionTxt = this.owner.CreateDetailHtml(this.owner.TwitterInstance.CreateHtmlAnchor(data, this.atidList, null));
             return this.descriptionTxt;
         }
 

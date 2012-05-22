@@ -159,7 +159,7 @@ namespace Hoehoe
                         {
                             return (Image)this._innerDictionary[key];
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             this._innerDictionary.Remove(key);
                             return null;

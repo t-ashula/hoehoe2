@@ -106,7 +106,7 @@ namespace Hoehoe
                 {
                     password = CryptoUtils.DecryptString(password);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     password = "";
                 }

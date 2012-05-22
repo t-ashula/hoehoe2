@@ -321,7 +321,7 @@ namespace Hoehoe
                 domain = input.Split('/')[2];
                 asciiDomain = idnConverter.GetAscii(domain);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

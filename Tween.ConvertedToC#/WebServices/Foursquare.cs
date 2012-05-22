@@ -63,7 +63,7 @@ namespace Hoehoe
                     return "";
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return "";
             }
@@ -85,7 +85,7 @@ namespace Hoehoe
                     {
                         curData = D.CreateDataFromJson<FourSquareData>(content);
                     }
-                    catch (Exception ex)
+                    catch (Exception )
                     {
                         return null;
                     }

@@ -76,7 +76,7 @@ namespace Hoehoe
                             }
                         }
                     }
-                    catch (Exception ex2)
+                    catch (Exception)
                     {
                     }
                 }

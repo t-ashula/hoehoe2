@@ -1873,7 +1873,7 @@ namespace Hoehoe
                             if (value != null)
                                 return Expression.Constant(value, type);
                         }
-                        catch (Exception ex)
+                        catch (Exception )
                         {
                             throw ParseError(Res.ExpressionExpected);
                         }

@@ -1,4 +1,7 @@
 <StyleCopSettings Version="105">
+  <GlobalSettings>
+    <IntegerProperty Name="MaxViolationCount">10000</IntegerProperty>
+  </GlobalSettings>
   <Parsers>
     <Parser ParserId="StyleCop.CSharp.CsParser">
       <ParserSettings>

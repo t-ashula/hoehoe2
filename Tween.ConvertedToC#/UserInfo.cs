@@ -46,7 +46,7 @@ namespace Hoehoe
             {
                 this.ImageUrl = new Uri(user.ProfileImageUrl);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 this.ImageUrl = null;
             }
