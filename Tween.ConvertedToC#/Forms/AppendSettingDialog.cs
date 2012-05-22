@@ -179,6 +179,670 @@ namespace Hoehoe
 
         public delegate void IntervalChangedEventHandler(object sender, IntervalChangedEventArgs e);
 
+        public int UserstreamPeriodInt
+        {
+            get { return this._MyUserstreamPeriod; }
+            set { this._MyUserstreamPeriod = value; }
+        }
+
+        public bool UserstreamStartup
+        {
+            get { return this._MyUserstreamStartup; }
+            set { this._MyUserstreamStartup = value; }
+        }
+
+        public int TimelinePeriodInt
+        {
+            get { return this._MytimelinePeriod; }
+            set { this._MytimelinePeriod = value; }
+        }
+
+        public int ReplyPeriodInt
+        {
+            get { return this._MyReplyPeriod; }
+            set { this._MyReplyPeriod = value; }
+        }
+
+        public int DMPeriodInt
+        {
+            get { return this._MyDMPeriod; }
+            set { this._MyDMPeriod = value; }
+        }
+
+        public int PubSearchPeriodInt
+        {
+            get { return this._MyPubSearchPeriod; }
+            set { this._MyPubSearchPeriod = value; }
+        }
+
+        public int ListsPeriodInt
+        {
+            get { return this._MyListsPeriod; }
+            set { this._MyListsPeriod = value; }
+        }
+
+        public int UserTimelinePeriodInt
+        {
+            get { return this._MyUserTimelinePeriod; }
+            set { this._MyUserTimelinePeriod = value; }
+        }
+
+        public bool Readed
+        {
+            get { return this._MyReaded; }
+            set { this._MyReaded = value; }
+        }
+
+        public IconSizes IconSz
+        {
+            get { return this._MyIconSize; }
+            set { this._MyIconSize = value; }
+        }
+
+        public string Status
+        {
+            get { return this._MyStatusText; }
+            set { this._MyStatusText = value; }
+        }
+
+        public bool UnreadManage
+        {
+            get { return this._MyUnreadManage; }
+            set { this._MyUnreadManage = value; }
+        }
+
+        public bool PlaySound
+        {
+            get { return this._MyPlaySound; }
+            set { this._MyPlaySound = value; }
+        }
+
+        public bool OneWayLove
+        {
+            get { return this._MyOneWayLove; }
+            set { this._MyOneWayLove = value; }
+        }
+
+        // 未使用
+        public Font FontUnread
+        {
+            get { return this._fntUnread; }
+            set { this._fntUnread = value; }
+        }
+
+        public Color ColorUnread
+        {
+            get { return this._clUnread; }
+            set { this._clUnread = value; }
+        }
+
+        // リストフォントとして使用
+        public Font FontReaded
+        {
+            get { return this._fntReaded; }
+            set { this._fntReaded = value; }
+        }
+
+        public Color ColorReaded
+        {
+            get { return this._clReaded; }
+            set { this._clReaded = value; }
+        }
+
+        public Color ColorFav
+        {
+            get { return this._clFav; }
+            set { this._clFav = value; }
+        }
+
+        public Color ColorOWL
+        {
+            get { return this._clOWL; }
+            set { this._clOWL = value; }
+        }
+
+        public Color ColorRetweet
+        {
+            get { return this._clRetweet; }
+            set { this._clRetweet = value; }
+        }
+
+        public Font FontDetail
+        {
+            get { return this._fntDetail; }
+            set { this._fntDetail = value; }
+        }
+
+        public Color ColorDetail
+        {
+            get { return this._clDetail; }
+            set { this._clDetail = value; }
+        }
+
+        public Color ColorDetailLink
+        {
+            get { return this._clDetailLink; }
+            set { this._clDetailLink = value; }
+        }
+
+        public Color ColorSelf
+        {
+            get { return this._clSelf; }
+            set { this._clSelf = value; }
+        }
+
+        public Color ColorAtSelf
+        {
+            get { return this._clAtSelf; }
+            set { this._clAtSelf = value; }
+        }
+
+        public Color ColorTarget
+        {
+            get { return this._clTarget; }
+            set { this._clTarget = value; }
+        }
+
+        public Color ColorAtTarget
+        {
+            get { return this._clAtTarget; }
+            set { this._clAtTarget = value; }
+        }
+
+        public Color ColorAtFromTarget
+        {
+            get { return this._clAtFromTarget; }
+            set { this._clAtFromTarget = value; }
+        }
+
+        public Color ColorAtTo
+        {
+            get { return this._clAtTo; }
+            set { this._clAtTo = value; }
+        }
+
+        public Color ColorInputBackcolor
+        {
+            get { return this._clInputBackcolor; }
+            set { this._clInputBackcolor = value; }
+        }
+
+        public Color ColorInputFont
+        {
+            get { return this._clInputFont; }
+            set { this._clInputFont = value; }
+        }
+
+        public Font FontInputFont
+        {
+            get { return this._fntInputFont; }
+            set { this._fntInputFont = value; }
+        }
+
+        public Color ColorListBackcolor
+        {
+            get { return this._clListBackcolor; }
+            set { this._clListBackcolor = value; }
+        }
+
+        public Color ColorDetailBackcolor
+        {
+            get { return this._clDetailBackcolor; }
+            set { this._clDetailBackcolor = value; }
+        }
+
+        public NameBalloonEnum NameBalloon
+        {
+            get { return this._myNameBalloon; }
+            set { this._myNameBalloon = value; }
+        }
+
+        public bool PostCtrlEnter
+        {
+            get { return this._myPostCtrlEnter; }
+            set { this._myPostCtrlEnter = value; }
+        }
+
+        public bool PostShiftEnter
+        {
+            get { return this._myPostShiftEnter; }
+            set { this._myPostShiftEnter = value; }
+        }
+
+        public int CountApi
+        {
+            get { return this._countApi; }
+            set { this._countApi = value; }
+        }
+
+        public int CountApiReply
+        {
+            get { return this._countApiReply; }
+            set { this._countApiReply = value; }
+        }
+
+        public int MoreCountApi
+        {
+            get { return this._MoreCountApi; }
+            set { this._MoreCountApi = value; }
+        }
+
+        public int FirstCountApi
+        {
+            get { return this._FirstCountApi; }
+            set { this._FirstCountApi = value; }
+        }
+
+        public int SearchCountApi
+        {
+            get { return this._SearchCountApi; }
+            set { this._SearchCountApi = value; }
+        }
+
+        public int FavoritesCountApi
+        {
+            get { return this._FavoritesCountApi; }
+            set { this._FavoritesCountApi = value; }
+        }
+
+        public int UserTimelineCountApi
+        {
+            get { return this._UserTimelineCountApi; }
+            set { this._UserTimelineCountApi = value; }
+        }
+
+        public int ListCountApi
+        {
+            get { return this._ListCountApi; }
+            set { this._ListCountApi = value; }
+        }
+
+        public bool PostAndGet
+        {
+            get { return this._MyPostAndGet; }
+            set { this._MyPostAndGet = value; }
+        }
+
+        public bool UseRecommendStatus
+        {
+            get { return this._myUseRecommendStatus; }
+            set { this._myUseRecommendStatus = value; }
+        }
+
+        public string RecommendStatusText
+        {
+            get { return this._MyRecommendStatusText; }
+            set { this._MyRecommendStatusText = value; }
+        }
+
+        public bool DispUsername
+        {
+            get { return this._myDispUsername; }
+            set { this._myDispUsername = value; }
+        }
+
+        public bool CloseToExit
+        {
+            get { return this._MyCloseToExit; }
+            set { this._MyCloseToExit = value; }
+        }
+
+        public bool MinimizeToTray
+        {
+            get { return this._MyMinimizeToTray; }
+            set { this._MyMinimizeToTray = value; }
+        }
+
+        public DispTitleEnum DispLatestPost
+        {
+            get { return this._MyDispLatestPost; }
+            set { this._MyDispLatestPost = value; }
+        }
+
+        public string BrowserPath
+        {
+            get { return this._browserpath; }
+            set { this._browserpath = value; }
+        }
+
+        public bool TinyUrlResolve
+        {
+            get { return this._MyTinyUrlResolve; }
+            set { this._MyTinyUrlResolve = value; }
+        }
+
+        public bool ShortUrlForceResolve
+        {
+            get { return this._MyShortUrlForceResolve; }
+            set { this._MyShortUrlForceResolve = value; }
+        }
+
+        public bool SortOrderLock
+        {
+            get { return this._MySortOrderLock; }
+            set { this._MySortOrderLock = value; }
+        }
+
+        public HttpConnection.ProxyType SelectedProxyType
+        {
+            get { return this._MyProxyType; }
+            set { this._MyProxyType = value; }
+        }
+
+        public string ProxyAddress
+        {
+            get { return this._MyProxyAddress; }
+            set { this._MyProxyAddress = value; }
+        }
+
+        public int ProxyPort
+        {
+            get { return this._MyProxyPort; }
+            set { this._MyProxyPort = value; }
+        }
+
+        public string ProxyUser
+        {
+            get { return this._MyProxyUser; }
+            set { this._MyProxyUser = value; }
+        }
+
+        public string ProxyPassword
+        {
+            get { return this._MyProxyPassword; }
+            set { this._MyProxyPassword = value; }
+        }
+
+        public bool PeriodAdjust
+        {
+            get { return this._MyPeriodAdjust; }
+            set { this._MyPeriodAdjust = value; }
+        }
+
+        public bool StartupVersion
+        {
+            get { return this._MyStartupVersion; }
+            set { this._MyStartupVersion = value; }
+        }
+
+        public bool StartupFollowers
+        {
+            get { return this._MyStartupFollowers; }
+            set { this._MyStartupFollowers = value; }
+        }
+
+        public bool RestrictFavCheck
+        {
+            get { return this._MyRestrictFavCheck; }
+            set { this._MyRestrictFavCheck = value; }
+        }
+
+        public bool AlwaysTop
+        {
+            get { return this._MyAlwaysTop; }
+            set { this._MyAlwaysTop = value; }
+        }
+
+        public bool UrlConvertAuto
+        {
+            get { return this._MyUrlConvertAuto; }
+            set { this._MyUrlConvertAuto = value; }
+        }
+
+        public bool ShortenTco
+        {
+            get { return this._MyShortenTco; }
+            set { this._MyShortenTco = value; }
+        }
+
+        public bool OutputzEnabled
+        {
+            get { return this._MyOutputz; }
+            set { this._MyOutputz = value; }
+        }
+
+        public string OutputzKey
+        {
+            get { return this._MyOutputzKey; }
+            set { this._MyOutputzKey = value; }
+        }
+
+        public OutputzUrlmode OutputzUrlmode
+        {
+            get { return this._MyOutputzUrlmode; }
+            set { this._MyOutputzUrlmode = value; }
+        }
+
+        public bool Nicoms
+        {
+            get { return this._MyNicoms; }
+            set { this._MyNicoms = value; }
+        }
+
+        public UrlConverter AutoShortUrlFirst
+        {
+            get { return this._MyAutoShortUrlFirst; }
+            set { this._MyAutoShortUrlFirst = value; }
+        }
+
+        public bool UseUnreadStyle
+        {
+            get { return this._MyUnreadStyle; }
+            set { this._MyUnreadStyle = value; }
+        }
+
+        public string DateTimeFormat
+        {
+            get { return this._MyDateTimeFormat; }
+            set { this._MyDateTimeFormat = value; }
+        }
+
+        public int DefaultTimeOut
+        {
+            get { return this._MyDefaultTimeOut; }
+            set { this._MyDefaultTimeOut = value; }
+        }
+
+        public bool RetweetNoConfirm
+        {
+            get { return this._MyRetweetNoConfirm; }
+            set { this._MyRetweetNoConfirm = value; }
+        }
+
+        public bool TabIconDisp
+        {
+            get { return this._MyTabIconDisp; }
+            set { this._MyTabIconDisp = value; }
+        }
+
+        public ReplyIconState ReplyIconState
+        {
+            get { return this._MyReplyIconState; }
+            set { this._MyReplyIconState = value; }
+        }
+
+        public bool ReadOwnPost
+        {
+            get { return this._MyReadOwnPost; }
+            set { this._MyReadOwnPost = value; }
+        }
+
+        public bool GetFav
+        {
+            get { return this._MyGetFav; }
+            set { this._MyGetFav = value; }
+        }
+
+        public bool IsMonospace
+        {
+            get { return this._MyMonoSpace; }
+            set { this._MyMonoSpace = value; }
+        }
+
+        public bool ReadOldPosts
+        {
+            get { return this._MyReadOldPosts; }
+            set { this._MyReadOldPosts = value; }
+        }
+
+        public bool UseSsl
+        {
+            get { return this._MyUseSsl; }
+            set { this._MyUseSsl = value; }
+        }
+
+        public string BitlyUser
+        {
+            get { return this._MyBitlyId; }
+            set { this._MyBitlyId = value; }
+        }
+
+        public string BitlyPwd
+        {
+            get { return this._MyBitlyPw; }
+            set { this._MyBitlyPw = value; }
+        }
+
+        public bool ShowGrid
+        {
+            get { return this._MyShowGrid; }
+            set { this._MyShowGrid = value; }
+        }
+
+        public bool UseAtIdSupplement
+        {
+            get { return this._MyUseAtIdSupplement; }
+            set { this._MyUseAtIdSupplement = value; }
+        }
+
+        public bool UseHashSupplement
+        {
+            get { return this._MyUseHashSupplement; }
+            set { this._MyUseHashSupplement = value; }
+        }
+
+        public bool PreviewEnable
+        {
+            get { return this._MyPreviewEnable; }
+            set { this._MyPreviewEnable = value; }
+        }
+
+        public bool UseAdditionalCount
+        {
+            get { return this._MyUseAdditonalCount; }
+            set { this._MyUseAdditonalCount = value; }
+        }
+
+        public bool OpenUserTimeline
+        {
+            get { return this._MyOpenUserTimeline; }
+            set { this._MyOpenUserTimeline = value; }
+        }
+
+        public string TwitterApiUrl
+        {
+            get { return this._MyTwitterApiUrl; }
+            set { this._MyTwitterApiUrl = value; }
+        }
+
+        public string TwitterSearchApiUrl
+        {
+            get { return this._MyTwitterSearchApiUrl; }
+            set { this._MyTwitterSearchApiUrl = value; }
+        }
+
+        public string Language
+        {
+            get { return this._MyLanguage; }
+            set { this._MyLanguage = value; }
+        }
+
+        public bool LimitBalloon
+        {
+            get { return this._MyLimitBalloon; }
+            set { this._MyLimitBalloon = value; }
+        }
+
+        public bool EventNotifyEnabled
+        {
+            get { return this._MyEventNotifyEnabled; }
+            set { this._MyEventNotifyEnabled = value; }
+        }
+
+        public EventType EventNotifyFlag
+        {
+            get { return this._MyEventNotifyFlag; }
+            set { this._MyEventNotifyFlag = value; }
+        }
+
+        public EventType IsMyEventNotifyFlag
+        {
+            get { return this._isMyEventNotifyFlag; }
+            set { this._isMyEventNotifyFlag = value; }
+        }
+
+        public bool ForceEventNotify
+        {
+            get { return this._MyForceEventNotify; }
+            set { this._MyForceEventNotify = value; }
+        }
+
+        public bool FavEventUnread
+        {
+            get { return this._MyFavEventUnread; }
+            set { this._MyFavEventUnread = value; }
+        }
+
+        public string TranslateLanguage
+        {
+            get { return this._MyTranslateLanguage; }
+            set
+            {
+                this._MyTranslateLanguage = value;
+                ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(value);
+            }
+        }
+
+        public string EventSoundFile
+        {
+            get { return this._MyEventSoundFile; }
+            set { this._MyEventSoundFile = value; }
+        }
+
+        public int ListDoubleClickAction
+        {
+            get { return this._MyDoubleClickAction; }
+            set { this._MyDoubleClickAction = value; }
+        }
+
+        public string UserAppointUrl
+        {
+            get { return this._UserAppointUrl; }
+            set { this._UserAppointUrl = value; }
+        }
+
+        public bool HotkeyEnabled { get; set; }
+
+        public Keys HotkeyKey { get; set; }
+
+        public int HotkeyValue { get; set; }
+
+        public Keys HotkeyMod { get; set; }
+
+        public bool BlinkNewMentions { get; set; }
+
+        private void CheckUseRecommendStatus_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CheckUseRecommendStatus.Checked == true)
+            {
+                StatusText.Enabled = false;
+            }
+            else
+            {
+                StatusText.Enabled = true;
+            }
+        }
+
         private void TreeViewSetting_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
             if (this.TreeViewSetting.SelectedNode == null)
@@ -1338,596 +2002,6 @@ namespace Hoehoe
             }
         }
 
-        public int UserstreamPeriodInt
-        {
-            get { return this._MyUserstreamPeriod; }
-            set { this._MyUserstreamPeriod = value; }
-        }
-
-        public bool UserstreamStartup
-        {
-            get { return this._MyUserstreamStartup; }
-            set { this._MyUserstreamStartup = value; }
-        }
-
-        public int TimelinePeriodInt
-        {
-            get { return this._MytimelinePeriod; }
-            set { this._MytimelinePeriod = value; }
-        }
-
-        public int ReplyPeriodInt
-        {
-            get { return this._MyReplyPeriod; }
-            set { this._MyReplyPeriod = value; }
-        }
-
-        public int DMPeriodInt
-        {
-            get { return this._MyDMPeriod; }
-            set { this._MyDMPeriod = value; }
-        }
-
-        public int PubSearchPeriodInt
-        {
-            get { return this._MyPubSearchPeriod; }
-            set { this._MyPubSearchPeriod = value; }
-        }
-
-        public int ListsPeriodInt
-        {
-            get { return this._MyListsPeriod; }
-            set { this._MyListsPeriod = value; }
-        }
-
-        public int UserTimelinePeriodInt
-        {
-            get { return this._MyUserTimelinePeriod; }
-            set { this._MyUserTimelinePeriod = value; }
-        }
-
-        public bool Readed
-        {
-            get { return this._MyReaded; }
-            set { this._MyReaded = value; }
-        }
-
-        public IconSizes IconSz
-        {
-            get { return this._MyIconSize; }
-            set { this._MyIconSize = value; }
-        }
-
-        public string Status
-        {
-            get { return this._MyStatusText; }
-            set { this._MyStatusText = value; }
-        }
-
-        public bool UnreadManage
-        {
-            get { return this._MyUnreadManage; }
-            set { this._MyUnreadManage = value; }
-        }
-
-        public bool PlaySound
-        {
-            get { return this._MyPlaySound; }
-            set { this._MyPlaySound = value; }
-        }
-
-        public bool OneWayLove
-        {
-            get { return this._MyOneWayLove; }
-            set { this._MyOneWayLove = value; }
-        }
-
-        // 未使用
-        public Font FontUnread
-        {
-            get { return this._fntUnread; }
-            set { this._fntUnread = value; }
-        }
-
-        public Color ColorUnread
-        {
-            get { return this._clUnread; }
-            set { this._clUnread = value; }
-        }
-
-        // リストフォントとして使用
-        public Font FontReaded
-        {
-            get { return this._fntReaded; }
-            set { this._fntReaded = value; }
-        }
-
-        public Color ColorReaded
-        {
-            get { return this._clReaded; }
-            set { this._clReaded = value; }
-        }
-
-        public Color ColorFav
-        {
-            get { return this._clFav; }
-            set { this._clFav = value; }
-        }
-
-        public Color ColorOWL
-        {
-            get { return this._clOWL; }
-            set { this._clOWL = value; }
-        }
-
-        public Color ColorRetweet
-        {
-            get { return this._clRetweet; }
-            set { this._clRetweet = value; }
-        }
-
-        public Font FontDetail
-        {
-            get { return this._fntDetail; }
-            set { this._fntDetail = value; }
-        }
-
-        public Color ColorDetail
-        {
-            get { return this._clDetail; }
-            set { this._clDetail = value; }
-        }
-
-        public Color ColorDetailLink
-        {
-            get { return this._clDetailLink; }
-            set { this._clDetailLink = value; }
-        }
-
-        public Color ColorSelf
-        {
-            get { return this._clSelf; }
-            set { this._clSelf = value; }
-        }
-
-        public Color ColorAtSelf
-        {
-            get { return this._clAtSelf; }
-            set { this._clAtSelf = value; }
-        }
-
-        public Color ColorTarget
-        {
-            get { return this._clTarget; }
-            set { this._clTarget = value; }
-        }
-
-        public Color ColorAtTarget
-        {
-            get { return this._clAtTarget; }
-            set { this._clAtTarget = value; }
-        }
-
-        public Color ColorAtFromTarget
-        {
-            get { return this._clAtFromTarget; }
-            set { this._clAtFromTarget = value; }
-        }
-
-        public Color ColorAtTo
-        {
-            get { return this._clAtTo; }
-            set { this._clAtTo = value; }
-        }
-
-        public Color ColorInputBackcolor
-        {
-            get { return this._clInputBackcolor; }
-            set { this._clInputBackcolor = value; }
-        }
-
-        public Color ColorInputFont
-        {
-            get { return this._clInputFont; }
-            set { this._clInputFont = value; }
-        }
-
-        public Font FontInputFont
-        {
-            get { return this._fntInputFont; }
-            set { this._fntInputFont = value; }
-        }
-
-        public Color ColorListBackcolor
-        {
-            get { return this._clListBackcolor; }
-            set { this._clListBackcolor = value; }
-        }
-
-        public Color ColorDetailBackcolor
-        {
-            get { return this._clDetailBackcolor; }
-            set { this._clDetailBackcolor = value; }
-        }
-
-        public NameBalloonEnum NameBalloon
-        {
-            get { return this._myNameBalloon; }
-            set { this._myNameBalloon = value; }
-        }
-
-        public bool PostCtrlEnter
-        {
-            get { return this._myPostCtrlEnter; }
-            set { this._myPostCtrlEnter = value; }
-        }
-
-        public bool PostShiftEnter
-        {
-            get { return this._myPostShiftEnter; }
-            set { this._myPostShiftEnter = value; }
-        }
-
-        public int CountApi
-        {
-            get { return this._countApi; }
-            set { this._countApi = value; }
-        }
-
-        public int CountApiReply
-        {
-            get { return this._countApiReply; }
-            set { this._countApiReply = value; }
-        }
-
-        public int MoreCountApi
-        {
-            get { return this._MoreCountApi; }
-            set { this._MoreCountApi = value; }
-        }
-
-        public int FirstCountApi
-        {
-            get { return this._FirstCountApi; }
-            set { this._FirstCountApi = value; }
-        }
-
-        public int SearchCountApi
-        {
-            get { return this._SearchCountApi; }
-            set { this._SearchCountApi = value; }
-        }
-
-        public int FavoritesCountApi
-        {
-            get { return this._FavoritesCountApi; }
-            set { this._FavoritesCountApi = value; }
-        }
-
-        public int UserTimelineCountApi
-        {
-            get { return this._UserTimelineCountApi; }
-            set { this._UserTimelineCountApi = value; }
-        }
-
-        public int ListCountApi
-        {
-            get { return this._ListCountApi; }
-            set { this._ListCountApi = value; }
-        }
-
-        public bool PostAndGet
-        {
-            get { return this._MyPostAndGet; }
-            set { this._MyPostAndGet = value; }
-        }
-
-        public bool UseRecommendStatus
-        {
-            get { return this._myUseRecommendStatus; }
-            set { this._myUseRecommendStatus = value; }
-        }
-
-        public string RecommendStatusText
-        {
-            get { return this._MyRecommendStatusText; }
-            set { this._MyRecommendStatusText = value; }
-        }
-
-        public bool DispUsername
-        {
-            get { return this._myDispUsername; }
-            set { this._myDispUsername = value; }
-        }
-
-        public bool CloseToExit
-        {
-            get { return this._MyCloseToExit; }
-            set { this._MyCloseToExit = value; }
-        }
-
-        public bool MinimizeToTray
-        {
-            get { return this._MyMinimizeToTray; }
-            set { this._MyMinimizeToTray = value; }
-        }
-
-        public DispTitleEnum DispLatestPost
-        {
-            get { return this._MyDispLatestPost; }
-            set { this._MyDispLatestPost = value; }
-        }
-
-        public string BrowserPath
-        {
-            get { return this._browserpath; }
-            set { this._browserpath = value; }
-        }
-
-        public bool TinyUrlResolve
-        {
-            get { return this._MyTinyUrlResolve; }
-            set { this._MyTinyUrlResolve = value; }
-        }
-
-        public bool ShortUrlForceResolve
-        {
-            get { return this._MyShortUrlForceResolve; }
-            set { this._MyShortUrlForceResolve = value; }
-        }
-
-        private void CheckUseRecommendStatus_CheckedChanged(object sender, EventArgs e)
-        {
-            if (CheckUseRecommendStatus.Checked == true)
-            {
-                StatusText.Enabled = false;
-            }
-            else
-            {
-                StatusText.Enabled = true;
-            }
-        }
-
-        public bool SortOrderLock
-        {
-            get { return this._MySortOrderLock; }
-            set { this._MySortOrderLock = value; }
-        }
-
-        public HttpConnection.ProxyType SelectedProxyType
-        {
-            get { return this._MyProxyType; }
-            set { this._MyProxyType = value; }
-        }
-
-        public string ProxyAddress
-        {
-            get { return this._MyProxyAddress; }
-            set { this._MyProxyAddress = value; }
-        }
-
-        public int ProxyPort
-        {
-            get { return this._MyProxyPort; }
-            set { this._MyProxyPort = value; }
-        }
-
-        public string ProxyUser
-        {
-            get { return this._MyProxyUser; }
-            set { this._MyProxyUser = value; }
-        }
-
-        public string ProxyPassword
-        {
-            get { return this._MyProxyPassword; }
-            set { this._MyProxyPassword = value; }
-        }
-
-        public bool PeriodAdjust
-        {
-            get { return this._MyPeriodAdjust; }
-            set { this._MyPeriodAdjust = value; }
-        }
-
-        public bool StartupVersion
-        {
-            get { return this._MyStartupVersion; }
-            set { this._MyStartupVersion = value; }
-        }
-
-        public bool StartupFollowers
-        {
-            get { return this._MyStartupFollowers; }
-            set { this._MyStartupFollowers = value; }
-        }
-
-        public bool RestrictFavCheck
-        {
-            get { return this._MyRestrictFavCheck; }
-            set { this._MyRestrictFavCheck = value; }
-        }
-
-        public bool AlwaysTop
-        {
-            get { return this._MyAlwaysTop; }
-            set { this._MyAlwaysTop = value; }
-        }
-
-        public bool UrlConvertAuto
-        {
-            get { return this._MyUrlConvertAuto; }
-            set { this._MyUrlConvertAuto = value; }
-        }
-
-        public bool ShortenTco
-        {
-            get { return this._MyShortenTco; }
-            set { this._MyShortenTco = value; }
-        }
-
-        public bool OutputzEnabled
-        {
-            get { return this._MyOutputz; }
-            set { this._MyOutputz = value; }
-        }
-
-        public string OutputzKey
-        {
-            get { return this._MyOutputzKey; }
-            set { this._MyOutputzKey = value; }
-        }
-
-        public OutputzUrlmode OutputzUrlmode
-        {
-            get { return this._MyOutputzUrlmode; }
-            set { this._MyOutputzUrlmode = value; }
-        }
-
-        public bool Nicoms
-        {
-            get { return this._MyNicoms; }
-            set { this._MyNicoms = value; }
-        }
-
-        public UrlConverter AutoShortUrlFirst
-        {
-            get { return this._MyAutoShortUrlFirst; }
-            set { this._MyAutoShortUrlFirst = value; }
-        }
-
-        public bool UseUnreadStyle
-        {
-            get { return this._MyUnreadStyle; }
-            set { this._MyUnreadStyle = value; }
-        }
-
-        public string DateTimeFormat
-        {
-            get { return this._MyDateTimeFormat; }
-            set { this._MyDateTimeFormat = value; }
-        }
-
-        public int DefaultTimeOut
-        {
-            get { return this._MyDefaultTimeOut; }
-            set { this._MyDefaultTimeOut = value; }
-        }
-
-        public bool RetweetNoConfirm
-        {
-            get { return this._MyRetweetNoConfirm; }
-            set { this._MyRetweetNoConfirm = value; }
-        }
-
-        public bool TabIconDisp
-        {
-            get { return this._MyTabIconDisp; }
-            set { this._MyTabIconDisp = value; }
-        }
-
-        public ReplyIconState ReplyIconState
-        {
-            get { return this._MyReplyIconState; }
-            set { this._MyReplyIconState = value; }
-        }
-
-        public bool ReadOwnPost
-        {
-            get { return this._MyReadOwnPost; }
-            set { this._MyReadOwnPost = value; }
-        }
-
-        public bool GetFav
-        {
-            get { return this._MyGetFav; }
-            set { this._MyGetFav = value; }
-        }
-
-        public bool IsMonospace
-        {
-            get { return this._MyMonoSpace; }
-            set { this._MyMonoSpace = value; }
-        }
-
-        public bool ReadOldPosts
-        {
-            get { return this._MyReadOldPosts; }
-            set { this._MyReadOldPosts = value; }
-        }
-
-        public bool UseSsl
-        {
-            get { return this._MyUseSsl; }
-            set { this._MyUseSsl = value; }
-        }
-
-        public string BitlyUser
-        {
-            get { return this._MyBitlyId; }
-            set { this._MyBitlyId = value; }
-        }
-
-        public string BitlyPwd
-        {
-            get { return this._MyBitlyPw; }
-            set { this._MyBitlyPw = value; }
-        }
-
-        public bool ShowGrid
-        {
-            get { return this._MyShowGrid; }
-            set { this._MyShowGrid = value; }
-        }
-
-        public bool UseAtIdSupplement
-        {
-            get { return this._MyUseAtIdSupplement; }
-            set { this._MyUseAtIdSupplement = value; }
-        }
-
-        public bool UseHashSupplement
-        {
-            get { return this._MyUseHashSupplement; }
-            set { this._MyUseHashSupplement = value; }
-        }
-
-        public bool PreviewEnable
-        {
-            get { return this._MyPreviewEnable; }
-            set { this._MyPreviewEnable = value; }
-        }
-
-        public bool UseAdditionalCount
-        {
-            get { return this._MyUseAdditonalCount; }
-            set { this._MyUseAdditonalCount = value; }
-        }
-
-        public bool OpenUserTimeline
-        {
-            get { return this._MyOpenUserTimeline; }
-            set { this._MyOpenUserTimeline = value; }
-        }
-
-        public string TwitterApiUrl
-        {
-            get { return this._MyTwitterApiUrl; }
-            set { this._MyTwitterApiUrl = value; }
-        }
-
-        public string TwitterSearchApiUrl
-        {
-            get { return this._MyTwitterSearchApiUrl; }
-            set { this._MyTwitterSearchApiUrl = value; }
-        }
-
-        public string Language
-        {
-            get { return this._MyLanguage; }
-            set { this._MyLanguage = value; }
-        }
-
         private void Button3_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog filedlg = new OpenFileDialog())
@@ -2111,70 +2185,6 @@ namespace Hoehoe
                 e.Cancel = true;
                 return;
             }
-        }
-
-        public bool LimitBalloon
-        {
-            get { return this._MyLimitBalloon; }
-            set { this._MyLimitBalloon = value; }
-        }
-
-        public bool EventNotifyEnabled
-        {
-            get { return this._MyEventNotifyEnabled; }
-            set { this._MyEventNotifyEnabled = value; }
-        }
-
-        public EventType EventNotifyFlag
-        {
-            get { return this._MyEventNotifyFlag; }
-            set { this._MyEventNotifyFlag = value; }
-        }
-
-        public EventType IsMyEventNotifyFlag
-        {
-            get { return this._isMyEventNotifyFlag; }
-            set { this._isMyEventNotifyFlag = value; }
-        }
-
-        public bool ForceEventNotify
-        {
-            get { return this._MyForceEventNotify; }
-            set { this._MyForceEventNotify = value; }
-        }
-
-        public bool FavEventUnread
-        {
-            get { return this._MyFavEventUnread; }
-            set { this._MyFavEventUnread = value; }
-        }
-
-        public string TranslateLanguage
-        {
-            get { return this._MyTranslateLanguage; }
-            set
-            {
-                this._MyTranslateLanguage = value;
-                ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(value);
-            }
-        }
-
-        public string EventSoundFile
-        {
-            get { return this._MyEventSoundFile; }
-            set { this._MyEventSoundFile = value; }
-        }
-
-        public int ListDoubleClickAction
-        {
-            get { return this._MyDoubleClickAction; }
-            set { this._MyDoubleClickAction = value; }
-        }
-
-        public string UserAppointUrl
-        {
-            get { return this._UserAppointUrl; }
-            set { this._UserAppointUrl = value; }
         }
 
         private void ComboBoxAutoShortUrlFirst_SelectedIndexChanged(object sender, EventArgs e)
@@ -2555,14 +2565,6 @@ namespace Hoehoe
             this._ValidationError = false;
         }
 
-        public bool HotkeyEnabled { get; set; }
-
-        public Keys HotkeyKey { get; set; }
-
-        public int HotkeyValue { get; set; }
-
-        public Keys HotkeyMod { get; set; }
-
         private void HotkeyText_KeyDown(object sender, KeyEventArgs e)
         {
             // KeyValueで判定する。表示文字とのテーブルを用意すること
@@ -2582,8 +2584,6 @@ namespace Hoehoe
             HotkeyText.Enabled = HotkeyCheck.Checked;
             HotkeyCode.Enabled = HotkeyCheck.Checked;
         }
-
-        public bool BlinkNewMentions { get; set; }
 
         private void GetMoreTextCountApi_Validating(object sender, CancelEventArgs e)
         {
