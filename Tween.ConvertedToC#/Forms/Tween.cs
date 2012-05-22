@@ -516,6 +516,929 @@ namespace Hoehoe
             get { return this.curPost != null && !this.curPost.IsDeleted; }
         }
 
+        public void AddNewTabForSearch(string searchWord)
+        {
+            // 同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
+            foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch))
+            {
+                if (tb.SearchWords == searchWord && string.IsNullOrEmpty(tb.SearchLang))
+                {
+                    foreach (TabPage tp in ListTab.TabPages)
+                    {
+                        if (tb.TabName == tp.Text)
+                        {
+                            ListTab.SelectedTab = tp;
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // ユニークなタブ名生成
+            string tabName = searchWord;
+            for (int i = 0; i <= 100; i++)
+            {
+                if (this.statuses.ContainsTab(tabName))
+                {
+                    tabName += "_";
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            // タブ追加
+            this.statuses.AddTab(tabName, TabUsageType.PublicSearch, null);
+            this.AddNewTab(tabName, false, TabUsageType.PublicSearch);
+
+            // 追加したタブをアクティブに
+            ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
+
+            // 検索条件の設定
+            ComboBox cmb = (ComboBox)ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"];
+            cmb.Items.Add(searchWord);
+            cmb.Text = searchWord;
+            this.SaveConfigsTabs();
+
+            // 検索実行
+            this.SearchButton_Click(ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
+        }
+
+        public void AddNewTabForUserTimeline(string user)
+        {
+            // 同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
+            foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.UserTimeline))
+            {
+                if (tb.User == user)
+                {
+                    foreach (TabPage tp in ListTab.TabPages)
+                    {
+                        if (tb.TabName == tp.Text)
+                        {
+                            ListTab.SelectedTab = tp;
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // ユニークなタブ名生成
+            string tabName = "user:" + user;
+            while (this.statuses.ContainsTab(tabName))
+            {
+                tabName += "_";
+            }
+
+            // タブ追加
+            this.statuses.AddTab(tabName, TabUsageType.UserTimeline, null);
+            this.statuses.Tabs[tabName].User = user;
+            this.AddNewTab(tabName, false, TabUsageType.UserTimeline);
+
+            // 追加したタブをアクティブに
+            ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
+            this.SaveConfigsTabs();
+
+            // 検索実行
+            this.GetTimeline(WorkerType.UserTimeline, 1, 0, tabName);
+        }
+
+        public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
+        {
+            // 重複チェック
+            foreach (TabPage tb in ListTab.TabPages)
+            {
+                if (tb.Text == tabName)
+                {
+                    return false;
+                }
+            }
+
+            // 新規タブ名チェック
+            if (tabName == Hoehoe.Properties.Resources.AddNewTabText1)
+            {
+                return false;
+            }
+
+            // タブタイプ重複チェック
+            if (!startup)
+            {
+                if (tabType == TabUsageType.DirectMessage || tabType == TabUsageType.Favorites || tabType == TabUsageType.Home || tabType == TabUsageType.Mentions || tabType == TabUsageType.Related)
+                {
+                    if (this.statuses.GetTabByType(tabType) != null)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            TabPage tabPage = new TabPage();
+            DetailsListView listCustom = new DetailsListView();
+            ColumnHeader colHd1 = new ColumnHeader();            // アイコン
+            ColumnHeader colHd2 = new ColumnHeader();            // ニックネーム
+            ColumnHeader colHd3 = new ColumnHeader();            // 本文
+            ColumnHeader colHd4 = new ColumnHeader();            // 日付
+            ColumnHeader colHd5 = new ColumnHeader();            // ユーザID
+            ColumnHeader colHd6 = new ColumnHeader();            // 未読
+            ColumnHeader colHd7 = new ColumnHeader();            // マーク＆プロテクト
+            ColumnHeader colHd8 = new ColumnHeader();            // ソース
+
+            int cnt = ListTab.TabPages.Count;
+
+            ///ToDo:Create and set controls follow tabtypes
+
+            this.SplitContainer1.Panel1.SuspendLayout();
+            this.SplitContainer1.Panel2.SuspendLayout();
+            this.SplitContainer1.SuspendLayout();
+            this.ListTab.SuspendLayout();
+            this.SuspendLayout();
+
+            tabPage.SuspendLayout();
+
+            /// UserTimeline関連
+            Label label = null;
+            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
+            {
+                label = new Label();
+                label.Dock = DockStyle.Top;
+                label.Name = "labelUser";
+                label.Text = tabType == TabUsageType.Lists ? listInfo.ToString() : this.statuses.Tabs[tabName].User + "'s Timeline";
+                label.TextAlign = ContentAlignment.MiddleLeft;
+                using (ComboBox tmpComboBox = new ComboBox())
+                {
+                    label.Height = tmpComboBox.Height;
+                }
+
+                tabPage.Controls.Add(label);
+            }
+
+            /// 検索関連の準備
+            Panel pnl = null;
+            if (tabType == TabUsageType.PublicSearch)
+            {
+                pnl = new Panel();
+
+                Label lbl = new Label();
+                ComboBox cmb = new ComboBox();
+                Button btn = new Button();
+                ComboBox cmbLang = new ComboBox();
+
+                pnl.SuspendLayout();
+
+                pnl.Controls.Add(cmb);
+                pnl.Controls.Add(cmbLang);
+                pnl.Controls.Add(btn);
+                pnl.Controls.Add(lbl);
+                pnl.Name = "panelSearch";
+                pnl.Dock = DockStyle.Top;
+                pnl.Height = cmb.Height;
+                pnl.Enter += this.SearchControls_Enter;
+                pnl.Leave += this.SearchControls_Leave;
+
+                cmb.Text = string.Empty;
+                cmb.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+                cmb.Dock = DockStyle.Fill;
+                cmb.Name = "comboSearch";
+                cmb.DropDownStyle = ComboBoxStyle.DropDown;
+                cmb.ImeMode = ImeMode.NoControl;
+                cmb.TabStop = false;
+                cmb.AutoCompleteMode = AutoCompleteMode.None;
+                cmb.KeyDown += this.SearchComboBox_KeyDown;
+
+                if (this.statuses.ContainsTab(tabName))
+                {
+                    cmb.Items.Add(this.statuses.Tabs[tabName].SearchWords);
+                    cmb.Text = this.statuses.Tabs[tabName].SearchWords;
+                }
+
+                cmbLang.Text = string.Empty;
+                cmbLang.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+                cmbLang.Dock = DockStyle.Right;
+                cmbLang.Width = 50;
+                cmbLang.Name = "comboLang";
+                cmbLang.DropDownStyle = ComboBoxStyle.DropDownList;
+                cmbLang.TabStop = false;
+                cmbLang.Items.Add(string.Empty);
+                cmbLang.Items.Add("ja");
+                cmbLang.Items.Add("en");
+                cmbLang.Items.Add("ar");
+                cmbLang.Items.Add("da");
+                cmbLang.Items.Add("nl");
+                cmbLang.Items.Add("fa");
+                cmbLang.Items.Add("fi");
+                cmbLang.Items.Add("fr");
+                cmbLang.Items.Add("de");
+                cmbLang.Items.Add("hu");
+                cmbLang.Items.Add("is");
+                cmbLang.Items.Add("it");
+                cmbLang.Items.Add("no");
+                cmbLang.Items.Add("pl");
+                cmbLang.Items.Add("pt");
+                cmbLang.Items.Add("ru");
+                cmbLang.Items.Add("es");
+                cmbLang.Items.Add("sv");
+                cmbLang.Items.Add("th");
+                if (this.statuses.ContainsTab(tabName))
+                {
+                    cmbLang.Text = this.statuses.Tabs[tabName].SearchLang;
+                }
+
+                lbl.Text = "Search(C-S-f)";
+                lbl.Name = "label1";
+                lbl.Dock = DockStyle.Left;
+                lbl.Width = 90;
+                lbl.Height = cmb.Height;
+                lbl.TextAlign = ContentAlignment.MiddleLeft;
+
+                btn.Text = "Search";
+                btn.Name = "buttonSearch";
+                btn.UseVisualStyleBackColor = true;
+                btn.Dock = DockStyle.Right;
+                btn.TabStop = false;
+                btn.Click += this.SearchButton_Click;
+            }
+
+            this.ListTab.Controls.Add(tabPage);
+            tabPage.Controls.Add(listCustom);
+
+            if (tabType == TabUsageType.PublicSearch)
+            {
+                tabPage.Controls.Add(pnl);
+            }
+
+            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
+            {
+                tabPage.Controls.Add(label);
+            }
+
+            tabPage.Location = new Point(4, 4);
+            tabPage.Name = "CTab" + cnt.ToString();
+            tabPage.Size = new Size(380, 260);
+            tabPage.TabIndex = 2 + cnt;
+            tabPage.Text = tabName;
+            tabPage.UseVisualStyleBackColor = true;
+
+            listCustom.AllowColumnReorder = true;
+            if (!this.iconCol)
+            {
+                listCustom.Columns.AddRange(new ColumnHeader[] { colHd1, colHd2, colHd3, colHd4, colHd5, colHd6, colHd7, colHd8 });
+            }
+            else
+            {
+                listCustom.Columns.AddRange(new ColumnHeader[] { colHd1, colHd3 });
+            }
+
+            listCustom.ContextMenuStrip = this.ContextMenuOperate;
+            listCustom.Dock = DockStyle.Fill;
+            listCustom.FullRowSelect = true;
+            listCustom.HideSelection = false;
+            listCustom.Location = new Point(0, 0);
+            listCustom.Margin = new Padding(0);
+            listCustom.Name = "CList" + Environment.TickCount.ToString();
+            listCustom.ShowItemToolTips = true;
+            listCustom.Size = new Size(380, 260);
+            listCustom.UseCompatibleStateImageBehavior = false;
+            listCustom.View = View.Details;
+            listCustom.OwnerDraw = true;
+            listCustom.VirtualMode = true;
+            listCustom.Font = this.fntReaded;
+            listCustom.BackColor = this.clrListBackcolor;
+            listCustom.GridLines = this.SettingDialog.ShowGrid;
+            listCustom.AllowDrop = true;
+            listCustom.SelectedIndexChanged += this.MyList_SelectedIndexChanged;
+            listCustom.MouseDoubleClick += this.MyList_MouseDoubleClick;
+            listCustom.ColumnClick += this.MyList_ColumnClick;
+            listCustom.DrawColumnHeader += this.MyList_DrawColumnHeader;
+            listCustom.DragDrop += this.TweenMain_DragDrop;
+            listCustom.DragOver += this.TweenMain_DragOver;
+            listCustom.DrawItem += this.MyList_DrawItem;
+            listCustom.MouseClick += this.MyList_MouseClick;
+            listCustom.ColumnReordered += this.MyList_ColumnReordered;
+            listCustom.ColumnWidthChanged += this.MyList_ColumnWidthChanged;
+            listCustom.CacheVirtualItems += this.MyList_CacheVirtualItems;
+            listCustom.RetrieveVirtualItem += this.MyList_RetrieveVirtualItem;
+            listCustom.DrawSubItem += this.MyList_DrawSubItem;
+            listCustom.HScrolled += this.MyList_HScrolled;
+
+            this.InitColumnText();
+            colHd1.Text = this.columnTexts[0];
+            colHd1.Width = 48;
+            colHd2.Text = this.columnTexts[1];
+            colHd2.Width = 80;
+            colHd3.Text = this.columnTexts[2];
+            colHd3.Width = 300;
+            colHd4.Text = this.columnTexts[3];
+            colHd4.Width = 50;
+            colHd5.Text = this.columnTexts[4];
+            colHd5.Width = 50;
+            colHd6.Text = this.columnTexts[5];
+            colHd6.Width = 16;
+            colHd7.Text = this.columnTexts[6];
+            colHd7.Width = 16;
+            colHd8.Text = this.columnTexts[7];
+            colHd8.Width = 50;
+
+            if (this.statuses.IsDistributableTab(tabName))
+            {
+                this.tabDialog.AddTab(tabName);
+            }
+
+            listCustom.SmallImageList = new ImageList();
+            if (this.iconSz > 0)
+            {
+                listCustom.SmallImageList.ImageSize = new Size(this.iconSz, this.iconSz);
+            }
+            else
+            {
+                listCustom.SmallImageList.ImageSize = new Size(1, 1);
+            }
+
+            int[] dispOrder = new int[8];
+            if (!startup)
+            {
+                for (int i = 0; i < this.curList.Columns.Count; i++)
+                {
+                    for (int j = 0; j < this.curList.Columns.Count; j++)
+                    {
+                        if (this.curList.Columns[j].DisplayIndex == i)
+                        {
+                            dispOrder[i] = j;
+                            break;
+                        }
+                    }
+                }
+
+                for (int i = 0; i <= this.curList.Columns.Count - 1; i++)
+                {
+                    listCustom.Columns[i].Width = this.curList.Columns[i].Width;
+                    listCustom.Columns[dispOrder[i]].DisplayIndex = i;
+                }
+            }
+            else
+            {
+                if (this.iconCol)
+                {
+                    listCustom.Columns[0].Width = this.cfgLocal.Width1;
+                    listCustom.Columns[1].Width = this.cfgLocal.Width3;
+                    listCustom.Columns[0].DisplayIndex = 0;
+                    listCustom.Columns[1].DisplayIndex = 1;
+                }
+                else
+                {
+                    for (int i = 0; i <= 7; i++)
+                    {
+                        if (this.cfgLocal.DisplayIndex1 == i)
+                        {
+                            dispOrder[i] = 0;
+                        }
+                        else if (this.cfgLocal.DisplayIndex2 == i)
+                        {
+                            dispOrder[i] = 1;
+                        }
+                        else if (this.cfgLocal.DisplayIndex3 == i)
+                        {
+                            dispOrder[i] = 2;
+                        }
+                        else if (this.cfgLocal.DisplayIndex4 == i)
+                        {
+                            dispOrder[i] = 3;
+                        }
+                        else if (this.cfgLocal.DisplayIndex5 == i)
+                        {
+                            dispOrder[i] = 4;
+                        }
+                        else if (this.cfgLocal.DisplayIndex6 == i)
+                        {
+                            dispOrder[i] = 5;
+                        }
+                        else if (this.cfgLocal.DisplayIndex7 == i)
+                        {
+                            dispOrder[i] = 6;
+                        }
+                        else if (this.cfgLocal.DisplayIndex8 == i)
+                        {
+                            dispOrder[i] = 7;
+                        }
+                    }
+
+                    listCustom.Columns[0].Width = this.cfgLocal.Width1;
+                    listCustom.Columns[1].Width = this.cfgLocal.Width2;
+                    listCustom.Columns[2].Width = this.cfgLocal.Width3;
+                    listCustom.Columns[3].Width = this.cfgLocal.Width4;
+                    listCustom.Columns[4].Width = this.cfgLocal.Width5;
+                    listCustom.Columns[5].Width = this.cfgLocal.Width6;
+                    listCustom.Columns[6].Width = this.cfgLocal.Width7;
+                    listCustom.Columns[7].Width = this.cfgLocal.Width8;
+                    for (int i = 0; i <= 7; i++)
+                    {
+                        listCustom.Columns[dispOrder[i]].DisplayIndex = i;
+                    }
+                }
+            }
+
+            if (tabType == TabUsageType.PublicSearch)
+            {
+                pnl.ResumeLayout(false);
+            }
+
+            tabPage.ResumeLayout(false);
+
+            this.SplitContainer1.Panel1.ResumeLayout(false);
+            this.SplitContainer1.Panel2.ResumeLayout(false);
+            this.SplitContainer1.ResumeLayout(false);
+            this.ListTab.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+            tabPage.Tag = listCustom;
+            return true;
+        }
+
+        public bool RemoveSpecifiedTab(string tabName, bool confirm)
+        {
+            int idx = 0;
+            for (idx = 0; idx < ListTab.TabPages.Count; idx++)
+            {
+                if (ListTab.TabPages[idx].Text == tabName)
+                {
+                    break;
+                }
+            }
+
+            if (this.statuses.IsDefaultTab(tabName))
+            {
+                return false;
+            }
+
+            if (confirm)
+            {
+                string tmp = string.Format(Hoehoe.Properties.Resources.RemoveSpecifiedTabText1, Environment.NewLine);
+                if (MessageBox.Show(tmp, tabName + " " + Hoehoe.Properties.Resources.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Cancel)
+                {
+                    return false;
+                }
+            }
+
+            this.SetListProperty(); // 他のタブに列幅等を反映
+
+            TabUsageType tabType = this.statuses.Tabs[tabName].TabType;
+
+            // オブジェクトインスタンスの削除
+            this.SplitContainer1.Panel1.SuspendLayout();
+            this.SplitContainer1.Panel2.SuspendLayout();
+            this.SplitContainer1.SuspendLayout();
+            this.ListTab.SuspendLayout();
+            this.SuspendLayout();
+
+            TabPage tabPage = ListTab.TabPages[idx];
+            DetailsListView listCustom = (DetailsListView)tabPage.Tag;
+            tabPage.Tag = null;
+
+            tabPage.SuspendLayout();
+
+            if (object.ReferenceEquals(this.ListTab.SelectedTab, this.ListTab.TabPages[idx]))
+            {
+                this.ListTab.SelectTab(this.prevSelectedTab != null && this.ListTab.TabPages.Contains(this.prevSelectedTab) ? this.prevSelectedTab : this.ListTab.TabPages[0]);
+            }
+
+            this.ListTab.Controls.Remove(tabPage);
+
+            Control pnl = null;
+            if (tabType == TabUsageType.PublicSearch)
+            {
+                pnl = tabPage.Controls["panelSearch"];
+                foreach (Control ctrl in pnl.Controls)
+                {
+                    if (ctrl.Name == "buttonSearch")
+                    {
+                        ctrl.Click -= this.SearchButton_Click;
+                    }
+
+                    ctrl.Enter -= this.SearchControls_Enter;
+                    ctrl.Leave -= this.SearchControls_Leave;
+                    pnl.Controls.Remove(ctrl);
+                    ctrl.Dispose();
+                }
+
+                tabPage.Controls.Remove(pnl);
+            }
+
+            tabPage.Controls.Remove(listCustom);
+            listCustom.Columns.Clear();
+            listCustom.ContextMenuStrip = null;
+
+            listCustom.SelectedIndexChanged -= this.MyList_SelectedIndexChanged;
+            listCustom.MouseDoubleClick -= this.MyList_MouseDoubleClick;
+            listCustom.ColumnClick -= this.MyList_ColumnClick;
+            listCustom.DrawColumnHeader -= this.MyList_DrawColumnHeader;
+            listCustom.DragDrop -= this.TweenMain_DragDrop;
+            listCustom.DragOver -= this.TweenMain_DragOver;
+            listCustom.DrawItem -= this.MyList_DrawItem;
+            listCustom.MouseClick -= this.MyList_MouseClick;
+            listCustom.ColumnReordered -= this.MyList_ColumnReordered;
+            listCustom.ColumnWidthChanged -= this.MyList_ColumnWidthChanged;
+            listCustom.CacheVirtualItems -= this.MyList_CacheVirtualItems;
+            listCustom.RetrieveVirtualItem -= this.MyList_RetrieveVirtualItem;
+            listCustom.DrawSubItem -= this.MyList_DrawSubItem;
+            listCustom.HScrolled -= this.MyList_HScrolled;
+
+            this.tabDialog.RemoveTab(tabName);
+
+            listCustom.SmallImageList = null;
+            listCustom.ListViewItemSorter = null;
+
+            // キャッシュのクリア
+            if (this.curTab.Equals(tabPage))
+            {
+                this.curTab = null;
+                this.curItemIndex = -1;
+                this.curList = null;
+                this.curPost = null;
+            }
+
+            this.itemCache = null;
+            this.itemCacheIndex = -1;
+            this.postCache = null;
+
+            tabPage.ResumeLayout(false);
+
+            this.SplitContainer1.Panel1.ResumeLayout(false);
+            this.SplitContainer1.Panel2.ResumeLayout(false);
+            this.SplitContainer1.ResumeLayout(false);
+            this.ListTab.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+            tabPage.Dispose();
+            listCustom.Dispose();
+            this.statuses.RemoveTab(tabName);
+
+            foreach (TabPage tp in ListTab.TabPages)
+            {
+                DetailsListView lst = (DetailsListView)tp.Tag;
+                if (lst.VirtualListSize != this.statuses.Tabs[tp.Text].AllCount)
+                {
+                    lst.VirtualListSize = this.statuses.Tabs[tp.Text].AllCount;
+                }
+            }
+
+            return true;
+        }
+
+        public void ShowSuplDialog(TextBox owner, AtIdSupplement dialog)
+        {
+            this.ShowSuplDialog(owner, dialog, 0, string.Empty);
+        }
+
+        public void ShowSuplDialog(TextBox owner, AtIdSupplement dialog, int offset)
+        {
+            this.ShowSuplDialog(owner, dialog, offset, string.Empty);
+        }
+
+        public void ShowSuplDialog(TextBox owner, AtIdSupplement dialog, int offset, string startswith)
+        {
+            dialog.StartsWith = startswith;
+            if (dialog.Visible)
+            {
+                dialog.Focus();
+            }
+            else
+            {
+                dialog.ShowDialog();
+            }
+
+            this.TopMost = this.SettingDialog.AlwaysTop;
+            int selStart = owner.SelectionStart;
+            string frontHalf = string.Empty;
+            string lastHalf = string.Empty;
+            if (dialog.DialogResult == DialogResult.OK)
+            {
+                if (!string.IsNullOrEmpty(dialog.InputText))
+                {
+                    if (selStart > 0)
+                    {
+                        frontHalf = owner.Text.Substring(0, selStart - offset);
+                    }
+
+                    if (selStart < owner.Text.Length)
+                    {
+                        lastHalf = owner.Text.Substring(selStart);
+                    }
+
+                    owner.Text = frontHalf + dialog.InputText + lastHalf;
+                    owner.SelectionStart = selStart + dialog.InputText.Length;
+                }
+            }
+            else
+            {
+                if (selStart > 0)
+                {
+                    frontHalf = owner.Text.Substring(0, selStart);
+                }
+
+                if (selStart < owner.Text.Length)
+                {
+                    lastHalf = owner.Text.Substring(selStart);
+                }
+
+                owner.Text = frontHalf + lastHalf;
+                if (selStart > 0)
+                {
+                    owner.SelectionStart = selStart;
+                }
+            }
+
+            owner.Focus();
+        }
+
+        public string CreateDetailHtml(string orgdata)
+        {
+            return this.detailHtmlFormatHeader + orgdata + this.detailHtmlFormatFooter;
+        }
+
+        public bool TabRename(ref string tabName)
+        {
+            // タブ名変更
+            string newTabText = null;
+            using (InputTabName inputName = new InputTabName())
+            {
+                inputName.TabName = tabName;
+                inputName.ShowDialog();
+                if (inputName.DialogResult == DialogResult.Cancel)
+                {
+                    return false;
+                }
+
+                newTabText = inputName.TabName;
+            }
+
+            this.TopMost = this.SettingDialog.AlwaysTop;
+            if (string.IsNullOrEmpty(newTabText))
+            {
+                return false;
+            }
+
+            // 新タブ名存在チェック
+            for (int i = 0; i < ListTab.TabCount; i++)
+            {
+                if (ListTab.TabPages[i].Text == newTabText)
+                {
+                    string tmp = string.Format(Hoehoe.Properties.Resources.Tabs_DoubleClickText1, newTabText);
+                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return false;
+                }
+            }
+
+            // タブ名のリスト作り直し（デフォルトタブ以外は再作成）
+            for (int i = 0; i < ListTab.TabCount; i++)
+            {
+                if (this.statuses.IsDistributableTab(ListTab.TabPages[i].Text))
+                {
+                    this.tabDialog.RemoveTab(ListTab.TabPages[i].Text);
+                }
+
+                if (ListTab.TabPages[i].Text == tabName)
+                {
+                    ListTab.TabPages[i].Text = newTabText;
+                }
+            }
+
+            this.statuses.RenameTab(tabName, newTabText);
+            for (int i = 0; i < ListTab.TabCount; i++)
+            {
+                if (this.statuses.IsDistributableTab(ListTab.TabPages[i].Text))
+                {
+                    if (ListTab.TabPages[i].Text == tabName)
+                    {
+                        ListTab.TabPages[i].Text = newTabText;
+                    }
+
+                    this.tabDialog.AddTab(ListTab.TabPages[i].Text);
+                }
+            }
+
+            this.SaveConfigsCommon();
+            this.SaveConfigsTabs();
+            this.rclickTabName = newTabText;
+            tabName = newTabText;
+            return true;
+        }
+
+        public void ReOrderTab(string targetTabText, string baseTabText, bool isBeforeBaseTab)
+        {
+            int baseIndex = 0;
+            for (baseIndex = 0; baseIndex < ListTab.TabPages.Count; baseIndex++)
+            {
+                if (ListTab.TabPages[baseIndex].Text == baseTabText)
+                {
+                    break;
+                }
+            }
+
+            ListTab.SuspendLayout();
+
+            TabPage mTp = null;
+            for (int j = 0; j < ListTab.TabPages.Count; j++)
+            {
+                if (ListTab.TabPages[j].Text == targetTabText)
+                {
+                    mTp = ListTab.TabPages[j];
+                    ListTab.TabPages.Remove(mTp);
+                    if (j < baseIndex)
+                    {
+                        baseIndex -= 1;
+                    }
+
+                    break;
+                }
+            }
+
+            if (isBeforeBaseTab)
+            {
+                ListTab.TabPages.Insert(baseIndex, mTp);
+            }
+            else
+            {
+                ListTab.TabPages.Insert(baseIndex + 1, mTp);
+            }
+
+            ListTab.ResumeLayout();
+            this.SaveConfigsTabs();
+        }
+
+        public void ChangeTabUnreadManage(string tabName, bool isManage)
+        {
+            int idx = 0;
+            for (idx = 0; idx < ListTab.TabCount; idx++)
+            {
+                if (ListTab.TabPages[idx].Text == tabName)
+                {
+                    break;
+                }
+            }
+
+            this.statuses.SetTabUnreadManage(tabName, isManage);
+            if (this.SettingDialog.TabIconDisp)
+            {
+                if (this.statuses.Tabs[tabName].UnreadCount > 0)
+                {
+                    ListTab.TabPages[idx].ImageIndex = 0;
+                }
+                else
+                {
+                    ListTab.TabPages[idx].ImageIndex = -1;
+                }
+            }
+
+            if (this.curTab.Text == tabName)
+            {
+                this.itemCache = null;
+                this.postCache = null;
+                this.curList.Refresh();
+            }
+
+            this.SetMainWindowTitle();
+            this.SetStatusLabelUrl();
+            if (!this.SettingDialog.TabIconDisp)
+            {
+                ListTab.Refresh();
+            }
+        }
+
+        public void SetStatusLabel(string text)
+        {
+            StatusLabel.Text = text;
+        }
+
+        public string WebBrowser_GetSelectionText(ref WebBrowser componentInstance)
+        {
+            // 発言詳細で「選択文字列をコピー」を行う
+            // WebBrowserコンポーネントのインスタンスを渡す
+            Type typ = componentInstance.ActiveXInstance.GetType();
+            object selObj = typ.InvokeMember("selection", BindingFlags.GetProperty, null, componentInstance.Document.DomDocument, null);
+            object objRange = selObj.GetType().InvokeMember("createRange", BindingFlags.InvokeMethod, null, selObj, null);
+            return (string)objRange.GetType().InvokeMember("text", BindingFlags.GetProperty, null, objRange, null);
+        }
+
+        public void OpenUriAsync(string uri)
+        {
+            this.RunAsync(new GetWorkerArg() { WorkerType = WorkerType.OpenUri, Url = uri });
+        }
+
+        /// <summary>
+        /// TwitterIDでない固定文字列を調べる（文字列検証のみ　実際に取得はしない）
+        /// </summary>
+        /// <param name="name">URLから切り出した文字列</param>
+        /// <returns></returns>
+        public bool IsTwitterId(string name)
+        {
+            if (this.SettingDialog.TwitterConfiguration.NonUsernamePaths == null || this.SettingDialog.TwitterConfiguration.NonUsernamePaths.Length == 0)
+            {
+                return !Regex.Match(name, "^(about|jobs|tos|privacy|who_to_follow|download|messages)$", RegexOptions.IgnoreCase).Success;
+            }
+            else
+            {
+                return !this.SettingDialog.TwitterConfiguration.NonUsernamePaths.Contains(name.ToLower());
+            }
+        }
+
+        public void SetModifySettingCommon(bool value)
+        {
+            this.modifySettingCommon = value;
+        }
+
+        public void SetModifySettingLocal(bool value)
+        {
+            this.modifySettingLocal = value;
+        }
+
+        public void SetModifySettingAtId(bool value)
+        {
+            this.modifySettingAtId = value;
+        }
+
+        internal void CheckReplyTo(string statusText)
+        {
+            // ハッシュタグの保存
+            MatchCollection m = Regex.Matches(statusText, Twitter.HASHTAG, RegexOptions.IgnoreCase);
+            string hstr = string.Empty;
+            foreach (Match hm in m)
+            {
+                if (!hstr.Contains("#" + hm.Result("$3") + " "))
+                {
+                    hstr += "#" + hm.Result("$3") + " ";
+                    this.HashSupl.AddItem("#" + hm.Result("$3"));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(this.HashMgr.UseHash) && !hstr.Contains(this.HashMgr.UseHash + " "))
+            {
+                hstr += this.HashMgr.UseHash;
+            }
+
+            if (!string.IsNullOrEmpty(hstr))
+            {
+                this.HashMgr.AddHashToHistory(hstr.Trim(), false);
+            }
+
+            // 本当にリプライ先指定すべきかどうかの判定
+            m = Regex.Matches(statusText, "(^|[ -/:-@[-^`{-~])(?<id>@[a-zA-Z0-9_]+)");
+            if (this.SettingDialog.UseAtIdSupplement)
+            {
+                int cnt = this.AtIdSupl.ItemCount;
+                foreach (Match mid in m)
+                {
+                    this.AtIdSupl.AddItem(mid.Result("${id}"));
+                }
+
+                if (cnt != this.AtIdSupl.ItemCount)
+                {
+                    this.modifySettingAtId = true;
+                }
+            }
+
+            // リプライ先ステータスIDの指定がない場合は指定しない
+            if (this.replyToId == 0)
+            {
+                return;
+            }
+
+            // リプライ先ユーザー名がない場合も指定しない
+            if (string.IsNullOrEmpty(this.replyToName))
+            {
+                this.replyToId = 0;
+                return;
+            }
+
+            // 通常Reply
+            // 次の条件を満たす場合に in_reply_to_status_id 指定
+            // 1. Twitterによりリンクと判定される @idが文中に1つ含まれる (2009/5/28 リンク化される@IDのみカウントするように修正)
+            // 2. リプライ先ステータスIDが設定されている(リストをダブルクリックで返信している)
+            // 3. 文中に含まれた@idがリプライ先のポスト者のIDと一致する
+            if (m != null)
+            {
+                if (statusText.StartsWith("@"))
+                {
+                    if (statusText.StartsWith("@" + this.replyToName))
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    foreach (Match mid in m)
+                    {
+                        if (statusText.Contains("QT " + mid.Result("${id}") + ":") && mid.Result("${id}") == "@" + this.replyToName)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+
+            this.replyToId = 0;
+            this.replyToName = string.Empty;
+        }
+
         private void TweenMain_Activated(object sender, EventArgs e)
         {
             // 画面がアクティブになったら、発言欄の背景色戻す
@@ -5038,55 +5961,6 @@ namespace Hoehoe
             }
         }
 
-        public void AddNewTabForSearch(string searchWord)
-        {
-            // 同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
-            foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch))
-            {
-                if (tb.SearchWords == searchWord && string.IsNullOrEmpty(tb.SearchLang))
-                {
-                    foreach (TabPage tp in ListTab.TabPages)
-                    {
-                        if (tb.TabName == tp.Text)
-                        {
-                            ListTab.SelectedTab = tp;
-                            return;
-                        }
-                    }
-                }
-            }
-            
-            // ユニークなタブ名生成
-            string tabName = searchWord;
-            for (int i = 0; i <= 100; i++)
-            {
-                if (this.statuses.ContainsTab(tabName))
-                {
-                    tabName += "_";
-                }
-                else
-                {
-                    break;
-                }
-            }
-            
-            // タブ追加
-            this.statuses.AddTab(tabName, TabUsageType.PublicSearch, null);
-            this.AddNewTab(tabName, false, TabUsageType.PublicSearch);
-            
-            // 追加したタブをアクティブに
-            ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
-            
-            // 検索条件の設定
-            ComboBox cmb = (ComboBox)ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"];
-            cmb.Items.Add(searchWord);
-            cmb.Text = searchWord;
-            this.SaveConfigsTabs();
-            
-            // 検索実行
-            this.SearchButton_Click(ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
-        }
-
         private void ShowUserTimeline()
         {
             if (!this.ExistCurrentPost)
@@ -5106,525 +5980,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        public void AddNewTabForUserTimeline(string user)
-        {
-            // 同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
-            foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.UserTimeline))
-            {
-                if (tb.User == user)
-                {
-                    foreach (TabPage tp in ListTab.TabPages)
-                    {
-                        if (tb.TabName == tp.Text)
-                        {
-                            ListTab.SelectedTab = tp;
-                            return;
-                        }
-                    }
-                }
-            }
-            
-            // ユニークなタブ名生成
-            string tabName = "user:" + user;
-            while (this.statuses.ContainsTab(tabName))
-            {
-                tabName += "_";
-            }
-            
-            // タブ追加
-            this.statuses.AddTab(tabName, TabUsageType.UserTimeline, null);
-            this.statuses.Tabs[tabName].User = user;
-            this.AddNewTab(tabName, false, TabUsageType.UserTimeline);
-            
-            // 追加したタブをアクティブに
-            ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
-            this.SaveConfigsTabs();
-            
-            // 検索実行
-            this.GetTimeline(WorkerType.UserTimeline, 1, 0, tabName);
-        }
-
-        public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
-        {
-            // 重複チェック
-            foreach (TabPage tb in ListTab.TabPages)
-            {
-                if (tb.Text == tabName)
-                {
-                    return false;
-                }
-            }
-
-            // 新規タブ名チェック
-            if (tabName == Hoehoe.Properties.Resources.AddNewTabText1)
-            {
-                return false;
-            }
-
-            // タブタイプ重複チェック
-            if (!startup)
-            {
-                if (tabType == TabUsageType.DirectMessage || tabType == TabUsageType.Favorites || tabType == TabUsageType.Home || tabType == TabUsageType.Mentions || tabType == TabUsageType.Related)
-                {
-                    if (this.statuses.GetTabByType(tabType) != null)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            TabPage tabPage = new TabPage();
-            DetailsListView listCustom = new DetailsListView();
-            ColumnHeader colHd1 = new ColumnHeader();            // アイコン
-            ColumnHeader colHd2 = new ColumnHeader();            // ニックネーム
-            ColumnHeader colHd3 = new ColumnHeader();            // 本文
-            ColumnHeader colHd4 = new ColumnHeader();            // 日付
-            ColumnHeader colHd5 = new ColumnHeader();            // ユーザID
-            ColumnHeader colHd6 = new ColumnHeader();            // 未読
-            ColumnHeader colHd7 = new ColumnHeader();            // マーク＆プロテクト
-            ColumnHeader colHd8 = new ColumnHeader();            // ソース
-
-            int cnt = ListTab.TabPages.Count;
-
-            ///ToDo:Create and set controls follow tabtypes
-
-            this.SplitContainer1.Panel1.SuspendLayout();
-            this.SplitContainer1.Panel2.SuspendLayout();
-            this.SplitContainer1.SuspendLayout();
-            this.ListTab.SuspendLayout();
-            this.SuspendLayout();
-
-            tabPage.SuspendLayout();
-
-            /// UserTimeline関連
-            Label label = null;
-            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
-            {
-                label = new Label();
-                label.Dock = DockStyle.Top;
-                label.Name = "labelUser";
-                label.Text = tabType == TabUsageType.Lists ? listInfo.ToString() : this.statuses.Tabs[tabName].User + "'s Timeline";
-                label.TextAlign = ContentAlignment.MiddleLeft;
-                using (ComboBox tmpComboBox = new ComboBox())
-                {
-                    label.Height = tmpComboBox.Height;
-                }
-
-                tabPage.Controls.Add(label);
-            }
-
-            /// 検索関連の準備
-            Panel pnl = null;
-            if (tabType == TabUsageType.PublicSearch)
-            {
-                pnl = new Panel();
-
-                Label lbl = new Label();
-                ComboBox cmb = new ComboBox();
-                Button btn = new Button();
-                ComboBox cmbLang = new ComboBox();
-
-                pnl.SuspendLayout();
-
-                pnl.Controls.Add(cmb);
-                pnl.Controls.Add(cmbLang);
-                pnl.Controls.Add(btn);
-                pnl.Controls.Add(lbl);
-                pnl.Name = "panelSearch";
-                pnl.Dock = DockStyle.Top;
-                pnl.Height = cmb.Height;
-                pnl.Enter += this.SearchControls_Enter;
-                pnl.Leave += this.SearchControls_Leave;
-
-                cmb.Text = string.Empty;
-                cmb.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-                cmb.Dock = DockStyle.Fill;
-                cmb.Name = "comboSearch";
-                cmb.DropDownStyle = ComboBoxStyle.DropDown;
-                cmb.ImeMode = ImeMode.NoControl;
-                cmb.TabStop = false;
-                cmb.AutoCompleteMode = AutoCompleteMode.None;
-                cmb.KeyDown += this.SearchComboBox_KeyDown;
-
-                if (this.statuses.ContainsTab(tabName))
-                {
-                    cmb.Items.Add(this.statuses.Tabs[tabName].SearchWords);
-                    cmb.Text = this.statuses.Tabs[tabName].SearchWords;
-                }
-
-                cmbLang.Text = string.Empty;
-                cmbLang.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-                cmbLang.Dock = DockStyle.Right;
-                cmbLang.Width = 50;
-                cmbLang.Name = "comboLang";
-                cmbLang.DropDownStyle = ComboBoxStyle.DropDownList;
-                cmbLang.TabStop = false;
-                cmbLang.Items.Add(string.Empty);
-                cmbLang.Items.Add("ja");
-                cmbLang.Items.Add("en");
-                cmbLang.Items.Add("ar");
-                cmbLang.Items.Add("da");
-                cmbLang.Items.Add("nl");
-                cmbLang.Items.Add("fa");
-                cmbLang.Items.Add("fi");
-                cmbLang.Items.Add("fr");
-                cmbLang.Items.Add("de");
-                cmbLang.Items.Add("hu");
-                cmbLang.Items.Add("is");
-                cmbLang.Items.Add("it");
-                cmbLang.Items.Add("no");
-                cmbLang.Items.Add("pl");
-                cmbLang.Items.Add("pt");
-                cmbLang.Items.Add("ru");
-                cmbLang.Items.Add("es");
-                cmbLang.Items.Add("sv");
-                cmbLang.Items.Add("th");
-                if (this.statuses.ContainsTab(tabName))
-                {
-                    cmbLang.Text = this.statuses.Tabs[tabName].SearchLang;
-                }
-
-                lbl.Text = "Search(C-S-f)";
-                lbl.Name = "label1";
-                lbl.Dock = DockStyle.Left;
-                lbl.Width = 90;
-                lbl.Height = cmb.Height;
-                lbl.TextAlign = ContentAlignment.MiddleLeft;
-
-                btn.Text = "Search";
-                btn.Name = "buttonSearch";
-                btn.UseVisualStyleBackColor = true;
-                btn.Dock = DockStyle.Right;
-                btn.TabStop = false;
-                btn.Click += this.SearchButton_Click;
-            }
-
-            this.ListTab.Controls.Add(tabPage);
-            tabPage.Controls.Add(listCustom);
-
-            if (tabType == TabUsageType.PublicSearch)
-            {
-                tabPage.Controls.Add(pnl);
-            }
-
-            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
-            {
-                tabPage.Controls.Add(label);
-            }
-
-            tabPage.Location = new Point(4, 4);
-            tabPage.Name = "CTab" + cnt.ToString();
-            tabPage.Size = new Size(380, 260);
-            tabPage.TabIndex = 2 + cnt;
-            tabPage.Text = tabName;
-            tabPage.UseVisualStyleBackColor = true;
-
-            listCustom.AllowColumnReorder = true;
-            if (!this.iconCol)
-            {
-                listCustom.Columns.AddRange(new ColumnHeader[] { colHd1, colHd2, colHd3, colHd4, colHd5, colHd6, colHd7, colHd8 });
-            }
-            else
-            {
-                listCustom.Columns.AddRange(new ColumnHeader[] { colHd1, colHd3 });
-            }
-
-            listCustom.ContextMenuStrip = this.ContextMenuOperate;
-            listCustom.Dock = DockStyle.Fill;
-            listCustom.FullRowSelect = true;
-            listCustom.HideSelection = false;
-            listCustom.Location = new Point(0, 0);
-            listCustom.Margin = new Padding(0);
-            listCustom.Name = "CList" + Environment.TickCount.ToString();
-            listCustom.ShowItemToolTips = true;
-            listCustom.Size = new Size(380, 260);
-            listCustom.UseCompatibleStateImageBehavior = false;
-            listCustom.View = View.Details;
-            listCustom.OwnerDraw = true;
-            listCustom.VirtualMode = true;
-            listCustom.Font = this.fntReaded;
-            listCustom.BackColor  = this.clrListBackcolor;
-            listCustom.GridLines = this.SettingDialog.ShowGrid;
-            listCustom.AllowDrop = true;
-            listCustom.SelectedIndexChanged += this.MyList_SelectedIndexChanged;
-            listCustom.MouseDoubleClick += this.MyList_MouseDoubleClick;
-            listCustom.ColumnClick += this.MyList_ColumnClick;
-            listCustom.DrawColumnHeader += this.MyList_DrawColumnHeader;
-            listCustom.DragDrop += this.TweenMain_DragDrop;
-            listCustom.DragOver += this.TweenMain_DragOver;
-            listCustom.DrawItem += this.MyList_DrawItem;
-            listCustom.MouseClick += this.MyList_MouseClick;
-            listCustom.ColumnReordered += this.MyList_ColumnReordered;
-            listCustom.ColumnWidthChanged += this.MyList_ColumnWidthChanged;
-            listCustom.CacheVirtualItems += this.MyList_CacheVirtualItems;
-            listCustom.RetrieveVirtualItem += this.MyList_RetrieveVirtualItem;
-            listCustom.DrawSubItem += this.MyList_DrawSubItem;
-            listCustom.HScrolled += this.MyList_HScrolled;
-
-            this.InitColumnText();
-            colHd1.Text = this.columnTexts[0];
-            colHd1.Width = 48;
-            colHd2.Text = this.columnTexts[1];
-            colHd2.Width = 80;
-            colHd3.Text = this.columnTexts[2];
-            colHd3.Width = 300;
-            colHd4.Text = this.columnTexts[3];
-            colHd4.Width = 50;
-            colHd5.Text = this.columnTexts[4];
-            colHd5.Width = 50;
-            colHd6.Text = this.columnTexts[5];
-            colHd6.Width = 16;
-            colHd7.Text = this.columnTexts[6];
-            colHd7.Width = 16;
-            colHd8.Text = this.columnTexts[7];
-            colHd8.Width = 50;
-
-            if (this.statuses.IsDistributableTab(tabName))
-            {
-                this.tabDialog.AddTab(tabName);
-            }
-
-            listCustom.SmallImageList = new ImageList();
-            if (this.iconSz > 0)
-            {
-                listCustom.SmallImageList.ImageSize = new Size(this.iconSz, this.iconSz);
-            }
-            else
-            {
-                listCustom.SmallImageList.ImageSize = new Size(1, 1);
-            }
-
-            int[] dispOrder = new int[8];
-            if (!startup)
-            {
-                for (int i = 0; i < this.curList.Columns.Count; i++)
-                {
-                    for (int j = 0; j < this.curList.Columns.Count; j++)
-                    {
-                        if (this.curList.Columns[j].DisplayIndex == i)
-                        {
-                            dispOrder[i] = j;
-                            break;
-                        }
-                    }
-                }
-
-                for (int i = 0; i <= this.curList.Columns.Count - 1; i++)
-                {
-                    listCustom.Columns[i].Width = this.curList.Columns[i].Width;
-                    listCustom.Columns[dispOrder[i]].DisplayIndex = i;
-                }
-            }
-            else
-            {
-                if (this.iconCol)
-                {
-                    listCustom.Columns[0].Width = this.cfgLocal.Width1;
-                    listCustom.Columns[1].Width = this.cfgLocal.Width3;
-                    listCustom.Columns[0].DisplayIndex = 0;
-                    listCustom.Columns[1].DisplayIndex = 1;
-                }
-                else
-                {
-                    for (int i = 0; i <= 7; i++)
-                    {
-                        if (this.cfgLocal.DisplayIndex1 == i)
-                        {
-                            dispOrder[i] = 0;
-                        }
-                        else if (this.cfgLocal.DisplayIndex2 == i)
-                        {
-                            dispOrder[i] = 1;
-                        }
-                        else if (this.cfgLocal.DisplayIndex3 == i)
-                        {
-                            dispOrder[i] = 2;
-                        }
-                        else if (this.cfgLocal.DisplayIndex4 == i)
-                        {
-                            dispOrder[i] = 3;
-                        }
-                        else if (this.cfgLocal.DisplayIndex5 == i)
-                        {
-                            dispOrder[i] = 4;
-                        }
-                        else if (this.cfgLocal.DisplayIndex6 == i)
-                        {
-                            dispOrder[i] = 5;
-                        }
-                        else if (this.cfgLocal.DisplayIndex7 == i)
-                        {
-                            dispOrder[i] = 6;
-                        }
-                        else if (this.cfgLocal.DisplayIndex8 == i)
-                        {
-                            dispOrder[i] = 7;
-                        }
-                    }
-
-                    listCustom.Columns[0].Width = this.cfgLocal.Width1;
-                    listCustom.Columns[1].Width = this.cfgLocal.Width2;
-                    listCustom.Columns[2].Width = this.cfgLocal.Width3;
-                    listCustom.Columns[3].Width = this.cfgLocal.Width4;
-                    listCustom.Columns[4].Width = this.cfgLocal.Width5;
-                    listCustom.Columns[5].Width = this.cfgLocal.Width6;
-                    listCustom.Columns[6].Width = this.cfgLocal.Width7;
-                    listCustom.Columns[7].Width = this.cfgLocal.Width8;
-                    for (int i = 0; i <= 7; i++)
-                    {
-                        listCustom.Columns[dispOrder[i]].DisplayIndex = i;
-                    }
-                }
-            }
-
-            if (tabType == TabUsageType.PublicSearch)
-            {
-                pnl.ResumeLayout(false);
-            }
-
-            tabPage.ResumeLayout(false);
-
-            this.SplitContainer1.Panel1.ResumeLayout(false);
-            this.SplitContainer1.Panel2.ResumeLayout(false);
-            this.SplitContainer1.ResumeLayout(false);
-            this.ListTab.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-            tabPage.Tag = listCustom;
-            return true;
-        }
-
-        public bool RemoveSpecifiedTab(string tabName, bool confirm)
-        {
-            int idx = 0;
-            for (idx = 0; idx < ListTab.TabPages.Count; idx++)
-            {
-                if (ListTab.TabPages[idx].Text == tabName)
-                {
-                    break;
-                }
-            }
-
-            if (this.statuses.IsDefaultTab(tabName))
-            {
-                return false;
-            }
-
-            if (confirm)
-            {
-                string tmp = string.Format(Hoehoe.Properties.Resources.RemoveSpecifiedTabText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, tabName + " " + Hoehoe.Properties.Resources.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Cancel)
-                {
-                    return false;
-                }
-            }
-
-            this.SetListProperty(); // 他のタブに列幅等を反映
-
-            TabUsageType tabType = this.statuses.Tabs[tabName].TabType;
-
-            // オブジェクトインスタンスの削除
-            this.SplitContainer1.Panel1.SuspendLayout();
-            this.SplitContainer1.Panel2.SuspendLayout();
-            this.SplitContainer1.SuspendLayout();
-            this.ListTab.SuspendLayout();
-            this.SuspendLayout();
-
-            TabPage tabPage = ListTab.TabPages[idx];
-            DetailsListView listCustom = (DetailsListView)tabPage.Tag;
-            tabPage.Tag = null;
-
-            tabPage.SuspendLayout();
-
-            if (object.ReferenceEquals(this.ListTab.SelectedTab, this.ListTab.TabPages[idx]))
-            {
-                this.ListTab.SelectTab(this.prevSelectedTab != null && this.ListTab.TabPages.Contains(this.prevSelectedTab) ? this.prevSelectedTab : this.ListTab.TabPages[0]);
-            }
-
-            this.ListTab.Controls.Remove(tabPage);
-
-            Control pnl = null;
-            if (tabType == TabUsageType.PublicSearch)
-            {
-                pnl = tabPage.Controls["panelSearch"];
-                foreach (Control ctrl in pnl.Controls)
-                {
-                    if (ctrl.Name == "buttonSearch")
-                    {
-                        ctrl.Click -= this.SearchButton_Click;
-                    }
-
-                    ctrl.Enter -= this.SearchControls_Enter;
-                    ctrl.Leave -= this.SearchControls_Leave;
-                    pnl.Controls.Remove(ctrl);
-                    ctrl.Dispose();
-                }
-
-                tabPage.Controls.Remove(pnl);
-            }
-
-            tabPage.Controls.Remove(listCustom);
-            listCustom.Columns.Clear();
-            listCustom.ContextMenuStrip = null;
-
-            listCustom.SelectedIndexChanged -= this.MyList_SelectedIndexChanged;
-            listCustom.MouseDoubleClick -= this.MyList_MouseDoubleClick;
-            listCustom.ColumnClick -= this.MyList_ColumnClick;
-            listCustom.DrawColumnHeader -= this.MyList_DrawColumnHeader;
-            listCustom.DragDrop -= this.TweenMain_DragDrop;
-            listCustom.DragOver -= this.TweenMain_DragOver;
-            listCustom.DrawItem -= this.MyList_DrawItem;
-            listCustom.MouseClick -= this.MyList_MouseClick;
-            listCustom.ColumnReordered -= this.MyList_ColumnReordered;
-            listCustom.ColumnWidthChanged -= this.MyList_ColumnWidthChanged;
-            listCustom.CacheVirtualItems -= this.MyList_CacheVirtualItems;
-            listCustom.RetrieveVirtualItem -= this.MyList_RetrieveVirtualItem;
-            listCustom.DrawSubItem -= this.MyList_DrawSubItem;
-            listCustom.HScrolled -= this.MyList_HScrolled;
-
-            this.tabDialog.RemoveTab(tabName);
-
-            listCustom.SmallImageList = null;
-            listCustom.ListViewItemSorter = null;
-
-            // キャッシュのクリア
-            if (this.curTab.Equals(tabPage))
-            {
-                this.curTab = null;
-                this.curItemIndex = -1;
-                this.curList = null;
-                this.curPost = null;
-            }
-
-            this.itemCache = null;
-            this.itemCacheIndex = -1;
-            this.postCache = null;
-
-            tabPage.ResumeLayout(false);
-
-            this.SplitContainer1.Panel1.ResumeLayout(false);
-            this.SplitContainer1.Panel2.ResumeLayout(false);
-            this.SplitContainer1.ResumeLayout(false);
-            this.ListTab.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
-            tabPage.Dispose();
-            listCustom.Dispose();
-            this.statuses.RemoveTab(tabName);
-
-            foreach (TabPage tp in ListTab.TabPages)
-            {
-                DetailsListView lst = (DetailsListView)tp.Tag;
-                if (lst.VirtualListSize != this.statuses.Tabs[tp.Text].AllCount)
-                {
-                    lst.VirtualListSize = this.statuses.Tabs[tp.Text].AllCount;
-                }
-            }
-
-            return true;
         }
 
         private void ListTab_Deselected(object sender, TabControlEventArgs e)
@@ -5788,72 +6143,6 @@ namespace Hoehoe
                 this.ShowSuplDialog(StatusText, this.HashSupl);
                 e.Handled = true;
             }
-        }
-
-        public void ShowSuplDialog(TextBox owner, AtIdSupplement dialog)
-        {
-            this.ShowSuplDialog(owner, dialog, 0, string.Empty);
-        }
-
-        public void ShowSuplDialog(TextBox owner, AtIdSupplement dialog, int offset)
-        {
-            this.ShowSuplDialog(owner, dialog, offset, string.Empty);
-        }
-
-        public void ShowSuplDialog(TextBox owner, AtIdSupplement dialog, int offset, string startswith)
-        {
-            dialog.StartsWith = startswith;
-            if (dialog.Visible)
-            {
-                dialog.Focus();
-            }
-            else
-            {
-                dialog.ShowDialog();
-            }
-
-            this.TopMost = this.SettingDialog.AlwaysTop;
-            int selStart = owner.SelectionStart;
-            string frontHalf = string.Empty;
-            string lastHalf = string.Empty;
-            if (dialog.DialogResult == DialogResult.OK)
-            {
-                if (!string.IsNullOrEmpty(dialog.InputText))
-                {
-                    if (selStart > 0)
-                    {
-                        frontHalf = owner.Text.Substring(0, selStart - offset);
-                    }
-                    
-                    if (selStart < owner.Text.Length)
-                    {
-                        lastHalf = owner.Text.Substring(selStart);
-                    }
-                
-                    owner.Text = frontHalf + dialog.InputText + lastHalf;
-                    owner.SelectionStart = selStart + dialog.InputText.Length;
-                }
-            }
-            else
-            {
-                if (selStart > 0)
-                {
-                    frontHalf = owner.Text.Substring(0, selStart);
-                }
-
-                if (selStart < owner.Text.Length)
-                {
-                    lastHalf = owner.Text.Substring(selStart);
-                }
-                
-                owner.Text = frontHalf + lastHalf;
-                if (selStart > 0)
-                {
-                    owner.SelectionStart = selStart;
-                }
-            }
-
-            owner.Focus();
         }
 
         private void StatusText_KeyUp(object sender, KeyEventArgs e)
@@ -6819,11 +7108,6 @@ namespace Hoehoe
             {
                 ListTab.Refresh();
             }
-        }
-
-        public string CreateDetailHtml(string orgdata)
-        {
-            return this.detailHtmlFormatHeader + orgdata + this.detailHtmlFormatFooter;
         }
 
         private void DisplayItemImage_Downloaded(object sender, EventArgs e)
@@ -9089,74 +9373,6 @@ namespace Hoehoe
             }
         }
 
-        public bool TabRename(ref string tabName)
-        {
-            // タブ名変更
-            string newTabText = null;
-            using (InputTabName inputName = new InputTabName())
-            {
-                inputName.TabName = tabName;
-                inputName.ShowDialog();
-                if (inputName.DialogResult == DialogResult.Cancel)
-                {
-                    return false;
-                }
-
-                newTabText = inputName.TabName;
-            }
-
-            this.TopMost = this.SettingDialog.AlwaysTop;
-            if (string.IsNullOrEmpty(newTabText))
-            {
-                return false;
-            }
-            
-            // 新タブ名存在チェック
-            for (int i = 0; i < ListTab.TabCount; i++)
-            {
-                if (ListTab.TabPages[i].Text == newTabText)
-                {
-                    string tmp = string.Format(Hoehoe.Properties.Resources.Tabs_DoubleClickText1, newTabText);
-                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return false;
-                }
-            }
-            
-            // タブ名のリスト作り直し（デフォルトタブ以外は再作成）
-            for (int i = 0; i < ListTab.TabCount; i++)
-            {
-                if (this.statuses.IsDistributableTab(ListTab.TabPages[i].Text))
-                {
-                    this.tabDialog.RemoveTab(ListTab.TabPages[i].Text);
-                }
-            
-                if (ListTab.TabPages[i].Text == tabName)
-                {
-                    ListTab.TabPages[i].Text = newTabText;
-                }
-            }
-            
-            this.statuses.RenameTab(tabName, newTabText);
-            for (int i = 0; i < ListTab.TabCount; i++)
-            {
-                if (this.statuses.IsDistributableTab(ListTab.TabPages[i].Text))
-                {
-                    if (ListTab.TabPages[i].Text == tabName)
-                    {
-                        ListTab.TabPages[i].Text = newTabText;
-                    }
-
-                    this.tabDialog.AddTab(ListTab.TabPages[i].Text);
-                }
-            }
-            
-            this.SaveConfigsCommon();
-            this.SaveConfigsTabs();
-            this.rclickTabName = newTabText;
-            tabName = newTabText;
-            return true;
-        }
-
         private void ListTab_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Middle)
@@ -9256,48 +9472,6 @@ namespace Hoehoe
             }
 
             this.ReOrderTab(tp.Text, tn, bef);
-        }
-
-        public void ReOrderTab(string targetTabText, string baseTabText, bool isBeforeBaseTab)
-        {
-            int baseIndex = 0;
-            for (baseIndex = 0; baseIndex < ListTab.TabPages.Count; baseIndex++)
-            {
-                if (ListTab.TabPages[baseIndex].Text == baseTabText)
-                {
-                    break;
-                }
-            }
-
-            ListTab.SuspendLayout();
-
-            TabPage mTp = null;
-            for (int j = 0; j < ListTab.TabPages.Count; j++)
-            {
-                if (ListTab.TabPages[j].Text == targetTabText)
-                {
-                    mTp = ListTab.TabPages[j];
-                    ListTab.TabPages.Remove(mTp);
-                    if (j < baseIndex)
-                    {
-                        baseIndex -= 1;
-                    }
-            
-                    break;
-                }
-            }
-            
-            if (isBeforeBaseTab)
-            {
-                ListTab.TabPages.Insert(baseIndex, mTp);
-            }
-            else
-            {
-                ListTab.TabPages.Insert(baseIndex + 1, mTp);
-            }
-
-            ListTab.ResumeLayout();
-            this.SaveConfigsTabs();
         }
 
         /// <summary>
@@ -9827,45 +10001,6 @@ namespace Hoehoe
 
             this.ChangeTabUnreadManage(this.rclickTabName, UreadManageMenuItem.Checked);
             this.SaveConfigsTabs();
-        }
-
-        public void ChangeTabUnreadManage(string tabName, bool isManage)
-        {
-            int idx = 0;
-            for (idx = 0; idx < ListTab.TabCount; idx++)
-            {
-                if (ListTab.TabPages[idx].Text == tabName)
-                {
-                    break;
-                }
-            }
-
-            this.statuses.SetTabUnreadManage(tabName, isManage);
-            if (this.SettingDialog.TabIconDisp)
-            {
-                if (this.statuses.Tabs[tabName].UnreadCount > 0)
-                {
-                    ListTab.TabPages[idx].ImageIndex = 0;
-                }
-                else
-                {
-                    ListTab.TabPages[idx].ImageIndex = -1;
-                }
-            }
-
-            if (this.curTab.Text == tabName)
-            {
-                this.itemCache = null;
-                this.postCache = null;
-                this.curList.Refresh();
-            }
-
-            this.SetMainWindowTitle();
-            this.SetStatusLabelUrl();
-            if (!this.SettingDialog.TabIconDisp)
-            {
-                ListTab.Refresh();
-            }
         }
 
         private void NotifyDispMenuItem_Click(object sender, EventArgs e)
@@ -10778,11 +10913,6 @@ namespace Hoehoe
             StatusLabelUrl.Text = this.GetStatusLabelText();
         }
 
-        public void SetStatusLabel(string text)
-        {
-            StatusLabel.Text = text;
-        }
-
         // タスクトレイアイコンのツールチップテキスト書き換え
         // Tween [未読/@]
         private void SetNotifyIconText()
@@ -10808,89 +10938,6 @@ namespace Hoehoe
             }
 
             NotifyIcon1.Text = ur.ToString();
-        }
-
-        internal void CheckReplyTo(string statusText)
-        {
-            // ハッシュタグの保存
-            MatchCollection m = Regex.Matches(statusText, Twitter.HASHTAG, RegexOptions.IgnoreCase);
-            string hstr = string.Empty;
-            foreach (Match hm in m)
-            {
-                if (!hstr.Contains("#" + hm.Result("$3") + " "))
-                {
-                    hstr += "#" + hm.Result("$3") + " ";
-                    this.HashSupl.AddItem("#" + hm.Result("$3"));
-                }
-            }
-            
-            if (!string.IsNullOrEmpty(this.HashMgr.UseHash) && !hstr.Contains(this.HashMgr.UseHash + " "))
-            {
-                hstr += this.HashMgr.UseHash;
-            }
-
-            if (!string.IsNullOrEmpty(hstr))
-            {
-                this.HashMgr.AddHashToHistory(hstr.Trim(), false);
-            }
-
-            // 本当にリプライ先指定すべきかどうかの判定
-            m = Regex.Matches(statusText, "(^|[ -/:-@[-^`{-~])(?<id>@[a-zA-Z0-9_]+)");
-            if (this.SettingDialog.UseAtIdSupplement)
-            {
-                int cnt = this.AtIdSupl.ItemCount;
-                foreach (Match mid in m)
-                {
-                    this.AtIdSupl.AddItem(mid.Result("${id}"));
-                }
-
-                if (cnt != this.AtIdSupl.ItemCount)
-                {
-                    this.modifySettingAtId = true;
-                }
-            }
-
-            // リプライ先ステータスIDの指定がない場合は指定しない
-            if (this.replyToId == 0)
-            {
-                return;
-            }
-
-            // リプライ先ユーザー名がない場合も指定しない
-            if (string.IsNullOrEmpty(this.replyToName))
-            {
-                this.replyToId = 0;
-                return;
-            }
-
-            // 通常Reply
-            // 次の条件を満たす場合に in_reply_to_status_id 指定
-            // 1. Twitterによりリンクと判定される @idが文中に1つ含まれる (2009/5/28 リンク化される@IDのみカウントするように修正)
-            // 2. リプライ先ステータスIDが設定されている(リストをダブルクリックで返信している)
-            // 3. 文中に含まれた@idがリプライ先のポスト者のIDと一致する
-            if (m != null)
-            {
-                if (statusText.StartsWith("@"))
-                {
-                    if (statusText.StartsWith("@" + this.replyToName))
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    foreach (Match mid in m)
-                    {
-                        if (statusText.Contains("QT " + mid.Result("${id}") + ":") && mid.Result("${id}") == "@" + this.replyToName)
-                        {
-                            return;
-                        }
-                    }
-                }
-            }
-
-            this.replyToId = 0;
-            this.replyToName = string.Empty;
         }
 
         private void TweenMain_Resize(object sender, EventArgs e)
@@ -11594,16 +11641,6 @@ namespace Hoehoe
             }
         }
 
-        public string WebBrowser_GetSelectionText(ref WebBrowser componentInstance)
-        {
-            // 発言詳細で「選択文字列をコピー」を行う
-            // WebBrowserコンポーネントのインスタンスを渡す
-            Type typ = componentInstance.ActiveXInstance.GetType();
-            object selObj = typ.InvokeMember("selection", BindingFlags.GetProperty, null, componentInstance.Document.DomDocument, null);
-            object objRange = selObj.GetType().InvokeMember("createRange", BindingFlags.InvokeMethod, null, selObj, null);
-            return (string)objRange.GetType().InvokeMember("text", BindingFlags.GetProperty, null, objRange, null);
-        }
-
         private void SelectionCopyContextMenuItem_Click(object sender, EventArgs e)
         {
             // 発言詳細で「選択文字列をコピー」
@@ -11857,11 +11894,6 @@ namespace Hoehoe
             {
                 e.Effect = DragDropEffects.None;
             }
-        }
-
-        public void OpenUriAsync(string uri)
-        {
-            this.RunAsync(new GetWorkerArg() { WorkerType = WorkerType.OpenUri, Url = uri });
         }
 
         private void ListTabSelect(TabPage tab)
@@ -12712,23 +12744,6 @@ namespace Hoehoe
         private void OwnStatusMenuItem_Click(object sender, EventArgs e)
         {
             this.DoShowUserStatus(this.tw.Username, false);
-        }
-
-        /// <summary>
-        /// TwitterIDでない固定文字列を調べる（文字列検証のみ　実際に取得はしない）
-        /// </summary>
-        /// <param name="name">URLから切り出した文字列</param>
-        /// <returns></returns>
-        public bool IsTwitterId(string name)
-        {
-            if (this.SettingDialog.TwitterConfiguration.NonUsernamePaths == null || this.SettingDialog.TwitterConfiguration.NonUsernamePaths.Length == 0)
-            {
-                return !Regex.Match(name, "^(about|jobs|tos|privacy|who_to_follow|download|messages)$", RegexOptions.IgnoreCase).Success;
-            }
-            else
-            {
-                return !this.SettingDialog.TwitterConfiguration.NonUsernamePaths.Contains(name.ToLower());
-            }
         }
 
         private string GetUserId()
@@ -13928,21 +13943,6 @@ namespace Hoehoe
             {
                 form.ShowDialog(this);
             }
-        }
-
-        public void SetModifySettingCommon(bool value)
-        {
-            this.modifySettingCommon = value;
-        }
-
-        public void SetModifySettingLocal(bool value)
-        {
-            this.modifySettingLocal = value;
-        }
-
-        public void SetModifySettingAtId(bool value)
-        {
-            this.modifySettingAtId = value;
         }
 
         private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
