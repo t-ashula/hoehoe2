@@ -152,12 +152,12 @@ namespace Hoehoe
             {
                 if (withEventsField_gh != null)
                 {
-                    withEventsField_gh.NotifyClicked -= GrowlHelper_Callback;
+                    withEventsField_gh.NotifyClicked -= this.GrowlHelper_Callback;
                 }
                 withEventsField_gh = value;
                 if (withEventsField_gh != null)
                 {
-                    withEventsField_gh.NotifyClicked += GrowlHelper_Callback;
+                    withEventsField_gh.NotifyClicked += this.GrowlHelper_Callback;
                 }
             }
         }
@@ -1416,7 +1416,7 @@ namespace Hoehoe
             StatusLabel.AutoToolTip = false;
             StatusLabel.ToolTipText = "";
             // 文字カウンタ初期化
-            lblLen.Text = GetRestStatusCount(true, false).ToString();
+            lblLen.Text = this.GetRestStatusCount(true, false).ToString();
 
             ///'''''''''''''''''''''''''''''''''''''
             this._statuses.SortOrder = (SortOrder)this._cfgCommon.SortOrder;
@@ -1782,7 +1782,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref this._timerHomeCounter, SettingDialog.TimelinePeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Timeline)
                 {
-                    GetTimeline(WorkerType.Timeline, 1, 0, "");
+                    this.GetTimeline(WorkerType.Timeline, 1, 0, "");
                 }
                 ResetTimers.Timeline = false;
             }
@@ -1791,7 +1791,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref this._timerMentionCounter, SettingDialog.ReplyPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.Reply)
                 {
-                    GetTimeline(WorkerType.Reply, 1, 0, "");
+                    this.GetTimeline(WorkerType.Reply, 1, 0, "");
                 }
                 ResetTimers.Reply = false;
             }
@@ -1800,7 +1800,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref this._timerDmCounter, SettingDialog.DMPeriodInt);
                 if (!tw.IsUserstreamDataReceived && !ResetTimers.DirectMessage)
                 {
-                    GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
+                    this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
                 }
                 ResetTimers.DirectMessage = false;
             }
@@ -1809,7 +1809,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref this._timerPubSearchCounter, SettingDialog.PubSearchPeriodInt);
                 if (!ResetTimers.PublicSearch)
                 {
-                    GetTimeline(WorkerType.PublicSearch, 1, 0, "");
+                    this.GetTimeline(WorkerType.PublicSearch, 1, 0, "");
                 }
                 ResetTimers.PublicSearch = false;
             }
@@ -1818,7 +1818,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref this._timerUserTimelineCounter, SettingDialog.UserTimelinePeriodInt);
                 if (!ResetTimers.UserTimeline)
                 {
-                    GetTimeline(WorkerType.UserTimeline, 1, 0, "");
+                    this.GetTimeline(WorkerType.UserTimeline, 1, 0, "");
                 }
                 ResetTimers.UserTimeline = false;
             }
@@ -1827,7 +1827,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref this._timerListsCounter, SettingDialog.ListsPeriodInt);
                 if (!ResetTimers.Lists)
                 {
-                    GetTimeline(WorkerType.List, 1, 0, "");
+                    this.GetTimeline(WorkerType.List, 1, 0, "");
                 }
                 ResetTimers.Lists = false;
             }
@@ -1844,7 +1844,7 @@ namespace Hoehoe
             {
                 Interlocked.Exchange(ref this._timerRefreshFollowers, 0);
                 this.doGetFollowersMenu();
-                GetTimeline(WorkerType.Configuration, 0, 0, "");
+                this.GetTimeline(WorkerType.Configuration, 0, 0, "");
                 if (InvokeRequired && !IsDisposed)
                 {
                     this.Invoke(new MethodInvoker(this.TrimPostChain));
@@ -1857,14 +1857,14 @@ namespace Hoehoe
                 {
                     isOsResumed = false;
                     Interlocked.Exchange(ref this._timerResumeWait, 0);
-                    GetTimeline(WorkerType.Timeline, 1, 0, "");
-                    GetTimeline(WorkerType.Reply, 1, 0, "");
-                    GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
-                    GetTimeline(WorkerType.PublicSearch, 1, 0, "");
-                    GetTimeline(WorkerType.UserTimeline, 1, 0, "");
-                    GetTimeline(WorkerType.List, 1, 0, "");
+                    this.GetTimeline(WorkerType.Timeline, 1, 0, "");
+                    this.GetTimeline(WorkerType.Reply, 1, 0, "");
+                    this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
+                    this.GetTimeline(WorkerType.PublicSearch, 1, 0, "");
+                    this.GetTimeline(WorkerType.UserTimeline, 1, 0, "");
+                    this.GetTimeline(WorkerType.List, 1, 0, "");
                     this.doGetFollowersMenu();
-                    GetTimeline(WorkerType.Configuration, 0, 0, "");
+                    this.GetTimeline(WorkerType.Configuration, 0, 0, "");
                     if (InvokeRequired && !IsDisposed)
                     {
                         this.Invoke(new MethodInvoker(this.TrimPostChain));
@@ -1882,7 +1882,7 @@ namespace Hoehoe
             // スクロール制御準備
             int smode = -1;
             // -1:制御しない,-2:最新へ,その他:topitem使用
-            long topId = GetScrollPos(ref smode);
+            long topId = this.GetScrollPos(ref smode);
             int befCnt = this._curList.VirtualListSize;
 
             // 現在の選択状態を退避
@@ -2375,7 +2375,7 @@ namespace Hoehoe
 
             try
             {
-                this._curPost = GetCurTabPost(this._curItemIndex);
+                this._curPost = this.GetCurTabPost(this._curItemIndex);
             }
             catch (ArgumentException)
             {
@@ -2502,7 +2502,7 @@ namespace Hoehoe
         {
             // Index:更新対象のListviewItem.Index。Colorを返す。-1は全キャッシュ。Colorは返さない（ダミーを戻す）
             PostClass post = this.anchorFlag ? this.anchorPost : this._curPost;
-            PostClass target = GetCurTabPost(index);
+            PostClass target = this.GetCurTabPost(index);
             if (post == null)
             {
                 return;
@@ -2629,12 +2629,12 @@ namespace Hoehoe
             {
                 isRemoveFooter = true;
             }
-            if (GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
+            if (this.GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
             {
                 if (MessageBox.Show(Hoehoe.Properties.Resources.PostLengthOverMessage1, Hoehoe.Properties.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
                 {
                     isCutOff = true;
-                    if (GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
+                    if (this.GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
                     {
                         isRemoveFooter = true;
                     }
@@ -3453,7 +3453,7 @@ namespace Hoehoe
                     this._waitReply = false;
                     if (rslt.NewDM && !this._initial)
                     {
-                        GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
+                        this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
                     }
                     break;
                 case WorkerType.Favorites:
@@ -3561,7 +3561,7 @@ namespace Hoehoe
                         }
                         else
                         {
-                            GetTimeline(WorkerType.Timeline, 1, 0, "");
+                            this.GetTimeline(WorkerType.Timeline, 1, 0, "");
                         }
                     }
                     break;
@@ -3579,7 +3579,7 @@ namespace Hoehoe
                         }
                         if (!this._isActiveUserstream && SettingDialog.PostAndGet)
                         {
-                            GetTimeline(WorkerType.Timeline, 1, 0, "");
+                            this.GetTimeline(WorkerType.Timeline, 1, 0, "");
                         }
                     }
                     break;
@@ -3853,7 +3853,7 @@ namespace Hoehoe
             };
             foreach (int idx in this._curList.SelectedIndices)
             {
-                PostClass post = GetCurTabPost(idx);
+                PostClass post = this.GetCurTabPost(idx);
                 if (isFavAdd)
                 {
                     if (!post.IsFav)
@@ -3901,7 +3901,7 @@ namespace Hoehoe
         {
             if (this._curList.SelectedIndices.Count > 0)
             {
-                OpenUriAsync("http://twitter.com/" + GetCurTabPost(this._curList.SelectedIndices[0]).ScreenName);
+                OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this._curList.SelectedIndices[0]).ScreenName);
             }
             else if (this._curList.SelectedIndices.Count == 0)
             {
@@ -3913,7 +3913,7 @@ namespace Hoehoe
         {
             if (this._curList.SelectedIndices.Count > 0)
             {
-                OpenUriAsync("http://twitter.com/" + GetCurTabPost(this._curList.SelectedIndices[0]).ScreenName + "/favorites");
+                OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this._curList.SelectedIndices[0]).ScreenName + "/favorites");
             }
         }
 
@@ -4173,7 +4173,7 @@ namespace Hoehoe
                 bool myPost = false;
                 foreach (int idx in this._curList.SelectedIndices)
                 {
-                    if (GetCurTabPost(idx).IsMe || GetCurTabPost(idx).RetweetedBy.ToLower() == tw.Username.ToLower())
+                    if (this.GetCurTabPost(idx).IsMe || this.GetCurTabPost(idx).RetweetedBy.ToLower() == tw.Username.ToLower())
                     {
                         myPost = true;
                         break;
@@ -4401,13 +4401,13 @@ namespace Hoehoe
                 switch (this._statuses.Tabs[this._curTab.Text].TabType)
                 {
                     case TabUsageType.Mentions:
-                        GetTimeline(WorkerType.Reply, 1, 0, "");
+                        this.GetTimeline(WorkerType.Reply, 1, 0, "");
                         break;
                     case TabUsageType.DirectMessage:
-                        GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
+                        this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
                         break;
                     case TabUsageType.Favorites:
-                        GetTimeline(WorkerType.Favorites, 1, 0, "");
+                        this.GetTimeline(WorkerType.Favorites, 1, 0, "");
                         break;
                     // Case TabUsageType.Profile
                     // ' TODO
@@ -4419,11 +4419,11 @@ namespace Hoehoe
                             {
                                 return;
                             }
-                            GetTimeline(WorkerType.PublicSearch, 1, 0, this._curTab.Text);
+                            this.GetTimeline(WorkerType.PublicSearch, 1, 0, this._curTab.Text);
                         }
                         break;
                     case TabUsageType.UserTimeline:
-                        GetTimeline(WorkerType.UserTimeline, 1, 0, this._curTab.Text);
+                        this.GetTimeline(WorkerType.UserTimeline, 1, 0, this._curTab.Text);
                         break;
                     case TabUsageType.Lists:
                         {
@@ -4434,17 +4434,17 @@ namespace Hoehoe
                                 return;
                             }
 
-                            GetTimeline(WorkerType.List, 1, 0, this._curTab.Text);
+                            this.GetTimeline(WorkerType.List, 1, 0, this._curTab.Text);
                         }
                         break;
                     default:
-                        GetTimeline(WorkerType.Timeline, 1, 0, "");
+                        this.GetTimeline(WorkerType.Timeline, 1, 0, "");
                         break;
                 }
             }
             else
             {
-                GetTimeline(WorkerType.Timeline, 1, 0, "");
+                this.GetTimeline(WorkerType.Timeline, 1, 0, "");
             }
         }
 
@@ -4456,13 +4456,13 @@ namespace Hoehoe
                 switch (this._statuses.Tabs[this._curTab.Text].TabType)
                 {
                     case TabUsageType.Mentions:
-                        GetTimeline(WorkerType.Reply, -1, 0, "");
+                        this.GetTimeline(WorkerType.Reply, -1, 0, "");
                         break;
                     case TabUsageType.DirectMessage:
-                        GetTimeline(WorkerType.DirectMessegeRcv, -1, 0, "");
+                        this.GetTimeline(WorkerType.DirectMessegeRcv, -1, 0, "");
                         break;
                     case TabUsageType.Favorites:
-                        GetTimeline(WorkerType.Favorites, -1, 0, "");
+                        this.GetTimeline(WorkerType.Favorites, -1, 0, "");
                         break;
                     case TabUsageType.Profile:
                         break;
@@ -4475,11 +4475,11 @@ namespace Hoehoe
                             {
                                 return;
                             }
-                            GetTimeline(WorkerType.PublicSearch, -1, 0, this._curTab.Text);
+                            this.GetTimeline(WorkerType.PublicSearch, -1, 0, this._curTab.Text);
                         }
                         break;
                     case TabUsageType.UserTimeline:
-                        GetTimeline(WorkerType.UserTimeline, -1, 0, this._curTab.Text);
+                        this.GetTimeline(WorkerType.UserTimeline, -1, 0, this._curTab.Text);
                         break;
                     case TabUsageType.Lists:
                         {
@@ -4489,17 +4489,17 @@ namespace Hoehoe
                             {
                                 return;
                             }
-                            GetTimeline(WorkerType.List, -1, 0, this._curTab.Text);
+                            this.GetTimeline(WorkerType.List, -1, 0, this._curTab.Text);
                         }
                         break;
                     default:
-                        GetTimeline(WorkerType.Timeline, -1, 0, "");
+                        this.GetTimeline(WorkerType.Timeline, -1, 0, "");
                         break;
                 }
             }
             else
             {
-                GetTimeline(WorkerType.Timeline, -1, 0, "");
+                this.GetTimeline(WorkerType.Timeline, -1, 0, "");
             }
         }
 
@@ -4974,7 +4974,7 @@ namespace Hoehoe
             ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
             SaveConfigsTabs();
             // 検索実行
-            GetTimeline(WorkerType.UserTimeline, 1, 0, tabName);
+            this.GetTimeline(WorkerType.UserTimeline, 1, 0, tabName);
         }
 
         public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
@@ -5702,7 +5702,7 @@ namespace Hoehoe
         private void StatusText_TextChanged(object sender, EventArgs e)
         {
             // 文字数カウント
-            int len = GetRestStatusCount(true, false);
+            int len = this.GetRestStatusCount(true, false);
             lblLen.Text = len.ToString();
             if (len < 0)
             {
@@ -6843,7 +6843,7 @@ namespace Hoehoe
                         return;
                     }
                 }
-                ModifierState State = GetModifierState(e.Control, e.Shift, e.Alt);
+                ModifierState State = this.GetModifierState(e.Control, e.Shift, e.Alt);
                 if (State == ModifierState.NotFlags)
                 {
                     return;
@@ -6954,10 +6954,10 @@ namespace Hoehoe
                             this.DoRefresh();
                             return true;
                         case Keys.F6:
-                            GetTimeline(WorkerType.Reply, 1, 0, "");
+                            this.GetTimeline(WorkerType.Reply, 1, 0, "");
                             return true;
                         case Keys.F7:
-                            GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
+                            this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, "");
                             return true;
                     }
                     if (focusedControl != FocusedControl.StatusText)
@@ -6989,14 +6989,14 @@ namespace Hoehoe
                         {
                             case Keys.N:
                             case Keys.Right:
-                                GoRelPost(true);
+                                this.GoRelPost(true);
                                 return true;
                             case Keys.P:
                             case Keys.Left:
-                                GoRelPost(false);
+                                this.GoRelPost(false);
                                 return true;
                             case Keys.OemPeriod:
-                                GoAnchor();
+                                this.GoAnchor();
                                 return true;
                             case Keys.I:
                                 if (this.StatusText.Enabled)
@@ -7018,28 +7018,28 @@ namespace Hoehoe
                         switch (keyCode)
                         {
                             case Keys.L:
-                                GoPost(true);
+                                this.GoPost(true);
                                 return true;
                             case Keys.H:
-                                GoPost(false);
+                                this.GoPost(false);
                                 return true;
                             case Keys.Z:
                             case Keys.Oemcomma:
                                 MoveTop();
                                 return true;
                             case Keys.S:
-                                GoNextTab(true);
+                                this.GoNextTab(true);
                                 return true;
                             case Keys.A:
-                                GoNextTab(false);
+                                this.GoNextTab(false);
                                 return true;
                             case Keys.Oem4:
                                 // ] in_reply_to参照元へ戻る
-                                GoInReplyToPostTree();
+                                this.GoInReplyToPostTree();
                                 return true;
                             case Keys.Oem6:
                                 // [ in_reply_toへジャンプ
-                                GoBackInReplyToPostTree();
+                                this.GoBackInReplyToPostTree();
                                 return true;
                             case Keys.Escape:
                                 if (ListTab.SelectedTab != null)
@@ -7105,7 +7105,7 @@ namespace Hoehoe
                             // Webページを開く動作
                             if (this._curList.SelectedIndices.Count > 0)
                             {
-                                OpenUriAsync("http://twitter.com/" + GetCurTabPost(this._curList.SelectedIndices[0]).ScreenName);
+                                OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this._curList.SelectedIndices[0]).ScreenName);
                             }
                             else if (this._curList.SelectedIndices.Count == 0)
                             {
@@ -7116,7 +7116,7 @@ namespace Hoehoe
                             // Webページを開く動作
                             if (this._curList.SelectedIndices.Count > 0)
                             {
-                                OpenUriAsync("http://twitter.com/" + GetCurTabPost(this._curList.SelectedIndices[0]).ScreenName + "/favorites");
+                                OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this._curList.SelectedIndices[0]).ScreenName + "/favorites");
                             }
                             return true;
                         case Keys.O:
@@ -7139,10 +7139,10 @@ namespace Hoehoe
                                 // スルーする
                                 return false;
                             case Keys.N:
-                                GoNextTab(true);
+                                this.GoNextTab(true);
                                 return true;
                             case Keys.P:
-                                GoNextTab(false);
+                                this.GoNextTab(false);
                                 return true;
                             case Keys.C:
                                 this.CopyStot();
@@ -7272,10 +7272,10 @@ namespace Hoehoe
                             this.DoRefreshMore();
                             return true;
                         case Keys.F6:
-                            GetTimeline(WorkerType.Reply, -1, 0, "");
+                            this.GetTimeline(WorkerType.Reply, -1, 0, "");
                             return true;
                         case Keys.F7:
-                            GetTimeline(WorkerType.DirectMessegeRcv, -1, 0, "");
+                            this.GetTimeline(WorkerType.DirectMessegeRcv, -1, 0, "");
                             return true;
                     }
                     // フォーカスStatusText以外
@@ -7293,35 +7293,35 @@ namespace Hoehoe
                         switch (keyCode)
                         {
                             case Keys.H:
-                                GoTopEnd(true);
+                                this.GoTopEnd(true);
                                 return true;
                             case Keys.L:
-                                GoTopEnd(false);
+                                this.GoTopEnd(false);
                                 return true;
                             case Keys.M:
-                                GoMiddle();
+                                this.GoMiddle();
                                 return true;
                             case Keys.G:
-                                GoLast();
+                                this.GoLast();
                                 return true;
                             case Keys.Z:
                                 MoveMiddle();
                                 return true;
                             case Keys.Oem4:
-                                GoBackInReplyToPostTree(true, false);
+                                this.GoBackInReplyToPostTree(true, false);
                                 return true;
                             case Keys.Oem6:
-                                GoBackInReplyToPostTree(true, true);
+                                this.GoBackInReplyToPostTree(true, true);
                                 return true;
                             case Keys.N:
                             case Keys.Right:
                                 // お気に入り前後ジャンプ(SHIFT+N←/P→)
-                                GoFav(true);
+                                this.GoFav(true);
                                 return true;
                             case Keys.P:
                             case Keys.Left:
                                 // お気に入り前後ジャンプ(SHIFT+N←/P→)
-                                GoFav(false);
+                                this.GoFav(false);
                                 return true;
                             case Keys.Space:
                                 this.GoBackSelectPostChain();
@@ -7360,12 +7360,12 @@ namespace Hoehoe
                         // 別タブの同じ書き込みへ(ALT+←/→)
                         if (keyCode == Keys.Right)
                         {
-                            GoSamePostToAnotherTab(false);
+                            this.GoSamePostToAnotherTab(false);
                             return true;
                         }
                         if (keyCode == Keys.Left)
                         {
-                            GoSamePostToAnotherTab(true);
+                            this.GoSamePostToAnotherTab(true);
                             return true;
                         }
                     }
@@ -7825,7 +7825,7 @@ namespace Hoehoe
             }
             // 未選択も処理しない
 
-            targetId = GetCurTabPost(this._curList.SelectedIndices[0]).StatusId;
+            targetId = this.GetCurTabPost(this._curList.SelectedIndices[0]).StatusId;
 
             if (left)
             {
@@ -8428,7 +8428,7 @@ namespace Hoehoe
 
         private void StatusText_KeyDown(object sender, KeyEventArgs e)
         {
-            ModifierState State = GetModifierState(e.Control, e.Shift, e.Alt);
+            ModifierState State = this.GetModifierState(e.Control, e.Shift, e.Alt);
             if (State == ModifierState.NotFlags)
             {
                 return;
@@ -8771,7 +8771,7 @@ namespace Hoehoe
 
         private void PostBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            ModifierState State = GetModifierState(e.Control, e.Shift, e.Alt);
+            ModifierState State = this.GetModifierState(e.Control, e.Shift, e.Alt);
             if (State == ModifierState.NotFlags)
             {
                 return;
@@ -9666,7 +9666,7 @@ namespace Hoehoe
                     {
                         ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
                         ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
-                        GetTimeline(WorkerType.List, 1, 0, tabName);
+                        this.GetTimeline(WorkerType.List, 1, 0, tabName);
                     }
                 }
             }
@@ -10395,7 +10395,7 @@ namespace Hoehoe
 
         private void SetStatusLabelUrl()
         {
-            StatusLabelUrl.Text = GetStatusLabelText();
+            StatusLabelUrl.Text = this.GetStatusLabelText();
         }
 
         public void SetStatusLabel(string text)
@@ -11276,7 +11276,7 @@ namespace Hoehoe
             if (PostBrowser.StatusText.StartsWith("http"))
             {
                 this._postBrowserStatusText = PostBrowser.StatusText;
-                string name = GetUserId();
+                string name = this.GetUserId();
                 UrlCopyContextMenuItem.Enabled = true;
                 if (name != null)
                 {
@@ -11453,7 +11453,7 @@ namespace Hoehoe
             if (this._curList.SelectedIndices.Count > 0)
             {
                 this._curItemIndex = this._curList.SelectedIndices[0];
-                this._curPost = GetCurTabPost(this._curItemIndex);
+                this._curPost = this.GetCurTabPost(this._curItemIndex);
             }
             else
             {
@@ -11572,9 +11572,9 @@ namespace Hoehoe
                             bw = this._bw[i];
                             bw.WorkerReportsProgress = true;
                             bw.WorkerSupportsCancellation = true;
-                            bw.DoWork += GetTimelineWorker_DoWork;
-                            bw.ProgressChanged += GetTimelineWorker_ProgressChanged;
-                            bw.RunWorkerCompleted += GetTimelineWorker_RunWorkerCompleted;
+                            bw.DoWork += this.GetTimelineWorker_DoWork;
+                            bw.ProgressChanged += this.GetTimelineWorker_ProgressChanged;
+                            bw.RunWorkerCompleted += this.GetTimelineWorker_RunWorkerCompleted;
                             break;
                         }
                     }
@@ -11588,9 +11588,9 @@ namespace Hoehoe
                     bw = this.followerFetchWorker;
                     bw.WorkerReportsProgress = true;
                     bw.WorkerSupportsCancellation = true;
-                    bw.DoWork += GetTimelineWorker_DoWork;
-                    bw.ProgressChanged += GetTimelineWorker_ProgressChanged;
-                    bw.RunWorkerCompleted += GetTimelineWorker_RunWorkerCompleted;
+                    bw.DoWork += this.GetTimelineWorker_DoWork;
+                    bw.ProgressChanged += this.GetTimelineWorker_ProgressChanged;
+                    bw.RunWorkerCompleted += this.GetTimelineWorker_RunWorkerCompleted;
                 }
                 else
                 {
@@ -11643,32 +11643,32 @@ namespace Hoehoe
 
             if (MyCommon.IsNetworkAvailable())
             {
-                GetTimeline(WorkerType.BlockIds, 0, 0, "");
+                this.GetTimeline(WorkerType.BlockIds, 0, 0, "");
                 if (SettingDialog.StartupFollowers)
                 {
-                    GetTimeline(WorkerType.Follower, 0, 0, "");
+                    this.GetTimeline(WorkerType.Follower, 0, 0, "");
                 }
-                GetTimeline(WorkerType.Configuration, 0, 0, "");
+                this.GetTimeline(WorkerType.Configuration, 0, 0, "");
                 StartUserStream();
                 this._waitTimeline = true;
-                GetTimeline(WorkerType.Timeline, 1, 1, "");
+                this.GetTimeline(WorkerType.Timeline, 1, 1, "");
                 this._waitReply = true;
-                GetTimeline(WorkerType.Reply, 1, 1, "");
+                this.GetTimeline(WorkerType.Reply, 1, 1, "");
                 this._waitDm = true;
-                GetTimeline(WorkerType.DirectMessegeRcv, 1, 1, "");
+                this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 1, "");
                 if (SettingDialog.GetFav)
                 {
                     this._waitFav = true;
-                    GetTimeline(WorkerType.Favorites, 1, 1, "");
+                    this.GetTimeline(WorkerType.Favorites, 1, 1, "");
                 }
                 this._waitPubSearch = true;
-                GetTimeline(WorkerType.PublicSearch, 1, 0, "");
+                this.GetTimeline(WorkerType.PublicSearch, 1, 0, "");
                 // tabname="":全タブ
                 this._waitUserTimeline = true;
-                GetTimeline(WorkerType.UserTimeline, 1, 0, "");
+                this.GetTimeline(WorkerType.UserTimeline, 1, 0, "");
                 // tabname="":全タブ
                 this._waitLists = true;
-                GetTimeline(WorkerType.List, 1, 0, "");
+                this.GetTimeline(WorkerType.List, 1, 0, "");
                 // tabname="":全タブ
                 int i = 0;
                 int j = 0;
@@ -11707,13 +11707,13 @@ namespace Hoehoe
                 // 取得失敗の場合は再試行する
                 if (!tw.GetFollowersSuccess && SettingDialog.StartupFollowers)
                 {
-                    GetTimeline(WorkerType.Follower, 0, 0, "");
+                    this.GetTimeline(WorkerType.Follower, 0, 0, "");
                 }
 
                 // 取得失敗の場合は再試行する
                 if (SettingDialog.TwitterConfiguration.PhotoSizeLimit == 0)
                 {
-                    GetTimeline(WorkerType.Configuration, 0, 0, "");
+                    this.GetTimeline(WorkerType.Configuration, 0, 0, "");
                 }
 
                 // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
@@ -11737,7 +11737,7 @@ namespace Hoehoe
 
         private void doGetFollowersMenu()
         {
-            GetTimeline(WorkerType.Follower, 1, 0, "");
+            this.GetTimeline(WorkerType.Follower, 1, 0, "");
             this.DispSelectedPost(true);
         }
 
@@ -11835,7 +11835,7 @@ namespace Hoehoe
                 };
                 foreach (int idx in this._curList.SelectedIndices)
                 {
-                    PostClass post = GetCurTabPost(idx);
+                    PostClass post = this.GetCurTabPost(idx);
                     if (!post.IsMe && !post.IsProtect && !post.IsDm)
                     {
                         args.Ids.Add(post.StatusId);
@@ -12000,7 +12000,7 @@ namespace Hoehoe
             };
 
             StringBuilder tmp = new StringBuilder();
-            using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ApiInfo6, GetApiInfo_Dowork, null, args))
+            using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ApiInfo6, this.GetApiInfo_Dowork, null, args))
             {
                 dlg.ShowDialog();
                 if (Convert.ToBoolean(dlg.Result))
@@ -12321,7 +12321,7 @@ namespace Hoehoe
 
         private void FollowContextMenuItem_Click(object sender, EventArgs e)
         {
-            string name = GetUserId();
+            string name = this.GetUserId();
             if (name != null)
             {
                 this.FollowCommand(name);
@@ -12330,7 +12330,7 @@ namespace Hoehoe
 
         private void RemoveContextMenuItem_Click(object sender, EventArgs e)
         {
-            string name = GetUserId();
+            string name = this.GetUserId();
             if (name != null)
             {
                 RemoveCommand(name, false);
@@ -12339,7 +12339,7 @@ namespace Hoehoe
 
         private void FriendshipContextMenuItem_Click(object sender, EventArgs e)
         {
-            string name = GetUserId();
+            string name = this.GetUserId();
             if (name != null)
             {
                 ShowFriendship(name);
@@ -12362,7 +12362,7 @@ namespace Hoehoe
 
         private void ShowUserStatusContextMenuItem_Click(object sender, EventArgs e)
         {
-            string name = GetUserId();
+            string name = this.GetUserId();
             if (name != null)
             {
                 ShowUserStatus(name);
@@ -12371,7 +12371,7 @@ namespace Hoehoe
 
         private void SearchPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string name = GetUserId();
+            string name = this.GetUserId();
             if (name != null)
             {
                 this.AddNewTabForUserTimeline(name);
@@ -12380,7 +12380,7 @@ namespace Hoehoe
 
         private void SearchAtPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string name = GetUserId();
+            string name = this.GetUserId();
             if (name != null)
             {
                 this.AddNewTabForSearch("@" + name);
@@ -12504,7 +12504,7 @@ namespace Hoehoe
                 // 検索条件の保存
             }
 
-            GetTimeline(WorkerType.PublicSearch, 1, 0, tbName);
+            this.GetTimeline(WorkerType.PublicSearch, 1, 0, tbName);
             ((DetailsListView)ListTab.SelectedTab.Tag).Focus();
         }
 
@@ -12545,10 +12545,10 @@ namespace Hoehoe
         {
             if (this._curList.SelectedIndices.Count > 0)
             {
-                PostClass post = GetCurTabPost(this._curList.SelectedIndices[0]);
+                PostClass post = this.GetCurTabPost(this._curList.SelectedIndices[0]);
                 if (post.RetweetedId > 0)
                 {
-                    OpenUriAsync("http://twitter.com/" + GetCurTabPost(this._curList.SelectedIndices[0]).RetweetedBy);
+                    OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this._curList.SelectedIndices[0]).RetweetedBy);
                 }
             }
         }
@@ -12560,7 +12560,7 @@ namespace Hoehoe
 
         private void IdFilterAddMenuItem_Click(object sender, EventArgs e)
         {
-            string name = GetUserId();
+            string name = this.GetUserId();
             if (name != null)
             {
                 string tabName = "";
@@ -12639,7 +12639,7 @@ namespace Hoehoe
 
             if (object.ReferenceEquals(menuItem.Owner, this.ContextMenuPostBrowser))
             {
-                user = GetUserId();
+                user = this.GetUserId();
                 if (user == null)
                 {
                     return;
@@ -13003,7 +13003,7 @@ namespace Hoehoe
                     {
                         id = inputName.TabName.Trim();
                         GetUserInfoArgs args = new GetUserInfoArgs() { tw = tw, id = id, user = user };
-                        using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
+                        using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
                         {
                             info.ShowDialog();
                             string ret = (string)info.Result;
@@ -13022,7 +13022,7 @@ namespace Hoehoe
             else
             {
                 GetUserInfoArgs args = new GetUserInfoArgs() { tw = tw, id = id, user = user };
-                using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
+                using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
                 {
                     info.ShowDialog();
                     string ret = (string)info.Result;
@@ -13153,7 +13153,7 @@ namespace Hoehoe
         {
             if (this.ExistCurrentPost)
             {
-                using (FormInfo _info = new FormInfo(this, Hoehoe.Properties.Resources.RtCountMenuItem_ClickText1, GetRetweet_DoWork))
+                using (FormInfo _info = new FormInfo(this, Hoehoe.Properties.Resources.RtCountMenuItem_ClickText1, this.GetRetweet_DoWork))
                 {
                     int retweet_count = 0;
 
@@ -13635,7 +13635,7 @@ namespace Hoehoe
                     }
                 }
 
-                GetTimeline(WorkerType.Related, 1, 1, tb.TabName);
+                this.GetTimeline(WorkerType.Related, 1, 1, tb.TabName);
             }
         }
 
@@ -14111,7 +14111,7 @@ namespace Hoehoe
 
         private void UserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string id = GetUserIdFromCurPostOrInput("Show UserTimeline");
+            string id = this.GetUserIdFromCurPostOrInput("Show UserTimeline");
             if (!String.IsNullOrEmpty(id))
             {
                 this.AddNewTabForUserTimeline(id);
@@ -14120,7 +14120,7 @@ namespace Hoehoe
 
         private void UserFavorareToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string id = GetUserIdFromCurPostOrInput("Show Favstar");
+            string id = this.GetUserIdFromCurPostOrInput("Show Favstar");
             if (!String.IsNullOrEmpty(id))
             {
                 OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + id + "/recent");
