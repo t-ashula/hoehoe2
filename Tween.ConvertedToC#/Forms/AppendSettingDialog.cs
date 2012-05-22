@@ -175,17 +175,6 @@ namespace Hoehoe
 
         private string _pin;
 
-        public class IntervalChangedEventArgs : EventArgs
-        {
-            public bool UserStream;
-            public bool Timeline;
-            public bool Reply;
-            public bool DirectMessage;
-            public bool PublicSearch;
-            public bool Lists;
-            public bool UserTimeline;
-        }
-
         public event IntervalChangedEventHandler IntervalChanged;
 
         public delegate void IntervalChangedEventHandler(object sender, IntervalChangedEventArgs e);
@@ -2530,7 +2519,7 @@ namespace Hoehoe
 
             /// TODO: BitlyApi
             string req = "http://api.bit.ly/v3/validate";
-            string content = "";
+            string content = string.Empty;
             Dictionary<string, string> param = new Dictionary<string, string>();
 
             param.Add("login", "tweenapi");
@@ -2744,12 +2733,6 @@ namespace Hoehoe
             }
         }
 
-        private class EventCheckboxTblElement
-        {
-            public CheckBox CheckBox;
-            public EventType Type;
-        }
-
         private EventCheckboxTblElement[] eventCheckboxTableElements = null;
 
         private EventCheckboxTblElement[] GetEventCheckboxTable()
@@ -2881,7 +2864,7 @@ namespace Hoehoe
                     {
                         int sep = path.IndexOf("\"", 2);
                         string browserPath = path.Substring(1, sep - 1);
-                        string arg = "";
+                        string arg = string.Empty;
                         if (sep < path.Length - 1)
                         {
                             arg = path.Substring(sep + 1);
@@ -2921,6 +2904,23 @@ namespace Hoehoe
         private void CheckAutoConvertUrl_CheckedChanged(object sender, EventArgs e)
         {
             ShortenTcoCheck.Enabled = CheckAutoConvertUrl.Checked;
+        }
+
+        public class IntervalChangedEventArgs : EventArgs
+        {
+            public bool UserStream;
+            public bool Timeline;
+            public bool Reply;
+            public bool DirectMessage;
+            public bool PublicSearch;
+            public bool Lists;
+            public bool UserTimeline;
+        }
+
+        private class EventCheckboxTblElement
+        {
+            public CheckBox CheckBox;
+            public EventType Type;
         }
     }
 }
