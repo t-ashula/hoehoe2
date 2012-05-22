@@ -1578,6 +1578,42 @@ namespace Hoehoe
 
             return base.ProcessDialogKey(keyData);
         }
+        
+        private static bool CheckAccountValid()
+        {
+            if (Twitter.AccountState != AccountState.Valid)
+            {
+                accountCheckErrorCount += 1;
+                if (accountCheckErrorCount > 5)
+                {
+                    accountCheckErrorCount = 0;
+                    Twitter.AccountState = AccountState.Valid;
+                    return true;
+                }
+
+                return false;
+            }
+
+            accountCheckErrorCount = 0;
+            return true;
+        }
+        
+        private static void MoveArrayItem(int[] values, int fromIndex, int toIndex)
+        {
+            int movedValue = values[fromIndex];
+            int numMoved = Math.Abs(fromIndex - toIndex);
+
+            if (toIndex < fromIndex)
+            {
+                Array.Copy(values, toIndex, values, toIndex + 1, numMoved);
+            }
+            else
+            {
+                Array.Copy(values, fromIndex + 1, values, fromIndex, numMoved);
+            }
+
+            values[toIndex] = movedValue;
+        }
 
         private void TweenMain_Activated(object sender, EventArgs e)
         {
@@ -3980,25 +4016,6 @@ namespace Hoehoe
 
             this.Activate();
             this.BringToFront();
-        }
-
-        private static bool CheckAccountValid()
-        {
-            if (Twitter.AccountState != AccountState.Valid)
-            {
-                accountCheckErrorCount += 1;
-                if (accountCheckErrorCount > 5)
-                {
-                    accountCheckErrorCount = 0;
-                    Twitter.AccountState = AccountState.Valid;
-                    return true;
-                }
-
-                return false;
-            }
-
-            accountCheckErrorCount = 0;
-            return true;
         }
 
         private void GetTimelineWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -14700,22 +14717,6 @@ namespace Hoehoe
             }
         }
 
-        private static void MoveArrayItem(int[] values, int fromIndex, int toIndex)
-        {
-            int movedValue = values[fromIndex];
-            int numMoved = Math.Abs(fromIndex - toIndex);
-
-            if (toIndex < fromIndex)
-            {
-                Array.Copy(values, toIndex, values, toIndex + 1, numMoved);
-            }
-            else
-            {
-                Array.Copy(values, fromIndex + 1, values, fromIndex, numMoved);
-            }
-
-            values[toIndex] = movedValue;
-        }
         #region inner types
         // URL短縮のUndo用
         private class UrlUndoInfo
