@@ -68,6 +68,17 @@ namespace Hoehoe
         /// </summary>
         private const string ApplicationShortcutKeyHelpWebPageUrl = "http://sourceforge.jp/projects/tween/wiki/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E3%82%AD%E3%83%BC";
 
+        private const string DetailHtmlFormatMono1 = "<html><head><style type=\"text/css\"><!-- pre {font-family: \"";
+        private const string DetailHtmlFormat2 = "\", sans-serif; font-size: ";
+        private const string DetailHtmlFormat3 = "pt; word-wrap: break-word; color:rgb(";
+        private const string DetailHtmlFormat4 = ");} a:link, a:visited, a:active, a:hover {color:rgb(";
+        private const string DetailHtmlFormat5 = "); } --></style></head><body style=\"margin:0px; background-color:rgb(";
+        private const string DetailHtmlFormatMono6 = ");\"><pre>";
+        private const string DetailHtmlFormatMono7 = "</pre></body></html>";
+        private const string DetailHtmlFormat1 = "<html><head><style type=\"text/css\"><!-- p {font-family: \"";
+        private const string DetailHtmlFormat6 = ");\"><p>";
+        private const string DetailHtmlFormat7 = "</p></body></html>";
+
         // 各種設定
         // 画面サイズ
         private Size mySize;
@@ -116,16 +127,6 @@ namespace Hoehoe
         // ロック用
         private readonly object syncObject = new object();
 
-        private const string DetailHtmlFormatMono1 = "<html><head><style type=\"text/css\"><!-- pre {font-family: \"";
-        private const string DetailHtmlFormat2 = "\", sans-serif; font-size: ";
-        private const string DetailHtmlFormat3 = "pt; word-wrap: break-word; color:rgb(";
-        private const string DetailHtmlFormat4 = ");} a:link, a:visited, a:active, a:hover {color:rgb(";
-        private const string DetailHtmlFormat5 = "); } --></style></head><body style=\"margin:0px; background-color:rgb(";
-        private const string DetailHtmlFormatMono6 = ");\"><pre>";
-        private const string DetailHtmlFormatMono7 = "</pre></body></html>";
-        private const string DetailHtmlFormat1 = "<html><head><style type=\"text/css\"><!-- p {font-family: \"";
-        private const string DetailHtmlFormat6 = ");\"><p>";
-        private const string DetailHtmlFormat7 = "</p></body></html>";
         private string detailHtmlFormatHeader;
         private string detailHtmlFormatFooter;
         private bool myStatusError;
