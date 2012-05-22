@@ -24,19 +24,19 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-using System.Windows.Forms;
-using Hoehoe.DataModels;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.IO;
+    using System.Reflection;
+    using System.Threading;
+    using System.Windows.Forms;
+    using Hoehoe.DataModels;
+
     public partial class AppendSettingDialog
     {
         private static AppendSettingDialog _instance = new AppendSettingDialog();
@@ -77,7 +77,6 @@ namespace Hoehoe
         private NameBalloonEnum _myNameBalloon;
         private bool _myPostCtrlEnter;
         private bool _myPostShiftEnter;
-        private bool _usePostMethod;
         private int _countApi;
         private int _countApiReply;
         private string _browserpath;
@@ -237,8 +236,7 @@ namespace Hoehoe
                 {
                     MessageBox.Show(Hoehoe.Properties.Resources.SettingSave_ClickText1);
                     _ValidationError = true;
-                    TreeViewSetting.SelectedNode.Name = "TweetActNode";
-                    // 動作タブを選択
+                    TreeViewSetting.SelectedNode.Name = "TweetActNode"; // 動作タブを選択
                     TextBitlyId.Focus();
                     return;
                 }
@@ -382,12 +380,9 @@ namespace Hoehoe
                 _MyPlaySound = PlaySnd.Checked;
                 _MyUnreadManage = UReadMng.Checked;
                 _MyOneWayLove = OneWayLv.Checked;
-
-                _fntUnread = lblUnread.Font;
-                //未使用
+                _fntUnread = lblUnread.Font;                // 未使用
                 _clUnread = lblUnread.ForeColor;
-                _fntReaded = lblListFont.Font;
-                //リストフォントとして使用
+                _fntReaded = lblListFont.Font;              // リストフォントとして使用
                 _clReaded = lblListFont.ForeColor;
                 _clFav = lblFav.ForeColor;
                 _clOWL = lblOWL.ForeColor;
@@ -434,7 +429,6 @@ namespace Hoehoe
                         _myPostShiftEnter = false;
                         break;
                 }
-                _usePostMethod = false;
                 _countApi = Convert.ToInt32(TextCountApi.Text);
                 _countApiReply = Convert.ToInt32(TextCountApiReply.Text);
                 _browserpath = BrowserPathText.Text.Trim();
@@ -446,35 +440,35 @@ namespace Hoehoe
                 switch (ComboDispTitle.SelectedIndex)
                 {
                     case 0:
-                        //None
+                        // None
                         _MyDispLatestPost = DispTitleEnum.None;
                         break;
                     case 1:
-                        //Ver
+                        // Ver
                         _MyDispLatestPost = DispTitleEnum.Ver;
                         break;
                     case 2:
-                        //Post
+                        // Post
                         _MyDispLatestPost = DispTitleEnum.Post;
                         break;
                     case 3:
-                        //RepCount
+                        // RepCount
                         _MyDispLatestPost = DispTitleEnum.UnreadRepCount;
                         break;
                     case 4:
-                        //AllCount
+                        // AllCount
                         _MyDispLatestPost = DispTitleEnum.UnreadAllCount;
                         break;
                     case 5:
-                        //Rep+All
+                        // Rep+All
                         _MyDispLatestPost = DispTitleEnum.UnreadAllRepCount;
                         break;
                     case 6:
-                        //Unread/All
+                        // Unread/All
                         _MyDispLatestPost = DispTitleEnum.UnreadCountAllCount;
                         break;
                     case 7:
-                        //Count of Status/Follow/Follower
+                        // Count of Status/Follow/Follower
                         _MyDispLatestPost = DispTitleEnum.OwnStatus;
                         break;
                 }
@@ -637,14 +631,15 @@ namespace Hoehoe
 
             if (this.DialogResult == DialogResult.Cancel)
             {
-                //キャンセル時は画面表示時のアカウントに戻す
-                //キャンセル時でも認証済みアカウント情報は保存する
+                // キャンセル時は画面表示時のアカウントに戻す
+                // キャンセル時でも認証済みアカウント情報は保存する
                 this.UserAccounts.Clear();
                 foreach (var u in this.AuthUserCombo.Items)
                 {
                     this.UserAccounts.Add((UserAccount)u);
                 }
-                //アクティブユーザーを起動時のアカウントに戻す（起動時アカウントなければ何もしない）
+                
+                // アクティブユーザーを起動時のアカウントに戻す（起動時アカウントなければ何もしない）
                 bool userSet = false;
                 if (this._InitialUserId > 0)
                 {
@@ -658,8 +653,8 @@ namespace Hoehoe
                         }
                     }
                 }
-                //認証済みアカウントが削除されていた場合、もしくは起動時アカウントがなかった場合は、
-                //アクティブユーザーなしとして初期化
+
+                // 認証済みアカウントが削除されていた場合、もしくは起動時アカウントがなかった場合は、アクティブユーザーなしとして初期化
                 if (!userSet)
                 {
                     _tw.ClearAuthInfo();
@@ -1438,11 +1433,10 @@ namespace Hoehoe
             set { _MyOneWayLove = value; }
         }
 
-        ///''未使用
+        // 未使用
         public Font FontUnread
         {
             get { return _fntUnread; }
-            //無視
             set { _fntUnread = value; }
         }
 
@@ -1452,7 +1446,7 @@ namespace Hoehoe
             set { _clUnread = value; }
         }
 
-        ///''リストフォントとして使用
+        // リストフォントとして使用
         public Font FontReaded
         {
             get { return _fntReaded; }
@@ -2255,7 +2249,7 @@ namespace Hoehoe
 
         private bool StartAuth()
         {
-            //現在の設定内容で通信
+            // 現在の設定内容で通信
             HttpConnection.ProxyType ptype = default(HttpConnection.ProxyType);
             if (RadioProxyNone.Checked)
             {
@@ -2274,7 +2268,7 @@ namespace Hoehoe
             string pusr = TextProxyUser.Text.Trim();
             string ppw = TextProxyPassword.Text.Trim();
 
-            //通信基底クラス初期化
+            // 通信基底クラス初期化
             HttpConnection.InitializeConnection(20, ptype, padr, pport, pusr, ppw);
             HttpTwitter.SetTwitterUrl(TwitterAPIText.Text.Trim());
             HttpTwitter.SetTwitterSearchUrl(TwitterSearchAPIText.Text.Trim());
@@ -2471,7 +2465,7 @@ namespace Hoehoe
                         MyCommon.TwitterApiInfo.UsingCount = usingApi;
                         var proc = new Thread(new System.Threading.ThreadStart(() =>
                         {
-                            _tw.GetInfoApi(null); //'取得エラー時はinfoCountは初期状態（値：-1）
+                            _tw.GetInfoApi(null); // 取得エラー時はinfoCountは初期状態（値：-1）
                             if (this.IsHandleCreated && this.IsDisposed)
                             {
                                 Invoke(new MethodInvoker(DisplayApiMaxCount));
@@ -2546,23 +2540,23 @@ namespace Hoehoe
 
             if (!(new HttpVarious()).PostData(req, param, ref content))
             {
-                return true;
                 // 通信エラーの場合はとりあえずチェックを通ったことにする
+                return true;
             }
             else if (content.Trim() == "1")
             {
-                return true;
                 // 検証成功
+                return true;
             }
             else if (content.Trim() == "0")
             {
-                return false;
                 // 検証失敗 APIキーとIDの組み合わせが違う
+                return false;
             }
             else
             {
-                return true;
                 // 規定外応答：通信エラーの可能性があるためとりあえずチェックを通ったことにする
+                return true;
             }
         }
 
@@ -2581,8 +2575,7 @@ namespace Hoehoe
 
         private void HotkeyText_KeyDown(object sender, KeyEventArgs e)
         {
-            //KeyValueで判定する。
-            //表示文字とのテーブルを用意すること
+            // KeyValueで判定する。表示文字とのテーブルを用意すること
             HotkeyText.Text = e.KeyCode.ToString();
             HotkeyCode.Text = e.KeyValue.ToString();
             HotkeyText.Tag = e.KeyCode;
@@ -2794,7 +2787,6 @@ namespace Hoehoe
                         break;
                     case CheckState.Unchecked:
                         break;
-                    //
                 }
             }
             eventnotifyflag = evt;
@@ -2907,7 +2899,6 @@ namespace Hoehoe
             }
             catch (Exception)
             {
-                //                MessageBox.Show("ブラウザの起動に失敗、またはタイムアウトしました。" + ex.ToString())
             }
         }
 
@@ -2922,7 +2913,6 @@ namespace Hoehoe
             InitializeComponent();
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
-
             this.Icon = Hoehoe.Properties.Resources.MIcon;
         }
 
