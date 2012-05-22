@@ -483,7 +483,7 @@ namespace Hoehoe
         }
 
         // URL短縮のUndo用
-        private struct UrlUndoInfo
+        private class UrlUndoInfo
         {
             public string Before;
             public string After;
