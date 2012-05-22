@@ -54,26 +54,26 @@ namespace Hoehoe
         private bool _MyPlaySound;
         private bool _MyOneWayLove;
         private Font _fntUnread;
-        private Color _clUnread;
+        private Color _clrUnread;
         private Font _fntReaded;
-        private Color _clReaded;
-        private Color _clFav;
-        private Color _clOWL;
-        private Color _clRetweet;
+        private Color _clrReaded;
+        private Color _clrFav;
+        private Color _clrOWL;
+        private Color _clrRetweet;
         private Font _fntDetail;
-        private Color _clSelf;
-        private Color _clAtSelf;
-        private Color _clTarget;
-        private Color _clAtTarget;
-        private Color _clAtFromTarget;
-        private Color _clAtTo;
-        private Color _clInputBackcolor;
-        private Color _clInputFont;
+        private Color _clrSelf;
+        private Color _clrAtSelf;
+        private Color _clrTarget;
+        private Color _clrAtTarget;
+        private Color _clrAtFromTarget;
+        private Color _clrAtTo;
+        private Color _clrInputBackcolor;
+        private Color _clrInputFont;
         private Font _fntInputFont;
-        private Color _clListBackcolor;
-        private Color _clDetailBackcolor;
-        private Color _clDetail;
-        private Color _clDetailLink;
+        private Color _clrListBackcolor;
+        private Color _clrDetailBackcolor;
+        private Color _clrDetail;
+        private Color _clrDetailLink;
         private NameBalloonEnum _myNameBalloon;
         private bool _myPostCtrlEnter;
         private bool _myPostShiftEnter;
@@ -285,8 +285,8 @@ namespace Hoehoe
 
         public Color ColorUnread
         {
-            get { return this._clUnread; }
-            set { this._clUnread = value; }
+            get { return this._clrUnread; }
+            set { this._clrUnread = value; }
         }
 
         // リストフォントとして使用
@@ -298,26 +298,26 @@ namespace Hoehoe
 
         public Color ColorReaded
         {
-            get { return this._clReaded; }
-            set { this._clReaded = value; }
+            get { return this._clrReaded; }
+            set { this._clrReaded = value; }
         }
 
         public Color ColorFav
         {
-            get { return this._clFav; }
-            set { this._clFav = value; }
+            get { return this._clrFav; }
+            set { this._clrFav = value; }
         }
 
         public Color ColorOWL
         {
-            get { return this._clOWL; }
-            set { this._clOWL = value; }
+            get { return this._clrOWL; }
+            set { this._clrOWL = value; }
         }
 
         public Color ColorRetweet
         {
-            get { return this._clRetweet; }
-            set { this._clRetweet = value; }
+            get { return this._clrRetweet; }
+            set { this._clrRetweet = value; }
         }
 
         public Font FontDetail
@@ -328,62 +328,62 @@ namespace Hoehoe
 
         public Color ColorDetail
         {
-            get { return this._clDetail; }
-            set { this._clDetail = value; }
+            get { return this._clrDetail; }
+            set { this._clrDetail = value; }
         }
 
         public Color ColorDetailLink
         {
-            get { return this._clDetailLink; }
-            set { this._clDetailLink = value; }
+            get { return this._clrDetailLink; }
+            set { this._clrDetailLink = value; }
         }
 
         public Color ColorSelf
         {
-            get { return this._clSelf; }
-            set { this._clSelf = value; }
+            get { return this._clrSelf; }
+            set { this._clrSelf = value; }
         }
 
         public Color ColorAtSelf
         {
-            get { return this._clAtSelf; }
-            set { this._clAtSelf = value; }
+            get { return this._clrAtSelf; }
+            set { this._clrAtSelf = value; }
         }
 
         public Color ColorTarget
         {
-            get { return this._clTarget; }
-            set { this._clTarget = value; }
+            get { return this._clrTarget; }
+            set { this._clrTarget = value; }
         }
 
         public Color ColorAtTarget
         {
-            get { return this._clAtTarget; }
-            set { this._clAtTarget = value; }
+            get { return this._clrAtTarget; }
+            set { this._clrAtTarget = value; }
         }
 
         public Color ColorAtFromTarget
         {
-            get { return this._clAtFromTarget; }
-            set { this._clAtFromTarget = value; }
+            get { return this._clrAtFromTarget; }
+            set { this._clrAtFromTarget = value; }
         }
 
         public Color ColorAtTo
         {
-            get { return this._clAtTo; }
-            set { this._clAtTo = value; }
+            get { return this._clrAtTo; }
+            set { this._clrAtTo = value; }
         }
 
         public Color ColorInputBackcolor
         {
-            get { return this._clInputBackcolor; }
-            set { this._clInputBackcolor = value; }
+            get { return this._clrInputBackcolor; }
+            set { this._clrInputBackcolor = value; }
         }
 
         public Color ColorInputFont
         {
-            get { return this._clInputFont; }
-            set { this._clInputFont = value; }
+            get { return this._clrInputFont; }
+            set { this._clrInputFont = value; }
         }
 
         public Font FontInputFont
@@ -394,14 +394,14 @@ namespace Hoehoe
 
         public Color ColorListBackcolor
         {
-            get { return this._clListBackcolor; }
-            set { this._clListBackcolor = value; }
+            get { return this._clrListBackcolor; }
+            set { this._clrListBackcolor = value; }
         }
 
         public Color ColorDetailBackcolor
         {
-            get { return this._clDetailBackcolor; }
-            set { this._clDetailBackcolor = value; }
+            get { return this._clrDetailBackcolor; }
+            set { this._clrDetailBackcolor = value; }
         }
 
         public NameBalloonEnum NameBalloon
@@ -1047,25 +1047,25 @@ namespace Hoehoe
                 this._MyUnreadManage = UReadMng.Checked;
                 this._MyOneWayLove = OneWayLv.Checked;
                 this._fntUnread = lblUnread.Font;                // 未使用
-                this._clUnread = lblUnread.ForeColor;
+                this._clrUnread = lblUnread.ForeColor;
                 this._fntReaded = lblListFont.Font;              // リストフォントとして使用
-                this._clReaded = lblListFont.ForeColor;
-                this._clFav = lblFav.ForeColor;
-                this._clOWL = lblOWL.ForeColor;
-                this._clRetweet = lblRetweet.ForeColor;
+                this._clrReaded = lblListFont.ForeColor;
+                this._clrFav = lblFav.ForeColor;
+                this._clrOWL = lblOWL.ForeColor;
+                this._clrRetweet = lblRetweet.ForeColor;
                 this._fntDetail = lblDetail.Font;
-                this._clSelf = lblSelf.BackColor;
-                this._clAtSelf = lblAtSelf.BackColor;
-                this._clTarget = lblTarget.BackColor;
-                this._clAtTarget = lblAtTarget.BackColor;
-                this._clAtFromTarget = lblAtFromTarget.BackColor;
-                this._clAtTo = lblAtTo.BackColor;
-                this._clInputBackcolor = lblInputBackcolor.BackColor;
-                this._clInputFont = lblInputFont.ForeColor;
-                this._clListBackcolor = lblListBackcolor.BackColor;
-                this._clDetailBackcolor = lblDetailBackcolor.BackColor;
-                this._clDetail = lblDetail.ForeColor;
-                this._clDetailLink = lblDetailLink.ForeColor;
+                this._clrSelf = lblSelf.BackColor;
+                this._clrAtSelf = lblAtSelf.BackColor;
+                this._clrTarget = lblTarget.BackColor;
+                this._clrAtTarget = lblAtTarget.BackColor;
+                this._clrAtFromTarget = lblAtFromTarget.BackColor;
+                this._clrAtTo = lblAtTo.BackColor;
+                this._clrInputBackcolor = lblInputBackcolor.BackColor;
+                this._clrInputFont = lblInputFont.ForeColor;
+                this._clrListBackcolor = lblListBackcolor.BackColor;
+                this._clrDetailBackcolor = lblDetailBackcolor.BackColor;
+                this._clrDetail = lblDetail.ForeColor;
+                this._clrDetailLink = lblDetailLink.ForeColor;
                 this._fntInputFont = lblInputFont.Font;
                 switch (cmbNameBalloon.SelectedIndex)
                 {
@@ -1413,25 +1413,25 @@ namespace Hoehoe
 
             lblListFont.Font = this._fntReaded;
             lblUnread.Font = this._fntUnread;
-            lblUnread.ForeColor = this._clUnread;
-            lblListFont.ForeColor = this._clReaded;
-            lblFav.ForeColor = this._clFav;
-            lblOWL.ForeColor = this._clOWL;
-            lblRetweet.ForeColor = this._clRetweet;
+            lblUnread.ForeColor = this._clrUnread;
+            lblListFont.ForeColor = this._clrReaded;
+            lblFav.ForeColor = this._clrFav;
+            lblOWL.ForeColor = this._clrOWL;
+            lblRetweet.ForeColor = this._clrRetweet;
             lblDetail.Font = this._fntDetail;
-            lblSelf.BackColor = this._clSelf;
-            lblAtSelf.BackColor = this._clAtSelf;
-            lblTarget.BackColor = this._clTarget;
-            lblAtTarget.BackColor = this._clAtTarget;
-            lblAtFromTarget.BackColor = this._clAtFromTarget;
-            lblAtTo.BackColor = this._clAtTo;
-            lblInputBackcolor.BackColor = this._clInputBackcolor;
-            lblInputFont.ForeColor = this._clInputFont;
+            lblSelf.BackColor = this._clrSelf;
+            lblAtSelf.BackColor = this._clrAtSelf;
+            lblTarget.BackColor = this._clrTarget;
+            lblAtTarget.BackColor = this._clrAtTarget;
+            lblAtFromTarget.BackColor = this._clrAtFromTarget;
+            lblAtTo.BackColor = this._clrAtTo;
+            lblInputBackcolor.BackColor = this._clrInputBackcolor;
+            lblInputFont.ForeColor = this._clrInputFont;
             lblInputFont.Font = this._fntInputFont;
-            lblListBackcolor.BackColor = this._clListBackcolor;
-            lblDetailBackcolor.BackColor = this._clDetailBackcolor;
-            lblDetail.ForeColor = this._clDetail;
-            lblDetailLink.ForeColor = this._clDetailLink;
+            lblListBackcolor.BackColor = this._clrListBackcolor;
+            lblDetailBackcolor.BackColor = this._clrDetailBackcolor;
+            lblDetail.ForeColor = this._clrDetail;
+            lblDetailLink.ForeColor = this._clrDetailLink;
 
             switch (this._myNameBalloon)
             {
