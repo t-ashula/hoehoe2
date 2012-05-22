@@ -161,6 +161,10 @@ namespace Hoehoe
             this.Icon = Hoehoe.Properties.Resources.MIcon;
         }
 
+        public delegate void IntervalChangedEventHandler(object sender, IntervalChangedEventArgs e);
+
+        public event IntervalChangedEventHandler IntervalChanged;
+
         public bool HideDuplicatedRetweets { get; set; }
 
         public bool IsPreviewFoursquare { get; set; }
@@ -182,10 +186,6 @@ namespace Hoehoe
         public bool IsNotifyUseGrowl { get; set; }
 
         public DataModels.Twitter.Configuration TwitterConfiguration { get; set; }
-
-        public event IntervalChangedEventHandler IntervalChanged;
-
-        public delegate void IntervalChangedEventHandler(object sender, IntervalChangedEventArgs e);
 
         public int UserstreamPeriodInt
         {
