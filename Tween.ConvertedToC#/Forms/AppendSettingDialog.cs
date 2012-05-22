@@ -1841,7 +1841,7 @@ namespace Hoehoe
             StartupReaded.Enabled = UReadMng.Checked == true;
         }
 
-        private void btnFontAndColor_Click(object sender, EventArgs e)
+        private void ButtonFontAndColor_Click(object sender, EventArgs e)
         {
             Button Btn = (Button)sender;
             DialogResult rtn = default(DialogResult);
@@ -1913,7 +1913,7 @@ namespace Hoehoe
             }
         }
 
-        private void btnColor_Click(object sender, EventArgs e)
+        private void ButtonColor_Click(object sender, EventArgs e)
         {
             Button Btn = (Button)sender;
             DialogResult rtn = default(DialogResult);

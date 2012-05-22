@@ -1940,7 +1940,7 @@ namespace Hoehoe
             resources.ApplyResources(this.btnRetweet, "btnRetweet");
             this.btnRetweet.Name = "btnRetweet";
             this.btnRetweet.UseVisualStyleBackColor = true;
-            this.btnRetweet.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnRetweet.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // lblRetweet
             // 
@@ -1965,7 +1965,7 @@ namespace Hoehoe
             resources.ApplyResources(this.btnDetailLink, "btnDetailLink");
             this.btnDetailLink.Name = "btnDetailLink";
             this.btnDetailLink.UseVisualStyleBackColor = true;
-            this.btnDetailLink.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnDetailLink.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // lblDetailLink
             // 
@@ -1983,7 +1983,7 @@ namespace Hoehoe
             resources.ApplyResources(this.btnUnread, "btnUnread");
             this.btnUnread.Name = "btnUnread";
             this.btnUnread.UseVisualStyleBackColor = true;
-            this.btnUnread.Click += new System.EventHandler(this.btnFontAndColor_Click);
+            this.btnUnread.Click += new System.EventHandler(this.ButtonFontAndColor_Click);
             // 
             // lblUnread
             // 
@@ -2001,7 +2001,7 @@ namespace Hoehoe
             resources.ApplyResources(this.btnDetailBack, "btnDetailBack");
             this.btnDetailBack.Name = "btnDetailBack";
             this.btnDetailBack.UseVisualStyleBackColor = true;
-            this.btnDetailBack.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnDetailBack.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // lblDetailBackcolor
             // 
@@ -2019,7 +2019,7 @@ namespace Hoehoe
             resources.ApplyResources(this.btnDetail, "btnDetail");
             this.btnDetail.Name = "btnDetail";
             this.btnDetail.UseVisualStyleBackColor = true;
-            this.btnDetail.Click += new System.EventHandler(this.btnFontAndColor_Click);
+            this.btnDetail.Click += new System.EventHandler(this.ButtonFontAndColor_Click);
             // 
             // lblDetail
             // 
@@ -2037,7 +2037,7 @@ namespace Hoehoe
             resources.ApplyResources(this.btnOWL, "btnOWL");
             this.btnOWL.Name = "btnOWL";
             this.btnOWL.UseVisualStyleBackColor = true;
-            this.btnOWL.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnOWL.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // lblOWL
             // 
@@ -2055,7 +2055,7 @@ namespace Hoehoe
             resources.ApplyResources(this.btnFav, "btnFav");
             this.btnFav.Name = "btnFav";
             this.btnFav.UseVisualStyleBackColor = true;
-            this.btnFav.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnFav.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // lblFav
             // 
@@ -2073,7 +2073,7 @@ namespace Hoehoe
             resources.ApplyResources(this.btnListFont, "btnListFont");
             this.btnListFont.Name = "btnListFont";
             this.btnListFont.UseVisualStyleBackColor = true;
-            this.btnListFont.Click += new System.EventHandler(this.btnFontAndColor_Click);
+            this.btnListFont.Click += new System.EventHandler(this.ButtonFontAndColor_Click);
             // 
             // lblListFont
             // 
@@ -2176,63 +2176,63 @@ namespace Hoehoe
             resources.ApplyResources(this.btnInputFont, "btnInputFont");
             this.btnInputFont.Name = "btnInputFont";
             this.btnInputFont.UseVisualStyleBackColor = true;
-            this.btnInputFont.Click += new System.EventHandler(this.btnFontAndColor_Click);
+            this.btnInputFont.Click += new System.EventHandler(this.ButtonFontAndColor_Click);
             // 
             // btnInputBackcolor
             // 
             resources.ApplyResources(this.btnInputBackcolor, "btnInputBackcolor");
             this.btnInputBackcolor.Name = "btnInputBackcolor";
             this.btnInputBackcolor.UseVisualStyleBackColor = true;
-            this.btnInputBackcolor.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnInputBackcolor.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // btnAtTo
             // 
             resources.ApplyResources(this.btnAtTo, "btnAtTo");
             this.btnAtTo.Name = "btnAtTo";
             this.btnAtTo.UseVisualStyleBackColor = true;
-            this.btnAtTo.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnAtTo.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // btnListBack
             // 
             resources.ApplyResources(this.btnListBack, "btnListBack");
             this.btnListBack.Name = "btnListBack";
             this.btnListBack.UseVisualStyleBackColor = true;
-            this.btnListBack.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnListBack.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // btnAtFromTarget
             // 
             resources.ApplyResources(this.btnAtFromTarget, "btnAtFromTarget");
             this.btnAtFromTarget.Name = "btnAtFromTarget";
             this.btnAtFromTarget.UseVisualStyleBackColor = true;
-            this.btnAtFromTarget.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnAtFromTarget.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // btnAtTarget
             // 
             resources.ApplyResources(this.btnAtTarget, "btnAtTarget");
             this.btnAtTarget.Name = "btnAtTarget";
             this.btnAtTarget.UseVisualStyleBackColor = true;
-            this.btnAtTarget.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnAtTarget.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // btnTarget
             // 
             resources.ApplyResources(this.btnTarget, "btnTarget");
             this.btnTarget.Name = "btnTarget";
             this.btnTarget.UseVisualStyleBackColor = true;
-            this.btnTarget.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnTarget.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // btnAtSelf
             // 
             resources.ApplyResources(this.btnAtSelf, "btnAtSelf");
             this.btnAtSelf.Name = "btnAtSelf";
             this.btnAtSelf.UseVisualStyleBackColor = true;
-            this.btnAtSelf.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnAtSelf.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // btnSelf
             // 
             resources.ApplyResources(this.btnSelf, "btnSelf");
             this.btnSelf.Name = "btnSelf";
             this.btnSelf.UseVisualStyleBackColor = true;
-            this.btnSelf.Click += new System.EventHandler(this.btnColor_Click);
+            this.btnSelf.Click += new System.EventHandler(this.ButtonColor_Click);
             // 
             // lblInputFont
             // 
