@@ -145,19 +145,19 @@ namespace Hoehoe
         {
             get
             {
-                return withEventsField_gh;
+                return this.withEventsField_gh;
             }
 
             set
             {
-                if (withEventsField_gh != null)
+                if (this.withEventsField_gh != null)
                 {
-                    withEventsField_gh.NotifyClicked -= this.GrowlHelper_Callback;
+                    this.withEventsField_gh.NotifyClicked -= this.GrowlHelper_Callback;
                 }
-                withEventsField_gh = value;
-                if (withEventsField_gh != null)
+                this.withEventsField_gh = value;
+                if (this.withEventsField_gh != null)
                 {
-                    withEventsField_gh.NotifyClicked += this.GrowlHelper_Callback;
+                    this.withEventsField_gh.NotifyClicked += this.GrowlHelper_Callback;
                 }
             }
         }
@@ -170,19 +170,19 @@ namespace Hoehoe
         {
             get
             {
-                return withEventsField_SettingDialog;
+                return this.withEventsField_SettingDialog;
             }
 
             set
             {
-                if (withEventsField_SettingDialog != null)
+                if (this.withEventsField_SettingDialog != null)
                 {
-                    withEventsField_SettingDialog.IntervalChanged -= this.TimerInterval_Changed;
+                    this.withEventsField_SettingDialog.IntervalChanged -= this.TimerInterval_Changed;
                 }
-                withEventsField_SettingDialog = value;
-                if (withEventsField_SettingDialog != null)
+                this.withEventsField_SettingDialog = value;
+                if (this.withEventsField_SettingDialog != null)
                 {
-                    withEventsField_SettingDialog.IntervalChanged += this.TimerInterval_Changed;
+                    this.withEventsField_SettingDialog.IntervalChanged += this.TimerInterval_Changed;
                 }
             }
         }
@@ -374,19 +374,19 @@ namespace Hoehoe
         {
             get
             {
-                return withEventsField_TimerTimeline;
+                return this.withEventsField_TimerTimeline;
             }
 
             set
             {
-                if (withEventsField_TimerTimeline != null)
+                if (this.withEventsField_TimerTimeline != null)
                 {
-                    withEventsField_TimerTimeline.Elapsed -= this.TimerTimeline_Elapsed;
+                    this.withEventsField_TimerTimeline.Elapsed -= this.TimerTimeline_Elapsed;
                 }
-                withEventsField_TimerTimeline = value;
-                if (withEventsField_TimerTimeline != null)
+                this.withEventsField_TimerTimeline = value;
+                if (this.withEventsField_TimerTimeline != null)
                 {
-                    withEventsField_TimerTimeline.Elapsed += this.TimerTimeline_Elapsed;
+                    this.withEventsField_TimerTimeline.Elapsed += this.TimerTimeline_Elapsed;
                 }
             }
         }
@@ -880,7 +880,7 @@ namespace Hoehoe
             this.SearchDialog.Owner = this;
             this.fltDialog.Owner = this;
             this.TabDialog.Owner = this;
-            UrlDialog.Owner = this;
+            this.UrlDialog.Owner = this;
 
             this._history.Add(new PostingStatus());
             this._hisIdx = 0;
@@ -2589,7 +2589,7 @@ namespace Hoehoe
             if (this.SettingDialog.Nicoms)
             {
                 StatusText.SelectionStart = StatusText.Text.Length;
-                UrlConvert(UrlConverter.Nicoms);
+                this.UrlConvert(UrlConverter.Nicoms);
             }
 
             StatusText.SelectionStart = StatusText.Text.Length;
@@ -2801,7 +2801,7 @@ namespace Hoehoe
             {
                 ((Control)ListTab.SelectedTab.Tag).Focus();
             }
-            urlUndoBuffer = null;
+            this.urlUndoBuffer = null;
             UrlUndoToolStripMenuItem.Enabled = false;
             // Undoをできないように設定
         }
@@ -7086,7 +7086,7 @@ namespace Hoehoe
                             this.HashManageMenuItem_Click(null, null);
                             return true;
                         case Keys.L:
-                            UrlConvertAutoToolStripMenuItem_Click(null, null);
+                            this.UrlConvertAutoToolStripMenuItem_Click(null, null);
                             return true;
                         case Keys.Y:
                             if (!(focusedControl == FocusedControl.PostBrowser))
@@ -7393,7 +7393,7 @@ namespace Hoehoe
                             this.FavoriteChange(false);
                             return true;
                         case Keys.B:
-                            UnreadStripMenuItem_Click(null, null);
+                            this.UnreadStripMenuItem_Click(null, null);
                             return true;
                         case Keys.T:
                             this.HashToggleMenuItem_Click(null, null);
@@ -10088,7 +10088,7 @@ namespace Hoehoe
         {
             if (PostBrowser.Document.Links.Count > 0)
             {
-                UrlDialog.ClearUrl();
+                this.UrlDialog.ClearUrl();
 
                 string openUrlStr = "";
 
@@ -10148,13 +10148,13 @@ namespace Hoehoe
                         {
                             continue;
                         }
-                        UrlDialog.AddUrl(new OpenUrlItem(linkText, MyCommon.urlEncodeMultibyteChar(urlStr), href));
+                        this.UrlDialog.AddUrl(new OpenUrlItem(linkText, MyCommon.urlEncodeMultibyteChar(urlStr), href));
                     }
                     try
                     {
-                        if (UrlDialog.ShowDialog() == DialogResult.OK)
+                        if (this.UrlDialog.ShowDialog() == DialogResult.OK)
                         {
-                            openUrlStr = UrlDialog.SelectedUrl;
+                            openUrlStr = this.UrlDialog.SelectedUrl;
                         }
                     }
                     catch (Exception)
@@ -10863,13 +10863,13 @@ namespace Hoehoe
                         StatusText.SelectedText = result;
 
                         // undoバッファにセット
-                        if (urlUndoBuffer == null)
+                        if (this.urlUndoBuffer == null)
                         {
-                            urlUndoBuffer = new List<UrlUndoInfo>();
+                            this.urlUndoBuffer = new List<UrlUndoInfo>();
                             UrlUndoToolStripMenuItem.Enabled = true;
                         }
 
-                        urlUndoBuffer.Add(new UrlUndoInfo() { Before = tmp, After = result });
+                        this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = tmp, After = result });
                     }
                 }
             }
@@ -10916,13 +10916,13 @@ namespace Hoehoe
                         StatusText.Select(StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
                         StatusText.SelectedText = result;
                         // undoバッファにセット
-                        if (urlUndoBuffer == null)
+                        if (this.urlUndoBuffer == null)
                         {
-                            urlUndoBuffer = new List<UrlUndoInfo>();
+                            this.urlUndoBuffer = new List<UrlUndoInfo>();
                             UrlUndoToolStripMenuItem.Enabled = true;
                         }
 
-                        urlUndoBuffer.Add(new UrlUndoInfo() { Before = mt.Result("${url}"), After = result });
+                        this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = mt.Result("${url}"), After = result });
                     }
                 }
             }
@@ -10932,15 +10932,15 @@ namespace Hoehoe
 
         private void doUrlUndo()
         {
-            if (urlUndoBuffer != null)
+            if (this.urlUndoBuffer != null)
             {
                 string tmp = StatusText.Text;
-                foreach (UrlUndoInfo data in urlUndoBuffer)
+                foreach (UrlUndoInfo data in this.urlUndoBuffer)
                 {
                     tmp = tmp.Replace(data.After, data.Before);
                 }
                 StatusText.Text = tmp;
-                urlUndoBuffer = null;
+                this.urlUndoBuffer = null;
                 UrlUndoToolStripMenuItem.Enabled = false;
                 StatusText.SelectionStart = 0;
                 StatusText.SelectionLength = 0;
@@ -10949,27 +10949,27 @@ namespace Hoehoe
 
         private void TinyURLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(UrlConverter.TinyUrl);
+            this.UrlConvert(UrlConverter.TinyUrl);
         }
 
         private void IsgdToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(UrlConverter.Isgd);
+            this.UrlConvert(UrlConverter.Isgd);
         }
 
         private void TwurlnlToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(UrlConverter.Twurl);
+            this.UrlConvert(UrlConverter.Twurl);
         }
 
         private void UxnuMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(UrlConverter.Uxnu);
+            this.UrlConvert(UrlConverter.Uxnu);
         }
 
         private void UrlConvertAutoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!UrlConvert(this.SettingDialog.AutoShortUrlFirst))
+            if (!this.UrlConvert(this.SettingDialog.AutoShortUrlFirst))
             {
                 UrlConverter svc = this.SettingDialog.AutoShortUrlFirst;
                 Random rnd = new Random();
@@ -10978,7 +10978,7 @@ namespace Hoehoe
                 {
                     svc = (UrlConverter)rnd.Next(System.Enum.GetNames(typeof(UrlConverter)).Length);
                 } while (!(svc != this.SettingDialog.AutoShortUrlFirst && svc != UrlConverter.Nicoms && svc != UrlConverter.Unu));
-                UrlConvert(svc);
+                this.UrlConvert(svc);
             }
         }
 
@@ -11193,7 +11193,7 @@ namespace Hoehoe
             // 発言詳細で「選択文字列をコピー」
             try
             {
-                Clipboard.SetDataObject(WebBrowser_GetSelectionText(ref PostBrowser), false, 5, 100);
+                Clipboard.SetDataObject(this.WebBrowser_GetSelectionText(ref PostBrowser), false, 5, 100);
             }
             catch (Exception ex)
             {
@@ -11204,7 +11204,7 @@ namespace Hoehoe
         private void doSearchToolStrip(string url)
         {
             // 発言詳細で「選択文字列で検索」（選択文字列取得）
-            string selText = WebBrowser_GetSelectionText(ref PostBrowser);
+            string selText = this.WebBrowser_GetSelectionText(ref PostBrowser);
 
             if (selText != null)
             {
@@ -11318,7 +11318,7 @@ namespace Hoehoe
                 ListManageUserContextToolStripMenuItem.Enabled = false;
             }
             // 文字列選択されていないときは選択文字列関係の項目を非表示に
-            string _selText = WebBrowser_GetSelectionText(ref PostBrowser);
+            string _selText = this.WebBrowser_GetSelectionText(ref PostBrowser);
             if (_selText == null)
             {
                 SelectionSearchContextMenuItem.Enabled = false;
@@ -11352,7 +11352,7 @@ namespace Hoehoe
         private void CurrentTabToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // 発言詳細の選択文字列で現在のタブを検索
-            string _selText = WebBrowser_GetSelectionText(ref PostBrowser);
+            string _selText = this.WebBrowser_GetSelectionText(ref PostBrowser);
 
             if (_selText != null)
             {
@@ -11971,12 +11971,12 @@ namespace Hoehoe
 
         private void BitlyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(UrlConverter.Bitly);
+            this.UrlConvert(UrlConverter.Bitly);
         }
 
         private void JmpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UrlConvert(UrlConverter.Jmp);
+            this.UrlConvert(UrlConverter.Jmp);
         }
 
         private class GetApiInfoArgs
@@ -13176,17 +13176,17 @@ namespace Hoehoe
 
         private HookGlobalHotkey _hookGlobalHotkey
         {
-            get { return withEventsField__hookGlobalHotkey; }
+            get { return this.withEventsField__hookGlobalHotkey; }
             set
             {
-                if (withEventsField__hookGlobalHotkey != null)
+                if (this.withEventsField__hookGlobalHotkey != null)
                 {
-                    withEventsField__hookGlobalHotkey.HotkeyPressed -= this._hookGlobalHotkey_HotkeyPressed;
+                    this.withEventsField__hookGlobalHotkey.HotkeyPressed -= this._hookGlobalHotkey_HotkeyPressed;
                 }
-                withEventsField__hookGlobalHotkey = value;
-                if (withEventsField__hookGlobalHotkey != null)
+                this.withEventsField__hookGlobalHotkey = value;
+                if (this.withEventsField__hookGlobalHotkey != null)
                 {
-                    withEventsField__hookGlobalHotkey.HotkeyPressed += this._hookGlobalHotkey_HotkeyPressed;
+                    this.withEventsField__hookGlobalHotkey.HotkeyPressed += this._hookGlobalHotkey_HotkeyPressed;
                 }
             }
         }
@@ -14067,7 +14067,7 @@ namespace Hoehoe
 
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.doTranslation(WebBrowser_GetSelectionText(ref PostBrowser));
+            this.doTranslation(this.WebBrowser_GetSelectionText(ref PostBrowser));
         }
 
         private bool ExistCurrentPost
