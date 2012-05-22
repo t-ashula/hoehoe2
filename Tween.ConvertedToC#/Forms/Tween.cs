@@ -1166,11 +1166,11 @@ namespace Hoehoe
             SettingDialog.IsNotifyUseGrowl = this._cfgCommon.IsUseNotifyGrowl;
 
             // ハッシュタグ関連
-            HashSupl = new AtIdSupplement(this._cfgCommon.HashTags, "#");
-            HashMgr = new HashtagManage(HashSupl, this._cfgCommon.HashTags.ToArray(), this._cfgCommon.HashSelected, this._cfgCommon.HashIsPermanent, this._cfgCommon.HashIsHead, this._cfgCommon.HashIsNotAddToAtReply);
-            if (!String.IsNullOrEmpty(HashMgr.UseHash) && HashMgr.IsPermanent)
+            this.HashSupl = new AtIdSupplement(this._cfgCommon.HashTags, "#");
+            this.HashMgr = new HashtagManage(this.HashSupl, this._cfgCommon.HashTags.ToArray(), this._cfgCommon.HashSelected, this._cfgCommon.HashIsPermanent, this._cfgCommon.HashIsHead, this._cfgCommon.HashIsNotAddToAtReply);
+            if (!String.IsNullOrEmpty(this.HashMgr.UseHash) && this.HashMgr.IsPermanent)
             {
-                HashStripSplitButton.Text = HashMgr.UseHash;
+                HashStripSplitButton.Text = this.HashMgr.UseHash;
             }
 
             this._initial = true;
@@ -2007,7 +2007,7 @@ namespace Hoehoe
                 SetStatusLabelUrl();
             }
 
-            HashSupl.AddRangeItem(tw.GetHashList());
+            this.HashSupl.AddRangeItem(tw.GetHashList());
         }
 
         private long GetScrollPos(ref int smode)
@@ -2655,31 +2655,31 @@ namespace Hoehoe
             else
             {
                 // ハッシュタグ
-                if (HashMgr.IsNotAddToAtReply)
+                if (this.HashMgr.IsNotAddToAtReply)
                 {
-                    if (!String.IsNullOrEmpty(HashMgr.UseHash) && this._replyToId == 0 && String.IsNullOrEmpty(this._replyToName))
+                    if (!String.IsNullOrEmpty(this.HashMgr.UseHash) && this._replyToId == 0 && String.IsNullOrEmpty(this._replyToName))
                     {
-                        if (HashMgr.IsHead)
+                        if (this.HashMgr.IsHead)
                         {
-                            header = HashMgr.UseHash + " ";
+                            header = this.HashMgr.UseHash + " ";
                         }
                         else
                         {
-                            footer = " " + HashMgr.UseHash;
+                            footer = " " + this.HashMgr.UseHash;
                         }
                     }
                 }
                 else
                 {
-                    if (!String.IsNullOrEmpty(HashMgr.UseHash))
+                    if (!String.IsNullOrEmpty(this.HashMgr.UseHash))
                     {
-                        if (HashMgr.IsHead)
+                        if (this.HashMgr.IsHead)
                         {
-                            header = HashMgr.UseHash + " ";
+                            header = this.HashMgr.UseHash + " ";
                         }
                         else
                         {
-                            footer = " " + HashMgr.UseHash;
+                            footer = " " + this.HashMgr.UseHash;
                         }
                     }
                 }
@@ -3519,9 +3519,9 @@ namespace Hoehoe
                             }
                         }
 
-                        if (!HashMgr.IsPermanent && !String.IsNullOrEmpty(HashMgr.UseHash))
+                        if (!this.HashMgr.IsPermanent && !String.IsNullOrEmpty(this.HashMgr.UseHash))
                         {
-                            HashMgr.ClearHashtag();
+                            this.HashMgr.ClearHashtag();
                             this.HashStripSplitButton.Text = "#[-]";
                             this.HashToggleMenuItem.Checked = false;
                             this.HashToggleToolStripMenuItem.Checked = false;
@@ -4837,8 +4837,8 @@ namespace Hoehoe
                     // ハッシュタグの場合は、タブで開く
                     string urlStr = HttpUtility.UrlDecode(e.Url.AbsoluteUri);
                     string hash = urlStr.Substring(urlStr.IndexOf("#"));
-                    HashSupl.AddItem(hash);
-                    HashMgr.AddHashToHistory(hash.Trim(), false);
+                    this.HashSupl.AddItem(hash);
+                    this.HashMgr.AddHashToHistory(hash.Trim(), false);
                     this.AddNewTabForSearch(hash);
                     return;
                 }
@@ -5603,7 +5603,7 @@ namespace Hoehoe
                 {
                     return;
                 }
-                ShowSuplDialog(StatusText, HashSupl);
+                ShowSuplDialog(StatusText, this.HashSupl);
                 e.Handled = true;
             }
         }
@@ -5741,9 +5741,9 @@ namespace Hoehoe
                     len -= SettingDialog.Status.Length + 1;
                 }
             }
-            if (!String.IsNullOrEmpty(HashMgr.UseHash))
+            if (!String.IsNullOrEmpty(this.HashMgr.UseHash))
             {
-                len -= HashMgr.UseHash.Length + 1;
+                len -= this.HashMgr.UseHash.Length + 1;
             }
 
             foreach (Match m in Regex.Matches(StatusText.Text, Twitter.RgUrl, RegexOptions.IgnoreCase))
@@ -7083,7 +7083,7 @@ namespace Hoehoe
                             ReadedStripMenuItem_Click(null, null);
                             return true;
                         case Keys.T:
-                            HashManageMenuItem_Click(null, null);
+                            this.HashManageMenuItem_Click(null, null);
                             return true;
                         case Keys.L:
                             UrlConvertAutoToolStripMenuItem_Click(null, null);
@@ -7396,7 +7396,7 @@ namespace Hoehoe
                             UnreadStripMenuItem_Click(null, null);
                             return true;
                         case Keys.T:
-                            HashToggleMenuItem_Click(null, null);
+                            this.HashToggleMenuItem_Click(null, null);
                             return true;
                         case Keys.P:
                             ImageSelectMenuItem_Click(null, null);
@@ -7464,7 +7464,7 @@ namespace Hoehoe
                                         {
                                             pressed = true;
                                             startstr = StatusText.Text.Substring(i + 1, endidx - i);
-                                            ShowSuplDialog(StatusText, HashSupl, startstr.Length + 1, startstr);
+                                            ShowSuplDialog(StatusText, this.HashSupl, startstr.Length + 1, startstr);
                                         }
                                         else
                                         {
@@ -8589,18 +8589,18 @@ namespace Hoehoe
                 }
 
                 this._cfgCommon.Nicoms = SettingDialog.Nicoms;
-                this._cfgCommon.HashTags = HashMgr.HashHistories;
-                if (HashMgr.IsPermanent)
+                this._cfgCommon.HashTags = this.HashMgr.HashHistories;
+                if (this.HashMgr.IsPermanent)
                 {
-                    this._cfgCommon.HashSelected = HashMgr.UseHash;
+                    this._cfgCommon.HashSelected = this.HashMgr.UseHash;
                 }
                 else
                 {
                     this._cfgCommon.HashSelected = "";
                 }
-                this._cfgCommon.HashIsHead = HashMgr.IsHead;
-                this._cfgCommon.HashIsPermanent = HashMgr.IsPermanent;
-                this._cfgCommon.HashIsNotAddToAtReply = HashMgr.IsNotAddToAtReply;
+                this._cfgCommon.HashIsHead = this.HashMgr.IsHead;
+                this._cfgCommon.HashIsPermanent = this.HashMgr.IsPermanent;
+                this._cfgCommon.HashIsNotAddToAtReply = this.HashMgr.IsNotAddToAtReply;
                 this._cfgCommon.TwitterUrl = SettingDialog.TwitterApiUrl;
                 this._cfgCommon.TwitterSearchUrl = SettingDialog.TwitterSearchApiUrl;
                 this._cfgCommon.HotkeyEnabled = SettingDialog.HotkeyEnabled;
@@ -10173,8 +10173,8 @@ namespace Hoehoe
                     // ハッシュタグの場合は、タブで開く
                     string urlStr = HttpUtility.UrlDecode(openUrlStr);
                     string hash = urlStr.Substring(urlStr.IndexOf("#"));
-                    HashSupl.AddItem(hash);
-                    HashMgr.AddHashToHistory(hash.Trim(), false);
+                    this.HashSupl.AddItem(hash);
+                    this.HashMgr.AddHashToHistory(hash.Trim(), false);
                     this.AddNewTabForSearch(hash);
                     return;
                 }
@@ -10438,16 +10438,16 @@ namespace Hoehoe
                 if (!hstr.Contains("#" + hm.Result("$3") + " "))
                 {
                     hstr += "#" + hm.Result("$3") + " ";
-                    HashSupl.AddItem("#" + hm.Result("$3"));
+                    this.HashSupl.AddItem("#" + hm.Result("$3"));
                 }
             }
-            if (!String.IsNullOrEmpty(HashMgr.UseHash) && !hstr.Contains(HashMgr.UseHash + " "))
+            if (!String.IsNullOrEmpty(this.HashMgr.UseHash) && !hstr.Contains(this.HashMgr.UseHash + " "))
             {
-                hstr += HashMgr.UseHash;
+                hstr += this.HashMgr.UseHash;
             }
             if (!String.IsNullOrEmpty(hstr))
             {
-                HashMgr.AddHashToHistory(hstr.Trim(), false);
+                this.HashMgr.AddHashToHistory(hstr.Trim(), false);
             }
 
             // 本当にリプライ先指定すべきかどうかの判定
@@ -12706,8 +12706,8 @@ namespace Hoehoe
             Match m = Regex.Match(this._postBrowserStatusText, "^https?:// twitter.com/search\\?q=%23(?<hash>.+)$");
             if (m.Success)
             {
-                HashMgr.SetPermanentHash("#" + m.Result("${hash}"));
-                HashStripSplitButton.Text = HashMgr.UseHash;
+                this.HashMgr.SetPermanentHash("#" + m.Result("${hash}"));
+                HashStripSplitButton.Text = this.HashMgr.UseHash;
                 HashToggleMenuItem.Checked = true;
                 HashToggleToolStripMenuItem.Checked = true;
                 // 使用ハッシュタグとして設定
@@ -12725,7 +12725,7 @@ namespace Hoehoe
             DialogResult rslt = default(DialogResult);
             try
             {
-                rslt = HashMgr.ShowDialog();
+                rslt = this.HashMgr.ShowDialog();
             }
             catch (Exception)
             {
@@ -12734,9 +12734,9 @@ namespace Hoehoe
             this.TopMost = SettingDialog.AlwaysTop;
             if (rslt == DialogResult.Cancel)
                 return;
-            if (!String.IsNullOrEmpty(HashMgr.UseHash))
+            if (!String.IsNullOrEmpty(this.HashMgr.UseHash))
             {
-                HashStripSplitButton.Text = HashMgr.UseHash;
+                HashStripSplitButton.Text = this.HashMgr.UseHash;
                 HashToggleMenuItem.Checked = true;
                 HashToggleToolStripMenuItem.Checked = true;
             }
@@ -12752,10 +12752,10 @@ namespace Hoehoe
 
         private void HashToggleMenuItem_Click(object sender, EventArgs e)
         {
-            HashMgr.ToggleHash();
-            if (!String.IsNullOrEmpty(HashMgr.UseHash))
+            this.HashMgr.ToggleHash();
+            if (!String.IsNullOrEmpty(this.HashMgr.UseHash))
             {
-                HashStripSplitButton.Text = HashMgr.UseHash;
+                HashStripSplitButton.Text = this.HashMgr.UseHash;
                 HashToggleMenuItem.Checked = true;
                 HashToggleToolStripMenuItem.Checked = true;
             }
@@ -12771,7 +12771,7 @@ namespace Hoehoe
 
         private void HashStripSplitButton_ButtonClick(object sender, EventArgs e)
         {
-            HashToggleMenuItem_Click(null, null);
+            this.HashToggleMenuItem_Click(null, null);
         }
 
         private void MenuItemOperate_DropDownOpening(object sender, EventArgs e)
