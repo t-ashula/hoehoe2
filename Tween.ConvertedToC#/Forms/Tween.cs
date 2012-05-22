@@ -51,6 +51,7 @@ namespace Hoehoe
 
     public partial class TweenMain
     {
+        #region private fields
         /// <summary>
         /// TODO: hoehoe webpage
         /// </summary>
@@ -140,60 +141,14 @@ namespace Hoehoe
         // Growl呼び出し部
         private GrowlHelper growl = new GrowlHelper("Hoehoe");
 
-        private GrowlHelper GrowlHelper
-        {
-            get
-            {
-                return this.growl;
-            }
-
-            set
-            {
-                if (this.growl != null)
-                {
-                    this.growl.NotifyClicked -= this.GrowlHelper_Callback;
-                }
-
-                this.growl = value;
-                if (this.growl != null)
-                {
-                    this.growl.NotifyClicked += this.GrowlHelper_Callback;
-                }
-            }
-        }
-
         // サブ画面インスタンス
         private AppendSettingDialog settingDialog = AppendSettingDialog.Instance; // 設定画面インスタンス
-
-        private AppendSettingDialog SettingDialog
-        {
-            get
-            {
-                return this.settingDialog;
-            }
-
-            set
-            {
-                if (this.settingDialog != null)
-                {
-                    this.settingDialog.IntervalChanged -= this.TimerInterval_Changed;
-                }
-
-                this.settingDialog = value;
-                if (this.settingDialog != null)
-                {
-                    this.settingDialog.IntervalChanged += this.TimerInterval_Changed;
-                }
-            }
-        }
 
         private TabsDialog tabDialog = new TabsDialog();      // タブ選択ダイアログインスタンス
         private SearchWord searchDialog = new SearchWord();   // 検索画面インスタンス
         private FilterDialog fltDialog = new FilterDialog();  // フィルター編集画面
         private OpenURL urlDialog = new OpenURL();
-        public AtIdSupplement AtIdSupl; // @id補助
-        public AtIdSupplement HashSupl;        // Hashtag補助
-        public HashtagManage HashMgr;
+
         private TweenAboutBox aboutBox;
         private EventViewerDialog evtDialog;
 
@@ -368,6 +323,110 @@ namespace Hoehoe
         private bool colorize = false;
         private System.Timers.Timer timerTimeline = new System.Timers.Timer();
 
+        private ImageListViewItem displayItem;
+
+        private List<UrlUndoInfo> urlUndoBuffer = null;
+
+        // [, ]でのリプライ移動の履歴
+        private Stack<ReplyChain> replyChains;
+
+        // ポスト選択履歴
+        private Stack<Tuple<TabPage, PostClass>> selectPostChains = new Stack<Tuple<TabPage, PostClass>>();
+
+        // タイマー系
+        private AppendSettingDialog.IntervalChangedEventArgs resetTimers = new AppendSettingDialog.IntervalChangedEventArgs();
+
+        private int timerHomeCounter;
+        private int timerMentionCounter;
+        private int timerDmCounter;
+        private int timerPubSearchCounter;
+        private int timerUserTimelineCounter;
+        private int timerListsCounter;
+        private int timerUsCounter;
+        private int timerResumeWait;
+        private int timerRefreshFollowers;
+
+        private Dictionary<WorkerType, DateTime> lastTimeWork;
+
+        private PostClass displayPost;
+
+        private int iconCnt;
+        private int blinkCnt;
+        private bool doBlink;
+        private bool isIdle;
+
+        private long prevFollowerCount = 0;
+
+        private HookGlobalHotkey hookGlobalHotkey;
+
+        private bool isActiveUserstream = false;
+        private string prevTrackWord;
+#endregion
+        
+        #region constructor
+        public TweenMain()
+        {
+            // この呼び出しは、Windows フォーム デザイナで必要です。
+            InitializeComponent();
+
+            // InitializeComponent() 呼び出しの後で初期化を追加します。
+            this.HookGlobalHotkey = new HookGlobalHotkey(this);
+            this.apiGauge.Control.Size = new Size(70, 22);
+            this.apiGauge.Control.Margin = new Padding(0, 3, 0, 2);
+            this.apiGauge.GaugeHeight = 8;
+            this.apiGauge.Control.DoubleClick += this.ApiInfoMenuItem_Click;
+            this.StatusStrip1.Items.Insert(2, this.apiGauge);
+        }
+        #endregion
+
+        private AppendSettingDialog SettingDialog
+        {
+            get
+            {
+                return this.settingDialog;
+            }
+
+            set
+            {
+                if (this.settingDialog != null)
+                {
+                    this.settingDialog.IntervalChanged -= this.TimerInterval_Changed;
+                }
+
+                this.settingDialog = value;
+                if (this.settingDialog != null)
+                {
+                    this.settingDialog.IntervalChanged += this.TimerInterval_Changed;
+                }
+            }
+        }
+
+        private GrowlHelper GrowlHelper
+        {
+            get
+            {
+                return this.growl;
+            }
+
+            set
+            {
+                if (this.growl != null)
+                {
+                    this.growl.NotifyClicked -= this.GrowlHelper_Callback;
+                }
+
+                this.growl = value;
+                if (this.growl != null)
+                {
+                    this.growl.NotifyClicked += this.GrowlHelper_Callback;
+                }
+            }
+        }
+
+        public AtIdSupplement AtIdSupl; // @id補助
+        public AtIdSupplement HashSupl;        // Hashtag補助
+        public HashtagManage HashMgr;
+
         private System.Timers.Timer TimerTimeline
         {
             get
@@ -390,16 +449,12 @@ namespace Hoehoe
             }
         }
 
-        private ImageListViewItem displayItem;
-
         // URL短縮のUndo用
         private struct UrlUndoInfo
         {
             public string Before;
             public string After;
         }
-
-        private List<UrlUndoInfo> urlUndoBuffer = null;
 
         private class ReplyChain
         {
@@ -414,12 +469,6 @@ namespace Hoehoe
                 this.OriginalTab = originalTab;
             }
         }
-
-        // [, ]でのリプライ移動の履歴
-        private Stack<ReplyChain> replyChains;
-
-        // ポスト選択履歴
-        private Stack<Tuple<TabPage, PostClass>> selectPostChains = new Stack<Tuple<TabPage, PostClass>>();
 
         // Backgroundworkerの処理結果通知用引数構造体
         private class GetWorkerResult
@@ -1788,17 +1837,6 @@ namespace Hoehoe
 
             this.resetTimers = e;
         }
-
-        private AppendSettingDialog.IntervalChangedEventArgs resetTimers = new AppendSettingDialog.IntervalChangedEventArgs();
-        private int timerHomeCounter;
-        private int timerMentionCounter;
-        private int timerDmCounter;
-        private int timerPubSearchCounter;
-        private int timerUserTimelineCounter;
-        private int timerListsCounter;
-        private int timerUsCounter;
-        private int timerResumeWait;
-        private int timerRefreshFollowers;
 
         private void TimerTimeline_Elapsed(object sender, EventArgs e)
         {
@@ -3863,8 +3901,6 @@ namespace Hoehoe
                 }
             }
         }
-
-        private Dictionary<WorkerType, DateTime> lastTimeWork;
 
         private void GetTimeline(WorkerType workerType, int fromPage, int toPage, string tabName)
         {
@@ -6899,8 +6935,6 @@ namespace Hoehoe
             this.DispSelectedPost(false);
         }
 
-        private PostClass displayPost;
-
         private void DispSelectedPost(bool forceupdate)
         {
             if (this.curList.SelectedIndices.Count == 0 || this.curPost == null)
@@ -9685,11 +9719,6 @@ namespace Hoehoe
             this.tabDraging = false;
         }
 
-        private int iconCnt;
-        private int blinkCnt;
-        private bool doBlink;
-        private bool isIdle;
-
         private void RefreshTasktrayIcon(bool forceRefresh)
         {
             if (this.colorize)
@@ -10683,8 +10712,6 @@ namespace Hoehoe
             this.SetMainWindowTitle();
             this.SetStatusLabelUrl();
         }
-
-        private long prevFollowerCount = 0;
 
         // メインウインドウタイトルの書き換え
         private void SetMainWindowTitle()
@@ -13722,8 +13749,6 @@ namespace Hoehoe
             }
         }
 
-        private HookGlobalHotkey hookGlobalHotkey;
-
         private HookGlobalHotkey HookGlobalHotkey
         {
             get
@@ -13744,20 +13769,6 @@ namespace Hoehoe
                     this.hookGlobalHotkey.HotkeyPressed += this.HookGlobalHotkey_HotkeyPressed;
                 }
             }
-        }
-
-        public TweenMain()
-        {
-            // この呼び出しは、Windows フォーム デザイナで必要です。
-            InitializeComponent();
-
-            // InitializeComponent() 呼び出しの後で初期化を追加します。
-            this.HookGlobalHotkey = new HookGlobalHotkey(this);
-            this.apiGauge.Control.Size = new Size(70, 22);
-            this.apiGauge.Control.Margin = new Padding(0, 3, 0, 2);
-            this.apiGauge.GaugeHeight = 8;
-            this.apiGauge.Control.DoubleClick += this.ApiInfoMenuItem_Click;
-            this.StatusStrip1.Items.Insert(2, this.apiGauge);
         }
 
         private void HookGlobalHotkey_HotkeyPressed(object sender, KeyEventArgs e)
@@ -14218,9 +14229,6 @@ namespace Hoehoe
         }
 
         #region "Userstream"
-
-        private bool isActiveUserstream = false;
-
         private void Tw_PostDeleted(long id)
         {
             try
@@ -14493,8 +14501,6 @@ namespace Hoehoe
                 this.tw.StartUserStream();
             }
         }
-
-        private string prevTrackWord;
 
         private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
