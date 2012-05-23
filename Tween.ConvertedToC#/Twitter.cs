@@ -24,41 +24,41 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Web;
-using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
-using Hoehoe.DataModels;
-using Hoehoe.DataModels.Twitter;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Json;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Threading;
+    using System.Web;
+    using System.Windows.Forms;
+    using System.Xml;
+    using System.Xml.Linq;
+    using Hoehoe.DataModels;
+    using Hoehoe.DataModels.Twitter;
+
     public class Twitter : IDisposable
     {
-        //Hashtag用正規表現
+        // Hashtag用正規表現
         private const string LATIN_ACCENTS = "\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\xff";
         private const string NON_LATIN_HASHTAG_CHARS = "\\u0400-\\u04ff\\u0500-\\u0527\\u1100-\\u11ff\\u3130-\\u3185\\uA960-\\uA97F\\uAC00-\\uD7AF\\uD7B0-\\uD7FF";
-        //Private Const CJ_HASHTAG_CHARACTERS As String = "\u30A1-\u30FA\uFF66-\uFF9F\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A\u3041-\u3096\u3400-\u4DBF\u4E00-\u9FFF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2F800-\u2FA1F"
         private const string CJ_HASHTAG_CHARACTERS = "\\u30A1-\\u30FA\\u30FC\\u3005\\uFF66-\\uFF9F\\uFF10-\\uFF19\\uFF21-\\uFF3A\\uFF41-\\uFF5A\\u3041-\\u309A\\u3400-\\u4DBF\\p{IsCJKUnifiedIdeographs}";
         private const string HASHTAG_BOUNDARY = "^|$|\\s|「|」|。|\\.|!";
         private const string HASHTAG_ALPHA = "[a-z_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
         private const string HASHTAG_ALPHANUMERIC = "[a-z0-9_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
         private const string HASHTAG_TERMINATOR = "[^a-z0-9_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
         public const string HASHTAG = "(" + HASHTAG_BOUNDARY + ")(#|＃)(" + HASHTAG_ALPHANUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHANUMERIC + "*)(?=" + HASHTAG_TERMINATOR + "|" + HASHTAG_BOUNDARY + ")";
-        //URL正規表現
+
+        // URL正規表現
         private const string URL_VALID_DOMAIN = "(?<domain>(?:[^\\p{P}\\s][\\.\\-_](?=[^\\p{P}\\s])|[^\\p{P}\\s]){1,}\\.[a-z]{2,}(?::[0-9]+)?)";
         private const string URL_VALID_GENERAL_PATH_CHARS = "[a-z0-9!*';:=+$/%#\\[\\]\\-_&,~]";
         private const string URL_BALANCE_PARENS = "(?:\\(" + URL_VALID_GENERAL_PATH_CHARS + "+\\))";
@@ -82,7 +82,7 @@ namespace Hoehoe
         private string _bio = "";
         private string _protocol = "https://";
 
-        //プロパティからアクセスされる共通情報
+        // プロパティからアクセスされる共通情報
         private string _uname;
 
         private int _iconSz;
@@ -91,19 +91,13 @@ namespace Hoehoe
         private bool _tinyUrlResolve;
         private bool _restrictFavCheck;
 
-        //private string _hubServer;
         private bool _readOwnPost;
 
         private List<string> _hashList = new List<string>();
 
-        //共通で使用する状態
-        //private int _remainCountApi = -1;
-
         private Outputz _outputz = new Outputz();
 
-        //max_idで古い発言を取得するために保持（lists分は個別タブで管理）
-        private long _minHomeTimeline = long.MaxValue;
-
+        private long _minHomeTimeline = long.MaxValue; // max_idで古い発言を取得するために保持（lists分は個別タブで管理）
         private long _minMentions = long.MaxValue;
         private long _minDirectmessage = long.MaxValue;
         private long _minDirectmessageSent = long.MaxValue;
@@ -169,7 +163,7 @@ namespace Hoehoe
 
         public string StartAuthentication(ref string pinPageUrl)
         {
-            //OAuth PIN Flow
+            // OAuth PIN Flow
             bool res = false;
             MyCommon.TwitterApiInfo.Initialize();
             try
@@ -300,11 +294,12 @@ namespace Hoehoe
 
         public void Initialize(string token, string tokenSecret, string username, long userId)
         {
-            //OAuth認証
+            // OAuth認証
             if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(tokenSecret) || String.IsNullOrEmpty(username))
             {
                 Twitter.AccountState = AccountState.Invalid;
             }
+
             MyCommon.TwitterApiInfo.Initialize();
             _twCon.Initialize(token, tokenSecret, username, userId);
             _uname = username.ToLower();
@@ -377,19 +372,20 @@ namespace Hoehoe
             retStr = retStr.Replace("<a href=", "<a target=\"_self\" href=");
             retStr = retStr.Replace("\r\n", "<br>");
 
-            //半角スペースを置換(Thanks @anis774)
+            // 半角スペースを置換(Thanks @anis774)
             bool ret = false;
             do
             {
                 ret = EscapeSpace(ref retStr);
-            } while (!ret);
+            }
+            while (!ret);
 
             return SanitizeHtml(retStr);
         }
 
         private bool EscapeSpace(ref string html)
         {
-            //半角スペースを置換(Thanks @anis774)
+            // 半角スペースを置換(Thanks @anis774)
             bool isTag = false;
             for (int i = 0; i < html.Length; i++)
             {
@@ -397,6 +393,7 @@ namespace Hoehoe
                 {
                     isTag = true;
                 }
+
                 if (html[i] == '>')
                 {
                     isTag = false;
@@ -409,6 +406,7 @@ namespace Hoehoe
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -511,6 +509,7 @@ namespace Hoehoe
                         MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                         return "Err:Invalid Json!";
                     }
+
                     _followersCount = status.User.FollowersCount;
                     _friendsCount = status.User.FriendsCount;
                     _statusesCount = status.User.StatusesCount;
@@ -521,6 +520,7 @@ namespace Hoehoe
                     {
                         return "OK:Delaying?";
                     }
+
                     return _outputz.Post(postStr.Length) ? "" : "Outputz:Failed";
                 case HttpStatusCode.NotFound:
                     return "";
@@ -542,7 +542,7 @@ namespace Hoehoe
                 case HttpStatusCode.RequestEntityTooLarge:
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
-                    //仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
+                    // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
                     return "Warn:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                 case HttpStatusCode.Unauthorized:
                     {
@@ -599,6 +599,7 @@ namespace Hoehoe
                         MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                         return "Err:Invalid Json!";
                     }
+
                     _followersCount = status.User.FollowersCount;
                     _friendsCount = status.User.FriendsCount;
                     _statusesCount = status.User.StatusesCount;
@@ -609,6 +610,7 @@ namespace Hoehoe
                     {
                         return "OK:Delaying?";
                     }
+
                     return _outputz.Post(postStr.Length) ? "" : "Outputz:Failed";
                 case HttpStatusCode.NotFound:
                     return "";
@@ -630,7 +632,7 @@ namespace Hoehoe
                 case HttpStatusCode.RequestEntityTooLarge:
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
-                    //仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
+                    // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
                     return "Warn:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
                 case HttpStatusCode.Unauthorized:
                     {
@@ -654,6 +656,7 @@ namespace Hoehoe
             {
                 return "";
             }
+
             if (MyCommon.TwitterApiInfo.AccessLevel != ApiAccessLevel.None)
             {
                 if (!MyCommon.TwitterApiInfo.IsDirectMessagePermission)
@@ -694,6 +697,7 @@ namespace Hoehoe
                         MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                         return "Err:Invalid Json!";
                     }
+
                     _followersCount = status.Sender.FollowersCount;
                     _friendsCount = status.Sender.FriendsCount;
                     _statusesCount = status.Sender.StatusesCount;
@@ -719,7 +723,7 @@ namespace Hoehoe
                 case HttpStatusCode.RequestEntityTooLarge:
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
-                    //仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
+                    // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
                     return "Warn:" + res.ToString();
                 case HttpStatusCode.Unauthorized:
                     {
@@ -775,12 +779,13 @@ namespace Hoehoe
             {
                 return "";
             }
+
             if (Twitter.AccountState != AccountState.Valid)
             {
                 return "";
             }
 
-            //データ部分の生成
+            // データ部分の生成
             long target = id;
             PostClass post = TabInformations.GetInstance().Item(id);
             if (post == null)
@@ -789,7 +794,7 @@ namespace Hoehoe
             }
             if (TabInformations.GetInstance().Item(id).RetweetedId > 0)
             {
-                //再RTの場合は元発言をRT
+                // 再RTの場合は元発言をRT
                 target = TabInformations.GetInstance().Item(id).RetweetedId;
             }
 
@@ -830,14 +835,14 @@ namespace Hoehoe
                 return "Err:Invalid Json!";
             }
 
-            //ReTweetしたものをTLに追加
+            // ReTweetしたものをTLに追加
             post = CreatePostsFromStatusData(status);
             if (post == null)
             {
                 return "Invalid Json!";
             }
 
-            //二重取得回避
+            // 二重取得回避
             lock (_lockObj)
             {
                 if (TabInformations.GetInstance().ContainsKey(post.StatusId))
@@ -845,13 +850,13 @@ namespace Hoehoe
                     return "";
                 }
             }
-            //Retweet判定
+            // Retweet判定
             if (post.RetweetedId == 0)
             {
                 return "Invalid Json!";
             }
 
-            //ユーザー情報
+            // ユーザー情報
             post.IsMe = true;
             post.IsRead = read;
             post.IsOwl = false;
@@ -1321,7 +1326,7 @@ namespace Hoehoe
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            //http://twitter.com/statuses/show/id.xml APIを発行して本文を取得
+            // http://twitter.com/statuses/show/id.xml APIを発行して本文を取得
             content = "";
             try
             {
@@ -1538,12 +1543,12 @@ namespace Hoehoe
         {
             try
             {
-                //本体
+                // 本体
                 if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/Tween" + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenNew.exe")))
                 {
                     return "Err:Download failed";
                 }
-                //英語リソース
+                // 英語リソース
                 if (!Directory.Exists(Path.Combine(MyCommon.SettingPath, "en")))
                 {
                     Directory.CreateDirectory(Path.Combine(MyCommon.SettingPath, "en"));
@@ -1552,8 +1557,8 @@ namespace Hoehoe
                 {
                     return "Err:Download failed";
                 }
-                //その他言語圏のリソース。取得失敗しても継続
-                //UIの言語圏のリソース
+                // その他言語圏のリソース。取得失敗しても継続
+                // UIの言語圏のリソース
                 string curCul = "";
                 if (!Thread.CurrentThread.CurrentUICulture.IsNeutralCulture)
                 {
@@ -1579,10 +1584,10 @@ namespace Hoehoe
                     }
                     if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenRes" + curCul + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, curCul), "Tween.resourcesNew.dll")))
                     {
-                        //Return "Err:Download failed"
+                        // Return "Err:Download failed"
                     }
                 }
-                //スレッドの言語圏のリソース
+                // スレッドの言語圏のリソース
                 string curCul2 = null;
                 if (!Thread.CurrentThread.CurrentCulture.IsNeutralCulture)
                 {
@@ -1608,16 +1613,16 @@ namespace Hoehoe
                     }
                     if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenRes" + curCul2 + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, curCul2), "Tween.resourcesNew.dll")))
                     {
-                        //Return "Err:Download failed"
+                        // Return "Err:Download failed"
                     }
                 }
 
-                //アップデータ
+                // アップデータ
                 if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenUp3.gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenUp3.exe")))
                 {
                     return "Err:Download failed";
                 }
-                //シリアライザDLL
+                // シリアライザDLL
                 if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenDll" + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenNew.XmlSerializers.dll")))
                 {
                     return "Err:Download failed";
@@ -1849,7 +1854,7 @@ namespace Hoehoe
                 {
                     item.RelTabName = tab.TabName;
                 }
-                //非同期アイコン取得＆StatusDictionaryに追加
+                // 非同期アイコン取得＆StatusDictionaryに追加
                 TabInformations.GetInstance().AddPost(item);
             }
 
@@ -1934,7 +1939,7 @@ namespace Hoehoe
                 {
                     post.RelTabName = tab.TabName;
                 }
-                //非同期アイコン取得＆StatusDictionaryに追加
+                // 非同期アイコン取得＆StatusDictionaryに追加
                 TabInformations.GetInstance().AddPost(post);
             }
             return r;
@@ -1949,19 +1954,19 @@ namespace Hoehoe
             {
                 RetweetedStatus retweeted = status.RetweetedStatus;
                 post.CreatedAt = MyCommon.DateTimeParse(retweeted.CreatedAt);
-                //Id
+                // Id
                 post.RetweetedId = retweeted.Id;
-                //本文
+                // 本文
                 post.TextFromApi = retweeted.Text;
                 entities = retweeted.Entities;
-                //Source取得（htmlの場合は、中身を取り出し）
+                // Source取得（htmlの場合は、中身を取り出し）
                 post.Source = retweeted.Source;
-                //Reply先
+                // Reply先
                 { long t; long.TryParse(retweeted.InReplyToStatusId, out t); post.InReplyToStatusId = t; }
                 post.InReplyToUser = retweeted.InReplyToScreenName;
                 { long t; long.TryParse(status.InReplyToUserId, out t); post.InReplyToUserId = t; }
 
-                //幻覚fav対策
+                // 幻覚fav対策
                 TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
                 post.IsFav = tc.Contains(post.RetweetedId);
 
@@ -1974,7 +1979,7 @@ namespace Hoehoe
                     };
                 }
 
-                //以下、ユーザー情報
+                // 以下、ユーザー情報
                 var user = retweeted.User;
                 if (user.ScreenName == null || status.User.ScreenName == null)
                 {
@@ -1985,7 +1990,7 @@ namespace Hoehoe
                 post.Nickname = user.Name.Trim();
                 post.ImageUrl = user.ProfileImageUrl;
                 post.IsProtect = user.Protected;
-                //Retweetした人
+                // Retweetした人
                 post.RetweetedBy = status.User.ScreenName;
                 post.RetweetedByUserId = status.User.Id;
                 post.IsMe = post.RetweetedBy.ToLower().Equals(_uname);
@@ -1993,10 +1998,10 @@ namespace Hoehoe
             else
             {
                 post.CreatedAt = MyCommon.DateTimeParse(status.CreatedAt);
-                //本文
+                // 本文
                 post.TextFromApi = status.Text;
                 entities = status.Entities;
-                //Source取得（htmlの場合は、中身を取り出し）
+                // Source取得（htmlの場合は、中身を取り出し）
                 post.Source = status.Source;
                 { long t; long.TryParse(status.InReplyToStatusId, out t); post.InReplyToStatusId = t; }
                 post.InReplyToUser = status.InReplyToScreenName;
@@ -2011,7 +2016,7 @@ namespace Hoehoe
                     };
                 }
 
-                //以下、ユーザー情報
+                // 以下、ユーザー情報
                 var user = status.User;
                 if (user.ScreenName == null)
                 {
@@ -2024,16 +2029,16 @@ namespace Hoehoe
                 post.IsProtect = user.Protected;
                 post.IsMe = post.ScreenName.ToLower().Equals(_uname);
 
-                //幻覚fav対策
+                // 幻覚fav対策
                 TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
                 post.IsFav = tc.Contains(post.StatusId) && TabInformations.GetInstance().Item(post.StatusId).IsFav;
             }
-            //HTMLに整形
+            // HTMLに整形
             { var t = post.TextFromApi; post.Text = CreateHtmlAnchor(ref t, post.ReplyToList, entities, post.Media); post.TextFromApi = t; }
             post.TextFromApi = this.ReplaceTextFromApi(post.TextFromApi, entities);
             post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
             post.TextFromApi = post.TextFromApi.Replace("<3", "♡");
-            //Source整形
+            // Source整形
             CreateSource(ref post);
             post.IsReply = post.ReplyToList.Contains(_uname);
             post.IsExcludeReply = false;
@@ -2083,7 +2088,7 @@ namespace Hoehoe
                 {
                     minimumId = post.StatusId;
                 }
-                //二重取得回避
+                // 二重取得回避
                 lock (_lockObj)
                 {
                     if (tab == null)
@@ -2102,7 +2107,7 @@ namespace Hoehoe
                     }
                 }
 
-                //RT禁止ユーザーによるもの
+                // RT禁止ユーザーによるもの
                 if (post.RetweetedId > 0 && this.noRTIds.Contains(post.RetweetedByUserId))
                 {
                     continue;
@@ -2118,7 +2123,7 @@ namespace Hoehoe
                 {
                     post.RelTabName = tab.TabName;
                 }
-                //非同期アイコン取得＆StatusDictionaryに追加
+                // 非同期アイコン取得＆StatusDictionaryに追加
                 TabInformations.GetInstance().AddPost(post);
             }
             return "";
@@ -2156,7 +2161,7 @@ namespace Hoehoe
                 {
                     minimumId = post.StatusId;
                 }
-                //二重取得回避
+                // 二重取得回避
                 lock (_lockObj)
                 {
                     if (tab == null)
@@ -2185,7 +2190,7 @@ namespace Hoehoe
                 {
                     post.RelTabName = tab.TabName;
                 }
-                //非同期アイコン取得＆StatusDictionaryに追加
+                // 非同期アイコン取得＆StatusDictionaryに追加
                 TabInformations.GetInstance().AddPost(post);
             }
 
@@ -2285,7 +2290,7 @@ namespace Hoehoe
             List<PostClass> relPosts = new List<PostClass>();
             if (tab.RelationTargetPost.TextFromApi.Contains("@") && tab.RelationTargetPost.InReplyToStatusId == 0)
             {
-                //検索結果対応
+                // 検索結果対応
                 PostClass p = TabInformations.GetInstance().Item(tab.RelationTargetPost.StatusId);
                 if (p != null && p.InReplyToStatusId > 0)
                 {
@@ -2423,7 +2428,7 @@ namespace Hoehoe
                     {
                         item.RelTabName = tab.TabName;
                     }
-                    //非同期アイコン取得＆StatusDictionaryに追加
+                    // 非同期アイコン取得＆StatusDictionaryに追加
                     relatedPosts.Add(item);
                 }
             }
@@ -2444,7 +2449,7 @@ namespace Hoehoe
                 return rslt;
             }
 
-            //MRTとかに対応のためツイート内にあるツイートを指すURLを取り込む
+            // MRTとかに対応のためツイート内にあるツイートを指すURLを取り込む
             MatchCollection ma = Regex.Matches(tab.RelationTargetPost.Text, "title=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/(?<StatusId>[0-9]+))\"");
             foreach (Match m in ma)
             {
@@ -2517,7 +2522,7 @@ namespace Hoehoe
                 case HttpStatusCode.NotFound:
                     return "Invalid query";
                 case HttpStatusCode.PaymentRequired:
-                    //API Documentには420と書いてあるが、該当コードがないので402にしてある
+                    // API Documentには420と書いてあるが、該当コードがないので402にしてある
                     return "Search API Limit?";
                 case HttpStatusCode.OK:
                     break;
@@ -2556,9 +2561,9 @@ namespace Hoehoe
                         continue;
                     }
                     post.CreatedAt = DateTime.Parse(xentry["published"].InnerText);
-                    //本文
+                    // 本文
                     post.TextFromApi = xentry["title"].InnerText;
-                    //Source取得（htmlの場合は、中身を取り出し）
+                    // Source取得（htmlの場合は、中身を取り出し）
                     post.Source = xentry["twitter:source"].InnerText;
                     post.InReplyToStatusId = 0;
                     post.InReplyToUser = "";
@@ -2576,7 +2581,7 @@ namespace Hoehoe
                         };
                     }
 
-                    //以下、ユーザー情報
+                    // 以下、ユーザー情報
                     XmlElement xUentry = (XmlElement)xentry.SelectSingleNode("./search:author", nsmgr);
                     post.UserId = 0;
                     post.ScreenName = xUentry["name"].InnerText.Split(' ')[0].Trim();
@@ -2592,10 +2597,10 @@ namespace Hoehoe
                     post.ImageUrl = ((XmlElement)xentry.SelectSingleNode("./search:link[@type='image/png']", nsmgr)).GetAttribute("href");
                     post.IsProtect = false;
                     post.IsMe = post.ScreenName.ToLower().Equals(_uname);
-                    //HTMLに整形
+                    // HTMLに整形
                     post.Text = CreateHtmlAnchor(HttpUtility.HtmlEncode(post.TextFromApi), post.ReplyToList, post.Media);
                     post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
-                    //Source整形
+                    // Source整形
                     CreateSource(ref post);
                     post.IsRead = read;
                     post.IsReply = post.ReplyToList.Contains(_uname);
@@ -2674,7 +2679,7 @@ namespace Hoehoe
                 case HttpStatusCode.NotFound:
                     return "Invalid query";
                 case HttpStatusCode.PaymentRequired:
-                    //API Documentには420と書いてあるが、該当コードがないので402にしてある
+                    // API Documentには420と書いてあるが、該当コードがないので402にしてある
                     return "Search API Limit?";
                 case HttpStatusCode.OK:
                     break;
@@ -2749,7 +2754,7 @@ namespace Hoehoe
                         }
                     }
 
-                    //二重取得回避
+                    // 二重取得回避
                     lock (_lockObj)
                     {
                         if (TabInformations.GetInstance().GetTabByType(TabUsageType.DirectMessage).Contains(post.StatusId))
@@ -2757,18 +2762,18 @@ namespace Hoehoe
                             continue;
                         }
                     }
-                    //sender_id
-                    //recipient_id
+                    // sender_id
+                    // recipient_id
                     post.CreatedAt = MyCommon.DateTimeParse(message.CreatedAt);
-                    //本文
+                    // 本文
                     post.TextFromApi = message.Text;
-                    //HTMLに整形
+                    // HTMLに整形
                     post.Text = CreateHtmlAnchor(post.TextFromApi, post.ReplyToList, post.Media);
                     post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
                     post.TextFromApi = post.TextFromApi.Replace("<3", "♡");
                     post.IsFav = false;
 
-                    //以下、ユーザー情報
+                    // 以下、ユーザー情報
                     User user = null;
                     if (gType == WorkerType.UserStream)
                     {
@@ -2978,7 +2983,7 @@ namespace Hoehoe
                 try
                 {
                     post.StatusId = status.Id;
-                    //二重取得回避
+                    // 二重取得回避
                     lock (_lockObj)
                     {
                         if (TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Contains(post.StatusId))
@@ -2986,48 +2991,48 @@ namespace Hoehoe
                             continue;
                         }
                     }
-                    //Retweet判定
+                    // Retweet判定
                     if (status.RetweetedStatus != null)
                     {
                         var retweeted = status.RetweetedStatus;
                         post.CreatedAt = MyCommon.DateTimeParse(retweeted.CreatedAt);
-                        //Id
+                        // Id
                         post.RetweetedId = post.StatusId;
-                        //本文
+                        // 本文
                         post.TextFromApi = retweeted.Text;
                         entities = retweeted.Entities;
-                        //Source取得（htmlの場合は、中身を取り出し）
+                        // Source取得（htmlの場合は、中身を取り出し）
                         post.Source = retweeted.Source;
-                        //Reply先
+                        // Reply先
                         { long t; long.TryParse(retweeted.InReplyToStatusId, out t); post.InReplyToStatusId = t; }
                         post.InReplyToUser = retweeted.InReplyToScreenName;
                         { long t; long.TryParse(retweeted.InReplyToUserId, out t); post.InReplyToUserId = t; }
                         post.IsFav = true;
-                        //以下、ユーザー情報
+                        // 以下、ユーザー情報
                         var user = retweeted.User;
                         post.UserId = user.Id;
                         post.ScreenName = user.ScreenName;
                         post.Nickname = user.Name.Trim();
                         post.ImageUrl = user.ProfileImageUrl;
                         post.IsProtect = user.Protected;
-                        //Retweetした人
+                        // Retweetした人
                         post.RetweetedBy = status.User.ScreenName;
                         post.IsMe = post.RetweetedBy.ToLower().Equals(_uname);
                     }
                     else
                     {
                         post.CreatedAt = MyCommon.DateTimeParse(status.CreatedAt);
-                        //本文
+                        // 本文
                         post.TextFromApi = status.Text;
                         entities = status.Entities;
-                        //Source取得（htmlの場合は、中身を取り出し）
+                        // Source取得（htmlの場合は、中身を取り出し）
                         post.Source = status.Source;
                         { long t; long.TryParse(status.InReplyToStatusId, out t); post.InReplyToStatusId = t; }
                         post.InReplyToUser = status.InReplyToScreenName;
                         { long t; long.TryParse(status.InReplyToUserId, out t); post.InReplyToUserId = t; }
 
                         post.IsFav = true;
-                        //以下、ユーザー情報
+                        // 以下、ユーザー情報
                         var user = status.User;
                         post.UserId = user.Id;
                         post.ScreenName = user.ScreenName;
@@ -3036,12 +3041,12 @@ namespace Hoehoe
                         post.IsProtect = user.Protected;
                         post.IsMe = post.ScreenName.ToLower().Equals(_uname);
                     }
-                    //HTMLに整形
+                    // HTMLに整形
                     { var t = post.TextFromApi; post.Text = CreateHtmlAnchor(ref t, post.ReplyToList, entities, post.Media); post.TextFromApi = t; }
                     post.TextFromApi = this.ReplaceTextFromApi(post.TextFromApi, entities);
                     post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
                     post.TextFromApi = post.TextFromApi.Replace("<3", "♡");
-                    //Source整形
+                    // Source整形
                     CreateSource(ref post);
                     post.IsRead = read;
                     post.IsReply = post.ReplyToList.Contains(_uname);
@@ -3247,8 +3252,7 @@ namespace Hoehoe
             {
                 var ids = D.CreateDataFromJson<long[]>(content);
                 noRTIds.AddRange(ids);
-                cursor = 0;
-                //0より小さければ何でも良い。
+                cursor = 0; // 0より小さければ何でも良い。
                 return "";
             }
             catch (SerializationException ex)
@@ -3732,7 +3736,7 @@ namespace Hoehoe
                 return null;
             }
             string retStr = text.Replace("&gt;", "<<<<<tweenだいなり>>>>>").Replace("&lt;", "<<<<<tweenしょうなり>>>>>");
-            //絶対パス表現のUriをリンクに置換
+            // 絶対パス表現のUriをリンクに置換
             retStr = Regex.Replace(retStr, RgUrl, new MatchEvaluator((Match mu) =>
             {
                 StringBuilder sb = new StringBuilder(mu.Result("${before}<a href=\""));
@@ -3750,7 +3754,7 @@ namespace Hoehoe
                 return sb.ToString();
             }), RegexOptions.IgnoreCase);
 
-            //@先をリンクに置換（リスト）
+            // @先をリンクに置換（リスト）
             retStr = Regex.Replace(retStr, "(^|[^a-zA-Z0-9_/])([@＠]+)([a-zA-Z0-9_]{1,20}/[a-zA-Z][a-zA-Z0-9\\p{IsLatin-1Supplement}\\-]{0,79})", "$1$2<a href=\"/$3\">$3</a>");
             Match m = Regex.Match(retStr, "(^|[^a-zA-Z0-9_])[@＠]([a-zA-Z0-9_]{1,20})");
             while (m.Success)
@@ -3761,10 +3765,10 @@ namespace Hoehoe
                 }
                 m = m.NextMatch();
             }
-            //@先をリンクに置換
+            // @先をリンクに置換
             retStr = Regex.Replace(retStr, "(^|[^a-zA-Z0-9_/])([@＠])([a-zA-Z0-9_]{1,20})", "$1$2<a href=\"/$3\">$3</a>");
 
-            //ハッシュタグを抽出し、リンクに置換
+            // ハッシュタグを抽出し、リンクに置換
             List<range> anchorRange = new List<range>();
             for (int i = 0; i < retStr.Length; i++)
             {
@@ -3797,9 +3801,7 @@ namespace Hoehoe
             }), RegexOptions.IgnoreCase);
             retStr = Regex.Replace(retStr, "(^|[^a-zA-Z0-9_/&#＃@＠>=.~])(sm|nm)([0-9]{1,10})", "$1<a href=\"http://www.nicovideo.jp/watch/$2$3\">$2$3</a>");
             retStr = retStr.Replace("<<<<<tweenだいなり>>>>>", "&gt;").Replace("<<<<<tweenしょうなり>>>>>", "&lt;");
-            //retStr = AdjustHtml(ShortUrl.Resolve(PreProcessUrl(retStr), True)) 'IDN置換、短縮Uri解決、@リンクを相対→絶対にしてtarget属性付与
-            retStr = AdjustHtml(PreProcessUrl(retStr));
-            //IDN置換、短縮Uri解決、@リンクを相対→絶対にしてtarget属性付与
+            retStr = AdjustHtml(PreProcessUrl(retStr)); // IDN置換、短縮Uri解決、@リンクを相対→絶対にしてtarget属性付与
             return retStr;
         }
 
@@ -3823,7 +3825,7 @@ namespace Hoehoe
             if (entities != null)
             {
                 SortedList<int, EntityInfo> etInfo = new SortedList<int, EntityInfo>();
-                //URL
+                // URL
                 if (entities.Urls != null)
                 {
                     foreach (var ent in entities.Urls)
@@ -3930,7 +3932,7 @@ namespace Hoehoe
                     }
                     catch (ArgumentOutOfRangeException)
                     {
-                        //Twitterのバグで不正なエンティティ（Index指定範囲が重なっている）が返ってくる場合の対応
+                        // Twitterのバグで不正なエンティティ（Index指定範囲が重なっている）が返ってくる場合の対応
                         ret = text;
                         entities = null;
                         if (media != null)
@@ -3942,11 +3944,14 @@ namespace Hoehoe
             }
 
             ret = Regex.Replace(ret, "(^|[^a-zA-Z0-9_/&#＃@＠>=.~])(sm|nm)([0-9]{1,10})", "$1<a href=\"http://www.nicovideo.jp/watch/$2$3\">$2$3</a>");
-            ret = AdjustHtml(ShortUrl.Resolve(PreProcessUrl(ret), false));//IDN置換、短縮Uri解決、@リンクを相対→絶対にしてtarget属性付与
+            ret = AdjustHtml(ShortUrl.Resolve(PreProcessUrl(ret), false)); // IDN置換、短縮Uri解決、@リンクを相対→絶対にしてtarget属性付与
             return ret;
         }
 
-        //Source整形
+        /// <summary>
+        /// Source整形
+        /// </summary>
+        /// <param name="post"></param>
         private void CreateSource(ref PostClass post)
         {
             if (post.Source.StartsWith("<"))
@@ -4146,7 +4151,7 @@ namespace Hoehoe
 
         public delegate void UserStreamStoppedEventHandler();
 
-        //public event UserStreamGetFriendsListEventHandler UserStreamGetFriendsList;
+        public event UserStreamGetFriendsListEventHandler UserStreamGetFriendsList;
 
         public delegate void UserStreamGetFriendsListEventHandler();
 
@@ -4214,18 +4219,18 @@ namespace Hoehoe
         }
 
         private EventTypeTableElement[] EventTable = {
-			new EventTypeTableElement("favorite", EventType.Favorite),
-			new EventTypeTableElement("unfavorite", EventType.Unfavorite),
-			new EventTypeTableElement("follow", EventType.Follow),
-			new EventTypeTableElement("list_member_added", EventType.ListMemberAdded),
-			new EventTypeTableElement("list_member_removed", EventType.ListMemberRemoved),
-			new EventTypeTableElement("block",EventType.Block),
-			new EventTypeTableElement("unblock",EventType.Unblock),
-			new EventTypeTableElement("user_update",EventType.UserUpdate),
-			new EventTypeTableElement("deleted", EventType.Deleted),
-			new EventTypeTableElement("list_created", EventType.ListCreated),
-			new EventTypeTableElement("list_updated", EventType.ListUpdated)
-		};
+            new EventTypeTableElement("favorite", EventType.Favorite),
+            new EventTypeTableElement("unfavorite", EventType.Unfavorite),
+            new EventTypeTableElement("follow", EventType.Follow),
+            new EventTypeTableElement("list_member_added", EventType.ListMemberAdded),
+            new EventTypeTableElement("list_member_removed", EventType.ListMemberRemoved),
+            new EventTypeTableElement("block", EventType.Block),
+            new EventTypeTableElement("unblock", EventType.Unblock),
+            new EventTypeTableElement("user_update", EventType.UserUpdate),
+            new EventTypeTableElement("deleted", EventType.Deleted),
+            new EventTypeTableElement("list_created", EventType.ListCreated),
+            new EventTypeTableElement("list_updated", EventType.ListUpdated)
+        };
 
         public EventType EventNameToEventType(string eventName)
         {
@@ -4378,12 +4383,14 @@ namespace Hoehoe
                     if (eventData.Target.ScreenName.ToLower().Equals(_uname))
                     {
                         if (!this._followerIds.Contains(eventData.Source.Id))
+                        {
                             this._followerIds.Add(eventData.Source.Id);
+                        }
                     }
                     else
                     {
+                        // Block後のUndoをすると、SourceとTargetが逆転したfollowイベントが帰ってくるため。
                         return;
-                        //Block後のUndoをすると、SourceとTargetが逆転したfollowイベントが帰ってくるため。
                     }
                     evt.Target = "";
                     break;
@@ -4672,8 +4679,8 @@ namespace Hoehoe
                     }
                     catch (ArgumentException ex)
                     {
-                        //System.ArgumentException: ストリームを読み取れませんでした。
-                        //サーバー側もしくは通信経路上で切断された場合？タイムアウト頻発後発生
+                        // System.ArgumentException: ストリームを読み取れませんでした。
+                        // サーバー側もしくは通信経路上で切断された場合？タイムアウト頻発後発生
                         sleepSec = 30;
                         MyCommon.TraceOut(ex, "Stop:ArgumentException");
                     }
@@ -4751,12 +4758,6 @@ namespace Hoehoe
             }
 
             // TODO: 上の Dispose(ByVal disposing As Boolean) にアンマネージ リソースを解放するコードがある場合にのみ、Finalize() をオーバーライドします。
-            //Protected Overrides Sub Finalize()
-            //    ' このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
-            //    Dispose(False)
-            //    MyBase.Finalize()
-            //End Sub
-
             // このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
             public void Dispose()
             {
