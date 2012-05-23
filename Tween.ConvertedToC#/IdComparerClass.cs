@@ -24,15 +24,29 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows.Forms;
+
     // ソート比較クラス：ID比較のみ
     public sealed class IdComparerClass : IComparer<long>
     {
+        private SortOrder sortOrder;
+        private ComparerMode comparerMode;
+        private Comparison<long> compareMethod;
+
+        /// <summary>
+        /// ListViewItemComparerクラスのコンストラクタ（引数付は未使用）
+        /// </summary>
+        public IdComparerClass()
+        {
+            this.sortOrder = SortOrder.Ascending;
+            this.comparerMode = ComparerMode.Id;
+            this.SetCompareMethod(this.comparerMode, this.sortOrder);
+        }
+
         /// <summary>
         /// 比較する方法
         /// </summary>
@@ -50,46 +64,46 @@ namespace Hoehoe
         /// </summary>
         public SortOrder Order
         {
-            get { return _order; }
+            get
+            {
+                return this.sortOrder;
+            }
+
             set
             {
-                _order = value;
-                setCompareMethod(_mode, _order);
+                this.sortOrder = value;
+                this.SetCompareMethod(this.comparerMode, this.sortOrder);
             }
         }
-        private SortOrder _order;
 
         /// <summary>
         /// 並び替えの方法 Setの際は同時に比較関数の切り替えを行う
         /// </summary>
         public ComparerMode Mode
         {
-            get { return _mode; }
+            get
+            {
+                return this.comparerMode;
+            }
+
             set
             {
-                _mode = value;
-                setCompareMethod(_mode, _order);
+                this.comparerMode = value;
+                this.SetCompareMethod(this.comparerMode, this.sortOrder);
             }
         }
-        private ComparerMode _mode;
 
         /// <summary>
-        /// ListViewItemComparerクラスのコンストラクタ（引数付は未使用）
+        /// 
         /// </summary>
-        /// <param name="col">並び替える列番号</param>
-        /// <param name="ord">昇順か降順か</param>
-        /// <param name="cmod">並び替えの方法</param>
-
-        public IdComparerClass()
-        {
-            _order = SortOrder.Ascending;
-            _mode = ComparerMode.Id;
-            setCompareMethod(_mode, _order);
-        }
-
         public Dictionary<long, PostClass> Posts { get; set; }
 
-        // 指定したソートモードとソートオーダーに従い使用する比較関数のアドレスを返す
+        /// <summary>
+        /// 指定したソートモードとソートオーダーに従い使用する比較関数のアドレスを返す
+        /// </summary>
+        /// <param name="sortMode"></param>
+        /// <param name="sortOrder"></param>
+        /// <returns></returns>
         public Comparison<long> GetCompareMethod(ComparerMode sortMode, SortOrder sortOrder)
         {
             Comparison<long> method = null;
@@ -99,19 +113,19 @@ namespace Hoehoe
                 switch (sortMode)
                 {
                     case ComparerMode.Data:
-                        method = Compare_ModeData_Ascending;
+                        method = this.Compare_ModeData_Ascending;
                         break;
                     case ComparerMode.Id:
-                        method = Compare_ModeId_Ascending;
+                        method = this.Compare_ModeId_Ascending;
                         break;
                     case ComparerMode.Name:
-                        method = Compare_ModeName_Ascending;
+                        method = this.Compare_ModeName_Ascending;
                         break;
                     case ComparerMode.Nickname:
-                        method = Compare_ModeNickName_Ascending;
+                        method = this.Compare_ModeNickName_Ascending;
                         break;
                     case ComparerMode.Source:
-                        method = Compare_ModeSource_Ascending;
+                        method = this.Compare_ModeSource_Ascending;
                         break;
                 }
             }
@@ -121,45 +135,46 @@ namespace Hoehoe
                 switch (sortMode)
                 {
                     case ComparerMode.Data:
-                        method = Compare_ModeData_Descending;
+                        method = this.Compare_ModeData_Descending;
                         break;
                     case ComparerMode.Id:
-                        method = Compare_ModeId_Descending;
+                        method = this.Compare_ModeId_Descending;
                         break;
                     case ComparerMode.Name:
-                        method = Compare_ModeName_Descending;
+                        method = this.Compare_ModeName_Descending;
                         break;
                     case ComparerMode.Nickname:
-                        method = Compare_ModeNickName_Descending;
+                        method = this.Compare_ModeNickName_Descending;
                         break;
                     case ComparerMode.Source:
-                        method = Compare_ModeSource_Descending;
+                        method = this.Compare_ModeSource_Descending;
                         break;
                 }
             }
+
             return method;
         }
 
-        // ソートモードとソートオーダーに従い使用する比較関数のアドレスを返す
-        // (overload 現在の使用中の比較関数のアドレスを返す)
+        /// <summary>
+        /// ソートモードとソートオーダーに従い使用する比較関数のアドレスを返す
+        /// (overload 現在の使用中の比較関数のアドレスを返す)
+        /// </summary>
+        /// <returns></returns>
         public Comparison<long> GetCompareMethod()
         {
-            return _compareMethod;
+            return this.compareMethod;
         }
 
-        // ソートモードとソートオーダーに従い比較関数のアドレスを切り替え
-        private void setCompareMethod(ComparerMode mode, SortOrder order)
-        {
-            _compareMethod = this.GetCompareMethod(mode, order);
-        }
-
-        private Comparison<long> _compareMethod;
-
-        // xがyより小さいときはマイナスの数、大きいときはプラスの数、
-        // 同じときは0を返す (こちらは未使用 一応比較関数群呼び出しの形のまま残しておく)
+        /// <summary>
+        /// x が yより小さいときはマイナスの数、大きいときはプラスの数、
+        /// 同じときは0を返す (こちらは未使用 一応比較関数群呼び出しの形のまま残しておく)
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public int Compare(long x, long y)
         {
-            return _compareMethod(x, y);
+            return this.compareMethod(x, y);
         }
 
         #region "比較用関数群"
@@ -167,22 +182,24 @@ namespace Hoehoe
         // 本文比較　昇順
         public int Compare_ModeData_Ascending(long x, long y)
         {
-            int result = String.Compare(Posts[x].TextFromApi, Posts[y].TextFromApi);
+            int result = string.Compare(this.Posts[x].TextFromApi, this.Posts[y].TextFromApi);
             if (result == 0)
             {
                 result = x.CompareTo(y);
             }
+
             return result;
         }
 
         // 本文比較　降順
         public int Compare_ModeData_Descending(long x, long y)
         {
-            int result = String.Compare(Posts[y].TextFromApi, Posts[x].TextFromApi);
+            int result = string.Compare(this.Posts[y].TextFromApi, this.Posts[x].TextFromApi);
             if (result == 0)
             {
                 result = y.CompareTo(x);
             }
+            
             return result;
         }
 
@@ -201,68 +218,79 @@ namespace Hoehoe
         // 表示名比較　昇順
         public int Compare_ModeName_Ascending(long x, long y)
         {
-            int result = String.Compare(Posts[x].ScreenName, Posts[y].ScreenName);
+            int result = string.Compare(this.Posts[x].ScreenName, this.Posts[y].ScreenName);
             if (result == 0)
             {
                 result = x.CompareTo(y);
             }
+            
             return result;
         }
 
         // 表示名比較　降順
         public int Compare_ModeName_Descending(long x, long y)
         {
-            int result = String.Compare(Posts[y].ScreenName, Posts[x].ScreenName);
+            int result = string.Compare(this.Posts[y].ScreenName, this.Posts[x].ScreenName);
             if (result == 0)
             {
                 result = y.CompareTo(x);
             }
+            
             return result;
         }
 
         // ユーザー名比較　昇順
         public int Compare_ModeNickName_Ascending(long x, long y)
         {
-            int result = String.Compare(Posts[x].Nickname, Posts[y].Nickname);
+            int result = string.Compare(this.Posts[x].Nickname, this.Posts[y].Nickname);
             if (result == 0)
             {
                 result = x.CompareTo(y);
             }
+            
             return result;
         }
 
         // ユーザー名比較　降順
         public int Compare_ModeNickName_Descending(long x, long y)
         {
-            int result = String.Compare(Posts[y].Nickname, Posts[x].Nickname);
+            int result = string.Compare(this.Posts[y].Nickname, this.Posts[x].Nickname);
             if (result == 0)
             {
                 result = y.CompareTo(x);
             }
+            
             return result;
         }
 
         // Source比較　昇順
         public int Compare_ModeSource_Ascending(long x, long y)
         {
-            int result = String.Compare(Posts[x].Source, Posts[y].Source);
+            int result = string.Compare(this.Posts[x].Source, this.Posts[y].Source);
             if (result == 0)
             {
                 result = x.CompareTo(y);
             }
+            
             return result;
         }
 
         // Source比較　降順
         public int Compare_ModeSource_Descending(long x, long y)
         {
-            int result = String.Compare(Posts[y].Source, Posts[x].Source);
+            int result = string.Compare(this.Posts[y].Source, this.Posts[x].Source);
             if (result == 0)
             {
                 result = y.CompareTo(x);
             }
+ 
             return result;
         }
         #endregion
+        // ソートモードとソートオーダーに従い比較関数のアドレスを切り替え
+        private void SetCompareMethod(ComparerMode mode, SortOrder order)
+        {
+            this.compareMethod = this.GetCompareMethod(mode, order);
+        }
     }
 }
