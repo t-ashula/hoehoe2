@@ -157,8 +157,117 @@ namespace Hoehoe
 
         public event PostDeletedEventHandler PostDeleted;
 
-
         public event UserStreamEventReceivedEventHandler UserStreamEventReceived;
+
+        public string Username
+        {
+            get { return this._twCon.AuthenticatedUsername; }
+        }
+
+        public long UserId
+        {
+            get { return this._twCon.AuthenticatedUserId; }
+        }
+
+        public string Password
+        {
+            get { return this._twCon.Password; }
+        }
+
+        public static AccountState AccountState
+        {
+            get { return _accountState; }
+            set { _accountState = value; }
+        }
+
+        public IDictionary<string, Image> DetailIcon
+        {
+            get { return this._dIcon; }
+            set { this._dIcon = value; }
+        }
+
+        public bool ReadOwnPost
+        {
+            get { return this._readOwnPost; }
+            set { this._readOwnPost = value; }
+        }
+
+        public int FollowersCount
+        {
+            get { return this._followersCount; }
+        }
+
+        public int FriendsCount
+        {
+            get { return this._friendsCount; }
+        }
+
+        public int StatusesCount
+        {
+            get { return this._statusesCount; }
+        }
+
+        public string Location
+        {
+            get { return this._location; }
+        }
+
+        public string Bio
+        {
+            get { return this._bio; }
+        }
+
+        public bool GetFollowersSuccess
+        {
+            get { return this._getFollowerResult; }
+        }
+
+        public bool GetNoRetweetSuccess
+        {
+            get { return this._getNoRetweetResult; }
+        }
+
+        public string AccessToken
+        {
+            get { return this._twCon.AccessToken; }
+        }
+
+        public string AccessTokenSecret
+        {
+            get { return this._twCon.AccessTokenSecret; }
+        }
+
+        public string TrackWord { get; set; }
+
+        public bool AllAtReply { get; set; }
+
+        private TwitterUserstream userStream
+        {
+            get { return this.withEventsField_userStream; }
+            set
+            {
+                if (this.withEventsField_userStream != null)
+                {
+                    this.withEventsField_userStream.StatusArrived -= this.userStream_StatusArrived;
+                    this.withEventsField_userStream.Started -= this.userStream_Started;
+                    this.withEventsField_userStream.Stopped -= this.userStream_Stopped;
+                }
+                this.withEventsField_userStream = value;
+                if (this.withEventsField_userStream != null)
+                {
+                    this.withEventsField_userStream.StatusArrived += this.userStream_StatusArrived;
+                    this.withEventsField_userStream.Started += this.userStream_Started;
+                    this.withEventsField_userStream.Stopped += this.userStream_Stopped;
+                }
+            }
+        }
+
+        public List<FormattedEvent> StoredEvent { get; set; }
+
+        public bool IsUserstreamDataReceived
+        {
+            get { return DateTime.Now.Subtract(this._lastUserstreamDataReceived).TotalSeconds < 31; }
+        }
 
         public string Authenticate(string username, string password)
         {
@@ -1514,28 +1623,7 @@ namespace Hoehoe
             }
         }
 
-        public string Username
-        {
-            get { return this._twCon.AuthenticatedUsername; }
-        }
-
-        public long UserId
-        {
-            get { return this._twCon.AuthenticatedUserId; }
-        }
-
-        public string Password
-        {
-            get { return this._twCon.Password; }
-        }
-
         private static AccountState _accountState = AccountState.Valid;
-
-        public static AccountState AccountState
-        {
-            get { return _accountState; }
-            set { _accountState = value; }
-        }
 
         public void SetGetIcon(bool value)
         {
@@ -1666,43 +1754,6 @@ namespace Hoehoe
         }
 
         #endregion "TODO:バージョンアップ"
-
-        public IDictionary<string, Image> DetailIcon
-        {
-            get { return this._dIcon; }
-            set { this._dIcon = value; }
-        }
-
-        public bool ReadOwnPost
-        {
-            get { return this._readOwnPost; }
-            set { this._readOwnPost = value; }
-        }
-
-        public int FollowersCount
-        {
-            get { return this._followersCount; }
-        }
-
-        public int FriendsCount
-        {
-            get { return this._friendsCount; }
-        }
-
-        public int StatusesCount
-        {
-            get { return this._statusesCount; }
-        }
-
-        public string Location
-        {
-            get { return this._location; }
-        }
-
-        public string Bio
-        {
-            get { return this._bio; }
-        }
 
         public void SetUseSsl(bool value)
         {
@@ -3202,11 +3253,6 @@ namespace Hoehoe
             return string.Empty;
         }
 
-        public bool GetFollowersSuccess
-        {
-            get { return this._getFollowerResult; }
-        }
-
         private string FollowerApi(ref long cursor)
         {
             if (Twitter.AccountState != AccountState.Valid)
@@ -3334,11 +3380,6 @@ namespace Hoehoe
                 MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
                 return "Err:Invalid Json!";
             }
-        }
-
-        public bool GetNoRetweetSuccess
-        {
-            get { return this._getNoRetweetResult; }
         }
 
         public string ConfigurationApi()
@@ -4167,58 +4208,15 @@ namespace Hoehoe
             return hashArray;
         }
 
-        public string AccessToken
-        {
-            get { return this._twCon.AccessToken; }
-        }
-
-        public string AccessTokenSecret
-        {
-            get { return this._twCon.AccessTokenSecret; }
-        }
-
-
         private void Twitter_ApiInformationChanged(object sender, ApiInformationChangedEventArgs e)
         {
         }
 
         #region "UserStream"
 
-        public string TrackWord { get; set; }
-
-        public bool AllAtReply { get; set; }
-
-        private TwitterUserstream userStream
-        {
-            get { return this.withEventsField_userStream; }
-            set
-            {
-                if (this.withEventsField_userStream != null)
-                {
-                    this.withEventsField_userStream.StatusArrived -= this.userStream_StatusArrived;
-                    this.withEventsField_userStream.Started -= this.userStream_Started;
-                    this.withEventsField_userStream.Stopped -= this.userStream_Stopped;
-                }
-                this.withEventsField_userStream = value;
-                if (this.withEventsField_userStream != null)
-                {
-                    this.withEventsField_userStream.StatusArrived += this.userStream_StatusArrived;
-                    this.withEventsField_userStream.Started += this.userStream_Started;
-                    this.withEventsField_userStream.Stopped += this.userStream_Stopped;
-                }
-            }
-        }
-
-        public List<FormattedEvent> StoredEvent { get; set; }
-
         public EventType EventNameToEventType(string eventName)
         {
             return (from tbl in this.EventTable where tbl.Name.Equals(eventName) select tbl.Type).FirstOrDefault();
-        }
-
-        public bool IsUserstreamDataReceived
-        {
-            get { return DateTime.Now.Subtract(this._lastUserstreamDataReceived).TotalSeconds < 31; }
         }
 
         private void userStream_StatusArrived(string line)
@@ -4545,21 +4543,6 @@ namespace Hoehoe
             public event StoppedEventHandler Stopped;
             public event StartedEventHandler Started;
 
-            public void Start(bool allAtReplies, string trackwords)
-            {
-                this.AllAtReplies = allAtReplies;
-                this.TrackWords = trackwords;
-                this._streamActive = true;
-                if (this._streamThread != null && this._streamThread.IsAlive)
-                {
-                    return;
-                }
-                this._streamThread = new Thread(this.UserStreamLoop);
-                this._streamThread.Name = "UserStreamReceiver";
-                this._streamThread.IsBackground = true;
-                this._streamThread.Start();
-            }
-
             public bool Enabled
             {
                 get { return this._streamActive; }
@@ -4575,6 +4558,21 @@ namespace Hoehoe
             {
                 get { return this._trackwords; }
                 set { this._trackwords = value; }
+            }
+
+            public void Start(bool allAtReplies, string trackwords)
+            {
+                this.AllAtReplies = allAtReplies;
+                this.TrackWords = trackwords;
+                this._streamActive = true;
+                if (this._streamThread != null && this._streamThread.IsAlive)
+                {
+                    return;
+                }
+                this._streamThread = new Thread(this.UserStreamLoop);
+                this._streamThread.Name = "UserStreamReceiver";
+                this._streamThread.IsBackground = true;
+                this._streamThread.Start();
             }
 
             private void UserStreamLoop()
@@ -4800,15 +4798,15 @@ namespace Hoehoe
 
         private class range
         {
-            public int fromIndex { get; set; }
-
-            public int toIndex { get; set; }
-
             public range(int fromIndex, int toIndex)
             {
                 this.fromIndex = fromIndex;
                 this.toIndex = toIndex;
             }
+
+            public int fromIndex { get; set; }
+
+            public int toIndex { get; set; }
         }
 
         private class EntityInfo
