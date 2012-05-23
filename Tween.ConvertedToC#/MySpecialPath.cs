@@ -24,25 +24,15 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.IO;
-using System.Windows.Forms;
-using Microsoft.Win32;
-
 namespace Hoehoe
 {
+    using System;
+    using System.IO;
+    using System.Windows.Forms;
+    using Microsoft.Win32;
+
     public static class MySpecialPath
     {
-        public static string UserAppDataPath()
-        {
-            return GetFileSystemPath(Environment.SpecialFolder.ApplicationData);
-        }
-
-        public static string UserAppDataPath(string productName)
-        {
-            return GetFileSystemPath(Environment.SpecialFolder.ApplicationData, productName);
-        }
-
         public static string CommonAppDataPath
         {
             get { return GetFileSystemPath(Environment.SpecialFolder.CommonApplicationData); }
@@ -63,6 +53,16 @@ namespace Hoehoe
             get { return GetRegistryPath(Registry.CurrentUser); }
         }
 
+        public static string UserAppDataPath()
+        {
+            return GetFileSystemPath(Environment.SpecialFolder.ApplicationData);
+        }
+
+        public static string UserAppDataPath(string productName)
+        {
+            return GetFileSystemPath(Environment.SpecialFolder.ApplicationData, productName);
+        }
+
         private static string GetFileSystemPath(Environment.SpecialFolder folder)
         {
             return GetFileSystemPath(folder, Application.ProductName);
@@ -72,6 +72,7 @@ namespace Hoehoe
         {
             // パスを取得
             string path = System.IO.Path.Combine(Environment.GetFolderPath(folder), Application.CompanyName, productName);
+
             // パスのフォルダを作成
             lock (typeof(Application))
             {
@@ -80,6 +81,7 @@ namespace Hoehoe
                     Directory.CreateDirectory(path);
                 }
             }
+
             return path;
         }
 
@@ -87,7 +89,8 @@ namespace Hoehoe
         {
             // パスを取得
             string basePath = key == Registry.LocalMachine ? "SOFTWARE" : "Software";
-            string path = String.Format("{0}\\{1}\\{2}", basePath, Application.CompanyName, Application.ProductName);
+            string path = string.Format("{0}\\{1}\\{2}", basePath, Application.CompanyName, Application.ProductName);
+
             // パスのレジストリ・キーの取得（および作成）
             return key.CreateSubKey(path);
         }
