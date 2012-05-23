@@ -24,230 +24,88 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml.Serialization;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Xml.Serialization;
+
     [Serializable]
-    public sealed class FiltersClass : System.IEquatable<FiltersClass>
+    public sealed class FiltersClass : IEquatable<FiltersClass>
     {
-        private string _name = "";
-        private List<string> _body = new List<string>();
-        private bool _searchBoth = true;
-        private bool _searchUrl = false;
-        private bool _caseSensitive = false;
-        private bool _useRegex = false;
-        private bool _isRt = false;
-        private string _source = "";
-        private string _exname = "";
-        private List<string> _exbody = new List<string>();
-        private bool _exsearchBoth = true;
-        private bool _exsearchUrl = false;
-        private bool _exuseRegex = false;
-        private bool _excaseSensitive = false;
-        private bool _isExRt = false;
-        private string _exSource = "";
-        private bool _moveFrom = false;
-        private bool _setMark = true;
-        private bool _useLambda = false;
-        private bool _exuseLambda = false;
-        private LambdaExpression _lambdaExp = null;
-        private Delegate _lambdaExpDelegate = null;
-        private LambdaExpression _exlambdaExp = null;
-        private Delegate _exlambdaExpDelegate = null;
+        private string name = string.Empty;
+        private List<string> body = new List<string>();
+        private bool searchBoth = true;
+        private bool searchUrl;
+        private bool caseSensitive;
+        private bool useRegex;
+        private bool isRt;
+        private string source = string.Empty;
+        private string exname = string.Empty;
+        private List<string> exbody = new List<string>();
+        private bool exsearchBoth = true;
+        private bool exsearchUrl;
+        private bool exuseRegex;
+        private bool excaseSensitive;
+        private bool isExRt;
+        private string exsource = string.Empty;
+        private bool moveFrom;
+        private bool setMark = true;
+        private bool useLambda;
+        private bool exuseLambda;
+        private LambdaExpression lambdaExp;
+        private Delegate lambdaExpDelegate;
+        private LambdaExpression exlambdaExp;
+        private Delegate exlambdaExpDelegate;
 
         public FiltersClass()
         {
         }
 
-        // フィルタ一覧に表示する文言生成
-        private string MakeSummary()
-        {
-            StringBuilder fs = new StringBuilder();
-            if (!String.IsNullOrEmpty(_name) || _body.Count > 0 || _isRt || !String.IsNullOrEmpty(_source))
-            {
-                if (_searchBoth)
-                {
-                    if (!String.IsNullOrEmpty(_name))
-                    {
-                        fs.AppendFormat(Hoehoe.Properties.Resources.SetFiltersText1, _name);
-                    }
-                    else
-                    {
-                        fs.Append(Hoehoe.Properties.Resources.SetFiltersText2);
-                    }
-                }
-                if (_body.Count > 0)
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText3);
-                    foreach (string bf in _body)
-                    {
-                        fs.Append(bf);
-                        fs.Append(" ");
-                    }
-                    fs.Length -= 1;
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText4);
-                }
-                fs.Append("(");
-                if (_searchBoth)
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText5);
-                }
-                else
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText6);
-                }
-                if (_useRegex)
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText7);
-                }
-                if (_searchUrl)
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText8);
-                }
-                if (_caseSensitive)
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText13);
-                }
-                if (_isRt)
-                {
-                    fs.Append("RT/");
-                }
-                if (_useLambda)
-                {
-                    fs.Append("LambdaExp/");
-                }
-                if (!String.IsNullOrEmpty(_source))
-                {
-                    fs.AppendFormat("Src…{0}/", _source);
-                }
-                fs.Length -= 1;
-                fs.Append(")");
-            }
-            if (!String.IsNullOrEmpty(_exname) || _exbody.Count > 0 || _isExRt || !String.IsNullOrEmpty(_exSource))
-            {
-                // 除外
-                fs.Append(Hoehoe.Properties.Resources.SetFiltersText12);
-                if (_exsearchBoth)
-                {
-                    if (!String.IsNullOrEmpty(_exname))
-                    {
-                        fs.AppendFormat(Hoehoe.Properties.Resources.SetFiltersText1, _exname);
-                    }
-                    else
-                    {
-                        fs.Append(Hoehoe.Properties.Resources.SetFiltersText2);
-                    }
-                }
-                if (_exbody.Count > 0)
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText3);
-                    foreach (string bf in _exbody)
-                    {
-                        fs.Append(bf);
-                        fs.Append(" ");
-                    }
-                    fs.Length -= 1;
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText4);
-                }
-                fs.Append("(");
-                if (_exsearchBoth)
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText5);
-                }
-                else
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText6);
-                }
-                if (_exuseRegex)
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText7);
-                }
-                if (_exsearchUrl)
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText8);
-                }
-                if (_excaseSensitive)
-                {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText13);
-                }
-                if (_isExRt)
-                {
-                    fs.Append("RT/");
-                }
-                if (_exuseLambda)
-                {
-                    fs.Append("LambdaExp/");
-                }
-                if (!String.IsNullOrEmpty(_exSource))
-                {
-                    fs.AppendFormat("Src…{0}/", _exSource);
-                }
-                fs.Length -= 1;
-                fs.Append(")");
-            }
-
-            fs.Append("(");
-            if (_moveFrom)
-            {
-                fs.Append(Hoehoe.Properties.Resources.SetFiltersText9);
-            }
-            else
-            {
-                fs.Append(Hoehoe.Properties.Resources.SetFiltersText11);
-            }
-            if (!_moveFrom && _setMark)
-            {
-                fs.Append(Hoehoe.Properties.Resources.SetFiltersText10);
-            }
-            else if (!_moveFrom)
-            {
-                fs.Length -= 1;
-            }
-
-            fs.Append(")");
-
-            return fs.ToString();
-        }
-
         public string NameFilter
         {
-            get { return _name; }
-            set { _name = value; }
+            get { return this.name; }
+            set { this.name = value; }
         }
 
         public string ExNameFilter
         {
-            get { return _exname; }
-            set { _exname = value; }
+            get { return this.exname; }
+            set { this.exname = value; }
         }
 
         [XmlIgnore]
         public List<string> BodyFilter
         {
-            get { return _body; }
+            get
+            {
+                return this.body;
+            }
+
             set
             {
-                _lambdaExp = null;
-                _lambdaExpDelegate = null;
-                _body = value;
+                this.lambdaExp = null;
+                this.lambdaExpDelegate = null;
+                this.body = value;
             }
         }
 
         public string[] BodyFilterArray
         {
-            get { return _body.ToArray(); }
+            get
+            {
+                return this.body.ToArray();
+            }
+
             set
             {
-                _body = new List<string>();
+                this.body = new List<string>();
                 foreach (string filter in value)
                 {
-                    _body.Add(filter);
+                    this.body.Add(filter);
                 }
             }
         }
@@ -255,227 +113,252 @@ namespace Hoehoe
         [XmlIgnore]
         public List<string> ExBodyFilter
         {
-            get { return _exbody; }
+            get
+            {
+                return this.exbody;
+            }
+
             set
             {
-                _exlambdaExp = null;
-                _exlambdaExpDelegate = null;
-                _exbody = value;
+                this.exlambdaExp = null;
+                this.exlambdaExpDelegate = null;
+                this.exbody = value;
             }
         }
 
         public string[] ExBodyFilterArray
         {
-            get { return _exbody.ToArray(); }
+            get
+            {
+                return this.exbody.ToArray();
+            }
+
             set
             {
-                _exbody = new List<string>();
+                this.exbody = new List<string>();
                 foreach (string filter in value)
                 {
-                    _exbody.Add(filter);
+                    this.exbody.Add(filter);
                 }
             }
         }
 
         public bool SearchBoth
         {
-            get { return _searchBoth; }
-            set { _searchBoth = value; }
+            get { return this.searchBoth; }
+            set { this.searchBoth = value; }
         }
 
         public bool ExSearchBoth
         {
-            get { return _exsearchBoth; }
-            set { _exsearchBoth = value; }
+            get { return this.exsearchBoth; }
+            set { this.exsearchBoth = value; }
         }
 
         public bool MoveFrom
         {
-            get { return _moveFrom; }
-            set { _moveFrom = value; }
+            get { return this.moveFrom; }
+            set { this.moveFrom = value; }
         }
 
         public bool SetMark
         {
-            get { return _setMark; }
-            set { _setMark = value; }
+            get { return this.setMark; }
+            set { this.setMark = value; }
         }
 
         public bool SearchUrl
         {
-            get { return _searchUrl; }
-            set { _searchUrl = value; }
+            get { return this.searchUrl; }
+            set { this.searchUrl = value; }
         }
 
         public bool ExSearchUrl
         {
-            get { return _exsearchUrl; }
-            set { _exsearchUrl = value; }
+            get { return this.exsearchUrl; }
+            set { this.exsearchUrl = value; }
         }
 
         public bool CaseSensitive
         {
-            get { return _caseSensitive; }
-            set { _caseSensitive = value; }
+            get { return this.caseSensitive; }
+            set { this.caseSensitive = value; }
         }
 
         public bool ExCaseSensitive
         {
-            get { return _excaseSensitive; }
-            set { _excaseSensitive = value; }
+            get { return this.excaseSensitive; }
+            set { this.excaseSensitive = value; }
         }
 
         public bool UseLambda
         {
-            get { return _useLambda; }
+            get
+            {
+                return this.useLambda;
+            }
+
             set
             {
-                _lambdaExp = null;
-                _lambdaExpDelegate = null;
-                _useLambda = value;
+                this.lambdaExp = null;
+                this.lambdaExpDelegate = null;
+                this.useLambda = value;
             }
         }
 
         public bool ExUseLambda
         {
-            get { return _exuseLambda; }
+            get
+            {
+                return this.exuseLambda;
+            }
+
             set
             {
-                _exlambdaExp = null;
-                _exlambdaExpDelegate = null;
-                _exuseLambda = value;
+                this.exlambdaExp = null;
+                this.exlambdaExpDelegate = null;
+                this.exuseLambda = value;
             }
         }
 
         public bool UseRegex
         {
-            get { return _useRegex; }
-            set { _useRegex = value; }
+            get { return this.useRegex; }
+            set { this.useRegex = value; }
         }
 
         public bool ExUseRegex
         {
-            get { return _exuseRegex; }
-            set { _exuseRegex = value; }
+            get { return this.exuseRegex; }
+            set { this.exuseRegex = value; }
         }
 
         public bool IsRt
         {
-            get { return _isRt; }
-            set { _isRt = value; }
+            get { return this.isRt; }
+            set { this.isRt = value; }
         }
 
         public bool IsExRt
         {
-            get { return _isExRt; }
-            set { _isExRt = value; }
+            get { return this.isExRt; }
+            set { this.isExRt = value; }
         }
 
         public string Source
         {
-            get { return _source; }
-            set { _source = value; }
+            get { return this.source; }
+            set { this.source = value; }
         }
 
         public string ExSource
         {
-            get { return _exSource; }
-            set { _exSource = value; }
+            get { return this.exsource; }
+            set { this.exsource = value; }
         }
 
         public override string ToString()
         {
-            return MakeSummary();
+            return this.MakeSummary();
         }
 
         public bool ExecuteLambdaExpression(string expr, PostClass post)
         {
-            if (_lambdaExp == null || _lambdaExpDelegate == null)
+#if notyet
+            if (this._lambdaExp == null || this._lambdaExpDelegate == null)
             {
-                _lambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
-                _lambdaExpDelegate = _lambdaExp.Compile();
+                this._lambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
+                this._lambdaExpDelegate = this._lambdaExp.Compile();
             }
-            return ((bool)_lambdaExpDelegate.DynamicInvoke(post));
+            return ((bool)this._lambdaExpDelegate.DynamicInvoke(post));
+#endif
+            return false;
         }
 
         public bool ExecuteExLambdaExpression(string expr, PostClass post)
         {
-            if (_exlambdaExp == null || _exlambdaExpDelegate == null)
+#if notyet
+            if (this._exlambdaExp == null || this._exlambdaExpDelegate == null)
             {
-                _exlambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
-                _exlambdaExpDelegate = _exlambdaExp.Compile();
+                this._exlambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
+                this._exlambdaExpDelegate = this._exlambdaExp.Compile();
             }
-            return ((bool)_exlambdaExpDelegate.DynamicInvoke(post));
+            return ((bool)this._exlambdaExpDelegate.DynamicInvoke(post));
+#endif
+            return false;
         }
 
         public HITRESULT IsHit(PostClass post)
         {
-            bool bHit = true;
-            string tBody = null;
-            string tSource = null;
-            if (_searchUrl)
+            bool isHit = true;
+            string bodyText = null;
+            string sourceText = null;
+            if (this.searchUrl)
             {
-                tBody = post.Text;
-                tSource = post.SourceHtml;
+                bodyText = post.Text;
+                sourceText = post.SourceHtml;
             }
             else
             {
-                tBody = post.TextFromApi;
-                tSource = post.Source;
+                bodyText = post.TextFromApi;
+                sourceText = post.Source;
             }
+
             // 検索オプション
             StringComparison compOpt = default(StringComparison);
-            RegexOptions rgOpt = default(RegexOptions);
-            if (_caseSensitive)
+            RegexOptions regexOption = default(RegexOptions);
+            if (this.caseSensitive)
             {
                 compOpt = StringComparison.Ordinal;
-                rgOpt = RegexOptions.None;
+                regexOption = RegexOptions.None;
             }
             else
             {
                 compOpt = StringComparison.OrdinalIgnoreCase;
-                rgOpt = RegexOptions.IgnoreCase;
+                regexOption = RegexOptions.IgnoreCase;
             }
-            if (_searchBoth)
+
+            if (this.searchBoth)
             {
-                if (String.IsNullOrEmpty(_name) || (!_useRegex && (post.ScreenName.Equals(_name, compOpt) || post.RetweetedBy.Equals(_name, compOpt))) || (_useRegex && (Regex.IsMatch(post.ScreenName, _name, rgOpt) || (!String.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, _name, rgOpt)))))
+                if (string.IsNullOrEmpty(this.name) || (!this.useRegex && (post.ScreenName.Equals(this.name, compOpt) || post.RetweetedBy.Equals(this.name, compOpt))) || (this.useRegex && (Regex.IsMatch(post.ScreenName, this.name, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, this.name, regexOption)))))
                 {
-                    if (_useLambda)
+                    if (this.useLambda)
                     {
-                        if (!ExecuteLambdaExpression(_body[0], post))
+                        if (!this.ExecuteLambdaExpression(this.body[0], post))
                         {
-                            bHit = false;
+                            isHit = false;
                         }
                     }
                     else
                     {
-                        foreach (string fs in _body)
+                        foreach (string fs in this.body)
                         {
-                            if (_useRegex)
+                            if (this.useRegex)
                             {
-                                if (!Regex.IsMatch(tBody, fs, rgOpt))
+                                if (!Regex.IsMatch(bodyText, fs, regexOption))
                                 {
-                                    bHit = false;
+                                    isHit = false;
                                 }
                             }
                             else
                             {
-                                if (_caseSensitive)
+                                if (this.caseSensitive)
                                 {
-                                    if (!tBody.Contains(fs))
+                                    if (!bodyText.Contains(fs))
                                     {
-                                        bHit = false;
+                                        isHit = false;
                                     }
                                 }
                                 else
                                 {
-                                    if (!tBody.ToLower().Contains(fs.ToLower()))
+                                    if (!bodyText.ToLower().Contains(fs.ToLower()))
                                     {
-                                        bHit = false;
+                                        isHit = false;
                                     }
                                 }
                             }
-                            if (!bHit)
+
+                            if (!isHit)
                             {
                                 break;
                             }
@@ -484,147 +367,155 @@ namespace Hoehoe
                 }
                 else
                 {
-                    bHit = false;
+                    isHit = false;
                 }
             }
             else
             {
-                if (_useLambda)
+                if (this.useLambda)
                 {
-                    if (!ExecuteLambdaExpression(_body[0], post))
+                    if (!this.ExecuteLambdaExpression(this.body[0], post))
                     {
-                        bHit = false;
+                        isHit = false;
                     }
                 }
                 else
                 {
-                    foreach (string fs in _body)
+                    foreach (string fs in this.body)
                     {
-                        if (_useRegex)
+                        if (this.useRegex)
                         {
-                            if (!(Regex.IsMatch(post.ScreenName, fs, rgOpt) || (!String.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) || Regex.IsMatch(tBody, fs, rgOpt)))
+                            if (!(Regex.IsMatch(post.ScreenName, fs, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, fs, regexOption)) || Regex.IsMatch(bodyText, fs, regexOption)))
                             {
-                                bHit = false;
+                                isHit = false;
                             }
                         }
                         else
                         {
-                            if (_caseSensitive)
+                            if (this.caseSensitive)
                             {
-                                if (!(post.ScreenName.Contains(fs) || post.RetweetedBy.Contains(fs) || tBody.Contains(fs)))
+                                if (!(post.ScreenName.Contains(fs) || post.RetweetedBy.Contains(fs) || bodyText.Contains(fs)))
                                 {
-                                    bHit = false;
+                                    isHit = false;
                                 }
                             }
                             else
                             {
-                                if (!(post.ScreenName.ToLower().Contains(fs.ToLower()) || post.RetweetedBy.ToLower().Contains(fs.ToLower()) || tBody.ToLower().Contains(fs.ToLower())))
+                                if (!(post.ScreenName.ToLower().Contains(fs.ToLower()) || post.RetweetedBy.ToLower().Contains(fs.ToLower()) || bodyText.ToLower().Contains(fs.ToLower())))
                                 {
-                                    bHit = false;
+                                    isHit = false;
                                 }
                             }
                         }
-                        if (!bHit)
+            
+                        if (!isHit)
                         {
                             break;
                         }
                     }
                 }
             }
-            if (_isRt)
+            
+            if (this.isRt)
             {
                 if (post.RetweetedId == 0)
                 {
-                    bHit = false;
+                    isHit = false;
                 }
             }
-            if (!String.IsNullOrEmpty(_source))
+            
+            if (!string.IsNullOrEmpty(this.source))
             {
-                if (_useRegex)
+                if (this.useRegex)
                 {
-                    if (!Regex.IsMatch(tSource, _source, rgOpt))
+                    if (!Regex.IsMatch(sourceText, this.source, regexOption))
                     {
-                        bHit = false;
+                        isHit = false;
                     }
                 }
                 else
                 {
-                    if (!tSource.Equals(_source, compOpt))
+                    if (!sourceText.Equals(this.source, compOpt))
                     {
-                        bHit = false;
+                        isHit = false;
                     }
                 }
             }
-            if (!bHit)
+            
+            if (!isHit)
             {
                 return HITRESULT.None;
             }
+            
             // 除外判定
-            if (_exsearchUrl)
+            if (this.exsearchUrl)
             {
-                tBody = post.Text;
-                tSource = post.SourceHtml;
+                bodyText = post.Text;
+                sourceText = post.SourceHtml;
             }
             else
             {
-                tBody = post.TextFromApi;
-                tSource = post.Source;
+                bodyText = post.TextFromApi;
+                sourceText = post.Source;
             }
-            bool exFlag = false;
-            if (!String.IsNullOrEmpty(_exname) || _exbody.Count > 0)
+
+            bool isExclude = false;
+            if (!string.IsNullOrEmpty(this.exname) || this.exbody.Count > 0)
             {
-                if (_excaseSensitive)
+                if (this.excaseSensitive)
                 {
                     compOpt = StringComparison.Ordinal;
-                    rgOpt = RegexOptions.None;
+                    regexOption = RegexOptions.None;
                 }
                 else
                 {
                     compOpt = StringComparison.OrdinalIgnoreCase;
-                    rgOpt = RegexOptions.IgnoreCase;
+                    regexOption = RegexOptions.IgnoreCase;
                 }
-                if (_exsearchBoth)
+
+                if (this.exsearchBoth)
                 {
-                    if (String.IsNullOrEmpty(_exname) || (!_exuseRegex && (post.ScreenName.Equals(_exname, compOpt) || post.RetweetedBy.Equals(_exname, compOpt))) || (_exuseRegex && (Regex.IsMatch(post.ScreenName, _exname, rgOpt) || (!String.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, _exname, rgOpt)))))
+                    if (string.IsNullOrEmpty(this.exname) || (!this.exuseRegex && (post.ScreenName.Equals(this.exname, compOpt) || post.RetweetedBy.Equals(this.exname, compOpt))) || (this.exuseRegex && (Regex.IsMatch(post.ScreenName, this.exname, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, this.exname, regexOption)))))
                     {
-                        if (_exbody.Count > 0)
+                        if (this.exbody.Count > 0)
                         {
-                            if (_exuseLambda)
+                            if (this.exuseLambda)
                             {
-                                if (ExecuteExLambdaExpression(_exbody[0], post))
+                                if (this.ExecuteExLambdaExpression(this.exbody[0], post))
                                 {
-                                    exFlag = true;
+                                    isExclude = true;
                                 }
                             }
                             else
                             {
-                                foreach (string fs in _exbody)
+                                foreach (string fs in this.exbody)
                                 {
-                                    if (_exuseRegex)
+                                    if (this.exuseRegex)
                                     {
-                                        if (Regex.IsMatch(tBody, fs, rgOpt))
+                                        if (Regex.IsMatch(bodyText, fs, regexOption))
                                         {
-                                            exFlag = true;
+                                            isExclude = true;
                                         }
                                     }
                                     else
                                     {
-                                        if (_excaseSensitive)
+                                        if (this.excaseSensitive)
                                         {
-                                            if (tBody.Contains(fs))
+                                            if (bodyText.Contains(fs))
                                             {
-                                                exFlag = true;
+                                                isExclude = true;
                                             }
                                         }
                                         else
                                         {
-                                            if (tBody.ToLower().Contains(fs.ToLower()))
+                                            if (bodyText.ToLower().Contains(fs.ToLower()))
                                             {
-                                                exFlag = true;
+                                                isExclude = true;
                                             }
                                         }
                                     }
-                                    if (exFlag)
+
+                                    if (isExclude)
                                     {
                                         break;
                                     }
@@ -633,46 +524,49 @@ namespace Hoehoe
                         }
                         else
                         {
-                            exFlag = true;
+                            isExclude = true;
                         }
                     }
                 }
                 else
                 {
-                    if (_exuseLambda)
+                    if (this.exuseLambda)
                     {
-                        if (ExecuteExLambdaExpression(_exbody[0], post))
-                            exFlag = true;
+                        if (this.ExecuteExLambdaExpression(this.exbody[0], post))
+                        {
+                            isExclude = true;
+                        }
                     }
                     else
                     {
-                        foreach (string fs in _exbody)
+                        foreach (string fs in this.exbody)
                         {
-                            if (_exuseRegex)
+                            if (this.exuseRegex)
                             {
-                                if (Regex.IsMatch(post.ScreenName, fs, rgOpt) || (!String.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, fs, rgOpt)) || Regex.IsMatch(tBody, fs, rgOpt))
+                                if (Regex.IsMatch(post.ScreenName, fs, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, fs, regexOption)) || Regex.IsMatch(bodyText, fs, regexOption))
                                 {
-                                    exFlag = true;
+                                    isExclude = true;
                                 }
                             }
                             else
                             {
-                                if (_excaseSensitive)
+                                if (this.excaseSensitive)
                                 {
-                                    if (post.ScreenName.Contains(fs) || post.RetweetedBy.Contains(fs) || tBody.Contains(fs))
+                                    if (post.ScreenName.Contains(fs) || post.RetweetedBy.Contains(fs) || bodyText.Contains(fs))
                                     {
-                                        exFlag = true;
+                                        isExclude = true;
                                     }
                                 }
                                 else
                                 {
-                                    if (post.ScreenName.ToLower().Contains(fs.ToLower()) || post.RetweetedBy.ToLower().Contains(fs.ToLower()) || tBody.ToLower().Contains(fs.ToLower()))
+                                    if (post.ScreenName.ToLower().Contains(fs.ToLower()) || post.RetweetedBy.ToLower().Contains(fs.ToLower()) || bodyText.ToLower().Contains(fs.ToLower()))
                                     {
-                                        exFlag = true;
+                                        isExclude = true;
                                     }
                                 }
                             }
-                            if (exFlag)
+
+                            if (isExclude)
                             {
                                 break;
                             }
@@ -680,55 +574,59 @@ namespace Hoehoe
                     }
                 }
             }
-            if (_isExRt)
+
+            if (this.isExRt)
             {
                 if (post.RetweetedId > 0)
                 {
-                    exFlag = true;
+                    isExclude = true;
                 }
             }
-            if (!String.IsNullOrEmpty(_exSource))
+
+            if (!string.IsNullOrEmpty(this.exsource))
             {
-                if (_exuseRegex)
+                if (this.exuseRegex)
                 {
-                    if (Regex.IsMatch(tSource, _exSource, rgOpt))
+                    if (Regex.IsMatch(sourceText, this.exsource, regexOption))
                     {
-                        exFlag = true;
+                        isExclude = true;
                     }
                 }
                 else
                 {
-                    if (tSource.Equals(_exSource, compOpt))
+                    if (sourceText.Equals(this.exsource, compOpt))
                     {
-                        exFlag = true;
+                        isExclude = true;
                     }
                 }
             }
-            if (String.IsNullOrEmpty(_name) && _body.Count == 0 && !_isRt && String.IsNullOrEmpty(_source))
+            
+            if (string.IsNullOrEmpty(this.name) && this.body.Count == 0 && !this.isRt && string.IsNullOrEmpty(this.source))
             {
-                bHit = false;
+                isHit = false;
             }
-            if (bHit)
+
+            if (isHit)
             {
-                if (exFlag)
+                if (isExclude)
                 {
                     return HITRESULT.Exclude;
                 }
                 else
                 {
-                    if (_moveFrom)
+                    if (this.moveFrom)
                     {
                         return HITRESULT.Move;
                     }
                     else
                     {
-                        return _setMark ? HITRESULT.CopyAndMark : HITRESULT.Copy;
+                        return this.setMark ? HITRESULT.CopyAndMark : HITRESULT.Copy;
                     }
                 }
             }
             else
             {
-                return exFlag ? HITRESULT.Exclude : HITRESULT.None;
+                return isExclude ? HITRESULT.Exclude : HITRESULT.None;
             }
         }
 
@@ -738,10 +636,12 @@ namespace Hoehoe
             {
                 return false;
             }
+            
             if (this.ExBodyFilter.Count != other.ExBodyFilter.Count)
             {
                 return false;
             }
+            
             for (int i = 0; i < this.BodyFilter.Count; i++)
             {
                 if (this.BodyFilter[i] != other.BodyFilter[i])
@@ -749,6 +649,7 @@ namespace Hoehoe
                     return false;
                 }
             }
+
             for (int i = 0; i < this.ExBodyFilter.Count; i++)
             {
                 if (this.ExBodyFilter[i] != other.ExBodyFilter[i])
@@ -818,6 +719,7 @@ namespace Hoehoe
             {
                 return false;
             }
+
             return this.Equals((FiltersClass)obj);
         }
 
@@ -832,6 +734,177 @@ namespace Hoehoe
                 ^ this.IsRt.GetHashCode() ^ this.Source.GetHashCode()
                 ^ this.IsExRt.GetHashCode() ^ this.ExSource.GetHashCode()
                 ^ this.UseLambda.GetHashCode() ^ this.ExUseLambda.GetHashCode();
+        }
+        
+        // フィルタ一覧に表示する文言生成
+        private string MakeSummary()
+        {
+            StringBuilder fs = new StringBuilder();
+            if (!string.IsNullOrEmpty(this.name) || this.body.Count > 0 || this.isRt || !string.IsNullOrEmpty(this.source))
+            {
+                if (this.searchBoth)
+                {
+                    if (!string.IsNullOrEmpty(this.name))
+                    {
+                        fs.AppendFormat(Hoehoe.Properties.Resources.SetFiltersText1, this.name);
+                    }
+                    else
+                    {
+                        fs.Append(Hoehoe.Properties.Resources.SetFiltersText2);
+                    }
+                }
+                
+                if (this.body.Count > 0)
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText3);
+                    foreach (string bf in this.body)
+                    {
+                        fs.Append(bf);
+                        fs.Append(" ");
+                    }
+
+                    fs.Length -= 1;
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText4);
+                }
+                
+                fs.Append("(");
+                if (this.searchBoth)
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText5);
+                }
+                else
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText6);
+                }
+                
+                if (this.useRegex)
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText7);
+                }
+                
+                if (this.searchUrl)
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText8);
+                }
+                
+                if (this.caseSensitive)
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText13);
+                }
+                
+                if (this.isRt)
+                {
+                    fs.Append("RT/");
+                }
+                
+                if (this.useLambda)
+                {
+                    fs.Append("LambdaExp/");
+                }
+                
+                if (!string.IsNullOrEmpty(this.source))
+                {
+                    fs.AppendFormat("Src…{0}/", this.source);
+                }
+            
+                fs.Length -= 1;
+                fs.Append(")");
+            }
+            
+            if (!string.IsNullOrEmpty(this.exname) || this.exbody.Count > 0 || this.isExRt || !string.IsNullOrEmpty(this.exsource))
+            {
+                // 除外
+                fs.Append(Hoehoe.Properties.Resources.SetFiltersText12);
+                if (this.exsearchBoth)
+                {
+                    if (!string.IsNullOrEmpty(this.exname))
+                    {
+                        fs.AppendFormat(Hoehoe.Properties.Resources.SetFiltersText1, this.exname);
+                    }
+                    else
+                    {
+                        fs.Append(Hoehoe.Properties.Resources.SetFiltersText2);
+                    }
+                }
+                
+                if (this.exbody.Count > 0)
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText3);
+                    foreach (string bf in this.exbody)
+                    {
+                        fs.Append(bf);
+                        fs.Append(" ");
+                    }
+
+                    fs.Length -= 1;
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText4);
+                }
+                
+                fs.Append("(");
+                if (this.exsearchBoth)
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText5);
+                }
+                else
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText6);
+                }
+                
+                if (this.exuseRegex)
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText7);
+                }
+                
+                if (this.exsearchUrl)
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText8);
+                }
+                
+                if (this.excaseSensitive)
+                {
+                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText13);
+                }
+                
+                if (this.isExRt)
+                {
+                    fs.Append("RT/");
+                }
+                
+                if (this.exuseLambda)
+                {
+                    fs.Append("LambdaExp/");
+                }
+                
+                if (!string.IsNullOrEmpty(this.exsource))
+                {
+                    fs.AppendFormat("Src…{0}/", this.exsource);
+                }
+            
+                fs.Length -= 1;
+                fs.Append(")");
+            }
+
+            fs.Append("(");
+            if (this.moveFrom)
+            {
+                fs.Append(Hoehoe.Properties.Resources.SetFiltersText9);
+            }
+            else
+            {
+                fs.Append(Hoehoe.Properties.Resources.SetFiltersText11);
+            }
+
+            if (!this.moveFrom && this.setMark)
+            {
+                fs.Append(Hoehoe.Properties.Resources.SetFiltersText10);
+            }
+            else if (!this.moveFrom)
+            {
+                fs.Length -= 1;
+            }
+
+            fs.Append(")");
+            return fs.ToString();
         }
     }
 }
