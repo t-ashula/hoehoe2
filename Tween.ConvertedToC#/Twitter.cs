@@ -4561,11 +4561,6 @@ namespace Hoehoe
 
         private class PostInfo
         {
-            public string CreatedAt;
-            public string Id;
-            public string Text;
-            public string UserId;
-
             public PostInfo(string created, string idStr, string txt, string uid)
             {
                 this.CreatedAt = created;
@@ -4573,6 +4568,11 @@ namespace Hoehoe
                 this.Text = txt;
                 this.UserId = uid;
             }
+
+            public string CreatedAt { get; set; }
+            public string Id { get; set; }
+            public string Text { get; set; }
+            public string UserId { get; set; }
 
             public bool Equals(PostInfo dst)
             {
@@ -4608,16 +4608,15 @@ namespace Hoehoe
 
         private class EventTypeTableElement
         {
-            public string Name;
-
-            public EventType Type;
-
             public EventTypeTableElement(string name, EventType type)
             {
                 this.Name = name;
                 this.Type = type;
             }
+            public string Name { get; set; }
+            public EventType Type { get; set; }
         }
+
         private class TwitterUserstream : IDisposable
         {
             private HttpTwitter twitterConnection;
