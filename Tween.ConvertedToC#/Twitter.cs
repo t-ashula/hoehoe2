@@ -431,29 +431,6 @@ namespace Hoehoe
             }
         }
 
-        private string GetErrorMessageJson(string content)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(content))
-                {
-                    using (var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(content), XmlDictionaryReaderQuotas.Max))
-                    {
-                        XElement xElm = XElement.Load(jsonReader);
-                        return xElm.Element("error") != null ? xElm.Element("error").Value : string.Empty;
-                    }
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-            catch (Exception)
-            {
-                return string.Empty;
-            }
-        }
-
         public void Initialize(string token, string tokenSecret, string username, long userId)
         {
             // OAuth認証
@@ -511,92 +488,6 @@ namespace Hoehoe
                 }
             }
             return orgData;
-        }
-
-        private string GetPlainText(string orgData)
-        {
-            return HttpUtility.HtmlDecode(Regex.Replace(orgData, "(?<tagStart><a [^>]+>)(?<text>[^<]+)(?<tagEnd></a>)", "${text}"));
-        }
-
-        // htmlの簡易サニタイズ(詳細表示に不要なタグの除去)
-        private string SanitizeHtml(string orgdata)
-        {
-            string retdata = orgdata;
-            retdata = Regex.Replace(retdata, "<(script|object|applet|image|frameset|fieldset|legend|style).*" + "</(script|object|applet|image|frameset|fieldset|legend|style)>", string.Empty, RegexOptions.IgnoreCase);
-            retdata = Regex.Replace(retdata, "<(frame|link|iframe|img)>", string.Empty, RegexOptions.IgnoreCase);
-            return retdata;
-        }
-
-        private string AdjustHtml(string orgData)
-        {
-            string retStr = orgData;
-            retStr = Regex.Replace(retStr, "<a [^>]*href=\"/", "<a href=\"" + this._protocol + "twitter.com/");
-            retStr = retStr.Replace("<a href=", "<a target=\"_self\" href=");
-            retStr = retStr.Replace("\r\n", "<br>");
-
-            // 半角スペースを置換(Thanks @anis774)
-            bool ret = false;
-            do
-            {
-                ret = this.EscapeSpace(ref retStr);
-            }
-            while (!ret);
-
-            return this.SanitizeHtml(retStr);
-        }
-
-        private bool EscapeSpace(ref string html)
-        {
-            // 半角スペースを置換(Thanks @anis774)
-            bool isTag = false;
-            for (int i = 0; i < html.Length; i++)
-            {
-                if (html[i] == '<')
-                {
-                    isTag = true;
-                }
-
-                if (html[i] == '>')
-                {
-                    isTag = false;
-                }
-
-                if ((!isTag) && (html[i] == ' '))
-                {
-                    html = html.Remove(i, 1);
-                    html = html.Insert(i, "&nbsp;");
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private bool IsPostRestricted(Status status)
-        {
-            PostInfo currentPost = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
-            currentPost.CreatedAt = status.CreatedAt;
-            currentPost.Id = status.IdStr;
-            if (status.Text == null)
-            {
-                currentPost.Text = string.Empty;
-            }
-            else
-            {
-                currentPost.Text = status.Text;
-            }
-            currentPost.UserId = status.User.IdStr;
-
-            if (currentPost.Equals(this._prevPostInfo))
-            {
-                return true;
-            }
-            this._prevPostInfo.CreatedAt = currentPost.CreatedAt;
-            this._prevPostInfo.Id = currentPost.Id;
-            this._prevPostInfo.Text = currentPost.Text;
-            this._prevPostInfo.UserId = currentPost.UserId;
-
-            return false;
         }
 
         public string PostStatus(string postStr, long replyToId)
@@ -1623,8 +1514,6 @@ namespace Hoehoe
             }
         }
 
-        private static AccountState _accountState = AccountState.Valid;
-
         public void SetGetIcon(bool value)
         {
             this._getIcon = value;
@@ -2026,278 +1915,6 @@ namespace Hoehoe
             return r;
         }
 
-        private PostClass CreatePostsFromStatusData(Status status)
-        {
-            PostClass post = new PostClass();
-            Entities entities = null;
-            post.StatusId = status.Id;
-            if (status.RetweetedStatus != null)
-            {
-                RetweetedStatus retweeted = status.RetweetedStatus;
-                post.CreatedAt = MyCommon.DateTimeParse(retweeted.CreatedAt);
-                // Id
-                post.RetweetedId = retweeted.Id;
-                // 本文
-                post.TextFromApi = retweeted.Text;
-                entities = retweeted.Entities;
-                // Source取得（htmlの場合は、中身を取り出し）
-                post.Source = retweeted.Source;
-                // Reply先
-                {
-                    long t;
-                    long.TryParse(retweeted.InReplyToStatusId, out t);
-                    post.InReplyToStatusId = t;
-                }
-                post.InReplyToUser = retweeted.InReplyToScreenName;
-                {
-                    long t;
-                    long.TryParse(status.InReplyToUserId, out t);
-                    post.InReplyToUserId = t;
-                }
-
-                // 幻覚fav対策
-                TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
-                post.IsFav = tc.Contains(post.RetweetedId);
-
-                if (retweeted.Geo != null)
-                {
-                    post.PostGeo = new PostClass.StatusGeo
-                    {
-                        Lat = retweeted.Geo.Coordinates[0],
-                        Lng = retweeted.Geo.Coordinates[1]
-                    };
-                }
-
-                // 以下、ユーザー情報
-                var user = retweeted.User;
-                if (user.ScreenName == null || status.User.ScreenName == null)
-                {
-                    return null;
-                }
-                post.UserId = user.Id;
-                post.ScreenName = user.ScreenName;
-                post.Nickname = user.Name.Trim();
-                post.ImageUrl = user.ProfileImageUrl;
-                post.IsProtect = user.Protected;
-                // Retweetした人
-                post.RetweetedBy = status.User.ScreenName;
-                post.RetweetedByUserId = status.User.Id;
-                post.IsMe = post.RetweetedBy.ToLower().Equals(this._uname);
-            }
-            else
-            {
-                post.CreatedAt = MyCommon.DateTimeParse(status.CreatedAt);
-                // 本文
-                post.TextFromApi = status.Text;
-                entities = status.Entities;
-                // Source取得（htmlの場合は、中身を取り出し）
-                post.Source = status.Source;
-                {
-                    long t;
-                    long.TryParse(status.InReplyToStatusId, out t);
-                    post.InReplyToStatusId = t;
-                }
-                post.InReplyToUser = status.InReplyToScreenName;
-                {
-                    long t;
-                    long.TryParse(status.InReplyToUserId, out t);
-                    post.InReplyToUserId = t;
-                }
-
-                if (status.Geo != null)
-                {
-                    post.PostGeo = new PostClass.StatusGeo
-                    {
-                        Lat = status.Geo.Coordinates[0],
-                        Lng = status.Geo.Coordinates[1]
-                    };
-                }
-
-                // 以下、ユーザー情報
-                var user = status.User;
-                if (user.ScreenName == null)
-                {
-                    return null;
-                }
-                post.UserId = user.Id;
-                post.ScreenName = user.ScreenName;
-                post.Nickname = user.Name.Trim();
-                post.ImageUrl = user.ProfileImageUrl;
-                post.IsProtect = user.Protected;
-                post.IsMe = post.ScreenName.ToLower().Equals(this._uname);
-
-                // 幻覚fav対策
-                TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
-                post.IsFav = tc.Contains(post.StatusId) && TabInformations.GetInstance().Item(post.StatusId).IsFav;
-            }
-            // HTMLに整形
-            {
-                var t = post.TextFromApi;
-                post.Text = this.CreateHtmlAnchor(ref t, post.ReplyToList, entities, post.Media);
-                post.TextFromApi = t;
-            }
-            post.TextFromApi = this.ReplaceTextFromApi(post.TextFromApi, entities);
-            post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
-            post.TextFromApi = post.TextFromApi.Replace("<3", "♡");
-            // Source整形
-            this.CreateSource(ref post);
-            post.IsReply = post.ReplyToList.Contains(this._uname);
-            post.IsExcludeReply = false;
-            if (post.IsMe)
-            {
-                post.IsOwl = false;
-            }
-            else
-            {
-                if (this._followerIds.Count > 0)
-                {
-                    post.IsOwl = !this._followerIds.Contains(post.UserId);
-                }
-            }
-            post.IsDm = false;
-            return post;
-        }
-
-        private string CreatePostsFromJson(string content, WorkerType gType, TabClass tab, bool read, int count, ref long minimumId)
-        {
-            List<Status> items = null;
-            try
-            {
-                items = D.CreateDataFromJson<List<Status>>(content);
-            }
-            catch (SerializationException ex)
-            {
-                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
-                return "Json Parse Error(DataContractJsonSerializer)";
-            }
-            catch (Exception ex)
-            {
-                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
-                return "Invalid Json!";
-            }
-
-            foreach (var status in items)
-            {
-                PostClass post = null;
-                post = this.CreatePostsFromStatusData(status);
-                if (post == null)
-                {
-                    continue;
-                }
-
-                if (minimumId > post.StatusId)
-                {
-                    minimumId = post.StatusId;
-                }
-                // 二重取得回避
-                lock (this._lockObj)
-                {
-                    if (tab == null)
-                    {
-                        if (TabInformations.GetInstance().ContainsKey(post.StatusId))
-                        {
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        if (TabInformations.GetInstance().ContainsKey(post.StatusId, tab.TabName))
-                        {
-                            continue;
-                        }
-                    }
-                }
-
-                // RT禁止ユーザーによるもの
-                if (post.RetweetedId > 0 && this.noRTIds.Contains(post.RetweetedByUserId))
-                {
-                    continue;
-                }
-
-                post.IsRead = read;
-                if (post.IsMe && !read && this._readOwnPost)
-                {
-                    post.IsRead = true;
-                }
-
-                if (tab != null)
-                {
-                    post.RelTabName = tab.TabName;
-                }
-                // 非同期アイコン取得＆StatusDictionaryに追加
-                TabInformations.GetInstance().AddPost(post);
-            }
-            return string.Empty;
-        }
-
-        private string CreatePostsFromPhoenixSearch(string content, WorkerType gType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
-        {
-            SearchResult items = null;
-            try
-            {
-                items = D.CreateDataFromJson<SearchResult>(content);
-            }
-            catch (SerializationException ex)
-            {
-                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
-                return "Json Parse Error(DataContractJsonSerializer)";
-            }
-            catch (Exception ex)
-            {
-                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
-                return "Invalid Json!";
-            }
-
-            nextPageQuery = items.NextPage;
-
-            foreach (var status in items.Statuses)
-            {
-                PostClass post = this.CreatePostsFromStatusData(status);
-                if (post == null)
-                {
-                    continue;
-                }
-
-                if (minimumId > post.StatusId)
-                {
-                    minimumId = post.StatusId;
-                }
-                // 二重取得回避
-                lock (this._lockObj)
-                {
-                    if (tab == null)
-                    {
-                        if (TabInformations.GetInstance().ContainsKey(post.StatusId))
-                        {
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        if (TabInformations.GetInstance().ContainsKey(post.StatusId, tab.TabName))
-                        {
-                            continue;
-                        }
-                    }
-                }
-
-                post.IsRead = read;
-                if (post.IsMe && !read && this._readOwnPost)
-                {
-                    post.IsRead = true;
-                }
-
-                if (tab != null)
-                {
-                    post.RelTabName = tab.TabName;
-                }
-                // 非同期アイコン取得＆StatusDictionaryに追加
-                TabInformations.GetInstance().AddPost(post);
-            }
-
-            return string.IsNullOrEmpty(items.ErrMsg) ? string.Empty : "Err:" + items.ErrMsg;
-        }
-
         public string GetListStatus(bool read, TabClass tab, bool more, bool startup)
         {
             if (MyCommon.IsEnding)
@@ -2366,25 +1983,6 @@ namespace Hoehoe
             return ret;
         }
 
-        private PostClass CheckReplyToPost(List<PostClass> relPosts)
-        {
-            PostClass tmpPost = relPosts[0];
-            PostClass lastPost = null;
-            while (tmpPost != null)
-            {
-                if (tmpPost.InReplyToStatusId == 0)
-                {
-                    return null;
-                }
-                lastPost = tmpPost;
-                var replyToPost = from p in relPosts
-                                  where p.StatusId == tmpPost.InReplyToStatusId
-                                  select p;
-                tmpPost = replyToPost.FirstOrDefault();
-            }
-            return lastPost;
-        }
-
         public string GetRelatedResult(bool read, TabClass tab)
         {
             string rslt = string.Empty;
@@ -2420,162 +2018,6 @@ namespace Hoehoe
             } while (tmpPost != null);
             relPosts.ForEach(p => TabInformations.GetInstance().AddPost(p));
             return rslt;
-        }
-
-        private string GetRelatedResultsApi(bool read, PostClass post, TabClass tab, List<PostClass> relatedPosts)
-        {
-            if (Twitter.AccountState != AccountState.Valid)
-            {
-                return string.Empty;
-            }
-
-            if (MyCommon.IsEnding)
-            {
-                return string.Empty;
-            }
-
-            HttpStatusCode res = default(HttpStatusCode);
-            string content = string.Empty;
-            try
-            {
-                if (post.RetweetedId > 0)
-                {
-                    res = this._twCon.GetRelatedResults(post.RetweetedId, ref content);
-                }
-                else
-                {
-                    res = this._twCon.GetRelatedResults(post.StatusId, ref content);
-                }
-            }
-            catch (Exception ex)
-            {
-                return "Err:" + ex.Message;
-            }
-            switch (res)
-            {
-                case HttpStatusCode.OK:
-                    Twitter.AccountState = AccountState.Valid;
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = AccountState.Invalid;
-                    return Hoehoe.Properties.Resources.Unauthorized;
-                case HttpStatusCode.BadRequest:
-                    return "Err:API Limits?";
-                default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
-            }
-
-            List<RelatedResult> items = null;
-            try
-            {
-                items = D.CreateDataFromJson<List<RelatedResult>>(content);
-            }
-            catch (SerializationException ex)
-            {
-                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
-                return "Json Parse Error(DataContractJsonSerializer)";
-            }
-            catch (Exception ex)
-            {
-                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
-                return "Invalid Json!";
-            }
-
-            PostClass targetItem = post;
-            if (targetItem == null)
-            {
-                return string.Empty;
-            }
-            else
-            {
-                targetItem = targetItem.Copy();
-            }
-            targetItem.RelTabName = tab.TabName;
-            TabInformations.GetInstance().AddPost(targetItem);
-            PostClass replyToItem = null;
-            string replyToUserName = targetItem.InReplyToUser;
-            if (targetItem.InReplyToStatusId > 0 && TabInformations.GetInstance().Item(targetItem.InReplyToStatusId) != null)
-            {
-                replyToItem = TabInformations.GetInstance().Item(targetItem.InReplyToStatusId).Copy();
-                replyToItem.IsRead = read;
-                if (replyToItem.IsMe && !read && this._readOwnPost)
-                {
-                    replyToItem.IsRead = true;
-                }
-                replyToItem.RelTabName = tab.TabName;
-            }
-
-            bool replyAdded = false;
-            foreach (var relatedData in items)
-            {
-                foreach (var result in relatedData.Results)
-                {
-                    PostClass item = this.CreatePostsFromStatusData(result.Status);
-                    if (item == null)
-                    {
-                        continue;
-                    }
-                    if (targetItem.InReplyToStatusId == item.StatusId)
-                    {
-                        replyToItem = null;
-                        replyAdded = true;
-                    }
-                    item.IsRead = read;
-                    if (item.IsMe && !read && this._readOwnPost)
-                    {
-                        item.IsRead = true;
-                    }
-                    if (tab != null)
-                    {
-                        item.RelTabName = tab.TabName;
-                    }
-                    // 非同期アイコン取得＆StatusDictionaryに追加
-                    relatedPosts.Add(item);
-                }
-            }
-            if (replyToItem != null)
-            {
-                relatedPosts.Add(replyToItem);
-            }
-            else if (targetItem.InReplyToStatusId > 0 && !replyAdded)
-            {
-                PostClass p = null;
-                string rslt = this.GetStatusApi(read, targetItem.InReplyToStatusId, ref p);
-                if (string.IsNullOrEmpty(rslt))
-                {
-                    p.IsRead = read;
-                    p.RelTabName = tab.TabName;
-                    relatedPosts.Add(p);
-                }
-                return rslt;
-            }
-
-            // MRTとかに対応のためツイート内にあるツイートを指すURLを取り込む
-            MatchCollection ma = Regex.Matches(tab.RelationTargetPost.Text, "title=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/(?<StatusId>[0-9]+))\"");
-            foreach (Match m in ma)
-            {
-                long statusId;
-                if (long.TryParse(m.Groups["StatusId"].Value, out statusId))
-                {
-                    PostClass p = null;
-                    PostClass p2 = TabInformations.GetInstance().Item(statusId);
-                    if (p2 == null)
-                    {
-                        this.GetStatusApi(read, statusId, ref p);
-                    }
-                    else
-                    {
-                        p = p2.Copy();
-                    }
-                    if (p != null)
-                    {
-                        p.IsRead = read;
-                        p.RelTabName = tab.TabName;
-                        relatedPosts.Add(p);
-                    }
-                }
-            }
-            return string.Empty;
         }
 
         public string GetSearch(bool read, TabClass tab, bool more)
@@ -2799,140 +2241,6 @@ namespace Hoehoe
             tab.OldestId = oid;
             tab.NextPageQuery = npq;
             return ret;
-        }
-
-        private string CreateDirectMessagesFromJson(string content, WorkerType gType, bool read)
-        {
-            List<Directmessage> item = null;
-            try
-            {
-                if (gType == WorkerType.UserStream)
-                {
-                    List<DirectmessageEvent> itm = D.CreateDataFromJson<List<DirectmessageEvent>>(content);
-                    item = new List<Directmessage>();
-                    foreach (var dat in itm)
-                    {
-                        item.Add(dat.Directmessage);
-                    }
-                }
-                else
-                {
-                    item = D.CreateDataFromJson<List<Directmessage>>(content);
-                }
-            }
-            catch (SerializationException ex)
-            {
-                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
-                return "Json Parse Error(DataContractJsonSerializer)";
-            }
-            catch (Exception ex)
-            {
-                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
-                return "Invalid Json!";
-            }
-
-            foreach (var message in item)
-            {
-                PostClass post = new PostClass();
-                try
-                {
-                    post.StatusId = message.Id;
-                    if (gType != WorkerType.UserStream)
-                    {
-                        if (gType == WorkerType.DirectMessegeRcv)
-                        {
-                            if (this._minDirectmessage > post.StatusId)
-                            {
-                                this._minDirectmessage = post.StatusId;
-                            }
-                        }
-                        else
-                        {
-                            if (this._minDirectmessageSent > post.StatusId)
-                            {
-                                this._minDirectmessageSent = post.StatusId;
-                            }
-                        }
-                    }
-
-                    // 二重取得回避
-                    lock (this._lockObj)
-                    {
-                        if (TabInformations.GetInstance().GetTabByType(TabUsageType.DirectMessage).Contains(post.StatusId))
-                        {
-                            continue;
-                        }
-                    }
-                    // sender_id
-                    // recipient_id
-                    post.CreatedAt = MyCommon.DateTimeParse(message.CreatedAt);
-                    // 本文
-                    post.TextFromApi = message.Text;
-                    // HTMLに整形
-                    post.Text = this.CreateHtmlAnchor(post.TextFromApi, post.ReplyToList, post.Media);
-                    post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
-                    post.TextFromApi = post.TextFromApi.Replace("<3", "♡");
-                    post.IsFav = false;
-
-                    // 以下、ユーザー情報
-                    User user = null;
-                    if (gType == WorkerType.UserStream)
-                    {
-                        if (this._twCon.AuthenticatedUsername.Equals(message.Recipient.ScreenName, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            user = message.Sender;
-                            post.IsMe = false;
-                            post.IsOwl = true;
-                        }
-                        else
-                        {
-                            user = message.Recipient;
-                            post.IsMe = true;
-                            post.IsOwl = false;
-                        }
-                    }
-                    else
-                    {
-                        if (gType == WorkerType.DirectMessegeRcv)
-                        {
-                            user = message.Sender;
-                            post.IsMe = false;
-                            post.IsOwl = true;
-                        }
-                        else
-                        {
-                            user = message.Recipient;
-                            post.IsMe = true;
-                            post.IsOwl = false;
-                        }
-                    }
-
-                    post.UserId = user.Id;
-                    post.ScreenName = user.ScreenName;
-                    post.Nickname = user.Name.Trim();
-                    post.ImageUrl = user.ProfileImageUrl;
-                    post.IsProtect = user.Protected;
-                }
-                catch (Exception ex)
-                {
-                    MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
-                    MessageBox.Show("Parse Error(CreateDirectMessagesFromJson)");
-                    continue;
-                }
-
-                post.IsRead = read;
-                if (post.IsMe && !read && this._readOwnPost)
-                {
-                    post.IsRead = true;
-                }
-                post.IsReply = false;
-                post.IsExcludeReply = false;
-                post.IsDm = true;
-
-                TabInformations.GetInstance().AddPost(post);
-            }
-
-            return string.Empty;
         }
 
         public string GetDirectMessageApi(bool read, WorkerType gType, bool more)
@@ -3196,35 +2504,6 @@ namespace Hoehoe
 
             return string.Empty;
         }
-
-        private string ReplaceTextFromApi(string text, Entities entities)
-        {
-            if (entities != null)
-            {
-                if (entities.Urls != null)
-                {
-                    foreach (var m in entities.Urls)
-                    {
-                        if (!string.IsNullOrEmpty(m.DisplayUrl))
-                        {
-                            text = text.Replace(m.Url, m.DisplayUrl);
-                        }
-                    }
-                }
-                if (entities.Media != null)
-                {
-                    foreach (var m in entities.Media)
-                    {
-                        if (!string.IsNullOrEmpty(m.DisplayUrl))
-                        {
-                            text = text.Replace(m.Url, m.DisplayUrl);
-                        }
-                    }
-                }
-            }
-            return text;
-        }
-
         public string GetFollowersApi()
         {
             if (MyCommon.IsEnding)
@@ -3253,57 +2532,6 @@ namespace Hoehoe
             return string.Empty;
         }
 
-        private string FollowerApi(ref long cursor)
-        {
-            if (Twitter.AccountState != AccountState.Valid)
-            {
-                return string.Empty;
-            }
-
-            HttpStatusCode res = default(HttpStatusCode);
-            string content = string.Empty;
-            try
-            {
-                res = this._twCon.FollowerIds(cursor, ref content);
-            }
-            catch (Exception ex)
-            {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
-            }
-
-            switch (res)
-            {
-                case HttpStatusCode.OK:
-                    Twitter.AccountState = AccountState.Valid;
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = AccountState.Invalid;
-                    return Hoehoe.Properties.Resources.Unauthorized;
-                case HttpStatusCode.BadRequest:
-                    return "Err:API Limits?";
-                default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
-            }
-
-            try
-            {
-                var followers = D.CreateDataFromJson<Ids>(content);
-                this._followerIds.AddRange(followers.Id);
-                cursor = followers.NextCursor;
-                return string.Empty;
-            }
-            catch (SerializationException ex)
-            {
-                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
-                return "Err:Json Parse Error(DataContractJsonSerializer)";
-            }
-            catch (Exception ex)
-            {
-                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
-                return "Err:Invalid Json!";
-            }
-        }
-
         public string GetNoRetweetIdsApi()
         {
             string newVariable = string.Empty;
@@ -3329,57 +2557,6 @@ namespace Hoehoe
 
             this._getNoRetweetResult = true;
             return newVariable;
-        }
-
-        private string NoRetweetApi(ref long cursor)
-        {
-            if (Twitter.AccountState != AccountState.Valid)
-            {
-                return string.Empty;
-            }
-
-            HttpStatusCode res = default(HttpStatusCode);
-            string content = string.Empty;
-            try
-            {
-                res = this._twCon.NoRetweetIds(cursor, ref content);
-            }
-            catch (Exception ex)
-            {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
-            }
-
-            switch (res)
-            {
-                case HttpStatusCode.OK:
-                    Twitter.AccountState = AccountState.Valid;
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    Twitter.AccountState = AccountState.Invalid;
-                    return Hoehoe.Properties.Resources.Unauthorized;
-                case HttpStatusCode.BadRequest:
-                    return "Err:API Limits?";
-                default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
-            }
-
-            try
-            {
-                var ids = D.CreateDataFromJson<long[]>(content);
-                this.noRTIds.AddRange(ids);
-                cursor = 0; // 0より小さければ何でも良い。
-                return string.Empty;
-            }
-            catch (SerializationException ex)
-            {
-                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
-                return "Err:Json Parse Error(DataContractJsonSerializer)";
-            }
-            catch (Exception ex)
-            {
-                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
-                return "Err:Invalid Json!";
-            }
         }
 
         public string ConfigurationApi()
@@ -4041,47 +3218,6 @@ namespace Hoehoe
             return ret;
         }
 
-        /// <summary>
-        /// Source整形
-        /// </summary>
-        /// <param name="post"></param>
-        private void CreateSource(ref PostClass post)
-        {
-            if (post.Source.StartsWith("<"))
-            {
-                if (!post.Source.Contains("</a>"))
-                {
-                    post.Source += "</a>";
-                }
-                Match mS = Regex.Match(post.Source, ">(?<source>.+)<");
-                if (mS.Success)
-                {
-                    post.SourceHtml = string.Copy(ShortUrl.Resolve(this.PreProcessUrl(post.Source), false));
-                    post.Source = HttpUtility.HtmlDecode(mS.Result("${source}"));
-                }
-                else
-                {
-                    post.Source = string.Empty;
-                    post.SourceHtml = string.Empty;
-                }
-            }
-            else
-            {
-                if (post.Source == "web")
-                {
-                    post.SourceHtml = Hoehoe.Properties.Resources.WebSourceString;
-                }
-                else if (post.Source == "Keitai Mail")
-                {
-                    post.SourceHtml = Hoehoe.Properties.Resources.KeitaiMailSourceString;
-                }
-                else
-                {
-                    post.SourceHtml = string.Copy(post.Source);
-                }
-            }
-        }
-
         public bool GetInfoApi(ApiInfo info)
         {
             if (Twitter.AccountState != AccountState.Valid)
@@ -4208,16 +3344,934 @@ namespace Hoehoe
             return hashArray;
         }
 
+        public EventType EventNameToEventType(string eventName)
+        {
+            return (from tbl in this.EventTable where tbl.Name.Equals(eventName) select tbl.Type).FirstOrDefault();
+        }
+
+        public void StartUserStream()
+        {
+            if (this.userStream != null)
+            {
+                this.StopUserStream();
+            }
+            this.userStream = new TwitterUserstream(this._twCon);
+            this.userStream.Start(this.AllAtReply, this.TrackWord);
+        }
+
+        public void StopUserStream()
+        {
+            if (this.userStream != null)
+            {
+                this.userStream.Dispose();
+            }
+            this.userStream = null;
+            if (!MyCommon.IsEnding)
+            {
+                if (this.UserStreamStopped != null)
+                {
+                    this.UserStreamStopped();
+                }
+            }
+        }
+
+        public void ReconnectUserStream()
+        {
+            if (this.userStream != null)
+            {
+                this.StartUserStream();
+            }
+        }
+
+        // このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // IDisposable
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.StopUserStream();
+                }
+            }
+            this.disposedValue = true;
+        }
+
+        private string GetErrorMessageJson(string content)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(content))
+                {
+                    using (var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(content), XmlDictionaryReaderQuotas.Max))
+                    {
+                        XElement xElm = XElement.Load(jsonReader);
+                        return xElm.Element("error") != null ? xElm.Element("error").Value : string.Empty;
+                    }
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+
+        private string GetPlainText(string orgData)
+        {
+            return HttpUtility.HtmlDecode(Regex.Replace(orgData, "(?<tagStart><a [^>]+>)(?<text>[^<]+)(?<tagEnd></a>)", "${text}"));
+        }
+
+        // htmlの簡易サニタイズ(詳細表示に不要なタグの除去)
+        private string SanitizeHtml(string orgdata)
+        {
+            string retdata = orgdata;
+            retdata = Regex.Replace(retdata, "<(script|object|applet|image|frameset|fieldset|legend|style).*" + "</(script|object|applet|image|frameset|fieldset|legend|style)>", string.Empty, RegexOptions.IgnoreCase);
+            retdata = Regex.Replace(retdata, "<(frame|link|iframe|img)>", string.Empty, RegexOptions.IgnoreCase);
+            return retdata;
+        }
+
+        private string AdjustHtml(string orgData)
+        {
+            string retStr = orgData;
+            retStr = Regex.Replace(retStr, "<a [^>]*href=\"/", "<a href=\"" + this._protocol + "twitter.com/");
+            retStr = retStr.Replace("<a href=", "<a target=\"_self\" href=");
+            retStr = retStr.Replace("\r\n", "<br>");
+
+            // 半角スペースを置換(Thanks @anis774)
+            bool ret = false;
+            do
+            {
+                ret = this.EscapeSpace(ref retStr);
+            }
+            while (!ret);
+
+            return this.SanitizeHtml(retStr);
+        }
+
+        private bool EscapeSpace(ref string html)
+        {
+            // 半角スペースを置換(Thanks @anis774)
+            bool isTag = false;
+            for (int i = 0; i < html.Length; i++)
+            {
+                if (html[i] == '<')
+                {
+                    isTag = true;
+                }
+
+                if (html[i] == '>')
+                {
+                    isTag = false;
+                }
+
+                if ((!isTag) && (html[i] == ' '))
+                {
+                    html = html.Remove(i, 1);
+                    html = html.Insert(i, "&nbsp;");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool IsPostRestricted(Status status)
+        {
+            PostInfo currentPost = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
+            currentPost.CreatedAt = status.CreatedAt;
+            currentPost.Id = status.IdStr;
+            if (status.Text == null)
+            {
+                currentPost.Text = string.Empty;
+            }
+            else
+            {
+                currentPost.Text = status.Text;
+            }
+            currentPost.UserId = status.User.IdStr;
+
+            if (currentPost.Equals(this._prevPostInfo))
+            {
+                return true;
+            }
+            this._prevPostInfo.CreatedAt = currentPost.CreatedAt;
+            this._prevPostInfo.Id = currentPost.Id;
+            this._prevPostInfo.Text = currentPost.Text;
+            this._prevPostInfo.UserId = currentPost.UserId;
+
+            return false;
+        }
+
+        private static AccountState _accountState = AccountState.Valid;
+
+        private PostClass CreatePostsFromStatusData(Status status)
+        {
+            PostClass post = new PostClass();
+            Entities entities = null;
+            post.StatusId = status.Id;
+            if (status.RetweetedStatus != null)
+            {
+                RetweetedStatus retweeted = status.RetweetedStatus;
+                post.CreatedAt = MyCommon.DateTimeParse(retweeted.CreatedAt);
+                // Id
+                post.RetweetedId = retweeted.Id;
+                // 本文
+                post.TextFromApi = retweeted.Text;
+                entities = retweeted.Entities;
+                // Source取得（htmlの場合は、中身を取り出し）
+                post.Source = retweeted.Source;
+                // Reply先
+                {
+                    long t;
+                    long.TryParse(retweeted.InReplyToStatusId, out t);
+                    post.InReplyToStatusId = t;
+                }
+                post.InReplyToUser = retweeted.InReplyToScreenName;
+                {
+                    long t;
+                    long.TryParse(status.InReplyToUserId, out t);
+                    post.InReplyToUserId = t;
+                }
+
+                // 幻覚fav対策
+                TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
+                post.IsFav = tc.Contains(post.RetweetedId);
+
+                if (retweeted.Geo != null)
+                {
+                    post.PostGeo = new PostClass.StatusGeo
+                    {
+                        Lat = retweeted.Geo.Coordinates[0],
+                        Lng = retweeted.Geo.Coordinates[1]
+                    };
+                }
+
+                // 以下、ユーザー情報
+                var user = retweeted.User;
+                if (user.ScreenName == null || status.User.ScreenName == null)
+                {
+                    return null;
+                }
+                post.UserId = user.Id;
+                post.ScreenName = user.ScreenName;
+                post.Nickname = user.Name.Trim();
+                post.ImageUrl = user.ProfileImageUrl;
+                post.IsProtect = user.Protected;
+                // Retweetした人
+                post.RetweetedBy = status.User.ScreenName;
+                post.RetweetedByUserId = status.User.Id;
+                post.IsMe = post.RetweetedBy.ToLower().Equals(this._uname);
+            }
+            else
+            {
+                post.CreatedAt = MyCommon.DateTimeParse(status.CreatedAt);
+                // 本文
+                post.TextFromApi = status.Text;
+                entities = status.Entities;
+                // Source取得（htmlの場合は、中身を取り出し）
+                post.Source = status.Source;
+                {
+                    long t;
+                    long.TryParse(status.InReplyToStatusId, out t);
+                    post.InReplyToStatusId = t;
+                }
+                post.InReplyToUser = status.InReplyToScreenName;
+                {
+                    long t;
+                    long.TryParse(status.InReplyToUserId, out t);
+                    post.InReplyToUserId = t;
+                }
+
+                if (status.Geo != null)
+                {
+                    post.PostGeo = new PostClass.StatusGeo
+                    {
+                        Lat = status.Geo.Coordinates[0],
+                        Lng = status.Geo.Coordinates[1]
+                    };
+                }
+
+                // 以下、ユーザー情報
+                var user = status.User;
+                if (user.ScreenName == null)
+                {
+                    return null;
+                }
+                post.UserId = user.Id;
+                post.ScreenName = user.ScreenName;
+                post.Nickname = user.Name.Trim();
+                post.ImageUrl = user.ProfileImageUrl;
+                post.IsProtect = user.Protected;
+                post.IsMe = post.ScreenName.ToLower().Equals(this._uname);
+
+                // 幻覚fav対策
+                TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
+                post.IsFav = tc.Contains(post.StatusId) && TabInformations.GetInstance().Item(post.StatusId).IsFav;
+            }
+            // HTMLに整形
+            {
+                var t = post.TextFromApi;
+                post.Text = this.CreateHtmlAnchor(ref t, post.ReplyToList, entities, post.Media);
+                post.TextFromApi = t;
+            }
+            post.TextFromApi = this.ReplaceTextFromApi(post.TextFromApi, entities);
+            post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
+            post.TextFromApi = post.TextFromApi.Replace("<3", "♡");
+            // Source整形
+            this.CreateSource(ref post);
+            post.IsReply = post.ReplyToList.Contains(this._uname);
+            post.IsExcludeReply = false;
+            if (post.IsMe)
+            {
+                post.IsOwl = false;
+            }
+            else
+            {
+                if (this._followerIds.Count > 0)
+                {
+                    post.IsOwl = !this._followerIds.Contains(post.UserId);
+                }
+            }
+            post.IsDm = false;
+            return post;
+        }
+
+        private string CreatePostsFromJson(string content, WorkerType gType, TabClass tab, bool read, int count, ref long minimumId)
+        {
+            List<Status> items = null;
+            try
+            {
+                items = D.CreateDataFromJson<List<Status>>(content);
+            }
+            catch (SerializationException ex)
+            {
+                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
+                return "Json Parse Error(DataContractJsonSerializer)";
+            }
+            catch (Exception ex)
+            {
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
+                return "Invalid Json!";
+            }
+
+            foreach (var status in items)
+            {
+                PostClass post = null;
+                post = this.CreatePostsFromStatusData(status);
+                if (post == null)
+                {
+                    continue;
+                }
+
+                if (minimumId > post.StatusId)
+                {
+                    minimumId = post.StatusId;
+                }
+                // 二重取得回避
+                lock (this._lockObj)
+                {
+                    if (tab == null)
+                    {
+                        if (TabInformations.GetInstance().ContainsKey(post.StatusId))
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (TabInformations.GetInstance().ContainsKey(post.StatusId, tab.TabName))
+                        {
+                            continue;
+                        }
+                    }
+                }
+
+                // RT禁止ユーザーによるもの
+                if (post.RetweetedId > 0 && this.noRTIds.Contains(post.RetweetedByUserId))
+                {
+                    continue;
+                }
+
+                post.IsRead = read;
+                if (post.IsMe && !read && this._readOwnPost)
+                {
+                    post.IsRead = true;
+                }
+
+                if (tab != null)
+                {
+                    post.RelTabName = tab.TabName;
+                }
+                // 非同期アイコン取得＆StatusDictionaryに追加
+                TabInformations.GetInstance().AddPost(post);
+            }
+            return string.Empty;
+        }
+
+        private string CreatePostsFromPhoenixSearch(string content, WorkerType gType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
+        {
+            SearchResult items = null;
+            try
+            {
+                items = D.CreateDataFromJson<SearchResult>(content);
+            }
+            catch (SerializationException ex)
+            {
+                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
+                return "Json Parse Error(DataContractJsonSerializer)";
+            }
+            catch (Exception ex)
+            {
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
+                return "Invalid Json!";
+            }
+
+            nextPageQuery = items.NextPage;
+
+            foreach (var status in items.Statuses)
+            {
+                PostClass post = this.CreatePostsFromStatusData(status);
+                if (post == null)
+                {
+                    continue;
+                }
+
+                if (minimumId > post.StatusId)
+                {
+                    minimumId = post.StatusId;
+                }
+                // 二重取得回避
+                lock (this._lockObj)
+                {
+                    if (tab == null)
+                    {
+                        if (TabInformations.GetInstance().ContainsKey(post.StatusId))
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (TabInformations.GetInstance().ContainsKey(post.StatusId, tab.TabName))
+                        {
+                            continue;
+                        }
+                    }
+                }
+
+                post.IsRead = read;
+                if (post.IsMe && !read && this._readOwnPost)
+                {
+                    post.IsRead = true;
+                }
+
+                if (tab != null)
+                {
+                    post.RelTabName = tab.TabName;
+                }
+                // 非同期アイコン取得＆StatusDictionaryに追加
+                TabInformations.GetInstance().AddPost(post);
+            }
+
+            return string.IsNullOrEmpty(items.ErrMsg) ? string.Empty : "Err:" + items.ErrMsg;
+        }
+
+        private PostClass CheckReplyToPost(List<PostClass> relPosts)
+        {
+            PostClass tmpPost = relPosts[0];
+            PostClass lastPost = null;
+            while (tmpPost != null)
+            {
+                if (tmpPost.InReplyToStatusId == 0)
+                {
+                    return null;
+                }
+                lastPost = tmpPost;
+                var replyToPost = from p in relPosts
+                                  where p.StatusId == tmpPost.InReplyToStatusId
+                                  select p;
+                tmpPost = replyToPost.FirstOrDefault();
+            }
+            return lastPost;
+        }
+
+        private string GetRelatedResultsApi(bool read, PostClass post, TabClass tab, List<PostClass> relatedPosts)
+        {
+            if (Twitter.AccountState != AccountState.Valid)
+            {
+                return string.Empty;
+            }
+
+            if (MyCommon.IsEnding)
+            {
+                return string.Empty;
+            }
+
+            HttpStatusCode res = default(HttpStatusCode);
+            string content = string.Empty;
+            try
+            {
+                if (post.RetweetedId > 0)
+                {
+                    res = this._twCon.GetRelatedResults(post.RetweetedId, ref content);
+                }
+                else
+                {
+                    res = this._twCon.GetRelatedResults(post.StatusId, ref content);
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Err:" + ex.Message;
+            }
+            switch (res)
+            {
+                case HttpStatusCode.OK:
+                    Twitter.AccountState = AccountState.Valid;
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    Twitter.AccountState = AccountState.Invalid;
+                    return Hoehoe.Properties.Resources.Unauthorized;
+                case HttpStatusCode.BadRequest:
+                    return "Err:API Limits?";
+                default:
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+            }
+
+            List<RelatedResult> items = null;
+            try
+            {
+                items = D.CreateDataFromJson<List<RelatedResult>>(content);
+            }
+            catch (SerializationException ex)
+            {
+                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
+                return "Json Parse Error(DataContractJsonSerializer)";
+            }
+            catch (Exception ex)
+            {
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
+                return "Invalid Json!";
+            }
+
+            PostClass targetItem = post;
+            if (targetItem == null)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                targetItem = targetItem.Copy();
+            }
+            targetItem.RelTabName = tab.TabName;
+            TabInformations.GetInstance().AddPost(targetItem);
+            PostClass replyToItem = null;
+            string replyToUserName = targetItem.InReplyToUser;
+            if (targetItem.InReplyToStatusId > 0 && TabInformations.GetInstance().Item(targetItem.InReplyToStatusId) != null)
+            {
+                replyToItem = TabInformations.GetInstance().Item(targetItem.InReplyToStatusId).Copy();
+                replyToItem.IsRead = read;
+                if (replyToItem.IsMe && !read && this._readOwnPost)
+                {
+                    replyToItem.IsRead = true;
+                }
+                replyToItem.RelTabName = tab.TabName;
+            }
+
+            bool replyAdded = false;
+            foreach (var relatedData in items)
+            {
+                foreach (var result in relatedData.Results)
+                {
+                    PostClass item = this.CreatePostsFromStatusData(result.Status);
+                    if (item == null)
+                    {
+                        continue;
+                    }
+                    if (targetItem.InReplyToStatusId == item.StatusId)
+                    {
+                        replyToItem = null;
+                        replyAdded = true;
+                    }
+                    item.IsRead = read;
+                    if (item.IsMe && !read && this._readOwnPost)
+                    {
+                        item.IsRead = true;
+                    }
+                    if (tab != null)
+                    {
+                        item.RelTabName = tab.TabName;
+                    }
+                    // 非同期アイコン取得＆StatusDictionaryに追加
+                    relatedPosts.Add(item);
+                }
+            }
+            if (replyToItem != null)
+            {
+                relatedPosts.Add(replyToItem);
+            }
+            else if (targetItem.InReplyToStatusId > 0 && !replyAdded)
+            {
+                PostClass p = null;
+                string rslt = this.GetStatusApi(read, targetItem.InReplyToStatusId, ref p);
+                if (string.IsNullOrEmpty(rslt))
+                {
+                    p.IsRead = read;
+                    p.RelTabName = tab.TabName;
+                    relatedPosts.Add(p);
+                }
+                return rslt;
+            }
+
+            // MRTとかに対応のためツイート内にあるツイートを指すURLを取り込む
+            MatchCollection ma = Regex.Matches(tab.RelationTargetPost.Text, "title=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/(?<StatusId>[0-9]+))\"");
+            foreach (Match m in ma)
+            {
+                long statusId;
+                if (long.TryParse(m.Groups["StatusId"].Value, out statusId))
+                {
+                    PostClass p = null;
+                    PostClass p2 = TabInformations.GetInstance().Item(statusId);
+                    if (p2 == null)
+                    {
+                        this.GetStatusApi(read, statusId, ref p);
+                    }
+                    else
+                    {
+                        p = p2.Copy();
+                    }
+                    if (p != null)
+                    {
+                        p.IsRead = read;
+                        p.RelTabName = tab.TabName;
+                        relatedPosts.Add(p);
+                    }
+                }
+            }
+            return string.Empty;
+        }
+
+        private string CreateDirectMessagesFromJson(string content, WorkerType gType, bool read)
+        {
+            List<Directmessage> item = null;
+            try
+            {
+                if (gType == WorkerType.UserStream)
+                {
+                    List<DirectmessageEvent> itm = D.CreateDataFromJson<List<DirectmessageEvent>>(content);
+                    item = new List<Directmessage>();
+                    foreach (var dat in itm)
+                    {
+                        item.Add(dat.Directmessage);
+                    }
+                }
+                else
+                {
+                    item = D.CreateDataFromJson<List<Directmessage>>(content);
+                }
+            }
+            catch (SerializationException ex)
+            {
+                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
+                return "Json Parse Error(DataContractJsonSerializer)";
+            }
+            catch (Exception ex)
+            {
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
+                return "Invalid Json!";
+            }
+
+            foreach (var message in item)
+            {
+                PostClass post = new PostClass();
+                try
+                {
+                    post.StatusId = message.Id;
+                    if (gType != WorkerType.UserStream)
+                    {
+                        if (gType == WorkerType.DirectMessegeRcv)
+                        {
+                            if (this._minDirectmessage > post.StatusId)
+                            {
+                                this._minDirectmessage = post.StatusId;
+                            }
+                        }
+                        else
+                        {
+                            if (this._minDirectmessageSent > post.StatusId)
+                            {
+                                this._minDirectmessageSent = post.StatusId;
+                            }
+                        }
+                    }
+
+                    // 二重取得回避
+                    lock (this._lockObj)
+                    {
+                        if (TabInformations.GetInstance().GetTabByType(TabUsageType.DirectMessage).Contains(post.StatusId))
+                        {
+                            continue;
+                        }
+                    }
+                    // sender_id
+                    // recipient_id
+                    post.CreatedAt = MyCommon.DateTimeParse(message.CreatedAt);
+                    // 本文
+                    post.TextFromApi = message.Text;
+                    // HTMLに整形
+                    post.Text = this.CreateHtmlAnchor(post.TextFromApi, post.ReplyToList, post.Media);
+                    post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
+                    post.TextFromApi = post.TextFromApi.Replace("<3", "♡");
+                    post.IsFav = false;
+
+                    // 以下、ユーザー情報
+                    User user = null;
+                    if (gType == WorkerType.UserStream)
+                    {
+                        if (this._twCon.AuthenticatedUsername.Equals(message.Recipient.ScreenName, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            user = message.Sender;
+                            post.IsMe = false;
+                            post.IsOwl = true;
+                        }
+                        else
+                        {
+                            user = message.Recipient;
+                            post.IsMe = true;
+                            post.IsOwl = false;
+                        }
+                    }
+                    else
+                    {
+                        if (gType == WorkerType.DirectMessegeRcv)
+                        {
+                            user = message.Sender;
+                            post.IsMe = false;
+                            post.IsOwl = true;
+                        }
+                        else
+                        {
+                            user = message.Recipient;
+                            post.IsMe = true;
+                            post.IsOwl = false;
+                        }
+                    }
+
+                    post.UserId = user.Id;
+                    post.ScreenName = user.ScreenName;
+                    post.Nickname = user.Name.Trim();
+                    post.ImageUrl = user.ProfileImageUrl;
+                    post.IsProtect = user.Protected;
+                }
+                catch (Exception ex)
+                {
+                    MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
+                    MessageBox.Show("Parse Error(CreateDirectMessagesFromJson)");
+                    continue;
+                }
+
+                post.IsRead = read;
+                if (post.IsMe && !read && this._readOwnPost)
+                {
+                    post.IsRead = true;
+                }
+                post.IsReply = false;
+                post.IsExcludeReply = false;
+                post.IsDm = true;
+
+                TabInformations.GetInstance().AddPost(post);
+            }
+
+            return string.Empty;
+        }
+
+        private string ReplaceTextFromApi(string text, Entities entities)
+        {
+            if (entities != null)
+            {
+                if (entities.Urls != null)
+                {
+                    foreach (var m in entities.Urls)
+                    {
+                        if (!string.IsNullOrEmpty(m.DisplayUrl))
+                        {
+                            text = text.Replace(m.Url, m.DisplayUrl);
+                        }
+                    }
+                }
+                if (entities.Media != null)
+                {
+                    foreach (var m in entities.Media)
+                    {
+                        if (!string.IsNullOrEmpty(m.DisplayUrl))
+                        {
+                            text = text.Replace(m.Url, m.DisplayUrl);
+                        }
+                    }
+                }
+            }
+            return text;
+        }
+
+        private string FollowerApi(ref long cursor)
+        {
+            if (Twitter.AccountState != AccountState.Valid)
+            {
+                return string.Empty;
+            }
+
+            HttpStatusCode res = default(HttpStatusCode);
+            string content = string.Empty;
+            try
+            {
+                res = this._twCon.FollowerIds(cursor, ref content);
+            }
+            catch (Exception ex)
+            {
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+            }
+
+            switch (res)
+            {
+                case HttpStatusCode.OK:
+                    Twitter.AccountState = AccountState.Valid;
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    Twitter.AccountState = AccountState.Invalid;
+                    return Hoehoe.Properties.Resources.Unauthorized;
+                case HttpStatusCode.BadRequest:
+                    return "Err:API Limits?";
+                default:
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+            }
+
+            try
+            {
+                var followers = D.CreateDataFromJson<Ids>(content);
+                this._followerIds.AddRange(followers.Id);
+                cursor = followers.NextCursor;
+                return string.Empty;
+            }
+            catch (SerializationException ex)
+            {
+                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
+                return "Err:Json Parse Error(DataContractJsonSerializer)";
+            }
+            catch (Exception ex)
+            {
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
+                return "Err:Invalid Json!";
+            }
+        }
+
+        private string NoRetweetApi(ref long cursor)
+        {
+            if (Twitter.AccountState != AccountState.Valid)
+            {
+                return string.Empty;
+            }
+
+            HttpStatusCode res = default(HttpStatusCode);
+            string content = string.Empty;
+            try
+            {
+                res = this._twCon.NoRetweetIds(cursor, ref content);
+            }
+            catch (Exception ex)
+            {
+                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+            }
+
+            switch (res)
+            {
+                case HttpStatusCode.OK:
+                    Twitter.AccountState = AccountState.Valid;
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    Twitter.AccountState = AccountState.Invalid;
+                    return Hoehoe.Properties.Resources.Unauthorized;
+                case HttpStatusCode.BadRequest:
+                    return "Err:API Limits?";
+                default:
+                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+            }
+
+            try
+            {
+                var ids = D.CreateDataFromJson<long[]>(content);
+                this.noRTIds.AddRange(ids);
+                cursor = 0; // 0より小さければ何でも良い。
+                return string.Empty;
+            }
+            catch (SerializationException ex)
+            {
+                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
+                return "Err:Json Parse Error(DataContractJsonSerializer)";
+            }
+            catch (Exception ex)
+            {
+                MyCommon.TraceOut(ex, System.Reflection.MethodInfo.GetCurrentMethod().Name + " " + content);
+                return "Err:Invalid Json!";
+            }
+        }
+
+        /// <summary>
+        /// Source整形
+        /// </summary>
+        /// <param name="post"></param>
+        private void CreateSource(ref PostClass post)
+        {
+            if (post.Source.StartsWith("<"))
+            {
+                if (!post.Source.Contains("</a>"))
+                {
+                    post.Source += "</a>";
+                }
+                Match mS = Regex.Match(post.Source, ">(?<source>.+)<");
+                if (mS.Success)
+                {
+                    post.SourceHtml = string.Copy(ShortUrl.Resolve(this.PreProcessUrl(post.Source), false));
+                    post.Source = HttpUtility.HtmlDecode(mS.Result("${source}"));
+                }
+                else
+                {
+                    post.Source = string.Empty;
+                    post.SourceHtml = string.Empty;
+                }
+            }
+            else
+            {
+                if (post.Source == "web")
+                {
+                    post.SourceHtml = Hoehoe.Properties.Resources.WebSourceString;
+                }
+                else if (post.Source == "Keitai Mail")
+                {
+                    post.SourceHtml = Hoehoe.Properties.Resources.KeitaiMailSourceString;
+                }
+                else
+                {
+                    post.SourceHtml = string.Copy(post.Source);
+                }
+            }
+        }
+
         private void Twitter_ApiInformationChanged(object sender, ApiInformationChangedEventArgs e)
         {
         }
 
         #region "UserStream"
-
-        public EventType EventNameToEventType(string eventName)
-        {
-            return (from tbl in this.EventTable where tbl.Name.Equals(eventName) select tbl.Type).FirstOrDefault();
-        }
 
         private void userStream_StatusArrived(string line)
         {
@@ -4486,66 +4540,8 @@ namespace Hoehoe
             get { return this.userStream == null ? false : this.userStream.Enabled; }
         }
 
-        public void StartUserStream()
-        {
-            if (this.userStream != null)
-            {
-                this.StopUserStream();
-            }
-            this.userStream = new TwitterUserstream(this._twCon);
-            this.userStream.Start(this.AllAtReply, this.TrackWord);
-        }
-
-        public void StopUserStream()
-        {
-            if (this.userStream != null)
-            {
-                this.userStream.Dispose();
-            }
-            this.userStream = null;
-            if (!MyCommon.IsEnding)
-            {
-                if (this.UserStreamStopped != null)
-                {
-                    this.UserStreamStopped();
-                }
-            }
-        }
-
-        public void ReconnectUserStream()
-        {
-            if (this.userStream != null)
-            {
-                this.StartUserStream();
-            }
-        }
-
         #endregion "UserStream"
 
-        #region "IDisposable Support"
-
-        // IDisposable
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposedValue)
-            {
-                if (disposing)
-                {
-                    this.StopUserStream();
-                }
-            }
-            this.disposedValue = true;
-        }
-
-        // このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
-        public void Dispose()
-        {
-            // このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion "IDisposable Support"
         public class FormattedEvent
         {
             public EventType Eventtype { get; set; }
@@ -4677,6 +4673,36 @@ namespace Hoehoe
                 this._streamThread.Start();
             }
 
+            // TODO: 上の Dispose(ByVal disposing As Boolean) にアンマネージ リソースを解放するコードがある場合にのみ、Finalize() をオーバーライドします。
+            // このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
+            public void Dispose()
+            {
+                // このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
+                this.Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            // IDisposable
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!this.disposedValue)
+                {
+                    if (disposing)
+                    {
+                        // TODO: マネージ状態を破棄します (マネージ オブジェクト)。
+                        this._streamActive = false;
+                        if (this._streamThread != null && this._streamThread.IsAlive)
+                        {
+                            this._streamThread.Abort();
+                        }
+                    }
+
+                    // TODO: アンマネージ リソース (アンマネージ オブジェクト) を解放し、下の Finalize() をオーバーライドします。
+                    // TODO: 大きなフィールドを null に設定します。
+                }
+                this.disposedValue = true;
+            }
+            
             private void UserStreamLoop()
             {
                 Stream st = null;
@@ -4807,40 +4833,6 @@ namespace Hoehoe
                 }
                 MyCommon.TraceOut("Stop:EndLoop");
             }
-
-            #region "IDisposable Support"
-
-            // IDisposable
-            protected virtual void Dispose(bool disposing)
-            {
-                if (!this.disposedValue)
-                {
-                    if (disposing)
-                    {
-                        // TODO: マネージ状態を破棄します (マネージ オブジェクト)。
-                        this._streamActive = false;
-                        if (this._streamThread != null && this._streamThread.IsAlive)
-                        {
-                            this._streamThread.Abort();
-                        }
-                    }
-
-                    // TODO: アンマネージ リソース (アンマネージ オブジェクト) を解放し、下の Finalize() をオーバーライドします。
-                    // TODO: 大きなフィールドを null に設定します。
-                }
-                this.disposedValue = true;
-            }
-
-            // TODO: 上の Dispose(ByVal disposing As Boolean) にアンマネージ リソースを解放するコードがある場合にのみ、Finalize() をオーバーライドします。
-            // このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
-            public void Dispose()
-            {
-                // このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
-                this.Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-
-            #endregion "IDisposable Support"
         }
     }
 }
