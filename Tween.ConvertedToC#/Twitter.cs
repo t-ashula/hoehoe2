@@ -68,7 +68,6 @@ namespace Hoehoe
         private const string QRY = "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\[\\]\\-_.,~]*[a-z0-9_&=#])?";
 
         public const string RgUrl = "(?<before>(?:[^\\\"':!=#]|^|\\:/))" + "(?<url>(?<protocol>https?://)" + URL_VALID_DOMAIN + PTH2 + QRY + ")";
-        public delegate void GetIconImageDelegate(PostClass post);
 
         private readonly object _lockObj = new object();
         private List<long> _followerIds = new List<long>();
@@ -104,8 +103,6 @@ namespace Hoehoe
         private HttpTwitter _twCon = new HttpTwitter();
 
         public event UserIdChangedEventHandler UserIdChanged;
-
-        public delegate void UserIdChangedEventHandler();
 
         public string Authenticate(string username, string password)
         {
@@ -4130,7 +4127,6 @@ namespace Hoehoe
 
         public event ApiInformationChangedEventHandler ApiInformationChanged;
 
-        public delegate void ApiInformationChangedEventHandler(object sender, ApiInformationChangedEventArgs e);
 
         private void Twitter_ApiInformationChanged(object sender, ApiInformationChangedEventArgs e)
         {
@@ -4144,27 +4140,17 @@ namespace Hoehoe
 
         public event NewPostFromStreamEventHandler NewPostFromStream;
 
-        public delegate void NewPostFromStreamEventHandler();
-
         public event UserStreamStartedEventHandler UserStreamStarted;
-
-        public delegate void UserStreamStartedEventHandler();
 
         public event UserStreamStoppedEventHandler UserStreamStopped;
 
-        public delegate void UserStreamStoppedEventHandler();
 
         public event UserStreamGetFriendsListEventHandler UserStreamGetFriendsList;
 
-        public delegate void UserStreamGetFriendsListEventHandler();
-
         public event PostDeletedEventHandler PostDeleted;
 
-        public delegate void PostDeletedEventHandler(long id);
 
         public event UserStreamEventReceivedEventHandler UserStreamEventReceived;
-
-        public delegate void UserStreamEventReceivedEventHandler(FormattedEvent eventType);
         private DateTime _lastUserstreamDataReceived;
         private TwitterUserstream withEventsField_userStream;
 
@@ -4520,15 +4506,11 @@ namespace Hoehoe
         {
             public event StatusArrivedEventHandler StatusArrived;
 
-            public delegate void StatusArrivedEventHandler(string status);
 
             public event StoppedEventHandler Stopped;
 
-            public delegate void StoppedEventHandler();
 
             public event StartedEventHandler Started;
-
-            public delegate void StartedEventHandler();
 
             private HttpTwitter _twCon;
             private Thread _streamThread;
@@ -4540,6 +4522,9 @@ namespace Hoehoe
             {
                 this._twCon = (HttpTwitter)twitterConnection.Clone();
             }
+            public delegate void StatusArrivedEventHandler(string status);
+            public delegate void StoppedEventHandler();
+            public delegate void StartedEventHandler();
 
             public void Start(bool allAtReplies, string trackwords)
             {
@@ -4776,6 +4761,22 @@ namespace Hoehoe
         {
             this.ApiInformationChanged += this.Twitter_ApiInformationChanged;
         }
+
+        public delegate void GetIconImageDelegate(PostClass post);
+        public delegate void UserIdChangedEventHandler();
+        public delegate void ApiInformationChangedEventHandler(object sender, ApiInformationChangedEventArgs e);
+        public delegate void NewPostFromStreamEventHandler();
+
+        public delegate void UserStreamStartedEventHandler();
+
+        public delegate void UserStreamStoppedEventHandler();
+        public delegate void UserStreamGetFriendsListEventHandler();
+        public delegate void PostDeletedEventHandler(long id);
+
+        public delegate void UserStreamEventReceivedEventHandler(FormattedEvent eventType);
+
+
+
 
         private class PostInfo
         {
