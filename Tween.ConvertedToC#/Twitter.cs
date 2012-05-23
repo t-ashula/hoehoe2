@@ -130,6 +130,19 @@ namespace Hoehoe
             this.ApiInformationChanged += this.Twitter_ApiInformationChanged;
         }
 
+        public delegate void GetIconImageDelegate(PostClass post);
+        public delegate void UserIdChangedEventHandler();
+        public delegate void ApiInformationChangedEventHandler(object sender, ApiInformationChangedEventArgs e);
+        public delegate void NewPostFromStreamEventHandler();
+
+        public delegate void UserStreamStartedEventHandler();
+
+        public delegate void UserStreamStoppedEventHandler();
+        public delegate void UserStreamGetFriendsListEventHandler();
+        public delegate void PostDeletedEventHandler(long id);
+
+        public delegate void UserStreamEventReceivedEventHandler(FormattedEvent eventType);
+
         public string Authenticate(string username, string password)
         {
             HttpStatusCode res = default(HttpStatusCode);
@@ -4759,18 +4772,6 @@ namespace Hoehoe
 
 
 
-        public delegate void GetIconImageDelegate(PostClass post);
-        public delegate void UserIdChangedEventHandler();
-        public delegate void ApiInformationChangedEventHandler(object sender, ApiInformationChangedEventArgs e);
-        public delegate void NewPostFromStreamEventHandler();
-
-        public delegate void UserStreamStartedEventHandler();
-
-        public delegate void UserStreamStoppedEventHandler();
-        public delegate void UserStreamGetFriendsListEventHandler();
-        public delegate void PostDeletedEventHandler(long id);
-
-        public delegate void UserStreamEventReceivedEventHandler(FormattedEvent eventType);
 
 
 
