@@ -39,10 +39,10 @@ namespace Hoehoe
         public string Slug = "";
         public bool IsPublic = true;
 
-        //購読者数
+        // 購読者数
         public int SubscriberCount = 0;
 
-        //リストメンバ数
+        // リストメンバ数
         public int MemberCount = 0;
 
         public long UserId = 0;

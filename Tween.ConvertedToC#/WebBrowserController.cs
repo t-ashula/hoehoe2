@@ -268,7 +268,7 @@ namespace Hoehoe
         {
             // ActiveXコントロール取得
             _WebBrowser.DocumentText = "about:blank";
-            //ActiveXを初期化する
+            // ActiveXを初期化する
             do
             {
                 Thread.Sleep(100);
@@ -371,7 +371,7 @@ namespace Hoehoe
 
         public int ProcessUrlAction(string pwszUrl, int dwAction, ref byte pPolicy, int cbPolicy, byte pContext, int cbContext, int dwFlags, int dwReserved)
         {
-            //スクリプト実行状態かを検査しポリシー設定
+            // スクリプト実行状態かを検査しポリシー設定
             if (WebBrowserAPI.URLACTION_SCRIPT_MIN <= dwAction & dwAction <= WebBrowserAPI.URLACTION_SCRIPT_MAX)
             {
                 // スクリプト実行状態
@@ -403,7 +403,7 @@ namespace Hoehoe
                 }
                 return HRESULT.S_OK;
             }
-            //他のものについてはデフォルト処理
+            // 他のものについてはデフォルト処理
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 

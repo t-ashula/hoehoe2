@@ -44,7 +44,7 @@ namespace Hoehoe
     {
         private static readonly object _lockObj = new object();
 
-        //終了フラグ
+        // 終了フラグ
         public static bool IsEnding;
 
         public static string CultureStr = null;
@@ -146,7 +146,7 @@ namespace Hoehoe
             buf.AppendLine(ex.StackTrace);
             buf.AppendLine();
 
-            //InnerExceptionが存在する場合書き出す
+            // InnerExceptionが存在する場合書き出す
             Exception innerEx = ex.InnerException;
             int nesting = 0;
             while (innerEx != null)

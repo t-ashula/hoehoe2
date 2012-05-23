@@ -161,7 +161,7 @@ namespace Hoehoe
             _MediaRemainCount = -1;
             _MediaResetTime = new DateTime();
 
-            //_UsingCount = -1
+            // _UsingCount = -1
             if (Changed != null)
             {
                 Changed(this, new ApiInformationChangedEventArgs());
@@ -456,7 +456,7 @@ namespace Hoehoe
                         return ApiAccessLevel.ReadWriteAndDirectMessage;
                     default:
                         MyCommon.TraceOut("Unknown ApiAccessLevel:" + HttpHeaders["X-Access-Level"]);
-                        //未知のアクセスレベルの場合Read/Write/Dmと仮定して処理継続
+                        // 未知のアクセスレベルの場合Read/Write/Dmと仮定して処理継続
                         return ApiAccessLevel.ReadWriteAndDirectMessage;
                 }
             }

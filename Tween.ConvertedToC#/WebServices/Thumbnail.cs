@@ -276,16 +276,16 @@ namespace Hoehoe
 
         private void ThumbnailProgressChanged(int ProgressPercentage, string AddMsg = "")
         {
-            //開始
+            // 開始
             if (ProgressPercentage == 0)
             {
-                //Owner.SetStatusLabel("Thumbnail generating...")
-                //正常終了
+                // Owner.SetStatusLabel("Thumbnail generating...")
+                // 正常終了
             }
             else if (ProgressPercentage == 100)
             {
-                //Owner.SetStatusLabel("Thumbnail generated.")
-                // エラー
+                // Owner.SetStatusLabel("Thumbnail generated.")
+                //  エラー
             }
             else
             {
@@ -529,7 +529,7 @@ namespace Hoehoe
 
         private static bool DirectLink_GetUrl(GetUrlArgs args)
         {
-            //画像拡張子で終わるURL（直リンク）
+            // 画像拡張子で終わるURL（直リンク）
             if (IsDirectLink(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended))
             {
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
@@ -1166,7 +1166,6 @@ namespace Hoehoe
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                //args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")))
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("${0}")));
                 return true;
             }
@@ -1174,7 +1173,6 @@ namespace Hoehoe
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                //args.imglist.Add(New KeyValuePair(Of String, String)(args.url, mc.Result("http://i.ytimg.com/vi/${1}/default.jpg")))
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("${0}")));
                 return true;
             }
@@ -1393,7 +1391,7 @@ namespace Hoehoe
                     {
                         imgurl = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/thumbnail_url").InnerText;
 
-                        //ツールチップに動画情報をセットする
+                        // ツールチップに動画情報をセットする
                         string tmp = null;
 
                         try
@@ -1588,11 +1586,11 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Pixiv_GetUrl(GetUrlArgs args)
         {
-            //参考: http://tail.s68.xrea.com/blog/2009/02/pixivflash.html Pixivの画像をFlashとかで取得する方法など:しっぽのブログ
-            //ユーザー向けの画像ページ http://www.pixiv.net/member_illust.php?mode=medium&illust_id=[ID番号]
-            //非ログインユーザー向けの画像ページ http://www.pixiv.net/index.php?mode=medium&illust_id=[ID番号]
-            //サムネイルURL http://img[サーバー番号].pixiv.net/img/[ユーザー名]/[サムネイルID]_s.[拡張子]
-            //サムネイルURLは画像ページから抽出する
+            // 参考: http://tail.s68.xrea.com/blog/2009/02/pixivflash.html Pixivの画像をFlashとかで取得する方法など:しっぽのブログ
+            // ユーザー向けの画像ページ http://www.pixiv.net/member_illust.php?mode=medium&illust_id=[ID番号]
+            // 非ログインユーザー向けの画像ページ http://www.pixiv.net/index.php?mode=medium&illust_id=[ID番号]
+            // サムネイルURL http://img[サーバー番号].pixiv.net/img/[ユーザー名]/[サムネイルID]_s.[拡張子]
+            // サムネイルURLは画像ページから抽出する
             // TODO URL判定処理を記述
             Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
             if (mc.Success)
@@ -1623,7 +1621,7 @@ namespace Hoehoe
         {
             // TODO: サムネイル画像読み込み処理を記述します
             string src = "";
-            //illustIDをキャプチャ
+            // illustIDをキャプチャ
             Match mc = Regex.Match(args.Url.Value, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
             if (mc.Groups["tag"].Value == "R-18" || mc.Groups["tag"].Value == "R-18G")
             {
@@ -1704,10 +1702,10 @@ namespace Hoehoe
         private static bool flickr_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            //参考: http://tanarky.blogspot.com/2010/03/flickr-urlunavailable.html アグレッシブエンジニア: flickr の画像URL仕様についてまとめ(Unavailable画像)
-            //画像URL仕様　http://farm{farm}.static.flickr.com/{server}/{id}_{secret}_{size}.{extension}
-            //photostreamなど複数の画像がある場合先頭の一つのみ認識と言うことにする
-            //(二つ目のキャプチャ 一つ目の画像はユーザーアイコン）
+            // 参考: http://tanarky.blogspot.com/2010/03/flickr-urlunavailable.html アグレッシブエンジニア: flickr の画像URL仕様についてまとめ(Unavailable画像)
+            // 画像URL仕様　http://farm{farm}.static.flickr.com/{server}/{id}_{secret}_{size}.{extension}
+            // photostreamなど複数の画像がある場合先頭の一つのみ認識と言うことにする
+            // (二つ目のキャプチャ 一つ目の画像はユーザーアイコン）
 
             string src = "";
             Match mc = Regex.Match(args.Url.Value, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
@@ -1715,7 +1713,7 @@ namespace Hoehoe
             if (http.GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, ""))
             {
                 MatchCollection mc2 = Regex.Matches(src, mc.Result("http://farm[0-9]+\\.static\\.flickr\\.com/[0-9]+/.+?\\.([a-zA-Z]+)"));
-                //二つ以上キャプチャした場合先頭の一つだけ 一つだけの場合はユーザーアイコンしか取れなかった
+                // 二つ以上キャプチャした場合先頭の一つだけ 一つだけの場合はユーザーアイコンしか取れなかった
                 if (mc2.Count > 1)
                 {
                     Image img = http.GetImage(mc2[1].Value, args.Url.Value, 0, ref args.Errmsg);
@@ -1925,7 +1923,7 @@ namespace Hoehoe
                     Match mc2 = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<big_img>http://c1\\.piapro\\.jp/timg/[0-9a-z]+_\\d{14}_0500_0500\\.(?:jpg|png|gif)?)\" />");
                     if (mc2.Success)
                     {
-                        //各画像には120x120のサムネイルがある（多分）ので、URLを置き換える。元々ページに埋め込まれている画像は500x500
+                        // 各画像には120x120のサムネイルがある（多分）ので、URLを置き換える。元々ページに埋め込まれている画像は500x500
                         Regex r = new Regex("_\\d{4}_\\d{4}");
                         string minImgUrl = r.Replace(mc2.Groups["big_img"].Value, "_0120_0120");
                         Image img = http.GetImage(minImgUrl, args.Url.Key, 0, ref args.Errmsg);
@@ -2969,8 +2967,8 @@ namespace Hoehoe
         private static bool Tinami_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            //http://www.tinami.com/view/250818
-            //http://tinami.jp/5dj6 (短縮URL)
+            // http://www.tinami.com/view/250818
+            // http://tinami.jp/5dj6 (短縮URL)
             Match mc = Regex.Match(String.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.tinami\\.com/view/\\d+$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
@@ -3045,7 +3043,7 @@ namespace Hoehoe
                             }
                             else
                             {
-                                //エラー処理 エラーメッセージが返ってきた場合はここで処理
+                                // エラー処理 エラーメッセージが返ってきた場合はここで処理
                                 if (xdoc.SelectSingleNode("/rsp/err") != null)
                                 {
                                     args.Errmsg = xdoc.SelectSingleNode("/rsp/err").Attributes.GetNamedItem("msg").InnerText;

@@ -129,14 +129,14 @@ namespace Hoehoe
                 }
                 catch (Exception )
                 {
-                    //検証エラー or 書き込みエラー
+                    // 検証エラー or 書き込みエラー
                     if (cnt > 3)
                     {
-                        //リトライオーバー
+                        // リトライオーバー
                         MessageBox.Show("Can't write setting XML.(" + fileName + ")", "Save Settings", MessageBoxButtons.OK);
                         return;
                     }
-                    //リトライ
+                    // リトライ
                     Thread.Sleep(1000);
                     err = true;
                 }

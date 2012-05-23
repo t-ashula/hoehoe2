@@ -117,8 +117,8 @@ namespace Hoehoe
             {
                 if (_urlCache.Count > 500)
                 {
+                    // 定期的にリセット
                     _urlCache.Clear();
-                    //定期的にリセット
                 }
             }
 
@@ -151,15 +151,14 @@ namespace Hoehoe
                     }
                     catch (Exception)
                     {
-                        //Through
+                        // Through
                     }
                 }
                 else
                 {
                     try
                     {
-                        //urlとして生成できない場合があるらしい
-                        //Dim urlstr As String = New Uri(urlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path)
+                        // urlとして生成できない場合があるらしい
                         string retUrlStr = "";
                         string tmpurlStr = new Uri(MyCommon.urlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
                         HttpVarious httpVar = new HttpVarious();
@@ -167,7 +166,7 @@ namespace Hoehoe
                         if (retUrlStr.StartsWith("http"))
                         {
                             retUrlStr = retUrlStr.Replace("\"", "%22");
-                            //ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
+                            // ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
                             orgData = orgData.Replace("<a href=\"" + tmpurlStr, "<a href=\"" + retUrlStr);
                             lock (_lockObj)
                             {
@@ -180,7 +179,7 @@ namespace Hoehoe
                     }
                     catch (Exception)
                     {
-                        //Through
+                        // Through
                     }
                 }
             }
@@ -197,8 +196,8 @@ namespace Hoehoe
             {
                 if (_urlCache.Count > 500)
                 {
+                    // 定期的にリセット
                     _urlCache.Clear();
-                    //定期的にリセット
                 }
             }
 
@@ -220,8 +219,7 @@ namespace Hoehoe
                     }
                     try
                     {
-                        //urlとして生成できない場合があるらしい
-                        //Dim urlstr As String = New Uri(urlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path)
+                        // urlとして生成できない場合があるらしい
                         string retUrlStr = "";
                         string tmpurlStr = new Uri(MyCommon.urlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
                         HttpVarious httpVar = new HttpVarious();
@@ -229,7 +227,7 @@ namespace Hoehoe
                         if (retUrlStr.StartsWith("http"))
                         {
                             retUrlStr = retUrlStr.Replace("\"", "%22");
-                            //ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
+                            // ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
                             lock (_lockObj)
                             {
                                 if (!_urlCache.ContainsKey(orgUrl))
@@ -272,7 +270,7 @@ namespace Hoehoe
                 }
             }
 
-            //nico.msは短縮しない
+            // nico.msは短縮しない
             if (srcUrl.StartsWith("http://nico.ms/"))
             {
                 return "Can't convert";
@@ -283,14 +281,14 @@ namespace Hoehoe
             switch (converterType)
             {
                 case UrlConverter.TinyUrl:
-                    //tinyurl
+                    // tinyurl
                     if (srcUrl.StartsWith("http"))
                     {
                         if ("http://tinyurl.com/xxxxxx".Length > src.Length && !src.Contains("?") && !src.Contains("#"))
                         {
                             // 明らかに長くなると推測できる場合は圧縮しない
                             content = src;
-                            break; // TODO: might not be correct. Was : Exit Select
+                            break;
                         }
                         if (!(new HttpVarious()).PostData("http://tinyurl.com/api-create.php?url=" + srcUrl, null, ref content))
                         {
@@ -331,7 +329,7 @@ namespace Hoehoe
                             break;
                         }
                         param.Add("link[url]", orgSrc);
-                        //twurlはpostメソッドなので日本語エンコードのみ済ませた状態で送る
+                        // twurlはpostメソッドなので日本語エンコードのみ済ませた状態で送る
                         if (!(new HttpVarious()).PostData("http://tweetburner.com/links", param, ref content))
                         {
                             return "Can't convert";
@@ -391,7 +389,7 @@ namespace Hoehoe
                     }
                     break;
             }
-            //変換結果から改行を除去
+            // 変換結果から改行を除去
             content = content.TrimEnd(new char[] { '\r', '\n' });
             // 圧縮の結果逆に長くなった場合は圧縮前のURLを返す
             if (src.Length < content.Length)

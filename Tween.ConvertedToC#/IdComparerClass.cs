@@ -30,7 +30,7 @@ using System.Windows.Forms;
 
 namespace Hoehoe
 {
-    //ソート比較クラス：ID比較のみ
+    // ソート比較クラス：ID比較のみ
     public sealed class IdComparerClass : IComparer<long>
     {
         /// <summary>
@@ -155,8 +155,8 @@ namespace Hoehoe
 
         private Comparison<long> _compareMethod;
 
-        //xがyより小さいときはマイナスの数、大きいときはプラスの数、
-        //同じときは0を返す (こちらは未使用 一応比較関数群呼び出しの形のまま残しておく)
+        // xがyより小さいときはマイナスの数、大きいときはプラスの数、
+        // 同じときは0を返す (こちらは未使用 一応比較関数群呼び出しの形のまま残しておく)
         public int Compare(long x, long y)
         {
             return _compareMethod(x, y);

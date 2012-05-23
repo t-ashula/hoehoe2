@@ -65,7 +65,7 @@ namespace Hoehoe
         {
         }
 
-        //フィルタ一覧に表示する文言生成
+        // フィルタ一覧に表示する文言生成
         private string MakeSummary()
         {
             StringBuilder fs = new StringBuilder();
@@ -131,7 +131,7 @@ namespace Hoehoe
             }
             if (!String.IsNullOrEmpty(_exname) || _exbody.Count > 0 || _isExRt || !String.IsNullOrEmpty(_exSource))
             {
-                //除外
+                // 除外
                 fs.Append(Hoehoe.Properties.Resources.SetFiltersText12);
                 if (_exsearchBoth)
                 {
@@ -423,7 +423,7 @@ namespace Hoehoe
                 tBody = post.TextFromApi;
                 tSource = post.Source;
             }
-            //検索オプション
+            // 検索オプション
             StringComparison compOpt = default(StringComparison);
             RegexOptions rgOpt = default(RegexOptions);
             if (_caseSensitive)
@@ -559,7 +559,7 @@ namespace Hoehoe
             {
                 return HITRESULT.None;
             }
-            //除外判定
+            // 除外判定
             if (_exsearchUrl)
             {
                 tBody = post.Text;

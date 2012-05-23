@@ -322,7 +322,7 @@ namespace Hoehoe.DataModels.Twitter
         [DataMember(Name = "name")]
         public string Name;
 
-        //<DataMember(Name:="attributes", IsRequired:=False)> Public attributes As attributes
+        ////<DataMember(Name:="attributes", IsRequired:=False)> Public attributes As attributes
         [DataMember(Name = "country_code", IsRequired = false)]
         public string CountryCode;
 

@@ -47,7 +47,7 @@ namespace Hoehoe
 
         #region "検索"
 
-        //Search query
+        // Search query
         private string _searchLang = "";
 
         private string _searchWords = "";
@@ -272,7 +272,7 @@ namespace Hoehoe
             get { return _sorter; }
         }
 
-        //無条件に追加
+        // 無条件に追加
         private void Add(long id, bool read)
         {
             if (this._ids.Contains(id))
@@ -318,7 +318,7 @@ namespace Hoehoe
             }
         }
 
-        //フィルタに合致したら追加
+        // フィルタに合致したら追加
         public HITRESULT AddFiltered(PostClass post)
         {
             if (IsInnerStorageTabType)
@@ -326,7 +326,7 @@ namespace Hoehoe
                 return HITRESULT.None;
             }
             HITRESULT rslt = HITRESULT.None;
-            //全フィルタ評価（優先順位あり）
+            // 全フィルタ評価（優先順位あり）
             lock (this._lockObj)
             {
                 foreach (FiltersClass ft in _filters)
@@ -335,7 +335,7 @@ namespace Hoehoe
                     {
                         switch (ft.IsHit(post))
                         {
-                            //フィルタクラスでヒット判定
+                            // フィルタクラスでヒット判定
                             case HITRESULT.None:
                                 break;
                             case HITRESULT.Copy:
@@ -357,7 +357,7 @@ namespace Hoehoe
                     }
                     catch (NullReferenceException)
                     {
-                        //IsHitでNullRef出る場合あり。暫定対応
+                        // IsHitでNullRef出る場合あり。暫定対応
                         MyCommon.TraceOut("IsHitでNullRef: " + ft.ToString());
                         rslt = HITRESULT.None;
                     }
@@ -369,11 +369,11 @@ namespace Hoehoe
                 _tmpIds.Add(new TemporaryId(post.StatusId, post.IsRead));
             }
 
+            // マーク付けは呼び出し元で行うこと
             return rslt;
-            //マーク付けは呼び出し元で行うこと
         }
 
-        //検索結果の追加
+        // 検索結果の追加
         public void AddPostToInnerStorage(PostClass post)
         {
             if (Posts.ContainsKey(post.StatusId))

@@ -47,16 +47,15 @@ namespace Hoehoe
         {
             lock (this._lockObject)
             {
-                //5Mb,80%
-                //キャッシュチェック間隔はデフォルト値（2分毎）
+                // 5Mb,80%
+                // キャッシュチェック間隔はデフォルト値（2分毎）
                 this._innerDictionary = new MemoryCache("imageCache", new NameValueCollection() {
                     { "CacheMemoryLimitMegabytes", cacheMemoryLimit.ToString() },
                     { "PhysicalMemoryLimitPercentage", "80" }
                 });
                 this._waitStack = new Stack<KeyValuePair<string, Action<Image>>>();
                 this._cachePolicy.RemovedCallback = CacheRemoved;
-                this._cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30);
-                //30分参照されなかったら削除
+                this._cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30); // 30分参照されなかったら削除
                 this._netSemaphore = new Semaphore(5, 5);
             }
         }
@@ -140,7 +139,7 @@ namespace Hoehoe
                             return (Image)this._innerDictionary[key];
                         }
                     }
-                    //スタックに積む
+                    // スタックに積む
                     this._waitStack.Push(new KeyValuePair<string, Action<Image>>(key, callBack));
                 }
                 return null;
@@ -284,7 +283,7 @@ namespace Hoehoe
             }
         }
 
-        //取得一時停止
+        // 取得一時停止
         private bool _pauseGetImage = false;
 
         private bool _pauseGetImage_popping = false;
@@ -297,7 +296,7 @@ namespace Hoehoe
                 if (!this._pauseGetImage && !_pauseGetImage_popping)
                 {
                     _pauseGetImage_popping = true;
-                    //最新から処理し
+                    // 最新から処理し
                     ThreadStart imgDlProc = null;
                     imgDlProc = () =>
                     {
@@ -321,7 +320,7 @@ namespace Hoehoe
                                 }
                                 catch (Exception)
                                 {
-                                    //Disposed,Release漏れ
+                                    // Disposed,Release漏れ
                                 }
                                 proc.BeginInvoke(req, null, null);
                             }

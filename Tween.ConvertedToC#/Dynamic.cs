@@ -848,7 +848,7 @@ namespace Hoehoe
             return orderings;
         }
 
-        //#pragma warning restore 0219
+        // #pragma warning restore 0219
 
         // ?: operator
         public Expression ParseExpression()

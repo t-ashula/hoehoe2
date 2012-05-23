@@ -78,9 +78,9 @@ namespace Hoehoe
         Bitly,
         Jmp,
         Uxnu,
-        //特殊
+        // 特殊
         Nicoms,
-        //廃止
+        // 廃止
         Unu = -1
     }
 
@@ -111,25 +111,25 @@ namespace Hoehoe
     /// </summary>
     public enum WorkerType
     {
-        Timeline,           //タイムライン取得
-        Reply,              //返信取得
-        DirectMessegeRcv,   //受信DM取得
-        DirectMessegeSnt,   //送信DM取得
-        PostMessage,        //発言POST
-        FavAdd,             //Fav追加
-        FavRemove,          //Fav削除
-        Follower,           //Followerリスト取得
-        OpenUri,            //Uri開く
-        Favorites,          //Fav取得
-        Retweet,            //Retweetする
-        PublicSearch,       //公式検索
-        List,               //Lists
-        Related,            //関連発言
-        UserStream,         //UserStream
-        UserTimeline,       //UserTimeline
-        BlockIds,           //Blocking/ids
-        Configuration,      //Twitter Configuration読み込み
-        ErrorState          //エラー表示のみで後処理終了(認証エラー時など)
+        Timeline,           /// <summary>タイムライン取得</summary>
+        Reply,              /// <summary>返信取得</summary>
+        DirectMessegeRcv,   /// <summary>受信DM取得</summary>
+        DirectMessegeSnt,   /// <summary>送信DM取得</summary>
+        PostMessage,        /// <summary>発言POST</summary>
+        FavAdd,             /// <summary>Fav追加</summary>
+        FavRemove,          /// <summary>Fav削除</summary>
+        Follower,           /// <summary>Followerリスト取得</summary>
+        OpenUri,            /// <summary>Uri開く</summary>
+        Favorites,          /// <summary>Fav取得</summary>
+        Retweet,            /// <summary>Retweetする</summary>
+        PublicSearch,       /// <summary>公式検索</summary>
+        List,               /// <summary>Lists</summary>
+        Related,            /// <summary>関連発言</summary>
+        UserStream,         /// <summary>UserStream</summary>
+        UserTimeline,       /// <summary>UserTimeline</summary>
+        BlockIds,           /// <summary>Blocking/ids</summary>
+        Configuration,      /// <summary>Twitter Configuration読み込み</summary>
+        ErrorState          /// <summary>エラー表示のみで後処理終了(認証エラー時など)</summary>
     }
 
     public enum AccountState
@@ -168,14 +168,14 @@ namespace Hoehoe
     public enum TabUsageType
     {
         Undefined = 0,
-        Home = 1,            //Unique
-        Mentions = 2,            //Unique
-        DirectMessage = 4,            //Unique
-        Favorites = 8,            //Unique
+        Home = 1,            // Unique
+        Mentions = 2,        // Unique
+        DirectMessage = 4,   // Unique
+        Favorites = 8,       // Unique
         UserDefined = 16,
-        LocalQuery = 32,            //Pin(no save/no save query/distribute/no update(normal update))
-        Profile = 64,            //Pin(save/no distribute/manual update)
-        PublicSearch = 128,            //Pin(save/no distribute/auto update)
+        LocalQuery = 32,     // Pin(no save/no save query/distribute/no update(normal update))
+        Profile = 64,        // Pin(save/no distribute/manual update)
+        PublicSearch = 128,  // Pin(save/no distribute/auto update)
         Lists = 256,
         Related = 512,
         UserTimeline = 1024

@@ -47,7 +47,7 @@ namespace Hoehoe
 
         public static string Shorten(string url)
         {
-            //整形（http(s)://を削除）
+            // 整形（http(s)://を削除）
             if (url.Length > 7 && url.Length < 128 && url.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
             {
                 url = url.Substring(7);

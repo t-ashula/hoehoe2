@@ -59,7 +59,7 @@ namespace Hoehoe
 
         public ShieldIcon()
         {
-            //NT6 kernelかどうか検査
+            // NT6 kernelかどうか検査
             if (!IsNT6())
             {
                 icondata = null;
@@ -82,7 +82,7 @@ namespace Hoehoe
 
         private static bool IsNT6()
         {
-            //NT6 kernelかどうか検査
+            // NT6 kernelかどうか検査
             return Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major == 6;
         }
 
@@ -96,8 +96,8 @@ namespace Hoehoe
 
         public Image Icon
         {
-            //Return icondata
-            //シールドアイコンのデータを返さないように　あとでどうにかする
+            // Return icondata
+            // シールドアイコンのデータを返さないように　あとでどうにかする
             get { return null; }
         }
     }

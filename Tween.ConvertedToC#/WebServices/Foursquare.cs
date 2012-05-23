@@ -137,7 +137,7 @@ namespace Hoehoe
                 Longitude = curVenue.Location.Longitude,
                 LocateInfo = CreateVenueInfoText(curVenue)
             };
-            //例外発生の場合があるため
+            // 例外発生の場合があるため
             if (!CheckInUrlsVenueCollection.ContainsKey(urlId))
             {
                 CheckInUrlsVenueCollection.Add(urlId, curLocation);

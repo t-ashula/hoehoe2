@@ -57,7 +57,7 @@ namespace Hoehoe
             this.CreatedAt = MyCommon.DateTimeParse(user.CreatedAt);
             this.StatusesCount = user.StatusesCount;
             this.Verified = user.Verified;
-            //this.isFollowing = this.isFollowing;
+            //// this.isFollowing = this.isFollowing;
             if (user.Status != null)
             {
                 this.RecentPost = user.Status.Text;

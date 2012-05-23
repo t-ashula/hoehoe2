@@ -204,7 +204,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    //内蔵アイコンリソースを使用
+                    // 内蔵アイコンリソースを使用
                     ConstructorInfo cibd = _core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(byte[]) }, null);
                     TypeConverter tc = new TypeConverter();
                     object bdata = cibd.Invoke(new object[] { IconToByteArray(Hoehoe.Properties.Resources.MIcon) });
@@ -313,7 +313,7 @@ namespace Hoehoe
 					text
 				});
             }
-            //_targetConnector.GetType.InvokeMember("Notify", BindingFlags.InvokeMethod, Nothing, _targetConnector, New Object() {n})
+            ////_targetConnector.GetType.InvokeMember("Notify", BindingFlags.InvokeMethod, Nothing, _targetConnector, New Object() {n})
             object cc = _connector.GetType("Growl.Connector.CallbackContext").InvokeMember(null, BindingFlags.CreateInstance, null, _connector, new object[] {
 				"some fake information",
 				notificationName
