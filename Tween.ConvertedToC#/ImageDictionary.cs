@@ -24,24 +24,29 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Drawing;
-using System.Runtime.Caching;
-using System.Threading;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.Drawing;
+    using System.Runtime.Caching;
+    using System.Threading;
+
     public class ImageDictionary : IDictionary<string, Image>, IDisposable
     {
         private readonly object _lockObject = new object();
-        private MemoryCache _innerDictionary;
-        private Stack<KeyValuePair<string, Action<Image>>> _waitStack;
         private CacheItemPolicy _cachePolicy = new CacheItemPolicy();
-        private long _removedCount = 0;
+        private MemoryCache _innerDictionary;
         private Semaphore _netSemaphore;
+
+        // 取得一時停止
+        private bool _pauseGetImage = false;
+
+        private bool _pauseGetImage_popping = false;
+        private long _removedCount = 0;
+        private Stack<KeyValuePair<string, Action<Image>>> _waitStack;
 
         public ImageDictionary(int cacheMemoryLimit)
         {
@@ -60,9 +65,16 @@ namespace Hoehoe
             }
         }
 
+        public delegate void GetImageDelegate(KeyValuePair<string, Action<Image>> arg1);
+
         public long CacheCount
         {
             get { return _innerDictionary.GetCount(); }
+        }
+
+        public long CacheMemoryLimit
+        {
+            get { return _innerDictionary.CacheMemoryLimit; }
         }
 
         public long CacheRemoveCount
@@ -70,9 +82,79 @@ namespace Hoehoe
             get { return _removedCount; }
         }
 
-        public long CacheMemoryLimit
+        public int Count
         {
-            get { return _innerDictionary.CacheMemoryLimit; }
+            get
+            {
+                lock (this._lockObject)
+                {
+                    return Convert.ToInt32(this._innerDictionary.GetCount());
+                }
+            }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
+
+        public ICollection<string> Keys
+        {
+            get
+            {
+                lock (this._lockObject)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+
+        public bool PauseGetImage
+        {
+            get { return this._pauseGetImage; }
+            set
+            {
+                if (!this._pauseGetImage && !_pauseGetImage_popping)
+                {
+                    _pauseGetImage_popping = true;
+                    // 最新から処理し
+                    ThreadStart imgDlProc = null;
+                    imgDlProc = () =>
+                    {
+                        while (!this._pauseGetImage)
+                        {
+                            if (this._waitStack.Count > 0)
+                            {
+                                KeyValuePair<string, Action<Image>> req = default(KeyValuePair<string, Action<Image>>);
+                                lock (this._lockObject)
+                                {
+                                    req = this._waitStack.Pop();
+                                }
+                                if (AppendSettingDialog.Instance.IconSz == IconSizes.IconNone)
+                                {
+                                    continue;
+                                }
+                                GetImageDelegate proc = new GetImageDelegate(GetImage);
+                                try
+                                {
+                                    this._netSemaphore.WaitOne();
+                                }
+                                catch (Exception)
+                                {
+                                    // Disposed,Release漏れ
+                                }
+                                proc.BeginInvoke(req, null, null);
+                            }
+                            else
+                            {
+                                Thread.Sleep(100);
+                            }
+                        }
+                        _pauseGetImage_popping = false;
+                    };
+                    imgDlProc.BeginInvoke(null, null);
+                }
+            }
         }
 
         public long PhysicalMemoryLimit
@@ -83,43 +165,6 @@ namespace Hoehoe
         public TimeSpan PollingInterval
         {
             get { return _innerDictionary.PollingInterval; }
-        }
-
-        private void CacheRemoved(CacheEntryRemovedArguments item)
-        {
-            ((Image)item.CacheItem.Value).Dispose();
-            _removedCount += 1;
-        }
-
-        public void Add(KeyValuePair<string, Image> item)
-        {
-            this.Add(item.Key, item.Value);
-        }
-
-        public void Add(string key, Image value)
-        {
-            lock (this._lockObject)
-            {
-                if (this._innerDictionary.Contains(key))
-                {
-                    return;
-                }
-                this._innerDictionary.Add(key, value, this._cachePolicy);
-            }
-        }
-
-        public bool Remove(KeyValuePair<string, Image> item)
-        {
-            return this.Remove(item.Key);
-        }
-
-        public bool Remove(string key)
-        {
-            lock (this._lockObject)
-            {
-                this._innerDictionary.Remove(key);
-            }
-            return true;
         }
 
         public Image this[string key, bool force, Action<Image> callBack]
@@ -180,6 +225,28 @@ namespace Hoehoe
             }
         }
 
+        public ICollection<Image> Values
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void Add(KeyValuePair<string, Image> item)
+        {
+            this.Add(item.Key, item.Value);
+        }
+
+        public void Add(string key, Image value)
+        {
+            lock (this._lockObject)
+            {
+                if (this._innerDictionary.Contains(key))
+                {
+                    return;
+                }
+                this._innerDictionary.Add(key, value, this._cachePolicy);
+            }
+        }
+
         public void Clear()
         {
             lock (this._lockObject)
@@ -196,6 +263,11 @@ namespace Hoehoe
             }
         }
 
+        public bool ContainsKey(string key)
+        {
+            return this._innerDictionary.Contains(key);
+        }
+
         public void CopyTo(KeyValuePair<string, Image>[] array, int arrayIndex)
         {
             lock (this._lockObject)
@@ -204,36 +276,38 @@ namespace Hoehoe
             }
         }
 
-        public int Count
+        public void Dispose()
         {
-            get
+            lock (this._lockObject)
             {
-                lock (this._lockObject)
-                {
-                    return Convert.ToInt32(this._innerDictionary.GetCount());
-                }
+                this._netSemaphore.Dispose();
+                this._innerDictionary.Dispose();
+                GC.SuppressFinalize(this);
             }
         }
 
-        public bool IsReadOnly
+        public IEnumerator<KeyValuePair<string, Image>> GetEnumerator()
         {
-            get { return false; }
+            throw new NotImplementedException();
         }
 
-        public bool ContainsKey(string key)
+        public IEnumerator GetEnumerator1()
         {
-            return this._innerDictionary.Contains(key);
+            throw new NotImplementedException();
         }
 
-        public ICollection<string> Keys
+        public bool Remove(KeyValuePair<string, Image> item)
         {
-            get
+            return this.Remove(item.Key);
+        }
+
+        public bool Remove(string key)
+        {
+            lock (this._lockObject)
             {
-                lock (this._lockObject)
-                {
-                    throw new NotImplementedException();
-                }
+                this._innerDictionary.Remove(key);
             }
+            return true;
         }
 
         public bool TryGetValue(string key, out Image value)
@@ -253,90 +327,11 @@ namespace Hoehoe
             }
         }
 
-        public ICollection<Image> Values
+        private void CacheRemoved(CacheEntryRemovedArguments item)
         {
-            get { throw new NotImplementedException(); }
+            ((Image)item.CacheItem.Value).Dispose();
+            _removedCount += 1;
         }
-
-        public IEnumerator<KeyValuePair<string, Image>> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerator GetEnumerator1()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator1();
-        }
-
-        public void Dispose()
-        {
-            lock (this._lockObject)
-            {
-                this._netSemaphore.Dispose();
-                this._innerDictionary.Dispose();
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        // 取得一時停止
-        private bool _pauseGetImage = false;
-
-        private bool _pauseGetImage_popping = false;
-
-        public bool PauseGetImage
-        {
-            get { return this._pauseGetImage; }
-            set
-            {
-                if (!this._pauseGetImage && !_pauseGetImage_popping)
-                {
-                    _pauseGetImage_popping = true;
-                    // 最新から処理し
-                    ThreadStart imgDlProc = null;
-                    imgDlProc = () =>
-                    {
-                        while (!this._pauseGetImage)
-                        {
-                            if (this._waitStack.Count > 0)
-                            {
-                                KeyValuePair<string, Action<Image>> req = default(KeyValuePair<string, Action<Image>>);
-                                lock (this._lockObject)
-                                {
-                                    req = this._waitStack.Pop();
-                                }
-                                if (AppendSettingDialog.Instance.IconSz == IconSizes.IconNone)
-                                {
-                                    continue;
-                                }
-                                GetImageDelegate proc = new GetImageDelegate(GetImage);
-                                try
-                                {
-                                    this._netSemaphore.WaitOne();
-                                }
-                                catch (Exception)
-                                {
-                                    // Disposed,Release漏れ
-                                }
-                                proc.BeginInvoke(req, null, null);
-                            }
-                            else
-                            {
-                                Thread.Sleep(100);
-                            }
-                        }
-                        _pauseGetImage_popping = false;
-                    };
-                    imgDlProc.BeginInvoke(null, null);
-                }
-            }
-        }
-
-        public delegate void GetImageDelegate(KeyValuePair<string, Action<Image>> arg1);
 
         private void GetImage(KeyValuePair<string, Action<Image>> downloadAsyncInfo)
         {
@@ -379,6 +374,11 @@ namespace Hoehoe
                 downloadAsyncInfo.Value.Invoke(callbackImage);
             }
             this._netSemaphore.Release();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator1();
         }
     }
 }
