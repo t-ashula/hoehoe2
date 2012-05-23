@@ -48,6 +48,9 @@ namespace Hoehoe
 
     public class Twitter : IDisposable
     {
+        public const string HASHTAG = "(" + HASHTAG_BOUNDARY + ")(#|＃)(" + HASHTAG_ALPHANUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHANUMERIC + "*)(?=" + HASHTAG_TERMINATOR + "|" + HASHTAG_BOUNDARY + ")";
+        public const string RgUrl = "(?<before>(?:[^\\\"':!=#]|^|\\:/))" + "(?<url>(?<protocol>https?://)" + URL_VALID_DOMAIN + PTH2 + QRY + ")";
+
         // Hashtag用正規表現
         private const string LATIN_ACCENTS = "\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\xff";
         private const string NON_LATIN_HASHTAG_CHARS = "\\u0400-\\u04ff\\u0500-\\u0527\\u1100-\\u11ff\\u3130-\\u3185\\uA960-\\uA97F\\uAC00-\\uD7AF\\uD7B0-\\uD7FF";
@@ -56,7 +59,6 @@ namespace Hoehoe
         private const string HASHTAG_ALPHA = "[a-z_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
         private const string HASHTAG_ALPHANUMERIC = "[a-z0-9_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
         private const string HASHTAG_TERMINATOR = "[^a-z0-9_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
-        public const string HASHTAG = "(" + HASHTAG_BOUNDARY + ")(#|＃)(" + HASHTAG_ALPHANUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHANUMERIC + "*)(?=" + HASHTAG_TERMINATOR + "|" + HASHTAG_BOUNDARY + ")";
 
         // URL正規表現
         private const string URL_VALID_DOMAIN = "(?<domain>(?:[^\\p{P}\\s][\\.\\-_](?=[^\\p{P}\\s])|[^\\p{P}\\s]){1,}\\.[a-z]{2,}(?::[0-9]+)?)";
@@ -66,9 +68,7 @@ namespace Hoehoe
         private const string PTH = "(?:" + URL_BALANCE_PARENS + "|@" + URL_VALID_GENERAL_PATH_CHARS + "+/" + "|[.,]?" + URL_VALID_GENERAL_PATH_CHARS + "+" + ")";
         private const string PTH2 = "(/(?:" + PTH + "+" + URL_VALID_URL_PATH_ENDING_CHARS + "|" + PTH + "+" + URL_VALID_URL_PATH_ENDING_CHARS + "?|" + URL_VALID_URL_PATH_ENDING_CHARS + ")?)?";
         private const string QRY = "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\[\\]\\-_.,~]*[a-z0-9_&=#])?";
-
-        public const string RgUrl = "(?<before>(?:[^\\\"':!=#]|^|\\:/))" + "(?<url>(?<protocol>https?://)" + URL_VALID_DOMAIN + PTH2 + QRY + ")";
-
+        
         private readonly object _lockObj = new object();
         private List<long> _followerIds = new List<long>();
         private bool _getFollowerResult;
