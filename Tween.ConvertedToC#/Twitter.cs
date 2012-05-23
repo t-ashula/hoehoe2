@@ -68,7 +68,9 @@ namespace Hoehoe
         private const string PTH = "(?:" + URL_BALANCE_PARENS + "|@" + URL_VALID_GENERAL_PATH_CHARS + "+/" + "|[.,]?" + URL_VALID_GENERAL_PATH_CHARS + "+" + ")";
         private const string PTH2 = "(/(?:" + PTH + "+" + URL_VALID_URL_PATH_ENDING_CHARS + "|" + PTH + "+" + URL_VALID_URL_PATH_ENDING_CHARS + "?|" + URL_VALID_URL_PATH_ENDING_CHARS + ")?)?";
         private const string QRY = "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\[\\]\\-_.,~]*[a-z0-9_&=#])?";
-        
+
+        private static AccountState _accountState = AccountState.Valid;
+
         private readonly object _lockObj = new object();
         private List<long> _followerIds = new List<long>();
         private bool _getFollowerResult;
@@ -159,6 +161,12 @@ namespace Hoehoe
 
         public event UserStreamEventReceivedEventHandler UserStreamEventReceived;
 
+        public static AccountState AccountState
+        {
+            get { return _accountState; }
+            set { _accountState = value; }
+        }
+
         public string Username
         {
             get { return this._twCon.AuthenticatedUsername; }
@@ -172,12 +180,6 @@ namespace Hoehoe
         public string Password
         {
             get { return this._twCon.Password; }
-        }
-
-        public static AccountState AccountState
-        {
-            get { return _accountState; }
-            set { _accountState = value; }
         }
 
         public IDictionary<string, Image> DetailIcon
@@ -3517,8 +3519,6 @@ namespace Hoehoe
 
             return false;
         }
-
-        private static AccountState _accountState = AccountState.Valid;
 
         private PostClass CreatePostsFromStatusData(Status status)
         {
