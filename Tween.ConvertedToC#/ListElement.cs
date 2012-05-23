@@ -24,46 +24,39 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using Hoehoe.DataModels;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Serialization;
+    using Hoehoe.DataModels;
+    using Hoehoe.DataModels.Twitter;
+
     public class ListElement
     {
-        public long Id = 0;
-        public string Name = "";
-        public string Description = "";
-        public string Slug = "";
-        public bool IsPublic = true;
-
-        // 購読者数
-        public int SubscriberCount = 0;
-
-        // リストメンバ数
-        public int MemberCount = 0;
-
-        public long UserId = 0;
-        public string Username = "";
-
-        public string Nickname = "";
-
-        protected Twitter _tw;
-        private List<UserInfo> _members = null;
-
-        private long _cursor = -1;
+        private List<UserInfo> members;
+        private long cursor = -1;
 
         public ListElement()
         {
+            this.Nickname = string.Empty;
+            this.Username = string.Empty;
+            this.UserId = 0;
+            this.MemberCount = 0;
+            this.SubscriberCount = 0;
+            this.IsPublic = true;
+            this.Slug = string.Empty;
+            this.Description = string.Empty;
+            this.Name = string.Empty;
+            this.Id = 0;
         }
 
-        public ListElement(DataModels.Twitter.ListElementData listElementData, Twitter tw)
+        public ListElement(ListElementData listElementData, Twitter tw)
+            : this()
         {
             this.Description = listElementData.Description;
             this.Id = listElementData.Id;
-            this.IsPublic = (listElementData.Mode == "public");
+            this.IsPublic = listElementData.Mode == "public";
             this.MemberCount = listElementData.MemberCount;
             this.Name = listElementData.Name;
             this.SubscriberCount = listElementData.SubscriberCount;
@@ -71,53 +64,77 @@ namespace Hoehoe
             this.Nickname = listElementData.User.Name.Trim();
             this.Username = listElementData.User.ScreenName;
             this.UserId = listElementData.User.Id;
-
-            this._tw = tw;
+            this.Tw = tw;
         }
 
-        public virtual string Refresh()
-        {
-            var t = this;
-            return _tw.EditList(this.Id.ToString(), Name, !this.IsPublic, this.Description, ref t);
-        }
+        public long Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public string Slug { get; set; }
+
+        public bool IsPublic { get; set; }
+
+        // 購読者数
+        public int SubscriberCount { get; set; }
+
+        // リストメンバ数
+        public int MemberCount { get; set; }
+
+        public long UserId { get; set; }
+
+        public string Username { get; set; }
+
+        public string Nickname { get; set; }
 
         [XmlIgnore]
         public List<UserInfo> Members
         {
             get
             {
-                if (this._members == null)
+                if (this.members == null)
                 {
-                    this._members = new List<UserInfo>();
+                    this.members = new List<UserInfo>();
                 }
-                return this._members;
+
+                return this.members;
             }
         }
 
         [XmlIgnore]
         public long Cursor
         {
-            get { return _cursor; }
+            get { return this.cursor; }
+        }
+
+        protected Twitter Tw { get; set; }
+
+        public virtual string Refresh()
+        {
+            var t = this;
+            return this.Tw.EditList(this.Id.ToString(), this.Name, !this.IsPublic, this.Description, ref t);
         }
 
         public string RefreshMembers()
         {
             List<UserInfo> users = new List<UserInfo>();
-            _cursor = -1;
-            string result = this._tw.GetListMembers(this.Id.ToString(), users, ref _cursor);
-            this._members = users;
-            return String.IsNullOrEmpty(result) ? this.ToString() : result;
+            this.cursor = -1;
+            string result = this.Tw.GetListMembers(this.Id.ToString(), users, ref this.cursor);
+            this.members = users;
+            return string.IsNullOrEmpty(result) ? this.ToString() : result;
         }
 
         public string GetMoreMembers()
         {
-            string result = this._tw.GetListMembers(this.Id.ToString(), this._members, ref _cursor);
-            return String.IsNullOrEmpty(result) ? this.ToString() : result;
+            string result = this.Tw.GetListMembers(this.Id.ToString(), this.members, ref this.cursor);
+            return string.IsNullOrEmpty(result) ? this.ToString() : result;
         }
 
         public override string ToString()
         {
-            return String.Format("@{0}/{1} [{2}]", Username, Name, this.IsPublic ? "Public" : "Protected");
+            return string.Format("@{0}/{1} [{2}]", this.Username, this.Name, this.IsPublic ? "Public" : "Protected");
         }
     }
 }
