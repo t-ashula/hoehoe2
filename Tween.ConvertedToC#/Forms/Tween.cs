@@ -1393,7 +1393,7 @@ namespace Hoehoe
         internal void CheckReplyTo(string statusText)
         {
             // ハッシュタグの保存
-            MatchCollection m = Regex.Matches(statusText, Twitter.HASHTAG, RegexOptions.IgnoreCase);
+            MatchCollection m = Regex.Matches(statusText, Twitter.HashtagRegexPattern, RegexOptions.IgnoreCase);
             string hstr = string.Empty;
             foreach (Match hm in m)
             {
@@ -6391,7 +6391,7 @@ namespace Hoehoe
                 len -= this.HashMgr.UseHash.Length + 1;
             }
 
-            foreach (Match m in Regex.Matches(StatusText.Text, Twitter.RgUrl, RegexOptions.IgnoreCase))
+            foreach (Match m in Regex.Matches(StatusText.Text, Twitter.UrlRegexPattern, RegexOptions.IgnoreCase))
             {
                 len += m.Result("${url}").Length - this.SettingDialog.TwitterConfiguration.ShortUrlLength;
             }

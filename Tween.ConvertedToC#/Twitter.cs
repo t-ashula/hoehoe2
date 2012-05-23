@@ -48,25 +48,25 @@ namespace Hoehoe
 
     public class Twitter : IDisposable
     {
-        public const string HASHTAG = "(" + HASHTAG_BOUNDARY + ")(#|＃)(" + HASHTAG_ALPHANUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHANUMERIC + "*)(?=" + HASHTAG_TERMINATOR + "|" + HASHTAG_BOUNDARY + ")";
-        public const string RgUrl = "(?<before>(?:[^\\\"':!=#]|^|\\:/))" + "(?<url>(?<protocol>https?://)" + URL_VALID_DOMAIN + PTH2 + QRY + ")";
+        public const string HashtagRegexPattern = "(" + HashTagBoundary + ")(#|＃)(" + HashtagAlphaNumeric + "*" + HashtagAlpha + HashtagAlphaNumeric + "*)(?=" + HashtagTerminator + "|" + HashTagBoundary + ")";
+        public const string UrlRegexPattern = "(?<before>(?:[^\\\"':!=#]|^|\\:/))" + "(?<url>(?<protocol>https?://)" + UrlValidDomain + PTH2 + QRY + ")";
 
         // Hashtag用正規表現
-        private const string LATIN_ACCENTS = "\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\xff";
-        private const string NON_LATIN_HASHTAG_CHARS = "\\u0400-\\u04ff\\u0500-\\u0527\\u1100-\\u11ff\\u3130-\\u3185\\uA960-\\uA97F\\uAC00-\\uD7AF\\uD7B0-\\uD7FF";
-        private const string CJ_HASHTAG_CHARACTERS = "\\u30A1-\\u30FA\\u30FC\\u3005\\uFF66-\\uFF9F\\uFF10-\\uFF19\\uFF21-\\uFF3A\\uFF41-\\uFF5A\\u3041-\\u309A\\u3400-\\u4DBF\\p{IsCJKUnifiedIdeographs}";
-        private const string HASHTAG_BOUNDARY = "^|$|\\s|「|」|。|\\.|!";
-        private const string HASHTAG_ALPHA = "[a-z_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
-        private const string HASHTAG_ALPHANUMERIC = "[a-z0-9_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
-        private const string HASHTAG_TERMINATOR = "[^a-z0-9_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
+        private const string LatinAccents = "\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\xff";
+        private const string NonLatinHashtagChars = "\\u0400-\\u04ff\\u0500-\\u0527\\u1100-\\u11ff\\u3130-\\u3185\\uA960-\\uA97F\\uAC00-\\uD7AF\\uD7B0-\\uD7FF";
+        private const string CjHashtagChars = "\\u30A1-\\u30FA\\u30FC\\u3005\\uFF66-\\uFF9F\\uFF10-\\uFF19\\uFF21-\\uFF3A\\uFF41-\\uFF5A\\u3041-\\u309A\\u3400-\\u4DBF\\p{IsCJKUnifiedIdeographs}";
+        private const string HashTagBoundary = "^|$|\\s|「|」|。|\\.|!";
+        private const string HashtagAlpha = "[a-z_" + LatinAccents + NonLatinHashtagChars + CjHashtagChars + "]";
+        private const string HashtagAlphaNumeric = "[a-z0-9_" + LatinAccents + NonLatinHashtagChars + CjHashtagChars + "]";
+        private const string HashtagTerminator = "[^a-z0-9_" + LatinAccents + NonLatinHashtagChars + CjHashtagChars + "]";
 
         // URL正規表現
-        private const string URL_VALID_DOMAIN = "(?<domain>(?:[^\\p{P}\\s][\\.\\-_](?=[^\\p{P}\\s])|[^\\p{P}\\s]){1,}\\.[a-z]{2,}(?::[0-9]+)?)";
-        private const string URL_VALID_GENERAL_PATH_CHARS = "[a-z0-9!*';:=+$/%#\\[\\]\\-_&,~]";
-        private const string URL_BALANCE_PARENS = "(?:\\(" + URL_VALID_GENERAL_PATH_CHARS + "+\\))";
-        private const string URL_VALID_URL_PATH_ENDING_CHARS = "(?:[a-z0-9=_#/\\-\\+]+|" + URL_BALANCE_PARENS + ")";
-        private const string PTH = "(?:" + URL_BALANCE_PARENS + "|@" + URL_VALID_GENERAL_PATH_CHARS + "+/" + "|[.,]?" + URL_VALID_GENERAL_PATH_CHARS + "+" + ")";
-        private const string PTH2 = "(/(?:" + PTH + "+" + URL_VALID_URL_PATH_ENDING_CHARS + "|" + PTH + "+" + URL_VALID_URL_PATH_ENDING_CHARS + "?|" + URL_VALID_URL_PATH_ENDING_CHARS + ")?)?";
+        private const string UrlValidDomain = "(?<domain>(?:[^\\p{P}\\s][\\.\\-_](?=[^\\p{P}\\s])|[^\\p{P}\\s]){1,}\\.[a-z]{2,}(?::[0-9]+)?)";
+        private const string UrlValidGeneralPathChars = "[a-z0-9!*';:=+$/%#\\[\\]\\-_&,~]";
+        private const string UrlBalanceParens = "(?:\\(" + UrlValidGeneralPathChars + "+\\))";
+        private const string UrlValidPathEndingChars = "(?:[a-z0-9=_#/\\-\\+]+|" + UrlBalanceParens + ")";
+        private const string PTH = "(?:" + UrlBalanceParens + "|@" + UrlValidGeneralPathChars + "+/" + "|[.,]?" + UrlValidGeneralPathChars + "+" + ")";
+        private const string PTH2 = "(/(?:" + PTH + "+" + UrlValidPathEndingChars + "|" + PTH + "+" + UrlValidPathEndingChars + "?|" + UrlValidPathEndingChars + ")?)?";
         private const string QRY = "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\[\\]\\-_.,~]*[a-z0-9_&=#])?";
 
         private static AccountState accountState = AccountState.Valid;
@@ -3034,7 +3034,7 @@ namespace Hoehoe
                 }
                 return sb.ToString();
             };
-            retStr = Regex.Replace(retStr, RgUrl, mev, RegexOptions.IgnoreCase);
+            retStr = Regex.Replace(retStr, UrlRegexPattern, mev, RegexOptions.IgnoreCase);
 
             // @先をリンクに置換（リスト）
             retStr = Regex.Replace(retStr, "(^|[^a-zA-Z0-9_/])([@＠]+)([a-zA-Z0-9_]{1,20}/[a-zA-Z][a-zA-Z0-9\\p{IsLatin-1Supplement}\\-]{0,79})", "$1$2<a href=\"/$3\">$3</a>");
@@ -3081,7 +3081,7 @@ namespace Hoehoe
                 }
                 return mh.Result("$1") + "<a href=\"" + protocol + "twitter.com/search?q=%23" + mh.Result("$3") + "\">" + mh.Result("$2$3") + "</a>";
             };
-            retStr = Regex.Replace(retStr, HASHTAG, hashReplace, RegexOptions.IgnoreCase);
+            retStr = Regex.Replace(retStr, HashtagRegexPattern, hashReplace, RegexOptions.IgnoreCase);
             retStr = Regex.Replace(retStr, "(^|[^a-zA-Z0-9_/&#＃@＠>=.~])(sm|nm)([0-9]{1,10})", "$1<a href=\"http://www.nicovideo.jp/watch/$2$3\">$2$3</a>");
             retStr = retStr.Replace("<<<<<tweenだいなり>>>>>", "&gt;").Replace("<<<<<tweenしょうなり>>>>>", "&lt;");
             retStr = this.AdjustHtml(this.PreProcessUrl(retStr)); // IDN置換、短縮Uri解決、@リンクを相対→絶対にしてtarget属性付与
