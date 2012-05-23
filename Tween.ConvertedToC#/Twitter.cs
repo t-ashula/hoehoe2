@@ -102,6 +102,34 @@ namespace Hoehoe
         private long _minDirectmessageSent = long.MaxValue;
         private HttpTwitter _twCon = new HttpTwitter();
 
+        PostInfo _prevPostInfo = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
+
+        int _prevFavPage = 1;
+        private DateTime _lastUserstreamDataReceived;
+        private TwitterUserstream withEventsField_userStream;
+
+        private EventTypeTableElement[] EventTable = {
+            new EventTypeTableElement("favorite", EventType.Favorite),
+            new EventTypeTableElement("unfavorite", EventType.Unfavorite),
+            new EventTypeTableElement("follow", EventType.Follow),
+            new EventTypeTableElement("list_member_added", EventType.ListMemberAdded),
+            new EventTypeTableElement("list_member_removed", EventType.ListMemberRemoved),
+            new EventTypeTableElement("block", EventType.Block),
+            new EventTypeTableElement("unblock", EventType.Unblock),
+            new EventTypeTableElement("user_update", EventType.UserUpdate),
+            new EventTypeTableElement("deleted", EventType.Deleted),
+            new EventTypeTableElement("list_created", EventType.ListCreated),
+            new EventTypeTableElement("list_updated", EventType.ListUpdated)
+        };
+
+        // 重複する呼び出しを検出するには
+        private bool disposedValue;
+
+        public Twitter()
+        {
+            this.ApiInformationChanged += this.Twitter_ApiInformationChanged;
+        }
+
         public string Authenticate(string username, string password)
         {
             HttpStatusCode res = default(HttpStatusCode);
@@ -404,8 +432,6 @@ namespace Hoehoe
 
             return true;
         }
-
-        PostInfo _prevPostInfo = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
 
         private bool IsPostRestricted(Status status)
         {
@@ -2897,8 +2923,6 @@ namespace Hoehoe
             return this.CreateDirectMessagesFromJson(content, gType, read);
         }
 
-        int _prevFavPage = 1;
-
         public string GetFavoritesApi(bool read, WorkerType gType, bool more)
         {
             if (Twitter.AccountState != AccountState.Valid)
@@ -4147,8 +4171,6 @@ namespace Hoehoe
 
 
         public event UserStreamEventReceivedEventHandler UserStreamEventReceived;
-        private DateTime _lastUserstreamDataReceived;
-        private TwitterUserstream withEventsField_userStream;
 
         private TwitterUserstream userStream
         {
@@ -4172,20 +4194,6 @@ namespace Hoehoe
         }
 
         public List<FormattedEvent> StoredEvent { get; set; }
-
-        private EventTypeTableElement[] EventTable = {
-            new EventTypeTableElement("favorite", EventType.Favorite),
-            new EventTypeTableElement("unfavorite", EventType.Unfavorite),
-            new EventTypeTableElement("follow", EventType.Follow),
-            new EventTypeTableElement("list_member_added", EventType.ListMemberAdded),
-            new EventTypeTableElement("list_member_removed", EventType.ListMemberRemoved),
-            new EventTypeTableElement("block", EventType.Block),
-            new EventTypeTableElement("unblock", EventType.Unblock),
-            new EventTypeTableElement("user_update", EventType.UserUpdate),
-            new EventTypeTableElement("deleted", EventType.Deleted),
-            new EventTypeTableElement("list_created", EventType.ListCreated),
-            new EventTypeTableElement("list_updated", EventType.ListUpdated)
-        };
 
         public EventType EventNameToEventType(string eventName)
         {
@@ -4723,9 +4731,6 @@ namespace Hoehoe
 
         #region "IDisposable Support"
 
-        // 重複する呼び出しを検出するには
-        private bool disposedValue;
-
         // IDisposable
         protected virtual void Dispose(bool disposing)
         {
@@ -4749,10 +4754,6 @@ namespace Hoehoe
 
         #endregion "IDisposable Support"
 
-        public Twitter()
-        {
-            this.ApiInformationChanged += this.Twitter_ApiInformationChanged;
-        }
         public event UserIdChangedEventHandler UserIdChanged;
         public event ApiInformationChangedEventHandler ApiInformationChanged;
 
