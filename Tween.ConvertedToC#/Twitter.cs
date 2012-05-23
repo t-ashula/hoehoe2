@@ -4520,6 +4520,108 @@ namespace Hoehoe
             }
         }
 
+        #endregion "UserStream"
+
+        #region "IDisposable Support"
+
+        // IDisposable
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.StopUserStream();
+                }
+            }
+            this.disposedValue = true;
+        }
+
+        // このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion "IDisposable Support"
+        public class FormattedEvent
+        {
+            public EventType Eventtype { get; set; }
+
+            public DateTime CreatedAt { get; set; }
+
+            public string Event { get; set; }
+
+            public string Username { get; set; }
+
+            public string Target { get; set; }
+
+            public long Id { get; set; }
+
+            public bool IsMe { get; set; }
+        }
+
+        private class PostInfo
+        {
+            public string CreatedAt;
+            public string Id;
+            public string Text;
+            public string UserId;
+
+            public PostInfo(string created, string idStr, string txt, string uid)
+            {
+                this.CreatedAt = created;
+                this.Id = idStr;
+                this.Text = txt;
+                this.UserId = uid;
+            }
+
+            public bool Equals(PostInfo dst)
+            {
+                return this.CreatedAt == dst.CreatedAt && this.Id == dst.Id && this.Text == dst.Text && this.UserId == dst.UserId;
+            }
+        }
+
+        private class range
+        {
+            public range(int fromIndex, int toIndex)
+            {
+                this.fromIndex = fromIndex;
+                this.toIndex = toIndex;
+            }
+
+            public int fromIndex { get; set; }
+
+            public int toIndex { get; set; }
+        }
+
+        private class EntityInfo
+        {
+            public int StartIndex { get; set; }
+
+            public int EndIndex { get; set; }
+
+            public string Text { get; set; }
+
+            public string Html { get; set; }
+
+            public string Display { get; set; }
+        }
+
+        private class EventTypeTableElement
+        {
+            public string Name;
+
+            public EventType Type;
+
+            public EventTypeTableElement(string name, EventType type)
+            {
+                this.Name = name;
+                this.Type = type;
+            }
+        }
         private class TwitterUserstream : IDisposable
         {
             private HttpTwitter _twCon;
@@ -4707,7 +4809,7 @@ namespace Hoehoe
             }
 
             #region "IDisposable Support"
-                        
+
             // IDisposable
             protected virtual void Dispose(bool disposing)
             {
@@ -4740,116 +4842,5 @@ namespace Hoehoe
 
             #endregion "IDisposable Support"
         }
-
-        #endregion "UserStream"
-
-        #region "IDisposable Support"
-
-        // IDisposable
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposedValue)
-            {
-                if (disposing)
-                {
-                    this.StopUserStream();
-                }
-            }
-            this.disposedValue = true;
-        }
-
-        // このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
-        public void Dispose()
-        {
-            // このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion "IDisposable Support"
-
-
-
-
-
-
-
-
-        private class PostInfo
-        {
-            public string CreatedAt;
-            public string Id;
-            public string Text;
-            public string UserId;
-
-            public PostInfo(string created, string idStr, string txt, string uid)
-            {
-                this.CreatedAt = created;
-                this.Id = idStr;
-                this.Text = txt;
-                this.UserId = uid;
-            }
-
-            public bool Equals(PostInfo dst)
-            {
-                return this.CreatedAt == dst.CreatedAt && this.Id == dst.Id && this.Text == dst.Text && this.UserId == dst.UserId;
-            }
-        }
-
-        private class range
-        {
-            public range(int fromIndex, int toIndex)
-            {
-                this.fromIndex = fromIndex;
-                this.toIndex = toIndex;
-            }
-
-            public int fromIndex { get; set; }
-
-            public int toIndex { get; set; }
-        }
-
-        private class EntityInfo
-        {
-            public int StartIndex { get; set; }
-
-            public int EndIndex { get; set; }
-
-            public string Text { get; set; }
-
-            public string Html { get; set; }
-
-            public string Display { get; set; }
-        }
-        public class FormattedEvent
-        {
-            public EventType Eventtype { get; set; }
-
-            public DateTime CreatedAt { get; set; }
-
-            public string Event { get; set; }
-
-            public string Username { get; set; }
-
-            public string Target { get; set; }
-
-            public long Id { get; set; }
-
-            public bool IsMe { get; set; }
-        }
-
-        private class EventTypeTableElement
-        {
-            public string Name;
-
-            public EventType Type;
-
-            public EventTypeTableElement(string name, EventType type)
-            {
-                this.Name = name;
-                this.Type = type;
-            }
-        }
-
     }
 }
