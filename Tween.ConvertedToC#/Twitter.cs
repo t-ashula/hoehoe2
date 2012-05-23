@@ -69,48 +69,48 @@ namespace Hoehoe
         private const string PTH2 = "(/(?:" + PTH + "+" + URL_VALID_URL_PATH_ENDING_CHARS + "|" + PTH + "+" + URL_VALID_URL_PATH_ENDING_CHARS + "?|" + URL_VALID_URL_PATH_ENDING_CHARS + ")?)?";
         private const string QRY = "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\[\\]\\-_.,~]*[a-z0-9_&=#])?";
 
-        private static AccountState _accountState = AccountState.Valid;
+        private static AccountState accountState = AccountState.Valid;
 
-        private readonly object _lockObj = new object();
-        private List<long> _followerIds = new List<long>();
-        private bool _getFollowerResult;
-        private List<long> noRTIds = new List<long>();
-        private bool _getNoRetweetResult;
-        private int _followersCount;
-        private int _friendsCount;
-        private int _statusesCount;
-        private string _location = string.Empty;
-        private string _bio = string.Empty;
-        private string _protocol = "https://";
+        private readonly object lockObj = new object();
+        private List<long> followerIds = new List<long>();
+        private bool getFollowerResult;
+        private List<long> noRetweetIds = new List<long>();
+        private bool getNoRetweetResult;
+        private int followersCount;
+        private int friendsCount;
+        private int statusesCount;
+        private string location = string.Empty;
+        private string bio = string.Empty;
+        private string protocol = "https://";
 
         // プロパティからアクセスされる共通情報
-        private string _uname;
+        private string uname;
 
-        private int _iconSz;
-        private bool _getIcon;
-        private IDictionary<string, Image> _dIcon;
-        private bool _tinyUrlResolve;
-        private bool _restrictFavCheck;
+        private int iconSz;
+        private bool getIcon;
+        private IDictionary<string, Image> userIcons;
+        private bool tinyUrlResolve;
+        private bool restrictFavCheck;
+        private bool readOwnPost;
 
-        private bool _readOwnPost;
+        private List<string> hashList = new List<string>();
 
-        private List<string> _hashList = new List<string>();
+        private Outputz outputz = new Outputz();
 
-        private Outputz _outputz = new Outputz();
+        private long minHomeTimeline = long.MaxValue; // max_idで古い発言を取得するために保持（lists分は個別タブで管理）
+        private long minMentions = long.MaxValue;
+        private long minDirectmessage = long.MaxValue;
+        private long minDirectmessageSent = long.MaxValue;
 
-        private long _minHomeTimeline = long.MaxValue; // max_idで古い発言を取得するために保持（lists分は個別タブで管理）
-        private long _minMentions = long.MaxValue;
-        private long _minDirectmessage = long.MaxValue;
-        private long _minDirectmessageSent = long.MaxValue;
-        private HttpTwitter _twCon = new HttpTwitter();
+        private HttpTwitter twitterConnection = new HttpTwitter();
+        
+        private PostInfo prevPostInfo = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
 
-        PostInfo _prevPostInfo = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
+        private int prevFavPage = 1;
+        private DateTime lastUserstreamDataReceived;
+        private TwitterUserstream withEventsFielduserStream;
 
-        int _prevFavPage = 1;
-        private DateTime _lastUserstreamDataReceived;
-        private TwitterUserstream withEventsField_userStream;
-
-        private EventTypeTableElement[] EventTable = {
+        private EventTypeTableElement[] eventsTable = {
             new EventTypeTableElement("favorite", EventType.Favorite),
             new EventTypeTableElement("unfavorite", EventType.Unfavorite),
             new EventTypeTableElement("follow", EventType.Follow),
@@ -163,80 +163,80 @@ namespace Hoehoe
 
         public static AccountState AccountState
         {
-            get { return _accountState; }
-            set { _accountState = value; }
+            get { return accountState; }
+            set { accountState = value; }
         }
 
         public string Username
         {
-            get { return this._twCon.AuthenticatedUsername; }
+            get { return this.twitterConnection.AuthenticatedUsername; }
         }
 
         public long UserId
         {
-            get { return this._twCon.AuthenticatedUserId; }
+            get { return this.twitterConnection.AuthenticatedUserId; }
         }
 
         public string Password
         {
-            get { return this._twCon.Password; }
+            get { return this.twitterConnection.Password; }
         }
 
         public IDictionary<string, Image> DetailIcon
         {
-            get { return this._dIcon; }
-            set { this._dIcon = value; }
+            get { return this.userIcons; }
+            set { this.userIcons = value; }
         }
 
         public bool ReadOwnPost
         {
-            get { return this._readOwnPost; }
-            set { this._readOwnPost = value; }
+            get { return this.readOwnPost; }
+            set { this.readOwnPost = value; }
         }
 
         public int FollowersCount
         {
-            get { return this._followersCount; }
+            get { return this.followersCount; }
         }
 
         public int FriendsCount
         {
-            get { return this._friendsCount; }
+            get { return this.friendsCount; }
         }
 
         public int StatusesCount
         {
-            get { return this._statusesCount; }
+            get { return this.statusesCount; }
         }
 
         public string Location
         {
-            get { return this._location; }
+            get { return this.location; }
         }
 
         public string Bio
         {
-            get { return this._bio; }
+            get { return this.bio; }
         }
 
         public bool GetFollowersSuccess
         {
-            get { return this._getFollowerResult; }
+            get { return this.getFollowerResult; }
         }
 
         public bool GetNoRetweetSuccess
         {
-            get { return this._getNoRetweetResult; }
+            get { return this.getNoRetweetResult; }
         }
 
         public string AccessToken
         {
-            get { return this._twCon.AccessToken; }
+            get { return this.twitterConnection.AccessToken; }
         }
 
         public string AccessTokenSecret
         {
-            get { return this._twCon.AccessTokenSecret; }
+            get { return this.twitterConnection.AccessTokenSecret; }
         }
 
         public string TrackWord { get; set; }
@@ -247,7 +247,7 @@ namespace Hoehoe
 
         public bool IsUserstreamDataReceived
         {
-            get { return DateTime.Now.Subtract(this._lastUserstreamDataReceived).TotalSeconds < 31; }
+            get { return DateTime.Now.Subtract(this.lastUserstreamDataReceived).TotalSeconds < 31; }
         }
 
         public bool UserStreamEnabled
@@ -257,21 +257,21 @@ namespace Hoehoe
 
         private TwitterUserstream UserStream
         {
-            get { return this.withEventsField_userStream; }
+            get { return this.withEventsFielduserStream; }
             set
             {
-                if (this.withEventsField_userStream != null)
+                if (this.withEventsFielduserStream != null)
                 {
-                    this.withEventsField_userStream.StatusArrived -= this.UserStream_StatusArrived;
-                    this.withEventsField_userStream.Started -= this.UserStream_Started;
-                    this.withEventsField_userStream.Stopped -= this.UserStream_Stopped;
+                    this.withEventsFielduserStream.StatusArrived -= this.UserStream_StatusArrived;
+                    this.withEventsFielduserStream.Started -= this.UserStream_Started;
+                    this.withEventsFielduserStream.Stopped -= this.UserStream_Stopped;
                 }
-                this.withEventsField_userStream = value;
-                if (this.withEventsField_userStream != null)
+                this.withEventsFielduserStream = value;
+                if (this.withEventsFielduserStream != null)
                 {
-                    this.withEventsField_userStream.StatusArrived += this.UserStream_StatusArrived;
-                    this.withEventsField_userStream.Started += this.UserStream_Started;
-                    this.withEventsField_userStream.Stopped += this.UserStream_Stopped;
+                    this.withEventsFielduserStream.StatusArrived += this.UserStream_StatusArrived;
+                    this.withEventsFielduserStream.Started += this.UserStream_Started;
+                    this.withEventsFielduserStream.Stopped += this.UserStream_Stopped;
                 }
             }
         }
@@ -283,7 +283,7 @@ namespace Hoehoe
             MyCommon.TwitterApiInfo.Initialize();
             try
             {
-                res = this._twCon.AuthUserAndPass(username, password, ref content);
+                res = this.twitterConnection.AuthUserAndPass(username, password, ref content);
             }
             catch (Exception ex)
             {
@@ -294,7 +294,7 @@ namespace Hoehoe
             {
                 case HttpStatusCode.OK:
                     Twitter.AccountState = AccountState.Valid;
-                    this._uname = username.ToLower();
+                    this.uname = username.ToLower();
                     if (AppendSettingDialog.Instance.UserstreamStartup)
                     {
                         this.ReconnectUserStream();
@@ -337,7 +337,7 @@ namespace Hoehoe
             MyCommon.TwitterApiInfo.Initialize();
             try
             {
-                res = this._twCon.AuthGetRequestToken(ref pinPageUrl);
+                res = this.twitterConnection.AuthGetRequestToken(ref pinPageUrl);
             }
             catch (Exception)
             {
@@ -355,7 +355,7 @@ namespace Hoehoe
             MyCommon.TwitterApiInfo.Initialize();
             try
             {
-                res = this._twCon.AuthGetAccessToken(pinCode);
+                res = this.twitterConnection.AuthGetAccessToken(pinCode);
             }
             catch (Exception)
             {
@@ -366,7 +366,7 @@ namespace Hoehoe
             {
                 case HttpStatusCode.OK:
                     Twitter.AccountState = AccountState.Valid;
-                    this._uname = this.Username.ToLower();
+                    this.uname = this.Username.ToLower();
                     if (AppendSettingDialog.Instance.UserstreamStartup)
                     {
                         this.ReconnectUserStream();
@@ -406,7 +406,7 @@ namespace Hoehoe
         {
             Twitter.AccountState = AccountState.Invalid;
             MyCommon.TwitterApiInfo.Initialize();
-            this._twCon.ClearAuthInfo();
+            this.twitterConnection.ClearAuthInfo();
         }
 
         public void VerifyCredentials()
@@ -415,7 +415,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.VerifyCredentials(ref content);
+                res = this.twitterConnection.VerifyCredentials(ref content);
             }
             catch (Exception)
             {
@@ -434,7 +434,7 @@ namespace Hoehoe
                 {
                     return;
                 }
-                this._twCon.AuthenticatedUserId = user.Id;
+                this.twitterConnection.AuthenticatedUserId = user.Id;
             }
         }
 
@@ -447,8 +447,8 @@ namespace Hoehoe
             }
 
             MyCommon.TwitterApiInfo.Initialize();
-            this._twCon.Initialize(token, tokenSecret, username, userId);
-            this._uname = username.ToLower();
+            this.twitterConnection.Initialize(token, tokenSecret, username, userId);
+            this.uname = username.ToLower();
             if (AppendSettingDialog.Instance.UserstreamStartup)
             {
                 this.ReconnectUserStream();
@@ -520,7 +520,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.UpdateStatus(postStr, replyToId, ref content);
+                res = this.twitterConnection.UpdateStatus(postStr, replyToId, ref content);
             }
             catch (Exception ex)
             {
@@ -547,18 +547,18 @@ namespace Hoehoe
                         return "Err:Invalid Json!";
                     }
 
-                    this._followersCount = status.User.FollowersCount;
-                    this._friendsCount = status.User.FriendsCount;
-                    this._statusesCount = status.User.StatusesCount;
-                    this._location = status.User.Location;
-                    this._bio = status.User.Description;
+                    this.followersCount = status.User.FollowersCount;
+                    this.friendsCount = status.User.FriendsCount;
+                    this.statusesCount = status.User.StatusesCount;
+                    this.location = status.User.Location;
+                    this.bio = status.User.Description;
 
                     if (this.IsPostRestricted(status))
                     {
                         return "OK:Delaying?";
                     }
 
-                    return this._outputz.Post(postStr.Length) ? string.Empty : "Outputz:Failed";
+                    return this.outputz.Post(postStr.Length) ? string.Empty : "Outputz:Failed";
                 case HttpStatusCode.NotFound:
                     return string.Empty;
                 case HttpStatusCode.Forbidden:
@@ -610,7 +610,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.UpdateStatusWithMedia(postStr, replyToId, mediaFile, ref content);
+                res = this.twitterConnection.UpdateStatusWithMedia(postStr, replyToId, mediaFile, ref content);
             }
             catch (Exception ex)
             {
@@ -637,18 +637,18 @@ namespace Hoehoe
                         return "Err:Invalid Json!";
                     }
 
-                    this._followersCount = status.User.FollowersCount;
-                    this._friendsCount = status.User.FriendsCount;
-                    this._statusesCount = status.User.StatusesCount;
-                    this._location = status.User.Location;
-                    this._bio = status.User.Description;
+                    this.followersCount = status.User.FollowersCount;
+                    this.friendsCount = status.User.FriendsCount;
+                    this.statusesCount = status.User.StatusesCount;
+                    this.location = status.User.Location;
+                    this.bio = status.User.Description;
 
                     if (this.IsPostRestricted(status))
                     {
                         return "OK:Delaying?";
                     }
 
-                    return this._outputz.Post(postStr.Length) ? string.Empty : "Outputz:Failed";
+                    return this.outputz.Post(postStr.Length) ? string.Empty : "Outputz:Failed";
                 case HttpStatusCode.NotFound:
                     return string.Empty;
                 case HttpStatusCode.Forbidden:
@@ -708,7 +708,7 @@ namespace Hoehoe
             Match mc = Regex.Match(postStr, "^DM? +(?<id>[a-zA-Z0-9_]+) +(?<body>.+)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
             try
             {
-                res = this._twCon.SendDirectMessage(mc.Groups["body"].Value, mc.Groups["id"].Value, ref content);
+                res = this.twitterConnection.SendDirectMessage(mc.Groups["body"].Value, mc.Groups["id"].Value, ref content);
             }
             catch (Exception ex)
             {
@@ -735,12 +735,12 @@ namespace Hoehoe
                         return "Err:Invalid Json!";
                     }
 
-                    this._followersCount = status.Sender.FollowersCount;
-                    this._friendsCount = status.Sender.FriendsCount;
-                    this._statusesCount = status.Sender.StatusesCount;
-                    this._location = status.Sender.Location;
-                    this._bio = status.Sender.Description;
-                    return this._outputz.Post(postStr.Length) ? string.Empty : "Outputz:Failed";
+                    this.followersCount = status.Sender.FollowersCount;
+                    this.friendsCount = status.Sender.FriendsCount;
+                    this.statusesCount = status.Sender.StatusesCount;
+                    this.location = status.Sender.Location;
+                    this.bio = status.Sender.Description;
+                    return this.outputz.Post(postStr.Length) ? string.Empty : "Outputz:Failed";
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.BadRequest:
                     {
@@ -788,7 +788,7 @@ namespace Hoehoe
             HttpStatusCode res = default(HttpStatusCode);
             try
             {
-                res = this._twCon.DestroyStatus(id);
+                res = this.twitterConnection.DestroyStatus(id);
             }
             catch (Exception ex)
             {
@@ -839,7 +839,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.RetweetStatus(target, ref content);
+                res = this.twitterConnection.RetweetStatus(target, ref content);
             }
             catch (Exception ex)
             {
@@ -880,7 +880,7 @@ namespace Hoehoe
             }
 
             // 二重取得回避
-            lock (this._lockObj)
+            lock (this.lockObj)
             {
                 if (TabInformations.GetInstance().ContainsKey(post.StatusId))
                 {
@@ -897,7 +897,7 @@ namespace Hoehoe
             post.IsMe = true;
             post.IsRead = read;
             post.IsOwl = false;
-            if (this._readOwnPost)
+            if (this.readOwnPost)
             {
                 post.IsRead = true;
             }
@@ -931,7 +931,7 @@ namespace Hoehoe
             HttpStatusCode res = default(HttpStatusCode);
             try
             {
-                res = this._twCon.DestroyDirectMessage(id);
+                res = this.twitterConnection.DestroyDirectMessage(id);
             }
             catch (Exception ex)
             {
@@ -969,7 +969,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.CreateFriendships(screenName, ref content);
+                res = this.twitterConnection.CreateFriendships(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1008,7 +1008,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.DestroyFriendships(screenName, ref content);
+                res = this.twitterConnection.DestroyFriendships(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1047,7 +1047,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.CreateBlock(screenName, ref content);
+                res = this.twitterConnection.CreateBlock(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1086,7 +1086,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.DestroyBlock(screenName, ref content);
+                res = this.twitterConnection.DestroyBlock(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1125,7 +1125,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.ReportSpam(screenName, ref content);
+                res = this.twitterConnection.ReportSpam(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1164,7 +1164,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.ShowFriendships(this._uname, screenName, ref content);
+                res = this.twitterConnection.ShowFriendships(this.uname, screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1218,7 +1218,7 @@ namespace Hoehoe
             user = null;
             try
             {
-                res = this._twCon.ShowUserInfo(screenName, ref content);
+                res = this.twitterConnection.ShowUserInfo(screenName, ref content);
             }
             catch (Exception ex)
             {
@@ -1274,7 +1274,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    res = this._twCon.Statusid_retweeted_by_ids(statusId, 100, i, ref content);
+                    res = this.twitterConnection.Statusid_retweeted_by_ids(statusId, 100, i, ref content);
                 }
                 catch (Exception ex)
                 {
@@ -1337,7 +1337,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.CreateFavorites(id, ref content);
+                res = this.twitterConnection.CreateFavorites(id, ref content);
             }
             catch (Exception ex)
             {
@@ -1348,7 +1348,7 @@ namespace Hoehoe
             {
                 case HttpStatusCode.OK:
                     Twitter.AccountState = AccountState.Valid;
-                    if (!this._restrictFavCheck)
+                    if (!this.restrictFavCheck)
                     {
                         return string.Empty;
                     }
@@ -1367,7 +1367,7 @@ namespace Hoehoe
             content = string.Empty;
             try
             {
-                res = this._twCon.ShowStatuses(id, ref content);
+                res = this.twitterConnection.ShowStatuses(id, ref content);
             }
             catch (Exception ex)
             {
@@ -1420,7 +1420,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.DestroyFavorites(id, ref content);
+                res = this.twitterConnection.DestroyFavorites(id, ref content);
             }
             catch (Exception ex)
             {
@@ -1459,7 +1459,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.UpdateProfile(name, url, location, description, ref content);
+                res = this.twitterConnection.UpdateProfile(name, url, location, description, ref content);
             }
             catch (Exception ex)
             {
@@ -1498,7 +1498,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.UpdateProfileImage(new FileInfo(filename), ref content);
+                res = this.twitterConnection.UpdateProfileImage(new FileInfo(filename), ref content);
             }
             catch (Exception ex)
             {
@@ -1523,22 +1523,22 @@ namespace Hoehoe
 
         public void SetGetIcon(bool value)
         {
-            this._getIcon = value;
+            this.getIcon = value;
         }
 
         public void SetTinyUrlResolve(bool value)
         {
-            this._tinyUrlResolve = value;
+            this.tinyUrlResolve = value;
         }
 
         public void SetRestrictFavCheck(bool value)
         {
-            this._restrictFavCheck = value;
+            this.restrictFavCheck = value;
         }
 
         public void SetIconSize(int value)
         {
-            this._iconSz = value;
+            this.iconSz = value;
         }
 
         #region "TODO:バージョンアップ"
@@ -1654,10 +1654,10 @@ namespace Hoehoe
         public void SetUseSsl(bool value)
         {
             HttpTwitter.SetUseSsl(value);
-            this._protocol = value ? "https://" : "http://";
+            this.protocol = value ? "https://" : "http://";
         }
 
-        public string GetTimelineApi(bool read, WorkerType gType, bool more, bool startup)
+        public string GetTimelineApi(bool read, WorkerType workerType, bool more, bool startup)
         {
             if (Twitter.AccountState != AccountState.Valid)
             {
@@ -1672,7 +1672,7 @@ namespace Hoehoe
             HttpStatusCode res = default(HttpStatusCode);
             string content = string.Empty;
             int count = AppendSettingDialog.Instance.CountApi;
-            if (gType == WorkerType.Reply)
+            if (workerType == WorkerType.Reply)
             {
                 count = AppendSettingDialog.Instance.CountApiReply;
             }
@@ -1682,33 +1682,33 @@ namespace Hoehoe
                 {
                     count = AppendSettingDialog.Instance.MoreCountApi;
                 }
-                else if (startup && AppendSettingDialog.Instance.FirstCountApi != 0 && gType == WorkerType.Timeline)
+                else if (startup && AppendSettingDialog.Instance.FirstCountApi != 0 && workerType == WorkerType.Timeline)
                 {
                     count = AppendSettingDialog.Instance.FirstCountApi;
                 }
             }
             try
             {
-                if (gType == WorkerType.Timeline)
+                if (workerType == WorkerType.Timeline)
                 {
                     if (more)
                     {
-                        res = this._twCon.HomeTimeline(count, this._minHomeTimeline, 0, ref content);
+                        res = this.twitterConnection.HomeTimeline(count, this.minHomeTimeline, 0, ref content);
                     }
                     else
                     {
-                        res = this._twCon.HomeTimeline(count, 0, 0, ref content);
+                        res = this.twitterConnection.HomeTimeline(count, 0, 0, ref content);
                     }
                 }
                 else
                 {
                     if (more)
                     {
-                        res = this._twCon.Mentions(count, this._minMentions, 0, ref content);
+                        res = this.twitterConnection.Mentions(count, this.minMentions, 0, ref content);
                     }
                     else
                     {
-                        res = this._twCon.Mentions(count, 0, 0, ref content);
+                        res = this.twitterConnection.Mentions(count, 0, 0, ref content);
                     }
                 }
             }
@@ -1730,9 +1730,9 @@ namespace Hoehoe
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            return gType == WorkerType.Timeline ?
-                this.CreatePostsFromJson(content, gType, null, read, count, ref this._minHomeTimeline) :
-                this.CreatePostsFromJson(content, gType, null, read, count, ref this._minMentions);
+            return workerType == WorkerType.Timeline ?
+                this.CreatePostsFromJson(content, workerType, null, read, count, ref this.minHomeTimeline) :
+                this.CreatePostsFromJson(content, workerType, null, read, count, ref this.minMentions);
         }
 
         public string GetUserTimelineApi(bool read, int count, string userName, TabClass tab, bool more)
@@ -1763,17 +1763,17 @@ namespace Hoehoe
                         return string.Empty;
                     }
                     userName = target;
-                    res = this._twCon.UserTimeline(0, target, count, 0, 0, ref content);
+                    res = this.twitterConnection.UserTimeline(0, target, count, 0, 0, ref content);
                 }
                 else
                 {
                     if (more)
                     {
-                        res = this._twCon.UserTimeline(0, userName, count, tab.OldestId, 0, ref content);
+                        res = this.twitterConnection.UserTimeline(0, userName, count, tab.OldestId, 0, ref content);
                     }
                     else
                     {
-                        res = this._twCon.UserTimeline(0, userName, count, 0, 0, ref content);
+                        res = this.twitterConnection.UserTimeline(0, userName, count, 0, 0, ref content);
                     }
                 }
             }
@@ -1823,7 +1823,7 @@ namespace Hoehoe
                     tab.OldestId = item.StatusId;
                 }
                 item.IsRead = read;
-                if (item.IsMe && !read && this._readOwnPost)
+                if (item.IsMe && !read && this.readOwnPost)
                 {
                     item.IsRead = true;
                 }
@@ -1854,7 +1854,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.ShowStatuses(id, ref content);
+                res = this.twitterConnection.ShowStatuses(id, ref content);
             }
             catch (Exception ex)
             {
@@ -1898,7 +1898,7 @@ namespace Hoehoe
                 return "Err:Can't create post";
             }
             item.IsRead = read;
-            if (item.IsMe && !read && this._readOwnPost)
+            if (item.IsMe && !read && this.readOwnPost)
             {
                 item.IsRead = true;
             }
@@ -1959,11 +1959,11 @@ namespace Hoehoe
             {
                 if (more)
                 {
-                    res = this._twCon.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, tab.OldestId, 0, AppendSettingDialog.Instance.IsListStatusesIncludeRts, ref content);
+                    res = this.twitterConnection.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, tab.OldestId, 0, AppendSettingDialog.Instance.IsListStatusesIncludeRts, ref content);
                 }
                 else
                 {
-                    res = this._twCon.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, 0, 0, AppendSettingDialog.Instance.IsListStatusesIncludeRts, ref content);
+                    res = this.twitterConnection.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, 0, 0, AppendSettingDialog.Instance.IsListStatusesIncludeRts, ref content);
                 }
             }
             catch (Exception ex)
@@ -2059,7 +2059,7 @@ namespace Hoehoe
 
             try
             {
-                res = this._twCon.Search(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content);
+                res = this.twitterConnection.Search(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content);
             }
             catch (Exception ex)
             {
@@ -2132,10 +2132,10 @@ namespace Hoehoe
                     }
 
                     // 以下、ユーザー情報
-                    XmlElement xUentry = (XmlElement)xentry.SelectSingleNode("./search:author", nsmgr);
+                    XmlElement author = (XmlElement)xentry.SelectSingleNode("./search:author", nsmgr);
                     post.UserId = 0;
-                    post.ScreenName = xUentry["name"].InnerText.Split(' ')[0].Trim();
-                    post.Nickname = xUentry["name"].InnerText.Substring(post.ScreenName.Length).Trim();
+                    post.ScreenName = author["name"].InnerText.Split(' ')[0].Trim();
+                    post.Nickname = author["name"].InnerText.Substring(post.ScreenName.Length).Trim();
                     if (post.Nickname.Length > 2)
                     {
                         post.Nickname = post.Nickname.Substring(1, post.Nickname.Length - 2);
@@ -2146,17 +2146,17 @@ namespace Hoehoe
                     }
                     post.ImageUrl = ((XmlElement)xentry.SelectSingleNode("./search:link[@type='image/png']", nsmgr)).GetAttribute("href");
                     post.IsProtect = false;
-                    post.IsMe = post.ScreenName.ToLower().Equals(this._uname);
+                    post.IsMe = post.ScreenName.ToLower().Equals(this.uname);
                     // HTMLに整形
                     post.Text = this.CreateHtmlAnchor(HttpUtility.HtmlEncode(post.TextFromApi), post.ReplyToList, post.Media);
                     post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
                     // Source整形
                     this.CreateSource(ref post);
                     post.IsRead = read;
-                    post.IsReply = post.ReplyToList.Contains(this._uname);
+                    post.IsReply = post.ReplyToList.Contains(this.uname);
                     post.IsExcludeReply = false;
                     post.IsOwl = false;
-                    if (post.IsMe && !read && this._readOwnPost)
+                    if (post.IsMe && !read && this.readOwnPost)
                     {
                         post.IsRead = true;
                     }
@@ -2211,11 +2211,11 @@ namespace Hoehoe
             {
                 if (string.IsNullOrEmpty(querystr))
                 {
-                    res = this._twCon.PhoenixSearch(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content);
+                    res = this.twitterConnection.PhoenixSearch(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content);
                 }
                 else
                 {
-                    res = this._twCon.PhoenixSearch(querystr, ref content);
+                    res = this.twitterConnection.PhoenixSearch(querystr, ref content);
                 }
             }
             catch (Exception ex)
@@ -2250,7 +2250,7 @@ namespace Hoehoe
             return ret;
         }
 
-        public string GetDirectMessageApi(bool read, WorkerType gType, bool more)
+        public string GetDirectMessageApi(bool read, WorkerType workerType, bool more)
         {
             if (MyCommon.IsEnding)
             {
@@ -2274,26 +2274,26 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                if (gType == WorkerType.DirectMessegeRcv)
+                if (workerType == WorkerType.DirectMessegeRcv)
                 {
                     if (more)
                     {
-                        res = this._twCon.DirectMessages(20, this._minDirectmessage, 0, ref content);
+                        res = this.twitterConnection.DirectMessages(20, this.minDirectmessage, 0, ref content);
                     }
                     else
                     {
-                        res = this._twCon.DirectMessages(20, 0, 0, ref content);
+                        res = this.twitterConnection.DirectMessages(20, 0, 0, ref content);
                     }
                 }
                 else
                 {
                     if (more)
                     {
-                        res = this._twCon.DirectMessagesSent(20, this._minDirectmessageSent, 0, ref content);
+                        res = this.twitterConnection.DirectMessagesSent(20, this.minDirectmessageSent, 0, ref content);
                     }
                     else
                     {
-                        res = this._twCon.DirectMessagesSent(20, 0, 0, ref content);
+                        res = this.twitterConnection.DirectMessagesSent(20, 0, 0, ref content);
                     }
                 }
             }
@@ -2316,10 +2316,10 @@ namespace Hoehoe
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            return this.CreateDirectMessagesFromJson(content, gType, read);
+            return this.CreateDirectMessagesFromJson(content, workerType, read);
         }
 
-        public string GetFavoritesApi(bool read, WorkerType gType, bool more)
+        public string GetFavoritesApi(bool read, WorkerType workerType, bool more)
         {
             if (Twitter.AccountState != AccountState.Valid)
             {
@@ -2342,16 +2342,16 @@ namespace Hoehoe
             // 前ページ取得の場合はページカウンタをインクリメント、それ以外の場合はページカウンタリセット
             if (more)
             {
-                this._prevFavPage += 1;
+                this.prevFavPage += 1;
             }
             else
             {
-                this._prevFavPage = 1;
+                this.prevFavPage = 1;
             }
 
             try
             {
-                res = this._twCon.Favorites(count, this._prevFavPage, ref content);
+                res = this.twitterConnection.Favorites(count, this.prevFavPage, ref content);
             }
             catch (Exception ex)
             {
@@ -2398,7 +2398,7 @@ namespace Hoehoe
                 {
                     post.StatusId = status.Id;
                     // 二重取得回避
-                    lock (this._lockObj)
+                    lock (this.lockObj)
                     {
                         if (TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Contains(post.StatusId))
                         {
@@ -2439,7 +2439,7 @@ namespace Hoehoe
                         post.IsProtect = user.Protected;
                         // Retweetした人
                         post.RetweetedBy = status.User.ScreenName;
-                        post.IsMe = post.RetweetedBy.ToLower().Equals(this._uname);
+                        post.IsMe = post.RetweetedBy.ToLower().Equals(this.uname);
                     }
                     else
                     {
@@ -2469,7 +2469,7 @@ namespace Hoehoe
                         post.Nickname = user.Name.Trim();
                         post.ImageUrl = user.ProfileImageUrl;
                         post.IsProtect = user.Protected;
-                        post.IsMe = post.ScreenName.ToLower().Equals(this._uname);
+                        post.IsMe = post.ScreenName.ToLower().Equals(this.uname);
                     }
                     // HTMLに整形
                     {
@@ -2483,7 +2483,7 @@ namespace Hoehoe
                     // Source整形
                     this.CreateSource(ref post);
                     post.IsRead = read;
-                    post.IsReply = post.ReplyToList.Contains(this._uname);
+                    post.IsReply = post.ReplyToList.Contains(this.uname);
                     post.IsExcludeReply = false;
 
                     if (post.IsMe)
@@ -2492,9 +2492,9 @@ namespace Hoehoe
                     }
                     else
                     {
-                        if (this._followerIds.Count > 0)
+                        if (this.followerIds.Count > 0)
                         {
-                            post.IsOwl = !this._followerIds.Contains(post.UserId);
+                            post.IsOwl = !this.followerIds.Contains(post.UserId);
                         }
                     }
 
@@ -2519,23 +2519,23 @@ namespace Hoehoe
             }
 
             long cursor = -1;
-            List<long> tmpFollower = new List<long>(this._followerIds);
-            this._followerIds.Clear();
+            List<long> tmpFollower = new List<long>(this.followerIds);
+            this.followerIds.Clear();
             do
             {
                 string ret = this.FollowerApi(ref cursor);
                 if (!string.IsNullOrEmpty(ret))
                 {
-                    this._followerIds.Clear();
-                    this._followerIds.AddRange(tmpFollower);
-                    this._getFollowerResult = false;
+                    this.followerIds.Clear();
+                    this.followerIds.AddRange(tmpFollower);
+                    this.getFollowerResult = false;
                     return ret;
                 }
             } while (cursor > 0);
 
-            TabInformations.GetInstance().RefreshOwl(this._followerIds);
+            TabInformations.GetInstance().RefreshOwl(this.followerIds);
 
-            this._getFollowerResult = true;
+            this.getFollowerResult = true;
             return string.Empty;
         }
 
@@ -2548,21 +2548,21 @@ namespace Hoehoe
             }
 
             long cursor = -1;
-            List<long> tmpIds = new List<long>(this.noRTIds);
-            this.noRTIds.Clear();
+            List<long> tmpIds = new List<long>(this.noRetweetIds);
+            this.noRetweetIds.Clear();
             do
             {
                 string ret = this.NoRetweetApi(ref cursor);
                 if (!string.IsNullOrEmpty(ret))
                 {
-                    this.noRTIds.Clear();
-                    this.noRTIds.AddRange(tmpIds);
-                    this._getNoRetweetResult = false;
+                    this.noRetweetIds.Clear();
+                    this.noRetweetIds.AddRange(tmpIds);
+                    this.getNoRetweetResult = false;
                     return ret;
                 }
             } while (cursor > 0);
 
-            this._getNoRetweetResult = true;
+            this.getNoRetweetResult = true;
             return newVariable;
         }
 
@@ -2572,7 +2572,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.GetConfiguration(ref content);
+                res = this.twitterConnection.GetConfiguration(ref content);
             }
             catch (Exception ex)
             {
@@ -2625,7 +2625,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    res = this._twCon.GetLists(this.Username, cursor, ref content);
+                    res = this.twitterConnection.GetLists(this.Username, cursor, ref content);
                 }
                 catch (Exception ex)
                 {
@@ -2670,7 +2670,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    res = this._twCon.GetListsSubscriptions(this.Username, cursor, ref content);
+                    res = this.twitterConnection.GetListsSubscriptions(this.Username, cursor, ref content);
                 }
                 catch (Exception ex)
                 {
@@ -2720,7 +2720,7 @@ namespace Hoehoe
 
             try
             {
-                res = this._twCon.DeleteListID(this.Username, listId, ref content);
+                res = this.twitterConnection.DeleteListID(this.Username, listId, ref content);
             }
             catch (Exception ex)
             {
@@ -2751,7 +2751,7 @@ namespace Hoehoe
 
             try
             {
-                res = this._twCon.UpdateListID(this.Username, listId, newName, isPrivate, description, ref content);
+                res = this.twitterConnection.UpdateListID(this.Username, listId, newName, isPrivate, description, ref content);
             }
             catch (Exception ex)
             {
@@ -2811,7 +2811,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.GetListMembers(this.Username, listId, cursor, ref content);
+                res = this.twitterConnection.GetListMembers(this.Username, listId, cursor, ref content);
             }
             catch (Exception ex)
             {
@@ -2862,7 +2862,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.CreateLists(listName, isPrivate, description, ref content);
+                res = this.twitterConnection.CreateLists(listName, isPrivate, description, ref content);
             }
             catch (Exception ex)
             {
@@ -2914,7 +2914,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.ShowListMember(listId, user, ref content);
+                res = this.twitterConnection.ShowListMember(listId, user, ref content);
             }
             catch (Exception ex)
             {
@@ -2957,7 +2957,7 @@ namespace Hoehoe
             HttpStatusCode res = default(HttpStatusCode);
             try
             {
-                res = this._twCon.CreateListMembers(listId, user, ref content);
+                res = this.twitterConnection.CreateListMembers(listId, user, ref content);
             }
             catch (Exception ex)
             {
@@ -2987,7 +2987,7 @@ namespace Hoehoe
             HttpStatusCode res = default(HttpStatusCode);
             try
             {
-                res = this._twCon.DeleteListMembers(listId, user, ref content);
+                res = this.twitterConnection.DeleteListMembers(listId, user, ref content);
             }
             catch (Exception ex)
             {
@@ -3010,7 +3010,7 @@ namespace Hoehoe
             return string.Empty;
         }
 
-        public string CreateHtmlAnchor(string text, List<string> atList, Dictionary<string, string> media)
+        public string CreateHtmlAnchor(string text, List<string> replyToIds, Dictionary<string, string> media)
         {
             if (text == null)
             {
@@ -3041,9 +3041,9 @@ namespace Hoehoe
             Match m = Regex.Match(retStr, "(^|[^a-zA-Z0-9_])[@＠]([a-zA-Z0-9_]{1,20})");
             while (m.Success)
             {
-                if (!atList.Contains(m.Result("$2").ToLower()))
+                if (!replyToIds.Contains(m.Result("$2").ToLower()))
                 {
-                    atList.Add(m.Result("$2").ToLower());
+                    replyToIds.Add(m.Result("$2").ToLower());
                 }
                 m = m.NextMatch();
             }
@@ -3075,11 +3075,11 @@ namespace Hoehoe
                         return mh.Result("$0");
                     }
                 }
-                lock (_lockObj)
+                lock (lockObj)
                 {
-                    _hashList.Add("#" + mh.Result("$3"));
+                    hashList.Add("#" + mh.Result("$3"));
                 }
-                return mh.Result("$1") + "<a href=\"" + _protocol + "twitter.com/search?q=%23" + mh.Result("$3") + "\">" + mh.Result("$2$3") + "</a>";
+                return mh.Result("$1") + "<a href=\"" + protocol + "twitter.com/search?q=%23" + mh.Result("$3") + "\">" + mh.Result("$2$3") + "</a>";
             };
             retStr = Regex.Replace(retStr, HASHTAG, hashReplace, RegexOptions.IgnoreCase);
             retStr = Regex.Replace(retStr, "(^|[^a-zA-Z0-9_/&#＃@＠>=.~])(sm|nm)([0-9]{1,10})", "$1<a href=\"http://www.nicovideo.jp/watch/$2$3\">$2$3</a>");
@@ -3088,13 +3088,13 @@ namespace Hoehoe
             return retStr;
         }
 
-        public string CreateHtmlAnchor(ref string text, List<string> atList, Entities entities, Dictionary<string, string> media)
+        public string CreateHtmlAnchor(ref string text, List<string> replyToIds, Entities entities, Dictionary<string, string> media)
         {
             string ret = text;
 
             if (entities != null)
             {
-                SortedList<int, EntityInfo> etInfo = new SortedList<int, EntityInfo>();
+                var entityInfos = new SortedList<int, EntityInfo>();
                 // URL
                 if (entities.Urls != null)
                 {
@@ -3109,7 +3109,7 @@ namespace Hoehoe
                                 Text = ent.Url,
                                 Html = string.Format("<a href=\"{0}\">{0}</a>", ent.Url)
                             };
-                            etInfo.Add(ent.Indices[0], tmpEntity);
+                            entityInfos.Add(ent.Indices[0], tmpEntity);
                         }
                         else
                         {
@@ -3122,7 +3122,7 @@ namespace Hoehoe
                                 Html = string.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", ent.Url, expanded, ent.DisplayUrl),
                                 Display = ent.DisplayUrl
                             };
-                            etInfo.Add(ent.Indices[0], tmp);
+                            entityInfos.Add(ent.Indices[0], tmp);
                             if (media != null && !media.ContainsKey(ent.Url))
                             {
                                 media.Add(ent.Url, expanded);
@@ -3141,12 +3141,12 @@ namespace Hoehoe
                             StartIndex = ent.Indices[0],
                             EndIndex = ent.Indices[1],
                             Text = hash,
-                            Html = string.Format("<a href=\"{0}twitter.com/search?q=%23{1}\">{2}</a>", this._protocol, ent.Text, hash)
+                            Html = string.Format("<a href=\"{0}twitter.com/search?q=%23{1}\">{2}</a>", this.protocol, ent.Text, hash)
                         };
-                        etInfo.Add(ent.Indices[0], tmp);
-                        lock (this._lockObj)
+                        entityInfos.Add(ent.Indices[0], tmp);
+                        lock (this.lockObj)
                         {
-                            this._hashList.Add("#" + ent.Text);
+                            this.hashList.Add("#" + ent.Text);
                         }
                     }
                 }
@@ -3163,10 +3163,10 @@ namespace Hoehoe
                             Text = ent.ScreenName,
                             Html = string.Format("<a href=\"/{0}\">{1}</a>", ent.ScreenName, screenName)
                         };
-                        etInfo.Add(ent.Indices[0] + 1, tmp);
-                        if (!atList.Contains(ent.ScreenName.ToLower()))
+                        entityInfos.Add(ent.Indices[0] + 1, tmp);
+                        if (!replyToIds.Contains(ent.ScreenName.ToLower()))
                         {
-                            atList.Add(ent.ScreenName.ToLower());
+                            replyToIds.Add(ent.ScreenName.ToLower());
                         }
                     }
                 }
@@ -3185,7 +3185,7 @@ namespace Hoehoe
                                 Html = string.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", ent.Url, ent.ExpandedUrl, ent.DisplayUrl),
                                 Display = ent.DisplayUrl
                             };
-                            etInfo.Add(ent.Indices[0], tmp);
+                            entityInfos.Add(ent.Indices[0], tmp);
                             if (media != null && !media.ContainsKey(ent.Url))
                             {
                                 media.Add(ent.Url, ent.MediaUrl);
@@ -3194,13 +3194,13 @@ namespace Hoehoe
                     }
                 }
 
-                if (etInfo.Count > 0)
+                if (entityInfos.Count > 0)
                 {
                     try
                     {
                         int idx = 0;
                         ret = string.Empty;
-                        foreach (var et in etInfo)
+                        foreach (var et in entityInfos)
                         {
                             ret += text.Substring(idx, et.Key - idx) + et.Value.Html;
                             idx = et.Value.EndIndex;
@@ -3241,7 +3241,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.RateLimitStatus(ref content);
+                res = this.twitterConnection.RateLimitStatus(ref content);
             }
             catch (Exception)
             {
@@ -3297,7 +3297,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.GetBlockUserIds(ref content);
+                res = this.twitterConnection.GetBlockUserIds(ref content);
             }
             catch (Exception ex)
             {
@@ -3343,17 +3343,17 @@ namespace Hoehoe
         public string[] GetHashList()
         {
             string[] hashArray = null;
-            lock (this._lockObj)
+            lock (this.lockObj)
             {
-                hashArray = this._hashList.ToArray();
-                this._hashList.Clear();
+                hashArray = this.hashList.ToArray();
+                this.hashList.Clear();
             }
             return hashArray;
         }
 
         public EventType EventNameToEventType(string eventName)
         {
-            return (from tbl in this.EventTable where tbl.Name.Equals(eventName) select tbl.Type).FirstOrDefault();
+            return (from tbl in this.eventsTable where tbl.Name.Equals(eventName) select tbl.Type).FirstOrDefault();
         }
 
         public void StartUserStream()
@@ -3362,7 +3362,7 @@ namespace Hoehoe
             {
                 this.StopUserStream();
             }
-            this.UserStream = new TwitterUserstream(this._twCon);
+            this.UserStream = new TwitterUserstream(this.twitterConnection);
             this.UserStream.Start(this.AllAtReply, this.TrackWord);
         }
 
@@ -3419,8 +3419,8 @@ namespace Hoehoe
                 {
                     using (var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(content), XmlDictionaryReaderQuotas.Max))
                     {
-                        XElement xElm = XElement.Load(jsonReader);
-                        return xElm.Element("error") != null ? xElm.Element("error").Value : string.Empty;
+                        XElement elm = XElement.Load(jsonReader);
+                        return elm.Element("error") != null ? elm.Element("error").Value : string.Empty;
                     }
                 }
                 else
@@ -3451,7 +3451,7 @@ namespace Hoehoe
         private string AdjustHtml(string orgData)
         {
             string retStr = orgData;
-            retStr = Regex.Replace(retStr, "<a [^>]*href=\"/", "<a href=\"" + this._protocol + "twitter.com/");
+            retStr = Regex.Replace(retStr, "<a [^>]*href=\"/", "<a href=\"" + this.protocol + "twitter.com/");
             retStr = retStr.Replace("<a href=", "<a target=\"_self\" href=");
             retStr = retStr.Replace("\r\n", "<br>");
 
@@ -3508,14 +3508,14 @@ namespace Hoehoe
             }
             currentPost.UserId = status.User.IdStr;
 
-            if (currentPost.Equals(this._prevPostInfo))
+            if (currentPost.Equals(this.prevPostInfo))
             {
                 return true;
             }
-            this._prevPostInfo.CreatedAt = currentPost.CreatedAt;
-            this._prevPostInfo.Id = currentPost.Id;
-            this._prevPostInfo.Text = currentPost.Text;
-            this._prevPostInfo.UserId = currentPost.UserId;
+            this.prevPostInfo.CreatedAt = currentPost.CreatedAt;
+            this.prevPostInfo.Id = currentPost.Id;
+            this.prevPostInfo.Text = currentPost.Text;
+            this.prevPostInfo.UserId = currentPost.UserId;
 
             return false;
         }
@@ -3576,7 +3576,7 @@ namespace Hoehoe
                 // Retweetした人
                 post.RetweetedBy = status.User.ScreenName;
                 post.RetweetedByUserId = status.User.Id;
-                post.IsMe = post.RetweetedBy.ToLower().Equals(this._uname);
+                post.IsMe = post.RetweetedBy.ToLower().Equals(this.uname);
             }
             else
             {
@@ -3618,7 +3618,7 @@ namespace Hoehoe
                 post.Nickname = user.Name.Trim();
                 post.ImageUrl = user.ProfileImageUrl;
                 post.IsProtect = user.Protected;
-                post.IsMe = post.ScreenName.ToLower().Equals(this._uname);
+                post.IsMe = post.ScreenName.ToLower().Equals(this.uname);
 
                 // 幻覚fav対策
                 TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
@@ -3635,7 +3635,7 @@ namespace Hoehoe
             post.TextFromApi = post.TextFromApi.Replace("<3", "♡");
             // Source整形
             this.CreateSource(ref post);
-            post.IsReply = post.ReplyToList.Contains(this._uname);
+            post.IsReply = post.ReplyToList.Contains(this.uname);
             post.IsExcludeReply = false;
             if (post.IsMe)
             {
@@ -3643,16 +3643,16 @@ namespace Hoehoe
             }
             else
             {
-                if (this._followerIds.Count > 0)
+                if (this.followerIds.Count > 0)
                 {
-                    post.IsOwl = !this._followerIds.Contains(post.UserId);
+                    post.IsOwl = !this.followerIds.Contains(post.UserId);
                 }
             }
             post.IsDm = false;
             return post;
         }
 
-        private string CreatePostsFromJson(string content, WorkerType gType, TabClass tab, bool read, int count, ref long minimumId)
+        private string CreatePostsFromJson(string content, WorkerType workerType, TabClass tab, bool read, int count, ref long minimumId)
         {
             List<Status> items = null;
             try
@@ -3684,7 +3684,7 @@ namespace Hoehoe
                     minimumId = post.StatusId;
                 }
                 // 二重取得回避
-                lock (this._lockObj)
+                lock (this.lockObj)
                 {
                     if (tab == null)
                     {
@@ -3703,13 +3703,13 @@ namespace Hoehoe
                 }
 
                 // RT禁止ユーザーによるもの
-                if (post.RetweetedId > 0 && this.noRTIds.Contains(post.RetweetedByUserId))
+                if (post.RetweetedId > 0 && this.noRetweetIds.Contains(post.RetweetedByUserId))
                 {
                     continue;
                 }
 
                 post.IsRead = read;
-                if (post.IsMe && !read && this._readOwnPost)
+                if (post.IsMe && !read && this.readOwnPost)
                 {
                     post.IsRead = true;
                 }
@@ -3724,7 +3724,7 @@ namespace Hoehoe
             return string.Empty;
         }
 
-        private string CreatePostsFromPhoenixSearch(string content, WorkerType gType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
+        private string CreatePostsFromPhoenixSearch(string content, WorkerType workerType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
         {
             SearchResult items = null;
             try
@@ -3757,7 +3757,7 @@ namespace Hoehoe
                     minimumId = post.StatusId;
                 }
                 // 二重取得回避
-                lock (this._lockObj)
+                lock (this.lockObj)
                 {
                     if (tab == null)
                     {
@@ -3776,7 +3776,7 @@ namespace Hoehoe
                 }
 
                 post.IsRead = read;
-                if (post.IsMe && !read && this._readOwnPost)
+                if (post.IsMe && !read && this.readOwnPost)
                 {
                     post.IsRead = true;
                 }
@@ -3829,11 +3829,11 @@ namespace Hoehoe
             {
                 if (post.RetweetedId > 0)
                 {
-                    res = this._twCon.GetRelatedResults(post.RetweetedId, ref content);
+                    res = this.twitterConnection.GetRelatedResults(post.RetweetedId, ref content);
                 }
                 else
                 {
-                    res = this._twCon.GetRelatedResults(post.StatusId, ref content);
+                    res = this.twitterConnection.GetRelatedResults(post.StatusId, ref content);
                 }
             }
             catch (Exception ex)
@@ -3887,7 +3887,7 @@ namespace Hoehoe
             {
                 replyToItem = TabInformations.GetInstance().Item(targetItem.InReplyToStatusId).Copy();
                 replyToItem.IsRead = read;
-                if (replyToItem.IsMe && !read && this._readOwnPost)
+                if (replyToItem.IsMe && !read && this.readOwnPost)
                 {
                     replyToItem.IsRead = true;
                 }
@@ -3910,7 +3910,7 @@ namespace Hoehoe
                         replyAdded = true;
                     }
                     item.IsRead = read;
-                    if (item.IsMe && !read && this._readOwnPost)
+                    if (item.IsMe && !read && this.readOwnPost)
                     {
                         item.IsRead = true;
                     }
@@ -3967,12 +3967,12 @@ namespace Hoehoe
             return string.Empty;
         }
 
-        private string CreateDirectMessagesFromJson(string content, WorkerType gType, bool read)
+        private string CreateDirectMessagesFromJson(string content, WorkerType workerType, bool read)
         {
             List<Directmessage> item = null;
             try
             {
-                if (gType == WorkerType.UserStream)
+                if (workerType == WorkerType.UserStream)
                 {
                     List<DirectmessageEvent> itm = D.CreateDataFromJson<List<DirectmessageEvent>>(content);
                     item = new List<Directmessage>();
@@ -4003,26 +4003,26 @@ namespace Hoehoe
                 try
                 {
                     post.StatusId = message.Id;
-                    if (gType != WorkerType.UserStream)
+                    if (workerType != WorkerType.UserStream)
                     {
-                        if (gType == WorkerType.DirectMessegeRcv)
+                        if (workerType == WorkerType.DirectMessegeRcv)
                         {
-                            if (this._minDirectmessage > post.StatusId)
+                            if (this.minDirectmessage > post.StatusId)
                             {
-                                this._minDirectmessage = post.StatusId;
+                                this.minDirectmessage = post.StatusId;
                             }
                         }
                         else
                         {
-                            if (this._minDirectmessageSent > post.StatusId)
+                            if (this.minDirectmessageSent > post.StatusId)
                             {
-                                this._minDirectmessageSent = post.StatusId;
+                                this.minDirectmessageSent = post.StatusId;
                             }
                         }
                     }
 
                     // 二重取得回避
-                    lock (this._lockObj)
+                    lock (this.lockObj)
                     {
                         if (TabInformations.GetInstance().GetTabByType(TabUsageType.DirectMessage).Contains(post.StatusId))
                         {
@@ -4042,9 +4042,9 @@ namespace Hoehoe
 
                     // 以下、ユーザー情報
                     User user = null;
-                    if (gType == WorkerType.UserStream)
+                    if (workerType == WorkerType.UserStream)
                     {
-                        if (this._twCon.AuthenticatedUsername.Equals(message.Recipient.ScreenName, StringComparison.CurrentCultureIgnoreCase))
+                        if (this.twitterConnection.AuthenticatedUsername.Equals(message.Recipient.ScreenName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             user = message.Sender;
                             post.IsMe = false;
@@ -4059,7 +4059,7 @@ namespace Hoehoe
                     }
                     else
                     {
-                        if (gType == WorkerType.DirectMessegeRcv)
+                        if (workerType == WorkerType.DirectMessegeRcv)
                         {
                             user = message.Sender;
                             post.IsMe = false;
@@ -4087,7 +4087,7 @@ namespace Hoehoe
                 }
 
                 post.IsRead = read;
-                if (post.IsMe && !read && this._readOwnPost)
+                if (post.IsMe && !read && this.readOwnPost)
                 {
                     post.IsRead = true;
                 }
@@ -4140,7 +4140,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.FollowerIds(cursor, ref content);
+                res = this.twitterConnection.FollowerIds(cursor, ref content);
             }
             catch (Exception ex)
             {
@@ -4164,7 +4164,7 @@ namespace Hoehoe
             try
             {
                 var followers = D.CreateDataFromJson<Ids>(content);
-                this._followerIds.AddRange(followers.Id);
+                this.followerIds.AddRange(followers.Id);
                 cursor = followers.NextCursor;
                 return string.Empty;
             }
@@ -4191,7 +4191,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                res = this._twCon.NoRetweetIds(cursor, ref content);
+                res = this.twitterConnection.NoRetweetIds(cursor, ref content);
             }
             catch (Exception ex)
             {
@@ -4215,7 +4215,7 @@ namespace Hoehoe
             try
             {
                 var ids = D.CreateDataFromJson<long[]>(content);
-                this.noRTIds.AddRange(ids);
+                this.noRetweetIds.AddRange(ids);
                 cursor = 0; // 0より小さければ何でも良い。
                 return string.Empty;
             }
@@ -4280,7 +4280,7 @@ namespace Hoehoe
 
         private void UserStream_StatusArrived(string line)
         {
-            this._lastUserstreamDataReceived = DateTime.Now;
+            this.lastUserstreamDataReceived = DateTime.Now;
             if (string.IsNullOrEmpty(line))
             {
                 return;
@@ -4291,27 +4291,27 @@ namespace Hoehoe
             {
                 using (XmlDictionaryReader jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(line), XmlDictionaryReaderQuotas.Max))
                 {
-                    XElement xElm = XElement.Load(jsonReader);
-                    if (xElm.Element("friends") != null)
+                    XElement elm = XElement.Load(jsonReader);
+                    if (elm.Element("friends") != null)
                     {
                         Debug.Print("friends");
                         return;
                     }
-                    if (xElm.Element("delete") != null)
+                    if (elm.Element("delete") != null)
                     {
                         Debug.Print("delete");
                         long id = default(long);
-                        if (xElm.Element("delete").Element("direct_message") != null && xElm.Element("delete").Element("direct_message").Element("id") != null)
+                        if (elm.Element("delete").Element("direct_message") != null && elm.Element("delete").Element("direct_message").Element("id") != null)
                         {
-                            id = Convert.ToInt64(xElm.Element("delete").Element("direct_message").Element("id").Value);
+                            id = Convert.ToInt64(elm.Element("delete").Element("direct_message").Element("id").Value);
                             if (this.PostDeleted != null)
                             {
                                 this.PostDeleted(id);
                             }
                         }
-                        else if (xElm.Element("delete").Element("status") != null && xElm.Element("delete").Element("status").Element("id") != null)
+                        else if (elm.Element("delete").Element("status") != null && elm.Element("delete").Element("status").Element("id") != null)
                         {
-                            id = Convert.ToInt64(xElm.Element("delete").Element("status").Element("id").Value);
+                            id = Convert.ToInt64(elm.Element("delete").Element("status").Element("id").Value);
                             if (this.PostDeleted != null)
                             {
                                 this.PostDeleted(id);
@@ -4324,35 +4324,35 @@ namespace Hoehoe
                         }
                         for (int i = this.StoredEvent.Count - 1; i >= 0; i--)
                         {
-                            FormattedEvent sEvt = this.StoredEvent[i];
-                            if (sEvt.Id == id && (sEvt.Event == "favorite" || sEvt.Event == "unfavorite"))
+                            var stored = this.StoredEvent[i];
+                            if (stored.Id == id && (stored.Event == "favorite" || stored.Event == "unfavorite"))
                             {
                                 this.StoredEvent.RemoveAt(i);
                             }
                         }
                         return;
                     }
-                    if (xElm.Element("limit") != null)
+                    if (elm.Element("limit") != null)
                     {
                         Debug.Print(line);
                         return;
                     }
-                    if (xElm.Element("event") != null)
+                    if (elm.Element("event") != null)
                     {
-                        Debug.Print("event: " + xElm.Element("event").Value);
+                        Debug.Print("event: " + elm.Element("event").Value);
                         this.CreateEventFromJson(line);
                         return;
                     }
-                    if (xElm.Element("direct_message") != null)
+                    if (elm.Element("direct_message") != null)
                     {
                         Debug.Print("direct_message");
                         isDm = true;
                     }
-                    else if (xElm.Element("scrub_geo") != null)
+                    else if (elm.Element("scrub_geo") != null)
                     {
                         try
                         {
-                            TabInformations.GetInstance().ScrubGeoReserve(long.Parse(xElm.Element("scrub_geo").Element("user_id").Value), long.Parse(xElm.Element("scrub_geo").Element("up_to_status_id").Value));
+                            TabInformations.GetInstance().ScrubGeoReserve(long.Parse(elm.Element("scrub_geo").Element("user_id").Value), long.Parse(elm.Element("scrub_geo").Element("up_to_status_id").Value));
                         }
                         catch (Exception)
                         {
@@ -4416,11 +4416,11 @@ namespace Hoehoe
                 case "access_revoked":
                     return;
                 case "follow":
-                    if (eventData.Target.ScreenName.ToLower().Equals(this._uname))
+                    if (eventData.Target.ScreenName.ToLower().Equals(this.uname))
                     {
-                        if (!this._followerIds.Contains(eventData.Source.Id))
+                        if (!this.followerIds.Contains(eventData.Source.Id))
                         {
-                            this._followerIds.Add(eventData.Source.Id);
+                            this.followerIds.Add(eventData.Source.Id);
                         }
                     }
                     else
@@ -4446,7 +4446,7 @@ namespace Hoehoe
                         PostClass post = TabInformations.GetInstance().Item(eventData.TargetObject.Id);
                         if (eventData.Event == "favorite")
                         {
-                            if (evt.Username.ToLower().Equals(this._uname))
+                            if (evt.Username.ToLower().Equals(this.uname))
                             {
                                 post.IsFav = true;
                                 TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
@@ -4473,7 +4473,7 @@ namespace Hoehoe
                         }
                         else
                         {
-                            if (evt.Username.ToLower().Equals(this._uname))
+                            if (evt.Username.ToLower().Equals(this.uname))
                             {
                                 post.IsFav = false;
                             }
@@ -4620,18 +4620,18 @@ namespace Hoehoe
         }
         private class TwitterUserstream : IDisposable
         {
-            private HttpTwitter _twCon;
-            private Thread _streamThread;
-            private bool _streamActive;
-            private bool _allAtreplies;
-            private string _trackwords = string.Empty;
+            private HttpTwitter twitterConnection;
+            private Thread streamThread;
+            private bool streamActive;
+            private bool allAtreplies;
+            private string trackwords = string.Empty;
 
             // 重複する呼び出しを検出するには
             private bool disposedValue;
 
             public TwitterUserstream(HttpTwitter twitterConnection)
             {
-                this._twCon = (HttpTwitter)twitterConnection.Clone();
+                this.twitterConnection = (HttpTwitter)twitterConnection.Clone();
             }
             public delegate void StatusArrivedEventHandler(string status);
             public delegate void StoppedEventHandler();
@@ -4643,34 +4643,34 @@ namespace Hoehoe
 
             public bool Enabled
             {
-                get { return this._streamActive; }
+                get { return this.streamActive; }
             }
 
             public bool AllAtReplies
             {
-                get { return this._allAtreplies; }
-                set { this._allAtreplies = value; }
+                get { return this.allAtreplies; }
+                set { this.allAtreplies = value; }
             }
 
             public string TrackWords
             {
-                get { return this._trackwords; }
-                set { this._trackwords = value; }
+                get { return this.trackwords; }
+                set { this.trackwords = value; }
             }
 
             public void Start(bool allAtReplies, string trackwords)
             {
                 this.AllAtReplies = allAtReplies;
                 this.TrackWords = trackwords;
-                this._streamActive = true;
-                if (this._streamThread != null && this._streamThread.IsAlive)
+                this.streamActive = true;
+                if (this.streamThread != null && this.streamThread.IsAlive)
                 {
                     return;
                 }
-                this._streamThread = new Thread(this.UserStreamLoop);
-                this._streamThread.Name = "UserStreamReceiver";
-                this._streamThread.IsBackground = true;
-                this._streamThread.Start();
+                this.streamThread = new Thread(this.UserStreamLoop);
+                this.streamThread.Name = "UserStreamReceiver";
+                this.streamThread.IsBackground = true;
+                this.streamThread.Start();
             }
 
             // TODO: 上の Dispose(ByVal disposing As Boolean) にアンマネージ リソースを解放するコードがある場合にのみ、Finalize() をオーバーライドします。
@@ -4690,10 +4690,10 @@ namespace Hoehoe
                     if (disposing)
                     {
                         // TODO: マネージ状態を破棄します (マネージ オブジェクト)。
-                        this._streamActive = false;
-                        if (this._streamThread != null && this._streamThread.IsAlive)
+                        this.streamActive = false;
+                        if (this.streamThread != null && this.streamThread.IsAlive)
                         {
-                            this._streamThread.Abort();
+                            this.streamThread.Abort();
                         }
                     }
 
@@ -4722,7 +4722,7 @@ namespace Hoehoe
                         {
                             this.Started();
                         }
-                        HttpStatusCode res = this._twCon.UserStream(ref st, this._allAtreplies, this._trackwords, MyCommon.GetUserAgentString());
+                        HttpStatusCode res = this.twitterConnection.UserStream(ref st, this.allAtreplies, this.trackwords, MyCommon.GetUserAgentString());
                         switch (res)
                         {
                             case HttpStatusCode.OK:
@@ -4742,7 +4742,7 @@ namespace Hoehoe
 
                         sr = new StreamReader(st);
 
-                        while (this._streamActive && !sr.EndOfStream && Twitter.AccountState == AccountState.Valid)
+                        while (this.streamActive && !sr.EndOfStream && Twitter.AccountState == AccountState.Valid)
                         {
                             if (this.StatusArrived != null)
                             {
@@ -4795,14 +4795,14 @@ namespace Hoehoe
                     }
                     finally
                     {
-                        if (this._streamActive)
+                        if (this.streamActive)
                         {
                             if (this.Stopped != null)
                             {
                                 this.Stopped();
                             }
                         }
-                        this._twCon.RequestAbort();
+                        this.twitterConnection.RequestAbort();
                         if (sr != null)
                         {
                             sr.Close();
@@ -4814,7 +4814,7 @@ namespace Hoehoe
                         if (sleepSec > 0)
                         {
                             int ms = 0;
-                            while (this._streamActive && ms < sleepSec * 1000)
+                            while (this.streamActive && ms < sleepSec * 1000)
                             {
                                 Thread.Sleep(500);
                                 ms += 500;
@@ -4822,9 +4822,9 @@ namespace Hoehoe
                         }
                         sleepSec = 0;
                     }
-                } while (this._streamActive);
+                } while (this.streamActive);
 
-                if (this._streamActive)
+                if (this.streamActive)
                 {
                     if (this.Stopped != null)
                     {
