@@ -4506,6 +4506,9 @@ namespace Hoehoe
             private bool _allAtreplies;
             private string _trackwords = string.Empty;
 
+            // 重複する呼び出しを検出するには
+            private bool disposedValue;
+
             public TwitterUserstream(HttpTwitter twitterConnection)
             {
                 this._twCon = (HttpTwitter)twitterConnection.Clone();
@@ -4686,10 +4689,7 @@ namespace Hoehoe
             }
 
             #region "IDisposable Support"
-
-            // 重複する呼び出しを検出するには
-            private bool disposedValue;
-
+                        
             // IDisposable
             protected virtual void Dispose(bool disposing)
             {
