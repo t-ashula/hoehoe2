@@ -252,26 +252,26 @@ namespace Hoehoe
 
         public bool UserStreamEnabled
         {
-            get { return this.userStream == null ? false : this.userStream.Enabled; }
+            get { return this.UserStream == null ? false : this.UserStream.Enabled; }
         }
 
-        private TwitterUserstream userStream
+        private TwitterUserstream UserStream
         {
             get { return this.withEventsField_userStream; }
             set
             {
                 if (this.withEventsField_userStream != null)
                 {
-                    this.withEventsField_userStream.StatusArrived -= this.userStream_StatusArrived;
-                    this.withEventsField_userStream.Started -= this.userStream_Started;
-                    this.withEventsField_userStream.Stopped -= this.userStream_Stopped;
+                    this.withEventsField_userStream.StatusArrived -= this.UserStream_StatusArrived;
+                    this.withEventsField_userStream.Started -= this.UserStream_Started;
+                    this.withEventsField_userStream.Stopped -= this.UserStream_Stopped;
                 }
                 this.withEventsField_userStream = value;
                 if (this.withEventsField_userStream != null)
                 {
-                    this.withEventsField_userStream.StatusArrived += this.userStream_StatusArrived;
-                    this.withEventsField_userStream.Started += this.userStream_Started;
-                    this.withEventsField_userStream.Stopped += this.userStream_Stopped;
+                    this.withEventsField_userStream.StatusArrived += this.UserStream_StatusArrived;
+                    this.withEventsField_userStream.Started += this.UserStream_Started;
+                    this.withEventsField_userStream.Stopped += this.UserStream_Stopped;
                 }
             }
         }
@@ -3051,7 +3051,7 @@ namespace Hoehoe
             retStr = Regex.Replace(retStr, "(^|[^a-zA-Z0-9_/])([@＠])([a-zA-Z0-9_]{1,20})", "$1$2<a href=\"/$3\">$3</a>");
 
             // ハッシュタグを抽出し、リンクに置換
-            List<range> anchorRange = new List<range>();
+            List<Range> anchorRange = new List<Range>();
             for (int i = 0; i < retStr.Length; i++)
             {
                 int index = retStr.IndexOf("<a ", i);
@@ -3061,16 +3061,16 @@ namespace Hoehoe
                     int toIndex = retStr.IndexOf("</a>", index);
                     if (toIndex > -1)
                     {
-                        anchorRange.Add(new range(index, toIndex + 3));
+                        anchorRange.Add(new Range(index, toIndex + 3));
                         i = toIndex;
                     }
                 }
             }
             MatchEvaluator hashReplace = mh =>
             {
-                foreach (range rng in anchorRange)
+                foreach (Range rng in anchorRange)
                 {
-                    if (mh.Index >= rng.fromIndex && mh.Index <= rng.toIndex)
+                    if (mh.Index >= rng.FromIndex && mh.Index <= rng.ToIndex)
                     {
                         return mh.Result("$0");
                     }
@@ -3358,21 +3358,21 @@ namespace Hoehoe
 
         public void StartUserStream()
         {
-            if (this.userStream != null)
+            if (this.UserStream != null)
             {
                 this.StopUserStream();
             }
-            this.userStream = new TwitterUserstream(this._twCon);
-            this.userStream.Start(this.AllAtReply, this.TrackWord);
+            this.UserStream = new TwitterUserstream(this._twCon);
+            this.UserStream.Start(this.AllAtReply, this.TrackWord);
         }
 
         public void StopUserStream()
         {
-            if (this.userStream != null)
+            if (this.UserStream != null)
             {
-                this.userStream.Dispose();
+                this.UserStream.Dispose();
             }
-            this.userStream = null;
+            this.UserStream = null;
             if (!MyCommon.IsEnding)
             {
                 if (this.UserStreamStopped != null)
@@ -3384,7 +3384,7 @@ namespace Hoehoe
 
         public void ReconnectUserStream()
         {
-            if (this.userStream != null)
+            if (this.UserStream != null)
             {
                 this.StartUserStream();
             }
@@ -4278,7 +4278,7 @@ namespace Hoehoe
 
         #region "UserStream"
 
-        private void userStream_StatusArrived(string line)
+        private void UserStream_StatusArrived(string line)
         {
             this._lastUserstreamDataReceived = DateTime.Now;
             if (string.IsNullOrEmpty(line))
@@ -4524,7 +4524,7 @@ namespace Hoehoe
             }
         }
 
-        private void userStream_Started()
+        private void UserStream_Started()
         {
             if (this.UserStreamStarted != null)
             {
@@ -4532,7 +4532,7 @@ namespace Hoehoe
             }
         }
 
-        private void userStream_Stopped()
+        private void UserStream_Stopped()
         {
             if (this.UserStreamStopped != null)
             {
@@ -4579,18 +4579,18 @@ namespace Hoehoe
                 return this.CreatedAt == dst.CreatedAt && this.Id == dst.Id && this.Text == dst.Text && this.UserId == dst.UserId;
             }
         }
-
-        private class range
+        
+        private class Range
         {
-            public range(int fromIndex, int toIndex)
+            public Range(int fromIndex, int toIndex)
             {
-                this.fromIndex = fromIndex;
-                this.toIndex = toIndex;
+                this.FromIndex = fromIndex;
+                this.ToIndex = toIndex;
             }
 
-            public int fromIndex { get; set; }
+            public int FromIndex { get; set; }
 
-            public int toIndex { get; set; }
+            public int ToIndex { get; set; }
         }
 
         private class EntityInfo
