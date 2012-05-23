@@ -29,54 +29,190 @@ namespace Hoehoe
     using System;
     using System.Collections.Generic;
 
-    public class ApiInformationChangedEventArgs : EventArgs
-    {
-        public ApiInfo ApiInfo = new ApiInfo();
-    }
-
-    public abstract class ApiInfoBase
-    {
-        protected static int _MaxCount = -1;
-        protected static int _RemainCount = -1;
-        protected static DateTime _ResetTime = new DateTime();
-        protected static int _ResetTimeInSeconds = -1;
-        protected static int _UsingCount = -1;
-        protected static ApiAccessLevel _AccessLevel = ApiAccessLevel.None;
-        protected static int _MediaMaxCount = -1;
-        protected static DateTime _MediaResetTime = new DateTime();
-        protected static int _MediaRemainCount = -1;
-    }
-
-    public class ApiInfo : ApiInfoBase
-    {
-        public int MaxCount;
-        public int RemainCount;
-        public DateTime ResetTime;
-        public int ResetTimeInSeconds;
-        public int UsingCount;
-        public ApiAccessLevel AccessLevel;
-        public int MediaMaxCount;
-        public int MediaRemainCount;
-
-        public DateTime MediaResetTime;
-
-        public ApiInfo()
-        {
-            this.MaxCount = ApiInfo._MaxCount;
-            this.RemainCount = ApiInfo._RemainCount;
-            this.ResetTime = ApiInfo._ResetTime;
-            this.ResetTimeInSeconds = ApiInfo._ResetTimeInSeconds;
-            this.UsingCount = ApiInfo._UsingCount;
-            this.AccessLevel = ApiInfo._AccessLevel;
-            this.MediaMaxCount = ApiInfo._MediaMaxCount;
-            this.MediaRemainCount = ApiInfo._MediaRemainCount;
-            this.MediaResetTime = ApiInfo._MediaResetTime;
-        }
-    }
-
     public class ApiInformation : ApiInfoBase
     {
         public Dictionary<string, string> HttpHeaders = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+
+        public delegate void ChangedEventHandler(object sender, ApiInformationChangedEventArgs e);
+
+        public event ChangedEventHandler Changed;
+
+        public int MaxCount
+        {
+            get
+            {
+                return ApiInformation.maxCount;
+            }
+
+            set
+            {
+                if (ApiInformation.maxCount != value)
+                {
+                    ApiInformation.maxCount = value;
+                    this.Raise_Changed();
+                }
+            }
+        }
+
+        public int RemainCount
+        {
+            get
+            {
+                return ApiInformation.remainCount;
+            }
+
+            set
+            {
+                if (ApiInformation.remainCount != value)
+                {
+                    ApiInformation.remainCount = value;
+                    this.Raise_Changed();
+                }
+            }
+        }
+
+        public DateTime ResetTime
+        {
+            get
+            {
+                return ApiInformation.resetTime;
+            }
+
+            set
+            {
+                if (ApiInformation.resetTime != value)
+                {
+                    ApiInformation.resetTime = value;
+                    this.Raise_Changed();
+                }
+            }
+        }
+
+        public int MediaMaxCount
+        {
+            get
+            {
+                return ApiInformation.mediaMaxCount;
+            }
+
+            set
+            {
+                if (ApiInformation.mediaMaxCount != value)
+                {
+                    ApiInformation.mediaMaxCount = value;
+                    this.Raise_Changed();
+                }
+            }
+        }
+
+        public int MediaRemainCount
+        {
+            get
+            {
+                return ApiInformation.mediaRemainCount;
+            }
+
+            set
+            {
+                if (ApiInformation.mediaRemainCount != value)
+                {
+                    ApiInformation.mediaRemainCount = value;
+                    this.Raise_Changed();
+                }
+            }
+        }
+
+        public DateTime MediaResetTime
+        {
+            get
+            {
+                return ApiInformation.mediaResetTime;
+            }
+
+            set
+            {
+                if (ApiInformation.mediaResetTime != value)
+                {
+                    ApiInformation.mediaResetTime = value;
+                    this.Raise_Changed();
+                }
+            }
+        }
+
+        public int ResetTimeInSeconds
+        {
+            get
+            {
+                return ApiInformation.resetTimeInSeconds;
+            }
+
+            set
+            {
+                if (ApiInformation.resetTimeInSeconds != value)
+                {
+                    ApiInformation.resetTimeInSeconds = value;
+                    this.Raise_Changed();
+                }
+            }
+        }
+
+        public int UsingCount
+        {
+            get
+            {
+                return ApiInformation.usingCount;
+            }
+
+            set
+            {
+                if (ApiInformation.usingCount != value)
+                {
+                    ApiInformation.usingCount = value;
+                    this.Raise_Changed();
+                }
+            }
+        }
+
+        public ApiAccessLevel AccessLevel
+        {
+            get
+            {
+                return ApiInformation.accessLevel;
+            }
+
+            private set
+            {
+                if (ApiInformation.accessLevel != value)
+                {
+                    ApiInformation.accessLevel = value;
+                    this.Raise_Changed();
+                }
+            }
+        }
+
+        public bool IsReadPermission
+        {
+            get
+            {
+                return this.AccessLevel == ApiAccessLevel.Read
+                    || this.AccessLevel == ApiAccessLevel.ReadWrite
+                    || this.AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage;
+            }
+        }
+
+        public bool IsWritePermission
+        {
+            get
+            {
+                return this.AccessLevel == ApiAccessLevel.ReadWrite
+                    || this.AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage;
+            }
+        }
+
+        public bool IsDirectMessagePermission
+        {
+            get { return this.AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage; }
+        }
 
         public void Initialize()
         {
@@ -143,13 +279,13 @@ namespace Hoehoe
                 this.HttpHeaders.Add("X-MediaRateLimit-Reset", "-1");
             }
 
-            ApiInformation._MaxCount = -1;
-            ApiInformation._RemainCount = -1;
-            ApiInformation._ResetTime = new DateTime();
-            ApiInformation._ResetTimeInSeconds = -1;
-            ApiInformation._MediaMaxCount = -1;
-            ApiInformation._MediaRemainCount = -1;
-            ApiInformation._MediaResetTime = new DateTime();
+            ApiInformation.maxCount = -1;
+            ApiInformation.remainCount = -1;
+            ApiInformation.resetTime = new DateTime();
+            ApiInformation.resetTimeInSeconds = -1;
+            ApiInformation.mediaMaxCount = -1;
+            ApiInformation.mediaRemainCount = -1;
+            ApiInformation.mediaResetTime = new DateTime();
             this.AccessLevel = ApiAccessLevel.None;
 
             // _UsingCount = -1
@@ -171,9 +307,59 @@ namespace Hoehoe
             }
         }
 
-        public event ChangedEventHandler Changed;
+        public void ParseHttpHeaders(Dictionary<string, string> headers)
+        {
+            int tmp = 0;
+            DateTime tmpd = default(DateTime);
+            tmp = this.GetMaxCountFromHttpHeader();
+            if (tmp != -1)
+            {
+                ApiInformation.maxCount = tmp;
+            }
 
-        public delegate void ChangedEventHandler(object sender, ApiInformationChangedEventArgs e);
+            tmp = this.GetRemainCountFromHttpHeader();
+            if (tmp != -1)
+            {
+                ApiInformation.remainCount = tmp;
+            }
+            
+            tmpd = this.GetResetTimeFromHttpHeader();
+            if (tmpd != new DateTime())
+            {
+                ApiInformation.resetTime = tmpd;
+            }
+
+            tmp = this.GetMediaMaxCountFromHttpHeader();
+            if (tmp != -1)
+            {
+                ApiInformation.mediaMaxCount = tmp;
+            }
+            
+            tmp = this.GetMediaRemainCountFromHttpHeader();
+            if (tmp != -1)
+            {
+                ApiInformation.mediaRemainCount = tmp;
+            }
+            
+            tmpd = this.GetMediaResetTimeFromHttpHeader();
+            if (tmpd != new DateTime())
+            {
+                ApiInformation.mediaResetTime = tmpd;
+            }
+
+            this.AccessLevel = this.GetApiAccessLevelFromHttpHeader();
+            this.Raise_Changed();
+        }
+
+        public void WriteBackEventArgs(ApiInformationChangedEventArgs arg)
+        {
+            ApiInformation.maxCount = arg.ApiInfo.MaxCount;
+            ApiInformation.remainCount = arg.ApiInfo.RemainCount;
+            ApiInformation.resetTime = arg.ApiInfo.ResetTime;
+            ApiInformation.resetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds;
+            ApiInformation.usingCount = arg.ApiInfo.UsingCount;
+            this.Raise_Changed();
+        }
 
         private void Raise_Changed()
         {
@@ -183,187 +369,10 @@ namespace Hoehoe
                 this.Changed(this, arg);
             }
 
-            ApiInformation._MaxCount = arg.ApiInfo.MaxCount;
-            ApiInformation._RemainCount = arg.ApiInfo.RemainCount;
-            ApiInformation._ResetTime = arg.ApiInfo.ResetTime;
-            ApiInformation._ResetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds;
-        }
-
-        public int MaxCount
-        {
-            get
-            {
-                return ApiInformation._MaxCount;
-            }
-
-            set
-            {
-                if (ApiInformation._MaxCount != value)
-                {
-                    ApiInformation._MaxCount = value;
-                    this.Raise_Changed();
-                }
-            }
-        }
-
-        public int RemainCount
-        {
-            get
-            {
-                return ApiInformation._RemainCount;
-            }
-
-            set
-            {
-                if (ApiInformation._RemainCount != value)
-                {
-                    ApiInformation._RemainCount = value;
-                    this.Raise_Changed();
-                }
-            }
-        }
-
-        public DateTime ResetTime
-        {
-            get
-            {
-                return ApiInformation._ResetTime;
-            }
-
-            set
-            {
-                if (ApiInformation._ResetTime != value)
-                {
-                    ApiInformation._ResetTime = value;
-                    this.Raise_Changed();
-                }
-            }
-        }
-
-        public int MediaMaxCount
-        {
-            get
-            {
-                return ApiInformation._MediaMaxCount;
-            }
-
-            set
-            {
-                if (ApiInformation._MediaMaxCount != value)
-                {
-                    ApiInformation._MediaMaxCount = value;
-                    this.Raise_Changed();
-                }
-            }
-        }
-
-        public int MediaRemainCount
-        {
-            get
-            {
-                return ApiInformation._MediaRemainCount;
-            }
-
-            set
-            {
-                if (ApiInformation._MediaRemainCount != value)
-                {
-                    ApiInformation._MediaRemainCount = value;
-                    this.Raise_Changed();
-                }
-            }
-        }
-
-        public DateTime MediaResetTime
-        {
-            get
-            {
-                return ApiInformation._MediaResetTime;
-            }
-
-            set
-            {
-                if (ApiInformation._MediaResetTime != value)
-                {
-                    ApiInformation._MediaResetTime = value;
-                    this.Raise_Changed();
-                }
-            }
-        }
-
-        public int ResetTimeInSeconds
-        {
-            get
-            {
-                return ApiInformation._ResetTimeInSeconds;
-            }
-
-            set
-            {
-                if (ApiInformation._ResetTimeInSeconds != value)
-                {
-                    ApiInformation._ResetTimeInSeconds = value;
-                    this.Raise_Changed();
-                }
-            }
-        }
-
-        public int UsingCount
-        {
-            get
-            {
-                return ApiInformation._UsingCount;
-            }
-
-            set
-            {
-                if (ApiInformation._UsingCount != value)
-                {
-                    ApiInformation._UsingCount = value;
-                    this.Raise_Changed();
-                }
-            }
-        }
-
-        public ApiAccessLevel AccessLevel
-        {
-            get
-            {
-                return ApiInformation._AccessLevel;
-            }
-
-            private set
-            {
-                if (ApiInformation._AccessLevel != value)
-                {
-                    ApiInformation._AccessLevel = value;
-                    this.Raise_Changed();
-                }
-            }
-        }
-
-        public bool IsReadPermission
-        {
-            get
-            {
-                return this.AccessLevel == ApiAccessLevel.Read
-                    || this.AccessLevel == ApiAccessLevel.ReadWrite
-                    || this.AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage;
-            }
-        }
-
-        public bool IsWritePermission
-        {
-            get
-            {
-                return this.AccessLevel == ApiAccessLevel.ReadWrite
-                    || this.AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage;
-            }
-        }
-
-        public bool IsDirectMessagePermission
-        {
-            get { return this.AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage; }
+            ApiInformation.maxCount = arg.ApiInfo.MaxCount;
+            ApiInformation.remainCount = arg.ApiInfo.RemainCount;
+            ApiInformation.resetTime = arg.ApiInfo.ResetTime;
+            ApiInformation.resetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds;
         }
 
         private int GetRemainCountFromHttpHeader()
@@ -474,60 +483,10 @@ namespace Hoehoe
                 case "read-write-privatemessages":
                     return ApiAccessLevel.ReadWriteAndDirectMessage;
                 default:
-                    MyCommon.TraceOut("Unknown ApiAccessLevel:" + this.HttpHeaders["X-Access-Level"]);
                     // 未知のアクセスレベルの場合Read/Write/Dmと仮定して処理継続
+                    MyCommon.TraceOut("Unknown ApiAccessLevel:" + this.HttpHeaders["X-Access-Level"]);
                     return ApiAccessLevel.ReadWriteAndDirectMessage;
             }
-        }
-
-        public void ParseHttpHeaders(Dictionary<string, string> headers)
-        {
-            int tmp = 0;
-            DateTime tmpd = default(DateTime);
-            tmp = this.GetMaxCountFromHttpHeader();
-            if (tmp != -1)
-            {
-                ApiInformation._MaxCount = tmp;
-            }
-            tmp = this.GetRemainCountFromHttpHeader();
-            if (tmp != -1)
-            {
-                ApiInformation._RemainCount = tmp;
-            }
-            tmpd = this.GetResetTimeFromHttpHeader();
-            if (tmpd != new DateTime())
-            {
-                ApiInformation._ResetTime = tmpd;
-            }
-
-            tmp = this.GetMediaMaxCountFromHttpHeader();
-            if (tmp != -1)
-            {
-                ApiInformation._MediaMaxCount = tmp;
-            }
-            tmp = this.GetMediaRemainCountFromHttpHeader();
-            if (tmp != -1)
-            {
-                ApiInformation._MediaRemainCount = tmp;
-            }
-            tmpd = this.GetMediaResetTimeFromHttpHeader();
-            if (tmpd != new DateTime())
-            {
-                ApiInformation._MediaResetTime = tmpd;
-            }
-
-            this.AccessLevel = this.GetApiAccessLevelFromHttpHeader();
-            this.Raise_Changed();
-        }
-
-        public void WriteBackEventArgs(ApiInformationChangedEventArgs arg)
-        {
-            ApiInformation._MaxCount = arg.ApiInfo.MaxCount;
-            ApiInformation._RemainCount = arg.ApiInfo.RemainCount;
-            ApiInformation._ResetTime = arg.ApiInfo.ResetTime;
-            ApiInformation._ResetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds;
-            ApiInformation._UsingCount = arg.ApiInfo.UsingCount;
-            this.Raise_Changed();
         }
     }
 }
