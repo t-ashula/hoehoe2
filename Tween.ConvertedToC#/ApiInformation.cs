@@ -31,11 +31,17 @@ namespace Hoehoe
 
     public class ApiInformation : ApiInfoBase
     {
-        public Dictionary<string, string> HttpHeaders = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+        private Dictionary<string, string> headers = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
 
         public delegate void ChangedEventHandler(object sender, ApiInformationChangedEventArgs e);
 
         public event ChangedEventHandler Changed;
+
+        public Dictionary<string, string> HttpHeaders
+        {
+            get { return this.headers; }
+            set { this.headers = value; }
+        }
 
         public int MaxCount
         {
@@ -382,10 +388,12 @@ namespace Hoehoe
             {
                 return -1;
             }
+
             if (int.TryParse(this.HttpHeaders["X-RateLimit-Remaining"], out result))
             {
                 return result;
             }
+
             return -1;
         }
 
@@ -396,10 +404,12 @@ namespace Hoehoe
             {
                 return -1;
             }
+
             if (int.TryParse(this.HttpHeaders["X-RateLimit-Limit"], out result))
             {
                 return result;
             }
+            
             return -1;
         }
 
@@ -430,10 +440,12 @@ namespace Hoehoe
             {
                 return -1;
             }
+
             if (int.TryParse(this.HttpHeaders["X-MediaRateLimit-Remaining"], out result))
             {
                 return result;
             }
+            
             return -1;
         }
 
@@ -444,10 +456,12 @@ namespace Hoehoe
             {
                 return -1;
             }
+            
             if (int.TryParse(this.HttpHeaders["X-MediaRateLimit-Limit"], out result))
             {
                 return result;
             }
+            
             return -1;
         }
 
@@ -456,19 +470,10 @@ namespace Hoehoe
             int i = 0;
             if (int.TryParse(this.HttpHeaders["X-MediaRateLimit-Reset"], out i))
             {
-                if (i >= 0)
-                {
-                    return TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i));
-                }
-                else
-                {
-                    return new DateTime();
-                }
+                return i >= 0 ? TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i)) : new DateTime();
             }
-            else
-            {
-                return new DateTime();
-            }
+            
+            return new DateTime();
         }
 
         private ApiAccessLevel GetApiAccessLevelFromHttpHeader()
