@@ -24,12 +24,12 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     public class FavoriteQueue : IList<long>
     {
         private Twitter _tw;
@@ -37,16 +37,16 @@ namespace Hoehoe
 
         public void AddRange(IEnumerable<long> stsIds)
         {
-            _favoriteCache.AddRange(stsIds);
+            this._favoriteCache.AddRange(stsIds);
         }
 
         public void FavoriteCacheStart()
         {
-            if (_favoriteCache.Count != 0)
+            if (this._favoriteCache.Count != 0)
             {
-                List<long> cacheList = new List<long>(_favoriteCache);
+                List<long> cacheList = new List<long>(this._favoriteCache);
                 this.Clear();
-                Parallel.ForEach<long>(cacheList, new Action<long>((long stsId) => { _tw.PostFavAdd(stsId); }));
+                Parallel.ForEach<long>(cacheList, new Action<long>((long stsId) => { this._tw.PostFavAdd(stsId); }));
             }
         }
 
@@ -54,29 +54,29 @@ namespace Hoehoe
         {
             if (!this.Contains(item))
             {
-                _favoriteCache.Add(item);
+                this._favoriteCache.Add(item);
             }
         }
 
         public void Clear()
         {
-            _favoriteCache.Clear();
-            _favoriteCache.TrimExcess();
+            this._favoriteCache.Clear();
+            this._favoriteCache.TrimExcess();
         }
 
         public bool Contains(long item)
         {
-            return _favoriteCache.Contains(item);
+            return this._favoriteCache.Contains(item);
         }
 
         public void CopyTo(long[] array, int arrayIndex)
         {
-            _favoriteCache.CopyTo(array, arrayIndex);
+            this._favoriteCache.CopyTo(array, arrayIndex);
         }
 
         public int Count
         {
-            get { return _favoriteCache.Count; }
+            get { return this._favoriteCache.Count; }
         }
 
         public bool IsReadOnly
@@ -86,12 +86,12 @@ namespace Hoehoe
 
         public bool Remove(long item)
         {
-            return _favoriteCache.Remove(item);
+            return this._favoriteCache.Remove(item);
         }
 
         public System.Collections.Generic.IEnumerator<long> GetEnumerator()
         {
-            return _favoriteCache.GetEnumerator();
+            return this._favoriteCache.GetEnumerator();
         }
 
         public System.Collections.IEnumerator GetEnumerator1()
@@ -101,28 +101,28 @@ namespace Hoehoe
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return GetEnumerator1();
+            return this.GetEnumerator1();
         }
 
         public int IndexOf(long item)
         {
-            return _favoriteCache.IndexOf(item);
+            return this._favoriteCache.IndexOf(item);
         }
 
         public void Insert(int index, long item)
         {
-            _favoriteCache.Insert(index, item);
+            this._favoriteCache.Insert(index, item);
         }
 
         public long this[int index]
         {
-            get { return _favoriteCache[index]; }
-            set { _favoriteCache[index] = value; }
+            get { return this._favoriteCache[index]; }
+            set { this._favoriteCache[index] = value; }
         }
 
         public void RemoveAt(int index)
         {
-            _favoriteCache.RemoveAt(index);
+            this._favoriteCache.RemoveAt(index);
         }
 
         public FavoriteQueue(Twitter twitter)
