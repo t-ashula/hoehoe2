@@ -24,10 +24,10 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-
 namespace Hoehoe
 {
+    using System;
+
     public enum IconSizes
     {
         IconNone = 0,
@@ -78,10 +78,8 @@ namespace Hoehoe
         Bitly,
         Jmp,
         Uxnu,
-        // 特殊
-        Nicoms,
-        // 廃止
-        Unu = -1
+        Nicoms,        // 特殊        
+        Unu = -1 // 廃止
     }
 
     public enum OutputzUrlmode
@@ -111,25 +109,62 @@ namespace Hoehoe
     /// </summary>
     public enum WorkerType
     {
-        Timeline,           /// <summary>タイムライン取得</summary>
-        Reply,              /// <summary>返信取得</summary>
-        DirectMessegeRcv,   /// <summary>受信DM取得</summary>
-        DirectMessegeSnt,   /// <summary>送信DM取得</summary>
-        PostMessage,        /// <summary>発言POST</summary>
-        FavAdd,             /// <summary>Fav追加</summary>
-        FavRemove,          /// <summary>Fav削除</summary>
-        Follower,           /// <summary>Followerリスト取得</summary>
-        OpenUri,            /// <summary>Uri開く</summary>
-        Favorites,          /// <summary>Fav取得</summary>
-        Retweet,            /// <summary>Retweetする</summary>
-        PublicSearch,       /// <summary>公式検索</summary>
-        List,               /// <summary>Lists</summary>
-        Related,            /// <summary>関連発言</summary>
-        UserStream,         /// <summary>UserStream</summary>
-        UserTimeline,       /// <summary>UserTimeline</summary>
-        BlockIds,           /// <summary>Blocking/ids</summary>
-        Configuration,      /// <summary>Twitter Configuration読み込み</summary>
-        ErrorState,         /// <summary>エラー表示のみで後処理終了(認証エラー時など)</summary>
+        /// <summary>タイムライン取得</summary>
+        Timeline,
+
+        /// <summary>返信取得</summary>
+        Reply,
+        
+        /// <summary>受信DM取得</summary>
+        DirectMessegeRcv,
+        
+        /// <summary>送信DM取得</summary>
+        DirectMessegeSnt,
+        
+        /// <summary>発言POST</summary>
+        PostMessage,
+        
+        /// <summary>Fav追加</summary>
+        FavAdd,
+        
+        /// <summary>Fav削除</summary>
+        FavRemove,
+        
+        /// <summary>Followerリスト取得</summary>
+        Follower,
+        
+        /// <summary>Uri開く</summary>
+        OpenUri,
+        
+        /// <summary>Fav取得</summary>
+        Favorites,
+        
+        /// <summary>Retweetする</summary>
+        Retweet,
+        
+        /// <summary>公式検索</summary>
+        PublicSearch,
+        
+        /// <summary>Lists</summary>
+        List,
+        
+        /// <summary>関連発言</summary>
+        Related,
+        
+        /// <summary>UserStream</summary>
+        UserStream,
+        
+        /// <summary>UserTimeline</summary>
+        UserTimeline,
+        
+        /// <summary>Blocking/ids</summary>
+        BlockIds,
+        
+        /// <summary>Twitter Configuration読み込み</summary>
+        Configuration,
+        
+        /// <summary>エラー表示のみで後処理終了(認証エラー時など)</summary>
+        ErrorState
     }
 
     public enum AccountState
@@ -160,7 +195,6 @@ namespace Hoehoe
         Deleted = 256,
         ListCreated = 512,
         ListUpdated = 1024,
-
         All = (None | Favorite | Unfavorite | Follow | ListMemberAdded | ListMemberRemoved | Block | Unblock | UserUpdate | Deleted | ListCreated | ListUpdated)
     }
 
