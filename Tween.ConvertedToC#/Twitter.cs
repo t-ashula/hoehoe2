@@ -4513,17 +4513,13 @@ namespace Hoehoe
             {
                 this._twCon = (HttpTwitter)twitterConnection.Clone();
             }
-            public event StatusArrivedEventHandler StatusArrived;
-
-
-            public event StoppedEventHandler Stopped;
-
-
-            public event StartedEventHandler Started;
-
             public delegate void StatusArrivedEventHandler(string status);
             public delegate void StoppedEventHandler();
             public delegate void StartedEventHandler();
+
+            public event StatusArrivedEventHandler StatusArrived;
+            public event StoppedEventHandler Stopped;
+            public event StartedEventHandler Started;
 
             public void Start(bool allAtReplies, string trackwords)
             {
