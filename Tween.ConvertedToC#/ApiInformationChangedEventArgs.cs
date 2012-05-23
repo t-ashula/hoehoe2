@@ -30,6 +30,12 @@ namespace Hoehoe
 
     public class ApiInformationChangedEventArgs : EventArgs
     {
-        public ApiInfo ApiInfo = new ApiInfo();
+        private ApiInfo a = new ApiInfo();
+
+        public ApiInfo ApiInfo
+        {
+            get { return this.a; }
+            set { this.a = value; }
+        }
     }
 }

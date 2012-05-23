@@ -29,16 +29,6 @@ namespace Hoehoe
 
     public class ApiInfo : ApiInfoBase
     {
-        public int MaxCount;
-        public int RemainCount;
-        public DateTime ResetTime;
-        public int ResetTimeInSeconds;
-        public int UsingCount;
-        public ApiAccessLevel AccessLevel;
-        public int MediaMaxCount;
-        public int MediaRemainCount;
-        public DateTime MediaResetTime;
-
         public ApiInfo()
         {
             this.MaxCount = ApiInfo.maxCount;
@@ -51,5 +41,23 @@ namespace Hoehoe
             this.MediaRemainCount = ApiInfo.mediaRemainCount;
             this.MediaResetTime = ApiInfo.mediaResetTime;
         }
+
+        public int MaxCount { get; set; }
+        
+        public int RemainCount { get; set; }
+        
+        public DateTime ResetTime { get; set; }
+        
+        public int ResetTimeInSeconds { get; set; }
+        
+        public int UsingCount { get; set; }
+        
+        public ApiAccessLevel AccessLevel { get; set; }
+        
+        public int MediaMaxCount { get; set; }
+        
+        public int MediaRemainCount { get; set; }
+        
+        public DateTime MediaResetTime { get; set; }
     }
 }
