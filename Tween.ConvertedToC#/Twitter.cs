@@ -102,8 +102,6 @@ namespace Hoehoe
         private long _minDirectmessageSent = long.MaxValue;
         private HttpTwitter _twCon = new HttpTwitter();
 
-        public event UserIdChangedEventHandler UserIdChanged;
-
         public string Authenticate(string username, string password)
         {
             HttpStatusCode res = default(HttpStatusCode);
@@ -4125,8 +4123,6 @@ namespace Hoehoe
             get { return this._twCon.AccessTokenSecret; }
         }
 
-        public event ApiInformationChangedEventHandler ApiInformationChanged;
-
 
         private void Twitter_ApiInformationChanged(object sender, ApiInformationChangedEventArgs e)
         {
@@ -4504,14 +4500,6 @@ namespace Hoehoe
 
         private class TwitterUserstream : IDisposable
         {
-            public event StatusArrivedEventHandler StatusArrived;
-
-
-            public event StoppedEventHandler Stopped;
-
-
-            public event StartedEventHandler Started;
-
             private HttpTwitter _twCon;
             private Thread _streamThread;
             private bool _streamActive;
@@ -4522,6 +4510,14 @@ namespace Hoehoe
             {
                 this._twCon = (HttpTwitter)twitterConnection.Clone();
             }
+            public event StatusArrivedEventHandler StatusArrived;
+
+
+            public event StoppedEventHandler Stopped;
+
+
+            public event StartedEventHandler Started;
+
             public delegate void StatusArrivedEventHandler(string status);
             public delegate void StoppedEventHandler();
             public delegate void StartedEventHandler();
@@ -4761,6 +4757,10 @@ namespace Hoehoe
         {
             this.ApiInformationChanged += this.Twitter_ApiInformationChanged;
         }
+        public event UserIdChangedEventHandler UserIdChanged;
+        public event ApiInformationChangedEventHandler ApiInformationChanged;
+
+
 
         public delegate void GetIconImageDelegate(PostClass post);
         public delegate void UserIdChangedEventHandler();
