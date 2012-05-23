@@ -24,48 +24,111 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Globalization;
-using System.IO;
-using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Security.Principal;
-using System.Text;
-using System.Web;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.Globalization;
+    using System.IO;
+    using System.Net.NetworkInformation;
+    using System.Reflection;
+    using System.Security.Principal;
+    using System.Text;
+    using System.Web;
+    using System.Windows.Forms;
+
     public sealed class MyCommon
     {
-        private static readonly object _lockObj = new object();
-
-        // 終了フラグ
+        /// <summary>
+        /// 終了フラグ
+        /// </summary>
         public static bool IsEnding;
 
+        /// <summary>
+        ///
+        /// </summary>
         public static string CultureStr = null;
+
+        /// <summary>
+        ///
+        /// </summary>
         public static string SettingPath;
 
-        public struct DEFAULTTAB
-        {
-            public const string RECENT = "Recent";
-            public const string REPLY = "Reply";
-            public const string DM = "Direct";
-            public const string FAV = "Favorites";
-        }
-
+        /// <summary>
+        ///
+        /// </summary>
         public static bool TraceFlag = false;
+
 #if DEBUG
 		public static bool DebugBuild = true;
 #else
         public static bool DebugBuild = false;
 #endif
 
+        /// <summary>
+        ///
+        /// </summary>
         public static ApiInformation TwitterApiInfo = new ApiInformation();
+
+        private static readonly object lockObj = new object();
+
+        public static string FileVersion
+        {
+            get { return AppFileVersion; }
+        }
+
+        public static string AppDir
+        {
+            get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); }
+        }
+
+        public static Assembly AppAssembly
+        {
+            get { return Assembly.GetExecutingAssembly(); }
+        }
+
+        public static string AppTitle
+        {
+            get { return GetAppAssemblyCustomeAttr<AssemblyTitleAttribute>().Title; }
+        }
+
+        public static string AppAssemblyDescription
+        {
+            get { return GetAppAssemblyCustomeAttr<AssemblyDescriptionAttribute>().Description; }
+        }
+
+        public static string AppAssemblyCompanyName
+        {
+            get { return GetAppAssemblyCustomeAttr<AssemblyCompanyAttribute>().Company; }
+        }
+
+        public static string AppAssemblyCopyright
+        {
+            get { return GetAppAssemblyCustomeAttr<AssemblyCopyrightAttribute>().Copyright; }
+        }
+
+        public static string AppAssemblyProductName
+        {
+            get { return GetAppAssemblyCustomeAttr<AssemblyProductAttribute>().Product; }
+        }
+
+        public static string AppAssemblyName
+        {
+            get { return AppAssembly.GetName().Name; }
+        }
+
+        public static Version AppVersion
+        {
+            get { return AppAssembly.GetName().Version; }
+        }
+
+        public static string AppFileVersion
+        {
+            get { return GetAppAssemblyCustomeAttr<AssemblyFileVersionAttribute>().Version; }
+        }
 
         public static void TraceOut(Exception ex, string message)
         {
@@ -81,14 +144,15 @@ namespace Hoehoe
 
         public static void TraceOut(bool outputFlag, string message)
         {
-            lock (_lockObj)
+            lock (lockObj)
             {
                 if (!outputFlag)
                 {
                     return;
                 }
+
                 DateTime now = DateTime.Now;
-                string fileName = String.Format("HoehoeTrace-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+                string fileName = string.Format("HoehoeTrace-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 
                 using (var writer = new StreamWriter(fileName))
                 {
@@ -99,7 +163,7 @@ namespace Hoehoe
                     writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText3);
                     writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText4, Environment.OSVersion.VersionString);
                     writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText5, Environment.Version.ToString());
-                    writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText6, fileVersion);
+                    writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText6, FileVersion);
                     writer.WriteLine(message);
                     writer.WriteLine();
                 }
@@ -114,7 +178,7 @@ namespace Hoehoe
         {
             if (ex == null)
             {
-                return "";
+                return string.Empty;
             }
 
             StringBuilder buf = new StringBuilder();
@@ -131,6 +195,7 @@ namespace Hoehoe
                         buf.AppendLine("-------Extra Information-------");
                         needHeader = false;
                     }
+
                     buf.AppendFormat("{0}  :  {1}", dt.Key, dt.Value);
                     buf.AppendLine();
                     if (dt.Key.Equals("IsTerminatePermission"))
@@ -138,11 +203,13 @@ namespace Hoehoe
                         isTerminatePermission = Convert.ToBoolean(dt.Value);
                     }
                 }
+
                 if (!needHeader)
                 {
                     buf.AppendLine("-----End Extra Information-----");
                 }
             }
+
             buf.AppendLine(ex.StackTrace);
             buf.AppendLine();
 
@@ -167,32 +234,36 @@ namespace Hoehoe
                             buf.AppendLine("-------Extra Information-------");
                             needHeader = false;
                         }
+
                         buf.AppendFormat("{0}  :  {1}", dt.Key, dt.Value);
                         if (dt.Key.Equals("IsTerminatePermission"))
                         {
                             isTerminatePermission = Convert.ToBoolean(dt.Value);
                         }
                     }
+
                     if (!needHeader)
                     {
                         buf.AppendLine("-----End Extra Information-----");
                     }
                 }
+
                 buf.AppendLine(innerEx.StackTrace);
                 buf.AppendLine();
                 nesting += 1;
                 innerEx = innerEx.InnerException;
             }
+
             return buf.ToString();
         }
 
         public static bool ExceptionOut(Exception ex)
         {
-            lock (_lockObj)
+            lock (lockObj)
             {
                 bool isTerminatePermission = true;
                 DateTime now = DateTime.Now;
-                string fileName = String.Format("Hoehoe-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+                string fileName = string.Format("Hoehoe-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 
                 using (var writer = new StreamWriter(fileName))
                 {
@@ -202,21 +273,23 @@ namespace Hoehoe
                     writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText1, DateTime.Now.ToString());
                     writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText2);
                     writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText3);
+
                     // 権限書き出し
                     writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText11 + princ.IsInRole(WindowsBuiltInRole.Administrator).ToString());
                     writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText12 + princ.IsInRole(WindowsBuiltInRole.User).ToString());
                     writer.WriteLine();
+
                     // OSVersion,AppVersion書き出し
                     writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText4);
                     writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText5, Environment.OSVersion.VersionString);
                     writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText6, Environment.Version.ToString());
-                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText7, fileVersion);
+                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText7, FileVersion);
 
                     writer.Write(ExceptionOutMessage(ex, ref isTerminatePermission));
                     writer.Flush();
                 }
 
-                switch (MessageBox.Show(String.Format(Hoehoe.Properties.Resources.UnhandledExceptionText9, fileName, Environment.NewLine), Hoehoe.Properties.Resources.UnhandledExceptionText10, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error))
+                switch (MessageBox.Show(string.Format(Hoehoe.Properties.Resources.UnhandledExceptionText9, fileName, Environment.NewLine), Hoehoe.Properties.Resources.UnhandledExceptionText10, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error))
                 {
                     case DialogResult.Yes:
                         Process.Start(fileName);
@@ -226,6 +299,7 @@ namespace Hoehoe
                     case DialogResult.Cancel:
                         return isTerminatePermission;
                 }
+
                 return isTerminatePermission;
             }
         }
@@ -238,7 +312,7 @@ namespace Hoehoe
         /// </summary>
         /// <param name = input>エンコード対象のURL</param>
         /// <returns>マルチバイト文字の部分をUTF-8/%xx形式でエンコードした文字列を返します。</returns>
-        public static string urlEncodeMultibyteChar(string input)
+        public static string GetUrlEncodeMultibyteChar(string input)
         {
             Uri uri = null;
             StringBuilder sb = new StringBuilder(256);
@@ -251,6 +325,7 @@ namespace Hoehoe
                     break;
                 }
             }
+
             if (Convert.ToInt32(c) <= 127)
             {
                 return input;
@@ -291,6 +366,7 @@ namespace Hoehoe
                     sb.Append(c);
                 }
             }
+
             return uri == null ? sb.ToString() : uri.GetLeftPart(UriPartial.Authority) + sb.ToString();
         }
 
@@ -329,15 +405,14 @@ namespace Hoehoe
             return input.Replace("://" + domain, "://" + asciiDomain);
         }
 
-        public static string fileVersion { get { return AppFileVersion; } }
-
         public static string GetUserAgentString()
         {
-            if (String.IsNullOrEmpty(fileVersion))
+            if (string.IsNullOrEmpty(FileVersion))
             {
                 throw new Exception("fileversion is not Initialized.");
             }
-            return "Hoehoe/" + fileVersion;
+
+            return "Hoehoe/" + FileVersion;
         }
 
         public static bool IsAnimatedGif(string filename)
@@ -350,15 +425,14 @@ namespace Hoehoe
                 {
                     return false;
                 }
+
                 if (img.RawFormat.Guid == ImageFormat.Gif.Guid)
                 {
                     var fd = new FrameDimension(img.FrameDimensionsList[0]);
                     return img.GetFrameCount(fd) > 1;
                 }
-                else
-                {
-                    return false;
-                }
+
+                return false;
             }
             catch (Exception)
             {
@@ -388,6 +462,7 @@ namespace Hoehoe
                     continue;
                 }
             }
+
             TraceOut("Parse Error(DateTimeFormat) : " + input);
             return new DateTime();
         }
@@ -404,35 +479,17 @@ namespace Hoehoe
             }
         }
 
-        public static string AppDir
-        {
-            get
-            {
-                return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            }
-        }
-
-        public static T getAppAssemblyCustomeAttr<T>() where T : Attribute
+        private static T GetAppAssemblyCustomeAttr<T>() where T : Attribute
         {
             return (T)Attribute.GetCustomAttribute(AppAssembly, typeof(T));
         }
 
-        public static Assembly AppAssembly { get { return Assembly.GetExecutingAssembly(); } }
-
-        public static string AppTitle { get { return getAppAssemblyCustomeAttr<AssemblyTitleAttribute>().Title; } }
-
-        public static string AppAssemblyDescription { get { return getAppAssemblyCustomeAttr<AssemblyDescriptionAttribute>().Description; } }
-
-        public static string AppAssemblyCompanyName { get { return getAppAssemblyCustomeAttr<AssemblyCompanyAttribute>().Company; } }
-
-        public static string AppAssemblyCopyright { get { return getAppAssemblyCustomeAttr<AssemblyCopyrightAttribute>().Copyright; } }
-
-        public static string AppAssemblyProductName { get { return getAppAssemblyCustomeAttr<AssemblyProductAttribute>().Product; } }
-
-        public static string AppAssemblyName { get { return AppAssembly.GetName().Name; } }
-
-        public static Version AppVersion { get { return AppAssembly.GetName().Version; } }
-
-        public static string AppFileVersion { get { return getAppAssemblyCustomeAttr<AssemblyFileVersionAttribute>().Version; } }
+        public struct DEFAULTTAB
+        {
+            public const string RECENT = "Recent";
+            public const string REPLY = "Reply";
+            public const string DM = "Direct";
+            public const string FAV = "Favorites";
+        }
     }
 }

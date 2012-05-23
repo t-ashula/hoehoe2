@@ -63,7 +63,7 @@ namespace Hoehoe
             string applicationTitle = !string.IsNullOrEmpty(MyCommon.AppTitle) ? MyCommon.AppTitle : Path.GetFileNameWithoutExtension(MyCommon.AppAssemblyName);
             this.Text = string.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText1, applicationTitle);
             this.LabelProductName.Text = MyCommon.AppAssemblyProductName;
-            this.LabelVersion.Text = string.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText2, MyCommon.fileVersion + "(" + MyCommon.AppVersion.ToString() + ")");
+            this.LabelVersion.Text = string.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText2, MyCommon.FileVersion + "(" + MyCommon.AppVersion.ToString() + ")");
             this.LabelCopyright.Text = MyCommon.AppAssemblyCopyright;
             this.LabelCompanyName.Text = MyCommon.AppAssemblyCompanyName;
             this.TextBoxDescription.Text = MyCommon.AppAssemblyDescription;
