@@ -129,7 +129,7 @@ namespace Hoehoe
         UserTimeline,       /// <summary>UserTimeline</summary>
         BlockIds,           /// <summary>Blocking/ids</summary>
         Configuration,      /// <summary>Twitter Configuration読み込み</summary>
-        ErrorState          /// <summary>エラー表示のみで後処理終了(認証エラー時など)</summary>
+        ErrorState,         /// <summary>エラー表示のみで後処理終了(認証エラー時など)</summary>
     }
 
     public enum AccountState
@@ -179,5 +179,14 @@ namespace Hoehoe
         Lists = 256,
         Related = 512,
         UserTimeline = 1024
+    }
+
+    public enum ApiAccessLevel
+    {
+        None,
+        Unknown,
+        Read,
+        ReadWrite,
+        ReadWriteAndDirectMessage
     }
 }

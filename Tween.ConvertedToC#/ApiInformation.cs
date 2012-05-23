@@ -24,11 +24,11 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+
     public class ApiInformationChangedEventArgs : EventArgs
     {
         public ApiInfo ApiInfo = new ApiInfo();
@@ -45,15 +45,6 @@ namespace Hoehoe
         protected static int _MediaMaxCount = -1;
         protected static DateTime _MediaResetTime = new DateTime();
         protected static int _MediaRemainCount = -1;
-    }
-
-    public enum ApiAccessLevel
-    {
-        None,
-        Unknown,
-        Read,
-        ReadWrite,
-        ReadWriteAndDirectMessage
     }
 
     public class ApiInfo : ApiInfoBase
