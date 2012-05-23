@@ -241,6 +241,18 @@ namespace Hoehoe
 
         public bool AllAtReply { get; set; }
 
+        public List<FormattedEvent> StoredEvent { get; set; }
+
+        public bool IsUserstreamDataReceived
+        {
+            get { return DateTime.Now.Subtract(this._lastUserstreamDataReceived).TotalSeconds < 31; }
+        }
+
+        public bool UserStreamEnabled
+        {
+            get { return this.userStream == null ? false : this.userStream.Enabled; }
+        }
+
         private TwitterUserstream userStream
         {
             get { return this.withEventsField_userStream; }
@@ -260,13 +272,6 @@ namespace Hoehoe
                     this.withEventsField_userStream.Stopped += this.userStream_Stopped;
                 }
             }
-        }
-
-        public List<FormattedEvent> StoredEvent { get; set; }
-
-        public bool IsUserstreamDataReceived
-        {
-            get { return DateTime.Now.Subtract(this._lastUserstreamDataReceived).TotalSeconds < 31; }
         }
 
         public string Authenticate(string username, string password)
@@ -4533,11 +4538,6 @@ namespace Hoehoe
             {
                 this.UserStreamStopped();
             }
-        }
-
-        public bool UserStreamEnabled
-        {
-            get { return this.userStream == null ? false : this.userStream.Enabled; }
         }
 
         #endregion "UserStream"
