@@ -28,11 +28,11 @@ namespace Hoehoe
 {
     public class OpenUrlItem
     {
-        private string _linkText;
+        private string linkText;
 
         public OpenUrlItem(string linkText, string url, string href)
         {
-            this._linkText = linkText;
+            this.linkText = linkText;
             this.Url = url;
             this.Href = href;
         }
@@ -41,15 +41,17 @@ namespace Hoehoe
         {
             get
             {
-                if (this._linkText.StartsWith("@") || this._linkText.StartsWith("＠") || this._linkText.StartsWith("#") || this._linkText.StartsWith("＃"))
+                if (this.linkText.StartsWith("@") || this.linkText.StartsWith("＠") || this.linkText.StartsWith("#") || this.linkText.StartsWith("＃"))
                 {
-                    return this._linkText;
+                    return this.linkText;
                 }
-                if (this._linkText.TrimEnd('/') == this.Url.TrimEnd('/'))
+
+                if (this.linkText.TrimEnd('/') == this.Url.TrimEnd('/'))
                 {
                     return this.Url;
                 }
-                return this._linkText + "  >>>  " + this.Url;
+
+                return this.linkText + "  >>>  " + this.Url;
             }
         }
 
