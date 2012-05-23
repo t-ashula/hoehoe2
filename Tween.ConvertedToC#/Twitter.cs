@@ -410,27 +410,6 @@ namespace Hoehoe
             return true;
         }
 
-        private class PostInfo
-        {
-            public string CreatedAt;
-            public string Id;
-            public string Text;
-            public string UserId;
-
-            public PostInfo(string created, string idStr, string txt, string uid)
-            {
-                this.CreatedAt = created;
-                this.Id = idStr;
-                this.Text = txt;
-                this.UserId = uid;
-            }
-
-            public bool Equals(PostInfo dst)
-            {
-                return this.CreatedAt == dst.CreatedAt && this.Id == dst.Id && this.Text == dst.Text && this.UserId == dst.UserId;
-            }
-        }
-
         PostInfo _prevPostInfo = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
 
         private bool IsPostRestricted(Status status)
@@ -3757,19 +3736,6 @@ namespace Hoehoe
             return string.Empty;
         }
 
-        private class range
-        {
-            public int fromIndex { get; set; }
-
-            public int toIndex { get; set; }
-
-            public range(int fromIndex, int toIndex)
-            {
-                this.fromIndex = fromIndex;
-                this.toIndex = toIndex;
-            }
-        }
-
         public string CreateHtmlAnchor(string text, List<string> atList, Dictionary<string, string> media)
         {
             if (text == null)
@@ -3848,19 +3814,6 @@ namespace Hoehoe
             return retStr;
         }
 
-        private class EntityInfo
-        {
-            public int StartIndex { get; set; }
-
-            public int EndIndex { get; set; }
-
-            public string Text { get; set; }
-
-            public string Html { get; set; }
-
-            public string Display { get; set; }
-        }
-
         public string CreateHtmlAnchor(ref string text, List<string> atList, Entities entities, Dictionary<string, string> media)
         {
             string ret = text;
@@ -3875,27 +3828,27 @@ namespace Hoehoe
                     {
                         if (string.IsNullOrEmpty(ent.DisplayUrl))
                         {
-                            etInfo.Add(ent.Indices[0],
-                                new EntityInfo()
-                                {
-                                    StartIndex = ent.Indices[0],
-                                    EndIndex = ent.Indices[1],
-                                    Text = ent.Url,
-                                    Html = "<a href=\"" + ent.Url + "\">" + ent.Url + "</a>"
-                                });
+                            var tmpEntity = new EntityInfo()
+                            {
+                                StartIndex = ent.Indices[0],
+                                EndIndex = ent.Indices[1],
+                                Text = ent.Url,
+                                Html = string.Format("<a href=\"{0}\">{0}</a>", ent.Url)
+                            };
+                            etInfo.Add(ent.Indices[0], tmpEntity);
                         }
                         else
                         {
                             string expanded = ShortUrl.ResolveMedia(ent.ExpandedUrl, false);
-                            etInfo.Add(ent.Indices[0],
-                                new EntityInfo()
-                                {
-                                    StartIndex = ent.Indices[0],
-                                    EndIndex = ent.Indices[1],
-                                    Text = ent.Url,
-                                    Html = "<a href=\"" + ent.Url + "\" title=\"" + expanded + "\">" + ent.DisplayUrl + "</a>",
-                                    Display = ent.DisplayUrl
-                                });
+                            var tmp = new EntityInfo()
+                            {
+                                StartIndex = ent.Indices[0],
+                                EndIndex = ent.Indices[1],
+                                Text = ent.Url,
+                                Html = string.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", ent.Url, expanded, ent.DisplayUrl),
+                                Display = ent.DisplayUrl
+                            };
+                            etInfo.Add(ent.Indices[0], tmp);
                             if (media != null && !media.ContainsKey(ent.Url))
                             {
                                 media.Add(ent.Url, expanded);
@@ -3909,14 +3862,14 @@ namespace Hoehoe
                     foreach (var ent in entities.Hashtags)
                     {
                         string hash = text.Substring(ent.Indices[0], ent.Indices[1] - ent.Indices[0]);
-                        etInfo.Add(ent.Indices[0],
-                            new EntityInfo()
-                            {
-                                StartIndex = ent.Indices[0],
-                                EndIndex = ent.Indices[1],
-                                Text = hash,
-                                Html = "<a href=\"" + this._protocol + "twitter.com/search?q=%23" + ent.Text + "\">" + hash + "</a>"
-                            });
+                        var tmp = new EntityInfo()
+                        {
+                            StartIndex = ent.Indices[0],
+                            EndIndex = ent.Indices[1],
+                            Text = hash,
+                            Html = string.Format("<a href=\"{0}twitter.com/search?q=%23{1}\">{2}</a>", this._protocol, ent.Text, hash)
+                        };
+                        etInfo.Add(ent.Indices[0], tmp);
                         lock (this._lockObj)
                         {
                             this._hashList.Add("#" + ent.Text);
@@ -3929,14 +3882,14 @@ namespace Hoehoe
                     foreach (var ent in entities.UserMentions)
                     {
                         string screenName = text.Substring(ent.Indices[0] + 1, ent.Indices[1] - ent.Indices[0] - 1);
-                        etInfo.Add(ent.Indices[0] + 1,
-                            new EntityInfo()
-                            {
-                                StartIndex = ent.Indices[0] + 1,
-                                EndIndex = ent.Indices[1],
-                                Text = ent.ScreenName,
-                                Html = "<a href=\"/" + ent.ScreenName + "\">" + screenName + "</a>"
-                            });
+                        var tmp = new EntityInfo()
+                        {
+                            StartIndex = ent.Indices[0] + 1,
+                            EndIndex = ent.Indices[1],
+                            Text = ent.ScreenName,
+                            Html = string.Format("<a href=\"/{0}\">{1}</a>", ent.ScreenName, screenName)
+                        };
+                        etInfo.Add(ent.Indices[0] + 1, tmp);
                         if (!atList.Contains(ent.ScreenName.ToLower()))
                         {
                             atList.Add(ent.ScreenName.ToLower());
@@ -3950,15 +3903,15 @@ namespace Hoehoe
                     {
                         if (ent.Type == "photo")
                         {
-                            etInfo.Add(ent.Indices[0],
-                                new EntityInfo()
-                                {
-                                    StartIndex = ent.Indices[0],
-                                    EndIndex = ent.Indices[1],
-                                    Text = ent.Url,
-                                    Html = "<a href=\"" + ent.Url + "\" title=\"" + ent.ExpandedUrl + "\">" + ent.DisplayUrl + "</a>",
-                                    Display = ent.DisplayUrl
-                                });
+                            var tmp = new EntityInfo()
+                            {
+                                StartIndex = ent.Indices[0],
+                                EndIndex = ent.Indices[1],
+                                Text = ent.Url,
+                                Html = string.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", ent.Url, ent.ExpandedUrl, ent.DisplayUrl),
+                                Display = ent.DisplayUrl
+                            };
+                            etInfo.Add(ent.Indices[0], tmp);
                             if (media != null && !media.ContainsKey(ent.Url))
                             {
                                 media.Add(ent.Url, ent.MediaUrl);
@@ -4236,37 +4189,7 @@ namespace Hoehoe
             }
         }
 
-        public class FormattedEvent
-        {
-            public EventType Eventtype { get; set; }
-
-            public DateTime CreatedAt { get; set; }
-
-            public string Event { get; set; }
-
-            public string Username { get; set; }
-
-            public string Target { get; set; }
-
-            public long Id { get; set; }
-
-            public bool IsMe { get; set; }
-        }
-
         public List<FormattedEvent> StoredEvent { get; set; }
-
-        private class EventTypeTableElement
-        {
-            public string Name;
-
-            public EventType Type;
-
-            public EventTypeTableElement(string name, EventType type)
-            {
-                this.Name = name;
-                this.Type = type;
-            }
-        }
 
         private EventTypeTableElement[] EventTable = {
             new EventTypeTableElement("favorite", EventType.Favorite),
@@ -4853,5 +4776,82 @@ namespace Hoehoe
         {
             this.ApiInformationChanged += this.Twitter_ApiInformationChanged;
         }
+
+        private class PostInfo
+        {
+            public string CreatedAt;
+            public string Id;
+            public string Text;
+            public string UserId;
+
+            public PostInfo(string created, string idStr, string txt, string uid)
+            {
+                this.CreatedAt = created;
+                this.Id = idStr;
+                this.Text = txt;
+                this.UserId = uid;
+            }
+
+            public bool Equals(PostInfo dst)
+            {
+                return this.CreatedAt == dst.CreatedAt && this.Id == dst.Id && this.Text == dst.Text && this.UserId == dst.UserId;
+            }
+        }
+
+        private class range
+        {
+            public int fromIndex { get; set; }
+
+            public int toIndex { get; set; }
+
+            public range(int fromIndex, int toIndex)
+            {
+                this.fromIndex = fromIndex;
+                this.toIndex = toIndex;
+            }
+        }
+
+        private class EntityInfo
+        {
+            public int StartIndex { get; set; }
+
+            public int EndIndex { get; set; }
+
+            public string Text { get; set; }
+
+            public string Html { get; set; }
+
+            public string Display { get; set; }
+        }
+        public class FormattedEvent
+        {
+            public EventType Eventtype { get; set; }
+
+            public DateTime CreatedAt { get; set; }
+
+            public string Event { get; set; }
+
+            public string Username { get; set; }
+
+            public string Target { get; set; }
+
+            public long Id { get; set; }
+
+            public bool IsMe { get; set; }
+        }
+
+        private class EventTypeTableElement
+        {
+            public string Name;
+
+            public EventType Type;
+
+            public EventTypeTableElement(string name, EventType type)
+            {
+                this.Name = name;
+                this.Type = type;
+            }
+        }
+
     }
 }
