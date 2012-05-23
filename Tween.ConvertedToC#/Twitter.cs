@@ -143,6 +143,23 @@ namespace Hoehoe
 
         public delegate void UserStreamEventReceivedEventHandler(FormattedEvent eventType);
 
+        public event UserIdChangedEventHandler UserIdChanged;
+        public event ApiInformationChangedEventHandler ApiInformationChanged;
+
+        public event NewPostFromStreamEventHandler NewPostFromStream;
+
+        public event UserStreamStartedEventHandler UserStreamStarted;
+
+        public event UserStreamStoppedEventHandler UserStreamStopped;
+
+
+        public event UserStreamGetFriendsListEventHandler UserStreamGetFriendsList;
+
+        public event PostDeletedEventHandler PostDeleted;
+
+
+        public event UserStreamEventReceivedEventHandler UserStreamEventReceived;
+
         public string Authenticate(string username, string password)
         {
             HttpStatusCode res = default(HttpStatusCode);
@@ -4171,20 +4188,6 @@ namespace Hoehoe
 
         public bool AllAtReply { get; set; }
 
-        public event NewPostFromStreamEventHandler NewPostFromStream;
-
-        public event UserStreamStartedEventHandler UserStreamStarted;
-
-        public event UserStreamStoppedEventHandler UserStreamStopped;
-
-
-        public event UserStreamGetFriendsListEventHandler UserStreamGetFriendsList;
-
-        public event PostDeletedEventHandler PostDeleted;
-
-
-        public event UserStreamEventReceivedEventHandler UserStreamEventReceived;
-
         private TwitterUserstream userStream
         {
             get { return this.withEventsField_userStream; }
@@ -4767,8 +4770,6 @@ namespace Hoehoe
 
         #endregion "IDisposable Support"
 
-        public event UserIdChangedEventHandler UserIdChanged;
-        public event ApiInformationChangedEventHandler ApiInformationChanged;
 
 
 
