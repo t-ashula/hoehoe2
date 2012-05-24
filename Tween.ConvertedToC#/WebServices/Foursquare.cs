@@ -24,59 +24,113 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text.RegularExpressions;
-using Hoehoe.DataModels;
-using Hoehoe.DataModels.FourSquare;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Text.RegularExpressions;
+    using Hoehoe.DataModels;
+    using Hoehoe.DataModels.FourSquare;
+
     public class Foursquare : HttpConnection
     {
-        private static Foursquare _instance = new Foursquare();
-
-        public static Foursquare GetInstance
-        {
-            get { return _instance; }
-        }
+        private static Foursquare instance = new Foursquare();
 
         /// <summary>
         /// 4SQ Api Key : TODO
         /// </summary>
-        private Dictionary<string, string> _authKey = new Dictionary<string, string> {
+        private Dictionary<string, string> authKey = new Dictionary<string, string> 
+        {
             { "client_id", "VWVC5NMXB1T5HKOYAKARCXKZDOHDNYSRLEMDDQYJNSJL2SUU" },
             { "client_secret", CryptoUtils.DecryptString("eXXMGYXZyuDxz/lJ9nLApihoUeEGXNLEO0ZDCAczvwdKgGRExZl1Xyac/ezNTwHFOLUZqaA8tbA=") }
         };
 
-        private Dictionary<string, Google.GlobalLocation> CheckInUrlsVenueCollection = new Dictionary<string, Google.GlobalLocation>();
+        private Dictionary<string, Google.GlobalLocation> checkInUrlsVenueCollection = new Dictionary<string, Google.GlobalLocation>();
+
+        public static Foursquare GetInstance
+        {
+            get { return instance; }
+        }
+
+        public string GetMapsUri(string url, ref string refText)
+        {
+            if (!AppendSettingDialog.Instance.IsPreviewFoursquare)
+            {
+                return null;
+            }
+
+            string urlId = Regex.Replace(url, "https?://(4sq|foursquare)\\.com/", string.Empty);
+
+            if (this.checkInUrlsVenueCollection.ContainsKey(urlId))
+            {
+                refText = this.checkInUrlsVenueCollection[urlId].LocateInfo;
+                return (new Google()).CreateGoogleStaticMapsUri(this.checkInUrlsVenueCollection[urlId]);
+            }
+
+            string venueId = this.GetVenueId(url);
+            if (string.IsNullOrEmpty(venueId))
+            {
+                return null;
+            }
+
+            Venue curVenue = this.GetVenueInfo(venueId);
+            if (curVenue == null)
+            {
+                return null;
+            }
+
+            Google.GlobalLocation curLocation = new Google.GlobalLocation
+            {
+                Latitude = curVenue.Location.Latitude,
+                Longitude = curVenue.Location.Longitude,
+                LocateInfo = this.CreateVenueInfoText(curVenue)
+            };
+            
+            // 例外発生の場合があるため
+            if (!this.checkInUrlsVenueCollection.ContainsKey(urlId))
+            {
+                this.checkInUrlsVenueCollection.Add(urlId, curLocation);
+            }
+
+            refText = curLocation.LocateInfo;
+            return (new Google()).CreateGoogleStaticMapsUri(curLocation);
+        }
+
+        public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content)
+        {
+            HttpWebRequest webReq = CreateRequest(method, requestUri, param, false);
+            HttpStatusCode code = default(HttpStatusCode);
+            code = this.GetResponse(webReq, ref content, null, false);
+            return code;
+        }
 
         private string GetVenueId(string url)
         {
-            string content = "";
+            string content = string.Empty;
             try
             {
-                HttpStatusCode res = GetContent("GET", new Uri(url), null, ref content);
+                HttpStatusCode res = this.GetContent("GET", new Uri(url), null, ref content);
                 if (res != HttpStatusCode.OK)
                 {
-                    return "";
+                    return string.Empty;
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
-                return "";
+                return string.Empty;
             }
+            
             Match mc = Regex.Match(content, "/venue/(?<venueId>[0-9]+)", RegexOptions.IgnoreCase);
-            return mc.Success ? mc.Result("${venueId}") : "";
+            return mc.Success ? mc.Result("${venueId}") : string.Empty;
         }
 
         private Venue GetVenueInfo(string venueId)
         {
-            string content = "";
+            string content = string.Empty;
             try
             {
-                HttpStatusCode res = GetContent("GET", new Uri("https://api.foursquare.com/v2/venues/" + venueId), _authKey, ref content);
+                HttpStatusCode res = this.GetContent("GET", new Uri("https://api.foursquare.com/v2/venues/" + venueId), this.authKey, ref content);
 
                 if (res == HttpStatusCode.OK)
                 {
@@ -85,7 +139,7 @@ namespace Hoehoe
                     {
                         curData = D.CreateDataFromJson<FourSquareData>(content);
                     }
-                    catch (Exception )
+                    catch (Exception)
                     {
                         return null;
                     }
@@ -103,49 +157,6 @@ namespace Hoehoe
             }
         }
 
-        public string GetMapsUri(string url, ref string refText)
-        {
-            if (!AppendSettingDialog.Instance.IsPreviewFoursquare)
-            {
-                return null;
-            }
-
-            string urlId = Regex.Replace(url, "https?://(4sq|foursquare)\\.com/", "");
-
-            if (CheckInUrlsVenueCollection.ContainsKey(urlId))
-            {
-                refText = CheckInUrlsVenueCollection[urlId].LocateInfo;
-                return (new Google()).CreateGoogleStaticMapsUri(CheckInUrlsVenueCollection[urlId]);
-            }
-
-            Venue curVenue = null;
-            string venueId = GetVenueId(url);
-            if (String.IsNullOrEmpty(venueId))
-            {
-                return null;
-            }
-
-            curVenue = GetVenueInfo(venueId);
-            if (curVenue == null)
-            {
-                return null;
-            }
-
-            Google.GlobalLocation curLocation = new Google.GlobalLocation
-            {
-                Latitude = curVenue.Location.Latitude,
-                Longitude = curVenue.Location.Longitude,
-                LocateInfo = CreateVenueInfoText(curVenue)
-            };
-            // 例外発生の場合があるため
-            if (!CheckInUrlsVenueCollection.ContainsKey(urlId))
-            {
-                CheckInUrlsVenueCollection.Add(urlId, curLocation);
-            }
-            refText = curLocation.LocateInfo;
-            return (new Google()).CreateGoogleStaticMapsUri(curLocation);
-        }
-
         private string CreateVenueInfoText(Venue info)
         {
             return info.Name + Environment.NewLine
@@ -154,14 +165,6 @@ namespace Hoehoe
                 + info.Location.City + info.Location.State + Environment.NewLine
                 + info.Location.Latitude.ToString() + Environment.NewLine
                 + info.Location.Longitude.ToString();
-        }
-
-        public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content)
-        {
-            HttpWebRequest webReq = CreateRequest(method, requestUri, param, false);
-            HttpStatusCode code = default(HttpStatusCode);
-            code = GetResponse(webReq, ref content, null, false);
-            return code;
         }
     }
 }

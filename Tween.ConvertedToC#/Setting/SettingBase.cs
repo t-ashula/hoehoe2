@@ -52,11 +52,11 @@ namespace Hoehoe
                     }
                 }
             }
-            catch (FileNotFoundException )
+            catch (FileNotFoundException)
             {
                 return new T();
             }
-            catch (Exception )
+            catch (Exception)
             {
                 string backupFile = Path.Combine(Path.Combine(MyCommon.AppDir, "TweenBackup1st"), typeof(T).Name + fileId + ".xml");
                 if (File.Exists(backupFile))
@@ -127,7 +127,7 @@ namespace Hoehoe
                         }
                     }
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                     // 検証エラー or 書き込みエラー
                     if (cnt > 3)

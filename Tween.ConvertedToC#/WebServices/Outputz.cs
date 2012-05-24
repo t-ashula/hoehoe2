@@ -24,11 +24,11 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+
     public class Outputz
     {
         public static string OutUrl { get; set; }
@@ -45,10 +45,7 @@ namespace Hoehoe
             }
 
             string output = "http://outputz.com/api/post";
-            var param = new Dictionary<string, string>() {
-                { "key", Key }, { "uri", OutUrl }, { "size", length.ToString() }
-            };
-            return (new HttpVarious()).PostData(output, param);
+            return (new HttpVarious()).PostData(output, new Dictionary<string, string>() { { "key", Key }, { "uri", OutUrl }, { "size", length.ToString() } });
         }
     }
 }

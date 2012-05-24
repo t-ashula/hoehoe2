@@ -24,10 +24,10 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-
 namespace Hoehoe
 {
+    using System;
+
     public static class nicoms
     {
         private static string[] _nicovideoUrls = {
@@ -71,16 +71,19 @@ namespace Hoehoe
             {
                 return String.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));
             }
+    
             i = url.IndexOf("nicovideo.jp/mylist/", StringComparison.OrdinalIgnoreCase);
             if (i == 0 || i == 4)
             {
                 return String.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));
             }
+            
             i = url.IndexOf("seiga.nicovideo.jp/watch/", StringComparison.OrdinalIgnoreCase);
             if (i == 0)
             {
                 return String.Format("{0}{1}", "http://nico.ms/", url.Substring(25));
             }
+            
             return "http://" + url;
         }
     }

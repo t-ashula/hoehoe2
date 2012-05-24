@@ -86,8 +86,8 @@ namespace Hoehoe
                 this.PostSource = user.Status.Source;
             }
         }
-        
-        public override string Tostring()
+
+        public override string ToString()
         {
             return this.ScreenName + " / " + this.Name;
         }

@@ -24,147 +24,148 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization.Json;
-using System.Web;
-using Hoehoe.DataModels;
-using Hoehoe.DataModels.Google;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization.Json;
+    using System.Web;
+    using Hoehoe.DataModels;
+    using Hoehoe.DataModels.Google;
+
     public class Google
     {
         #region "Translation"
-
-        // http://code.google.com/intl/ja/apis/ajaxlanguage/documentation/#fonje
-        // デベロッパー ガイド - Google AJAX Language API - Google Code
-
+        /* 
+         * デベロッパー ガイド - Google AJAX Language API - Google Code
+         * http://code.google.com/intl/ja/apis/ajaxlanguage/documentation/#fonje
+         */
+        
         private const string TranslateEndPoint = "http://ajax.googleapis.com/ajax/services/language/translate";
-
         private const string LanguageDetectEndPoint = "https://ajax.googleapis.com/ajax/services/language/detect";
 
-        private static List<string> LanguageTable = new List<string> {
         #region "言語テーブル定義"
-
-			"af",
-			"sq",
-			"am",
-			"ar",
-			"hy",
-			"az",
-			"eu",
-			"be",
-			"bn",
-			"bh",
-			"br",
-			"bg",
-			"my",
-			"ca",
-			"chr",
-			"zh",
-			"zh-CN",
-			"zh-TW",
-			"co",
-			"hr",
-			"cs",
-			"da",
-			"dv",
-			"nl",
-			"en",
-			"eo",
-			"et",
-			"fo",
-			"tl",
-			"fi",
-			"fr",
-			"fy",
-			"gl",
-			"ka",
-			"de",
-			"el",
-			"gu",
-			"ht",
-			"iw",
-			"hi",
-			"hu",
-			"is",
-			"id",
-			"iu",
-			"ga",
-			"it",
-			"ja",
-			"jw",
-			"kn",
-			"kk",
-			"km",
-			"ko",
-			"ku",
-			"ky",
-			"lo",
-			"la",
-			"lv",
-			"lt",
-			"lb",
-			"mk",
-			"ms",
-			"ml",
-			"mt",
-			"mi",
-			"mr",
-			"mn",
-			"ne",
-			"no",
-			"oc",
-			"or",
-			"ps",
-			"fa",
-			"pl",
-			"pt",
-			"pt-PT",
-			"pa",
-			"qu",
-			"ro",
-			"ru",
-			"sa",
-			"gd",
-			"sr",
-			"sd",
-			"si",
-			"sk",
-			"sl",
-			"es",
-			"su",
-			"sw",
-			"sv",
-			"syr",
-			"tg",
-			"ta",
-			"tt",
-			"te",
-			"th",
-			"bo",
-			"to",
-			"tr",
-			"uk",
-			"ur",
-			"uz",
-			"ug",
-			"vi",
-			"cy",
-			"yi",
-			"yo"
-
-			#endregion "言語テーブル定義"
-		};
-
-        public bool Translate(string srclng, string dstlng, string source, ref string destination, ref string ErrMsg)
+        private static List<string> languages = new List<string> 
         {
-            ErrMsg = "";
-            if (String.IsNullOrEmpty(srclng) || String.IsNullOrEmpty(dstlng))
+            "af",
+            "sq",
+            "am",
+            "ar",
+   "hy",
+   "az",
+   "eu",
+   "be",
+   "bn",
+   "bh",
+   "br",
+   "bg",
+   "my",
+   "ca",
+   "chr",
+   "zh",
+   "zh-CN",
+   "zh-TW",
+   "co",
+   "hr",
+   "cs",
+   "da",
+   "dv",
+   "nl",
+   "en",
+   "eo",
+   "et",
+   "fo",
+   "tl",
+   "fi",
+   "fr",
+   "fy",
+   "gl",
+   "ka",
+   "de",
+   "el",
+   "gu",
+   "ht",
+   "iw",
+   "hi",
+   "hu",
+   "is",
+   "id",
+   "iu",
+   "ga",
+   "it",
+   "ja",
+   "jw",
+   "kn",
+   "kk",
+   "km",
+   "ko",
+   "ku",
+   "ky",
+   "lo",
+   "la",
+   "lv",
+   "lt",
+   "lb",
+   "mk",
+   "ms",
+   "ml",
+   "mt",
+   "mi",
+   "mr",
+   "mn",
+   "ne",
+   "no",
+   "oc",
+   "or",
+   "ps",
+   "fa",
+   "pl",
+   "pt",
+   "pt-PT",
+   "pa",
+   "qu",
+   "ro",
+   "ru",
+   "sa",
+   "gd",
+   "sr",
+   "sd",
+   "si",
+   "sk",
+   "sl",
+   "es",
+   "su",
+   "sw",
+   "sv",
+   "syr",
+   "tg",
+   "ta",
+   "tt",
+   "te",
+   "th",
+   "bo",
+   "to",
+   "tr",
+   "uk",
+   "ur",
+   "uz",
+   "ug",
+   "vi",
+   "cy",
+   "yi",
+   "yo"
+        };
+
+        #endregion "言語テーブル定義"
+
+        public bool Translate(string srclng, string dstlng, string source, ref string destination, ref string errorMessage)
+        {
+            errorMessage = string.Empty;
+            if (string.IsNullOrEmpty(srclng) || string.IsNullOrEmpty(dstlng))
             {
                 return false;
             }
+
             string apiurl = TranslateEndPoint;
             Dictionary<string, string> headers = new Dictionary<string, string>();
             headers.Add("v", "1.0");
@@ -172,7 +173,7 @@ namespace Hoehoe
             headers.Add("langpair", srclng + "|" + dstlng);
             headers.Add("q", source);
 
-            string content = "";
+            string content = string.Empty;
             HttpVarious http = new HttpVarious();
             if (http.GetData(apiurl, headers, ref content))
             {
@@ -185,21 +186,22 @@ namespace Hoehoe
                 }
                 catch (Exception)
                 {
-                    ErrMsg = "Err:Invalid JSON";
+                    errorMessage = "Err:Invalid JSON";
                     return false;
                 }
 
                 if (res.ResponseData == null)
                 {
-                    ErrMsg = "Err:" + res.ResponseDetails;
+                    errorMessage = "Err:" + res.ResponseDetails;
                     return false;
                 }
+            
                 string body = res.ResponseData.TranslatedText;
                 string buf = HttpUtility.UrlDecode(body);
-
-                destination = String.Copy(buf);
+                destination = string.Copy(buf);
                 return true;
             }
+
             return false;
         }
 
@@ -211,7 +213,7 @@ namespace Hoehoe
             headers.Add("User-Agent", MyCommon.GetUserAgentString());
             headers.Add("v", "1.0");
             headers.Add("q", source);
-            string content = "";
+            string content = string.Empty;
             if (http.GetData(apiurl, headers, ref content))
             {
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(LanguageDetectResponse));
@@ -222,29 +224,29 @@ namespace Hoehoe
                 }
                 catch (Exception)
                 {
-                    return "";
+                    return string.Empty;
                 }
             }
-            return "";
+            
+            return string.Empty;
         }
 
         public string GetLanguageEnumFromIndex(int index)
         {
-            return LanguageTable[index];
+            return languages[index];
         }
 
         public int GetIndexFromLanguageEnum(string lang)
         {
-            return LanguageTable.IndexOf(lang);
+            return languages.IndexOf(lang);
         }
 
         #endregion "Translation"
 
         #region "UrlShortener"
 
-        // http://code.google.com/intl/ja/apis/urlshortener/v1/getting_started.html
         // Google URL Shortener API
-
+        // http://code.google.com/intl/ja/apis/urlshortener/v1/getting_started.html        
         public string Shorten(string source)
         {
             Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -254,7 +256,7 @@ namespace Hoehoe
             HttpVarious http = new HttpVarious();
             string apiurl = "https://www.googleapis.com/urlshortener/v1/url";
             http.PostData(apiurl, headers);
-            return "";
+            return string.Empty;
         }
 
         #endregion "UrlShortener"
@@ -263,7 +265,7 @@ namespace Hoehoe
 
         public string CreateGoogleStaticMapsUri(GlobalLocation locate)
         {
-            return CreateGoogleStaticMapsUri(locate.Latitude, locate.Longitude);
+            return this.CreateGoogleStaticMapsUri(locate.Latitude, locate.Longitude);
         }
 
         public string CreateGoogleStaticMapsUri(double lat, double lng)
@@ -273,7 +275,7 @@ namespace Hoehoe
 
         public string CreateGoogleMapsUri(GlobalLocation locate)
         {
-            return CreateGoogleMapsUri(locate.Latitude, locate.Longitude);
+            return this.CreateGoogleMapsUri(locate.Latitude, locate.Longitude);
         }
 
         public string CreateGoogleMapsUri(double lat, double lng)

@@ -278,7 +278,7 @@ namespace Hoehoe
             get
             {
                 string pwd = ProxyPassword;
-                if (String.IsNullOrEmpty(pwd))
+                if (string.IsNullOrEmpty(pwd))
                 {
                     pwd = "";
                 }
@@ -301,7 +301,7 @@ namespace Hoehoe
             set
             {
                 string pwd = value;
-                if (String.IsNullOrEmpty(pwd))
+                if (string.IsNullOrEmpty(pwd))
                 {
                     pwd = "";
                 }

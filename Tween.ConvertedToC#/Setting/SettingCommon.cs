@@ -73,7 +73,7 @@ namespace Hoehoe
 
         private string Encrypt(string password)
         {
-            if (String.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(password))
             {
                 password = "";
             }
@@ -96,7 +96,7 @@ namespace Hoehoe
 
         private string Decrypt(string password)
         {
-            if (String.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(password))
             {
                 password = "";
             }
