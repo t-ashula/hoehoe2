@@ -24,13 +24,33 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using Hoehoe.DataModels;
-
 namespace Hoehoe
 {
+    using System;
+    using Hoehoe.DataModels;
+
     public class UserInfo
     {
+        public long Id = 0;
+        public string Name = string.Empty;
+        public string ScreenName = string.Empty;
+        public string Location = string.Empty;
+        public string Description = string.Empty;
+        public Uri ImageUrl;
+        public string Url = string.Empty;
+        public bool Protect;
+        public int FriendsCount;
+        public int FollowersCount;
+        public int FavoriteCount;
+        public DateTime CreatedAt = new DateTime();
+        public int StatusesCount;
+        public bool Verified;
+        public string RecentPost = string.Empty;
+        public DateTime PostCreatedAt = new DateTime();
+        public string PostSource = string.Empty; // html形式　"<a href="http://sourceforge.jp/projects/tween/wiki/FrontPage" rel="nofollow">Tween</a>"
+        public bool IsFollowing;
+        public bool IsFollowed;
+
         public UserInfo()
         {
         }
@@ -46,10 +66,11 @@ namespace Hoehoe
             {
                 this.ImageUrl = new Uri(user.ProfileImageUrl);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 this.ImageUrl = null;
             }
+
             this.Url = user.Url;
             this.Protect = user.Protected;
             this.FriendsCount = user.FriendsCount;
@@ -65,29 +86,8 @@ namespace Hoehoe
                 this.PostSource = user.Status.Source;
             }
         }
-
-        public Int64 Id = 0;
-        public string Name = String.Empty;
-        public string ScreenName = String.Empty;
-        public string Location = String.Empty;
-        public string Description = String.Empty;
-        public Uri ImageUrl;
-        public string Url = String.Empty;
-        public bool Protect;
-        public int FriendsCount;
-        public int FollowersCount;
-        public int FavoriteCount;
-        public DateTime CreatedAt = new DateTime();
-        public int StatusesCount;
-        public bool Verified;
-        public string RecentPost = String.Empty;
-        public DateTime PostCreatedAt = new DateTime();
-        // html形式　"<a href="http://sourceforge.jp/projects/tween/wiki/FrontPage" rel="nofollow">Tween</a>"
-        public string PostSource = String.Empty;
-        public bool IsFollowing;
-        public bool IsFollowed;
-
-        public override string ToString()
+        
+        public override string Tostring()
         {
             return this.ScreenName + " / " + this.Name;
         }
