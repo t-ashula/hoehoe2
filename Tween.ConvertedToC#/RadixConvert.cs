@@ -24,11 +24,11 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Text;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Text;
+
     public static class RadixConvert
     {
         #region "Int16型およびUInt16型用のメソッド群"
@@ -47,7 +47,7 @@ namespace Hoehoe
         public static short ToInt16(string s, int radix)
         {
             ulong digit = ToUInt64(s, radix);
-            CheckDigitOverflow(digit, Int16.MaxValue);
+            CheckDigitOverflow(digit, short.MaxValue);
             return Convert.ToInt16(digit);
         }
 
@@ -65,7 +65,7 @@ namespace Hoehoe
         public static ushort ToUInt16(string s, int radix)
         {
             ulong digit = ToUInt64(s, radix);
-            CheckDigitOverflow(digit, UInt16.MaxValue);
+            CheckDigitOverflow(digit, ushort.MaxValue);
             return Convert.ToUInt16(digit);
         }
 
@@ -119,7 +119,7 @@ namespace Hoehoe
         public static int ToInt32(string s, int radix)
         {
             ulong digit = ToUInt64(s, radix);
-            CheckDigitOverflow(digit, Int32.MaxValue);
+            CheckDigitOverflow(digit, int.MaxValue);
             return Convert.ToInt32(digit);
         }
 
@@ -137,7 +137,7 @@ namespace Hoehoe
         public static uint ToUInt32(string s, int radix)
         {
             ulong digit = ToUInt64(s, radix);
-            CheckDigitOverflow(digit, UInt32.MaxValue);
+            CheckDigitOverflow(digit, uint.MaxValue);
             return Convert.ToUInt32(digit);
         }
 
@@ -191,7 +191,7 @@ namespace Hoehoe
         public static long ToInt64(string s, int radix)
         {
             ulong digit = ToUInt64(s, radix);
-            CheckDigitOverflow(digit, Int64.MaxValue);
+            CheckDigitOverflow(digit, long.MaxValue);
             return Convert.ToInt64(digit);
         }
 
@@ -212,16 +212,12 @@ namespace Hoehoe
             CheckNumberArgument(s);
             CheckRadixArgument(radix);
 
-            ulong curValue = 0;
-            // 変換中の数値
-            ulong maxValue = Convert.ToUInt64(UInt64.MaxValue / Convert.ToUInt64(radix));
-            // 最大値の1けた前の数値
+            ulong curValue = 0; // 変換中の数値
+            ulong maxValue = Convert.ToUInt64(ulong.MaxValue / Convert.ToUInt64(radix)); // 最大値の1けた前の数値
 
             // 数値文字列を解析して数値に変換する
-            char num = '\0';
-            // 処理中の1けたの数値文字列
-            int digit = 0;
-            // 処理中の1けたの数値
+            char num = '\0';          // 処理中の1けたの数値文字列
+            int digit = 0;            // 処理中の1けたの数値
             int length = s.Length;
             for (int i = 0; i <= length - 1; i++)
             {
@@ -231,7 +227,7 @@ namespace Hoehoe
 
                 // 次にradixを掛けるときに数値がオーバーフローしないかを事前にチェックする
                 CheckDigitOverflow(curValue, maxValue);
-                curValue = curValue * Convert.ToUInt64(radix) + Convert.ToUInt64(digit);
+                curValue = (curValue * Convert.ToUInt64(radix)) + Convert.ToUInt64(digit);
             }
 
             return curValue;
@@ -275,24 +271,24 @@ namespace Hoehoe
                 return "0";
             }
 
-            StringBuilder curValue = new StringBuilder(41);
             // 変換中の数値文字列
             // ※UInt64.MaxValueの数値を3進数で表現すると41けたです。
-            ulong curDigit = n;
-            // 未処理の数値
+            StringBuilder curValue = new StringBuilder(41);
+            ulong curDigit = n;            // 未処理の数値
 
             // 数値を解析して数値文字列に変換する
-            ulong digit = 0;
-            // 処理中の1けたの数値
+            ulong digit = 0; // 処理中の1けたの数値
             do
             {
                 // 一番下のけたの数値を取り出す
                 digit = curDigit % Convert.ToUInt64(radix);
+
                 // 取り出した1けたを切り捨てる
                 curDigit = Convert.ToUInt64(curDigit / Convert.ToUInt64(radix));
 
                 curValue.Insert(0, GetNumberFromDigit(Convert.ToInt32(digit), uppercase));
-            } while (curDigit != 0);
+            }
+            while (curDigit != 0);
 
             return curValue.ToString();
         }
@@ -318,16 +314,12 @@ namespace Hoehoe
             CheckNumberArgument(s);
             CheckRadixArgument(radix);
 
-            decimal curValue = 0;
-            // 変換中の数値
-            decimal maxValue = decimal.MaxValue / Convert.ToDecimal(radix);
-            // 最大値の1けた前の数値
+            decimal curValue = 0;            // 変換中の数値
+            decimal maxValue = decimal.MaxValue / Convert.ToDecimal(radix);            // 最大値の1けた前の数値
 
             // 数値文字列を解析して数値に変換する
-            char num = '\0';
-            // 処理中の1けたの数値文字列
-            int digit = 0;
-            // 処理中の1けたの数値
+            char num = '\0';            // 処理中の1けたの数値文字列
+            int digit = 0;            // 処理中の1けたの数値
             int length = s.Length;
             for (int i = 0; i <= length - 1; i++)
             {
@@ -337,7 +329,8 @@ namespace Hoehoe
 
                 // 次にradixを掛けるときに数値がオーバーフローしないかを事前にチェックする
                 CheckDigitOverflow(curValue, maxValue);
-                curValue = curValue * Convert.ToDecimal(radix) + Convert.ToDecimal(digit);
+
+                curValue = (curValue * Convert.ToDecimal(radix)) + Convert.ToDecimal(digit);
             }
 
             return curValue;
@@ -365,23 +358,22 @@ namespace Hoehoe
                 return "0";
             }
 
-            StringBuilder curValue = new StringBuilder(120);
-            // 変換中の数値文字列
-            // ※Decimal.MaxValueの数値を3進数で表現すると120けたです。
-            decimal curDigit = n;
-            // 未処理の数値
+            StringBuilder curValue = new StringBuilder(120);            // 変換中の数値文字列 ※Decimal.MaxValueの数値を3進数で表現すると120けたです。
+            decimal curDigit = n;            // 未処理の数値
 
             // 数値を解析して数値文字列に変換する
-            decimal digit = default(decimal);
-            // 処理中の1けたの数値
+            decimal digit = default(decimal);            // 処理中の1けたの数値
             do
             {
                 // 一番下のけたの数値を取り出す
                 digit = curDigit % Convert.ToDecimal(radix);
+
                 // 取り出した1けたを切り捨てる
                 curDigit = curDigit / Convert.ToDecimal(radix);
+
                 curValue.Insert(0, GetNumberFromDigit(Convert.ToInt32(digit), uppercase));
-            } while (curDigit != 0);
+            }
+            while (curDigit != 0);
 
             return curValue.ToString();
         }
@@ -404,6 +396,7 @@ namespace Hoehoe
             {
                 throw new ArgumentException("2／8／10／16進数はSystem.Convertクラスを使ってください。");
             }
+
             if (radix <= 1 || 36 < radix)
             {
                 throw new ArgumentException("3～36進数にしか対応していません。");
@@ -441,14 +434,17 @@ namespace Hoehoe
             {
                 return num - '0';
             }
+
             if (ascNum >= 'A' && ascNum <= 'Z')
             {
                 return ascNum - 'A' + 10;
             }
+
             if (ascNum >= 'a' && ascNum <= 'z')
             {
                 return ascNum - 'a' + 10;
             }
+
             return -1;
         }
 
@@ -458,10 +454,12 @@ namespace Hoehoe
             {
                 return (char)('0' + digit);
             }
+
             if (uppercase)
             {
                 return (char)('A' + digit - 10);
             }
+
             return (char)('a' + digit - 10);
         }
 
