@@ -24,20 +24,18 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Runtime.InteropServices;
+    using System.Text.RegularExpressions;
+    using System.Threading;
+    using System.Windows.Forms;
+
     #region "WebBrowserAPI"
 
     public class WebBrowserAPI
     {
-        public static int INET_E_DEFAULT_ACTION = unchecked((int)0x800c0011);
-
         public enum URLZONE
         {
             URLZONE_LOCAL_MACHINE = 0,
@@ -47,6 +45,7 @@ namespace Hoehoe
             URLZONE_UNTRUSTED = URLZONE_INTERNET + 1
         }
 
+        public static int INET_E_DEFAULT_ACTION = unchecked((int)0x800c0011);
         public static int URLACTION_MIN = 0x1000;
         public static int URLACTION_DOWNLOAD_MIN = 0x1000;
         public static int URLACTION_DOWNLOAD_SIGNED_ACTIVEX = 0x1001;
@@ -73,16 +72,12 @@ namespace Hoehoe
         public static int URLACTION_SCRIPT_PASTE = 0x1407;
         public static int URLACTION_SCRIPT_CURR_MAX = 0x1407;
         public static int URLACTION_SCRIPT_MAX = 0x15ff;
-        public static int URLACTION_HTML_MIN = 0x1600;
-        // aggregate next two
+        public static int URLACTION_HTML_MIN = 0x1600;        // aggregate next two
         public static int URLACTION_HTML_SUBMIT_FORMS = 0x1601;
-        //
         public static int URLACTION_HTML_SUBMIT_FORMS_FROM = 0x1602;
-        //
         public static int URLACTION_HTML_SUBMIT_FORMS_TO = 0x1603;
         public static int URLACTION_HTML_FONT_DOWNLOAD = 0x1604;
-        // derive from Java custom policy
-        public static int URLACTION_HTML_JAVA_RUN = 0x1605;
+        public static int URLACTION_HTML_JAVA_RUN = 0x1605; // derive from Java custom policy
         public static int URLACTION_HTML_USERDATA_SAVE = 0x1606;
         public static int URLACTION_HTML_SUBFRAME_NAVIGATE = 0x1607;
         public static int URLACTION_HTML_META_REFRESH = 0x1608;
@@ -146,6 +141,7 @@ namespace Hoehoe
         public static int URLPOLICY_CHANNEL_SOFTDIST_PRECACHE = 0x20000;
         public static int URLPOLICY_CHANNEL_SOFTDIST_AUTOINSTALL = 0x30000;
         public static int URLACTION_CHANNEL_SOFTDIST_MAX = 0x1eff;
+        
         // For each action specified above the system maintains
         // a set of policies for the action.
         // The only policies supported currently are permissions (i.e. is something allowed)
@@ -163,6 +159,7 @@ namespace Hoehoe
         // Notifications are not done when user already queried.
         public static int URLPOLICY_NOTIFY_ON_ALLOW = 0x10;
         public static int URLPOLICY_NOTIFY_ON_DISALLOW = 0x20;
+        
         // Logging is done regardless of whether user was queried.
         public static int URLPOLICY_LOG_ON_ALLOW = 0x40;
         public static int URLPOLICY_LOG_ON_DISALLOW = 0x80;
@@ -172,9 +169,7 @@ namespace Hoehoe
         // ----------------------------------------------------------------------
         // ここ以下は COM Interface の宣言です。
         public static Guid IID_IProfferService = new Guid("cb728b20-f786-11ce-92ad-00aa00a74cd0");
-
         public static Guid SID_SProfferService = new Guid("cb728b20-f786-11ce-92ad-00aa00a74cd0");
-
         public static Guid IID_IInternetSecurityManager = new Guid("79eac9ee-baf9-11ce-8c82-00aa004ba90b");
 
         [ComImport, Guid("6d5140c1-7436-11ce-8034-00aa006009fa"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -217,7 +212,7 @@ namespace Hoehoe
             int MapUrlToZone([In, MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, out int pdwZone, int dwFlags);
 
             [PreserveSig]
-            int GetSecurityId([MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, [MarshalAs(UnmanagedType.LPArray)]byte[] pbSecurityId, ref UInt32 pcbSecurityId, UInt32 dwReserved);
+            int GetSecurityId([MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, [MarshalAs(UnmanagedType.LPArray)]byte[] pbSecurityId, ref uint pcbSecurityId, uint dwReserved);
 
             [PreserveSig]
             int ProcessUrlAction([In, MarshalAs(UnmanagedType.LPWStr)]string pwszUrl, int dwAction, ref byte pPolicy, int cbPolicy, byte pContext, int cbContext, int dwFlags, int dwReserved);
@@ -237,25 +232,6 @@ namespace Hoehoe
 
     public class InternetSecurityManager : WebBrowserAPI.IServiceProvider, WebBrowserAPI.IInternetSecurityManager
     {
-        #region "HRESULT"
-
-        private class HRESULT
-        {
-            public static int S_OK = 0x0;
-            public static int S_FALSE = 0x1;
-            public static int E_NOTIMPL = unchecked((int)0x80004001);
-            public static int E_NOINTERFACE = unchecked((int)0x80004002);
-        }
-
-        #endregion "HRESULT"
-
-        [Flags]
-        public enum POLICY : int
-        {
-            ALLOW_ACTIVEX = 0x1,
-            ALLOW_SCRIPT = 0x2
-        }
-
         private object ocx = new object();
         private WebBrowserAPI.IServiceProvider ocxServiceProvider;
         private IntPtr profferServicePtr = new IntPtr();
@@ -268,24 +244,26 @@ namespace Hoehoe
         {
             // ActiveXコントロール取得
             _WebBrowser.DocumentText = "about:blank";
+            
             // ActiveXを初期化する
             do
             {
                 Thread.Sleep(100);
                 Application.DoEvents();
-            } while (!(_WebBrowser.ReadyState == WebBrowserReadyState.Complete));
+            } 
+            while (!(_WebBrowser.ReadyState == WebBrowserReadyState.Complete));
 
-            ocx = _WebBrowser.ActiveXInstance;
+            this.ocx = _WebBrowser.ActiveXInstance;
 
             // IServiceProvider.QueryService() を使って IProfferService を取得
-            ocxServiceProvider = (WebBrowserAPI.IServiceProvider)ocx;
+            this.ocxServiceProvider = (WebBrowserAPI.IServiceProvider)this.ocx;
 
             int hresult = 0;
             try
             {
-                hresult = ocxServiceProvider.QueryService(ref WebBrowserAPI.SID_SProfferService, ref WebBrowserAPI.IID_IProfferService, out profferServicePtr);
+                hresult = this.ocxServiceProvider.QueryService(ref WebBrowserAPI.SID_SProfferService, ref WebBrowserAPI.IID_IProfferService, out this.profferServicePtr);
             }
-            catch (SEHException ex)
+            catch (SEHException)
             {
             }
             catch (ExternalException ex)
@@ -294,16 +272,16 @@ namespace Hoehoe
                 return;
             }
 
-            profferService = (WebBrowserAPI.IProfferService)Marshal.GetObjectForIUnknown(profferServicePtr);
+            this.profferService = (WebBrowserAPI.IProfferService)Marshal.GetObjectForIUnknown(this.profferServicePtr);
 
             // IProfferService.ProfferService() を使って
             // 自分を IInternetSecurityManager として提供
             try
             {
                 int cookie;
-                hresult = profferService.ProfferService(ref WebBrowserAPI.IID_IInternetSecurityManager, this, out cookie);
+                hresult = this.profferService.ProfferService(ref WebBrowserAPI.IID_IInternetSecurityManager, this, out cookie);
             }
-            catch (SEHException ex)
+            catch (SEHException)
             {
             }
             catch (ExternalException ex)
@@ -311,6 +289,19 @@ namespace Hoehoe
                 MyCommon.TraceOut(ex, "IProfferSerive.ProfferService() HRESULT:" + ex.ErrorCode.ToString("X8") + Environment.NewLine);
                 return;
             }
+        }
+
+        [Flags]
+        public enum POLICY : int
+        {
+            ALLOW_ACTIVEX = 0x1,
+            ALLOW_SCRIPT = 0x2
+        }
+
+        public POLICY SecurityPolicy
+        {
+            get { return this._Policy; }
+            set { this._Policy = value; }
         }
 
         public int QueryService(ref System.Guid guidService, ref System.Guid riid, out System.IntPtr ppvObject)
@@ -352,7 +343,7 @@ namespace Hoehoe
             try
             {
                 string urlStr = MyCommon.IDNDecode(pwszUrl);
-                if (String.IsNullOrEmpty(urlStr))
+                if (string.IsNullOrEmpty(urlStr))
                 {
                     return WebBrowserAPI.URLPOLICY_DISALLOW;
                 }
@@ -362,7 +353,7 @@ namespace Hoehoe
                     return WebBrowserAPI.URLPOLICY_DISALLOW;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return WebBrowserAPI.URLPOLICY_DISALLOW;
             }
@@ -375,7 +366,7 @@ namespace Hoehoe
             if (WebBrowserAPI.URLACTION_SCRIPT_MIN <= dwAction & dwAction <= WebBrowserAPI.URLACTION_SCRIPT_MAX)
             {
                 // スクリプト実行状態
-                if ((_Policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT)
+                if ((this._Policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT)
                 {
                     pPolicy = WebBrowserAPI.URLPOLICY_ALLOW;
                 }
@@ -393,7 +384,7 @@ namespace Hoehoe
             if (WebBrowserAPI.URLACTION_ACTIVEX_MIN <= dwAction & dwAction <= WebBrowserAPI.URLACTION_ACTIVEX_MAX)
             {
                 // ActiveX実行状態
-                if ((_Policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX)
+                if ((this._Policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX)
                 {
                     pPolicy = WebBrowserAPI.URLPOLICY_ALLOW;
                 }
@@ -422,10 +413,16 @@ namespace Hoehoe
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
-        public POLICY SecurityPolicy
+        #region "HRESULT"
+
+        private class HRESULT
         {
-            get { return _Policy; }
-            set { _Policy = value; }
+            public static int S_OK = 0x0;
+            public static int S_FALSE = 0x1;
+            public static int E_NOTIMPL = unchecked((int)0x80004001);
+            public static int E_NOINTERFACE = unchecked((int)0x80004002);
         }
+
+        #endregion "HRESULT"
     }
 }
