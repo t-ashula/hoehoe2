@@ -55,33 +55,33 @@ namespace Hoehoe
 
         public string SearchLang
         {
-            get { return _searchLang; }
+            get { return this._searchLang; }
             set
             {
-                SinceId = 0;
-                _searchLang = value;
+                this.SinceId = 0;
+                this._searchLang = value;
             }
         }
 
         public string SearchWords
         {
-            get { return _searchWords; }
+            get { return this._searchWords; }
             set
             {
-                SinceId = 0;
-                _searchWords = value.Trim();
+                this.SinceId = 0;
+                this._searchWords = value.Trim();
             }
         }
 
         public string NextPageQuery
         {
-            get { return _nextPageQuery; }
-            set { _nextPageQuery = value; }
+            get { return this._nextPageQuery; }
+            set { this._nextPageQuery = value; }
         }
 
         public int GetSearchPage(int count)
         {
-            return ((_ids.Count / count) + 1);
+            return (this._ids.Count / count) + 1;
         }
 
         private Dictionary<string, string> _beforeQuery = new Dictionary<string, string>();
@@ -89,38 +89,38 @@ namespace Hoehoe
         public void SaveQuery(bool more)
         {
             Dictionary<string, string> qry = new Dictionary<string, string>();
-            if (string.IsNullOrEmpty(_searchWords))
+            if (string.IsNullOrEmpty(this._searchWords))
             {
-                _beforeQuery = qry;
+                this._beforeQuery = qry;
                 return;
             }
-            qry.Add("q", _searchWords);
-            if (!string.IsNullOrEmpty(_searchLang))
+            qry.Add("q", this._searchWords);
+            if (!string.IsNullOrEmpty(this._searchLang))
             {
-                qry.Add("lang", _searchLang);
+                qry.Add("lang", this._searchLang);
             }
-            _beforeQuery = qry;
+            this._beforeQuery = qry;
         }
 
         public bool IsQueryChanged()
         {
             Dictionary<string, string> qry = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(_searchWords))
+            if (!string.IsNullOrEmpty(this._searchWords))
             {
-                qry.Add("q", _searchWords);
-                if (!string.IsNullOrEmpty(_searchLang))
+                qry.Add("q", this._searchWords);
+                if (!string.IsNullOrEmpty(this._searchLang))
                 {
-                    qry.Add("lang", _searchLang);
+                    qry.Add("lang", this._searchLang);
                 }
             }
-            if (qry.Count != _beforeQuery.Count)
+            if (qry.Count != this._beforeQuery.Count)
             {
                 return true;
             }
 
             foreach (KeyValuePair<string, string> kvp in qry)
             {
-                if (!_beforeQuery.ContainsKey(kvp.Key) || _beforeQuery[kvp.Key] != kvp.Value)
+                if (!this._beforeQuery.ContainsKey(kvp.Key) || this._beforeQuery[kvp.Key] != kvp.Value)
                 {
                     return true;
                 }
@@ -136,8 +136,8 @@ namespace Hoehoe
 
         public ListElement ListInfo
         {
-            get { return _listInfo; }
-            set { _listInfo = value; }
+            get { return this._listInfo; }
+            set { this._listInfo = value; }
         }
 
         #endregion "リスト"
@@ -157,20 +157,20 @@ namespace Hoehoe
         public PostClass[] GetTemporaryPosts()
         {
             List<PostClass> tempPosts = new List<PostClass>();
-            if (_tmpIds.Count == 0)
+            if (this._tmpIds.Count == 0)
             {
                 return tempPosts.ToArray();
             }
-            foreach (TemporaryId tempId in _tmpIds)
+            foreach (TemporaryId tempId in this._tmpIds)
             {
-                tempPosts.Add(Posts[tempId.Id]);
+                tempPosts.Add(this.Posts[tempId.Id]);
             }
             return tempPosts.ToArray();
         }
 
         public int GetTemporaryCount()
         {
-            return _tmpIds.Count;
+            return this._tmpIds.Count;
         }
 
         private struct TemporaryId
@@ -180,96 +180,96 @@ namespace Hoehoe
 
             public TemporaryId(long argId, bool argRead)
             {
-                Id = argId;
-                Read = argRead;
+                this.Id = argId;
+                this.Read = argRead;
             }
         }
 
         public TabClass()
         {
-            Posts = new Dictionary<long, PostClass>();
-            _filters = new List<FiltersClass>();
-            Notify = true;
-            SoundFile = "";
-            _unreadManage = true;
-            _ids = new List<long>();
+            this.Posts = new Dictionary<long, PostClass>();
+            this._filters = new List<FiltersClass>();
+            this.Notify = true;
+            this.SoundFile = "";
+            this._unreadManage = true;
+            this._ids = new List<long>();
             this.OldestUnreadId = -1;
-            _tabType = TabUsageType.Undefined;
-            _listInfo = null;
+            this._tabType = TabUsageType.Undefined;
+            this._listInfo = null;
         }
 
         public TabClass(string tabName, TabUsageType tabType, ListElement list)
         {
-            Posts = new Dictionary<long, PostClass>();
-            TabName = tabName;
-            _filters = new List<FiltersClass>();
-            Notify = true;
-            SoundFile = "";
-            _unreadManage = true;
-            _ids = new List<long>();
-            OldestUnreadId = -1;
-            _tabType = tabType;
-            ListInfo = list;
-            if (IsInnerStorageTabType)
+            this.Posts = new Dictionary<long, PostClass>();
+            this.TabName = tabName;
+            this._filters = new List<FiltersClass>();
+            this.Notify = true;
+            this.SoundFile = "";
+            this._unreadManage = true;
+            this._ids = new List<long>();
+            this.OldestUnreadId = -1;
+            this._tabType = tabType;
+            this.ListInfo = list;
+            if (this.IsInnerStorageTabType)
             {
-                _sorter.Posts = Posts;
+                this._sorter.Posts = this.Posts;
             }
             else
             {
-                _sorter.Posts = TabInformations.GetInstance().Posts;
+                this._sorter.Posts = TabInformations.GetInstance().Posts;
             }
         }
 
         public void Sort()
         {
-            if (_sorter.Mode == IdComparerClass.ComparerMode.Id)
+            if (this._sorter.Mode == IdComparerClass.ComparerMode.Id)
             {
-                _ids.Sort(_sorter.GetCompareMethod());
+                this._ids.Sort(this._sorter.GetCompareMethod());
                 return;
             }
             long[] ar = null;
-            if (_sorter.Order == SortOrder.Ascending)
+            if (this._sorter.Order == SortOrder.Ascending)
             {
-                switch (_sorter.Mode)
+                switch (this._sorter.Mode)
                 {
                     case IdComparerClass.ComparerMode.Data:
-                        ar = _ids.OrderBy(n => _sorter.Posts[n].TextFromApi).ToArray();
+                        ar = this._ids.OrderBy(n => this._sorter.Posts[n].TextFromApi).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Name:
-                        ar = _ids.OrderBy(n => _sorter.Posts[n].ScreenName).ToArray();
+                        ar = this._ids.OrderBy(n => this._sorter.Posts[n].ScreenName).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Nickname:
-                        ar = _ids.OrderBy(n => _sorter.Posts[n].Nickname).ToArray();
+                        ar = this._ids.OrderBy(n => this._sorter.Posts[n].Nickname).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Source:
-                        ar = _ids.OrderBy(n => _sorter.Posts[n].Source).ToArray();
+                        ar = this._ids.OrderBy(n => this._sorter.Posts[n].Source).ToArray();
                         break;
                 }
             }
             else
             {
-                switch (_sorter.Mode)
+                switch (this._sorter.Mode)
                 {
                     case IdComparerClass.ComparerMode.Data:
-                        ar = _ids.OrderByDescending(n => _sorter.Posts[n].TextFromApi).ToArray();
+                        ar = this._ids.OrderByDescending(n => this._sorter.Posts[n].TextFromApi).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Name:
-                        ar = _ids.OrderByDescending(n => _sorter.Posts[n].ScreenName).ToArray();
+                        ar = this._ids.OrderByDescending(n => this._sorter.Posts[n].ScreenName).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Nickname:
-                        ar = _ids.OrderByDescending(n => _sorter.Posts[n].Nickname).ToArray();
+                        ar = this._ids.OrderByDescending(n => this._sorter.Posts[n].Nickname).ToArray();
                         break;
                     case IdComparerClass.ComparerMode.Source:
-                        ar = _ids.OrderByDescending(n => _sorter.Posts[n].Source).ToArray();
+                        ar = this._ids.OrderByDescending(n => this._sorter.Posts[n].Source).ToArray();
                         break;
                 }
             }
-            _ids = new List<long>(ar);
+            this._ids = new List<long>(ar);
         }
 
         public IdComparerClass Sorter
         {
-            get { return _sorter; }
+            get { return this._sorter; }
         }
 
         // 無条件に追加
@@ -280,28 +280,28 @@ namespace Hoehoe
                 return;
             }
 
-            if (Sorter.Mode == IdComparerClass.ComparerMode.Id)
+            if (this.Sorter.Mode == IdComparerClass.ComparerMode.Id)
             {
-                if (Sorter.Order == SortOrder.Ascending)
+                if (this.Sorter.Order == SortOrder.Ascending)
                 {
-                    _ids.Add(id);
+                    this._ids.Add(id);
                 }
                 else
                 {
-                    _ids.Insert(0, id);
+                    this._ids.Insert(0, id);
                 }
             }
             else
             {
-                _ids.Add(id);
+                this._ids.Add(id);
             }
 
-            if (!read && _unreadManage)
+            if (!read && this._unreadManage)
             {
-                _unreadCount += 1;
-                if (id < OldestUnreadId)
+                this._unreadCount += 1;
+                if (id < this.OldestUnreadId)
                 {
-                    OldestUnreadId = id;
+                    this.OldestUnreadId = id;
                 }
             }
         }
@@ -314,14 +314,14 @@ namespace Hoehoe
             }
             else
             {
-                _tmpIds.Add(new TemporaryId(id, read));
+                this._tmpIds.Add(new TemporaryId(id, read));
             }
         }
 
         // フィルタに合致したら追加
         public HITRESULT AddFiltered(PostClass post)
         {
-            if (IsInnerStorageTabType)
+            if (this.IsInnerStorageTabType)
             {
                 return HITRESULT.None;
             }
@@ -329,7 +329,7 @@ namespace Hoehoe
             // 全フィルタ評価（優先順位あり）
             lock (this._lockObj)
             {
-                foreach (FiltersClass ft in _filters)
+                foreach (FiltersClass ft in this._filters)
                 {
                     try
                     {
@@ -366,7 +366,7 @@ namespace Hoehoe
 
             if (rslt != HITRESULT.None && rslt != HITRESULT.Exclude)
             {
-                _tmpIds.Add(new TemporaryId(post.StatusId, post.IsRead));
+                this._tmpIds.Add(new TemporaryId(post.StatusId, post.IsRead));
             }
 
             // マーク付けは呼び出し元で行うこと
@@ -376,22 +376,22 @@ namespace Hoehoe
         // 検索結果の追加
         public void AddPostToInnerStorage(PostClass post)
         {
-            if (Posts.ContainsKey(post.StatusId))
+            if (this.Posts.ContainsKey(post.StatusId))
             {
                 return;
             }
-            Posts.Add(post.StatusId, post);
-            _tmpIds.Add(new TemporaryId(post.StatusId, post.IsRead));
+            this.Posts.Add(post.StatusId, post);
+            this._tmpIds.Add(new TemporaryId(post.StatusId, post.IsRead));
         }
 
         public void AddSubmit(ref bool isMentionIncluded)
         {
-            if (_tmpIds.Count == 0)
+            if (this._tmpIds.Count == 0)
             {
                 return;
             }
-            _tmpIds.Sort((TemporaryId x, TemporaryId y) => x.Id.CompareTo(y.Id));
-            foreach (TemporaryId tId in _tmpIds)
+            this._tmpIds.Sort((TemporaryId x, TemporaryId y) => x.Id.CompareTo(y.Id));
+            foreach (TemporaryId tId in this._tmpIds)
             {
                 if (this.TabType == TabUsageType.Mentions && TabInformations.GetInstance().Item(tId.Id).IsReply)
                 {
@@ -399,58 +399,58 @@ namespace Hoehoe
                 }
                 this.Add(tId.Id, tId.Read);
             }
-            _tmpIds.Clear();
+            this._tmpIds.Clear();
         }
 
         public void AddSubmit()
         {
             bool mention = false;
-            AddSubmit(ref mention);
+            this.AddSubmit(ref mention);
         }
 
         public void Remove(long id)
         {
-            if (!_ids.Contains(id))
+            if (!this._ids.Contains(id))
             {
                 return;
             }
-            _ids.Remove(id);
-            if (IsInnerStorageTabType)
+            this._ids.Remove(id);
+            if (this.IsInnerStorageTabType)
             {
-                Posts.Remove(id);
+                this.Posts.Remove(id);
             }
         }
 
         public void Remove(long id, bool read)
         {
-            if (!_ids.Contains(id))
+            if (!this._ids.Contains(id))
             {
                 return;
             }
 
-            if (!read && _unreadManage)
+            if (!read && this._unreadManage)
             {
-                _unreadCount -= 1;
-                OldestUnreadId = -1;
+                this._unreadCount -= 1;
+                this.OldestUnreadId = -1;
             }
 
-            _ids.Remove(id);
-            if (IsInnerStorageTabType)
+            this._ids.Remove(id);
+            if (this.IsInnerStorageTabType)
             {
-                Posts.Remove(id);
+                this.Posts.Remove(id);
             }
         }
 
         public bool UnreadManage
         {
-            get { return _unreadManage; }
+            get { return this._unreadManage; }
             set
             {
-                _unreadManage = value;
+                this._unreadManage = value;
                 if (!value)
                 {
-                    OldestUnreadId = -1;
-                    _unreadCount = 0;
+                    this.OldestUnreadId = -1;
+                    this._unreadCount = 0;
                 }
             }
         }
@@ -465,49 +465,49 @@ namespace Hoehoe
         [System.Xml.Serialization.XmlIgnore]
         public int UnreadCount
         {
-            get { return this.UnreadManage && AppendSettingDialog.Instance.UnreadManage ? _unreadCount : 0; }
+            get { return this.UnreadManage && AppendSettingDialog.Instance.UnreadManage ? this._unreadCount : 0; }
             set
             {
                 if (value < 0)
                 {
                     value = 0;
                 }
-                _unreadCount = value;
+                this._unreadCount = value;
             }
         }
 
         public int AllCount
         {
-            get { return _ids.Count; }
+            get { return this._ids.Count; }
         }
 
         public FiltersClass[] GetFilters()
         {
-            lock (_lockObj)
+            lock (this._lockObj)
             {
-                return _filters.ToArray();
+                return this._filters.ToArray();
             }
         }
 
         public void RemoveFilter(FiltersClass filter)
         {
-            lock (_lockObj)
+            lock (this._lockObj)
             {
-                _filters.Remove(filter);
-                FilterModified = true;
+                this._filters.Remove(filter);
+                this.FilterModified = true;
             }
         }
 
         public bool AddFilter(FiltersClass filter)
         {
-            lock (_lockObj)
+            lock (this._lockObj)
             {
-                if (_filters.Contains(filter))
+                if (this._filters.Contains(filter))
                 {
                     return false;
                 }
-                _filters.Add(filter);
-                FilterModified = true;
+                this._filters.Add(filter);
+                this.FilterModified = true;
                 return true;
             }
         }
@@ -534,26 +534,26 @@ namespace Hoehoe
             original.ExSource = modified.ExSource;
             original.MoveFrom = modified.MoveFrom;
             original.SetMark = modified.SetMark;
-            FilterModified = true;
+            this.FilterModified = true;
         }
 
         [System.Xml.Serialization.XmlIgnore]
         public List<FiltersClass> Filters
         {
-            get { lock (_lockObj) { return _filters; } }
-            set { lock (_lockObj) { _filters = value; } }
+            get { lock (this._lockObj) { return this._filters; } }
+            set { lock (this._lockObj) { this._filters = value; } }
         }
 
         public FiltersClass[] FilterArray
         {
-            get { lock (_lockObj) { return _filters.ToArray(); } }
+            get { lock (this._lockObj) { return this._filters.ToArray(); } }
             set
             {
-                lock (_lockObj)
+                lock (this._lockObj)
                 {
                     foreach (FiltersClass filters in value)
                     {
-                        _filters.Add(filters);
+                        this._filters.Add(filters);
                     }
                 }
             }
@@ -561,29 +561,29 @@ namespace Hoehoe
 
         public bool Contains(long id)
         {
-            return _ids.Contains(id);
+            return this._ids.Contains(id);
         }
 
         public void ClearIDs()
         {
-            _ids.Clear();
-            _tmpIds.Clear();
-            _unreadCount = 0;
-            OldestUnreadId = -1;
-            if (Posts != null)
+            this._ids.Clear();
+            this._tmpIds.Clear();
+            this._unreadCount = 0;
+            this.OldestUnreadId = -1;
+            if (this.Posts != null)
             {
-                Posts.Clear();
+                this.Posts.Clear();
             }
         }
 
         public long GetId(int index)
         {
-            return index < _ids.Count ? _ids[index] : -1;
+            return index < this._ids.Count ? this._ids[index] : -1;
         }
 
         public int IndexOf(long id)
         {
-            return _ids.IndexOf(id);
+            return this._ids.IndexOf(id);
         }
 
         [System.Xml.Serialization.XmlIgnore]
@@ -591,24 +591,24 @@ namespace Hoehoe
 
         public long[] BackupIds()
         {
-            return _ids.ToArray();
+            return this._ids.ToArray();
         }
 
         public string TabName { get; set; }
 
         public TabUsageType TabType
         {
-            get { return _tabType; }
+            get { return this._tabType; }
             set
             {
-                _tabType = value;
-                if (IsInnerStorageTabType)
+                this._tabType = value;
+                if (this.IsInnerStorageTabType)
                 {
-                    _sorter.Posts = Posts;
+                    this._sorter.Posts = this.Posts;
                 }
                 else
                 {
-                    _sorter.Posts = TabInformations.GetInstance().Posts;
+                    this._sorter.Posts = TabInformations.GetInstance().Posts;
                 }
             }
         }
@@ -617,7 +617,11 @@ namespace Hoehoe
         {
             get
             {
-                return _tabType == TabUsageType.PublicSearch || _tabType == TabUsageType.DirectMessage || _tabType == TabUsageType.Lists || _tabType == TabUsageType.UserTimeline || _tabType == TabUsageType.Related;
+                return this._tabType == TabUsageType.PublicSearch
+                    || this._tabType == TabUsageType.DirectMessage
+                    || this._tabType == TabUsageType.Lists
+                    || this._tabType == TabUsageType.UserTimeline 
+                    || this._tabType == TabUsageType.Related;
             }
         }
     }
