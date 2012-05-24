@@ -56,6 +56,7 @@ namespace Hoehoe
         private bool setMark = true;
         private bool useLambda;
         private bool exuseLambda;
+
         private LambdaExpression lambdaExp;
         private Delegate lambdaExpDelegate;
         private LambdaExpression exlambdaExp;
@@ -264,28 +265,22 @@ namespace Hoehoe
 
         public bool ExecuteLambdaExpression(string expr, PostClass post)
         {
-#if notyet
-            if (this._lambdaExp == null || this._lambdaExpDelegate == null)
+            if (this.lambdaExp == null || this.lambdaExpDelegate == null)
             {
-                this._lambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
-                this._lambdaExpDelegate = this._lambdaExp.Compile();
+                this.lambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
+                this.lambdaExpDelegate = this.lambdaExp.Compile();
             }
-            return ((bool)this._lambdaExpDelegate.DynamicInvoke(post));
-#endif
-            return false;
+            return (bool)this.lambdaExpDelegate.DynamicInvoke(post);
         }
 
         public bool ExecuteExLambdaExpression(string expr, PostClass post)
         {
-#if notyet
-            if (this._exlambdaExp == null || this._exlambdaExpDelegate == null)
+            if (this.exlambdaExp == null || this.exlambdaExpDelegate == null)
             {
-                this._exlambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
-                this._exlambdaExpDelegate = this._exlambdaExp.Compile();
+                this.exlambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
+                this.exlambdaExpDelegate = this.exlambdaExp.Compile();
             }
-            return ((bool)this._exlambdaExpDelegate.DynamicInvoke(post));
-#endif
-            return false;
+            return (bool)this.exlambdaExpDelegate.DynamicInvoke(post);
         }
 
         public HITRESULT IsHit(PostClass post)
@@ -407,7 +402,7 @@ namespace Hoehoe
                                 }
                             }
                         }
-            
+
                         if (!isHit)
                         {
                             break;
@@ -415,7 +410,7 @@ namespace Hoehoe
                     }
                 }
             }
-            
+
             if (this.isRt)
             {
                 if (post.RetweetedId == 0)
@@ -423,7 +418,7 @@ namespace Hoehoe
                     isHit = false;
                 }
             }
-            
+
             if (!string.IsNullOrEmpty(this.source))
             {
                 if (this.useRegex)
@@ -441,12 +436,12 @@ namespace Hoehoe
                     }
                 }
             }
-            
+
             if (!isHit)
             {
                 return HITRESULT.None;
             }
-            
+
             // 除外判定
             if (this.exsearchUrl)
             {
@@ -600,7 +595,7 @@ namespace Hoehoe
                     }
                 }
             }
-            
+
             if (string.IsNullOrEmpty(this.name) && this.body.Count == 0 && !this.isRt && string.IsNullOrEmpty(this.source))
             {
                 isHit = false;
@@ -636,12 +631,12 @@ namespace Hoehoe
             {
                 return false;
             }
-            
+
             if (this.ExBodyFilter.Count != other.ExBodyFilter.Count)
             {
                 return false;
             }
-            
+
             for (int i = 0; i < this.BodyFilter.Count; i++)
             {
                 if (this.BodyFilter[i] != other.BodyFilter[i])
@@ -735,7 +730,7 @@ namespace Hoehoe
                 ^ this.IsExRt.GetHashCode() ^ this.ExSource.GetHashCode()
                 ^ this.UseLambda.GetHashCode() ^ this.ExUseLambda.GetHashCode();
         }
-        
+
         // フィルタ一覧に表示する文言生成
         private string MakeSummary()
         {
@@ -753,7 +748,7 @@ namespace Hoehoe
                         fs.Append(Hoehoe.Properties.Resources.SetFiltersText2);
                     }
                 }
-                
+
                 if (this.body.Count > 0)
                 {
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText3);
@@ -766,7 +761,7 @@ namespace Hoehoe
                     fs.Length -= 1;
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText4);
                 }
-                
+
                 fs.Append("(");
                 if (this.searchBoth)
                 {
@@ -776,41 +771,41 @@ namespace Hoehoe
                 {
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText6);
                 }
-                
+
                 if (this.useRegex)
                 {
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText7);
                 }
-                
+
                 if (this.searchUrl)
                 {
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText8);
                 }
-                
+
                 if (this.caseSensitive)
                 {
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText13);
                 }
-                
+
                 if (this.isRt)
                 {
                     fs.Append("RT/");
                 }
-                
+
                 if (this.useLambda)
                 {
                     fs.Append("LambdaExp/");
                 }
-                
+
                 if (!string.IsNullOrEmpty(this.source))
                 {
                     fs.AppendFormat("Src…{0}/", this.source);
                 }
-            
+
                 fs.Length -= 1;
                 fs.Append(")");
             }
-            
+
             if (!string.IsNullOrEmpty(this.exname) || this.exbody.Count > 0 || this.isExRt || !string.IsNullOrEmpty(this.exsource))
             {
                 // 除外
@@ -826,7 +821,7 @@ namespace Hoehoe
                         fs.Append(Hoehoe.Properties.Resources.SetFiltersText2);
                     }
                 }
-                
+
                 if (this.exbody.Count > 0)
                 {
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText3);
@@ -839,7 +834,7 @@ namespace Hoehoe
                     fs.Length -= 1;
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText4);
                 }
-                
+
                 fs.Append("(");
                 if (this.exsearchBoth)
                 {
@@ -849,37 +844,37 @@ namespace Hoehoe
                 {
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText6);
                 }
-                
+
                 if (this.exuseRegex)
                 {
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText7);
                 }
-                
+
                 if (this.exsearchUrl)
                 {
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText8);
                 }
-                
+
                 if (this.excaseSensitive)
                 {
                     fs.Append(Hoehoe.Properties.Resources.SetFiltersText13);
                 }
-                
+
                 if (this.isExRt)
                 {
                     fs.Append("RT/");
                 }
-                
+
                 if (this.exuseLambda)
                 {
                     fs.Append("LambdaExp/");
                 }
-                
+
                 if (!string.IsNullOrEmpty(this.exsource))
                 {
                     fs.AppendFormat("Src…{0}/", this.exsource);
                 }
-            
+
                 fs.Length -= 1;
                 fs.Append(")");
             }
