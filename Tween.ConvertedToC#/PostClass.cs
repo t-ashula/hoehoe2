@@ -24,33 +24,72 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+
     public sealed class PostClass : ICloneable
     {
-        public class StatusGeo
-        {
-            public double Lng { get; set; }
+        #region private
 
-            public double Lat { get; set; }
+        private bool isFav;
+        private bool isProtect;
+        private bool isMark;
+        private long inReplyToStatusId;
+        private States states = States.None;
+        private bool isDeleted;
+        private StatusGeo postGeo;
+
+        #endregion private
+
+        #region constructor
+
+        public PostClass()
+        {
+            this.RelTabName = string.Empty;
+            this.InReplyToUserId = 0;
+            this.RetweetedId = 0;
+            this.RetweetedBy = string.Empty;
+            this.ReplyToList = new List<string>();
+            this.postGeo = new StatusGeo();
         }
 
-        private bool _isFav;
-        private bool _isProtect;
-        private bool _isMark;
-        private long _inReplyToStatusId;
-        private States _states = States.None;
-        private bool _IsDeleted;
-        private StatusGeo _postGeo = new StatusGeo();
+        public PostClass(string nickname, string textFromApi, string text, string imageUrl, string screenName, DateTime createdAt, long statusId, bool isFav, bool isRead, bool isReply, bool isExcludeReply, bool isProtect, bool isOwl, bool isMark, string inReplyToUser, long inReplyToStatusId, string source, string sourceHtml, List<string> replyToList, bool isMe, bool isDm, long userId, bool filterHit, string retweetedBy, long retweetedId, StatusGeo geo)
+        {
+            this.Nickname = nickname;
+            this.TextFromApi = textFromApi;
+            this.ImageUrl = imageUrl;
+            this.ScreenName = screenName;
+            this.CreatedAt = createdAt;
+            this.StatusId = statusId;
+            this.isFav = isFav;
+            this.Text = text;
+            this.IsRead = isRead;
+            this.IsReply = isReply;
+            this.IsExcludeReply = isExcludeReply;
+            this.isProtect = isProtect;
+            this.IsOwl = isOwl;
+            this.isMark = isMark;
+            this.InReplyToUser = inReplyToUser;
+            this.inReplyToStatusId = inReplyToStatusId;
+            this.Source = source;
+            this.SourceHtml = sourceHtml;
+            this.ReplyToList = replyToList;
+            this.IsMe = isMe;
+            this.IsDm = isDm;
+            this.UserId = userId;
+            this.FilterHit = filterHit;
+            this.RetweetedBy = retweetedBy;
+            this.RetweetedId = retweetedId;
+            this.postGeo = geo;
+            this.RelTabName = string.Empty;
+            this.InReplyToUserId = 0;
+        }
 
-        public int RetweetedCount { get; set; }
+        #endregion constructor
 
-        public long RetweetedByUserId { get; set; }
-
-        public Dictionary<string, string> Media { get; set; }
+        #region enumes
 
         [Flags]
         private enum States
@@ -62,49 +101,15 @@ namespace Hoehoe
             Geo = 8
         }
 
-        public PostClass(string nickname, string textFromApi, string text, string imageUrl, string screenName, DateTime createdAt, long statusId,
-            bool isFav, bool isRead, bool isReply, bool isExcludeReply, bool isProtect, bool isOwl, bool isMark,
-            string inReplyToUser, long inReplyToStatusId, string source, string sourceHtml,
-            List<string> replyToList, bool isMe, bool isDm, long userId, bool filterHit, string retweetedBy, long retweetedId, StatusGeo geo)
-        {
-            Nickname = nickname;
-            TextFromApi = textFromApi;
-            ImageUrl = imageUrl;
-            ScreenName = screenName;
-            CreatedAt = createdAt;
-            StatusId = statusId;
-            _isFav = isFav;
-            Text = text;
-            IsRead = isRead;
-            IsReply = isReply;
-            IsExcludeReply = isExcludeReply;
-            _isProtect = isProtect;
-            IsOwl = isOwl;
-            _isMark = isMark;
-            InReplyToUser = inReplyToUser;
-            _inReplyToStatusId = inReplyToStatusId;
-            Source = source;
-            SourceHtml = sourceHtml;
-            ReplyToList = replyToList;
-            IsMe = isMe;
-            IsDm = isDm;
-            UserId = userId;
-            FilterHit = filterHit;
-            RetweetedBy = retweetedBy;
-            RetweetedId = retweetedId;
-            _postGeo = geo;
-            RelTabName = "";
-            InReplyToUserId = 0;
-        }
+        #endregion enumes
 
-        public PostClass()
-        {
-            RelTabName = "";
-            InReplyToUserId = 0;
-            RetweetedId = 0;
-            RetweetedBy = "";
-            ReplyToList = new List<string>();
-        }
+        #region properties
+
+        public int RetweetedCount { get; set; }
+
+        public long RetweetedByUserId { get; set; }
+
+        public Dictionary<string, string> Media { get; set; }
 
         public string Nickname { get; set; }
 
@@ -122,21 +127,22 @@ namespace Hoehoe
         {
             get
             {
-                if (RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(RetweetedId) != null)
+                if (this.RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(this.RetweetedId) != null)
                 {
-                    return TabInformations.GetInstance().RetweetSource(RetweetedId).IsFav;
+                    return TabInformations.GetInstance().RetweetSource(this.RetweetedId).IsFav;
                 }
                 else
                 {
-                    return _isFav;
+                    return this.isFav;
                 }
             }
+
             set
             {
-                _isFav = value;
-                if (RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(RetweetedId) != null)
+                this.isFav = value;
+                if (this.RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(this.RetweetedId) != null)
                 {
-                    TabInformations.GetInstance().RetweetSource(RetweetedId).IsFav = value;
+                    TabInformations.GetInstance().RetweetSource(this.RetweetedId).IsFav = value;
                 }
             }
         }
@@ -151,18 +157,23 @@ namespace Hoehoe
 
         public bool IsProtect
         {
-            get { return _isProtect; }
+            get
+            {
+                return this.isProtect;
+            }
+
             set
             {
                 if (value)
                 {
-                    _states = _states | States.Protect;
+                    this.states = this.states | States.Protect;
                 }
                 else
                 {
-                    _states = _states & ~States.Protect;
+                    this.states = this.states & ~States.Protect;
                 }
-                _isProtect = value;
+
+                this.isProtect = value;
             }
         }
 
@@ -170,18 +181,23 @@ namespace Hoehoe
 
         public bool IsMark
         {
-            get { return _isMark; }
+            get
+            {
+                return this.isMark;
+            }
+
             set
             {
                 if (value)
                 {
-                    _states = _states | States.Mark;
+                    this.states = this.states | States.Mark;
                 }
                 else
                 {
-                    _states = _states & ~States.Mark;
+                    this.states = this.states & ~States.Mark;
                 }
-                _isMark = value;
+
+                this.isMark = value;
             }
         }
 
@@ -189,18 +205,23 @@ namespace Hoehoe
 
         public long InReplyToStatusId
         {
-            get { return _inReplyToStatusId; }
+            get
+            {
+                return this.inReplyToStatusId;
+            }
+
             set
             {
                 if (value > 0)
                 {
-                    _states = _states | States.Reply;
+                    this.states = this.states | States.Reply;
                 }
                 else
                 {
-                    _states = _states & ~States.Reply;
+                    this.states = this.states & ~States.Reply;
                 }
-                _inReplyToStatusId = value;
+
+                this.inReplyToStatusId = value;
             }
         }
 
@@ -228,19 +249,24 @@ namespace Hoehoe
 
         public bool IsDeleted
         {
-            get { return _IsDeleted; }
+            get
+            {
+                return this.isDeleted;
+            }
+
             set
             {
                 if (value)
                 {
                     this.InReplyToStatusId = 0;
-                    this.InReplyToUser = "";
+                    this.InReplyToUser = string.Empty;
                     this.InReplyToUserId = 0;
                     this.IsReply = false;
                     this.ReplyToList = new List<string>();
-                    this._states = States.None;
+                    this.states = States.None;
                 }
-                _IsDeleted = value;
+
+                this.isDeleted = value;
             }
         }
 
@@ -248,25 +274,34 @@ namespace Hoehoe
 
         public StatusGeo PostGeo
         {
-            get { return _postGeo; }
+            get
+            {
+                return this.postGeo;
+            }
+
             set
             {
                 if (value != null && (value.Lat != 0 || value.Lng != 0))
                 {
-                    _states = _states | States.Geo;
+                    this.states = this.states | States.Geo;
                 }
                 else
                 {
-                    _states = _states & ~States.Geo;
+                    this.states = this.states & ~States.Geo;
                 }
-                _postGeo = value;
+
+                this.postGeo = value;
             }
         }
 
         public int StateIndex
         {
-            get { return Convert.ToInt32(_states) - 1; }
+            get { return Convert.ToInt32(this.states) - 1; }
         }
+
+        #endregion properties
+
+        #region public methods
 
         public PostClass Copy()
         {
@@ -281,6 +316,7 @@ namespace Hoehoe
             {
                 return false;
             }
+
             return this.Equals((PostClass)obj);
         }
 
@@ -290,21 +326,39 @@ namespace Hoehoe
             {
                 return false;
             }
-            return (this.Nickname == other.Nickname) && (this.TextFromApi == other.TextFromApi) && (this.ImageUrl == other.ImageUrl) && (this.ScreenName == other.ScreenName) && (this.CreatedAt == other.CreatedAt) && (this.StatusId == other.StatusId) && (this.IsFav == other.IsFav) && (this.Text == other.Text) && (this.IsRead == other.IsRead) && (this.IsReply == other.IsReply) && (this.IsExcludeReply == other.IsExcludeReply) && (this.IsProtect == other.IsProtect) && (this.IsOwl == other.IsOwl) && (this.IsMark == other.IsMark) && (this.InReplyToUser == other.InReplyToUser) && (this.InReplyToStatusId == other.InReplyToStatusId) && (this.Source == other.Source) && (this.SourceHtml == other.SourceHtml) && (this.ReplyToList.Equals(other.ReplyToList)) && (this.IsMe == other.IsMe) && (this.IsDm == other.IsDm) && (this.UserId == other.UserId) && (this.FilterHit == other.FilterHit) && (this.RetweetedBy == other.RetweetedBy) && (this.RetweetedId == other.RetweetedId) && (this.RelTabName == other.RelTabName) && (this.IsDeleted == other.IsDeleted) && (this.InReplyToUserId == other.InReplyToUserId);
-        }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
+            return this.Nickname == other.Nickname
+                && this.TextFromApi == other.TextFromApi && this.ImageUrl == other.ImageUrl
+                && this.ScreenName == other.ScreenName && this.CreatedAt == other.CreatedAt
+                && this.StatusId == other.StatusId && this.IsFav == other.IsFav
+                && this.Text == other.Text && this.IsRead == other.IsRead
+                && this.IsReply == other.IsReply && this.IsExcludeReply == other.IsExcludeReply
+                && this.IsProtect == other.IsProtect && this.IsOwl == other.IsOwl
+                && this.IsMark == other.IsMark && this.InReplyToUser == other.InReplyToUser
+                && this.InReplyToStatusId == other.InReplyToStatusId && this.Source == other.Source
+                && this.SourceHtml == other.SourceHtml && this.ReplyToList.Equals(other.ReplyToList)
+                && this.IsMe == other.IsMe && this.IsDm == other.IsDm
+                && this.UserId == other.UserId && this.FilterHit == other.FilterHit
+                && this.RetweetedBy == other.RetweetedBy && this.RetweetedId == other.RetweetedId
+                && this.RelTabName == other.RelTabName && this.IsDeleted == other.IsDeleted && this.InReplyToUserId == other.InReplyToUserId;
         }
-
-        #region "IClonable.Clone"
 
         public object Clone()
         {
             return this.MemberwiseClone();
         }
 
-        #endregion "IClonable.Clone"
+        #endregion public methods
+
+        #region inner types
+
+        public class StatusGeo
+        {
+            public double Lng { get; set; }
+
+            public double Lat { get; set; }
+        }
+
+        #endregion inner types
     }
 }
