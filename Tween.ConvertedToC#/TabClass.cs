@@ -50,6 +50,41 @@ namespace Hoehoe
 
         private ListElement _listInfo;
 
+        public TabClass()
+        {
+            this.Posts = new Dictionary<long, PostClass>();
+            this._filters = new List<FiltersClass>();
+            this.Notify = true;
+            this.SoundFile = string.Empty;
+            this._unreadManage = true;
+            this._ids = new List<long>();
+            this.OldestUnreadId = -1;
+            this._tabType = TabUsageType.Undefined;
+            this._listInfo = null;
+        }
+
+        public TabClass(string tabName, TabUsageType tabType, ListElement list)
+        {
+            this.Posts = new Dictionary<long, PostClass>();
+            this.TabName = tabName;
+            this._filters = new List<FiltersClass>();
+            this.Notify = true;
+            this.SoundFile = string.Empty;
+            this._unreadManage = true;
+            this._ids = new List<long>();
+            this.OldestUnreadId = -1;
+            this._tabType = tabType;
+            this.ListInfo = list;
+            if (this.IsInnerStorageTabType)
+            {
+                this._sorter.Posts = this.Posts;
+            }
+            else
+            {
+                this._sorter.Posts = TabInformations.GetInstance().Posts;
+            }
+        }
+
         public string User { get; set; }
 
         public string SearchLang
@@ -272,41 +307,6 @@ namespace Hoehoe
             {
                 this.Id = argId;
                 this.Read = argRead;
-            }
-        }
-
-        public TabClass()
-        {
-            this.Posts = new Dictionary<long, PostClass>();
-            this._filters = new List<FiltersClass>();
-            this.Notify = true;
-            this.SoundFile = string.Empty;
-            this._unreadManage = true;
-            this._ids = new List<long>();
-            this.OldestUnreadId = -1;
-            this._tabType = TabUsageType.Undefined;
-            this._listInfo = null;
-        }
-
-        public TabClass(string tabName, TabUsageType tabType, ListElement list)
-        {
-            this.Posts = new Dictionary<long, PostClass>();
-            this.TabName = tabName;
-            this._filters = new List<FiltersClass>();
-            this.Notify = true;
-            this.SoundFile = string.Empty;
-            this._unreadManage = true;
-            this._ids = new List<long>();
-            this.OldestUnreadId = -1;
-            this._tabType = tabType;
-            this.ListInfo = list;
-            if (this.IsInnerStorageTabType)
-            {
-                this._sorter.Posts = this.Posts;
-            }
-            else
-            {
-                this._sorter.Posts = TabInformations.GetInstance().Posts;
             }
         }
 
