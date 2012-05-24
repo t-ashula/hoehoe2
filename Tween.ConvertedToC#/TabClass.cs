@@ -24,13 +24,13 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows.Forms;
+
     [Serializable]
     public sealed class TabClass
     {
@@ -43,15 +43,14 @@ namespace Hoehoe
         private IdComparerClass _sorter = new IdComparerClass();
         private readonly object _lockObj = new object();
 
+        private string _searchLang = string.Empty;
+        private string _searchWords = string.Empty;
+        private string _nextPageQuery = string.Empty;
+        private Dictionary<string, string> _beforeQuery = new Dictionary<string, string>();
+
+        private ListElement _listInfo;
+
         public string User { get; set; }
-
-        #region "検索"
-
-        // Search query
-        private string _searchLang = "";
-
-        private string _searchWords = "";
-        private string _nextPageQuery = "";
 
         public string SearchLang
         {
@@ -79,12 +78,129 @@ namespace Hoehoe
             set { this._nextPageQuery = value; }
         }
 
+        public ListElement ListInfo
+        {
+            get { return this._listInfo; }
+            set { this._listInfo = value; }
+        }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public PostClass RelationTargetPost { get; set; }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public long OldestId { get; set; }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public long SinceId { get; set; }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public Dictionary<long, PostClass> Posts { get; set; }
+
+        public IdComparerClass Sorter
+        {
+            get { return this._sorter; }
+        }
+
+        public bool UnreadManage
+        {
+            get { return this._unreadManage; }
+            set
+            {
+                this._unreadManage = value;
+                if (!value)
+                {
+                    this.OldestUnreadId = -1;
+                    this._unreadCount = 0;
+                }
+            }
+        }
+
+        public bool Notify { get; set; }
+
+        public string SoundFile { get; set; }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public long OldestUnreadId { get; set; }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public int UnreadCount
+        {
+            get { return this.UnreadManage && AppendSettingDialog.Instance.UnreadManage ? this._unreadCount : 0; }
+            set
+            {
+                if (value < 0)
+                {
+                    value = 0;
+                }
+                this._unreadCount = value;
+            }
+        }
+
+        public int AllCount
+        {
+            get { return this._ids.Count; }
+        }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public List<FiltersClass> Filters
+        {
+            get { lock (this._lockObj) { return this._filters; } }
+            set { lock (this._lockObj) { this._filters = value; } }
+        }
+
+        public FiltersClass[] FilterArray
+        {
+            get { lock (this._lockObj) { return this._filters.ToArray(); } }
+            set
+            {
+                lock (this._lockObj)
+                {
+                    foreach (FiltersClass filters in value)
+                    {
+                        this._filters.Add(filters);
+                    }
+                }
+            }
+        }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public bool FilterModified { get; set; }
+
+        public string TabName { get; set; }
+
+        public TabUsageType TabType
+        {
+            get { return this._tabType; }
+            set
+            {
+                this._tabType = value;
+                if (this.IsInnerStorageTabType)
+                {
+                    this._sorter.Posts = this.Posts;
+                }
+                else
+                {
+                    this._sorter.Posts = TabInformations.GetInstance().Posts;
+                }
+            }
+        }
+
+        public bool IsInnerStorageTabType
+        {
+            get
+            {
+                return this._tabType == TabUsageType.PublicSearch
+                    || this._tabType == TabUsageType.DirectMessage
+                    || this._tabType == TabUsageType.Lists
+                    || this._tabType == TabUsageType.UserTimeline
+                    || this._tabType == TabUsageType.Related;
+            }
+        }
+
         public int GetSearchPage(int count)
         {
             return (this._ids.Count / count) + 1;
         }
-
-        private Dictionary<string, string> _beforeQuery = new Dictionary<string, string>();
 
         public void SaveQuery(bool more)
         {
@@ -128,32 +244,6 @@ namespace Hoehoe
             return false;
         }
 
-        #endregion "検索"
-
-        #region "リスト"
-
-        private ListElement _listInfo;
-
-        public ListElement ListInfo
-        {
-            get { return this._listInfo; }
-            set { this._listInfo = value; }
-        }
-
-        #endregion "リスト"
-
-        [System.Xml.Serialization.XmlIgnore]
-        public PostClass RelationTargetPost { get; set; }
-
-        [System.Xml.Serialization.XmlIgnore]
-        public long OldestId { get; set; }
-
-        [System.Xml.Serialization.XmlIgnore]
-        public long SinceId { get; set; }
-
-        [System.Xml.Serialization.XmlIgnore]
-        public Dictionary<long, PostClass> Posts { get; set; }
-
         public PostClass[] GetTemporaryPosts()
         {
             List<PostClass> tempPosts = new List<PostClass>();
@@ -190,7 +280,7 @@ namespace Hoehoe
             this.Posts = new Dictionary<long, PostClass>();
             this._filters = new List<FiltersClass>();
             this.Notify = true;
-            this.SoundFile = "";
+            this.SoundFile = string.Empty;
             this._unreadManage = true;
             this._ids = new List<long>();
             this.OldestUnreadId = -1;
@@ -204,7 +294,7 @@ namespace Hoehoe
             this.TabName = tabName;
             this._filters = new List<FiltersClass>();
             this.Notify = true;
-            this.SoundFile = "";
+            this.SoundFile = string.Empty;
             this._unreadManage = true;
             this._ids = new List<long>();
             this.OldestUnreadId = -1;
@@ -265,11 +355,6 @@ namespace Hoehoe
                 }
             }
             this._ids = new List<long>(ar);
-        }
-
-        public IdComparerClass Sorter
-        {
-            get { return this._sorter; }
         }
 
         // 無条件に追加
@@ -441,46 +526,6 @@ namespace Hoehoe
             }
         }
 
-        public bool UnreadManage
-        {
-            get { return this._unreadManage; }
-            set
-            {
-                this._unreadManage = value;
-                if (!value)
-                {
-                    this.OldestUnreadId = -1;
-                    this._unreadCount = 0;
-                }
-            }
-        }
-
-        public bool Notify { get; set; }
-
-        public string SoundFile { get; set; }
-
-        [System.Xml.Serialization.XmlIgnore]
-        public long OldestUnreadId { get; set; }
-
-        [System.Xml.Serialization.XmlIgnore]
-        public int UnreadCount
-        {
-            get { return this.UnreadManage && AppendSettingDialog.Instance.UnreadManage ? this._unreadCount : 0; }
-            set
-            {
-                if (value < 0)
-                {
-                    value = 0;
-                }
-                this._unreadCount = value;
-            }
-        }
-
-        public int AllCount
-        {
-            get { return this._ids.Count; }
-        }
-
         public FiltersClass[] GetFilters()
         {
             lock (this._lockObj)
@@ -537,28 +582,6 @@ namespace Hoehoe
             this.FilterModified = true;
         }
 
-        [System.Xml.Serialization.XmlIgnore]
-        public List<FiltersClass> Filters
-        {
-            get { lock (this._lockObj) { return this._filters; } }
-            set { lock (this._lockObj) { this._filters = value; } }
-        }
-
-        public FiltersClass[] FilterArray
-        {
-            get { lock (this._lockObj) { return this._filters.ToArray(); } }
-            set
-            {
-                lock (this._lockObj)
-                {
-                    foreach (FiltersClass filters in value)
-                    {
-                        this._filters.Add(filters);
-                    }
-                }
-            }
-        }
-
         public bool Contains(long id)
         {
             return this._ids.Contains(id);
@@ -586,43 +609,10 @@ namespace Hoehoe
             return this._ids.IndexOf(id);
         }
 
-        [System.Xml.Serialization.XmlIgnore]
-        public bool FilterModified { get; set; }
-
         public long[] BackupIds()
         {
             return this._ids.ToArray();
         }
 
-        public string TabName { get; set; }
-
-        public TabUsageType TabType
-        {
-            get { return this._tabType; }
-            set
-            {
-                this._tabType = value;
-                if (this.IsInnerStorageTabType)
-                {
-                    this._sorter.Posts = this.Posts;
-                }
-                else
-                {
-                    this._sorter.Posts = TabInformations.GetInstance().Posts;
-                }
-            }
-        }
-
-        public bool IsInnerStorageTabType
-        {
-            get
-            {
-                return this._tabType == TabUsageType.PublicSearch
-                    || this._tabType == TabUsageType.DirectMessage
-                    || this._tabType == TabUsageType.Lists
-                    || this._tabType == TabUsageType.UserTimeline 
-                    || this._tabType == TabUsageType.Related;
-            }
-        }
     }
 }
