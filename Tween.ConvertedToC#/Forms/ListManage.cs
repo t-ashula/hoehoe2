@@ -197,6 +197,7 @@ namespace Hoehoe
             Action<ListElement> dlgt = new Action<ListElement>(lElement => { this.Invoke(new Action<string>(GetListMembersCallback), lElement.GetMoreMembers()); });
             dlgt.BeginInvoke((ListElement)this.ListsList.SelectedItem, null, null);
         }
+
         private void DeleteUserButton_Click(object sender, EventArgs e)
         {
             if (this.ListsList.SelectedItem == null || this.UserList.SelectedItem == null)
@@ -388,7 +389,7 @@ namespace Hoehoe
         {
             public NewListElement(Twitter tw)
             {
-                this._tw = tw;
+                this.Tw = tw;
                 this.IsCreated = false;
             }
 
@@ -401,7 +402,7 @@ namespace Hoehoe
                     return base.Refresh();
                 }
 
-                string rslt = this._tw.CreateListApi(this.Name, !this.IsPublic, this.Description);
+                string rslt = this.Tw.CreateListApi(this.Name, !this.IsPublic, this.Description);
                 this.IsCreated = string.IsNullOrEmpty(rslt);
                 return rslt;
             }
