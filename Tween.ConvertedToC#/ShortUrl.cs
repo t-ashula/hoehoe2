@@ -24,101 +24,58 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Web;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text.RegularExpressions;
+    using System.Web;
+
     public class ShortUrl
     {
-        private static string[] _shortUrlServices = {
-			"http://t.co/",
-			"http://tinyurl.com/",
-			"http://is.gd/",
-			"http://bit.ly/",
-			"http://j.mp/",
-			"http://goo.gl/",
-			"http://htn.to/",
-			"http://amzn.to/",
-			"http://flic.kr/",
-			"http://ux.nu/",
-			"http://youtu.be/",
-			"http://p.tl/",
-			"http://nico.ms",
-			"http://moi.st/",
-			"http://snipurl.com/",
-			"http://snurl.com/",
-			"http://nsfw.in/",
-			"http://icanhaz.com/",
-			"http://tiny.cc/",
-			"http://urlenco.de/",
-			"http://linkbee.com/",
-			"http://traceurl.com/",
-			"http://twurl.nl/",
-			"http://cli.gs/",
-			"http://rubyurl.com/",
-			"http://budurl.com/",
-			"http://ff.im/",
-			"http://twitthis.com/",
-			"http://blip.fm/",
-			"http://tumblr.com/",
-			"http://www.qurl.com/",
-			"http://digg.com/",
-			"http://ustre.am/",
-			"http://pic.gd/",
-			"http://airme.us/",
-			"http://qurl.com/",
-			"http://bctiny.com/",
-			"http://ow.ly/",
-			"http://bkite.com/",
-			"http://dlvr.it/",
-			"http://ht.ly/",
-			"http://tl.gd/"
-		};
-
-        private static string _bitlyId = "";
-        private static string _bitlyKey = "";
-        private static bool _isResolve = true;
-        private static bool _isForceResolve = true;
-        private static Dictionary<string, string> _urlCache = new Dictionary<string, string>();
-        private static readonly object _lockObj = new object();
-
-        public static void SetBitlyId(string value)
-        {
-            _bitlyId = value;
-        }
-
-        public static void SetBitlyKey(string value)
-        {
-            _bitlyKey = value;
-        }
+        private static readonly object lockObj = new object();
+        private static string[] shortUrlServices = { "http://t.co/", "http://tinyurl.com/", "http://is.gd/", "http://bit.ly/", "http://j.mp/", "http://goo.gl/", "http://htn.to/", "http://amzn.to/", "http://flic.kr/", "http://ux.nu/", "http://youtu.be/", "http://p.tl/", "http://nico.ms", "http://moi.st/", "http://snipurl.com/", "http://snurl.com/", "http://nsfw.in/", "http://icanhaz.com/", "http://tiny.cc/", "http://urlenco.de/", "http://linkbee.com/", "http://traceurl.com/", "http://twurl.nl/", "http://cli.gs/", "http://rubyurl.com/", "http://budurl.com/", "http://ff.im/", "http://twitthis.com/", "http://blip.fm/", "http://tumblr.com/", "http://www.qurl.com/", "http://digg.com/", "http://ustre.am/", "http://pic.gd/", "http://airme.us/", "http://qurl.com/", "http://bctiny.com/", "http://ow.ly/", "http://bkite.com/", "http://dlvr.it/", "http://ht.ly/", "http://tl.gd/" };
+        private static string bitlyId = string.Empty;
+        private static string bitlyKey = string.Empty;
+        private static bool isResolve = true;
+        private static bool isForceResolve = true;
+        private static Dictionary<string, string> urlCache = new Dictionary<string, string>();
 
         public static bool IsResolve
         {
-            get { return _isResolve; }
-            set { _isResolve = value; }
+            get { return isResolve; }
+            set { isResolve = value; }
         }
 
         public static bool IsForceResolve
         {
-            get { return _isForceResolve; }
-            set { _isForceResolve = value; }
+            get { return isForceResolve; }
+            set { isForceResolve = value; }
+        }
+
+        public static void SetBitlyId(string value)
+        {
+            bitlyId = value;
+        }
+
+        public static void SetBitlyKey(string value)
+        {
+            bitlyKey = value;
         }
 
         public static string Resolve(string orgData, bool tcoResolve)
         {
-            if (!_isResolve)
+            if (!isResolve)
             {
                 return orgData;
             }
-            lock (_lockObj)
+
+            lock (lockObj)
             {
-                if (_urlCache.Count > 500)
+                if (urlCache.Count > 500)
                 {
                     // 定期的にリセット
-                    _urlCache.Clear();
+                    urlCache.Clear();
                 }
             }
 
@@ -128,13 +85,14 @@ namespace Hoehoe
             {
                 string orgUrl = orgUrlMatch.Result("${svc}");
                 string orgUrlPath = orgUrlMatch.Result("${path}");
-                if ((_isForceResolve || Array.IndexOf(_shortUrlServices, orgUrl) > -1) && !urlList.Contains(orgUrl + orgUrlPath) && orgUrl != "http://twitter.com/")
+                if ((isForceResolve || Array.IndexOf(shortUrlServices, orgUrl) > -1) && !urlList.Contains(orgUrl + orgUrlPath) && orgUrl != "http://twitter.com/")
                 {
                     if (!tcoResolve && (orgUrl == "http://t.co/" || orgUrl == "https://t.co"))
                     {
                         continue;
                     }
-                    lock (_lockObj)
+
+                    lock (lockObj)
                     {
                         urlList.Add(orgUrl + orgUrlPath);
                     }
@@ -143,11 +101,11 @@ namespace Hoehoe
 
             foreach (string orgUrl in urlList)
             {
-                if (_urlCache.ContainsKey(orgUrl))
+                if (urlCache.ContainsKey(orgUrl))
                 {
                     try
                     {
-                        orgData = orgData.Replace("<a href=\"" + orgUrl + "\"", "<a href=\"" + _urlCache[orgUrl] + "\"");
+                        orgData = orgData.Replace("<a href=\"" + orgUrl + "\"", "<a href=\"" + urlCache[orgUrl] + "\"");
                     }
                     catch (Exception)
                     {
@@ -159,20 +117,20 @@ namespace Hoehoe
                     try
                     {
                         // urlとして生成できない場合があるらしい
-                        string retUrlStr = "";
-                        string tmpurlStr = new Uri(MyCommon.urlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
+                        string retUrlStr = string.Empty;
+                        string tmpurlStr = new Uri(MyCommon.GetUrlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
                         HttpVarious httpVar = new HttpVarious();
-                        retUrlStr = MyCommon.urlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
+                        retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
                         if (retUrlStr.StartsWith("http"))
                         {
-                            retUrlStr = retUrlStr.Replace("\"", "%22");
                             // ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
+                            retUrlStr = retUrlStr.Replace("\"", "%22");
                             orgData = orgData.Replace("<a href=\"" + tmpurlStr, "<a href=\"" + retUrlStr);
-                            lock (_lockObj)
+                            lock (lockObj)
                             {
-                                if (!_urlCache.ContainsKey(orgUrl))
+                                if (!urlCache.ContainsKey(orgUrl))
                                 {
-                                    _urlCache.Add(orgUrl, retUrlStr);
+                                    urlCache.Add(orgUrl, retUrlStr);
                                 }
                             }
                         }
@@ -183,21 +141,23 @@ namespace Hoehoe
                     }
                 }
             }
+
             return orgData;
         }
 
         public static string ResolveMedia(string orgData, bool tcoResolve)
         {
-            if (!_isResolve)
+            if (!isResolve)
             {
                 return orgData;
             }
-            lock (_lockObj)
+
+            lock (lockObj)
             {
-                if (_urlCache.Count > 500)
+                if (urlCache.Count > 500)
                 {
                     // 定期的にリセット
-                    _urlCache.Clear();
+                    urlCache.Clear();
                 }
             }
 
@@ -206,35 +166,38 @@ namespace Hoehoe
             {
                 string orgUrl = m.Result("${svc}");
                 string orgUrlPath = m.Result("${path}");
-                if ((_isForceResolve || Array.IndexOf(_shortUrlServices, orgUrl) > -1) && orgUrl != "http://twitter.com/")
+                if ((isForceResolve || Array.IndexOf(shortUrlServices, orgUrl) > -1) && orgUrl != "http://twitter.com/")
                 {
                     if (!tcoResolve && (orgUrl == "http://t.co/" || orgUrl == "https://t.co/"))
                     {
                         return orgData;
                     }
+
                     orgUrl += orgUrlPath;
-                    if (_urlCache.ContainsKey(orgUrl))
+                    if (urlCache.ContainsKey(orgUrl))
                     {
-                        return orgData.Replace(orgUrl, _urlCache[orgUrl]);
+                        return orgData.Replace(orgUrl, urlCache[orgUrl]);
                     }
+
                     try
                     {
                         // urlとして生成できない場合があるらしい
-                        string retUrlStr = "";
-                        string tmpurlStr = new Uri(MyCommon.urlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
+                        string retUrlStr = string.Empty;
+                        string tmpurlStr = new Uri(MyCommon.GetUrlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
                         HttpVarious httpVar = new HttpVarious();
-                        retUrlStr = MyCommon.urlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
+                        retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
                         if (retUrlStr.StartsWith("http"))
                         {
-                            retUrlStr = retUrlStr.Replace("\"", "%22");
                             // ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
-                            lock (_lockObj)
+                            retUrlStr = retUrlStr.Replace("\"", "%22");
+                            lock (lockObj)
                             {
-                                if (!_urlCache.ContainsKey(orgUrl))
+                                if (!urlCache.ContainsKey(orgUrl))
                                 {
-                                    _urlCache.Add(orgUrl, orgData.Replace(tmpurlStr, retUrlStr));
+                                    urlCache.Add(orgUrl, orgData.Replace(tmpurlStr, retUrlStr));
                                 }
                             }
+
                             return orgData.Replace(tmpurlStr, retUrlStr);
                         }
                     }
@@ -244,15 +207,16 @@ namespace Hoehoe
                     }
                 }
             }
+
             return orgData;
         }
 
         public static string Make(UrlConverter converterType, string srcUrl)
         {
-            string src = "";
+            string src = string.Empty;
             try
             {
-                src = MyCommon.urlEncodeMultibyteChar(srcUrl);
+                src = MyCommon.GetUrlEncodeMultibyteChar(srcUrl);
             }
             catch (Exception)
             {
@@ -261,8 +225,8 @@ namespace Hoehoe
 
             string orgSrc = srcUrl;
             Dictionary<string, string> param = new Dictionary<string, string>();
-            string content = "";
-            foreach (string svc in _shortUrlServices)
+            string content = string.Empty;
+            foreach (string svc in shortUrlServices)
             {
                 if (srcUrl.StartsWith(svc))
                 {
@@ -290,15 +254,18 @@ namespace Hoehoe
                             content = src;
                             break;
                         }
+
                         if (!(new HttpVarious()).PostData("http://tinyurl.com/api-create.php?url=" + srcUrl, null, ref content))
                         {
                             return "Can't convert";
                         }
                     }
+
                     if (!content.StartsWith("http://tinyurl.com/"))
                     {
                         return "Can't convert";
                     }
+
                     break;
                 case UrlConverter.Isgd:
                     if (srcUrl.StartsWith("http"))
@@ -309,15 +276,18 @@ namespace Hoehoe
                             content = src;
                             break;
                         }
+
                         if (!(new HttpVarious()).PostData("http://is.gd/api.php?longurl=" + srcUrl, null, ref content))
                         {
                             return "Can't convert";
                         }
                     }
+
                     if (!content.StartsWith("http://is.gd/"))
                     {
                         return "Can't convert";
                     }
+
                     break;
                 case UrlConverter.Twurl:
                     if (srcUrl.StartsWith("http"))
@@ -328,17 +298,21 @@ namespace Hoehoe
                             content = src;
                             break;
                         }
+
                         param.Add("link[url]", orgSrc);
+
                         // twurlはpostメソッドなので日本語エンコードのみ済ませた状態で送る
                         if (!(new HttpVarious()).PostData("http://tweetburner.com/links", param, ref content))
                         {
                             return "Can't convert";
                         }
                     }
+
                     if (!content.StartsWith("http://twurl.nl/"))
                     {
                         return "Can't convert";
                     }
+
                     break;
                 case UrlConverter.Bitly:
                 case UrlConverter.Jmp:
@@ -353,21 +327,25 @@ namespace Hoehoe
                             content = src;
                             break;
                         }
+
                         string req = "http://api.bitly.com/v" + BitlyApiVersion + "/shorten?";
                         req += "login=" + BitlyLogin + "&apiKey=" + BitlyApiKey + "&format=txt" + "&longUrl=" + srcUrl;
-                        if (!String.IsNullOrEmpty(_bitlyId) && !String.IsNullOrEmpty(_bitlyKey))
+                        if (!string.IsNullOrEmpty(bitlyId) && !string.IsNullOrEmpty(bitlyKey))
                         {
-                            req += "&x_login=" + _bitlyId + "&x_apiKey=" + _bitlyKey;
+                            req += "&x_login=" + bitlyId + "&x_apiKey=" + bitlyKey;
                         }
+
                         if (converterType == UrlConverter.Jmp)
                         {
                             req += "&domain=j.mp";
                         }
+
                         if (!(new HttpVarious()).GetData(req, null, ref content))
                         {
                             return "Can't convert";
                         }
                     }
+
                     break;
                 case UrlConverter.Uxnu:
                     if (srcUrl.StartsWith("http"))
@@ -378,24 +356,30 @@ namespace Hoehoe
                             content = src;
                             break;
                         }
+
                         if (!(new HttpVarious()).PostData("http://ux.nu/api/short?url=" + srcUrl + "&format=plain", null, ref content))
                         {
                             return "Can't convert";
                         }
                     }
+
                     if (!content.StartsWith("http://ux.nu/"))
                     {
                         return "Can't convert";
                     }
+
                     break;
             }
+
             // 変換結果から改行を除去
             content = content.TrimEnd(new char[] { '\r', '\n' });
+
             // 圧縮の結果逆に長くなった場合は圧縮前のURLを返す
             if (src.Length < content.Length)
             {
                 content = src;
             }
+
             return content;
         }
     }
