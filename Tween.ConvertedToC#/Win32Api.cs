@@ -24,15 +24,15 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Diagnostics;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Windows.Forms;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Diagnostics;
+    using System.Net;
+    using System.Runtime.InteropServices;
+    using System.Threading;
+    using System.Windows.Forms;
+
     internal static class Win32Api
     {
         #region "先行起動プロセスをアクティブにする"
@@ -52,15 +52,15 @@ namespace Hoehoe
 
         // 外部プロセスのメイン・ウィンドウを起動するためのWin32 API
         [DllImport("user32.dll")]
-        private extern static bool SetForegroundWindow(IntPtr hWnd);
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         // ウィンドウの表示状態を設定
         [DllImport("user32.dll")]
-        private extern static bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+        private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 
         // 指定されたウィンドウが最小化（ アイコン化）されているかどうかを調べる
         [DllImport("user32.dll")]
-        private extern static bool IsIconic(IntPtr hWnd);
+        private static extern bool IsIconic(IntPtr hWnd);
 
         // ShowWindowAsync関数のパラメータに渡す定義値
         // 画面を元の大きさに戻す
@@ -97,15 +97,15 @@ namespace Hoehoe
 
         // 指定されたクラス名およびウィンドウ名と一致するトップレベルウィンドウのハンドルを取得します
         [DllImport("user32.dll")]
-        private extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         // 指定された文字列と一致するクラス名とウィンドウ名文字列を持つウィンドウのハンドルを返します
         [DllImport("user32.dll")]
-        private extern static IntPtr FindWindowEx(IntPtr hWnd1, IntPtr hWnd2, string lpsz1, string lpsz2);
+        private static extern IntPtr FindWindowEx(IntPtr hWnd1, IntPtr hWnd2, string lpsz1, string lpsz2);
 
         // 指定されたウィンドウへ、指定されたメッセージを送信します
         [DllImport("user32.dll")]
-        private extern static int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+        private static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
 
         // SendMessageで送信するメッセージ
         private enum Sm_Message : int
@@ -138,16 +138,16 @@ namespace Hoehoe
         [StructLayout(LayoutKind.Sequential)]
         private struct TBBUTTONINFO
         {
-            public Int32 cbSize;
-            public Int32 dwMask;
-            public Int32 idCommand;
-            public Int32 iImage;
+            public int cbSize;
+            public int dwMask;
+            public int idCommand;
+            public int iImage;
             public byte fsState;
             public byte fsStyle;
             public short cx;
             public IntPtr lParam;
             public IntPtr pszText;
-            public Int32 cchText;
+            public int cchText;
         }
 
         // TBBUTTONINFOのlParamでポイントされるアイコン情報（PostMessageで使用）
@@ -155,10 +155,10 @@ namespace Hoehoe
         private struct TRAYNOTIFY
         {
             public IntPtr hWnd;
-            public UInt32 uID;
-            public UInt32 uCallbackMessage;
-            public UInt32 dwDummy1;
-            public UInt32 dwDummy2;
+            public uint uID;
+            public uint uCallbackMessage;
+            public uint dwDummy1;
+            public uint dwDummy2;
             public IntPtr hIcon;
         }
 
@@ -173,41 +173,50 @@ namespace Hoehoe
 
         // 指定されたウィンドウを作成したスレッドの ID を取得します
         [DllImport("user32.dll", SetLastError = true)]
-        private extern static int GetWindowThreadProcessId(IntPtr hwnd, ref int lpdwProcessId);
+        private static extern int GetWindowThreadProcessId(IntPtr hwnd, ref int lpdwProcessId);
 
         // 指定したプロセスIDに対するプロセスハンドルを取得します
         [DllImport("kernel32.dll")]
-        private extern static IntPtr OpenProcess(ProcessAccess dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)]bool bInheritHandle, int dwProcessId);
+        private static extern IntPtr OpenProcess(ProcessAccess dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)]bool bInheritHandle, int dwProcessId);
 
         // OpenProcessで指定するアクセス権
         [Flags]
         private enum ProcessAccess : int
-        {
+        {   
             /// <summary>Specifies all possible access flags for the process object.</summary>
             AllAccess = CreateThread | DuplicateHandle | QueryInformation | SetInformation | Terminate | VMOperation | VMRead | VMWrite | Synchronize,
+            
             /// <summary>Enables usage of the process handle in the CreateRemoteThread function to create a thread in the process.</summary>
             CreateThread = 0x2,
+            
             /// <summary>Enables usage of the process handle as either the source or target process in the DuplicateHandle function to duplicate a handle.</summary>
             DuplicateHandle = 0x40,
+            
             /// <summary>Enables usage of the process handle in the GetExitCodeProcess and GetPriorityClass functions to read information from the process object.</summary>
             QueryInformation = 0x400,
+            
             /// <summary>Enables usage of the process handle in the SetPriorityClass function to set the priority class of the process.</summary>
             SetInformation = 0x200,
+            
             /// <summary>Enables usage of the process handle in the TerminateProcess function to terminate the process.</summary>
             Terminate = 0x1,
+            
             /// <summary>Enables usage of the process handle in the VirtualProtectEx and WriteProcessMemory functions to modify the virtual memory of the process.</summary>
             VMOperation = 0x8,
+            
             /// <summary>Enables usage of the process handle in the ReadProcessMemory function to' read from the virtual memory of the process.</summary>
             VMRead = 0x10,
+            
             /// <summary>Enables usage of the process handle in the WriteProcessMemory function to write to the virtual memory of the process.</summary>
             VMWrite = 0x20,
+
             /// <summary>Enables usage of the process handle in any of the wait functions to wait for the process to terminate.</summary>
             Synchronize = 0x100000
         }
 
         // 指定したプロセスの仮想アドレス空間にメモリ領域を確保
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-        private extern static IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, AllocationTypes flAllocationType, MemoryProtectionTypes flProtect);
+        private static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, AllocationTypes flAllocationType, MemoryProtectionTypes flProtect);
 
         // アロケート種類
         [Flags]
@@ -243,11 +252,11 @@ namespace Hoehoe
 
         // オープンしているカーネルオブジェクトのハンドルをクローズします
         [DllImport("kernel32.dll", SetLastError = true)]
-        private extern static bool CloseHandle(IntPtr hHandle);
+        private static extern bool CloseHandle(IntPtr hHandle);
 
         // 指定されたプロセスの仮想アドレス空間内のメモリ領域を解放またはコミット解除します
         [DllImport("kernel32.dll")]
-        private extern static bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, int dwFreeType);
+        private static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, int dwFreeType);
 
         // メモリ解放種別
         [Flags]
@@ -258,15 +267,15 @@ namespace Hoehoe
 
         // 指定したプロセスのメモリ領域にデータをコピーする
         [DllImport("kernel32.dll", SetLastError = true)]
-        private extern static bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, ref TBBUTTONINFO lpBuffer, int nSize, out int lpNumberOfBytesWritten);
+        private static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, ref TBBUTTONINFO lpBuffer, int nSize, out int lpNumberOfBytesWritten);
 
         // 指定したプロセスのメモリ領域のデータを呼び出し側プロセスのバッファにコピーする
         [DllImport("kernel32.dll", SetLastError = true)]
-        private extern static bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int iSize, ref int lpNumberOfBytesRead);
+        private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int iSize, ref int lpNumberOfBytesRead);
 
         // メッセージをウィンドウのメッセージ キューに置き、対応するウィンドウがメッセージを処理するのを待たずに戻ります
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private extern static bool PostMessage(IntPtr hWnd, uint Msg, UInt32 wParam, UInt32 lParam);
+        private static extern bool PostMessage(IntPtr hWnd, uint msg, uint wParam, uint lParam);
 
         // PostMessageで送信するメッセージ
         private enum PM_Message : uint
@@ -347,12 +356,12 @@ namespace Hoehoe
                     // メモリ確保失敗
                     try
                     {
-                        const int titleSize = 256;
+                        const int TitleSize = 256;
                         // Tooltip文字列長
-                        string title = "";
+                        string title = string.Empty;
                         // Tooltip文字列
                         // 共有メモリにTooltip読込メモリ確保
-                        IntPtr pszTitle = Marshal.AllocCoTaskMem(titleSize);
+                        IntPtr pszTitle = Marshal.AllocCoTaskMem(TitleSize);
                         if (pszTitle.Equals(IntPtr.Zero))
                         {
                             return false;
@@ -361,7 +370,7 @@ namespace Hoehoe
                         try
                         {
                             // Explorer内にTooltip読込メモリ確保
-                            IntPtr pszSysTitle = VirtualAllocEx(hProc, IntPtr.Zero, titleSize, AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
+                            IntPtr pszSysTitle = VirtualAllocEx(hProc, IntPtr.Zero, TitleSize, AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
                             if (pszSysTitle.Equals(IntPtr.Zero))
                             {
                                 return false;
@@ -409,7 +418,7 @@ namespace Hoehoe
                                     tbButtonInfoLocal.dwMask = (int)(ToolbarButtonMask.TBIF_COMMAND | ToolbarButtonMask.TBIF_LPARAM | ToolbarButtonMask.TBIF_TEXT);
                                     tbButtonInfoLocal.pszText = pszSysTitle;
                                     // Tooltip書き込み先領域
-                                    tbButtonInfoLocal.cchText = titleSize;
+                                    tbButtonInfoLocal.cchText = TitleSize;
                                     // マスク設定等をExplorerのメモリへ書き込み
                                     WriteProcessMemory(hProc, ptbSysInfo, ref tbButtonInfoLocal, Marshal.SizeOf(tbButtonInfoLocal), out dwBytes);
                                     // ボタン詳細情報取得
@@ -436,9 +445,9 @@ namespace Hoehoe
                                         Marshal.FreeCoTaskMem(ptrInfo);
                                     }
                                     // Tooltipの内容をExplorer内のメモリから共有メモリへ読込
-                                    ReadProcessMemory(hProc, pszSysTitle, pszTitle, titleSize, ref dwBytes);
+                                    ReadProcessMemory(hProc, pszSysTitle, pszTitle, TitleSize, ref dwBytes);
                                     // ローカル変数へ変換
-                                    title = Marshal.PtrToStringAnsi(pszTitle, titleSize);
+                                    title = Marshal.PtrToStringAnsi(pszTitle, TitleSize);
 
                                     // Tooltipが指定文字列を含んでいればクリック
                                     if (title.Contains(tooltip))
@@ -479,7 +488,7 @@ namespace Hoehoe
                             }
                             finally
                             {
-                                VirtualFreeEx(hProc, pszSysTitle, titleSize, (int)MemoryFreeTypes.Release);
+                                VirtualFreeEx(hProc, pszSysTitle, TitleSize, (int)MemoryFreeTypes.Release);
                             }
                         }
                         finally
@@ -507,7 +516,7 @@ namespace Hoehoe
 
         // 画面をブリンクするためのWin32API。起動時に10ページ読み取りごとに継続確認メッセージを表示する際の通知強調用
         [DllImport("user32.dll")]
-        public extern static int FlashWindow(int hwnd, int bInvert);
+        public static extern int FlashWindow(int hwnd, int bInvert);
 
         #region "画面ブリンク用"
 
@@ -535,49 +544,33 @@ namespace Hoehoe
 
         /// http://www.atmarkit.co.jp/fdotnet/dotnettips/723flashwindow/flashwindow.html
         [DllImport("user32.dll")]
-        private extern static bool FlashWindowEx(ref FLASHWINFO FWInfo);
+        private static extern bool FlashWindowEx(ref FLASHWINFO fwinfo);
 
         private struct FLASHWINFO
         {
-            // FLASHWINFO構造体のサイズ
-            public Int32 cbSize;
-
-            // 点滅対象のウィンドウ・ハンドル
-            public IntPtr hwnd;
-
-            // 以下の「FLASHW_XXX」のいずれか
-            public Int32 dwFlags;
-
-            // 点滅する回数
-            public Int32 uCount;
-
-            // 点滅する間隔（ミリ秒単位）
-            public Int32 dwTimeout;
+            public int cbSize;    // FLASHWINFO構造体のサイズ            
+            public IntPtr hwnd;   // 点滅対象のウィンドウ・ハンドル           
+            public int dwFlags;   // 以下の「FLASHW_XXX」のいずれか
+            public int uCount;    // 点滅する回数
+            public int dwTimeout; // 点滅する間隔（ミリ秒単位）
         }
 
-        // 点滅を止める
-        private const Int32 FLASHW_STOP = 0;
-        // タイトルバーを点滅させる
-        private const Int32 FLASHW_CAPTION = 0x1;
-        // タスクバー・ボタンを点滅させる
-        private const Int32 FLASHW_TRAY = 0x2;
-        // タスクバー・ボタンとタイトルバーを点滅させる
-        private const Int32 FLASHW_ALL = 0x3;
-        // FLASHW_STOPが指定されるまでずっと点滅させる
-        private const Int32 FLASHW_TIMER = 0x4;
-        // ウィンドウが最前面に来るまでずっと点滅させる
-
+        private const int FLASHW_STOP = 0;        // 点滅を止める
+        private const int FLASHW_CAPTION = 0x1;   // タイトルバーを点滅させる
+        private const int FLASHW_TRAY = 0x2;      // タスクバー・ボタンを点滅させる
+        private const int FLASHW_ALL = 0x3;       // タスクバー・ボタンとタイトルバーを点滅させる
+        private const int FLASHW_TIMER = 0x4;     // FLASHW_STOPが指定されるまでずっと点滅させる
+        private const int FLASHW_TIMERNOFG = 0xc; // ウィンドウが最前面に来るまでずっと点滅させる
         #endregion "画面ブリンク用"
 
-        private const Int32 FLASHW_TIMERNOFG = 0xc;
 
         [DllImport("user32.dll")]
-        public extern static bool ValidateRect(IntPtr hwnd, IntPtr rect);
+        public static extern bool ValidateRect(IntPtr hwnd, IntPtr rect);
 
         #region "スクリーンセーバー起動中か判定"
 
         [DllImport("user32", CharSet = CharSet.Auto)]
-        private extern static int SystemParametersInfo(int intAction, int intParam, ref bool bParam, int intWinIniFlag);
+        private static extern int SystemParametersInfo(int intAction, int intParam, ref bool bParam, int intWinIniFlag);
 
         // スクリーンセーバーが起動中かを取得する定数
         private const int SPI_GETSCREENSAVERRUNNING = 0x61;
@@ -643,7 +636,6 @@ namespace Hoehoe
             if (hotkeyID != 0)
             {
                 UnregisterHotKey(targetForm.Handle, hotkeyID);
-                // clean up the atom list
                 GlobalDeleteAtom(hotkeyID);
                 hotkeyID = 0;
             }
@@ -654,7 +646,7 @@ namespace Hoehoe
         #region "プロセスのProxy設定"
 
         [DllImport("wininet.dll", SetLastError = true)]
-        private extern static bool InternetSetOption(IntPtr hInternet, int dwOption, IntPtr lpBuffer, int lpdwBufferLength);
+        private static extern bool InternetSetOption(IntPtr hInternet, int dwOption, IntPtr lpBuffer, int lpdwBufferLength);
 
         private struct INTERNET_PROXY_INFO
         {
@@ -666,7 +658,7 @@ namespace Hoehoe
         private static void RefreshProxySettings(string strProxy)
         {
             const int INTERNET_OPTION_PROXY = 38;
-            // const int INTERNET_OPEN_TYPE_PRECONFIG = 0   // IE setting
+            const int INTERNET_OPEN_TYPE_PRECONFIG = 0;  // IE setting
             const int INTERNET_OPEN_TYPE_DIRECT = 1; // Direct
             const int INTERNET_OPEN_TYPE_PROXY = 3;  // Custom
 
@@ -773,10 +765,10 @@ namespace Hoehoe
                     proxy = null;
                     break;
                 case HttpConnection.ProxyType.None:
-                    proxy = "";
+                    proxy = string.Empty;
                     break;
                 case HttpConnection.ProxyType.Specified:
-                    proxy = host + (port > 0 ? ":" + port.ToString() : "");
+                    proxy = host + (port > 0 ? ":" + port.ToString() : string.Empty);
                     break;
             }
             RefreshProxySettings(proxy);
