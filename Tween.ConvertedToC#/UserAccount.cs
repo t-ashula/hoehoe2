@@ -24,32 +24,38 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Xml.Serialization;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Xml.Serialization;
+
     public class UserAccount
     {
-        public string Username = "";
+        public string Username = string.Empty;
         public long UserId = 0;
-        public string Token = "";
+        public string Token = string.Empty;
 
         [XmlIgnore]
-        public string TokenSecret = "";
+        public string TokenSecret = string.Empty;
 
         public string EncryptTokenSecret
         {
-            get { return Encrypt(TokenSecret); }
-            set { TokenSecret = Decrypt(value); }
+            get { return this.Encrypt(this.TokenSecret); }
+            set { this.TokenSecret = this.Decrypt(value); }
+        }
+
+        public override string ToString()
+        {
+            return this.Username;
         }
 
         private string Encrypt(string password)
         {
-            if (String.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(password))
             {
-                password = "";
+                password = string.Empty;
             }
+
             if (password.Length > 0)
             {
                 try
@@ -58,21 +64,22 @@ namespace Hoehoe
                 }
                 catch (Exception)
                 {
-                    return "";
+                    return string.Empty;
                 }
             }
             else
             {
-                return "";
+                return string.Empty;
             }
         }
 
         private string Decrypt(string password)
         {
-            if (String.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(password))
             {
-                password = "";
+                password = string.Empty;
             }
+
             if (password.Length > 0)
             {
                 try
@@ -81,15 +88,11 @@ namespace Hoehoe
                 }
                 catch (Exception)
                 {
-                    password = "";
+                    password = string.Empty;
                 }
             }
-            return password;
-        }
 
-        public override string ToString()
-        {
-            return this.Username;
+            return password;
         }
     }
 }
