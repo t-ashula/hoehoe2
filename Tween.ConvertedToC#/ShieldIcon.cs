@@ -24,14 +24,71 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Drawing;
+    using System.Runtime.InteropServices;
+
     public class ShieldIcon
     {
+        private Image icondata;
+        private SHSTOCKICONINFO sii;
+
+        public ShieldIcon()
+        {
+            const int SIID_SHIELD = 77;
+            const uint SHGFI_ICON = 0x100;
+            const uint SHGFI_SMALLICON = 0x1;
+
+            // NT6 kernelかどうか検査
+            if (!IsNT6())
+            {
+                this.icondata = null;
+                return;
+            }
+
+            try
+            {
+                this.sii = new SHSTOCKICONINFO();
+                this.sii.cbSize = Marshal.SizeOf(this.sii);
+                this.sii.hIcon = IntPtr.Zero;
+                SHGetStockIconInfo(SIID_SHIELD, SHGFI_ICON | SHGFI_SMALLICON, ref this.sii);
+                this.icondata = Bitmap.FromHicon(this.sii.hIcon);
+            }
+            catch (Exception)
+            {
+                this.icondata = null;
+            }
+        }
+
+        public Image Icon
+        {
+            // Return icondata
+            // シールドアイコンのデータを返さないように　あとでどうにかする
+            get { return null; }
+        }
+
+        public void Dispose()
+        {
+            if (this.icondata != null)
+            {
+                this.icondata.Dispose();
+            }
+        }
+
+        private static bool IsNT6()
+        {
+            // NT6 kernelかどうか検査
+            return Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major == 6;
+        }
+
+        [DllImport("shell32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
+        private static extern int SHGetStockIconInfo(int siid, uint uFlags, ref SHSTOCKICONINFO psii);
+
+        [DllImport("shell32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
+        private static extern bool DestroyIcon(IntPtr hIcon);
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         private struct SHSTOCKICONINFO
         {
@@ -42,63 +99,6 @@ namespace Hoehoe
 
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
             public string szPath;
-        }
-
-        [DllImport("shell32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-        private static extern int SHGetStockIconInfo(int siid, uint uFlags, ref SHSTOCKICONINFO psii);
-
-        [DllImport("shell32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-        private static extern bool DestroyIcon(IntPtr hIcon);
-
-        const int SIID_SHIELD = 77;
-        const uint SHGFI_ICON = 0x100;
-        const uint SHGFI_SMALLICON = 0x1;
-
-        private Image icondata;
-        private SHSTOCKICONINFO sii;
-
-        public ShieldIcon()
-        {
-            // NT6 kernelかどうか検査
-            if (!IsNT6())
-            {
-                icondata = null;
-                return;
-            }
-
-            try
-            {
-                sii = new SHSTOCKICONINFO();
-                sii.cbSize = Marshal.SizeOf(sii);
-                sii.hIcon = IntPtr.Zero;
-                SHGetStockIconInfo(SIID_SHIELD, SHGFI_ICON | SHGFI_SMALLICON, ref sii);
-                icondata = Bitmap.FromHicon(sii.hIcon);
-            }
-            catch (Exception)
-            {
-                icondata = null;
-            }
-        }
-
-        private static bool IsNT6()
-        {
-            // NT6 kernelかどうか検査
-            return Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major == 6;
-        }
-
-        public void Dispose()
-        {
-            if (icondata != null)
-            {
-                icondata.Dispose();
-            }
-        }
-
-        public Image Icon
-        {
-            // Return icondata
-            // シールドアイコンのデータを返さないように　あとでどうにかする
-            get { return null; }
         }
     }
 }
