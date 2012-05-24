@@ -298,18 +298,6 @@ namespace Hoehoe
             return this._tmpIds.Count;
         }
 
-        private struct TemporaryId
-        {
-            public long Id;
-            public bool Read;
-
-            public TemporaryId(long argId, bool argRead)
-            {
-                this.Id = argId;
-                this.Read = argRead;
-            }
-        }
-
         public void Sort()
         {
             if (this._sorter.Mode == IdComparerClass.ComparerMode.Id)
@@ -613,6 +601,19 @@ namespace Hoehoe
         {
             return this._ids.ToArray();
         }
+
+        private struct TemporaryId
+        {
+            public long Id;
+            public bool Read;
+
+            public TemporaryId(long argId, bool argRead)
+            {
+                this.Id = argId;
+                this.Read = argRead;
+            }
+        }
+
 
     }
 }
