@@ -582,7 +582,7 @@ namespace Hoehoe
                 
                 this.CountApi = Convert.ToInt32(TextCountApi.Text);
                 this.CountApiReply = Convert.ToInt32(TextCountApiReply.Text);
-                this.BrowserPath = BrowserPathText.Text.Trim();
+                this.BrowserPath = this.BrowserPathText.Text.Trim();
                 this.PostAndGet = CheckPostAndGet.Checked;
                 this.UseRecommendStatus = CheckUseRecommendStatus.Checked;
                 this.DispUsername = CheckDispUsername.Checked;
@@ -1160,11 +1160,11 @@ namespace Hoehoe
 
             IsNotifyUseGrowlCheckBox.Enabled = GrowlHelper.IsDllExists;
 
-            this.TreeViewSetting.Nodes["BasedNode"].Tag = BasedPanel;
+            this.TreeViewSetting.Nodes["BasedNode"].Tag = this.BasedPanel;
             this.TreeViewSetting.Nodes["BasedNode"].Nodes["PeriodNode"].Tag = GetPeriodPanel;
             this.TreeViewSetting.Nodes["BasedNode"].Nodes["StartUpNode"].Tag = StartupPanel;
             this.TreeViewSetting.Nodes["BasedNode"].Nodes["GetCountNode"].Tag = GetCountPanel;
-            this.TreeViewSetting.Nodes["ActionNode"].Tag = ActionPanel;
+            this.TreeViewSetting.Nodes["ActionNode"].Tag = this.ActionPanel;
             this.TreeViewSetting.Nodes["ActionNode"].Nodes["TweetActNode"].Tag = TweetActPanel;
             this.TreeViewSetting.Nodes["PreviewNode"].Tag = PreviewPanel;
             this.TreeViewSetting.Nodes["PreviewNode"].Nodes["TweetPrvNode"].Tag = TweetPrvPanel;

@@ -30,20 +30,21 @@ namespace Hoehoe
 
     public static class nicoms
     {
-        private static string[] _nicovideoUrls = {
-			"www.nicovideo.jp/watch/",
-			"live.nicovideo.jp/watch/",
-			"live.nicovideo.jp/gate/",
-			"live.nicolive.jp/gate/",
-			"co.nicovideo.jp/community/",
-			"com.nicovideo.jp/community/",
-			"ch.nicovideo.jp/channel/",
-			"nicovideo.jp/watch/",
-			"seiga.nicovideo.jp/bbs/",
-			"www.niconicommons.jp/material/",
-			"niconicommons.jp/material/",
-			"news.nicovideo.jp/watch/"
-		};
+        private static string[] _nicovideoUrls = 
+        {
+            "www.nicovideo.jp/watch/",
+            "live.nicovideo.jp/watch/",
+            "live.nicovideo.jp/gate/",
+            "live.nicolive.jp/gate/",
+            "co.nicovideo.jp/community/",
+            "com.nicovideo.jp/community/",
+            "ch.nicovideo.jp/channel/",
+            "nicovideo.jp/watch/",
+            "seiga.nicovideo.jp/bbs/",
+            "www.niconicommons.jp/material/",
+            "niconicommons.jp/material/",
+            "news.nicovideo.jp/watch/"
+        };
 
         public static string Shorten(string url)
         {

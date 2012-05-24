@@ -90,7 +90,7 @@ namespace Hoehoe
             }
 
             // アイコンロード
-            BackgroundWorkerImageLoader.RunWorkerAsync();
+            this.BackgroundWorkerImageLoader.RunWorkerAsync();
 
             this.InitPath();
             this.InitTooltip();

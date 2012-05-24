@@ -2461,7 +2461,7 @@ namespace Hoehoe
             this.tw.TrackWord = this.cfgCommon.TrackWord;
             TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.tw.TrackWord);
             this.tw.AllAtReply = this.cfgCommon.AllAtReply;
-            AllrepliesToolStripMenuItem.Checked = this.tw.AllAtReply;
+            this.AllrepliesToolStripMenuItem.Checked = this.tw.AllAtReply;
 
             Outputz.Key = this.SettingDialog.OutputzKey;
             Outputz.Enabled = this.SettingDialog.OutputzEnabled;
@@ -14429,7 +14429,7 @@ namespace Hoehoe
 
         private void AllrepliesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.tw.AllAtReply = AllrepliesToolStripMenuItem.Checked;
+            this.tw.AllAtReply = this.AllrepliesToolStripMenuItem.Checked;
             this.modifySettingCommon = true;
             this.tw.ReconnectUserStream();
         }
