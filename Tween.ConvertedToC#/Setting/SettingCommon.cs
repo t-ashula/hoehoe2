@@ -24,94 +24,37 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows.Forms;
+    using System.Xml.Serialization;
+
     [Serializable]
     public class SettingCommon : SettingBase<SettingCommon>
     {
-        #region "Settingクラス基本"
-
-        public static SettingCommon Load()
-        {
-            return LoadSettings();
-        }
-
-        public void Save()
-        {
-            SaveSettings(this);
-        }
-
-        #endregion "Settingクラス基本"
-
-        public List<UserAccount> UserAccounts;
-        public string UserName = "";
+        private List<UserAccount> userAccounts;
+        public string UserName = string.Empty;
 
         [XmlIgnore]
-        public string Password = "";
+        public string Password = string.Empty;
 
         public string EncryptPassword
         {
-            get { return Encrypt(Password); }
-            set { Password = Decrypt(value); }
+            get { return SettingCommon.Encrypt(this.Password); }
+            set { this.Password = SettingCommon.Decrypt(value); }
         }
 
-        public string Token = "";
+        public string Token = string.Empty;
 
         [XmlIgnore]
-        public string TokenSecret = "";
+        public string TokenSecret = string.Empty;
 
         public string EncryptTokenSecret
         {
-            get { return Encrypt(TokenSecret); }
-            set { TokenSecret = Decrypt(value); }
-        }
-
-        private string Encrypt(string password)
-        {
-            if (string.IsNullOrEmpty(password))
-            {
-                password = "";
-            }
-            if (password.Length > 0)
-            {
-                try
-                {
-                    return CryptoUtils.EncryptString(password);
-                }
-                catch (Exception)
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        private string Decrypt(string password)
-        {
-            if (string.IsNullOrEmpty(password))
-            {
-                password = "";
-            }
-            if (password.Length > 0)
-            {
-                try
-                {
-                    password = CryptoUtils.DecryptString(password);
-                }
-                catch (Exception)
-                {
-                    password = "";
-                }
-            }
-            return password;
+            get { return SettingCommon.Encrypt(this.TokenSecret); }
+            set { this.TokenSecret = SettingCommon.Decrypt(value); }
         }
 
         public long UserId = 0;
@@ -131,7 +74,7 @@ namespace Hoehoe
         public bool ForceEventNotify = false;
         public bool FavEventUnread = true;
         public string TranslateLanguage = Hoehoe.Properties.Resources.TranslateDefaultLanguage;
-        public string EventSoundFile = "";
+        public string EventSoundFile = string.Empty;
         public bool PlaySound = false;
         public bool UnreadManage = true;
         public bool OneWayLove = true;
@@ -153,7 +96,7 @@ namespace Hoehoe
         public bool StartupFollowers = true;
         public bool RestrictFavCheck = false;
         public bool AlwaysTop = false;
-        public string CultureCode = "";
+        public string CultureCode = string.Empty;
         public bool UrlConvertAuto = false;
         public bool Outputz = false;
         public int SortColumn = 3;
@@ -164,7 +107,7 @@ namespace Hoehoe
         public string Language = "OS";
         public bool Nicoms = false;
         public List<string> HashTags = new List<string>();
-        public string HashSelected = "";
+        public string HashSelected = string.Empty;
         public bool HashIsPermanent = false;
         public bool HashIsHead = false;
         public bool HashIsNotAddToAtReply = true;
@@ -172,12 +115,12 @@ namespace Hoehoe
         public bool PreviewEnable = true;
 
         [XmlIgnore]
-        public string OutputzKey = "";
+        public string OutputzKey = string.Empty;
 
         public string EncryptOutputzKey
         {
-            get { return Encrypt(OutputzKey); }
-            set { OutputzKey = Decrypt(value); }
+            get { return SettingCommon.Encrypt(this.OutputzKey); }
+            set { this.OutputzKey = SettingCommon.Decrypt(value); }
         }
 
         public OutputzUrlmode OutputzUrlMode = OutputzUrlmode.twittercom;
@@ -192,8 +135,8 @@ namespace Hoehoe
         public bool WideSpaceConvert = true;
         public bool ReadOwnPost = false;
         public bool GetFav = true;
-        public string BilyUser = "";
-        public string BitlyPwd = "";
+        public string BilyUser = string.Empty;
+        public string BitlyPwd = string.Empty;
         public bool ShowGrid = false;
         public bool UseAtIdSupplement = true;
         public bool UseHashSupplement = true;
@@ -210,7 +153,7 @@ namespace Hoehoe
         public int FirstCountApi = 100;
         public int SearchCountApi = 100;
         public int FavoritesCountApi = 40;
-        public string TrackWord = "";
+        public string TrackWord = string.Empty;
         public bool AllAtReply = false;
         public bool UserstreamStartup = true;
         public int UserstreamPeriod = 0;
@@ -220,7 +163,7 @@ namespace Hoehoe
         public int ListCountApi = 100;
         public int UseImageService = 0;
         public int ListDoubleClickAction = 0;
-        public string UserAppointUrl = "";
+        public string UserAppointUrl = string.Empty;
         public bool HideDuplicatedRetweets = false;
         public bool IsPreviewFoursquare = false;
         public int FoursquarePreviewHeight = 300;
@@ -232,5 +175,71 @@ namespace Hoehoe
         public bool TabMouseLock = false;
         public bool IsRemoveSameEvent = false;
         public bool IsUseNotifyGrowl = false;
+
+        #region "Settingクラス基本"
+
+        public static SettingCommon Load()
+        {
+            return SettingCommon.LoadSettings();
+        }
+
+        public void Save()
+        {
+            SettingCommon.SaveSettings(this);
+        }
+
+        #endregion "Settingクラス基本"
+
+        private static string Encrypt(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                password = string.Empty;
+            }
+
+            if (password.Length > 0)
+            {
+                try
+                {
+                    return CryptoUtils.EncryptString(password);
+                }
+                catch (Exception)
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        private static string Decrypt(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                password = string.Empty;
+            }
+
+            if (password.Length > 0)
+            {
+                try
+                {
+                    password = CryptoUtils.DecryptString(password);
+                }
+                catch (Exception)
+                {
+                    password = string.Empty;
+                }
+            }
+
+            return password;
+        }
+
+        public List<UserAccount> UserAccounts
+        {
+            get { return userAccounts; }
+            set { userAccounts = value; }
+        }
     }
 }

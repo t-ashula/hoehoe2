@@ -24,14 +24,14 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.IO;
-using System.Threading;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-
 namespace Hoehoe
 {
+    using System;
+    using System.IO;
+    using System.Threading;
+    using System.Windows.Forms;
+    using System.Xml.Serialization;
+
     public abstract class SettingBase<T> where T : class, new()
     {
         private static object lockObj = new object();
@@ -80,6 +80,7 @@ namespace Hoehoe
                     {
                     }
                 }
+
                 MessageBox.Show("File: " + GetSettingFilePath(fileId) + Environment.NewLine + "Use default setting, because application can't read this setting file.");
                 return new T();
             }
@@ -87,7 +88,7 @@ namespace Hoehoe
 
         protected static T LoadSettings()
         {
-            return LoadSettings("");
+            return LoadSettings(string.Empty);
         }
 
         protected static void SaveSettings(T instance, string fileId)
@@ -99,6 +100,7 @@ namespace Hoehoe
             {
                 return;
             }
+
             do
             {
                 err = false;
@@ -113,8 +115,8 @@ namespace Hoehoe
                             XmlSerializer xs = new XmlSerializer(typeof(T));
                             xs.Serialize(fs, instance);
                             fs.Flush();
-                            fs.Close();
                         }
+
                         FileInfo fi = new FileInfo(fileName);
                         if (fi.Length == 0)
                         {
@@ -122,6 +124,7 @@ namespace Hoehoe
                             {
                                 throw new Exception();
                             }
+
                             Thread.Sleep(1000);
                             err = true;
                         }
@@ -136,16 +139,18 @@ namespace Hoehoe
                         MessageBox.Show("Can't write setting XML.(" + fileName + ")", "Save Settings", MessageBoxButtons.OK);
                         return;
                     }
+
                     // リトライ
                     Thread.Sleep(1000);
                     err = true;
                 }
-            } while (err);
+            }
+            while (err);
         }
 
         protected static void SaveSettings(T instance)
         {
-            SaveSettings(instance, "");
+            SaveSettings(instance, string.Empty);
         }
 
         public static string GetSettingFilePath(string fileId)

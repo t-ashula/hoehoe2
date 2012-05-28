@@ -24,12 +24,12 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Drawing;
-using System.Xml.Serialization;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Drawing;
+    using System.Xml.Serialization;
+
     [Serializable]
     public class SettingLocal : SettingBase<SettingLocal>
     {
@@ -54,8 +54,8 @@ namespace Hoehoe
         public int SplitterDistance = 200;
         public int AdSplitterDistance = 350;
         public Size FormSize = new Size(600, 500);
-        public string StatusText = "";
-        public bool UseRecommendStatus = false;
+        public string StatusText = string.Empty;
+        public bool UseRecommendStatus;
         public int Width1 = 48;
         public int Width2 = 80;
         public int Width3 = 290;
@@ -72,12 +72,12 @@ namespace Hoehoe
         public int DisplayIndex6 = 1;
         public int DisplayIndex7 = 0;
         public int DisplayIndex8 = 7;
-        public string BrowserPath = "";
+        public string BrowserPath = string.Empty;
         public HttpConnection.ProxyType ProxyType = HttpConnection.ProxyType.IE;
         public string ProxyAddress = "127.0.0.1";
         public int ProxyPort = 80;
-        public string ProxyUser = "";
-        public bool StatusMultiline = false;
+        public string ProxyUser = string.Empty;
+        public bool StatusMultiline;
         public int StatusTextHeight = 38;
         public int PreviewDistance = -1;
 
@@ -271,7 +271,7 @@ namespace Hoehoe
         }
 
         [XmlIgnore]
-        public string ProxyPassword = "";
+        public string ProxyPassword = string.Empty;
 
         public string EncryptProxyPassword
         {
@@ -280,8 +280,9 @@ namespace Hoehoe
                 string pwd = ProxyPassword;
                 if (string.IsNullOrEmpty(pwd))
                 {
-                    pwd = "";
+                    pwd = string.Empty;
                 }
+                
                 if (pwd.Length > 0)
                 {
                     try
@@ -290,21 +291,23 @@ namespace Hoehoe
                     }
                     catch (Exception)
                     {
-                        return "";
+                        return string.Empty;
                     }
                 }
                 else
                 {
-                    return "";
+                    return string.Empty;
                 }
             }
+
             set
             {
                 string pwd = value;
                 if (string.IsNullOrEmpty(pwd))
                 {
-                    pwd = "";
+                    pwd = string.Empty;
                 }
+                
                 if (pwd.Length > 0)
                 {
                     try
@@ -313,9 +316,10 @@ namespace Hoehoe
                     }
                     catch (Exception)
                     {
-                        pwd = "";
+                        pwd = string.Empty;
                     }
                 }
+
                 ProxyPassword = pwd;
             }
         }

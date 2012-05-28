@@ -24,19 +24,21 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-
 namespace Hoehoe
 {
+    using System;
+    using System.Collections.Generic;
+
     [Serializable]
     public class SettingTabs : SettingBase<SettingTabs>
     {
+        public List<TabClass> Tabs;
+
         #region "Settingクラス基本"
 
         public static SettingTabs Load()
         {
-            SettingTabs setting = LoadSettings("");
+            SettingTabs setting = LoadSettings(string.Empty);
             return setting;
         }
 
@@ -49,9 +51,6 @@ namespace Hoehoe
         {
             Tabs = new List<TabClass>();
         }
-
         #endregion "Settingクラス基本"
-
-        public List<TabClass> Tabs;
     }
 }
