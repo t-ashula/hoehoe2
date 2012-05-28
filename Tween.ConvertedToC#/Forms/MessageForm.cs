@@ -23,6 +23,7 @@
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
+
 namespace Hoehoe
 {
     using System.Windows.Forms;
@@ -30,13 +31,16 @@ namespace Hoehoe
     public partial class MessageForm
     {
         #region constructor
+
         public MessageForm()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-        #endregion
+
+        #endregion constructor
 
         #region public methods
+
         public DialogResult ShowDialog(string message)
         {
             Label1.Text = message;
@@ -45,6 +49,7 @@ namespace Hoehoe
             Label1.Visible = true;
             return this.ShowDialog();
         }
-        #endregion
+
+        #endregion public methods
     }
 }

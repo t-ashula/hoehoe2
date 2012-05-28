@@ -28,10 +28,10 @@ namespace Hoehoe
     {
         public static Expression<Func<T, S>> ParseLambda<T, S>(string expression, params object[] values)
         {
-            return (Expression<Func<T, S>>)dummy();
+            return (Expression<Func<T, S>>)Dummy();
         }
 
-        private static LambdaExpression dummy()
+        private static LambdaExpression Dummy()
         {
             Expression<Func<PostClass, bool>> f = p => true;
             return f;

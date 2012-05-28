@@ -39,6 +39,7 @@ namespace Hoehoe
     public partial class ShowUserInfo
     {
         #region private
+
         private const string Mainpath = "http://twitter.com/";
         private const string Followingpath = "/following";
         private const string Followerspath = "/followers";
@@ -58,23 +59,29 @@ namespace Hoehoe
         private TweenMain owner;
         private bool isEditing = false;
         private string buttonEditText = string.Empty;
-        #endregion
+
+        #endregion private
 
         #region constructor
+
         public ShowUserInfo()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-        #endregion
+
+        #endregion constructor
 
         #region public methods
+
         public void SetUser(DataModels.Twitter.User value)
         {
             this.userInfo = value;
         }
-        #endregion
+
+        #endregion public methods
 
         #region event handler
+
         private void ShowUserInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
         }
@@ -681,9 +688,11 @@ namespace Hoehoe
                 this.ChangeIcon(filename);
             }
         }
-        #endregion
+
+        #endregion event handler
 
         #region private methods
+
         private void InitPath()
         {
             this.home = Mainpath + this.info.ScreenName;
@@ -799,9 +808,10 @@ namespace Hoehoe
             return this.IsValidExtension(ext) && fileInfo.Length < 700 * 1024 && !MyCommon.IsAnimatedGif(fileInfo.FullName);
         }
 
-        #endregion
+        #endregion private methods
 
         #region inner class
+
         public class UpdateProfileImageArgs
         {
             public Twitter Tw { get; set; }
@@ -821,6 +831,7 @@ namespace Hoehoe
 
             public string Description { get; set; }
         }
-        #endregion
+
+        #endregion inner class
     }
 }

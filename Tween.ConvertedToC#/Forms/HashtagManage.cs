@@ -42,7 +42,7 @@ namespace Hoehoe
         public HashtagManage(AtIdSupplement hashSuplForm, string[] history, string permanentHash, bool isPermanent, bool isHead, bool isNotAddToAtReply)
         {
             // この呼び出しは、Windows フォーム デザイナで必要です。
-            InitializeComponent();
+            this.InitializeComponent();
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
             this.hashSupl = hashSuplForm;
@@ -213,7 +213,7 @@ namespace Hoehoe
             {
                 return;
             }
-            
+
             for (int i = 0; i < HistoryHashList.SelectedIndices.Count; i++)
             {
                 if (UseHashText.Text == HistoryHashList.SelectedItems[0].ToString())
@@ -255,7 +255,7 @@ namespace Hoehoe
                     idx++;
                     continue;
                 }
-                
+
                 if (string.Compare(src, value, true) == 0)
                 {
                     return idx;
@@ -305,7 +305,7 @@ namespace Hoehoe
                     {
                         front = UseHashText.Text.Substring(0, selStart);
                     }
-                    
+
                     if (selStart < UseHashText.Text.Length)
                     {
                         last = UseHashText.Text.Substring(selStart);
@@ -342,7 +342,7 @@ namespace Hoehoe
                 do
                 {
                     this.HistoryHashList.SelectedIndices.Clear();
-                } 
+                }
                 while (this.HistoryHashList.SelectedIndices.Count > 0);
                 this.HistoryHashList.Items.Insert(idx, hashStr);
                 this.HistoryHashList.SelectedIndex = idx;
@@ -427,7 +427,7 @@ namespace Hoehoe
 
                         return false;
                     }
-                    
+
                     adjust += hash + " ";
                 }
             }

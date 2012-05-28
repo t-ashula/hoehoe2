@@ -43,40 +43,41 @@ namespace Hoehoe
         private object lckPrev = new object();
         private PreviewData preview;
         private TweenMain tweenMain;
-        private ThumbnailService[] thumbnailServices = 
-        { 
+
+        private ThumbnailService[] thumbnailServices =
+        {
             new ThumbnailService("ImgUr", ImgUr_GetUrl, ImgUr_CreateImage),
-            new ThumbnailService("DirectLink", DirectLink_GetUrl, DirectLink_CreateImage), 
-            new ThumbnailService("TwitPic", TwitPic_GetUrl, TwitPic_CreateImage), 
-            new ThumbnailService("yfrog", Yfrog_GetUrl, Yfrog_CreateImage), 
-            new ThumbnailService("Plixi(TweetPhoto)", Plixi_GetUrl, Plixi_CreateImage), 
-            new ThumbnailService("MobyPicture", MobyPicture_GetUrl, MobyPicture_CreateImage), 
-            new ThumbnailService("携帯百景", MovaPic_GetUrl, MovaPic_CreateImage), 
-            new ThumbnailService("はてなフォトライフ", Hatena_GetUrl, Hatena_CreateImage), 
-            new ThumbnailService("PhotoShare/bctiny", PhotoShare_GetUrl, PhotoShare_CreateImage), 
-            new ThumbnailService("img.ly", Imgly_GetUrl, Imgly_CreateImage), 
-            new ThumbnailService("brightkite", Brightkite_GetUrl, Brightkite_CreateImage), 
-            new ThumbnailService("Twitgoo", Twitgoo_GetUrl, Twitgoo_CreateImage), 
-            new ThumbnailService("youtube", Youtube_GetUrl, Youtube_CreateImage), 
-            new ThumbnailService("ニコニコ動画", Nicovideo_GetUrl, Nicovideo_CreateImage), 
-            new ThumbnailService("ニコニコ静画", Nicoseiga_GetUrl, Nicoseiga_CreateImage), 
-            new ThumbnailService("Pixiv", Pixiv_GetUrl, Pixiv_CreateImage), 
-            new ThumbnailService("flickr", Flickr_GetUrl, Flickr_CreateImage), 
-            new ThumbnailService("フォト蔵", Photozou_GetUrl, Photozou_CreateImage), 
-            new ThumbnailService("TwitVideo", TwitVideo_GetUrl, TwitVideo_CreateImage), 
-            new ThumbnailService("Piapro", Piapro_GetUrl, Piapro_CreateImage), 
-            new ThumbnailService("Tumblr", Tumblr_GetUrl, Tumblr_CreateImage), 
-            new ThumbnailService("ついっぷるフォト", TwipplePhoto_GetUrl, TwipplePhoto_CreateImage), 
-            new ThumbnailService("mypix/shamoji", Mypix_GetUrl, Mypix_CreateImage), 
-            new ThumbnailService("ow.ly", Owly_GetUrl, Owly_CreateImage), 
-            new ThumbnailService("vimeo", Vimeo_GetUrl, Vimeo_CreateImage), 
-            new ThumbnailService("cloudfiles", CloudFiles_GetUrl, CloudFiles_CreateImage), 
-            new ThumbnailService("instagram", Instagram_GetUrl, Instagram_CreateImage), 
-            new ThumbnailService("pikubo", Pikubo_GetUrl, Pikubo_CreateImage), 
-            new ThumbnailService("PicPlz", PicPlz_GetUrl, PicPlz_CreateImage), 
-            new ThumbnailService("FourSquare", Foursquare_GetUrl, Foursquare_CreateImage), 
-            new ThumbnailService("TINAMI", Tinami_GetUrl, Tinami_CreateImage), 
-            new ThumbnailService("Twimg", Twimg_GetUrl, Twimg_CreateImage) 
+            new ThumbnailService("DirectLink", DirectLink_GetUrl, DirectLink_CreateImage),
+            new ThumbnailService("TwitPic", TwitPic_GetUrl, TwitPic_CreateImage),
+            new ThumbnailService("yfrog", Yfrog_GetUrl, Yfrog_CreateImage),
+            new ThumbnailService("Plixi(TweetPhoto)", Plixi_GetUrl, Plixi_CreateImage),
+            new ThumbnailService("MobyPicture", MobyPicture_GetUrl, MobyPicture_CreateImage),
+            new ThumbnailService("携帯百景", MovaPic_GetUrl, MovaPic_CreateImage),
+            new ThumbnailService("はてなフォトライフ", Hatena_GetUrl, Hatena_CreateImage),
+            new ThumbnailService("PhotoShare/bctiny", PhotoShare_GetUrl, PhotoShare_CreateImage),
+            new ThumbnailService("img.ly", Imgly_GetUrl, Imgly_CreateImage),
+            new ThumbnailService("brightkite", Brightkite_GetUrl, Brightkite_CreateImage),
+            new ThumbnailService("Twitgoo", Twitgoo_GetUrl, Twitgoo_CreateImage),
+            new ThumbnailService("youtube", Youtube_GetUrl, Youtube_CreateImage),
+            new ThumbnailService("ニコニコ動画", Nicovideo_GetUrl, Nicovideo_CreateImage),
+            new ThumbnailService("ニコニコ静画", Nicoseiga_GetUrl, Nicoseiga_CreateImage),
+            new ThumbnailService("Pixiv", Pixiv_GetUrl, Pixiv_CreateImage),
+            new ThumbnailService("flickr", Flickr_GetUrl, Flickr_CreateImage),
+            new ThumbnailService("フォト蔵", Photozou_GetUrl, Photozou_CreateImage),
+            new ThumbnailService("TwitVideo", TwitVideo_GetUrl, TwitVideo_CreateImage),
+            new ThumbnailService("Piapro", Piapro_GetUrl, Piapro_CreateImage),
+            new ThumbnailService("Tumblr", Tumblr_GetUrl, Tumblr_CreateImage),
+            new ThumbnailService("ついっぷるフォト", TwipplePhoto_GetUrl, TwipplePhoto_CreateImage),
+            new ThumbnailService("mypix/shamoji", Mypix_GetUrl, Mypix_CreateImage),
+            new ThumbnailService("ow.ly", Owly_GetUrl, Owly_CreateImage),
+            new ThumbnailService("vimeo", Vimeo_GetUrl, Vimeo_CreateImage),
+            new ThumbnailService("cloudfiles", CloudFiles_GetUrl, CloudFiles_CreateImage),
+            new ThumbnailService("instagram", Instagram_GetUrl, Instagram_CreateImage),
+            new ThumbnailService("pikubo", Pikubo_GetUrl, Pikubo_CreateImage),
+            new ThumbnailService("PicPlz", PicPlz_GetUrl, PicPlz_CreateImage),
+            new ThumbnailService("FourSquare", Foursquare_GetUrl, Foursquare_CreateImage),
+            new ThumbnailService("TINAMI", Tinami_GetUrl, Tinami_CreateImage),
+            new ThumbnailService("Twimg", Twimg_GetUrl, Twimg_CreateImage)
         };
 
         public Thumbnail(TweenMain owner)
@@ -163,7 +164,7 @@ namespace Hoehoe
                     }
                 }
             }
-            
+
             if (geo != null)
             {
                 GetUrlArgs args = new GetUrlArgs() { Url = string.Empty, ImgList = imglist, GeoInfo = new Google.GlobalLocation { Latitude = geo.Lat, Longitude = geo.Lng } };
@@ -173,7 +174,7 @@ namespace Hoehoe
                     dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(args.Url, new ImageCreatorDelegate(TwitterGeo_CreateImage)));
                 }
             }
-            
+
             if (imglist.Count == 0)
             {
                 this.tweenMain.PreviewScrollBar.Maximum = 0;
@@ -188,7 +189,7 @@ namespace Hoehoe
             bgw.RunWorkerCompleted += this.Bgw_Completed;
             bgw.RunWorkerAsync(new PreviewData(id, imglist, dlg));
         }
-        
+
         public void ScrollThumbnail(bool forward)
         {
             if (forward)
@@ -218,7 +219,7 @@ namespace Hoehoe
         {
             return Regex.Match(url, "^http://.*(\\.jpg|\\.jpeg|\\.gif|\\.png|\\.bmp)$", RegexOptions.IgnoreCase).Success;
         }
-        
+
         #region "テンプレ"
 
 #if template
@@ -442,7 +443,7 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended + ".th.jpg"));
                 return true;
             }
-            
+
             return false;
         }
 
@@ -541,7 +542,7 @@ namespace Hoehoe
             {
                 return false;
             }
-            
+
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
             args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
             args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
@@ -571,7 +572,7 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://mobypicture.com/?${1}:small")));
                 return true;
             }
-            
+
             return false;
         }
 
@@ -624,7 +625,7 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://image.movapic.com/pic/s_${1}.jpeg")));
                 return true;
             }
-            
+
             return false;
         }
 
@@ -796,7 +797,7 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://img.ly/show/thumb/${1}")));
                 return true;
             }
-            
+
             return false;
         }
 
@@ -849,7 +850,7 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://cdn.brightkite.com/${2}/${3}/${1}-feed.jpg")));
                 return true;
             }
-            
+
             return false;
         }
 
@@ -963,7 +964,7 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("${0}")));
                 return true;
             }
-            
+
             return false;
         }
 
@@ -1111,14 +1112,14 @@ namespace Hoehoe
                         {
                             return false;
                         }
-            
+
                         args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
                         args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, sb.ToString().Trim()));
                         return true;
                     }
                 }
             }
-            
+
             return false;
         }
 
@@ -1249,7 +1250,7 @@ namespace Hoehoe
                         catch (Exception)
                         {
                         }
-                    
+
                         try
                         {
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/mylist_counter").InnerText;
@@ -1289,7 +1290,7 @@ namespace Hoehoe
                     {
                         return false;
                     }
-            
+
                     args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
                     args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, sb.ToString().Trim()));
                     return true;
@@ -1352,7 +1353,7 @@ namespace Hoehoe
                 {
                     return false;
                 }
-            
+
                 args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
                 args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
                 return true;
@@ -1389,7 +1390,7 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url.Replace("amp;", string.Empty), mc.Value));
                 return true;
             }
-            
+
             return false;
         }
 
@@ -1414,7 +1415,7 @@ namespace Hoehoe
                 args.Errmsg = "NotSupported";
                 return false;
             }
-            
+
             HttpVarious http = new HttpVarious();
             string src = string.Empty;
             if (http.GetData(Regex.Replace(mc.Groups[0].Value, "amp;", string.Empty), null, ref src, 0, ref args.Errmsg, string.Empty))
@@ -1427,12 +1428,12 @@ namespace Hoehoe
                     {
                         return false;
                     }
-            
+
                     args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
                     args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
                     return true;
                 }
-                
+
                 if (Regex.Match(src, "<span class='error'>ログインしてください</span>").Success)
                 {
                     args.Errmsg = "NotSupported";
@@ -1467,7 +1468,7 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
                 return true;
             }
-            
+
             return false;
         }
 
@@ -1579,12 +1580,12 @@ namespace Hoehoe
                         args.Errmsg = ex.Message;
                         thumbnailUrl = string.Empty;
                     }
-                    
+
                     if (string.IsNullOrEmpty(thumbnailUrl))
                     {
                         return false;
                     }
-            
+
                     Image img = http.GetImage(thumbnailUrl, args.Url.Key);
                     if (img == null)
                     {
@@ -1648,7 +1649,7 @@ namespace Hoehoe
             {
                 return false;
             }
-            
+
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
             args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
             args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
@@ -1717,7 +1718,7 @@ namespace Hoehoe
                         {
                             return false;
                         }
-                    
+
                         args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
                         args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
                         return true;
@@ -1847,7 +1848,7 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
-            
+
             return false;
         }
 
@@ -1892,7 +1893,7 @@ namespace Hoehoe
                     {
                         return false;
                     }
-                    
+
                     Image img = http.GetImage(thumbnailUrl, args.Url.Key, 0, ref args.Errmsg);
                     if (img == null)
                     {
@@ -2389,7 +2390,7 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
-            
+
             mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://picplz\\.com/(?<shorturl_ids>\\w+)?$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
@@ -2433,7 +2434,7 @@ namespace Hoehoe
                     return false;
                 }
             }
-            
+
             string src = string.Empty;
             string imgurl = string.Empty;
             if ((new HttpVarious()).GetData(apiurl, null, ref src, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
@@ -2515,7 +2516,7 @@ namespace Hoehoe
                 {
                     return false;
                 }
-            
+
                 args.ImgList.Add(new KeyValuePair<string, string>(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, string.Empty));
                 return true;
             }
@@ -2550,7 +2551,7 @@ namespace Hoehoe
             {
                 return false;
             }
-            
+
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
             args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
             args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, tipsText));
@@ -2709,7 +2710,7 @@ namespace Hoehoe
                                 {
                                     return false;
                                 }
-                                
+
                                 Image img = http.GetImage(thumbnailUrl, args.Url.Key);
                                 if (img == null)
                                 {
@@ -2959,17 +2960,17 @@ namespace Hoehoe
             public long StatusId { get; private set; }
 
             public List<KeyValuePair<string, string>> Urls { get; private set; }
-            
+
             public List<KeyValuePair<string, Image>> Pics { get; private set; }
-            
+
             public List<KeyValuePair<string, string>> TooltipText { get; private set; }
-            
+
             public List<KeyValuePair<string, ImageCreatorDelegate>> ImageCreators { get; private set; }
 
             public bool IsError { get; set; }
-            
+
             public string AdditionalErrorMessage { get; set; }
-            
+
             #region " IDisposable Support "
 
             // このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
@@ -3008,25 +3009,33 @@ namespace Hoehoe
 
         private class GetUrlArgs
         {
-            public string Url;
-            public string Extended;
-            public List<KeyValuePair<string, string>> ImgList;
-            public Google.GlobalLocation GeoInfo;
+            public string Url { get; set; }
+
+            public string Extended { get; set; }
+
+            public List<KeyValuePair<string, string>> ImgList { get; set; }
+
+            public Google.GlobalLocation GeoInfo { get; set; }
         }
 
         private class CreateImageArgs
         {
-            public KeyValuePair<string, string> Url;
-            public List<KeyValuePair<string, Image>> Pics;
-            public List<KeyValuePair<string, string>> TooltipText;
+            public KeyValuePair<string, string> Url { get; set; }
+
+            public List<KeyValuePair<string, Image>> Pics { get; set; }
+
+            public List<KeyValuePair<string, string>> TooltipText { get; set; }
+
             public string Errmsg;
         }
 
         private class ThumbnailService
         {
-            public string Name;
-            public UrlCreatorDelegate UrlCreator;
-            public ImageCreatorDelegate ImageCreator;
+            public string Name { get; private set; }
+
+            public UrlCreatorDelegate UrlCreator { get; private set; }
+
+            public ImageCreatorDelegate ImageCreator { get; private set; }
 
             public ThumbnailService(string name, UrlCreatorDelegate urlcreator, ImageCreatorDelegate imagecreator)
             {
@@ -3035,7 +3044,7 @@ namespace Hoehoe
                 this.ImageCreator = imagecreator;
             }
         }
-    
+
         private class PicPlzDataModel
         {
             [DataContract]

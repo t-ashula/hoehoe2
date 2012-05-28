@@ -33,18 +33,23 @@ namespace Hoehoe
     public partial class ListAvailable
     {
         #region constructor
+
         public ListAvailable()
         {
             this.SelectedList = null;
-            InitializeComponent();
+            this.InitializeComponent();
         }
-        #endregion
+
+        #endregion constructor
 
         #region properties
+
         public ListElement SelectedList { get; private set; }
-        #endregion
+
+        #endregion properties
 
         #region event handler
+
         private void OkButton_Click(object sender, EventArgs e)
         {
             if (this.ListsList.SelectedIndex > -1)
@@ -114,9 +119,11 @@ namespace Hoehoe
                 return;
             }
         }
-        #endregion
+
+        #endregion event handler
 
         #region private methods
+
         private void ClearListInfo()
         {
             this.UsernameLabel.Text = string.Empty;
@@ -149,6 +156,7 @@ namespace Hoehoe
                 }
             }
         }
-        #endregion
+
+        #endregion private methods
     }
 }

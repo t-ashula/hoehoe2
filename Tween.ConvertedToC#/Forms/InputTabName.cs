@@ -32,17 +32,22 @@ namespace Hoehoe
     public partial class InputTabName
     {
         #region privates
+
         private bool isShowUsage;
-        #endregion
+
+        #endregion privates
 
         #region constructor
+
         public InputTabName()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-        #endregion
+
+        #endregion constructor
 
         #region properties
+
         public string TabName
         {
             get { return this.TextTabName.Text.Trim(); }
@@ -50,9 +55,11 @@ namespace Hoehoe
         }
 
         public TabUsageType Usage { get; private set; }
-        #endregion
+
+        #endregion properties
 
         #region public methods
+
         public void SetFormTitle(string value)
         {
             this.Text = value;
@@ -67,9 +74,11 @@ namespace Hoehoe
         {
             this.isShowUsage = value;
         }
-        #endregion
+
+        #endregion public methods
 
         #region event handler
+
         private void OkButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
@@ -121,6 +130,7 @@ namespace Hoehoe
                     break;
             }
         }
-        #endregion
+
+        #endregion event handler
     }
 }

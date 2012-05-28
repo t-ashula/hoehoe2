@@ -33,11 +33,14 @@ namespace Hoehoe
     public partial class TabsDialog
     {
         #region private
+
         private bool multiSelect = false;
         private string newtabItem = Hoehoe.Properties.Resources.AddNewTabText1;
-        #endregion
+
+        #endregion private
 
         #region constructor
+
         public TabsDialog()
         {
             this.InitializeComponent();
@@ -45,12 +48,14 @@ namespace Hoehoe
 
         public TabsDialog(bool multiselect)
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this.MultiSelect = true;
         }
-        #endregion
+
+        #endregion constructor
 
         #region properties
+
         public string SelectedTabName
         {
             get
@@ -106,9 +111,11 @@ namespace Hoehoe
                 }
             }
         }
-        #endregion
+
+        #endregion properties
 
         #region public methods
+
         public void AddTab(string tabName)
         {
             foreach (string obj in TabList.Items)
@@ -147,9 +154,11 @@ namespace Hoehoe
                 TabList.Items.RemoveAt(0);
             }
         }
-        #endregion
+
+        #endregion public methods
 
         #region event handler
+
         private void OK_Button_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
@@ -201,6 +210,7 @@ namespace Hoehoe
         {
             TabList.Focus();
         }
-        #endregion
+
+        #endregion event handler
     }
 }

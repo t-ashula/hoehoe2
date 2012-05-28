@@ -270,6 +270,7 @@ namespace Hoehoe
                 this.lambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
                 this.lambdaExpDelegate = this.lambdaExp.Compile();
             }
+
             return (bool)this.lambdaExpDelegate.DynamicInvoke(post);
         }
 
@@ -280,6 +281,7 @@ namespace Hoehoe
                 this.exlambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
                 this.exlambdaExpDelegate = this.exlambdaExp.Compile();
             }
+
             return (bool)this.exlambdaExpDelegate.DynamicInvoke(post);
         }
 

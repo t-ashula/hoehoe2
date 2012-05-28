@@ -32,13 +32,16 @@ namespace Hoehoe
     public partial class SearchWord
     {
         #region constructor
+
         public SearchWord()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-        #endregion
+
+        #endregion constructor
 
         #region properties
+
         public string SWord
         {
             get { return SWordText.Text; }
@@ -56,9 +59,11 @@ namespace Hoehoe
             get { return CheckSearchRegex.Checked; }
             set { CheckSearchRegex.Checked = value; }
         }
-        #endregion
+
+        #endregion properties
 
         #region event handler
+
         private void OK_Button_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
@@ -76,6 +81,7 @@ namespace Hoehoe
             SWordText.SelectAll();
             SWordText.Focus();
         }
-        #endregion
+
+        #endregion event handler
     }
 }

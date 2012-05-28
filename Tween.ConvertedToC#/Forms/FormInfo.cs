@@ -37,10 +37,10 @@ namespace Hoehoe
     /// <remarks>
     /// 重要：BackGroundWorkerコンポーネントが実際のタスクサービスを行うため、DoWorkでコントロールを触ることはできない。
     /// また、Twitterへの通信を必要とする場合は引数にTwitterInstanceを含めそれを使用すること。
-    /// 1.Class生成 
+    /// 1.Class生成
     /// 2.コンストラクタの引数としてサービス登録(Dowork RunWorkerCompletedも同様 使用しない場合Nothing)
     /// 3.Instance.Argumentへ,あるいはコンストラクタ引数へ引数セット
-    /// 4.Instance.InfoMessage、またはコンストラクタ引数へ表示メッセージ設定 
+    /// 4.Instance.InfoMessage、またはコンストラクタ引数へ表示メッセージ設定
     /// 5.Instance.ShowDialog()により表示
     /// 6.必要な場合はInstance.Result(=Servicerのe.Result)を参照し戻り値を得る
     /// 7.Dispose タスクサービスが正常終了した場合は自分自身をCloseするので最後にDisposeすること。
@@ -48,14 +48,17 @@ namespace Hoehoe
     public partial class FormInfo
     {
         #region privates
+
         private string formMessage;
         private BackgroundWorkerServicer backGroundWorkerServicer;
-        #endregion
+
+        #endregion privates
 
         #region constructor
+
         public FormInfo(Form owner, string message, DoWorkEventHandler doWork, RunWorkerCompletedEventHandler runWorkerCompleted = null, object argument = null)
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this.Owner = owner;
             this.InfoMessage = message;
             this.backGroundWorkerServicer = new BackgroundWorkerServicer();
@@ -67,9 +70,11 @@ namespace Hoehoe
 
             this.Argument = argument;
         }
-        #endregion
-        
+
+        #endregion constructor
+
         #region properties
+
         /// <summary>
         /// ダイアログに表示されるユーザー向けメッセージを設定あるいは取得する
         /// </summary>
@@ -96,9 +101,11 @@ namespace Hoehoe
         {
             get { return this.backGroundWorkerServicer.Result; }
         }
-        #endregion
-        
+
+        #endregion properties
+
         #region event handler
+
         private void LabelInformation_TextChanged(object sender, EventArgs e)
         {
             LabelInformation.Refresh();
@@ -126,9 +133,11 @@ namespace Hoehoe
                 Owner.TopMost = !Owner.TopMost;
             }
         }
-        #endregion
-        
+
+        #endregion event handler
+
         #region inner class
+
         private class BackgroundWorkerServicer : BackgroundWorker
         {
             public object Result { get; set; }
@@ -139,6 +148,7 @@ namespace Hoehoe
                 base.OnRunWorkerCompleted(e);
             }
         }
-        #endregion
+
+        #endregion inner class
     }
 }

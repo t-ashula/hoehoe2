@@ -32,24 +32,31 @@ namespace Hoehoe
     public partial class OpenURL
     {
         #region private
+
         private string selectedUrl;
-        #endregion
+
+        #endregion private
 
         #region constructor
+
         public OpenURL()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-        #endregion
+
+        #endregion constructor
 
         #region properties
+
         public string SelectedUrl
         {
             get { return UrlList.SelectedItems.Count == 1 ? this.selectedUrl : string.Empty; }
         }
-        #endregion
+
+        #endregion properties
 
         #region public methods
+
         public void ClearUrl()
         {
             UrlList.Items.Clear();
@@ -59,9 +66,11 @@ namespace Hoehoe
         {
             UrlList.Items.Add(openUrlItem);
         }
-        #endregion
+
+        #endregion public methods
 
         #region event handler
+
         private void OkButton_Click(object sender, EventArgs e)
         {
             this.SelectUrlOrCancelDialog();
@@ -121,9 +130,11 @@ namespace Hoehoe
                 this.CloseWithCancel();
             }
         }
-        #endregion
+
+        #endregion event handler
 
         #region private methods
+
         private void SelectUrlOrCancelDialog()
         {
             if (UrlList.SelectedItems.Count == 0)
@@ -143,6 +154,7 @@ namespace Hoehoe
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
-        #endregion
+
+        #endregion private methods
     }
 }

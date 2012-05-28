@@ -24,14 +24,14 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Text;
-
 namespace Hoehoe.DataModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Runtime.Serialization.Json;
+    using System.Text;
+
     public static class D
     {
         public static T CreateDataFromJson<T>(string content)
@@ -44,6 +44,7 @@ namespace Hoehoe.DataModels
                 stream.Seek(offset: 0, loc: SeekOrigin.Begin);
                 data = (T)(new DataContractJsonSerializer(typeof(T))).ReadObject(stream);
             }
+
             return data;
         }
     }

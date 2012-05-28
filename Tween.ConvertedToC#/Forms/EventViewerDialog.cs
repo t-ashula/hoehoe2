@@ -37,24 +37,31 @@ namespace Hoehoe
     public partial class EventViewerDialog
     {
         #region privates
+
         private Twitter.FormattedEvent[] filterdEventSource;
         private ListViewItem[] itemCache;
         private int itemCacheIndex;
         private TabPage curTab;
-        #endregion
+
+        #endregion privates
 
         #region constructor
+
         public EventViewerDialog()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-        #endregion
+
+        #endregion constructor
 
         #region properties
+
         public List<Hoehoe.Twitter.FormattedEvent> EventSource { get; set; }
-        #endregion
+
+        #endregion properties
 
         #region event handler
+
         private void OK_Button_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
@@ -139,7 +146,7 @@ namespace Hoehoe
         {
             this.CreateCache(e.StartIndex, e.EndIndex);
         }
-        
+
         private void SaveLogButton_Click(object sender, EventArgs e)
         {
             DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText5, Environment.NewLine), Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -187,9 +194,11 @@ namespace Hoehoe
 
             this.TopMost = AppendSettingDialog.Instance.AlwaysTop;
         }
-        #endregion
+
+        #endregion event handler
 
         #region private methods
+
         private ListViewItem CreateListViewItem(Twitter.FormattedEvent source)
         {
             return new ListViewItem(new[] { source.CreatedAt.ToString(), source.Event.ToUpper(), source.Username, source.Target });
@@ -273,6 +282,7 @@ namespace Hoehoe
                 sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}", ev.Eventtype, ev.CreatedAt, ev.Event, ev.Username, ev.Target, ev.Id));
             }
         }
-        #endregion
+
+        #endregion private methods
     }
 }

@@ -30,7 +30,7 @@ namespace Hoehoe
 
     public static class nicoms
     {
-        private static string[] _nicovideoUrls = 
+        private static string[] nicovideoUrls =
         {
             "www.nicovideo.jp/watch/",
             "live.nicovideo.jp/watch/",
@@ -58,11 +58,11 @@ namespace Hoehoe
                 return url;
             }
 
-            foreach (string nv in _nicovideoUrls)
+            foreach (string nv in nicovideoUrls)
             {
                 if (url.StartsWith(nv))
                 {
-                    return String.Format("{0}{1}", "http://nico.ms/", url.Substring(nv.Length));
+                    return string.Format("{0}{1}", "http://nico.ms/", url.Substring(nv.Length));
                 }
             }
 
@@ -70,21 +70,21 @@ namespace Hoehoe
             i = url.IndexOf("nicovideo.jp/user/", StringComparison.OrdinalIgnoreCase);
             if (i == 0 || i == 4)
             {
-                return String.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));
+                return string.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));
             }
-    
+
             i = url.IndexOf("nicovideo.jp/mylist/", StringComparison.OrdinalIgnoreCase);
             if (i == 0 || i == 4)
             {
-                return String.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));
+                return string.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));
             }
-            
+
             i = url.IndexOf("seiga.nicovideo.jp/watch/", StringComparison.OrdinalIgnoreCase);
             if (i == 0)
             {
-                return String.Format("{0}{1}", "http://nico.ms/", url.Substring(25));
+                return string.Format("{0}{1}", "http://nico.ms/", url.Substring(25));
             }
-            
+
             return "http://" + url;
         }
     }

@@ -31,19 +31,18 @@ using System.Runtime.InteropServices;
 // これらの属性値を変更してください。
 
 // アセンブリ属性の値を確認します。
-
 [assembly: AssemblyTitle("Hoehoe")]
 [assembly: AssemblyDescription("Client of Twitter. Free software(GPLv3)")]
 [assembly: AssemblyCompany("Hoehoe")]
 [assembly: AssemblyProduct("Hoehoe")]
 [assembly: AssemblyCopyright("(C) kiri_feather 2007 - 2011/t.ashula 2011-")]
-
 [assembly: AssemblyTrademark("")]
 
 [assembly: ComVisible(false)]
-// このプロジェクトが COM に公開される場合、次の GUID がタイプ ライブラリの ID になります。
 
+// このプロジェクトが COM に公開される場合、次の GUID がタイプ ライブラリの ID になります。
 [assembly: Guid("052287B9-54F7-4133-8B1F-6DCE4D313785")]
+
 // アセンブリのバージョン情報は、以下の 4 つの値で構成されています:
 //
 //      Major Version
@@ -54,7 +53,5 @@ using System.Runtime.InteropServices;
 // すべての値を指定するか、下のように '*' を使ってビルドおよびリビジョン番号を
 // 既定値にすることができます:
 // <Assembly: AssemblyVersion("1.0.*")>
-
 [assembly: AssemblyVersion("0.1.0.0")]
-
 [assembly: AssemblyFileVersion("1.1.0.0")]
