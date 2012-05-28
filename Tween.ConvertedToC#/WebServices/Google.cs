@@ -37,7 +37,7 @@ namespace Hoehoe
     {
         #region "Translation"
         /* 
-         * デベロッパー ガイド - Google AJAX Language API - Google Code
+         * デベロッパー ガイド - Google AJAX Language_ API - Google Code
          * http://code.google.com/intl/ja/apis/ajaxlanguage/documentation/#fonje
          */
         

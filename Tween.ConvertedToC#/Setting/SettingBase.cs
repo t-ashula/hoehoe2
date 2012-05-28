@@ -153,7 +153,7 @@ namespace Hoehoe
             SaveSettings(instance, string.Empty);
         }
 
-        public static string GetSettingFilePath(string fileId)
+        private static string GetSettingFilePath(string fileId)
         {
             return Path.Combine(MyCommon.SettingPath, typeof(T).Name + fileId + ".xml");
         }

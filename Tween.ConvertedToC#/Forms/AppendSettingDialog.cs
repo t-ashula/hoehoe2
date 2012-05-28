@@ -40,6 +40,7 @@ namespace Hoehoe
     public partial class AppendSettingDialog
     {
         #region privates
+
         private static AppendSettingDialog instance = new AppendSettingDialog();
         private Twitter tw;
         private bool validationError;
@@ -49,9 +50,11 @@ namespace Hoehoe
         private long initialUserId;
         private string pin;
         private EventCheckboxTblElement[] eventCheckboxTableElements = null;
-        #endregion
+
+        #endregion privates
 
         #region constructor
+
         public AppendSettingDialog()
         {
             // この呼び出しはデザイナーで必要です。
@@ -60,17 +63,23 @@ namespace Hoehoe
             // InitializeComponent() 呼び出しの後で初期化を追加します。
             this.Icon = Hoehoe.Properties.Resources.MIcon;
         }
-        #endregion
+
+        #endregion constructor
 
         #region delegates
-        public delegate void IntervalChangedEventHandler(object sender, IntervalChangedEventArgs e);
-        #endregion
 
-        #region events 
+        public delegate void IntervalChangedEventHandler(object sender, IntervalChangedEventArgs e);
+
+        #endregion delegates
+
+        #region events
+
         public event IntervalChangedEventHandler IntervalChanged;
-        #endregion
+
+        #endregion events
 
         #region properties
+
         public static AppendSettingDialog Instance
         {
             get { return instance; }
@@ -318,7 +327,7 @@ namespace Hoehoe
             {
                 return this.myTranslateLanguage;
             }
-            
+
             set
             {
                 this.myTranslateLanguage = value;
@@ -341,9 +350,11 @@ namespace Hoehoe
         public Keys HotkeyMod { get; set; }
 
         public bool BlinkNewMentions { get; set; }
-        #endregion
+
+        #endregion properties
 
         #region event handler
+
         private void CheckUseRecommendStatus_CheckedChanged(object sender, EventArgs e)
         {
             StatusText.Enabled = !CheckUseRecommendStatus.Checked;
@@ -355,13 +366,13 @@ namespace Hoehoe
             {
                 return;
             }
-            
+
             var pnl = (Panel)this.TreeViewSetting.SelectedNode.Tag;
             if (pnl == null)
             {
                 return;
             }
-            
+
             pnl.Enabled = false;
             pnl.Visible = false;
         }
@@ -372,13 +383,13 @@ namespace Hoehoe
             {
                 return;
             }
-            
+
             var pnl = (Panel)e.Node.Tag;
             if (pnl == null)
             {
                 return;
             }
-            
+
             pnl.Enabled = true;
             pnl.Visible = true;
 
@@ -418,7 +429,7 @@ namespace Hoehoe
             {
                 this.UserAccounts.Add((UserAccount)u);
             }
-            
+
             if (this.AuthUserCombo.SelectedIndex > -1)
             {
                 foreach (UserAccount u in this.UserAccounts)
@@ -455,21 +466,21 @@ namespace Hoehoe
                     arg.UserStream = true;
                     isIntervalChanged = true;
                 }
-                
+
                 if (this.TimelinePeriodInt != Convert.ToInt32(TimelinePeriod.Text))
                 {
                     this.TimelinePeriodInt = Convert.ToInt32(TimelinePeriod.Text);
                     arg.Timeline = true;
                     isIntervalChanged = true;
                 }
-                
+
                 if (this.DMPeriodInt != Convert.ToInt32(DMPeriod.Text))
                 {
                     this.DMPeriodInt = Convert.ToInt32(DMPeriod.Text);
                     arg.DirectMessage = true;
                     isIntervalChanged = true;
                 }
-                
+
                 if (this.PubSearchPeriodInt != Convert.ToInt32(PubSearchPeriod.Text))
                 {
                     this.PubSearchPeriodInt = Convert.ToInt32(PubSearchPeriod.Text);
@@ -483,14 +494,14 @@ namespace Hoehoe
                     arg.Lists = true;
                     isIntervalChanged = true;
                 }
-                
+
                 if (this.ReplyPeriodInt != Convert.ToInt32(ReplyPeriod.Text))
                 {
                     this.ReplyPeriodInt = Convert.ToInt32(ReplyPeriod.Text);
                     arg.Reply = true;
                     isIntervalChanged = true;
                 }
-                
+
                 if (this.UserTimelinePeriodInt != Convert.ToInt32(UserTimelinePeriod.Text))
                 {
                     this.UserTimelinePeriodInt = Convert.ToInt32(UserTimelinePeriod.Text);
@@ -525,7 +536,7 @@ namespace Hoehoe
                         this.IconSz = Hoehoe.IconSizes.Icon48_2;
                         break;
                 }
-                
+
                 this.Status = StatusText.Text;
                 this.PlaySound = PlaySnd.Checked;
                 this.UnreadManage = UReadMng.Checked;
@@ -579,7 +590,7 @@ namespace Hoehoe
                         this.PostShiftEnter = false;
                         break;
                 }
-                
+
                 this.CountApi = Convert.ToInt32(TextCountApi.Text);
                 this.CountApiReply = Convert.ToInt32(TextCountApiReply.Text);
                 this.BrowserPath = this.BrowserPathText.Text.Trim();
@@ -623,7 +634,7 @@ namespace Hoehoe
                         this.DispLatestPost = DispTitleEnum.OwnStatus;
                         break;
                 }
-                
+
                 this.SortOrderLock = CheckSortOrderLock.Checked;
                 this.TinyUrlResolve = CheckTinyURL.Checked;
                 this.ShortUrlForceResolve = CheckForceResolve.Checked;
@@ -641,7 +652,7 @@ namespace Hoehoe
                 {
                     this.SelectedProxyType = HttpConnection.ProxyType.Specified;
                 }
-                
+
                 this.ProxyAddress = TextProxyAddress.Text.Trim();
                 this.ProxyPort = int.Parse(TextProxyPort.Text.Trim());
                 this.ProxyUser = TextProxyUser.Text.Trim();
@@ -705,7 +716,7 @@ namespace Hoehoe
                         this.ReplyIconState = ReplyIconState.BlinkIcon;
                         break;
                 }
-                
+
                 switch (LanguageCombo.SelectedIndex)
                 {
                     case 0:
@@ -724,29 +735,29 @@ namespace Hoehoe
                         this.Language = "en";
                         break;
                 }
-                
+
                 this.HotkeyEnabled = this.HotkeyCheck.Checked;
                 this.HotkeyMod = Keys.None;
                 if (this.HotkeyAlt.Checked)
                 {
                     this.HotkeyMod = this.HotkeyMod | Keys.Alt;
                 }
-                
+
                 if (this.HotkeyShift.Checked)
                 {
                     this.HotkeyMod = this.HotkeyMod | Keys.Shift;
                 }
-                
+
                 if (this.HotkeyCtrl.Checked)
                 {
                     this.HotkeyMod = this.HotkeyMod | Keys.Control;
                 }
-                
+
                 if (this.HotkeyWin.Checked)
                 {
                     this.HotkeyMod = this.HotkeyMod | Keys.LWin;
                 }
-                
+
                 {
                     int tmp = this.HotkeyValue;
                     if (int.TryParse(HotkeyCode.Text, out tmp))
@@ -837,7 +848,7 @@ namespace Hoehoe
             {
                 e.Cancel = true;
             }
-            
+
             if (!e.Cancel && TreeViewSetting.SelectedNode != null)
             {
                 Panel curPanel = (Panel)TreeViewSetting.SelectedNode.Tag;
@@ -1562,7 +1573,7 @@ namespace Hoehoe
             {
                 TextProxyPort.Text = "0";
             }
-            
+
             if (!int.TryParse(TextProxyPort.Text.Trim(), out port))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.TextProxyPort_ValidatingText1);
@@ -2015,9 +2026,11 @@ namespace Hoehoe
         {
             ShortenTcoCheck.Enabled = CheckAutoConvertUrl.Checked;
         }
-        #endregion
+
+        #endregion event handler
 
         #region private methods
+
         private bool CreateDateTimeFormatSample()
         {
             try
@@ -2029,7 +2042,7 @@ namespace Hoehoe
                 LabelDateTimeFormatApplied.Text = Hoehoe.Properties.Resources.CreateDateTimeFormatSampleText1;
                 return false;
             }
-            
+
             return true;
         }
 
@@ -2101,7 +2114,7 @@ namespace Hoehoe
                     Token = this.tw.AccessToken,
                     TokenSecret = this.tw.AccessTokenSecret
                 };
-                
+
                 foreach (var u in this.AuthUserCombo.Items)
                 {
                     if (((UserAccount)u).Username.ToLower() == this.tw.Username.ToLower())
@@ -2110,7 +2123,7 @@ namespace Hoehoe
                         break;
                     }
                 }
-                
+
                 if (idx > -1)
                 {
                     this.AuthUserCombo.Items.RemoveAt(idx);
@@ -2297,7 +2310,7 @@ namespace Hoehoe
         {
             if (this.eventCheckboxTableElements == null)
             {
-                this.eventCheckboxTableElements = new EventCheckboxTblElement[] 
+                this.eventCheckboxTableElements = new EventCheckboxTblElement[]
                 {
                     new EventCheckboxTblElement { CheckBox = CheckFavoritesEvent, Type = EventType.Favorite },
                     new EventCheckboxTblElement { CheckBox = CheckUnfavoritesEvent, Type = EventType.Unfavorite },
@@ -2362,7 +2375,7 @@ namespace Hoehoe
                 {
                     tbl.CheckBox.CheckState = CheckState.Unchecked;
                 }
-                
+
                 tbl.CheckBox.Enabled = rootEnabled;
             }
         }
@@ -2373,7 +2386,7 @@ namespace Hoehoe
             {
                 this.EventSoundFile = string.Empty;
             }
-            
+
             ComboBoxEventNotifySound.Items.Clear();
             ComboBoxEventNotifySound.Items.Add(string.Empty);
             DirectoryInfo dir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
@@ -2381,12 +2394,12 @@ namespace Hoehoe
             {
                 dir = dir.GetDirectories("Sounds")[0];
             }
-            
+
             foreach (FileInfo file in dir.GetFiles("*.wav"))
             {
                 ComboBoxEventNotifySound.Items.Add(file.Name);
             }
-            
+
             int idx = ComboBoxEventNotifySound.Items.IndexOf(this.EventSoundFile);
             if (idx == -1)
             {
@@ -2431,9 +2444,11 @@ namespace Hoehoe
             {
             }
         }
-        #endregion
+
+        #endregion private methods
 
         #region inner class
+
         public class IntervalChangedEventArgs : EventArgs
         {
             public bool UserStream;
@@ -2450,6 +2465,7 @@ namespace Hoehoe
             public CheckBox CheckBox;
             public EventType Type;
         }
-        #endregion
+
+        #endregion inner class
     }
 }

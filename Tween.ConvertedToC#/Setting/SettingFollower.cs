@@ -24,14 +24,26 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-
 namespace Hoehoe
 {
-    [Serializable()]
+    using System;
+    using System.Collections.Generic;
+
+    [Serializable]
     public class SettingFollower : SettingBase<SettingFollower>
     {
+        public SettingFollower()
+        {
+            this.Follower = new List<string>();
+        }
+
+        public SettingFollower(List<string> follower)
+        {
+            this.Follower = follower;
+        }
+
+        public List<string> Follower { get; set; }
+
         #region "Settingクラス基本"
 
         public static SettingFollower Load()
@@ -42,21 +54,9 @@ namespace Hoehoe
 
         public void Save()
         {
-            SaveSettings(this);
-        }
-
-        public SettingFollower()
-        {
-            Follower = new List<string>();
-        }
-
-        public SettingFollower(List<string> follower)
-        {
-            this.Follower = follower;
+            SettingFollower.SaveSettings(this);
         }
 
         #endregion "Settingクラス基本"
-
-        public List<string> Follower;
     }
 }

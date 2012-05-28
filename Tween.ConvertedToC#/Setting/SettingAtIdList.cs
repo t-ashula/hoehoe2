@@ -32,22 +32,9 @@ namespace Hoehoe
     [Serializable]
     public class SettingAtIdList : SettingBase<SettingAtIdList>
     {
-        #region "Settingクラス基本"
-
-        public static SettingAtIdList Load()
-        {
-            SettingAtIdList setting = LoadSettings();
-            return setting;
-        }
-
-        public void Save()
-        {
-            SaveSettings(this);
-        }
-
         public SettingAtIdList()
+            : this(new List<string>())
         {
-            AtIdList = new List<string>();
         }
 
         public SettingAtIdList(List<string> ids)
@@ -55,8 +42,20 @@ namespace Hoehoe
             this.AtIdList = ids;
         }
 
-        #endregion "Settingクラス基本"
+        public List<string> AtIdList { get; set; }
 
-        public List<string> AtIdList;
+        #region "Settingクラス基本"
+
+        public static SettingAtIdList Load()
+        {
+            return SettingAtIdList.LoadSettings();
+        }
+
+        public void Save()
+        {
+            SettingAtIdList.SaveSettings(this);
+        }
+
+        #endregion "Settingクラス基本"
     }
 }

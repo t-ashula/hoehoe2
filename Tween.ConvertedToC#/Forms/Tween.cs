@@ -3589,7 +3589,7 @@ namespace Hoehoe
 
         private void ChangeCacheStyleRead(bool read, int index, TabPage tab)
         {
-            // Read:True=既読 False=未読
+            // Read_:True=既読 False=未読
             // 未読管理していなかったら既読として扱う
             if (!this.statuses.Tabs[this.curTab.Text].UnreadManage || !this.SettingDialog.UnreadManage)
             {
@@ -4025,7 +4025,7 @@ namespace Hoehoe
             }
             else
             {
-                // Google.GASender.GetInstance().TrackEventWithCategory("post", "end", this.Tw.UserId)
+                // Google.GASender.GetInstance().TrackEventWithCategory("post", "end", this.Tw.UserId_)
                 this.HookGlobalHotkey.UnregisterAllOriginalHotkey();
                 this.ignoreConfigSave = true;
                 MyCommon.IsEnding = true;

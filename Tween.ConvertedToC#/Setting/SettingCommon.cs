@@ -34,11 +34,126 @@ namespace Hoehoe
     [Serializable]
     public class SettingCommon : SettingBase<SettingCommon>
     {
-        private List<UserAccount> userAccounts;
-        public string UserName = string.Empty;
+        public SettingCommon()
+        {
+            this.UserName = string.Empty;
+            this.Password = string.Empty;
+            this.Token = string.Empty;
+            this.TokenSecret = string.Empty;
+            this.UserId = 0;
+            this.TabList = new List<string>();
+            this.TimelinePeriod = 90;
+            this.ReplyPeriod = 180;
+            this.DMPeriod = 600;
+            this.PubSearchPeriod = 180;
+            this.ListsPeriod = 180;
+            this.Read = true;
+            this.ListLock = false;
+            this.IconSize = IconSizes.Icon16;
+            this.NewAllPop = true;
+            this.EventNotifyEnabled = true;
+            this.EventNotifyFlag = EventType.All;
+            this.IsMyEventNotifyFlag = EventType.All;
+            this.ForceEventNotify = false;
+            this.FavEventUnread = true;
+            this.TranslateLanguage = Hoehoe.Properties.Resources.TranslateDefaultLanguage;
+            this.EventSoundFile = string.Empty;
+            this.PlaySound = false;
+            this.UnreadManage = true;
+            this.OneWayLove = true;
+            this.NameBalloon = NameBalloonEnum.NickName;
+            this.PostCtrlEnter = false;
+            this.PostShiftEnter = false;
+            this.CountApi = 60;
+            this.CountApiReply = 40;
+            this.PostAndGet = true;
+            this.DispUsername = false;
+            this.MinimizeToTray = false;
+            this.CloseToExit = false;
+            this.DispLatestPost = DispTitleEnum.Post;
+            this.SortOrderLock = false;
+            this.TinyUrlResolve = true;
+            this.ShortUrlForceResolve = false;
+            this.PeriodAdjust = true;
+            this.StartupVersion = true;
+            this.StartupFollowers = true;
+            this.RestrictFavCheck = false;
+            this.AlwaysTop = false;
+            this.CultureCode = string.Empty;
+            this.UrlConvertAuto = false;
+            this.Outputz = false;
+            this.SortColumn = 3;
+            this.SortOrder = 1;
+            this.IsMonospace = false;
+            this.ReadOldPosts = false;
+            this.UseSsl = true;
+            this.Language = "OS";
+            this.Nicoms = false;
+            this.HashTags = new List<string>();
+            this.HashSelected = string.Empty;
+            this.HashIsPermanent = false;
+            this.HashIsHead = false;
+            this.HashIsNotAddToAtReply = true;
+            this.PreviewEnable = true;
+            this.OutputzKey = string.Empty;
+            this.OutputzUrlMode = OutputzUrlmode.twittercom;
+            this.AutoShortUrlFirst = UrlConverter.Bitly;
+            this.UseUnreadStyle = true;
+            this.DateTimeFormat = "yyyy/MM/dd H:mm:ss";
+            this.DefaultTimeOut = 20;
+            this.RetweetNoConfirm = false;
+            this.LimitBalloon = false;
+            this.TabIconDisp = true;
+            this.ReplyIconState = ReplyIconState.StaticIcon;
+            this.WideSpaceConvert = true;
+            this.ReadOwnPost = false;
+            this.GetFav = true;
+            this.BilyUser = string.Empty;
+            this.BitlyPwd = string.Empty;
+            this.ShowGrid = false;
+            this.UseAtIdSupplement = true;
+            this.UseHashSupplement = true;
+            this.TwitterUrl = "api.twitter.com";
+            this.TwitterSearchUrl = "search.twitter.com";
+            this.HotkeyEnabled = false;
+            this.HotkeyModifier = Keys.None;
+            this.HotkeyKey = Keys.None;
+            this.HotkeyValue = 0;
+            this.BlinkNewMentions = false;
+            this.FocusLockToStatusText = false;
+            this.UseAdditionalCount = false;
+            this.MoreCountApi = 200;
+            this.FirstCountApi = 100;
+            this.SearchCountApi = 100;
+            this.FavoritesCountApi = 40;
+            this.TrackWord = string.Empty;
+            this.AllAtReply = false;
+            this.UserstreamStartup = true;
+            this.UserstreamPeriod = 0;
+            this.UserTimelineCountApi = 20;
+            this.UserTimelinePeriod = 600;
+            this.OpenUserTimeline = true;
+            this.ListCountApi = 100;
+            this.UseImageService = 0;
+            this.ListDoubleClickAction = 0;
+            this.UserAppointUrl = string.Empty;
+            this.HideDuplicatedRetweets = false;
+            this.IsPreviewFoursquare = false;
+            this.FoursquarePreviewHeight = 300;
+            this.FoursquarePreviewWidth = 300;
+            this.FoursquarePreviewZoom = 15;
+            this.IsListsIncludeRts = false;
+            this.GAFirst = 0;
+            this.GALast = 0;
+            this.TabMouseLock = false;
+            this.IsRemoveSameEvent = false;
+            this.IsUseNotifyGrowl = false;
+        }
+
+        public string UserName { get; set; }
 
         [XmlIgnore]
-        public string Password = string.Empty;
+        public string Password { get; set; }
 
         public string EncryptPassword
         {
@@ -46,10 +161,10 @@ namespace Hoehoe
             set { this.Password = SettingCommon.Decrypt(value); }
         }
 
-        public string Token = string.Empty;
+        public string Token { get; set; }
 
         [XmlIgnore]
-        public string TokenSecret = string.Empty;
+        public string TokenSecret { get; set; }
 
         public string EncryptTokenSecret
         {
@@ -57,65 +172,118 @@ namespace Hoehoe
             set { this.TokenSecret = SettingCommon.Decrypt(value); }
         }
 
-        public long UserId = 0;
-        public List<string> TabList = new List<string>();
-        public int TimelinePeriod = 90;
-        public int ReplyPeriod = 180;
-        public int DMPeriod = 600;
-        public int PubSearchPeriod = 180;
-        public int ListsPeriod = 180;
-        public bool Read = true;
-        public bool ListLock = false;
-        public IconSizes IconSize = IconSizes.Icon16;
-        public bool NewAllPop = true;
-        public bool EventNotifyEnabled = true;
-        public EventType EventNotifyFlag = EventType.All;
-        public EventType IsMyEventNotifyFlag = EventType.All;
-        public bool ForceEventNotify = false;
-        public bool FavEventUnread = true;
-        public string TranslateLanguage = Hoehoe.Properties.Resources.TranslateDefaultLanguage;
-        public string EventSoundFile = string.Empty;
-        public bool PlaySound = false;
-        public bool UnreadManage = true;
-        public bool OneWayLove = true;
-        public NameBalloonEnum NameBalloon = NameBalloonEnum.NickName;
-        public bool PostCtrlEnter = false;
-        public bool PostShiftEnter = false;
-        public int CountApi = 60;
-        public int CountApiReply = 40;
-        public bool PostAndGet = true;
-        public bool DispUsername = false;
-        public bool MinimizeToTray = false;
-        public bool CloseToExit = false;
-        public DispTitleEnum DispLatestPost = DispTitleEnum.Post;
-        public bool SortOrderLock = false;
-        public bool TinyUrlResolve = true;
-        public bool ShortUrlForceResolve = false;
-        public bool PeriodAdjust = true;
-        public bool StartupVersion = true;
-        public bool StartupFollowers = true;
-        public bool RestrictFavCheck = false;
-        public bool AlwaysTop = false;
-        public string CultureCode = string.Empty;
-        public bool UrlConvertAuto = false;
-        public bool Outputz = false;
-        public int SortColumn = 3;
-        public int SortOrder = 1;
-        public bool IsMonospace = false;
-        public bool ReadOldPosts = false;
-        public bool UseSsl = true;
-        public string Language = "OS";
-        public bool Nicoms = false;
-        public List<string> HashTags = new List<string>();
-        public string HashSelected = string.Empty;
-        public bool HashIsPermanent = false;
-        public bool HashIsHead = false;
-        public bool HashIsNotAddToAtReply = true;
+        public long UserId { get; set; }
 
-        public bool PreviewEnable = true;
+        public List<string> TabList { get; set; }
+
+        public int TimelinePeriod { get; set; }
+
+        public int ReplyPeriod { get; set; }
+
+        public int DMPeriod { get; set; }
+
+        public int PubSearchPeriod { get; set; }
+
+        public int ListsPeriod { get; set; }
+
+        public bool Read { get; set; }
+
+        public bool ListLock { get; set; }
+
+        public IconSizes IconSize { get; set; }
+
+        public bool NewAllPop { get; set; }
+
+        public bool EventNotifyEnabled { get; set; }
+
+        public EventType EventNotifyFlag { get; set; }
+
+        public EventType IsMyEventNotifyFlag { get; set; }
+
+        public bool ForceEventNotify { get; set; }
+
+        public bool FavEventUnread { get; set; }
+
+        public string TranslateLanguage { get; set; }
+
+        public string EventSoundFile { get; set; }
+
+        public bool PlaySound { get; set; }
+
+        public bool UnreadManage { get; set; }
+
+        public bool OneWayLove { get; set; }
+
+        public NameBalloonEnum NameBalloon { get; set; }
+
+        public bool PostCtrlEnter { get; set; }
+
+        public bool PostShiftEnter { get; set; }
+
+        public int CountApi { get; set; }
+
+        public int CountApiReply { get; set; }
+
+        public bool PostAndGet { get; set; }
+
+        public bool DispUsername { get; set; }
+
+        public bool MinimizeToTray { get; set; }
+
+        public bool CloseToExit { get; set; }
+
+        public DispTitleEnum DispLatestPost { get; set; }
+
+        public bool SortOrderLock { get; set; }
+
+        public bool TinyUrlResolve { get; set; }
+
+        public bool ShortUrlForceResolve { get; set; }
+
+        public bool PeriodAdjust { get; set; }
+
+        public bool StartupVersion { get; set; }
+
+        public bool StartupFollowers { get; set; }
+
+        public bool RestrictFavCheck { get; set; }
+
+        public bool AlwaysTop { get; set; }
+
+        public string CultureCode { get; set; }
+
+        public bool UrlConvertAuto { get; set; }
+
+        public bool Outputz { get; set; }
+
+        public int SortColumn { get; set; }
+
+        public int SortOrder { get; set; }
+
+        public bool IsMonospace { get; set; }
+
+        public bool ReadOldPosts { get; set; }
+
+        public bool UseSsl { get; set; }
+
+        public string Language { get; set; }
+
+        public bool Nicoms { get; set; }
+
+        public List<string> HashTags { get; set; }
+
+        public string HashSelected { get; set; }
+
+        public bool HashIsPermanent { get; set; }
+
+        public bool HashIsHead { get; set; }
+
+        public bool HashIsNotAddToAtReply { get; set; }
+
+        public bool PreviewEnable { get; set; }
 
         [XmlIgnore]
-        public string OutputzKey = string.Empty;
+        public string OutputzKey { get; set; }
 
         public string EncryptOutputzKey
         {
@@ -123,58 +291,111 @@ namespace Hoehoe
             set { this.OutputzKey = SettingCommon.Decrypt(value); }
         }
 
-        public OutputzUrlmode OutputzUrlMode = OutputzUrlmode.twittercom;
-        public UrlConverter AutoShortUrlFirst = UrlConverter.Bitly;
-        public bool UseUnreadStyle = true;
-        public string DateTimeFormat = "yyyy/MM/dd H:mm:ss";
-        public int DefaultTimeOut = 20;
-        public bool RetweetNoConfirm = false;
-        public bool LimitBalloon = false;
-        public bool TabIconDisp = true;
-        public ReplyIconState ReplyIconState = ReplyIconState.StaticIcon;
-        public bool WideSpaceConvert = true;
-        public bool ReadOwnPost = false;
-        public bool GetFav = true;
-        public string BilyUser = string.Empty;
-        public string BitlyPwd = string.Empty;
-        public bool ShowGrid = false;
-        public bool UseAtIdSupplement = true;
-        public bool UseHashSupplement = true;
-        public string TwitterUrl = "api.twitter.com";
-        public string TwitterSearchUrl = "search.twitter.com";
-        public bool HotkeyEnabled = false;
-        public Keys HotkeyModifier = Keys.None;
-        public Keys HotkeyKey = Keys.None;
-        public int HotkeyValue = 0;
-        public bool BlinkNewMentions = false;
-        public bool FocusLockToStatusText = false;
-        public bool UseAdditionalCount = false;
-        public int MoreCountApi = 200;
-        public int FirstCountApi = 100;
-        public int SearchCountApi = 100;
-        public int FavoritesCountApi = 40;
-        public string TrackWord = string.Empty;
-        public bool AllAtReply = false;
-        public bool UserstreamStartup = true;
-        public int UserstreamPeriod = 0;
-        public int UserTimelineCountApi = 20;
-        public int UserTimelinePeriod = 600;
-        public bool OpenUserTimeline = true;
-        public int ListCountApi = 100;
-        public int UseImageService = 0;
-        public int ListDoubleClickAction = 0;
-        public string UserAppointUrl = string.Empty;
-        public bool HideDuplicatedRetweets = false;
-        public bool IsPreviewFoursquare = false;
-        public int FoursquarePreviewHeight = 300;
-        public int FoursquarePreviewWidth = 300;
-        public int FoursquarePreviewZoom = 15;
-        public bool IsListsIncludeRts = false;
-        public long GAFirst = 0;
-        public long GALast = 0;
-        public bool TabMouseLock = false;
-        public bool IsRemoveSameEvent = false;
-        public bool IsUseNotifyGrowl = false;
+        public OutputzUrlmode OutputzUrlMode { get; set; }
+
+        public UrlConverter AutoShortUrlFirst { get; set; }
+
+        public bool UseUnreadStyle { get; set; }
+
+        public string DateTimeFormat { get; set; }
+
+        public int DefaultTimeOut { get; set; }
+
+        public bool RetweetNoConfirm { get; set; }
+
+        public bool LimitBalloon { get; set; }
+
+        public bool TabIconDisp { get; set; }
+
+        public ReplyIconState ReplyIconState { get; set; }
+
+        public bool WideSpaceConvert { get; set; }
+
+        public bool ReadOwnPost { get; set; }
+
+        public bool GetFav { get; set; }
+
+        public string BilyUser { get; set; }
+
+        public string BitlyPwd { get; set; }
+
+        public bool ShowGrid { get; set; }
+
+        public bool UseAtIdSupplement { get; set; }
+
+        public bool UseHashSupplement { get; set; }
+
+        public string TwitterUrl { get; set; }
+
+        public string TwitterSearchUrl { get; set; }
+
+        public bool HotkeyEnabled { get; set; }
+
+        public Keys HotkeyModifier { get; set; }
+
+        public Keys HotkeyKey { get; set; }
+
+        public int HotkeyValue { get; set; }
+
+        public bool BlinkNewMentions { get; set; }
+
+        public bool FocusLockToStatusText { get; set; }
+
+        public bool UseAdditionalCount { get; set; }
+
+        public int MoreCountApi { get; set; }
+
+        public int FirstCountApi { get; set; }
+
+        public int SearchCountApi { get; set; }
+
+        public int FavoritesCountApi { get; set; }
+
+        public string TrackWord { get; set; }
+
+        public bool AllAtReply { get; set; }
+
+        public bool UserstreamStartup { get; set; }
+
+        public int UserstreamPeriod { get; set; }
+
+        public int UserTimelineCountApi { get; set; }
+
+        public int UserTimelinePeriod { get; set; }
+
+        public bool OpenUserTimeline { get; set; }
+
+        public int ListCountApi { get; set; }
+
+        public int UseImageService { get; set; }
+
+        public int ListDoubleClickAction { get; set; }
+
+        public string UserAppointUrl { get; set; }
+
+        public bool HideDuplicatedRetweets { get; set; }
+
+        public bool IsPreviewFoursquare { get; set; }
+
+        public int FoursquarePreviewHeight { get; set; }
+
+        public int FoursquarePreviewWidth { get; set; }
+
+        public int FoursquarePreviewZoom { get; set; }
+
+        public bool IsListsIncludeRts { get; set; }
+
+        public long GAFirst { get; set; }
+
+        public long GALast { get; set; }
+
+        public bool TabMouseLock { get; set; }
+
+        public bool IsRemoveSameEvent { get; set; }
+
+        public bool IsUseNotifyGrowl { get; set; }
+
+        public List<UserAccount> UserAccounts { get; set; }
 
         #region "Settingクラス基本"
 
@@ -234,12 +455,6 @@ namespace Hoehoe
             }
 
             return password;
-        }
-
-        public List<UserAccount> UserAccounts
-        {
-            get { return userAccounts; }
-            set { userAccounts = value; }
         }
     }
 }

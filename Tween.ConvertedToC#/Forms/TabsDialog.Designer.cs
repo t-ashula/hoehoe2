@@ -61,7 +61,7 @@ namespace Hoehoe
             this.Cancel_Button.Name = "Cancel_Button";
             this.Cancel_Button.Click += new System.EventHandler(this.Cancel_Button_Click);
             // 
-            // TabList
+            // TabList_
             // 
             this.TabList.FormattingEnabled = true;
             resources.ApplyResources(this.TabList, "TabList");

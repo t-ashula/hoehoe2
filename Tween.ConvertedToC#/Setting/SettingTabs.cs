@@ -32,7 +32,12 @@ namespace Hoehoe
     [Serializable]
     public class SettingTabs : SettingBase<SettingTabs>
     {
-        public List<TabClass> Tabs;
+        public SettingTabs()
+        {
+            this.Tabs = new List<TabClass>();
+        }
+
+        public List<TabClass> Tabs { get; set; }
 
         #region "Settingクラス基本"
 
@@ -44,13 +49,9 @@ namespace Hoehoe
 
         public void Save()
         {
-            SaveSettings(this);
+            SettingTabs.SaveSettings(this);
         }
 
-        public SettingTabs()
-        {
-            Tabs = new List<TabClass>();
-        }
         #endregion "Settingクラス基本"
     }
 }

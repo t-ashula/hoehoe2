@@ -982,7 +982,7 @@ namespace Hoehoe
             resources.ApplyResources(this.Label11, "Label11");
             this.Label11.Name = "Label11";
             // 
-            // IconSize
+            // IconSize_
             // 
             this.IconSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.IconSize.FormattingEnabled = true;
@@ -1589,7 +1589,7 @@ namespace Hoehoe
             resources.ApplyResources(this.GetPeriodPanel, "GetPeriodPanel");
             this.GetPeriodPanel.Name = "GetPeriodPanel";
             // 
-            // UserstreamPeriod
+            // UserstreamPeriod_
             // 
             resources.ApplyResources(this.UserstreamPeriod, "UserstreamPeriod");
             this.UserstreamPeriod.Name = "UserstreamPeriod";
@@ -1615,13 +1615,13 @@ namespace Hoehoe
             resources.ApplyResources(this.Label21, "Label21");
             this.Label21.Name = "Label21";
             // 
-            // UserTimelinePeriod
+            // UserTimelinePeriod_
             // 
             resources.ApplyResources(this.UserTimelinePeriod, "UserTimelinePeriod");
             this.UserTimelinePeriod.Name = "UserTimelinePeriod";
             this.UserTimelinePeriod.Validating += new System.ComponentModel.CancelEventHandler(this.UserTimeline_Validating);
             // 
-            // TimelinePeriod
+            // TimelinePeriod_
             // 
             resources.ApplyResources(this.TimelinePeriod, "TimelinePeriod");
             this.TimelinePeriod.Name = "TimelinePeriod";
@@ -1654,7 +1654,7 @@ namespace Hoehoe
             resources.ApplyResources(this.Label33, "Label33");
             this.Label33.Name = "Label33";
             // 
-            // ListsPeriod
+            // ListsPeriod_
             // 
             resources.ApplyResources(this.ListsPeriod, "ListsPeriod");
             this.ListsPeriod.Name = "ListsPeriod";
@@ -1665,7 +1665,7 @@ namespace Hoehoe
             resources.ApplyResources(this.Label7, "Label7");
             this.Label7.Name = "Label7";
             // 
-            // PubSearchPeriod
+            // PubSearchPeriod_
             // 
             resources.ApplyResources(this.PubSearchPeriod, "PubSearchPeriod");
             this.PubSearchPeriod.Name = "PubSearchPeriod";
@@ -1676,7 +1676,7 @@ namespace Hoehoe
             resources.ApplyResources(this.Label69, "Label69");
             this.Label69.Name = "Label69";
             // 
-            // ReplyPeriod
+            // ReplyPeriod_
             // 
             resources.ApplyResources(this.ReplyPeriod, "ReplyPeriod");
             this.ReplyPeriod.Name = "ReplyPeriod";
@@ -1700,7 +1700,7 @@ namespace Hoehoe
             resources.ApplyResources(this.Label5, "Label5");
             this.Label5.Name = "Label5";
             // 
-            // DMPeriod
+            // DMPeriod_
             // 
             resources.ApplyResources(this.DMPeriod, "DMPeriod");
             this.DMPeriod.Name = "DMPeriod";

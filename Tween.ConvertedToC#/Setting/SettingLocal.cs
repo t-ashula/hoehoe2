@@ -33,268 +33,330 @@ namespace Hoehoe
     [Serializable]
     public class SettingLocal : SettingBase<SettingLocal>
     {
-        #region "Settingクラス基本"
+        private FontConverter fontConverter = new FontConverter();
+        private ColorConverter colorConverter = new ColorConverter();
 
-        public static SettingLocal Load()
+        public SettingLocal()
         {
-            return LoadSettings();
+            this.FormLocation = new Point(0, 0);
+            this.SplitterDistance = 200;
+            this.AdSplitterDistance = 350;
+            this.FormSize = new Size(600, 500);
+            this.StatusText = string.Empty;
+            this.PreviewDistance = -1;
+            this.StatusTextHeight = 38;
+            this.Width1 = 48;
+            this.Width2 = 80;
+            this.Width3 = 290;
+            this.Width4 = 120;
+            this.Width5 = 50;
+            this.Width6 = 16;
+            this.Width7 = 32;
+            this.Width8 = 50;
+            this.DisplayIndex1 = 2;
+            this.DisplayIndex2 = 3;
+            this.DisplayIndex3 = 4;
+            this.DisplayIndex4 = 5;
+            this.DisplayIndex5 = 6;
+            this.DisplayIndex6 = 1;
+            this.DisplayIndex7 = 0;
+            this.DisplayIndex8 = 7;
+            this.BrowserPath = string.Empty;
+            this.ProxyType = HttpConnection.ProxyType.IE;
+            this.ProxyAddress = "127.0.0.1";
+            this.ProxyPort = 80;
+            this.ProxyUser = string.Empty;
+            this.FontUnread = new Font(SystemFonts.DefaultFont, FontStyle.Bold | FontStyle.Underline);
+            this.ColorUnread = SystemColors.ControlText;
+            this.FontRead = SystemFonts.DefaultFont;
+            this.ColorRead = SystemColors.ControlText;
+            this.ColorFav = Color.FromKnownColor(KnownColor.Red);
+            this.ColorOWL = Color.FromKnownColor(KnownColor.Blue);
+            this.ColorRetweet = Color.FromKnownColor(KnownColor.Green);
+            this.FontDetail = SystemFonts.DefaultFont;
+            this.ColorSelf = Color.FromKnownColor(KnownColor.AliceBlue);
+            this.ColorAtSelf = Color.FromKnownColor(KnownColor.AntiqueWhite);
+            this.ColorTarget = Color.FromKnownColor(KnownColor.LemonChiffon);
+            this.ColorAtTarget = Color.FromKnownColor(KnownColor.LavenderBlush);
+            this.ColorAtFromTarget = Color.FromKnownColor(KnownColor.Honeydew);
+            this.ColorAtTo = Color.FromKnownColor(KnownColor.Pink);
+            this.ColorInputBackcolor = Color.FromKnownColor(KnownColor.LemonChiffon);
+            this.ColorInputFont = Color.FromKnownColor(KnownColor.ControlText);
+            this.FontInputFont = SystemFonts.DefaultFont;
+            this.ColorListBackcolor = Color.FromKnownColor(KnownColor.Window);
+            this.ColorDetailBackcolor = Color.FromKnownColor(KnownColor.Window);
+            this.ColorDetail = Color.FromKnownColor(KnownColor.ControlText);
+            this.ColorDetailLink = Color.FromKnownColor(KnownColor.Blue);
+            this.ProxyPassword = string.Empty;
         }
 
-        public void Save()
-        {
-            SaveSettings(this);
-        }
+        public Point FormLocation { get; set; }
 
-        #endregion "Settingクラス基本"
+        public int SplitterDistance { get; set; }
 
-        private FontConverter _fc = new FontConverter();
-        private ColorConverter _cc = new ColorConverter();
+        public int AdSplitterDistance { get; set; }
 
-        public Point FormLocation = new Point(0, 0);
-        public int SplitterDistance = 200;
-        public int AdSplitterDistance = 350;
-        public Size FormSize = new Size(600, 500);
-        public string StatusText = string.Empty;
-        public bool UseRecommendStatus;
-        public int Width1 = 48;
-        public int Width2 = 80;
-        public int Width3 = 290;
-        public int Width4 = 120;
-        public int Width5 = 50;
-        public int Width6 = 16;
-        public int Width7 = 32;
-        public int Width8 = 50;
-        public int DisplayIndex1 = 2;
-        public int DisplayIndex2 = 3;
-        public int DisplayIndex3 = 4;
-        public int DisplayIndex4 = 5;
-        public int DisplayIndex5 = 6;
-        public int DisplayIndex6 = 1;
-        public int DisplayIndex7 = 0;
-        public int DisplayIndex8 = 7;
-        public string BrowserPath = string.Empty;
-        public HttpConnection.ProxyType ProxyType = HttpConnection.ProxyType.IE;
-        public string ProxyAddress = "127.0.0.1";
-        public int ProxyPort = 80;
-        public string ProxyUser = string.Empty;
-        public bool StatusMultiline;
-        public int StatusTextHeight = 38;
-        public int PreviewDistance = -1;
+        public Size FormSize { get; set; }
+
+        public string StatusText { get; set; }
+
+        public bool UseRecommendStatus { get; set; }
+
+        public int Width1 { get; set; }
+
+        public int Width2 { get; set; }
+
+        public int Width3 { get; set; }
+
+        public int Width4 { get; set; }
+
+        public int Width5 { get; set; }
+
+        public int Width6 { get; set; }
+
+        public int Width7 { get; set; }
+
+        public int Width8 { get; set; }
+
+        public int DisplayIndex1 { get; set; }
+
+        public int DisplayIndex2 { get; set; }
+
+        public int DisplayIndex3 { get; set; }
+
+        public int DisplayIndex4 { get; set; }
+
+        public int DisplayIndex5 { get; set; }
+
+        public int DisplayIndex6 { get; set; }
+
+        public int DisplayIndex7 { get; set; }
+
+        public int DisplayIndex8 { get; set; }
+
+        public string BrowserPath { get; set; }
+
+        public HttpConnection.ProxyType ProxyType { get; set; }
+
+        public string ProxyAddress { get; set; }
+
+        public int ProxyPort { get; set; }
+
+        public string ProxyUser { get; set; }
+
+        public bool StatusMultiline { get; set; }
+
+        public int StatusTextHeight { get; set; }
+
+        public int PreviewDistance { get; set; }
 
         [XmlIgnore]
-        public Font FontUnread = new Font(SystemFonts.DefaultFont, FontStyle.Bold | FontStyle.Underline);
+        public Font FontUnread { get; set; }
 
         public string FontUnreadStr
         {
-            get { return _fc.ConvertToString(FontUnread); }
-            set { FontUnread = (Font)_fc.ConvertFromString(value); }
+            get { return this.fontConverter.ConvertToString(this.FontUnread); }
+            set { this.FontUnread = (Font)this.fontConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorUnread = SystemColors.ControlText;
+        public Color ColorUnread { get; set; }
 
         public string ColorUnreadStr
         {
-            get { return _cc.ConvertToString(ColorUnread); }
-            set { ColorUnread = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorUnread); }
+            set { this.ColorUnread = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Font FontRead = SystemFonts.DefaultFont;
+        public Font FontRead { get; set; }
 
         public string FontReadStr
         {
-            get { return _fc.ConvertToString(FontRead); }
-            set { FontRead = (Font)_fc.ConvertFromString(value); }
+            get { return this.fontConverter.ConvertToString(this.FontRead); }
+            set { this.FontRead = (Font)this.fontConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorRead = SystemColors.ControlText;
+        public Color ColorRead { get; set; }
 
         public string ColorReadStr
         {
-            get { return _cc.ConvertToString(ColorRead); }
-            set { ColorRead = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorRead); }
+            set { this.ColorRead = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorFav = Color.FromKnownColor(KnownColor.Red);
+        public Color ColorFav { get; set; }
 
         public string ColorFavStr
         {
-            get { return _cc.ConvertToString(ColorFav); }
-            set { ColorFav = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorFav); }
+            set { this.ColorFav = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorOWL = Color.FromKnownColor(KnownColor.Blue);
+        public Color ColorOWL { get; set; }
 
         public string ColorOWLStr
         {
-            get { return _cc.ConvertToString(ColorOWL); }
-            set { ColorOWL = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorOWL); }
+            set { this.ColorOWL = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorRetweet = Color.FromKnownColor(KnownColor.Green);
+        public Color ColorRetweet { get; set; }
 
         public string ColorRetweetStr
         {
-            get { return _cc.ConvertToString(ColorRetweet); }
-            set { ColorRetweet = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorRetweet); }
+            set { this.ColorRetweet = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Font FontDetail = SystemFonts.DefaultFont;
+        public Font FontDetail { get; set; }
 
         public string FontDetailStr
         {
-            get { return _fc.ConvertToString(FontDetail); }
-            set { FontDetail = (Font)_fc.ConvertFromString(value); }
+            get { return this.fontConverter.ConvertToString(this.FontDetail); }
+            set { this.FontDetail = (Font)this.fontConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorSelf = Color.FromKnownColor(KnownColor.AliceBlue);
+        public Color ColorSelf { get; set; }
 
         public string ColorSelfStr
         {
-            get { return _cc.ConvertToString(ColorSelf); }
-            set { ColorSelf = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorSelf); }
+            set { this.ColorSelf = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorAtSelf = Color.FromKnownColor(KnownColor.AntiqueWhite);
+        public Color ColorAtSelf { get; set; }
 
         public string ColorAtSelfStr
         {
-            get { return _cc.ConvertToString(ColorAtSelf); }
-            set { ColorAtSelf = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorAtSelf); }
+            set { this.ColorAtSelf = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorTarget = Color.FromKnownColor(KnownColor.LemonChiffon);
+        public Color ColorTarget { get; set; }
 
         public string ColorTargetStr
         {
-            get { return _cc.ConvertToString(ColorTarget); }
-            set { ColorTarget = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorTarget); }
+            set { this.ColorTarget = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorAtTarget = Color.FromKnownColor(KnownColor.LavenderBlush);
+        public Color ColorAtTarget { get; set; }
 
         public string ColorAtTargetStr
         {
-            get { return _cc.ConvertToString(ColorAtTarget); }
-            set { ColorAtTarget = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorAtTarget); }
+            set { this.ColorAtTarget = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorAtFromTarget = Color.FromKnownColor(KnownColor.Honeydew);
+        public Color ColorAtFromTarget { get; set; }
 
         public string ColorAtFromTargetStr
         {
-            get { return _cc.ConvertToString(ColorAtFromTarget); }
-            set { ColorAtFromTarget = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorAtFromTarget); }
+            set { this.ColorAtFromTarget = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorAtTo = Color.FromKnownColor(KnownColor.Pink);
+        public Color ColorAtTo { get; set; }
 
         public string ColorAtToStr
         {
-            get { return _cc.ConvertToString(ColorAtTo); }
-            set { ColorAtTo = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorAtTo); }
+            set { this.ColorAtTo = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorInputBackcolor = Color.FromKnownColor(KnownColor.LemonChiffon);
+        public Color ColorInputBackcolor { get; set; }
 
         public string ColorInputBackcolorStr
         {
-            get { return _cc.ConvertToString(ColorInputBackcolor); }
-            set { ColorInputBackcolor = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorInputBackcolor); }
+            set { this.ColorInputBackcolor = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorInputFont = Color.FromKnownColor(KnownColor.ControlText);
+        public Color ColorInputFont { get; set; }
 
         public string ColorInputFontStr
         {
-            get { return _cc.ConvertToString(ColorInputFont); }
-            set { ColorInputFont = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorInputFont); }
+            set { this.ColorInputFont = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Font FontInputFont = SystemFonts.DefaultFont;
+        public Font FontInputFont { get; set; }
 
         public string FontInputFontStr
         {
-            get { return _fc.ConvertToString(FontInputFont); }
-            set { FontInputFont = (Font)_fc.ConvertFromString(value); }
+            get { return this.fontConverter.ConvertToString(this.FontInputFont); }
+            set { this.FontInputFont = (Font)this.fontConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorListBackcolor = Color.FromKnownColor(KnownColor.Window);
+        public Color ColorListBackcolor { get; set; }
 
         public string ColorListBackcolorStr
         {
-            get { return _cc.ConvertToString(ColorListBackcolor); }
-            set { ColorListBackcolor = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorListBackcolor); }
+            set { this.ColorListBackcolor = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorDetailBackcolor = Color.FromKnownColor(KnownColor.Window);
+        public Color ColorDetailBackcolor { get; set; }
 
         public string ColorDetailBackcolorStr
         {
-            get { return _cc.ConvertToString(ColorDetailBackcolor); }
-            set { ColorDetailBackcolor = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorDetailBackcolor); }
+            set { this.ColorDetailBackcolor = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorDetail = Color.FromKnownColor(KnownColor.ControlText);
+        public Color ColorDetail { get; set; }
 
         public string ColorDetailStr
         {
-            get { return _cc.ConvertToString(ColorDetail); }
-            set { ColorDetail = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorDetail); }
+            set { this.ColorDetail = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public Color ColorDetailLink = Color.FromKnownColor(KnownColor.Blue);
+        public Color ColorDetailLink { get; set; }
 
         public string ColorDetailLinkStr
         {
-            get { return _cc.ConvertToString(ColorDetailLink); }
-            set { ColorDetailLink = (Color)_cc.ConvertFromString(value); }
+            get { return this.colorConverter.ConvertToString(this.ColorDetailLink); }
+            set { this.ColorDetailLink = (Color)this.colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
-        public string ProxyPassword = string.Empty;
+        public string ProxyPassword { get; set; }
 
         public string EncryptProxyPassword
         {
             get
             {
-                string pwd = ProxyPassword;
+                string pwd = this.ProxyPassword;
                 if (string.IsNullOrEmpty(pwd))
                 {
-                    pwd = string.Empty;
+                    return string.Empty;
                 }
-                
-                if (pwd.Length > 0)
+
+                try
                 {
-                    try
-                    {
-                        return CryptoUtils.EncryptString(pwd);
-                    }
-                    catch (Exception)
-                    {
-                        return string.Empty;
-                    }
+                    return CryptoUtils.EncryptString(pwd);
                 }
-                else
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -307,7 +369,7 @@ namespace Hoehoe
                 {
                     pwd = string.Empty;
                 }
-                
+
                 if (pwd.Length > 0)
                 {
                     try
@@ -320,8 +382,22 @@ namespace Hoehoe
                     }
                 }
 
-                ProxyPassword = pwd;
+                this.ProxyPassword = pwd;
             }
         }
+
+        #region "Settingクラス基本"
+
+        public static SettingLocal Load()
+        {
+            return SettingLocal.LoadSettings();
+        }
+
+        public void Save()
+        {
+            SettingLocal.SaveSettings(this);
+        }
+
+        #endregion "Settingクラス基本"
     }
 }

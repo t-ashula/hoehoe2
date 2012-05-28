@@ -793,7 +793,7 @@ namespace Hoehoe
         // / TODO: パフォーマンスを勘案して、戻すか決める
         public void SetRead(bool read, string tabName, int index)
         {
-            // Read:True=既読へ　False=未読へ
+            // Read_:True=既読へ　False=未読へ
             TabClass tb = this.Tabs[tabName];
 
             if (!tb.UnreadManage)
