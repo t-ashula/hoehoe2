@@ -157,8 +157,8 @@ namespace Hoehoe
 
         public string EncryptPassword
         {
-            get { return SettingCommon.Encrypt(this.Password); }
-            set { this.Password = SettingCommon.Decrypt(value); }
+            get { return CryptoUtils.TryEncrypt(this.Password); }
+            set { this.Password = CryptoUtils.TryDecrypt(value); }
         }
 
         public string Token { get; set; }
@@ -168,8 +168,8 @@ namespace Hoehoe
 
         public string EncryptTokenSecret
         {
-            get { return SettingCommon.Encrypt(this.TokenSecret); }
-            set { this.TokenSecret = SettingCommon.Decrypt(value); }
+            get { return CryptoUtils.TryEncrypt(this.TokenSecret); }
+            set { this.TokenSecret = CryptoUtils.TryDecrypt(value); }
         }
 
         public long UserId { get; set; }
@@ -287,8 +287,8 @@ namespace Hoehoe
 
         public string EncryptOutputzKey
         {
-            get { return SettingCommon.Encrypt(this.OutputzKey); }
-            set { this.OutputzKey = SettingCommon.Decrypt(value); }
+            get { return CryptoUtils.TryEncrypt(this.OutputzKey); }
+            set { this.OutputzKey = CryptoUtils.TryDecrypt(value); }
         }
 
         public OutputzUrlmode OutputzUrlMode { get; set; }
@@ -410,51 +410,5 @@ namespace Hoehoe
         }
 
         #endregion "Settingクラス基本"
-
-        private static string Encrypt(string password)
-        {
-            if (string.IsNullOrEmpty(password))
-            {
-                password = string.Empty;
-            }
-
-            if (password.Length > 0)
-            {
-                try
-                {
-                    return CryptoUtils.EncryptString(password);
-                }
-                catch (Exception)
-                {
-                    return string.Empty;
-                }
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
-
-        private static string Decrypt(string password)
-        {
-            if (string.IsNullOrEmpty(password))
-            {
-                password = string.Empty;
-            }
-
-            if (password.Length > 0)
-            {
-                try
-                {
-                    password = CryptoUtils.DecryptString(password);
-                }
-                catch (Exception)
-                {
-                    password = string.Empty;
-                }
-            }
-
-            return password;
-        }
     }
 }

@@ -49,7 +49,7 @@ namespace Hoehoe
                 // 共有キーと初期化ベクタを決定
                 // パスワードをバイト配列にする
                 byte[] bytesKey = Encoding.UTF8.GetBytes("_tween_encrypt_key_");
-                
+
                 // 共有キーと初期化ベクタを設定
                 des.Key = ResizeBytesArray(bytesKey, des.Key.Length);
                 des.IV = ResizeBytesArray(bytesKey, des.IV.Length);
@@ -66,7 +66,7 @@ namespace Hoehoe
                             // 書き込む
                             cryptStream.Write(bytesIn, 0, bytesIn.Length);
                             cryptStream.FlushFinalBlock();
-                            
+
                             // 暗号化されたデータを取得
                             byte[] bytesOut = memStream.ToArray();
 
@@ -129,6 +129,52 @@ namespace Hoehoe
                     }
                 }
             }
+        }
+
+        public static string TryEncrypt(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                password = string.Empty;
+            }
+
+            if (password.Length > 0)
+            {
+                try
+                {
+                    return CryptoUtils.EncryptString(password);
+                }
+                catch (Exception)
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        public static string TryDecrypt(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                password = string.Empty;
+            }
+
+            if (password.Length > 0)
+            {
+                try
+                {
+                    password = CryptoUtils.DecryptString(password);
+                }
+                catch (Exception)
+                {
+                    password = string.Empty;
+                }
+            }
+
+            return password;
         }
 
         private static byte[] ResizeBytesArray(byte[] bytes, int newSize)

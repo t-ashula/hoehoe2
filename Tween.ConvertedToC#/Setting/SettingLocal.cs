@@ -344,46 +344,8 @@ namespace Hoehoe
 
         public string EncryptProxyPassword
         {
-            get
-            {
-                string pwd = this.ProxyPassword;
-                if (string.IsNullOrEmpty(pwd))
-                {
-                    return string.Empty;
-                }
-
-                try
-                {
-                    return CryptoUtils.EncryptString(pwd);
-                }
-                catch (Exception)
-                {
-                    return string.Empty;
-                }
-            }
-
-            set
-            {
-                string pwd = value;
-                if (string.IsNullOrEmpty(pwd))
-                {
-                    pwd = string.Empty;
-                }
-
-                if (pwd.Length > 0)
-                {
-                    try
-                    {
-                        pwd = CryptoUtils.DecryptString(pwd);
-                    }
-                    catch (Exception)
-                    {
-                        pwd = string.Empty;
-                    }
-                }
-
-                this.ProxyPassword = pwd;
-            }
+            get { return CryptoUtils.TryEncrypt(this.ProxyPassword); }
+            set { this.ProxyPassword = CryptoUtils.TryDecrypt(value); }
         }
 
         #region "Settingクラス基本"
