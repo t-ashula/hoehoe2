@@ -24,12 +24,11 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
 namespace Hoehoe.DataModels.Twitter
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
     [DataContract]
     public class Annotations
     {
@@ -44,10 +43,10 @@ namespace Hoehoe.DataModels.Twitter
     public class SizeElement
     {
         [DataMember(Name = "w")]
-        public int w;
+        public int Width;
 
         [DataMember(Name = "h")]
-        public int h;
+        public int Height;
 
         [DataMember(Name = "resize")]
         public string Resize;
@@ -139,7 +138,7 @@ namespace Hoehoe.DataModels.Twitter
         public string Name;
 
         [DataMember(Name = "id")]
-        public Int64 Id;
+        public long Id;
     }
 
     [DataContract]
@@ -249,7 +248,7 @@ namespace Hoehoe.DataModels.Twitter
         public string ProfileLinkColor;
 
         [DataMember(Name = "id")]
-        public Int64 Id;
+        public long Id;
 
         [DataMember(Name = "listed_count")]
         public int ListedCount;
@@ -370,7 +369,7 @@ namespace Hoehoe.DataModels.Twitter
         public bool Truncated;
 
         [DataMember(Name = "id")]
-        public Int64 Id;
+        public long Id;
 
         [DataMember(Name = "annotations", IsRequired = false)]
         public Annotations Annotations;
@@ -443,7 +442,7 @@ namespace Hoehoe.DataModels.Twitter
         public RetweetedStatus RetweetedStatus;
 
         [DataMember(Name = "id")]
-        public Int64 Id;
+        public long Id;
 
         [DataMember(Name = "favorited")]
         public bool Favorited;
@@ -493,7 +492,7 @@ namespace Hoehoe.DataModels.Twitter
         public string CreatedAt;
 
         [DataMember(Name = "sender_id")]
-        public Int64 SenderId;
+        public long SenderId;
 
         [DataMember(Name = "sender_screen_name")]
         public string SenderScreenName;
@@ -511,10 +510,10 @@ namespace Hoehoe.DataModels.Twitter
         public string RecipientScreenName;
 
         [DataMember(Name = "recipient_id")]
-        public Int64 RecipientId;
+        public long RecipientId;
 
         [DataMember(Name = "id")]
-        public Int64 Id;
+        public long Id;
 
         [DataMember(Name = "text")]
         public string Text;
@@ -527,17 +526,17 @@ namespace Hoehoe.DataModels.Twitter
     public class Friendsevent
     {
         [DataMember(Name = "friends")]
-        public Int64[] Friends;
+        public long[] Friends;
     }
 
     [DataContract]
     public class DeletedStatusContent
     {
         [DataMember(Name = "id")]
-        public Int64 Id;
+        public long Id;
 
         [DataMember(Name = "user_id")]
-        public Int64 UserId;
+        public long UserId;
     }
 
     [DataContract]
@@ -667,7 +666,7 @@ namespace Hoehoe.DataModels.Twitter
     public class Relationship
     {
         [DataMember(Name = "relationship")]
-        public RelationshipUsers Relationship_;
+        public RelationshipUsers RelationshipUsers;
     }
 
     [DataContract]
@@ -740,7 +739,7 @@ namespace Hoehoe.DataModels.Twitter
     public class Lists
     {
         [DataMember(Name = "lists")]
-        public ListElementData[] Lists_;
+        public ListElementData[] ListElements;
 
         [DataMember(Name = "next_cursor")]
         public long NextCursor;
@@ -753,7 +752,7 @@ namespace Hoehoe.DataModels.Twitter
     public class Users
     {
         [DataMember(Name = "users")]
-        public User[] users;
+        public User[] Users_;
 
         [DataMember(Name = "next_cursor")]
         public long NextCursor;

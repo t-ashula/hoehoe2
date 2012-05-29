@@ -1206,8 +1206,8 @@ namespace Hoehoe
                     try
                     {
                         var relation = D.CreateDataFromJson<Relationship>(content);
-                        isFollowing = relation.Relationship_.Source.Following;
-                        isFollowed = relation.Relationship_.Source.FollowedBy;
+                        isFollowing = relation.RelationshipUsers.Source.Following;
+                        isFollowed = relation.RelationshipUsers.Source.FollowedBy;
                         return string.Empty;
                     }
                     catch (SerializationException ex)
@@ -2746,7 +2746,7 @@ namespace Hoehoe
                 try
                 {
                     var lst = D.CreateDataFromJson<Lists>(content);
-                    lists.AddRange(from le in lst.Lists_ select new ListElement(le, this));
+                    lists.AddRange(from le in lst.ListElements select new ListElement(le, this));
                     cursor = lst.NextCursor;
                 }
                 catch (SerializationException ex)
@@ -2792,7 +2792,7 @@ namespace Hoehoe
                 try
                 {
                     var lst = D.CreateDataFromJson<Lists>(content);
-                    lists.AddRange(from le in lst.Lists_ select new ListElement(le, this));
+                    lists.AddRange(from le in lst.ListElements select new ListElement(le, this));
                     cursor = lst.NextCursor;
                 }
                 catch (SerializationException ex)
@@ -2934,7 +2934,7 @@ namespace Hoehoe
             try
             {
                 var users = D.CreateDataFromJson<Users>(content);
-                Array.ForEach<User>(users.users, new Action<User>(u => { lists.Add(new UserInfo(u)); }));
+                Array.ForEach<User>(users.Users_, new Action<User>(u => { lists.Add(new UserInfo(u)); }));
                 cursor = users.NextCursor;
                 return string.Empty;
             }

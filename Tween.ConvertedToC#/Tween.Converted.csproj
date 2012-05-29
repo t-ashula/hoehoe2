@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -149,7 +149,7 @@
     <Compile Include="Connection\TwitPic.cs" />
     <Compile Include="Connection\TwitterPhoto.cs" />
     <Compile Include="Connection\Yfrog.cs" />
-    <Compile Include="DataModels\Twitter.cs" />
+    <Compile Include="DataModels\Twitter\Twitter.cs" />
     <Compile Include="Forms\DetailsListView.cs">
       <SubType>Component</SubType>
     </Compile>
