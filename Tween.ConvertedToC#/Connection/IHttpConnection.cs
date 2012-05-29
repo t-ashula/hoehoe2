@@ -47,13 +47,13 @@ namespace Hoehoe
         long AuthUserId { get; set; }
 
         HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref Stream content, string userAgent);
-        
+
         HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content, Dictionary<string, string> headerInfo, CallbackDelegate callback);
-        
+
         HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, List<KeyValuePair<string, FileInfo>> binary, ref string content, Dictionary<string, string> headerInfo, CallbackDelegate callback);
-        
+
         void RequestAbort();
-        
+
         HttpStatusCode Authenticate(Uri url, string username, string password, ref string content);
     }
 }

@@ -31,7 +31,7 @@ namespace Hoehoe
     using System.IO;
     using System.Net;
     using System.Xml;
-    
+
     public class Plixi : HttpConnectionOAuthEcho, IMultimediaShareService
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace Hoehoe
         /// OAuthの署名作成用秘密コンシューマーデータ
         /// </summary>
         private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
-        
+
         /// <summary>
         /// plixi api key
         /// </summary>

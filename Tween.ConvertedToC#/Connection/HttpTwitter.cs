@@ -34,7 +34,7 @@ namespace Hoehoe
     public class HttpTwitter : ICloneable
     {
         /// <summary>
-        /// OAuthのコンシューマー鍵 : 
+        /// OAuthのコンシューマー鍵 :
         /// </summary>
         private const string ConsumerKey = "BIazYuf0scya8pyhLjkdg";
 
@@ -61,13 +61,15 @@ namespace Hoehoe
 
         /// <summary>
         /// HttpConnectionApi or HttpConnectionOAuth
-        /// </summary>        
+        /// </summary>
         private IHttpConnection httpCon;
+
         private HttpVarious httpConVar = new HttpVarious();
         private AuthMethod connectionType = AuthMethod.Basic;
 
         // for OAuth
         private string requestToken;
+
         private string tk = string.Empty;
         private string tks = string.Empty;
         private string un = string.Empty;
@@ -307,7 +309,7 @@ namespace Hoehoe
             {
                 param.Add("max_id", max_id.ToString());
             }
-            
+
             if (since_id > 0)
             {
                 param.Add("since_id", since_id.ToString());
@@ -330,22 +332,22 @@ namespace Hoehoe
             {
                 param.Add("user_id", user_id.ToString());
             }
-            
+
             if (!string.IsNullOrEmpty(screen_name))
             {
                 param.Add("screen_name", screen_name);
             }
-            
+
             if (count > 0)
             {
                 param.Add("count", count.ToString());
             }
-            
+
             if (max_id > 0)
             {
                 param.Add("max_id", max_id.ToString());
             }
-            
+
             if (since_id > 0)
             {
                 param.Add("since_id", since_id.ToString());
@@ -368,7 +370,7 @@ namespace Hoehoe
             {
                 param.Add("max_id", maxId.ToString());
             }
-            
+
             if (sinceId > 0)
             {
                 param.Add("since_id", sinceId.ToString());
@@ -385,12 +387,12 @@ namespace Hoehoe
             {
                 param.Add("count", count.ToString());
             }
-            
+
             if (maxId > 0)
             {
                 param.Add("max_id", maxId.ToString());
             }
-            
+
             if (sinceId > 0)
             {
                 param.Add("since_id", sinceId.ToString());
@@ -407,7 +409,7 @@ namespace Hoehoe
             {
                 param.Add("count", count.ToString());
             }
-            
+
             if (maxId > 0)
             {
                 param.Add("max_id", maxId.ToString());
@@ -429,17 +431,17 @@ namespace Hoehoe
             {
                 param.Add("count", count.ToString());
             }
-            
+
             if (maxId > 0)
             {
                 param.Add("max_id", maxId.ToString());
             }
-            
+
             if (sinceId > 0)
             {
                 param.Add("since_id", sinceId.ToString());
             }
-            
+
             param.Add("include_entities", "true");
             return this.httpCon.GetContent(GetMethod, this.CreateTwitterUri("/1/direct_messages/sent.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, this.GetApiCallback);
         }
@@ -488,24 +490,24 @@ namespace Hoehoe
             {
                 param.Add("q", words);
             }
-            
+
             param.Add("include_entities", "1");
             param.Add("contributor_details", "true");
             if (!string.IsNullOrEmpty(lang))
             {
                 param.Add("lang", lang);
             }
-            
+
             if (rpp > 0)
             {
                 param.Add("rpp", rpp.ToString());
             }
-            
+
             if (page > 0)
             {
                 param.Add("page", page.ToString());
             }
-            
+
             if (sinceId > 0)
             {
                 param.Add("since_id", sinceId.ToString());
@@ -521,22 +523,22 @@ namespace Hoehoe
             {
                 param.Add("q", words);
             }
-            
+
             if (!string.IsNullOrEmpty(lang))
             {
                 param.Add("lang", lang);
             }
-            
+
             if (rpp > 0)
             {
                 param.Add("rpp", rpp.ToString());
             }
-            
+
             if (page > 0)
             {
                 param.Add("page", page.ToString());
             }
-            
+
             if (sinceId > 0)
             {
                 param.Add("since_id", sinceId.ToString());
@@ -594,12 +596,12 @@ namespace Hoehoe
             {
                 param.Add("name", name);
             }
-            
+
             if (description != null)
             {
                 param.Add("description", description);
             }
-            
+
             return this.httpCon.GetContent(PostMethod, this.CreateTwitterUri("/1/lists/update.json"), param, ref content, null, null);
         }
 
@@ -629,12 +631,12 @@ namespace Hoehoe
             {
                 param.Add("include_rts", "true");
             }
-            
+
             if (perPage > 0)
             {
                 param.Add("per_page", perPage.ToString());
             }
-            
+
             if (maxId > 0)
             {
                 param.Add("max_id", maxId.ToString());
@@ -644,7 +646,7 @@ namespace Hoehoe
             {
                 param.Add("since_id", sinceId.ToString());
             }
-            
+
             param.Add("include_entities", "true");
             return this.httpCon.GetContent(GetMethod, this.CreateTwitterUri("/1/lists/statuses.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, this.GetApiCallback);
         }
@@ -704,7 +706,7 @@ namespace Hoehoe
             {
                 param.Add("count", count.ToString());
             }
- 
+
             if (page > 0)
             {
                 param.Add("page", page.ToString());
@@ -819,6 +821,7 @@ namespace Hoehoe
         }
 
         #endregion "Proxy API"
+
         private void GetApiCallback(object sender, ref HttpStatusCode code, ref string content)
         {
             if (code < HttpStatusCode.InternalServerError)

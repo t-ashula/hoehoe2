@@ -84,7 +84,7 @@ namespace Hoehoe
 
         public UploadFileType GetFileType(string ext)
         {
-            return this.CheckValidExtension(ext) ? UploadFileType.Picture : UploadFileType.Invalid;            
+            return this.CheckValidExtension(ext) ? UploadFileType.Picture : UploadFileType.Invalid;
         }
 
         public bool IsSupportedFileType(UploadFileType type)
@@ -103,7 +103,7 @@ namespace Hoehoe
             {
                 message = string.Empty;
             }
-            
+
             FileInfo mediaFile = null;
             try
             {
@@ -113,12 +113,12 @@ namespace Hoehoe
             {
                 return "Err:" + ex.Message;
             }
-            
+
             if (!mediaFile.Exists)
             {
                 return "Err:File isn't exists.";
             }
-            
+
             if (MyCommon.IsAnimatedGif(filePath))
             {
                 return "Err:Don't support animatedGIF.";

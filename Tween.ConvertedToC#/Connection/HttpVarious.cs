@@ -153,18 +153,18 @@ namespace Hoehoe
                 {
                     req.UserAgent = userAgent;
                 }
-                
+
                 HttpStatusCode res = this.GetResponse(req, ref content, null, false);
                 if (res == HttpStatusCode.OK)
                 {
                     return true;
                 }
-                
+
                 if (errmsg != null)
                 {
                     errmsg = res.ToString();
                 }
-                
+
                 return false;
             }
             catch (Exception ex)
@@ -173,7 +173,7 @@ namespace Hoehoe
                 {
                     errmsg = ex.Message;
                 }
-                
+
                 return false;
             }
         }

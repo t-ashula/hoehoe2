@@ -44,7 +44,7 @@ namespace Hoehoe
         /// OAuthの署名作成用秘密コンシューマーデータ
         /// </summary>
         private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
-        
+
         /// <summary>
         /// Twitpic API Key
         /// </summary>
@@ -52,7 +52,7 @@ namespace Hoehoe
 
         // Image only // Multimedia filesize limit unknown. But length limit is 1:30.
         private const long MaxFileSize = 10 * 1024 * 1024;
-        
+
         private string[] pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
 
         private string[] multimediaExts = { ".avi", ".wmv", ".flv", ".m4v", ".mov", ".mp4", ".rm", ".mpeg", ".mpg", ".3gp", ".3g2" };
@@ -77,7 +77,7 @@ namespace Hoehoe
             {
                 message = string.Empty;
             }
-            
+
             FileInfo mediaFile = null;
             try
             {
@@ -87,7 +87,7 @@ namespace Hoehoe
             {
                 return "Err:" + ex.Message;
             }
-            
+
             if (mediaFile == null || !mediaFile.Exists)
             {
                 return "Err:File isn't exists.";
@@ -104,7 +104,7 @@ namespace Hoehoe
             {
                 return "Err:" + ex.Message;
             }
-            
+
             string url = string.Empty;
             if (ret == HttpStatusCode.OK)
             {
@@ -150,7 +150,7 @@ namespace Hoehoe
             {
                 message += " " + url;
             }
-            
+
             return this.tw.PostStatus(message, 0);
         }
 
@@ -170,12 +170,12 @@ namespace Hoehoe
             {
                 return UploadFileType.Picture;
             }
-            
+
             if (Array.IndexOf(this.multimediaExts, ext.ToLower()) > -1)
             {
                 return UploadFileType.MultiMedia;
             }
-            
+
             return UploadFileType.Invalid;
         }
 
@@ -196,7 +196,7 @@ namespace Hoehoe
                 // Multimedia : no check
                 return true;
             }
-            
+
             return false;
         }
 
@@ -212,13 +212,13 @@ namespace Hoehoe
             {
                 message = string.Empty;
             }
-            
+
             // Check filetype and size(Max 5MB)
             if (!this.CheckValidExtension(mediaFile.Extension))
             {
                 throw new ArgumentException("Service don't support this filetype.");
             }
-            
+
             if (!this.CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
             {
                 throw new ArgumentException("File is too large.");
