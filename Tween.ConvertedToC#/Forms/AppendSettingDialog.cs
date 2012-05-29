@@ -2457,15 +2457,4 @@ namespace Hoehoe
 
         #endregion inner class
     }
-
-    public class IntervalChangedEventArgs : EventArgs
-    {
-        public bool UserStream;
-        public bool Timeline;
-        public bool Reply;
-        public bool DirectMessage;
-        public bool PublicSearch;
-        public bool Lists;
-        public bool UserTimeline;
-    }
 }
