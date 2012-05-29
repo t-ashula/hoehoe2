@@ -112,8 +112,8 @@
     <Compile Include="ApiInformationChangedEventArgs.cs" />
     <Compile Include="CryptoUtils.cs" />
     <Compile Include="DataModels\D.cs" />
-    <Compile Include="DataModels\FourSquare.cs" />
-    <Compile Include="DataModels\Google.cs" />
+    <Compile Include="DataModels\FourSquare\FourSquare.cs" />
+    <Compile Include="DataModels\Google\Google.cs" />
     <Compile Include="Dynamic.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Forms\AppendSettingDialog.cs">
