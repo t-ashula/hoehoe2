@@ -2786,7 +2786,7 @@ namespace Hoehoe
             this.pictureServices = new Dictionary<string, IMultimediaShareService>
             {
                 { "TwitPic", new TwitPic(this.tw) },
-                { "img.ly", new imgly(this.tw) },
+                { "img.ly", new Imgly(this.tw) },
                 { "yfrog", new yfrog(this.tw) },
                 { "lockerz", new Plixi(this.tw) },
                 { "Twitter", new TwitterPhoto(this.tw) }

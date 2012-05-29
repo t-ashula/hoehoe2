@@ -32,7 +32,7 @@ namespace Hoehoe
     using System.Net;
     using System.Xml;
 
-    public class imgly : HttpConnectionOAuthEcho, IMultimediaShareService
+    public class Imgly : HttpConnectionOAuthEcho, IMultimediaShareService
     {
         /// <summary>
         /// OAuthのコンシューマー鍵
@@ -50,7 +50,7 @@ namespace Hoehoe
 
         private Twitter tw;
 
-        public imgly(Twitter twitter)
+        public Imgly(Twitter twitter)
             : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.json"))
         {
             this.tw = twitter;
@@ -68,7 +68,7 @@ namespace Hoehoe
             {
                 message = string.Empty;
             }
-            
+
             FileInfo mediaFile = null;
             try
             {
@@ -78,7 +78,7 @@ namespace Hoehoe
             {
                 return "Err:" + ex.Message;
             }
-            
+
             if (mediaFile == null || !mediaFile.Exists)
             {
                 return "Err:File isn't exists.";
@@ -95,7 +95,7 @@ namespace Hoehoe
             {
                 return "Err:" + ex.Message;
             }
-            
+
             string url = string.Empty;
             if (ret == HttpStatusCode.OK)
             {
@@ -157,7 +157,7 @@ namespace Hoehoe
 
         public Hoehoe.UploadFileType GetFileType(string ext)
         {
-            return this.CheckValidExtension(ext) ? Hoehoe.UploadFileType.Picture : Hoehoe.UploadFileType.Invalid;            
+            return this.CheckValidExtension(ext) ? Hoehoe.UploadFileType.Picture : Hoehoe.UploadFileType.Invalid;
         }
 
         public bool IsSupportedFileType(Hoehoe.UploadFileType type)
@@ -182,7 +182,7 @@ namespace Hoehoe
             {
                 message = string.Empty;
             }
-            
+
             // Check filetype and size(Max 4MB)
             if (!this.CheckValidExtension(mediaFile.Extension))
             {
