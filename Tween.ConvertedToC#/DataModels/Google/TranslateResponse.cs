@@ -1,4 +1,4 @@
-﻿// Hoehoe - Client of Twitter
+// Hoehoe - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
 //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
@@ -26,17 +26,8 @@
 
 namespace Hoehoe.DataModels.Google
 {
-    using System;
-    using System.Collections.Generic;
     using System.Net;
     using System.Runtime.Serialization;
-
-    [DataContract]
-    public class TranslateResponseData
-    {
-        [DataMember(Name = "translatedText")]
-        public string TranslatedText;
-    }
 
     [DataContract]
     public class TranslateResponse
@@ -49,43 +40,5 @@ namespace Hoehoe.DataModels.Google
 
         [DataMember(Name = "responseStatus")]
         public HttpStatusCode ResponseStatus;
-    }
-
-    [DataContract]
-    public class LanguageDetectResponseData
-    {
-        [DataMember(Name = "language")]
-        public string Language;
-
-        [DataMember(Name = "isReliable")]
-        public bool IsReliable;
-
-        [DataMember(Name = "confidence")]
-        public double Confidence;
-    }
-
-    [DataContract]
-    public class LanguageDetectResponse
-    {
-        [DataMember(Name = "responseData")]
-        public LanguageDetectResponseData ResponseData;
-
-        [DataMember(Name = "responseDetails")]
-        public string ResponseDetails;
-
-        [DataMember(Name = "responseStatus")]
-        public HttpStatusCode ResponseStatus;
-    }
-
-    [DataContract]
-    public class UrlShortenerParameter
-    {
-        [DataMember(Name = "longUrl")]
-        public string LongUrl;
-    }
-
-    [DataContract]
-    public class UrlShortenerResponse
-    {
     }
 }
