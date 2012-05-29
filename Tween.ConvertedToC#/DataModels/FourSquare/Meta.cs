@@ -1,4 +1,4 @@
-﻿// Hoehoe - Client of Twitter
+// Hoehoe - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
 //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
@@ -29,12 +29,15 @@ namespace Hoehoe.DataModels.FourSquare
     using System.Runtime.Serialization;
 
     [DataContract]
-    public class FourSquareData
+    public class Meta
     {
-        [DataMember(Name = "meta", IsRequired = false)]
-        public Meta Meta;
+        [DataMember(Name = "code")]
+        public int Code;
 
-        [DataMember(Name = "response", IsRequired = false)]
-        public Response Response;
+        [DataMember(Name = "errorType", IsRequired = false)]
+        public string ErrorType;
+
+        [DataMember(Name = "errorDetail", IsRequired = false)]
+        public string ErrorDetail;
     }
 }
