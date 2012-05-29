@@ -422,7 +422,7 @@ namespace Hoehoe
 
         #endregion "TwitPic"
 
-        #region "yfrog"
+        #region "Yfrog"
 
         /// <summary>
         /// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
@@ -473,7 +473,7 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "yfrog"
+        #endregion "Yfrog"
 
         #region "Plixi(TweetPhoto)"
 

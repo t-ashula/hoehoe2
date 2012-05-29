@@ -2787,7 +2787,7 @@ namespace Hoehoe
             {
                 { "TwitPic", new TwitPic(this.tw) },
                 { "img.ly", new Imgly(this.tw) },
-                { "yfrog", new yfrog(this.tw) },
+                { "yfrog", new Yfrog(this.tw) },
                 { "lockerz", new Plixi(this.tw) },
                 { "Twitter", new TwitterPhoto(this.tw) }
             };

@@ -32,7 +32,7 @@ namespace Hoehoe
     using System.Net;
     using System.Xml;
 
-    public class yfrog : HttpConnectionOAuthEcho, IMultimediaShareService
+    public class Yfrog : HttpConnectionOAuthEcho, IMultimediaShareService
     {
         /// <summary>
         /// OAuthのコンシューマー鍵
@@ -45,7 +45,7 @@ namespace Hoehoe
         private const string ConsumerSecretKey = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
 
         /// <summary>
-        /// yfrog api key
+        /// Yfrog api key
         /// </summary>
         private const string ApiKey = "069IKPSW75e293f35ab00d91a1b862c5a654c46b";
 
@@ -55,7 +55,7 @@ namespace Hoehoe
 
         private Twitter tw;
 
-        public yfrog(Twitter twitter)
+        public Yfrog(Twitter twitter)
             : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.xml"))
         {
             this.tw = twitter;
