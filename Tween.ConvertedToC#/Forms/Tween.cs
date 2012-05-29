@@ -347,7 +347,7 @@ namespace Hoehoe
         private Stack<Tuple<TabPage, PostClass>> selectPostChains = new Stack<Tuple<TabPage, PostClass>>();
 
         // タイマー系
-        private AppendSettingDialog.IntervalChangedEventArgs resetTimers = new AppendSettingDialog.IntervalChangedEventArgs();
+        private IntervalChangedEventArgs resetTimers = new IntervalChangedEventArgs();
 
         private int timerHomeCounter;
         private int timerMentionCounter;
@@ -2878,7 +2878,7 @@ namespace Hoehoe
             }
         }
 
-        private void TimerInterval_Changed(object sender, AppendSettingDialog.IntervalChangedEventArgs e)
+        private void TimerInterval_Changed(object sender, IntervalChangedEventArgs e)
         {
             if (!this.TimerTimeline.Enabled)
             {
