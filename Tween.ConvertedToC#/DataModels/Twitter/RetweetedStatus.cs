@@ -29,18 +29,54 @@ namespace Hoehoe.DataModels.Twitter
     using System.Runtime.Serialization;
 
     [DataContract]
-    public class PhotoType
+    public class RetweetedStatus
     {
-        [DataMember(Name = "large")]
-        public PhotoSize LargeSize;
+        [DataMember(Name = "coordinates", IsRequired = false)]
+        public Coordinates Coordinates;
 
-        [DataMember(Name = "medium")]
-        public PhotoSize MediumSize;
+        [DataMember(Name = "geo", IsRequired = false)]
+        public Geo Geo;
 
-        [DataMember(Name = "small")]
-        public PhotoSize SmallSize;
+        [DataMember(Name = "in_reply_to_user_id")]
+        public string InReplyToUserId;
 
-        [DataMember(Name = "thumb")]
-        public PhotoSize ThumbSize;
+        [DataMember(Name = "source")]
+        public string Source;
+
+        [DataMember(Name = "user")]
+        public User User;
+
+        [DataMember(Name = "in_reply_to_screen_name")]
+        public string InReplyToScreenName;
+
+        [DataMember(Name = "created_at")]
+        public string CreatedAt;
+
+        [DataMember(Name = "contributors")]
+        public int[] Contributors;
+
+        [DataMember(Name = "favorited")]
+        public bool Favorited;
+
+        [DataMember(Name = "truncated")]
+        public bool Truncated;
+
+        [DataMember(Name = "id")]
+        public long Id;
+
+        [DataMember(Name = "annotations", IsRequired = false)]
+        public Annotations Annotations;
+
+        [DataMember(Name = "place", IsRequired = false)]
+        public Place Place;
+
+        [DataMember(Name = "in_reply_to_status_id")]
+        public string InReplyToStatusId;
+
+        [DataMember(Name = "text")]
+        public string Text;
+
+        [DataMember(Name = "entities", IsRequired = false)]
+        public Entities Entities;
     }
 }

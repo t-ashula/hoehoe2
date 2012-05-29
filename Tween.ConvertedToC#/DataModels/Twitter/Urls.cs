@@ -29,18 +29,18 @@ namespace Hoehoe.DataModels.Twitter
     using System.Runtime.Serialization;
 
     [DataContract]
-    public class PhotoType
+    public class Urls
     {
-        [DataMember(Name = "large")]
-        public PhotoSize LargeSize;
+        [DataMember(Name = "url")]
+        public string Url;
 
-        [DataMember(Name = "medium")]
-        public PhotoSize MediumSize;
+        [DataMember(Name = "display_url")]
+        public string DisplayUrl;
 
-        [DataMember(Name = "small")]
-        public PhotoSize SmallSize;
+        [DataMember(Name = "expanded_url")]
+        public string ExpandedUrl;
 
-        [DataMember(Name = "thumb")]
-        public PhotoSize ThumbSize;
+        [DataMember(Name = "indices")]
+        public int[] Indices = new int[3];
     }
 }

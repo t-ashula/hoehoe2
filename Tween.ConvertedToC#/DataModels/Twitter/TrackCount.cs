@@ -29,18 +29,9 @@ namespace Hoehoe.DataModels.Twitter
     using System.Runtime.Serialization;
 
     [DataContract]
-    public class PhotoType
+    public class TrackCount
     {
-        [DataMember(Name = "large")]
-        public PhotoSize LargeSize;
-
-        [DataMember(Name = "medium")]
-        public PhotoSize MediumSize;
-
-        [DataMember(Name = "small")]
-        public PhotoSize SmallSize;
-
-        [DataMember(Name = "thumb")]
-        public PhotoSize ThumbSize;
+        [DataMember(Name = "track")]
+        public int Track;
     }
 }

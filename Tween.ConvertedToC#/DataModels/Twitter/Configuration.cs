@@ -29,18 +29,27 @@ namespace Hoehoe.DataModels.Twitter
     using System.Runtime.Serialization;
 
     [DataContract]
-    public class PhotoType
+    public class Configuration
     {
-        [DataMember(Name = "large")]
-        public PhotoSize LargeSize;
+        [DataMember(Name = "characters_reserved_per_media")]
+        public int CharactersReservedPerMedia = 20;
 
-        [DataMember(Name = "medium")]
-        public PhotoSize MediumSize;
+        [DataMember(Name = "photo_size_limit")]
+        public int PhotoSizeLimit;
 
-        [DataMember(Name = "small")]
-        public PhotoSize SmallSize;
+        [DataMember(Name = "photo_sizes")]
+        public PhotoType PhotoSizes;
 
-        [DataMember(Name = "thumb")]
-        public PhotoSize ThumbSize;
+        [DataMember(Name = "non_username_paths")]
+        public string[] NonUsernamePaths;
+
+        [DataMember(Name = "short_url_length")]
+        public int ShortUrlLength = 19;
+
+        [DataMember(Name = "short_url_length_https")]
+        public int ShortUrlLengthHttps = 20;
+
+        [DataMember(Name = "max_media_per_upload")]
+        public int MaxMediaPerUpload;
     }
 }

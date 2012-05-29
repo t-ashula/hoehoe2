@@ -29,18 +29,21 @@ namespace Hoehoe.DataModels.Twitter
     using System.Runtime.Serialization;
 
     [DataContract]
-    public class PhotoType
+    public class RelatedResult
     {
-        [DataMember(Name = "large")]
-        public PhotoSize LargeSize;
+        [DataMember(Name = "annotations")]
+        public Annotations Annotations;
 
-        [DataMember(Name = "medium")]
-        public PhotoSize MediumSize;
+        [DataMember(Name = "groupName")]
+        public string GroupName;
 
-        [DataMember(Name = "small")]
-        public PhotoSize SmallSize;
+        [DataMember(Name = "resultType")]
+        public string ResultType;
 
-        [DataMember(Name = "thumb")]
-        public PhotoSize ThumbSize;
+        [DataMember(Name = "results")]
+        public RelatedTweet[] Results;
+
+        [DataMember(Name = "score")]
+        public double Score;
     }
 }
