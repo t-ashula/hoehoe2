@@ -60,7 +60,7 @@ namespace Hoehoe
         {
             get
             {
-                return TabList.SelectedIndex == -1 ? string.Empty : Convert.ToString(TabList.SelectedItem);
+                return this.TabList.SelectedIndex == -1 ? string.Empty : Convert.ToString(this.TabList.SelectedItem);
             }
         }
 
@@ -68,13 +68,13 @@ namespace Hoehoe
         {
             get
             {
-                if (TabList.SelectedIndex == -1)
+                if (this.TabList.SelectedIndex == -1)
                 {
                     return null;
                 }
 
                 StringCollection ret = new StringCollection();
-                foreach (object selitem in TabList.SelectedItems)
+                foreach (object selitem in this.TabList.SelectedItems)
                 {
                     ret.Add(Convert.ToString(selitem));
                 }
@@ -118,7 +118,7 @@ namespace Hoehoe
 
         public void AddTab(string tabName)
         {
-            foreach (string obj in TabList.Items)
+            foreach (string obj in this.TabList.Items)
             {
                 if (obj == tabName)
                 {
@@ -126,16 +126,16 @@ namespace Hoehoe
                 }
             }
 
-            TabList.Items.Add(tabName);
+            this.TabList.Items.Add(tabName);
         }
 
         public void RemoveTab(string tabName)
         {
-            for (int i = 0; i < TabList.Items.Count; i++)
+            for (int i = 0; i < this.TabList.Items.Count; i++)
             {
-                if (Convert.ToString(TabList.Items[i]) == tabName)
+                if (Convert.ToString(this.TabList.Items[i]) == tabName)
                 {
-                    TabList.Items.RemoveAt(i);
+                    this.TabList.Items.RemoveAt(i);
                     return;
                 }
             }
@@ -149,9 +149,9 @@ namespace Hoehoe
                 startidx = 0;
             }
 
-            for (int i = startidx; i < TabList.Items.Count; i++)
+            for (int i = startidx; i < this.TabList.Items.Count; i++)
             {
-                TabList.Items.RemoveAt(0);
+                this.TabList.Items.RemoveAt(0);
             }
         }
 
@@ -175,13 +175,13 @@ namespace Hoehoe
         {
             if (this.multiSelect)
             {
-                TabList.SelectedIndex = -1;
+                this.TabList.SelectedIndex = -1;
             }
             else
             {
-                if (TabList.SelectedIndex == -1)
+                if (this.TabList.SelectedIndex == -1)
                 {
-                    TabList.SelectedIndex = 0;
+                    this.TabList.SelectedIndex = 0;
                 }
             }
         }
@@ -192,12 +192,12 @@ namespace Hoehoe
 
         private void TabList_DoubleClick(object sender, EventArgs e)
         {
-            if (TabList.SelectedItem == null)
+            if (this.TabList.SelectedItem == null)
             {
                 return;
             }
 
-            if (TabList.IndexFromPoint(TabList.PointToClient(Control.MousePosition)) == ListBox.NoMatches)
+            if (this.TabList.IndexFromPoint(this.TabList.PointToClient(Control.MousePosition)) == ListBox.NoMatches)
             {
                 return;
             }
@@ -208,7 +208,7 @@ namespace Hoehoe
 
         private void TabsDialog_Shown(object sender, EventArgs e)
         {
-            TabList.Focus();
+            this.TabList.Focus();
         }
 
         #endregion event handler
