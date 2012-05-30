@@ -35,7 +35,7 @@ namespace Hoehoe
         #region constructor        
         public TweenAboutBox()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
         #endregion
 
@@ -52,7 +52,7 @@ namespace Hoehoe
 
         private void TweenAboutBox_Shown(object sender, EventArgs e)
         {
-            OKButton.Focus();
+            this.OKButton.Focus();
         }
         #endregion
 
