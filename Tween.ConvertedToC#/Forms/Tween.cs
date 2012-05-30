@@ -74,7 +74,7 @@ namespace Hoehoe
         private const string DetailHtmlFormat6 = ");\"><p>";
         private const string DetailHtmlFormat7 = "</p></body></html>";
 
-        private static int accountCheckErrorCount = 0;
+        private static int accountCheckErrorCount;
 
         // ロック用
         private readonly object syncObject = new object();
@@ -303,14 +303,14 @@ namespace Hoehoe
         private int curItemIndex;
         private DetailsListView curList;
         private PostClass curPost;
-        private bool isColumnChanged = false;
-        private bool waitTimeline = false;
-        private bool waitReply = false;
-        private bool waitDm = false;
-        private bool waitFav = false;
-        private bool waitPubSearch = false;
-        private bool waitUserTimeline = false;
-        private bool waitLists = false;
+        private bool isColumnChanged;
+        private bool waitTimeline;
+        private bool waitReply;
+        private bool waitDm;
+        private bool waitFav;
+        private bool waitPubSearch;
+        private bool waitUserTimeline;
+        private bool waitLists;
         private BackgroundWorker[] bworkers = new BackgroundWorker[19];
         private BackgroundWorker followerFetchWorker;
         private ShieldIcon shield = new ShieldIcon();
@@ -320,14 +320,14 @@ namespace Hoehoe
         private int unreadAtCounter = -1;
         private string[] columnOrgTexts = new string[9];
         private string[] columnTexts = new string[9];
-        private bool doFavRetweetFlags = false;
-        private bool isOsResumed = false;
+        private bool doFavRetweetFlags;
+        private bool isOsResumed;
         private Dictionary<string, IMultimediaShareService> pictureServices;
         private string postBrowserStatusText = string.Empty;
-        private bool colorize = false;
+        private bool colorize;
         private System.Timers.Timer timerTimeline;
         private ImageListViewItem displayItem;
-        private List<UrlUndoInfo> urlUndoBuffer = null;
+        private List<UrlUndoInfo> urlUndoBuffer;
 
         // [, ]でのリプライ移動の履歴
         private Stack<ReplyChain> replyChains;
