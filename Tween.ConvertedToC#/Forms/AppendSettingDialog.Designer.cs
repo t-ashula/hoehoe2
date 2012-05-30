@@ -41,14 +41,14 @@ namespace Hoehoe
             this.StartupReaded = new System.Windows.Forms.CheckBox();
             this.CheckStartupFollowers = new System.Windows.Forms.CheckBox();
             this.CheckStartupVersion = new System.Windows.Forms.CheckBox();
-            this.chkGetFav = new System.Windows.Forms.CheckBox();
+            this.CheckGetFav = new System.Windows.Forms.CheckBox();
             this.PreviewPanel = new System.Windows.Forms.Panel();
             this.Label2 = new System.Windows.Forms.Label();
             this.IsNotifyUseGrowlCheckBox = new System.Windows.Forms.CheckBox();
             this.ReplyIconStateCombo = new System.Windows.Forms.ComboBox();
             this.Label72 = new System.Windows.Forms.Label();
-            this.ChkNewMentionsBlink = new System.Windows.Forms.CheckBox();
-            this.chkTabIconDisp = new System.Windows.Forms.CheckBox();
+            this.CheckNewMentionsBlink = new System.Windows.Forms.CheckBox();
+            this.CheckTabIconDisp = new System.Windows.Forms.CheckBox();
             this.CheckPreviewEnable = new System.Windows.Forms.CheckBox();
             this.Label81 = new System.Windows.Forms.Label();
             this.LanguageCombo = new System.Windows.Forms.ComboBox();
@@ -369,7 +369,7 @@ namespace Hoehoe
             this.StartupPanel.Controls.Add(this.StartupReaded);
             this.StartupPanel.Controls.Add(this.CheckStartupFollowers);
             this.StartupPanel.Controls.Add(this.CheckStartupVersion);
-            this.StartupPanel.Controls.Add(this.chkGetFav);
+            this.StartupPanel.Controls.Add(this.CheckGetFav);
             resources.ApplyResources(this.StartupPanel, "StartupPanel");
             this.StartupPanel.Name = "StartupPanel";
             // 
@@ -393,9 +393,9 @@ namespace Hoehoe
             // 
             // chkGetFav
             // 
-            resources.ApplyResources(this.chkGetFav, "chkGetFav");
-            this.chkGetFav.Name = "chkGetFav";
-            this.chkGetFav.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.CheckGetFav, "chkGetFav");
+            this.CheckGetFav.Name = "chkGetFav";
+            this.CheckGetFav.UseVisualStyleBackColor = true;
             // 
             // PreviewPanel
             // 
@@ -403,8 +403,8 @@ namespace Hoehoe
             this.PreviewPanel.Controls.Add(this.IsNotifyUseGrowlCheckBox);
             this.PreviewPanel.Controls.Add(this.ReplyIconStateCombo);
             this.PreviewPanel.Controls.Add(this.Label72);
-            this.PreviewPanel.Controls.Add(this.ChkNewMentionsBlink);
-            this.PreviewPanel.Controls.Add(this.chkTabIconDisp);
+            this.PreviewPanel.Controls.Add(this.CheckNewMentionsBlink);
+            this.PreviewPanel.Controls.Add(this.CheckTabIconDisp);
             this.PreviewPanel.Controls.Add(this.CheckPreviewEnable);
             this.PreviewPanel.Controls.Add(this.Label81);
             this.PreviewPanel.Controls.Add(this.LanguageCombo);
@@ -451,15 +451,15 @@ namespace Hoehoe
             // 
             // ChkNewMentionsBlink
             // 
-            resources.ApplyResources(this.ChkNewMentionsBlink, "ChkNewMentionsBlink");
-            this.ChkNewMentionsBlink.Name = "ChkNewMentionsBlink";
-            this.ChkNewMentionsBlink.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.CheckNewMentionsBlink, "ChkNewMentionsBlink");
+            this.CheckNewMentionsBlink.Name = "ChkNewMentionsBlink";
+            this.CheckNewMentionsBlink.UseVisualStyleBackColor = true;
             // 
             // chkTabIconDisp
             // 
-            resources.ApplyResources(this.chkTabIconDisp, "chkTabIconDisp");
-            this.chkTabIconDisp.Name = "chkTabIconDisp";
-            this.chkTabIconDisp.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.CheckTabIconDisp, "chkTabIconDisp");
+            this.CheckTabIconDisp.Name = "chkTabIconDisp";
+            this.CheckTabIconDisp.UseVisualStyleBackColor = true;
             // 
             // CheckPreviewEnable
             // 
@@ -2399,7 +2399,7 @@ namespace Hoehoe
         internal System.Windows.Forms.CheckBox StartupReaded;
         internal System.Windows.Forms.CheckBox CheckStartupFollowers;
         internal System.Windows.Forms.CheckBox CheckStartupVersion;
-        internal System.Windows.Forms.CheckBox chkGetFav;
+        internal System.Windows.Forms.CheckBox CheckGetFav;
         internal System.Windows.Forms.TextBox TextCountApiReply;
         internal System.Windows.Forms.Label Label67;
         internal System.Windows.Forms.TextBox TextCountApi;
@@ -2558,8 +2558,8 @@ namespace Hoehoe
         internal System.Windows.Forms.TextBox TextBox3;
         internal System.Windows.Forms.ComboBox ReplyIconStateCombo;
         internal System.Windows.Forms.Label Label72;
-        internal System.Windows.Forms.CheckBox ChkNewMentionsBlink;
-        internal System.Windows.Forms.CheckBox chkTabIconDisp;
+        internal System.Windows.Forms.CheckBox CheckNewMentionsBlink;
+        internal System.Windows.Forms.CheckBox CheckTabIconDisp;
         internal System.Windows.Forms.CheckBox StartupUserstreamCheck;
         internal System.Windows.Forms.Label Label65;
         internal System.Windows.Forms.Label Label52;

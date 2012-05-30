@@ -58,7 +58,7 @@ namespace Hoehoe
         public AppendSettingDialog()
         {
             // この呼び出しはデザイナーで必要です。
-            InitializeComponent();
+            this.InitializeComponent();
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
             this.Icon = Hoehoe.Properties.Resources.MIcon;
@@ -331,7 +331,7 @@ namespace Hoehoe
             set
             {
                 this.myTranslateLanguage = value;
-                ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(value);
+                this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(value);
             }
         }
 
@@ -357,7 +357,7 @@ namespace Hoehoe
 
         private void CheckUseRecommendStatus_CheckedChanged(object sender, EventArgs e)
         {
-            StatusText.Enabled = !CheckUseRecommendStatus.Checked;
+            this.StatusText.Enabled = !this.CheckUseRecommendStatus.Checked;
         }
 
         private void TreeViewSetting_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -395,23 +395,23 @@ namespace Hoehoe
 
             if (pnl.Name == "PreviewPanel")
             {
-                IsNotifyUseGrowlCheckBox.Enabled = GrowlHelper.IsDllExists;
+                this.IsNotifyUseGrowlCheckBox.Enabled = GrowlHelper.IsDllExists;
             }
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
             if (MyCommon.IsNetworkAvailable()
-                && (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly
-                || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp)
-                && (!string.IsNullOrEmpty(TextBitlyId.Text) || !string.IsNullOrEmpty(TextBitlyPw.Text)))
+                && (this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly
+                || this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp)
+                && (!string.IsNullOrEmpty(this.TextBitlyId.Text) || !string.IsNullOrEmpty(this.TextBitlyPw.Text)))
             {
-                if (!this.BitlyValidation(TextBitlyId.Text, TextBitlyPw.Text))
+                if (!this.BitlyValidation(this.TextBitlyId.Text, this.TextBitlyPw.Text))
                 {
                     MessageBox.Show(Hoehoe.Properties.Resources.SettingSave_ClickText1);
                     this.validationError = true;
-                    TreeViewSetting.SelectedNode.Name = "TweetActNode"; // 動作タブを選択
-                    TextBitlyId.Focus();
+                    this.TreeViewSetting.SelectedNode.Name = "TweetActNode"; // 動作タブを選択
+                    this.TextBitlyId.Focus();
                     return;
                 }
                 else
@@ -460,51 +460,51 @@ namespace Hoehoe
             {
                 this.UserstreamStartup = this.StartupUserstreamCheck.Checked;
 
-                if (this.UserstreamPeriodInt != Convert.ToInt32(UserstreamPeriod.Text))
+                if (this.UserstreamPeriodInt != Convert.ToInt32(this.UserstreamPeriod.Text))
                 {
-                    this.UserstreamPeriodInt = Convert.ToInt32(UserstreamPeriod.Text);
+                    this.UserstreamPeriodInt = Convert.ToInt32(this.UserstreamPeriod.Text);
                     arg.UserStream = true;
                     isIntervalChanged = true;
                 }
 
-                if (this.TimelinePeriodInt != Convert.ToInt32(TimelinePeriod.Text))
+                if (this.TimelinePeriodInt != Convert.ToInt32(this.TimelinePeriod.Text))
                 {
-                    this.TimelinePeriodInt = Convert.ToInt32(TimelinePeriod.Text);
+                    this.TimelinePeriodInt = Convert.ToInt32(this.TimelinePeriod.Text);
                     arg.Timeline = true;
                     isIntervalChanged = true;
                 }
 
-                if (this.DMPeriodInt != Convert.ToInt32(DMPeriod.Text))
+                if (this.DMPeriodInt != Convert.ToInt32(this.DMPeriod.Text))
                 {
-                    this.DMPeriodInt = Convert.ToInt32(DMPeriod.Text);
+                    this.DMPeriodInt = Convert.ToInt32(this.DMPeriod.Text);
                     arg.DirectMessage = true;
                     isIntervalChanged = true;
                 }
 
-                if (this.PubSearchPeriodInt != Convert.ToInt32(PubSearchPeriod.Text))
+                if (this.PubSearchPeriodInt != Convert.ToInt32(this.PubSearchPeriod.Text))
                 {
-                    this.PubSearchPeriodInt = Convert.ToInt32(PubSearchPeriod.Text);
+                    this.PubSearchPeriodInt = Convert.ToInt32(this.PubSearchPeriod.Text);
                     arg.PublicSearch = true;
                     isIntervalChanged = true;
                 }
 
-                if (this.ListsPeriodInt != Convert.ToInt32(ListsPeriod.Text))
+                if (this.ListsPeriodInt != Convert.ToInt32(this.ListsPeriod.Text))
                 {
-                    this.ListsPeriodInt = Convert.ToInt32(ListsPeriod.Text);
+                    this.ListsPeriodInt = Convert.ToInt32(this.ListsPeriod.Text);
                     arg.Lists = true;
                     isIntervalChanged = true;
                 }
 
-                if (this.ReplyPeriodInt != Convert.ToInt32(ReplyPeriod.Text))
+                if (this.ReplyPeriodInt != Convert.ToInt32(this.ReplyPeriod.Text))
                 {
-                    this.ReplyPeriodInt = Convert.ToInt32(ReplyPeriod.Text);
+                    this.ReplyPeriodInt = Convert.ToInt32(this.ReplyPeriod.Text);
                     arg.Reply = true;
                     isIntervalChanged = true;
                 }
 
-                if (this.UserTimelinePeriodInt != Convert.ToInt32(UserTimelinePeriod.Text))
+                if (this.UserTimelinePeriodInt != Convert.ToInt32(this.UserTimelinePeriod.Text))
                 {
-                    this.UserTimelinePeriodInt = Convert.ToInt32(UserTimelinePeriod.Text);
+                    this.UserTimelinePeriodInt = Convert.ToInt32(this.UserTimelinePeriod.Text);
                     arg.UserTimeline = true;
                     isIntervalChanged = true;
                 }
@@ -517,52 +517,52 @@ namespace Hoehoe
                     }
                 }
 
-                this.Readed = StartupReaded.Checked;
-                switch (IconSize.SelectedIndex)
+                this.Readed = this.StartupReaded.Checked;
+                switch (this.IconSize.SelectedIndex)
                 {
                     case 0:
-                        this.IconSz = Hoehoe.IconSizes.IconNone;
+                        this.IconSz = IconSizes.IconNone;
                         break;
                     case 1:
-                        this.IconSz = Hoehoe.IconSizes.Icon16;
+                        this.IconSz = IconSizes.Icon16;
                         break;
                     case 2:
-                        this.IconSz = Hoehoe.IconSizes.Icon24;
+                        this.IconSz = IconSizes.Icon24;
                         break;
                     case 3:
-                        this.IconSz = Hoehoe.IconSizes.Icon48;
+                        this.IconSz = IconSizes.Icon48;
                         break;
                     case 4:
-                        this.IconSz = Hoehoe.IconSizes.Icon48_2;
+                        this.IconSz = IconSizes.Icon48_2;
                         break;
                 }
 
-                this.Status = StatusText.Text;
-                this.PlaySound = PlaySnd.Checked;
-                this.UnreadManage = UReadMng.Checked;
-                this.OneWayLove = OneWayLv.Checked;
-                this.FontUnread = lblUnread.Font;                // 未使用
-                this.ColorUnread = lblUnread.ForeColor;
-                this.FontReaded = lblListFont.Font;              // リストフォントとして使用
-                this.ColorReaded = lblListFont.ForeColor;
-                this.ColorFav = lblFav.ForeColor;
-                this.ColorOWL = lblOWL.ForeColor;
-                this.ColorRetweet = lblRetweet.ForeColor;
-                this.FontDetail = lblDetail.Font;
-                this.ColorSelf = lblSelf.BackColor;
-                this.ColorAtSelf = lblAtSelf.BackColor;
-                this.ColorTarget = lblTarget.BackColor;
-                this.ColorAtTarget = lblAtTarget.BackColor;
-                this.ColorAtFromTarget = lblAtFromTarget.BackColor;
-                this.ColorAtTo = lblAtTo.BackColor;
-                this.ColorInputBackcolor = lblInputBackcolor.BackColor;
-                this.ColorInputFont = lblInputFont.ForeColor;
-                this.ColorListBackcolor = lblListBackcolor.BackColor;
-                this.ColorDetailBackcolor = lblDetailBackcolor.BackColor;
-                this.ColorDetail = lblDetail.ForeColor;
-                this.ColorDetailLink = lblDetailLink.ForeColor;
-                this.FontInputFont = lblInputFont.Font;
-                switch (cmbNameBalloon.SelectedIndex)
+                this.Status = this.StatusText.Text;
+                this.PlaySound = this.PlaySnd.Checked;
+                this.UnreadManage = this.UReadMng.Checked;
+                this.OneWayLove = this.OneWayLv.Checked;
+                this.FontUnread = this.lblUnread.Font;                // 未使用
+                this.ColorUnread = this.lblUnread.ForeColor;
+                this.FontReaded = this.lblListFont.Font;              // リストフォントとして使用
+                this.ColorReaded = this.lblListFont.ForeColor;
+                this.ColorFav = this.lblFav.ForeColor;
+                this.ColorOWL = this.lblOWL.ForeColor;
+                this.ColorRetweet = this.lblRetweet.ForeColor;
+                this.FontDetail = this.lblDetail.Font;
+                this.ColorSelf = this.lblSelf.BackColor;
+                this.ColorAtSelf = this.lblAtSelf.BackColor;
+                this.ColorTarget = this.lblTarget.BackColor;
+                this.ColorAtTarget = this.lblAtTarget.BackColor;
+                this.ColorAtFromTarget = this.lblAtFromTarget.BackColor;
+                this.ColorAtTo = this.lblAtTo.BackColor;
+                this.ColorInputBackcolor = this.lblInputBackcolor.BackColor;
+                this.ColorInputFont = this.lblInputFont.ForeColor;
+                this.ColorListBackcolor = this.lblListBackcolor.BackColor;
+                this.ColorDetailBackcolor = this.lblDetailBackcolor.BackColor;
+                this.ColorDetail = this.lblDetail.ForeColor;
+                this.ColorDetailLink = this.lblDetailLink.ForeColor;
+                this.FontInputFont = this.lblInputFont.Font;
+                switch (this.cmbNameBalloon.SelectedIndex)
                 {
                     case 0:
                         this.NameBalloon = NameBalloonEnum.None;
@@ -575,7 +575,7 @@ namespace Hoehoe
                         break;
                 }
 
-                switch (ComboBoxPostKeySelect.SelectedIndex)
+                switch (this.ComboBoxPostKeySelect.SelectedIndex)
                 {
                     case 2:
                         this.PostShiftEnter = true;
@@ -591,15 +591,15 @@ namespace Hoehoe
                         break;
                 }
 
-                this.CountApi = Convert.ToInt32(TextCountApi.Text);
-                this.CountApiReply = Convert.ToInt32(TextCountApiReply.Text);
+                this.CountApi = Convert.ToInt32(this.TextCountApi.Text);
+                this.CountApiReply = Convert.ToInt32(this.TextCountApiReply.Text);
                 this.BrowserPath = this.BrowserPathText.Text.Trim();
-                this.PostAndGet = CheckPostAndGet.Checked;
-                this.UseRecommendStatus = CheckUseRecommendStatus.Checked;
-                this.DispUsername = CheckDispUsername.Checked;
-                this.CloseToExit = CheckCloseToExit.Checked;
-                this.MinimizeToTray = CheckMinimizeToTray.Checked;
-                switch (ComboDispTitle.SelectedIndex)
+                this.PostAndGet = this.CheckPostAndGet.Checked;
+                this.UseRecommendStatus = this.CheckUseRecommendStatus.Checked;
+                this.DispUsername = this.CheckDispUsername.Checked;
+                this.CloseToExit = this.CheckCloseToExit.Checked;
+                this.MinimizeToTray = this.CheckMinimizeToTray.Checked;
+                switch (this.ComboDispTitle.SelectedIndex)
                 {
                     case 0:
                         // None
@@ -635,16 +635,16 @@ namespace Hoehoe
                         break;
                 }
 
-                this.SortOrderLock = CheckSortOrderLock.Checked;
-                this.TinyUrlResolve = CheckTinyURL.Checked;
-                this.ShortUrlForceResolve = CheckForceResolve.Checked;
+                this.SortOrderLock = this.CheckSortOrderLock.Checked;
+                this.TinyUrlResolve = this.CheckTinyURL.Checked;
+                this.ShortUrlForceResolve = this.CheckForceResolve.Checked;
                 ShortUrl.IsResolve = this.TinyUrlResolve;
                 ShortUrl.IsForceResolve = this.ShortUrlForceResolve;
-                if (RadioProxyNone.Checked)
+                if (this.RadioProxyNone.Checked)
                 {
                     this.SelectedProxyType = HttpConnection.ProxyType.None;
                 }
-                else if (RadioProxyIE.Checked)
+                else if (this.RadioProxyIE.Checked)
                 {
                     this.SelectedProxyType = HttpConnection.ProxyType.IE;
                 }
@@ -653,21 +653,21 @@ namespace Hoehoe
                     this.SelectedProxyType = HttpConnection.ProxyType.Specified;
                 }
 
-                this.ProxyAddress = TextProxyAddress.Text.Trim();
-                this.ProxyPort = int.Parse(TextProxyPort.Text.Trim());
-                this.ProxyUser = TextProxyUser.Text.Trim();
-                this.ProxyPassword = TextProxyPassword.Text.Trim();
-                this.PeriodAdjust = CheckPeriodAdjust.Checked;
-                this.StartupVersion = CheckStartupVersion.Checked;
-                this.StartupFollowers = CheckStartupFollowers.Checked;
-                this.RestrictFavCheck = CheckFavRestrict.Checked;
-                this.AlwaysTop = CheckAlwaysTop.Checked;
-                this.UrlConvertAuto = CheckAutoConvertUrl.Checked;
-                this.ShortenTco = ShortenTcoCheck.Checked;
-                this.OutputzEnabled = CheckOutputz.Checked;
-                this.OutputzKey = TextBoxOutputzKey.Text.Trim();
+                this.ProxyAddress = this.TextProxyAddress.Text.Trim();
+                this.ProxyPort = int.Parse(this.TextProxyPort.Text.Trim());
+                this.ProxyUser = this.TextProxyUser.Text.Trim();
+                this.ProxyPassword = this.TextProxyPassword.Text.Trim();
+                this.PeriodAdjust = this.CheckPeriodAdjust.Checked;
+                this.StartupVersion = this.CheckStartupVersion.Checked;
+                this.StartupFollowers = this.CheckStartupFollowers.Checked;
+                this.RestrictFavCheck = this.CheckFavRestrict.Checked;
+                this.AlwaysTop = this.CheckAlwaysTop.Checked;
+                this.UrlConvertAuto = this.CheckAutoConvertUrl.Checked;
+                this.ShortenTco = this.ShortenTcoCheck.Checked;
+                this.OutputzEnabled = this.CheckOutputz.Checked;
+                this.OutputzKey = this.TextBoxOutputzKey.Text.Trim();
 
-                switch (ComboBoxOutputzUrlmode.SelectedIndex)
+                switch (this.ComboBoxOutputzUrlmode.SelectedIndex)
                 {
                     case 0:
                         this.OutputzUrlmode = OutputzUrlmode.twittercom;
@@ -677,34 +677,34 @@ namespace Hoehoe
                         break;
                 }
 
-                this.Nicoms = CheckNicoms.Checked;
-                this.UseUnreadStyle = chkUnreadStyle.Checked;
-                this.DateTimeFormat = CmbDateTimeFormat.Text;
-                this.DefaultTimeOut = Convert.ToInt32(ConnectionTimeOut.Text);
-                this.RetweetNoConfirm = CheckRetweetNoConfirm.Checked;
-                this.LimitBalloon = CheckBalloonLimit.Checked;
-                this.EventNotifyEnabled = CheckEventNotify.Checked;
+                this.Nicoms = this.CheckNicoms.Checked;
+                this.UseUnreadStyle = this.chkUnreadStyle.Checked;
+                this.DateTimeFormat = this.CmbDateTimeFormat.Text;
+                this.DefaultTimeOut = Convert.ToInt32(this.ConnectionTimeOut.Text);
+                this.RetweetNoConfirm = this.CheckRetweetNoConfirm.Checked;
+                this.LimitBalloon = this.CheckBalloonLimit.Checked;
+                this.EventNotifyEnabled = this.CheckEventNotify.Checked;
                 this.GetEventNotifyFlag(ref this.myEventNotifyFlag, ref this.isMyEventNotifyFlag);
-                this.ForceEventNotify = CheckForceEventNotify.Checked;
-                this.FavEventUnread = CheckFavEventUnread.Checked;
-                this.myTranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(ComboBoxTranslateLanguage.SelectedIndex);
-                this.EventSoundFile = Convert.ToString(ComboBoxEventNotifySound.SelectedItem);
-                this.AutoShortUrlFirst = (UrlConverter)ComboBoxAutoShortUrlFirst.SelectedIndex;
-                this.TabIconDisp = chkTabIconDisp.Checked;
-                this.ReadOwnPost = chkReadOwnPost.Checked;
-                this.GetFav = chkGetFav.Checked;
-                this.IsMonospace = CheckMonospace.Checked;
-                this.ReadOldPosts = CheckReadOldPosts.Checked;
-                this.UseSsl = CheckUseSsl.Checked;
-                this.BitlyUser = TextBitlyId.Text;
-                this.BitlyPwd = TextBitlyPw.Text;
-                this.ShowGrid = CheckShowGrid.Checked;
-                this.UseAtIdSupplement = CheckAtIdSupple.Checked;
-                this.UseHashSupplement = CheckHashSupple.Checked;
-                this.PreviewEnable = CheckPreviewEnable.Checked;
-                this.TwitterApiUrl = TwitterAPIText.Text.Trim();
-                this.TwitterSearchApiUrl = TwitterSearchAPIText.Text.Trim();
-                switch (ReplyIconStateCombo.SelectedIndex)
+                this.ForceEventNotify = this.CheckForceEventNotify.Checked;
+                this.FavEventUnread = this.CheckFavEventUnread.Checked;
+                this.myTranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(this.ComboBoxTranslateLanguage.SelectedIndex);
+                this.EventSoundFile = Convert.ToString(this.ComboBoxEventNotifySound.SelectedItem);
+                this.AutoShortUrlFirst = (UrlConverter)this.ComboBoxAutoShortUrlFirst.SelectedIndex;
+                this.TabIconDisp = this.CheckTabIconDisp.Checked;
+                this.ReadOwnPost = this.chkReadOwnPost.Checked;
+                this.GetFav = this.CheckGetFav.Checked;
+                this.IsMonospace = this.CheckMonospace.Checked;
+                this.ReadOldPosts = this.CheckReadOldPosts.Checked;
+                this.UseSsl = this.CheckUseSsl.Checked;
+                this.BitlyUser = this.TextBitlyId.Text;
+                this.BitlyPwd = this.TextBitlyPw.Text;
+                this.ShowGrid = this.CheckShowGrid.Checked;
+                this.UseAtIdSupplement = this.CheckAtIdSupple.Checked;
+                this.UseHashSupplement = this.CheckHashSupple.Checked;
+                this.PreviewEnable = this.CheckPreviewEnable.Checked;
+                this.TwitterApiUrl = this.TwitterAPIText.Text.Trim();
+                this.TwitterSearchApiUrl = this.TwitterSearchAPIText.Text.Trim();
+                switch (this.ReplyIconStateCombo.SelectedIndex)
                 {
                     case 0:
                         this.ReplyIconState = ReplyIconState.None;
@@ -717,7 +717,7 @@ namespace Hoehoe
                         break;
                 }
 
-                switch (LanguageCombo.SelectedIndex)
+                switch (this.LanguageCombo.SelectedIndex)
                 {
                     case 0:
                         this.Language = "OS";
@@ -760,24 +760,24 @@ namespace Hoehoe
 
                 {
                     int tmp = this.HotkeyValue;
-                    if (int.TryParse(HotkeyCode.Text, out tmp))
+                    if (int.TryParse(this.HotkeyCode.Text, out tmp))
                     {
                         this.HotkeyValue = tmp;
                     }
                 }
 
-                this.HotkeyKey = (Keys)HotkeyText.Tag;
-                this.BlinkNewMentions = ChkNewMentionsBlink.Checked;
-                this.UseAdditionalCount = UseChangeGetCount.Checked;
-                this.MoreCountApi = Convert.ToInt32(GetMoreTextCountApi.Text);
-                this.FirstCountApi = Convert.ToInt32(FirstTextCountApi.Text);
-                this.SearchCountApi = Convert.ToInt32(SearchTextCountApi.Text);
-                this.FavoritesCountApi = Convert.ToInt32(FavoritesTextCountApi.Text);
-                this.UserTimelineCountApi = Convert.ToInt32(UserTimelineTextCountApi.Text);
-                this.ListCountApi = Convert.ToInt32(ListTextCountApi.Text);
-                this.OpenUserTimeline = CheckOpenUserTimeline.Checked;
-                this.ListDoubleClickAction = ListDoubleClickActionComboBox.SelectedIndex;
-                this.UserAppointUrl = UserAppointUrlText.Text;
+                this.HotkeyKey = (Keys)this.HotkeyText.Tag;
+                this.BlinkNewMentions = this.CheckNewMentionsBlink.Checked;
+                this.UseAdditionalCount = this.UseChangeGetCount.Checked;
+                this.MoreCountApi = Convert.ToInt32(this.GetMoreTextCountApi.Text);
+                this.FirstCountApi = Convert.ToInt32(this.FirstTextCountApi.Text);
+                this.SearchCountApi = Convert.ToInt32(this.SearchTextCountApi.Text);
+                this.FavoritesCountApi = Convert.ToInt32(this.FavoritesTextCountApi.Text);
+                this.UserTimelineCountApi = Convert.ToInt32(this.UserTimelineTextCountApi.Text);
+                this.ListCountApi = Convert.ToInt32(this.ListTextCountApi.Text);
+                this.OpenUserTimeline = this.CheckOpenUserTimeline.Checked;
+                this.ListDoubleClickAction = this.ListDoubleClickActionComboBox.SelectedIndex;
+                this.UserAppointUrl = this.UserAppointUrlText.Text;
                 this.HideDuplicatedRetweets = this.HideDuplicatedRetweetsCheck.Checked;
                 this.IsPreviewFoursquare = this.IsPreviewFoursquareCheckBox.Checked;
                 this.FoursquarePreviewHeight = Convert.ToInt32(this.FoursquarePreviewHeightTextBox.Text);
@@ -849,9 +849,9 @@ namespace Hoehoe
                 e.Cancel = true;
             }
 
-            if (!e.Cancel && TreeViewSetting.SelectedNode != null)
+            if (!e.Cancel && this.TreeViewSetting.SelectedNode != null)
             {
-                Panel curPanel = (Panel)TreeViewSetting.SelectedNode.Tag;
+                Panel curPanel = (Panel)this.TreeViewSetting.SelectedNode.Tag;
                 curPanel.Visible = false;
                 curPanel.Enabled = false;
             }
@@ -888,277 +888,276 @@ namespace Hoehoe
             }
 
             this.StartupUserstreamCheck.Checked = this.UserstreamStartup;
-            UserstreamPeriod.Text = this.UserstreamPeriodInt.ToString();
-            TimelinePeriod.Text = this.TimelinePeriodInt.ToString();
-            ReplyPeriod.Text = this.ReplyPeriodInt.ToString();
-            DMPeriod.Text = this.DMPeriodInt.ToString();
-            PubSearchPeriod.Text = this.PubSearchPeriodInt.ToString();
-            ListsPeriod.Text = this.ListsPeriodInt.ToString();
-            UserTimelinePeriod.Text = this.UserTimelinePeriodInt.ToString();
+            this.UserstreamPeriod.Text = this.UserstreamPeriodInt.ToString();
+            this.TimelinePeriod.Text = this.TimelinePeriodInt.ToString();
+            this.ReplyPeriod.Text = this.ReplyPeriodInt.ToString();
+            this.DMPeriod.Text = this.DMPeriodInt.ToString();
+            this.PubSearchPeriod.Text = this.PubSearchPeriodInt.ToString();
+            this.ListsPeriod.Text = this.ListsPeriodInt.ToString();
+            this.UserTimelinePeriod.Text = this.UserTimelinePeriodInt.ToString();
+            this.StartupReaded.Checked = this.Readed;
 
-            StartupReaded.Checked = this.Readed;
             switch (this.IconSz)
             {
-                case Hoehoe.IconSizes.IconNone:
-                    IconSize.SelectedIndex = 0;
+                case IconSizes.IconNone:
+                    this.IconSize.SelectedIndex = 0;
                     break;
-                case Hoehoe.IconSizes.Icon16:
-                    IconSize.SelectedIndex = 1;
+                case IconSizes.Icon16:
+                    this.IconSize.SelectedIndex = 1;
                     break;
-                case Hoehoe.IconSizes.Icon24:
-                    IconSize.SelectedIndex = 2;
+                case IconSizes.Icon24:
+                    this.IconSize.SelectedIndex = 2;
                     break;
-                case Hoehoe.IconSizes.Icon48:
-                    IconSize.SelectedIndex = 3;
+                case IconSizes.Icon48:
+                    this.IconSize.SelectedIndex = 3;
                     break;
-                case Hoehoe.IconSizes.Icon48_2:
-                    IconSize.SelectedIndex = 4;
+                case IconSizes.Icon48_2:
+                    this.IconSize.SelectedIndex = 4;
                     break;
             }
 
-            StatusText.Text = this.Status;
-            UReadMng.Checked = this.UnreadManage;
-            StartupReaded.Enabled = this.UnreadManage != false;
-            PlaySnd.Checked = this.PlaySound;
-            OneWayLv.Checked = this.OneWayLove;
+            this.StatusText.Text = this.Status;
+            this.UReadMng.Checked = this.UnreadManage;
+            this.StartupReaded.Enabled = this.UnreadManage != false;
+            this.PlaySnd.Checked = this.PlaySound;
+            this.OneWayLv.Checked = this.OneWayLove;
 
-            lblListFont.Font = this.FontReaded;
-            lblUnread.Font = this.FontUnread;
-            lblUnread.ForeColor = this.ColorUnread;
-            lblListFont.ForeColor = this.ColorReaded;
-            lblFav.ForeColor = this.ColorFav;
-            lblOWL.ForeColor = this.ColorOWL;
-            lblRetweet.ForeColor = this.ColorRetweet;
-            lblDetail.Font = this.FontDetail;
-            lblSelf.BackColor = this.ColorSelf;
-            lblAtSelf.BackColor = this.ColorAtSelf;
-            lblTarget.BackColor = this.ColorTarget;
-            lblAtTarget.BackColor = this.ColorAtTarget;
-            lblAtFromTarget.BackColor = this.ColorAtFromTarget;
-            lblAtTo.BackColor = this.ColorAtTo;
-            lblInputBackcolor.BackColor = this.ColorInputBackcolor;
-            lblInputFont.ForeColor = this.ColorInputFont;
-            lblInputFont.Font = this.FontInputFont;
-            lblListBackcolor.BackColor = this.ColorListBackcolor;
-            lblDetailBackcolor.BackColor = this.ColorDetailBackcolor;
-            lblDetail.ForeColor = this.ColorDetail;
-            lblDetailLink.ForeColor = this.ColorDetailLink;
+            this.lblListFont.Font = this.FontReaded;
+            this.lblUnread.Font = this.FontUnread;
+            this.lblUnread.ForeColor = this.ColorUnread;
+            this.lblListFont.ForeColor = this.ColorReaded;
+            this.lblFav.ForeColor = this.ColorFav;
+            this.lblOWL.ForeColor = this.ColorOWL;
+            this.lblRetweet.ForeColor = this.ColorRetweet;
+            this.lblDetail.Font = this.FontDetail;
+            this.lblSelf.BackColor = this.ColorSelf;
+            this.lblAtSelf.BackColor = this.ColorAtSelf;
+            this.lblTarget.BackColor = this.ColorTarget;
+            this.lblAtTarget.BackColor = this.ColorAtTarget;
+            this.lblAtFromTarget.BackColor = this.ColorAtFromTarget;
+            this.lblAtTo.BackColor = this.ColorAtTo;
+            this.lblInputBackcolor.BackColor = this.ColorInputBackcolor;
+            this.lblInputFont.ForeColor = this.ColorInputFont;
+            this.lblInputFont.Font = this.FontInputFont;
+            this.lblListBackcolor.BackColor = this.ColorListBackcolor;
+            this.lblDetailBackcolor.BackColor = this.ColorDetailBackcolor;
+            this.lblDetail.ForeColor = this.ColorDetail;
+            this.lblDetailLink.ForeColor = this.ColorDetailLink;
 
             switch (this.NameBalloon)
             {
                 case NameBalloonEnum.None:
-                    cmbNameBalloon.SelectedIndex = 0;
+                    this.cmbNameBalloon.SelectedIndex = 0;
                     break;
                 case NameBalloonEnum.UserID:
-                    cmbNameBalloon.SelectedIndex = 1;
+                    this.cmbNameBalloon.SelectedIndex = 1;
                     break;
                 case NameBalloonEnum.NickName:
-                    cmbNameBalloon.SelectedIndex = 2;
+                    this.cmbNameBalloon.SelectedIndex = 2;
                     break;
             }
 
             if (this.PostCtrlEnter)
             {
-                ComboBoxPostKeySelect.SelectedIndex = 1;
+                this.ComboBoxPostKeySelect.SelectedIndex = 1;
             }
             else if (this.PostShiftEnter)
             {
-                ComboBoxPostKeySelect.SelectedIndex = 2;
+                this.ComboBoxPostKeySelect.SelectedIndex = 2;
             }
             else
             {
-                ComboBoxPostKeySelect.SelectedIndex = 0;
+                this.ComboBoxPostKeySelect.SelectedIndex = 0;
             }
 
-            TextCountApi.Text = this.CountApi.ToString();
-            TextCountApiReply.Text = this.CountApiReply.ToString();
-            BrowserPathText.Text = this.BrowserPath;
-            CheckPostAndGet.Checked = this.PostAndGet;
-            CheckUseRecommendStatus.Checked = this.UseRecommendStatus;
-            CheckDispUsername.Checked = this.DispUsername;
-            CheckCloseToExit.Checked = this.CloseToExit;
-            CheckMinimizeToTray.Checked = this.MinimizeToTray;
+            this.TextCountApi.Text = this.CountApi.ToString();
+            this.TextCountApiReply.Text = this.CountApiReply.ToString();
+            this.BrowserPathText.Text = this.BrowserPath;
+            this.CheckPostAndGet.Checked = this.PostAndGet;
+            this.CheckUseRecommendStatus.Checked = this.UseRecommendStatus;
+            this.CheckDispUsername.Checked = this.DispUsername;
+            this.CheckCloseToExit.Checked = this.CloseToExit;
+            this.CheckMinimizeToTray.Checked = this.MinimizeToTray;
             switch (this.DispLatestPost)
             {
                 case DispTitleEnum.None:
-                    ComboDispTitle.SelectedIndex = 0;
+                    this.ComboDispTitle.SelectedIndex = 0;
                     break;
                 case DispTitleEnum.Ver:
-                    ComboDispTitle.SelectedIndex = 1;
+                    this.ComboDispTitle.SelectedIndex = 1;
                     break;
                 case DispTitleEnum.Post:
-                    ComboDispTitle.SelectedIndex = 2;
+                    this.ComboDispTitle.SelectedIndex = 2;
                     break;
                 case DispTitleEnum.UnreadRepCount:
-                    ComboDispTitle.SelectedIndex = 3;
+                    this.ComboDispTitle.SelectedIndex = 3;
                     break;
                 case DispTitleEnum.UnreadAllCount:
-                    ComboDispTitle.SelectedIndex = 4;
+                    this.ComboDispTitle.SelectedIndex = 4;
                     break;
                 case DispTitleEnum.UnreadAllRepCount:
-                    ComboDispTitle.SelectedIndex = 5;
+                    this.ComboDispTitle.SelectedIndex = 5;
                     break;
                 case DispTitleEnum.UnreadCountAllCount:
-                    ComboDispTitle.SelectedIndex = 6;
+                    this.ComboDispTitle.SelectedIndex = 6;
                     break;
                 case DispTitleEnum.OwnStatus:
-                    ComboDispTitle.SelectedIndex = 7;
+                    this.ComboDispTitle.SelectedIndex = 7;
                     break;
             }
 
-            CheckSortOrderLock.Checked = this.SortOrderLock;
-            CheckTinyURL.Checked = this.TinyUrlResolve;
-            CheckForceResolve.Checked = this.ShortUrlForceResolve;
+            this.CheckSortOrderLock.Checked = this.SortOrderLock;
+            this.CheckTinyURL.Checked = this.TinyUrlResolve;
+            this.CheckForceResolve.Checked = this.ShortUrlForceResolve;
             switch (this.SelectedProxyType)
             {
                 case HttpConnection.ProxyType.None:
-                    RadioProxyNone.Checked = true;
+                    this.RadioProxyNone.Checked = true;
                     break;
                 case HttpConnection.ProxyType.IE:
-                    RadioProxyIE.Checked = true;
+                    this.RadioProxyIE.Checked = true;
                     break;
                 default:
-                    RadioProxySpecified.Checked = true;
+                    this.RadioProxySpecified.Checked = true;
                     break;
             }
 
-            bool chk = RadioProxySpecified.Checked;
-            LabelProxyAddress.Enabled = chk;
-            TextProxyAddress.Enabled = chk;
-            LabelProxyPort.Enabled = chk;
-            TextProxyPort.Enabled = chk;
-            LabelProxyUser.Enabled = chk;
-            TextProxyUser.Enabled = chk;
-            LabelProxyPassword.Enabled = chk;
-            TextProxyPassword.Enabled = chk;
+            bool chk = this.RadioProxySpecified.Checked;
+            this.LabelProxyAddress.Enabled = chk;
+            this.TextProxyAddress.Enabled = chk;
+            this.LabelProxyPort.Enabled = chk;
+            this.TextProxyPort.Enabled = chk;
+            this.LabelProxyUser.Enabled = chk;
+            this.TextProxyUser.Enabled = chk;
+            this.LabelProxyPassword.Enabled = chk;
+            this.TextProxyPassword.Enabled = chk;
 
-            TextProxyAddress.Text = this.ProxyAddress;
-            TextProxyPort.Text = this.ProxyPort.ToString();
-            TextProxyUser.Text = this.ProxyUser;
-            TextProxyPassword.Text = this.ProxyPassword;
+            this.TextProxyAddress.Text = this.ProxyAddress;
+            this.TextProxyPort.Text = this.ProxyPort.ToString();
+            this.TextProxyUser.Text = this.ProxyUser;
+            this.TextProxyPassword.Text = this.ProxyPassword;
 
-            CheckPeriodAdjust.Checked = this.PeriodAdjust;
-            CheckStartupVersion.Checked = this.StartupVersion;
-            CheckStartupFollowers.Checked = this.StartupFollowers;
-            CheckFavRestrict.Checked = this.RestrictFavCheck;
-            CheckAlwaysTop.Checked = this.AlwaysTop;
-            CheckAutoConvertUrl.Checked = this.UrlConvertAuto;
-            ShortenTcoCheck.Checked = this.ShortenTco;
-            ShortenTcoCheck.Enabled = CheckAutoConvertUrl.Checked;
-            CheckOutputz.Checked = this.OutputzEnabled;
-            TextBoxOutputzKey.Text = this.OutputzKey;
+            this.CheckPeriodAdjust.Checked = this.PeriodAdjust;
+            this.CheckStartupVersion.Checked = this.StartupVersion;
+            this.CheckStartupFollowers.Checked = this.StartupFollowers;
+            this.CheckFavRestrict.Checked = this.RestrictFavCheck;
+            this.CheckAlwaysTop.Checked = this.AlwaysTop;
+            this.CheckAutoConvertUrl.Checked = this.UrlConvertAuto;
+            this.ShortenTcoCheck.Checked = this.ShortenTco;
+            this.ShortenTcoCheck.Enabled = this.CheckAutoConvertUrl.Checked;
+            this.CheckOutputz.Checked = this.OutputzEnabled;
+            this.TextBoxOutputzKey.Text = this.OutputzKey;
 
             switch (this.OutputzUrlmode)
             {
                 case OutputzUrlmode.twittercom:
-                    ComboBoxOutputzUrlmode.SelectedIndex = 0;
+                    this.ComboBoxOutputzUrlmode.SelectedIndex = 0;
                     break;
                 case OutputzUrlmode.twittercomWithUsername:
-                    ComboBoxOutputzUrlmode.SelectedIndex = 1;
+                    this.ComboBoxOutputzUrlmode.SelectedIndex = 1;
                     break;
             }
 
-            CheckNicoms.Checked = this.Nicoms;
-            chkUnreadStyle.Checked = this.UseUnreadStyle;
-            CmbDateTimeFormat.Text = this.DateTimeFormat;
-            ConnectionTimeOut.Text = this.DefaultTimeOut.ToString();
-            CheckRetweetNoConfirm.Checked = this.RetweetNoConfirm;
-            CheckBalloonLimit.Checked = this.LimitBalloon;
-
+            this.CheckNicoms.Checked = this.Nicoms;
+            this.chkUnreadStyle.Checked = this.UseUnreadStyle;
+            this.CmbDateTimeFormat.Text = this.DateTimeFormat;
+            this.ConnectionTimeOut.Text = this.DefaultTimeOut.ToString();
+            this.CheckRetweetNoConfirm.Checked = this.RetweetNoConfirm;
+            this.CheckBalloonLimit.Checked = this.LimitBalloon;
             this.ApplyEventNotifyFlag(this.EventNotifyEnabled, this.myEventNotifyFlag, this.isMyEventNotifyFlag);
-            CheckForceEventNotify.Checked = this.ForceEventNotify;
-            CheckFavEventUnread.Checked = this.FavEventUnread;
-            ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this.myTranslateLanguage);
+            this.CheckForceEventNotify.Checked = this.ForceEventNotify;
+            this.CheckFavEventUnread.Checked = this.FavEventUnread;
+            this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this.myTranslateLanguage);
             this.SoundFileListup();
-            ComboBoxAutoShortUrlFirst.SelectedIndex = (int)this.AutoShortUrlFirst;
-            chkTabIconDisp.Checked = this.TabIconDisp;
-            chkReadOwnPost.Checked = this.ReadOwnPost;
-            chkGetFav.Checked = this.GetFav;
-            CheckMonospace.Checked = this.IsMonospace;
-            CheckReadOldPosts.Checked = this.ReadOldPosts;
-            CheckUseSsl.Checked = this.UseSsl;
-            TextBitlyId.Text = this.BitlyUser;
-            TextBitlyPw.Text = this.BitlyPwd;
-            TextBitlyId.Modified = false;
-            TextBitlyPw.Modified = false;
-            CheckShowGrid.Checked = this.ShowGrid;
-            CheckAtIdSupple.Checked = this.UseAtIdSupplement;
-            CheckHashSupple.Checked = this.UseHashSupplement;
-            CheckPreviewEnable.Checked = this.PreviewEnable;
-            TwitterAPIText.Text = this.TwitterApiUrl;
-            TwitterSearchAPIText.Text = this.TwitterSearchApiUrl;
+            this.ComboBoxAutoShortUrlFirst.SelectedIndex = (int)this.AutoShortUrlFirst;
+            this.CheckTabIconDisp.Checked = this.TabIconDisp;
+            this.chkReadOwnPost.Checked = this.ReadOwnPost;
+            this.CheckGetFav.Checked = this.GetFav;
+            this.CheckMonospace.Checked = this.IsMonospace;
+            this.CheckReadOldPosts.Checked = this.ReadOldPosts;
+            this.CheckUseSsl.Checked = this.UseSsl;
+            this.TextBitlyId.Text = this.BitlyUser;
+            this.TextBitlyPw.Text = this.BitlyPwd;
+            this.TextBitlyId.Modified = false;
+            this.TextBitlyPw.Modified = false;
+            this.CheckShowGrid.Checked = this.ShowGrid;
+            this.CheckAtIdSupple.Checked = this.UseAtIdSupplement;
+            this.CheckHashSupple.Checked = this.UseHashSupplement;
+            this.CheckPreviewEnable.Checked = this.PreviewEnable;
+            this.TwitterAPIText.Text = this.TwitterApiUrl;
+            this.TwitterSearchAPIText.Text = this.TwitterSearchApiUrl;
             switch (this.ReplyIconState)
             {
                 case ReplyIconState.None:
-                    ReplyIconStateCombo.SelectedIndex = 0;
+                    this.ReplyIconStateCombo.SelectedIndex = 0;
                     break;
                 case ReplyIconState.StaticIcon:
-                    ReplyIconStateCombo.SelectedIndex = 1;
+                    this.ReplyIconStateCombo.SelectedIndex = 1;
                     break;
                 case ReplyIconState.BlinkIcon:
-                    ReplyIconStateCombo.SelectedIndex = 2;
+                    this.ReplyIconStateCombo.SelectedIndex = 2;
                     break;
             }
 
             switch (this.Language)
             {
                 case "OS":
-                    LanguageCombo.SelectedIndex = 0;
+                    this.LanguageCombo.SelectedIndex = 0;
                     break;
                 case "ja":
-                    LanguageCombo.SelectedIndex = 1;
+                    this.LanguageCombo.SelectedIndex = 1;
                     break;
                 case "en":
-                    LanguageCombo.SelectedIndex = 2;
+                    this.LanguageCombo.SelectedIndex = 2;
                     break;
                 case "zh-CN":
-                    LanguageCombo.SelectedIndex = 3;
+                    this.LanguageCombo.SelectedIndex = 3;
                     break;
                 default:
-                    LanguageCombo.SelectedIndex = 0;
+                    this.LanguageCombo.SelectedIndex = 0;
                     break;
             }
 
-            HotkeyCheck.Checked = this.HotkeyEnabled;
-            HotkeyAlt.Checked = (this.HotkeyMod & Keys.Alt) == Keys.Alt;
-            HotkeyCtrl.Checked = (this.HotkeyMod & Keys.Control) == Keys.Control;
-            HotkeyShift.Checked = (this.HotkeyMod & Keys.Shift) == Keys.Shift;
-            HotkeyWin.Checked = (this.HotkeyMod & Keys.LWin) == Keys.LWin;
-            HotkeyCode.Text = this.HotkeyValue.ToString();
-            HotkeyText.Text = this.HotkeyKey.ToString();
-            HotkeyText.Tag = this.HotkeyKey;
-            HotkeyAlt.Enabled = this.HotkeyEnabled;
-            HotkeyShift.Enabled = this.HotkeyEnabled;
-            HotkeyCtrl.Enabled = this.HotkeyEnabled;
-            HotkeyWin.Enabled = this.HotkeyEnabled;
-            HotkeyText.Enabled = this.HotkeyEnabled;
-            HotkeyCode.Enabled = this.HotkeyEnabled;
-            ChkNewMentionsBlink.Checked = this.BlinkNewMentions;
+            this.HotkeyCheck.Checked = this.HotkeyEnabled;
+            this.HotkeyAlt.Checked = (this.HotkeyMod & Keys.Alt) == Keys.Alt;
+            this.HotkeyCtrl.Checked = (this.HotkeyMod & Keys.Control) == Keys.Control;
+            this.HotkeyShift.Checked = (this.HotkeyMod & Keys.Shift) == Keys.Shift;
+            this.HotkeyWin.Checked = (this.HotkeyMod & Keys.LWin) == Keys.LWin;
+            this.HotkeyCode.Text = this.HotkeyValue.ToString();
+            this.HotkeyText.Text = this.HotkeyKey.ToString();
+            this.HotkeyText.Tag = this.HotkeyKey;
+            this.HotkeyAlt.Enabled = this.HotkeyEnabled;
+            this.HotkeyShift.Enabled = this.HotkeyEnabled;
+            this.HotkeyCtrl.Enabled = this.HotkeyEnabled;
+            this.HotkeyWin.Enabled = this.HotkeyEnabled;
+            this.HotkeyText.Enabled = this.HotkeyEnabled;
+            this.HotkeyCode.Enabled = this.HotkeyEnabled;
+            this.CheckNewMentionsBlink.Checked = this.BlinkNewMentions;
 
             this.CheckOutputz_CheckedChanged(sender, e);
 
-            GetMoreTextCountApi.Text = this.MoreCountApi.ToString();
-            FirstTextCountApi.Text = this.FirstCountApi.ToString();
-            SearchTextCountApi.Text = this.SearchCountApi.ToString();
-            FavoritesTextCountApi.Text = this.FavoritesCountApi.ToString();
-            UserTimelineTextCountApi.Text = this.UserTimelineCountApi.ToString();
-            ListTextCountApi.Text = this.ListCountApi.ToString();
-            UseChangeGetCount.Checked = this.UseAdditionalCount;
-            Label28.Enabled = UseChangeGetCount.Checked;
-            Label30.Enabled = UseChangeGetCount.Checked;
-            Label53.Enabled = UseChangeGetCount.Checked;
-            Label66.Enabled = UseChangeGetCount.Checked;
-            Label17.Enabled = UseChangeGetCount.Checked;
-            Label25.Enabled = UseChangeGetCount.Checked;
-            GetMoreTextCountApi.Enabled = UseChangeGetCount.Checked;
-            FirstTextCountApi.Enabled = UseChangeGetCount.Checked;
-            SearchTextCountApi.Enabled = UseChangeGetCount.Checked;
-            FavoritesTextCountApi.Enabled = UseChangeGetCount.Checked;
-            UserTimelineTextCountApi.Enabled = UseChangeGetCount.Checked;
-            ListTextCountApi.Enabled = UseChangeGetCount.Checked;
-            CheckOpenUserTimeline.Checked = this.OpenUserTimeline;
-            ListDoubleClickActionComboBox.SelectedIndex = this.ListDoubleClickAction;
-            UserAppointUrlText.Text = this.UserAppointUrl;
+            this.GetMoreTextCountApi.Text = this.MoreCountApi.ToString();
+            this.FirstTextCountApi.Text = this.FirstCountApi.ToString();
+            this.SearchTextCountApi.Text = this.SearchCountApi.ToString();
+            this.FavoritesTextCountApi.Text = this.FavoritesCountApi.ToString();
+            this.UserTimelineTextCountApi.Text = this.UserTimelineCountApi.ToString();
+            this.ListTextCountApi.Text = this.ListCountApi.ToString();
+            this.UseChangeGetCount.Checked = this.UseAdditionalCount;
+            this.Label28.Enabled = this.UseChangeGetCount.Checked;
+            this.Label30.Enabled = this.UseChangeGetCount.Checked;
+            this.Label53.Enabled = this.UseChangeGetCount.Checked;
+            this.Label66.Enabled = this.UseChangeGetCount.Checked;
+            this.Label17.Enabled = this.UseChangeGetCount.Checked;
+            this.Label25.Enabled = this.UseChangeGetCount.Checked;
+            this.GetMoreTextCountApi.Enabled = this.UseChangeGetCount.Checked;
+            this.FirstTextCountApi.Enabled = this.UseChangeGetCount.Checked;
+            this.SearchTextCountApi.Enabled = this.UseChangeGetCount.Checked;
+            this.FavoritesTextCountApi.Enabled = this.UseChangeGetCount.Checked;
+            this.UserTimelineTextCountApi.Enabled = this.UseChangeGetCount.Checked;
+            this.ListTextCountApi.Enabled = this.UseChangeGetCount.Checked;
+            this.CheckOpenUserTimeline.Checked = this.OpenUserTimeline;
+            this.ListDoubleClickActionComboBox.SelectedIndex = this.ListDoubleClickAction;
+            this.UserAppointUrlText.Text = this.UserAppointUrl;
             this.HideDuplicatedRetweetsCheck.Checked = this.HideDuplicatedRetweets;
             this.IsPreviewFoursquareCheckBox.Checked = this.IsPreviewFoursquare;
             this.FoursquarePreviewHeightTextBox.Text = this.FoursquarePreviewHeight.ToString();
@@ -1169,27 +1168,27 @@ namespace Hoehoe
             this.IsRemoveSameFavEventCheckBox.Checked = this.IsRemoveSameEvent;
             this.IsNotifyUseGrowlCheckBox.Checked = this.IsNotifyUseGrowl;
 
-            IsNotifyUseGrowlCheckBox.Enabled = GrowlHelper.IsDllExists;
+            this.IsNotifyUseGrowlCheckBox.Enabled = GrowlHelper.IsDllExists;
 
             this.TreeViewSetting.Nodes["BasedNode"].Tag = this.BasedPanel;
-            this.TreeViewSetting.Nodes["BasedNode"].Nodes["PeriodNode"].Tag = GetPeriodPanel;
-            this.TreeViewSetting.Nodes["BasedNode"].Nodes["StartUpNode"].Tag = StartupPanel;
-            this.TreeViewSetting.Nodes["BasedNode"].Nodes["GetCountNode"].Tag = GetCountPanel;
+            this.TreeViewSetting.Nodes["BasedNode"].Nodes["PeriodNode"].Tag = this.GetPeriodPanel;
+            this.TreeViewSetting.Nodes["BasedNode"].Nodes["StartUpNode"].Tag = this.StartupPanel;
+            this.TreeViewSetting.Nodes["BasedNode"].Nodes["GetCountNode"].Tag = this.GetCountPanel;
             this.TreeViewSetting.Nodes["ActionNode"].Tag = this.ActionPanel;
-            this.TreeViewSetting.Nodes["ActionNode"].Nodes["TweetActNode"].Tag = TweetActPanel;
-            this.TreeViewSetting.Nodes["PreviewNode"].Tag = PreviewPanel;
-            this.TreeViewSetting.Nodes["PreviewNode"].Nodes["TweetPrvNode"].Tag = TweetPrvPanel;
-            this.TreeViewSetting.Nodes["PreviewNode"].Nodes["NotifyNode"].Tag = NotifyPanel;
-            this.TreeViewSetting.Nodes["FontNode"].Tag = FontPanel;
-            this.TreeViewSetting.Nodes["FontNode"].Nodes["FontNode2"].Tag = FontPanel2;
-            this.TreeViewSetting.Nodes["ConnectionNode"].Tag = ConnectionPanel;
-            this.TreeViewSetting.Nodes["ConnectionNode"].Nodes["ProxyNode"].Tag = ProxyPanel;
-            this.TreeViewSetting.Nodes["ConnectionNode"].Nodes["CooperateNode"].Tag = CooperatePanel;
-            this.TreeViewSetting.Nodes["ConnectionNode"].Nodes["ShortUrlNode"].Tag = ShortUrlPanel;
+            this.TreeViewSetting.Nodes["ActionNode"].Nodes["TweetActNode"].Tag = this.TweetActPanel;
+            this.TreeViewSetting.Nodes["PreviewNode"].Tag = this.PreviewPanel;
+            this.TreeViewSetting.Nodes["PreviewNode"].Nodes["TweetPrvNode"].Tag = this.TweetPrvPanel;
+            this.TreeViewSetting.Nodes["PreviewNode"].Nodes["NotifyNode"].Tag = this.NotifyPanel;
+            this.TreeViewSetting.Nodes["FontNode"].Tag = this.FontPanel;
+            this.TreeViewSetting.Nodes["FontNode"].Nodes["FontNode2"].Tag = this.FontPanel2;
+            this.TreeViewSetting.Nodes["ConnectionNode"].Tag = this.ConnectionPanel;
+            this.TreeViewSetting.Nodes["ConnectionNode"].Nodes["ProxyNode"].Tag = this.ProxyPanel;
+            this.TreeViewSetting.Nodes["ConnectionNode"].Nodes["CooperateNode"].Tag = this.CooperatePanel;
+            this.TreeViewSetting.Nodes["ConnectionNode"].Nodes["ShortUrlNode"].Tag = this.ShortUrlPanel;
 
             this.TreeViewSetting.SelectedNode = this.TreeViewSetting.Nodes[0];
             this.TreeViewSetting.ExpandAll();
-            ActiveControl = StartAuthButton;
+            ActiveControl = this.StartAuthButton;
         }
 
         private void UserstreamPeriod_Validating(object sender, CancelEventArgs e)
@@ -1197,7 +1196,7 @@ namespace Hoehoe
             int prd = 0;
             try
             {
-                prd = Convert.ToInt32(UserstreamPeriod.Text);
+                prd = Convert.ToInt32(this.UserstreamPeriod.Text);
             }
             catch (Exception)
             {
@@ -1221,7 +1220,7 @@ namespace Hoehoe
             int prd = 0;
             try
             {
-                prd = Convert.ToInt32(TimelinePeriod.Text);
+                prd = Convert.ToInt32(this.TimelinePeriod.Text);
             }
             catch (Exception)
             {
@@ -1245,7 +1244,7 @@ namespace Hoehoe
             int prd = 0;
             try
             {
-                prd = Convert.ToInt32(ReplyPeriod.Text);
+                prd = Convert.ToInt32(this.ReplyPeriod.Text);
             }
             catch (Exception)
             {
@@ -1269,7 +1268,7 @@ namespace Hoehoe
             int prd = 0;
             try
             {
-                prd = Convert.ToInt32(DMPeriod.Text);
+                prd = Convert.ToInt32(this.DMPeriod.Text);
             }
             catch (Exception)
             {
@@ -1293,7 +1292,7 @@ namespace Hoehoe
             int prd = 0;
             try
             {
-                prd = Convert.ToInt32(PubSearchPeriod.Text);
+                prd = Convert.ToInt32(this.PubSearchPeriod.Text);
             }
             catch (Exception)
             {
@@ -1314,7 +1313,7 @@ namespace Hoehoe
             int prd = 0;
             try
             {
-                prd = Convert.ToInt32(ListsPeriod.Text);
+                prd = Convert.ToInt32(this.ListsPeriod.Text);
             }
             catch (Exception)
             {
@@ -1338,7 +1337,7 @@ namespace Hoehoe
             int prd = 0;
             try
             {
-                prd = Convert.ToInt32(UserTimelinePeriod.Text);
+                prd = Convert.ToInt32(this.UserTimelinePeriod.Text);
             }
             catch (Exception)
             {
@@ -1359,7 +1358,7 @@ namespace Hoehoe
 
         private void UReadMng_CheckedChanged(object sender, EventArgs e)
         {
-            StartupReaded.Enabled = UReadMng.Checked == true;
+            this.StartupReaded.Enabled = this.UReadMng.Checked == true;
         }
 
         private void ButtonFontAndColor_Click(object sender, EventArgs e)
@@ -1367,40 +1366,40 @@ namespace Hoehoe
             Button btn = (Button)sender;
             DialogResult rtn = default(DialogResult);
 
-            FontDialog1.AllowVerticalFonts = false;
-            FontDialog1.AllowScriptChange = true;
-            FontDialog1.AllowSimulations = true;
-            FontDialog1.AllowVectorFonts = true;
-            FontDialog1.FixedPitchOnly = false;
-            FontDialog1.FontMustExist = true;
-            FontDialog1.ScriptsOnly = false;
-            FontDialog1.ShowApply = false;
-            FontDialog1.ShowEffects = true;
-            FontDialog1.ShowColor = true;
+            this.FontDialog1.AllowVerticalFonts = false;
+            this.FontDialog1.AllowScriptChange = true;
+            this.FontDialog1.AllowSimulations = true;
+            this.FontDialog1.AllowVectorFonts = true;
+            this.FontDialog1.FixedPitchOnly = false;
+            this.FontDialog1.FontMustExist = true;
+            this.FontDialog1.ScriptsOnly = false;
+            this.FontDialog1.ShowApply = false;
+            this.FontDialog1.ShowEffects = true;
+            this.FontDialog1.ShowColor = true;
 
             switch (btn.Name)
             {
                 case "btnUnread":
-                    FontDialog1.Color = lblUnread.ForeColor;
-                    FontDialog1.Font = lblUnread.Font;
+                    this.FontDialog1.Color = this.lblUnread.ForeColor;
+                    this.FontDialog1.Font = this.lblUnread.Font;
                     break;
                 case "btnDetail":
-                    FontDialog1.Color = lblDetail.ForeColor;
-                    FontDialog1.Font = lblDetail.Font;
+                    this.FontDialog1.Color = this.lblDetail.ForeColor;
+                    this.FontDialog1.Font = this.lblDetail.Font;
                     break;
                 case "btnListFont":
-                    FontDialog1.Color = lblListFont.ForeColor;
-                    FontDialog1.Font = lblListFont.Font;
+                    this.FontDialog1.Color = this.lblListFont.ForeColor;
+                    this.FontDialog1.Font = this.lblListFont.Font;
                     break;
                 case "btnInputFont":
-                    FontDialog1.Color = lblInputFont.ForeColor;
-                    FontDialog1.Font = lblInputFont.Font;
+                    this.FontDialog1.Color = this.lblInputFont.ForeColor;
+                    this.FontDialog1.Font = this.lblInputFont.Font;
                     break;
             }
 
             try
             {
-                rtn = FontDialog1.ShowDialog();
+                rtn = this.FontDialog1.ShowDialog();
             }
             catch (ArgumentException ex)
             {
@@ -1416,20 +1415,20 @@ namespace Hoehoe
             switch (btn.Name)
             {
                 case "btnUnread":
-                    lblUnread.ForeColor = FontDialog1.Color;
-                    lblUnread.Font = FontDialog1.Font;
+                    this.lblUnread.ForeColor = this.FontDialog1.Color;
+                    this.lblUnread.Font = this.FontDialog1.Font;
                     break;
                 case "btnDetail":
-                    lblDetail.ForeColor = FontDialog1.Color;
-                    lblDetail.Font = FontDialog1.Font;
+                    this.lblDetail.ForeColor = this.FontDialog1.Color;
+                    this.lblDetail.Font = this.FontDialog1.Font;
                     break;
                 case "btnListFont":
-                    lblListFont.ForeColor = FontDialog1.Color;
-                    lblListFont.Font = FontDialog1.Font;
+                    this.lblListFont.ForeColor = this.FontDialog1.Color;
+                    this.lblListFont.Font = this.FontDialog1.Font;
                     break;
                 case "btnInputFont":
-                    lblInputFont.ForeColor = FontDialog1.Color;
-                    lblInputFont.Font = FontDialog1.Font;
+                    this.lblInputFont.ForeColor = this.FontDialog1.Color;
+                    this.lblInputFont.Font = this.FontDialog1.Font;
                     break;
             }
         }
@@ -1439,55 +1438,55 @@ namespace Hoehoe
             Button btn = (Button)sender;
             DialogResult rtn = default(DialogResult);
 
-            ColorDialog1.AllowFullOpen = true;
-            ColorDialog1.AnyColor = true;
-            ColorDialog1.FullOpen = false;
-            ColorDialog1.SolidColorOnly = false;
+            this.ColorDialog1.AllowFullOpen = true;
+            this.ColorDialog1.AnyColor = true;
+            this.ColorDialog1.FullOpen = false;
+            this.ColorDialog1.SolidColorOnly = false;
 
             switch (btn.Name)
             {
                 case "btnSelf":
-                    ColorDialog1.Color = lblSelf.BackColor;
+                    this.ColorDialog1.Color = this.lblSelf.BackColor;
                     break;
                 case "btnAtSelf":
-                    ColorDialog1.Color = lblAtSelf.BackColor;
+                    this.ColorDialog1.Color = this.lblAtSelf.BackColor;
                     break;
                 case "btnTarget":
-                    ColorDialog1.Color = lblTarget.BackColor;
+                    this.ColorDialog1.Color = this.lblTarget.BackColor;
                     break;
                 case "btnAtTarget":
-                    ColorDialog1.Color = lblAtTarget.BackColor;
+                    this.ColorDialog1.Color = this.lblAtTarget.BackColor;
                     break;
                 case "btnAtFromTarget":
-                    ColorDialog1.Color = lblAtFromTarget.BackColor;
+                    this.ColorDialog1.Color = this.lblAtFromTarget.BackColor;
                     break;
                 case "btnFav":
-                    ColorDialog1.Color = lblFav.ForeColor;
+                    this.ColorDialog1.Color = this.lblFav.ForeColor;
                     break;
                 case "btnOWL":
-                    ColorDialog1.Color = lblOWL.ForeColor;
+                    this.ColorDialog1.Color = this.lblOWL.ForeColor;
                     break;
                 case "btnRetweet":
-                    ColorDialog1.Color = lblRetweet.ForeColor;
+                    this.ColorDialog1.Color = this.lblRetweet.ForeColor;
                     break;
                 case "btnInputBackcolor":
-                    ColorDialog1.Color = lblInputBackcolor.BackColor;
+                    this.ColorDialog1.Color = this.lblInputBackcolor.BackColor;
                     break;
                 case "btnAtTo":
-                    ColorDialog1.Color = lblAtTo.BackColor;
+                    this.ColorDialog1.Color = this.lblAtTo.BackColor;
                     break;
                 case "btnListBack":
-                    ColorDialog1.Color = lblListBackcolor.BackColor;
+                    this.ColorDialog1.Color = this.lblListBackcolor.BackColor;
                     break;
                 case "btnDetailBack":
-                    ColorDialog1.Color = lblDetailBackcolor.BackColor;
+                    this.ColorDialog1.Color = this.lblDetailBackcolor.BackColor;
                     break;
                 case "btnDetailLink":
-                    ColorDialog1.Color = lblDetailLink.ForeColor;
+                    this.ColorDialog1.Color = this.lblDetailLink.ForeColor;
                     break;
             }
 
-            rtn = ColorDialog1.ShowDialog();
+            rtn = this.ColorDialog1.ShowDialog();
             if (rtn == DialogResult.Cancel)
             {
                 return;
@@ -1496,43 +1495,43 @@ namespace Hoehoe
             switch (btn.Name)
             {
                 case "btnSelf":
-                    lblSelf.BackColor = ColorDialog1.Color;
+                    this.lblSelf.BackColor = this.ColorDialog1.Color;
                     break;
                 case "btnAtSelf":
-                    lblAtSelf.BackColor = ColorDialog1.Color;
+                    this.lblAtSelf.BackColor = this.ColorDialog1.Color;
                     break;
                 case "btnTarget":
-                    lblTarget.BackColor = ColorDialog1.Color;
+                    this.lblTarget.BackColor = this.ColorDialog1.Color;
                     break;
                 case "btnAtTarget":
-                    lblAtTarget.BackColor = ColorDialog1.Color;
+                    this.lblAtTarget.BackColor = this.ColorDialog1.Color;
                     break;
                 case "btnAtFromTarget":
-                    lblAtFromTarget.BackColor = ColorDialog1.Color;
+                    this.lblAtFromTarget.BackColor = this.ColorDialog1.Color;
                     break;
                 case "btnFav":
-                    lblFav.ForeColor = ColorDialog1.Color;
+                    this.lblFav.ForeColor = this.ColorDialog1.Color;
                     break;
                 case "btnOWL":
-                    lblOWL.ForeColor = ColorDialog1.Color;
+                    this.lblOWL.ForeColor = this.ColorDialog1.Color;
                     break;
                 case "btnRetweet":
-                    lblRetweet.ForeColor = ColorDialog1.Color;
+                    this.lblRetweet.ForeColor = this.ColorDialog1.Color;
                     break;
                 case "btnInputBackcolor":
-                    lblInputBackcolor.BackColor = ColorDialog1.Color;
+                    this.lblInputBackcolor.BackColor = this.ColorDialog1.Color;
                     break;
                 case "btnAtTo":
-                    lblAtTo.BackColor = ColorDialog1.Color;
+                    this.lblAtTo.BackColor = this.ColorDialog1.Color;
                     break;
                 case "btnListBack":
-                    lblListBackcolor.BackColor = ColorDialog1.Color;
+                    this.lblListBackcolor.BackColor = this.ColorDialog1.Color;
                     break;
                 case "btnDetailBack":
-                    lblDetailBackcolor.BackColor = ColorDialog1.Color;
+                    this.lblDetailBackcolor.BackColor = this.ColorDialog1.Color;
                     break;
                 case "btnDetailLink":
-                    lblDetailLink.ForeColor = ColorDialog1.Color;
+                    this.lblDetailLink.ForeColor = this.ColorDialog1.Color;
                     break;
             }
         }
@@ -1548,33 +1547,33 @@ namespace Hoehoe
 
                 if (filedlg.ShowDialog() == DialogResult.OK)
                 {
-                    BrowserPathText.Text = filedlg.FileName;
+                    this.BrowserPathText.Text = filedlg.FileName;
                 }
             }
         }
 
         private void RadioProxySpecified_CheckedChanged(object sender, EventArgs e)
         {
-            bool chk = RadioProxySpecified.Checked;
-            LabelProxyAddress.Enabled = chk;
-            TextProxyAddress.Enabled = chk;
-            LabelProxyPort.Enabled = chk;
-            TextProxyPort.Enabled = chk;
-            LabelProxyUser.Enabled = chk;
-            TextProxyUser.Enabled = chk;
-            LabelProxyPassword.Enabled = chk;
-            TextProxyPassword.Enabled = chk;
+            bool chk = this.RadioProxySpecified.Checked;
+            this.LabelProxyAddress.Enabled = chk;
+            this.TextProxyAddress.Enabled = chk;
+            this.LabelProxyPort.Enabled = chk;
+            this.TextProxyPort.Enabled = chk;
+            this.LabelProxyUser.Enabled = chk;
+            this.TextProxyUser.Enabled = chk;
+            this.LabelProxyPassword.Enabled = chk;
+            this.TextProxyPassword.Enabled = chk;
         }
 
         private void TextProxyPort_Validating(object sender, CancelEventArgs e)
         {
             int port = 0;
-            if (string.IsNullOrEmpty(TextProxyPort.Text.Trim()))
+            if (string.IsNullOrEmpty(this.TextProxyPort.Text.Trim()))
             {
-                TextProxyPort.Text = "0";
+                this.TextProxyPort.Text = "0";
             }
 
-            if (!int.TryParse(TextProxyPort.Text.Trim(), out port))
+            if (!int.TryParse(this.TextProxyPort.Text.Trim(), out port))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.TextProxyPort_ValidatingText1);
                 e.Cancel = true;
@@ -1591,28 +1590,28 @@ namespace Hoehoe
 
         private void CheckOutputz_CheckedChanged(object sender, EventArgs e)
         {
-            if (CheckOutputz.Checked == true)
+            if (this.CheckOutputz.Checked == true)
             {
-                Label59.Enabled = true;
-                Label60.Enabled = true;
-                TextBoxOutputzKey.Enabled = true;
-                ComboBoxOutputzUrlmode.Enabled = true;
+                this.Label59.Enabled = true;
+                this.Label60.Enabled = true;
+                this.TextBoxOutputzKey.Enabled = true;
+                this.ComboBoxOutputzUrlmode.Enabled = true;
             }
             else
             {
-                Label59.Enabled = false;
-                Label60.Enabled = false;
-                TextBoxOutputzKey.Enabled = false;
-                ComboBoxOutputzUrlmode.Enabled = false;
+                this.Label59.Enabled = false;
+                this.Label60.Enabled = false;
+                this.TextBoxOutputzKey.Enabled = false;
+                this.ComboBoxOutputzUrlmode.Enabled = false;
             }
         }
 
         private void TextBoxOutputzKey_Validating(object sender, CancelEventArgs e)
         {
-            if (CheckOutputz.Checked)
+            if (this.CheckOutputz.Checked)
             {
-                TextBoxOutputzKey.Text = TextBoxOutputzKey.Text.Trim();
-                if (TextBoxOutputzKey.Text.Length == 0)
+                this.TextBoxOutputzKey.Text = this.TextBoxOutputzKey.Text.Trim();
+                if (this.TextBoxOutputzKey.Text.Length == 0)
                 {
                     MessageBox.Show(Hoehoe.Properties.Resources.TextBoxOutputzKey_Validating);
                     e.Cancel = true;
@@ -1645,7 +1644,7 @@ namespace Hoehoe
             int tm = 0;
             try
             {
-                tm = Convert.ToInt32(ConnectionTimeOut.Text);
+                tm = Convert.ToInt32(this.ConnectionTimeOut.Text);
             }
             catch (Exception)
             {
@@ -1671,7 +1670,7 @@ namespace Hoehoe
             int cnt = 0;
             try
             {
-                cnt = int.Parse(TextCountApi.Text);
+                cnt = int.Parse(this.TextCountApi.Text);
             }
             catch (Exception)
             {
@@ -1693,7 +1692,7 @@ namespace Hoehoe
             int cnt = 0;
             try
             {
-                cnt = int.Parse(TextCountApiReply.Text);
+                cnt = int.Parse(this.TextCountApiReply.Text);
             }
             catch (Exception)
             {
@@ -1712,61 +1711,62 @@ namespace Hoehoe
 
         private void ComboBoxAutoShortUrlFirst_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly || ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp)
+            if (this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly
+                || this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp)
             {
-                Label76.Enabled = true;
-                Label77.Enabled = true;
-                TextBitlyId.Enabled = true;
-                TextBitlyPw.Enabled = true;
+                this.Label76.Enabled = true;
+                this.Label77.Enabled = true;
+                this.TextBitlyId.Enabled = true;
+                this.TextBitlyPw.Enabled = true;
             }
             else
             {
-                Label76.Enabled = false;
-                Label77.Enabled = false;
-                TextBitlyId.Enabled = false;
-                TextBitlyPw.Enabled = false;
+                this.Label76.Enabled = false;
+                this.Label77.Enabled = false;
+                this.TextBitlyId.Enabled = false;
+                this.TextBitlyPw.Enabled = false;
             }
         }
 
         private void ButtonBackToDefaultFontColor_Click(object sender, EventArgs e)
         {
-            lblUnread.ForeColor = SystemColors.ControlText;
-            lblUnread.Font = new Font(SystemFonts.DefaultFont, FontStyle.Bold | FontStyle.Underline);
+            this.lblUnread.ForeColor = SystemColors.ControlText;
+            this.lblUnread.Font = new Font(SystemFonts.DefaultFont, FontStyle.Bold | FontStyle.Underline);
 
-            lblListFont.ForeColor = SystemColors.ControlText;
-            lblListFont.Font = SystemFonts.DefaultFont;
+            this.lblListFont.ForeColor = SystemColors.ControlText;
+            this.lblListFont.Font = SystemFonts.DefaultFont;
 
-            lblDetail.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
-            lblDetail.Font = SystemFonts.DefaultFont;
+            this.lblDetail.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
+            this.lblDetail.Font = SystemFonts.DefaultFont;
 
-            lblInputFont.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
-            lblInputFont.Font = SystemFonts.DefaultFont;
+            this.lblInputFont.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
+            this.lblInputFont.Font = SystemFonts.DefaultFont;
 
-            lblSelf.BackColor = Color.FromKnownColor(KnownColor.AliceBlue);
+            this.lblSelf.BackColor = Color.FromKnownColor(KnownColor.AliceBlue);
 
-            lblAtSelf.BackColor = Color.FromKnownColor(KnownColor.AntiqueWhite);
+            this.lblAtSelf.BackColor = Color.FromKnownColor(KnownColor.AntiqueWhite);
 
-            lblTarget.BackColor = Color.FromKnownColor(KnownColor.LemonChiffon);
+            this.lblTarget.BackColor = Color.FromKnownColor(KnownColor.LemonChiffon);
 
-            lblAtTarget.BackColor = Color.FromKnownColor(KnownColor.LavenderBlush);
+            this.lblAtTarget.BackColor = Color.FromKnownColor(KnownColor.LavenderBlush);
 
-            lblAtFromTarget.BackColor = Color.FromKnownColor(KnownColor.Honeydew);
+            this.lblAtFromTarget.BackColor = Color.FromKnownColor(KnownColor.Honeydew);
 
-            lblFav.ForeColor = Color.FromKnownColor(KnownColor.Red);
+            this.lblFav.ForeColor = Color.FromKnownColor(KnownColor.Red);
 
-            lblOWL.ForeColor = Color.FromKnownColor(KnownColor.Blue);
+            this.lblOWL.ForeColor = Color.FromKnownColor(KnownColor.Blue);
 
-            lblInputBackcolor.BackColor = Color.FromKnownColor(KnownColor.LemonChiffon);
+            this.lblInputBackcolor.BackColor = Color.FromKnownColor(KnownColor.LemonChiffon);
 
-            lblAtTo.BackColor = Color.FromKnownColor(KnownColor.Pink);
+            this.lblAtTo.BackColor = Color.FromKnownColor(KnownColor.Pink);
 
-            lblListBackcolor.BackColor = Color.FromKnownColor(KnownColor.Window);
+            this.lblListBackcolor.BackColor = Color.FromKnownColor(KnownColor.Window);
 
-            lblDetailBackcolor.BackColor = Color.FromKnownColor(KnownColor.Window);
+            this.lblDetailBackcolor.BackColor = Color.FromKnownColor(KnownColor.Window);
 
-            lblDetailLink.ForeColor = Color.FromKnownColor(KnownColor.Blue);
+            this.lblDetailLink.ForeColor = Color.FromKnownColor(KnownColor.Blue);
 
-            lblRetweet.ForeColor = Color.FromKnownColor(KnownColor.Green);
+            this.lblRetweet.ForeColor = Color.FromKnownColor(KnownColor.Green);
         }
 
         private void StartAuthButton_Click(object sender, EventArgs e)
@@ -1831,21 +1831,22 @@ namespace Hoehoe
         private void HotkeyText_KeyDown(object sender, KeyEventArgs e)
         {
             // KeyValueで判定する。表示文字とのテーブルを用意すること
-            HotkeyText.Text = e.KeyCode.ToString();
-            HotkeyCode.Text = e.KeyValue.ToString();
-            HotkeyText.Tag = e.KeyCode;
+            this.HotkeyText.Text = e.KeyCode.ToString();
+            this.HotkeyCode.Text = e.KeyValue.ToString();
+            this.HotkeyText.Tag = e.KeyCode;
             e.Handled = true;
             e.SuppressKeyPress = true;
         }
 
         private void HotkeyCheck_CheckedChanged(object sender, EventArgs e)
         {
-            HotkeyCtrl.Enabled = HotkeyCheck.Checked;
-            HotkeyAlt.Enabled = HotkeyCheck.Checked;
-            HotkeyShift.Enabled = HotkeyCheck.Checked;
-            HotkeyWin.Enabled = HotkeyCheck.Checked;
-            HotkeyText.Enabled = HotkeyCheck.Checked;
-            HotkeyCode.Enabled = HotkeyCheck.Checked;
+            bool chk = this.HotkeyCheck.Checked;
+            this.HotkeyCtrl.Enabled = chk;
+            this.HotkeyAlt.Enabled = chk;
+            this.HotkeyShift.Enabled = chk;
+            this.HotkeyWin.Enabled = chk;
+            this.HotkeyText.Enabled = chk;
+            this.HotkeyCode.Enabled = chk;
         }
 
         private void GetMoreTextCountApi_Validating(object sender, CancelEventArgs e)
@@ -1853,7 +1854,7 @@ namespace Hoehoe
             int cnt = 0;
             try
             {
-                cnt = int.Parse(GetMoreTextCountApi.Text);
+                cnt = int.Parse(this.GetMoreTextCountApi.Text);
             }
             catch (Exception)
             {
@@ -1872,18 +1873,19 @@ namespace Hoehoe
 
         private void UseChangeGetCount_CheckedChanged(object sender, EventArgs e)
         {
-            GetMoreTextCountApi.Enabled = UseChangeGetCount.Checked;
-            FirstTextCountApi.Enabled = UseChangeGetCount.Checked;
-            Label28.Enabled = UseChangeGetCount.Checked;
-            Label30.Enabled = UseChangeGetCount.Checked;
-            Label53.Enabled = UseChangeGetCount.Checked;
-            Label66.Enabled = UseChangeGetCount.Checked;
-            Label17.Enabled = UseChangeGetCount.Checked;
-            Label25.Enabled = UseChangeGetCount.Checked;
-            SearchTextCountApi.Enabled = UseChangeGetCount.Checked;
-            FavoritesTextCountApi.Enabled = UseChangeGetCount.Checked;
-            UserTimelineTextCountApi.Enabled = UseChangeGetCount.Checked;
-            ListTextCountApi.Enabled = UseChangeGetCount.Checked;
+            bool check = this.UseChangeGetCount.Checked;
+            this.GetMoreTextCountApi.Enabled = check;
+            this.FirstTextCountApi.Enabled = check;
+            this.Label28.Enabled = check;
+            this.Label30.Enabled = check;
+            this.Label53.Enabled = check;
+            this.Label66.Enabled = check;
+            this.Label17.Enabled = check;
+            this.Label25.Enabled = check;
+            this.SearchTextCountApi.Enabled = check;
+            this.FavoritesTextCountApi.Enabled = check;
+            this.UserTimelineTextCountApi.Enabled = check;
+            this.ListTextCountApi.Enabled = check;
         }
 
         private void FirstTextCountApi_Validating(object sender, CancelEventArgs e)
@@ -1891,7 +1893,7 @@ namespace Hoehoe
             int cnt = 0;
             try
             {
-                cnt = int.Parse(FirstTextCountApi.Text);
+                cnt = int.Parse(this.FirstTextCountApi.Text);
             }
             catch (Exception)
             {
@@ -1913,7 +1915,7 @@ namespace Hoehoe
             int cnt = 0;
             try
             {
-                cnt = int.Parse(SearchTextCountApi.Text);
+                cnt = int.Parse(this.SearchTextCountApi.Text);
             }
             catch (Exception)
             {
@@ -1935,7 +1937,7 @@ namespace Hoehoe
             int cnt = 0;
             try
             {
-                cnt = int.Parse(FavoritesTextCountApi.Text);
+                cnt = int.Parse(this.FavoritesTextCountApi.Text);
             }
             catch (Exception)
             {
@@ -1957,7 +1959,7 @@ namespace Hoehoe
             int cnt = 0;
             try
             {
-                cnt = int.Parse(UserTimelineTextCountApi.Text);
+                cnt = int.Parse(this.UserTimelineTextCountApi.Text);
             }
             catch (Exception)
             {
@@ -1979,7 +1981,7 @@ namespace Hoehoe
             int cnt = 0;
             try
             {
-                cnt = int.Parse(ListTextCountApi.Text);
+                cnt = int.Parse(this.ListTextCountApi.Text);
             }
             catch (Exception)
             {
@@ -2000,13 +2002,14 @@ namespace Hoehoe
         {
             foreach (EventCheckboxTblElement tbl in this.GetEventCheckboxTable())
             {
-                tbl.CheckBox.Enabled = CheckEventNotify.Checked;
+                tbl.CheckBox.Enabled = this.CheckEventNotify.Checked;
             }
         }
 
         private void UserAppointUrlText_Validating(object sender, CancelEventArgs e)
         {
-            if (!UserAppointUrlText.Text.StartsWith("http") && !string.IsNullOrEmpty(UserAppointUrlText.Text))
+            if (!string.IsNullOrEmpty(this.UserAppointUrlText.Text)
+                && !this.UserAppointUrlText.Text.StartsWith("http"))
             {
                 MessageBox.Show("Text Error:正しいURLではありません");
             }
@@ -2014,7 +2017,7 @@ namespace Hoehoe
 
         private void IsPreviewFoursquareCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            FoursquareGroupBox.Enabled = IsPreviewFoursquareCheckBox.Checked;
+            this.FoursquareGroupBox.Enabled = this.IsPreviewFoursquareCheckBox.Checked;
         }
 
         private void CreateAccountButton_Click(object sender, EventArgs e)
@@ -2024,7 +2027,7 @@ namespace Hoehoe
 
         private void CheckAutoConvertUrl_CheckedChanged(object sender, EventArgs e)
         {
-            ShortenTcoCheck.Enabled = CheckAutoConvertUrl.Checked;
+            this.ShortenTcoCheck.Enabled = this.CheckAutoConvertUrl.Checked;
         }
 
         #endregion event handler
@@ -2035,11 +2038,11 @@ namespace Hoehoe
         {
             try
             {
-                LabelDateTimeFormatApplied.Text = DateTime.Now.ToString(CmbDateTimeFormat.Text);
+                this.LabelDateTimeFormatApplied.Text = DateTime.Now.ToString(this.CmbDateTimeFormat.Text);
             }
             catch (FormatException)
             {
-                LabelDateTimeFormatApplied.Text = Hoehoe.Properties.Resources.CreateDateTimeFormatSampleText1;
+                this.LabelDateTimeFormatApplied.Text = Hoehoe.Properties.Resources.CreateDateTimeFormatSampleText1;
                 return false;
             }
 
@@ -2050,11 +2053,11 @@ namespace Hoehoe
         {
             // 現在の設定内容で通信
             HttpConnection.ProxyType ptype = default(HttpConnection.ProxyType);
-            if (RadioProxyNone.Checked)
+            if (this.RadioProxyNone.Checked)
             {
                 ptype = HttpConnection.ProxyType.None;
             }
-            else if (RadioProxyIE.Checked)
+            else if (this.RadioProxyIE.Checked)
             {
                 ptype = HttpConnection.ProxyType.IE;
             }
@@ -2063,15 +2066,15 @@ namespace Hoehoe
                 ptype = HttpConnection.ProxyType.Specified;
             }
 
-            string padr = TextProxyAddress.Text.Trim();
-            int pport = int.Parse(TextProxyPort.Text.Trim());
-            string pusr = TextProxyUser.Text.Trim();
-            string ppw = TextProxyPassword.Text.Trim();
+            string padr = this.TextProxyAddress.Text.Trim();
+            int pport = int.Parse(this.TextProxyPort.Text.Trim());
+            string pusr = this.TextProxyUser.Text.Trim();
+            string ppw = this.TextProxyPassword.Text.Trim();
 
             // 通信基底クラス初期化
             HttpConnection.InitializeConnection(20, ptype, padr, pport, pusr, ppw);
-            HttpTwitter.SetTwitterUrl(TwitterAPIText.Text.Trim());
-            HttpTwitter.SetTwitterSearchUrl(TwitterSearchAPIText.Text.Trim());
+            HttpTwitter.SetTwitterUrl(this.TwitterAPIText.Text.Trim());
+            HttpTwitter.SetTwitterSearchUrl(this.TwitterSearchAPIText.Text.Trim());
             this.tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
             string pinPageUrl = string.Empty;
             string rslt = this.tw.StartAuthentication(ref pinPageUrl);
@@ -2146,14 +2149,8 @@ namespace Hoehoe
 
         private void DisplayApiMaxCount()
         {
-            if (MyCommon.TwitterApiInfo.MaxCount > -1)
-            {
-                LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, MyCommon.TwitterApiInfo.MaxCount);
-            }
-            else
-            {
-                LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, "???");
-            }
+            string v = (MyCommon.TwitterApiInfo.MaxCount > -1) ? MyCommon.TwitterApiInfo.MaxCount.ToString() : "???";
+            this.LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, v);
         }
 
         private void CalcApiUsing()
@@ -2183,7 +2180,7 @@ namespace Hoehoe
             // Recent計算 0は手動更新
             int tmp = 0;
             int usingApi = 0;
-            if (int.TryParse(TimelinePeriod.Text, out tmp))
+            if (int.TryParse(this.TimelinePeriod.Text, out tmp))
             {
                 if (tmp != 0)
                 {
@@ -2192,7 +2189,7 @@ namespace Hoehoe
             }
 
             // Reply計算 0は手動更新
-            if (int.TryParse(ReplyPeriod.Text, out tmp))
+            if (int.TryParse(this.ReplyPeriod.Text, out tmp))
             {
                 if (tmp != 0)
                 {
@@ -2201,7 +2198,7 @@ namespace Hoehoe
             }
 
             // DM計算 0は手動更新 送受信両方
-            if (int.TryParse(DMPeriod.Text, out tmp))
+            if (int.TryParse(this.DMPeriod.Text, out tmp))
             {
                 if (tmp != 0)
                 {
@@ -2211,7 +2208,7 @@ namespace Hoehoe
 
             // Listsタブ計算 0は手動更新
             int apiLists = 0;
-            if (int.TryParse(ListsPeriod.Text, out tmp))
+            if (int.TryParse(this.ListsPeriod.Text, out tmp))
             {
                 if (tmp != 0)
                 {
@@ -2222,7 +2219,7 @@ namespace Hoehoe
 
             // UserTimelineタブ計算 0は手動更新
             int apiUserTimeline = 0;
-            if (int.TryParse(UserTimelinePeriod.Text, out tmp))
+            if (int.TryParse(this.UserTimelinePeriod.Text, out tmp))
             {
                 if (tmp != 0)
                 {
@@ -2238,7 +2235,7 @@ namespace Hoehoe
                     if (Twitter.AccountState == AccountState.Valid)
                     {
                         MyCommon.TwitterApiInfo.UsingCount = usingApi;
-                        var proc = new Thread(new System.Threading.ThreadStart(() =>
+                        var proc = new Thread(new ThreadStart(() =>
                         {
                             this.tw.GetInfoApi(null); // 取得エラー時はinfoCountは初期状態（値：-1）
                             if (this.IsHandleCreated && this.IsDisposed)
@@ -2250,20 +2247,20 @@ namespace Hoehoe
                     }
                     else
                     {
-                        LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, "???");
+                        this.LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, "???");
                     }
                 }
                 else
                 {
-                    LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, MyCommon.TwitterApiInfo.MaxCount);
+                    this.LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, MyCommon.TwitterApiInfo.MaxCount);
                 }
             }
 
-            LabelPostAndGet.Visible = CheckPostAndGet.Checked && !this.tw.UserStreamEnabled;
-            LabelUserStreamActive.Visible = this.tw.UserStreamEnabled;
+            this.LabelPostAndGet.Visible = this.CheckPostAndGet.Checked && !this.tw.UserStreamEnabled;
+            this.LabelUserStreamActive.Visible = this.tw.UserStreamEnabled;
 
-            LabelApiUsingUserStreamEnabled.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse2, apiLists + apiUserTimeline);
-            LabelApiUsingUserStreamEnabled.Visible = this.tw.UserStreamEnabled;
+            this.LabelApiUsingUserStreamEnabled.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse2, apiLists + apiUserTimeline);
+            this.LabelApiUsingUserStreamEnabled.Visible = this.tw.UserStreamEnabled;
         }
 
         private bool BitlyValidation(string id, string apikey)
@@ -2310,16 +2307,16 @@ namespace Hoehoe
         {
             if (this.eventCheckboxTableElements == null)
             {
-                this.eventCheckboxTableElements = new EventCheckboxTblElement[]
-                {
-                    new EventCheckboxTblElement { CheckBox = CheckFavoritesEvent, Type = EventType.Favorite },
-                    new EventCheckboxTblElement { CheckBox = CheckUnfavoritesEvent, Type = EventType.Unfavorite },
-                    new EventCheckboxTblElement { CheckBox = CheckFollowEvent, Type = EventType.Follow },
-                    new EventCheckboxTblElement { CheckBox = CheckListMemberAddedEvent, Type = EventType.ListMemberAdded },
-                    new EventCheckboxTblElement { CheckBox = CheckListMemberRemovedEvent, Type = EventType.ListMemberRemoved },
-                    new EventCheckboxTblElement { CheckBox = CheckBlockEvent, Type = EventType.Block },
-                    new EventCheckboxTblElement { CheckBox = CheckUserUpdateEvent, Type = EventType.UserUpdate },
-                    new EventCheckboxTblElement { CheckBox = CheckListCreatedEvent, Type = EventType.ListCreated }
+                this.eventCheckboxTableElements = new EventCheckboxTblElement[] 
+                { 
+                    new EventCheckboxTblElement(this.CheckFavoritesEvent, EventType.Favorite), 
+                    new EventCheckboxTblElement(this.CheckUnfavoritesEvent, EventType.Unfavorite), 
+                    new EventCheckboxTblElement(this.CheckFollowEvent, EventType.Follow), 
+                    new EventCheckboxTblElement(this.CheckListMemberAddedEvent, EventType.ListMemberAdded), 
+                    new EventCheckboxTblElement(this.CheckListMemberRemovedEvent, EventType.ListMemberRemoved), 
+                    new EventCheckboxTblElement(this.CheckBlockEvent, EventType.Block), 
+                    new EventCheckboxTblElement(this.CheckUserUpdateEvent, EventType.UserUpdate), 
+                    new EventCheckboxTblElement(this.CheckListCreatedEvent, EventType.ListCreated)
                 };
             }
 
@@ -2336,11 +2333,11 @@ namespace Hoehoe
                 switch (tbl.CheckBox.CheckState)
                 {
                     case CheckState.Checked:
-                        evt = evt | tbl.Type;
-                        myevt = myevt | tbl.Type;
+                        evt = evt | tbl.EventType;
+                        myevt = myevt | tbl.EventType;
                         break;
                     case CheckState.Indeterminate:
-                        evt = evt | tbl.Type;
+                        evt = evt | tbl.EventType;
                         break;
                     case CheckState.Unchecked:
                         break;
@@ -2356,13 +2353,13 @@ namespace Hoehoe
             var evt = eventnotifyflag;
             var myevt = isMyeventnotifyflag;
 
-            CheckEventNotify.Checked = rootEnabled;
+            this.CheckEventNotify.Checked = rootEnabled;
 
             foreach (EventCheckboxTblElement tbl in this.GetEventCheckboxTable())
             {
-                if (Convert.ToBoolean(evt & tbl.Type))
+                if (Convert.ToBoolean(evt & tbl.EventType))
                 {
-                    if (Convert.ToBoolean(myevt & tbl.Type))
+                    if (Convert.ToBoolean(myevt & tbl.EventType))
                     {
                         tbl.CheckBox.CheckState = CheckState.Checked;
                     }
@@ -2387,8 +2384,8 @@ namespace Hoehoe
                 this.EventSoundFile = string.Empty;
             }
 
-            ComboBoxEventNotifySound.Items.Clear();
-            ComboBoxEventNotifySound.Items.Add(string.Empty);
+            this.ComboBoxEventNotifySound.Items.Clear();
+            this.ComboBoxEventNotifySound.Items.Add(string.Empty);
             DirectoryInfo dir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
             if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
             {
@@ -2397,16 +2394,16 @@ namespace Hoehoe
 
             foreach (FileInfo file in dir.GetFiles("*.wav"))
             {
-                ComboBoxEventNotifySound.Items.Add(file.Name);
+                this.ComboBoxEventNotifySound.Items.Add(file.Name);
             }
 
-            int idx = ComboBoxEventNotifySound.Items.IndexOf(this.EventSoundFile);
+            int idx = this.ComboBoxEventNotifySound.Items.IndexOf(this.EventSoundFile);
             if (idx == -1)
             {
                 idx = 0;
             }
 
-            ComboBoxEventNotifySound.SelectedIndex = idx;
+            this.ComboBoxEventNotifySound.SelectedIndex = idx;
         }
 
         private void OpenUrl(string url)
@@ -2415,7 +2412,11 @@ namespace Hoehoe
             string path = this.BrowserPathText.Text;
             try
             {
-                if (!string.IsNullOrEmpty(this.BrowserPath))
+                if (string.IsNullOrEmpty(this.BrowserPath))
+                {
+                    Process.Start(myPath);
+                }
+                else
                 {
                     if (path.StartsWith("\"") && path.Length > 2 && path.IndexOf("\"", 2) > -1)
                     {
@@ -2435,10 +2436,6 @@ namespace Hoehoe
                         Process.Start(path, myPath);
                     }
                 }
-                else
-                {
-                    Process.Start(myPath);
-                }
             }
             catch (Exception)
             {
@@ -2451,8 +2448,15 @@ namespace Hoehoe
 
         private class EventCheckboxTblElement
         {
-            public CheckBox CheckBox;
-            public EventType Type;
+            public EventCheckboxTblElement(CheckBox cb, EventType et)
+            {
+                this.CheckBox = cb;
+                this.EventType = et;
+            }
+
+            public CheckBox CheckBox { get; private set; }
+
+            public EventType EventType { get; private set; }
         }
 
         #endregion inner class
