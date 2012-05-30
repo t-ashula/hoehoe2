@@ -369,7 +369,8 @@ namespace Hoehoe
             this.InitializeComponent();
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
-            this.HookGlobalHotkey = new HookGlobalHotkey(this);
+            this.hookGlobalHotkey = new HookGlobalHotkey(this);
+            this.hookGlobalHotkey.HotkeyPressed += this.HookGlobalHotkey_HotkeyPressed;
             this.apiGauge.Control.Size = new Size(70, 22);
             this.apiGauge.Control.Margin = new Padding(0, 3, 0, 2);
             this.apiGauge.GaugeHeight = 8;
@@ -513,28 +514,6 @@ namespace Hoehoe
                 if (this.timerTimeline != null)
                 {
                     this.timerTimeline.Elapsed += this.TimerTimeline_Elapsed;
-                }
-            }
-        }
-
-        private HookGlobalHotkey HookGlobalHotkey
-        {
-            get
-            {
-                return this.hookGlobalHotkey;
-            }
-
-            set
-            {
-                if (this.hookGlobalHotkey != null)
-                {
-                    this.hookGlobalHotkey.HotkeyPressed -= this.HookGlobalHotkey_HotkeyPressed;
-                }
-
-                this.hookGlobalHotkey = value;
-                if (this.hookGlobalHotkey != null)
-                {
-                    this.hookGlobalHotkey.HotkeyPressed += this.HookGlobalHotkey_HotkeyPressed;
                 }
             }
         }
@@ -2431,7 +2410,7 @@ namespace Hoehoe
                     modKey = modKey | HookGlobalHotkey.ModKeys.Win;
                 }
 
-                this.HookGlobalHotkey.RegisterOriginalHotkey(this.SettingDialog.HotkeyKey, this.SettingDialog.HotkeyValue, modKey);
+                this.hookGlobalHotkey.RegisterOriginalHotkey(this.SettingDialog.HotkeyKey, this.SettingDialog.HotkeyValue, modKey);
             }
 
             // Twitter用通信クラス初期化
@@ -4014,7 +3993,7 @@ namespace Hoehoe
             else
             {
                 // Google.GASender.GetInstance().TrackEventWithCategory("post", "end", this.Tw.UserId_)
-                this.HookGlobalHotkey.UnregisterAllOriginalHotkey();
+                this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
                 this.ignoreConfigSave = true;
                 MyCommon.IsEnding = true;
                 this.TimerTimeline.Enabled = false;
@@ -6008,7 +5987,7 @@ namespace Hoehoe
                             break;
                     }
 
-                    this.HookGlobalHotkey.UnregisterAllOriginalHotkey();
+                    this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
                     if (this.SettingDialog.HotkeyEnabled)
                     {
                         ///グローバルホットキーの登録。設定で変更可能にするかも
@@ -6033,7 +6012,7 @@ namespace Hoehoe
                             modKey = modKey | HookGlobalHotkey.ModKeys.Win;
                         }
 
-                        this.HookGlobalHotkey.RegisterOriginalHotkey(this.SettingDialog.HotkeyKey, this.SettingDialog.HotkeyValue, modKey);
+                        this.hookGlobalHotkey.RegisterOriginalHotkey(this.SettingDialog.HotkeyKey, this.SettingDialog.HotkeyValue, modKey);
                     }
 
                     if (uid != this.tw.Username)
