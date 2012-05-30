@@ -44,20 +44,20 @@ namespace Hoehoe
 
         public string SWord
         {
-            get { return SWordText.Text; }
-            set { SWordText.Text = value; }
+            get { return this.SWordText.Text; }
+            set { this.SWordText.Text = value; }
         }
 
         public bool CheckCaseSensitive
         {
-            get { return CheckSearchCaseSensitive.Checked; }
-            set { CheckSearchCaseSensitive.Checked = value; }
+            get { return this.CheckSearchCaseSensitive.Checked; }
+            set { this.CheckSearchCaseSensitive.Checked = value; }
         }
 
         public bool CheckRegex
         {
-            get { return CheckSearchRegex.Checked; }
-            set { CheckSearchRegex.Checked = value; }
+            get { return this.CheckSearchRegex.Checked; }
+            set { this.CheckSearchRegex.Checked = value; }
         }
 
         #endregion properties
@@ -78,8 +78,8 @@ namespace Hoehoe
 
         private void SearchWord_Shown(object sender, EventArgs e)
         {
-            SWordText.SelectAll();
-            SWordText.Focus();
+            this.SWordText.SelectAll();
+            this.SWordText.Focus();
         }
 
         #endregion event handler
