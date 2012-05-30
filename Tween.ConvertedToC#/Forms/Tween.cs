@@ -325,7 +325,7 @@ namespace Hoehoe
         private Dictionary<string, IMultimediaShareService> pictureServices;
         private string postBrowserStatusText = string.Empty;
         private bool colorize = false;
-        private System.Timers.Timer timerTimeline = new System.Timers.Timer();
+        private System.Timers.Timer timerTimeline;
         private ImageListViewItem displayItem;
         private List<UrlUndoInfo> urlUndoBuffer = null;
 
@@ -379,6 +379,8 @@ namespace Hoehoe
             this.StatusStrip1.Items.Insert(2, this.apiGauge);
             this.growlHelper = new GrowlHelper("Hoehoe");
             this.growlHelper.NotifyClicked += this.GrowlHelper_Callback;
+            this.timerTimeline = new System.Timers.Timer();
+            this.timerTimeline.Elapsed += this.TimerTimeline_Elapsed;
         }
 
         #endregion constructor
@@ -454,28 +456,6 @@ namespace Hoehoe
         public AtIdSupplement HashSupl { get; set; }
 
         public HashtagManage HashMgr { get; set; }
-
-        private System.Timers.Timer TimerTimeline
-        {
-            get
-            {
-                return this.timerTimeline;
-            }
-
-            set
-            {
-                if (this.timerTimeline != null)
-                {
-                    this.timerTimeline.Elapsed -= this.TimerTimeline_Elapsed;
-                }
-
-                this.timerTimeline = value;
-                if (this.timerTimeline != null)
-                {
-                    this.timerTimeline.Elapsed += this.TimerTimeline_Elapsed;
-                }
-            }
-        }
 
         private string ImageService
         {
@@ -2472,12 +2452,12 @@ namespace Hoehoe
             }
 
             // タイマー設定
-            this.TimerTimeline.AutoReset = true;
-            this.TimerTimeline.SynchronizingObject = this;
+            this.timerTimeline.AutoReset = true;
+            this.timerTimeline.SynchronizingObject = this;
 
             // Recent取得間隔
-            this.TimerTimeline.Interval = 1000;
-            this.TimerTimeline.Enabled = true;
+            this.timerTimeline.Interval = 1000;
+            this.timerTimeline.Enabled = true;
 
             // 更新中アイコンアニメーション間隔
             this.TimerRefreshIcon.Interval = 200;
@@ -2806,7 +2786,7 @@ namespace Hoehoe
 
         private void TimerInterval_Changed(object sender, IntervalChangedEventArgs e)
         {
-            if (!this.TimerTimeline.Enabled)
+            if (!this.timerTimeline.Enabled)
             {
                 return;
             }
@@ -3955,7 +3935,7 @@ namespace Hoehoe
                 this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
                 this.ignoreConfigSave = true;
                 MyCommon.IsEnding = true;
-                this.TimerTimeline.Enabled = false;
+                this.timerTimeline.Enabled = false;
                 this.TimerRefreshIcon.Enabled = false;
             }
         }
@@ -12174,7 +12154,7 @@ namespace Hoehoe
             }
 
             this.isInitializing = false;
-            this.TimerTimeline.Enabled = true;
+            this.timerTimeline.Enabled = true;
         }
 
         private bool IsInitialRead()
@@ -14515,7 +14495,7 @@ namespace Hoehoe
                 this.tw.StopUserStream();
             }
 
-            this.TimerTimeline.Enabled = isEnable;
+            this.timerTimeline.Enabled = isEnable;
         }
 
         private void StopRefreshAllMenuItem_CheckedChanged(object sender, EventArgs e)
