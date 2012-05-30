@@ -143,7 +143,7 @@ namespace Hoehoe
         private Twitter tw = new Twitter();
 
         // Growl呼び出し部
-        private GrowlHelper growl = new GrowlHelper("Hoehoe");
+        private GrowlHelper growlHelper;
 
         // サブ画面インスタンス
         private AppendSettingDialog settingDialog = AppendSettingDialog.Instance; // 設定画面インスタンス
@@ -377,6 +377,8 @@ namespace Hoehoe
             this.apiGauge.GaugeHeight = 8;
             this.apiGauge.Control.DoubleClick += this.ApiInfoMenuItem_Click;
             this.StatusStrip1.Items.Insert(2, this.apiGauge);
+            this.growlHelper = new GrowlHelper("Hoehoe");
+            this.growlHelper.NotifyClicked += this.GrowlHelper_Callback;
         }
 
         #endregion constructor
@@ -452,28 +454,6 @@ namespace Hoehoe
         public AtIdSupplement HashSupl { get; set; }
 
         public HashtagManage HashMgr { get; set; }
-
-        private GrowlHelper GrowlHelper
-        {
-            get
-            {
-                return this.growl;
-            }
-
-            set
-            {
-                if (this.growl != null)
-                {
-                    this.growl.NotifyClicked -= this.GrowlHelper_Callback;
-                }
-
-                this.growl = value;
-                if (this.growl != null)
-                {
-                    this.growl.NotifyClicked += this.GrowlHelper_Callback;
-                }
-            }
-        }
 
         private System.Timers.Timer TimerTimeline
         {
@@ -2488,7 +2468,7 @@ namespace Hoehoe
 
             if (this.settingDialog.IsNotifyUseGrowl)
             {
-                GrowlHelper.RegisterGrowl();
+                growlHelper.RegisterGrowl();
             }
 
             // タイマー設定
@@ -3380,7 +3360,7 @@ namespace Hoehoe
                                 return;
                             }
 
-                            GrowlHelper.Notify(nt, post.StatusId.ToString(), title.ToString(), notifyText, this.iconDict[post.ImageUrl], post.ImageUrl);
+                            growlHelper.Notify(nt, post.StatusId.ToString(), title.ToString(), notifyText, this.iconDict[post.ImageUrl], post.ImageUrl);
                         }
                     }
                     else
@@ -6002,7 +5982,7 @@ namespace Hoehoe
                     this.SetImageServiceCombo();
                     if (this.settingDialog.IsNotifyUseGrowl)
                     {
-                        GrowlHelper.RegisterGrowl();
+                        growlHelper.RegisterGrowl();
                     }
 
                     try
@@ -14276,7 +14256,7 @@ namespace Hoehoe
 
                 if (this.settingDialog.IsNotifyUseGrowl)
                 {
-                    GrowlHelper.Notify(GrowlHelper.NotifyType.UserStreamEvent, ev.Id.ToString(), title.ToString(), text);
+                   growlHelper.Notify(GrowlHelper.NotifyType.UserStreamEvent, ev.Id.ToString(), title.ToString(), text);
                 }
                 else
                 {
