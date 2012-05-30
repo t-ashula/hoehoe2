@@ -53,10 +53,6 @@ namespace Hoehoe
     {
         #region public fields
 
-        public AtIdSupplement AtIdSupl; // @id補助
-        public AtIdSupplement HashSupl; // Hashtag補助
-        public HashtagManage HashMgr;
-
         #endregion public fields
 
         #region private fields
@@ -220,7 +216,6 @@ namespace Hoehoe
         private Color clrListBackcolor;
 
         // 入力欄背景色
-        private Color clrInputBackcolor;
 
         // 入力欄文字色
         private Color clrInputForecolor;
@@ -433,11 +428,7 @@ namespace Hoehoe
 
         #region properties
 
-        public Color InputBackColor
-        {
-            get { return this.clrInputBackcolor; }
-            set { this.clrInputBackcolor = value; }
-        }
+        public Color InputBackColor { get; set; }
 
         public Twitter TwitterInstance
         {
@@ -458,6 +449,18 @@ namespace Hoehoe
         {
             get { return this.SettingDialog.FavEventUnread; }
         }
+
+        /// <summary>
+        /// @id補助
+        /// </summary>
+        public AtIdSupplement AtIdSupl { get; set; }
+
+        /// <summary>
+        /// Hashtag補助
+        /// </summary>
+        public AtIdSupplement HashSupl { get; set; }
+
+        public HashtagManage HashMgr { get; set; }
 
         private AppendSettingDialog SettingDialog
         {
@@ -556,6 +559,7 @@ namespace Hoehoe
         {
             get { return this.curPost != null && !this.curPost.IsDeleted; }
         }
+
 
         #endregion properties
 
@@ -2036,7 +2040,7 @@ namespace Hoehoe
             this.clrAtFromTarget = this.cfgLocal.ColorAtFromTarget;
             this.clrAtTo = this.cfgLocal.ColorAtTo;
             this.clrListBackcolor = this.cfgLocal.ColorListBackcolor;
-            this.clrInputBackcolor = this.cfgLocal.ColorInputBackcolor;
+            this.InputBackColor = this.cfgLocal.ColorInputBackcolor;
             this.clrInputForecolor = this.cfgLocal.ColorInputFont;
             this.fntInputFont = this.cfgLocal.FontInputFont;
 
@@ -2154,7 +2158,7 @@ namespace Hoehoe
             this.SettingDialog.ColorAtFromTarget = this.clrAtFromTarget;
             this.SettingDialog.ColorAtTo = this.clrAtTo;
             this.SettingDialog.ColorListBackcolor = this.clrListBackcolor;
-            this.SettingDialog.ColorInputBackcolor = this.clrInputBackcolor;
+            this.SettingDialog.ColorInputBackcolor = this.InputBackColor;
             this.SettingDialog.ColorInputFont = this.clrInputForecolor;
             this.SettingDialog.FontInputFont = this.fntInputFont;
             this.SettingDialog.NameBalloon = this.cfgCommon.NameBalloon;
@@ -2369,7 +2373,7 @@ namespace Hoehoe
                 this.clrAtFromTarget = this.SettingDialog.ColorAtFromTarget;
                 this.clrAtTo = this.SettingDialog.ColorAtTo;
                 this.clrListBackcolor = this.SettingDialog.ColorListBackcolor;
-                this.clrInputBackcolor = this.SettingDialog.ColorInputBackcolor;
+                this.InputBackColor = this.SettingDialog.ColorInputBackcolor;
                 this.clrInputForecolor = this.SettingDialog.ColorInputFont;
                 this.fntInputFont = this.SettingDialog.FontInputFont;
                 this.brsForeColorUnread.Dispose();
@@ -5883,14 +5887,14 @@ namespace Hoehoe
                     this.clrAtFromTarget = this.SettingDialog.ColorAtFromTarget;
                     this.clrAtTo = this.SettingDialog.ColorAtTo;
                     this.clrListBackcolor = this.SettingDialog.ColorListBackcolor;
-                    this.clrInputBackcolor = this.SettingDialog.ColorInputBackcolor;
+                    this.InputBackColor = this.SettingDialog.ColorInputBackcolor;
                     this.clrInputForecolor = this.SettingDialog.ColorInputFont;
                     this.fntInputFont = this.SettingDialog.FontInputFont;
                     try
                     {
                         if (this.StatusText.Focused)
                         {
-                            this.StatusText.BackColor = this.clrInputBackcolor;
+                            this.StatusText.BackColor = this.InputBackColor;
                         }
 
                         this.StatusText.Font = this.fntInputFont;
@@ -9169,7 +9173,7 @@ namespace Hoehoe
         {
             // フォーカスの戻り先を StatusText に設定
             this.Tag = this.StatusText;
-            this.StatusText.BackColor = this.clrInputBackcolor;
+            this.StatusText.BackColor = this.InputBackColor;
         }
 
         private void StatusText_Leave(object sender, EventArgs e)
@@ -9437,7 +9441,7 @@ namespace Hoehoe
                 this.cfgLocal.ColorAtFromTarget = this.clrAtFromTarget;
                 this.cfgLocal.ColorAtTo = this.clrAtTo;
                 this.cfgLocal.ColorListBackcolor = this.clrListBackcolor;
-                this.cfgLocal.ColorInputBackcolor = this.clrInputBackcolor;
+                this.cfgLocal.ColorInputBackcolor = this.InputBackColor;
                 this.cfgLocal.ColorInputFont = this.clrInputForecolor;
                 this.cfgLocal.FontInputFont = this.fntInputFont;
                 this.cfgLocal.BrowserPath = this.SettingDialog.BrowserPath;
@@ -14746,8 +14750,9 @@ namespace Hoehoe
         /// </summary>
         private class UrlUndoInfo
         {
-            public string Before;
-            public string After;
+            public string Before { get; set; }
+         
+            public string After { get; set; }
         }
 
         private class ReplyChain
@@ -14850,38 +14855,6 @@ namespace Hoehoe
                 this.Status = status;
                 this.InReplyToId = replyToId;
                 this.InReplyToName = replyToName;
-            }
-        }
-
-        private class SpaceKeyCanceler : NativeWindow, IDisposable
-        {
-            public SpaceKeyCanceler(Control control)
-            {
-                this.AssignHandle(control.Handle);
-            }
-
-            public event EventHandler SpaceCancel;
-
-            public void Dispose()
-            {
-                this.ReleaseHandle();
-            }
-
-            protected override void WndProc(ref Message m)
-            {
-                const int WM_KEYDOWN = 0x100;
-                const int VK_SPACE = 0x20;
-                if ((m.Msg == WM_KEYDOWN) && (Convert.ToInt32(m.WParam) == VK_SPACE))
-                {
-                    if (this.SpaceCancel != null)
-                    {
-                        this.SpaceCancel(this, EventArgs.Empty);
-                    }
-
-                    return;
-                }
-
-                base.WndProc(ref m);
             }
         }
 

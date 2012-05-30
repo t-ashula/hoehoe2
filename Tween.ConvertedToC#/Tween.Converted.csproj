@@ -188,6 +188,7 @@
     <Compile Include="Forms\AuthBrowser.Designer.cs">
       <DependentUpon>AuthBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SpaceKeyCanceler.cs" />
     <Compile Include="IntervalChangedEventArgs.cs" />
     <Compile Include="WebServices\bing.cs" />
     <Compile Include="Connection\HttpConnection.cs" />
