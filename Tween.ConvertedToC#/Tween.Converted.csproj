@@ -189,6 +189,10 @@
       <DependentUpon>AuthBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SpaceKeyCanceler.cs" />
+    <Compile Include="Forms\Tween.InnerClass.cs">
+      <DependentUpon>Tween.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="IntervalChangedEventArgs.cs" />
     <Compile Include="WebServices\bing.cs" />
     <Compile Include="Connection\HttpConnection.cs" />

@@ -51,10 +51,6 @@ namespace Hoehoe
 
     public partial class TweenMain
     {
-        #region public fields
-
-        #endregion public fields
-
         #region private fields
 
         /// <summary>
@@ -559,7 +555,6 @@ namespace Hoehoe
         {
             get { return this.curPost != null && !this.curPost.IsDeleted; }
         }
-
 
         #endregion properties
 
@@ -14742,160 +14737,5 @@ namespace Hoehoe
         }
 
         #endregion private methods
-
-        #region inner types
-
-        /// <summary>
-        /// URL短縮のUndo用
-        /// </summary>
-        private class UrlUndoInfo
-        {
-            public string Before { get; set; }
-         
-            public string After { get; set; }
-        }
-
-        private class ReplyChain
-        {
-            public ReplyChain(long originalId, long inReplyToId, TabPage originalTab)
-            {
-                this.OriginalId = originalId;
-                this.InReplyToId = inReplyToId;
-                this.OriginalTab = originalTab;
-            }
-
-            public long OriginalId { get; private set; }
-
-            public long InReplyToId { get; private set; }
-
-            public TabPage OriginalTab { get; private set; }
-        }
-
-        /// <summary>
-        /// Backgroundworkerの処理結果通知用引数構造体
-        /// </summary>
-        private class GetWorkerResult
-        {
-            // 処理結果詳細メッセージ。エラー時に値がセットされる
-            public string RetMsg = string.Empty;
-
-            // 取得対象ページ番号
-            public int Page;
-
-            // 取得終了ページ番号（継続可能ならインクリメントされて返る。pageと比較して継続判定）
-            public int EndPage;
-
-            // 処理種別
-            public WorkerType WorkerType;
-
-            // 新規取得したアイコンイメージ
-            public Dictionary<string, Image> Imgs;
-
-            // Fav追加・削除時のタブ名
-            public string TabName = string.Empty;
-
-            // Fav追加・削除時のID
-            public List<long> Ids;
-
-            // Fav追加・削除成功分のID
-            public List<long> SIds;
-
-            public bool NewDM;
-            public int AddCount;
-            public PostingStatus PStatus;
-        }
-
-        /// <summary>
-        /// Backgroundworkerへ処理内容を通知するための引数用構造体
-        /// </summary>
-        private class GetWorkerArg
-        {
-            // 処理対象ページ番号
-            public int Page;
-
-            // 処理終了ページ番号（起動時の読み込みページ数。通常時はpageと同じ値をセット）
-            public int EndPage;
-
-            // 処理種別
-            public WorkerType WorkerType;
-
-            // URLをブラウザで開くときのアドレス
-            public string Url = string.Empty;
-
-            // 発言POST時の発言内容
-            public PostingStatus PStatus = new PostingStatus();
-
-            // Fav追加・削除時のItemIndex
-            public List<long> Ids;
-
-            // Fav追加・削除成功分のItemIndex
-            public List<long> SIds;
-
-            // Fav追加・削除時のタブ名
-            public string TabName = string.Empty;
-        }
-
-        private class PostingStatus
-        {
-            public string Status = string.Empty;
-            public long InReplyToId = 0;
-            public string InReplyToName = string.Empty;
-
-            // 画像投稿サービス名
-            public string ImageService = string.Empty;
-
-            public string ImagePath = string.Empty;
-
-            public PostingStatus()
-            {
-            }
-
-            public PostingStatus(string status, long replyToId, string replyToName)
-            {
-                this.Status = status;
-                this.InReplyToId = replyToId;
-                this.InReplyToName = replyToName;
-            }
-        }
-
-        private class GetApiInfoArgs
-        {
-            public Twitter Tw;
-            public ApiInfo Info;
-        }
-
-        private class FollowRemoveCommandArgs
-        {
-            public Twitter Tw;
-            public string Id;
-        }
-
-        private class ShowFriendshipArgs
-        {
-            public Twitter Tw;
-            public List<FriendshipInfo> Ids = new List<FriendshipInfo>();
-
-            public class FriendshipInfo
-            {
-                public string Id = string.Empty;
-                public bool IsFollowing = false;
-                public bool IsFollowed = false;
-                public bool IsError = false;
-
-                public FriendshipInfo(string id)
-                {
-                    this.Id = id;
-                }
-            }
-        }
-
-        private class GetUserInfoArgs
-        {
-            public Hoehoe.Twitter Tw;
-            public string Id;
-            public DataModels.Twitter.User User;
-        }
-
-        #endregion inner types
     }
 }
