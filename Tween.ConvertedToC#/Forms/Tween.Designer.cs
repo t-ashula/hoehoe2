@@ -2447,7 +2447,7 @@ namespace Hoehoe
             this.Activated += new System.EventHandler(this.TweenMain_Activated);
             this.Deactivate += new System.EventHandler(this.TweenMain_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Tween_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.TweenMain_Load);
             this.Shown += new System.EventHandler(this.TweenMain_Shown);
             this.ClientSizeChanged += new System.EventHandler(this.Tween_ClientSizeChanged);
             this.LocationChanged += new System.EventHandler(this.Tween_LocationChanged);

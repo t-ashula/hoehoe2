@@ -7689,7 +7689,7 @@ namespace Hoehoe
             Microsoft.Win32.SystemEvents.PowerModeChanged -= this.SystemEvents_PowerModeChanged;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void TweenMain_Load(object sender, EventArgs e)
         {
             this.ignoreConfigSave = true;
             this.Visible = false;
