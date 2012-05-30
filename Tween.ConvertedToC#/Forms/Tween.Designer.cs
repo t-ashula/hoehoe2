@@ -677,6 +677,7 @@ namespace Hoehoe
             this.ImageSelectionPanel.Controls.Add(this.ImageSelectedPicture);
             this.ImageSelectionPanel.Controls.Add(this.ImagePathPanel);
             this.ImageSelectionPanel.Name = "ImageSelectionPanel";
+            this.ImageSelectionPanel.VisibleChanged += new System.EventHandler(this.ImageSelectionPanel_VisibleChanged);
             // 
             // ImageSelectedPicture
             // 
@@ -699,6 +700,10 @@ namespace Hoehoe
             // 
             resources.ApplyResources(this.ImagefilePathText, "ImagefilePathText");
             this.ImagefilePathText.Name = "ImagefilePathText";
+            this.ImagefilePathText.PreviewKeyDown += new PreviewKeyDownEventHandler(this.ImageSelection_PreviewKeyDown);
+            this.ImagefilePathText.KeyPress += new KeyPressEventHandler(this.ImageSelection_KeyPress);
+            this.ImagefilePathText.KeyDown += new KeyEventHandler(this.ImageSelection_KeyDown);
+            this.ImagefilePathText.Validating += new System.ComponentModel.CancelEventHandler(this.ImagefilePathText_Validating);
             // 
             // FilePickButton
             // 
@@ -706,6 +711,9 @@ namespace Hoehoe
             this.FilePickButton.Name = "FilePickButton";
             this.FilePickButton.UseVisualStyleBackColor = true;
             this.FilePickButton.Click += new System.EventHandler(this.FilePickButton_Click);
+            this.FilePickButton.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.ImageSelection_PreviewKeyDown);
+            this.FilePickButton.KeyPress += new KeyPressEventHandler(this.ImageSelection_KeyPress);
+            this.FilePickButton.KeyDown += new KeyEventHandler(this.ImageSelection_KeyDown);
             // 
             // Label2
             // 
@@ -721,6 +729,10 @@ namespace Hoehoe
             resources.GetString("ImageServiceCombo.Items"),
             resources.GetString("ImageServiceCombo.Items1")});
             this.ImageServiceCombo.Name = "ImageServiceCombo";
+            this.ImageServiceCombo.SelectedIndexChanged += new System.EventHandler(this.ImageServiceCombo_SelectedIndexChanged);
+            this.ImageServiceCombo.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.ImageSelection_PreviewKeyDown);
+            this.ImageServiceCombo.KeyPress += new KeyPressEventHandler(this.ImageSelection_KeyPress);
+            this.ImageServiceCombo.KeyDown += new KeyEventHandler(this.ImageSelection_KeyDown);
             // 
             // ImageCancelButton
             // 

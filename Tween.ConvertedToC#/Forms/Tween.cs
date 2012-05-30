@@ -1549,173 +1549,6 @@ namespace Hoehoe
             this.replyToName = string.Empty;
         }
 
-        private void TweenMain_Activated(object sender, EventArgs e)
-        {
-            // 画面がアクティブになったら、発言欄の背景色戻す
-            if (this.StatusText.Focused)
-            {
-                this.StatusText_Enter(this.StatusText, EventArgs.Empty);
-            }
-        }
-
-        private void TweenMain_Disposed(object sender, EventArgs e)
-        {
-            // 後始末
-            this.settingDialog.Dispose();
-            this.tabDialog.Dispose();
-            this.searchDialog.Dispose();
-            this.fltDialog.Dispose();
-            this.urlDialog.Dispose();
-            this.spaceKeyCanceler.Dispose();
-            if (this.iconAt != null)
-            {
-                this.iconAt.Dispose();
-            }
-
-            if (this.iconAtRed != null)
-            {
-                this.iconAtRed.Dispose();
-            }
-
-            if (this.iconAtSmoke != null)
-            {
-                this.iconAtSmoke.Dispose();
-            }
-
-            if (this.iconRefresh[0] != null)
-            {
-                this.iconRefresh[0].Dispose();
-            }
-
-            if (this.iconRefresh[1] != null)
-            {
-                this.iconRefresh[1].Dispose();
-            }
-
-            if (this.iconRefresh[2] != null)
-            {
-                this.iconRefresh[2].Dispose();
-            }
-
-            if (this.iconRefresh[3] != null)
-            {
-                this.iconRefresh[3].Dispose();
-            }
-
-            if (this.tabIcon != null)
-            {
-                this.tabIcon.Dispose();
-            }
-
-            if (this.mainIcon != null)
-            {
-                this.mainIcon.Dispose();
-            }
-
-            if (this.replyIcon != null)
-            {
-                this.replyIcon.Dispose();
-            }
-
-            if (this.replyIconBlink != null)
-            {
-                this.replyIconBlink.Dispose();
-            }
-
-            this.brsHighLight.Dispose();
-            this.brsHighLightText.Dispose();
-            if (this.brsForeColorUnread != null)
-            {
-                this.brsForeColorUnread.Dispose();
-            }
-
-            if (this.brsForeColorReaded != null)
-            {
-                this.brsForeColorReaded.Dispose();
-            }
-
-            if (this.brsForeColorFav != null)
-            {
-                this.brsForeColorFav.Dispose();
-            }
-
-            if (this.brsForeColorOWL != null)
-            {
-                this.brsForeColorOWL.Dispose();
-            }
-
-            if (this.brsForeColorRetweet != null)
-            {
-                this.brsForeColorRetweet.Dispose();
-            }
-
-            if (this.brsBackColorMine != null)
-            {
-                this.brsBackColorMine.Dispose();
-            }
-
-            if (this.brsBackColorAt != null)
-            {
-                this.brsBackColorAt.Dispose();
-            }
-
-            if (this.brsBackColorYou != null)
-            {
-                this.brsBackColorYou.Dispose();
-            }
-
-            if (this.brsBackColorAtYou != null)
-            {
-                this.brsBackColorAtYou.Dispose();
-            }
-
-            if (this.brsBackColorAtFromTarget != null)
-            {
-                this.brsBackColorAtFromTarget.Dispose();
-            }
-
-            if (this.brsBackColorAtTo != null)
-            {
-                this.brsBackColorAtTo.Dispose();
-            }
-
-            if (this.brsBackColorNone != null)
-            {
-                this.brsBackColorNone.Dispose();
-            }
-
-            if (this.brsDeactiveSelection != null)
-            {
-                this.brsDeactiveSelection.Dispose();
-            }
-
-            this.shield.Dispose();
-            this.tabStringFormat.Dispose();
-            foreach (BackgroundWorker bw in this.bworkers)
-            {
-                if (bw != null)
-                {
-                    bw.Dispose();
-                }
-            }
-
-            if (this.followerFetchWorker != null)
-            {
-                this.followerFetchWorker.Dispose();
-            }
-
-            this.apiGauge.Dispose();
-            if (this.iconDict != null)
-            {
-                ((ImageDictionary)this.iconDict).PauseGetImage = true;
-                ((IDisposable)this.iconDict).Dispose();
-            }
-
-            // 終了時にRemoveHandlerしておかないとメモリリークする
-            // http://msdn.microsoft.com/ja-jp/library/microsoft.win32.systemevents.powermodechanged.aspx
-            Microsoft.Win32.SystemEvents.PowerModeChanged -= this.SystemEvents_PowerModeChanged;
-        }
-
         private void LoadIcon(ref Icon iconInstance, string fileName)
         {
             string dir = Application.StartupPath;
@@ -1868,819 +1701,6 @@ namespace Hoehoe
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            this.ignoreConfigSave = true;
-            this.Visible = false;
-
-            this.securityManager = new InternetSecurityManager(this.PostBrowser);
-            this.thumbnail = new Thumbnail(this);
-
-            MyCommon.TwitterApiInfo.Changed += this.SetStatusLabelApiHandler;
-            Microsoft.Win32.SystemEvents.PowerModeChanged += this.SystemEvents_PowerModeChanged;
-
-            this.VerUpMenuItem.Image = this.shield.Icon;
-            var cmdArgs = System.Environment.GetCommandLineArgs().Skip(1).ToArray();
-            if (cmdArgs.Length != 0 && cmdArgs.Contains("/d"))
-            {
-                MyCommon.TraceFlag = true;
-            }
-
-            this.spaceKeyCanceler = new SpaceKeyCanceler(this.PostButton);
-            this.spaceKeyCanceler.SpaceCancel += this.SpaceKeyCanceler_SpaceCancel;
-
-            Regex.CacheSize = 100;
-
-            this.InitializeTraceFrag();
-
-            // アイコン読み込み
-            this.LoadIcons();
-
-            // 発言保持クラス
-            this.statuses = TabInformations.GetInstance();
-
-            // アイコン設定
-            this.Icon = this.mainIcon;          // メインフォーム（TweenMain）
-            this.NotifyIcon1.Icon = this.iconAt;     // タスクトレイ
-            this.TabImage.Images.Add(this.tabIcon);  // タブ見出し
-
-            this.settingDialog.Owner = this;
-            this.searchDialog.Owner = this;
-            this.fltDialog.Owner = this;
-            this.tabDialog.Owner = this;
-            this.urlDialog.Owner = this;
-
-            this.postHistory.Add(new PostingStatus());
-            this.postHistoryIndex = 0;
-            this.replyToId = 0;
-            this.replyToName = string.Empty;
-
-            // <<<<<<<<<設定関連>>>>>>>>>
-            // '設定読み出し
-            this.LoadConfig();
-
-            // 新着バルーン通知のチェック状態設定
-            this.NewPostPopMenuItem.Checked = this.cfgCommon.NewAllPop;
-            this.NotifyFileMenuItem.Checked = this.NewPostPopMenuItem.Checked;
-
-            // フォント＆文字色＆背景色保持
-            this.fntUnread = this.cfgLocal.FontUnread;
-            this.clrUnread = this.cfgLocal.ColorUnread;
-            this.fntReaded = this.cfgLocal.FontRead;
-            this.clrRead = this.cfgLocal.ColorRead;
-            this.clrFav = this.cfgLocal.ColorFav;
-            this.clrOWL = this.cfgLocal.ColorOWL;
-            this.clrRetweet = this.cfgLocal.ColorRetweet;
-            this.fntDetail = this.cfgLocal.FontDetail;
-            this.clrDetail = this.cfgLocal.ColorDetail;
-            this.clrDetailLink = this.cfgLocal.ColorDetailLink;
-            this.clrDetailBackcolor = this.cfgLocal.ColorDetailBackcolor;
-            this.clrSelf = this.cfgLocal.ColorSelf;
-            this.clrAtSelf = this.cfgLocal.ColorAtSelf;
-            this.clrTarget = this.cfgLocal.ColorTarget;
-            this.clrAtTarget = this.cfgLocal.ColorAtTarget;
-            this.clrAtFromTarget = this.cfgLocal.ColorAtFromTarget;
-            this.clrAtTo = this.cfgLocal.ColorAtTo;
-            this.clrListBackcolor = this.cfgLocal.ColorListBackcolor;
-            this.InputBackColor = this.cfgLocal.ColorInputBackcolor;
-            this.clrInputForecolor = this.cfgLocal.ColorInputFont;
-            this.fntInputFont = this.cfgLocal.FontInputFont;
-
-            this.brsForeColorUnread = new SolidBrush(this.clrUnread);
-            this.brsForeColorReaded = new SolidBrush(this.clrRead);
-            this.brsForeColorFav = new SolidBrush(this.clrFav);
-            this.brsForeColorOWL = new SolidBrush(this.clrOWL);
-            this.brsForeColorRetweet = new SolidBrush(this.clrRetweet);
-            this.brsBackColorMine = new SolidBrush(this.clrSelf);
-            this.brsBackColorAt = new SolidBrush(this.clrAtSelf);
-            this.brsBackColorYou = new SolidBrush(this.clrTarget);
-            this.brsBackColorAtYou = new SolidBrush(this.clrAtTarget);
-            this.brsBackColorAtFromTarget = new SolidBrush(this.clrAtFromTarget);
-            this.brsBackColorAtTo = new SolidBrush(this.clrAtTo);
-            this.brsBackColorNone = new SolidBrush(this.clrListBackcolor);
-
-            // StringFormatオブジェクトへの事前設定
-            this.tabStringFormat.Alignment = StringAlignment.Center;
-            this.tabStringFormat.LineAlignment = StringAlignment.Center;
-
-            // 設定画面への反映
-            HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
-            HttpTwitter.SetTwitterSearchUrl(this.cfgCommon.TwitterSearchUrl);
-            this.settingDialog.TwitterApiUrl = this.cfgCommon.TwitterUrl;
-            this.settingDialog.TwitterSearchApiUrl = this.cfgCommon.TwitterSearchUrl;
-
-            // 認証関連
-            if (string.IsNullOrEmpty(this.cfgCommon.Token))
-            {
-                this.cfgCommon.UserName = string.Empty;
-            }
-
-            this.tw.Initialize(this.cfgCommon.Token, this.cfgCommon.TokenSecret, this.cfgCommon.UserName, this.cfgCommon.UserId);
-
-            this.settingDialog.UserAccounts = this.cfgCommon.UserAccounts;
-            this.settingDialog.TimelinePeriodInt = this.cfgCommon.TimelinePeriod;
-            this.settingDialog.ReplyPeriodInt = this.cfgCommon.ReplyPeriod;
-            this.settingDialog.DMPeriodInt = this.cfgCommon.DMPeriod;
-            this.settingDialog.PubSearchPeriodInt = this.cfgCommon.PubSearchPeriod;
-            this.settingDialog.UserTimelinePeriodInt = this.cfgCommon.UserTimelinePeriod;
-            this.settingDialog.ListsPeriodInt = this.cfgCommon.ListsPeriod;
-
-            // 不正値チェック
-            if (!cmdArgs.Contains("nolimit"))
-            {
-                if (this.settingDialog.TimelinePeriodInt < 15 && this.settingDialog.TimelinePeriodInt > 0)
-                {
-                    this.settingDialog.TimelinePeriodInt = 15;
-                }
-
-                if (this.settingDialog.ReplyPeriodInt < 15 && this.settingDialog.ReplyPeriodInt > 0)
-                {
-                    this.settingDialog.ReplyPeriodInt = 15;
-                }
-
-                if (this.settingDialog.DMPeriodInt < 15 && this.settingDialog.DMPeriodInt > 0)
-                {
-                    this.settingDialog.DMPeriodInt = 15;
-                }
-
-                if (this.settingDialog.PubSearchPeriodInt < 30 && this.settingDialog.PubSearchPeriodInt > 0)
-                {
-                    this.settingDialog.PubSearchPeriodInt = 30;
-                }
-
-                if (this.settingDialog.UserTimelinePeriodInt < 15 && this.settingDialog.UserTimelinePeriodInt > 0)
-                {
-                    this.settingDialog.UserTimelinePeriodInt = 15;
-                }
-
-                if (this.settingDialog.ListsPeriodInt < 15 && this.settingDialog.ListsPeriodInt > 0)
-                {
-                    this.settingDialog.ListsPeriodInt = 15;
-                }
-            }
-
-            // 起動時読み込み分を既読にするか。Trueなら既読として処理
-            this.settingDialog.Readed = this.cfgCommon.Read;
-
-            // 新着取得時のリストスクロールをするか。Trueならスクロールしない
-            this.ListLockMenuItem.Checked = this.cfgCommon.ListLock;
-            this.LockListFileMenuItem.Checked = this.cfgCommon.ListLock;
-            this.settingDialog.IconSz = this.cfgCommon.IconSize;
-
-            // 文末ステータス
-            this.settingDialog.Status = this.cfgLocal.StatusText;
-
-            // 未読管理。Trueなら未読管理する
-            this.settingDialog.UnreadManage = this.cfgCommon.UnreadManage;
-
-            // サウンド再生（タブ別設定より優先）
-            this.settingDialog.PlaySound = this.cfgCommon.PlaySound;
-            this.PlaySoundMenuItem.Checked = this.settingDialog.PlaySound;
-            this.PlaySoundFileMenuItem.Checked = this.settingDialog.PlaySound;
-
-            // 片思い表示。Trueなら片思い表示する
-            this.settingDialog.OneWayLove = this.cfgCommon.OneWayLove;
-
-            // フォント＆文字色＆背景色
-            this.settingDialog.FontUnread = this.fntUnread;
-            this.settingDialog.ColorUnread = this.clrUnread;
-            this.settingDialog.FontReaded = this.fntReaded;
-            this.settingDialog.ColorReaded = this.clrRead;
-            this.settingDialog.ColorFav = this.clrFav;
-            this.settingDialog.ColorOWL = this.clrOWL;
-            this.settingDialog.ColorRetweet = this.clrRetweet;
-            this.settingDialog.FontDetail = this.fntDetail;
-            this.settingDialog.ColorDetail = this.clrDetail;
-            this.settingDialog.ColorDetailLink = this.clrDetailLink;
-            this.settingDialog.ColorDetailBackcolor = this.clrDetailBackcolor;
-            this.settingDialog.ColorSelf = this.clrSelf;
-            this.settingDialog.ColorAtSelf = this.clrAtSelf;
-            this.settingDialog.ColorTarget = this.clrTarget;
-            this.settingDialog.ColorAtTarget = this.clrAtTarget;
-            this.settingDialog.ColorAtFromTarget = this.clrAtFromTarget;
-            this.settingDialog.ColorAtTo = this.clrAtTo;
-            this.settingDialog.ColorListBackcolor = this.clrListBackcolor;
-            this.settingDialog.ColorInputBackcolor = this.InputBackColor;
-            this.settingDialog.ColorInputFont = this.clrInputForecolor;
-            this.settingDialog.FontInputFont = this.fntInputFont;
-            this.settingDialog.NameBalloon = this.cfgCommon.NameBalloon;
-            this.settingDialog.PostCtrlEnter = this.cfgCommon.PostCtrlEnter;
-            this.settingDialog.PostShiftEnter = this.cfgCommon.PostShiftEnter;
-            this.settingDialog.CountApi = this.cfgCommon.CountApi;
-            this.settingDialog.CountApiReply = this.cfgCommon.CountApiReply;
-            if (this.settingDialog.CountApi < 20 || this.settingDialog.CountApi > 200)
-            {
-                this.settingDialog.CountApi = 60;
-            }
-
-            if (this.settingDialog.CountApiReply < 20 || this.settingDialog.CountApiReply > 200)
-            {
-                this.settingDialog.CountApiReply = 40;
-            }
-
-            this.settingDialog.BrowserPath = this.cfgLocal.BrowserPath;
-            this.settingDialog.PostAndGet = this.cfgCommon.PostAndGet;
-            this.settingDialog.UseRecommendStatus = this.cfgLocal.UseRecommendStatus;
-            this.settingDialog.DispUsername = this.cfgCommon.DispUsername;
-            this.settingDialog.CloseToExit = this.cfgCommon.CloseToExit;
-            this.settingDialog.MinimizeToTray = this.cfgCommon.MinimizeToTray;
-            this.settingDialog.DispLatestPost = this.cfgCommon.DispLatestPost;
-            this.settingDialog.SortOrderLock = this.cfgCommon.SortOrderLock;
-            this.settingDialog.TinyUrlResolve = this.cfgCommon.TinyUrlResolve;
-            this.settingDialog.ShortUrlForceResolve = this.cfgCommon.ShortUrlForceResolve;
-            this.settingDialog.SelectedProxyType = this.cfgLocal.ProxyType;
-            this.settingDialog.ProxyAddress = this.cfgLocal.ProxyAddress;
-            this.settingDialog.ProxyPort = this.cfgLocal.ProxyPort;
-            this.settingDialog.ProxyUser = this.cfgLocal.ProxyUser;
-            this.settingDialog.ProxyPassword = this.cfgLocal.ProxyPassword;
-            this.settingDialog.PeriodAdjust = this.cfgCommon.PeriodAdjust;
-            this.settingDialog.StartupVersion = this.cfgCommon.StartupVersion;
-            this.settingDialog.StartupFollowers = this.cfgCommon.StartupFollowers;
-            this.settingDialog.RestrictFavCheck = this.cfgCommon.RestrictFavCheck;
-            this.settingDialog.AlwaysTop = this.cfgCommon.AlwaysTop;
-            this.settingDialog.UrlConvertAuto = false;
-            this.settingDialog.OutputzEnabled = this.cfgCommon.Outputz;
-            this.settingDialog.OutputzKey = this.cfgCommon.OutputzKey;
-            this.settingDialog.OutputzUrlmode = this.cfgCommon.OutputzUrlMode;
-            this.settingDialog.UseUnreadStyle = this.cfgCommon.UseUnreadStyle;
-            this.settingDialog.DefaultTimeOut = this.cfgCommon.DefaultTimeOut;
-            this.settingDialog.RetweetNoConfirm = this.cfgCommon.RetweetNoConfirm;
-            this.settingDialog.PlaySound = this.cfgCommon.PlaySound;
-            this.settingDialog.DateTimeFormat = this.cfgCommon.DateTimeFormat;
-            this.settingDialog.LimitBalloon = this.cfgCommon.LimitBalloon;
-            this.settingDialog.EventNotifyEnabled = this.cfgCommon.EventNotifyEnabled;
-            this.settingDialog.EventNotifyFlag = this.cfgCommon.EventNotifyFlag;
-            this.settingDialog.IsMyEventNotifyFlag = this.cfgCommon.IsMyEventNotifyFlag;
-            this.settingDialog.ForceEventNotify = this.cfgCommon.ForceEventNotify;
-            this.settingDialog.FavEventUnread = this.cfgCommon.FavEventUnread;
-            this.settingDialog.TranslateLanguage = this.cfgCommon.TranslateLanguage;
-            this.settingDialog.EventSoundFile = this.cfgCommon.EventSoundFile;
-
-            // 廃止サービスが選択されていた場合bit.lyへ読み替え
-            if (this.cfgCommon.AutoShortUrlFirst < 0)
-            {
-                this.cfgCommon.AutoShortUrlFirst = UrlConverter.Bitly;
-            }
-
-            this.settingDialog.AutoShortUrlFirst = this.cfgCommon.AutoShortUrlFirst;
-            this.settingDialog.TabIconDisp = this.cfgCommon.TabIconDisp;
-            this.settingDialog.ReplyIconState = this.cfgCommon.ReplyIconState;
-            this.settingDialog.ReadOwnPost = this.cfgCommon.ReadOwnPost;
-            this.settingDialog.GetFav = this.cfgCommon.GetFav;
-            this.settingDialog.ReadOldPosts = this.cfgCommon.ReadOldPosts;
-            this.settingDialog.UseSsl = this.cfgCommon.UseSsl;
-            this.settingDialog.BitlyUser = this.cfgCommon.BilyUser;
-            this.settingDialog.BitlyPwd = this.cfgCommon.BitlyPwd;
-            this.settingDialog.ShowGrid = this.cfgCommon.ShowGrid;
-            this.settingDialog.Language = this.cfgCommon.Language;
-            this.settingDialog.UseAtIdSupplement = this.cfgCommon.UseAtIdSupplement;
-            this.settingDialog.UseHashSupplement = this.cfgCommon.UseHashSupplement;
-            this.settingDialog.PreviewEnable = this.cfgCommon.PreviewEnable;
-            this.AtIdSupl = new AtIdSupplement(SettingAtIdList.Load().AtIdList, "@");
-
-            this.settingDialog.IsMonospace = this.cfgCommon.IsMonospace;
-            if (this.settingDialog.IsMonospace)
-            {
-                this.detailHtmlFormatHeader = DetailHtmlFormatMono1;
-                this.detailHtmlFormatFooter = DetailHtmlFormatMono7;
-            }
-            else
-            {
-                this.detailHtmlFormatHeader = DetailHtmlFormat1;
-                this.detailHtmlFormatFooter = DetailHtmlFormat7;
-            }
-
-            this.detailHtmlFormatHeader += this.fntDetail.Name + DetailHtmlFormat2 + this.fntDetail.Size.ToString() + DetailHtmlFormat3 + this.clrDetail.R.ToString() + "," + this.clrDetail.G.ToString() + "," + this.clrDetail.B.ToString() + DetailHtmlFormat4 + this.clrDetailLink.R.ToString() + "," + this.clrDetailLink.G.ToString() + "," + this.clrDetailLink.B.ToString() + DetailHtmlFormat5 + this.clrDetailBackcolor.R.ToString() + "," + this.clrDetailBackcolor.G.ToString() + "," + this.clrDetailBackcolor.B.ToString();
-            if (this.settingDialog.IsMonospace)
-            {
-                this.detailHtmlFormatHeader += DetailHtmlFormatMono6;
-            }
-            else
-            {
-                this.detailHtmlFormatHeader += DetailHtmlFormat6;
-            }
-
-            this.IdeographicSpaceToSpaceToolStripMenuItem.Checked = this.cfgCommon.WideSpaceConvert;
-            this.ToolStripFocusLockMenuItem.Checked = this.cfgCommon.FocusLockToStatusText;
-
-            this.settingDialog.RecommendStatusText = " [TWNv" + Regex.Replace(MyCommon.FileVersion.Replace(".", string.Empty), "^0*", string.Empty) + "]";
-
-            // 書式指定文字列エラーチェック
-            try
-            {
-                if (DateTime.Now.ToString(this.settingDialog.DateTimeFormat).Length == 0)
-                {
-                    // このブロックは絶対に実行されないはず
-                    // 変換が成功した場合にLengthが0にならない
-                    this.settingDialog.DateTimeFormat = "yyyy/MM/dd H:mm:ss";
-                }
-            }
-            catch (FormatException)
-            {
-                // FormatExceptionが発生したら初期値を設定 (=yyyy/MM/dd H:mm:ssとみなされる)
-                this.settingDialog.DateTimeFormat = "yyyy/MM/dd H:mm:ss";
-            }
-
-            this.settingDialog.Nicoms = this.cfgCommon.Nicoms;
-            this.settingDialog.HotkeyEnabled = this.cfgCommon.HotkeyEnabled;
-            this.settingDialog.HotkeyMod = this.cfgCommon.HotkeyModifier;
-            this.settingDialog.HotkeyKey = this.cfgCommon.HotkeyKey;
-            this.settingDialog.HotkeyValue = this.cfgCommon.HotkeyValue;
-            this.settingDialog.BlinkNewMentions = this.cfgCommon.BlinkNewMentions;
-            this.settingDialog.UseAdditionalCount = this.cfgCommon.UseAdditionalCount;
-            this.settingDialog.MoreCountApi = this.cfgCommon.MoreCountApi;
-            this.settingDialog.FirstCountApi = this.cfgCommon.FirstCountApi;
-            this.settingDialog.SearchCountApi = this.cfgCommon.SearchCountApi;
-            this.settingDialog.FavoritesCountApi = this.cfgCommon.FavoritesCountApi;
-            this.settingDialog.UserTimelineCountApi = this.cfgCommon.UserTimelineCountApi;
-            this.settingDialog.ListCountApi = this.cfgCommon.ListCountApi;
-            this.settingDialog.UserstreamStartup = this.cfgCommon.UserstreamStartup;
-            this.settingDialog.UserstreamPeriodInt = this.cfgCommon.UserstreamPeriod;
-            this.settingDialog.OpenUserTimeline = this.cfgCommon.OpenUserTimeline;
-            this.settingDialog.ListDoubleClickAction = this.cfgCommon.ListDoubleClickAction;
-            this.settingDialog.UserAppointUrl = this.cfgCommon.UserAppointUrl;
-            this.settingDialog.HideDuplicatedRetweets = this.cfgCommon.HideDuplicatedRetweets;
-            this.settingDialog.IsPreviewFoursquare = this.cfgCommon.IsPreviewFoursquare;
-            this.settingDialog.FoursquarePreviewHeight = this.cfgCommon.FoursquarePreviewHeight;
-            this.settingDialog.FoursquarePreviewWidth = this.cfgCommon.FoursquarePreviewWidth;
-            this.settingDialog.FoursquarePreviewZoom = this.cfgCommon.FoursquarePreviewZoom;
-            this.settingDialog.IsListStatusesIncludeRts = this.cfgCommon.IsListsIncludeRts;
-            this.settingDialog.TabMouseLock = this.cfgCommon.TabMouseLock;
-            this.settingDialog.IsRemoveSameEvent = this.cfgCommon.IsRemoveSameEvent;
-            this.settingDialog.IsNotifyUseGrowl = this.cfgCommon.IsUseNotifyGrowl;
-
-            // ハッシュタグ関連
-            this.HashSupl = new AtIdSupplement(this.cfgCommon.HashTags, "#");
-            this.HashMgr = new HashtagManage(this.HashSupl, this.cfgCommon.HashTags.ToArray(), this.cfgCommon.HashSelected, this.cfgCommon.HashIsPermanent, this.cfgCommon.HashIsHead, this.cfgCommon.HashIsNotAddToAtReply);
-            if (!string.IsNullOrEmpty(this.HashMgr.UseHash) && this.HashMgr.IsPermanent)
-            {
-                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
-            }
-
-            this.isInitializing = true;
-
-            // アイコンリスト作成
-            try
-            {
-                this.iconDict = new ImageDictionary(5);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Please install [.NET Framework 4 (Full)].");
-                Application.Exit();
-                return;
-            }
-
-            ((ImageDictionary)this.iconDict).PauseGetImage = false;
-
-            bool saveRequired = false;
-
-            // ユーザー名、パスワードが未設定なら設定画面を表示（初回起動時など）
-            if (string.IsNullOrEmpty(this.tw.Username))
-            {
-                saveRequired = true;
-
-                // 設定せずにキャンセルされた場合はプログラム終了
-                if (this.settingDialog.ShowDialog(this) == DialogResult.Cancel)
-                {
-                    // 強制終了
-                    Application.Exit();
-                    return;
-                }
-
-                // 設定されたが、依然ユーザー名とパスワードが未設定ならプログラム終了
-                if (string.IsNullOrEmpty(this.tw.Username))
-                {
-                    // 強制終了
-                    Application.Exit();
-                    return;
-                }
-
-                // フォント＆文字色＆背景色保持
-                this.fntUnread = this.settingDialog.FontUnread;
-                this.clrUnread = this.settingDialog.ColorUnread;
-                this.fntReaded = this.settingDialog.FontReaded;
-                this.clrRead = this.settingDialog.ColorReaded;
-                this.clrFav = this.settingDialog.ColorFav;
-                this.clrOWL = this.settingDialog.ColorOWL;
-                this.clrRetweet = this.settingDialog.ColorRetweet;
-                this.fntDetail = this.settingDialog.FontDetail;
-                this.clrDetail = this.settingDialog.ColorDetail;
-                this.clrDetailLink = this.settingDialog.ColorDetailLink;
-                this.clrDetailBackcolor = this.settingDialog.ColorDetailBackcolor;
-                this.clrSelf = this.settingDialog.ColorSelf;
-                this.clrAtSelf = this.settingDialog.ColorAtSelf;
-                this.clrTarget = this.settingDialog.ColorTarget;
-                this.clrAtTarget = this.settingDialog.ColorAtTarget;
-                this.clrAtFromTarget = this.settingDialog.ColorAtFromTarget;
-                this.clrAtTo = this.settingDialog.ColorAtTo;
-                this.clrListBackcolor = this.settingDialog.ColorListBackcolor;
-                this.InputBackColor = this.settingDialog.ColorInputBackcolor;
-                this.clrInputForecolor = this.settingDialog.ColorInputFont;
-                this.fntInputFont = this.settingDialog.FontInputFont;
-                this.brsForeColorUnread.Dispose();
-                this.brsForeColorReaded.Dispose();
-                this.brsForeColorFav.Dispose();
-                this.brsForeColorOWL.Dispose();
-                this.brsForeColorRetweet.Dispose();
-                this.brsForeColorUnread = new SolidBrush(this.clrUnread);
-                this.brsForeColorReaded = new SolidBrush(this.clrRead);
-                this.brsForeColorFav = new SolidBrush(this.clrFav);
-                this.brsForeColorOWL = new SolidBrush(this.clrOWL);
-                this.brsForeColorRetweet = new SolidBrush(this.clrRetweet);
-                this.brsBackColorMine.Dispose();
-                this.brsBackColorAt.Dispose();
-                this.brsBackColorYou.Dispose();
-                this.brsBackColorAtYou.Dispose();
-                this.brsBackColorAtFromTarget.Dispose();
-                this.brsBackColorAtTo.Dispose();
-                this.brsBackColorNone.Dispose();
-                this.brsBackColorMine = new SolidBrush(this.clrSelf);
-                this.brsBackColorAt = new SolidBrush(this.clrAtSelf);
-                this.brsBackColorYou = new SolidBrush(this.clrTarget);
-                this.brsBackColorAtYou = new SolidBrush(this.clrAtTarget);
-                this.brsBackColorAtFromTarget = new SolidBrush(this.clrAtFromTarget);
-                this.brsBackColorAtTo = new SolidBrush(this.clrAtTo);
-                this.brsBackColorNone = new SolidBrush(this.clrListBackcolor);
-
-                if (this.settingDialog.IsMonospace)
-                {
-                    this.detailHtmlFormatHeader = DetailHtmlFormatMono1;
-                    this.detailHtmlFormatFooter = DetailHtmlFormatMono7;
-                }
-                else
-                {
-                    this.detailHtmlFormatHeader = DetailHtmlFormat1;
-                    this.detailHtmlFormatFooter = DetailHtmlFormat7;
-                }
-
-                this.detailHtmlFormatHeader += this.fntDetail.Name + DetailHtmlFormat2 + this.fntDetail.Size.ToString() + DetailHtmlFormat3 + this.clrDetail.R.ToString() + "," + this.clrDetail.G.ToString() + "," + this.clrDetail.B.ToString() + DetailHtmlFormat4 + this.clrDetailLink.R.ToString() + "," + this.clrDetailLink.G.ToString() + "," + this.clrDetailLink.B.ToString() + DetailHtmlFormat5 + this.clrDetailBackcolor.R.ToString() + "," + this.clrDetailBackcolor.G.ToString() + "," + this.clrDetailBackcolor.B.ToString();
-                if (this.settingDialog.IsMonospace)
-                {
-                    this.detailHtmlFormatHeader += DetailHtmlFormatMono6;
-                }
-                else
-                {
-                    this.detailHtmlFormatHeader += DetailHtmlFormat6;
-                }
-            }
-
-            if (this.settingDialog.HotkeyEnabled)
-            {
-                // グローバルホットキーの登録
-                HookGlobalHotkey.ModKeys modKey = HookGlobalHotkey.ModKeys.None;
-                if ((this.settingDialog.HotkeyMod & Keys.Alt) == Keys.Alt)
-                {
-                    modKey = modKey | HookGlobalHotkey.ModKeys.Alt;
-                }
-
-                if ((this.settingDialog.HotkeyMod & Keys.Control) == Keys.Control)
-                {
-                    modKey = modKey | HookGlobalHotkey.ModKeys.Ctrl;
-                }
-
-                if ((this.settingDialog.HotkeyMod & Keys.Shift) == Keys.Shift)
-                {
-                    modKey = modKey | HookGlobalHotkey.ModKeys.Shift;
-                }
-
-                if ((this.settingDialog.HotkeyMod & Keys.LWin) == Keys.LWin)
-                {
-                    modKey = modKey | HookGlobalHotkey.ModKeys.Win;
-                }
-
-                this.hookGlobalHotkey.RegisterOriginalHotkey(this.settingDialog.HotkeyKey, this.settingDialog.HotkeyValue, modKey);
-            }
-
-            // Twitter用通信クラス初期化
-            HttpConnection.InitializeConnection(this.settingDialog.DefaultTimeOut, this.settingDialog.SelectedProxyType, this.settingDialog.ProxyAddress, this.settingDialog.ProxyPort, this.settingDialog.ProxyUser, this.settingDialog.ProxyPassword);
-
-            this.tw.SetRestrictFavCheck(this.settingDialog.RestrictFavCheck);
-            this.tw.ReadOwnPost = this.settingDialog.ReadOwnPost;
-            this.tw.SetUseSsl(this.settingDialog.UseSsl);
-            ShortUrl.IsResolve = this.settingDialog.TinyUrlResolve;
-            ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
-            ShortUrl.SetBitlyId(this.settingDialog.BitlyUser);
-            ShortUrl.SetBitlyKey(this.settingDialog.BitlyPwd);
-            HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
-            HttpTwitter.SetTwitterSearchUrl(this.cfgCommon.TwitterSearchUrl);
-            this.tw.TrackWord = this.cfgCommon.TrackWord;
-            this.TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.tw.TrackWord);
-            this.tw.AllAtReply = this.cfgCommon.AllAtReply;
-            this.AllrepliesToolStripMenuItem.Checked = this.tw.AllAtReply;
-
-            Outputz.Key = this.settingDialog.OutputzKey;
-            Outputz.Enabled = this.settingDialog.OutputzEnabled;
-            switch (this.settingDialog.OutputzUrlmode)
-            {
-                case OutputzUrlmode.twittercom:
-                    Outputz.OutUrl = "http://twitter.com/";
-                    break;
-                case OutputzUrlmode.twittercomWithUsername:
-                    Outputz.OutUrl = "http://twitter.com/" + this.tw.Username;
-                    break;
-            }
-
-            // 画像投稿サービス
-            this.CreatePictureServices();
-            this.SetImageServiceCombo();
-            this.ImageSelectionPanel.Enabled = false;
-            this.ImageServiceCombo.SelectedIndex = this.cfgCommon.UseImageService;
-
-            // ウィンドウ設定
-            this.ClientSize = this.cfgLocal.FormSize;
-            this.mySize = this.cfgLocal.FormSize;          // サイズ保持（最小化・最大化されたまま終了した場合の対応用）
-            this.myLoc = this.cfgLocal.FormLocation;       // タイトルバー領域
-            if (this.WindowState != FormWindowState.Minimized)
-            {
-                this.DesktopLocation = this.cfgLocal.FormLocation;
-                Rectangle tbarRect = new Rectangle(this.Location, new Size(this.mySize.Width, SystemInformation.CaptionHeight));
-                bool outOfScreen = true;
-                if (Screen.AllScreens.Length == 1)
-                {
-                    foreach (Screen scr in Screen.AllScreens)
-                    {
-                        if (!Rectangle.Intersect(tbarRect, scr.Bounds).IsEmpty)
-                        {
-                            outOfScreen = false;
-                            break;
-                        }
-                    }
-
-                    if (outOfScreen)
-                    {
-                        this.DesktopLocation = new Point(0, 0);
-                        this.myLoc = this.DesktopLocation;
-                    }
-                }
-            }
-
-            this.TopMost = this.settingDialog.AlwaysTop;
-            this.mySpDis = this.cfgLocal.SplitterDistance;
-            this.mySpDis2 = this.cfgLocal.StatusTextHeight;
-            this.mySpDis3 = this.cfgLocal.PreviewDistance;
-            if (this.mySpDis3 == -1)
-            {
-                this.mySpDis3 = this.mySize.Width - 150;
-                if (this.mySpDis3 < 1)
-                {
-                    this.mySpDis3 = 50;
-                }
-
-                this.cfgLocal.PreviewDistance = this.mySpDis3;
-            }
-
-            this.myAdSpDis = this.cfgLocal.AdSplitterDistance;
-            this.MultiLineMenuItem.Checked = this.cfgLocal.StatusMultiline;
-            this.PlaySoundMenuItem.Checked = this.settingDialog.PlaySound;
-            this.PlaySoundFileMenuItem.Checked = this.settingDialog.PlaySound;
-
-            // 入力欄
-            this.StatusText.Font = this.fntInputFont;
-            this.StatusText.ForeColor = this.clrInputForecolor;
-
-            // 全新着通知のチェック状態により、Reply＆DMの新着通知有効無効切り替え（タブ別設定にするため削除予定）
-            if (this.settingDialog.UnreadManage == false)
-            {
-                this.ReadedStripMenuItem.Enabled = false;
-                this.UnreadStripMenuItem.Enabled = false;
-            }
-
-            if (this.settingDialog.IsNotifyUseGrowl)
-            {
-                growlHelper.RegisterGrowl();
-            }
-
-            // タイマー設定
-            this.timerTimeline.AutoReset = true;
-            this.timerTimeline.SynchronizingObject = this;
-
-            // Recent取得間隔
-            this.timerTimeline.Interval = 1000;
-            this.timerTimeline.Enabled = true;
-
-            // 更新中アイコンアニメーション間隔
-            this.TimerRefreshIcon.Interval = 200;
-            this.TimerRefreshIcon.Enabled = true;
-
-            // 状態表示部の初期化（画面右下）
-            this.StatusLabel.Text = string.Empty;
-            this.StatusLabel.AutoToolTip = false;
-            this.StatusLabel.ToolTipText = string.Empty;
-
-            // 文字カウンタ初期化
-            this.lblLen.Text = this.GetRestStatusCount(true, false).ToString();
-
-            this.statuses.SortOrder = (SortOrder)this.cfgCommon.SortOrder;
-            IdComparerClass.ComparerMode mode = default(IdComparerClass.ComparerMode);
-            switch (this.cfgCommon.SortColumn)
-            {
-                case 0:
-                case 5:
-                case 6:
-                    // 0:アイコン,5:未読マーク,6:プロテクト・フィルターマーク
-                    // ソートしない Idソートに読み替え
-                    mode = IdComparerClass.ComparerMode.Id;
-                    break;
-                case 1:
-                    // ニックネーム
-                    mode = IdComparerClass.ComparerMode.Nickname;
-                    break;
-                case 2:
-                    // 本文
-                    mode = IdComparerClass.ComparerMode.Data;
-                    break;
-                case 3:
-                    // 時刻=発言Id
-                    mode = IdComparerClass.ComparerMode.Id;
-                    break;
-                case 4:
-                    // 名前
-                    mode = IdComparerClass.ComparerMode.Name;
-                    break;
-                case 7:
-                    // Source
-                    mode = IdComparerClass.ComparerMode.Source;
-                    break;
-            }
-
-            this.statuses.SortMode = mode;
-
-            switch (this.settingDialog.IconSz)
-            {
-                case IconSizes.IconNone:
-                    this.iconSz = 0;
-                    break;
-                case IconSizes.Icon16:
-                    this.iconSz = 16;
-                    break;
-                case IconSizes.Icon24:
-                    this.iconSz = 26;
-                    break;
-                case IconSizes.Icon48:
-                    this.iconSz = 48;
-                    break;
-                case IconSizes.Icon48_2:
-                    this.iconSz = 48;
-                    this.iconCol = true;
-                    break;
-            }
-
-            if (this.iconSz == 0)
-            {
-                this.tw.SetGetIcon(false);
-            }
-            else
-            {
-                this.tw.SetGetIcon(true);
-                this.tw.SetIconSize(this.iconSz);
-            }
-
-            this.tw.SetTinyUrlResolve(this.settingDialog.TinyUrlResolve);
-            ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
-
-            // 発言詳細部アイコンをリストアイコンにサイズ変更
-            int sz = this.iconSz;
-            if (this.iconSz == 0)
-            {
-                sz = 16;
-            }
-
-            this.tw.DetailIcon = this.iconDict;
-
-            this.StatusLabel.Text = Hoehoe.Properties.Resources.Form1_LoadText1;  // 画面右下の状態表示を変更
-            this.StatusLabelUrl.Text = string.Empty;  // 画面左下のリンク先URL表示部を初期化
-            this.NameLabel.Text = string.Empty;       // 発言詳細部名前ラベル初期化
-            this.DateTimeLabel.Text = string.Empty;   // 発言詳細部日時ラベル初期化
-            this.SourceLinkLabel.Text = string.Empty; // Source部分初期化
-
-            // <<<<<<<<タブ関連>>>>>>>
-            // デフォルトタブの存在チェック、ない場合には追加
-            if (this.statuses.GetTabByType(TabUsageType.Home) == null)
-            {
-                if (!this.statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.RECENT))
-                {
-                    this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.RECENT, TabUsageType.Home, null);
-                }
-                else
-                {
-                    this.statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.RECENT].TabType = TabUsageType.Home;
-                }
-            }
-
-            if (this.statuses.GetTabByType(TabUsageType.Mentions) == null)
-            {
-                if (!this.statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.REPLY))
-                {
-                    this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
-                }
-                else
-                {
-                    this.statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.REPLY].TabType = TabUsageType.Mentions;
-                }
-            }
-
-            if (this.statuses.GetTabByType(TabUsageType.DirectMessage) == null)
-            {
-                if (!this.statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.DM))
-                {
-                    this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
-                }
-                else
-                {
-                    this.statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.DM].TabType = TabUsageType.DirectMessage;
-                }
-            }
-
-            if (this.statuses.GetTabByType(TabUsageType.Favorites) == null)
-            {
-                if (!this.statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.FAV))
-                {
-                    this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, TabUsageType.Favorites, null);
-                }
-                else
-                {
-                    this.statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.FAV].TabType = TabUsageType.Favorites;
-                }
-            }
-
-            foreach (string tn in this.statuses.Tabs.Keys)
-            {
-                if (this.statuses.Tabs[tn].TabType == TabUsageType.Undefined)
-                {
-                    this.statuses.Tabs[tn].TabType = TabUsageType.UserDefined;
-                }
-
-                if (!this.AddNewTab(tn, true, this.statuses.Tabs[tn].TabType, this.statuses.Tabs[tn].ListInfo))
-                {
-                    throw new Exception(Hoehoe.Properties.Resources.TweenMain_LoadText1);
-                }
-            }
-
-            this.JumpReadOpMenuItem.ShortcutKeyDisplayString = "Space";
-            this.CopySTOTMenuItem.ShortcutKeyDisplayString = "Ctrl+C";
-            this.CopyURLMenuItem.ShortcutKeyDisplayString = "Ctrl+Shift+C";
-            this.CopyUserIdStripMenuItem.ShortcutKeyDisplayString = "Shift+Alt+C";
-
-            if (this.settingDialog.MinimizeToTray == false || this.WindowState != FormWindowState.Minimized)
-            {
-                this.Visible = true;
-            }
-
-            this.curTab = this.ListTab.SelectedTab;
-            this.curItemIndex = -1;
-            this.curList = (DetailsListView)this.curTab.Tag;
-            this.SetMainWindowTitle();
-            this.SetNotifyIconText();
-
-            if (this.settingDialog.TabIconDisp)
-            {
-                this.ListTab.DrawMode = TabDrawMode.Normal;
-            }
-            else
-            {
-                this.ListTab.DrawMode = TabDrawMode.OwnerDrawFixed;
-                this.ListTab.DrawItem += this.ListTab_DrawItem;
-                this.ListTab.ImageList = null;
-            }
-
-#if UA // = "True"
-			ab = new AdsBrowser();
-			this.SplitContainer4.Panel2.Controls.Add(ab);
-#else
-            this.SplitContainer4.Panel2Collapsed = true;
-#endif
-
-            this.ignoreConfigSave = false;
-            this.TweenMain_Resize(null, null);
-            if (saveRequired)
-            {
-                this.SaveConfigsAll(false);
-            }
-
-            if (this.tw.UserId == 0)
-            {
-                this.tw.VerifyCredentials();
-                foreach (var ua in this.cfgCommon.UserAccounts)
-                {
-                    if (ua.Username.ToLower() == this.tw.Username.ToLower())
-                    {
-                        ua.UserId = this.tw.UserId;
-                        break;
-                    }
-                }
-            }
-
-            foreach (var ua in this.settingDialog.UserAccounts)
-            {
-                if (ua.UserId == 0 && ua.Username.ToLower() == this.tw.Username.ToLower())
-                {
-                    ua.UserId = this.tw.UserId;
-                    break;
-                }
-            }
-        }
-
         private void CreatePictureServices()
         {
             if (this.pictureServices != null)
@@ -2697,49 +1717,6 @@ namespace Hoehoe
                 { "lockerz", new Plixi(this.tw) },
                 { "Twitter", new TwitterPhoto(this.tw) }
             };
-        }
-
-        private void SpaceKeyCanceler_SpaceCancel(object sender, EventArgs e)
-        {
-            this.JumpUnreadMenuItem_Click(null, null);
-        }
-
-        private void ListTab_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            string txt = null;
-            try
-            {
-                txt = this.ListTab.TabPages[e.Index].Text;
-            }
-            catch (Exception)
-            {
-                return;
-            }
-
-            e.Graphics.FillRectangle(SystemBrushes.Control, e.Bounds);
-            if (e.State == DrawItemState.Selected)
-            {
-                e.DrawFocusRectangle();
-            }
-
-            Brush fore = null;
-            try
-            {
-                if (this.statuses.Tabs[txt].UnreadCount > 0)
-                {
-                    fore = Brushes.Red;
-                }
-                else
-                {
-                    fore = SystemBrushes.ControlText;
-                }
-            }
-            catch (Exception)
-            {
-                fore = SystemBrushes.ControlText;
-            }
-
-            e.Graphics.DrawString(txt, e.Font, fore, e.Bounds, this.tabStringFormat);
         }
 
         private void LoadConfig()
@@ -2781,167 +1758,6 @@ namespace Hoehoe
                 this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
                 this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
                 this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, TabUsageType.Favorites, null);
-            }
-        }
-
-        private void TimerInterval_Changed(object sender, IntervalChangedEventArgs e)
-        {
-            if (!this.timerTimeline.Enabled)
-            {
-                return;
-            }
-
-            this.resetTimers = e;
-        }
-
-        private void TimerTimeline_Elapsed(object sender, EventArgs e)
-        {
-            if (this.timerHomeCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerHomeCounter);
-            }
-
-            if (this.timerMentionCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerMentionCounter);
-            }
-
-            if (this.timerDmCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerDmCounter);
-            }
-
-            if (this.timerPubSearchCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerPubSearchCounter);
-            }
-
-            if (this.timerUserTimelineCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerUserTimelineCounter);
-            }
-
-            if (this.timerListsCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerListsCounter);
-            }
-
-            if (this.timerUsCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerUsCounter);
-            }
-
-            Interlocked.Increment(ref this.timerRefreshFollowers);
-
-            // 'タイマー初期化
-            if (this.resetTimers.Timeline || (this.timerHomeCounter <= 0 && this.settingDialog.TimelinePeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerHomeCounter, this.settingDialog.TimelinePeriodInt);
-                if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.Timeline)
-                {
-                    this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.Timeline = false;
-            }
-
-            if (this.resetTimers.Reply || (this.timerMentionCounter <= 0 && this.settingDialog.ReplyPeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerMentionCounter, this.settingDialog.ReplyPeriodInt);
-                if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.Reply)
-                {
-                    this.GetTimeline(WorkerType.Reply, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.Reply = false;
-            }
-
-            if (this.resetTimers.DirectMessage || (this.timerDmCounter <= 0 && this.settingDialog.DMPeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerDmCounter, this.settingDialog.DMPeriodInt);
-                if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.DirectMessage)
-                {
-                    this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.DirectMessage = false;
-            }
-
-            if (this.resetTimers.PublicSearch || (this.timerPubSearchCounter <= 0 && this.settingDialog.PubSearchPeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerPubSearchCounter, this.settingDialog.PubSearchPeriodInt);
-                if (!this.resetTimers.PublicSearch)
-                {
-                    this.GetTimeline(WorkerType.PublicSearch, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.PublicSearch = false;
-            }
-
-            if (this.resetTimers.UserTimeline || (this.timerUserTimelineCounter <= 0 && this.settingDialog.UserTimelinePeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerUserTimelineCounter, this.settingDialog.UserTimelinePeriodInt);
-                if (!this.resetTimers.UserTimeline)
-                {
-                    this.GetTimeline(WorkerType.UserTimeline, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.UserTimeline = false;
-            }
-
-            if (this.resetTimers.Lists || (this.timerListsCounter <= 0 && this.settingDialog.ListsPeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerListsCounter, this.settingDialog.ListsPeriodInt);
-                if (!this.resetTimers.Lists)
-                {
-                    this.GetTimeline(WorkerType.List, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.Lists = false;
-            }
-
-            if (this.resetTimers.UserStream || (this.timerUsCounter <= 0 && this.settingDialog.UserstreamPeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerUsCounter, this.settingDialog.UserstreamPeriodInt);
-                if (this.isActiveUserstream)
-                {
-                    this.RefreshTimeline(true);
-                }
-
-                this.resetTimers.UserStream = false;
-            }
-
-            if (this.timerRefreshFollowers > 6 * 3600)
-            {
-                Interlocked.Exchange(ref this.timerRefreshFollowers, 0);
-                this.DoGetFollowersMenu();
-                this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
-                if (InvokeRequired && !IsDisposed)
-                {
-                    this.Invoke(new MethodInvoker(this.TrimPostChain));
-                }
-            }
-
-            if (this.isOsResumed)
-            {
-                Interlocked.Increment(ref this.timerResumeWait);
-                if (this.timerResumeWait > 30)
-                {
-                    this.isOsResumed = false;
-                    Interlocked.Exchange(ref this.timerResumeWait, 0);
-                    this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
-                    this.GetTimeline(WorkerType.Reply, 1, 0, string.Empty);
-                    this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
-                    this.GetTimeline(WorkerType.PublicSearch, 1, 0, string.Empty);
-                    this.GetTimeline(WorkerType.UserTimeline, 1, 0, string.Empty);
-                    this.GetTimeline(WorkerType.List, 1, 0, string.Empty);
-                    this.DoGetFollowersMenu();
-                    this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
-                    if (InvokeRequired && !IsDisposed)
-                    {
-                        this.Invoke(new MethodInvoker(this.TrimPostChain));
-                    }
-                }
             }
         }
 
@@ -3340,7 +2156,7 @@ namespace Hoehoe
                                 return;
                             }
 
-                            growlHelper.Notify(nt, post.StatusId.ToString(), title.ToString(), notifyText, this.iconDict[post.ImageUrl], post.ImageUrl);
+                            this.growlHelper.Notify(nt, post.StatusId.ToString(), title.ToString(), notifyText, this.iconDict[post.ImageUrl], post.ImageUrl);
                         }
                     }
                     else
@@ -3454,43 +2270,6 @@ namespace Hoehoe
             {
                 Win32Api.FlashMyWindow(this.Handle, Hoehoe.Win32Api.FlashSpecification.FlashTray, 3);
             }
-        }
-
-        private void MyList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.curList == null || this.curList.SelectedIndices.Count != 1)
-            {
-                return;
-            }
-
-            this.curItemIndex = this.curList.SelectedIndices[0];
-            if (this.curItemIndex > this.curList.VirtualListSize - 1)
-            {
-                return;
-            }
-
-            try
-            {
-                this.curPost = this.GetCurTabPost(this.curItemIndex);
-            }
-            catch (ArgumentException)
-            {
-                return;
-            }
-
-            this.PushSelectPostChain();
-
-            if (this.settingDialog.UnreadManage)
-            {
-                this.statuses.SetReadAllTab(true, this.curTab.Text, this.curItemIndex);
-            }
-
-            // キャッシュの書き換え
-            this.ChangeCacheStyleRead(true, this.curItemIndex, this.curTab);
-
-            // 既読へ（フォント、文字色）
-            this.ColorizeList();
-            this.colorize = true;
         }
 
         private void ChangeCacheStyleRead(bool read, int index, TabPage tab)
@@ -3659,721 +2438,6 @@ namespace Hoehoe
             return cl;
         }
 
-        private void PostButton_Click(object sender, EventArgs e)
-        {
-            if (this.StatusText.Text.Trim().Length == 0)
-            {
-                if (!this.ImageSelectionPanel.Enabled)
-                {
-                    this.DoRefresh();
-                    return;
-                }
-            }
-
-            if (this.ExistCurrentPost && this.StatusText.Text.Trim() == string.Format("RT @{0}: {1}", this.curPost.ScreenName, this.curPost.TextFromApi))
-            {
-                DialogResult res = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                switch (res)
-                {
-                    case DialogResult.Yes:
-                        this.DoReTweetOfficial(false);
-                        this.StatusText.Text = string.Empty;
-                        return;
-                    case DialogResult.Cancel:
-                        return;
-                }
-            }
-
-            this.postHistory[this.postHistory.Count - 1] = new PostingStatus(this.StatusText.Text.Trim(), this.replyToId, this.replyToName);
-
-            if (this.settingDialog.Nicoms)
-            {
-                this.StatusText.SelectionStart = this.StatusText.Text.Length;
-                this.UrlConvert(UrlConverter.Nicoms);
-            }
-
-            this.StatusText.SelectionStart = this.StatusText.Text.Length;
-            GetWorkerArg args = new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage };
-            this.CheckReplyTo(this.StatusText.Text);
-
-            // 整形によって増加する文字数を取得
-            int adjustCount = 0;
-            string tmpStatus = this.StatusText.Text.Trim();
-            if (this.ToolStripMenuItemApiCommandEvasion.Checked)
-            {
-                // APIコマンド回避
-                if (Regex.IsMatch(tmpStatus, "^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)", RegexOptions.IgnoreCase) && !tmpStatus.EndsWith(" ."))
-                {
-                    adjustCount += 2;
-                }
-            }
-
-            if (this.ToolStripMenuItemUrlMultibyteSplit.Checked)
-            {
-                // URLと全角文字の切り離し
-                adjustCount += Regex.Matches(tmpStatus, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+").Count;
-            }
-
-            bool isCutOff = false;
-            bool isRemoveFooter = this.IsKeyDown(Keys.Shift);
-            if (this.StatusText.Multiline && !this.settingDialog.PostCtrlEnter)
-            {
-                // 複数行でEnter投稿の場合、Ctrlも押されていたらフッタ付加しない
-                isRemoveFooter = this.IsKeyDown(Keys.Control);
-            }
-
-            if (this.settingDialog.PostShiftEnter)
-            {
-                isRemoveFooter = this.IsKeyDown(Keys.Control);
-            }
-
-            if (!isRemoveFooter && (this.StatusText.Text.Contains("RT @") || this.StatusText.Text.Contains("QT @")))
-            {
-                isRemoveFooter = true;
-            }
-
-            if (this.GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
-            {
-                if (MessageBox.Show(Hoehoe.Properties.Resources.PostLengthOverMessage1, Hoehoe.Properties.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
-                {
-                    isCutOff = true;
-                    if (this.GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
-                    {
-                        isRemoveFooter = true;
-                    }
-                }
-                else
-                {
-                    return;
-                }
-            }
-
-            string footer = string.Empty;
-            string header = string.Empty;
-            if (this.StatusText.Text.StartsWith("D ") || this.StatusText.Text.StartsWith("d "))
-            {
-                // DM時は何もつけない
-                footer = string.Empty;
-            }
-            else
-            {
-                // ハッシュタグ
-                if (this.HashMgr.IsNotAddToAtReply)
-                {
-                    if (!string.IsNullOrEmpty(this.HashMgr.UseHash) && this.replyToId == 0 && string.IsNullOrEmpty(this.replyToName))
-                    {
-                        if (this.HashMgr.IsHead)
-                        {
-                            header = this.HashMgr.UseHash + " ";
-                        }
-                        else
-                        {
-                            footer = " " + this.HashMgr.UseHash;
-                        }
-                    }
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(this.HashMgr.UseHash))
-                    {
-                        if (this.HashMgr.IsHead)
-                        {
-                            header = this.HashMgr.UseHash + " ";
-                        }
-                        else
-                        {
-                            footer = " " + this.HashMgr.UseHash;
-                        }
-                    }
-                }
-
-                if (!isRemoveFooter)
-                {
-                    if (this.settingDialog.UseRecommendStatus)
-                    {
-                        // 推奨ステータスを使用する
-                        footer += this.settingDialog.RecommendStatusText;
-                    }
-                    else
-                    {
-                        // テキストボックスに入力されている文字列を使用する
-                        footer += " " + this.settingDialog.Status.Trim();
-                    }
-                }
-            }
-
-            args.PStatus.Status = header + this.StatusText.Text.Trim() + footer;
-
-            if (this.ToolStripMenuItemApiCommandEvasion.Checked)
-            {
-                // APIコマンド回避
-                if (Regex.IsMatch(args.PStatus.Status, "^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)", RegexOptions.IgnoreCase) && !args.PStatus.Status.EndsWith(" ."))
-                {
-                    args.PStatus.Status += " .";
-                }
-            }
-
-            if (this.ToolStripMenuItemUrlMultibyteSplit.Checked)
-            {
-                // URLと全角文字の切り離し
-                Match mc2 = Regex.Match(args.PStatus.Status, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+");
-                if (mc2.Success)
-                {
-                    args.PStatus.Status = Regex.Replace(args.PStatus.Status, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+", "$& ");
-                }
-            }
-
-            if (this.IdeographicSpaceToSpaceToolStripMenuItem.Checked)
-            {
-                // 文中の全角スペースを半角スペース1個にする
-                args.PStatus.Status = args.PStatus.Status.Replace("　", " ");
-            }
-
-            if (isCutOff && args.PStatus.Status.Length > 140)
-            {
-                args.PStatus.Status = args.PStatus.Status.Substring(0, 140);
-                const string AtId = "(@|＠)[a-z0-9_/]+$";
-                const string HashTag = "(^|[^0-9A-Z&\\/\\?]+)(#|＃)([0-9A-Z_]*[A-Z_]+)$";
-                const string Url = "https?:\\/\\/[a-z0-9!\\*'\\(\\);:&=\\+\\$\\/%#\\[\\]\\-_\\.,~?]+$";
-
-                // 簡易判定
-                string pattern = string.Format("({0})|({1})|({2})", AtId, HashTag, Url);
-                Match mc = Regex.Match(args.PStatus.Status, pattern, RegexOptions.IgnoreCase);
-                if (mc.Success)
-                {
-                    // さらに@ID、ハッシュタグ、URLと推測される文字列をカットする
-                    args.PStatus.Status = args.PStatus.Status.Substring(0, 140 - mc.Value.Length);
-                }
-
-                if (MessageBox.Show(args.PStatus.Status, "Post or Cancel?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
-                {
-                    return;
-                }
-            }
-
-            args.PStatus.InReplyToId = this.replyToId;
-            args.PStatus.InReplyToName = this.replyToName;
-            if (this.ImageSelectionPanel.Visible)
-            {
-                // 画像投稿
-                if (!object.ReferenceEquals(this.ImageSelectedPicture.Image, this.ImageSelectedPicture.InitialImage) && this.ImageServiceCombo.SelectedIndex > -1 && !string.IsNullOrEmpty(this.ImagefilePathText.Text))
-                {
-                    if (MessageBox.Show(Hoehoe.Properties.Resources.PostPictureConfirm1, Hoehoe.Properties.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Cancel)
-                    {
-                        this.TimelinePanel.Visible = true;
-                        this.TimelinePanel.Enabled = true;
-                        this.ImageSelectionPanel.Visible = false;
-                        this.ImageSelectionPanel.Enabled = false;
-                        if (this.curList != null)
-                        {
-                            this.curList.Focus();
-                        }
-
-                        return;
-                    }
-
-                    args.PStatus.ImageService = this.ImageServiceCombo.Text;
-                    args.PStatus.ImagePath = this.ImagefilePathText.Text;
-                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                    this.ImagefilePathText.Text = string.Empty;
-                    this.TimelinePanel.Visible = true;
-                    this.TimelinePanel.Enabled = true;
-                    this.ImageSelectionPanel.Visible = false;
-                    this.ImageSelectionPanel.Enabled = false;
-                    if (this.curList != null)
-                    {
-                        this.curList.Focus();
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(Hoehoe.Properties.Resources.PostPictureWarn1, Hoehoe.Properties.Resources.PostPictureWarn2);
-                    return;
-                }
-            }
-
-            this.RunAsync(args);
-
-            // Google検索（試験実装）
-            if (this.StatusText.Text.StartsWith("Google:", StringComparison.OrdinalIgnoreCase) && this.StatusText.Text.Trim().Length > 7)
-            {
-                string tmp = string.Format(Hoehoe.Properties.Resources.SearchItem2Url, HttpUtility.UrlEncode(this.StatusText.Text.Substring(7)));
-                this.OpenUriAsync(tmp);
-            }
-
-            this.replyToId = 0;
-            this.replyToName = string.Empty;
-            this.StatusText.Text = string.Empty;
-            this.postHistory.Add(new PostingStatus());
-            this.postHistoryIndex = this.postHistory.Count - 1;
-            if (!this.ToolStripFocusLockMenuItem.Checked)
-            {
-                ((Control)this.ListTab.SelectedTab.Tag).Focus();
-            }
-
-            this.urlUndoBuffer = null;
-            this.UrlUndoToolStripMenuItem.Enabled = false; // Undoをできないように設定
-        }
-
-        private void EndToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MyCommon.IsEnding = true;
-            this.Close();
-        }
-
-        private void Tween_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (!this.settingDialog.CloseToExit && e.CloseReason == CloseReason.UserClosing && MyCommon.IsEnding == false)
-            {
-                // _endingFlag=False:フォームの×ボタン
-                e.Cancel = true;
-                this.Visible = false;
-            }
-            else
-            {
-                // Google.GASender.GetInstance().TrackEventWithCategory("post", "end", this.Tw.UserId_)
-                this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
-                this.ignoreConfigSave = true;
-                MyCommon.IsEnding = true;
-                this.timerTimeline.Enabled = false;
-                this.TimerRefreshIcon.Enabled = false;
-            }
-        }
-
-        private void NotifyIcon1_BalloonTipClicked(object sender, EventArgs e)
-        {
-            this.Visible = true;
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                this.WindowState = FormWindowState.Normal;
-            }
-
-            this.Activate();
-            this.BringToFront();
-        }
-
-        private void GetTimelineWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker bw = (BackgroundWorker)sender;
-            if (bw.CancellationPending || MyCommon.IsEnding)
-            {
-                e.Cancel = true;
-                return;
-            }
-
-            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-            //// Tween.My.MyProject.Application.InitCulture(); // TODO: Need this here?
-            string ret = string.Empty;
-            GetWorkerResult rslt = new GetWorkerResult();
-            bool read = !this.settingDialog.UnreadManage;
-            if (this.isInitializing && this.settingDialog.UnreadManage)
-            {
-                read = this.settingDialog.Readed;
-            }
-
-            GetWorkerArg args = (GetWorkerArg)e.Argument;
-            if (!CheckAccountValid())
-            {
-                // エラー表示のみ行ない、後処理キャンセル
-                rslt.RetMsg = "Auth error. Check your account";
-                rslt.WorkerType = WorkerType.ErrorState;
-                rslt.TabName = args.TabName;
-                e.Result = rslt;
-                return;
-            }
-
-            if (args.WorkerType != WorkerType.OpenUri)
-            {
-                bw.ReportProgress(0, string.Empty);
-            }
-
-            // Notifyアイコンアニメーション開始
-            switch (args.WorkerType)
-            {
-                case WorkerType.Timeline:
-                case WorkerType.Reply:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = this.tw.GetTimelineApi(read, args.WorkerType, args.Page == -1, this.isInitializing);
-                    if (string.IsNullOrEmpty(ret) && args.WorkerType == WorkerType.Timeline && this.settingDialog.ReadOldPosts)
-                    {
-                        // 新着時未読クリア
-                        this.statuses.SetRead();
-                    }
-
-                    rslt.AddCount = this.statuses.DistributePosts();                    // 振り分け
-                    break;
-                case WorkerType.DirectMessegeRcv:
-                    // 送信分もまとめて取得
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = this.tw.GetDirectMessageApi(read, WorkerType.DirectMessegeRcv, args.Page == -1);
-                    if (string.IsNullOrEmpty(ret))
-                    {
-                        ret = this.tw.GetDirectMessageApi(read, WorkerType.DirectMessegeSnt, args.Page == -1);
-                    }
-
-                    rslt.AddCount = this.statuses.DistributePosts();
-                    break;
-                case WorkerType.FavAdd:
-                    // スレッド処理はしない
-                    if (this.statuses.Tabs.ContainsKey(args.TabName))
-                    {
-                        TabClass tbc = this.statuses.Tabs[args.TabName];
-                        for (int i = 0; i < args.Ids.Count; i++)
-                        {
-                            PostClass post = null;
-                            if (tbc.IsInnerStorageTabType)
-                            {
-                                post = tbc.Posts[args.Ids[i]];
-                            }
-                            else
-                            {
-                                post = this.statuses.Item(args.Ids[i]);
-                            }
-
-                            args.Page = i + 1;
-                            bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                            if (!post.IsFav)
-                            {
-                                if (post.RetweetedId == 0)
-                                {
-                                    ret = this.tw.PostFavAdd(post.StatusId);
-                                }
-                                else
-                                {
-                                    ret = this.tw.PostFavAdd(post.RetweetedId);
-                                }
-
-                                if (ret.Length == 0)
-                                {
-                                    // リスト再描画必要
-                                    args.SIds.Add(post.StatusId);
-                                    post.IsFav = true;
-                                    this.favTimestamps.Add(DateTime.Now);
-                                    if (string.IsNullOrEmpty(post.RelTabName))
-                                    {
-                                        // 検索,リストUserTimeline.Relatedタブからのfavは、favタブへ追加せず。それ以外は追加
-                                        this.statuses.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
-                                    }
-                                    else
-                                    {
-                                        // 検索,リスト,UserTimeline.Relatedタブからのfavで、TLでも取得済みならfav反映
-                                        if (this.statuses.ContainsKey(post.StatusId))
-                                        {
-                                            PostClass postTl = this.statuses.Item(post.StatusId);
-                                            postTl.IsFav = true;
-                                            this.statuses.GetTabByType(TabUsageType.Favorites).Add(postTl.StatusId, postTl.IsRead, false);
-                                        }
-                                    }
-
-                                    // 検索,リスト,UserTimeline,Relatedの各タブに反映
-                                    foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
-                                    {
-                                        if (tb.Contains(post.StatusId))
-                                        {
-                                            tb.Posts[post.StatusId].IsFav = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    rslt.SIds = args.SIds;
-                    break;
-                case WorkerType.FavRemove:
-                    // スレッド処理はしない
-                    if (this.statuses.Tabs.ContainsKey(args.TabName))
-                    {
-                        TabClass tbc = this.statuses.Tabs[args.TabName];
-                        for (int i = 0; i < args.Ids.Count; i++)
-                        {
-                            PostClass post = tbc.IsInnerStorageTabType ? tbc.Posts[args.Ids[i]] : this.statuses.Item(args.Ids[i]);
-                            args.Page = i + 1;
-                            bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                            if (post.IsFav)
-                            {
-                                ret = post.RetweetedId == 0 ? this.tw.PostFavRemove(post.StatusId) : this.tw.PostFavRemove(post.RetweetedId);
-                                if (ret.Length == 0)
-                                {
-                                    args.SIds.Add(post.StatusId);
-                                    post.IsFav = false;
-
-                                    // リスト再描画必要
-                                    if (this.statuses.ContainsKey(post.StatusId))
-                                    {
-                                        this.statuses.Item(post.StatusId).IsFav = false;
-                                    }
-
-                                    // 検索,リスト,UserTimeline,Relatedの各タブに反映
-                                    foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
-                                    {
-                                        if (tb.Contains(post.StatusId))
-                                        {
-                                            tb.Posts[post.StatusId].IsFav = false;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    rslt.SIds = args.SIds;
-                    break;
-                case WorkerType.PostMessage:
-                    bw.ReportProgress(200);
-                    if (string.IsNullOrEmpty(args.PStatus.ImagePath))
-                    {
-                        for (int i = 0; i <= 1; i++)
-                        {
-                            ret = this.tw.PostStatus(args.PStatus.Status, args.PStatus.InReplyToId);
-                            if (string.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.PStatus.Status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.PStatus.Status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != AccountState.Valid)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ret = this.pictureServices[args.PStatus.ImageService].Upload(ref args.PStatus.ImagePath, ref args.PStatus.Status, args.PStatus.InReplyToId);
-                    }
-
-                    bw.ReportProgress(300);
-                    rslt.PStatus = args.PStatus;
-                    break;
-                case WorkerType.Retweet:
-                    bw.ReportProgress(200);
-                    for (int i = 0; i < args.Ids.Count; i++)
-                    {
-                        ret = this.tw.PostRetweet(args.Ids[i], read);
-                    }
-
-                    bw.ReportProgress(300);
-                    break;
-                case WorkerType.Follower:
-                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText1);
-                    ret = this.tw.GetFollowersApi();
-                    if (string.IsNullOrEmpty(ret))
-                    {
-                        ret = this.tw.GetNoRetweetIdsApi();
-                    }
-
-                    break;
-                case WorkerType.Configuration:
-                    ret = this.tw.ConfigurationApi();
-                    break;
-                case WorkerType.OpenUri:
-                    string myPath = Convert.ToString(args.Url);
-                    try
-                    {
-                        if (!string.IsNullOrEmpty(this.settingDialog.BrowserPath))
-                        {
-                            if (this.settingDialog.BrowserPath.StartsWith("\"") && this.settingDialog.BrowserPath.Length > 2 && this.settingDialog.BrowserPath.IndexOf("\"", 2) > -1)
-                            {
-                                int sep = this.settingDialog.BrowserPath.IndexOf("\"", 2);
-                                string browserPath = this.settingDialog.BrowserPath.Substring(1, sep - 1);
-                                string arg = string.Empty;
-                                if (sep < this.settingDialog.BrowserPath.Length - 1)
-                                {
-                                    arg = this.settingDialog.BrowserPath.Substring(sep + 1);
-                                }
-
-                                myPath = arg + " " + myPath;
-                                Process.Start(browserPath, myPath);
-                            }
-                            else
-                            {
-                                Process.Start(this.settingDialog.BrowserPath, myPath);
-                            }
-                        }
-                        else
-                        {
-                            Process.Start(myPath);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    break;
-                case WorkerType.Favorites:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = this.tw.GetFavoritesApi(read, args.WorkerType, args.Page == -1);
-                    rslt.AddCount = this.statuses.DistributePosts();
-                    break;
-                case WorkerType.PublicSearch:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    if (string.IsNullOrEmpty(args.TabName))
-                    {
-                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch))
-                        {
-                            if (!string.IsNullOrEmpty(tb.SearchWords))
-                            {
-                                ret = this.tw.GetSearch(read, tb, false);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        TabClass tb = this.statuses.GetTabByName(args.TabName);
-                        if (tb != null)
-                        {
-                            ret = this.tw.GetSearch(read, tb, false);
-                            if (string.IsNullOrEmpty(ret) && args.Page == -1)
-                            {
-                                ret = this.tw.GetSearch(read, tb, true);
-                            }
-                        }
-                    }
-
-                    rslt.AddCount = this.statuses.DistributePosts();                    // 振り分け
-                    break;
-                case WorkerType.UserTimeline:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    int count = 20;
-                    if (this.settingDialog.UseAdditionalCount)
-                    {
-                        count = this.settingDialog.UserTimelineCountApi;
-                    }
-
-                    if (string.IsNullOrEmpty(args.TabName))
-                    {
-                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.UserTimeline))
-                        {
-                            if (!string.IsNullOrEmpty(tb.User))
-                            {
-                                ret = this.tw.GetUserTimelineApi(read, count, tb.User, tb, false);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        TabClass tb = this.statuses.GetTabByName(args.TabName);
-                        if (tb != null)
-                        {
-                            ret = this.tw.GetUserTimelineApi(read, count, tb.User, tb, args.Page == -1);
-                        }
-                    }
-
-                    rslt.AddCount = this.statuses.DistributePosts();                     // 振り分け
-                    break;
-                case WorkerType.List:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    if (string.IsNullOrEmpty(args.TabName))
-                    {
-                        // 定期更新
-                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.Lists))
-                        {
-                            if (tb.ListInfo != null && tb.ListInfo.Id != 0)
-                            {
-                                ret = this.tw.GetListStatus(read, tb, false, this.isInitializing);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // 手動更新（特定タブのみ更新）
-                        TabClass tb = this.statuses.GetTabByName(args.TabName);
-                        if (tb != null)
-                        {
-                            ret = this.tw.GetListStatus(read, tb, args.Page == -1, this.isInitializing);
-                        }
-                    }
-
-                    rslt.AddCount = this.statuses.DistributePosts(); // 振り分け
-                    break;
-                case WorkerType.Related:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = this.tw.GetRelatedResult(read, this.statuses.GetTabByName(args.TabName));
-                    rslt.AddCount = this.statuses.DistributePosts();
-                    break;
-                case WorkerType.BlockIds:
-                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateBlockUserText1);
-                    ret = this.tw.GetBlockUserIds();
-                    if (TabInformations.GetInstance().BlockIds.Count == 0)
-                    {
-                        this.tw.GetBlockUserIds();
-                    }
-
-                    break;
-            }
-
-            // キャンセル要求
-            if (bw.CancellationPending)
-            {
-                e.Cancel = true;
-                return;
-            }
-
-            // 時速表示用
-            if (args.WorkerType == WorkerType.FavAdd)
-            {
-                System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
-                for (int i = this.favTimestamps.Count - 1; i >= 0; i += -1)
-                {
-                    if (this.favTimestamps[i].CompareTo(oneHour) < 0)
-                    {
-                        this.favTimestamps.RemoveAt(i);
-                    }
-                }
-            }
-
-            if (args.WorkerType == WorkerType.Timeline && !this.isInitializing)
-            {
-                lock (this.syncObject)
-                {
-                    DateTime tm = DateTime.Now;
-                    if (this.timeLineTimestamps.ContainsKey(tm))
-                    {
-                        this.timeLineTimestamps[tm] += rslt.AddCount;
-                    }
-                    else
-                    {
-                        this.timeLineTimestamps.Add(tm, rslt.AddCount);
-                    }
-
-                    DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
-                    List<DateTime> keys = new List<DateTime>();
-                    this.timeLineCount = 0;
-                    foreach (DateTime key in this.timeLineTimestamps.Keys)
-                    {
-                        if (key.CompareTo(oneHour) < 0)
-                        {
-                            keys.Add(key);
-                        }
-                        else
-                        {
-                            this.timeLineCount += this.timeLineTimestamps[key];
-                        }
-                    }
-
-                    foreach (DateTime key in keys)
-                    {
-                        this.timeLineTimestamps.Remove(key);
-                    }
-
-                    keys.Clear();
-                }
-            }
-
-            // 終了ステータス
-            if (args.WorkerType != WorkerType.OpenUri)
-            {
-                bw.ReportProgress(100, this.MakeStatusMessage(args, true));
-            }
-
-            // ステータス書き換え、Notifyアイコンアニメーション開始
-            rslt.RetMsg = ret;
-            rslt.WorkerType = args.WorkerType;
-            rslt.TabName = args.TabName;
-            if (args.WorkerType == WorkerType.DirectMessegeRcv || args.WorkerType == WorkerType.DirectMessegeSnt || args.WorkerType == WorkerType.Reply || args.WorkerType == WorkerType.Timeline || args.WorkerType == WorkerType.Favorites)
-            {
-                // 値が正しいか後でチェック。10ページ毎の継続確認
-                rslt.Page = args.Page - 1;
-            }
-
-            e.Result = rslt;
-        }
-
         private string MakeStatusMessage(GetWorkerArg asyncArg, bool isFinish)
         {
             string smsg = string.Empty;
@@ -4465,298 +2529,6 @@ namespace Hoehoe
             }
 
             return smsg;
-        }
-
-        private void GetTimelineWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (MyCommon.IsEnding)
-            {
-                return;
-            }
-
-            if (e.ProgressPercentage > 100)
-            {
-                // 発言投稿
-                if (e.ProgressPercentage == 200)
-                {
-                    // 開始
-                    this.StatusLabel.Text = "Posting...";
-                }
-
-                if (e.ProgressPercentage == 300)
-                {
-                    // 終了
-                    this.StatusLabel.Text = Hoehoe.Properties.Resources.PostWorker_RunWorkerCompletedText4;
-                }
-            }
-            else
-            {
-                string smsg = (string)e.UserState;
-                if (smsg.Length > 0)
-                {
-                    this.StatusLabel.Text = smsg;
-                }
-            }
-        }
-
-        private void GetTimelineWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (MyCommon.IsEnding || e.Cancelled)
-            {
-                // キャンセル
-                return;
-            }
-
-            if (e.Error != null)
-            {
-                this.myStatusError = true;
-                this.waitTimeline = false;
-                this.waitReply = false;
-                this.waitDm = false;
-                this.waitFav = false;
-                this.waitPubSearch = false;
-                this.waitUserTimeline = false;
-                this.waitLists = false;
-                throw new Exception("BackgroundWorker Exception", e.Error);
-            }
-
-            GetWorkerResult rslt = (GetWorkerResult)e.Result;
-
-            if (rslt.WorkerType == WorkerType.OpenUri)
-            {
-                return;
-            }
-
-            // エラー
-            if (rslt.RetMsg.Length > 0)
-            {
-                this.myStatusError = true;
-                this.StatusLabel.Text = rslt.RetMsg;
-            }
-
-            if (rslt.WorkerType == WorkerType.ErrorState)
-            {
-                return;
-            }
-
-            if (rslt.WorkerType == WorkerType.FavRemove)
-            {
-                this.RemovePostFromFavTab(rslt.SIds.ToArray());
-            }
-
-            if (rslt.WorkerType == WorkerType.Timeline || rslt.WorkerType == WorkerType.Reply || rslt.WorkerType == WorkerType.List || rslt.WorkerType == WorkerType.PublicSearch || rslt.WorkerType == WorkerType.DirectMessegeRcv || rslt.WorkerType == WorkerType.DirectMessegeSnt || rslt.WorkerType == WorkerType.Favorites || rslt.WorkerType == WorkerType.Follower || rslt.WorkerType == WorkerType.FavAdd || rslt.WorkerType == WorkerType.FavRemove || rslt.WorkerType == WorkerType.Related || rslt.WorkerType == WorkerType.UserTimeline || rslt.WorkerType == WorkerType.BlockIds || rslt.WorkerType == WorkerType.Configuration)
-            {
-                // リスト反映
-                this.RefreshTimeline(false);
-            }
-
-            switch (rslt.WorkerType)
-            {
-                case WorkerType.Timeline:
-                    this.waitTimeline = false;
-                    if (!this.isInitializing)
-                    {
-                        // 'API使用時の取得調整は別途考える（カウント調整？）
-                    }
-
-                    break;
-                case WorkerType.Reply:
-                    this.waitReply = false;
-                    if (rslt.NewDM && !this.isInitializing)
-                    {
-                        this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
-                    }
-
-                    break;
-                case WorkerType.Favorites:
-                    this.waitFav = false;
-                    break;
-                case WorkerType.DirectMessegeRcv:
-                    this.waitDm = false;
-                    break;
-                case WorkerType.FavAdd:
-                case WorkerType.FavRemove:
-                    if (this.curList != null && this.curTab != null)
-                    {
-                        this.curList.BeginUpdate();
-                        if (rslt.WorkerType == WorkerType.FavRemove && this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.Favorites)
-                        {
-                            // 色変えは不要
-                        }
-                        else
-                        {
-                            for (int i = 0; i < rslt.SIds.Count; i++)
-                            {
-                                if (this.curTab.Text.Equals(rslt.TabName))
-                                {
-                                    int idx = this.statuses.Tabs[rslt.TabName].IndexOf(rslt.SIds[i]);
-                                    if (idx > -1)
-                                    {
-                                        TabClass tb = this.statuses.Tabs[rslt.TabName];
-                                        if (tb != null)
-                                        {
-                                            PostClass post = null;
-                                            if (tb.TabType == TabUsageType.Lists || tb.TabType == TabUsageType.PublicSearch)
-                                            {
-                                                post = tb.Posts[rslt.SIds[i]];
-                                            }
-                                            else
-                                            {
-                                                post = this.statuses.Item(rslt.SIds[i]);
-                                            }
-
-                                            this.ChangeCacheStyleRead(post.IsRead, idx, this.curTab);
-                                        }
-
-                                        if (idx == this.curItemIndex)
-                                        {
-                                            // 選択アイテム再表示
-                                            this.DispSelectedPost(true);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        this.curList.EndUpdate();
-                    }
-
-                    break;
-                case WorkerType.PostMessage:
-                    if (string.IsNullOrEmpty(rslt.RetMsg) || rslt.RetMsg.StartsWith("Outputz") || rslt.RetMsg.StartsWith("OK:") || rslt.RetMsg == "Warn:Status is a duplicate.")
-                    {
-                        this.postTimestamps.Add(DateTime.Now);
-                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
-                        for (int i = this.postTimestamps.Count - 1; i >= 0; i += -1)
-                        {
-                            if (this.postTimestamps[i].CompareTo(oneHour) < 0)
-                            {
-                                this.postTimestamps.RemoveAt(i);
-                            }
-                        }
-
-                        if (!this.HashMgr.IsPermanent && !string.IsNullOrEmpty(this.HashMgr.UseHash))
-                        {
-                            this.HashMgr.ClearHashtag();
-                            this.HashStripSplitButton.Text = "#[-]";
-                            this.HashToggleMenuItem.Checked = false;
-                            this.HashToggleToolStripMenuItem.Checked = false;
-                        }
-
-                        this.SetMainWindowTitle();
-                        rslt.RetMsg = string.Empty;
-                    }
-                    else
-                    {
-                        DialogResult retry = default(DialogResult);
-                        try
-                        {
-                            retry = MessageBox.Show(string.Format("{0}   --->   [ " + rslt.RetMsg + " ]" + Environment.NewLine + "\"" + rslt.PStatus.Status + "\"" + Environment.NewLine + "{1}", Hoehoe.Properties.Resources.StatusUpdateFailed1, Hoehoe.Properties.Resources.StatusUpdateFailed2), "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
-                        }
-                        catch (Exception)
-                        {
-                            retry = DialogResult.Abort;
-                        }
-
-                        if (retry == DialogResult.Retry)
-                        {
-                            RunAsync(new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage, PStatus = rslt.PStatus });
-                        }
-                        else
-                        {
-                            if (ToolStripFocusLockMenuItem.Checked)
-                            {
-                                // 連投モードのときだけEnterイベントが起きないので強制的に背景色を戻す
-                                this.StatusText_Enter(this.StatusText, new EventArgs());
-                            }
-                        }
-                    }
-
-                    if (rslt.RetMsg.Length == 0 && this.settingDialog.PostAndGet)
-                    {
-                        if (this.isActiveUserstream)
-                        {
-                            this.RefreshTimeline(true);
-                        }
-                        else
-                        {
-                            this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
-                        }
-                    }
-
-                    break;
-                case WorkerType.Retweet:
-                    if (rslt.RetMsg.Length == 0)
-                    {
-                        this.postTimestamps.Add(DateTime.Now);
-                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
-                        for (int i = this.postTimestamps.Count - 1; i >= 0; i--)
-                        {
-                            if (this.postTimestamps[i].CompareTo(oneHour) < 0)
-                            {
-                                this.postTimestamps.RemoveAt(i);
-                            }
-                        }
-
-                        if (!this.isActiveUserstream && this.settingDialog.PostAndGet)
-                        {
-                            this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
-                        }
-                    }
-
-                    break;
-                case WorkerType.Follower:
-                    this.itemCache = null;
-                    this.postCache = null;
-                    if (this.curList != null)
-                    {
-                        this.curList.Refresh();
-                    }
-
-                    break;
-                case WorkerType.Configuration:
-                    // this._waitFollower = False
-                    if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit != 0)
-                    {
-                        this.pictureServices["Twitter"].Configuration("MaxUploadFilesize", this.settingDialog.TwitterConfiguration.PhotoSizeLimit);
-                    }
-
-                    this.itemCache = null;
-                    this.postCache = null;
-                    if (this.curList != null)
-                    {
-                        this.curList.Refresh();
-                    }
-
-                    break;
-                case WorkerType.PublicSearch:
-                    this.waitPubSearch = false;
-                    break;
-                case WorkerType.UserTimeline:
-                    this.waitUserTimeline = false;
-                    break;
-                case WorkerType.List:
-                    this.waitLists = false;
-                    break;
-                case WorkerType.Related:
-                    {
-                        TabClass tb = this.statuses.GetTabByType(TabUsageType.Related);
-                        if (tb != null && tb.RelationTargetPost != null && tb.Contains(tb.RelationTargetPost.StatusId))
-                        {
-                            foreach (TabPage tp in this.ListTab.TabPages)
-                            {
-                                if (tp.Text == tb.TabName)
-                                {
-                                    ((DetailsListView)tp.Tag).SelectedIndices.Add(tb.IndexOf(tb.RelationTargetPost.StatusId));
-                                    ((DetailsListView)tp.Tag).Items[tb.IndexOf(tb.RelationTargetPost.StatusId)].Focused = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    break;
-            }
         }
 
         private void RemovePostFromFavTab(long[] ids)
@@ -4863,76 +2635,6 @@ namespace Hoehoe
             }
         }
 
-        private void NotifyIcon1_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                this.Visible = true;
-                if (this.WindowState == FormWindowState.Minimized)
-                {
-                    this.WindowState = FormWindowState.Normal;
-                }
-
-                this.Activate();
-                this.BringToFront();
-            }
-        }
-
-        private void MyList_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            switch (this.settingDialog.ListDoubleClickAction)
-            {
-                case 0:
-                    this.MakeReplyOrDirectStatus();
-                    break;
-                case 1:
-                    this.FavoriteChange(true);
-                    break;
-                case 2:
-                    if (this.curPost != null)
-                    {
-                        this.ShowUserStatus(this.curPost.ScreenName, false);
-                    }
-
-                    break;
-                case 3:
-                    this.ShowUserTimeline();
-                    break;
-                case 4:
-                    this.ShowRelatedStatusesMenuItem_Click(null, null);
-                    break;
-                case 5:
-                    this.MoveToHomeToolStripMenuItem_Click(null, null);
-                    break;
-                case 6:
-                    this.StatusOpenMenuItem_Click(null, null);
-                    break;
-                case 7:
-                    // 動作なし
-                    break;
-            }
-        }
-
-        private void FavAddToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.FavoriteChange(true);
-        }
-
-        private void FavRemoveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.FavoriteChange(false);
-        }
-
-        private void FavoriteRetweetMenuItem_Click(object sender, EventArgs e)
-        {
-            this.FavoritesRetweetOriginal();
-        }
-
-        private void FavoriteRetweetUnofficialMenuItem_Click(object sender, EventArgs e)
-        {
-            this.FavoritesRetweetUnofficial();
-        }
-
         private void FavoriteChange(bool isFavAdd, bool multiFavoriteChangeDialogEnable = true)
         {
             // TrueでFavAdd,FalseでFavRemove
@@ -5028,280 +2730,6 @@ namespace Hoehoe
             {
                 return this.statuses.Item(this.curTab.Text, index);
             }
-        }
-
-        private void MoveToHomeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.curList.SelectedIndices.Count > 0)
-            {
-                this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName);
-            }
-            else if (this.curList.SelectedIndices.Count == 0)
-            {
-                this.OpenUriAsync("http://twitter.com/");
-            }
-        }
-
-        private void MoveToFavToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.curList.SelectedIndices.Count > 0)
-            {
-                this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName + "/favorites");
-            }
-        }
-
-        private void Tween_ClientSizeChanged(object sender, EventArgs e)
-        {
-            if ((!this.initialLayout) && this.Visible)
-            {
-                if (this.WindowState == FormWindowState.Normal)
-                {
-                    this.mySize = this.ClientSize;
-                    this.mySpDis = this.SplitContainer1.SplitterDistance;
-                    this.mySpDis3 = this.SplitContainer3.SplitterDistance;
-                    if (this.StatusText.Multiline)
-                    {
-                        this.mySpDis2 = this.StatusText.Height;
-                    }
-
-                    this.myAdSpDis = this.SplitContainer4.SplitterDistance;
-                    this.modifySettingLocal = true;
-                }
-            }
-        }
-
-        private void MyList_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            if (this.settingDialog.SortOrderLock)
-            {
-                return;
-            }
-
-            IdComparerClass.ComparerMode mode = default(IdComparerClass.ComparerMode);
-            if (this.iconCol)
-            {
-                mode = IdComparerClass.ComparerMode.Id;
-            }
-            else
-            {
-                switch (e.Column)
-                {
-                    case 0:
-                    case 5:
-                    case 6:
-                        // 0:アイコン,5:未読マーク,6:プロテクト・フィルターマーク
-                        // ソートしない
-                        return;
-                    case 1:
-                        // ニックネーム
-                        mode = IdComparerClass.ComparerMode.Nickname;
-                        break;
-                    case 2:
-                        // 本文
-                        mode = IdComparerClass.ComparerMode.Data;
-                        break;
-                    case 3:
-                        // 時刻=発言Id
-                        mode = IdComparerClass.ComparerMode.Id;
-                        break;
-                    case 4:
-                        // 名前
-                        mode = IdComparerClass.ComparerMode.Name;
-                        break;
-                    case 7:
-                        // Source
-                        mode = IdComparerClass.ComparerMode.Source;
-                        break;
-                }
-            }
-
-            this.statuses.ToggleSortOrder(mode);
-            this.InitColumnText();
-
-            if (this.iconCol)
-            {
-                ((DetailsListView)sender).Columns[0].Text = this.columnOrgTexts[0];
-                ((DetailsListView)sender).Columns[1].Text = this.columnTexts[2];
-            }
-            else
-            {
-                for (int i = 0; i <= 7; i++)
-                {
-                    ((DetailsListView)sender).Columns[i].Text = this.columnOrgTexts[i];
-                }
-
-                ((DetailsListView)sender).Columns[e.Column].Text = this.columnTexts[e.Column];
-            }
-
-            this.itemCache = null;
-            this.postCache = null;
-
-            if (this.statuses.Tabs[this.curTab.Text].AllCount > 0 && this.curPost != null)
-            {
-                int idx = this.statuses.Tabs[this.curTab.Text].IndexOf(this.curPost.StatusId);
-                if (idx > -1)
-                {
-                    this.SelectListItem(this.curList, idx);
-                    this.curList.EnsureVisible(idx);
-                }
-            }
-
-            this.curList.Refresh();
-            this.modifySettingCommon = true;
-        }
-
-        private void Tween_LocationChanged(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
-            {
-                this.myLoc = this.DesktopLocation;
-                this.modifySettingLocal = true;
-            }
-        }
-
-        private void ContextMenuOperate_Opening(object sender, CancelEventArgs e)
-        {
-            if (this.ListTab.SelectedTab == null)
-            {
-                return;
-            }
-
-            if (this.statuses == null || this.statuses.Tabs == null || !this.statuses.Tabs.ContainsKey(this.ListTab.SelectedTab.Text))
-            {
-                return;
-            }
-
-            if (!this.ExistCurrentPost)
-            {
-                this.ReplyStripMenuItem.Enabled = false;
-                this.ReplyAllStripMenuItem.Enabled = false;
-                this.DMStripMenuItem.Enabled = false;
-                this.ShowProfileMenuItem.Enabled = false;
-                this.ShowUserTimelineContextMenuItem.Enabled = false;
-                this.ListManageUserContextToolStripMenuItem2.Enabled = false;
-                this.MoveToFavToolStripMenuItem.Enabled = false;
-                this.TabMenuItem.Enabled = false;
-                this.IDRuleMenuItem.Enabled = false;
-                this.ReadedStripMenuItem.Enabled = false;
-                this.UnreadStripMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.ShowProfileMenuItem.Enabled = true;
-                this.ListManageUserContextToolStripMenuItem2.Enabled = true;
-                this.ReplyStripMenuItem.Enabled = true;
-                this.ReplyAllStripMenuItem.Enabled = true;
-                this.DMStripMenuItem.Enabled = true;
-                this.ShowUserTimelineContextMenuItem.Enabled = true;
-                this.MoveToFavToolStripMenuItem.Enabled = true;
-                this.TabMenuItem.Enabled = true;
-                this.IDRuleMenuItem.Enabled = true;
-                this.ReadedStripMenuItem.Enabled = true;
-                this.UnreadStripMenuItem.Enabled = true;
-            }
-
-            this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
-            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || this.curPost.IsDm)
-            {
-                this.FavAddToolStripMenuItem.Enabled = false;
-                this.FavRemoveToolStripMenuItem.Enabled = false;
-                this.StatusOpenMenuItem.Enabled = false;
-                this.FavorareMenuItem.Enabled = false;
-                this.ShowRelatedStatusesMenuItem.Enabled = false;
-                this.ReTweetStripMenuItem.Enabled = false;
-                this.ReTweetOriginalStripMenuItem.Enabled = false;
-                this.QuoteStripMenuItem.Enabled = false;
-                this.FavoriteRetweetContextMenu.Enabled = false;
-                this.FavoriteRetweetUnofficialContextMenu.Enabled = false;
-                if (this.ExistCurrentPost && this.curPost.IsDm)
-                {
-                    this.DeleteStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    this.DeleteStripMenuItem.Enabled = false;
-                }
-            }
-            else
-            {
-                this.FavAddToolStripMenuItem.Enabled = true;
-                this.FavRemoveToolStripMenuItem.Enabled = true;
-                this.StatusOpenMenuItem.Enabled = true;
-                this.FavorareMenuItem.Enabled = true;
-                this.ShowRelatedStatusesMenuItem.Enabled = true;
-                if (this.curPost.IsMe)
-                {
-                    this.ReTweetOriginalStripMenuItem.Enabled = false;
-                    this.FavoriteRetweetContextMenu.Enabled = false;
-                    if (string.IsNullOrEmpty(this.curPost.RetweetedBy))
-                    {
-                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
-                    }
-                    else
-                    {
-                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
-                    }
-
-                    this.DeleteStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    if (string.IsNullOrEmpty(this.curPost.RetweetedBy))
-                    {
-                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
-                    }
-                    else
-                    {
-                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
-                    }
-
-                    this.DeleteStripMenuItem.Enabled = false;
-                    if (this.curPost.IsProtect)
-                    {
-                        this.ReTweetOriginalStripMenuItem.Enabled = false;
-                        this.ReTweetStripMenuItem.Enabled = false;
-                        this.QuoteStripMenuItem.Enabled = false;
-                        this.FavoriteRetweetContextMenu.Enabled = false;
-                        this.FavoriteRetweetUnofficialContextMenu.Enabled = false;
-                    }
-                    else
-                    {
-                        this.ReTweetOriginalStripMenuItem.Enabled = true;
-                        this.ReTweetStripMenuItem.Enabled = true;
-                        this.QuoteStripMenuItem.Enabled = true;
-                        this.FavoriteRetweetContextMenu.Enabled = true;
-                        this.FavoriteRetweetUnofficialContextMenu.Enabled = true;
-                    }
-                }
-            }
-
-            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(this.curPost.InReplyToStatusId > 0))
-            {
-                this.RepliedStatusOpenMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.RepliedStatusOpenMenuItem.Enabled = true;
-            }
-
-            if (!this.ExistCurrentPost || string.IsNullOrEmpty(this.curPost.RetweetedBy))
-            {
-                this.MoveToRTHomeMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.MoveToRTHomeMenuItem.Enabled = true;
-            }
-        }
-
-        private void ReplyStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.MakeReplyOrDirectStatus(false, true);
-        }
-
-        private void DMStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.MakeReplyOrDirectStatus(false, false);
         }
 
         private void DoStatusDelete()
@@ -5462,92 +2890,6 @@ namespace Hoehoe
             }
         }
 
-        private void DeleteStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.DoStatusDelete();
-        }
-
-        private void ReadedStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.curList.BeginUpdate();
-            if (this.settingDialog.UnreadManage)
-            {
-                foreach (int idx in this.curList.SelectedIndices)
-                {
-                    this.statuses.SetReadAllTab(true, this.curTab.Text, idx);
-                }
-            }
-
-            foreach (int idx in this.curList.SelectedIndices)
-            {
-                this.ChangeCacheStyleRead(true, idx, this.curTab);
-            }
-
-            this.ColorizeList();
-            this.curList.EndUpdate();
-            foreach (TabPage tb in this.ListTab.TabPages)
-            {
-                if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
-                {
-                    if (this.settingDialog.TabIconDisp)
-                    {
-                        if (tb.ImageIndex == 0)
-                        {
-                            tb.ImageIndex = -1;
-                        }
-                    }
-                }
-            }
-
-            if (!this.settingDialog.TabIconDisp)
-            {
-                this.ListTab.Refresh();
-            }
-        }
-
-        private void UnreadStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.curList.BeginUpdate();
-            if (this.settingDialog.UnreadManage)
-            {
-                foreach (int idx in this.curList.SelectedIndices)
-                {
-                    this.statuses.SetReadAllTab(false, this.curTab.Text, idx);
-                }
-            }
-
-            foreach (int idx in this.curList.SelectedIndices)
-            {
-                this.ChangeCacheStyleRead(false, idx, this.curTab);
-            }
-
-            this.ColorizeList();
-            this.curList.EndUpdate();
-            foreach (TabPage tb in this.ListTab.TabPages)
-            {
-                if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
-                {
-                    if (this.settingDialog.TabIconDisp)
-                    {
-                        if (tb.ImageIndex == -1)
-                        {
-                            tb.ImageIndex = 0;
-                        }
-                    }
-                }
-            }
-
-            if (!this.settingDialog.TabIconDisp)
-            {
-                this.ListTab.Refresh();
-            }
-        }
-
-        private void RefreshStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.DoRefresh();
-        }
-
         private void DoRefresh()
         {
             if (this.curTab != null)
@@ -5661,392 +3003,6 @@ namespace Hoehoe
             }
         }
 
-        private void SettingStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DialogResult result = default(DialogResult);
-            string uid = this.tw.Username.ToLower();
-            foreach (UserAccount u in this.settingDialog.UserAccounts)
-            {
-                if (u.UserId == this.tw.UserId)
-                {
-                    break;
-                }
-            }
-
-            try
-            {
-                result = this.settingDialog.ShowDialog(this);
-            }
-            catch (Exception)
-            {
-                return;
-            }
-
-            if (result == DialogResult.OK)
-            {
-                lock (this.syncObject)
-                {
-                    this.tw.SetTinyUrlResolve(this.settingDialog.TinyUrlResolve);
-                    this.tw.SetRestrictFavCheck(this.settingDialog.RestrictFavCheck);
-                    this.tw.ReadOwnPost = this.settingDialog.ReadOwnPost;
-                    this.tw.SetUseSsl(this.settingDialog.UseSsl);
-                    ShortUrl.IsResolve = this.settingDialog.TinyUrlResolve;
-                    ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
-                    ShortUrl.SetBitlyId(this.settingDialog.BitlyUser);
-                    ShortUrl.SetBitlyKey(this.settingDialog.BitlyPwd);
-                    HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
-                    HttpTwitter.SetTwitterSearchUrl(this.cfgCommon.TwitterSearchUrl);
-
-                    HttpConnection.InitializeConnection(this.settingDialog.DefaultTimeOut, this.settingDialog.SelectedProxyType, this.settingDialog.ProxyAddress, this.settingDialog.ProxyPort, this.settingDialog.ProxyUser, this.settingDialog.ProxyPassword);
-                    this.CreatePictureServices();
-#if UA // = "True"
-					this.SplitContainer4.Panel2.Controls.RemoveAt(0);
-					this.ab = new AdsBrowser();
-					this.SplitContainer4.Panel2.Controls.Add(ab);
-#endif
-                    try
-                    {
-                        if (this.settingDialog.TabIconDisp)
-                        {
-                            this.ListTab.DrawItem -= this.ListTab_DrawItem;
-                            this.ListTab.DrawMode = TabDrawMode.Normal;
-                            this.ListTab.ImageList = this.TabImage;
-                        }
-                        else
-                        {
-                            this.ListTab.DrawItem -= this.ListTab_DrawItem;
-                            this.ListTab.DrawItem += this.ListTab_DrawItem;
-                            this.ListTab.DrawMode = TabDrawMode.OwnerDrawFixed;
-                            this.ListTab.ImageList = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Data["Instance"] = "ListTab(TabIconDisp)";
-                        ex.Data["IsTerminatePermission"] = false;
-                        throw;
-                    }
-
-                    try
-                    {
-                        if (!this.settingDialog.UnreadManage)
-                        {
-                            this.ReadedStripMenuItem.Enabled = false;
-                            this.UnreadStripMenuItem.Enabled = false;
-                            if (this.settingDialog.TabIconDisp)
-                            {
-                                foreach (TabPage myTab in this.ListTab.TabPages)
-                                {
-                                    myTab.ImageIndex = -1;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            this.ReadedStripMenuItem.Enabled = true;
-                            this.UnreadStripMenuItem.Enabled = true;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Data["Instance"] = "ListTab(UnreadManage)";
-                        ex.Data["IsTerminatePermission"] = false;
-                        throw;
-                    }
-
-                    try
-                    {
-                        foreach (TabPage mytab in this.ListTab.TabPages)
-                        {
-                            DetailsListView lst = (DetailsListView)mytab.Tag;
-                            lst.GridLines = this.settingDialog.ShowGrid;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Data["Instance"] = "ListTab(ShowGrid)";
-                        ex.Data["IsTerminatePermission"] = false;
-                        throw;
-                    }
-
-                    this.PlaySoundMenuItem.Checked = this.settingDialog.PlaySound;
-                    this.PlaySoundFileMenuItem.Checked = this.settingDialog.PlaySound;
-                    this.fntUnread = this.settingDialog.FontUnread;
-                    this.clrUnread = this.settingDialog.ColorUnread;
-                    this.fntReaded = this.settingDialog.FontReaded;
-                    this.clrRead = this.settingDialog.ColorReaded;
-                    this.clrFav = this.settingDialog.ColorFav;
-                    this.clrOWL = this.settingDialog.ColorOWL;
-                    this.clrRetweet = this.settingDialog.ColorRetweet;
-                    this.fntDetail = this.settingDialog.FontDetail;
-                    this.clrDetail = this.settingDialog.ColorDetail;
-                    this.clrDetailLink = this.settingDialog.ColorDetailLink;
-                    this.clrDetailBackcolor = this.settingDialog.ColorDetailBackcolor;
-                    this.clrSelf = this.settingDialog.ColorSelf;
-                    this.clrAtSelf = this.settingDialog.ColorAtSelf;
-                    this.clrTarget = this.settingDialog.ColorTarget;
-                    this.clrAtTarget = this.settingDialog.ColorAtTarget;
-                    this.clrAtFromTarget = this.settingDialog.ColorAtFromTarget;
-                    this.clrAtTo = this.settingDialog.ColorAtTo;
-                    this.clrListBackcolor = this.settingDialog.ColorListBackcolor;
-                    this.InputBackColor = this.settingDialog.ColorInputBackcolor;
-                    this.clrInputForecolor = this.settingDialog.ColorInputFont;
-                    this.fntInputFont = this.settingDialog.FontInputFont;
-                    try
-                    {
-                        if (this.StatusText.Focused)
-                        {
-                            this.StatusText.BackColor = this.InputBackColor;
-                        }
-
-                        this.StatusText.Font = this.fntInputFont;
-                        this.StatusText.ForeColor = this.clrInputForecolor;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-
-                    this.brsForeColorUnread.Dispose();
-                    this.brsForeColorReaded.Dispose();
-                    this.brsForeColorFav.Dispose();
-                    this.brsForeColorOWL.Dispose();
-                    this.brsForeColorRetweet.Dispose();
-                    this.brsForeColorUnread = new SolidBrush(this.clrUnread);
-                    this.brsForeColorReaded = new SolidBrush(this.clrRead);
-                    this.brsForeColorFav = new SolidBrush(this.clrFav);
-                    this.brsForeColorOWL = new SolidBrush(this.clrOWL);
-                    this.brsForeColorRetweet = new SolidBrush(this.clrRetweet);
-                    this.brsBackColorMine.Dispose();
-                    this.brsBackColorAt.Dispose();
-                    this.brsBackColorYou.Dispose();
-                    this.brsBackColorAtYou.Dispose();
-                    this.brsBackColorAtFromTarget.Dispose();
-                    this.brsBackColorAtTo.Dispose();
-                    this.brsBackColorNone.Dispose();
-                    this.brsBackColorMine = new SolidBrush(this.clrSelf);
-                    this.brsBackColorAt = new SolidBrush(this.clrAtSelf);
-                    this.brsBackColorYou = new SolidBrush(this.clrTarget);
-                    this.brsBackColorAtYou = new SolidBrush(this.clrAtTarget);
-                    this.brsBackColorAtFromTarget = new SolidBrush(this.clrAtFromTarget);
-                    this.brsBackColorAtTo = new SolidBrush(this.clrAtTo);
-                    this.brsBackColorNone = new SolidBrush(this.clrListBackcolor);
-                    try
-                    {
-                        if (this.settingDialog.IsMonospace)
-                        {
-                            this.detailHtmlFormatHeader = DetailHtmlFormatMono1;
-                            this.detailHtmlFormatFooter = DetailHtmlFormatMono7;
-                        }
-                        else
-                        {
-                            this.detailHtmlFormatHeader = DetailHtmlFormat1;
-                            this.detailHtmlFormatFooter = DetailHtmlFormat7;
-                        }
-
-                        this.detailHtmlFormatHeader += this.fntDetail.Name + DetailHtmlFormat2 + this.fntDetail.Size.ToString() + DetailHtmlFormat3 + this.clrDetail.R.ToString() + "," + this.clrDetail.G.ToString() + "," + this.clrDetail.B.ToString() + DetailHtmlFormat4 + this.clrDetailLink.R.ToString() + "," + this.clrDetailLink.G.ToString() + "," + this.clrDetailLink.B.ToString() + DetailHtmlFormat5 + this.clrDetailBackcolor.R.ToString() + "," + this.clrDetailBackcolor.G.ToString() + "," + this.clrDetailBackcolor.B.ToString();
-                        if (this.settingDialog.IsMonospace)
-                        {
-                            this.detailHtmlFormatHeader += DetailHtmlFormatMono6;
-                        }
-                        else
-                        {
-                            this.detailHtmlFormatHeader += DetailHtmlFormat6;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Data["Instance"] = "Font";
-                        ex.Data["IsTerminatePermission"] = false;
-                        throw;
-                    }
-
-                    try
-                    {
-                        this.statuses.SetUnreadManage(this.settingDialog.UnreadManage);
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Data["Instance"] = "_statuses";
-                        ex.Data["IsTerminatePermission"] = false;
-                        throw;
-                    }
-
-                    try
-                    {
-                        foreach (TabPage tb in this.ListTab.TabPages)
-                        {
-                            if (this.settingDialog.TabIconDisp)
-                            {
-                                if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
-                                {
-                                    tb.ImageIndex = -1;
-                                }
-                                else
-                                {
-                                    tb.ImageIndex = 0;
-                                }
-                            }
-
-                            if (tb.Tag != null && tb.Controls.Count > 0)
-                            {
-                                ((DetailsListView)tb.Tag).Font = this.fntReaded;
-                                ((DetailsListView)tb.Tag).BackColor = this.clrListBackcolor;
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Data["Instance"] = "ListTab(TabIconDisp no2)";
-                        ex.Data["IsTerminatePermission"] = false;
-                        throw;
-                    }
-
-                    this.SetMainWindowTitle();
-                    this.SetNotifyIconText();
-
-                    this.itemCache = null;
-                    this.postCache = null;
-                    if (this.curList != null)
-                    {
-                        this.curList.Refresh();
-                    }
-
-                    this.ListTab.Refresh();
-
-                    Outputz.Key = this.settingDialog.OutputzKey;
-                    Outputz.Enabled = this.settingDialog.OutputzEnabled;
-                    switch (this.settingDialog.OutputzUrlmode)
-                    {
-                        case OutputzUrlmode.twittercom:
-                            Outputz.OutUrl = "http:// twitter.com/";
-                            break;
-                        case OutputzUrlmode.twittercomWithUsername:
-                            Outputz.OutUrl = "http:// twitter.com/" + this.tw.Username;
-                            break;
-                    }
-
-                    this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
-                    if (this.settingDialog.HotkeyEnabled)
-                    {
-                        ///グローバルホットキーの登録。設定で変更可能にするかも
-                        HookGlobalHotkey.ModKeys modKey = HookGlobalHotkey.ModKeys.None;
-                        if ((this.settingDialog.HotkeyMod & Keys.Alt) == Keys.Alt)
-                        {
-                            modKey = modKey | HookGlobalHotkey.ModKeys.Alt;
-                        }
-
-                        if ((this.settingDialog.HotkeyMod & Keys.Control) == Keys.Control)
-                        {
-                            modKey = modKey | HookGlobalHotkey.ModKeys.Ctrl;
-                        }
-
-                        if ((this.settingDialog.HotkeyMod & Keys.Shift) == Keys.Shift)
-                        {
-                            modKey = modKey | HookGlobalHotkey.ModKeys.Shift;
-                        }
-
-                        if ((this.settingDialog.HotkeyMod & Keys.LWin) == Keys.LWin)
-                        {
-                            modKey = modKey | HookGlobalHotkey.ModKeys.Win;
-                        }
-
-                        this.hookGlobalHotkey.RegisterOriginalHotkey(this.settingDialog.HotkeyKey, this.settingDialog.HotkeyValue, modKey);
-                    }
-
-                    if (uid != this.tw.Username)
-                    {
-                        this.DoGetFollowersMenu();
-                    }
-
-                    this.SetImageServiceCombo();
-                    if (this.settingDialog.IsNotifyUseGrowl)
-                    {
-                        growlHelper.RegisterGrowl();
-                    }
-
-                    try
-                    {
-                        this.StatusText_TextChanged(null, null);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-            }
-
-            Twitter.AccountState = AccountState.Valid;
-
-            this.TopMost = this.settingDialog.AlwaysTop;
-            this.SaveConfigsAll(false);
-        }
-
-        private void PostBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
-        {
-            if (e.Url.AbsoluteUri != "about:blank")
-            {
-                this.DispSelectedPost();
-                this.OpenUriAsync(e.Url.OriginalString);
-            }
-        }
-
-        private void PostBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
-        {
-            if (e.Url.Scheme == "data")
-            {
-                this.StatusLabelUrl.Text = this.PostBrowser.StatusText.Replace("&", "&&");
-            }
-            else if (e.Url.AbsoluteUri != "about:blank")
-            {
-                e.Cancel = true;
-
-                if (e.Url.AbsoluteUri.StartsWith("http://twitter.com/search?q=%23") || e.Url.AbsoluteUri.StartsWith("https:// twitter.com/search?q=%23"))
-                {
-                    // ハッシュタグの場合は、タブで開く
-                    string urlStr = HttpUtility.UrlDecode(e.Url.AbsoluteUri);
-                    string hash = urlStr.Substring(urlStr.IndexOf("#"));
-                    this.HashSupl.AddItem(hash);
-                    this.HashMgr.AddHashToHistory(hash.Trim(), false);
-                    this.AddNewTabForSearch(hash);
-                    return;
-                }
-                else
-                {
-                    Match m = Regex.Match(e.Url.AbsoluteUri, "^https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
-                    if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
-                    {
-                        // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
-                        if (this.settingDialog.OpenUserTimeline)
-                        {
-                            if (this.IsKeyDown(Keys.Control))
-                            {
-                                this.OpenUriAsync(e.Url.OriginalString);
-                            }
-                            else
-                            {
-                                this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
-                            }
-                        }
-                        else
-                        {
-                            if (this.IsKeyDown(Keys.Control))
-                            {
-                                this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
-                            }
-                            else
-                            {
-                                this.OpenUriAsync(e.Url.OriginalString);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        this.OpenUriAsync(e.Url.OriginalString);
-                    }
-                }
-            }
-        }
-
         private void ShowUserTimeline()
         {
             if (!this.ExistCurrentPost)
@@ -6055,84 +3011,6 @@ namespace Hoehoe
             }
 
             this.AddNewTabForUserTimeline(this.curPost.ScreenName);
-        }
-
-        private void SearchComboBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                TabPage relTp = this.ListTab.SelectedTab;
-                this.RemoveSpecifiedTab(relTp.Text, false);
-                this.SaveConfigsTabs();
-                e.SuppressKeyPress = true;
-            }
-        }
-
-        private void ListTab_Deselected(object sender, TabControlEventArgs e)
-        {
-            this.itemCache = null;
-            this.itemCacheIndex = -1;
-            this.postCache = null;
-            this.prevSelectedTab = e.TabPage;
-        }
-
-        private void ListTab_MouseMove(object sender, MouseEventArgs e)
-        {
-            // タブのD&D
-            if (!this.settingDialog.TabMouseLock && e.Button == MouseButtons.Left && this.tabDraging)
-            {
-                string tn = string.Empty;
-                Rectangle dragEnableRectangle = new Rectangle(Convert.ToInt32(this.tabMouseDownPoint.X - (SystemInformation.DragSize.Width / 2)), Convert.ToInt32(this.tabMouseDownPoint.Y - (SystemInformation.DragSize.Height / 2)), SystemInformation.DragSize.Width, SystemInformation.DragSize.Height);
-                if (!dragEnableRectangle.Contains(e.Location))
-                {
-                    // タブが多段の場合にはMouseDownの前の段階で選択されたタブの段が変わっているので、このタイミングでカーソルの位置からタブを判定出来ない。
-                    tn = this.ListTab.SelectedTab.Text;
-                }
-
-                if (string.IsNullOrEmpty(tn))
-                {
-                    return;
-                }
-
-                foreach (TabPage tb in this.ListTab.TabPages)
-                {
-                    if (tb.Text == tn)
-                    {
-                        this.ListTab.DoDragDrop(tb, DragDropEffects.All);
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                this.tabDraging = false;
-            }
-
-            Point cpos = new Point(e.X, e.Y);
-            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
-            {
-                Rectangle rect = this.ListTab.GetTabRect(i);
-                if (rect.Left <= cpos.X & cpos.X <= rect.Right & rect.Top <= cpos.Y & cpos.Y <= rect.Bottom)
-                {
-                    this.rclickTabName = this.ListTab.TabPages[i].Text;
-                    break;
-                }
-            }
-        }
-
-        private void ListTab_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // this._curList.Refresh()
-            this.DispSelectedPost();
-            this.SetMainWindowTitle();
-            this.SetStatusLabelUrl();
-            if (this.ListTab.Focused || ((Control)this.ListTab.SelectedTab.Tag).Focused)
-            {
-                this.Tag = this.ListTab.Tag;
-            }
-
-            this.TabMenuControl(this.ListTab.SelectedTab.Text);
-            this.PushSelectPostChain();
         }
 
         private void SetListProperty()
@@ -6181,110 +3059,6 @@ namespace Hoehoe
             this.isColumnChanged = false;
         }
 
-        private void PostBrowser_StatusTextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (this.PostBrowser.StatusText.StartsWith("http") || this.PostBrowser.StatusText.StartsWith("ftp") || this.PostBrowser.StatusText.StartsWith("data"))
-                {
-                    this.StatusLabelUrl.Text = this.PostBrowser.StatusText.Replace("&", "&&");
-                }
-
-                if (string.IsNullOrEmpty(this.PostBrowser.StatusText))
-                {
-                    this.SetStatusLabelUrl();
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        private void StatusText_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == '@')
-            {
-                // @マーク
-                if (!this.settingDialog.UseAtIdSupplement)
-                {
-                    return;
-                }
-
-                int cnt = this.AtIdSupl.ItemCount;
-                this.ShowSuplDialog(this.StatusText, this.AtIdSupl);
-                if (cnt != this.AtIdSupl.ItemCount)
-                {
-                    this.modifySettingAtId = true;
-                }
-
-                e.Handled = true;
-            }
-            else if (e.KeyChar == '#')
-            {
-                if (!this.settingDialog.UseHashSupplement)
-                {
-                    return;
-                }
-
-                this.ShowSuplDialog(this.StatusText, this.HashSupl);
-                e.Handled = true;
-            }
-        }
-
-        private void StatusText_KeyUp(object sender, KeyEventArgs e)
-        {
-            // スペースキーで未読ジャンプ
-            if (!e.Alt && !e.Control && !e.Shift)
-            {
-                if (e.KeyCode == Keys.Space || e.KeyCode == Keys.ProcessKey)
-                {
-                    bool isSpace = false;
-                    foreach (char c in this.StatusText.Text.ToCharArray())
-                    {
-                        if (c == ' ' || c == '　')
-                        {
-                            isSpace = true;
-                        }
-                        else
-                        {
-                            isSpace = false;
-                            break;
-                        }
-                    }
-
-                    if (isSpace)
-                    {
-                        e.Handled = true;
-                        this.StatusText.Text = string.Empty;
-                        this.JumpUnreadMenuItem_Click(null, null);
-                    }
-                }
-            }
-
-            this.StatusText_TextChanged(null, null);
-        }
-
-        private void StatusText_TextChanged(object sender, EventArgs e)
-        {
-            // 文字数カウント
-            int len = this.GetRestStatusCount(true, false);
-            this.lblLen.Text = len.ToString();
-            if (len < 0)
-            {
-                this.StatusText.ForeColor = Color.Red;
-            }
-            else
-            {
-                this.StatusText.ForeColor = this.clrInputForecolor;
-            }
-
-            if (string.IsNullOrEmpty(this.StatusText.Text))
-            {
-                this.replyToId = 0;
-                this.replyToName = string.Empty;
-            }
-        }
-
         private int GetRestStatusCount(bool isAuto, bool isAddFooter)
         {
             // 文字数カウント
@@ -6324,45 +3098,6 @@ namespace Hoehoe
             }
 
             return len;
-        }
-
-        private void MyList_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
-        {
-            if (this.itemCache != null && e.StartIndex >= this.itemCacheIndex && e.EndIndex < this.itemCacheIndex + this.itemCache.Length && this.curList.Equals(sender))
-            {
-                // If the newly requested cache is a subset of the old cache,
-                // no need to rebuild everything, so do nothing.
-                return;
-            }
-
-            // Now we need to rebuild the cache.
-            if (this.curList.Equals(sender))
-            {
-                this.CreateCache(e.StartIndex, e.EndIndex);
-            }
-        }
-
-        private void MyList_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
-        {
-            if (this.itemCache != null && e.ItemIndex >= this.itemCacheIndex && e.ItemIndex < this.itemCacheIndex + this.itemCache.Length && this.curList.Equals(sender))
-            {
-                // A cache hit, so get the ListViewItem from the cache instead of making a new one.
-                e.Item = this.itemCache[e.ItemIndex - this.itemCacheIndex];
-            }
-            else
-            {
-                // A cache miss, so create a new ListViewItem and pass it back.
-                TabPage tb = (TabPage)((Hoehoe.TweenCustomControl.DetailsListView)sender).Parent;
-                try
-                {
-                    e.Item = this.CreateItem(tb, this.statuses.Item(tb.Text, e.ItemIndex), e.ItemIndex);
-                }
-                catch (Exception)
-                {
-                    // 不正な要求に対する間に合わせの応答
-                    e.Item = new ImageListViewItem(new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty }, string.Empty);
-                }
-            }
         }
 
         private void CreateCache(int startIndex, int endIndex)
@@ -6433,221 +3168,6 @@ namespace Hoehoe
             }
 
             return itm;
-        }
-
-        private void MyList_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
-        {
-            e.DrawDefault = true;
-        }
-
-        private void MyList_HScrolled(object sender, EventArgs e)
-        {
-            DetailsListView listView = (DetailsListView)sender;
-            listView.Refresh();
-        }
-
-        private void MyList_DrawItem(object sender, DrawListViewItemEventArgs e)
-        {
-            if (e.State == 0)
-            {
-                return;
-            }
-
-            e.DrawDefault = false;
-            if (!e.Item.Selected)
-            {
-                SolidBrush brs2 = null;
-                var cl = e.Item.BackColor;
-                if (cl == this.clrSelf)
-                {
-                    brs2 = this.brsBackColorMine;
-                }
-                else if (cl == this.clrAtSelf)
-                {
-                    brs2 = this.brsBackColorAt;
-                }
-                else if (cl == this.clrTarget)
-                {
-                    brs2 = this.brsBackColorYou;
-                }
-                else if (cl == this.clrAtTarget)
-                {
-                    brs2 = this.brsBackColorAtYou;
-                }
-                else if (cl == this.clrAtFromTarget)
-                {
-                    brs2 = this.brsBackColorAtFromTarget;
-                }
-                else if (cl == this.clrAtTo)
-                {
-                    brs2 = this.brsBackColorAtTo;
-                }
-                else
-                {
-                    brs2 = this.brsBackColorNone;
-                }
-
-                e.Graphics.FillRectangle(brs2, e.Bounds);
-            }
-            else
-            {
-                // 選択中の行
-                if (((Control)sender).Focused)
-                {
-                    e.Graphics.FillRectangle(this.brsHighLight, e.Bounds);
-                }
-                else
-                {
-                    e.Graphics.FillRectangle(this.brsDeactiveSelection, e.Bounds);
-                }
-            }
-
-            if ((e.State & ListViewItemStates.Focused) == ListViewItemStates.Focused)
-            {
-                e.DrawFocusRectangle();
-            }
-
-            this.DrawListViewItemIcon(e);
-        }
-
-        private void MyList_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
-        {
-            if (e.ItemState == 0)
-            {
-                return;
-            }
-
-            if (e.ColumnIndex > 0)
-            {
-                // アイコン以外の列
-                RectangleF rct = e.Bounds;
-                RectangleF rctB = e.Bounds;
-                rct.Width = e.Header.Width;
-                rctB.Width = e.Header.Width;
-                if (this.iconCol)
-                {
-                    rct.Y += e.Item.Font.Height;
-                    rct.Height -= e.Item.Font.Height;
-                    rctB.Height = e.Item.Font.Height;
-                }
-
-                int heightDiff = 0;
-                int drawLineCount = Math.Max(1, Math.DivRem(Convert.ToInt32(rct.Height), e.Item.Font.Height, out heightDiff));
-
-                // フォントの高さの半分を足してるのは保険。無くてもいいかも。
-                if (!this.iconCol && drawLineCount <= 1)
-                {
-                }
-                else if (heightDiff < e.Item.Font.Height * 0.7)
-                {
-                    rct.Height = Convert.ToSingle(e.Item.Font.Height * drawLineCount) - 1;
-                }
-                else
-                {
-                    drawLineCount += 1;
-                }
-
-                if (!e.Item.Selected)
-                {
-                    // 選択されていない行
-                    // 文字色
-                    SolidBrush brs = null;
-                    bool flg = false;
-                    var cl = e.Item.ForeColor;
-                    if (cl == this.clrUnread)
-                    {
-                        brs = this.brsForeColorUnread;
-                    }
-                    else if (cl == this.clrRead)
-                    {
-                        brs = this.brsForeColorReaded;
-                    }
-                    else if (cl == this.clrFav)
-                    {
-                        brs = this.brsForeColorFav;
-                    }
-                    else if (cl == this.clrOWL)
-                    {
-                        brs = this.brsForeColorOWL;
-                    }
-                    else if (cl == this.clrRetweet)
-                    {
-                        brs = this.brsForeColorRetweet;
-                    }
-                    else
-                    {
-                        brs = new SolidBrush(e.Item.ForeColor);
-                        flg = true;
-                    }
-
-                    if (rct.Width > 0)
-                    {
-                        if (this.iconCol)
-                        {
-                            using (Font fnt = new Font(e.Item.Font, FontStyle.Bold))
-                            {
-                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), brs.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                            }
-                        }
-                        else if (drawLineCount == 1)
-                        {
-                            TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
-                        }
-                        else
-                        {
-                            TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                        }
-                    }
-
-                    if (flg)
-                    {
-                        brs.Dispose();
-                    }
-                }
-                else
-                {
-                    if (rct.Width > 0)
-                    {
-                        // 選択中の行
-                        using (Font fnt = new Font(e.Item.Font, FontStyle.Bold))
-                        {
-                            if (((Control)sender).Focused)
-                            {
-                                if (this.iconCol)
-                                {
-                                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), this.brsHighLightText.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                }
-                                else if (drawLineCount == 1)
-                                {
-                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
-                                }
-                                else
-                                {
-                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                }
-                            }
-                            else
-                            {
-                                if (this.iconCol)
-                                {
-                                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), this.brsForeColorUnread.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                }
-                                else if (drawLineCount == 1)
-                                {
-                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
-                                }
-                                else
-                                {
-                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         private void DrawListViewItemIcon(DrawListViewItemEventArgs e)
@@ -6863,180 +3383,6 @@ namespace Hoehoe
             MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText2, Hoehoe.Properties.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void MenuItemSubSearch_Click(object sender, EventArgs e)
-        {
-            // 検索メニュー
-            this.searchDialog.Owner = this;
-            if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
-            {
-                this.TopMost = this.settingDialog.AlwaysTop;
-                return;
-            }
-
-            this.TopMost = this.settingDialog.AlwaysTop;
-            if (!string.IsNullOrEmpty(this.searchDialog.SWord))
-            {
-                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
-            }
-        }
-
-        private void MenuItemSearchNext_Click(object sender, EventArgs e)
-        {
-            // 次を検索
-            if (string.IsNullOrEmpty(this.searchDialog.SWord))
-            {
-                if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
-                {
-                    this.TopMost = this.settingDialog.AlwaysTop;
-                    return;
-                }
-
-                this.TopMost = this.settingDialog.AlwaysTop;
-                if (string.IsNullOrEmpty(this.searchDialog.SWord))
-                {
-                    return;
-                }
-
-                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
-            }
-            else
-            {
-                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
-            }
-        }
-
-        private void MenuItemSearchPrev_Click(object sender, EventArgs e)
-        {
-            // 前を検索
-            if (string.IsNullOrEmpty(this.searchDialog.SWord))
-            {
-                if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
-                {
-                    this.TopMost = this.settingDialog.AlwaysTop;
-                    return;
-                }
-
-                this.TopMost = this.settingDialog.AlwaysTop;
-                if (string.IsNullOrEmpty(this.searchDialog.SWord))
-                {
-                    return;
-                }
-            }
-
-            this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
-        }
-
-        private void AboutMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.aboutBox == null)
-            {
-                this.aboutBox = new TweenAboutBox();
-            }
-
-            this.aboutBox.ShowDialog();
-            this.TopMost = this.settingDialog.AlwaysTop;
-        }
-
-        private void JumpUnreadMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.ImageSelectionPanel.Enabled)
-            {
-                return;
-            }
-
-            // 現在タブから最終タブまで探索
-            int bgnIdx = this.ListTab.TabPages.IndexOf(this.curTab);
-            int idx = -1;
-            DetailsListView lst = null;
-            for (int i = bgnIdx; i < this.ListTab.TabPages.Count; i++)
-            {
-                // 未読Index取得
-                idx = this.statuses.GetOldestUnreadIndex(this.ListTab.TabPages[i].Text);
-                if (idx > -1)
-                {
-                    this.ListTab.SelectedIndex = i;
-                    lst = (DetailsListView)this.ListTab.TabPages[i].Tag;
-                    break;
-                }
-            }
-
-            // 未読みつからず＆現在タブが先頭ではなかったら、先頭タブから現在タブの手前まで探索
-            if (idx == -1 && bgnIdx > 0)
-            {
-                for (int i = 0; i < bgnIdx; i++)
-                {
-                    idx = this.statuses.GetOldestUnreadIndex(this.ListTab.TabPages[i].Text);
-                    if (idx > -1)
-                    {
-                        this.ListTab.SelectedIndex = i;
-                        lst = (DetailsListView)this.ListTab.TabPages[i].Tag;
-                        break;
-                    }
-                }
-            }
-
-            // 全部調べたが未読見つからず→先頭タブの最新発言へ
-            if (idx == -1)
-            {
-                this.ListTab.SelectedIndex = 0;
-                lst = (DetailsListView)this.ListTab.TabPages[0].Tag;
-                if (this.statuses.SortOrder == SortOrder.Ascending)
-                {
-                    idx = lst.VirtualListSize - 1;
-                }
-                else
-                {
-                    idx = 0;
-                }
-            }
-
-            if (lst.VirtualListSize > 0 && idx > -1 && lst.VirtualListSize > idx)
-            {
-                this.SelectListItem(lst, idx);
-                if (this.statuses.SortMode == IdComparerClass.ComparerMode.Id)
-                {
-                    if ((this.statuses.SortOrder == SortOrder.Ascending && lst.Items[idx].Position.Y > lst.ClientSize.Height - this.iconSz - 10) || (this.statuses.SortOrder == SortOrder.Descending && lst.Items[idx].Position.Y < this.iconSz + 10))
-                    {
-                        this.MoveTop();
-                    }
-                    else
-                    {
-                        lst.EnsureVisible(idx);
-                    }
-                }
-                else
-                {
-                    lst.EnsureVisible(idx);
-                }
-            }
-
-            lst.Focus();
-        }
-
-        private void StatusOpenMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.curList.SelectedIndices.Count > 0 && this.statuses.Tabs[this.curTab.Text].TabType != TabUsageType.DirectMessage)
-            {
-                PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
-                var sid = post.RetweetedId == 0 ? post.StatusId : post.RetweetedId;
-                this.OpenUriAsync("http://twitter.com/" + post.ScreenName + "/status/" + sid.ToString());
-            }
-        }
-
-        private void FavorareMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.curList.SelectedIndices.Count > 0)
-            {
-                PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
-                this.OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + post.ScreenName + "/recent");
-            }
-        }
-
-        private void VerUpMenuItem_Click(object sender, EventArgs e)
-        {
-            this.CheckNewVersion();
-        }
-
         // TODO: to hoehoe2
         private void RunTweenUp()
         {
@@ -7193,33 +3539,6 @@ namespace Hoehoe
             if (!this.settingDialog.TabIconDisp)
             {
                 this.ListTab.Refresh();
-            }
-        }
-
-        private void DisplayItemImage_Downloaded(object sender, EventArgs e)
-        {
-            if (sender.Equals(this.displayItem))
-            {
-                if (this.UserPicture.Image != null)
-                {
-                    this.UserPicture.Image.Dispose();
-                }
-
-                if (this.displayItem.Image != null)
-                {
-                    try
-                    {
-                        this.UserPicture.Image = new Bitmap(this.displayItem.Image);
-                    }
-                    catch (Exception)
-                    {
-                        this.UserPicture.Image = null;
-                    }
-                }
-                else
-                {
-                    this.UserPicture.Image = null;
-                }
             }
         }
 
@@ -7417,48 +3736,6 @@ namespace Hoehoe
                 finally
                 {
                     this.PostBrowser.Visible = true;
-                }
-            }
-        }
-
-        private void MatomeMenuItem_Click(object sender, EventArgs e)
-        {
-            this.OpenUriAsync(ApplicationHelpWebPageUrl);
-        }
-
-        private void ShortcutKeyListMenuItem_Click(object sender, EventArgs e)
-        {
-            this.OpenUriAsync(ApplicationShortcutKeyHelpWebPageUrl);
-        }
-
-        private void ListTab_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (this.ListTab.SelectedTab != null)
-            {
-                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
-                {
-                    Control pnl = this.ListTab.SelectedTab.Controls["panelSearch"];
-                    if (pnl.Controls["comboSearch"].Focused || pnl.Controls["comboLang"].Focused || pnl.Controls["buttonSearch"].Focused)
-                    {
-                        return;
-                    }
-                }
-
-                ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
-                if (modState == ModifierState.NotFlags)
-                {
-                    return;
-                }
-
-                if (modState != ModifierState.None)
-                {
-                    this.anchorFlag = false;
-                }
-
-                if (this.CommonKeyDown(e.KeyCode, FocusedControl.ListTab, modState))
-                {
-                    e.Handled = true;
-                    e.SuppressKeyPress = true;
                 }
             }
         }
@@ -9066,46 +5343,6 @@ namespace Hoehoe
             return false;
         }
 
-        private void MyList_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.anchorFlag = false;
-        }
-
-        private void StatusText_Enter(object sender, EventArgs e)
-        {
-            // フォーカスの戻り先を StatusText に設定
-            this.Tag = this.StatusText;
-            this.StatusText.BackColor = this.InputBackColor;
-        }
-
-        private void StatusText_Leave(object sender, EventArgs e)
-        {
-            // フォーカスがメニューに遷移しないならばフォーカスはタブに移ることを期待
-            if (this.ListTab.SelectedTab != null && this.MenuStrip1.Tag == null)
-            {
-                this.Tag = this.ListTab.SelectedTab.Tag;
-            }
-
-            this.StatusText.BackColor = Color.FromKnownColor(KnownColor.Window);
-        }
-
-        private void StatusText_KeyDown(object sender, KeyEventArgs e)
-        {
-            ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
-            if (modState == ModifierState.NotFlags)
-            {
-                return;
-            }
-
-            if (this.CommonKeyDown(e.KeyCode, FocusedControl.StatusText, modState))
-            {
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-
-            this.StatusText_TextChanged(null, null);
-        }
-
         private void SaveConfigsAll(bool ifModified)
         {
             if (!ifModified)
@@ -9374,183 +5611,6 @@ namespace Hoehoe
             }
 
             tabSetting.Save();
-        }
-
-        private void SaveLogMenuItem_Click(object sender, EventArgs e)
-        {
-            DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (rslt == DialogResult.Cancel)
-            {
-                return;
-            }
-
-            this.SaveFileDialog1.FileName = string.Format("HoehoePosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
-            this.SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
-            this.SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
-            this.SaveFileDialog1.FilterIndex = 0;
-            this.SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
-            this.SaveFileDialog1.RestoreDirectory = true;
-
-            if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (!this.SaveFileDialog1.ValidateNames)
-                {
-                    return;
-                }
-
-                using (StreamWriter sw = new StreamWriter(this.SaveFileDialog1.FileName, false, Encoding.UTF8))
-                {
-                    if (rslt == DialogResult.Yes)
-                    {
-                        // All
-                        for (int idx = 0; idx <= this.curList.VirtualListSize - 1; idx++)
-                        {
-                            PostClass post = this.statuses.Item(this.curTab.Text, idx);
-                            string protect = string.Empty;
-                            if (post.IsProtect)
-                            {
-                                protect = "Protect";
-                            }
-
-                            sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}", post.Nickname, post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""), post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl, post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""), protect));
-                        }
-                    }
-                    else
-                    {
-                        foreach (int idx in this.curList.SelectedIndices)
-                        {
-                            PostClass post = this.statuses.Item(this.curTab.Text, idx);
-                            string protect = string.Empty;
-                            if (post.IsProtect)
-                            {
-                                protect = "Protect";
-                            }
-
-                            sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}", post.Nickname, post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""), post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl, post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""), protect));
-                        }
-                    }
-
-                    sw.Close();
-                }
-            }
-
-            this.TopMost = this.settingDialog.AlwaysTop;
-        }
-
-        private void PostBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
-            if (modState == ModifierState.NotFlags)
-            {
-                return;
-            }
-
-            bool res = this.CommonKeyDown(e.KeyCode, FocusedControl.PostBrowser, modState);
-            if (res)
-            {
-                e.IsInputKey = true;
-            }
-        }
-
-        private void ListTab_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Middle)
-            {
-                for (int i = 0; i < this.ListTab.TabPages.Count; i++)
-                {
-                    if (this.ListTab.GetTabRect(i).Contains(e.Location))
-                    {
-                        this.RemoveSpecifiedTab(this.ListTab.TabPages[i].Text, true);
-                        this.SaveConfigsTabs();
-                        break;
-                    }
-                }
-            }
-        }
-
-        private void Tabs_DoubleClick(object sender, MouseEventArgs e)
-        {
-            string tn = this.ListTab.SelectedTab.Text;
-            this.TabRename(ref tn);
-        }
-
-        private void Tabs_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (this.settingDialog.TabMouseLock)
-            {
-                return;
-            }
-
-            Point cpos = new Point(e.X, e.Y);
-            if (e.Button == MouseButtons.Left)
-            {
-                for (int i = 0; i < this.ListTab.TabPages.Count; i++)
-                {
-                    if (this.ListTab.GetTabRect(i).Contains(e.Location))
-                    {
-                        this.tabDraging = true;
-                        this.tabMouseDownPoint = e.Location;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                this.tabDraging = false;
-            }
-        }
-
-        private void Tabs_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(typeof(TabPage)))
-            {
-                e.Effect = DragDropEffects.Move;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
-        }
-
-        private void Tabs_DragDrop(object sender, DragEventArgs e)
-        {
-            if (!e.Data.GetDataPresent(typeof(TabPage)))
-            {
-                return;
-            }
-
-            this.tabDraging = false;
-            string tn = string.Empty;
-            bool bef = false;
-            Point cpos = new Point(e.X, e.Y);
-            Point spos = this.ListTab.PointToClient(cpos);
-            int i = 0;
-            for (i = 0; i < this.ListTab.TabPages.Count; i++)
-            {
-                Rectangle rect = this.ListTab.GetTabRect(i);
-                if (rect.Left <= spos.X && spos.X <= rect.Right && rect.Top <= spos.Y && spos.Y <= rect.Bottom)
-                {
-                    tn = this.ListTab.TabPages[i].Text;
-                    bef = spos.X <= (rect.Left + rect.Right) / 2;
-                    break;
-                }
-            }
-
-            // タブのないところにドロップ->最後尾へ移動
-            if (string.IsNullOrEmpty(tn))
-            {
-                tn = this.ListTab.TabPages[this.ListTab.TabPages.Count - 1].Text;
-                bef = false;
-                i = this.ListTab.TabPages.Count - 1;
-            }
-
-            TabPage tp = (TabPage)e.Data.GetData(typeof(TabPage));
-            if (tp.Text == tn)
-            {
-                return;
-            }
-
-            this.ReOrderTab(tp.Text, tn, bef);
         }
 
         /// <summary>
@@ -9872,11 +5932,6 @@ namespace Hoehoe
             }
         }
 
-        private void ListTab_MouseUp(object sender, MouseEventArgs e)
-        {
-            this.tabDraging = false;
-        }
-
         private void RefreshTasktrayIcon(bool forceRefresh)
         {
             if (this.colorize)
@@ -9972,6 +6027,5446 @@ namespace Hoehoe
             }
         }
 
+        private void TabMenuControl(string tabName)
+        {
+            if (this.statuses.Tabs[tabName].TabType != TabUsageType.Mentions && this.statuses.IsDefaultTab(tabName))
+            {
+                this.FilterEditMenuItem.Enabled = true;
+                this.EditRuleTbMenuItem.Enabled = true;
+                this.DeleteTabMenuItem.Enabled = false;
+                this.DeleteTbMenuItem.Enabled = false;
+            }
+            else if (this.statuses.Tabs[tabName].TabType == TabUsageType.Mentions)
+            {
+                this.FilterEditMenuItem.Enabled = true;
+                this.EditRuleTbMenuItem.Enabled = true;
+                this.DeleteTabMenuItem.Enabled = false;
+                this.DeleteTbMenuItem.Enabled = false;
+            }
+            else
+            {
+                this.FilterEditMenuItem.Enabled = true;
+                this.EditRuleTbMenuItem.Enabled = true;
+                this.DeleteTabMenuItem.Enabled = true;
+                this.DeleteTbMenuItem.Enabled = true;
+            }
+        }
+
+        private bool SelectTab(ref string tabName)
+        {
+            do
+            {
+                // 振り分け先タブ選択
+                if (this.tabDialog.ShowDialog() == DialogResult.Cancel)
+                {
+                    this.TopMost = this.settingDialog.AlwaysTop;
+                    return false;
+                }
+
+                this.TopMost = this.settingDialog.AlwaysTop;
+                tabName = this.tabDialog.SelectedTabName;
+                this.ListTab.SelectedTab.Focus();
+
+                // 新規タブを選択→タブ作成
+                if (tabName == Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText1)
+                {
+                    using (InputTabName inputName = new InputTabName())
+                    {
+                        inputName.TabName = this.statuses.GetUniqueTabName();
+                        inputName.ShowDialog();
+                        if (inputName.DialogResult == DialogResult.Cancel)
+                        {
+                            return false;
+                        }
+
+                        tabName = inputName.TabName;
+                        inputName.Dispose();
+                    }
+
+                    this.TopMost = this.settingDialog.AlwaysTop;
+                    if (!string.IsNullOrEmpty(tabName))
+                    {
+                        if (!this.statuses.AddTab(tabName, TabUsageType.UserDefined, null) || !this.AddNewTab(tabName, false, TabUsageType.UserDefined))
+                        {
+                            // もう一度タブ名入力
+                            string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText2, tabName);
+                            MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    // 既存タブを選択
+                    return true;
+                }
+            }
+            while (true);
+        }
+
+        private void MoveOrCopy(ref bool move, ref bool mark)
+        {
+            // 移動するか？
+            string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText4, Environment.NewLine);
+            if (MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                move = false;
+            }
+            else
+            {
+                move = true;
+            }
+
+            if (!move)
+            {
+                // マークするか？
+                tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText6, "\r\n");
+                if (MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    mark = true;
+                }
+                else
+                {
+                    mark = false;
+                }
+            }
+        }
+
+        private void MoveMiddle()
+        {
+            if (this.curList.SelectedIndices.Count == 0)
+            {
+                return;
+            }
+
+            int idx = this.curList.SelectedIndices[0];
+
+            ListViewItem item = this.curList.GetItemAt(0, 25);
+            int idx1 = item == null ? 0 : item.Index;
+
+            item = this.curList.GetItemAt(0, this.curList.ClientSize.Height - 1);
+            int idx2 = item == null ? this.curList.VirtualListSize - 1 : item.Index;
+
+            idx -= Math.Abs(idx1 - idx2) / 2;
+            if (idx < 0)
+            {
+                idx = 0;
+            }
+
+            this.curList.EnsureVisible(this.curList.VirtualListSize - 1);
+            this.curList.EnsureVisible(idx);
+        }
+
+        private void ClearTab(string tabName, bool showWarning)
+        {
+            if (showWarning)
+            {
+                string tmp = string.Format(Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
+                if (MessageBox.Show(tmp, tabName + " " + Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+
+            this.statuses.ClearTabIds(tabName);
+            if (this.ListTab.SelectedTab.Text == tabName)
+            {
+                this.anchorPost = null;
+                this.anchorFlag = false;
+                this.itemCache = null;
+                this.postCache = null;
+                this.itemCacheIndex = -1;
+                this.curItemIndex = -1;
+                this.curPost = null;
+            }
+
+            foreach (TabPage tb in this.ListTab.TabPages)
+            {
+                if (tb.Text == tabName)
+                {
+                    tb.ImageIndex = -1;
+                    ((DetailsListView)tb.Tag).VirtualListSize = 0;
+                    break;
+                }
+            }
+
+            if (!this.settingDialog.TabIconDisp)
+            {
+                this.ListTab.Refresh();
+            }
+
+            this.SetMainWindowTitle();
+            this.SetStatusLabelUrl();
+        }
+
+        // メインウインドウタイトルの書き換え
+        private void SetMainWindowTitle()
+        {
+            StringBuilder ttl = new StringBuilder(256);
+            int ur = 0;
+            int al = 0;
+            if (this.settingDialog.DispLatestPost != DispTitleEnum.None
+                && this.settingDialog.DispLatestPost != DispTitleEnum.Post
+                && this.settingDialog.DispLatestPost != DispTitleEnum.Ver
+                && this.settingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
+            {
+                foreach (string key in this.statuses.Tabs.Keys)
+                {
+                    ur += this.statuses.Tabs[key].UnreadCount;
+                    al += this.statuses.Tabs[key].AllCount;
+                }
+            }
+
+            if (this.settingDialog.DispUsername)
+            {
+                ttl.Append(this.tw.Username).Append(" - ");
+            }
+
+            ttl.Append("Hoehoe  ");
+            switch (this.settingDialog.DispLatestPost)
+            {
+                case DispTitleEnum.Ver:
+                    ttl.Append("Ver:").Append(MyCommon.FileVersion);
+                    break;
+                case DispTitleEnum.Post:
+                    if (this.postHistory != null && this.postHistory.Count > 1)
+                    {
+                        ttl.Append(this.postHistory[this.postHistory.Count - 2].Status.Replace("\r\n", string.Empty));
+                    }
+
+                    break;
+                case DispTitleEnum.UnreadRepCount:
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText1, this.statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + this.statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
+                    break;
+                case DispTitleEnum.UnreadAllCount:
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText2, ur);
+                    break;
+                case DispTitleEnum.UnreadAllRepCount:
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText3, ur, this.statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + this.statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
+                    break;
+                case DispTitleEnum.UnreadCountAllCount:
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText4, ur, al);
+                    break;
+                case DispTitleEnum.OwnStatus:
+                    if (this.prevFollowerCount == 0 && this.tw.FollowersCount > 0)
+                    {
+                        this.prevFollowerCount = this.tw.FollowersCount;
+                    }
+
+                    ttl.AppendFormat(Hoehoe.Properties.Resources.OwnStatusTitle, this.tw.StatusesCount, this.tw.FriendsCount, this.tw.FollowersCount, this.tw.FollowersCount - this.prevFollowerCount);
+                    break;
+            }
+
+            try
+            {
+                this.Text = ttl.ToString();
+            }
+            catch (AccessViolationException ex)
+            {
+                // 原因不明。ポスト内容に依存か？たまーに発生するが再現せず。
+                System.Diagnostics.Debug.Write(ex);
+            }
+        }
+
+        private string GetStatusLabelText()
+        {
+            // ステータス欄にカウント表示
+            // タブ未読数/タブ発言数 全未読数/総発言数 (未読＠＋未読DM数)
+            if (this.statuses == null)
+            {
+                return string.Empty;
+            }
+
+            TabClass mentionTab = this.statuses.GetTabByType(TabUsageType.Mentions);
+            TabClass dmessageTab = this.statuses.GetTabByType(TabUsageType.DirectMessage);
+            if (mentionTab == null || dmessageTab == null)
+            {
+                return string.Empty;
+            }
+
+            int urat = mentionTab.UnreadCount + dmessageTab.UnreadCount;
+            int ur = 0;
+            int al = 0;
+            int tur = 0;
+            int tal = 0;
+            StringBuilder slbl = new StringBuilder(256);
+            try
+            {
+                foreach (string key in this.statuses.Tabs.Keys)
+                {
+                    ur += this.statuses.Tabs[key].UnreadCount;
+                    al += this.statuses.Tabs[key].AllCount;
+                    if (key.Equals(this.curTab.Text))
+                    {
+                        tur = this.statuses.Tabs[key].UnreadCount;
+                        tal = this.statuses.Tabs[key].AllCount;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+
+            this.unreadCounter = ur;
+            this.unreadAtCounter = urat;
+
+            slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, this.postTimestamps.Count, this.favTimestamps.Count, this.timeLineCount);
+            if (this.settingDialog.TimelinePeriodInt == 0)
+            {
+                slbl.Append(Hoehoe.Properties.Resources.SetStatusLabelText2);
+            }
+            else
+            {
+                slbl.Append(this.settingDialog.TimelinePeriodInt.ToString() + Hoehoe.Properties.Resources.SetStatusLabelText3);
+            }
+
+            return slbl.ToString();
+        }
+
+        private void SetStatusLabelApi()
+        {
+            this.apiGauge.RemainCount = MyCommon.TwitterApiInfo.RemainCount;
+            this.apiGauge.MaxCount = MyCommon.TwitterApiInfo.MaxCount;
+            this.apiGauge.ResetTime = MyCommon.TwitterApiInfo.ResetTime;
+        }
+
+        private void SetStatusLabelUrl()
+        {
+            this.StatusLabelUrl.Text = this.GetStatusLabelText();
+        }
+
+        // タスクトレイアイコンのツールチップテキスト書き換え
+        // Tween [未読/@]
+        private void SetNotifyIconText()
+        {
+            StringBuilder ur = new StringBuilder(64);
+            if (this.settingDialog.DispUsername)
+            {
+                ur.Append(this.tw.Username);
+                ur.Append(" - ");
+            }
+
+            ur.Append("Hoehoe");
+#if DEBUG
+			ur.Append("(Debug Build)");
+#endif
+            if (this.unreadCounter != -1 && this.unreadAtCounter != -1)
+            {
+                ur.Append(" [");
+                ur.Append(this.unreadCounter);
+                ur.Append("/@");
+                ur.Append(this.unreadAtCounter);
+                ur.Append("]");
+            }
+
+            this.NotifyIcon1.Text = ur.ToString();
+        }
+
+        private void DoRepliedStatusOpen()
+        {
+            if (this.ExistCurrentPost && this.curPost.InReplyToUser != null && this.curPost.InReplyToStatusId > 0)
+            {
+                if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+                {
+                    this.OpenUriAsync(string.Format("https:// twitter.com/{0}/status/{1}", this.curPost.InReplyToUser, this.curPost.InReplyToStatusId));
+                    return;
+                }
+
+                if (this.statuses.ContainsKey(this.curPost.InReplyToStatusId))
+                {
+                    PostClass repPost = this.statuses.Item(this.curPost.InReplyToStatusId);
+                    MessageBox.Show(repPost.ScreenName + " / " + repPost.Nickname + "   (" + repPost.CreatedAt.ToString() + ")" + Environment.NewLine + repPost.TextFromApi);
+                }
+                else
+                {
+                    foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.Lists | TabUsageType.PublicSearch))
+                    {
+                        if (tb == null || !tb.Contains(this.curPost.InReplyToStatusId))
+                        {
+                            break;
+                        }
+
+                        PostClass repPost = this.statuses.Item(this.curPost.InReplyToStatusId);
+                        MessageBox.Show(repPost.ScreenName + " / " + repPost.Nickname + "   (" + repPost.CreatedAt.ToString() + ")" + Environment.NewLine + repPost.TextFromApi);
+                        return;
+                    }
+
+                    this.OpenUriAsync("http://twitter.com/" + this.curPost.InReplyToUser + "/status/" + this.curPost.InReplyToStatusId.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// t.coで投稿時自動短縮する場合は、外部サービスでの短縮禁止
+        /// Converter_Type=Nicomsの場合は、nicovideoのみ短縮する
+        /// 参考資料 RFC3986 Uniform Resource Identifier (URI): Generic Syntax
+        /// Appendix A.  Collected ABNF for URI
+        /// http://www.ietf.org/rfc/rfc3986.txt
+        /// </summary>
+        /// <param name="urlCoonverterType"></param>
+        /// <returns></returns>
+        private bool UrlConvert(UrlConverter urlCoonverterType)
+        {
+            string result = string.Empty;
+
+            const string NicoUrlPattern = "^https?:// [a-z]+\\.(nicovideo|niconicommons|nicolive)\\.jp/[a-z]+/[a-z0-9]+$";
+
+            if (this.StatusText.SelectionLength > 0)
+            {
+                // 文字列が選択されている場合はその文字列について処理
+                string tmp = this.StatusText.SelectedText;
+
+                // httpから始まらない場合、ExcludeStringで指定された文字列で始まる場合は対象としない
+                if (tmp.StartsWith("http"))
+                {
+                    // nico.ms使用、nicovideoにマッチしたら変換
+                    if (this.settingDialog.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
+                    {
+                        result = nicoms.Shorten(tmp);
+                    }
+                    else if (urlCoonverterType != UrlConverter.Nicoms)
+                    {
+                        // 短縮URL変換 日本語を含むかもしれないのでURLエンコードする
+                        result = ShortUrl.Make(urlCoonverterType, tmp);
+                        if (result.Equals("Can't convert"))
+                        {
+                            this.StatusLabel.Text = result.Insert(0, urlCoonverterType.ToString() + ":");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return true;
+                    }
+
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        this.StatusText.Select(this.StatusText.Text.IndexOf(tmp, StringComparison.Ordinal), tmp.Length);
+                        this.StatusText.SelectedText = result;
+
+                        // undoバッファにセット
+                        if (this.urlUndoBuffer == null)
+                        {
+                            this.urlUndoBuffer = new List<UrlUndoInfo>();
+                            this.UrlUndoToolStripMenuItem.Enabled = true;
+                        }
+
+                        this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = tmp, After = result });
+                    }
+                }
+            }
+            else
+            {
+                const string UrlPattern = "(?<before>(?:[^\\\"':!=]|^|\\:))" + "(?<url>(?<protocol>https?:// )" + "(?<domain>(?:[\\.-]|[^\\p{P}\\s])+\\.[a-z]{2,}(?::[0-9]+)?)" + "(?<path>/[a-z0-9!*'();:&=+$/%#\\-_.,~@]*[a-z0-9)=#/]?)?" + "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\-_.,~@?]*[a-z0-9_&=#/])?)";
+
+                // 正規表現にマッチしたURL文字列をtinyurl化
+                foreach (Match mt in Regex.Matches(this.StatusText.Text, UrlPattern, RegexOptions.IgnoreCase))
+                {
+                    if (this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal) == -1)
+                    {
+                        continue;
+                    }
+
+                    string tmp = mt.Result("${url}");
+                    if (tmp.StartsWith("w", StringComparison.OrdinalIgnoreCase))
+                    {
+                        tmp = "http://" + tmp;
+                    }
+
+                    // 選んだURLを選択（？）
+                    this.StatusText.Select(this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
+
+                    // nico.ms使用、nicovideoにマッチしたら変換
+                    if (this.settingDialog.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
+                    {
+                        result = nicoms.Shorten(tmp);
+                    }
+                    else if (urlCoonverterType != UrlConverter.Nicoms)
+                    {
+                        // 短縮URL変換 日本語を含むかもしれないのでURLエンコードする
+                        result = ShortUrl.Make(urlCoonverterType, tmp);
+                        if (result.Equals("Can't convert"))
+                        {
+                            this.StatusLabel.Text = result.Insert(0, urlCoonverterType.ToString() + ":");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        this.StatusText.Select(this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
+                        this.StatusText.SelectedText = result;
+
+                        // undoバッファにセット
+                        if (this.urlUndoBuffer == null)
+                        {
+                            this.urlUndoBuffer = new List<UrlUndoInfo>();
+                            this.UrlUndoToolStripMenuItem.Enabled = true;
+                        }
+
+                        this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = mt.Result("${url}"), After = result });
+                    }
+                }
+            }
+
+            return true;
+        }
+        
+        private void DoUrlUndo()
+        {
+            if (this.urlUndoBuffer != null)
+            {
+                string tmp = this.StatusText.Text;
+                foreach (UrlUndoInfo data in this.urlUndoBuffer)
+                {
+                    tmp = tmp.Replace(data.After, data.Before);
+                }
+
+                this.StatusText.Text = tmp;
+                this.urlUndoBuffer = null;
+                this.UrlUndoToolStripMenuItem.Enabled = false;
+                this.StatusText.SelectionStart = 0;
+                this.StatusText.SelectionLength = 0;
+            }
+        }
+        
+        private void DoSearchToolStrip(string url)
+        {
+            // 発言詳細で「選択文字列で検索」（選択文字列取得）
+            string selText = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
+
+            if (selText != null)
+            {
+                if (url == Hoehoe.Properties.Resources.SearchItem4Url)
+                {
+                    // 公式検索
+                    this.AddNewTabForSearch(selText);
+                    return;
+                }
+
+                string tmp = string.Format(url, HttpUtility.UrlEncode(selText));
+                this.OpenUriAsync(tmp);
+            }
+        }
+        
+        private void ListTabSelect(TabPage tab)
+        {
+            this.SetListProperty();
+
+            this.itemCache = null;
+            this.itemCacheIndex = -1;
+            this.postCache = null;
+
+            this.curTab = tab;
+            this.curList = (DetailsListView)tab.Tag;
+            if (this.curList.SelectedIndices.Count > 0)
+            {
+                this.curItemIndex = this.curList.SelectedIndices[0];
+                this.curPost = this.GetCurTabPost(this.curItemIndex);
+            }
+            else
+            {
+                this.curItemIndex = -1;
+                this.curPost = null;
+            }
+
+            this.anchorPost = null;
+            this.anchorFlag = false;
+
+            if (this.iconCol)
+            {
+                ((DetailsListView)tab.Tag).Columns[1].Text = this.columnTexts[2];
+            }
+            else
+            {
+                for (int i = 0; i <= this.curList.Columns.Count - 1; i++)
+                {
+                    ((DetailsListView)tab.Tag).Columns[i].Text = this.columnTexts[i];
+                }
+            }
+        }
+        
+        private void SelectListItem(DetailsListView listView, int index)
+        {
+            // 単一
+            Rectangle bnd = default(Rectangle);
+            bool flg = false;
+            if (listView.FocusedItem != null)
+            {
+                bnd = listView.FocusedItem.Bounds;
+                flg = true;
+            }
+
+            do
+            {
+                listView.SelectedIndices.Clear();
+            }
+            while (listView.SelectedIndices.Count > 0);
+            listView.Items[index].Selected = true;
+            listView.Items[index].Focused = true;
+
+            if (flg)
+            {
+                listView.Invalidate(bnd);
+            }
+        }
+        
+        private void SelectListItem(DetailsListView listView, int[] indecies, int focused)
+        {
+            // 複数
+            Rectangle bnd = default(Rectangle);
+            bool flg = false;
+            if (listView.FocusedItem != null)
+            {
+                bnd = listView.FocusedItem.Bounds;
+                flg = true;
+            }
+
+            int fIdx = -1;
+            if (indecies != null && !(indecies.Count() == 1 && indecies[0] == -1))
+            {
+                do
+                {
+                    listView.SelectedIndices.Clear();
+                }
+                while (listView.SelectedIndices.Count > 0);
+
+                foreach (int idx in indecies)
+                {
+                    if (idx > -1 && listView.VirtualListSize > idx)
+                    {
+                        listView.SelectedIndices.Add(idx);
+                        if (fIdx == -1)
+                        {
+                            fIdx = idx;
+                        }
+                    }
+                }
+            }
+
+            if (focused > -1 && listView.VirtualListSize > focused)
+            {
+                listView.Items[focused].Focused = true;
+            }
+            else if (fIdx > -1)
+            {
+                listView.Items[fIdx].Focused = true;
+            }
+
+            if (flg)
+            {
+                listView.Invalidate(bnd);
+            }
+        }
+        
+        private void RunAsync(GetWorkerArg args)
+        {
+            BackgroundWorker bw = null;
+            if (args.WorkerType != WorkerType.Follower)
+            {
+                for (int i = 0; i < this.bworkers.Length; i++)
+                {
+                    if (this.bworkers[i] != null && !this.bworkers[i].IsBusy)
+                    {
+                        bw = this.bworkers[i];
+                        break;
+                    }
+                }
+
+                if (bw == null)
+                {
+                    for (int i = 0; i < this.bworkers.Length; i++)
+                    {
+                        if (this.bworkers[i] == null)
+                        {
+                            this.bworkers[i] = new BackgroundWorker();
+                            bw = this.bworkers[i];
+                            bw.WorkerReportsProgress = true;
+                            bw.WorkerSupportsCancellation = true;
+                            bw.DoWork += this.GetTimelineWorker_DoWork;
+                            bw.ProgressChanged += this.GetTimelineWorker_ProgressChanged;
+                            bw.RunWorkerCompleted += this.GetTimelineWorker_RunWorkerCompleted;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (this.followerFetchWorker == null)
+                {
+                    this.followerFetchWorker = new BackgroundWorker();
+                    bw = this.followerFetchWorker;
+                    bw.WorkerReportsProgress = true;
+                    bw.WorkerSupportsCancellation = true;
+                    bw.DoWork += this.GetTimelineWorker_DoWork;
+                    bw.ProgressChanged += this.GetTimelineWorker_ProgressChanged;
+                    bw.RunWorkerCompleted += this.GetTimelineWorker_RunWorkerCompleted;
+                }
+                else
+                {
+                    if (this.followerFetchWorker.IsBusy == false)
+                    {
+                        bw = this.followerFetchWorker;
+                    }
+                }
+            }
+
+            if (bw == null)
+            {
+                return;
+            }
+
+            bw.RunWorkerAsync(args);
+        }
+        
+        private void StartUserStream()
+        {
+            this.tw.NewPostFromStream += this.Tw_NewPostFromStream;
+            this.tw.UserStreamStarted += this.Tw_UserStreamStarted;
+            this.tw.UserStreamStopped += this.Tw_UserStreamStopped;
+            this.tw.PostDeleted += this.Tw_PostDeleted;
+            this.tw.UserStreamEventReceived += this.Tw_UserStreamEventArrived;
+            this.MenuItemUserStream.Text = "&UserStream ■";
+            this.MenuItemUserStream.Enabled = true;
+            this.StopToolStripMenuItem.Text = "&Start";
+            this.StopToolStripMenuItem.Enabled = true;
+            if (this.settingDialog.UserstreamStartup)
+            {
+                this.tw.StartUserStream();
+            }
+        }
+        
+        private bool IsInitialRead()
+        {
+            return this.waitTimeline || this.waitReply || this.waitDm || this.waitFav || this.waitPubSearch || this.waitUserTimeline || this.waitLists;
+        }
+        
+        private void DoGetFollowersMenu()
+        {
+            this.GetTimeline(WorkerType.Follower, 1, 0, string.Empty);
+            this.DispSelectedPost(true);
+        }
+        
+        private void DoReTweetUnofficial()
+        {
+            // RT @id:内容
+            if (this.ExistCurrentPost)
+            {
+                if (this.curPost.IsDm || !this.StatusText.Enabled)
+                {
+                    return;
+                }
+
+                if (this.curPost.IsProtect)
+                {
+                    MessageBox.Show("Protected.");
+                    return;
+                }
+
+                string rtdata = this.CreateRetweetUnofficial(this.curPost.Text);
+                this.StatusText.Text = "RT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
+                this.StatusText.SelectionStart = 0;
+                this.StatusText.Focus();
+            }
+        }
+        
+        private void DoReTweetOfficial(bool isConfirm)
+        {
+            // 公式RT
+            if (this.ExistCurrentPost)
+            {
+                if (this.curPost.IsProtect)
+                {
+                    MessageBox.Show("Protected.");
+                    this.doFavRetweetFlags = false;
+                    return;
+                }
+
+                if (this.curList.SelectedIndices.Count > 15)
+                {
+                    MessageBox.Show(Hoehoe.Properties.Resources.RetweetLimitText);
+                    this.doFavRetweetFlags = false;
+                    return;
+                }
+                else if (this.curList.SelectedIndices.Count > 1)
+                {
+                    string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion2;
+                    if (this.doFavRetweetFlags)
+                    {
+                        confirmMessage = Hoehoe.Properties.Resources.FavoriteRetweetQuestionText1;
+                    }
+
+                    switch (MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                    {
+                        case DialogResult.Cancel:
+                        case DialogResult.No:
+                            this.doFavRetweetFlags = false;
+                            return;
+                    }
+                }
+                else
+                {
+                    if (this.curPost.IsDm || this.curPost.IsMe)
+                    {
+                        this.doFavRetweetFlags = false;
+                        return;
+                    }
+
+                    if (!this.settingDialog.RetweetNoConfirm)
+                    {
+                        string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion1;
+                        if (this.doFavRetweetFlags)
+                        {
+                            confirmMessage = Hoehoe.Properties.Resources.FavoritesRetweetQuestionText2;
+                        }
+
+                        if (isConfirm && MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                        {
+                            this.doFavRetweetFlags = false;
+                            return;
+                        }
+                    }
+                }
+
+                GetWorkerArg args = new GetWorkerArg()
+                {
+                    Ids = new List<long>(),
+                    SIds = new List<long>(),
+                    TabName = this.curTab.Text,
+                    WorkerType = WorkerType.Retweet
+                };
+                foreach (int idx in this.curList.SelectedIndices)
+                {
+                    PostClass post = this.GetCurTabPost(idx);
+                    if (!post.IsMe && !post.IsProtect && !post.IsDm)
+                    {
+                        args.Ids.Add(post.StatusId);
+                    }
+                }
+
+                this.RunAsync(args);
+            }
+        }
+        
+        private void FavoritesRetweetOriginal()
+        {
+            if (!this.ExistCurrentPost)
+            {
+                return;
+            }
+
+            this.doFavRetweetFlags = true;
+            this.DoReTweetOfficial(true);
+            if (this.doFavRetweetFlags)
+            {
+                this.doFavRetweetFlags = false;
+                this.FavoriteChange(true, false);
+            }
+        }
+        
+        private void FavoritesRetweetUnofficial()
+        {
+            if (this.ExistCurrentPost && !this.curPost.IsDm)
+            {
+                this.doFavRetweetFlags = true;
+                this.FavoriteChange(true);
+                if (!this.curPost.IsProtect && this.doFavRetweetFlags)
+                {
+                    this.doFavRetweetFlags = false;
+                    this.DoReTweetUnofficial();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Twitterにより省略されているURLを含むaタグをキャプチャしてリンク先URLへ置き換える
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        private string CreateRetweetUnofficial(string status)
+        {
+            MatchCollection ms = Regex.Matches(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\"[^>]*>(?<link>(https?|shttp|ftps?):// [^<]+)</a>");
+            foreach (Match m in ms)
+            {
+                if (m.Result("${link}").EndsWith("..."))
+                {
+                    break;
+                }
+            }
+
+            status = Regex.Replace(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\" title=\"(?<title>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "${title}");
+
+            // その他のリンク(@IDなど)を置き換える
+            status = Regex.Replace(status, "@<a target=\"_self\" href=\"https?:// twitter.com/(#!/)?(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "@${url}");
+
+            // ハッシュタグ
+            status = Regex.Replace(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "${link}");
+
+            // <br>タグ除去
+            if (this.StatusText.Multiline)
+            {
+                status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", "\r\n", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            }
+            else
+            {
+                status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            }
+
+            this.replyToId = 0;
+            this.replyToName = string.Empty;
+            return status.Replace("&nbsp;", " ");
+        }
+        
+        private bool IsKeyDown(Keys key)
+        {
+            return (Control.ModifierKeys & key) == key;
+        }
+        
+        private void FollowCommand(string id)
+        {
+            using (InputTabName inputName = new InputTabName())
+            {
+                inputName.SetFormTitle("Follow");
+                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
+                inputName.TabName = id;
+                if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
+                {
+                    FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs();
+                    arg.Tw = this.tw;
+                    arg.Id = inputName.TabName.Trim();
+                    using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.FollowCommandText1, this.FollowCommand_DoWork, null, arg))
+                    {
+                        info.ShowDialog();
+                        string ret = (string)info.Result;
+                        if (!string.IsNullOrEmpty(ret))
+                        {
+                            MessageBox.Show(Hoehoe.Properties.Resources.FRMessage2 + ret);
+                        }
+                        else
+                        {
+                            MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
+                        }
+                    }
+                }
+            }
+        }
+        
+        private void RemoveCommand(string id, bool skipInput)
+        {
+            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs() { Tw = this.tw, Id = id };
+            if (!skipInput)
+            {
+                using (InputTabName inputName = new InputTabName())
+                {
+                    inputName.SetFormTitle("Unfollow");
+                    inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
+                    inputName.TabName = id;
+                    if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
+                    {
+                        arg.Tw = this.tw;
+                        arg.Id = inputName.TabName.Trim();
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
+            using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.RemoveCommandText1, this.RemoveCommand_DoWork, null, arg))
+            {
+                info.ShowDialog();
+                string ret = (string)info.Result;
+                if (!string.IsNullOrEmpty(ret))
+                {
+                    MessageBox.Show(Hoehoe.Properties.Resources.FRMessage2 + ret);
+                }
+                else
+                {
+                    MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
+                }
+            }
+        }
+        
+        private void ShowFriendship(string id)
+        {
+            ShowFriendshipArgs args = new ShowFriendshipArgs();
+            args.Tw = this.tw;
+            using (InputTabName inputName = new InputTabName())
+            {
+                inputName.SetFormTitle("Show Friendships");
+                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
+                inputName.TabName = id;
+                if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
+                {
+                    string ret = string.Empty;
+                    args.Ids.Add(new ShowFriendshipArgs.FriendshipInfo(inputName.TabName.Trim()));
+                    using (FormInfo formInfo = new FormInfo(this, Hoehoe.Properties.Resources.ShowFriendshipText1, this.ShowFriendship_DoWork, null, args))
+                    {
+                        formInfo.ShowDialog();
+                        ret = (string)formInfo.Result;
+                    }
+
+                    string result = string.Empty;
+                    if (string.IsNullOrEmpty(ret))
+                    {
+                        if (args.Ids[0].IsFollowing)
+                        {
+                            result = Hoehoe.Properties.Resources.GetFriendshipInfo1 + System.Environment.NewLine;
+                        }
+                        else
+                        {
+                            result = Hoehoe.Properties.Resources.GetFriendshipInfo2 + System.Environment.NewLine;
+                        }
+
+                        if (args.Ids[0].IsFollowed)
+                        {
+                            result += Hoehoe.Properties.Resources.GetFriendshipInfo3;
+                        }
+                        else
+                        {
+                            result += Hoehoe.Properties.Resources.GetFriendshipInfo4;
+                        }
+
+                        result = args.Ids[0].Id + Hoehoe.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine + result;
+                    }
+                    else
+                    {
+                        result = ret;
+                    }
+
+                    MessageBox.Show(result);
+                }
+            }
+        }
+        
+        private void ShowFriendship(string[] ids)
+        {
+            foreach (string id in ids)
+            {
+                string ret = string.Empty;
+                ShowFriendshipArgs args = new ShowFriendshipArgs();
+                args.Tw = this.tw;
+                args.Ids.Add(new ShowFriendshipArgs.FriendshipInfo(id.Trim()));
+                using (FormInfo formInfo = new FormInfo(this, Hoehoe.Properties.Resources.ShowFriendshipText1, this.ShowFriendship_DoWork, null, args))
+                {
+                    formInfo.ShowDialog();
+                    ret = (string)formInfo.Result;
+                }
+
+                string result = string.Empty;
+                ShowFriendshipArgs.FriendshipInfo fInfo = args.Ids[0];
+                string ff = string.Empty;
+                if (string.IsNullOrEmpty(ret))
+                {
+                    ff = "  ";
+                    if (fInfo.IsFollowing)
+                    {
+                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo1;
+                    }
+                    else
+                    {
+                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo2;
+                    }
+
+                    ff += System.Environment.NewLine + "  ";
+                    if (fInfo.IsFollowed)
+                    {
+                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo3;
+                    }
+                    else
+                    {
+                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo4;
+                    }
+
+                    result += fInfo.Id + Hoehoe.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine + ff;
+                    if (fInfo.IsFollowing)
+                    {
+                        if (MessageBox.Show(Hoehoe.Properties.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result, Hoehoe.Properties.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                        {
+                            this.RemoveCommand(fInfo.Id, true);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(result);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(ret);
+                }
+            }
+        }
+        
+        private string GetUserId()
+        {
+            Match m = Regex.Match(this.postBrowserStatusText, "^https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?$");
+            if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
+            {
+                return m.Result("${ScreenName}");
+            }
+            else
+            {
+                return null;
+            }
+        }
+        
+        private void DoQuote()
+        {
+            // QT @id:内容
+            // 返信先情報付加
+            if (this.ExistCurrentPost)
+            {
+                if (this.curPost.IsDm || !this.StatusText.Enabled)
+                {
+                    return;
+                }
+
+                if (this.curPost.IsProtect)
+                {
+                    MessageBox.Show("Protected.");
+                    return;
+                }
+
+                string rtdata = this.CreateRetweetUnofficial(this.curPost.Text);
+                this.StatusText.Text = " QT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
+                if (this.curPost.RetweetedId == 0)
+                {
+                    this.replyToId = this.curPost.StatusId;
+                }
+                else
+                {
+                    this.replyToId = this.curPost.RetweetedId;
+                }
+
+                this.replyToName = this.curPost.ScreenName;
+
+                this.StatusText.SelectionStart = 0;
+                this.StatusText.Focus();
+            }
+        }
+        
+        private void DoMoveToRTHome()
+        {
+            if (this.curList.SelectedIndices.Count > 0)
+            {
+                PostClass post = this.GetCurTabPost(this.curList.SelectedIndices[0]);
+                if (post.RetweetedId > 0)
+                {
+                    this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).RetweetedBy);
+                }
+            }
+        }
+        
+        private void DoShowUserStatus(string id, bool showInputDialog)
+        {
+            DataModels.Twitter.User user = null;
+            if (showInputDialog)
+            {
+                using (InputTabName inputName = new InputTabName())
+                {
+                    inputName.SetFormTitle("Show UserStatus");
+                    inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
+                    inputName.TabName = id;
+                    if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
+                    {
+                        id = inputName.TabName.Trim();
+                        GetUserInfoArgs args = new GetUserInfoArgs() { Tw = this.tw, Id = id, User = user };
+                        using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
+                        {
+                            info.ShowDialog();
+                            string ret = (string)info.Result;
+                            if (string.IsNullOrEmpty(ret))
+                            {
+                                this.DoShowUserStatus(args.User);
+                            }
+                            else
+                            {
+                                MessageBox.Show(ret);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                GetUserInfoArgs args = new GetUserInfoArgs() { Tw = this.tw, Id = id, User = user };
+                using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
+                {
+                    info.ShowDialog();
+                    string ret = (string)info.Result;
+                    if (string.IsNullOrEmpty(ret))
+                    {
+                        this.DoShowUserStatus(args.User);
+                    }
+                    else
+                    {
+                        MessageBox.Show(ret);
+                    }
+                }
+            }
+        }
+        
+        private void DoShowUserStatus(DataModels.Twitter.User user)
+        {
+            using (ShowUserInfo userinfo = new ShowUserInfo())
+            {
+                userinfo.Owner = this;
+                userinfo.SetUser(user);
+                userinfo.ShowDialog(this);
+                this.Activate();
+                this.BringToFront();
+            }
+        }
+        
+        private void ShowUserStatus(string id, bool showInputDialog)
+        {
+            this.DoShowUserStatus(id, showInputDialog);
+        }
+        
+        private void ShowUserStatus(string id)
+        {
+            this.DoShowUserStatus(id, true);
+        }
+        
+        private void ImageFromSelectedFile()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(this.ImagefilePathText.Text.Trim()) || string.IsNullOrEmpty(this.ImageService))
+                {
+                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                    this.ImagefilePathText.Text = string.Empty;
+                    return;
+                }
+
+                FileInfo fl = new FileInfo(this.ImagefilePathText.Text.Trim());
+                if (!this.pictureServices[this.ImageService].CheckValidExtension(fl.Extension))
+                {
+                    // 画像以外の形式
+                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                    this.ImagefilePathText.Text = string.Empty;
+                    return;
+                }
+
+                if (!this.pictureServices[this.ImageService].CheckValidFilesize(fl.Extension, fl.Length))
+                {
+                    // ファイルサイズが大きすぎる
+                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                    this.ImagefilePathText.Text = string.Empty;
+                    MessageBox.Show("File is too large.");
+                    return;
+                }
+
+                switch (this.pictureServices[this.ImageService].GetFileType(fl.Extension))
+                {
+                    case UploadFileType.Invalid:
+                        this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                        this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                        this.ImagefilePathText.Text = string.Empty;
+                        break;
+                    case UploadFileType.Picture:
+                        Image img = null;
+                        using (FileStream fs = new FileStream(this.ImagefilePathText.Text, FileMode.Open, FileAccess.Read))
+                        {
+                            img = Image.FromStream(fs);
+                            fs.Close();
+                        }
+
+                        this.ImageSelectedPicture.Image = (new HttpVarious()).CheckValidImage(img, img.Width, img.Height);
+                        this.ImageSelectedPicture.Tag = UploadFileType.Picture;
+                        break;
+                    case UploadFileType.MultiMedia:
+                        this.ImageSelectedPicture.Image = Hoehoe.Properties.Resources.MultiMediaImage;
+                        this.ImageSelectedPicture.Tag = UploadFileType.MultiMedia;
+                        break;
+                    default:
+                        this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                        this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                        this.ImagefilePathText.Text = string.Empty;
+                        break;
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                this.ImagefilePathText.Text = string.Empty;
+                MessageBox.Show("File not found.");
+            }
+            catch (Exception)
+            {
+                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                this.ImagefilePathText.Text = string.Empty;
+                MessageBox.Show("The type of this file is not image.");
+            }
+        }
+        
+        private void SetImageServiceCombo()
+        {
+            string svc = string.Empty;
+            if (this.ImageServiceCombo.SelectedIndex > -1)
+            {
+                svc = this.ImageServiceCombo.SelectedItem.ToString();
+            }
+
+            this.ImageServiceCombo.Items.Clear();
+            this.ImageServiceCombo.Items.Add("TwitPic");
+            this.ImageServiceCombo.Items.Add("img.ly");
+            this.ImageServiceCombo.Items.Add("yfrog");
+            this.ImageServiceCombo.Items.Add("lockerz");
+            this.ImageServiceCombo.Items.Add("Twitter");
+
+            if (string.IsNullOrEmpty(svc))
+            {
+                this.ImageServiceCombo.SelectedIndex = 0;
+            }
+            else
+            {
+                int idx = this.ImageServiceCombo.Items.IndexOf(svc);
+                if (idx == -1)
+                {
+                    this.ImageServiceCombo.SelectedIndex = 0;
+                }
+                else
+                {
+                    this.ImageServiceCombo.SelectedIndex = idx;
+                }
+            }
+        }
+        
+        private void CopyUserId()
+        {
+            if (this.curPost == null)
+            {
+                return;
+            }
+
+            string clstr = this.curPost.ScreenName;
+            try
+            {
+                Clipboard.SetDataObject(clstr, false, 5, 100);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        
+        private void NotifyEvent(Twitter.FormattedEvent ev)
+        {
+            // 新着通知
+            if (this.BalloonRequired(ev))
+            {
+                this.NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
+                StringBuilder title = new StringBuilder();
+                if (this.settingDialog.DispUsername)
+                {
+                    title.Append(this.tw.Username);
+                    title.Append(" - ");
+                }
+
+                title.Append("Hoehoe [");
+                title.Append(ev.Event.ToUpper());
+                title.Append("] by ");
+                if (!string.IsNullOrEmpty(ev.Username))
+                {
+                    title.Append(ev.Username.ToString());
+                }
+
+                string text = !string.IsNullOrEmpty(ev.Target) ? ev.Target : " ";
+
+                if (this.settingDialog.IsNotifyUseGrowl)
+                {
+                    this.growlHelper.Notify(GrowlHelper.NotifyType.UserStreamEvent, ev.Id.ToString(), title.ToString(), text);
+                }
+                else
+                {
+                    this.NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
+                    this.NotifyIcon1.BalloonTipTitle = title.ToString();
+                    this.NotifyIcon1.BalloonTipText = text;
+                    this.NotifyIcon1.ShowBalloonTip(500);
+                }
+            }
+
+            // サウンド再生
+            string snd = this.settingDialog.EventSoundFile;
+            if (!this.isInitializing && this.settingDialog.PlaySound && !string.IsNullOrEmpty(snd))
+            {
+                if (Convert.ToBoolean(ev.Eventtype & this.settingDialog.EventNotifyFlag) && this.IsMyEventNotityAsEventType(ev))
+                {
+                    try
+                    {
+                        string dir = MyCommon.AppDir;
+                        if (Directory.Exists(Path.Combine(dir, "Sounds")))
+                        {
+                            dir = Path.Combine(dir, "Sounds");
+                        }
+
+                        new SoundPlayer(Path.Combine(dir, snd)).Play();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+        }
+        
+        private void DoTranslation(string str)
+        {
+            Bing bing = new Bing();
+            string buf = string.Empty;
+            if (string.IsNullOrEmpty(str))
+            {
+                return;
+            }
+
+            string srclng = string.Empty;
+            string dstlng = this.settingDialog.TranslateLanguage;
+            string msg = string.Empty;
+            if (srclng != dstlng && bing.Translate(string.Empty, dstlng, str, ref buf))
+            {
+                this.PostBrowser.DocumentText = this.CreateDetailHtml(buf);
+            }
+            else
+            {
+                if (msg.StartsWith("Err:"))
+                {
+                    this.StatusLabel.Text = msg;
+                }
+            }
+        }
+        
+        private string GetUserIdFromCurPostOrInput(string caption)
+        {
+            string id = string.Empty;
+            if (this.curPost != null)
+            {
+                id = this.curPost.ScreenName;
+            }
+
+            using (InputTabName inputName = new InputTabName())
+            {
+                inputName.SetFormTitle(caption);
+                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
+                inputName.TabName = id;
+                if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
+                {
+                    id = inputName.TabName.Trim();
+                }
+                else
+                {
+                    id = string.Empty;
+                }
+            }
+
+            return id;
+        }
+        
+        private void TimelineRefreshEnableChange(bool isEnable)
+        {
+            if (isEnable)
+            {
+                this.tw.StartUserStream();
+            }
+            else
+            {
+                this.tw.StopUserStream();
+            }
+
+            this.timerTimeline.Enabled = isEnable;
+        }
+
+        private void OpenUserAppointUrl()
+        {
+            if (this.settingDialog.UserAppointUrl != null)
+            {
+                if (this.settingDialog.UserAppointUrl.Contains("{ID}") || this.settingDialog.UserAppointUrl.Contains("{STATUS}"))
+                {
+                    if (this.curPost != null)
+                    {
+                        string url = this.settingDialog.UserAppointUrl;
+                        url = url.Replace("{ID}", this.curPost.ScreenName);
+                        if (this.curPost.RetweetedId != 0)
+                        {
+                            url = url.Replace("{STATUS}", this.curPost.RetweetedId.ToString());
+                        }
+                        else
+                        {
+                            url = url.Replace("{STATUS}", this.curPost.StatusId.ToString());
+                        }
+
+                        this.OpenUriAsync(url);
+                    }
+                }
+                else
+                {
+                    this.OpenUriAsync(this.settingDialog.UserAppointUrl);
+                }
+            }
+        }
+
+        #region event handler
+
+        private void TweenMain_Activated(object sender, EventArgs e)
+        {
+            // 画面がアクティブになったら、発言欄の背景色戻す
+            if (this.StatusText.Focused)
+            {
+                this.StatusText_Enter(this.StatusText, EventArgs.Empty);
+            }
+        }
+
+        private void TweenMain_Disposed(object sender, EventArgs e)
+        {
+            // 後始末
+            this.settingDialog.Dispose();
+            this.tabDialog.Dispose();
+            this.searchDialog.Dispose();
+            this.fltDialog.Dispose();
+            this.urlDialog.Dispose();
+            this.spaceKeyCanceler.Dispose();
+            if (this.iconAt != null)
+            {
+                this.iconAt.Dispose();
+            }
+
+            if (this.iconAtRed != null)
+            {
+                this.iconAtRed.Dispose();
+            }
+
+            if (this.iconAtSmoke != null)
+            {
+                this.iconAtSmoke.Dispose();
+            }
+
+            if (this.iconRefresh[0] != null)
+            {
+                this.iconRefresh[0].Dispose();
+            }
+
+            if (this.iconRefresh[1] != null)
+            {
+                this.iconRefresh[1].Dispose();
+            }
+
+            if (this.iconRefresh[2] != null)
+            {
+                this.iconRefresh[2].Dispose();
+            }
+
+            if (this.iconRefresh[3] != null)
+            {
+                this.iconRefresh[3].Dispose();
+            }
+
+            if (this.tabIcon != null)
+            {
+                this.tabIcon.Dispose();
+            }
+
+            if (this.mainIcon != null)
+            {
+                this.mainIcon.Dispose();
+            }
+
+            if (this.replyIcon != null)
+            {
+                this.replyIcon.Dispose();
+            }
+
+            if (this.replyIconBlink != null)
+            {
+                this.replyIconBlink.Dispose();
+            }
+
+            this.brsHighLight.Dispose();
+            this.brsHighLightText.Dispose();
+            if (this.brsForeColorUnread != null)
+            {
+                this.brsForeColorUnread.Dispose();
+            }
+
+            if (this.brsForeColorReaded != null)
+            {
+                this.brsForeColorReaded.Dispose();
+            }
+
+            if (this.brsForeColorFav != null)
+            {
+                this.brsForeColorFav.Dispose();
+            }
+
+            if (this.brsForeColorOWL != null)
+            {
+                this.brsForeColorOWL.Dispose();
+            }
+
+            if (this.brsForeColorRetweet != null)
+            {
+                this.brsForeColorRetweet.Dispose();
+            }
+
+            if (this.brsBackColorMine != null)
+            {
+                this.brsBackColorMine.Dispose();
+            }
+
+            if (this.brsBackColorAt != null)
+            {
+                this.brsBackColorAt.Dispose();
+            }
+
+            if (this.brsBackColorYou != null)
+            {
+                this.brsBackColorYou.Dispose();
+            }
+
+            if (this.brsBackColorAtYou != null)
+            {
+                this.brsBackColorAtYou.Dispose();
+            }
+
+            if (this.brsBackColorAtFromTarget != null)
+            {
+                this.brsBackColorAtFromTarget.Dispose();
+            }
+
+            if (this.brsBackColorAtTo != null)
+            {
+                this.brsBackColorAtTo.Dispose();
+            }
+
+            if (this.brsBackColorNone != null)
+            {
+                this.brsBackColorNone.Dispose();
+            }
+
+            if (this.brsDeactiveSelection != null)
+            {
+                this.brsDeactiveSelection.Dispose();
+            }
+
+            this.shield.Dispose();
+            this.tabStringFormat.Dispose();
+            foreach (BackgroundWorker bw in this.bworkers)
+            {
+                if (bw != null)
+                {
+                    bw.Dispose();
+                }
+            }
+
+            if (this.followerFetchWorker != null)
+            {
+                this.followerFetchWorker.Dispose();
+            }
+
+            this.apiGauge.Dispose();
+            if (this.iconDict != null)
+            {
+                ((ImageDictionary)this.iconDict).PauseGetImage = true;
+                ((IDisposable)this.iconDict).Dispose();
+            }
+
+            // 終了時にRemoveHandlerしておかないとメモリリークする
+            // http://msdn.microsoft.com/ja-jp/library/microsoft.win32.systemevents.powermodechanged.aspx
+            Microsoft.Win32.SystemEvents.PowerModeChanged -= this.SystemEvents_PowerModeChanged;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.ignoreConfigSave = true;
+            this.Visible = false;
+
+            this.securityManager = new InternetSecurityManager(this.PostBrowser);
+            this.thumbnail = new Thumbnail(this);
+
+            MyCommon.TwitterApiInfo.Changed += this.SetStatusLabelApiHandler;
+            Microsoft.Win32.SystemEvents.PowerModeChanged += this.SystemEvents_PowerModeChanged;
+
+            this.VerUpMenuItem.Image = this.shield.Icon;
+            var cmdArgs = System.Environment.GetCommandLineArgs().Skip(1).ToArray();
+            if (cmdArgs.Length != 0 && cmdArgs.Contains("/d"))
+            {
+                MyCommon.TraceFlag = true;
+            }
+
+            this.spaceKeyCanceler = new SpaceKeyCanceler(this.PostButton);
+            this.spaceKeyCanceler.SpaceCancel += this.SpaceKeyCanceler_SpaceCancel;
+
+            Regex.CacheSize = 100;
+
+            this.InitializeTraceFrag();
+
+            // アイコン読み込み
+            this.LoadIcons();
+
+            // 発言保持クラス
+            this.statuses = TabInformations.GetInstance();
+
+            // アイコン設定
+            this.Icon = this.mainIcon;          // メインフォーム（TweenMain）
+            this.NotifyIcon1.Icon = this.iconAt;     // タスクトレイ
+            this.TabImage.Images.Add(this.tabIcon);  // タブ見出し
+
+            this.settingDialog.Owner = this;
+            this.searchDialog.Owner = this;
+            this.fltDialog.Owner = this;
+            this.tabDialog.Owner = this;
+            this.urlDialog.Owner = this;
+
+            this.postHistory.Add(new PostingStatus());
+            this.postHistoryIndex = 0;
+            this.replyToId = 0;
+            this.replyToName = string.Empty;
+
+            // <<<<<<<<<設定関連>>>>>>>>>
+            // '設定読み出し
+            this.LoadConfig();
+
+            // 新着バルーン通知のチェック状態設定
+            this.NewPostPopMenuItem.Checked = this.cfgCommon.NewAllPop;
+            this.NotifyFileMenuItem.Checked = this.NewPostPopMenuItem.Checked;
+
+            // フォント＆文字色＆背景色保持
+            this.fntUnread = this.cfgLocal.FontUnread;
+            this.clrUnread = this.cfgLocal.ColorUnread;
+            this.fntReaded = this.cfgLocal.FontRead;
+            this.clrRead = this.cfgLocal.ColorRead;
+            this.clrFav = this.cfgLocal.ColorFav;
+            this.clrOWL = this.cfgLocal.ColorOWL;
+            this.clrRetweet = this.cfgLocal.ColorRetweet;
+            this.fntDetail = this.cfgLocal.FontDetail;
+            this.clrDetail = this.cfgLocal.ColorDetail;
+            this.clrDetailLink = this.cfgLocal.ColorDetailLink;
+            this.clrDetailBackcolor = this.cfgLocal.ColorDetailBackcolor;
+            this.clrSelf = this.cfgLocal.ColorSelf;
+            this.clrAtSelf = this.cfgLocal.ColorAtSelf;
+            this.clrTarget = this.cfgLocal.ColorTarget;
+            this.clrAtTarget = this.cfgLocal.ColorAtTarget;
+            this.clrAtFromTarget = this.cfgLocal.ColorAtFromTarget;
+            this.clrAtTo = this.cfgLocal.ColorAtTo;
+            this.clrListBackcolor = this.cfgLocal.ColorListBackcolor;
+            this.InputBackColor = this.cfgLocal.ColorInputBackcolor;
+            this.clrInputForecolor = this.cfgLocal.ColorInputFont;
+            this.fntInputFont = this.cfgLocal.FontInputFont;
+
+            this.brsForeColorUnread = new SolidBrush(this.clrUnread);
+            this.brsForeColorReaded = new SolidBrush(this.clrRead);
+            this.brsForeColorFav = new SolidBrush(this.clrFav);
+            this.brsForeColorOWL = new SolidBrush(this.clrOWL);
+            this.brsForeColorRetweet = new SolidBrush(this.clrRetweet);
+            this.brsBackColorMine = new SolidBrush(this.clrSelf);
+            this.brsBackColorAt = new SolidBrush(this.clrAtSelf);
+            this.brsBackColorYou = new SolidBrush(this.clrTarget);
+            this.brsBackColorAtYou = new SolidBrush(this.clrAtTarget);
+            this.brsBackColorAtFromTarget = new SolidBrush(this.clrAtFromTarget);
+            this.brsBackColorAtTo = new SolidBrush(this.clrAtTo);
+            this.brsBackColorNone = new SolidBrush(this.clrListBackcolor);
+
+            // StringFormatオブジェクトへの事前設定
+            this.tabStringFormat.Alignment = StringAlignment.Center;
+            this.tabStringFormat.LineAlignment = StringAlignment.Center;
+
+            // 設定画面への反映
+            HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
+            HttpTwitter.SetTwitterSearchUrl(this.cfgCommon.TwitterSearchUrl);
+            this.settingDialog.TwitterApiUrl = this.cfgCommon.TwitterUrl;
+            this.settingDialog.TwitterSearchApiUrl = this.cfgCommon.TwitterSearchUrl;
+
+            // 認証関連
+            if (string.IsNullOrEmpty(this.cfgCommon.Token))
+            {
+                this.cfgCommon.UserName = string.Empty;
+            }
+
+            this.tw.Initialize(this.cfgCommon.Token, this.cfgCommon.TokenSecret, this.cfgCommon.UserName, this.cfgCommon.UserId);
+
+            this.settingDialog.UserAccounts = this.cfgCommon.UserAccounts;
+            this.settingDialog.TimelinePeriodInt = this.cfgCommon.TimelinePeriod;
+            this.settingDialog.ReplyPeriodInt = this.cfgCommon.ReplyPeriod;
+            this.settingDialog.DMPeriodInt = this.cfgCommon.DMPeriod;
+            this.settingDialog.PubSearchPeriodInt = this.cfgCommon.PubSearchPeriod;
+            this.settingDialog.UserTimelinePeriodInt = this.cfgCommon.UserTimelinePeriod;
+            this.settingDialog.ListsPeriodInt = this.cfgCommon.ListsPeriod;
+
+            // 不正値チェック
+            if (!cmdArgs.Contains("nolimit"))
+            {
+                if (this.settingDialog.TimelinePeriodInt < 15 && this.settingDialog.TimelinePeriodInt > 0)
+                {
+                    this.settingDialog.TimelinePeriodInt = 15;
+                }
+
+                if (this.settingDialog.ReplyPeriodInt < 15 && this.settingDialog.ReplyPeriodInt > 0)
+                {
+                    this.settingDialog.ReplyPeriodInt = 15;
+                }
+
+                if (this.settingDialog.DMPeriodInt < 15 && this.settingDialog.DMPeriodInt > 0)
+                {
+                    this.settingDialog.DMPeriodInt = 15;
+                }
+
+                if (this.settingDialog.PubSearchPeriodInt < 30 && this.settingDialog.PubSearchPeriodInt > 0)
+                {
+                    this.settingDialog.PubSearchPeriodInt = 30;
+                }
+
+                if (this.settingDialog.UserTimelinePeriodInt < 15 && this.settingDialog.UserTimelinePeriodInt > 0)
+                {
+                    this.settingDialog.UserTimelinePeriodInt = 15;
+                }
+
+                if (this.settingDialog.ListsPeriodInt < 15 && this.settingDialog.ListsPeriodInt > 0)
+                {
+                    this.settingDialog.ListsPeriodInt = 15;
+                }
+            }
+
+            // 起動時読み込み分を既読にするか。Trueなら既読として処理
+            this.settingDialog.Readed = this.cfgCommon.Read;
+
+            // 新着取得時のリストスクロールをするか。Trueならスクロールしない
+            this.ListLockMenuItem.Checked = this.cfgCommon.ListLock;
+            this.LockListFileMenuItem.Checked = this.cfgCommon.ListLock;
+            this.settingDialog.IconSz = this.cfgCommon.IconSize;
+
+            // 文末ステータス
+            this.settingDialog.Status = this.cfgLocal.StatusText;
+
+            // 未読管理。Trueなら未読管理する
+            this.settingDialog.UnreadManage = this.cfgCommon.UnreadManage;
+
+            // サウンド再生（タブ別設定より優先）
+            this.settingDialog.PlaySound = this.cfgCommon.PlaySound;
+            this.PlaySoundMenuItem.Checked = this.settingDialog.PlaySound;
+            this.PlaySoundFileMenuItem.Checked = this.settingDialog.PlaySound;
+
+            // 片思い表示。Trueなら片思い表示する
+            this.settingDialog.OneWayLove = this.cfgCommon.OneWayLove;
+
+            // フォント＆文字色＆背景色
+            this.settingDialog.FontUnread = this.fntUnread;
+            this.settingDialog.ColorUnread = this.clrUnread;
+            this.settingDialog.FontReaded = this.fntReaded;
+            this.settingDialog.ColorReaded = this.clrRead;
+            this.settingDialog.ColorFav = this.clrFav;
+            this.settingDialog.ColorOWL = this.clrOWL;
+            this.settingDialog.ColorRetweet = this.clrRetweet;
+            this.settingDialog.FontDetail = this.fntDetail;
+            this.settingDialog.ColorDetail = this.clrDetail;
+            this.settingDialog.ColorDetailLink = this.clrDetailLink;
+            this.settingDialog.ColorDetailBackcolor = this.clrDetailBackcolor;
+            this.settingDialog.ColorSelf = this.clrSelf;
+            this.settingDialog.ColorAtSelf = this.clrAtSelf;
+            this.settingDialog.ColorTarget = this.clrTarget;
+            this.settingDialog.ColorAtTarget = this.clrAtTarget;
+            this.settingDialog.ColorAtFromTarget = this.clrAtFromTarget;
+            this.settingDialog.ColorAtTo = this.clrAtTo;
+            this.settingDialog.ColorListBackcolor = this.clrListBackcolor;
+            this.settingDialog.ColorInputBackcolor = this.InputBackColor;
+            this.settingDialog.ColorInputFont = this.clrInputForecolor;
+            this.settingDialog.FontInputFont = this.fntInputFont;
+            this.settingDialog.NameBalloon = this.cfgCommon.NameBalloon;
+            this.settingDialog.PostCtrlEnter = this.cfgCommon.PostCtrlEnter;
+            this.settingDialog.PostShiftEnter = this.cfgCommon.PostShiftEnter;
+            this.settingDialog.CountApi = this.cfgCommon.CountApi;
+            this.settingDialog.CountApiReply = this.cfgCommon.CountApiReply;
+            if (this.settingDialog.CountApi < 20 || this.settingDialog.CountApi > 200)
+            {
+                this.settingDialog.CountApi = 60;
+            }
+
+            if (this.settingDialog.CountApiReply < 20 || this.settingDialog.CountApiReply > 200)
+            {
+                this.settingDialog.CountApiReply = 40;
+            }
+
+            this.settingDialog.BrowserPath = this.cfgLocal.BrowserPath;
+            this.settingDialog.PostAndGet = this.cfgCommon.PostAndGet;
+            this.settingDialog.UseRecommendStatus = this.cfgLocal.UseRecommendStatus;
+            this.settingDialog.DispUsername = this.cfgCommon.DispUsername;
+            this.settingDialog.CloseToExit = this.cfgCommon.CloseToExit;
+            this.settingDialog.MinimizeToTray = this.cfgCommon.MinimizeToTray;
+            this.settingDialog.DispLatestPost = this.cfgCommon.DispLatestPost;
+            this.settingDialog.SortOrderLock = this.cfgCommon.SortOrderLock;
+            this.settingDialog.TinyUrlResolve = this.cfgCommon.TinyUrlResolve;
+            this.settingDialog.ShortUrlForceResolve = this.cfgCommon.ShortUrlForceResolve;
+            this.settingDialog.SelectedProxyType = this.cfgLocal.ProxyType;
+            this.settingDialog.ProxyAddress = this.cfgLocal.ProxyAddress;
+            this.settingDialog.ProxyPort = this.cfgLocal.ProxyPort;
+            this.settingDialog.ProxyUser = this.cfgLocal.ProxyUser;
+            this.settingDialog.ProxyPassword = this.cfgLocal.ProxyPassword;
+            this.settingDialog.PeriodAdjust = this.cfgCommon.PeriodAdjust;
+            this.settingDialog.StartupVersion = this.cfgCommon.StartupVersion;
+            this.settingDialog.StartupFollowers = this.cfgCommon.StartupFollowers;
+            this.settingDialog.RestrictFavCheck = this.cfgCommon.RestrictFavCheck;
+            this.settingDialog.AlwaysTop = this.cfgCommon.AlwaysTop;
+            this.settingDialog.UrlConvertAuto = false;
+            this.settingDialog.OutputzEnabled = this.cfgCommon.Outputz;
+            this.settingDialog.OutputzKey = this.cfgCommon.OutputzKey;
+            this.settingDialog.OutputzUrlmode = this.cfgCommon.OutputzUrlMode;
+            this.settingDialog.UseUnreadStyle = this.cfgCommon.UseUnreadStyle;
+            this.settingDialog.DefaultTimeOut = this.cfgCommon.DefaultTimeOut;
+            this.settingDialog.RetweetNoConfirm = this.cfgCommon.RetweetNoConfirm;
+            this.settingDialog.PlaySound = this.cfgCommon.PlaySound;
+            this.settingDialog.DateTimeFormat = this.cfgCommon.DateTimeFormat;
+            this.settingDialog.LimitBalloon = this.cfgCommon.LimitBalloon;
+            this.settingDialog.EventNotifyEnabled = this.cfgCommon.EventNotifyEnabled;
+            this.settingDialog.EventNotifyFlag = this.cfgCommon.EventNotifyFlag;
+            this.settingDialog.IsMyEventNotifyFlag = this.cfgCommon.IsMyEventNotifyFlag;
+            this.settingDialog.ForceEventNotify = this.cfgCommon.ForceEventNotify;
+            this.settingDialog.FavEventUnread = this.cfgCommon.FavEventUnread;
+            this.settingDialog.TranslateLanguage = this.cfgCommon.TranslateLanguage;
+            this.settingDialog.EventSoundFile = this.cfgCommon.EventSoundFile;
+
+            // 廃止サービスが選択されていた場合bit.lyへ読み替え
+            if (this.cfgCommon.AutoShortUrlFirst < 0)
+            {
+                this.cfgCommon.AutoShortUrlFirst = UrlConverter.Bitly;
+            }
+
+            this.settingDialog.AutoShortUrlFirst = this.cfgCommon.AutoShortUrlFirst;
+            this.settingDialog.TabIconDisp = this.cfgCommon.TabIconDisp;
+            this.settingDialog.ReplyIconState = this.cfgCommon.ReplyIconState;
+            this.settingDialog.ReadOwnPost = this.cfgCommon.ReadOwnPost;
+            this.settingDialog.GetFav = this.cfgCommon.GetFav;
+            this.settingDialog.ReadOldPosts = this.cfgCommon.ReadOldPosts;
+            this.settingDialog.UseSsl = this.cfgCommon.UseSsl;
+            this.settingDialog.BitlyUser = this.cfgCommon.BilyUser;
+            this.settingDialog.BitlyPwd = this.cfgCommon.BitlyPwd;
+            this.settingDialog.ShowGrid = this.cfgCommon.ShowGrid;
+            this.settingDialog.Language = this.cfgCommon.Language;
+            this.settingDialog.UseAtIdSupplement = this.cfgCommon.UseAtIdSupplement;
+            this.settingDialog.UseHashSupplement = this.cfgCommon.UseHashSupplement;
+            this.settingDialog.PreviewEnable = this.cfgCommon.PreviewEnable;
+            this.AtIdSupl = new AtIdSupplement(SettingAtIdList.Load().AtIdList, "@");
+
+            this.settingDialog.IsMonospace = this.cfgCommon.IsMonospace;
+            if (this.settingDialog.IsMonospace)
+            {
+                this.detailHtmlFormatHeader = DetailHtmlFormatMono1;
+                this.detailHtmlFormatFooter = DetailHtmlFormatMono7;
+            }
+            else
+            {
+                this.detailHtmlFormatHeader = DetailHtmlFormat1;
+                this.detailHtmlFormatFooter = DetailHtmlFormat7;
+            }
+
+            this.detailHtmlFormatHeader += this.fntDetail.Name + DetailHtmlFormat2 + this.fntDetail.Size.ToString() + DetailHtmlFormat3 + this.clrDetail.R.ToString() + "," + this.clrDetail.G.ToString() + "," + this.clrDetail.B.ToString() + DetailHtmlFormat4 + this.clrDetailLink.R.ToString() + "," + this.clrDetailLink.G.ToString() + "," + this.clrDetailLink.B.ToString() + DetailHtmlFormat5 + this.clrDetailBackcolor.R.ToString() + "," + this.clrDetailBackcolor.G.ToString() + "," + this.clrDetailBackcolor.B.ToString();
+            if (this.settingDialog.IsMonospace)
+            {
+                this.detailHtmlFormatHeader += DetailHtmlFormatMono6;
+            }
+            else
+            {
+                this.detailHtmlFormatHeader += DetailHtmlFormat6;
+            }
+
+            this.IdeographicSpaceToSpaceToolStripMenuItem.Checked = this.cfgCommon.WideSpaceConvert;
+            this.ToolStripFocusLockMenuItem.Checked = this.cfgCommon.FocusLockToStatusText;
+
+            this.settingDialog.RecommendStatusText = " [TWNv" + Regex.Replace(MyCommon.FileVersion.Replace(".", string.Empty), "^0*", string.Empty) + "]";
+
+            // 書式指定文字列エラーチェック
+            try
+            {
+                if (DateTime.Now.ToString(this.settingDialog.DateTimeFormat).Length == 0)
+                {
+                    // このブロックは絶対に実行されないはず
+                    // 変換が成功した場合にLengthが0にならない
+                    this.settingDialog.DateTimeFormat = "yyyy/MM/dd H:mm:ss";
+                }
+            }
+            catch (FormatException)
+            {
+                // FormatExceptionが発生したら初期値を設定 (=yyyy/MM/dd H:mm:ssとみなされる)
+                this.settingDialog.DateTimeFormat = "yyyy/MM/dd H:mm:ss";
+            }
+
+            this.settingDialog.Nicoms = this.cfgCommon.Nicoms;
+            this.settingDialog.HotkeyEnabled = this.cfgCommon.HotkeyEnabled;
+            this.settingDialog.HotkeyMod = this.cfgCommon.HotkeyModifier;
+            this.settingDialog.HotkeyKey = this.cfgCommon.HotkeyKey;
+            this.settingDialog.HotkeyValue = this.cfgCommon.HotkeyValue;
+            this.settingDialog.BlinkNewMentions = this.cfgCommon.BlinkNewMentions;
+            this.settingDialog.UseAdditionalCount = this.cfgCommon.UseAdditionalCount;
+            this.settingDialog.MoreCountApi = this.cfgCommon.MoreCountApi;
+            this.settingDialog.FirstCountApi = this.cfgCommon.FirstCountApi;
+            this.settingDialog.SearchCountApi = this.cfgCommon.SearchCountApi;
+            this.settingDialog.FavoritesCountApi = this.cfgCommon.FavoritesCountApi;
+            this.settingDialog.UserTimelineCountApi = this.cfgCommon.UserTimelineCountApi;
+            this.settingDialog.ListCountApi = this.cfgCommon.ListCountApi;
+            this.settingDialog.UserstreamStartup = this.cfgCommon.UserstreamStartup;
+            this.settingDialog.UserstreamPeriodInt = this.cfgCommon.UserstreamPeriod;
+            this.settingDialog.OpenUserTimeline = this.cfgCommon.OpenUserTimeline;
+            this.settingDialog.ListDoubleClickAction = this.cfgCommon.ListDoubleClickAction;
+            this.settingDialog.UserAppointUrl = this.cfgCommon.UserAppointUrl;
+            this.settingDialog.HideDuplicatedRetweets = this.cfgCommon.HideDuplicatedRetweets;
+            this.settingDialog.IsPreviewFoursquare = this.cfgCommon.IsPreviewFoursquare;
+            this.settingDialog.FoursquarePreviewHeight = this.cfgCommon.FoursquarePreviewHeight;
+            this.settingDialog.FoursquarePreviewWidth = this.cfgCommon.FoursquarePreviewWidth;
+            this.settingDialog.FoursquarePreviewZoom = this.cfgCommon.FoursquarePreviewZoom;
+            this.settingDialog.IsListStatusesIncludeRts = this.cfgCommon.IsListsIncludeRts;
+            this.settingDialog.TabMouseLock = this.cfgCommon.TabMouseLock;
+            this.settingDialog.IsRemoveSameEvent = this.cfgCommon.IsRemoveSameEvent;
+            this.settingDialog.IsNotifyUseGrowl = this.cfgCommon.IsUseNotifyGrowl;
+
+            // ハッシュタグ関連
+            this.HashSupl = new AtIdSupplement(this.cfgCommon.HashTags, "#");
+            this.HashMgr = new HashtagManage(this.HashSupl, this.cfgCommon.HashTags.ToArray(), this.cfgCommon.HashSelected, this.cfgCommon.HashIsPermanent, this.cfgCommon.HashIsHead, this.cfgCommon.HashIsNotAddToAtReply);
+            if (!string.IsNullOrEmpty(this.HashMgr.UseHash) && this.HashMgr.IsPermanent)
+            {
+                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
+            }
+
+            this.isInitializing = true;
+
+            // アイコンリスト作成
+            try
+            {
+                this.iconDict = new ImageDictionary(5);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Please install [.NET Framework 4 (Full)].");
+                Application.Exit();
+                return;
+            }
+
+            ((ImageDictionary)this.iconDict).PauseGetImage = false;
+
+            bool saveRequired = false;
+
+            // ユーザー名、パスワードが未設定なら設定画面を表示（初回起動時など）
+            if (string.IsNullOrEmpty(this.tw.Username))
+            {
+                saveRequired = true;
+
+                // 設定せずにキャンセルされた場合はプログラム終了
+                if (this.settingDialog.ShowDialog(this) == DialogResult.Cancel)
+                {
+                    // 強制終了
+                    Application.Exit();
+                    return;
+                }
+
+                // 設定されたが、依然ユーザー名とパスワードが未設定ならプログラム終了
+                if (string.IsNullOrEmpty(this.tw.Username))
+                {
+                    // 強制終了
+                    Application.Exit();
+                    return;
+                }
+
+                // フォント＆文字色＆背景色保持
+                this.fntUnread = this.settingDialog.FontUnread;
+                this.clrUnread = this.settingDialog.ColorUnread;
+                this.fntReaded = this.settingDialog.FontReaded;
+                this.clrRead = this.settingDialog.ColorReaded;
+                this.clrFav = this.settingDialog.ColorFav;
+                this.clrOWL = this.settingDialog.ColorOWL;
+                this.clrRetweet = this.settingDialog.ColorRetweet;
+                this.fntDetail = this.settingDialog.FontDetail;
+                this.clrDetail = this.settingDialog.ColorDetail;
+                this.clrDetailLink = this.settingDialog.ColorDetailLink;
+                this.clrDetailBackcolor = this.settingDialog.ColorDetailBackcolor;
+                this.clrSelf = this.settingDialog.ColorSelf;
+                this.clrAtSelf = this.settingDialog.ColorAtSelf;
+                this.clrTarget = this.settingDialog.ColorTarget;
+                this.clrAtTarget = this.settingDialog.ColorAtTarget;
+                this.clrAtFromTarget = this.settingDialog.ColorAtFromTarget;
+                this.clrAtTo = this.settingDialog.ColorAtTo;
+                this.clrListBackcolor = this.settingDialog.ColorListBackcolor;
+                this.InputBackColor = this.settingDialog.ColorInputBackcolor;
+                this.clrInputForecolor = this.settingDialog.ColorInputFont;
+                this.fntInputFont = this.settingDialog.FontInputFont;
+                this.brsForeColorUnread.Dispose();
+                this.brsForeColorReaded.Dispose();
+                this.brsForeColorFav.Dispose();
+                this.brsForeColorOWL.Dispose();
+                this.brsForeColorRetweet.Dispose();
+                this.brsForeColorUnread = new SolidBrush(this.clrUnread);
+                this.brsForeColorReaded = new SolidBrush(this.clrRead);
+                this.brsForeColorFav = new SolidBrush(this.clrFav);
+                this.brsForeColorOWL = new SolidBrush(this.clrOWL);
+                this.brsForeColorRetweet = new SolidBrush(this.clrRetweet);
+                this.brsBackColorMine.Dispose();
+                this.brsBackColorAt.Dispose();
+                this.brsBackColorYou.Dispose();
+                this.brsBackColorAtYou.Dispose();
+                this.brsBackColorAtFromTarget.Dispose();
+                this.brsBackColorAtTo.Dispose();
+                this.brsBackColorNone.Dispose();
+                this.brsBackColorMine = new SolidBrush(this.clrSelf);
+                this.brsBackColorAt = new SolidBrush(this.clrAtSelf);
+                this.brsBackColorYou = new SolidBrush(this.clrTarget);
+                this.brsBackColorAtYou = new SolidBrush(this.clrAtTarget);
+                this.brsBackColorAtFromTarget = new SolidBrush(this.clrAtFromTarget);
+                this.brsBackColorAtTo = new SolidBrush(this.clrAtTo);
+                this.brsBackColorNone = new SolidBrush(this.clrListBackcolor);
+
+                if (this.settingDialog.IsMonospace)
+                {
+                    this.detailHtmlFormatHeader = DetailHtmlFormatMono1;
+                    this.detailHtmlFormatFooter = DetailHtmlFormatMono7;
+                }
+                else
+                {
+                    this.detailHtmlFormatHeader = DetailHtmlFormat1;
+                    this.detailHtmlFormatFooter = DetailHtmlFormat7;
+                }
+
+                this.detailHtmlFormatHeader += this.fntDetail.Name + DetailHtmlFormat2 + this.fntDetail.Size.ToString() + DetailHtmlFormat3 + this.clrDetail.R.ToString() + "," + this.clrDetail.G.ToString() + "," + this.clrDetail.B.ToString() + DetailHtmlFormat4 + this.clrDetailLink.R.ToString() + "," + this.clrDetailLink.G.ToString() + "," + this.clrDetailLink.B.ToString() + DetailHtmlFormat5 + this.clrDetailBackcolor.R.ToString() + "," + this.clrDetailBackcolor.G.ToString() + "," + this.clrDetailBackcolor.B.ToString();
+                if (this.settingDialog.IsMonospace)
+                {
+                    this.detailHtmlFormatHeader += DetailHtmlFormatMono6;
+                }
+                else
+                {
+                    this.detailHtmlFormatHeader += DetailHtmlFormat6;
+                }
+            }
+
+            if (this.settingDialog.HotkeyEnabled)
+            {
+                // グローバルホットキーの登録
+                HookGlobalHotkey.ModKeys modKey = HookGlobalHotkey.ModKeys.None;
+                if ((this.settingDialog.HotkeyMod & Keys.Alt) == Keys.Alt)
+                {
+                    modKey = modKey | HookGlobalHotkey.ModKeys.Alt;
+                }
+
+                if ((this.settingDialog.HotkeyMod & Keys.Control) == Keys.Control)
+                {
+                    modKey = modKey | HookGlobalHotkey.ModKeys.Ctrl;
+                }
+
+                if ((this.settingDialog.HotkeyMod & Keys.Shift) == Keys.Shift)
+                {
+                    modKey = modKey | HookGlobalHotkey.ModKeys.Shift;
+                }
+
+                if ((this.settingDialog.HotkeyMod & Keys.LWin) == Keys.LWin)
+                {
+                    modKey = modKey | HookGlobalHotkey.ModKeys.Win;
+                }
+
+                this.hookGlobalHotkey.RegisterOriginalHotkey(this.settingDialog.HotkeyKey, this.settingDialog.HotkeyValue, modKey);
+            }
+
+            // Twitter用通信クラス初期化
+            HttpConnection.InitializeConnection(this.settingDialog.DefaultTimeOut, this.settingDialog.SelectedProxyType, this.settingDialog.ProxyAddress, this.settingDialog.ProxyPort, this.settingDialog.ProxyUser, this.settingDialog.ProxyPassword);
+
+            this.tw.SetRestrictFavCheck(this.settingDialog.RestrictFavCheck);
+            this.tw.ReadOwnPost = this.settingDialog.ReadOwnPost;
+            this.tw.SetUseSsl(this.settingDialog.UseSsl);
+            ShortUrl.IsResolve = this.settingDialog.TinyUrlResolve;
+            ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
+            ShortUrl.SetBitlyId(this.settingDialog.BitlyUser);
+            ShortUrl.SetBitlyKey(this.settingDialog.BitlyPwd);
+            HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
+            HttpTwitter.SetTwitterSearchUrl(this.cfgCommon.TwitterSearchUrl);
+            this.tw.TrackWord = this.cfgCommon.TrackWord;
+            this.TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.tw.TrackWord);
+            this.tw.AllAtReply = this.cfgCommon.AllAtReply;
+            this.AllrepliesToolStripMenuItem.Checked = this.tw.AllAtReply;
+
+            Outputz.Key = this.settingDialog.OutputzKey;
+            Outputz.Enabled = this.settingDialog.OutputzEnabled;
+            switch (this.settingDialog.OutputzUrlmode)
+            {
+                case OutputzUrlmode.twittercom:
+                    Outputz.OutUrl = "http://twitter.com/";
+                    break;
+                case OutputzUrlmode.twittercomWithUsername:
+                    Outputz.OutUrl = "http://twitter.com/" + this.tw.Username;
+                    break;
+            }
+
+            // 画像投稿サービス
+            this.CreatePictureServices();
+            this.SetImageServiceCombo();
+            this.ImageSelectionPanel.Enabled = false;
+            this.ImageServiceCombo.SelectedIndex = this.cfgCommon.UseImageService;
+
+            // ウィンドウ設定
+            this.ClientSize = this.cfgLocal.FormSize;
+            this.mySize = this.cfgLocal.FormSize;          // サイズ保持（最小化・最大化されたまま終了した場合の対応用）
+            this.myLoc = this.cfgLocal.FormLocation;       // タイトルバー領域
+            if (this.WindowState != FormWindowState.Minimized)
+            {
+                this.DesktopLocation = this.cfgLocal.FormLocation;
+                Rectangle tbarRect = new Rectangle(this.Location, new Size(this.mySize.Width, SystemInformation.CaptionHeight));
+                bool outOfScreen = true;
+                if (Screen.AllScreens.Length == 1)
+                {
+                    foreach (Screen scr in Screen.AllScreens)
+                    {
+                        if (!Rectangle.Intersect(tbarRect, scr.Bounds).IsEmpty)
+                        {
+                            outOfScreen = false;
+                            break;
+                        }
+                    }
+
+                    if (outOfScreen)
+                    {
+                        this.DesktopLocation = new Point(0, 0);
+                        this.myLoc = this.DesktopLocation;
+                    }
+                }
+            }
+
+            this.TopMost = this.settingDialog.AlwaysTop;
+            this.mySpDis = this.cfgLocal.SplitterDistance;
+            this.mySpDis2 = this.cfgLocal.StatusTextHeight;
+            this.mySpDis3 = this.cfgLocal.PreviewDistance;
+            if (this.mySpDis3 == -1)
+            {
+                this.mySpDis3 = this.mySize.Width - 150;
+                if (this.mySpDis3 < 1)
+                {
+                    this.mySpDis3 = 50;
+                }
+
+                this.cfgLocal.PreviewDistance = this.mySpDis3;
+            }
+
+            this.myAdSpDis = this.cfgLocal.AdSplitterDistance;
+            this.MultiLineMenuItem.Checked = this.cfgLocal.StatusMultiline;
+            this.PlaySoundMenuItem.Checked = this.settingDialog.PlaySound;
+            this.PlaySoundFileMenuItem.Checked = this.settingDialog.PlaySound;
+
+            // 入力欄
+            this.StatusText.Font = this.fntInputFont;
+            this.StatusText.ForeColor = this.clrInputForecolor;
+
+            // 全新着通知のチェック状態により、Reply＆DMの新着通知有効無効切り替え（タブ別設定にするため削除予定）
+            if (this.settingDialog.UnreadManage == false)
+            {
+                this.ReadedStripMenuItem.Enabled = false;
+                this.UnreadStripMenuItem.Enabled = false;
+            }
+
+            if (this.settingDialog.IsNotifyUseGrowl)
+            {
+                this.growlHelper.RegisterGrowl();
+            }
+
+            // タイマー設定
+            this.timerTimeline.AutoReset = true;
+            this.timerTimeline.SynchronizingObject = this;
+
+            // Recent取得間隔
+            this.timerTimeline.Interval = 1000;
+            this.timerTimeline.Enabled = true;
+
+            // 更新中アイコンアニメーション間隔
+            this.TimerRefreshIcon.Interval = 200;
+            this.TimerRefreshIcon.Enabled = true;
+
+            // 状態表示部の初期化（画面右下）
+            this.StatusLabel.Text = string.Empty;
+            this.StatusLabel.AutoToolTip = false;
+            this.StatusLabel.ToolTipText = string.Empty;
+
+            // 文字カウンタ初期化
+            this.lblLen.Text = this.GetRestStatusCount(true, false).ToString();
+
+            this.statuses.SortOrder = (SortOrder)this.cfgCommon.SortOrder;
+            IdComparerClass.ComparerMode mode = default(IdComparerClass.ComparerMode);
+            switch (this.cfgCommon.SortColumn)
+            {
+                case 0:
+                case 5:
+                case 6:
+                    // 0:アイコン,5:未読マーク,6:プロテクト・フィルターマーク
+                    // ソートしない Idソートに読み替え
+                    mode = IdComparerClass.ComparerMode.Id;
+                    break;
+                case 1:
+                    // ニックネーム
+                    mode = IdComparerClass.ComparerMode.Nickname;
+                    break;
+                case 2:
+                    // 本文
+                    mode = IdComparerClass.ComparerMode.Data;
+                    break;
+                case 3:
+                    // 時刻=発言Id
+                    mode = IdComparerClass.ComparerMode.Id;
+                    break;
+                case 4:
+                    // 名前
+                    mode = IdComparerClass.ComparerMode.Name;
+                    break;
+                case 7:
+                    // Source
+                    mode = IdComparerClass.ComparerMode.Source;
+                    break;
+            }
+
+            this.statuses.SortMode = mode;
+
+            switch (this.settingDialog.IconSz)
+            {
+                case IconSizes.IconNone:
+                    this.iconSz = 0;
+                    break;
+                case IconSizes.Icon16:
+                    this.iconSz = 16;
+                    break;
+                case IconSizes.Icon24:
+                    this.iconSz = 26;
+                    break;
+                case IconSizes.Icon48:
+                    this.iconSz = 48;
+                    break;
+                case IconSizes.Icon48_2:
+                    this.iconSz = 48;
+                    this.iconCol = true;
+                    break;
+            }
+
+            if (this.iconSz == 0)
+            {
+                this.tw.SetGetIcon(false);
+            }
+            else
+            {
+                this.tw.SetGetIcon(true);
+                this.tw.SetIconSize(this.iconSz);
+            }
+
+            this.tw.SetTinyUrlResolve(this.settingDialog.TinyUrlResolve);
+            ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
+
+            // 発言詳細部アイコンをリストアイコンにサイズ変更
+            int sz = this.iconSz;
+            if (this.iconSz == 0)
+            {
+                sz = 16;
+            }
+
+            this.tw.DetailIcon = this.iconDict;
+
+            this.StatusLabel.Text = Hoehoe.Properties.Resources.Form1_LoadText1;  // 画面右下の状態表示を変更
+            this.StatusLabelUrl.Text = string.Empty;  // 画面左下のリンク先URL表示部を初期化
+            this.NameLabel.Text = string.Empty;       // 発言詳細部名前ラベル初期化
+            this.DateTimeLabel.Text = string.Empty;   // 発言詳細部日時ラベル初期化
+            this.SourceLinkLabel.Text = string.Empty; // Source部分初期化
+
+            // <<<<<<<<タブ関連>>>>>>>
+            // デフォルトタブの存在チェック、ない場合には追加
+            if (this.statuses.GetTabByType(TabUsageType.Home) == null)
+            {
+                if (!this.statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.RECENT))
+                {
+                    this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.RECENT, TabUsageType.Home, null);
+                }
+                else
+                {
+                    this.statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.RECENT].TabType = TabUsageType.Home;
+                }
+            }
+
+            if (this.statuses.GetTabByType(TabUsageType.Mentions) == null)
+            {
+                if (!this.statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.REPLY))
+                {
+                    this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
+                }
+                else
+                {
+                    this.statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.REPLY].TabType = TabUsageType.Mentions;
+                }
+            }
+
+            if (this.statuses.GetTabByType(TabUsageType.DirectMessage) == null)
+            {
+                if (!this.statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.DM))
+                {
+                    this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
+                }
+                else
+                {
+                    this.statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.DM].TabType = TabUsageType.DirectMessage;
+                }
+            }
+
+            if (this.statuses.GetTabByType(TabUsageType.Favorites) == null)
+            {
+                if (!this.statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.FAV))
+                {
+                    this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, TabUsageType.Favorites, null);
+                }
+                else
+                {
+                    this.statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.FAV].TabType = TabUsageType.Favorites;
+                }
+            }
+
+            foreach (string tn in this.statuses.Tabs.Keys)
+            {
+                if (this.statuses.Tabs[tn].TabType == TabUsageType.Undefined)
+                {
+                    this.statuses.Tabs[tn].TabType = TabUsageType.UserDefined;
+                }
+
+                if (!this.AddNewTab(tn, true, this.statuses.Tabs[tn].TabType, this.statuses.Tabs[tn].ListInfo))
+                {
+                    throw new Exception(Hoehoe.Properties.Resources.TweenMain_LoadText1);
+                }
+            }
+
+            this.JumpReadOpMenuItem.ShortcutKeyDisplayString = "Space";
+            this.CopySTOTMenuItem.ShortcutKeyDisplayString = "Ctrl+C";
+            this.CopyURLMenuItem.ShortcutKeyDisplayString = "Ctrl+Shift+C";
+            this.CopyUserIdStripMenuItem.ShortcutKeyDisplayString = "Shift+Alt+C";
+
+            if (this.settingDialog.MinimizeToTray == false || this.WindowState != FormWindowState.Minimized)
+            {
+                this.Visible = true;
+            }
+
+            this.curTab = this.ListTab.SelectedTab;
+            this.curItemIndex = -1;
+            this.curList = (DetailsListView)this.curTab.Tag;
+            this.SetMainWindowTitle();
+            this.SetNotifyIconText();
+
+            if (this.settingDialog.TabIconDisp)
+            {
+                this.ListTab.DrawMode = TabDrawMode.Normal;
+            }
+            else
+            {
+                this.ListTab.DrawMode = TabDrawMode.OwnerDrawFixed;
+                this.ListTab.DrawItem += this.ListTab_DrawItem;
+                this.ListTab.ImageList = null;
+            }
+
+#if UA // = "True"
+			ab = new AdsBrowser();
+			this.SplitContainer4.Panel2.Controls.Add(ab);
+#else
+            this.SplitContainer4.Panel2Collapsed = true;
+#endif
+
+            this.ignoreConfigSave = false;
+            this.TweenMain_Resize(null, null);
+            if (saveRequired)
+            {
+                this.SaveConfigsAll(false);
+            }
+
+            if (this.tw.UserId == 0)
+            {
+                this.tw.VerifyCredentials();
+                foreach (var ua in this.cfgCommon.UserAccounts)
+                {
+                    if (ua.Username.ToLower() == this.tw.Username.ToLower())
+                    {
+                        ua.UserId = this.tw.UserId;
+                        break;
+                    }
+                }
+            }
+
+            foreach (var ua in this.settingDialog.UserAccounts)
+            {
+                if (ua.UserId == 0 && ua.Username.ToLower() == this.tw.Username.ToLower())
+                {
+                    ua.UserId = this.tw.UserId;
+                    break;
+                }
+            }
+        }
+
+        private void SpaceKeyCanceler_SpaceCancel(object sender, EventArgs e)
+        {
+            this.JumpUnreadMenuItem_Click(null, null);
+        }
+
+        private void ListTab_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            string txt = null;
+            try
+            {
+                txt = this.ListTab.TabPages[e.Index].Text;
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            e.Graphics.FillRectangle(SystemBrushes.Control, e.Bounds);
+            if (e.State == DrawItemState.Selected)
+            {
+                e.DrawFocusRectangle();
+            }
+
+            Brush fore = null;
+            try
+            {
+                if (this.statuses.Tabs[txt].UnreadCount > 0)
+                {
+                    fore = Brushes.Red;
+                }
+                else
+                {
+                    fore = SystemBrushes.ControlText;
+                }
+            }
+            catch (Exception)
+            {
+                fore = SystemBrushes.ControlText;
+            }
+
+            e.Graphics.DrawString(txt, e.Font, fore, e.Bounds, this.tabStringFormat);
+        }
+
+        private void TimerInterval_Changed(object sender, IntervalChangedEventArgs e)
+        {
+            if (!this.timerTimeline.Enabled)
+            {
+                return;
+            }
+
+            this.resetTimers = e;
+        }
+
+        private void TimerTimeline_Elapsed(object sender, EventArgs e)
+        {
+            if (this.timerHomeCounter > 0)
+            {
+                Interlocked.Decrement(ref this.timerHomeCounter);
+            }
+
+            if (this.timerMentionCounter > 0)
+            {
+                Interlocked.Decrement(ref this.timerMentionCounter);
+            }
+
+            if (this.timerDmCounter > 0)
+            {
+                Interlocked.Decrement(ref this.timerDmCounter);
+            }
+
+            if (this.timerPubSearchCounter > 0)
+            {
+                Interlocked.Decrement(ref this.timerPubSearchCounter);
+            }
+
+            if (this.timerUserTimelineCounter > 0)
+            {
+                Interlocked.Decrement(ref this.timerUserTimelineCounter);
+            }
+
+            if (this.timerListsCounter > 0)
+            {
+                Interlocked.Decrement(ref this.timerListsCounter);
+            }
+
+            if (this.timerUsCounter > 0)
+            {
+                Interlocked.Decrement(ref this.timerUsCounter);
+            }
+
+            Interlocked.Increment(ref this.timerRefreshFollowers);
+
+            // 'タイマー初期化
+            if (this.resetTimers.Timeline || (this.timerHomeCounter <= 0 && this.settingDialog.TimelinePeriodInt > 0))
+            {
+                Interlocked.Exchange(ref this.timerHomeCounter, this.settingDialog.TimelinePeriodInt);
+                if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.Timeline)
+                {
+                    this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                }
+
+                this.resetTimers.Timeline = false;
+            }
+
+            if (this.resetTimers.Reply || (this.timerMentionCounter <= 0 && this.settingDialog.ReplyPeriodInt > 0))
+            {
+                Interlocked.Exchange(ref this.timerMentionCounter, this.settingDialog.ReplyPeriodInt);
+                if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.Reply)
+                {
+                    this.GetTimeline(WorkerType.Reply, 1, 0, string.Empty);
+                }
+
+                this.resetTimers.Reply = false;
+            }
+
+            if (this.resetTimers.DirectMessage || (this.timerDmCounter <= 0 && this.settingDialog.DMPeriodInt > 0))
+            {
+                Interlocked.Exchange(ref this.timerDmCounter, this.settingDialog.DMPeriodInt);
+                if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.DirectMessage)
+                {
+                    this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
+                }
+
+                this.resetTimers.DirectMessage = false;
+            }
+
+            if (this.resetTimers.PublicSearch || (this.timerPubSearchCounter <= 0 && this.settingDialog.PubSearchPeriodInt > 0))
+            {
+                Interlocked.Exchange(ref this.timerPubSearchCounter, this.settingDialog.PubSearchPeriodInt);
+                if (!this.resetTimers.PublicSearch)
+                {
+                    this.GetTimeline(WorkerType.PublicSearch, 1, 0, string.Empty);
+                }
+
+                this.resetTimers.PublicSearch = false;
+            }
+
+            if (this.resetTimers.UserTimeline || (this.timerUserTimelineCounter <= 0 && this.settingDialog.UserTimelinePeriodInt > 0))
+            {
+                Interlocked.Exchange(ref this.timerUserTimelineCounter, this.settingDialog.UserTimelinePeriodInt);
+                if (!this.resetTimers.UserTimeline)
+                {
+                    this.GetTimeline(WorkerType.UserTimeline, 1, 0, string.Empty);
+                }
+
+                this.resetTimers.UserTimeline = false;
+            }
+
+            if (this.resetTimers.Lists || (this.timerListsCounter <= 0 && this.settingDialog.ListsPeriodInt > 0))
+            {
+                Interlocked.Exchange(ref this.timerListsCounter, this.settingDialog.ListsPeriodInt);
+                if (!this.resetTimers.Lists)
+                {
+                    this.GetTimeline(WorkerType.List, 1, 0, string.Empty);
+                }
+
+                this.resetTimers.Lists = false;
+            }
+
+            if (this.resetTimers.UserStream || (this.timerUsCounter <= 0 && this.settingDialog.UserstreamPeriodInt > 0))
+            {
+                Interlocked.Exchange(ref this.timerUsCounter, this.settingDialog.UserstreamPeriodInt);
+                if (this.isActiveUserstream)
+                {
+                    this.RefreshTimeline(true);
+                }
+
+                this.resetTimers.UserStream = false;
+            }
+
+            if (this.timerRefreshFollowers > 6 * 3600)
+            {
+                Interlocked.Exchange(ref this.timerRefreshFollowers, 0);
+                this.DoGetFollowersMenu();
+                this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
+                if (InvokeRequired && !IsDisposed)
+                {
+                    this.Invoke(new MethodInvoker(this.TrimPostChain));
+                }
+            }
+
+            if (this.isOsResumed)
+            {
+                Interlocked.Increment(ref this.timerResumeWait);
+                if (this.timerResumeWait > 30)
+                {
+                    this.isOsResumed = false;
+                    Interlocked.Exchange(ref this.timerResumeWait, 0);
+                    this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                    this.GetTimeline(WorkerType.Reply, 1, 0, string.Empty);
+                    this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
+                    this.GetTimeline(WorkerType.PublicSearch, 1, 0, string.Empty);
+                    this.GetTimeline(WorkerType.UserTimeline, 1, 0, string.Empty);
+                    this.GetTimeline(WorkerType.List, 1, 0, string.Empty);
+                    this.DoGetFollowersMenu();
+                    this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
+                    if (InvokeRequired && !IsDisposed)
+                    {
+                        this.Invoke(new MethodInvoker(this.TrimPostChain));
+                    }
+                }
+            }
+        }
+
+        private void MyList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.curList == null || this.curList.SelectedIndices.Count != 1)
+            {
+                return;
+            }
+
+            this.curItemIndex = this.curList.SelectedIndices[0];
+            if (this.curItemIndex > this.curList.VirtualListSize - 1)
+            {
+                return;
+            }
+
+            try
+            {
+                this.curPost = this.GetCurTabPost(this.curItemIndex);
+            }
+            catch (ArgumentException)
+            {
+                return;
+            }
+
+            this.PushSelectPostChain();
+
+            if (this.settingDialog.UnreadManage)
+            {
+                this.statuses.SetReadAllTab(true, this.curTab.Text, this.curItemIndex);
+            }
+
+            // キャッシュの書き換え
+            this.ChangeCacheStyleRead(true, this.curItemIndex, this.curTab);
+
+            // 既読へ（フォント、文字色）
+            this.ColorizeList();
+            this.colorize = true;
+        }
+
+        private void PostButton_Click(object sender, EventArgs e)
+        {
+            if (this.StatusText.Text.Trim().Length == 0)
+            {
+                if (!this.ImageSelectionPanel.Enabled)
+                {
+                    this.DoRefresh();
+                    return;
+                }
+            }
+
+            if (this.ExistCurrentPost && this.StatusText.Text.Trim() == string.Format("RT @{0}: {1}", this.curPost.ScreenName, this.curPost.TextFromApi))
+            {
+                DialogResult res = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                switch (res)
+                {
+                    case DialogResult.Yes:
+                        this.DoReTweetOfficial(false);
+                        this.StatusText.Text = string.Empty;
+                        return;
+                    case DialogResult.Cancel:
+                        return;
+                }
+            }
+
+            this.postHistory[this.postHistory.Count - 1] = new PostingStatus(this.StatusText.Text.Trim(), this.replyToId, this.replyToName);
+
+            if (this.settingDialog.Nicoms)
+            {
+                this.StatusText.SelectionStart = this.StatusText.Text.Length;
+                this.UrlConvert(UrlConverter.Nicoms);
+            }
+
+            this.StatusText.SelectionStart = this.StatusText.Text.Length;
+            GetWorkerArg args = new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage };
+            this.CheckReplyTo(this.StatusText.Text);
+
+            // 整形によって増加する文字数を取得
+            int adjustCount = 0;
+            string tmpStatus = this.StatusText.Text.Trim();
+            if (this.ToolStripMenuItemApiCommandEvasion.Checked)
+            {
+                // APIコマンド回避
+                if (Regex.IsMatch(tmpStatus, "^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)", RegexOptions.IgnoreCase) && !tmpStatus.EndsWith(" ."))
+                {
+                    adjustCount += 2;
+                }
+            }
+
+            if (this.ToolStripMenuItemUrlMultibyteSplit.Checked)
+            {
+                // URLと全角文字の切り離し
+                adjustCount += Regex.Matches(tmpStatus, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+").Count;
+            }
+
+            bool isCutOff = false;
+            bool isRemoveFooter = this.IsKeyDown(Keys.Shift);
+            if (this.StatusText.Multiline && !this.settingDialog.PostCtrlEnter)
+            {
+                // 複数行でEnter投稿の場合、Ctrlも押されていたらフッタ付加しない
+                isRemoveFooter = this.IsKeyDown(Keys.Control);
+            }
+
+            if (this.settingDialog.PostShiftEnter)
+            {
+                isRemoveFooter = this.IsKeyDown(Keys.Control);
+            }
+
+            if (!isRemoveFooter && (this.StatusText.Text.Contains("RT @") || this.StatusText.Text.Contains("QT @")))
+            {
+                isRemoveFooter = true;
+            }
+
+            if (this.GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
+            {
+                if (MessageBox.Show(Hoehoe.Properties.Resources.PostLengthOverMessage1, Hoehoe.Properties.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
+                {
+                    isCutOff = true;
+                    if (this.GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
+                    {
+                        isRemoveFooter = true;
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            string footer = string.Empty;
+            string header = string.Empty;
+            if (this.StatusText.Text.StartsWith("D ") || this.StatusText.Text.StartsWith("d "))
+            {
+                // DM時は何もつけない
+                footer = string.Empty;
+            }
+            else
+            {
+                // ハッシュタグ
+                if (this.HashMgr.IsNotAddToAtReply)
+                {
+                    if (!string.IsNullOrEmpty(this.HashMgr.UseHash) && this.replyToId == 0 && string.IsNullOrEmpty(this.replyToName))
+                    {
+                        if (this.HashMgr.IsHead)
+                        {
+                            header = this.HashMgr.UseHash + " ";
+                        }
+                        else
+                        {
+                            footer = " " + this.HashMgr.UseHash;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(this.HashMgr.UseHash))
+                    {
+                        if (this.HashMgr.IsHead)
+                        {
+                            header = this.HashMgr.UseHash + " ";
+                        }
+                        else
+                        {
+                            footer = " " + this.HashMgr.UseHash;
+                        }
+                    }
+                }
+
+                if (!isRemoveFooter)
+                {
+                    if (this.settingDialog.UseRecommendStatus)
+                    {
+                        // 推奨ステータスを使用する
+                        footer += this.settingDialog.RecommendStatusText;
+                    }
+                    else
+                    {
+                        // テキストボックスに入力されている文字列を使用する
+                        footer += " " + this.settingDialog.Status.Trim();
+                    }
+                }
+            }
+
+            args.PStatus.Status = header + this.StatusText.Text.Trim() + footer;
+
+            if (this.ToolStripMenuItemApiCommandEvasion.Checked)
+            {
+                // APIコマンド回避
+                if (Regex.IsMatch(args.PStatus.Status, "^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)", RegexOptions.IgnoreCase) && !args.PStatus.Status.EndsWith(" ."))
+                {
+                    args.PStatus.Status += " .";
+                }
+            }
+
+            if (this.ToolStripMenuItemUrlMultibyteSplit.Checked)
+            {
+                // URLと全角文字の切り離し
+                Match mc2 = Regex.Match(args.PStatus.Status, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+");
+                if (mc2.Success)
+                {
+                    args.PStatus.Status = Regex.Replace(args.PStatus.Status, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+", "$& ");
+                }
+            }
+
+            if (this.IdeographicSpaceToSpaceToolStripMenuItem.Checked)
+            {
+                // 文中の全角スペースを半角スペース1個にする
+                args.PStatus.Status = args.PStatus.Status.Replace("　", " ");
+            }
+
+            if (isCutOff && args.PStatus.Status.Length > 140)
+            {
+                args.PStatus.Status = args.PStatus.Status.Substring(0, 140);
+                const string AtId = "(@|＠)[a-z0-9_/]+$";
+                const string HashTag = "(^|[^0-9A-Z&\\/\\?]+)(#|＃)([0-9A-Z_]*[A-Z_]+)$";
+                const string Url = "https?:\\/\\/[a-z0-9!\\*'\\(\\);:&=\\+\\$\\/%#\\[\\]\\-_\\.,~?]+$";
+
+                // 簡易判定
+                string pattern = string.Format("({0})|({1})|({2})", AtId, HashTag, Url);
+                Match mc = Regex.Match(args.PStatus.Status, pattern, RegexOptions.IgnoreCase);
+                if (mc.Success)
+                {
+                    // さらに@ID、ハッシュタグ、URLと推測される文字列をカットする
+                    args.PStatus.Status = args.PStatus.Status.Substring(0, 140 - mc.Value.Length);
+                }
+
+                if (MessageBox.Show(args.PStatus.Status, "Post or Cancel?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+
+            args.PStatus.InReplyToId = this.replyToId;
+            args.PStatus.InReplyToName = this.replyToName;
+            if (this.ImageSelectionPanel.Visible)
+            {
+                // 画像投稿
+                if (!object.ReferenceEquals(this.ImageSelectedPicture.Image, this.ImageSelectedPicture.InitialImage) && this.ImageServiceCombo.SelectedIndex > -1 && !string.IsNullOrEmpty(this.ImagefilePathText.Text))
+                {
+                    if (MessageBox.Show(Hoehoe.Properties.Resources.PostPictureConfirm1, Hoehoe.Properties.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Cancel)
+                    {
+                        this.TimelinePanel.Visible = true;
+                        this.TimelinePanel.Enabled = true;
+                        this.ImageSelectionPanel.Visible = false;
+                        this.ImageSelectionPanel.Enabled = false;
+                        if (this.curList != null)
+                        {
+                            this.curList.Focus();
+                        }
+
+                        return;
+                    }
+
+                    args.PStatus.ImageService = this.ImageServiceCombo.Text;
+                    args.PStatus.ImagePath = this.ImagefilePathText.Text;
+                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                    this.ImagefilePathText.Text = string.Empty;
+                    this.TimelinePanel.Visible = true;
+                    this.TimelinePanel.Enabled = true;
+                    this.ImageSelectionPanel.Visible = false;
+                    this.ImageSelectionPanel.Enabled = false;
+                    if (this.curList != null)
+                    {
+                        this.curList.Focus();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(Hoehoe.Properties.Resources.PostPictureWarn1, Hoehoe.Properties.Resources.PostPictureWarn2);
+                    return;
+                }
+            }
+
+            this.RunAsync(args);
+
+            // Google検索（試験実装）
+            if (this.StatusText.Text.StartsWith("Google:", StringComparison.OrdinalIgnoreCase) && this.StatusText.Text.Trim().Length > 7)
+            {
+                string tmp = string.Format(Hoehoe.Properties.Resources.SearchItem2Url, HttpUtility.UrlEncode(this.StatusText.Text.Substring(7)));
+                this.OpenUriAsync(tmp);
+            }
+
+            this.replyToId = 0;
+            this.replyToName = string.Empty;
+            this.StatusText.Text = string.Empty;
+            this.postHistory.Add(new PostingStatus());
+            this.postHistoryIndex = this.postHistory.Count - 1;
+            if (!this.ToolStripFocusLockMenuItem.Checked)
+            {
+                ((Control)this.ListTab.SelectedTab.Tag).Focus();
+            }
+
+            this.urlUndoBuffer = null;
+            this.UrlUndoToolStripMenuItem.Enabled = false; // Undoをできないように設定
+        }
+
+        private void EndToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MyCommon.IsEnding = true;
+            this.Close();
+        }
+
+        private void Tween_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!this.settingDialog.CloseToExit && e.CloseReason == CloseReason.UserClosing && MyCommon.IsEnding == false)
+            {
+                // _endingFlag=False:フォームの×ボタン
+                e.Cancel = true;
+                this.Visible = false;
+            }
+            else
+            {
+                // Google.GASender.GetInstance().TrackEventWithCategory("post", "end", this.Tw.UserId_)
+                this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
+                this.ignoreConfigSave = true;
+                MyCommon.IsEnding = true;
+                this.timerTimeline.Enabled = false;
+                this.TimerRefreshIcon.Enabled = false;
+            }
+        }
+
+        private void NotifyIcon1_BalloonTipClicked(object sender, EventArgs e)
+        {
+            this.Visible = true;
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+
+            this.Activate();
+            this.BringToFront();
+        }
+
+        private void GetTimelineWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker bw = (BackgroundWorker)sender;
+            if (bw.CancellationPending || MyCommon.IsEnding)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            //// Tween.My.MyProject.Application.InitCulture(); // TODO: Need this here?
+            string ret = string.Empty;
+            GetWorkerResult rslt = new GetWorkerResult();
+            bool read = !this.settingDialog.UnreadManage;
+            if (this.isInitializing && this.settingDialog.UnreadManage)
+            {
+                read = this.settingDialog.Readed;
+            }
+
+            GetWorkerArg args = (GetWorkerArg)e.Argument;
+            if (!CheckAccountValid())
+            {
+                // エラー表示のみ行ない、後処理キャンセル
+                rslt.RetMsg = "Auth error. Check your account";
+                rslt.WorkerType = WorkerType.ErrorState;
+                rslt.TabName = args.TabName;
+                e.Result = rslt;
+                return;
+            }
+
+            if (args.WorkerType != WorkerType.OpenUri)
+            {
+                bw.ReportProgress(0, string.Empty);
+            }
+
+            // Notifyアイコンアニメーション開始
+            switch (args.WorkerType)
+            {
+                case WorkerType.Timeline:
+                case WorkerType.Reply:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    ret = this.tw.GetTimelineApi(read, args.WorkerType, args.Page == -1, this.isInitializing);
+                    if (string.IsNullOrEmpty(ret) && args.WorkerType == WorkerType.Timeline && this.settingDialog.ReadOldPosts)
+                    {
+                        // 新着時未読クリア
+                        this.statuses.SetRead();
+                    }
+
+                    rslt.AddCount = this.statuses.DistributePosts();                    // 振り分け
+                    break;
+                case WorkerType.DirectMessegeRcv:
+                    // 送信分もまとめて取得
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    ret = this.tw.GetDirectMessageApi(read, WorkerType.DirectMessegeRcv, args.Page == -1);
+                    if (string.IsNullOrEmpty(ret))
+                    {
+                        ret = this.tw.GetDirectMessageApi(read, WorkerType.DirectMessegeSnt, args.Page == -1);
+                    }
+
+                    rslt.AddCount = this.statuses.DistributePosts();
+                    break;
+                case WorkerType.FavAdd:
+                    // スレッド処理はしない
+                    if (this.statuses.Tabs.ContainsKey(args.TabName))
+                    {
+                        TabClass tbc = this.statuses.Tabs[args.TabName];
+                        for (int i = 0; i < args.Ids.Count; i++)
+                        {
+                            PostClass post = null;
+                            if (tbc.IsInnerStorageTabType)
+                            {
+                                post = tbc.Posts[args.Ids[i]];
+                            }
+                            else
+                            {
+                                post = this.statuses.Item(args.Ids[i]);
+                            }
+
+                            args.Page = i + 1;
+                            bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                            if (!post.IsFav)
+                            {
+                                if (post.RetweetedId == 0)
+                                {
+                                    ret = this.tw.PostFavAdd(post.StatusId);
+                                }
+                                else
+                                {
+                                    ret = this.tw.PostFavAdd(post.RetweetedId);
+                                }
+
+                                if (ret.Length == 0)
+                                {
+                                    // リスト再描画必要
+                                    args.SIds.Add(post.StatusId);
+                                    post.IsFav = true;
+                                    this.favTimestamps.Add(DateTime.Now);
+                                    if (string.IsNullOrEmpty(post.RelTabName))
+                                    {
+                                        // 検索,リストUserTimeline.Relatedタブからのfavは、favタブへ追加せず。それ以外は追加
+                                        this.statuses.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                    }
+                                    else
+                                    {
+                                        // 検索,リスト,UserTimeline.Relatedタブからのfavで、TLでも取得済みならfav反映
+                                        if (this.statuses.ContainsKey(post.StatusId))
+                                        {
+                                            PostClass postTl = this.statuses.Item(post.StatusId);
+                                            postTl.IsFav = true;
+                                            this.statuses.GetTabByType(TabUsageType.Favorites).Add(postTl.StatusId, postTl.IsRead, false);
+                                        }
+                                    }
+
+                                    // 検索,リスト,UserTimeline,Relatedの各タブに反映
+                                    foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
+                                    {
+                                        if (tb.Contains(post.StatusId))
+                                        {
+                                            tb.Posts[post.StatusId].IsFav = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    rslt.SIds = args.SIds;
+                    break;
+                case WorkerType.FavRemove:
+                    // スレッド処理はしない
+                    if (this.statuses.Tabs.ContainsKey(args.TabName))
+                    {
+                        TabClass tbc = this.statuses.Tabs[args.TabName];
+                        for (int i = 0; i < args.Ids.Count; i++)
+                        {
+                            PostClass post = tbc.IsInnerStorageTabType ? tbc.Posts[args.Ids[i]] : this.statuses.Item(args.Ids[i]);
+                            args.Page = i + 1;
+                            bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                            if (post.IsFav)
+                            {
+                                ret = post.RetweetedId == 0 ? this.tw.PostFavRemove(post.StatusId) : this.tw.PostFavRemove(post.RetweetedId);
+                                if (ret.Length == 0)
+                                {
+                                    args.SIds.Add(post.StatusId);
+                                    post.IsFav = false;
+
+                                    // リスト再描画必要
+                                    if (this.statuses.ContainsKey(post.StatusId))
+                                    {
+                                        this.statuses.Item(post.StatusId).IsFav = false;
+                                    }
+
+                                    // 検索,リスト,UserTimeline,Relatedの各タブに反映
+                                    foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
+                                    {
+                                        if (tb.Contains(post.StatusId))
+                                        {
+                                            tb.Posts[post.StatusId].IsFav = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    rslt.SIds = args.SIds;
+                    break;
+                case WorkerType.PostMessage:
+                    bw.ReportProgress(200);
+                    if (string.IsNullOrEmpty(args.PStatus.ImagePath))
+                    {
+                        for (int i = 0; i <= 1; i++)
+                        {
+                            ret = this.tw.PostStatus(args.PStatus.Status, args.PStatus.InReplyToId);
+                            if (string.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.PStatus.Status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.PStatus.Status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != AccountState.Valid)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ret = this.pictureServices[args.PStatus.ImageService].Upload(ref args.PStatus.ImagePath, ref args.PStatus.Status, args.PStatus.InReplyToId);
+                    }
+
+                    bw.ReportProgress(300);
+                    rslt.PStatus = args.PStatus;
+                    break;
+                case WorkerType.Retweet:
+                    bw.ReportProgress(200);
+                    for (int i = 0; i < args.Ids.Count; i++)
+                    {
+                        ret = this.tw.PostRetweet(args.Ids[i], read);
+                    }
+
+                    bw.ReportProgress(300);
+                    break;
+                case WorkerType.Follower:
+                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText1);
+                    ret = this.tw.GetFollowersApi();
+                    if (string.IsNullOrEmpty(ret))
+                    {
+                        ret = this.tw.GetNoRetweetIdsApi();
+                    }
+
+                    break;
+                case WorkerType.Configuration:
+                    ret = this.tw.ConfigurationApi();
+                    break;
+                case WorkerType.OpenUri:
+                    string myPath = Convert.ToString(args.Url);
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(this.settingDialog.BrowserPath))
+                        {
+                            if (this.settingDialog.BrowserPath.StartsWith("\"") && this.settingDialog.BrowserPath.Length > 2 && this.settingDialog.BrowserPath.IndexOf("\"", 2) > -1)
+                            {
+                                int sep = this.settingDialog.BrowserPath.IndexOf("\"", 2);
+                                string browserPath = this.settingDialog.BrowserPath.Substring(1, sep - 1);
+                                string arg = string.Empty;
+                                if (sep < this.settingDialog.BrowserPath.Length - 1)
+                                {
+                                    arg = this.settingDialog.BrowserPath.Substring(sep + 1);
+                                }
+
+                                myPath = arg + " " + myPath;
+                                Process.Start(browserPath, myPath);
+                            }
+                            else
+                            {
+                                Process.Start(this.settingDialog.BrowserPath, myPath);
+                            }
+                        }
+                        else
+                        {
+                            Process.Start(myPath);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    break;
+                case WorkerType.Favorites:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    ret = this.tw.GetFavoritesApi(read, args.WorkerType, args.Page == -1);
+                    rslt.AddCount = this.statuses.DistributePosts();
+                    break;
+                case WorkerType.PublicSearch:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    if (string.IsNullOrEmpty(args.TabName))
+                    {
+                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch))
+                        {
+                            if (!string.IsNullOrEmpty(tb.SearchWords))
+                            {
+                                ret = this.tw.GetSearch(read, tb, false);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TabClass tb = this.statuses.GetTabByName(args.TabName);
+                        if (tb != null)
+                        {
+                            ret = this.tw.GetSearch(read, tb, false);
+                            if (string.IsNullOrEmpty(ret) && args.Page == -1)
+                            {
+                                ret = this.tw.GetSearch(read, tb, true);
+                            }
+                        }
+                    }
+
+                    rslt.AddCount = this.statuses.DistributePosts();                    // 振り分け
+                    break;
+                case WorkerType.UserTimeline:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    int count = 20;
+                    if (this.settingDialog.UseAdditionalCount)
+                    {
+                        count = this.settingDialog.UserTimelineCountApi;
+                    }
+
+                    if (string.IsNullOrEmpty(args.TabName))
+                    {
+                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.UserTimeline))
+                        {
+                            if (!string.IsNullOrEmpty(tb.User))
+                            {
+                                ret = this.tw.GetUserTimelineApi(read, count, tb.User, tb, false);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TabClass tb = this.statuses.GetTabByName(args.TabName);
+                        if (tb != null)
+                        {
+                            ret = this.tw.GetUserTimelineApi(read, count, tb.User, tb, args.Page == -1);
+                        }
+                    }
+
+                    rslt.AddCount = this.statuses.DistributePosts();                     // 振り分け
+                    break;
+                case WorkerType.List:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    if (string.IsNullOrEmpty(args.TabName))
+                    {
+                        // 定期更新
+                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.Lists))
+                        {
+                            if (tb.ListInfo != null && tb.ListInfo.Id != 0)
+                            {
+                                ret = this.tw.GetListStatus(read, tb, false, this.isInitializing);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // 手動更新（特定タブのみ更新）
+                        TabClass tb = this.statuses.GetTabByName(args.TabName);
+                        if (tb != null)
+                        {
+                            ret = this.tw.GetListStatus(read, tb, args.Page == -1, this.isInitializing);
+                        }
+                    }
+
+                    rslt.AddCount = this.statuses.DistributePosts(); // 振り分け
+                    break;
+                case WorkerType.Related:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    ret = this.tw.GetRelatedResult(read, this.statuses.GetTabByName(args.TabName));
+                    rslt.AddCount = this.statuses.DistributePosts();
+                    break;
+                case WorkerType.BlockIds:
+                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateBlockUserText1);
+                    ret = this.tw.GetBlockUserIds();
+                    if (TabInformations.GetInstance().BlockIds.Count == 0)
+                    {
+                        this.tw.GetBlockUserIds();
+                    }
+
+                    break;
+            }
+
+            // キャンセル要求
+            if (bw.CancellationPending)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            // 時速表示用
+            if (args.WorkerType == WorkerType.FavAdd)
+            {
+                System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                for (int i = this.favTimestamps.Count - 1; i >= 0; i += -1)
+                {
+                    if (this.favTimestamps[i].CompareTo(oneHour) < 0)
+                    {
+                        this.favTimestamps.RemoveAt(i);
+                    }
+                }
+            }
+
+            if (args.WorkerType == WorkerType.Timeline && !this.isInitializing)
+            {
+                lock (this.syncObject)
+                {
+                    DateTime tm = DateTime.Now;
+                    if (this.timeLineTimestamps.ContainsKey(tm))
+                    {
+                        this.timeLineTimestamps[tm] += rslt.AddCount;
+                    }
+                    else
+                    {
+                        this.timeLineTimestamps.Add(tm, rslt.AddCount);
+                    }
+
+                    DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                    List<DateTime> keys = new List<DateTime>();
+                    this.timeLineCount = 0;
+                    foreach (DateTime key in this.timeLineTimestamps.Keys)
+                    {
+                        if (key.CompareTo(oneHour) < 0)
+                        {
+                            keys.Add(key);
+                        }
+                        else
+                        {
+                            this.timeLineCount += this.timeLineTimestamps[key];
+                        }
+                    }
+
+                    foreach (DateTime key in keys)
+                    {
+                        this.timeLineTimestamps.Remove(key);
+                    }
+
+                    keys.Clear();
+                }
+            }
+
+            // 終了ステータス
+            if (args.WorkerType != WorkerType.OpenUri)
+            {
+                bw.ReportProgress(100, this.MakeStatusMessage(args, true));
+            }
+
+            // ステータス書き換え、Notifyアイコンアニメーション開始
+            rslt.RetMsg = ret;
+            rslt.WorkerType = args.WorkerType;
+            rslt.TabName = args.TabName;
+            if (args.WorkerType == WorkerType.DirectMessegeRcv || args.WorkerType == WorkerType.DirectMessegeSnt || args.WorkerType == WorkerType.Reply || args.WorkerType == WorkerType.Timeline || args.WorkerType == WorkerType.Favorites)
+            {
+                // 値が正しいか後でチェック。10ページ毎の継続確認
+                rslt.Page = args.Page - 1;
+            }
+
+            e.Result = rslt;
+        }
+
+        private void GetTimelineWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (MyCommon.IsEnding)
+            {
+                return;
+            }
+
+            if (e.ProgressPercentage > 100)
+            {
+                // 発言投稿
+                if (e.ProgressPercentage == 200)
+                {
+                    // 開始
+                    this.StatusLabel.Text = "Posting...";
+                }
+
+                if (e.ProgressPercentage == 300)
+                {
+                    // 終了
+                    this.StatusLabel.Text = Hoehoe.Properties.Resources.PostWorker_RunWorkerCompletedText4;
+                }
+            }
+            else
+            {
+                string smsg = (string)e.UserState;
+                if (smsg.Length > 0)
+                {
+                    this.StatusLabel.Text = smsg;
+                }
+            }
+        }
+
+        private void GetTimelineWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (MyCommon.IsEnding || e.Cancelled)
+            {
+                // キャンセル
+                return;
+            }
+
+            if (e.Error != null)
+            {
+                this.myStatusError = true;
+                this.waitTimeline = false;
+                this.waitReply = false;
+                this.waitDm = false;
+                this.waitFav = false;
+                this.waitPubSearch = false;
+                this.waitUserTimeline = false;
+                this.waitLists = false;
+                throw new Exception("BackgroundWorker Exception", e.Error);
+            }
+
+            GetWorkerResult rslt = (GetWorkerResult)e.Result;
+
+            if (rslt.WorkerType == WorkerType.OpenUri)
+            {
+                return;
+            }
+
+            // エラー
+            if (rslt.RetMsg.Length > 0)
+            {
+                this.myStatusError = true;
+                this.StatusLabel.Text = rslt.RetMsg;
+            }
+
+            if (rslt.WorkerType == WorkerType.ErrorState)
+            {
+                return;
+            }
+
+            if (rslt.WorkerType == WorkerType.FavRemove)
+            {
+                this.RemovePostFromFavTab(rslt.SIds.ToArray());
+            }
+
+            if (rslt.WorkerType == WorkerType.Timeline || rslt.WorkerType == WorkerType.Reply || rslt.WorkerType == WorkerType.List || rslt.WorkerType == WorkerType.PublicSearch || rslt.WorkerType == WorkerType.DirectMessegeRcv || rslt.WorkerType == WorkerType.DirectMessegeSnt || rslt.WorkerType == WorkerType.Favorites || rslt.WorkerType == WorkerType.Follower || rslt.WorkerType == WorkerType.FavAdd || rslt.WorkerType == WorkerType.FavRemove || rslt.WorkerType == WorkerType.Related || rslt.WorkerType == WorkerType.UserTimeline || rslt.WorkerType == WorkerType.BlockIds || rslt.WorkerType == WorkerType.Configuration)
+            {
+                // リスト反映
+                this.RefreshTimeline(false);
+            }
+
+            switch (rslt.WorkerType)
+            {
+                case WorkerType.Timeline:
+                    this.waitTimeline = false;
+                    if (!this.isInitializing)
+                    {
+                        // 'API使用時の取得調整は別途考える（カウント調整？）
+                    }
+
+                    break;
+                case WorkerType.Reply:
+                    this.waitReply = false;
+                    if (rslt.NewDM && !this.isInitializing)
+                    {
+                        this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
+                    }
+
+                    break;
+                case WorkerType.Favorites:
+                    this.waitFav = false;
+                    break;
+                case WorkerType.DirectMessegeRcv:
+                    this.waitDm = false;
+                    break;
+                case WorkerType.FavAdd:
+                case WorkerType.FavRemove:
+                    if (this.curList != null && this.curTab != null)
+                    {
+                        this.curList.BeginUpdate();
+                        if (rslt.WorkerType == WorkerType.FavRemove && this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.Favorites)
+                        {
+                            // 色変えは不要
+                        }
+                        else
+                        {
+                            for (int i = 0; i < rslt.SIds.Count; i++)
+                            {
+                                if (this.curTab.Text.Equals(rslt.TabName))
+                                {
+                                    int idx = this.statuses.Tabs[rslt.TabName].IndexOf(rslt.SIds[i]);
+                                    if (idx > -1)
+                                    {
+                                        TabClass tb = this.statuses.Tabs[rslt.TabName];
+                                        if (tb != null)
+                                        {
+                                            PostClass post = null;
+                                            if (tb.TabType == TabUsageType.Lists || tb.TabType == TabUsageType.PublicSearch)
+                                            {
+                                                post = tb.Posts[rslt.SIds[i]];
+                                            }
+                                            else
+                                            {
+                                                post = this.statuses.Item(rslt.SIds[i]);
+                                            }
+
+                                            this.ChangeCacheStyleRead(post.IsRead, idx, this.curTab);
+                                        }
+
+                                        if (idx == this.curItemIndex)
+                                        {
+                                            // 選択アイテム再表示
+                                            this.DispSelectedPost(true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        this.curList.EndUpdate();
+                    }
+
+                    break;
+                case WorkerType.PostMessage:
+                    if (string.IsNullOrEmpty(rslt.RetMsg) || rslt.RetMsg.StartsWith("Outputz") || rslt.RetMsg.StartsWith("OK:") || rslt.RetMsg == "Warn:Status is a duplicate.")
+                    {
+                        this.postTimestamps.Add(DateTime.Now);
+                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                        for (int i = this.postTimestamps.Count - 1; i >= 0; i += -1)
+                        {
+                            if (this.postTimestamps[i].CompareTo(oneHour) < 0)
+                            {
+                                this.postTimestamps.RemoveAt(i);
+                            }
+                        }
+
+                        if (!this.HashMgr.IsPermanent && !string.IsNullOrEmpty(this.HashMgr.UseHash))
+                        {
+                            this.HashMgr.ClearHashtag();
+                            this.HashStripSplitButton.Text = "#[-]";
+                            this.HashToggleMenuItem.Checked = false;
+                            this.HashToggleToolStripMenuItem.Checked = false;
+                        }
+
+                        this.SetMainWindowTitle();
+                        rslt.RetMsg = string.Empty;
+                    }
+                    else
+                    {
+                        DialogResult retry = default(DialogResult);
+                        try
+                        {
+                            retry = MessageBox.Show(string.Format("{0}   --->   [ " + rslt.RetMsg + " ]" + Environment.NewLine + "\"" + rslt.PStatus.Status + "\"" + Environment.NewLine + "{1}", Hoehoe.Properties.Resources.StatusUpdateFailed1, Hoehoe.Properties.Resources.StatusUpdateFailed2), "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
+                        }
+                        catch (Exception)
+                        {
+                            retry = DialogResult.Abort;
+                        }
+
+                        if (retry == DialogResult.Retry)
+                        {
+                            RunAsync(new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage, PStatus = rslt.PStatus });
+                        }
+                        else
+                        {
+                            if (ToolStripFocusLockMenuItem.Checked)
+                            {
+                                // 連投モードのときだけEnterイベントが起きないので強制的に背景色を戻す
+                                this.StatusText_Enter(this.StatusText, new EventArgs());
+                            }
+                        }
+                    }
+
+                    if (rslt.RetMsg.Length == 0 && this.settingDialog.PostAndGet)
+                    {
+                        if (this.isActiveUserstream)
+                        {
+                            this.RefreshTimeline(true);
+                        }
+                        else
+                        {
+                            this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                        }
+                    }
+
+                    break;
+                case WorkerType.Retweet:
+                    if (rslt.RetMsg.Length == 0)
+                    {
+                        this.postTimestamps.Add(DateTime.Now);
+                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                        for (int i = this.postTimestamps.Count - 1; i >= 0; i--)
+                        {
+                            if (this.postTimestamps[i].CompareTo(oneHour) < 0)
+                            {
+                                this.postTimestamps.RemoveAt(i);
+                            }
+                        }
+
+                        if (!this.isActiveUserstream && this.settingDialog.PostAndGet)
+                        {
+                            this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                        }
+                    }
+
+                    break;
+                case WorkerType.Follower:
+                    this.itemCache = null;
+                    this.postCache = null;
+                    if (this.curList != null)
+                    {
+                        this.curList.Refresh();
+                    }
+
+                    break;
+                case WorkerType.Configuration:
+                    // this._waitFollower = False
+                    if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit != 0)
+                    {
+                        this.pictureServices["Twitter"].Configuration("MaxUploadFilesize", this.settingDialog.TwitterConfiguration.PhotoSizeLimit);
+                    }
+
+                    this.itemCache = null;
+                    this.postCache = null;
+                    if (this.curList != null)
+                    {
+                        this.curList.Refresh();
+                    }
+
+                    break;
+                case WorkerType.PublicSearch:
+                    this.waitPubSearch = false;
+                    break;
+                case WorkerType.UserTimeline:
+                    this.waitUserTimeline = false;
+                    break;
+                case WorkerType.List:
+                    this.waitLists = false;
+                    break;
+                case WorkerType.Related:
+                    {
+                        TabClass tb = this.statuses.GetTabByType(TabUsageType.Related);
+                        if (tb != null && tb.RelationTargetPost != null && tb.Contains(tb.RelationTargetPost.StatusId))
+                        {
+                            foreach (TabPage tp in this.ListTab.TabPages)
+                            {
+                                if (tp.Text == tb.TabName)
+                                {
+                                    ((DetailsListView)tp.Tag).SelectedIndices.Add(tb.IndexOf(tb.RelationTargetPost.StatusId));
+                                    ((DetailsListView)tp.Tag).Items[tb.IndexOf(tb.RelationTargetPost.StatusId)].Focused = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+            }
+        }
+
+        private void NotifyIcon1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                this.Visible = true;
+                if (this.WindowState == FormWindowState.Minimized)
+                {
+                    this.WindowState = FormWindowState.Normal;
+                }
+
+                this.Activate();
+                this.BringToFront();
+            }
+        }
+
+        private void MyList_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            switch (this.settingDialog.ListDoubleClickAction)
+            {
+                case 0:
+                    this.MakeReplyOrDirectStatus();
+                    break;
+                case 1:
+                    this.FavoriteChange(true);
+                    break;
+                case 2:
+                    if (this.curPost != null)
+                    {
+                        this.ShowUserStatus(this.curPost.ScreenName, false);
+                    }
+
+                    break;
+                case 3:
+                    this.ShowUserTimeline();
+                    break;
+                case 4:
+                    this.ShowRelatedStatusesMenuItem_Click(null, null);
+                    break;
+                case 5:
+                    this.MoveToHomeToolStripMenuItem_Click(null, null);
+                    break;
+                case 6:
+                    this.StatusOpenMenuItem_Click(null, null);
+                    break;
+                case 7:
+                    // 動作なし
+                    break;
+            }
+        }
+
+        private void FavAddToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.FavoriteChange(true);
+        }
+
+        private void FavRemoveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.FavoriteChange(false);
+        }
+
+        private void FavoriteRetweetMenuItem_Click(object sender, EventArgs e)
+        {
+            this.FavoritesRetweetOriginal();
+        }
+
+        private void FavoriteRetweetUnofficialMenuItem_Click(object sender, EventArgs e)
+        {
+            this.FavoritesRetweetUnofficial();
+        }
+
+        private void MoveToHomeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.curList.SelectedIndices.Count > 0)
+            {
+                this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName);
+            }
+            else if (this.curList.SelectedIndices.Count == 0)
+            {
+                this.OpenUriAsync("http://twitter.com/");
+            }
+        }
+
+        private void MoveToFavToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.curList.SelectedIndices.Count > 0)
+            {
+                this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName + "/favorites");
+            }
+        }
+
+        private void Tween_ClientSizeChanged(object sender, EventArgs e)
+        {
+            if ((!this.initialLayout) && this.Visible)
+            {
+                if (this.WindowState == FormWindowState.Normal)
+                {
+                    this.mySize = this.ClientSize;
+                    this.mySpDis = this.SplitContainer1.SplitterDistance;
+                    this.mySpDis3 = this.SplitContainer3.SplitterDistance;
+                    if (this.StatusText.Multiline)
+                    {
+                        this.mySpDis2 = this.StatusText.Height;
+                    }
+
+                    this.myAdSpDis = this.SplitContainer4.SplitterDistance;
+                    this.modifySettingLocal = true;
+                }
+            }
+        }
+
+        private void MyList_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (this.settingDialog.SortOrderLock)
+            {
+                return;
+            }
+
+            IdComparerClass.ComparerMode mode = default(IdComparerClass.ComparerMode);
+            if (this.iconCol)
+            {
+                mode = IdComparerClass.ComparerMode.Id;
+            }
+            else
+            {
+                switch (e.Column)
+                {
+                    case 0:
+                    case 5:
+                    case 6:
+                        // 0:アイコン,5:未読マーク,6:プロテクト・フィルターマーク
+                        // ソートしない
+                        return;
+                    case 1:
+                        // ニックネーム
+                        mode = IdComparerClass.ComparerMode.Nickname;
+                        break;
+                    case 2:
+                        // 本文
+                        mode = IdComparerClass.ComparerMode.Data;
+                        break;
+                    case 3:
+                        // 時刻=発言Id
+                        mode = IdComparerClass.ComparerMode.Id;
+                        break;
+                    case 4:
+                        // 名前
+                        mode = IdComparerClass.ComparerMode.Name;
+                        break;
+                    case 7:
+                        // Source
+                        mode = IdComparerClass.ComparerMode.Source;
+                        break;
+                }
+            }
+
+            this.statuses.ToggleSortOrder(mode);
+            this.InitColumnText();
+
+            if (this.iconCol)
+            {
+                ((DetailsListView)sender).Columns[0].Text = this.columnOrgTexts[0];
+                ((DetailsListView)sender).Columns[1].Text = this.columnTexts[2];
+            }
+            else
+            {
+                for (int i = 0; i <= 7; i++)
+                {
+                    ((DetailsListView)sender).Columns[i].Text = this.columnOrgTexts[i];
+                }
+
+                ((DetailsListView)sender).Columns[e.Column].Text = this.columnTexts[e.Column];
+            }
+
+            this.itemCache = null;
+            this.postCache = null;
+
+            if (this.statuses.Tabs[this.curTab.Text].AllCount > 0 && this.curPost != null)
+            {
+                int idx = this.statuses.Tabs[this.curTab.Text].IndexOf(this.curPost.StatusId);
+                if (idx > -1)
+                {
+                    this.SelectListItem(this.curList, idx);
+                    this.curList.EnsureVisible(idx);
+                }
+            }
+
+            this.curList.Refresh();
+            this.modifySettingCommon = true;
+        }
+
+        private void Tween_LocationChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
+            {
+                this.myLoc = this.DesktopLocation;
+                this.modifySettingLocal = true;
+            }
+        }
+
+        private void ContextMenuOperate_Opening(object sender, CancelEventArgs e)
+        {
+            if (this.ListTab.SelectedTab == null)
+            {
+                return;
+            }
+
+            if (this.statuses == null || this.statuses.Tabs == null || !this.statuses.Tabs.ContainsKey(this.ListTab.SelectedTab.Text))
+            {
+                return;
+            }
+
+            if (!this.ExistCurrentPost)
+            {
+                this.ReplyStripMenuItem.Enabled = false;
+                this.ReplyAllStripMenuItem.Enabled = false;
+                this.DMStripMenuItem.Enabled = false;
+                this.ShowProfileMenuItem.Enabled = false;
+                this.ShowUserTimelineContextMenuItem.Enabled = false;
+                this.ListManageUserContextToolStripMenuItem2.Enabled = false;
+                this.MoveToFavToolStripMenuItem.Enabled = false;
+                this.TabMenuItem.Enabled = false;
+                this.IDRuleMenuItem.Enabled = false;
+                this.ReadedStripMenuItem.Enabled = false;
+                this.UnreadStripMenuItem.Enabled = false;
+            }
+            else
+            {
+                this.ShowProfileMenuItem.Enabled = true;
+                this.ListManageUserContextToolStripMenuItem2.Enabled = true;
+                this.ReplyStripMenuItem.Enabled = true;
+                this.ReplyAllStripMenuItem.Enabled = true;
+                this.DMStripMenuItem.Enabled = true;
+                this.ShowUserTimelineContextMenuItem.Enabled = true;
+                this.MoveToFavToolStripMenuItem.Enabled = true;
+                this.TabMenuItem.Enabled = true;
+                this.IDRuleMenuItem.Enabled = true;
+                this.ReadedStripMenuItem.Enabled = true;
+                this.UnreadStripMenuItem.Enabled = true;
+            }
+
+            this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
+            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || this.curPost.IsDm)
+            {
+                this.FavAddToolStripMenuItem.Enabled = false;
+                this.FavRemoveToolStripMenuItem.Enabled = false;
+                this.StatusOpenMenuItem.Enabled = false;
+                this.FavorareMenuItem.Enabled = false;
+                this.ShowRelatedStatusesMenuItem.Enabled = false;
+                this.ReTweetStripMenuItem.Enabled = false;
+                this.ReTweetOriginalStripMenuItem.Enabled = false;
+                this.QuoteStripMenuItem.Enabled = false;
+                this.FavoriteRetweetContextMenu.Enabled = false;
+                this.FavoriteRetweetUnofficialContextMenu.Enabled = false;
+                if (this.ExistCurrentPost && this.curPost.IsDm)
+                {
+                    this.DeleteStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    this.DeleteStripMenuItem.Enabled = false;
+                }
+            }
+            else
+            {
+                this.FavAddToolStripMenuItem.Enabled = true;
+                this.FavRemoveToolStripMenuItem.Enabled = true;
+                this.StatusOpenMenuItem.Enabled = true;
+                this.FavorareMenuItem.Enabled = true;
+                this.ShowRelatedStatusesMenuItem.Enabled = true;
+                if (this.curPost.IsMe)
+                {
+                    this.ReTweetOriginalStripMenuItem.Enabled = false;
+                    this.FavoriteRetweetContextMenu.Enabled = false;
+                    if (string.IsNullOrEmpty(this.curPost.RetweetedBy))
+                    {
+                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
+                    }
+                    else
+                    {
+                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
+                    }
+
+                    this.DeleteStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(this.curPost.RetweetedBy))
+                    {
+                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
+                    }
+                    else
+                    {
+                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
+                    }
+
+                    this.DeleteStripMenuItem.Enabled = false;
+                    if (this.curPost.IsProtect)
+                    {
+                        this.ReTweetOriginalStripMenuItem.Enabled = false;
+                        this.ReTweetStripMenuItem.Enabled = false;
+                        this.QuoteStripMenuItem.Enabled = false;
+                        this.FavoriteRetweetContextMenu.Enabled = false;
+                        this.FavoriteRetweetUnofficialContextMenu.Enabled = false;
+                    }
+                    else
+                    {
+                        this.ReTweetOriginalStripMenuItem.Enabled = true;
+                        this.ReTweetStripMenuItem.Enabled = true;
+                        this.QuoteStripMenuItem.Enabled = true;
+                        this.FavoriteRetweetContextMenu.Enabled = true;
+                        this.FavoriteRetweetUnofficialContextMenu.Enabled = true;
+                    }
+                }
+            }
+
+            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(this.curPost.InReplyToStatusId > 0))
+            {
+                this.RepliedStatusOpenMenuItem.Enabled = false;
+            }
+            else
+            {
+                this.RepliedStatusOpenMenuItem.Enabled = true;
+            }
+
+            if (!this.ExistCurrentPost || string.IsNullOrEmpty(this.curPost.RetweetedBy))
+            {
+                this.MoveToRTHomeMenuItem.Enabled = false;
+            }
+            else
+            {
+                this.MoveToRTHomeMenuItem.Enabled = true;
+            }
+        }
+
+        private void ReplyStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.MakeReplyOrDirectStatus(false, true);
+        }
+
+        private void DMStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.MakeReplyOrDirectStatus(false, false);
+        }
+
+        private void DeleteStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.DoStatusDelete();
+        }
+
+        private void ReadedStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.curList.BeginUpdate();
+            if (this.settingDialog.UnreadManage)
+            {
+                foreach (int idx in this.curList.SelectedIndices)
+                {
+                    this.statuses.SetReadAllTab(true, this.curTab.Text, idx);
+                }
+            }
+
+            foreach (int idx in this.curList.SelectedIndices)
+            {
+                this.ChangeCacheStyleRead(true, idx, this.curTab);
+            }
+
+            this.ColorizeList();
+            this.curList.EndUpdate();
+            foreach (TabPage tb in this.ListTab.TabPages)
+            {
+                if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
+                {
+                    if (this.settingDialog.TabIconDisp)
+                    {
+                        if (tb.ImageIndex == 0)
+                        {
+                            tb.ImageIndex = -1;
+                        }
+                    }
+                }
+            }
+
+            if (!this.settingDialog.TabIconDisp)
+            {
+                this.ListTab.Refresh();
+            }
+        }
+
+        private void UnreadStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.curList.BeginUpdate();
+            if (this.settingDialog.UnreadManage)
+            {
+                foreach (int idx in this.curList.SelectedIndices)
+                {
+                    this.statuses.SetReadAllTab(false, this.curTab.Text, idx);
+                }
+            }
+
+            foreach (int idx in this.curList.SelectedIndices)
+            {
+                this.ChangeCacheStyleRead(false, idx, this.curTab);
+            }
+
+            this.ColorizeList();
+            this.curList.EndUpdate();
+            foreach (TabPage tb in this.ListTab.TabPages)
+            {
+                if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
+                {
+                    if (this.settingDialog.TabIconDisp)
+                    {
+                        if (tb.ImageIndex == -1)
+                        {
+                            tb.ImageIndex = 0;
+                        }
+                    }
+                }
+            }
+
+            if (!this.settingDialog.TabIconDisp)
+            {
+                this.ListTab.Refresh();
+            }
+        }
+
+        private void RefreshStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.DoRefresh();
+        }
+
+        private void SettingStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult result = default(DialogResult);
+            string uid = this.tw.Username.ToLower();
+            foreach (UserAccount u in this.settingDialog.UserAccounts)
+            {
+                if (u.UserId == this.tw.UserId)
+                {
+                    break;
+                }
+            }
+
+            try
+            {
+                result = this.settingDialog.ShowDialog(this);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            if (result == DialogResult.OK)
+            {
+                lock (this.syncObject)
+                {
+                    this.tw.SetTinyUrlResolve(this.settingDialog.TinyUrlResolve);
+                    this.tw.SetRestrictFavCheck(this.settingDialog.RestrictFavCheck);
+                    this.tw.ReadOwnPost = this.settingDialog.ReadOwnPost;
+                    this.tw.SetUseSsl(this.settingDialog.UseSsl);
+                    ShortUrl.IsResolve = this.settingDialog.TinyUrlResolve;
+                    ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
+                    ShortUrl.SetBitlyId(this.settingDialog.BitlyUser);
+                    ShortUrl.SetBitlyKey(this.settingDialog.BitlyPwd);
+                    HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
+                    HttpTwitter.SetTwitterSearchUrl(this.cfgCommon.TwitterSearchUrl);
+
+                    HttpConnection.InitializeConnection(this.settingDialog.DefaultTimeOut, this.settingDialog.SelectedProxyType, this.settingDialog.ProxyAddress, this.settingDialog.ProxyPort, this.settingDialog.ProxyUser, this.settingDialog.ProxyPassword);
+                    this.CreatePictureServices();
+#if UA // = "True"
+					this.SplitContainer4.Panel2.Controls.RemoveAt(0);
+					this.ab = new AdsBrowser();
+					this.SplitContainer4.Panel2.Controls.Add(ab);
+#endif
+                    try
+                    {
+                        if (this.settingDialog.TabIconDisp)
+                        {
+                            this.ListTab.DrawItem -= this.ListTab_DrawItem;
+                            this.ListTab.DrawMode = TabDrawMode.Normal;
+                            this.ListTab.ImageList = this.TabImage;
+                        }
+                        else
+                        {
+                            this.ListTab.DrawItem -= this.ListTab_DrawItem;
+                            this.ListTab.DrawItem += this.ListTab_DrawItem;
+                            this.ListTab.DrawMode = TabDrawMode.OwnerDrawFixed;
+                            this.ListTab.ImageList = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Data["Instance"] = "ListTab(TabIconDisp)";
+                        ex.Data["IsTerminatePermission"] = false;
+                        throw;
+                    }
+
+                    try
+                    {
+                        if (!this.settingDialog.UnreadManage)
+                        {
+                            this.ReadedStripMenuItem.Enabled = false;
+                            this.UnreadStripMenuItem.Enabled = false;
+                            if (this.settingDialog.TabIconDisp)
+                            {
+                                foreach (TabPage myTab in this.ListTab.TabPages)
+                                {
+                                    myTab.ImageIndex = -1;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            this.ReadedStripMenuItem.Enabled = true;
+                            this.UnreadStripMenuItem.Enabled = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Data["Instance"] = "ListTab(UnreadManage)";
+                        ex.Data["IsTerminatePermission"] = false;
+                        throw;
+                    }
+
+                    try
+                    {
+                        foreach (TabPage mytab in this.ListTab.TabPages)
+                        {
+                            DetailsListView lst = (DetailsListView)mytab.Tag;
+                            lst.GridLines = this.settingDialog.ShowGrid;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Data["Instance"] = "ListTab(ShowGrid)";
+                        ex.Data["IsTerminatePermission"] = false;
+                        throw;
+                    }
+
+                    this.PlaySoundMenuItem.Checked = this.settingDialog.PlaySound;
+                    this.PlaySoundFileMenuItem.Checked = this.settingDialog.PlaySound;
+                    this.fntUnread = this.settingDialog.FontUnread;
+                    this.clrUnread = this.settingDialog.ColorUnread;
+                    this.fntReaded = this.settingDialog.FontReaded;
+                    this.clrRead = this.settingDialog.ColorReaded;
+                    this.clrFav = this.settingDialog.ColorFav;
+                    this.clrOWL = this.settingDialog.ColorOWL;
+                    this.clrRetweet = this.settingDialog.ColorRetweet;
+                    this.fntDetail = this.settingDialog.FontDetail;
+                    this.clrDetail = this.settingDialog.ColorDetail;
+                    this.clrDetailLink = this.settingDialog.ColorDetailLink;
+                    this.clrDetailBackcolor = this.settingDialog.ColorDetailBackcolor;
+                    this.clrSelf = this.settingDialog.ColorSelf;
+                    this.clrAtSelf = this.settingDialog.ColorAtSelf;
+                    this.clrTarget = this.settingDialog.ColorTarget;
+                    this.clrAtTarget = this.settingDialog.ColorAtTarget;
+                    this.clrAtFromTarget = this.settingDialog.ColorAtFromTarget;
+                    this.clrAtTo = this.settingDialog.ColorAtTo;
+                    this.clrListBackcolor = this.settingDialog.ColorListBackcolor;
+                    this.InputBackColor = this.settingDialog.ColorInputBackcolor;
+                    this.clrInputForecolor = this.settingDialog.ColorInputFont;
+                    this.fntInputFont = this.settingDialog.FontInputFont;
+                    try
+                    {
+                        if (this.StatusText.Focused)
+                        {
+                            this.StatusText.BackColor = this.InputBackColor;
+                        }
+
+                        this.StatusText.Font = this.fntInputFont;
+                        this.StatusText.ForeColor = this.clrInputForecolor;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+
+                    this.brsForeColorUnread.Dispose();
+                    this.brsForeColorReaded.Dispose();
+                    this.brsForeColorFav.Dispose();
+                    this.brsForeColorOWL.Dispose();
+                    this.brsForeColorRetweet.Dispose();
+                    this.brsForeColorUnread = new SolidBrush(this.clrUnread);
+                    this.brsForeColorReaded = new SolidBrush(this.clrRead);
+                    this.brsForeColorFav = new SolidBrush(this.clrFav);
+                    this.brsForeColorOWL = new SolidBrush(this.clrOWL);
+                    this.brsForeColorRetweet = new SolidBrush(this.clrRetweet);
+                    this.brsBackColorMine.Dispose();
+                    this.brsBackColorAt.Dispose();
+                    this.brsBackColorYou.Dispose();
+                    this.brsBackColorAtYou.Dispose();
+                    this.brsBackColorAtFromTarget.Dispose();
+                    this.brsBackColorAtTo.Dispose();
+                    this.brsBackColorNone.Dispose();
+                    this.brsBackColorMine = new SolidBrush(this.clrSelf);
+                    this.brsBackColorAt = new SolidBrush(this.clrAtSelf);
+                    this.brsBackColorYou = new SolidBrush(this.clrTarget);
+                    this.brsBackColorAtYou = new SolidBrush(this.clrAtTarget);
+                    this.brsBackColorAtFromTarget = new SolidBrush(this.clrAtFromTarget);
+                    this.brsBackColorAtTo = new SolidBrush(this.clrAtTo);
+                    this.brsBackColorNone = new SolidBrush(this.clrListBackcolor);
+                    try
+                    {
+                        if (this.settingDialog.IsMonospace)
+                        {
+                            this.detailHtmlFormatHeader = DetailHtmlFormatMono1;
+                            this.detailHtmlFormatFooter = DetailHtmlFormatMono7;
+                        }
+                        else
+                        {
+                            this.detailHtmlFormatHeader = DetailHtmlFormat1;
+                            this.detailHtmlFormatFooter = DetailHtmlFormat7;
+                        }
+
+                        this.detailHtmlFormatHeader += this.fntDetail.Name + DetailHtmlFormat2 + this.fntDetail.Size.ToString() + DetailHtmlFormat3 + this.clrDetail.R.ToString() + "," + this.clrDetail.G.ToString() + "," + this.clrDetail.B.ToString() + DetailHtmlFormat4 + this.clrDetailLink.R.ToString() + "," + this.clrDetailLink.G.ToString() + "," + this.clrDetailLink.B.ToString() + DetailHtmlFormat5 + this.clrDetailBackcolor.R.ToString() + "," + this.clrDetailBackcolor.G.ToString() + "," + this.clrDetailBackcolor.B.ToString();
+                        if (this.settingDialog.IsMonospace)
+                        {
+                            this.detailHtmlFormatHeader += DetailHtmlFormatMono6;
+                        }
+                        else
+                        {
+                            this.detailHtmlFormatHeader += DetailHtmlFormat6;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Data["Instance"] = "Font";
+                        ex.Data["IsTerminatePermission"] = false;
+                        throw;
+                    }
+
+                    try
+                    {
+                        this.statuses.SetUnreadManage(this.settingDialog.UnreadManage);
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Data["Instance"] = "_statuses";
+                        ex.Data["IsTerminatePermission"] = false;
+                        throw;
+                    }
+
+                    try
+                    {
+                        foreach (TabPage tb in this.ListTab.TabPages)
+                        {
+                            if (this.settingDialog.TabIconDisp)
+                            {
+                                if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
+                                {
+                                    tb.ImageIndex = -1;
+                                }
+                                else
+                                {
+                                    tb.ImageIndex = 0;
+                                }
+                            }
+
+                            if (tb.Tag != null && tb.Controls.Count > 0)
+                            {
+                                ((DetailsListView)tb.Tag).Font = this.fntReaded;
+                                ((DetailsListView)tb.Tag).BackColor = this.clrListBackcolor;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Data["Instance"] = "ListTab(TabIconDisp no2)";
+                        ex.Data["IsTerminatePermission"] = false;
+                        throw;
+                    }
+
+                    this.SetMainWindowTitle();
+                    this.SetNotifyIconText();
+
+                    this.itemCache = null;
+                    this.postCache = null;
+                    if (this.curList != null)
+                    {
+                        this.curList.Refresh();
+                    }
+
+                    this.ListTab.Refresh();
+
+                    Outputz.Key = this.settingDialog.OutputzKey;
+                    Outputz.Enabled = this.settingDialog.OutputzEnabled;
+                    switch (this.settingDialog.OutputzUrlmode)
+                    {
+                        case OutputzUrlmode.twittercom:
+                            Outputz.OutUrl = "http:// twitter.com/";
+                            break;
+                        case OutputzUrlmode.twittercomWithUsername:
+                            Outputz.OutUrl = "http:// twitter.com/" + this.tw.Username;
+                            break;
+                    }
+
+                    this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
+                    if (this.settingDialog.HotkeyEnabled)
+                    {
+                        ///グローバルホットキーの登録。設定で変更可能にするかも
+                        HookGlobalHotkey.ModKeys modKey = HookGlobalHotkey.ModKeys.None;
+                        if ((this.settingDialog.HotkeyMod & Keys.Alt) == Keys.Alt)
+                        {
+                            modKey = modKey | HookGlobalHotkey.ModKeys.Alt;
+                        }
+
+                        if ((this.settingDialog.HotkeyMod & Keys.Control) == Keys.Control)
+                        {
+                            modKey = modKey | HookGlobalHotkey.ModKeys.Ctrl;
+                        }
+
+                        if ((this.settingDialog.HotkeyMod & Keys.Shift) == Keys.Shift)
+                        {
+                            modKey = modKey | HookGlobalHotkey.ModKeys.Shift;
+                        }
+
+                        if ((this.settingDialog.HotkeyMod & Keys.LWin) == Keys.LWin)
+                        {
+                            modKey = modKey | HookGlobalHotkey.ModKeys.Win;
+                        }
+
+                        this.hookGlobalHotkey.RegisterOriginalHotkey(this.settingDialog.HotkeyKey, this.settingDialog.HotkeyValue, modKey);
+                    }
+
+                    if (uid != this.tw.Username)
+                    {
+                        this.DoGetFollowersMenu();
+                    }
+
+                    this.SetImageServiceCombo();
+                    if (this.settingDialog.IsNotifyUseGrowl)
+                    {
+                        this.growlHelper.RegisterGrowl();
+                    }
+
+                    try
+                    {
+                        this.StatusText_TextChanged(null, null);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+
+            Twitter.AccountState = AccountState.Valid;
+
+            this.TopMost = this.settingDialog.AlwaysTop;
+            this.SaveConfigsAll(false);
+        }
+
+        private void PostBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        {
+            if (e.Url.AbsoluteUri != "about:blank")
+            {
+                this.DispSelectedPost();
+                this.OpenUriAsync(e.Url.OriginalString);
+            }
+        }
+
+        private void PostBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        {
+            if (e.Url.Scheme == "data")
+            {
+                this.StatusLabelUrl.Text = this.PostBrowser.StatusText.Replace("&", "&&");
+            }
+            else if (e.Url.AbsoluteUri != "about:blank")
+            {
+                e.Cancel = true;
+
+                if (e.Url.AbsoluteUri.StartsWith("http://twitter.com/search?q=%23") || e.Url.AbsoluteUri.StartsWith("https:// twitter.com/search?q=%23"))
+                {
+                    // ハッシュタグの場合は、タブで開く
+                    string urlStr = HttpUtility.UrlDecode(e.Url.AbsoluteUri);
+                    string hash = urlStr.Substring(urlStr.IndexOf("#"));
+                    this.HashSupl.AddItem(hash);
+                    this.HashMgr.AddHashToHistory(hash.Trim(), false);
+                    this.AddNewTabForSearch(hash);
+                    return;
+                }
+                else
+                {
+                    Match m = Regex.Match(e.Url.AbsoluteUri, "^https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
+                    if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
+                    {
+                        // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
+                        if (this.settingDialog.OpenUserTimeline)
+                        {
+                            if (this.IsKeyDown(Keys.Control))
+                            {
+                                this.OpenUriAsync(e.Url.OriginalString);
+                            }
+                            else
+                            {
+                                this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
+                            }
+                        }
+                        else
+                        {
+                            if (this.IsKeyDown(Keys.Control))
+                            {
+                                this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
+                            }
+                            else
+                            {
+                                this.OpenUriAsync(e.Url.OriginalString);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.OpenUriAsync(e.Url.OriginalString);
+                    }
+                }
+            }
+        }
+
+        private void SearchComboBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                TabPage relTp = this.ListTab.SelectedTab;
+                this.RemoveSpecifiedTab(relTp.Text, false);
+                this.SaveConfigsTabs();
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void ListTab_Deselected(object sender, TabControlEventArgs e)
+        {
+            this.itemCache = null;
+            this.itemCacheIndex = -1;
+            this.postCache = null;
+            this.prevSelectedTab = e.TabPage;
+        }
+
+        private void ListTab_MouseMove(object sender, MouseEventArgs e)
+        {
+            // タブのD&D
+            if (!this.settingDialog.TabMouseLock && e.Button == MouseButtons.Left && this.tabDraging)
+            {
+                string tn = string.Empty;
+                Rectangle dragEnableRectangle = new Rectangle(Convert.ToInt32(this.tabMouseDownPoint.X - (SystemInformation.DragSize.Width / 2)), Convert.ToInt32(this.tabMouseDownPoint.Y - (SystemInformation.DragSize.Height / 2)), SystemInformation.DragSize.Width, SystemInformation.DragSize.Height);
+                if (!dragEnableRectangle.Contains(e.Location))
+                {
+                    // タブが多段の場合にはMouseDownの前の段階で選択されたタブの段が変わっているので、このタイミングでカーソルの位置からタブを判定出来ない。
+                    tn = this.ListTab.SelectedTab.Text;
+                }
+
+                if (string.IsNullOrEmpty(tn))
+                {
+                    return;
+                }
+
+                foreach (TabPage tb in this.ListTab.TabPages)
+                {
+                    if (tb.Text == tn)
+                    {
+                        this.ListTab.DoDragDrop(tb, DragDropEffects.All);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                this.tabDraging = false;
+            }
+
+            Point cpos = new Point(e.X, e.Y);
+            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
+            {
+                Rectangle rect = this.ListTab.GetTabRect(i);
+                if (rect.Left <= cpos.X & cpos.X <= rect.Right & rect.Top <= cpos.Y & cpos.Y <= rect.Bottom)
+                {
+                    this.rclickTabName = this.ListTab.TabPages[i].Text;
+                    break;
+                }
+            }
+        }
+
+        private void ListTab_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // this._curList.Refresh()
+            this.DispSelectedPost();
+            this.SetMainWindowTitle();
+            this.SetStatusLabelUrl();
+            if (this.ListTab.Focused || ((Control)this.ListTab.SelectedTab.Tag).Focused)
+            {
+                this.Tag = this.ListTab.Tag;
+            }
+
+            this.TabMenuControl(this.ListTab.SelectedTab.Text);
+            this.PushSelectPostChain();
+        }
+
+        private void PostBrowser_StatusTextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.PostBrowser.StatusText.StartsWith("http") || this.PostBrowser.StatusText.StartsWith("ftp") || this.PostBrowser.StatusText.StartsWith("data"))
+                {
+                    this.StatusLabelUrl.Text = this.PostBrowser.StatusText.Replace("&", "&&");
+                }
+
+                if (string.IsNullOrEmpty(this.PostBrowser.StatusText))
+                {
+                    this.SetStatusLabelUrl();
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void StatusText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '@')
+            {
+                // @マーク
+                if (!this.settingDialog.UseAtIdSupplement)
+                {
+                    return;
+                }
+
+                int cnt = this.AtIdSupl.ItemCount;
+                this.ShowSuplDialog(this.StatusText, this.AtIdSupl);
+                if (cnt != this.AtIdSupl.ItemCount)
+                {
+                    this.modifySettingAtId = true;
+                }
+
+                e.Handled = true;
+            }
+            else if (e.KeyChar == '#')
+            {
+                if (!this.settingDialog.UseHashSupplement)
+                {
+                    return;
+                }
+
+                this.ShowSuplDialog(this.StatusText, this.HashSupl);
+                e.Handled = true;
+            }
+        }
+
+        private void StatusText_KeyUp(object sender, KeyEventArgs e)
+        {
+            // スペースキーで未読ジャンプ
+            if (!e.Alt && !e.Control && !e.Shift)
+            {
+                if (e.KeyCode == Keys.Space || e.KeyCode == Keys.ProcessKey)
+                {
+                    bool isSpace = false;
+                    foreach (char c in this.StatusText.Text.ToCharArray())
+                    {
+                        if (c == ' ' || c == '　')
+                        {
+                            isSpace = true;
+                        }
+                        else
+                        {
+                            isSpace = false;
+                            break;
+                        }
+                    }
+
+                    if (isSpace)
+                    {
+                        e.Handled = true;
+                        this.StatusText.Text = string.Empty;
+                        this.JumpUnreadMenuItem_Click(null, null);
+                    }
+                }
+            }
+
+            this.StatusText_TextChanged(null, null);
+        }
+
+        private void StatusText_TextChanged(object sender, EventArgs e)
+        {
+            // 文字数カウント
+            int len = this.GetRestStatusCount(true, false);
+            this.lblLen.Text = len.ToString();
+            if (len < 0)
+            {
+                this.StatusText.ForeColor = Color.Red;
+            }
+            else
+            {
+                this.StatusText.ForeColor = this.clrInputForecolor;
+            }
+
+            if (string.IsNullOrEmpty(this.StatusText.Text))
+            {
+                this.replyToId = 0;
+                this.replyToName = string.Empty;
+            }
+        }
+
+        private void MyList_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
+        {
+            if (this.itemCache != null && e.StartIndex >= this.itemCacheIndex && e.EndIndex < this.itemCacheIndex + this.itemCache.Length && this.curList.Equals(sender))
+            {
+                // If the newly requested cache is a subset of the old cache,
+                // no need to rebuild everything, so do nothing.
+                return;
+            }
+
+            // Now we need to rebuild the cache.
+            if (this.curList.Equals(sender))
+            {
+                this.CreateCache(e.StartIndex, e.EndIndex);
+            }
+        }
+
+        private void MyList_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        {
+            if (this.itemCache != null && e.ItemIndex >= this.itemCacheIndex && e.ItemIndex < this.itemCacheIndex + this.itemCache.Length && this.curList.Equals(sender))
+            {
+                // A cache hit, so get the ListViewItem from the cache instead of making a new one.
+                e.Item = this.itemCache[e.ItemIndex - this.itemCacheIndex];
+            }
+            else
+            {
+                // A cache miss, so create a new ListViewItem and pass it back.
+                TabPage tb = (TabPage)((Hoehoe.TweenCustomControl.DetailsListView)sender).Parent;
+                try
+                {
+                    e.Item = this.CreateItem(tb, this.statuses.Item(tb.Text, e.ItemIndex), e.ItemIndex);
+                }
+                catch (Exception)
+                {
+                    // 不正な要求に対する間に合わせの応答
+                    e.Item = new ImageListViewItem(new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty }, string.Empty);
+                }
+            }
+        }
+
+        private void MyList_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        private void MyList_HScrolled(object sender, EventArgs e)
+        {
+            DetailsListView listView = (DetailsListView)sender;
+            listView.Refresh();
+        }
+
+        private void MyList_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            if (e.State == 0)
+            {
+                return;
+            }
+
+            e.DrawDefault = false;
+            if (!e.Item.Selected)
+            {
+                SolidBrush brs2 = null;
+                var cl = e.Item.BackColor;
+                if (cl == this.clrSelf)
+                {
+                    brs2 = this.brsBackColorMine;
+                }
+                else if (cl == this.clrAtSelf)
+                {
+                    brs2 = this.brsBackColorAt;
+                }
+                else if (cl == this.clrTarget)
+                {
+                    brs2 = this.brsBackColorYou;
+                }
+                else if (cl == this.clrAtTarget)
+                {
+                    brs2 = this.brsBackColorAtYou;
+                }
+                else if (cl == this.clrAtFromTarget)
+                {
+                    brs2 = this.brsBackColorAtFromTarget;
+                }
+                else if (cl == this.clrAtTo)
+                {
+                    brs2 = this.brsBackColorAtTo;
+                }
+                else
+                {
+                    brs2 = this.brsBackColorNone;
+                }
+
+                e.Graphics.FillRectangle(brs2, e.Bounds);
+            }
+            else
+            {
+                // 選択中の行
+                if (((Control)sender).Focused)
+                {
+                    e.Graphics.FillRectangle(this.brsHighLight, e.Bounds);
+                }
+                else
+                {
+                    e.Graphics.FillRectangle(this.brsDeactiveSelection, e.Bounds);
+                }
+            }
+
+            if ((e.State & ListViewItemStates.Focused) == ListViewItemStates.Focused)
+            {
+                e.DrawFocusRectangle();
+            }
+
+            this.DrawListViewItemIcon(e);
+        }
+
+        private void MyList_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            if (e.ItemState == 0)
+            {
+                return;
+            }
+
+            if (e.ColumnIndex > 0)
+            {
+                // アイコン以外の列
+                RectangleF rct = e.Bounds;
+                RectangleF rctB = e.Bounds;
+                rct.Width = e.Header.Width;
+                rctB.Width = e.Header.Width;
+                if (this.iconCol)
+                {
+                    rct.Y += e.Item.Font.Height;
+                    rct.Height -= e.Item.Font.Height;
+                    rctB.Height = e.Item.Font.Height;
+                }
+
+                int heightDiff = 0;
+                int drawLineCount = Math.Max(1, Math.DivRem(Convert.ToInt32(rct.Height), e.Item.Font.Height, out heightDiff));
+
+                // フォントの高さの半分を足してるのは保険。無くてもいいかも。
+                if (!this.iconCol && drawLineCount <= 1)
+                {
+                }
+                else if (heightDiff < e.Item.Font.Height * 0.7)
+                {
+                    rct.Height = Convert.ToSingle(e.Item.Font.Height * drawLineCount) - 1;
+                }
+                else
+                {
+                    drawLineCount += 1;
+                }
+
+                if (!e.Item.Selected)
+                {
+                    // 選択されていない行
+                    // 文字色
+                    SolidBrush brs = null;
+                    bool flg = false;
+                    var cl = e.Item.ForeColor;
+                    if (cl == this.clrUnread)
+                    {
+                        brs = this.brsForeColorUnread;
+                    }
+                    else if (cl == this.clrRead)
+                    {
+                        brs = this.brsForeColorReaded;
+                    }
+                    else if (cl == this.clrFav)
+                    {
+                        brs = this.brsForeColorFav;
+                    }
+                    else if (cl == this.clrOWL)
+                    {
+                        brs = this.brsForeColorOWL;
+                    }
+                    else if (cl == this.clrRetweet)
+                    {
+                        brs = this.brsForeColorRetweet;
+                    }
+                    else
+                    {
+                        brs = new SolidBrush(e.Item.ForeColor);
+                        flg = true;
+                    }
+
+                    if (rct.Width > 0)
+                    {
+                        if (this.iconCol)
+                        {
+                            using (Font fnt = new Font(e.Item.Font, FontStyle.Bold))
+                            {
+                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), brs.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                            }
+                        }
+                        else if (drawLineCount == 1)
+                        {
+                            TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
+                        }
+                        else
+                        {
+                            TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                        }
+                    }
+
+                    if (flg)
+                    {
+                        brs.Dispose();
+                    }
+                }
+                else
+                {
+                    if (rct.Width > 0)
+                    {
+                        // 選択中の行
+                        using (Font fnt = new Font(e.Item.Font, FontStyle.Bold))
+                        {
+                            if (((Control)sender).Focused)
+                            {
+                                if (this.iconCol)
+                                {
+                                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), this.brsHighLightText.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                }
+                                else if (drawLineCount == 1)
+                                {
+                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
+                                }
+                                else
+                                {
+                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                }
+                            }
+                            else
+                            {
+                                if (this.iconCol)
+                                {
+                                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), this.brsForeColorUnread.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                }
+                                else if (drawLineCount == 1)
+                                {
+                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
+                                }
+                                else
+                                {
+                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void MenuItemSubSearch_Click(object sender, EventArgs e)
+        {
+            // 検索メニュー
+            this.searchDialog.Owner = this;
+            if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
+            {
+                this.TopMost = this.settingDialog.AlwaysTop;
+                return;
+            }
+
+            this.TopMost = this.settingDialog.AlwaysTop;
+            if (!string.IsNullOrEmpty(this.searchDialog.SWord))
+            {
+                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
+            }
+        }
+
+        private void MenuItemSearchNext_Click(object sender, EventArgs e)
+        {
+            // 次を検索
+            if (string.IsNullOrEmpty(this.searchDialog.SWord))
+            {
+                if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
+                {
+                    this.TopMost = this.settingDialog.AlwaysTop;
+                    return;
+                }
+
+                this.TopMost = this.settingDialog.AlwaysTop;
+                if (string.IsNullOrEmpty(this.searchDialog.SWord))
+                {
+                    return;
+                }
+
+                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
+            }
+            else
+            {
+                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
+            }
+        }
+
+        private void MenuItemSearchPrev_Click(object sender, EventArgs e)
+        {
+            // 前を検索
+            if (string.IsNullOrEmpty(this.searchDialog.SWord))
+            {
+                if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
+                {
+                    this.TopMost = this.settingDialog.AlwaysTop;
+                    return;
+                }
+
+                this.TopMost = this.settingDialog.AlwaysTop;
+                if (string.IsNullOrEmpty(this.searchDialog.SWord))
+                {
+                    return;
+                }
+            }
+
+            this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
+        }
+
+        private void AboutMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.aboutBox == null)
+            {
+                this.aboutBox = new TweenAboutBox();
+            }
+
+            this.aboutBox.ShowDialog();
+            this.TopMost = this.settingDialog.AlwaysTop;
+        }
+
+        private void JumpUnreadMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.ImageSelectionPanel.Enabled)
+            {
+                return;
+            }
+
+            // 現在タブから最終タブまで探索
+            int bgnIdx = this.ListTab.TabPages.IndexOf(this.curTab);
+            int idx = -1;
+            DetailsListView lst = null;
+            for (int i = bgnIdx; i < this.ListTab.TabPages.Count; i++)
+            {
+                // 未読Index取得
+                idx = this.statuses.GetOldestUnreadIndex(this.ListTab.TabPages[i].Text);
+                if (idx > -1)
+                {
+                    this.ListTab.SelectedIndex = i;
+                    lst = (DetailsListView)this.ListTab.TabPages[i].Tag;
+                    break;
+                }
+            }
+
+            // 未読みつからず＆現在タブが先頭ではなかったら、先頭タブから現在タブの手前まで探索
+            if (idx == -1 && bgnIdx > 0)
+            {
+                for (int i = 0; i < bgnIdx; i++)
+                {
+                    idx = this.statuses.GetOldestUnreadIndex(this.ListTab.TabPages[i].Text);
+                    if (idx > -1)
+                    {
+                        this.ListTab.SelectedIndex = i;
+                        lst = (DetailsListView)this.ListTab.TabPages[i].Tag;
+                        break;
+                    }
+                }
+            }
+
+            // 全部調べたが未読見つからず→先頭タブの最新発言へ
+            if (idx == -1)
+            {
+                this.ListTab.SelectedIndex = 0;
+                lst = (DetailsListView)this.ListTab.TabPages[0].Tag;
+                if (this.statuses.SortOrder == SortOrder.Ascending)
+                {
+                    idx = lst.VirtualListSize - 1;
+                }
+                else
+                {
+                    idx = 0;
+                }
+            }
+
+            if (lst.VirtualListSize > 0 && idx > -1 && lst.VirtualListSize > idx)
+            {
+                this.SelectListItem(lst, idx);
+                if (this.statuses.SortMode == IdComparerClass.ComparerMode.Id)
+                {
+                    if ((this.statuses.SortOrder == SortOrder.Ascending && lst.Items[idx].Position.Y > lst.ClientSize.Height - this.iconSz - 10) || (this.statuses.SortOrder == SortOrder.Descending && lst.Items[idx].Position.Y < this.iconSz + 10))
+                    {
+                        this.MoveTop();
+                    }
+                    else
+                    {
+                        lst.EnsureVisible(idx);
+                    }
+                }
+                else
+                {
+                    lst.EnsureVisible(idx);
+                }
+            }
+
+            lst.Focus();
+        }
+
+        private void StatusOpenMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.curList.SelectedIndices.Count > 0 && this.statuses.Tabs[this.curTab.Text].TabType != TabUsageType.DirectMessage)
+            {
+                PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
+                var sid = post.RetweetedId == 0 ? post.StatusId : post.RetweetedId;
+                this.OpenUriAsync("http://twitter.com/" + post.ScreenName + "/status/" + sid.ToString());
+            }
+        }
+
+        private void FavorareMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.curList.SelectedIndices.Count > 0)
+            {
+                PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
+                this.OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + post.ScreenName + "/recent");
+            }
+        }
+
+        private void VerUpMenuItem_Click(object sender, EventArgs e)
+        {
+            this.CheckNewVersion();
+        }
+
+        private void DisplayItemImage_Downloaded(object sender, EventArgs e)
+        {
+            if (sender.Equals(this.displayItem))
+            {
+                if (this.UserPicture.Image != null)
+                {
+                    this.UserPicture.Image.Dispose();
+                }
+
+                if (this.displayItem.Image != null)
+                {
+                    try
+                    {
+                        this.UserPicture.Image = new Bitmap(this.displayItem.Image);
+                    }
+                    catch (Exception)
+                    {
+                        this.UserPicture.Image = null;
+                    }
+                }
+                else
+                {
+                    this.UserPicture.Image = null;
+                }
+            }
+        }
+
+        private void MatomeMenuItem_Click(object sender, EventArgs e)
+        {
+            this.OpenUriAsync(ApplicationHelpWebPageUrl);
+        }
+
+        private void ShortcutKeyListMenuItem_Click(object sender, EventArgs e)
+        {
+            this.OpenUriAsync(ApplicationShortcutKeyHelpWebPageUrl);
+        }
+
+        private void ListTab_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (this.ListTab.SelectedTab != null)
+            {
+                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
+                {
+                    Control pnl = this.ListTab.SelectedTab.Controls["panelSearch"];
+                    if (pnl.Controls["comboSearch"].Focused || pnl.Controls["comboLang"].Focused || pnl.Controls["buttonSearch"].Focused)
+                    {
+                        return;
+                    }
+                }
+
+                ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
+                if (modState == ModifierState.NotFlags)
+                {
+                    return;
+                }
+
+                if (modState != ModifierState.None)
+                {
+                    this.anchorFlag = false;
+                }
+
+                if (this.CommonKeyDown(e.KeyCode, FocusedControl.ListTab, modState))
+                {
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+            }
+        }
+
+        private void MyList_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.anchorFlag = false;
+        }
+
+        private void StatusText_Enter(object sender, EventArgs e)
+        {
+            // フォーカスの戻り先を StatusText に設定
+            this.Tag = this.StatusText;
+            this.StatusText.BackColor = this.InputBackColor;
+        }
+
+        private void StatusText_Leave(object sender, EventArgs e)
+        {
+            // フォーカスがメニューに遷移しないならばフォーカスはタブに移ることを期待
+            if (this.ListTab.SelectedTab != null && this.MenuStrip1.Tag == null)
+            {
+                this.Tag = this.ListTab.SelectedTab.Tag;
+            }
+
+            this.StatusText.BackColor = Color.FromKnownColor(KnownColor.Window);
+        }
+
+        private void StatusText_KeyDown(object sender, KeyEventArgs e)
+        {
+            ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
+            if (modState == ModifierState.NotFlags)
+            {
+                return;
+            }
+
+            if (this.CommonKeyDown(e.KeyCode, FocusedControl.StatusText, modState))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+
+            this.StatusText_TextChanged(null, null);
+        }
+
+        private void SaveLogMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (rslt == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            this.SaveFileDialog1.FileName = string.Format("HoehoePosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
+            this.SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
+            this.SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
+            this.SaveFileDialog1.FilterIndex = 0;
+            this.SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
+            this.SaveFileDialog1.RestoreDirectory = true;
+
+            if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (!this.SaveFileDialog1.ValidateNames)
+                {
+                    return;
+                }
+
+                using (StreamWriter sw = new StreamWriter(this.SaveFileDialog1.FileName, false, Encoding.UTF8))
+                {
+                    if (rslt == DialogResult.Yes)
+                    {
+                        // All
+                        for (int idx = 0; idx <= this.curList.VirtualListSize - 1; idx++)
+                        {
+                            PostClass post = this.statuses.Item(this.curTab.Text, idx);
+                            string protect = string.Empty;
+                            if (post.IsProtect)
+                            {
+                                protect = "Protect";
+                            }
+
+                            sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}", post.Nickname, post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""), post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl, post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""), protect));
+                        }
+                    }
+                    else
+                    {
+                        foreach (int idx in this.curList.SelectedIndices)
+                        {
+                            PostClass post = this.statuses.Item(this.curTab.Text, idx);
+                            string protect = string.Empty;
+                            if (post.IsProtect)
+                            {
+                                protect = "Protect";
+                            }
+
+                            sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}", post.Nickname, post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""), post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl, post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""), protect));
+                        }
+                    }
+
+                    sw.Close();
+                }
+            }
+
+            this.TopMost = this.settingDialog.AlwaysTop;
+        }
+
+        private void PostBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
+            if (modState == ModifierState.NotFlags)
+            {
+                return;
+            }
+
+            bool res = this.CommonKeyDown(e.KeyCode, FocusedControl.PostBrowser, modState);
+            if (res)
+            {
+                e.IsInputKey = true;
+            }
+        }
+
+        private void ListTab_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                for (int i = 0; i < this.ListTab.TabPages.Count; i++)
+                {
+                    if (this.ListTab.GetTabRect(i).Contains(e.Location))
+                    {
+                        this.RemoveSpecifiedTab(this.ListTab.TabPages[i].Text, true);
+                        this.SaveConfigsTabs();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void Tabs_DoubleClick(object sender, MouseEventArgs e)
+        {
+            string tn = this.ListTab.SelectedTab.Text;
+            this.TabRename(ref tn);
+        }
+
+        private void Tabs_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (this.settingDialog.TabMouseLock)
+            {
+                return;
+            }
+
+            Point cpos = new Point(e.X, e.Y);
+            if (e.Button == MouseButtons.Left)
+            {
+                for (int i = 0; i < this.ListTab.TabPages.Count; i++)
+                {
+                    if (this.ListTab.GetTabRect(i).Contains(e.Location))
+                    {
+                        this.tabDraging = true;
+                        this.tabMouseDownPoint = e.Location;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                this.tabDraging = false;
+            }
+        }
+
+        private void Tabs_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(TabPage)))
+            {
+                e.Effect = DragDropEffects.Move;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void Tabs_DragDrop(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(typeof(TabPage)))
+            {
+                return;
+            }
+
+            this.tabDraging = false;
+            string tn = string.Empty;
+            bool bef = false;
+            Point cpos = new Point(e.X, e.Y);
+            Point spos = this.ListTab.PointToClient(cpos);
+            int i = 0;
+            for (i = 0; i < this.ListTab.TabPages.Count; i++)
+            {
+                Rectangle rect = this.ListTab.GetTabRect(i);
+                if (rect.Left <= spos.X && spos.X <= rect.Right && rect.Top <= spos.Y && spos.Y <= rect.Bottom)
+                {
+                    tn = this.ListTab.TabPages[i].Text;
+                    bef = spos.X <= (rect.Left + rect.Right) / 2;
+                    break;
+                }
+            }
+
+            // タブのないところにドロップ->最後尾へ移動
+            if (string.IsNullOrEmpty(tn))
+            {
+                tn = this.ListTab.TabPages[this.ListTab.TabPages.Count - 1].Text;
+                bef = false;
+                i = this.ListTab.TabPages.Count - 1;
+            }
+
+            TabPage tp = (TabPage)e.Data.GetData(typeof(TabPage));
+            if (tp.Text == tn)
+            {
+                return;
+            }
+
+            this.ReOrderTab(tp.Text, tn, bef);
+        }
+
+        private void ListTab_MouseUp(object sender, MouseEventArgs e)
+        {
+            this.tabDraging = false;
+        }
+
         private void TimerRefreshIcon_Tick(object sender, EventArgs e)
         {
             // 200ms
@@ -10041,31 +11536,6 @@ namespace Hoehoe
             this.UnreadMngTbMenuItem.Checked = tb.UnreadManage;
 
             this.TabMenuControl(this.rclickTabName);
-        }
-
-        private void TabMenuControl(string tabName)
-        {
-            if (this.statuses.Tabs[tabName].TabType != TabUsageType.Mentions && this.statuses.IsDefaultTab(tabName))
-            {
-                this.FilterEditMenuItem.Enabled = true;
-                this.EditRuleTbMenuItem.Enabled = true;
-                this.DeleteTabMenuItem.Enabled = false;
-                this.DeleteTbMenuItem.Enabled = false;
-            }
-            else if (this.statuses.Tabs[tabName].TabType == TabUsageType.Mentions)
-            {
-                this.FilterEditMenuItem.Enabled = true;
-                this.EditRuleTbMenuItem.Enabled = true;
-                this.DeleteTabMenuItem.Enabled = false;
-                this.DeleteTbMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.FilterEditMenuItem.Enabled = true;
-                this.EditRuleTbMenuItem.Enabled = true;
-                this.DeleteTabMenuItem.Enabled = true;
-                this.DeleteTbMenuItem.Enabled = true;
-            }
         }
 
         private void UreadManageMenuItem_Click(object sender, EventArgs e)
@@ -10417,89 +11887,6 @@ namespace Hoehoe
             this.SaveConfigsTabs();
         }
 
-        private bool SelectTab(ref string tabName)
-        {
-            do
-            {
-                // 振り分け先タブ選択
-                if (this.tabDialog.ShowDialog() == DialogResult.Cancel)
-                {
-                    this.TopMost = this.settingDialog.AlwaysTop;
-                    return false;
-                }
-
-                this.TopMost = this.settingDialog.AlwaysTop;
-                tabName = this.tabDialog.SelectedTabName;
-                this.ListTab.SelectedTab.Focus();
-
-                // 新規タブを選択→タブ作成
-                if (tabName == Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText1)
-                {
-                    using (InputTabName inputName = new InputTabName())
-                    {
-                        inputName.TabName = this.statuses.GetUniqueTabName();
-                        inputName.ShowDialog();
-                        if (inputName.DialogResult == DialogResult.Cancel)
-                        {
-                            return false;
-                        }
-
-                        tabName = inputName.TabName;
-                        inputName.Dispose();
-                    }
-
-                    this.TopMost = this.settingDialog.AlwaysTop;
-                    if (!string.IsNullOrEmpty(tabName))
-                    {
-                        if (!this.statuses.AddTab(tabName, TabUsageType.UserDefined, null) || !this.AddNewTab(tabName, false, TabUsageType.UserDefined))
-                        {
-                            // もう一度タブ名入力
-                            string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText2, tabName);
-                            MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else
-                {
-                    // 既存タブを選択
-                    return true;
-                }
-            }
-            while (true);
-        }
-
-        private void MoveOrCopy(ref bool move, ref bool mark)
-        {
-            // 移動するか？
-            string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText4, Environment.NewLine);
-            if (MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                move = false;
-            }
-            else
-            {
-                move = true;
-            }
-
-            if (!move)
-            {
-                // マークするか？
-                tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText6, "\r\n");
-                if (MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    mark = true;
-                }
-                else
-                {
-                    mark = false;
-                }
-            }
-        }
-
         private void CopySTOTMenuItem_Click(object sender, EventArgs e)
         {
             this.CopyStot();
@@ -10525,31 +11912,6 @@ namespace Hoehoe
                     this.curList.SelectedIndices.Add(i);
                 }
             }
-        }
-
-        private void MoveMiddle()
-        {
-            if (this.curList.SelectedIndices.Count == 0)
-            {
-                return;
-            }
-
-            int idx = this.curList.SelectedIndices[0];
-
-            ListViewItem item = this.curList.GetItemAt(0, 25);
-            int idx1 = item == null ? 0 : item.Index;
-
-            item = this.curList.GetItemAt(0, this.curList.ClientSize.Height - 1);
-            int idx2 = item == null ? this.curList.VirtualListSize - 1 : item.Index;
-
-            idx -= Math.Abs(idx1 - idx2) / 2;
-            if (idx < 0)
-            {
-                idx = 0;
-            }
-
-            this.curList.EnsureVisible(this.curList.VirtualListSize - 1);
-            this.curList.EnsureVisible(idx);
         }
 
         private void OpenURLMenuItem_Click(object sender, EventArgs e)
@@ -10677,173 +12039,6 @@ namespace Hoehoe
             this.ClearTab(this.rclickTabName, true);
         }
 
-        private void ClearTab(string tabName, bool showWarning)
-        {
-            if (showWarning)
-            {
-                string tmp = string.Format(Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, tabName + " " + Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
-                {
-                    return;
-                }
-            }
-
-            this.statuses.ClearTabIds(tabName);
-            if (this.ListTab.SelectedTab.Text == tabName)
-            {
-                this.anchorPost = null;
-                this.anchorFlag = false;
-                this.itemCache = null;
-                this.postCache = null;
-                this.itemCacheIndex = -1;
-                this.curItemIndex = -1;
-                this.curPost = null;
-            }
-
-            foreach (TabPage tb in this.ListTab.TabPages)
-            {
-                if (tb.Text == tabName)
-                {
-                    tb.ImageIndex = -1;
-                    ((DetailsListView)tb.Tag).VirtualListSize = 0;
-                    break;
-                }
-            }
-
-            if (!this.settingDialog.TabIconDisp)
-            {
-                this.ListTab.Refresh();
-            }
-
-            this.SetMainWindowTitle();
-            this.SetStatusLabelUrl();
-        }
-
-        // メインウインドウタイトルの書き換え
-        private void SetMainWindowTitle()
-        {
-            StringBuilder ttl = new StringBuilder(256);
-            int ur = 0;
-            int al = 0;
-            if (this.settingDialog.DispLatestPost != DispTitleEnum.None
-                && this.settingDialog.DispLatestPost != DispTitleEnum.Post
-                && this.settingDialog.DispLatestPost != DispTitleEnum.Ver
-                && this.settingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
-            {
-                foreach (string key in this.statuses.Tabs.Keys)
-                {
-                    ur += this.statuses.Tabs[key].UnreadCount;
-                    al += this.statuses.Tabs[key].AllCount;
-                }
-            }
-
-            if (this.settingDialog.DispUsername)
-            {
-                ttl.Append(this.tw.Username).Append(" - ");
-            }
-
-            ttl.Append("Hoehoe  ");
-            switch (this.settingDialog.DispLatestPost)
-            {
-                case DispTitleEnum.Ver:
-                    ttl.Append("Ver:").Append(MyCommon.FileVersion);
-                    break;
-                case DispTitleEnum.Post:
-                    if (this.postHistory != null && this.postHistory.Count > 1)
-                    {
-                        ttl.Append(this.postHistory[this.postHistory.Count - 2].Status.Replace("\r\n", string.Empty));
-                    }
-
-                    break;
-                case DispTitleEnum.UnreadRepCount:
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText1, this.statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + this.statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
-                    break;
-                case DispTitleEnum.UnreadAllCount:
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText2, ur);
-                    break;
-                case DispTitleEnum.UnreadAllRepCount:
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText3, ur, this.statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + this.statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
-                    break;
-                case DispTitleEnum.UnreadCountAllCount:
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText4, ur, al);
-                    break;
-                case DispTitleEnum.OwnStatus:
-                    if (this.prevFollowerCount == 0 && this.tw.FollowersCount > 0)
-                    {
-                        this.prevFollowerCount = this.tw.FollowersCount;
-                    }
-
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.OwnStatusTitle, this.tw.StatusesCount, this.tw.FriendsCount, this.tw.FollowersCount, this.tw.FollowersCount - this.prevFollowerCount);
-                    break;
-            }
-
-            try
-            {
-                this.Text = ttl.ToString();
-            }
-            catch (AccessViolationException ex)
-            {
-                // 原因不明。ポスト内容に依存か？たまーに発生するが再現せず。
-                System.Diagnostics.Debug.Write(ex);
-            }
-        }
-
-        private string GetStatusLabelText()
-        {
-            // ステータス欄にカウント表示
-            // タブ未読数/タブ発言数 全未読数/総発言数 (未読＠＋未読DM数)
-            if (this.statuses == null)
-            {
-                return string.Empty;
-            }
-
-            TabClass mentionTab = this.statuses.GetTabByType(TabUsageType.Mentions);
-            TabClass dmessageTab = this.statuses.GetTabByType(TabUsageType.DirectMessage);
-            if (mentionTab == null || dmessageTab == null)
-            {
-                return string.Empty;
-            }
-
-            int urat = mentionTab.UnreadCount + dmessageTab.UnreadCount;
-            int ur = 0;
-            int al = 0;
-            int tur = 0;
-            int tal = 0;
-            StringBuilder slbl = new StringBuilder(256);
-            try
-            {
-                foreach (string key in this.statuses.Tabs.Keys)
-                {
-                    ur += this.statuses.Tabs[key].UnreadCount;
-                    al += this.statuses.Tabs[key].AllCount;
-                    if (key.Equals(this.curTab.Text))
-                    {
-                        tur = this.statuses.Tabs[key].UnreadCount;
-                        tal = this.statuses.Tabs[key].AllCount;
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                return string.Empty;
-            }
-
-            this.unreadCounter = ur;
-            this.unreadAtCounter = urat;
-
-            slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, this.postTimestamps.Count, this.favTimestamps.Count, this.timeLineCount);
-            if (this.settingDialog.TimelinePeriodInt == 0)
-            {
-                slbl.Append(Hoehoe.Properties.Resources.SetStatusLabelText2);
-            }
-            else
-            {
-                slbl.Append(this.settingDialog.TimelinePeriodInt.ToString() + Hoehoe.Properties.Resources.SetStatusLabelText3);
-            }
-
-            return slbl.ToString();
-        }
-
         private void SetStatusLabelApiHandler(object sender, ApiInformationChangedEventArgs e)
         {
             try
@@ -10865,45 +12060,6 @@ namespace Hoehoe
             {
                 return;
             }
-        }
-
-        private void SetStatusLabelApi()
-        {
-            this.apiGauge.RemainCount = MyCommon.TwitterApiInfo.RemainCount;
-            this.apiGauge.MaxCount = MyCommon.TwitterApiInfo.MaxCount;
-            this.apiGauge.ResetTime = MyCommon.TwitterApiInfo.ResetTime;
-        }
-
-        private void SetStatusLabelUrl()
-        {
-            this.StatusLabelUrl.Text = this.GetStatusLabelText();
-        }
-
-        // タスクトレイアイコンのツールチップテキスト書き換え
-        // Tween [未読/@]
-        private void SetNotifyIconText()
-        {
-            StringBuilder ur = new StringBuilder(64);
-            if (this.settingDialog.DispUsername)
-            {
-                ur.Append(this.tw.Username);
-                ur.Append(" - ");
-            }
-
-            ur.Append("Hoehoe");
-#if DEBUG
-			ur.Append("(Debug Build)");
-#endif
-            if (this.unreadCounter != -1 && this.unreadAtCounter != -1)
-            {
-                ur.Append(" [");
-                ur.Append(this.unreadCounter);
-                ur.Append("/@");
-                ur.Append(this.unreadAtCounter);
-                ur.Append("]");
-            }
-
-            this.NotifyIcon1.Text = ur.ToString();
         }
 
         private void TweenMain_Resize(object sender, EventArgs e)
@@ -10987,40 +12143,6 @@ namespace Hoehoe
             {
                 this.myAdSpDis = this.SplitContainer4.SplitterDistance;
                 this.modifySettingLocal = true;
-            }
-        }
-
-        private void DoRepliedStatusOpen()
-        {
-            if (this.ExistCurrentPost && this.curPost.InReplyToUser != null && this.curPost.InReplyToStatusId > 0)
-            {
-                if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
-                {
-                    this.OpenUriAsync(string.Format("https:// twitter.com/{0}/status/{1}", this.curPost.InReplyToUser, this.curPost.InReplyToStatusId));
-                    return;
-                }
-
-                if (this.statuses.ContainsKey(this.curPost.InReplyToStatusId))
-                {
-                    PostClass repPost = this.statuses.Item(this.curPost.InReplyToStatusId);
-                    MessageBox.Show(repPost.ScreenName + " / " + repPost.Nickname + "   (" + repPost.CreatedAt.ToString() + ")" + Environment.NewLine + repPost.TextFromApi);
-                }
-                else
-                {
-                    foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.Lists | TabUsageType.PublicSearch))
-                    {
-                        if (tb == null || !tb.Contains(this.curPost.InReplyToStatusId))
-                        {
-                            break;
-                        }
-
-                        PostClass repPost = this.statuses.Item(this.curPost.InReplyToStatusId);
-                        MessageBox.Show(repPost.ScreenName + " / " + repPost.Nickname + "   (" + repPost.CreatedAt.ToString() + ")" + Environment.NewLine + repPost.TextFromApi);
-                        return;
-                    }
-
-                    this.OpenUriAsync("http://twitter.com/" + this.curPost.InReplyToUser + "/status/" + this.curPost.InReplyToStatusId.ToString());
-                }
             }
         }
 
@@ -11223,144 +12345,6 @@ namespace Hoehoe
             }
 
             this.modifySettingLocal = true;
-        }
-
-        /// <summary>
-        /// t.coで投稿時自動短縮する場合は、外部サービスでの短縮禁止
-        /// Converter_Type=Nicomsの場合は、nicovideoのみ短縮する
-        /// 参考資料 RFC3986 Uniform Resource Identifier (URI): Generic Syntax
-        /// Appendix A.  Collected ABNF for URI
-        /// http://www.ietf.org/rfc/rfc3986.txt
-        /// </summary>
-        /// <param name="urlCoonverterType"></param>
-        /// <returns></returns>
-        private bool UrlConvert(UrlConverter urlCoonverterType)
-        {
-            string result = string.Empty;
-
-            const string NicoUrlPattern = "^https?:// [a-z]+\\.(nicovideo|niconicommons|nicolive)\\.jp/[a-z]+/[a-z0-9]+$";
-
-            if (this.StatusText.SelectionLength > 0)
-            {
-                // 文字列が選択されている場合はその文字列について処理
-                string tmp = this.StatusText.SelectedText;
-
-                // httpから始まらない場合、ExcludeStringで指定された文字列で始まる場合は対象としない
-                if (tmp.StartsWith("http"))
-                {
-                    // nico.ms使用、nicovideoにマッチしたら変換
-                    if (this.settingDialog.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
-                    {
-                        result = nicoms.Shorten(tmp);
-                    }
-                    else if (urlCoonverterType != UrlConverter.Nicoms)
-                    {
-                        // 短縮URL変換 日本語を含むかもしれないのでURLエンコードする
-                        result = ShortUrl.Make(urlCoonverterType, tmp);
-                        if (result.Equals("Can't convert"))
-                        {
-                            this.StatusLabel.Text = result.Insert(0, urlCoonverterType.ToString() + ":");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrEmpty(result))
-                    {
-                        this.StatusText.Select(this.StatusText.Text.IndexOf(tmp, StringComparison.Ordinal), tmp.Length);
-                        this.StatusText.SelectedText = result;
-
-                        // undoバッファにセット
-                        if (this.urlUndoBuffer == null)
-                        {
-                            this.urlUndoBuffer = new List<UrlUndoInfo>();
-                            this.UrlUndoToolStripMenuItem.Enabled = true;
-                        }
-
-                        this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = tmp, After = result });
-                    }
-                }
-            }
-            else
-            {
-                const string UrlPattern = "(?<before>(?:[^\\\"':!=]|^|\\:))" + "(?<url>(?<protocol>https?:// )" + "(?<domain>(?:[\\.-]|[^\\p{P}\\s])+\\.[a-z]{2,}(?::[0-9]+)?)" + "(?<path>/[a-z0-9!*'();:&=+$/%#\\-_.,~@]*[a-z0-9)=#/]?)?" + "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\-_.,~@?]*[a-z0-9_&=#/])?)";
-
-                // 正規表現にマッチしたURL文字列をtinyurl化
-                foreach (Match mt in Regex.Matches(this.StatusText.Text, UrlPattern, RegexOptions.IgnoreCase))
-                {
-                    if (this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal) == -1)
-                    {
-                        continue;
-                    }
-
-                    string tmp = mt.Result("${url}");
-                    if (tmp.StartsWith("w", StringComparison.OrdinalIgnoreCase))
-                    {
-                        tmp = "http://" + tmp;
-                    }
-
-                    // 選んだURLを選択（？）
-                    this.StatusText.Select(this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
-
-                    // nico.ms使用、nicovideoにマッチしたら変換
-                    if (this.settingDialog.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
-                    {
-                        result = nicoms.Shorten(tmp);
-                    }
-                    else if (urlCoonverterType != UrlConverter.Nicoms)
-                    {
-                        // 短縮URL変換 日本語を含むかもしれないのでURLエンコードする
-                        result = ShortUrl.Make(urlCoonverterType, tmp);
-                        if (result.Equals("Can't convert"))
-                        {
-                            this.StatusLabel.Text = result.Insert(0, urlCoonverterType.ToString() + ":");
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                    if (!string.IsNullOrEmpty(result))
-                    {
-                        this.StatusText.Select(this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
-                        this.StatusText.SelectedText = result;
-
-                        // undoバッファにセット
-                        if (this.urlUndoBuffer == null)
-                        {
-                            this.urlUndoBuffer = new List<UrlUndoInfo>();
-                            this.UrlUndoToolStripMenuItem.Enabled = true;
-                        }
-
-                        this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = mt.Result("${url}"), After = result });
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        private void DoUrlUndo()
-        {
-            if (this.urlUndoBuffer != null)
-            {
-                string tmp = this.StatusText.Text;
-                foreach (UrlUndoInfo data in this.urlUndoBuffer)
-                {
-                    tmp = tmp.Replace(data.After, data.Before);
-                }
-
-                this.StatusText.Text = tmp;
-                this.urlUndoBuffer = null;
-                this.UrlUndoToolStripMenuItem.Enabled = false;
-                this.StatusText.SelectionStart = 0;
-                this.StatusText.SelectionLength = 0;
-            }
         }
 
         private void TinyURLToolStripMenuItem_Click(object sender, EventArgs e)
@@ -11620,31 +12604,12 @@ namespace Hoehoe
             }
         }
 
-        private void DoSearchToolStrip(string url)
-        {
-            // 発言詳細で「選択文字列で検索」（選択文字列取得）
-            string selText = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
-
-            if (selText != null)
-            {
-                if (url == Hoehoe.Properties.Resources.SearchItem4Url)
-                {
-                    // 公式検索
-                    this.AddNewTabForSearch(selText);
-                    return;
-                }
-
-                string tmp = string.Format(url, HttpUtility.UrlEncode(selText));
-                this.OpenUriAsync(tmp);
-            }
-        }
-
         private void SelectionAllContextMenuItem_Click(object sender, EventArgs e)
         {
             // 発言詳細ですべて選択
             this.PostBrowser.Document.ExecCommand("SelectAll", false, null);
         }
-
+        
         private void SearchWikipediaContextMenuItem_Click(object sender, EventArgs e)
         {
             this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem1Url);
@@ -11859,200 +12824,12 @@ namespace Hoehoe
                 e.Effect = DragDropEffects.None;
             }
         }
-
-        private void ListTabSelect(TabPage tab)
-        {
-            this.SetListProperty();
-
-            this.itemCache = null;
-            this.itemCacheIndex = -1;
-            this.postCache = null;
-
-            this.curTab = tab;
-            this.curList = (DetailsListView)tab.Tag;
-            if (this.curList.SelectedIndices.Count > 0)
-            {
-                this.curItemIndex = this.curList.SelectedIndices[0];
-                this.curPost = this.GetCurTabPost(this.curItemIndex);
-            }
-            else
-            {
-                this.curItemIndex = -1;
-                this.curPost = null;
-            }
-
-            this.anchorPost = null;
-            this.anchorFlag = false;
-
-            if (this.iconCol)
-            {
-                ((DetailsListView)tab.Tag).Columns[1].Text = this.columnTexts[2];
-            }
-            else
-            {
-                for (int i = 0; i <= this.curList.Columns.Count - 1; i++)
-                {
-                    ((DetailsListView)tab.Tag).Columns[i].Text = this.columnTexts[i];
-                }
-            }
-        }
-
+        
         private void ListTab_Selecting(object sender, TabControlCancelEventArgs e)
         {
             this.ListTabSelect(e.TabPage);
         }
-
-        private void SelectListItem(DetailsListView listView, int index)
-        {
-            // 単一
-            Rectangle bnd = default(Rectangle);
-            bool flg = false;
-            if (listView.FocusedItem != null)
-            {
-                bnd = listView.FocusedItem.Bounds;
-                flg = true;
-            }
-
-            do
-            {
-                listView.SelectedIndices.Clear();
-            }
-            while (listView.SelectedIndices.Count > 0);
-            listView.Items[index].Selected = true;
-            listView.Items[index].Focused = true;
-
-            if (flg)
-            {
-                listView.Invalidate(bnd);
-            }
-        }
-
-        private void SelectListItem(DetailsListView listView, int[] indecies, int focused)
-        {
-            // 複数
-            Rectangle bnd = default(Rectangle);
-            bool flg = false;
-            if (listView.FocusedItem != null)
-            {
-                bnd = listView.FocusedItem.Bounds;
-                flg = true;
-            }
-
-            int fIdx = -1;
-            if (indecies != null && !(indecies.Count() == 1 && indecies[0] == -1))
-            {
-                do
-                {
-                    listView.SelectedIndices.Clear();
-                }
-                while (listView.SelectedIndices.Count > 0);
-
-                foreach (int idx in indecies)
-                {
-                    if (idx > -1 && listView.VirtualListSize > idx)
-                    {
-                        listView.SelectedIndices.Add(idx);
-                        if (fIdx == -1)
-                        {
-                            fIdx = idx;
-                        }
-                    }
-                }
-            }
-
-            if (focused > -1 && listView.VirtualListSize > focused)
-            {
-                listView.Items[focused].Focused = true;
-            }
-            else if (fIdx > -1)
-            {
-                listView.Items[fIdx].Focused = true;
-            }
-
-            if (flg)
-            {
-                listView.Invalidate(bnd);
-            }
-        }
-
-        private void RunAsync(GetWorkerArg args)
-        {
-            BackgroundWorker bw = null;
-            if (args.WorkerType != WorkerType.Follower)
-            {
-                for (int i = 0; i < this.bworkers.Length; i++)
-                {
-                    if (this.bworkers[i] != null && !this.bworkers[i].IsBusy)
-                    {
-                        bw = this.bworkers[i];
-                        break;
-                    }
-                }
-
-                if (bw == null)
-                {
-                    for (int i = 0; i < this.bworkers.Length; i++)
-                    {
-                        if (this.bworkers[i] == null)
-                        {
-                            this.bworkers[i] = new BackgroundWorker();
-                            bw = this.bworkers[i];
-                            bw.WorkerReportsProgress = true;
-                            bw.WorkerSupportsCancellation = true;
-                            bw.DoWork += this.GetTimelineWorker_DoWork;
-                            bw.ProgressChanged += this.GetTimelineWorker_ProgressChanged;
-                            bw.RunWorkerCompleted += this.GetTimelineWorker_RunWorkerCompleted;
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (this.followerFetchWorker == null)
-                {
-                    this.followerFetchWorker = new BackgroundWorker();
-                    bw = this.followerFetchWorker;
-                    bw.WorkerReportsProgress = true;
-                    bw.WorkerSupportsCancellation = true;
-                    bw.DoWork += this.GetTimelineWorker_DoWork;
-                    bw.ProgressChanged += this.GetTimelineWorker_ProgressChanged;
-                    bw.RunWorkerCompleted += this.GetTimelineWorker_RunWorkerCompleted;
-                }
-                else
-                {
-                    if (this.followerFetchWorker.IsBusy == false)
-                    {
-                        bw = this.followerFetchWorker;
-                    }
-                }
-            }
-
-            if (bw == null)
-            {
-                return;
-            }
-
-            bw.RunWorkerAsync(args);
-        }
-
-        private void StartUserStream()
-        {
-            this.tw.NewPostFromStream += this.Tw_NewPostFromStream;
-            this.tw.UserStreamStarted += this.Tw_UserStreamStarted;
-            this.tw.UserStreamStopped += this.Tw_UserStreamStopped;
-            this.tw.PostDeleted += this.Tw_PostDeleted;
-            this.tw.UserStreamEventReceived += this.Tw_UserStreamEventArrived;
-            this.MenuItemUserStream.Text = "&UserStream ■";
-            this.MenuItemUserStream.Enabled = true;
-            this.StopToolStripMenuItem.Text = "&Start";
-            this.StopToolStripMenuItem.Enabled = true;
-            if (this.settingDialog.UserstreamStartup)
-            {
-                this.tw.StartUserStream();
-            }
-        }
-
+        
         private void TweenMain_Shown(object sender, EventArgs e)
         {
             try
@@ -12156,201 +12933,19 @@ namespace Hoehoe
             this.isInitializing = false;
             this.timerTimeline.Enabled = true;
         }
-
-        private bool IsInitialRead()
-        {
-            return this.waitTimeline || this.waitReply || this.waitDm || this.waitFav || this.waitPubSearch || this.waitUserTimeline || this.waitLists;
-        }
-
-        private void DoGetFollowersMenu()
-        {
-            this.GetTimeline(WorkerType.Follower, 1, 0, string.Empty);
-            this.DispSelectedPost(true);
-        }
-
+        
         private void GetFollowersAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.DoGetFollowersMenu();
-        }
-
-        private void DoReTweetUnofficial()
-        {
-            // RT @id:内容
-            if (this.ExistCurrentPost)
-            {
-                if (this.curPost.IsDm || !this.StatusText.Enabled)
-                {
-                    return;
-                }
-
-                if (this.curPost.IsProtect)
-                {
-                    MessageBox.Show("Protected.");
-                    return;
-                }
-
-                string rtdata = this.CreateRetweetUnofficial(this.curPost.Text);
-                this.StatusText.Text = "RT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
-                this.StatusText.SelectionStart = 0;
-                this.StatusText.Focus();
-            }
         }
 
         private void ReTweetStripMenuItem_Click(object sender, EventArgs e)
         {
             this.DoReTweetUnofficial();
         }
-
-        private void DoReTweetOfficial(bool isConfirm)
-        {
-            // 公式RT
-            if (this.ExistCurrentPost)
-            {
-                if (this.curPost.IsProtect)
-                {
-                    MessageBox.Show("Protected.");
-                    this.doFavRetweetFlags = false;
-                    return;
-                }
-
-                if (this.curList.SelectedIndices.Count > 15)
-                {
-                    MessageBox.Show(Hoehoe.Properties.Resources.RetweetLimitText);
-                    this.doFavRetweetFlags = false;
-                    return;
-                }
-                else if (this.curList.SelectedIndices.Count > 1)
-                {
-                    string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion2;
-                    if (this.doFavRetweetFlags)
-                    {
-                        confirmMessage = Hoehoe.Properties.Resources.FavoriteRetweetQuestionText1;
-                    }
-
-                    switch (MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
-                    {
-                        case DialogResult.Cancel:
-                        case DialogResult.No:
-                            this.doFavRetweetFlags = false;
-                            return;
-                    }
-                }
-                else
-                {
-                    if (this.curPost.IsDm || this.curPost.IsMe)
-                    {
-                        this.doFavRetweetFlags = false;
-                        return;
-                    }
-
-                    if (!this.settingDialog.RetweetNoConfirm)
-                    {
-                        string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion1;
-                        if (this.doFavRetweetFlags)
-                        {
-                            confirmMessage = Hoehoe.Properties.Resources.FavoritesRetweetQuestionText2;
-                        }
-
-                        if (isConfirm && MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
-                        {
-                            this.doFavRetweetFlags = false;
-                            return;
-                        }
-                    }
-                }
-
-                GetWorkerArg args = new GetWorkerArg()
-                {
-                    Ids = new List<long>(),
-                    SIds = new List<long>(),
-                    TabName = this.curTab.Text,
-                    WorkerType = WorkerType.Retweet
-                };
-                foreach (int idx in this.curList.SelectedIndices)
-                {
-                    PostClass post = this.GetCurTabPost(idx);
-                    if (!post.IsMe && !post.IsProtect && !post.IsDm)
-                    {
-                        args.Ids.Add(post.StatusId);
-                    }
-                }
-
-                this.RunAsync(args);
-            }
-        }
-
         private void ReTweetOriginalStripMenuItem_Click(object sender, EventArgs e)
         {
             this.DoReTweetOfficial(true);
-        }
-
-        private void FavoritesRetweetOriginal()
-        {
-            if (!this.ExistCurrentPost)
-            {
-                return;
-            }
-
-            this.doFavRetweetFlags = true;
-            this.DoReTweetOfficial(true);
-            if (this.doFavRetweetFlags)
-            {
-                this.doFavRetweetFlags = false;
-                this.FavoriteChange(true, false);
-            }
-        }
-
-        private void FavoritesRetweetUnofficial()
-        {
-            if (this.ExistCurrentPost && !this.curPost.IsDm)
-            {
-                this.doFavRetweetFlags = true;
-                this.FavoriteChange(true);
-                if (!this.curPost.IsProtect && this.doFavRetweetFlags)
-                {
-                    this.doFavRetweetFlags = false;
-                    this.DoReTweetUnofficial();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Twitterにより省略されているURLを含むaタグをキャプチャしてリンク先URLへ置き換える
-        /// </summary>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        private string CreateRetweetUnofficial(string status)
-        {
-            MatchCollection ms = Regex.Matches(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\"[^>]*>(?<link>(https?|shttp|ftps?):// [^<]+)</a>");
-            foreach (Match m in ms)
-            {
-                if (m.Result("${link}").EndsWith("..."))
-                {
-                    break;
-                }
-            }
-
-            status = Regex.Replace(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\" title=\"(?<title>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "${title}");
-
-            // その他のリンク(@IDなど)を置き換える
-            status = Regex.Replace(status, "@<a target=\"_self\" href=\"https?:// twitter.com/(#!/)?(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "@${url}");
-
-            // ハッシュタグ
-            status = Regex.Replace(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "${link}");
-
-            // <br>タグ除去
-            if (this.StatusText.Multiline)
-            {
-                status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", "\r\n", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            }
-            else
-            {
-                status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            }
-
-            this.replyToId = 0;
-            this.replyToName = string.Empty;
-            return status.Replace("&nbsp;", " ");
         }
 
         private void DumpPostClassToolStripMenuItem_Click(object sender, EventArgs e)
@@ -12359,11 +12954,6 @@ namespace Hoehoe
             {
                 this.DispSelectedPost(true);
             }
-        }
-
-        private bool IsKeyDown(Keys key)
-        {
-            return (Control.ModifierKeys & key) == key;
         }
 
         private void MenuItemHelp_DropDownOpening(object sender, EventArgs e)
@@ -12419,12 +13009,6 @@ namespace Hoehoe
             this.UrlConvert(UrlConverter.Jmp);
         }
 
-        private void GetApiInfo_Dowork(object sender, DoWorkEventArgs e)
-        {
-            GetApiInfoArgs args = (GetApiInfoArgs)e.Argument;
-            e.Result = this.tw.GetInfoApi(args.Info);
-        }
-
         private void ApiInfoMenuItem_Click(object sender, EventArgs e)
         {
             GetApiInfoArgs args = new GetApiInfoArgs
@@ -12473,41 +13057,6 @@ namespace Hoehoe
             this.FollowCommand(id);
         }
 
-        private void FollowCommand_DoWork(object sender, DoWorkEventArgs e)
-        {
-            FollowRemoveCommandArgs arg = (FollowRemoveCommandArgs)e.Argument;
-            e.Result = arg.Tw.PostFollowCommand(arg.Id);
-        }
-
-        private void FollowCommand(string id)
-        {
-            using (InputTabName inputName = new InputTabName())
-            {
-                inputName.SetFormTitle("Follow");
-                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
-                inputName.TabName = id;
-                if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
-                {
-                    FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs();
-                    arg.Tw = this.tw;
-                    arg.Id = inputName.TabName.Trim();
-                    using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.FollowCommandText1, this.FollowCommand_DoWork, null, arg))
-                    {
-                        info.ShowDialog();
-                        string ret = (string)info.Result;
-                        if (!string.IsNullOrEmpty(ret))
-                        {
-                            MessageBox.Show(Hoehoe.Properties.Resources.FRMessage2 + ret);
-                        }
-                        else
-                        {
-                            MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
-                        }
-                    }
-                }
-            }
-        }
-
         private void RemoveCommandMenuItem_Click(object sender, EventArgs e)
         {
             string id = string.Empty;
@@ -12517,49 +13066,6 @@ namespace Hoehoe
             }
 
             this.RemoveCommand(id, false);
-        }
-
-        private void RemoveCommand_DoWork(object sender, DoWorkEventArgs e)
-        {
-            FollowRemoveCommandArgs arg = (FollowRemoveCommandArgs)e.Argument;
-            e.Result = arg.Tw.PostRemoveCommand(arg.Id);
-        }
-
-        private void RemoveCommand(string id, bool skipInput)
-        {
-            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs() { Tw = this.tw, Id = id };
-            if (!skipInput)
-            {
-                using (InputTabName inputName = new InputTabName())
-                {
-                    inputName.SetFormTitle("Unfollow");
-                    inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
-                    inputName.TabName = id;
-                    if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
-                    {
-                        arg.Tw = this.tw;
-                        arg.Id = inputName.TabName.Trim();
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-            }
-
-            using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.RemoveCommandText1, this.RemoveCommand_DoWork, null, arg))
-            {
-                info.ShowDialog();
-                string ret = (string)info.Result;
-                if (!string.IsNullOrEmpty(ret))
-                {
-                    MessageBox.Show(Hoehoe.Properties.Resources.FRMessage2 + ret);
-                }
-                else
-                {
-                    MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
-                }
-            }
         }
 
         private void FriendshipMenuItem_Click(object sender, EventArgs e)
@@ -12573,154 +13079,9 @@ namespace Hoehoe
             this.ShowFriendship(id);
         }
 
-        private void ShowFriendship_DoWork(object sender, DoWorkEventArgs e)
-        {
-            ShowFriendshipArgs arg = (ShowFriendshipArgs)e.Argument;
-            string result = string.Empty;
-            foreach (ShowFriendshipArgs.FriendshipInfo fInfo in arg.Ids)
-            {
-                string rt = arg.Tw.GetFriendshipInfo(fInfo.Id, ref fInfo.IsFollowing, ref fInfo.IsFollowed);
-                if (!string.IsNullOrEmpty(rt))
-                {
-                    if (string.IsNullOrEmpty(result))
-                    {
-                        result = rt;
-                    }
-
-                    fInfo.IsError = true;
-                }
-            }
-
-            e.Result = result;
-        }
-
-        private void ShowFriendship(string id)
-        {
-            ShowFriendshipArgs args = new ShowFriendshipArgs();
-            args.Tw = this.tw;
-            using (InputTabName inputName = new InputTabName())
-            {
-                inputName.SetFormTitle("Show Friendships");
-                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
-                inputName.TabName = id;
-                if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
-                {
-                    string ret = string.Empty;
-                    args.Ids.Add(new ShowFriendshipArgs.FriendshipInfo(inputName.TabName.Trim()));
-                    using (FormInfo formInfo = new FormInfo(this, Hoehoe.Properties.Resources.ShowFriendshipText1, this.ShowFriendship_DoWork, null, args))
-                    {
-                        formInfo.ShowDialog();
-                        ret = (string)formInfo.Result;
-                    }
-
-                    string result = string.Empty;
-                    if (string.IsNullOrEmpty(ret))
-                    {
-                        if (args.Ids[0].IsFollowing)
-                        {
-                            result = Hoehoe.Properties.Resources.GetFriendshipInfo1 + System.Environment.NewLine;
-                        }
-                        else
-                        {
-                            result = Hoehoe.Properties.Resources.GetFriendshipInfo2 + System.Environment.NewLine;
-                        }
-
-                        if (args.Ids[0].IsFollowed)
-                        {
-                            result += Hoehoe.Properties.Resources.GetFriendshipInfo3;
-                        }
-                        else
-                        {
-                            result += Hoehoe.Properties.Resources.GetFriendshipInfo4;
-                        }
-
-                        result = args.Ids[0].Id + Hoehoe.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine + result;
-                    }
-                    else
-                    {
-                        result = ret;
-                    }
-
-                    MessageBox.Show(result);
-                }
-            }
-        }
-
-        private void ShowFriendship(string[] ids)
-        {
-            foreach (string id in ids)
-            {
-                string ret = string.Empty;
-                ShowFriendshipArgs args = new ShowFriendshipArgs();
-                args.Tw = this.tw;
-                args.Ids.Add(new ShowFriendshipArgs.FriendshipInfo(id.Trim()));
-                using (FormInfo formInfo = new FormInfo(this, Hoehoe.Properties.Resources.ShowFriendshipText1, this.ShowFriendship_DoWork, null, args))
-                {
-                    formInfo.ShowDialog();
-                    ret = (string)formInfo.Result;
-                }
-
-                string result = string.Empty;
-                ShowFriendshipArgs.FriendshipInfo fInfo = args.Ids[0];
-                string ff = string.Empty;
-                if (string.IsNullOrEmpty(ret))
-                {
-                    ff = "  ";
-                    if (fInfo.IsFollowing)
-                    {
-                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo1;
-                    }
-                    else
-                    {
-                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo2;
-                    }
-
-                    ff += System.Environment.NewLine + "  ";
-                    if (fInfo.IsFollowed)
-                    {
-                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo3;
-                    }
-                    else
-                    {
-                        ff += Hoehoe.Properties.Resources.GetFriendshipInfo4;
-                    }
-
-                    result += fInfo.Id + Hoehoe.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine + ff;
-                    if (fInfo.IsFollowing)
-                    {
-                        if (MessageBox.Show(Hoehoe.Properties.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result, Hoehoe.Properties.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
-                        {
-                            this.RemoveCommand(fInfo.Id, true);
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show(result);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(ret);
-                }
-            }
-        }
-
         private void OwnStatusMenuItem_Click(object sender, EventArgs e)
         {
             this.DoShowUserStatus(this.tw.Username, false);
-        }
-
-        private string GetUserId()
-        {
-            Match m = Regex.Match(this.postBrowserStatusText, "^https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?$");
-            if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
-            {
-                return m.Result("${ScreenName}");
-            }
-            else
-            {
-                return null;
-            }
         }
 
         private void FollowContextMenuItem_Click(object sender, EventArgs e)
@@ -12752,7 +13113,7 @@ namespace Hoehoe
 
         private void FriendshipAllMenuItem_Click(object sender, EventArgs e)
         {
-            MatchCollection ma = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"");
+            MatchCollection ma = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"");
             List<string> ids = new List<string>();
             foreach (Match mu in ma)
             {
@@ -12800,41 +13161,6 @@ namespace Hoehoe
         private void ToolStripFocusLockMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             this.modifySettingCommon = true;
-        }
-
-        private void DoQuote()
-        {
-            // QT @id:内容
-            // 返信先情報付加
-            if (this.ExistCurrentPost)
-            {
-                if (this.curPost.IsDm || !this.StatusText.Enabled)
-                {
-                    return;
-                }
-
-                if (this.curPost.IsProtect)
-                {
-                    MessageBox.Show("Protected.");
-                    return;
-                }
-
-                string rtdata = this.CreateRetweetUnofficial(this.curPost.Text);
-                this.StatusText.Text = " QT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
-                if (this.curPost.RetweetedId == 0)
-                {
-                    this.replyToId = this.curPost.StatusId;
-                }
-                else
-                {
-                    this.replyToId = this.curPost.RetweetedId;
-                }
-
-                this.replyToName = this.curPost.ScreenName;
-
-                this.StatusText.SelectionStart = 0;
-                this.StatusText.Focus();
-            }
         }
 
         private void QuoteStripMenuItem_Click(object sender, EventArgs e)
@@ -12952,18 +13278,6 @@ namespace Hoehoe
                 this.AddNewTab(renamed, false, tb.TabType, tb.ListInfo);
                 this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
                 this.SaveConfigsTabs();
-            }
-        }
-
-        private void DoMoveToRTHome()
-        {
-            if (this.curList.SelectedIndices.Count > 0)
-            {
-                PostClass post = this.GetCurTabPost(this.curList.SelectedIndices[0]);
-                if (post.RetweetedId > 0)
-                {
-                    this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).RetweetedBy);
-                }
             }
         }
 
@@ -13172,6 +13486,11 @@ namespace Hoehoe
             this.StatusText_TextChanged(null, null);
         }
 
+        private void HashStripSplitButton_ButtonClick(object sender, EventArgs e)
+        {
+            this.HashToggleMenuItem_Click(null, null);
+        }
+
         private void HashToggleMenuItem_Click(object sender, EventArgs e)
         {
             this.HashMgr.ToggleHash();
@@ -13190,11 +13509,6 @@ namespace Hoehoe
 
             this.modifySettingCommon = true;
             this.StatusText_TextChanged(null, null);
-        }
-
-        private void HashStripSplitButton_ButtonClick(object sender, EventArgs e)
-        {
-            this.HashToggleMenuItem_Click(null, null);
         }
 
         private void MenuItemOperate_DropDownOpening(object sender, EventArgs e)
@@ -13398,83 +13712,6 @@ namespace Hoehoe
             this.ShowUserStatus(id);
         }
 
-        private void GetUserInfo_DoWork(object sender, DoWorkEventArgs e)
-        {
-            GetUserInfoArgs args = (GetUserInfoArgs)e.Argument;
-            e.Result = args.Tw.GetUserInfo(args.Id, ref args.User);
-        }
-
-        private void DoShowUserStatus(string id, bool showInputDialog)
-        {
-            DataModels.Twitter.User user = null;
-            if (showInputDialog)
-            {
-                using (InputTabName inputName = new InputTabName())
-                {
-                    inputName.SetFormTitle("Show UserStatus");
-                    inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
-                    inputName.TabName = id;
-                    if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
-                    {
-                        id = inputName.TabName.Trim();
-                        GetUserInfoArgs args = new GetUserInfoArgs() { Tw = this.tw, Id = id, User = user };
-                        using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
-                        {
-                            info.ShowDialog();
-                            string ret = (string)info.Result;
-                            if (string.IsNullOrEmpty(ret))
-                            {
-                                this.DoShowUserStatus(args.User);
-                            }
-                            else
-                            {
-                                MessageBox.Show(ret);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                GetUserInfoArgs args = new GetUserInfoArgs() { Tw = this.tw, Id = id, User = user };
-                using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
-                {
-                    info.ShowDialog();
-                    string ret = (string)info.Result;
-                    if (string.IsNullOrEmpty(ret))
-                    {
-                        this.DoShowUserStatus(args.User);
-                    }
-                    else
-                    {
-                        MessageBox.Show(ret);
-                    }
-                }
-            }
-        }
-
-        private void DoShowUserStatus(DataModels.Twitter.User user)
-        {
-            using (ShowUserInfo userinfo = new ShowUserInfo())
-            {
-                userinfo.Owner = this;
-                userinfo.SetUser(user);
-                userinfo.ShowDialog(this);
-                this.Activate();
-                this.BringToFront();
-            }
-        }
-
-        private void ShowUserStatus(string id, bool showInputDialog)
-        {
-            this.DoShowUserStatus(id, showInputDialog);
-        }
-
-        private void ShowUserStatus(string id)
-        {
-            this.DoShowUserStatus(id, true);
-        }
-
         private void FollowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.NameLabel.Tag != null)
@@ -13546,6 +13783,53 @@ namespace Hoehoe
             }
         }
 
+        #region callback
+
+        private void GetApiInfo_Dowork(object sender, DoWorkEventArgs e)
+        {
+            GetApiInfoArgs args = (GetApiInfoArgs)e.Argument;
+            e.Result = this.tw.GetInfoApi(args.Info);
+        }
+
+        private void FollowCommand_DoWork(object sender, DoWorkEventArgs e)
+        {
+            FollowRemoveCommandArgs arg = (FollowRemoveCommandArgs)e.Argument;
+            e.Result = arg.Tw.PostFollowCommand(arg.Id);
+        }
+
+        private void RemoveCommand_DoWork(object sender, DoWorkEventArgs e)
+        {
+            FollowRemoveCommandArgs arg = (FollowRemoveCommandArgs)e.Argument;
+            e.Result = arg.Tw.PostRemoveCommand(arg.Id);
+        }
+
+        private void ShowFriendship_DoWork(object sender, DoWorkEventArgs e)
+        {
+            ShowFriendshipArgs arg = (ShowFriendshipArgs)e.Argument;
+            string result = string.Empty;
+            foreach (ShowFriendshipArgs.FriendshipInfo fInfo in arg.Ids)
+            {
+                string rt = arg.Tw.GetFriendshipInfo(fInfo.Id, ref fInfo.IsFollowing, ref fInfo.IsFollowed);
+                if (!string.IsNullOrEmpty(rt))
+                {
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        result = rt;
+                    }
+
+                    fInfo.IsError = true;
+                }
+            }
+
+            e.Result = result;
+        }
+
+        private void GetUserInfo_DoWork(object sender, DoWorkEventArgs e)
+        {
+            GetUserInfoArgs args = (GetUserInfoArgs)e.Argument;
+            e.Result = args.Tw.GetUserInfo(args.Id, ref args.User);
+        }
+
         private void GetRetweet_DoWork(object sender, DoWorkEventArgs e)
         {
             int counter = 0;
@@ -13561,9 +13845,9 @@ namespace Hoehoe
             }
 
             this.tw.GetStatus_Retweeted_Count(statusid, ref counter);
-
             e.Result = counter;
         }
+        #endregion
 
         private void RtCountMenuItem_Click(object sender, EventArgs e)
         {
@@ -13631,8 +13915,6 @@ namespace Hoehoe
         {
             this.MultiLineMenuItem.PerformClick();
         }
-
-        #region "画像投稿"
 
         private void ImageSelectMenuItem_Click(object sender, EventArgs e)
         {
@@ -13704,83 +13986,6 @@ namespace Hoehoe
             }
         }
 
-        private void ImageFromSelectedFile()
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(this.ImagefilePathText.Text.Trim()) || string.IsNullOrEmpty(this.ImageService))
-                {
-                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                    this.ImagefilePathText.Text = string.Empty;
-                    return;
-                }
-
-                FileInfo fl = new FileInfo(this.ImagefilePathText.Text.Trim());
-                if (!this.pictureServices[this.ImageService].CheckValidExtension(fl.Extension))
-                {
-                    // 画像以外の形式
-                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                    this.ImagefilePathText.Text = string.Empty;
-                    return;
-                }
-
-                if (!this.pictureServices[this.ImageService].CheckValidFilesize(fl.Extension, fl.Length))
-                {
-                    // ファイルサイズが大きすぎる
-                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                    this.ImagefilePathText.Text = string.Empty;
-                    MessageBox.Show("File is too large.");
-                    return;
-                }
-
-                switch (this.pictureServices[this.ImageService].GetFileType(fl.Extension))
-                {
-                    case UploadFileType.Invalid:
-                        this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                        this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                        this.ImagefilePathText.Text = string.Empty;
-                        break;
-                    case UploadFileType.Picture:
-                        Image img = null;
-                        using (FileStream fs = new FileStream(this.ImagefilePathText.Text, FileMode.Open, FileAccess.Read))
-                        {
-                            img = Image.FromStream(fs);
-                            fs.Close();
-                        }
-
-                        this.ImageSelectedPicture.Image = (new HttpVarious()).CheckValidImage(img, img.Width, img.Height);
-                        this.ImageSelectedPicture.Tag = UploadFileType.Picture;
-                        break;
-                    case UploadFileType.MultiMedia:
-                        this.ImageSelectedPicture.Image = Hoehoe.Properties.Resources.MultiMediaImage;
-                        this.ImageSelectedPicture.Tag = UploadFileType.MultiMedia;
-                        break;
-                    default:
-                        this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                        this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                        this.ImagefilePathText.Text = string.Empty;
-                        break;
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                this.ImagefilePathText.Text = string.Empty;
-                MessageBox.Show("File not found.");
-            }
-            catch (Exception)
-            {
-                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                this.ImagefilePathText.Text = string.Empty;
-                MessageBox.Show("The type of this file is not image.");
-            }
-        }
-
         private void ImageSelection_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
@@ -13810,39 +14015,6 @@ namespace Hoehoe
             if (e.KeyCode == Keys.Escape)
             {
                 this.ImagefilePathText.CausesValidation = false;
-            }
-        }
-
-        private void SetImageServiceCombo()
-        {
-            string svc = string.Empty;
-            if (this.ImageServiceCombo.SelectedIndex > -1)
-            {
-                svc = this.ImageServiceCombo.SelectedItem.ToString();
-            }
-
-            this.ImageServiceCombo.Items.Clear();
-            this.ImageServiceCombo.Items.Add("TwitPic");
-            this.ImageServiceCombo.Items.Add("img.ly");
-            this.ImageServiceCombo.Items.Add("yfrog");
-            this.ImageServiceCombo.Items.Add("lockerz");
-            this.ImageServiceCombo.Items.Add("Twitter");
-
-            if (string.IsNullOrEmpty(svc))
-            {
-                this.ImageServiceCombo.SelectedIndex = 0;
-            }
-            else
-            {
-                int idx = this.ImageServiceCombo.Items.IndexOf(svc);
-                if (idx == -1)
-                {
-                    this.ImageServiceCombo.SelectedIndex = 0;
-                }
-                else
-                {
-                    this.ImageServiceCombo.SelectedIndex = idx;
-                }
             }
         }
 
@@ -13883,8 +14055,6 @@ namespace Hoehoe
                 }
             }
         }
-
-        #endregion "画像投稿"
 
         private void ListManageToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -13932,24 +14102,6 @@ namespace Hoehoe
         private void CopyUserIdStripMenuItem_Click(object sender, EventArgs e)
         {
             this.CopyUserId();
-        }
-
-        private void CopyUserId()
-        {
-            if (this.curPost == null)
-            {
-                return;
-            }
-
-            string clstr = this.curPost.ScreenName;
-            try
-            {
-                Clipboard.SetDataObject(clstr, false, 5, 100);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
 
         private void ShowRelatedStatusesMenuItem_Click(object sender, EventArgs e)
@@ -14014,8 +14166,6 @@ namespace Hoehoe
         {
             this.modifySettingCommon = true;
         }
-
-        #region "Userstream"
 
         private void Tw_PostDeleted(long id)
         {
@@ -14211,65 +14361,6 @@ namespace Hoehoe
             }
         }
 
-        private void NotifyEvent(Twitter.FormattedEvent ev)
-        {
-            // 新着通知
-            if (this.BalloonRequired(ev))
-            {
-                this.NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
-                StringBuilder title = new StringBuilder();
-                if (this.settingDialog.DispUsername)
-                {
-                    title.Append(this.tw.Username);
-                    title.Append(" - ");
-                }
-
-                title.Append("Hoehoe [");
-                title.Append(ev.Event.ToUpper());
-                title.Append("] by ");
-                if (!string.IsNullOrEmpty(ev.Username))
-                {
-                    title.Append(ev.Username.ToString());
-                }
-
-                string text = !string.IsNullOrEmpty(ev.Target) ? ev.Target : " ";
-
-                if (this.settingDialog.IsNotifyUseGrowl)
-                {
-                   growlHelper.Notify(GrowlHelper.NotifyType.UserStreamEvent, ev.Id.ToString(), title.ToString(), text);
-                }
-                else
-                {
-                    this.NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
-                    this.NotifyIcon1.BalloonTipTitle = title.ToString();
-                    this.NotifyIcon1.BalloonTipText = text;
-                    this.NotifyIcon1.ShowBalloonTip(500);
-                }
-            }
-
-            // サウンド再生
-            string snd = this.settingDialog.EventSoundFile;
-            if (!this.isInitializing && this.settingDialog.PlaySound && !string.IsNullOrEmpty(snd))
-            {
-                if (Convert.ToBoolean(ev.Eventtype & this.settingDialog.EventNotifyFlag) && this.IsMyEventNotityAsEventType(ev))
-                {
-                    try
-                    {
-                        string dir = MyCommon.AppDir;
-                        if (Directory.Exists(Path.Combine(dir, "Sounds")))
-                        {
-                            dir = Path.Combine(dir, "Sounds");
-                        }
-
-                        new SoundPlayer(Path.Combine(dir, snd)).Play();
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-            }
-        }
-
         private void StopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.MenuItemUserStream.Enabled = false;
@@ -14358,8 +14449,6 @@ namespace Hoehoe
             this.TopMost = this.settingDialog.AlwaysTop;
         }
 
-        #endregion "Userstream"
-
         private void TweenRestartMenuItem_Click(object sender, EventArgs e)
         {
             MyCommon.IsEnding = true;
@@ -14387,31 +14476,6 @@ namespace Hoehoe
             this.OpenUriAsync("http://twitter.com/" + this.tw.Username);
         }
 
-        private void DoTranslation(string str)
-        {
-            Bing bing = new Bing();
-            string buf = string.Empty;
-            if (string.IsNullOrEmpty(str))
-            {
-                return;
-            }
-
-            string srclng = string.Empty;
-            string dstlng = this.settingDialog.TranslateLanguage;
-            string msg = string.Empty;
-            if (srclng != dstlng && bing.Translate(string.Empty, dstlng, str, ref buf))
-            {
-                this.PostBrowser.DocumentText = this.CreateDetailHtml(buf);
-            }
-            else
-            {
-                if (msg.StartsWith("Err:"))
-                {
-                    this.StatusLabel.Text = msg;
-                }
-            }
-        }
-
         private void TranslationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!this.ExistCurrentPost)
@@ -14430,32 +14494,6 @@ namespace Hoehoe
         private void ShowUserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ShowUserTimeline();
-        }
-
-        private string GetUserIdFromCurPostOrInput(string caption)
-        {
-            string id = string.Empty;
-            if (this.curPost != null)
-            {
-                id = this.curPost.ScreenName;
-            }
-
-            using (InputTabName inputName = new InputTabName())
-            {
-                inputName.SetFormTitle(caption);
-                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
-                inputName.TabName = id;
-                if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
-                {
-                    id = inputName.TabName.Trim();
-                }
-                else
-                {
-                    id = string.Empty;
-                }
-            }
-
-            return id;
         }
 
         private void UserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
@@ -14484,52 +14522,9 @@ namespace Hoehoe
             }
         }
 
-        private void TimelineRefreshEnableChange(bool isEnable)
-        {
-            if (isEnable)
-            {
-                this.tw.StartUserStream();
-            }
-            else
-            {
-                this.tw.StopUserStream();
-            }
-
-            this.timerTimeline.Enabled = isEnable;
-        }
-
         private void StopRefreshAllMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             this.TimelineRefreshEnableChange(!this.StopRefreshAllMenuItem.Checked);
-        }
-
-        private void OpenUserAppointUrl()
-        {
-            if (this.settingDialog.UserAppointUrl != null)
-            {
-                if (this.settingDialog.UserAppointUrl.Contains("{ID}") || this.settingDialog.UserAppointUrl.Contains("{STATUS}"))
-                {
-                    if (this.curPost != null)
-                    {
-                        string url = this.settingDialog.UserAppointUrl;
-                        url = url.Replace("{ID}", this.curPost.ScreenName);
-                        if (this.curPost.RetweetedId != 0)
-                        {
-                            url = url.Replace("{STATUS}", this.curPost.RetweetedId.ToString());
-                        }
-                        else
-                        {
-                            url = url.Replace("{STATUS}", this.curPost.StatusId.ToString());
-                        }
-
-                        this.OpenUriAsync(url);
-                    }
-                }
-                else
-                {
-                    this.OpenUriAsync(this.settingDialog.UserAppointUrl);
-                }
-            }
         }
 
         private void OpenUserSpecifiedUrlMenuItem_Click(object sender, EventArgs e)
@@ -14563,11 +14558,6 @@ namespace Hoehoe
             {
                 this.SplitContainer4.SplitterDistance = this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - 90;
             }
-        }
-
-        private void Ga_Sent()
-        {
-            this.modifySettingCommon = true;
         }
 
         private void SourceCopyMenuItem_Click(object sender, EventArgs e)
@@ -14642,6 +14632,7 @@ namespace Hoehoe
                     }));
             }
         }
+        #endregion
 
         #endregion private methods
     }
