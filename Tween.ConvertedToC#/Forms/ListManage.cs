@@ -217,12 +217,12 @@ namespace Hoehoe
                     return;
                 }
 
-                int idx = ListsList.SelectedIndex;
+                int idx = this.ListsList.SelectedIndex;
                 list.Members.Remove(user);
                 this.ListsList_SelectedIndexChanged(this.ListsList, EventArgs.Empty);
-                if (idx < ListsList.Items.Count)
+                if (idx < this.ListsList.Items.Count)
                 {
-                    ListsList.SelectedIndex = idx;
+                    this.ListsList.SelectedIndex = idx;
                 }
             }
         }
@@ -269,7 +269,7 @@ namespace Hoehoe
 
         private void UserList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (UserList.SelectedItem == null)
+            if (this.UserList.SelectedItem == null)
             {
                 if (this.UserIcon.Image != null)
                 {
@@ -329,7 +329,7 @@ namespace Hoehoe
         {
             if (this.Owner != null)
             {
-                ((TweenMain)this.Owner).OpenUriAsync(UserWeb.Text);
+                ((TweenMain)this.Owner).OpenUriAsync(this.UserWeb.Text);
             }
         }
 
