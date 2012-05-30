@@ -382,7 +382,7 @@ namespace Hoehoe
         public TweenMain()
         {
             // この呼び出しは、Windows フォーム デザイナで必要です。
-            InitializeComponent();
+            this.InitializeComponent();
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
             this.HookGlobalHotkey = new HookGlobalHotkey(this);
@@ -549,7 +549,7 @@ namespace Hoehoe
 
         private string ImageService
         {
-            get { return Convert.ToString(ImageServiceCombo.SelectedItem); }
+            get { return Convert.ToString(this.ImageServiceCombo.SelectedItem); }
         }
 
         private bool ExistCurrentPost
@@ -568,11 +568,11 @@ namespace Hoehoe
             {
                 if (tb.SearchWords == searchWord && string.IsNullOrEmpty(tb.SearchLang))
                 {
-                    foreach (TabPage tp in ListTab.TabPages)
+                    foreach (TabPage tp in this.ListTab.TabPages)
                     {
                         if (tb.TabName == tp.Text)
                         {
-                            ListTab.SelectedTab = tp;
+                            this.ListTab.SelectedTab = tp;
                             return;
                         }
                     }
@@ -598,16 +598,16 @@ namespace Hoehoe
             this.AddNewTab(tabName, false, TabUsageType.PublicSearch);
 
             // 追加したタブをアクティブに
-            ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
+            this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
 
             // 検索条件の設定
-            ComboBox cmb = (ComboBox)ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"];
+            ComboBox cmb = (ComboBox)this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"];
             cmb.Items.Add(searchWord);
             cmb.Text = searchWord;
             this.SaveConfigsTabs();
 
             // 検索実行
-            this.SearchButton_Click(ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
+            this.SearchButton_Click(this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
         }
 
         public void AddNewTabForUserTimeline(string user)
@@ -617,11 +617,11 @@ namespace Hoehoe
             {
                 if (tb.User == user)
                 {
-                    foreach (TabPage tp in ListTab.TabPages)
+                    foreach (TabPage tp in this.ListTab.TabPages)
                     {
                         if (tb.TabName == tp.Text)
                         {
-                            ListTab.SelectedTab = tp;
+                            this.ListTab.SelectedTab = tp;
                             return;
                         }
                     }
@@ -641,7 +641,7 @@ namespace Hoehoe
             this.AddNewTab(tabName, false, TabUsageType.UserTimeline);
 
             // 追加したタブをアクティブに
-            ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
+            this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
             this.SaveConfigsTabs();
 
             // 検索実行
@@ -651,7 +651,7 @@ namespace Hoehoe
         public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
         {
             // 重複チェック
-            foreach (TabPage tb in ListTab.TabPages)
+            foreach (TabPage tb in this.ListTab.TabPages)
             {
                 if (tb.Text == tabName)
                 {
@@ -688,7 +688,7 @@ namespace Hoehoe
             ColumnHeader colHd7 = new ColumnHeader();            // マーク＆プロテクト
             ColumnHeader colHd8 = new ColumnHeader();            // ソース
 
-            int cnt = ListTab.TabPages.Count;
+            int cnt = this.ListTab.TabPages.Count;
 
             ///ToDo:Create and set controls follow tabtypes
 
@@ -1001,9 +1001,9 @@ namespace Hoehoe
         public bool RemoveSpecifiedTab(string tabName, bool confirm)
         {
             int idx = 0;
-            for (idx = 0; idx < ListTab.TabPages.Count; idx++)
+            for (idx = 0; idx < this.ListTab.TabPages.Count; idx++)
             {
-                if (ListTab.TabPages[idx].Text == tabName)
+                if (this.ListTab.TabPages[idx].Text == tabName)
                 {
                     break;
                 }
@@ -1034,7 +1034,7 @@ namespace Hoehoe
             this.ListTab.SuspendLayout();
             this.SuspendLayout();
 
-            TabPage tabPage = ListTab.TabPages[idx];
+            TabPage tabPage = this.ListTab.TabPages[idx];
             DetailsListView listCustom = (DetailsListView)tabPage.Tag;
             tabPage.Tag = null;
 
@@ -1117,7 +1117,7 @@ namespace Hoehoe
             listCustom.Dispose();
             this.statuses.RemoveTab(tabName);
 
-            foreach (TabPage tp in ListTab.TabPages)
+            foreach (TabPage tp in this.ListTab.TabPages)
             {
                 DetailsListView lst = (DetailsListView)tp.Tag;
                 if (lst.VirtualListSize != this.statuses.Tabs[tp.Text].AllCount)
@@ -1223,9 +1223,9 @@ namespace Hoehoe
             }
 
             // 新タブ名存在チェック
-            for (int i = 0; i < ListTab.TabCount; i++)
+            for (int i = 0; i < this.ListTab.TabCount; i++)
             {
-                if (ListTab.TabPages[i].Text == newTabText)
+                if (this.ListTab.TabPages[i].Text == newTabText)
                 {
                     string tmp = string.Format(Hoehoe.Properties.Resources.Tabs_DoubleClickText1, newTabText);
                     MessageBox.Show(tmp, Hoehoe.Properties.Resources.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -1234,30 +1234,30 @@ namespace Hoehoe
             }
 
             // タブ名のリスト作り直し（デフォルトタブ以外は再作成）
-            for (int i = 0; i < ListTab.TabCount; i++)
+            for (int i = 0; i < this.ListTab.TabCount; i++)
             {
-                if (this.statuses.IsDistributableTab(ListTab.TabPages[i].Text))
+                if (this.statuses.IsDistributableTab(this.ListTab.TabPages[i].Text))
                 {
-                    this.tabDialog.RemoveTab(ListTab.TabPages[i].Text);
+                    this.tabDialog.RemoveTab(this.ListTab.TabPages[i].Text);
                 }
 
-                if (ListTab.TabPages[i].Text == tabName)
+                if (this.ListTab.TabPages[i].Text == tabName)
                 {
-                    ListTab.TabPages[i].Text = newTabText;
+                    this.ListTab.TabPages[i].Text = newTabText;
                 }
             }
 
             this.statuses.RenameTab(tabName, newTabText);
-            for (int i = 0; i < ListTab.TabCount; i++)
+            for (int i = 0; i < this.ListTab.TabCount; i++)
             {
-                if (this.statuses.IsDistributableTab(ListTab.TabPages[i].Text))
+                if (this.statuses.IsDistributableTab(this.ListTab.TabPages[i].Text))
                 {
-                    if (ListTab.TabPages[i].Text == tabName)
+                    if (this.ListTab.TabPages[i].Text == tabName)
                     {
-                        ListTab.TabPages[i].Text = newTabText;
+                        this.ListTab.TabPages[i].Text = newTabText;
                     }
 
-                    this.tabDialog.AddTab(ListTab.TabPages[i].Text);
+                    this.tabDialog.AddTab(this.ListTab.TabPages[i].Text);
                 }
             }
 
@@ -1271,23 +1271,23 @@ namespace Hoehoe
         public void ReOrderTab(string targetTabText, string baseTabText, bool isBeforeBaseTab)
         {
             int baseIndex = 0;
-            for (baseIndex = 0; baseIndex < ListTab.TabPages.Count; baseIndex++)
+            for (baseIndex = 0; baseIndex < this.ListTab.TabPages.Count; baseIndex++)
             {
-                if (ListTab.TabPages[baseIndex].Text == baseTabText)
+                if (this.ListTab.TabPages[baseIndex].Text == baseTabText)
                 {
                     break;
                 }
             }
 
-            ListTab.SuspendLayout();
+            this.ListTab.SuspendLayout();
 
             TabPage mTp = null;
-            for (int j = 0; j < ListTab.TabPages.Count; j++)
+            for (int j = 0; j < this.ListTab.TabPages.Count; j++)
             {
-                if (ListTab.TabPages[j].Text == targetTabText)
+                if (this.ListTab.TabPages[j].Text == targetTabText)
                 {
-                    mTp = ListTab.TabPages[j];
-                    ListTab.TabPages.Remove(mTp);
+                    mTp = this.ListTab.TabPages[j];
+                    this.ListTab.TabPages.Remove(mTp);
                     if (j < baseIndex)
                     {
                         baseIndex -= 1;
@@ -1299,23 +1299,23 @@ namespace Hoehoe
 
             if (isBeforeBaseTab)
             {
-                ListTab.TabPages.Insert(baseIndex, mTp);
+                this.ListTab.TabPages.Insert(baseIndex, mTp);
             }
             else
             {
-                ListTab.TabPages.Insert(baseIndex + 1, mTp);
+                this.ListTab.TabPages.Insert(baseIndex + 1, mTp);
             }
 
-            ListTab.ResumeLayout();
+            this.ListTab.ResumeLayout();
             this.SaveConfigsTabs();
         }
 
         public void ChangeTabUnreadManage(string tabName, bool isManage)
         {
             int idx = 0;
-            for (idx = 0; idx < ListTab.TabCount; idx++)
+            for (idx = 0; idx < this.ListTab.TabCount; idx++)
             {
-                if (ListTab.TabPages[idx].Text == tabName)
+                if (this.ListTab.TabPages[idx].Text == tabName)
                 {
                     break;
                 }
@@ -1326,11 +1326,11 @@ namespace Hoehoe
             {
                 if (this.statuses.Tabs[tabName].UnreadCount > 0)
                 {
-                    ListTab.TabPages[idx].ImageIndex = 0;
+                    this.ListTab.TabPages[idx].ImageIndex = 0;
                 }
                 else
                 {
-                    ListTab.TabPages[idx].ImageIndex = -1;
+                    this.ListTab.TabPages[idx].ImageIndex = -1;
                 }
             }
 
@@ -1345,13 +1345,13 @@ namespace Hoehoe
             this.SetStatusLabelUrl();
             if (!this.SettingDialog.TabIconDisp)
             {
-                ListTab.Refresh();
+                this.ListTab.Refresh();
             }
         }
 
         public void SetStatusLabel(string text)
         {
-            StatusLabel.Text = text;
+            this.StatusLabel.Text = text;
         }
 
         public string WebBrowser_GetSelectionText(ref WebBrowser componentInstance)
@@ -1497,7 +1497,7 @@ namespace Hoehoe
             // TextBox1でEnterを押してもビープ音が鳴らないようにする
             if ((keyData & Keys.KeyCode) == Keys.Enter)
             {
-                if (StatusText.Focused)
+                if (this.StatusText.Focused)
                 {
                     bool doNewLine = false;
                     bool doPost = false;
@@ -1505,7 +1505,7 @@ namespace Hoehoe
                     // Ctrl+Enter投稿時
                     if (this.SettingDialog.PostCtrlEnter)
                     {
-                        if (StatusText.Multiline)
+                        if (this.StatusText.Multiline)
                         {
                             if ((keyData & Keys.Shift) == Keys.Shift && (keyData & Keys.Control) != Keys.Control)
                             {
@@ -1529,7 +1529,7 @@ namespace Hoehoe
                     }
                     else if (this.SettingDialog.PostShiftEnter)
                     {
-                        if (StatusText.Multiline)
+                        if (this.StatusText.Multiline)
                         {
                             if ((keyData & Keys.Control) == Keys.Control && (keyData & Keys.Shift) != Keys.Shift)
                             {
@@ -1553,7 +1553,7 @@ namespace Hoehoe
                     }
                     else
                     {
-                        if (StatusText.Multiline)
+                        if (this.StatusText.Multiline)
                         {
                             if ((keyData & Keys.Shift) == Keys.Shift && (keyData & Keys.Control) != Keys.Control)
                             {
@@ -1576,15 +1576,15 @@ namespace Hoehoe
 
                     if (doNewLine)
                     {
-                        int pos1 = StatusText.SelectionStart;
-                        if (StatusText.SelectionLength > 0)
+                        int pos1 = this.StatusText.SelectionStart;
+                        if (this.StatusText.SelectionLength > 0)
                         {
                             // 選択状態文字列削除
-                            StatusText.Text = StatusText.Text.Remove(pos1, StatusText.SelectionLength);
+                            this.StatusText.Text = this.StatusText.Text.Remove(pos1, this.StatusText.SelectionLength);
                         }
 
-                        StatusText.Text = StatusText.Text.Insert(pos1, Environment.NewLine); // 改行挿入
-                        StatusText.SelectionStart = pos1 + Environment.NewLine.Length;       // カーソルを改行の次の文字へ移動
+                        this.StatusText.Text = this.StatusText.Text.Insert(pos1, Environment.NewLine); // 改行挿入
+                        this.StatusText.SelectionStart = pos1 + Environment.NewLine.Length;       // カーソルを改行の次の文字へ移動
                         return true;
                     }
                     else if (doPost)
@@ -1593,9 +1593,9 @@ namespace Hoehoe
                         return true;
                     }
                 }
-                else if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch && (ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focused || ListTab.SelectedTab.Controls["panelSearch"].Controls["comboLang"].Focused))
+                else if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch && (this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focused || this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboLang"].Focused))
                 {
-                    this.SearchButton_Click(ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
+                    this.SearchButton_Click(this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
                     return true;
                 }
             }
@@ -1646,7 +1646,7 @@ namespace Hoehoe
         private void TweenMain_Activated(object sender, EventArgs e)
         {
             // 画面がアクティブになったら、発言欄の背景色戻す
-            if (StatusText.Focused)
+            if (this.StatusText.Focused)
             {
                 this.StatusText_Enter(this.StatusText, EventArgs.Empty);
             }
@@ -1957,7 +1957,7 @@ namespace Hoehoe
 #endif
             if (!MyCommon.FileVersion.EndsWith("0"))
             {
-                TraceOutToolStripMenuItem.Checked = true;
+                this.TraceOutToolStripMenuItem.Checked = true;
                 MyCommon.TraceFlag = true;
             }
         }
@@ -1967,15 +1967,15 @@ namespace Hoehoe
             this.ignoreConfigSave = true;
             this.Visible = false;
 
-            this.securityManager = new InternetSecurityManager(PostBrowser);
+            this.securityManager = new InternetSecurityManager(this.PostBrowser);
             this.thumbnail = new Thumbnail(this);
 
             MyCommon.TwitterApiInfo.Changed += this.SetStatusLabelApiHandler;
             Microsoft.Win32.SystemEvents.PowerModeChanged += this.SystemEvents_PowerModeChanged;
 
-            VerUpMenuItem.Image = this.shield.Icon;
+            this.VerUpMenuItem.Image = this.shield.Icon;
             var cmdArgs = System.Environment.GetCommandLineArgs().Skip(1).ToArray();
-            if (!(cmdArgs.Length == 0) && cmdArgs.Contains("/d"))
+            if (cmdArgs.Length != 0 && cmdArgs.Contains("/d"))
             {
                 MyCommon.TraceFlag = true;
             }
@@ -1995,8 +1995,8 @@ namespace Hoehoe
 
             // アイコン設定
             this.Icon = this.mainIcon;          // メインフォーム（TweenMain）
-            NotifyIcon1.Icon = this.iconAt;     // タスクトレイ
-            TabImage.Images.Add(this.tabIcon);  // タブ見出し
+            this.NotifyIcon1.Icon = this.iconAt;     // タスクトレイ
+            this.TabImage.Images.Add(this.tabIcon);  // タブ見出し
 
             this.SettingDialog.Owner = this;
             this.searchDialog.Owner = this;
@@ -2014,8 +2014,8 @@ namespace Hoehoe
             this.LoadConfig();
 
             // 新着バルーン通知のチェック状態設定
-            NewPostPopMenuItem.Checked = this.cfgCommon.NewAllPop;
-            this.NotifyFileMenuItem.Checked = NewPostPopMenuItem.Checked;
+            this.NewPostPopMenuItem.Checked = this.cfgCommon.NewAllPop;
+            this.NotifyFileMenuItem.Checked = this.NewPostPopMenuItem.Checked;
 
             // フォント＆文字色＆背景色保持
             this.fntUnread = this.cfgLocal.FontUnread;
@@ -2117,7 +2117,7 @@ namespace Hoehoe
             this.SettingDialog.Readed = this.cfgCommon.Read;
 
             // 新着取得時のリストスクロールをするか。Trueならスクロールしない
-            ListLockMenuItem.Checked = this.cfgCommon.ListLock;
+            this.ListLockMenuItem.Checked = this.cfgCommon.ListLock;
             this.LockListFileMenuItem.Checked = this.cfgCommon.ListLock;
             this.SettingDialog.IconSz = this.cfgCommon.IconSize;
 
@@ -2129,7 +2129,7 @@ namespace Hoehoe
 
             // サウンド再生（タブ別設定より優先）
             this.SettingDialog.PlaySound = this.cfgCommon.PlaySound;
-            PlaySoundMenuItem.Checked = this.SettingDialog.PlaySound;
+            this.PlaySoundMenuItem.Checked = this.SettingDialog.PlaySound;
             this.PlaySoundFileMenuItem.Checked = this.SettingDialog.PlaySound;
 
             // 片思い表示。Trueなら片思い表示する
@@ -2308,7 +2308,7 @@ namespace Hoehoe
             this.HashMgr = new HashtagManage(this.HashSupl, this.cfgCommon.HashTags.ToArray(), this.cfgCommon.HashSelected, this.cfgCommon.HashIsPermanent, this.cfgCommon.HashIsHead, this.cfgCommon.HashIsNotAddToAtReply);
             if (!string.IsNullOrEmpty(this.HashMgr.UseHash) && this.HashMgr.IsPermanent)
             {
-                HashStripSplitButton.Text = this.HashMgr.UseHash;
+                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
             }
 
             this.isInitializing = true;
@@ -2459,7 +2459,7 @@ namespace Hoehoe
             HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
             HttpTwitter.SetTwitterSearchUrl(this.cfgCommon.TwitterSearchUrl);
             this.tw.TrackWord = this.cfgCommon.TrackWord;
-            TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.tw.TrackWord);
+            this.TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.tw.TrackWord);
             this.tw.AllAtReply = this.cfgCommon.AllAtReply;
             this.AllrepliesToolStripMenuItem.Checked = this.tw.AllAtReply;
 
@@ -2478,8 +2478,8 @@ namespace Hoehoe
             // 画像投稿サービス
             this.CreatePictureServices();
             this.SetImageServiceCombo();
-            ImageSelectionPanel.Enabled = false;
-            ImageServiceCombo.SelectedIndex = this.cfgCommon.UseImageService;
+            this.ImageSelectionPanel.Enabled = false;
+            this.ImageServiceCombo.SelectedIndex = this.cfgCommon.UseImageService;
 
             // ウィンドウ設定
             this.ClientSize = this.cfgLocal.FormSize;
@@ -2525,19 +2525,19 @@ namespace Hoehoe
             }
 
             this.myAdSpDis = this.cfgLocal.AdSplitterDistance;
-            MultiLineMenuItem.Checked = this.cfgLocal.StatusMultiline;
-            PlaySoundMenuItem.Checked = this.SettingDialog.PlaySound;
+            this.MultiLineMenuItem.Checked = this.cfgLocal.StatusMultiline;
+            this.PlaySoundMenuItem.Checked = this.SettingDialog.PlaySound;
             this.PlaySoundFileMenuItem.Checked = this.SettingDialog.PlaySound;
 
             // 入力欄
-            StatusText.Font = this.fntInputFont;
-            StatusText.ForeColor = this.clrInputForecolor;
+            this.StatusText.Font = this.fntInputFont;
+            this.StatusText.ForeColor = this.clrInputForecolor;
 
             // 全新着通知のチェック状態により、Reply＆DMの新着通知有効無効切り替え（タブ別設定にするため削除予定）
             if (this.SettingDialog.UnreadManage == false)
             {
-                ReadedStripMenuItem.Enabled = false;
-                UnreadStripMenuItem.Enabled = false;
+                this.ReadedStripMenuItem.Enabled = false;
+                this.UnreadStripMenuItem.Enabled = false;
             }
 
             if (this.SettingDialog.IsNotifyUseGrowl)
@@ -2558,12 +2558,12 @@ namespace Hoehoe
             this.TimerRefreshIcon.Enabled = true;
 
             // 状態表示部の初期化（画面右下）
-            StatusLabel.Text = string.Empty;
-            StatusLabel.AutoToolTip = false;
-            StatusLabel.ToolTipText = string.Empty;
+            this.StatusLabel.Text = string.Empty;
+            this.StatusLabel.AutoToolTip = false;
+            this.StatusLabel.ToolTipText = string.Empty;
 
             // 文字カウンタ初期化
-            lblLen.Text = this.GetRestStatusCount(true, false).ToString();
+            this.lblLen.Text = this.GetRestStatusCount(true, false).ToString();
 
             this.statuses.SortOrder = (SortOrder)this.cfgCommon.SortOrder;
             IdComparerClass.ComparerMode mode = default(IdComparerClass.ComparerMode);
@@ -2642,11 +2642,11 @@ namespace Hoehoe
 
             this.tw.DetailIcon = this.iconDict;
 
-            StatusLabel.Text = Hoehoe.Properties.Resources.Form1_LoadText1;  // 画面右下の状態表示を変更
-            StatusLabelUrl.Text = string.Empty;  // 画面左下のリンク先URL表示部を初期化
-            NameLabel.Text = string.Empty;       // 発言詳細部名前ラベル初期化
-            DateTimeLabel.Text = string.Empty;   // 発言詳細部日時ラベル初期化
-            SourceLinkLabel.Text = string.Empty; // Source部分初期化
+            this.StatusLabel.Text = Hoehoe.Properties.Resources.Form1_LoadText1;  // 画面右下の状態表示を変更
+            this.StatusLabelUrl.Text = string.Empty;  // 画面左下のリンク先URL表示部を初期化
+            this.NameLabel.Text = string.Empty;       // 発言詳細部名前ラベル初期化
+            this.DateTimeLabel.Text = string.Empty;   // 発言詳細部日時ラベル初期化
+            this.SourceLinkLabel.Text = string.Empty; // Source部分初期化
 
             // <<<<<<<<タブ関連>>>>>>>
             // デフォルトタブの存在チェック、ない場合には追加
@@ -2712,16 +2712,16 @@ namespace Hoehoe
             }
 
             this.JumpReadOpMenuItem.ShortcutKeyDisplayString = "Space";
-            CopySTOTMenuItem.ShortcutKeyDisplayString = "Ctrl+C";
-            CopyURLMenuItem.ShortcutKeyDisplayString = "Ctrl+Shift+C";
-            CopyUserIdStripMenuItem.ShortcutKeyDisplayString = "Shift+Alt+C";
+            this.CopySTOTMenuItem.ShortcutKeyDisplayString = "Ctrl+C";
+            this.CopyURLMenuItem.ShortcutKeyDisplayString = "Ctrl+Shift+C";
+            this.CopyUserIdStripMenuItem.ShortcutKeyDisplayString = "Shift+Alt+C";
 
             if (this.SettingDialog.MinimizeToTray == false || this.WindowState != FormWindowState.Minimized)
             {
                 this.Visible = true;
             }
 
-            this.curTab = ListTab.SelectedTab;
+            this.curTab = this.ListTab.SelectedTab;
             this.curItemIndex = -1;
             this.curList = (DetailsListView)this.curTab.Tag;
             this.SetMainWindowTitle();
@@ -2729,20 +2729,20 @@ namespace Hoehoe
 
             if (this.SettingDialog.TabIconDisp)
             {
-                ListTab.DrawMode = TabDrawMode.Normal;
+                this.ListTab.DrawMode = TabDrawMode.Normal;
             }
             else
             {
-                ListTab.DrawMode = TabDrawMode.OwnerDrawFixed;
-                ListTab.DrawItem += this.ListTab_DrawItem;
-                ListTab.ImageList = null;
+                this.ListTab.DrawMode = TabDrawMode.OwnerDrawFixed;
+                this.ListTab.DrawItem += this.ListTab_DrawItem;
+                this.ListTab.ImageList = null;
             }
 
 #if UA // = "True"
 			ab = new AdsBrowser();
 			this.SplitContainer4.Panel2.Controls.Add(ab);
 #else
-            SplitContainer4.Panel2Collapsed = true;
+            this.SplitContainer4.Panel2Collapsed = true;
 #endif
 
             this.ignoreConfigSave = false;
@@ -2803,7 +2803,7 @@ namespace Hoehoe
             string txt = null;
             try
             {
-                txt = ListTab.TabPages[e.Index].Text;
+                txt = this.ListTab.TabPages[e.Index].Text;
             }
             catch (Exception)
             {
@@ -3075,7 +3075,7 @@ namespace Hoehoe
             // リストに反映＆選択状態復元
             try
             {
-                foreach (TabPage tab in ListTab.TabPages)
+                foreach (TabPage tab in this.ListTab.TabPages)
                 {
                     DetailsListView lst = (DetailsListView)tab.Tag;
                     TabClass tabInfo = this.statuses.Tabs[tab.Text];
@@ -3117,7 +3117,7 @@ namespace Hoehoe
 
                 if (!this.SettingDialog.TabIconDisp)
                 {
-                    ListTab.Refresh();
+                    this.ListTab.Refresh();
                 }
             }
             catch (Exception)
@@ -3175,7 +3175,7 @@ namespace Hoehoe
             this.NotifyNewPosts(notifyPosts, soundFile, addCount, isMention || dmessageCount != this.statuses.GetTabByType(TabUsageType.DirectMessage).AllCount);
 
             this.SetMainWindowTitle();
-            if (!StatusLabelUrl.Text.StartsWith("http"))
+            if (!this.StatusLabelUrl.Text.StartsWith("http"))
             {
                 this.SetStatusLabelUrl();
             }
@@ -3193,7 +3193,7 @@ namespace Hoehoe
                     if (this.statuses.SortOrder == SortOrder.Ascending)
                     {
                         // Id昇順
-                        if (ListLockMenuItem.Checked)
+                        if (this.ListLockMenuItem.Checked)
                         {
                             // 制御しない(現在表示位置へ強制スクロール)
                             smode = -1;
@@ -3221,7 +3221,7 @@ namespace Hoehoe
                     else
                     {
                         // Id降順
-                        if (ListLockMenuItem.Checked)
+                        if (this.ListLockMenuItem.Checked)
                         {
                             // 現在表示位置へ強制スクロール
                             if (this.curList.TopItem != null)
@@ -3284,7 +3284,7 @@ namespace Hoehoe
                 return;
             }
 
-            foreach (TabPage tab in ListTab.TabPages)
+            foreach (TabPage tab in this.ListTab.TabPages)
             {
                 DetailsListView lst = (DetailsListView)tab.Tag;
                 if (lst.SelectedIndices.Count > 0 && lst.SelectedIndices.Count < 61)
@@ -3324,7 +3324,7 @@ namespace Hoehoe
 
         private bool BalloonRequired(Twitter.FormattedEvent ev)
         {
-            return this.IsEventNotifyAsEventType(ev.Eventtype) && this.IsMyEventNotityAsEventType(ev) && (NewPostPopMenuItem.Checked || (this.SettingDialog.ForceEventNotify && ev.Eventtype != EventType.None)) && !this.isInitializing && ((this.SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !this.SettingDialog.LimitBalloon) && !Win32Api.IsScreenSaverRunning();
+            return this.IsEventNotifyAsEventType(ev.Eventtype) && this.IsMyEventNotityAsEventType(ev) && (this.NewPostPopMenuItem.Checked || (this.SettingDialog.ForceEventNotify && ev.Eventtype != EventType.None)) && !this.isInitializing && ((this.SettingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !this.SettingDialog.LimitBalloon) && !Win32Api.IsScreenSaverRunning();
         }
 
         private void NotifyNewPosts(PostClass[] notifyPosts, string soundFile, int addCount, bool newMentions)
@@ -3517,10 +3517,10 @@ namespace Hoehoe
                             return;
                         }
 
-                        NotifyIcon1.BalloonTipTitle = title.ToString();
-                        NotifyIcon1.BalloonTipText = notifyText;
-                        NotifyIcon1.BalloonTipIcon = notifyIcon;
-                        NotifyIcon1.ShowBalloonTip(500);
+                        this.NotifyIcon1.BalloonTipTitle = title.ToString();
+                        this.NotifyIcon1.BalloonTipText = notifyText;
+                        this.NotifyIcon1.BalloonTipIcon = notifyIcon;
+                        this.NotifyIcon1.ShowBalloonTip(500);
                     }
                 }
             }
@@ -3755,45 +3755,45 @@ namespace Hoehoe
 
         private void PostButton_Click(object sender, EventArgs e)
         {
-            if (StatusText.Text.Trim().Length == 0)
+            if (this.StatusText.Text.Trim().Length == 0)
             {
-                if (!ImageSelectionPanel.Enabled)
+                if (!this.ImageSelectionPanel.Enabled)
                 {
                     this.DoRefresh();
                     return;
                 }
             }
 
-            if (this.ExistCurrentPost && StatusText.Text.Trim() == string.Format("RT @{0}: {1}", this.curPost.ScreenName, this.curPost.TextFromApi))
+            if (this.ExistCurrentPost && this.StatusText.Text.Trim() == string.Format("RT @{0}: {1}", this.curPost.ScreenName, this.curPost.TextFromApi))
             {
                 DialogResult res = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (res)
                 {
                     case DialogResult.Yes:
                         this.DoReTweetOfficial(false);
-                        StatusText.Text = string.Empty;
+                        this.StatusText.Text = string.Empty;
                         return;
                     case DialogResult.Cancel:
                         return;
                 }
             }
 
-            this.postHistory[this.postHistory.Count - 1] = new PostingStatus(StatusText.Text.Trim(), this.replyToId, this.replyToName);
+            this.postHistory[this.postHistory.Count - 1] = new PostingStatus(this.StatusText.Text.Trim(), this.replyToId, this.replyToName);
 
             if (this.SettingDialog.Nicoms)
             {
-                StatusText.SelectionStart = StatusText.Text.Length;
+                this.StatusText.SelectionStart = this.StatusText.Text.Length;
                 this.UrlConvert(UrlConverter.Nicoms);
             }
 
-            StatusText.SelectionStart = StatusText.Text.Length;
+            this.StatusText.SelectionStart = this.StatusText.Text.Length;
             GetWorkerArg args = new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage };
-            this.CheckReplyTo(StatusText.Text);
+            this.CheckReplyTo(this.StatusText.Text);
 
             // 整形によって増加する文字数を取得
             int adjustCount = 0;
-            string tmpStatus = StatusText.Text.Trim();
-            if (ToolStripMenuItemApiCommandEvasion.Checked)
+            string tmpStatus = this.StatusText.Text.Trim();
+            if (this.ToolStripMenuItemApiCommandEvasion.Checked)
             {
                 // APIコマンド回避
                 if (Regex.IsMatch(tmpStatus, "^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)", RegexOptions.IgnoreCase) && !tmpStatus.EndsWith(" ."))
@@ -3802,7 +3802,7 @@ namespace Hoehoe
                 }
             }
 
-            if (ToolStripMenuItemUrlMultibyteSplit.Checked)
+            if (this.ToolStripMenuItemUrlMultibyteSplit.Checked)
             {
                 // URLと全角文字の切り離し
                 adjustCount += Regex.Matches(tmpStatus, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+").Count;
@@ -3810,7 +3810,7 @@ namespace Hoehoe
 
             bool isCutOff = false;
             bool isRemoveFooter = this.IsKeyDown(Keys.Shift);
-            if (StatusText.Multiline && !this.SettingDialog.PostCtrlEnter)
+            if (this.StatusText.Multiline && !this.SettingDialog.PostCtrlEnter)
             {
                 // 複数行でEnter投稿の場合、Ctrlも押されていたらフッタ付加しない
                 isRemoveFooter = this.IsKeyDown(Keys.Control);
@@ -3821,7 +3821,7 @@ namespace Hoehoe
                 isRemoveFooter = this.IsKeyDown(Keys.Control);
             }
 
-            if (!isRemoveFooter && (StatusText.Text.Contains("RT @") || StatusText.Text.Contains("QT @")))
+            if (!isRemoveFooter && (this.StatusText.Text.Contains("RT @") || this.StatusText.Text.Contains("QT @")))
             {
                 isRemoveFooter = true;
             }
@@ -3844,7 +3844,7 @@ namespace Hoehoe
 
             string footer = string.Empty;
             string header = string.Empty;
-            if (StatusText.Text.StartsWith("D ") || StatusText.Text.StartsWith("d "))
+            if (this.StatusText.Text.StartsWith("D ") || this.StatusText.Text.StartsWith("d "))
             {
                 // DM時は何もつけない
                 footer = string.Empty;
@@ -3896,9 +3896,9 @@ namespace Hoehoe
                 }
             }
 
-            args.PStatus.Status = header + StatusText.Text.Trim() + footer;
+            args.PStatus.Status = header + this.StatusText.Text.Trim() + footer;
 
-            if (ToolStripMenuItemApiCommandEvasion.Checked)
+            if (this.ToolStripMenuItemApiCommandEvasion.Checked)
             {
                 // APIコマンド回避
                 if (Regex.IsMatch(args.PStatus.Status, "^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)", RegexOptions.IgnoreCase) && !args.PStatus.Status.EndsWith(" ."))
@@ -3907,7 +3907,7 @@ namespace Hoehoe
                 }
             }
 
-            if (ToolStripMenuItemUrlMultibyteSplit.Checked)
+            if (this.ToolStripMenuItemUrlMultibyteSplit.Checked)
             {
                 // URLと全角文字の切り離し
                 Match mc2 = Regex.Match(args.PStatus.Status, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+");
@@ -3917,7 +3917,7 @@ namespace Hoehoe
                 }
             }
 
-            if (IdeographicSpaceToSpaceToolStripMenuItem.Checked)
+            if (this.IdeographicSpaceToSpaceToolStripMenuItem.Checked)
             {
                 // 文中の全角スペースを半角スペース1個にする
                 args.PStatus.Status = args.PStatus.Status.Replace("　", " ");
@@ -3947,17 +3947,17 @@ namespace Hoehoe
 
             args.PStatus.InReplyToId = this.replyToId;
             args.PStatus.InReplyToName = this.replyToName;
-            if (ImageSelectionPanel.Visible)
+            if (this.ImageSelectionPanel.Visible)
             {
                 // 画像投稿
-                if (!object.ReferenceEquals(ImageSelectedPicture.Image, ImageSelectedPicture.InitialImage) && ImageServiceCombo.SelectedIndex > -1 && !string.IsNullOrEmpty(ImagefilePathText.Text))
+                if (!object.ReferenceEquals(this.ImageSelectedPicture.Image, this.ImageSelectedPicture.InitialImage) && this.ImageServiceCombo.SelectedIndex > -1 && !string.IsNullOrEmpty(this.ImagefilePathText.Text))
                 {
                     if (MessageBox.Show(Hoehoe.Properties.Resources.PostPictureConfirm1, Hoehoe.Properties.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Cancel)
                     {
-                        TimelinePanel.Visible = true;
-                        TimelinePanel.Enabled = true;
-                        ImageSelectionPanel.Visible = false;
-                        ImageSelectionPanel.Enabled = false;
+                        this.TimelinePanel.Visible = true;
+                        this.TimelinePanel.Enabled = true;
+                        this.ImageSelectionPanel.Visible = false;
+                        this.ImageSelectionPanel.Enabled = false;
                         if (this.curList != null)
                         {
                             this.curList.Focus();
@@ -3966,14 +3966,14 @@ namespace Hoehoe
                         return;
                     }
 
-                    args.PStatus.ImageService = ImageServiceCombo.Text;
-                    args.PStatus.ImagePath = ImagefilePathText.Text;
-                    ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                    ImagefilePathText.Text = string.Empty;
-                    TimelinePanel.Visible = true;
-                    TimelinePanel.Enabled = true;
-                    ImageSelectionPanel.Visible = false;
-                    ImageSelectionPanel.Enabled = false;
+                    args.PStatus.ImageService = this.ImageServiceCombo.Text;
+                    args.PStatus.ImagePath = this.ImagefilePathText.Text;
+                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                    this.ImagefilePathText.Text = string.Empty;
+                    this.TimelinePanel.Visible = true;
+                    this.TimelinePanel.Enabled = true;
+                    this.ImageSelectionPanel.Visible = false;
+                    this.ImageSelectionPanel.Enabled = false;
                     if (this.curList != null)
                     {
                         this.curList.Focus();
@@ -3989,24 +3989,24 @@ namespace Hoehoe
             this.RunAsync(args);
 
             // Google検索（試験実装）
-            if (StatusText.Text.StartsWith("Google:", StringComparison.OrdinalIgnoreCase) && StatusText.Text.Trim().Length > 7)
+            if (this.StatusText.Text.StartsWith("Google:", StringComparison.OrdinalIgnoreCase) && this.StatusText.Text.Trim().Length > 7)
             {
-                string tmp = string.Format(Hoehoe.Properties.Resources.SearchItem2Url, HttpUtility.UrlEncode(StatusText.Text.Substring(7)));
+                string tmp = string.Format(Hoehoe.Properties.Resources.SearchItem2Url, HttpUtility.UrlEncode(this.StatusText.Text.Substring(7)));
                 this.OpenUriAsync(tmp);
             }
 
             this.replyToId = 0;
             this.replyToName = string.Empty;
-            StatusText.Text = string.Empty;
+            this.StatusText.Text = string.Empty;
             this.postHistory.Add(new PostingStatus());
             this.postHistoryIndex = this.postHistory.Count - 1;
-            if (!ToolStripFocusLockMenuItem.Checked)
+            if (!this.ToolStripFocusLockMenuItem.Checked)
             {
-                ((Control)ListTab.SelectedTab.Tag).Focus();
+                ((Control)this.ListTab.SelectedTab.Tag).Focus();
             }
 
             this.urlUndoBuffer = null;
-            UrlUndoToolStripMenuItem.Enabled = false; // Undoをできないように設定
+            this.UrlUndoToolStripMenuItem.Enabled = false; // Undoをできないように設定
         }
 
         private void EndToolStripMenuItem_Click(object sender, EventArgs e)
@@ -4574,13 +4574,13 @@ namespace Hoehoe
                 if (e.ProgressPercentage == 200)
                 {
                     // 開始
-                    StatusLabel.Text = "Posting...";
+                    this.StatusLabel.Text = "Posting...";
                 }
 
                 if (e.ProgressPercentage == 300)
                 {
                     // 終了
-                    StatusLabel.Text = Hoehoe.Properties.Resources.PostWorker_RunWorkerCompletedText4;
+                    this.StatusLabel.Text = Hoehoe.Properties.Resources.PostWorker_RunWorkerCompletedText4;
                 }
             }
             else
@@ -4588,7 +4588,7 @@ namespace Hoehoe
                 string smsg = (string)e.UserState;
                 if (smsg.Length > 0)
                 {
-                    StatusLabel.Text = smsg;
+                    this.StatusLabel.Text = smsg;
                 }
             }
         }
@@ -4625,7 +4625,7 @@ namespace Hoehoe
             if (rslt.RetMsg.Length > 0)
             {
                 this.myStatusError = true;
-                StatusLabel.Text = rslt.RetMsg;
+                this.StatusLabel.Text = rslt.RetMsg;
             }
 
             if (rslt.WorkerType == WorkerType.ErrorState)
@@ -4761,7 +4761,7 @@ namespace Hoehoe
                             if (ToolStripFocusLockMenuItem.Checked)
                             {
                                 // 連投モードのときだけEnterイベントが起きないので強制的に背景色を戻す
-                                StatusText_Enter(StatusText, new EventArgs());
+                                this.StatusText_Enter(this.StatusText, new EventArgs());
                             }
                         }
                     }
@@ -4837,7 +4837,7 @@ namespace Hoehoe
                         TabClass tb = this.statuses.GetTabByType(TabUsageType.Related);
                         if (tb != null && tb.RelationTargetPost != null && tb.Contains(tb.RelationTargetPost.StatusId))
                         {
-                            foreach (TabPage tp in ListTab.TabPages)
+                            foreach (TabPage tp in this.ListTab.TabPages)
                             {
                                 if (tp.Text == tb.TabName)
                                 {
@@ -4894,7 +4894,7 @@ namespace Hoehoe
                 //// this._curItemIndex = -1
             }
 
-            foreach (TabPage tp in ListTab.TabPages)
+            foreach (TabPage tp in this.ListTab.TabPages)
             {
                 if (tp.Text == favTabName)
                 {
@@ -5099,11 +5099,11 @@ namespace Hoehoe
             {
                 if (isFavAdd)
                 {
-                    StatusLabel.Text = Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText4;
+                    this.StatusLabel.Text = Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText4;
                 }
                 else
                 {
-                    StatusLabel.Text = Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText4;
+                    this.StatusLabel.Text = Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText4;
                 }
 
                 return;
@@ -5153,7 +5153,7 @@ namespace Hoehoe
                     this.mySize = this.ClientSize;
                     this.mySpDis = this.SplitContainer1.SplitterDistance;
                     this.mySpDis3 = this.SplitContainer3.SplitterDistance;
-                    if (StatusText.Multiline)
+                    if (this.StatusText.Multiline)
                     {
                         this.mySpDis2 = this.StatusText.Height;
                     }
@@ -5255,139 +5255,136 @@ namespace Hoehoe
 
         private void ContextMenuOperate_Opening(object sender, CancelEventArgs e)
         {
-            if (ListTab.SelectedTab == null)
+            if (this.ListTab.SelectedTab == null)
             {
                 return;
             }
 
-            if (this.statuses == null || this.statuses.Tabs == null || !this.statuses.Tabs.ContainsKey(ListTab.SelectedTab.Text))
+            if (this.statuses == null || this.statuses.Tabs == null || !this.statuses.Tabs.ContainsKey(this.ListTab.SelectedTab.Text))
             {
                 return;
             }
 
             if (!this.ExistCurrentPost)
             {
-                ReplyStripMenuItem.Enabled = false;
-                ReplyAllStripMenuItem.Enabled = false;
-                DMStripMenuItem.Enabled = false;
-                ShowProfileMenuItem.Enabled = false;
-                ShowUserTimelineContextMenuItem.Enabled = false;
-                ListManageUserContextToolStripMenuItem2.Enabled = false;
-                MoveToFavToolStripMenuItem.Enabled = false;
-                TabMenuItem.Enabled = false;
-                IDRuleMenuItem.Enabled = false;
-                ReadedStripMenuItem.Enabled = false;
-                UnreadStripMenuItem.Enabled = false;
+                this.ReplyStripMenuItem.Enabled = false;
+                this.ReplyAllStripMenuItem.Enabled = false;
+                this.DMStripMenuItem.Enabled = false;
+                this.ShowProfileMenuItem.Enabled = false;
+                this.ShowUserTimelineContextMenuItem.Enabled = false;
+                this.ListManageUserContextToolStripMenuItem2.Enabled = false;
+                this.MoveToFavToolStripMenuItem.Enabled = false;
+                this.TabMenuItem.Enabled = false;
+                this.IDRuleMenuItem.Enabled = false;
+                this.ReadedStripMenuItem.Enabled = false;
+                this.UnreadStripMenuItem.Enabled = false;
             }
             else
             {
-                ShowProfileMenuItem.Enabled = true;
-                ListManageUserContextToolStripMenuItem2.Enabled = true;
-                ReplyStripMenuItem.Enabled = true;
-                ReplyAllStripMenuItem.Enabled = true;
-                DMStripMenuItem.Enabled = true;
-                ShowUserTimelineContextMenuItem.Enabled = true;
-                MoveToFavToolStripMenuItem.Enabled = true;
-                TabMenuItem.Enabled = true;
-                IDRuleMenuItem.Enabled = true;
-                ReadedStripMenuItem.Enabled = true;
-                UnreadStripMenuItem.Enabled = true;
+                this.ShowProfileMenuItem.Enabled = true;
+                this.ListManageUserContextToolStripMenuItem2.Enabled = true;
+                this.ReplyStripMenuItem.Enabled = true;
+                this.ReplyAllStripMenuItem.Enabled = true;
+                this.DMStripMenuItem.Enabled = true;
+                this.ShowUserTimelineContextMenuItem.Enabled = true;
+                this.MoveToFavToolStripMenuItem.Enabled = true;
+                this.TabMenuItem.Enabled = true;
+                this.IDRuleMenuItem.Enabled = true;
+                this.ReadedStripMenuItem.Enabled = true;
+                this.UnreadStripMenuItem.Enabled = true;
             }
 
-            DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
-            if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || this.curPost.IsDm)
+            this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
+            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || this.curPost.IsDm)
             {
-                FavAddToolStripMenuItem.Enabled = false;
-                FavRemoveToolStripMenuItem.Enabled = false;
-                StatusOpenMenuItem.Enabled = false;
-                FavorareMenuItem.Enabled = false;
-                ShowRelatedStatusesMenuItem.Enabled = false;
-
-                ReTweetStripMenuItem.Enabled = false;
-                ReTweetOriginalStripMenuItem.Enabled = false;
-                QuoteStripMenuItem.Enabled = false;
-                FavoriteRetweetContextMenu.Enabled = false;
-                FavoriteRetweetUnofficialContextMenu.Enabled = false;
+                this.FavAddToolStripMenuItem.Enabled = false;
+                this.FavRemoveToolStripMenuItem.Enabled = false;
+                this.StatusOpenMenuItem.Enabled = false;
+                this.FavorareMenuItem.Enabled = false;
+                this.ShowRelatedStatusesMenuItem.Enabled = false;
+                this.ReTweetStripMenuItem.Enabled = false;
+                this.ReTweetOriginalStripMenuItem.Enabled = false;
+                this.QuoteStripMenuItem.Enabled = false;
+                this.FavoriteRetweetContextMenu.Enabled = false;
+                this.FavoriteRetweetUnofficialContextMenu.Enabled = false;
                 if (this.ExistCurrentPost && this.curPost.IsDm)
                 {
-                    DeleteStripMenuItem.Enabled = true;
+                    this.DeleteStripMenuItem.Enabled = true;
                 }
                 else
                 {
-                    DeleteStripMenuItem.Enabled = false;
+                    this.DeleteStripMenuItem.Enabled = false;
                 }
             }
             else
             {
-                FavAddToolStripMenuItem.Enabled = true;
-                FavRemoveToolStripMenuItem.Enabled = true;
-                StatusOpenMenuItem.Enabled = true;
-                FavorareMenuItem.Enabled = true;
-                ShowRelatedStatusesMenuItem.Enabled = true;
-
-                // TODO: PublicSearchの時問題出るかも
+                this.FavAddToolStripMenuItem.Enabled = true;
+                this.FavRemoveToolStripMenuItem.Enabled = true;
+                this.StatusOpenMenuItem.Enabled = true;
+                this.FavorareMenuItem.Enabled = true;
+                this.ShowRelatedStatusesMenuItem.Enabled = true;
                 if (this.curPost.IsMe)
                 {
-                    ReTweetOriginalStripMenuItem.Enabled = false;
-                    FavoriteRetweetContextMenu.Enabled = false;
+                    this.ReTweetOriginalStripMenuItem.Enabled = false;
+                    this.FavoriteRetweetContextMenu.Enabled = false;
                     if (string.IsNullOrEmpty(this.curPost.RetweetedBy))
                     {
-                        DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
+                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
                     }
                     else
                     {
-                        DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
+                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
                     }
 
-                    DeleteStripMenuItem.Enabled = true;
+                    this.DeleteStripMenuItem.Enabled = true;
                 }
                 else
                 {
                     if (string.IsNullOrEmpty(this.curPost.RetweetedBy))
                     {
-                        DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
+                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
                     }
                     else
                     {
-                        DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
+                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
                     }
 
-                    DeleteStripMenuItem.Enabled = false;
+                    this.DeleteStripMenuItem.Enabled = false;
                     if (this.curPost.IsProtect)
                     {
-                        ReTweetOriginalStripMenuItem.Enabled = false;
-                        ReTweetStripMenuItem.Enabled = false;
-                        QuoteStripMenuItem.Enabled = false;
-                        FavoriteRetweetContextMenu.Enabled = false;
-                        FavoriteRetweetUnofficialContextMenu.Enabled = false;
+                        this.ReTweetOriginalStripMenuItem.Enabled = false;
+                        this.ReTweetStripMenuItem.Enabled = false;
+                        this.QuoteStripMenuItem.Enabled = false;
+                        this.FavoriteRetweetContextMenu.Enabled = false;
+                        this.FavoriteRetweetUnofficialContextMenu.Enabled = false;
                     }
                     else
                     {
-                        ReTweetOriginalStripMenuItem.Enabled = true;
-                        ReTweetStripMenuItem.Enabled = true;
-                        QuoteStripMenuItem.Enabled = true;
-                        FavoriteRetweetContextMenu.Enabled = true;
-                        FavoriteRetweetUnofficialContextMenu.Enabled = true;
+                        this.ReTweetOriginalStripMenuItem.Enabled = true;
+                        this.ReTweetStripMenuItem.Enabled = true;
+                        this.QuoteStripMenuItem.Enabled = true;
+                        this.FavoriteRetweetContextMenu.Enabled = true;
+                        this.FavoriteRetweetUnofficialContextMenu.Enabled = true;
                     }
                 }
             }
 
-            if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(this.curPost.InReplyToStatusId > 0))
+            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(this.curPost.InReplyToStatusId > 0))
             {
-                RepliedStatusOpenMenuItem.Enabled = false;
+                this.RepliedStatusOpenMenuItem.Enabled = false;
             }
             else
             {
-                RepliedStatusOpenMenuItem.Enabled = true;
+                this.RepliedStatusOpenMenuItem.Enabled = true;
             }
 
             if (!this.ExistCurrentPost || string.IsNullOrEmpty(this.curPost.RetweetedBy))
             {
-                MoveToRTHomeMenuItem.Enabled = false;
+                this.MoveToRTHomeMenuItem.Enabled = false;
             }
             else
             {
-                MoveToRTHomeMenuItem.Enabled = true;
+                this.MoveToRTHomeMenuItem.Enabled = true;
             }
         }
 
@@ -5492,12 +5489,12 @@ namespace Hoehoe
                 if (rslt)
                 {
                     // 成功
-                    StatusLabel.Text = Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText4;
+                    this.StatusLabel.Text = Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText4;
                 }
                 else
                 {
                     // 失敗
-                    StatusLabel.Text = Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText3;
+                    this.StatusLabel.Text = Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText3;
                 }
 
                 // キャッシュ破棄
@@ -5505,7 +5502,7 @@ namespace Hoehoe
                 this.postCache = null;
                 this.curPost = null;
                 this.curItemIndex = -1;
-                foreach (TabPage tb in ListTab.TabPages)
+                foreach (TabPage tb in this.ListTab.TabPages)
                 {
                     ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
                     if (this.curTab.Equals(tb))
@@ -5550,7 +5547,7 @@ namespace Hoehoe
 
                 if (!this.SettingDialog.TabIconDisp)
                 {
-                    ListTab.Refresh();
+                    this.ListTab.Refresh();
                 }
             }
             finally
@@ -5582,7 +5579,7 @@ namespace Hoehoe
 
             this.ColorizeList();
             this.curList.EndUpdate();
-            foreach (TabPage tb in ListTab.TabPages)
+            foreach (TabPage tb in this.ListTab.TabPages)
             {
                 if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
                 {
@@ -5598,7 +5595,7 @@ namespace Hoehoe
 
             if (!this.SettingDialog.TabIconDisp)
             {
-                ListTab.Refresh();
+                this.ListTab.Refresh();
             }
         }
 
@@ -5620,7 +5617,7 @@ namespace Hoehoe
 
             this.ColorizeList();
             this.curList.EndUpdate();
-            foreach (TabPage tb in ListTab.TabPages)
+            foreach (TabPage tb in this.ListTab.TabPages)
             {
                 if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
                 {
@@ -5636,7 +5633,7 @@ namespace Hoehoe
 
             if (!this.SettingDialog.TabIconDisp)
             {
-                ListTab.Refresh();
+                this.ListTab.Refresh();
             }
         }
 
@@ -5805,16 +5802,16 @@ namespace Hoehoe
                     {
                         if (this.SettingDialog.TabIconDisp)
                         {
-                            ListTab.DrawItem -= this.ListTab_DrawItem;
-                            ListTab.DrawMode = TabDrawMode.Normal;
-                            ListTab.ImageList = this.TabImage;
+                            this.ListTab.DrawItem -= this.ListTab_DrawItem;
+                            this.ListTab.DrawMode = TabDrawMode.Normal;
+                            this.ListTab.ImageList = this.TabImage;
                         }
                         else
                         {
-                            ListTab.DrawItem -= this.ListTab_DrawItem;
-                            ListTab.DrawItem += this.ListTab_DrawItem;
-                            ListTab.DrawMode = TabDrawMode.OwnerDrawFixed;
-                            ListTab.ImageList = null;
+                            this.ListTab.DrawItem -= this.ListTab_DrawItem;
+                            this.ListTab.DrawItem += this.ListTab_DrawItem;
+                            this.ListTab.DrawMode = TabDrawMode.OwnerDrawFixed;
+                            this.ListTab.ImageList = null;
                         }
                     }
                     catch (Exception ex)
@@ -5828,11 +5825,11 @@ namespace Hoehoe
                     {
                         if (!this.SettingDialog.UnreadManage)
                         {
-                            ReadedStripMenuItem.Enabled = false;
-                            UnreadStripMenuItem.Enabled = false;
+                            this.ReadedStripMenuItem.Enabled = false;
+                            this.UnreadStripMenuItem.Enabled = false;
                             if (this.SettingDialog.TabIconDisp)
                             {
-                                foreach (TabPage myTab in ListTab.TabPages)
+                                foreach (TabPage myTab in this.ListTab.TabPages)
                                 {
                                     myTab.ImageIndex = -1;
                                 }
@@ -5840,8 +5837,8 @@ namespace Hoehoe
                         }
                         else
                         {
-                            ReadedStripMenuItem.Enabled = true;
-                            UnreadStripMenuItem.Enabled = true;
+                            this.ReadedStripMenuItem.Enabled = true;
+                            this.UnreadStripMenuItem.Enabled = true;
                         }
                     }
                     catch (Exception ex)
@@ -5853,7 +5850,7 @@ namespace Hoehoe
 
                     try
                     {
-                        foreach (TabPage mytab in ListTab.TabPages)
+                        foreach (TabPage mytab in this.ListTab.TabPages)
                         {
                             DetailsListView lst = (DetailsListView)mytab.Tag;
                             lst.GridLines = this.SettingDialog.ShowGrid;
@@ -5866,7 +5863,7 @@ namespace Hoehoe
                         throw;
                     }
 
-                    PlaySoundMenuItem.Checked = this.SettingDialog.PlaySound;
+                    this.PlaySoundMenuItem.Checked = this.SettingDialog.PlaySound;
                     this.PlaySoundFileMenuItem.Checked = this.SettingDialog.PlaySound;
                     this.fntUnread = this.SettingDialog.FontUnread;
                     this.clrUnread = this.SettingDialog.ColorUnread;
@@ -5891,13 +5888,13 @@ namespace Hoehoe
                     this.fntInputFont = this.SettingDialog.FontInputFont;
                     try
                     {
-                        if (StatusText.Focused)
+                        if (this.StatusText.Focused)
                         {
-                            StatusText.BackColor = this.clrInputBackcolor;
+                            this.StatusText.BackColor = this.clrInputBackcolor;
                         }
 
-                        StatusText.Font = this.fntInputFont;
-                        StatusText.ForeColor = this.clrInputForecolor;
+                        this.StatusText.Font = this.fntInputFont;
+                        this.StatusText.ForeColor = this.clrInputForecolor;
                     }
                     catch (Exception ex)
                     {
@@ -5971,7 +5968,7 @@ namespace Hoehoe
 
                     try
                     {
-                        foreach (TabPage tb in ListTab.TabPages)
+                        foreach (TabPage tb in this.ListTab.TabPages)
                         {
                             if (this.SettingDialog.TabIconDisp)
                             {
@@ -6009,7 +6006,7 @@ namespace Hoehoe
                         this.curList.Refresh();
                     }
 
-                    ListTab.Refresh();
+                    this.ListTab.Refresh();
 
                     Outputz.Key = this.SettingDialog.OutputzKey;
                     Outputz.Enabled = this.SettingDialog.OutputzEnabled;
@@ -6091,7 +6088,7 @@ namespace Hoehoe
         {
             if (e.Url.Scheme == "data")
             {
-                StatusLabelUrl.Text = PostBrowser.StatusText.Replace("&", "&&");
+                this.StatusLabelUrl.Text = this.PostBrowser.StatusText.Replace("&", "&&");
             }
             else if (e.Url.AbsoluteUri != "about:blank")
             {
@@ -6158,7 +6155,7 @@ namespace Hoehoe
         {
             if (e.KeyCode == Keys.Escape)
             {
-                TabPage relTp = ListTab.SelectedTab;
+                TabPage relTp = this.ListTab.SelectedTab;
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
@@ -6183,7 +6180,7 @@ namespace Hoehoe
                 if (!dragEnableRectangle.Contains(e.Location))
                 {
                     // タブが多段の場合にはMouseDownの前の段階で選択されたタブの段が変わっているので、このタイミングでカーソルの位置からタブを判定出来ない。
-                    tn = ListTab.SelectedTab.Text;
+                    tn = this.ListTab.SelectedTab.Text;
                 }
 
                 if (string.IsNullOrEmpty(tn))
@@ -6191,11 +6188,11 @@ namespace Hoehoe
                     return;
                 }
 
-                foreach (TabPage tb in ListTab.TabPages)
+                foreach (TabPage tb in this.ListTab.TabPages)
                 {
                     if (tb.Text == tn)
                     {
-                        ListTab.DoDragDrop(tb, DragDropEffects.All);
+                        this.ListTab.DoDragDrop(tb, DragDropEffects.All);
                         break;
                     }
                 }
@@ -6206,12 +6203,12 @@ namespace Hoehoe
             }
 
             Point cpos = new Point(e.X, e.Y);
-            for (int i = 0; i < ListTab.TabPages.Count; i++)
+            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
             {
-                Rectangle rect = ListTab.GetTabRect(i);
+                Rectangle rect = this.ListTab.GetTabRect(i);
                 if (rect.Left <= cpos.X & cpos.X <= rect.Right & rect.Top <= cpos.Y & cpos.Y <= rect.Bottom)
                 {
-                    this.rclickTabName = ListTab.TabPages[i].Text;
+                    this.rclickTabName = this.ListTab.TabPages[i].Text;
                     break;
                 }
             }
@@ -6223,12 +6220,12 @@ namespace Hoehoe
             this.DispSelectedPost();
             this.SetMainWindowTitle();
             this.SetStatusLabelUrl();
-            if (ListTab.Focused || ((Control)ListTab.SelectedTab.Tag).Focused)
+            if (this.ListTab.Focused || ((Control)this.ListTab.SelectedTab.Tag).Focused)
             {
-                this.Tag = ListTab.Tag;
+                this.Tag = this.ListTab.Tag;
             }
 
-            this.TabMenuControl(ListTab.SelectedTab.Text);
+            this.TabMenuControl(this.ListTab.SelectedTab.Text);
             this.PushSelectPostChain();
         }
 
@@ -6259,7 +6256,7 @@ namespace Hoehoe
             }
 
             // 列幅、列並びを他のタブに設定
-            foreach (TabPage tb in ListTab.TabPages)
+            foreach (TabPage tb in this.ListTab.TabPages)
             {
                 if (!tb.Equals(this.curTab))
                 {
@@ -6282,12 +6279,12 @@ namespace Hoehoe
         {
             try
             {
-                if (PostBrowser.StatusText.StartsWith("http") || PostBrowser.StatusText.StartsWith("ftp") || PostBrowser.StatusText.StartsWith("data"))
+                if (this.PostBrowser.StatusText.StartsWith("http") || this.PostBrowser.StatusText.StartsWith("ftp") || this.PostBrowser.StatusText.StartsWith("data"))
                 {
-                    StatusLabelUrl.Text = PostBrowser.StatusText.Replace("&", "&&");
+                    this.StatusLabelUrl.Text = this.PostBrowser.StatusText.Replace("&", "&&");
                 }
 
-                if (string.IsNullOrEmpty(PostBrowser.StatusText))
+                if (string.IsNullOrEmpty(this.PostBrowser.StatusText))
                 {
                     this.SetStatusLabelUrl();
                 }
@@ -6308,7 +6305,7 @@ namespace Hoehoe
                 }
 
                 int cnt = this.AtIdSupl.ItemCount;
-                this.ShowSuplDialog(StatusText, this.AtIdSupl);
+                this.ShowSuplDialog(this.StatusText, this.AtIdSupl);
                 if (cnt != this.AtIdSupl.ItemCount)
                 {
                     this.modifySettingAtId = true;
@@ -6323,7 +6320,7 @@ namespace Hoehoe
                     return;
                 }
 
-                this.ShowSuplDialog(StatusText, this.HashSupl);
+                this.ShowSuplDialog(this.StatusText, this.HashSupl);
                 e.Handled = true;
             }
         }
@@ -6336,7 +6333,7 @@ namespace Hoehoe
                 if (e.KeyCode == Keys.Space || e.KeyCode == Keys.ProcessKey)
                 {
                     bool isSpace = false;
-                    foreach (char c in StatusText.Text.ToCharArray())
+                    foreach (char c in this.StatusText.Text.ToCharArray())
                     {
                         if (c == ' ' || c == '　')
                         {
@@ -6352,7 +6349,7 @@ namespace Hoehoe
                     if (isSpace)
                     {
                         e.Handled = true;
-                        StatusText.Text = string.Empty;
+                        this.StatusText.Text = string.Empty;
                         this.JumpUnreadMenuItem_Click(null, null);
                     }
                 }
@@ -6365,17 +6362,17 @@ namespace Hoehoe
         {
             // 文字数カウント
             int len = this.GetRestStatusCount(true, false);
-            lblLen.Text = len.ToString();
+            this.lblLen.Text = len.ToString();
             if (len < 0)
             {
-                StatusText.ForeColor = Color.Red;
+                this.StatusText.ForeColor = Color.Red;
             }
             else
             {
-                StatusText.ForeColor = this.clrInputForecolor;
+                this.StatusText.ForeColor = this.clrInputForecolor;
             }
 
-            if (string.IsNullOrEmpty(StatusText.Text))
+            if (string.IsNullOrEmpty(this.StatusText.Text))
             {
                 this.replyToId = 0;
                 this.replyToName = string.Empty;
@@ -6385,7 +6382,7 @@ namespace Hoehoe
         private int GetRestStatusCount(bool isAuto, bool isAddFooter)
         {
             // 文字数カウント
-            int len = 140 - StatusText.Text.Length;
+            int len = 140 - this.StatusText.Text.Length;
             if (this.NotifyIcon1 == null || !this.NotifyIcon1.Visible)
             {
                 return len;
@@ -6410,12 +6407,12 @@ namespace Hoehoe
                 len -= this.HashMgr.UseHash.Length + 1;
             }
 
-            foreach (Match m in Regex.Matches(StatusText.Text, Twitter.UrlRegexPattern, RegexOptions.IgnoreCase))
+            foreach (Match m in Regex.Matches(this.StatusText.Text, Twitter.UrlRegexPattern, RegexOptions.IgnoreCase))
             {
                 len += m.Result("${url}").Length - this.SettingDialog.TwitterConfiguration.ShortUrlLength;
             }
 
-            if (ImageSelectionPanel.Visible && ImageSelectedPicture.Tag != null && !string.IsNullOrEmpty(this.ImageService))
+            if (this.ImageSelectionPanel.Visible && this.ImageSelectedPicture.Tag != null && !string.IsNullOrEmpty(this.ImageService))
             {
                 len -= this.SettingDialog.TwitterConfiguration.CharactersReservedPerMedia;
             }
@@ -7036,23 +7033,23 @@ namespace Hoehoe
 
         private void JumpUnreadMenuItem_Click(object sender, EventArgs e)
         {
-            if (ImageSelectionPanel.Enabled)
+            if (this.ImageSelectionPanel.Enabled)
             {
                 return;
             }
 
             // 現在タブから最終タブまで探索
-            int bgnIdx = ListTab.TabPages.IndexOf(this.curTab);
+            int bgnIdx = this.ListTab.TabPages.IndexOf(this.curTab);
             int idx = -1;
             DetailsListView lst = null;
-            for (int i = bgnIdx; i < ListTab.TabPages.Count; i++)
+            for (int i = bgnIdx; i < this.ListTab.TabPages.Count; i++)
             {
                 // 未読Index取得
-                idx = this.statuses.GetOldestUnreadIndex(ListTab.TabPages[i].Text);
+                idx = this.statuses.GetOldestUnreadIndex(this.ListTab.TabPages[i].Text);
                 if (idx > -1)
                 {
-                    ListTab.SelectedIndex = i;
-                    lst = (DetailsListView)ListTab.TabPages[i].Tag;
+                    this.ListTab.SelectedIndex = i;
+                    lst = (DetailsListView)this.ListTab.TabPages[i].Tag;
                     break;
                 }
             }
@@ -7062,11 +7059,11 @@ namespace Hoehoe
             {
                 for (int i = 0; i < bgnIdx; i++)
                 {
-                    idx = this.statuses.GetOldestUnreadIndex(ListTab.TabPages[i].Text);
+                    idx = this.statuses.GetOldestUnreadIndex(this.ListTab.TabPages[i].Text);
                     if (idx > -1)
                     {
-                        ListTab.SelectedIndex = i;
-                        lst = (DetailsListView)ListTab.TabPages[i].Tag;
+                        this.ListTab.SelectedIndex = i;
+                        lst = (DetailsListView)this.ListTab.TabPages[i].Tag;
                         break;
                     }
                 }
@@ -7075,8 +7072,8 @@ namespace Hoehoe
             // 全部調べたが未読見つからず→先頭タブの最新発言へ
             if (idx == -1)
             {
-                ListTab.SelectedIndex = 0;
-                lst = (DetailsListView)ListTab.TabPages[0].Tag;
+                this.ListTab.SelectedIndex = 0;
+                lst = (DetailsListView)this.ListTab.TabPages[0].Tag;
                 if (this.statuses.SortOrder == SortOrder.Ascending)
                 {
                     idx = lst.VirtualListSize - 1;
@@ -7166,7 +7163,7 @@ namespace Hoehoe
             }
             catch (Exception)
             {
-                StatusLabel.Text = Hoehoe.Properties.Resources.CheckNewVersionText9;
+                this.StatusLabel.Text = Hoehoe.Properties.Resources.CheckNewVersionText9;
                 if (!startup)
                 {
                     MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText10, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
@@ -7249,7 +7246,7 @@ namespace Hoehoe
             }
             else
             {
-                StatusLabel.Text = Hoehoe.Properties.Resources.CheckNewVersionText9;
+                this.StatusLabel.Text = Hoehoe.Properties.Resources.CheckNewVersionText9;
                 if (!startup)
                 {
                     MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText10, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -7268,12 +7265,12 @@ namespace Hoehoe
                 this.SetMainWindowTitle();
             }
 
-            if (!StatusLabelUrl.Text.StartsWith("http"))
+            if (!this.StatusLabelUrl.Text.StartsWith("http"))
             {
                 this.SetStatusLabelUrl();
             }
 
-            foreach (TabPage tb in ListTab.TabPages)
+            foreach (TabPage tb in this.ListTab.TabPages)
             {
                 if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
                 {
@@ -7289,7 +7286,7 @@ namespace Hoehoe
 
             if (!this.SettingDialog.TabIconDisp)
             {
-                ListTab.Refresh();
+                this.ListTab.Refresh();
             }
         }
 
@@ -7297,25 +7294,25 @@ namespace Hoehoe
         {
             if (sender.Equals(this.displayItem))
             {
-                if (UserPicture.Image != null)
+                if (this.UserPicture.Image != null)
                 {
-                    UserPicture.Image.Dispose();
+                    this.UserPicture.Image.Dispose();
                 }
 
                 if (this.displayItem.Image != null)
                 {
                     try
                     {
-                        UserPicture.Image = new Bitmap(this.displayItem.Image);
+                        this.UserPicture.Image = new Bitmap(this.displayItem.Image);
                     }
                     catch (Exception)
                     {
-                        UserPicture.Image = null;
+                        this.UserPicture.Image = null;
                     }
                 }
                 else
                 {
-                    UserPicture.Image = null;
+                    this.UserPicture.Image = null;
                 }
             }
         }
@@ -7350,8 +7347,8 @@ namespace Hoehoe
             string detailText = this.CreateDetailHtml(this.curPost.IsDeleted ? "(DELETED)" : this.curPost.Text);
             if (this.curPost.IsDm)
             {
-                SourceLinkLabel.Tag = null;
-                SourceLinkLabel.Text = string.Empty;
+                this.SourceLinkLabel.Tag = null;
+                this.SourceLinkLabel.Text = string.Empty;
             }
             else
             {
@@ -7359,94 +7356,93 @@ namespace Hoehoe
                 if (mc.Success)
                 {
                     string src = mc.Groups["sourceurl"].Value;
-                    SourceLinkLabel.Tag = mc.Groups["sourceurl"].Value;
+                    this.SourceLinkLabel.Tag = mc.Groups["sourceurl"].Value;
                     mc = Regex.Match(src, "^https?:// ");
                     if (!mc.Success)
                     {
                         src = src.Insert(0, "http://twitter.com");
                     }
 
-                    SourceLinkLabel.Tag = src;
+                    this.SourceLinkLabel.Tag = src;
                 }
                 else
                 {
-                    SourceLinkLabel.Tag = null;
+                    this.SourceLinkLabel.Tag = null;
                 }
 
                 if (string.IsNullOrEmpty(this.curPost.Source))
                 {
-                    SourceLinkLabel.Text = string.Empty;
+                    this.SourceLinkLabel.Text = string.Empty;
                 }
                 else
                 {
-                    SourceLinkLabel.Text = this.curPost.Source;
+                    this.SourceLinkLabel.Text = this.curPost.Source;
                 }
             }
 
-            SourceLinkLabel.TabStop = false;
+            this.SourceLinkLabel.TabStop = false;
 
             if (this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage && !this.curPost.IsOwl)
             {
-                NameLabel.Text = "DM TO -> ";
+                this.NameLabel.Text = "DM TO -> ";
             }
             else if (this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage)
             {
-                NameLabel.Text = "DM FROM <- ";
+                this.NameLabel.Text = "DM FROM <- ";
             }
             else
             {
-                NameLabel.Text = string.Empty;
+                this.NameLabel.Text = string.Empty;
             }
 
-            NameLabel.Text += this.curPost.ScreenName + "/" + this.curPost.Nickname;
-            NameLabel.Tag = this.curPost.ScreenName;
+            this.NameLabel.Text += this.curPost.ScreenName + "/" + this.curPost.Nickname;
+            this.NameLabel.Tag = this.curPost.ScreenName;
             if (!string.IsNullOrEmpty(this.curPost.RetweetedBy))
             {
-                NameLabel.Text += " (RT:" + this.curPost.RetweetedBy + ")";
+                this.NameLabel.Text += " (RT:" + this.curPost.RetweetedBy + ")";
             }
 
-            if (UserPicture.Image != null)
+            if (this.UserPicture.Image != null)
             {
-                UserPicture.Image.Dispose();
+                this.UserPicture.Image.Dispose();
             }
 
             if (!string.IsNullOrEmpty(this.curPost.ImageUrl) && this.iconDict[this.curPost.ImageUrl] != null)
             {
                 try
                 {
-                    UserPicture.Image = new Bitmap(this.iconDict[this.curPost.ImageUrl]);
+                    this.UserPicture.Image = new Bitmap(this.iconDict[this.curPost.ImageUrl]);
                 }
                 catch (Exception)
                 {
-                    UserPicture.Image = null;
+                    this.UserPicture.Image = null;
                 }
             }
             else
             {
-                UserPicture.Image = null;
+                this.UserPicture.Image = null;
             }
 
-            NameLabel.ForeColor = SystemColors.ControlText;
-            DateTimeLabel.Text = this.curPost.CreatedAt.ToString();
+            this.NameLabel.ForeColor = SystemColors.ControlText;
+            this.DateTimeLabel.Text = this.curPost.CreatedAt.ToString();
             if (this.curPost.IsOwl && (this.SettingDialog.OneWayLove || this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage))
             {
-                NameLabel.ForeColor = this.clrOWL;
+                this.NameLabel.ForeColor = this.clrOWL;
             }
 
             if (this.curPost.RetweetedId > 0)
             {
-                NameLabel.ForeColor = this.clrRetweet;
+                this.NameLabel.ForeColor = this.clrRetweet;
             }
 
             if (this.curPost.IsFav)
             {
-                NameLabel.ForeColor = this.clrFav;
+                this.NameLabel.ForeColor = this.clrFav;
             }
 
-            if (DumpPostClassToolStripMenuItem.Checked)
+            if (this.DumpPostClassToolStripMenuItem.Checked)
             {
                 StringBuilder sb = new StringBuilder(512);
-
                 sb.Append("-----Start PostClass Dump<br>");
                 sb.AppendFormat("TextFromApi           : {0}<br>", this.curPost.TextFromApi);
                 sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", this.curPost.TextFromApi);
@@ -7455,45 +7451,45 @@ namespace Hoehoe
                 sb.AppendFormat("ImageUrl       : {0}<br>", this.curPost.ImageUrl);
                 sb.AppendFormat("InReplyToStatusId    : {0}<br>", this.curPost.InReplyToStatusId.ToString());
                 sb.AppendFormat("InReplyToUser  : {0}<br>", this.curPost.InReplyToUser);
-                sb.AppendFormat("IsDM           : {0}<br>", this.curPost.IsDm.ToString());
-                sb.AppendFormat("IsFav          : {0}<br>", this.curPost.IsFav.ToString());
-                sb.AppendFormat("IsMark         : {0}<br>", this.curPost.IsMark.ToString());
-                sb.AppendFormat("IsMe           : {0}<br>", this.curPost.IsMe.ToString());
-                sb.AppendFormat("IsOwl          : {0}<br>", this.curPost.IsOwl.ToString());
-                sb.AppendFormat("IsProtect      : {0}<br>", this.curPost.IsProtect.ToString());
-                sb.AppendFormat("IsRead         : {0}<br>", this.curPost.IsRead.ToString());
-                sb.AppendFormat("IsReply        : {0}<br>", this.curPost.IsReply.ToString());
+                sb.AppendFormat("IsDM           : {0}<br>", this.curPost.IsDm);
+                sb.AppendFormat("IsFav          : {0}<br>", this.curPost.IsFav);
+                sb.AppendFormat("IsMark         : {0}<br>", this.curPost.IsMark);
+                sb.AppendFormat("IsMe           : {0}<br>", this.curPost.IsMe);
+                sb.AppendFormat("IsOwl          : {0}<br>", this.curPost.IsOwl);
+                sb.AppendFormat("IsProtect      : {0}<br>", this.curPost.IsProtect);
+                sb.AppendFormat("IsRead         : {0}<br>", this.curPost.IsRead);
+                sb.AppendFormat("IsReply        : {0}<br>", this.curPost.IsReply);
 
                 foreach (string nm in this.curPost.ReplyToList)
                 {
                     sb.AppendFormat("ReplyToList    : {0}<br>", nm);
                 }
 
-                sb.AppendFormat("ScreenName           : {0}<br>", this.curPost.ScreenName);
+                sb.AppendFormat("ScreenName     : {0}<br>", this.curPost.ScreenName);
                 sb.AppendFormat("NickName       : {0}<br>", this.curPost.Nickname);
-                sb.AppendFormat("Text   : {0}<br>", this.curPost.Text);
+                sb.AppendFormat("Text           : {0}<br>", this.curPost.Text);
                 sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", this.curPost.Text);
-                sb.AppendFormat("CreatedAt          : {0}<br>", this.curPost.CreatedAt.ToString());
+                sb.AppendFormat("CreatedAt      : {0}<br>", this.curPost.CreatedAt);
                 sb.AppendFormat("Source         : {0}<br>", this.curPost.Source);
-                sb.AppendFormat("UserId            : {0}<br>", this.curPost.UserId);
+                sb.AppendFormat("UserId         : {0}<br>", this.curPost.UserId);
                 sb.AppendFormat("FilterHit      : {0}<br>", this.curPost.FilterHit);
                 sb.AppendFormat("RetweetedBy    : {0}<br>", this.curPost.RetweetedBy);
                 sb.AppendFormat("RetweetedId    : {0}<br>", this.curPost.RetweetedId);
                 sb.AppendFormat("SearchTabName  : {0}<br>", this.curPost.RelTabName);
                 sb.Append("-----End PostClass Dump<br>");
 
-                PostBrowser.Visible = false;
-                PostBrowser.DocumentText = this.detailHtmlFormatHeader + sb.ToString() + this.detailHtmlFormatFooter;
-                PostBrowser.Visible = true;
+                this.PostBrowser.Visible = false;
+                this.PostBrowser.DocumentText = this.detailHtmlFormatHeader + sb.ToString() + this.detailHtmlFormatFooter;
+                this.PostBrowser.Visible = true;
             }
             else
             {
                 try
                 {
-                    if (PostBrowser.DocumentText != detailText)
+                    if (this.PostBrowser.DocumentText != detailText)
                     {
-                        PostBrowser.Visible = false;
-                        PostBrowser.DocumentText = detailText;
+                        this.PostBrowser.Visible = false;
+                        this.PostBrowser.DocumentText = detailText;
                         List<string> lnks = new List<string>();
                         foreach (Match lnk in Regex.Matches(detailText, "<a target=\"_self\" href=\"(?<url>http[^\"]+)\"", RegexOptions.IgnoreCase))
                         {
@@ -7510,11 +7506,11 @@ namespace Hoehoe
                 }
                 catch (UriFormatException)
                 {
-                    PostBrowser.DocumentText = detailText;
+                    this.PostBrowser.DocumentText = detailText;
                 }
                 finally
                 {
-                    PostBrowser.Visible = true;
+                    this.PostBrowser.Visible = true;
                 }
             }
         }
@@ -7531,11 +7527,11 @@ namespace Hoehoe
 
         private void ListTab_KeyDown(object sender, KeyEventArgs e)
         {
-            if (ListTab.SelectedTab != null)
+            if (this.ListTab.SelectedTab != null)
             {
-                if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
+                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
                 {
-                    Control pnl = ListTab.SelectedTab.Controls["panelSearch"];
+                    Control pnl = this.ListTab.SelectedTab.Controls["panelSearch"];
                     if (pnl.Controls["comboSearch"].Focused || pnl.Controls["comboLang"].Focused || pnl.Controls["buttonSearch"].Focused)
                     {
                         return;
@@ -7727,12 +7723,12 @@ namespace Hoehoe
                                 this.GoBackInReplyToPostTree();
                                 return true;
                             case Keys.Escape:
-                                if (ListTab.SelectedTab != null)
+                                if (this.ListTab.SelectedTab != null)
                                 {
-                                    TabUsageType tabtype = this.statuses.Tabs[ListTab.SelectedTab.Text].TabType;
+                                    TabUsageType tabtype = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType;
                                     if (tabtype == TabUsageType.Related || tabtype == TabUsageType.UserTimeline || tabtype == TabUsageType.PublicSearch)
                                     {
-                                        TabPage relTp = ListTab.SelectedTab;
+                                        TabPage relTp = this.ListTab.SelectedTab;
                                         this.RemoveSpecifiedTab(relTp.Text, false);
                                         this.SaveConfigsTabs();
                                         return true;
@@ -7847,17 +7843,17 @@ namespace Hoehoe
                             case Keys.D8:
                                 // タブダイレクト選択(Ctrl+1～8,Ctrl+9)
                                 int tabNo = keyCode - Keys.D1;
-                                if (ListTab.TabPages.Count < tabNo)
+                                if (this.ListTab.TabPages.Count < tabNo)
                                 {
                                     return functionReturnValue;
                                 }
 
-                                ListTab.SelectedIndex = tabNo;
-                                this.ListTabSelect(ListTab.TabPages[tabNo]);
+                                this.ListTab.SelectedIndex = tabNo;
+                                this.ListTabSelect(this.ListTab.TabPages[tabNo]);
                                 return true;
                             case Keys.D9:
-                                ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
-                                this.ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
+                                this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
+                                this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
                                 return true;
                         }
                     }
@@ -7867,13 +7863,13 @@ namespace Hoehoe
                         switch (keyCode)
                         {
                             case Keys.A:
-                                StatusText.SelectAll();
+                                this.StatusText.SelectAll();
                                 return true;
                             case Keys.Up:
                             case Keys.Down:
-                                if (!string.IsNullOrEmpty(StatusText.Text.Trim()))
+                                if (!string.IsNullOrEmpty(this.StatusText.Text.Trim()))
                                 {
-                                    this.postHistory[this.postHistoryIndex] = new PostingStatus(StatusText.Text, this.replyToId, this.replyToName);
+                                    this.postHistory[this.postHistoryIndex] = new PostingStatus(this.StatusText.Text, this.replyToId, this.replyToName);
                                 }
 
                                 if (keyCode == Keys.Up)
@@ -7893,36 +7889,36 @@ namespace Hoehoe
                                     }
                                 }
 
-                                StatusText.Text = this.postHistory[this.postHistoryIndex].Status;
+                                this.StatusText.Text = this.postHistory[this.postHistoryIndex].Status;
                                 this.replyToId = this.postHistory[this.postHistoryIndex].InReplyToId;
                                 this.replyToName = this.postHistory[this.postHistoryIndex].InReplyToName;
-                                StatusText.SelectionStart = StatusText.Text.Length;
+                                this.StatusText.SelectionStart = this.StatusText.Text.Length;
                                 return true;
                             case Keys.PageUp:
                             case Keys.P:
-                                if (ListTab.SelectedIndex == 0)
+                                if (this.ListTab.SelectedIndex == 0)
                                 {
-                                    ListTab.SelectedIndex = ListTab.TabCount - 1;
+                                    this.ListTab.SelectedIndex = this.ListTab.TabCount - 1;
                                 }
                                 else
                                 {
-                                    ListTab.SelectedIndex -= 1;
+                                    this.ListTab.SelectedIndex -= 1;
                                 }
 
-                                StatusText.Focus();
+                                this.StatusText.Focus();
                                 return true;
                             case Keys.PageDown:
                             case Keys.N:
-                                if (ListTab.SelectedIndex == ListTab.TabCount - 1)
+                                if (this.ListTab.SelectedIndex == this.ListTab.TabCount - 1)
                                 {
-                                    ListTab.SelectedIndex = 0;
+                                    this.ListTab.SelectedIndex = 0;
                                 }
                                 else
                                 {
-                                    ListTab.SelectedIndex += 1;
+                                    this.ListTab.SelectedIndex += 1;
                                 }
 
-                                StatusText.Focus();
+                                this.StatusText.Focus();
                                 return true;
                         }
                     }
@@ -7932,11 +7928,11 @@ namespace Hoehoe
                         switch (keyCode)
                         {
                             case Keys.A:
-                                PostBrowser.Document.ExecCommand("SelectAll", false, null);
+                                this.PostBrowser.Document.ExecCommand("SelectAll", false, null);
                                 return true;
                             case Keys.C:
                             case Keys.Insert:
-                                string selText = WebBrowser_GetSelectionText(ref PostBrowser);
+                                string selText = WebBrowser_GetSelectionText(ref this.PostBrowser);
                                 if (!string.IsNullOrEmpty(selText))
                                 {
                                     try
@@ -8084,11 +8080,11 @@ namespace Hoehoe
                             this.CopyIdUri();
                             return true;
                         case Keys.F:
-                            if (ListTab.SelectedTab != null)
+                            if (this.ListTab.SelectedTab != null)
                             {
-                                if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
+                                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
                                 {
-                                    ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
+                                    this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
                                     return true;
                                 }
                             }
@@ -8145,14 +8141,14 @@ namespace Hoehoe
 
                                 break;
                             case Keys.Space:
-                                if (StatusText.SelectionStart > 0)
+                                if (this.StatusText.SelectionStart > 0)
                                 {
-                                    int endidx = StatusText.SelectionStart - 1;
+                                    int endidx = this.StatusText.SelectionStart - 1;
                                     string startstr = string.Empty;
                                     bool pressed = false;
-                                    for (int i = StatusText.SelectionStart - 1; i >= 0; i--)
+                                    for (int i = this.StatusText.SelectionStart - 1; i >= 0; i--)
                                     {
-                                        char c = StatusText.Text[i];
+                                        char c = this.StatusText.Text[i];
                                         if (char.IsLetterOrDigit(c) || c == '_')
                                         {
                                             continue;
@@ -8161,9 +8157,9 @@ namespace Hoehoe
                                         if (c == '@')
                                         {
                                             pressed = true;
-                                            startstr = StatusText.Text.Substring(i + 1, endidx - i);
+                                            startstr = this.StatusText.Text.Substring(i + 1, endidx - i);
                                             int cnt = this.AtIdSupl.ItemCount;
-                                            this.ShowSuplDialog(StatusText, this.AtIdSupl, startstr.Length + 1, startstr);
+                                            this.ShowSuplDialog(this.StatusText, this.AtIdSupl, startstr.Length + 1, startstr);
                                             if (this.AtIdSupl.ItemCount != cnt)
                                             {
                                                 this.modifySettingAtId = true;
@@ -8172,8 +8168,8 @@ namespace Hoehoe
                                         else if (c == '#')
                                         {
                                             pressed = true;
-                                            startstr = StatusText.Text.Substring(i + 1, endidx - i);
-                                            this.ShowSuplDialog(StatusText, this.HashSupl, startstr.Length + 1, startstr);
+                                            startstr = this.StatusText.Text.Substring(i + 1, endidx - i);
+                                            this.ShowSuplDialog(this.StatusText, this.HashSupl, startstr.Length + 1, startstr);
                                         }
                                         else
                                         {
@@ -8202,7 +8198,7 @@ namespace Hoehoe
                                 {
                                     // ソートダイレクト選択(Ctrl+Shift+1～8,Ctrl+Shift+9)
                                     int colNo = keyCode - Keys.D1;
-                                    DetailsListView lst = (DetailsListView)ListTab.SelectedTab.Tag;
+                                    DetailsListView lst = (DetailsListView)this.ListTab.SelectedTab.Tag;
                                     if (lst.Columns.Count < colNo)
                                     {
                                         return functionReturnValue;
@@ -8220,7 +8216,7 @@ namespace Hoehoe
 
                             case Keys.D9:
                                 {
-                                    DetailsListView lst = (DetailsListView)ListTab.SelectedTab.Tag;
+                                    DetailsListView lst = (DetailsListView)this.ListTab.SelectedTab.Tag;
                                     var col = lst.Columns.Cast<ColumnHeader>().OrderByDescending(x => x.DisplayIndex).First();
                                     MyList_ColumnClick(lst, new ColumnClickEventArgs(col.Index));
                                     return true;
@@ -8304,7 +8300,7 @@ namespace Hoehoe
 
         private void ScrollDownPostBrowser(bool forward)
         {
-            HtmlDocument doc = PostBrowser.Document;
+            HtmlDocument doc = this.PostBrowser.Document;
             if (doc == null)
             {
                 return;
@@ -8327,7 +8323,7 @@ namespace Hoehoe
 
         private void PageDownPostBrowser(bool forward)
         {
-            HtmlDocument doc = PostBrowser.Document;
+            HtmlDocument doc = this.PostBrowser.Document;
             if (doc == null)
             {
                 return;
@@ -8340,21 +8336,21 @@ namespace Hoehoe
 
             if (forward)
             {
-                doc.Body.ScrollTop += PostBrowser.ClientRectangle.Height - this.SettingDialog.FontDetail.Height;
+                doc.Body.ScrollTop += this.PostBrowser.ClientRectangle.Height - this.SettingDialog.FontDetail.Height;
             }
             else
             {
-                doc.Body.ScrollTop -= PostBrowser.ClientRectangle.Height - this.SettingDialog.FontDetail.Height;
+                doc.Body.ScrollTop -= this.PostBrowser.ClientRectangle.Height - this.SettingDialog.FontDetail.Height;
             }
         }
 
         private void GoNextTab(bool forward)
         {
-            int idx = ListTab.SelectedIndex;
+            int idx = this.ListTab.SelectedIndex;
             if (forward)
             {
                 idx += 1;
-                if (idx > ListTab.TabPages.Count - 1)
+                if (idx > this.ListTab.TabPages.Count - 1)
                 {
                     idx = 0;
                 }
@@ -8364,12 +8360,12 @@ namespace Hoehoe
                 idx -= 1;
                 if (idx < 0)
                 {
-                    idx = ListTab.TabPages.Count - 1;
+                    idx = this.ListTab.TabPages.Count - 1;
                 }
             }
 
-            ListTab.SelectedIndex = idx;
-            this.ListTabSelect(ListTab.TabPages[idx]);
+            this.ListTab.SelectedIndex = idx;
+            this.ListTabSelect(this.ListTab.TabPages[idx]);
         }
 
         private void CopyStot()
@@ -8568,13 +8564,13 @@ namespace Hoehoe
             if (left)
             {
                 // 左のタブへ
-                if (ListTab.SelectedIndex == 0)
+                if (this.ListTab.SelectedIndex == 0)
                 {
                     return;
                 }
                 else
                 {
-                    fIdx = ListTab.SelectedIndex - 1;
+                    fIdx = this.ListTab.SelectedIndex - 1;
                 }
 
                 toIdx = 0;
@@ -8583,34 +8579,34 @@ namespace Hoehoe
             else
             {
                 // 右のタブへ
-                if (ListTab.SelectedIndex == ListTab.TabCount - 1)
+                if (this.ListTab.SelectedIndex == this.ListTab.TabCount - 1)
                 {
                     return;
                 }
                 else
                 {
-                    fIdx = ListTab.SelectedIndex + 1;
+                    fIdx = this.ListTab.SelectedIndex + 1;
                 }
 
-                toIdx = ListTab.TabCount - 1;
+                toIdx = this.ListTab.TabCount - 1;
                 stp = 1;
             }
 
             bool found = false;
             for (int tabidx = fIdx; tabidx <= toIdx; tabidx += stp)
             {
-                if (this.statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType == TabUsageType.DirectMessage)
+                if (this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].TabType == TabUsageType.DirectMessage)
                 {
                     // Directタブは対象外
                     continue;
                 }
 
-                for (int idx = 0; idx <= ((DetailsListView)ListTab.TabPages[tabidx].Tag).VirtualListSize - 1; idx++)
+                for (int idx = 0; idx <= ((DetailsListView)this.ListTab.TabPages[tabidx].Tag).VirtualListSize - 1; idx++)
                 {
-                    if (this.statuses.Item(ListTab.TabPages[tabidx].Text, idx).StatusId == targetId)
+                    if (this.statuses.Item(this.ListTab.TabPages[tabidx].Text, idx).StatusId == targetId)
                     {
-                        ListTab.SelectedIndex = tabidx;
-                        this.ListTabSelect(ListTab.TabPages[tabidx]);
+                        this.ListTab.SelectedIndex = tabidx;
+                        this.ListTabSelect(this.ListTab.TabPages[tabidx]);
                         this.SelectListItem(this.curList, idx);
                         this.curList.EnsureVisible(idx);
                         found = true;
@@ -9047,7 +9043,7 @@ namespace Hoehoe
                         {
                             try
                             {
-                                ListTab.SelectTab(chainHead.OriginalTab);
+                                this.ListTab.SelectTab(chainHead.OriginalTab);
                             }
                             catch (Exception)
                             {
@@ -9125,13 +9121,13 @@ namespace Hoehoe
                 return false;
             }
 
-            for (int tabidx = 0; tabidx <= ListTab.TabCount - 1; tabidx++)
+            for (int tabidx = 0; tabidx <= this.ListTab.TabCount - 1; tabidx++)
             {
-                if (this.statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType != TabUsageType.DirectMessage && this.statuses.Tabs[ListTab.TabPages[tabidx].Text].Contains(statusId))
+                if (this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].TabType != TabUsageType.DirectMessage && this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].Contains(statusId))
                 {
-                    var idx = this.statuses.Tabs[ListTab.TabPages[tabidx].Text].IndexOf(statusId);
-                    ListTab.SelectedIndex = tabidx;
-                    this.ListTabSelect(ListTab.TabPages[tabidx]);
+                    var idx = this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].IndexOf(statusId);
+                    this.ListTab.SelectedIndex = tabidx;
+                    this.ListTabSelect(this.ListTab.TabPages[tabidx]);
                     this.SelectListItem(this.curList, idx);
                     this.curList.EnsureVisible(idx);
                     return true;
@@ -9148,13 +9144,13 @@ namespace Hoehoe
                 return false;
             }
 
-            for (int tabidx = 0; tabidx < ListTab.TabCount; tabidx++)
+            for (int tabidx = 0; tabidx < this.ListTab.TabCount; tabidx++)
             {
-                if (this.statuses.Tabs[ListTab.TabPages[tabidx].Text].TabType == TabUsageType.DirectMessage && this.statuses.Tabs[ListTab.TabPages[tabidx].Text].Contains(statusId))
+                if (this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].TabType == TabUsageType.DirectMessage && this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].Contains(statusId))
                 {
-                    var idx = this.statuses.Tabs[ListTab.TabPages[tabidx].Text].IndexOf(statusId);
-                    ListTab.SelectedIndex = tabidx;
-                    this.ListTabSelect(ListTab.TabPages[tabidx]);
+                    var idx = this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].IndexOf(statusId);
+                    this.ListTab.SelectedIndex = tabidx;
+                    this.ListTabSelect(this.ListTab.TabPages[tabidx]);
                     this.SelectListItem(this.curList, idx);
                     this.curList.EnsureVisible(idx);
                     return true;
@@ -9172,19 +9168,19 @@ namespace Hoehoe
         private void StatusText_Enter(object sender, EventArgs e)
         {
             // フォーカスの戻り先を StatusText に設定
-            this.Tag = StatusText;
-            StatusText.BackColor = this.clrInputBackcolor;
+            this.Tag = this.StatusText;
+            this.StatusText.BackColor = this.clrInputBackcolor;
         }
 
         private void StatusText_Leave(object sender, EventArgs e)
         {
             // フォーカスがメニューに遷移しないならばフォーカスはタブに移ることを期待
-            if (ListTab.SelectedTab != null && MenuStrip1.Tag == null)
+            if (this.ListTab.SelectedTab != null && this.MenuStrip1.Tag == null)
             {
-                this.Tag = ListTab.SelectedTab.Tag;
+                this.Tag = this.ListTab.SelectedTab.Tag;
             }
 
-            StatusText.BackColor = Color.FromKnownColor(KnownColor.Window);
+            this.StatusText.BackColor = Color.FromKnownColor(KnownColor.Window);
         }
 
         private void StatusText_KeyDown(object sender, KeyEventArgs e)
@@ -9313,7 +9309,7 @@ namespace Hoehoe
                 this.cfgCommon.ReadOwnPost = this.SettingDialog.ReadOwnPost;
                 this.cfgCommon.GetFav = this.SettingDialog.GetFav;
                 this.cfgCommon.IsMonospace = this.SettingDialog.IsMonospace;
-                if (IdeographicSpaceToSpaceToolStripMenuItem != null && IdeographicSpaceToSpaceToolStripMenuItem.IsDisposed == false)
+                if (this.IdeographicSpaceToSpaceToolStripMenuItem != null && this.IdeographicSpaceToSpaceToolStripMenuItem.IsDisposed == false)
                 {
                     this.cfgCommon.WideSpaceConvert = this.IdeographicSpaceToSpaceToolStripMenuItem.Checked;
                 }
@@ -9373,7 +9369,7 @@ namespace Hoehoe
                 this.cfgCommon.HotkeyKey = this.SettingDialog.HotkeyKey;
                 this.cfgCommon.HotkeyValue = this.SettingDialog.HotkeyValue;
                 this.cfgCommon.BlinkNewMentions = this.SettingDialog.BlinkNewMentions;
-                if (ToolStripFocusLockMenuItem != null && ToolStripFocusLockMenuItem.IsDisposed == false)
+                if (this.ToolStripFocusLockMenuItem != null && !this.ToolStripFocusLockMenuItem.IsDisposed)
                 {
                     this.cfgCommon.FocusLockToStatusText = this.ToolStripFocusLockMenuItem.Checked;
                 }
@@ -9388,7 +9384,7 @@ namespace Hoehoe
                 this.cfgCommon.AllAtReply = this.tw.AllAtReply;
                 this.cfgCommon.OpenUserTimeline = this.SettingDialog.OpenUserTimeline;
                 this.cfgCommon.ListCountApi = this.SettingDialog.ListCountApi;
-                this.cfgCommon.UseImageService = ImageServiceCombo.SelectedIndex;
+                this.cfgCommon.UseImageService = this.ImageServiceCombo.SelectedIndex;
                 this.cfgCommon.ListDoubleClickAction = this.SettingDialog.ListDoubleClickAction;
                 this.cfgCommon.UserAppointUrl = this.SettingDialog.UserAppointUrl;
                 this.cfgCommon.HideDuplicatedRetweets = this.SettingDialog.HideDuplicatedRetweets;
@@ -9419,7 +9415,7 @@ namespace Hoehoe
                 this.cfgLocal.FormLocation = this.myLoc;
                 this.cfgLocal.SplitterDistance = this.mySpDis;
                 this.cfgLocal.PreviewDistance = this.mySpDis3;
-                this.cfgLocal.StatusMultiline = StatusText.Multiline;
+                this.cfgLocal.StatusMultiline = this.StatusText.Multiline;
                 this.cfgLocal.StatusTextHeight = this.mySpDis2;
                 this.cfgLocal.AdSplitterDistance = this.myAdSpDis;
                 this.cfgLocal.StatusText = this.SettingDialog.Status;
@@ -9463,11 +9459,11 @@ namespace Hoehoe
         private void SaveConfigsTabs()
         {
             SettingTabs tabSetting = new SettingTabs();
-            for (int i = 0; i < ListTab.TabPages.Count; i++)
+            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
             {
-                if (this.statuses.Tabs[ListTab.TabPages[i].Text].TabType != TabUsageType.Related)
+                if (this.statuses.Tabs[this.ListTab.TabPages[i].Text].TabType != TabUsageType.Related)
                 {
-                    tabSetting.Tabs.Add(this.statuses.Tabs[ListTab.TabPages[i].Text]);
+                    tabSetting.Tabs.Add(this.statuses.Tabs[this.ListTab.TabPages[i].Text]);
                 }
             }
 
@@ -9482,21 +9478,21 @@ namespace Hoehoe
                 return;
             }
 
-            SaveFileDialog1.FileName = string.Format("HoehoePosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
-            SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
-            SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
-            SaveFileDialog1.FilterIndex = 0;
-            SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
-            SaveFileDialog1.RestoreDirectory = true;
+            this.SaveFileDialog1.FileName = string.Format("HoehoePosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
+            this.SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
+            this.SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
+            this.SaveFileDialog1.FilterIndex = 0;
+            this.SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
+            this.SaveFileDialog1.RestoreDirectory = true;
 
-            if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (!SaveFileDialog1.ValidateNames)
+                if (!this.SaveFileDialog1.ValidateNames)
                 {
                     return;
                 }
 
-                using (StreamWriter sw = new StreamWriter(SaveFileDialog1.FileName, false, Encoding.UTF8))
+                using (StreamWriter sw = new StreamWriter(this.SaveFileDialog1.FileName, false, Encoding.UTF8))
                 {
                     if (rslt == DialogResult.Yes)
                     {
@@ -9568,7 +9564,7 @@ namespace Hoehoe
 
         private void Tabs_DoubleClick(object sender, MouseEventArgs e)
         {
-            string tn = ListTab.SelectedTab.Text;
+            string tn = this.ListTab.SelectedTab.Text;
             this.TabRename(ref tn);
         }
 
@@ -9582,7 +9578,7 @@ namespace Hoehoe
             Point cpos = new Point(e.X, e.Y);
             if (e.Button == MouseButtons.Left)
             {
-                for (int i = 0; i < ListTab.TabPages.Count; i++)
+                for (int i = 0; i < this.ListTab.TabPages.Count; i++)
                 {
                     if (this.ListTab.GetTabRect(i).Contains(e.Location))
                     {
@@ -9621,14 +9617,14 @@ namespace Hoehoe
             string tn = string.Empty;
             bool bef = false;
             Point cpos = new Point(e.X, e.Y);
-            Point spos = ListTab.PointToClient(cpos);
+            Point spos = this.ListTab.PointToClient(cpos);
             int i = 0;
-            for (i = 0; i < ListTab.TabPages.Count; i++)
+            for (i = 0; i < this.ListTab.TabPages.Count; i++)
             {
-                Rectangle rect = ListTab.GetTabRect(i);
+                Rectangle rect = this.ListTab.GetTabRect(i);
                 if (rect.Left <= spos.X && spos.X <= rect.Right && rect.Top <= spos.Y && spos.Y <= rect.Bottom)
                 {
-                    tn = ListTab.TabPages[i].Text;
+                    tn = this.ListTab.TabPages[i].Text;
                     bef = spos.X <= (rect.Left + rect.Right) / 2;
                     break;
                 }
@@ -9637,9 +9633,9 @@ namespace Hoehoe
             // タブのないところにドロップ->最後尾へ移動
             if (string.IsNullOrEmpty(tn))
             {
-                tn = ListTab.TabPages[ListTab.TabPages.Count - 1].Text;
+                tn = this.ListTab.TabPages[this.ListTab.TabPages.Count - 1].Text;
                 bef = false;
-                i = ListTab.TabPages.Count - 1;
+                i = this.ListTab.TabPages.Count - 1;
             }
 
             TabPage tp = (TabPage)e.Data.GetData(typeof(TabPage));
@@ -9659,7 +9655,7 @@ namespace Hoehoe
         /// <param name="isAll"></param>
         private void MakeReplyOrDirectStatus(bool isAuto = true, bool isReply = true, bool isAll = false)
         {
-            if (!StatusText.Enabled)
+            if (!this.StatusText.Enabled)
             {
                 return;
             }
@@ -9686,22 +9682,22 @@ namespace Hoehoe
                 if (this.curList.SelectedIndices.Count == 1 && !isAll && this.ExistCurrentPost)
                 {
                     // 単独ユーザー宛リプライまたはDM
-                    if ((this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage && isAuto) || (!isAuto && !isReply))
+                    if ((this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage && isAuto) || (!isAuto && !isReply))
                     {
                         // ダイレクトメッセージ
-                        StatusText.Text = "D " + this.curPost.ScreenName + " " + StatusText.Text;
-                        StatusText.SelectionStart = StatusText.Text.Length;
-                        StatusText.Focus();
+                        this.StatusText.Text = "D " + this.curPost.ScreenName + " " + this.StatusText.Text;
+                        this.StatusText.SelectionStart = this.StatusText.Text.Length;
+                        this.StatusText.Focus();
                         this.replyToId = 0;
                         this.replyToName = string.Empty;
                         return;
                     }
 
-                    if (string.IsNullOrEmpty(StatusText.Text))
+                    if (string.IsNullOrEmpty(this.StatusText.Text))
                     {
                         // 空の場合
                         // ステータステキストが入力されていない場合先頭に@ユーザー名を追加する
-                        StatusText.Text = "@" + this.curPost.ScreenName + " ";
+                        this.StatusText.Text = "@" + this.curPost.ScreenName + " ";
                         if (this.curPost.RetweetedId > 0)
                         {
                             this.replyToId = this.curPost.RetweetedId;
@@ -9719,7 +9715,7 @@ namespace Hoehoe
                         if (isAuto)
                         {
                             // 1件選んでEnter or DoubleClick
-                            if (StatusText.Text.Contains("@" + this.curPost.ScreenName + " "))
+                            if (this.StatusText.Text.Contains("@" + this.curPost.ScreenName + " "))
                             {
                                 if (this.replyToId > 0 && this.replyToName == this.curPost.ScreenName)
                                 {
@@ -9739,20 +9735,20 @@ namespace Hoehoe
                                 return;
                             }
 
-                            if (!StatusText.Text.StartsWith("@"))
+                            if (!this.StatusText.Text.StartsWith("@"))
                             {
                                 // 文頭＠以外
-                                if (StatusText.Text.StartsWith(". "))
+                                if (this.StatusText.Text.StartsWith(". "))
                                 {
                                     // 複数リプライ
-                                    StatusText.Text = StatusText.Text.Insert(2, "@" + this.curPost.ScreenName + " ");
+                                    this.StatusText.Text = this.StatusText.Text.Insert(2, "@" + this.curPost.ScreenName + " ");
                                     this.replyToId = 0;
                                     this.replyToName = string.Empty;
                                 }
                                 else
                                 {
                                     // 単独リプライ
-                                    StatusText.Text = "@" + this.curPost.ScreenName + " " + StatusText.Text;
+                                    this.StatusText.Text = "@" + this.curPost.ScreenName + " " + this.StatusText.Text;
                                     if (this.curPost.RetweetedId > 0)
                                     {
                                         this.replyToId = this.curPost.RetweetedId;
@@ -9769,7 +9765,7 @@ namespace Hoehoe
                             {
                                 // 文頭＠
                                 // 複数リプライ
-                                StatusText.Text = ". @" + this.curPost.ScreenName + " " + StatusText.Text;
+                                this.StatusText.Text = ". @" + this.curPost.ScreenName + " " + this.StatusText.Text;
                                 this.replyToId = 0;
                                 this.replyToName = string.Empty;
                             }
@@ -9777,20 +9773,20 @@ namespace Hoehoe
                         else
                         {
                             // 1件選んでCtrl-Rの場合（返信先操作せず）
-                            int sidx = StatusText.SelectionStart;
+                            int sidx = this.StatusText.SelectionStart;
                             string id = "@" + this.curPost.ScreenName + " ";
                             if (sidx > 0)
                             {
-                                if (StatusText.Text.Substring(sidx - 1, 1) != " ")
+                                if (this.StatusText.Text.Substring(sidx - 1, 1) != " ")
                                 {
                                     id = " " + id;
                                 }
                             }
 
-                            StatusText.Text = StatusText.Text.Insert(sidx, id);
+                            this.StatusText.Text = this.StatusText.Text.Insert(sidx, id);
                             sidx += id.Length;
-                            StatusText.SelectionStart = sidx;
-                            StatusText.Focus();
+                            this.StatusText.SelectionStart = sidx;
+                            this.StatusText.Focus();
                             return;
                         }
                     }
@@ -9807,7 +9803,7 @@ namespace Hoehoe
                     if (isAuto)
                     {
                         // Enter or DoubleClick
-                        string statusTxt = StatusText.Text;
+                        string statusTxt = this.StatusText.Text;
                         if (!statusTxt.StartsWith(". "))
                         {
                             statusTxt = ". " + statusTxt;
@@ -9824,7 +9820,7 @@ namespace Hoehoe
                             }
                         }
 
-                        StatusText.Text = statusTxt;
+                        this.StatusText.Text = statusTxt;
                     }
                     else
                     {
@@ -9833,7 +9829,7 @@ namespace Hoehoe
                         {
                             // 複数ポスト選択
                             string ids = string.Empty;
-                            int sidx = StatusText.SelectionStart;
+                            int sidx = this.StatusText.SelectionStart;
                             for (int cnt = 0; cnt <= this.curList.SelectedIndices.Count - 1; cnt++)
                             {
                                 PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[cnt]);
@@ -9867,9 +9863,9 @@ namespace Hoehoe
                                 return;
                             }
 
-                            if (!StatusText.Text.StartsWith(". "))
+                            if (!this.StatusText.Text.StartsWith(". "))
                             {
-                                StatusText.Text = ". " + StatusText.Text;
+                                this.StatusText.Text = ". " + this.StatusText.Text;
                                 sidx += 2;
                                 this.replyToId = 0;
                                 this.replyToName = string.Empty;
@@ -9877,23 +9873,23 @@ namespace Hoehoe
 
                             if (sidx > 0)
                             {
-                                if (StatusText.Text.Substring(sidx - 1, 1) != " ")
+                                if (this.StatusText.Text.Substring(sidx - 1, 1) != " ")
                                 {
                                     ids = " " + ids;
                                 }
                             }
 
-                            StatusText.Text = StatusText.Text.Insert(sidx, ids);
+                            this.StatusText.Text = this.StatusText.Text.Insert(sidx, ids);
                             sidx += ids.Length;
-                            StatusText.SelectionStart = sidx;
-                            StatusText.Focus();
+                            this.StatusText.SelectionStart = sidx;
+                            this.StatusText.Focus();
                             return;
                         }
                         else
                         {
                             // 1件のみ選択のC-S-r（返信元付加する可能性あり）
                             string ids = string.Empty;
-                            int sidx = StatusText.SelectionStart;
+                            int sidx = this.StatusText.SelectionStart;
                             PostClass post = this.curPost;
                             if (!ids.Contains("@" + post.ScreenName + " ") && !post.ScreenName.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
                             {
@@ -9929,12 +9925,12 @@ namespace Hoehoe
                                 return;
                             }
 
-                            if (string.IsNullOrEmpty(StatusText.Text))
+                            if (string.IsNullOrEmpty(this.StatusText.Text))
                             {
                                 // 未入力の場合のみ返信先付加
-                                StatusText.Text = ids;
-                                StatusText.SelectionStart = ids.Length;
-                                StatusText.Focus();
+                                this.StatusText.Text = ids;
+                                this.StatusText.SelectionStart = ids.Length;
+                                this.StatusText.Focus();
                                 if (post.RetweetedId > 0)
                                 {
                                     this.replyToId = post.RetweetedId;
@@ -9950,23 +9946,23 @@ namespace Hoehoe
 
                             if (sidx > 0)
                             {
-                                if (StatusText.Text.Substring(sidx - 1, 1) != " ")
+                                if (this.StatusText.Text.Substring(sidx - 1, 1) != " ")
                                 {
                                     ids = " " + ids;
                                 }
                             }
 
-                            StatusText.Text = StatusText.Text.Insert(sidx, ids);
+                            this.StatusText.Text = this.StatusText.Text.Insert(sidx, ids);
                             sidx += ids.Length;
-                            StatusText.SelectionStart = sidx;
-                            StatusText.Focus();
+                            this.StatusText.SelectionStart = sidx;
+                            this.StatusText.Focus();
                             return;
                         }
                     }
                 }
 
-                StatusText.SelectionStart = StatusText.Text.Length;
-                StatusText.Focus();
+                this.StatusText.SelectionStart = this.StatusText.Text.Length;
+                this.StatusText.Focus();
             }
         }
 
@@ -9982,7 +9978,7 @@ namespace Hoehoe
                 this.Colorize();
             }
 
-            if (!TimerRefreshIcon.Enabled)
+            if (!this.TimerRefreshIcon.Enabled)
             {
                 return;
             }
@@ -10018,7 +10014,7 @@ namespace Hoehoe
 
             if (busy)
             {
-                NotifyIcon1.Icon = this.iconRefresh[this.iconCnt];
+                this.NotifyIcon1.Icon = this.iconRefresh[this.iconCnt];
                 this.isIdle = false;
                 this.myStatusError = false;
                 return;
@@ -10035,11 +10031,11 @@ namespace Hoehoe
                 this.doBlink = !this.doBlink;
                 if (this.doBlink || this.SettingDialog.ReplyIconState == ReplyIconState.StaticIcon)
                 {
-                    NotifyIcon1.Icon = this.replyIcon;
+                    this.NotifyIcon1.Icon = this.replyIcon;
                 }
                 else
                 {
-                    NotifyIcon1.Icon = this.replyIconBlink;
+                    this.NotifyIcon1.Icon = this.replyIconBlink;
                 }
 
                 this.isIdle = false;
@@ -10056,17 +10052,17 @@ namespace Hoehoe
             // 優先度：エラー→オフライン→アイドル．エラーは更新アイコンでクリアされる
             if (this.myStatusError)
             {
-                NotifyIcon1.Icon = this.iconAtRed;
+                this.NotifyIcon1.Icon = this.iconAtRed;
                 return;
             }
 
             if (MyCommon.IsNetworkAvailable())
             {
-                NotifyIcon1.Icon = this.iconAt;
+                this.NotifyIcon1.Icon = this.iconAt;
             }
             else
             {
-                NotifyIcon1.Icon = this.iconAtSmoke;
+                this.NotifyIcon1.Icon = this.iconAtSmoke;
             }
         }
 
@@ -10079,11 +10075,11 @@ namespace Hoehoe
         private void ContextMenuTabProperty_Opening(object sender, CancelEventArgs e)
         {
             // 右クリックの場合はタブ名が設定済。アプリケーションキーの場合は現在のタブを対象とする
-            if (string.IsNullOrEmpty(this.rclickTabName) || !object.ReferenceEquals(sender, ContextMenuTabProperty))
+            if (string.IsNullOrEmpty(this.rclickTabName) || !object.ReferenceEquals(sender, this.ContextMenuTabProperty))
             {
-                if (ListTab != null && ListTab.SelectedTab != null)
+                if (this.ListTab != null && this.ListTab.SelectedTab != null)
                 {
-                    this.rclickTabName = ListTab.SelectedTab.Text;
+                    this.rclickTabName = this.ListTab.SelectedTab.Text;
                 }
                 else
                 {
@@ -10107,12 +10103,12 @@ namespace Hoehoe
                 return;
             }
 
-            NotifyDispMenuItem.Checked = tb.Notify;
+            this.NotifyDispMenuItem.Checked = tb.Notify;
             this.NotifyTbMenuItem.Checked = tb.Notify;
             this.soundfileListup = true;
-            SoundFileComboBox.Items.Clear();
+            this.SoundFileComboBox.Items.Clear();
             this.SoundFileTbComboBox.Items.Clear();
-            SoundFileComboBox.Items.Add(string.Empty);
+            this.SoundFileComboBox.Items.Add(string.Empty);
             this.SoundFileTbComboBox.Items.Add(string.Empty);
             DirectoryInfo soundDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
             if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
@@ -10122,20 +10118,20 @@ namespace Hoehoe
 
             foreach (FileInfo soundFile in soundDir.GetFiles("*.wav"))
             {
-                SoundFileComboBox.Items.Add(soundFile.Name);
+                this.SoundFileComboBox.Items.Add(soundFile.Name);
                 this.SoundFileTbComboBox.Items.Add(soundFile.Name);
             }
 
-            int idx = SoundFileComboBox.Items.IndexOf(tb.SoundFile);
+            int idx = this.SoundFileComboBox.Items.IndexOf(tb.SoundFile);
             if (idx == -1)
             {
                 idx = 0;
             }
 
-            SoundFileComboBox.SelectedIndex = idx;
+            this.SoundFileComboBox.SelectedIndex = idx;
             this.SoundFileTbComboBox.SelectedIndex = idx;
             this.soundfileListup = false;
-            UreadManageMenuItem.Checked = tb.UnreadManage;
+            this.UreadManageMenuItem.Checked = tb.UnreadManage;
             this.UnreadMngTbMenuItem.Checked = tb.UnreadManage;
 
             this.TabMenuControl(this.rclickTabName);
@@ -10145,53 +10141,52 @@ namespace Hoehoe
         {
             if (this.statuses.Tabs[tabName].TabType != TabUsageType.Mentions && this.statuses.IsDefaultTab(tabName))
             {
-                FilterEditMenuItem.Enabled = true;
+                this.FilterEditMenuItem.Enabled = true;
                 this.EditRuleTbMenuItem.Enabled = true;
-                DeleteTabMenuItem.Enabled = false;
+                this.DeleteTabMenuItem.Enabled = false;
                 this.DeleteTbMenuItem.Enabled = false;
             }
             else if (this.statuses.Tabs[tabName].TabType == TabUsageType.Mentions)
             {
-                FilterEditMenuItem.Enabled = true;
+                this.FilterEditMenuItem.Enabled = true;
                 this.EditRuleTbMenuItem.Enabled = true;
-                DeleteTabMenuItem.Enabled = false;
+                this.DeleteTabMenuItem.Enabled = false;
                 this.DeleteTbMenuItem.Enabled = false;
             }
             else
             {
-                FilterEditMenuItem.Enabled = true;
+                this.FilterEditMenuItem.Enabled = true;
                 this.EditRuleTbMenuItem.Enabled = true;
-                DeleteTabMenuItem.Enabled = true;
+                this.DeleteTabMenuItem.Enabled = true;
                 this.DeleteTbMenuItem.Enabled = true;
             }
         }
 
         private void UreadManageMenuItem_Click(object sender, EventArgs e)
         {
-            UreadManageMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
-            this.UnreadMngTbMenuItem.Checked = UreadManageMenuItem.Checked;
+            this.UreadManageMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
+            this.UnreadMngTbMenuItem.Checked = this.UreadManageMenuItem.Checked;
 
             if (string.IsNullOrEmpty(this.rclickTabName))
             {
                 return;
             }
 
-            this.ChangeTabUnreadManage(this.rclickTabName, UreadManageMenuItem.Checked);
+            this.ChangeTabUnreadManage(this.rclickTabName, this.UreadManageMenuItem.Checked);
             this.SaveConfigsTabs();
         }
 
         private void NotifyDispMenuItem_Click(object sender, EventArgs e)
         {
-            NotifyDispMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
-            this.NotifyTbMenuItem.Checked = NotifyDispMenuItem.Checked;
+            this.NotifyDispMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
+            this.NotifyTbMenuItem.Checked = this.NotifyDispMenuItem.Checked;
 
             if (string.IsNullOrEmpty(this.rclickTabName))
             {
                 return;
             }
 
-            this.statuses.Tabs[this.rclickTabName].Notify = NotifyDispMenuItem.Checked;
-
+            this.statuses.Tabs[this.rclickTabName].Notify = this.NotifyDispMenuItem.Checked;
             this.SaveConfigsTabs();
         }
 
@@ -10203,7 +10198,6 @@ namespace Hoehoe
             }
 
             this.statuses.Tabs[this.rclickTabName].SoundFile = (string)((ToolStripComboBox)sender).SelectedItem;
-
             this.SaveConfigsTabs();
         }
 
@@ -10211,7 +10205,7 @@ namespace Hoehoe
         {
             if (string.IsNullOrEmpty(this.rclickTabName) || object.ReferenceEquals(sender, this.DeleteTbMenuItem))
             {
-                this.rclickTabName = ListTab.SelectedTab.Text;
+                this.rclickTabName = this.ListTab.SelectedTab.Text;
             }
 
             this.RemoveSpecifiedTab(this.rclickTabName, true);
@@ -10237,7 +10231,7 @@ namespace Hoehoe
                 this.curPost = null;
                 this.curItemIndex = -1;
                 this.statuses.FilterAll();
-                foreach (TabPage tb in ListTab.TabPages)
+                foreach (TabPage tb in this.ListTab.TabPages)
                 {
                     ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
                     if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
@@ -10258,7 +10252,7 @@ namespace Hoehoe
 
                 if (!this.SettingDialog.TabIconDisp)
                 {
-                    ListTab.Refresh();
+                    this.ListTab.Refresh();
                 }
             }
             finally
@@ -10321,15 +10315,15 @@ namespace Hoehoe
                     this.SaveConfigsTabs();
                     if (tabUsage == TabUsageType.PublicSearch)
                     {
-                        ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
-                        this.ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
-                        ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
+                        this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
+                        this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
+                        this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
                     }
 
                     if (tabUsage == TabUsageType.Lists)
                     {
-                        ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
-                        this.ListTabSelect(ListTab.TabPages[ListTab.TabPages.Count - 1]);
+                        this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
+                        this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
                         this.GetTimeline(WorkerType.List, 1, 0, tabName);
                     }
                 }
@@ -10371,7 +10365,7 @@ namespace Hoehoe
                 this.curPost = null;
                 this.curItemIndex = -1;
                 this.statuses.FilterAll();
-                foreach (TabPage tb in ListTab.TabPages)
+                foreach (TabPage tb in this.ListTab.TabPages)
                 {
                     ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
                     if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
@@ -10392,7 +10386,7 @@ namespace Hoehoe
 
                 if (!this.SettingDialog.TabIconDisp)
                 {
-                    ListTab.Refresh();
+                    this.ListTab.Refresh();
                 }
             }
             finally
@@ -10482,7 +10476,7 @@ namespace Hoehoe
                 this.curPost = null;
                 this.curItemIndex = -1;
                 this.statuses.FilterAll();
-                foreach (TabPage tb in ListTab.TabPages)
+                foreach (TabPage tb in this.ListTab.TabPages)
                 {
                     ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
                     if (this.statuses.ContainsTab(tb.Text))
@@ -10506,7 +10500,7 @@ namespace Hoehoe
 
                 if (!this.SettingDialog.TabIconDisp)
                 {
-                    ListTab.Refresh();
+                    this.ListTab.Refresh();
                 }
             }
             finally
@@ -10530,7 +10524,7 @@ namespace Hoehoe
 
                 this.TopMost = this.SettingDialog.AlwaysTop;
                 tabName = this.tabDialog.SelectedTabName;
-                ListTab.SelectedTab.Focus();
+                this.ListTab.SelectedTab.Focus();
 
                 // 新規タブを選択→タブ作成
                 if (tabName == Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText1)
@@ -10612,10 +10606,10 @@ namespace Hoehoe
 
         private void SelectAllMenuItem_Click(object sender, EventArgs e)
         {
-            if (StatusText.Focused)
+            if (this.StatusText.Focused)
             {
                 // 発言欄でのCtrl+A
-                StatusText.SelectAll();
+                this.StatusText.SelectAll();
             }
             else
             {
@@ -10654,16 +10648,16 @@ namespace Hoehoe
 
         private void OpenURLMenuItem_Click(object sender, EventArgs e)
         {
-            if (PostBrowser.Document.Links.Count > 0)
+            if (this.PostBrowser.Document.Links.Count > 0)
             {
                 this.urlDialog.ClearUrl();
                 string openUrlStr = string.Empty;
-                if (PostBrowser.Document.Links.Count == 1)
+                if (this.PostBrowser.Document.Links.Count == 1)
                 {
                     string urlStr = string.Empty;
                     try
                     {
-                        urlStr = MyCommon.IDNDecode(PostBrowser.Document.Links[0].GetAttribute("href"));
+                        urlStr = MyCommon.IDNDecode(this.PostBrowser.Document.Links[0].GetAttribute("href"));
                     }
                     catch (ArgumentException)
                     {
@@ -10684,7 +10678,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    foreach (HtmlElement linkElm in PostBrowser.Document.Links)
+                    foreach (HtmlElement linkElm in this.PostBrowser.Document.Links)
                     {
                         string urlStr = string.Empty;
                         string linkText = string.Empty;
@@ -10789,7 +10783,7 @@ namespace Hoehoe
             }
 
             this.statuses.ClearTabIds(tabName);
-            if (ListTab.SelectedTab.Text == tabName)
+            if (this.ListTab.SelectedTab.Text == tabName)
             {
                 this.anchorPost = null;
                 this.anchorFlag = false;
@@ -10800,7 +10794,7 @@ namespace Hoehoe
                 this.curPost = null;
             }
 
-            foreach (TabPage tb in ListTab.TabPages)
+            foreach (TabPage tb in this.ListTab.TabPages)
             {
                 if (tb.Text == tabName)
                 {
@@ -10812,7 +10806,7 @@ namespace Hoehoe
 
             if (!this.SettingDialog.TabIconDisp)
             {
-                ListTab.Refresh();
+                this.ListTab.Refresh();
             }
 
             this.SetMainWindowTitle();
@@ -10976,7 +10970,7 @@ namespace Hoehoe
 
         private void SetStatusLabelUrl()
         {
-            StatusLabelUrl.Text = this.GetStatusLabelText();
+            this.StatusLabelUrl.Text = this.GetStatusLabelText();
         }
 
         // タスクトレイアイコンのツールチップテキスト書き換え
@@ -11003,7 +10997,7 @@ namespace Hoehoe
                 ur.Append("]");
             }
 
-            NotifyIcon1.Text = ur.ToString();
+            this.NotifyIcon1.Text = ur.ToString();
         }
 
         private void TweenMain_Resize(object sender, EventArgs e)
@@ -11018,7 +11012,7 @@ namespace Hoehoe
                 this.ClientSize = this.cfgLocal.FormSize;          // 'サイズ保持（最小化・最大化されたまま終了した場合の対応用）
                 this.DesktopLocation = this.cfgLocal.FormLocation; // '位置保持（最小化・最大化されたまま終了した場合の対応用）
 
-                if (!SplitContainer4.Panel2Collapsed && this.cfgLocal.AdSplitterDistance > this.SplitContainer4.Panel1MinSize)
+                if (!this.SplitContainer4.Panel2Collapsed && this.cfgLocal.AdSplitterDistance > this.SplitContainer4.Panel1MinSize)
                 {
                     // Splitterの位置設定
                     this.SplitContainer4.SplitterDistance = this.cfgLocal.AdSplitterDistance;
@@ -11031,22 +11025,22 @@ namespace Hoehoe
                 }
 
                 // 発言欄複数行
-                StatusText.Multiline = this.cfgLocal.StatusMultiline;
-                if (StatusText.Multiline)
+                this.StatusText.Multiline = this.cfgLocal.StatusMultiline;
+                if (this.StatusText.Multiline)
                 {
-                    int dis = SplitContainer2.Height - this.cfgLocal.StatusTextHeight - SplitContainer2.SplitterWidth;
-                    if (dis > SplitContainer2.Panel1MinSize && dis < SplitContainer2.Height - SplitContainer2.Panel2MinSize - SplitContainer2.SplitterWidth)
+                    int dis = this.SplitContainer2.Height - this.cfgLocal.StatusTextHeight - this.SplitContainer2.SplitterWidth;
+                    if (dis > this.SplitContainer2.Panel1MinSize && dis < this.SplitContainer2.Height - this.SplitContainer2.Panel2MinSize - this.SplitContainer2.SplitterWidth)
                     {
-                        SplitContainer2.SplitterDistance = SplitContainer2.Height - this.cfgLocal.StatusTextHeight - SplitContainer2.SplitterWidth;
+                        this.SplitContainer2.SplitterDistance = this.SplitContainer2.Height - this.cfgLocal.StatusTextHeight - this.SplitContainer2.SplitterWidth;
                     }
 
-                    StatusText.Height = this.cfgLocal.StatusTextHeight;
+                    this.StatusText.Height = this.cfgLocal.StatusTextHeight;
                 }
                 else
                 {
-                    if (SplitContainer2.Height - SplitContainer2.Panel2MinSize - SplitContainer2.SplitterWidth > 0)
+                    if (this.SplitContainer2.Height - this.SplitContainer2.Panel2MinSize - this.SplitContainer2.SplitterWidth > 0)
                     {
-                        SplitContainer2.SplitterDistance = SplitContainer2.Height - SplitContainer2.Panel2MinSize - SplitContainer2.SplitterWidth;
+                        this.SplitContainer2.SplitterDistance = this.SplitContainer2.Height - this.SplitContainer2.Panel2MinSize - this.SplitContainer2.SplitterWidth;
                     }
                 }
 
@@ -11061,9 +11055,9 @@ namespace Hoehoe
 
         private void PlaySoundMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            PlaySoundMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
-            this.PlaySoundFileMenuItem.Checked = PlaySoundMenuItem.Checked;
-            this.SettingDialog.PlaySound = PlaySoundMenuItem.Checked;
+            this.PlaySoundMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
+            this.PlaySoundFileMenuItem.Checked = this.PlaySoundMenuItem.Checked;
+            this.SettingDialog.PlaySound = this.PlaySoundMenuItem.Checked;
             this.modifySettingCommon = true;
         }
 
@@ -11071,10 +11065,10 @@ namespace Hoehoe
         {
             if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
             {
-                this.mySpDis = SplitContainer1.SplitterDistance;
-                if (StatusText.Multiline)
+                this.mySpDis = this.SplitContainer1.SplitterDistance;
+                if (this.StatusText.Multiline)
                 {
-                    this.mySpDis2 = StatusText.Height;
+                    this.mySpDis2 = this.StatusText.Height;
                 }
 
                 this.modifySettingLocal = true;
@@ -11085,7 +11079,7 @@ namespace Hoehoe
         {
             if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
             {
-                this.myAdSpDis = SplitContainer4.SplitterDistance;
+                this.myAdSpDis = this.SplitContainer4.SplitterDistance;
                 this.modifySettingLocal = true;
             }
         }
@@ -11182,39 +11176,39 @@ namespace Hoehoe
                 this.IconNameToolStripMenuItem.Text = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText2;
             }
 
-            if (NameLabel.Tag != null)
+            if (this.NameLabel.Tag != null)
             {
-                string id = (string)NameLabel.Tag;
+                string id = (string)this.NameLabel.Tag;
                 if (id == this.tw.Username)
                 {
-                    FollowToolStripMenuItem.Enabled = false;
-                    UnFollowToolStripMenuItem.Enabled = false;
-                    ShowFriendShipToolStripMenuItem.Enabled = false;
-                    ShowUserStatusToolStripMenuItem.Enabled = true;
-                    SearchPostsDetailNameToolStripMenuItem.Enabled = true;
-                    SearchAtPostsDetailNameToolStripMenuItem.Enabled = false;
-                    ListManageUserContextToolStripMenuItem3.Enabled = true;
+                    this.FollowToolStripMenuItem.Enabled = false;
+                    this.UnFollowToolStripMenuItem.Enabled = false;
+                    this.ShowFriendShipToolStripMenuItem.Enabled = false;
+                    this.ShowUserStatusToolStripMenuItem.Enabled = true;
+                    this.SearchPostsDetailNameToolStripMenuItem.Enabled = true;
+                    this.SearchAtPostsDetailNameToolStripMenuItem.Enabled = false;
+                    this.ListManageUserContextToolStripMenuItem3.Enabled = true;
                 }
                 else
                 {
-                    FollowToolStripMenuItem.Enabled = true;
-                    UnFollowToolStripMenuItem.Enabled = true;
-                    ShowFriendShipToolStripMenuItem.Enabled = true;
-                    ShowUserStatusToolStripMenuItem.Enabled = true;
-                    SearchPostsDetailNameToolStripMenuItem.Enabled = true;
-                    SearchAtPostsDetailNameToolStripMenuItem.Enabled = true;
-                    ListManageUserContextToolStripMenuItem3.Enabled = true;
+                    this.FollowToolStripMenuItem.Enabled = true;
+                    this.UnFollowToolStripMenuItem.Enabled = true;
+                    this.ShowFriendShipToolStripMenuItem.Enabled = true;
+                    this.ShowUserStatusToolStripMenuItem.Enabled = true;
+                    this.SearchPostsDetailNameToolStripMenuItem.Enabled = true;
+                    this.SearchAtPostsDetailNameToolStripMenuItem.Enabled = true;
+                    this.ListManageUserContextToolStripMenuItem3.Enabled = true;
                 }
             }
             else
             {
-                FollowToolStripMenuItem.Enabled = false;
-                UnFollowToolStripMenuItem.Enabled = false;
-                ShowFriendShipToolStripMenuItem.Enabled = false;
-                ShowUserStatusToolStripMenuItem.Enabled = false;
-                SearchPostsDetailNameToolStripMenuItem.Enabled = false;
-                SearchAtPostsDetailNameToolStripMenuItem.Enabled = false;
-                ListManageUserContextToolStripMenuItem3.Enabled = false;
+                this.FollowToolStripMenuItem.Enabled = false;
+                this.UnFollowToolStripMenuItem.Enabled = false;
+                this.ShowFriendShipToolStripMenuItem.Enabled = false;
+                this.ShowUserStatusToolStripMenuItem.Enabled = false;
+                this.SearchPostsDetailNameToolStripMenuItem.Enabled = false;
+                this.SearchAtPostsDetailNameToolStripMenuItem.Enabled = false;
+                this.ListManageUserContextToolStripMenuItem3.Enabled = false;
             }
         }
 
@@ -11283,7 +11277,7 @@ namespace Hoehoe
         private void SplitContainer2_Panel2_Resize(object sender, EventArgs e)
         {
             this.StatusText.Multiline = this.SplitContainer2.Panel2.Height > this.SplitContainer2.Panel2MinSize + 2;
-            MultiLineMenuItem.Checked = this.StatusText.Multiline;
+            this.MultiLineMenuItem.Checked = this.StatusText.Multiline;
             this.modifySettingLocal = true;
         }
 
@@ -11304,22 +11298,22 @@ namespace Hoehoe
         private void MultiLineMenuItem_Click(object sender, EventArgs e)
         {
             // 発言欄複数行
-            StatusText.Multiline = MultiLineMenuItem.Checked;
-            this.cfgLocal.StatusMultiline = MultiLineMenuItem.Checked;
-            if (MultiLineMenuItem.Checked)
+            this.StatusText.Multiline = this.MultiLineMenuItem.Checked;
+            this.cfgLocal.StatusMultiline = this.MultiLineMenuItem.Checked;
+            if (this.MultiLineMenuItem.Checked)
             {
-                if (SplitContainer2.Height - this.mySpDis2 - SplitContainer2.SplitterWidth < 0)
+                if (this.SplitContainer2.Height - this.mySpDis2 - this.SplitContainer2.SplitterWidth < 0)
                 {
-                    SplitContainer2.SplitterDistance = 0;
+                    this.SplitContainer2.SplitterDistance = 0;
                 }
                 else
                 {
-                    SplitContainer2.SplitterDistance = SplitContainer2.Height - this.mySpDis2 - SplitContainer2.SplitterWidth;
+                    this.SplitContainer2.SplitterDistance = this.SplitContainer2.Height - this.mySpDis2 - this.SplitContainer2.SplitterWidth;
                 }
             }
             else
             {
-                SplitContainer2.SplitterDistance = SplitContainer2.Height - SplitContainer2.Panel2MinSize - SplitContainer2.SplitterWidth;
+                this.SplitContainer2.SplitterDistance = this.SplitContainer2.Height - this.SplitContainer2.Panel2MinSize - this.SplitContainer2.SplitterWidth;
             }
 
             this.modifySettingLocal = true;
@@ -11340,10 +11334,10 @@ namespace Hoehoe
 
             const string NicoUrlPattern = "^https?:// [a-z]+\\.(nicovideo|niconicommons|nicolive)\\.jp/[a-z]+/[a-z0-9]+$";
 
-            if (StatusText.SelectionLength > 0)
+            if (this.StatusText.SelectionLength > 0)
             {
                 // 文字列が選択されている場合はその文字列について処理
-                string tmp = StatusText.SelectedText;
+                string tmp = this.StatusText.SelectedText;
 
                 // httpから始まらない場合、ExcludeStringで指定された文字列で始まる場合は対象としない
                 if (tmp.StartsWith("http"))
@@ -11359,7 +11353,7 @@ namespace Hoehoe
                         result = ShortUrl.Make(urlCoonverterType, tmp);
                         if (result.Equals("Can't convert"))
                         {
-                            StatusLabel.Text = result.Insert(0, urlCoonverterType.ToString() + ":");
+                            this.StatusLabel.Text = result.Insert(0, urlCoonverterType.ToString() + ":");
                             return false;
                         }
                     }
@@ -11370,14 +11364,14 @@ namespace Hoehoe
 
                     if (!string.IsNullOrEmpty(result))
                     {
-                        StatusText.Select(StatusText.Text.IndexOf(tmp, StringComparison.Ordinal), tmp.Length);
-                        StatusText.SelectedText = result;
+                        this.StatusText.Select(this.StatusText.Text.IndexOf(tmp, StringComparison.Ordinal), tmp.Length);
+                        this.StatusText.SelectedText = result;
 
                         // undoバッファにセット
                         if (this.urlUndoBuffer == null)
                         {
                             this.urlUndoBuffer = new List<UrlUndoInfo>();
-                            UrlUndoToolStripMenuItem.Enabled = true;
+                            this.UrlUndoToolStripMenuItem.Enabled = true;
                         }
 
                         this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = tmp, After = result });
@@ -11389,9 +11383,9 @@ namespace Hoehoe
                 const string UrlPattern = "(?<before>(?:[^\\\"':!=]|^|\\:))" + "(?<url>(?<protocol>https?:// )" + "(?<domain>(?:[\\.-]|[^\\p{P}\\s])+\\.[a-z]{2,}(?::[0-9]+)?)" + "(?<path>/[a-z0-9!*'();:&=+$/%#\\-_.,~@]*[a-z0-9)=#/]?)?" + "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\-_.,~@?]*[a-z0-9_&=#/])?)";
 
                 // 正規表現にマッチしたURL文字列をtinyurl化
-                foreach (Match mt in Regex.Matches(StatusText.Text, UrlPattern, RegexOptions.IgnoreCase))
+                foreach (Match mt in Regex.Matches(this.StatusText.Text, UrlPattern, RegexOptions.IgnoreCase))
                 {
-                    if (StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal) == -1)
+                    if (this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal) == -1)
                     {
                         continue;
                     }
@@ -11403,7 +11397,7 @@ namespace Hoehoe
                     }
 
                     // 選んだURLを選択（？）
-                    StatusText.Select(StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
+                    this.StatusText.Select(this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
 
                     // nico.ms使用、nicovideoにマッチしたら変換
                     if (this.SettingDialog.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
@@ -11416,7 +11410,7 @@ namespace Hoehoe
                         result = ShortUrl.Make(urlCoonverterType, tmp);
                         if (result.Equals("Can't convert"))
                         {
-                            StatusLabel.Text = result.Insert(0, urlCoonverterType.ToString() + ":");
+                            this.StatusLabel.Text = result.Insert(0, urlCoonverterType.ToString() + ":");
                             continue;
                         }
                     }
@@ -11427,14 +11421,14 @@ namespace Hoehoe
 
                     if (!string.IsNullOrEmpty(result))
                     {
-                        StatusText.Select(StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
-                        StatusText.SelectedText = result;
+                        this.StatusText.Select(this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
+                        this.StatusText.SelectedText = result;
 
                         // undoバッファにセット
                         if (this.urlUndoBuffer == null)
                         {
                             this.urlUndoBuffer = new List<UrlUndoInfo>();
-                            UrlUndoToolStripMenuItem.Enabled = true;
+                            this.UrlUndoToolStripMenuItem.Enabled = true;
                         }
 
                         this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = mt.Result("${url}"), After = result });
@@ -11449,17 +11443,17 @@ namespace Hoehoe
         {
             if (this.urlUndoBuffer != null)
             {
-                string tmp = StatusText.Text;
+                string tmp = this.StatusText.Text;
                 foreach (UrlUndoInfo data in this.urlUndoBuffer)
                 {
                     tmp = tmp.Replace(data.After, data.Before);
                 }
 
-                StatusText.Text = tmp;
+                this.StatusText.Text = tmp;
                 this.urlUndoBuffer = null;
-                UrlUndoToolStripMenuItem.Enabled = false;
-                StatusText.SelectionStart = 0;
-                StatusText.SelectionLength = 0;
+                this.UrlUndoToolStripMenuItem.Enabled = false;
+                this.StatusText.SelectionStart = 0;
+                this.StatusText.SelectionLength = 0;
             }
         }
 
@@ -11508,23 +11502,23 @@ namespace Hoehoe
         {
             this.NotifyFileMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
             this.NewPostPopMenuItem.Checked = this.NotifyFileMenuItem.Checked;
-            this.cfgCommon.NewAllPop = NewPostPopMenuItem.Checked;
+            this.cfgCommon.NewAllPop = this.NewPostPopMenuItem.Checked;
             this.modifySettingCommon = true;
         }
 
         private void ListLockMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            ListLockMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
-            this.LockListFileMenuItem.Checked = ListLockMenuItem.Checked;
-            this.cfgCommon.ListLock = ListLockMenuItem.Checked;
+            this.ListLockMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
+            this.LockListFileMenuItem.Checked = this.ListLockMenuItem.Checked;
+            this.cfgCommon.ListLock = this.ListLockMenuItem.Checked;
             this.modifySettingCommon = true;
         }
 
         private void MenuStrip1_MenuActivate(object sender, EventArgs e)
         {
             // フォーカスがメニューに移る (MenuStrip1.Tag フラグを立てる)
-            MenuStrip1.Tag = new object();
-            MenuStrip1.Select();
+            this.MenuStrip1.Tag = new object();
+            this.MenuStrip1.Select();
         }
 
         private void MenuStrip1_MenuDeactivate(object sender, EventArgs e)
@@ -11544,15 +11538,15 @@ namespace Hoehoe
             else
             {
                 // 戻り先が指定されていない (初期状態) 場合はタブに遷移
-                if (ListTab.SelectedIndex > -1 && ListTab.SelectedTab.HasChildren)
+                if (this.ListTab.SelectedIndex > -1 && this.ListTab.SelectedTab.HasChildren)
                 {
-                    this.Tag = ListTab.SelectedTab.Tag;
+                    this.Tag = this.ListTab.SelectedTab.Tag;
                     ((Control)this.Tag).Select();
                 }
             }
 
             // フォーカスがメニューに遷移したかどうかを表すフラグを降ろす
-            MenuStrip1.Tag = null;
+            this.MenuStrip1.Tag = null;
         }
 
         private void MyList_ColumnReordered(object sender, ColumnReorderedEventArgs e)
@@ -11712,7 +11706,7 @@ namespace Hoehoe
             // 発言詳細で「選択文字列をコピー」
             try
             {
-                Clipboard.SetDataObject(this.WebBrowser_GetSelectionText(ref PostBrowser), false, 5, 100);
+                Clipboard.SetDataObject(this.WebBrowser_GetSelectionText(ref this.PostBrowser), false, 5, 100);
             }
             catch (Exception ex)
             {
@@ -11723,7 +11717,7 @@ namespace Hoehoe
         private void DoSearchToolStrip(string url)
         {
             // 発言詳細で「選択文字列で検索」（選択文字列取得）
-            string selText = this.WebBrowser_GetSelectionText(ref PostBrowser);
+            string selText = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
 
             if (selText != null)
             {
@@ -11742,7 +11736,7 @@ namespace Hoehoe
         private void SelectionAllContextMenuItem_Click(object sender, EventArgs e)
         {
             // 発言詳細ですべて選択
-            PostBrowser.Document.ExecCommand("SelectAll", false, null);
+            this.PostBrowser.Document.ExecCommand("SelectAll", false, null);
         }
 
         private void SearchWikipediaContextMenuItem_Click(object sender, EventArgs e)
@@ -11793,64 +11787,64 @@ namespace Hoehoe
         private void ContextMenuPostBrowser_Opening(object sender, CancelEventArgs e)
         {
             // URLコピーの項目の表示/非表示
-            if (PostBrowser.StatusText.StartsWith("http"))
+            if (this.PostBrowser.StatusText.StartsWith("http"))
             {
-                this.postBrowserStatusText = PostBrowser.StatusText;
+                this.postBrowserStatusText = this.PostBrowser.StatusText;
                 string name = this.GetUserId();
-                UrlCopyContextMenuItem.Enabled = true;
+                this.UrlCopyContextMenuItem.Enabled = true;
                 if (name != null)
                 {
-                    FollowContextMenuItem.Enabled = true;
-                    RemoveContextMenuItem.Enabled = true;
-                    FriendshipContextMenuItem.Enabled = true;
-                    ShowUserStatusContextMenuItem.Enabled = true;
-                    SearchPostsDetailToolStripMenuItem.Enabled = true;
-                    IdFilterAddMenuItem.Enabled = true;
-                    ListManageUserContextToolStripMenuItem.Enabled = true;
-                    SearchAtPostsDetailToolStripMenuItem.Enabled = true;
+                    this.FollowContextMenuItem.Enabled = true;
+                    this.RemoveContextMenuItem.Enabled = true;
+                    this.FriendshipContextMenuItem.Enabled = true;
+                    this.ShowUserStatusContextMenuItem.Enabled = true;
+                    this.SearchPostsDetailToolStripMenuItem.Enabled = true;
+                    this.IdFilterAddMenuItem.Enabled = true;
+                    this.ListManageUserContextToolStripMenuItem.Enabled = true;
+                    this.SearchAtPostsDetailToolStripMenuItem.Enabled = true;
                 }
                 else
                 {
-                    FollowContextMenuItem.Enabled = false;
-                    RemoveContextMenuItem.Enabled = false;
-                    FriendshipContextMenuItem.Enabled = false;
-                    ShowUserStatusContextMenuItem.Enabled = false;
-                    SearchPostsDetailToolStripMenuItem.Enabled = false;
-                    IdFilterAddMenuItem.Enabled = false;
-                    ListManageUserContextToolStripMenuItem.Enabled = false;
-                    SearchAtPostsDetailToolStripMenuItem.Enabled = false;
+                    this.FollowContextMenuItem.Enabled = false;
+                    this.RemoveContextMenuItem.Enabled = false;
+                    this.FriendshipContextMenuItem.Enabled = false;
+                    this.ShowUserStatusContextMenuItem.Enabled = false;
+                    this.SearchPostsDetailToolStripMenuItem.Enabled = false;
+                    this.IdFilterAddMenuItem.Enabled = false;
+                    this.ListManageUserContextToolStripMenuItem.Enabled = false;
+                    this.SearchAtPostsDetailToolStripMenuItem.Enabled = false;
                 }
 
-                UseHashtagMenuItem.Enabled = Regex.IsMatch(this.postBrowserStatusText, "^https?:// twitter.com/search\\?q=%23");
+                this.UseHashtagMenuItem.Enabled = Regex.IsMatch(this.postBrowserStatusText, "^https?:// twitter.com/search\\?q=%23");
             }
             else
             {
                 this.postBrowserStatusText = string.Empty;
-                UrlCopyContextMenuItem.Enabled = false;
-                FollowContextMenuItem.Enabled = false;
-                RemoveContextMenuItem.Enabled = false;
-                FriendshipContextMenuItem.Enabled = false;
-                ShowUserStatusContextMenuItem.Enabled = false;
-                SearchPostsDetailToolStripMenuItem.Enabled = false;
-                SearchAtPostsDetailToolStripMenuItem.Enabled = false;
-                UseHashtagMenuItem.Enabled = false;
-                IdFilterAddMenuItem.Enabled = false;
-                ListManageUserContextToolStripMenuItem.Enabled = false;
+                this.UrlCopyContextMenuItem.Enabled = false;
+                this.FollowContextMenuItem.Enabled = false;
+                this.RemoveContextMenuItem.Enabled = false;
+                this.FriendshipContextMenuItem.Enabled = false;
+                this.ShowUserStatusContextMenuItem.Enabled = false;
+                this.SearchPostsDetailToolStripMenuItem.Enabled = false;
+                this.SearchAtPostsDetailToolStripMenuItem.Enabled = false;
+                this.UseHashtagMenuItem.Enabled = false;
+                this.IdFilterAddMenuItem.Enabled = false;
+                this.ListManageUserContextToolStripMenuItem.Enabled = false;
             }
 
             // 文字列選択されていないときは選択文字列関係の項目を非表示に
-            string selectText = this.WebBrowser_GetSelectionText(ref PostBrowser);
+            string selectText = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
             if (selectText == null)
             {
-                SelectionSearchContextMenuItem.Enabled = false;
-                SelectionCopyContextMenuItem.Enabled = false;
-                SelectionTranslationToolStripMenuItem.Enabled = false;
+                this.SelectionSearchContextMenuItem.Enabled = false;
+                this.SelectionCopyContextMenuItem.Enabled = false;
+                this.SelectionTranslationToolStripMenuItem.Enabled = false;
             }
             else
             {
-                SelectionSearchContextMenuItem.Enabled = true;
-                SelectionCopyContextMenuItem.Enabled = true;
-                SelectionTranslationToolStripMenuItem.Enabled = true;
+                this.SelectionSearchContextMenuItem.Enabled = true;
+                this.SelectionCopyContextMenuItem.Enabled = true;
+                this.SelectionTranslationToolStripMenuItem.Enabled = true;
             }
 
             // 発言内に自分以外のユーザーが含まれてればフォロー状態全表示を有効に
@@ -11866,16 +11860,14 @@ namespace Hoehoe
             }
 
             this.FriendshipAllMenuItem.Enabled = fAllFlag;
-
-            TranslationToolStripMenuItem.Enabled = this.curPost != null;
-
+            this.TranslationToolStripMenuItem.Enabled = this.curPost != null;
             e.Cancel = false;
         }
 
         private void CurrentTabToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // 発言詳細の選択文字列で現在のタブを検索
-            string txt = this.WebBrowser_GetSelectionText(ref PostBrowser);
+            string txt = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
 
             if (txt != null)
             {
@@ -11889,9 +11881,9 @@ namespace Hoehoe
 
         private void SplitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            if (StatusText.Multiline)
+            if (this.StatusText.Multiline)
             {
-                this.mySpDis2 = StatusText.Height;
+                this.mySpDis2 = this.StatusText.Height;
             }
 
             this.modifySettingLocal = true;
@@ -11901,22 +11893,22 @@ namespace Hoehoe
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                ImageSelectionPanel.Visible = true;
-                ImageSelectionPanel.Enabled = true;
-                TimelinePanel.Visible = false;
-                TimelinePanel.Enabled = false;
-                ImagefilePathText.Text = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
+                this.ImageSelectionPanel.Visible = true;
+                this.ImageSelectionPanel.Enabled = true;
+                this.TimelinePanel.Visible = false;
+                this.TimelinePanel.Enabled = false;
+                this.ImagefilePathText.Text = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
                 this.ImageFromSelectedFile();
                 this.Activate();
                 this.BringToFront();
-                StatusText.Focus();
+                this.StatusText.Focus();
             }
             else if (e.Data.GetDataPresent(DataFormats.StringFormat))
             {
                 string data = e.Data.GetData(DataFormats.StringFormat, true) as string;
                 if (data != null)
                 {
-                    StatusText.Text += data;
+                    this.StatusText.Text += data;
                 }
             }
         }
@@ -11935,7 +11927,7 @@ namespace Hoehoe
                     return;
                 }
 
-                foreach (string svc in ImageServiceCombo.Items)
+                foreach (string svc in this.ImageServiceCombo.Items)
                 {
                     if (string.IsNullOrEmpty(svc))
                     {
@@ -11944,7 +11936,7 @@ namespace Hoehoe
 
                     if (this.pictureServices[svc].CheckValidFilesize(ext, fl.Length))
                     {
-                        ImageServiceCombo.SelectedItem = svc;
+                        this.ImageServiceCombo.SelectedItem = svc;
                         e.Effect = DragDropEffects.Copy;
                         return;
                     }
@@ -12145,10 +12137,10 @@ namespace Hoehoe
             this.tw.UserStreamStopped += this.Tw_UserStreamStopped;
             this.tw.PostDeleted += this.Tw_PostDeleted;
             this.tw.UserStreamEventReceived += this.Tw_UserStreamEventArrived;
-            MenuItemUserStream.Text = "&UserStream ■";
-            MenuItemUserStream.Enabled = true;
-            StopToolStripMenuItem.Text = "&Start";
-            StopToolStripMenuItem.Enabled = true;
+            this.MenuItemUserStream.Text = "&UserStream ■";
+            this.MenuItemUserStream.Enabled = true;
+            this.StopToolStripMenuItem.Text = "&Start";
+            this.StopToolStripMenuItem.Enabled = true;
             if (this.SettingDialog.UserstreamStartup)
             {
                 this.tw.StartUserStream();
@@ -12160,14 +12152,14 @@ namespace Hoehoe
             try
             {
                 // 発言詳細部初期化
-                PostBrowser.Url = new Uri("about:blank");
-                PostBrowser.DocumentText = string.Empty;
+                this.PostBrowser.Url = new Uri("about:blank");
+                this.PostBrowser.DocumentText = string.Empty;
             }
             catch (Exception)
             {
             }
 
-            NotifyIcon1.Visible = true;
+            this.NotifyIcon1.Visible = true;
             this.tw.UserIdChanged += this.Tw_UserIdChanged;
 
             if (MyCommon.IsNetworkAvailable())
@@ -12280,7 +12272,7 @@ namespace Hoehoe
             // RT @id:内容
             if (this.ExistCurrentPost)
             {
-                if (this.curPost.IsDm || !StatusText.Enabled)
+                if (this.curPost.IsDm || !this.StatusText.Enabled)
                 {
                     return;
                 }
@@ -12292,9 +12284,9 @@ namespace Hoehoe
                 }
 
                 string rtdata = this.CreateRetweetUnofficial(this.curPost.Text);
-                StatusText.Text = "RT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
-                StatusText.SelectionStart = 0;
-                StatusText.Focus();
+                this.StatusText.Text = "RT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
+                this.StatusText.SelectionStart = 0;
+                this.StatusText.Focus();
             }
         }
 
@@ -12441,7 +12433,7 @@ namespace Hoehoe
             status = Regex.Replace(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "${link}");
 
             // <br>タグ除去
-            if (StatusText.Multiline)
+            if (this.StatusText.Multiline)
             {
                 status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", "\r\n", RegexOptions.IgnoreCase | RegexOptions.Multiline);
             }
@@ -12472,33 +12464,33 @@ namespace Hoehoe
         {
             if (MyCommon.DebugBuild || (this.IsKeyDown(Keys.CapsLock) && this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift)))
             {
-                DebugModeToolStripMenuItem.Visible = true;
+                this.DebugModeToolStripMenuItem.Visible = true;
             }
             else
             {
-                DebugModeToolStripMenuItem.Visible = false;
+                this.DebugModeToolStripMenuItem.Visible = false;
             }
         }
 
         private void ToolStripMenuItemUrlAutoShorten_CheckedChanged(object sender, EventArgs e)
         {
-            this.SettingDialog.UrlConvertAuto = ToolStripMenuItemUrlAutoShorten.Checked;
+            this.SettingDialog.UrlConvertAuto = this.ToolStripMenuItemUrlAutoShorten.Checked;
         }
 
         private void ContextMenuPostMode_Opening(object sender, CancelEventArgs e)
         {
-            ToolStripMenuItemUrlAutoShorten.Checked = this.SettingDialog.UrlConvertAuto;
+            this.ToolStripMenuItemUrlAutoShorten.Checked = this.SettingDialog.UrlConvertAuto;
         }
 
         private void TraceOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MyCommon.TraceFlag = TraceOutToolStripMenuItem.Checked;
+            MyCommon.TraceFlag = this.TraceOutToolStripMenuItem.Checked;
         }
 
         private void TweenMain_Deactivate(object sender, EventArgs e)
         {
             // 画面が非アクティブになったら、発言欄の背景色をデフォルトへ
-            this.StatusText_Leave(StatusText, EventArgs.Empty);
+            this.StatusText_Leave(this.StatusText, EventArgs.Empty);
         }
 
         private void TabRenameMenuItem_Click(object sender, EventArgs e)
@@ -12910,7 +12902,7 @@ namespace Hoehoe
             // 返信先情報付加
             if (this.ExistCurrentPost)
             {
-                if (this.curPost.IsDm || !StatusText.Enabled)
+                if (this.curPost.IsDm || !this.StatusText.Enabled)
                 {
                     return;
                 }
@@ -12922,7 +12914,7 @@ namespace Hoehoe
                 }
 
                 string rtdata = this.CreateRetweetUnofficial(this.curPost.Text);
-                StatusText.Text = " QT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
+                this.StatusText.Text = " QT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
                 if (this.curPost.RetweetedId == 0)
                 {
                     this.replyToId = this.curPost.StatusId;
@@ -12934,8 +12926,8 @@ namespace Hoehoe
 
                 this.replyToName = this.curPost.ScreenName;
 
-                StatusText.SelectionStart = 0;
-                StatusText.Focus();
+                this.StatusText.SelectionStart = 0;
+                this.StatusText.Focus();
             }
         }
 
@@ -12995,7 +12987,7 @@ namespace Hoehoe
             tb.SearchLang = cmbLang.Text;
             if (string.IsNullOrEmpty(cmb.Text))
             {
-                ((DetailsListView)ListTab.SelectedTab.Tag).Focus();
+                ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
                 this.SaveConfigsTabs();
                 return;
             }
@@ -13019,7 +13011,7 @@ namespace Hoehoe
             }
 
             this.GetTimeline(WorkerType.PublicSearch, 1, 0, tabName);
-            ((DetailsListView)ListTab.SelectedTab.Tag).Focus();
+            ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
         }
 
         private void RefreshMoreStripMenuItem_Click(object sender, EventArgs e)
@@ -13052,7 +13044,7 @@ namespace Hoehoe
                 tb.TabName = renamed;
                 this.statuses.Tabs.Add(renamed, tb);
                 this.AddNewTab(renamed, false, tb.TabType, tb.ListInfo);
-                ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
+                this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
                 this.SaveConfigsTabs();
             }
         }
@@ -13116,7 +13108,7 @@ namespace Hoehoe
                     this.curPost = null;
                     this.curItemIndex = -1;
                     this.statuses.FilterAll();
-                    foreach (TabPage tb in ListTab.TabPages)
+                    foreach (TabPage tb in this.ListTab.TabPages)
                     {
                         ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
                         if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
@@ -13137,7 +13129,7 @@ namespace Hoehoe
 
                     if (!this.SettingDialog.TabIconDisp)
                     {
-                        ListTab.Refresh();
+                        this.ListTab.Refresh();
                     }
                 }
                 finally
@@ -13209,14 +13201,14 @@ namespace Hoehoe
 
         private void PublicSearchQueryMenuItem_Click(object sender, EventArgs e)
         {
-            if (ListTab.SelectedTab != null)
+            if (this.ListTab.SelectedTab != null)
             {
-                if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType != TabUsageType.PublicSearch)
+                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.PublicSearch)
                 {
                     return;
                 }
 
-                ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
+                this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
             }
         }
 
@@ -13227,16 +13219,16 @@ namespace Hoehoe
             {
                 // 使用ハッシュタグとして設定
                 this.HashMgr.SetPermanentHash("#" + m.Result("${hash}"));
-                HashStripSplitButton.Text = this.HashMgr.UseHash;
-                HashToggleMenuItem.Checked = true;
-                HashToggleToolStripMenuItem.Checked = true;
+                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
+                this.HashToggleMenuItem.Checked = true;
+                this.HashToggleToolStripMenuItem.Checked = true;
                 this.modifySettingCommon = true;
             }
         }
 
         private void StatusLabel_DoubleClick(object sender, EventArgs e)
         {
-            MessageBox.Show(StatusLabel.TextHistory, "Logs", MessageBoxButtons.OK, MessageBoxIcon.None);
+            MessageBox.Show(this.StatusLabel.TextHistory, "Logs", MessageBoxButtons.OK, MessageBoxIcon.None);
         }
 
         private void HashManageMenuItem_Click(object sender, EventArgs e)
@@ -13259,15 +13251,15 @@ namespace Hoehoe
 
             if (!string.IsNullOrEmpty(this.HashMgr.UseHash))
             {
-                HashStripSplitButton.Text = this.HashMgr.UseHash;
-                HashToggleMenuItem.Checked = true;
-                HashToggleToolStripMenuItem.Checked = true;
+                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
+                this.HashToggleMenuItem.Checked = true;
+                this.HashToggleToolStripMenuItem.Checked = true;
             }
             else
             {
-                HashStripSplitButton.Text = "#[-]";
-                HashToggleMenuItem.Checked = false;
-                HashToggleToolStripMenuItem.Checked = false;
+                this.HashStripSplitButton.Text = "#[-]";
+                this.HashToggleMenuItem.Checked = false;
+                this.HashToggleToolStripMenuItem.Checked = false;
             }
 
             this.modifySettingCommon = true;
@@ -13279,15 +13271,15 @@ namespace Hoehoe
             this.HashMgr.ToggleHash();
             if (!string.IsNullOrEmpty(this.HashMgr.UseHash))
             {
-                HashStripSplitButton.Text = this.HashMgr.UseHash;
-                HashToggleMenuItem.Checked = true;
-                HashToggleToolStripMenuItem.Checked = true;
+                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
+                this.HashToggleMenuItem.Checked = true;
+                this.HashToggleToolStripMenuItem.Checked = true;
             }
             else
             {
-                HashStripSplitButton.Text = "#[-]";
-                HashToggleMenuItem.Checked = false;
-                HashToggleToolStripMenuItem.Checked = false;
+                this.HashStripSplitButton.Text = "#[-]";
+                this.HashToggleMenuItem.Checked = false;
+                this.HashToggleToolStripMenuItem.Checked = false;
             }
 
             this.modifySettingCommon = true;
@@ -13301,12 +13293,12 @@ namespace Hoehoe
 
         private void MenuItemOperate_DropDownOpening(object sender, EventArgs e)
         {
-            if (ListTab.SelectedTab == null)
+            if (this.ListTab.SelectedTab == null)
             {
                 return;
             }
 
-            if (this.statuses == null || this.statuses.Tabs == null || !this.statuses.Tabs.ContainsKey(ListTab.SelectedTab.Text))
+            if (this.statuses == null || this.statuses.Tabs == null || !this.statuses.Tabs.ContainsKey(this.ListTab.SelectedTab.Text))
             {
                 return;
             }
@@ -13340,7 +13332,7 @@ namespace Hoehoe
                 this.UnreadOpMenuItem.Enabled = true;
             }
 
-            if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || this.curPost.IsDm)
+            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || this.curPost.IsDm)
             {
                 this.FavOpMenuItem.Enabled = false;
                 this.UnFavOpMenuItem.Enabled = false;
@@ -13392,7 +13384,7 @@ namespace Hoehoe
                 }
             }
 
-            if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType != TabUsageType.Favorites)
+            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.Favorites)
             {
                 this.RefreshPrevOpMenuItem.Enabled = true;
             }
@@ -13401,22 +13393,22 @@ namespace Hoehoe
                 this.RefreshPrevOpMenuItem.Enabled = false;
             }
 
-            if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(this.curPost.InReplyToStatusId > 0))
+            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(this.curPost.InReplyToStatusId > 0))
             {
-                OpenRepSourceOpMenuItem.Enabled = false;
+                this.OpenRepSourceOpMenuItem.Enabled = false;
             }
             else
             {
-                OpenRepSourceOpMenuItem.Enabled = true;
+                this.OpenRepSourceOpMenuItem.Enabled = true;
             }
 
             if (!this.ExistCurrentPost || string.IsNullOrEmpty(this.curPost.RetweetedBy))
             {
-                OpenRterHomeMenuItem.Enabled = false;
+                this.OpenRterHomeMenuItem.Enabled = false;
             }
             else
             {
-                OpenRterHomeMenuItem.Enabled = true;
+                this.OpenRterHomeMenuItem.Enabled = true;
             }
         }
 
@@ -13429,7 +13421,7 @@ namespace Hoehoe
         {
             if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
             {
-                this.mySpDis3 = SplitContainer3.SplitterDistance;
+                this.mySpDis3 = this.SplitContainer3.SplitterDistance;
                 this.modifySettingLocal = true;
             }
         }
@@ -13438,27 +13430,27 @@ namespace Hoehoe
         {
             if (this.statuses.RemovedTab.Count == 0)
             {
-                UndoRemoveTabMenuItem.Enabled = false;
+                this.UndoRemoveTabMenuItem.Enabled = false;
             }
             else
             {
-                UndoRemoveTabMenuItem.Enabled = true;
+                this.UndoRemoveTabMenuItem.Enabled = true;
             }
 
-            if (ListTab.SelectedTab != null)
+            if (this.ListTab.SelectedTab != null)
             {
-                if (this.statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
+                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
                 {
-                    PublicSearchQueryMenuItem.Enabled = true;
+                    this.PublicSearchQueryMenuItem.Enabled = true;
                 }
                 else
                 {
-                    PublicSearchQueryMenuItem.Enabled = false;
+                    this.PublicSearchQueryMenuItem.Enabled = false;
                 }
             }
             else
             {
-                PublicSearchQueryMenuItem.Enabled = false;
+                this.PublicSearchQueryMenuItem.Enabled = false;
             }
 
             if (!this.ExistCurrentPost)
@@ -13579,9 +13571,9 @@ namespace Hoehoe
 
         private void FollowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (NameLabel.Tag != null)
+            if (this.NameLabel.Tag != null)
             {
-                string id = (string)NameLabel.Tag;
+                string id = (string)this.NameLabel.Tag;
                 if (id != this.tw.Username)
                 {
                     this.FollowCommand(id);
@@ -13591,9 +13583,9 @@ namespace Hoehoe
 
         private void UnFollowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (NameLabel.Tag != null)
+            if (this.NameLabel.Tag != null)
             {
-                string id = (string)NameLabel.Tag;
+                string id = (string)this.NameLabel.Tag;
                 if (id != this.tw.Username)
                 {
                     this.RemoveCommand(id, false);
@@ -13603,9 +13595,9 @@ namespace Hoehoe
 
         private void ShowFriendShipToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (NameLabel.Tag != null)
+            if (this.NameLabel.Tag != null)
             {
-                string id = (string)NameLabel.Tag;
+                string id = (string)this.NameLabel.Tag;
                 if (id != this.tw.Username)
                 {
                     this.ShowFriendship(id);
@@ -13615,27 +13607,27 @@ namespace Hoehoe
 
         private void ShowUserStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (NameLabel.Tag != null)
+            if (this.NameLabel.Tag != null)
             {
-                string id = (string)NameLabel.Tag;
+                string id = (string)this.NameLabel.Tag;
                 this.ShowUserStatus(id, false);
             }
         }
 
         private void SearchPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (NameLabel.Tag != null)
+            if (this.NameLabel.Tag != null)
             {
-                string id = (string)NameLabel.Tag;
+                string id = (string)this.NameLabel.Tag;
                 this.AddNewTabForUserTimeline(id);
             }
         }
 
         private void SearchAtPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (NameLabel.Tag != null)
+            if (this.NameLabel.Tag != null)
             {
-                string id = (string)NameLabel.Tag;
+                string id = (string)this.NameLabel.Tag;
                 this.AddNewTabForSearch("@" + id);
             }
         }
@@ -13723,9 +13715,9 @@ namespace Hoehoe
 
         private void UserPicture_DoubleClick(object sender, EventArgs e)
         {
-            if (NameLabel.Tag != null)
+            if (this.NameLabel.Tag != null)
             {
-                this.OpenUriAsync("http://twitter.com/" + NameLabel.Tag.ToString());
+                this.OpenUriAsync("http://twitter.com/" + this.NameLabel.Tag.ToString());
             }
         }
 
@@ -13738,23 +13730,23 @@ namespace Hoehoe
 
         private void ImageSelectMenuItem_Click(object sender, EventArgs e)
         {
-            if (ImageSelectionPanel.Visible == true)
+            if (this.ImageSelectionPanel.Visible == true)
             {
-                ImagefilePathText.CausesValidation = false;
-                TimelinePanel.Visible = true;
-                TimelinePanel.Enabled = true;
-                ImageSelectionPanel.Visible = false;
-                ImageSelectionPanel.Enabled = false;
-                ((DetailsListView)ListTab.SelectedTab.Tag).Focus();
-                ImagefilePathText.CausesValidation = true;
+                this.ImagefilePathText.CausesValidation = false;
+                this.TimelinePanel.Visible = true;
+                this.TimelinePanel.Enabled = true;
+                this.ImageSelectionPanel.Visible = false;
+                this.ImageSelectionPanel.Enabled = false;
+                ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
+                this.ImagefilePathText.CausesValidation = true;
             }
             else
             {
-                ImageSelectionPanel.Visible = true;
-                ImageSelectionPanel.Enabled = true;
-                TimelinePanel.Visible = false;
-                TimelinePanel.Enabled = false;
-                ImagefilePathText.Focus();
+                this.ImageSelectionPanel.Visible = true;
+                this.ImageSelectionPanel.Enabled = true;
+                this.TimelinePanel.Visible = false;
+                this.TimelinePanel.Enabled = false;
+                this.ImagefilePathText.Focus();
             }
         }
 
@@ -13765,14 +13757,14 @@ namespace Hoehoe
                 return;
             }
 
-            OpenFileDialog1.Filter = this.pictureServices[this.ImageService].GetFileOpenDialogFilter();
-            OpenFileDialog1.Title = Hoehoe.Properties.Resources.PickPictureDialog1;
-            OpenFileDialog1.FileName = string.Empty;
+            this.OpenFileDialog1.Filter = this.pictureServices[this.ImageService].GetFileOpenDialogFilter();
+            this.OpenFileDialog1.Title = Hoehoe.Properties.Resources.PickPictureDialog1;
+            this.OpenFileDialog1.FileName = string.Empty;
 
             try
             {
                 this.AllowDrop = false;
-                if (OpenFileDialog1.ShowDialog() == DialogResult.Cancel)
+                if (this.OpenFileDialog1.ShowDialog() == DialogResult.Cancel)
                 {
                     return;
                 }
@@ -13782,23 +13774,23 @@ namespace Hoehoe
                 this.AllowDrop = true;
             }
 
-            ImagefilePathText.Text = OpenFileDialog1.FileName;
+            this.ImagefilePathText.Text = this.OpenFileDialog1.FileName;
             this.ImageFromSelectedFile();
         }
 
         private void ImagefilePathText_Validating(object sender, CancelEventArgs e)
         {
-            if (ImageCancelButton.Focused)
+            if (this.ImageCancelButton.Focused)
             {
-                ImagefilePathText.CausesValidation = false;
+                this.ImagefilePathText.CausesValidation = false;
                 return;
             }
 
-            ImagefilePathText.Text = ImagefilePathText.Text.Trim();
-            if (string.IsNullOrEmpty(ImagefilePathText.Text))
+            this.ImagefilePathText.Text = this.ImagefilePathText.Text.Trim();
+            if (string.IsNullOrEmpty(this.ImagefilePathText.Text))
             {
-                ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
             }
             else
             {
@@ -13810,30 +13802,30 @@ namespace Hoehoe
         {
             try
             {
-                if (string.IsNullOrEmpty(ImagefilePathText.Text.Trim()) || string.IsNullOrEmpty(this.ImageService))
+                if (string.IsNullOrEmpty(this.ImagefilePathText.Text.Trim()) || string.IsNullOrEmpty(this.ImageService))
                 {
-                    ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                    ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                    ImagefilePathText.Text = string.Empty;
+                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                    this.ImagefilePathText.Text = string.Empty;
                     return;
                 }
 
-                FileInfo fl = new FileInfo(ImagefilePathText.Text.Trim());
+                FileInfo fl = new FileInfo(this.ImagefilePathText.Text.Trim());
                 if (!this.pictureServices[this.ImageService].CheckValidExtension(fl.Extension))
                 {
                     // 画像以外の形式
-                    ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                    ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                    ImagefilePathText.Text = string.Empty;
+                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                    this.ImagefilePathText.Text = string.Empty;
                     return;
                 }
 
                 if (!this.pictureServices[this.ImageService].CheckValidFilesize(fl.Extension, fl.Length))
                 {
                     // ファイルサイズが大きすぎる
-                    ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                    ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                    ImagefilePathText.Text = string.Empty;
+                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                    this.ImagefilePathText.Text = string.Empty;
                     MessageBox.Show("File is too large.");
                     return;
                 }
@@ -13841,44 +13833,44 @@ namespace Hoehoe
                 switch (this.pictureServices[this.ImageService].GetFileType(fl.Extension))
                 {
                     case UploadFileType.Invalid:
-                        ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                        ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                        ImagefilePathText.Text = string.Empty;
+                        this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                        this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                        this.ImagefilePathText.Text = string.Empty;
                         break;
                     case UploadFileType.Picture:
                         Image img = null;
-                        using (FileStream fs = new FileStream(ImagefilePathText.Text, FileMode.Open, FileAccess.Read))
+                        using (FileStream fs = new FileStream(this.ImagefilePathText.Text, FileMode.Open, FileAccess.Read))
                         {
                             img = Image.FromStream(fs);
                             fs.Close();
                         }
 
-                        ImageSelectedPicture.Image = (new HttpVarious()).CheckValidImage(img, img.Width, img.Height);
-                        ImageSelectedPicture.Tag = UploadFileType.Picture;
+                        this.ImageSelectedPicture.Image = (new HttpVarious()).CheckValidImage(img, img.Width, img.Height);
+                        this.ImageSelectedPicture.Tag = UploadFileType.Picture;
                         break;
                     case UploadFileType.MultiMedia:
-                        ImageSelectedPicture.Image = Hoehoe.Properties.Resources.MultiMediaImage;
-                        ImageSelectedPicture.Tag = UploadFileType.MultiMedia;
+                        this.ImageSelectedPicture.Image = Hoehoe.Properties.Resources.MultiMediaImage;
+                        this.ImageSelectedPicture.Tag = UploadFileType.MultiMedia;
                         break;
                     default:
-                        ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                        ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                        ImagefilePathText.Text = string.Empty;
+                        this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                        this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                        this.ImagefilePathText.Text = string.Empty;
                         break;
                 }
             }
             catch (FileNotFoundException)
             {
-                ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                ImagefilePathText.Text = string.Empty;
+                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                this.ImagefilePathText.Text = string.Empty;
                 MessageBox.Show("File not found.");
             }
             catch (Exception)
             {
-                ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                ImagefilePathText.Text = string.Empty;
+                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                this.ImagefilePathText.Text = string.Empty;
                 MessageBox.Show("The type of this file is not image.");
             }
         }
@@ -13887,14 +13879,14 @@ namespace Hoehoe
         {
             if (e.KeyCode == Keys.Escape)
             {
-                ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                TimelinePanel.Visible = true;
-                TimelinePanel.Enabled = true;
-                ImageSelectionPanel.Visible = false;
-                ImageSelectionPanel.Enabled = false;
-                ((DetailsListView)ListTab.SelectedTab.Tag).Focus();
-                ImagefilePathText.CausesValidation = true;
+                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                this.TimelinePanel.Visible = true;
+                this.TimelinePanel.Enabled = true;
+                this.ImageSelectionPanel.Visible = false;
+                this.ImageSelectionPanel.Enabled = false;
+                ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
+                this.ImagefilePathText.CausesValidation = true;
             }
         }
 
@@ -13902,7 +13894,7 @@ namespace Hoehoe
         {
             if (Convert.ToInt32(e.KeyChar) == 0x1b)
             {
-                ImagefilePathText.CausesValidation = false;
+                this.ImagefilePathText.CausesValidation = false;
                 e.Handled = true;
             }
         }
@@ -13911,66 +13903,66 @@ namespace Hoehoe
         {
             if (e.KeyCode == Keys.Escape)
             {
-                ImagefilePathText.CausesValidation = false;
+                this.ImagefilePathText.CausesValidation = false;
             }
         }
 
         private void SetImageServiceCombo()
         {
             string svc = string.Empty;
-            if (ImageServiceCombo.SelectedIndex > -1)
+            if (this.ImageServiceCombo.SelectedIndex > -1)
             {
-                svc = ImageServiceCombo.SelectedItem.ToString();
+                svc = this.ImageServiceCombo.SelectedItem.ToString();
             }
 
-            ImageServiceCombo.Items.Clear();
-            ImageServiceCombo.Items.Add("TwitPic");
-            ImageServiceCombo.Items.Add("img.ly");
-            ImageServiceCombo.Items.Add("yfrog");
-            ImageServiceCombo.Items.Add("lockerz");
-            ImageServiceCombo.Items.Add("Twitter");
+            this.ImageServiceCombo.Items.Clear();
+            this.ImageServiceCombo.Items.Add("TwitPic");
+            this.ImageServiceCombo.Items.Add("img.ly");
+            this.ImageServiceCombo.Items.Add("yfrog");
+            this.ImageServiceCombo.Items.Add("lockerz");
+            this.ImageServiceCombo.Items.Add("Twitter");
 
             if (string.IsNullOrEmpty(svc))
             {
-                ImageServiceCombo.SelectedIndex = 0;
+                this.ImageServiceCombo.SelectedIndex = 0;
             }
             else
             {
-                int idx = ImageServiceCombo.Items.IndexOf(svc);
+                int idx = this.ImageServiceCombo.Items.IndexOf(svc);
                 if (idx == -1)
                 {
-                    ImageServiceCombo.SelectedIndex = 0;
+                    this.ImageServiceCombo.SelectedIndex = 0;
                 }
                 else
                 {
-                    ImageServiceCombo.SelectedIndex = idx;
+                    this.ImageServiceCombo.SelectedIndex = idx;
                 }
             }
         }
 
         private void ImageCancelButton_Click(object sender, EventArgs e)
         {
-            ImagefilePathText.CausesValidation = false;
-            TimelinePanel.Visible = true;
-            TimelinePanel.Enabled = true;
-            ImageSelectionPanel.Visible = false;
-            ImageSelectionPanel.Enabled = false;
-            ((DetailsListView)ListTab.SelectedTab.Tag).Focus();
-            ImagefilePathText.CausesValidation = true;
+            this.ImagefilePathText.CausesValidation = false;
+            this.TimelinePanel.Visible = true;
+            this.TimelinePanel.Enabled = true;
+            this.ImageSelectionPanel.Visible = false;
+            this.ImageSelectionPanel.Enabled = false;
+            ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
+            this.ImagefilePathText.CausesValidation = true;
         }
 
         private void ImageServiceCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ImageSelectedPicture.Tag != null && !string.IsNullOrEmpty(this.ImageService))
+            if (this.ImageSelectedPicture.Tag != null && !string.IsNullOrEmpty(this.ImageService))
             {
                 try
                 {
-                    FileInfo fi = new FileInfo(ImagefilePathText.Text.Trim());
+                    FileInfo fi = new FileInfo(this.ImagefilePathText.Text.Trim());
                     if (!this.pictureServices[this.ImageService].CheckValidFilesize(fi.Extension, fi.Length))
                     {
-                        ImagefilePathText.Text = string.Empty;
-                        ImageSelectedPicture.Image = ImageSelectedPicture.InitialImage;
-                        ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                        this.ImagefilePathText.Text = string.Empty;
+                        this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                        this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
                     }
                 }
                 catch (Exception)
@@ -13998,7 +13990,7 @@ namespace Hoehoe
 
         private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string link = Convert.ToString(SourceLinkLabel.Tag);
+            string link = Convert.ToString(this.SourceLinkLabel.Tag);
             if (!string.IsNullOrEmpty(link) && e.Button == MouseButtons.Left)
             {
                 this.OpenUriAsync(link);
@@ -14007,10 +13999,10 @@ namespace Hoehoe
 
         private void SourceLinkLabel_MouseEnter(object sender, EventArgs e)
         {
-            string link = Convert.ToString(SourceLinkLabel.Tag);
+            string link = Convert.ToString(this.SourceLinkLabel.Tag);
             if (!string.IsNullOrEmpty(link))
             {
-                StatusLabelUrl.Text = link;
+                this.StatusLabelUrl.Text = link;
             }
         }
 
@@ -14023,11 +14015,11 @@ namespace Hoehoe
         {
             if (this.ExistCurrentPost && !this.curPost.IsDm)
             {
-                RtCountMenuItem.Enabled = true;
+                this.RtCountMenuItem.Enabled = true;
             }
             else
             {
-                RtCountMenuItem.Enabled = false;
+                this.RtCountMenuItem.Enabled = false;
             }
         }
 
@@ -14056,7 +14048,7 @@ namespace Hoehoe
 
         private void ShowRelatedStatusesMenuItem_Click(object sender, EventArgs e)
         {
-            TabClass backToTab = this.curTab == null ? this.statuses.Tabs[ListTab.SelectedTab.Text] : this.statuses.Tabs[this.curTab.Text];
+            TabClass backToTab = this.curTab == null ? this.statuses.Tabs[this.ListTab.SelectedTab.Text] : this.statuses.Tabs[this.curTab.Text];
             if (this.ExistCurrentPost && !this.curPost.IsDm)
             {
                 // PublicSearchも除外した方がよい？
@@ -14088,12 +14080,12 @@ namespace Hoehoe
                 TabClass tb = this.statuses.GetTabByType(TabUsageType.Related);
                 tb.RelationTargetPost = this.curPost;
                 this.ClearTab(tb.TabName, false);
-                for (int i = 0; i < ListTab.TabPages.Count; i++)
+                for (int i = 0; i < this.ListTab.TabPages.Count; i++)
                 {
-                    if (tb.TabName == ListTab.TabPages[i].Text)
+                    if (tb.TabName == this.ListTab.TabPages[i].Text)
                     {
-                        ListTab.SelectedIndex = i;
-                        this.ListTabSelect(ListTab.TabPages[i]);
+                        this.ListTab.SelectedIndex = i;
+                        this.ListTabSelect(this.ListTab.TabPages[i]);
                         break;
                     }
                 }
@@ -14240,12 +14232,11 @@ namespace Hoehoe
                 return;
             }
 
-            MenuItemUserStream.Text = "&UserStream ▶";
-            MenuItemUserStream.Enabled = true;
-            StopToolStripMenuItem.Text = "&Stop";
-            StopToolStripMenuItem.Enabled = true;
-
-            StatusLabel.Text = "UserStream Started.";
+            this.MenuItemUserStream.Text = "&UserStream ▶";
+            this.MenuItemUserStream.Enabled = true;
+            this.StopToolStripMenuItem.Text = "&Stop";
+            this.StopToolStripMenuItem.Enabled = true;
+            this.StatusLabel.Text = "UserStream Started.";
         }
 
         private void Tw_UserStreamStopped()
@@ -14268,12 +14259,12 @@ namespace Hoehoe
                 return;
             }
 
-            MenuItemUserStream.Text = "&UserStream ■";
-            MenuItemUserStream.Enabled = true;
-            StopToolStripMenuItem.Text = "&Start";
-            StopToolStripMenuItem.Enabled = true;
+            this.MenuItemUserStream.Text = "&UserStream ■";
+            this.MenuItemUserStream.Enabled = true;
+            this.StopToolStripMenuItem.Text = "&Start";
+            this.StopToolStripMenuItem.Enabled = true;
 
-            StatusLabel.Text = "UserStream Stopped.";
+            this.StatusLabel.Text = "UserStream Stopped.";
         }
 
         private void Tw_UserStreamEventArrived(Twitter.FormattedEvent ev)
@@ -14295,7 +14286,7 @@ namespace Hoehoe
                 return;
             }
 
-            StatusLabel.Text = "Event: " + ev.Event;
+            this.StatusLabel.Text = "Event: " + ev.Event;
             this.NotifyEvent(ev);
             if (ev.Event == "favorite" || ev.Event == "unfavorite")
             {
@@ -14319,7 +14310,7 @@ namespace Hoehoe
             // 新着通知
             if (this.BalloonRequired(ev))
             {
-                NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
+                this.NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
                 StringBuilder title = new StringBuilder();
                 if (this.SettingDialog.DispUsername)
                 {
@@ -14343,10 +14334,10 @@ namespace Hoehoe
                 }
                 else
                 {
-                    NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
-                    NotifyIcon1.BalloonTipTitle = title.ToString();
-                    NotifyIcon1.BalloonTipText = text;
-                    NotifyIcon1.ShowBalloonTip(500);
+                    this.NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
+                    this.NotifyIcon1.BalloonTipTitle = title.ToString();
+                    this.NotifyIcon1.BalloonTipText = text;
+                    this.NotifyIcon1.ShowBalloonTip(500);
                 }
             }
 
@@ -14375,10 +14366,10 @@ namespace Hoehoe
 
         private void StopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MenuItemUserStream.Enabled = false;
-            if (StopRefreshAllMenuItem.Checked)
+            this.MenuItemUserStream.Enabled = false;
+            if (this.StopRefreshAllMenuItem.Checked)
             {
-                StopRefreshAllMenuItem.Checked = false;
+                this.StopRefreshAllMenuItem.Checked = false;
                 return;
             }
 
@@ -14394,7 +14385,7 @@ namespace Hoehoe
 
         private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (TrackToolStripMenuItem.Checked)
+            if (this.TrackToolStripMenuItem.Checked)
             {
                 using (InputTabName inputForm = new InputTabName())
                 {
@@ -14403,7 +14394,7 @@ namespace Hoehoe
                     inputForm.SetFormDescription("Track word");
                     if (inputForm.ShowDialog() != DialogResult.OK)
                     {
-                        TrackToolStripMenuItem.Checked = false;
+                        this.TrackToolStripMenuItem.Checked = false;
                         return;
                     }
 
@@ -14414,7 +14405,7 @@ namespace Hoehoe
                 {
                     this.tw.TrackWord = this.prevTrackWord;
                     this.modifySettingCommon = true;
-                    TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.prevTrackWord);
+                    this.TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.prevTrackWord);
                     this.tw.ReconnectUserStream();
                 }
             }
@@ -14504,13 +14495,13 @@ namespace Hoehoe
             string msg = string.Empty;
             if (srclng != dstlng && bing.Translate(string.Empty, dstlng, str, ref buf))
             {
-                PostBrowser.DocumentText = this.CreateDetailHtml(buf);
+                this.PostBrowser.DocumentText = this.CreateDetailHtml(buf);
             }
             else
             {
                 if (msg.StartsWith("Err:"))
                 {
-                    StatusLabel.Text = msg;
+                    this.StatusLabel.Text = msg;
                 }
             }
         }
@@ -14527,7 +14518,7 @@ namespace Hoehoe
 
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoTranslation(this.WebBrowser_GetSelectionText(ref PostBrowser));
+            this.DoTranslation(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
         }
 
         private void ShowUserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
@@ -14603,7 +14594,7 @@ namespace Hoehoe
 
         private void StopRefreshAllMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            this.TimelineRefreshEnableChange(!StopRefreshAllMenuItem.Checked);
+            this.TimelineRefreshEnableChange(!this.StopRefreshAllMenuItem.Checked);
         }
 
         private void OpenUserAppointUrl()
@@ -14652,19 +14643,19 @@ namespace Hoehoe
                 return;
             }
 
-            if (SplitContainer4.Panel2Collapsed)
+            if (this.SplitContainer4.Panel2Collapsed)
             {
                 return;
             }
 
-            if (SplitContainer4.Height < SplitContainer4.SplitterWidth + SplitContainer4.Panel2MinSize + SplitContainer4.SplitterDistance && SplitContainer4.Height - SplitContainer4.SplitterWidth - SplitContainer4.Panel2MinSize > 0)
+            if (this.SplitContainer4.Height < this.SplitContainer4.SplitterWidth + this.SplitContainer4.Panel2MinSize + this.SplitContainer4.SplitterDistance && this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - this.SplitContainer4.Panel2MinSize > 0)
             {
-                SplitContainer4.SplitterDistance = SplitContainer4.Height - SplitContainer4.SplitterWidth - SplitContainer4.Panel2MinSize;
+                this.SplitContainer4.SplitterDistance = this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - this.SplitContainer4.Panel2MinSize;
             }
 
-            if (SplitContainer4.Panel2.Height > 90 && SplitContainer4.Height - SplitContainer4.SplitterWidth - 90 > 0)
+            if (this.SplitContainer4.Panel2.Height > 90 && this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - 90 > 0)
             {
-                SplitContainer4.SplitterDistance = SplitContainer4.Height - SplitContainer4.SplitterWidth - 90;
+                this.SplitContainer4.SplitterDistance = this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - 90;
             }
         }
 
@@ -14675,7 +14666,7 @@ namespace Hoehoe
 
         private void SourceCopyMenuItem_Click(object sender, EventArgs e)
         {
-            string selText = SourceLinkLabel.Text;
+            string selText = this.SourceLinkLabel.Text;
             try
             {
                 Clipboard.SetDataObject(selText, false, 5, 100);
@@ -14688,7 +14679,7 @@ namespace Hoehoe
 
         private void SourceUrlCopyMenuItem_Click(object sender, EventArgs e)
         {
-            string selText = Convert.ToString(SourceLinkLabel.Tag);
+            string selText = Convert.ToString(this.SourceLinkLabel.Tag);
             try
             {
                 Clipboard.SetDataObject(selText, false, 5, 100);
@@ -14703,13 +14694,13 @@ namespace Hoehoe
         {
             if (this.curPost == null || !this.ExistCurrentPost || this.curPost.IsDm)
             {
-                SourceCopyMenuItem.Enabled = false;
-                SourceUrlCopyMenuItem.Enabled = false;
+                this.SourceCopyMenuItem.Enabled = false;
+                this.SourceUrlCopyMenuItem.Enabled = false;
             }
             else
             {
-                SourceCopyMenuItem.Enabled = true;
-                SourceUrlCopyMenuItem.Enabled = true;
+                this.SourceCopyMenuItem.Enabled = true;
+                this.SourceUrlCopyMenuItem.Enabled = true;
             }
         }
 
