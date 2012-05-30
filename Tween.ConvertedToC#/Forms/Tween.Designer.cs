@@ -700,9 +700,9 @@ namespace Hoehoe
             // 
             resources.ApplyResources(this.ImagefilePathText, "ImagefilePathText");
             this.ImagefilePathText.Name = "ImagefilePathText";
-            this.ImagefilePathText.PreviewKeyDown += new PreviewKeyDownEventHandler(this.ImageSelection_PreviewKeyDown);
-            this.ImagefilePathText.KeyPress += new KeyPressEventHandler(this.ImageSelection_KeyPress);
-            this.ImagefilePathText.KeyDown += new KeyEventHandler(this.ImageSelection_KeyDown);
+            this.ImagefilePathText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImageSelection_KeyDown);
+            this.ImagefilePathText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ImageSelection_KeyPress);
+            this.ImagefilePathText.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.ImageSelection_PreviewKeyDown);
             this.ImagefilePathText.Validating += new System.ComponentModel.CancelEventHandler(this.ImagefilePathText_Validating);
             // 
             // FilePickButton
@@ -711,9 +711,9 @@ namespace Hoehoe
             this.FilePickButton.Name = "FilePickButton";
             this.FilePickButton.UseVisualStyleBackColor = true;
             this.FilePickButton.Click += new System.EventHandler(this.FilePickButton_Click);
+            this.FilePickButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImageSelection_KeyDown);
+            this.FilePickButton.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ImageSelection_KeyPress);
             this.FilePickButton.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.ImageSelection_PreviewKeyDown);
-            this.FilePickButton.KeyPress += new KeyPressEventHandler(this.ImageSelection_KeyPress);
-            this.FilePickButton.KeyDown += new KeyEventHandler(this.ImageSelection_KeyDown);
             // 
             // Label2
             // 
@@ -730,9 +730,9 @@ namespace Hoehoe
             resources.GetString("ImageServiceCombo.Items1")});
             this.ImageServiceCombo.Name = "ImageServiceCombo";
             this.ImageServiceCombo.SelectedIndexChanged += new System.EventHandler(this.ImageServiceCombo_SelectedIndexChanged);
+            this.ImageServiceCombo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImageSelection_KeyDown);
+            this.ImageServiceCombo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ImageSelection_KeyPress);
             this.ImageServiceCombo.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.ImageSelection_PreviewKeyDown);
-            this.ImageServiceCombo.KeyPress += new KeyPressEventHandler(this.ImageSelection_KeyPress);
-            this.ImageServiceCombo.KeyDown += new KeyEventHandler(this.ImageSelection_KeyDown);
             // 
             // ImageCancelButton
             // 
@@ -2446,11 +2446,11 @@ namespace Hoehoe
             this.Name = "TweenMain";
             this.Activated += new System.EventHandler(this.TweenMain_Activated);
             this.Deactivate += new System.EventHandler(this.TweenMain_Deactivate);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Tween_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TweenMain_FormClosing);
             this.Load += new System.EventHandler(this.TweenMain_Load);
             this.Shown += new System.EventHandler(this.TweenMain_Shown);
-            this.ClientSizeChanged += new System.EventHandler(this.Tween_ClientSizeChanged);
-            this.LocationChanged += new System.EventHandler(this.Tween_LocationChanged);
+            this.ClientSizeChanged += new System.EventHandler(this.TweenMain_ClientSizeChanged);
+            this.LocationChanged += new System.EventHandler(this.TweenMain_LocationChanged);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.TweenMain_DragDrop);
             this.DragOver += new System.Windows.Forms.DragEventHandler(this.TweenMain_DragOver);
             this.Resize += new System.EventHandler(this.TweenMain_Resize);

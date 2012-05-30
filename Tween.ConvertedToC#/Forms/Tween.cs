@@ -9005,7 +9005,7 @@ namespace Hoehoe
             this.Close();
         }
 
-        private void Tween_FormClosing(object sender, FormClosingEventArgs e)
+        private void TweenMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!this.settingDialog.CloseToExit && e.CloseReason == CloseReason.UserClosing && MyCommon.IsEnding == false)
             {
@@ -9840,7 +9840,7 @@ namespace Hoehoe
             }
         }
 
-        private void Tween_ClientSizeChanged(object sender, EventArgs e)
+        private void TweenMain_ClientSizeChanged(object sender, EventArgs e)
         {
             if ((!this.initialLayout) && this.Visible)
             {
@@ -9940,7 +9940,7 @@ namespace Hoehoe
             this.modifySettingCommon = true;
         }
 
-        private void Tween_LocationChanged(object sender, EventArgs e)
+        private void TweenMain_LocationChanged(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
             {
