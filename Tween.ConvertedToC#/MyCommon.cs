@@ -170,10 +170,15 @@ namespace Hoehoe
             }
         }
 
-        // エラー内容をバッファに書き出し
-        // 注意：最終的にファイル出力されるエラーログに記録されるため次の情報は書き出さない
-        // 文頭メッセージ、権限、動作環境
-        // Dataプロパティにある終了許可フラグのパースもここで行う
+        /// <summary>
+        /// エラー内容をバッファに書き出し
+        /// 注意：最終的にファイル出力されるエラーログに記録されるため次の情報は書き出さない
+        /// 文頭メッセージ、権限、動作環境
+        /// Dataプロパティにある終了許可フラグのパースもここで行う
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <param name="isTerminatePermission"></param>
+        /// <returns></returns>
         public static string ExceptionOutMessage(Exception ex, ref bool isTerminatePermission)
         {
             if (ex == null)
