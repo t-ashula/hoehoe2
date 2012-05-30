@@ -76,18 +76,18 @@ namespace Hoehoe
 
         private void EventViewerDialog_Shown(object sender, EventArgs e)
         {
-            EventList.BeginUpdate();
-            this.curTab = TabEventType.SelectedTab;
+            this.EventList.BeginUpdate();
+            this.curTab = this.TabEventType.SelectedTab;
             this.CreateFilterdEventSource();
-            EventList.EndUpdate();
+            this.EventList.EndUpdate();
             this.TopMost = AppendSettingDialog.Instance.AlwaysTop;
         }
 
         private void EventList_DoubleClick(object sender, EventArgs e)
         {
-            if (EventList.SelectedIndices.Count != 0)
+            if (this.EventList.SelectedIndices.Count != 0)
             {
-                var selectedEvent = this.filterdEventSource[EventList.SelectedIndices[0]];
+                var selectedEvent = this.filterdEventSource[this.EventList.SelectedIndices[0]];
                 if (selectedEvent != null)
                 {
                     ((TweenMain)this.Owner).OpenUriAsync("http://twitter.com/" + selectedEvent.Username);
@@ -113,9 +113,9 @@ namespace Hoehoe
         private void TabEventType_Selecting(object sender, TabControlCancelEventArgs e)
         {
             this.curTab = e.TabPage;
-            if (!e.TabPage.Controls.Contains(EventList))
+            if (!e.TabPage.Controls.Contains(this.EventList))
             {
-                e.TabPage.Controls.Add(EventList);
+                e.TabPage.Controls.Add(this.EventList);
             }
         }
 
@@ -162,21 +162,21 @@ namespace Hoehoe
                     return;
             }
 
-            SaveFileDialog1.FileName = string.Format("HoehoeEvents{0}{1:yyMMdd-HHmmss}.tsv", tabName, DateTime.Now);
-            SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
-            SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
-            SaveFileDialog1.FilterIndex = 0;
-            SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
-            SaveFileDialog1.RestoreDirectory = true;
+            this.SaveFileDialog1.FileName = string.Format("HoehoeEvents{0}{1:yyMMdd-HHmmss}.tsv", tabName, DateTime.Now);
+            this.SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
+            this.SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
+            this.SaveFileDialog1.FilterIndex = 0;
+            this.SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
+            this.SaveFileDialog1.RestoreDirectory = true;
 
-            if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (!SaveFileDialog1.ValidateNames)
+                if (!this.SaveFileDialog1.ValidateNames)
                 {
                     return;
                 }
 
-                using (StreamWriter sw = new StreamWriter(SaveFileDialog1.FileName, false, Encoding.UTF8))
+                using (StreamWriter sw = new StreamWriter(this.SaveFileDialog1.FileName, false, Encoding.UTF8))
                 {
                     switch (rslt)
                     {
@@ -211,27 +211,25 @@ namespace Hoehoe
 
         private bool IsFilterMatch(Twitter.FormattedEvent x)
         {
-            if (!CheckBoxFilter.Checked || string.IsNullOrEmpty(TextBoxKeyword.Text))
+            if (!this.CheckBoxFilter.Checked || string.IsNullOrEmpty(this.TextBoxKeyword.Text))
             {
                 return true;
             }
 
-            if (CheckRegex.Checked)
+            if (!this.CheckRegex.Checked)
             {
-                try
-                {
-                    Regex rx = new Regex(TextBoxKeyword.Text);
-                    return rx.Match(x.Username).Success || rx.Match(x.Target).Success;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(Hoehoe.Properties.Resources.ButtonOK_ClickText3 + ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return false;
-                }
+                return x.Username.Contains(this.TextBoxKeyword.Text) || x.Target.Contains(this.TextBoxKeyword.Text);
             }
-            else
+            
+            try
             {
-                return x.Username.Contains(TextBoxKeyword.Text) || x.Target.Contains(TextBoxKeyword.Text);
+                Regex rx = new Regex(this.TextBoxKeyword.Text);
+                return rx.Match(x.Username).Success || rx.Match(x.Target).Success;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(Hoehoe.Properties.Resources.ButtonOK_ClickText3 + ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
             }
         }
 
@@ -239,7 +237,7 @@ namespace Hoehoe
         {
             if (this.EventSource != null && this.EventSource.Count > 0)
             {
-                this.filterdEventSource = this.EventSource.FindAll(x => CheckExcludeMyEvent.Checked ? !x.IsMe : true
+                this.filterdEventSource = this.EventSource.FindAll(x => this.CheckExcludeMyEvent.Checked ? !x.IsMe : true
                     && Convert.ToBoolean(x.Eventtype & this.ParseEventTypeFromTag())
                     && this.IsFilterMatch(x)).ToArray();
                 this.itemCache = null;
