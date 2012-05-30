@@ -365,7 +365,7 @@
     <Compile Include="Twitter.cs" />
     <Compile Include="UserAccount.cs" />
     <Compile Include="UserInfo.cs" />
-    <Compile Include="WebBrowserController.cs" />
+    <Compile Include="InternetSecurityManager.cs" />
     <Compile Include="Win32Api.cs" />
   </ItemGroup>
   <ItemGroup>
