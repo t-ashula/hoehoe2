@@ -112,8 +112,20 @@
     <Compile Include="ApiInformationChangedEventArgs.cs" />
     <Compile Include="CryptoUtils.cs" />
     <Compile Include="DataModels\D.cs" />
-    <Compile Include="DataModels\FourSquare\FourSquare.cs" />
-    <Compile Include="DataModels\Google\Google.cs" />
+    <Compile Include="DataModels\FourSquare\FourSquareData.cs" />
+    <Compile Include="DataModels\FourSquare\FoursquareUser.cs" />
+    <Compile Include="DataModels\FourSquare\Location.cs" />
+    <Compile Include="DataModels\FourSquare\Mayor.cs" />
+    <Compile Include="DataModels\FourSquare\Meta.cs" />
+    <Compile Include="DataModels\FourSquare\Response.cs" />
+    <Compile Include="DataModels\FourSquare\Stats.cs" />
+    <Compile Include="DataModels\FourSquare\Venue.cs" />
+    <Compile Include="DataModels\Google\UrlShortenerResponse.cs" />
+    <Compile Include="DataModels\Google\LanguageDetectResponse.cs" />
+    <Compile Include="DataModels\Google\LanguageDetectResponseData.cs" />
+    <Compile Include="DataModels\Google\TranslateResponse.cs" />
+    <Compile Include="DataModels\Google\TranslateResponseData.cs" />
+    <Compile Include="DataModels\Google\UrlShortenerParameter.cs" />
     <Compile Include="DataModels\Twitter\Annotations.cs" />
     <Compile Include="DataModels\Twitter\Attributes.cs" />
     <Compile Include="DataModels\Twitter\BoundingBox.cs" />
@@ -191,7 +203,7 @@
     <Compile Include="Connection\TwitPic.cs" />
     <Compile Include="Connection\TwitterPhoto.cs" />
     <Compile Include="Connection\Yfrog.cs" />
-    <Compile Include="DataModels\Twitter\Twitter.cs" />
+    <Compile Include="DataModels\Twitter\PhotoType.cs" />
     <Compile Include="Forms\DetailsListView.cs">
       <SubType>Component</SubType>
     </Compile>

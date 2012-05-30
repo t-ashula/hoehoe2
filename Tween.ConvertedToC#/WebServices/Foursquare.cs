@@ -40,7 +40,7 @@ namespace Hoehoe
         /// <summary>
         /// 4SQ Api Key : TODO
         /// </summary>
-        private Dictionary<string, string> authKey = new Dictionary<string, string> 
+        private Dictionary<string, string> authKey = new Dictionary<string, string>
         {
             { "client_id", "VWVC5NMXB1T5HKOYAKARCXKZDOHDNYSRLEMDDQYJNSJL2SUU" },
             { "client_secret", CryptoUtils.DecryptString("eXXMGYXZyuDxz/lJ9nLApihoUeEGXNLEO0ZDCAczvwdKgGRExZl1Xyac/ezNTwHFOLUZqaA8tbA=") }
@@ -86,7 +86,7 @@ namespace Hoehoe
                 Longitude = curVenue.Location.Longitude,
                 LocateInfo = this.CreateVenueInfoText(curVenue)
             };
-            
+
             // 例外発生の場合があるため
             if (!this.checkInUrlsVenueCollection.ContainsKey(urlId))
             {
@@ -120,7 +120,7 @@ namespace Hoehoe
             {
                 return string.Empty;
             }
-            
+
             Match mc = Regex.Match(content, "/venue/(?<venueId>[0-9]+)", RegexOptions.IgnoreCase);
             return mc.Success ? mc.Result("${venueId}") : string.Empty;
         }

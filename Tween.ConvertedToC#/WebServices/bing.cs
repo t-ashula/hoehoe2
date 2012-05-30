@@ -26,20 +26,20 @@
 
 namespace Hoehoe
 {
-    using System;
     using System.Collections.Generic;
     using System.Web;
 
     public class Bing
     {
         /// <summary>
-        /// TODO:BingAppID 
+        /// TODO:BingAppID
         /// </summary>
         private const string AppId = "8DFACAC0C4891D0F75F5728391C9D30664B797A1";
         private const string TranslateUri = "http://api.microsofttranslator.com/v2/Http.svc/Translate?appId=" + AppId;
 
         #region "言語テーブル定義"
-        private static readonly List<string> languages = new List<string> 
+
+        private static readonly List<string> languages = new List<string>
         {
           "af",
           "sq",
@@ -53,7 +53,7 @@ namespace Hoehoe
           "cs",
           "da",
           "nl", "nl-be",
-          "en", "en-us", "en-gb", "en-au", "en-ca", "en-nz", "en-ie", "en-za", "en-jm", "en", "en-bz", "en-tt", 
+          "en", "en-us", "en-gb", "en-au", "en-ca", "en-nz", "en-ie", "en-za", "en-jm", "en", "en-bz", "en-tt",
           "et",
           "fo",
           "fa",
@@ -105,7 +105,7 @@ namespace Hoehoe
           "vi",
           "xh",
           "ji",
-          "zu" 
+          "zu"
         };
 
         #endregion "言語テーブル定義"

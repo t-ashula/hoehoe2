@@ -36,16 +36,18 @@ namespace Hoehoe
     public class Google
     {
         #region "Translation"
-        /* 
+
+        /*
          * デベロッパー ガイド - Google AJAX Language_ API - Google Code
          * http://code.google.com/intl/ja/apis/ajaxlanguage/documentation/#fonje
          */
-        
+
         private const string TranslateEndPoint = "http://ajax.googleapis.com/ajax/services/language/translate";
         private const string LanguageDetectEndPoint = "https://ajax.googleapis.com/ajax/services/language/detect";
 
         #region "言語テーブル定義"
-        private static List<string> languages = new List<string> 
+
+        private static List<string> languages = new List<string>
         {
             "af",
             "sq",
@@ -195,7 +197,7 @@ namespace Hoehoe
                     errorMessage = "Err:" + res.ResponseDetails;
                     return false;
                 }
-            
+
                 string body = res.ResponseData.TranslatedText;
                 string buf = HttpUtility.UrlDecode(body);
                 destination = string.Copy(buf);
@@ -227,7 +229,7 @@ namespace Hoehoe
                     return string.Empty;
                 }
             }
-            
+
             return string.Empty;
         }
 
@@ -246,7 +248,7 @@ namespace Hoehoe
         #region "UrlShortener"
 
         // Google URL Shortener API
-        // http://code.google.com/intl/ja/apis/urlshortener/v1/getting_started.html        
+        // http://code.google.com/intl/ja/apis/urlshortener/v1/getting_started.html
         public string Shorten(string source)
         {
             Dictionary<string, string> headers = new Dictionary<string, string>();
