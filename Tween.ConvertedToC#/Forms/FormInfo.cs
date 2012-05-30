@@ -83,7 +83,7 @@ namespace Hoehoe
         public string InfoMessage
         {
             get { return this.formMessage; }
-            set { LabelInformation.Text = this.formMessage = value; }
+            set { this.LabelInformation.Text = this.formMessage = value; }
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Hoehoe
 
         private void LabelInformation_TextChanged(object sender, EventArgs e)
         {
-            LabelInformation.Refresh();
+            this.LabelInformation.Refresh();
         }
 
         private void FormInfo_Shown(object sender, EventArgs e)
