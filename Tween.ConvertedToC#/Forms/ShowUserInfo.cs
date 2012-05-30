@@ -102,43 +102,44 @@ namespace Hoehoe
             this.InitPath();
             this.InitTooltip();
             this.Text = this.Text.Insert(0, this.info.ScreenName + " ");
-            LabelId.Text = this.info.Id.ToString();
-            LabelScreenName.Text = this.info.ScreenName;
-            LabelName.Text = this.info.Name;
-            LabelLocation.Text = this.info.Location;
+            this.LabelId.Text = this.info.Id.ToString();
+            this.LabelScreenName.Text = this.info.ScreenName;
+            this.LabelName.Text = this.info.Name;
+            this.LabelLocation.Text = this.info.Location;
             this.SetLinklabelWeb(this.info.Url);
-            DescriptionBrowser.Visible = false;
+            this.DescriptionBrowser.Visible = false;
             this.MakeDescriptionBrowserText(this.info.Description);
-            RecentPostBrowser.Visible = false;
+            this.RecentPostBrowser.Visible = false;
             if (this.info.RecentPost != null)
             {
-                this.recentPostTxt = this.owner.CreateDetailHtml(this.owner.TwitterInstance.CreateHtmlAnchor(ref this.info.RecentPost, this.atidList, this.userInfo.Status.Entities, null)
-                    + " Posted at " + this.info.PostCreatedAt.ToString() + " via " + this.info.PostSource);
+                this.recentPostTxt = this.owner.CreateDetailHtml(
+                    this.owner.TwitterInstance.CreateHtmlAnchor(ref this.info.RecentPost, this.atidList, this.userInfo.Status.Entities, null)
+                    + string.Format(" Posted at {0} via {1}", this.info.PostCreatedAt, this.info.PostSource));
             }
 
-            LinkLabelFollowing.Text = this.info.FriendsCount.ToString();
-            LinkLabelFollowers.Text = this.info.FollowersCount.ToString();
-            LinkLabelFav.Text = this.info.FavoriteCount.ToString();
-            LinkLabelTweet.Text = this.info.StatusesCount.ToString();
-            LabelCreatedAt.Text = this.info.CreatedAt.ToString();
-            LabelIsProtected.Text = this.info.Protect ? Hoehoe.Properties.Resources.Yes : Hoehoe.Properties.Resources.No;
-            LabelIsVerified.Text = this.info.Verified ? Hoehoe.Properties.Resources.Yes : Hoehoe.Properties.Resources.No;
+            this.LinkLabelFollowing.Text = this.info.FriendsCount.ToString();
+            this.LinkLabelFollowers.Text = this.info.FollowersCount.ToString();
+            this.LinkLabelFav.Text = this.info.FavoriteCount.ToString();
+            this.LinkLabelTweet.Text = this.info.StatusesCount.ToString();
+            this.LabelCreatedAt.Text = this.info.CreatedAt.ToString();
+            this.LabelIsProtected.Text = this.info.Protect ? Hoehoe.Properties.Resources.Yes : Hoehoe.Properties.Resources.No;
+            this.LabelIsVerified.Text = this.info.Verified ? Hoehoe.Properties.Resources.Yes : Hoehoe.Properties.Resources.No;
 
             if (this.owner.TwitterInstance.Username == this.info.ScreenName)
             {
-                ButtonEdit.Enabled = true;
-                ChangeIconToolStripMenuItem.Enabled = true;
-                ButtonBlock.Enabled = false;
-                ButtonReportSpam.Enabled = false;
-                ButtonBlockDestroy.Enabled = false;
+                this.ButtonEdit.Enabled = true;
+                this.ChangeIconToolStripMenuItem.Enabled = true;
+                this.ButtonBlock.Enabled = false;
+                this.ButtonReportSpam.Enabled = false;
+                this.ButtonBlockDestroy.Enabled = false;
             }
             else
             {
-                ButtonEdit.Enabled = false;
-                ChangeIconToolStripMenuItem.Enabled = false;
-                ButtonBlock.Enabled = true;
-                ButtonReportSpam.Enabled = true;
-                ButtonBlockDestroy.Enabled = true;
+                this.ButtonEdit.Enabled = false;
+                this.ChangeIconToolStripMenuItem.Enabled = false;
+                this.ButtonBlock.Enabled = true;
+                this.ButtonReportSpam.Enabled = true;
+                this.ButtonBlockDestroy.Enabled = true;
             }
         }
 
@@ -151,7 +152,7 @@ namespace Hoehoe
         {
             if (this.info.Url != null)
             {
-                this.owner.OpenUriAsync(LinkLabelWeb.Text);
+                this.owner.OpenUriAsync(this.LinkLabelWeb.Text);
             }
         }
 
@@ -185,9 +186,9 @@ namespace Hoehoe
             else
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
-                LabelIsFollowing.Text = Hoehoe.Properties.Resources.GetFriendshipInfo1;
-                ButtonFollow.Enabled = false;
-                ButtonUnFollow.Enabled = true;
+                this.LabelIsFollowing.Text = Hoehoe.Properties.Resources.GetFriendshipInfo1;
+                this.ButtonFollow.Enabled = false;
+                this.ButtonUnFollow.Enabled = true;
             }
         }
 
@@ -203,9 +204,9 @@ namespace Hoehoe
                 else
                 {
                     MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
-                    LabelIsFollowing.Text = Hoehoe.Properties.Resources.GetFriendshipInfo2;
-                    ButtonFollow.Enabled = true;
-                    ButtonUnFollow.Enabled = false;
+                    this.LabelIsFollowing.Text = Hoehoe.Properties.Resources.GetFriendshipInfo2;
+                    this.ButtonFollow.Enabled = true;
+                    this.ButtonUnFollow.Enabled = false;
                 }
             }
         }
@@ -213,15 +214,15 @@ namespace Hoehoe
         private void ShowUserInfo_Activated(object sender, EventArgs e)
         {
             // 画面が他画面の裏に隠れると、アイコン画像が再描画されない問題の対応
-            if (UserPicture.Image != null)
+            if (this.UserPicture.Image != null)
             {
-                UserPicture.Invalidate(false);
+                this.UserPicture.Invalidate(false);
             }
         }
 
         private void ShowUserInfo_FormClosing(object sender, FormClosingEventArgs e)
         {
-            UserPicture.Image = null;
+            this.UserPicture.Image = null;
             if (this.icondata != null)
             {
                 this.icondata.Dispose();
@@ -248,57 +249,57 @@ namespace Hoehoe
             {
                 if (this.icondata != null)
                 {
-                    UserPicture.Image = this.icondata;
+                    this.UserPicture.Image = this.icondata;
                 }
             }
             catch (Exception)
             {
-                UserPicture.Image = null;
+                this.UserPicture.Image = null;
             }
 
             if (this.owner.TwitterInstance.Username == this.info.ScreenName)
             {
                 // 自分の場合
-                LabelIsFollowing.Text = string.Empty;
-                LabelIsFollowed.Text = string.Empty;
-                ButtonFollow.Enabled = false;
-                ButtonUnFollow.Enabled = false;
+                this.LabelIsFollowing.Text = string.Empty;
+                this.LabelIsFollowed.Text = string.Empty;
+                this.ButtonFollow.Enabled = false;
+                this.ButtonUnFollow.Enabled = false;
             }
             else
             {
                 if (string.IsNullOrEmpty(this.friendshipResult))
                 {
-                    LabelIsFollowing.Text = this.info.IsFollowing ? Hoehoe.Properties.Resources.GetFriendshipInfo1 : Hoehoe.Properties.Resources.GetFriendshipInfo2;
-                    ButtonFollow.Enabled = !this.info.IsFollowing;
-                    LabelIsFollowed.Text = this.info.IsFollowed ? Hoehoe.Properties.Resources.GetFriendshipInfo3 : Hoehoe.Properties.Resources.GetFriendshipInfo4;
-                    ButtonUnFollow.Enabled = this.info.IsFollowing;
+                    this.LabelIsFollowing.Text = this.info.IsFollowing ? Hoehoe.Properties.Resources.GetFriendshipInfo1 : Hoehoe.Properties.Resources.GetFriendshipInfo2;
+                    this.ButtonFollow.Enabled = !this.info.IsFollowing;
+                    this.LabelIsFollowed.Text = this.info.IsFollowed ? Hoehoe.Properties.Resources.GetFriendshipInfo3 : Hoehoe.Properties.Resources.GetFriendshipInfo4;
+                    this.ButtonUnFollow.Enabled = this.info.IsFollowing;
                 }
                 else
                 {
                     MessageBox.Show(this.friendshipResult);
-                    ButtonUnFollow.Enabled = false;
-                    ButtonFollow.Enabled = false;
-                    LabelIsFollowed.Text = Hoehoe.Properties.Resources.GetFriendshipInfo6;
-                    LabelIsFollowing.Text = Hoehoe.Properties.Resources.GetFriendshipInfo6;
+                    this.ButtonUnFollow.Enabled = false;
+                    this.ButtonFollow.Enabled = false;
+                    this.LabelIsFollowed.Text = Hoehoe.Properties.Resources.GetFriendshipInfo6;
+                    this.LabelIsFollowing.Text = Hoehoe.Properties.Resources.GetFriendshipInfo6;
                 }
             }
         }
 
         private void ShowUserInfo_Shown(object sender, EventArgs e)
         {
-            DescriptionBrowser.DocumentText = this.descriptionTxt;
-            DescriptionBrowser.Visible = true;
+            this.DescriptionBrowser.DocumentText = this.descriptionTxt;
+            this.DescriptionBrowser.Visible = true;
             if (this.info.RecentPost != null)
             {
-                RecentPostBrowser.DocumentText = this.recentPostTxt;
-                RecentPostBrowser.Visible = true;
+                this.RecentPostBrowser.DocumentText = this.recentPostTxt;
+                this.RecentPostBrowser.Visible = true;
             }
             else
             {
-                LabelRecentPost.Text = Hoehoe.Properties.Resources.ShowUserInfo2;
+                this.LabelRecentPost.Text = Hoehoe.Properties.Resources.ShowUserInfo2;
             }
 
-            ButtonClose.Focus();
+            this.ButtonClose.Focus();
         }
 
         private void WebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
@@ -337,17 +338,17 @@ namespace Hoehoe
             WebBrowser browser = (WebBrowser)sender;
             if (browser.StatusText.StartsWith("http"))
             {
-                ToolTip1.Show(browser.StatusText, this, PointToClient(MousePosition));
+                this.ToolTip1.Show(browser.StatusText, this, PointToClient(MousePosition));
             }
-            else if (string.IsNullOrEmpty(DescriptionBrowser.StatusText))
+            else if (string.IsNullOrEmpty(this.DescriptionBrowser.StatusText))
             {
-                ToolTip1.Hide(this);
+                this.ToolTip1.Hide(this);
             }
         }
 
         private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
+            WebBrowser sc = this.ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
                 sc.Document.ExecCommand("SelectAll", false, null);
@@ -356,7 +357,7 @@ namespace Hoehoe
 
         private void SelectionCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
+            WebBrowser sc = this.ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
                 string selectedText = this.owner.WebBrowser_GetSelectionText(ref sc);
@@ -376,24 +377,24 @@ namespace Hoehoe
 
         private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
+            WebBrowser sc = this.ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
                 string selectedText = this.owner.WebBrowser_GetSelectionText(ref sc);
                 if (selectedText == null)
                 {
-                    SelectionCopyToolStripMenuItem.Enabled = false;
+                    this.SelectionCopyToolStripMenuItem.Enabled = false;
                 }
                 else
                 {
-                    SelectionCopyToolStripMenuItem.Enabled = true;
+                    this.SelectionCopyToolStripMenuItem.Enabled = true;
                 }
             }
         }
 
         private void ShowUserInfo_MouseEnter(object sender, EventArgs e)
         {
-            ToolTip1.Hide(this);
+            this.ToolTip1.Hide(this);
         }
 
         private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -413,7 +414,7 @@ namespace Hoehoe
 
         private void UserPicture_DoubleClick(object sender, EventArgs e)
         {
-            if (UserPicture.Image != null)
+            if (this.UserPicture.Image != null)
             {
                 string name = this.info.ImageUrl.ToString();
                 this.owner.OpenUriAsync(name.Remove(name.LastIndexOf("_normal"), 7));
@@ -422,12 +423,12 @@ namespace Hoehoe
 
         private void UserPicture_MouseEnter(object sender, EventArgs e)
         {
-            UserPicture.Cursor = Cursors.Hand;
+            this.UserPicture.Cursor = Cursors.Hand;
         }
 
         private void UserPicture_MouseLeave(object sender, EventArgs e)
         {
-            UserPicture.Cursor = Cursors.Default;
+            this.UserPicture.Cursor = Cursors.Default;
         }
 
         private void UpdateProfile_Dowork(object sender, DoWorkEventArgs e)
@@ -455,68 +456,69 @@ namespace Hoehoe
 
             if (!this.isEditing)
             {
-                this.buttonEditText = ButtonEdit.Text;
-                ButtonEdit.Text = Hoehoe.Properties.Resources.UserInfoButtonEdit_ClickText1;
+                this.buttonEditText = this.ButtonEdit.Text;
+                this.ButtonEdit.Text = Hoehoe.Properties.Resources.UserInfoButtonEdit_ClickText1;
 
                 // 座標初期化,プロパティ設定
-                TextBoxName.Location = LabelName.Location;
-                TextBoxName.Height = LabelName.Height;
-                TextBoxName.Width = LabelName.Width;
-                TextBoxName.BackColor = this.owner.InputBackColor;
-                TextBoxName.MaxLength = 20;
-                TextBoxName.Text = LabelName.Text;
-                TextBoxName.TabStop = true;
-                TextBoxName.Visible = true;
-                LabelName.Visible = false;
+                this.TextBoxName.Location = this.LabelName.Location;
+                this.TextBoxName.Height = this.LabelName.Height;
+                this.TextBoxName.Width = this.LabelName.Width;
+                this.TextBoxName.BackColor = this.owner.InputBackColor;
+                this.TextBoxName.MaxLength = 20;
+                this.TextBoxName.Text = this.LabelName.Text;
+                this.TextBoxName.TabStop = true;
+                this.TextBoxName.Visible = true;
+                this.LabelName.Visible = false;
 
-                TextBoxLocation.Location = LabelLocation.Location;
-                TextBoxLocation.Height = LabelLocation.Height;
-                TextBoxLocation.Width = LabelLocation.Width;
-                TextBoxLocation.BackColor = this.owner.InputBackColor;
-                TextBoxLocation.MaxLength = 30;
-                TextBoxLocation.Text = LabelLocation.Text;
-                TextBoxLocation.TabStop = true;
-                TextBoxLocation.Visible = true;
-                LabelLocation.Visible = false;
+                this.TextBoxLocation.Location = this.LabelLocation.Location;
+                this.TextBoxLocation.Height = this.LabelLocation.Height;
+                this.TextBoxLocation.Width = this.LabelLocation.Width;
+                this.TextBoxLocation.BackColor = this.owner.InputBackColor;
+                this.TextBoxLocation.MaxLength = 30;
+                this.TextBoxLocation.Text = this.LabelLocation.Text;
+                this.TextBoxLocation.TabStop = true;
+                this.TextBoxLocation.Visible = true;
+                this.LabelLocation.Visible = false;
 
-                TextBoxWeb.Location = LinkLabelWeb.Location;
-                TextBoxWeb.Height = LinkLabelWeb.Height;
-                TextBoxWeb.Width = LinkLabelWeb.Width;
-                TextBoxWeb.BackColor = this.owner.InputBackColor;
-                TextBoxWeb.MaxLength = 100;
-                TextBoxWeb.Text = this.info.Url;
-                TextBoxWeb.TabStop = true;
-                TextBoxWeb.Visible = true;
-                LinkLabelWeb.Visible = false;
+                this.TextBoxWeb.Location = this.LinkLabelWeb.Location;
+                this.TextBoxWeb.Height = this.LinkLabelWeb.Height;
+                this.TextBoxWeb.Width = this.LinkLabelWeb.Width;
+                this.TextBoxWeb.BackColor = this.owner.InputBackColor;
+                this.TextBoxWeb.MaxLength = 100;
+                this.TextBoxWeb.Text = this.info.Url;
+                this.TextBoxWeb.TabStop = true;
+                this.TextBoxWeb.Visible = true;
+                this.LinkLabelWeb.Visible = false;
 
-                TextBoxDescription.Location = DescriptionBrowser.Location;
-                TextBoxDescription.Height = DescriptionBrowser.Height;
-                TextBoxDescription.Width = DescriptionBrowser.Width;
-                TextBoxDescription.BackColor = this.owner.InputBackColor;
-                TextBoxDescription.MaxLength = 160;
-                TextBoxDescription.Text = this.info.Description;
-                TextBoxDescription.Multiline = true;
-                TextBoxDescription.ScrollBars = ScrollBars.Vertical;
-                TextBoxDescription.TabStop = true;
-                TextBoxDescription.Visible = true;
-                DescriptionBrowser.Visible = false;
+                this.TextBoxDescription.Location = this.DescriptionBrowser.Location;
+                this.TextBoxDescription.Height = this.DescriptionBrowser.Height;
+                this.TextBoxDescription.Width = this.DescriptionBrowser.Width;
+                this.TextBoxDescription.BackColor = this.owner.InputBackColor;
+                this.TextBoxDescription.MaxLength = 160;
+                this.TextBoxDescription.Text = this.info.Description;
+                this.TextBoxDescription.Multiline = true;
+                this.TextBoxDescription.ScrollBars = ScrollBars.Vertical;
+                this.TextBoxDescription.TabStop = true;
+                this.TextBoxDescription.Visible = true;
+                this.DescriptionBrowser.Visible = false;
 
-                TextBoxName.Focus();
-                TextBoxName.Select(TextBoxName.Text.Length, 0);
+                this.TextBoxName.Focus();
+                this.TextBoxName.Select(this.TextBoxName.Text.Length, 0);
 
                 this.isEditing = true;
             }
             else
             {
-                UpdateProfileArgs arg = new UpdateProfileArgs();
-
-                if (TextBoxName.Modified || TextBoxLocation.Modified || TextBoxWeb.Modified || TextBoxDescription.Modified)
+                if (this.TextBoxName.Modified || this.TextBoxLocation.Modified || this.TextBoxWeb.Modified || this.TextBoxDescription.Modified)
                 {
-                    arg.Tw = this.owner.TwitterInstance;
-                    arg.Name = TextBoxName.Text.Trim();
-                    arg.Url = TextBoxWeb.Text.Trim();
-                    arg.Location = TextBoxLocation.Text.Trim();
-                    arg.Description = TextBoxDescription.Text.Trim();
+                    UpdateProfileArgs arg = new UpdateProfileArgs()
+                    {
+                        Tw = this.owner.TwitterInstance,
+                        Name = this.TextBoxName.Text.Trim(),
+                        Url = this.TextBoxWeb.Text.Trim(),
+                        Location = this.TextBoxLocation.Text.Trim(),
+                        Description = this.TextBoxDescription.Text.Trim()
+                    };
 
                     using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.UserInfoButtonEdit_ClickText2, this.UpdateProfile_Dowork, this.UpddateProfile_RunWorkerCompleted, arg))
                     {
@@ -528,31 +530,31 @@ namespace Hoehoe
                     }
                 }
 
-                LabelName.Text = TextBoxName.Text;
-                this.info.Name = LabelName.Text;
-                TextBoxName.TabStop = false;
-                TextBoxName.Visible = false;
-                LabelName.Visible = true;
+                this.LabelName.Text = this.TextBoxName.Text;
+                this.info.Name = this.LabelName.Text;
+                this.TextBoxName.TabStop = false;
+                this.TextBoxName.Visible = false;
+                this.LabelName.Visible = true;
 
-                LabelLocation.Text = TextBoxLocation.Text;
-                this.info.Location = LabelLocation.Text;
-                TextBoxLocation.TabStop = false;
-                TextBoxLocation.Visible = false;
-                LabelLocation.Visible = true;
+                this.LabelLocation.Text = this.TextBoxLocation.Text;
+                this.info.Location = this.LabelLocation.Text;
+                this.TextBoxLocation.TabStop = false;
+                this.TextBoxLocation.Visible = false;
+                this.LabelLocation.Visible = true;
 
-                this.SetLinklabelWeb(TextBoxWeb.Text);
-                this.info.Url = TextBoxWeb.Text;
-                TextBoxWeb.TabStop = false;
-                TextBoxWeb.Visible = false;
-                LinkLabelWeb.Visible = true;
+                this.SetLinklabelWeb(this.TextBoxWeb.Text);
+                this.info.Url = this.TextBoxWeb.Text;
+                this.TextBoxWeb.TabStop = false;
+                this.TextBoxWeb.Visible = false;
+                this.LinkLabelWeb.Visible = true;
 
-                this.DescriptionBrowser.DocumentText = this.MakeDescriptionBrowserText(TextBoxDescription.Text);
-                this.info.Description = TextBoxDescription.Text;
-                TextBoxDescription.TabStop = false;
-                TextBoxDescription.Visible = false;
-                DescriptionBrowser.Visible = true;
+                this.DescriptionBrowser.DocumentText = this.MakeDescriptionBrowserText(this.TextBoxDescription.Text);
+                this.info.Description = this.TextBoxDescription.Text;
+                this.TextBoxDescription.TabStop = false;
+                this.TextBoxDescription.Visible = false;
+                this.DescriptionBrowser.Visible = true;
 
-                ButtonEdit.Text = this.buttonEditText;
+                this.ButtonEdit.Text = this.buttonEditText;
 
                 this.isEditing = false;
             }
@@ -581,7 +583,7 @@ namespace Hoehoe
                 Image img = (new HttpVarious()).GetImage(user.ProfileImageUrl);
                 if (img != null)
                 {
-                    UserPicture.Image = img;
+                    this.UserPicture.Image = img;
                 }
             }
             catch (Exception)
@@ -591,18 +593,17 @@ namespace Hoehoe
 
         private void ChangeIconToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialogIcon.Filter = Hoehoe.Properties.Resources.ChangeIconToolStripMenuItem_ClickText1;
-            OpenFileDialogIcon.Title = Hoehoe.Properties.Resources.ChangeIconToolStripMenuItem_ClickText2;
-            OpenFileDialogIcon.FileName = string.Empty;
+            this.OpenFileDialogIcon.Filter = Hoehoe.Properties.Resources.ChangeIconToolStripMenuItem_ClickText1;
+            this.OpenFileDialogIcon.Title = Hoehoe.Properties.Resources.ChangeIconToolStripMenuItem_ClickText2;
+            this.OpenFileDialogIcon.FileName = string.Empty;
 
-            DialogResult rslt = OpenFileDialogIcon.ShowDialog();
-
+            DialogResult rslt = this.OpenFileDialogIcon.ShowDialog();
             if (rslt != DialogResult.OK)
             {
                 return;
             }
 
-            string fn = OpenFileDialogIcon.FileName;
+            string fn = this.OpenFileDialogIcon.FileName;
             if (this.IsValidIconFile(new FileInfo(fn)))
             {
                 this.ChangeIcon(fn);
@@ -703,10 +704,10 @@ namespace Hoehoe
 
         private void InitTooltip()
         {
-            ToolTip1.SetToolTip(LinkLabelTweet, this.home);
-            ToolTip1.SetToolTip(LinkLabelFollowing, this.following);
-            ToolTip1.SetToolTip(LinkLabelFollowers, this.followers);
-            ToolTip1.SetToolTip(LinkLabelFav, this.favorites);
+            this.ToolTip1.SetToolTip(this.LinkLabelTweet, this.home);
+            this.ToolTip1.SetToolTip(this.LinkLabelFollowing, this.following);
+            this.ToolTip1.SetToolTip(this.LinkLabelFollowers, this.followers);
+            this.ToolTip1.SetToolTip(this.LinkLabelFav, this.favorites);
         }
 
         private bool AnalizeUserInfo(DataModels.Twitter.User user)
@@ -761,9 +762,9 @@ namespace Hoehoe
             string webtext = this.owner.TwitterInstance.PreProcessUrl("<a href=\"" + data + "\">Dummy</a>");
             webtext = ShortUrl.Resolve(webtext, false);
             string jumpto = Regex.Match(webtext, "<a href=\"(?<url>.*?)\"").Groups["url"].Value;
-            ToolTip1.SetToolTip(LinkLabelWeb, jumpto);
-            LinkLabelWeb.Tag = jumpto;
-            LinkLabelWeb.Text = data;
+            this.ToolTip1.SetToolTip(this.LinkLabelWeb, jumpto);
+            this.LinkLabelWeb.Tag = jumpto;
+            this.LinkLabelWeb.Text = data;
         }
 
         private string MakeDescriptionBrowserText(string data)
