@@ -326,9 +326,7 @@ namespace Hoehoe
         private string postBrowserStatusText = string.Empty;
         private bool colorize = false;
         private System.Timers.Timer timerTimeline = new System.Timers.Timer();
-
         private ImageListViewItem displayItem;
-
         private List<UrlUndoInfo> urlUndoBuffer = null;
 
         // [, ]でのリプライ移動の履歴
@@ -349,20 +347,15 @@ namespace Hoehoe
         private int timerUsCounter;
         private int timerResumeWait;
         private int timerRefreshFollowers;
-
         private Dictionary<WorkerType, DateTime> lastTimeWork;
 
         private PostClass displayPost;
-
         private int iconCnt;
         private int blinkCnt;
         private bool doBlink;
         private bool isIdle;
-
         private long prevFollowerCount = 0;
-
         private HookGlobalHotkey hookGlobalHotkey;
-
         private bool isActiveUserstream = false;
         private string prevTrackWord;
 
@@ -1402,93 +1395,6 @@ namespace Hoehoe
 
         #endregion public methods
 
-        #region internal methods
-
-        internal void CheckReplyTo(string statusText)
-        {
-            // ハッシュタグの保存
-            MatchCollection m = Regex.Matches(statusText, Twitter.HashtagRegexPattern, RegexOptions.IgnoreCase);
-            string hstr = string.Empty;
-            foreach (Match hm in m)
-            {
-                if (!hstr.Contains("#" + hm.Result("$3") + " "))
-                {
-                    hstr += "#" + hm.Result("$3") + " ";
-                    this.HashSupl.AddItem("#" + hm.Result("$3"));
-                }
-            }
-
-            if (!string.IsNullOrEmpty(this.HashMgr.UseHash) && !hstr.Contains(this.HashMgr.UseHash + " "))
-            {
-                hstr += this.HashMgr.UseHash;
-            }
-
-            if (!string.IsNullOrEmpty(hstr))
-            {
-                this.HashMgr.AddHashToHistory(hstr.Trim(), false);
-            }
-
-            // 本当にリプライ先指定すべきかどうかの判定
-            m = Regex.Matches(statusText, "(^|[ -/:-@[-^`{-~])(?<id>@[a-zA-Z0-9_]+)");
-            if (this.SettingDialog.UseAtIdSupplement)
-            {
-                int cnt = this.AtIdSupl.ItemCount;
-                foreach (Match mid in m)
-                {
-                    this.AtIdSupl.AddItem(mid.Result("${id}"));
-                }
-
-                if (cnt != this.AtIdSupl.ItemCount)
-                {
-                    this.modifySettingAtId = true;
-                }
-            }
-
-            // リプライ先ステータスIDの指定がない場合は指定しない
-            if (this.replyToId == 0)
-            {
-                return;
-            }
-
-            // リプライ先ユーザー名がない場合も指定しない
-            if (string.IsNullOrEmpty(this.replyToName))
-            {
-                this.replyToId = 0;
-                return;
-            }
-
-            // 通常Reply
-            // 次の条件を満たす場合に in_reply_to_status_id 指定
-            // 1. Twitterによりリンクと判定される @idが文中に1つ含まれる (2009/5/28 リンク化される@IDのみカウントするように修正)
-            // 2. リプライ先ステータスIDが設定されている(リストをダブルクリックで返信している)
-            // 3. 文中に含まれた@idがリプライ先のポスト者のIDと一致する
-            if (m != null)
-            {
-                if (statusText.StartsWith("@"))
-                {
-                    if (statusText.StartsWith("@" + this.replyToName))
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    foreach (Match mid in m)
-                    {
-                        if (statusText.Contains("QT " + mid.Result("${id}") + ":") && mid.Result("${id}") == "@" + this.replyToName)
-                        {
-                            return;
-                        }
-                    }
-                }
-            }
-
-            this.replyToId = 0;
-            this.replyToName = string.Empty;
-        }
-
-        #endregion internal methods
-
         #region protected methods
 
         protected override bool ProcessDialogKey(Keys keyData)
@@ -1640,6 +1546,89 @@ namespace Hoehoe
             }
 
             values[toIndex] = movedValue;
+        }
+
+        private void CheckReplyTo(string statusText)
+        {
+            // ハッシュタグの保存
+            MatchCollection m = Regex.Matches(statusText, Twitter.HashtagRegexPattern, RegexOptions.IgnoreCase);
+            string hstr = string.Empty;
+            foreach (Match hm in m)
+            {
+                if (!hstr.Contains("#" + hm.Result("$3") + " "))
+                {
+                    hstr += "#" + hm.Result("$3") + " ";
+                    this.HashSupl.AddItem("#" + hm.Result("$3"));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(this.HashMgr.UseHash) && !hstr.Contains(this.HashMgr.UseHash + " "))
+            {
+                hstr += this.HashMgr.UseHash;
+            }
+
+            if (!string.IsNullOrEmpty(hstr))
+            {
+                this.HashMgr.AddHashToHistory(hstr.Trim(), false);
+            }
+
+            // 本当にリプライ先指定すべきかどうかの判定
+            m = Regex.Matches(statusText, "(^|[ -/:-@[-^`{-~])(?<id>@[a-zA-Z0-9_]+)");
+            if (this.SettingDialog.UseAtIdSupplement)
+            {
+                int cnt = this.AtIdSupl.ItemCount;
+                foreach (Match mid in m)
+                {
+                    this.AtIdSupl.AddItem(mid.Result("${id}"));
+                }
+
+                if (cnt != this.AtIdSupl.ItemCount)
+                {
+                    this.modifySettingAtId = true;
+                }
+            }
+
+            // リプライ先ステータスIDの指定がない場合は指定しない
+            if (this.replyToId == 0)
+            {
+                return;
+            }
+
+            // リプライ先ユーザー名がない場合も指定しない
+            if (string.IsNullOrEmpty(this.replyToName))
+            {
+                this.replyToId = 0;
+                return;
+            }
+
+            // 通常Reply
+            // 次の条件を満たす場合に in_reply_to_status_id 指定
+            // 1. Twitterによりリンクと判定される @idが文中に1つ含まれる (2009/5/28 リンク化される@IDのみカウントするように修正)
+            // 2. リプライ先ステータスIDが設定されている(リストをダブルクリックで返信している)
+            // 3. 文中に含まれた@idがリプライ先のポスト者のIDと一致する
+            if (m != null)
+            {
+                if (statusText.StartsWith("@"))
+                {
+                    if (statusText.StartsWith("@" + this.replyToName))
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    foreach (Match mid in m)
+                    {
+                        if (statusText.Contains("QT " + mid.Result("${id}") + ":") && mid.Result("${id}") == "@" + this.replyToName)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+
+            this.replyToId = 0;
+            this.replyToName = string.Empty;
         }
 
         private void TweenMain_Activated(object sender, EventArgs e)
