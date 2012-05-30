@@ -75,6 +75,7 @@ namespace Hoehoe
             foreach (Process checkProcess_loopVariable in allProcesses)
             {
                 checkProcess = checkProcess_loopVariable;
+                
                 // 自分自身のプロセスIDは無視する
                 if (checkProcess.Id != curProcess.Id)
                 {
@@ -110,13 +111,24 @@ namespace Hoehoe
         // SendMessageで送信するメッセージ
         private enum Sm_Message : int
         {
-            // ユーザー定義メッセージ
+            /// <summary>
+            /// ユーザー定義メッセージ
+            /// </summary> 
             WM_USER = 0x400,
-            // ツールバーのボタン取得
+
+            /// <summary>
+            /// ツールバーのボタン取得
+            /// </summary> 
             TB_GETBUTTON = WM_USER + 23,
-            // ツールバーのボタン（アイコン）数取得
+
+            /// <summary>
+            /// ツールバーのボタン（アイコン）数取得
+            /// </summary> 
             TB_BUTTONCOUNT = WM_USER + 24,
-            // ツールバーのボタン詳細情報取得
+
+            /// <summary>
+            /// ツールバーのボタン詳細情報取得
+            /// </summary> 
             TB_GETBUTTONINFO = WM_USER + 65
         }
 
@@ -282,6 +294,7 @@ namespace Hoehoe
         {
             // 左マウスボタン押し下げ
             WM_LBUTTONDOWN = 0x201,
+
             // 左マウスボタン離し
             WM_LBUTTONUP = 0x202
         }
@@ -297,31 +310,35 @@ namespace Hoehoe
             const string TRAY_NOTIFYWINDOW = "TrayNotifyWnd";
             const string TRAY_PAGER = "SysPager";
             const string TOOLBAR_CONTROL = "ToolbarWindow32";
+            
             // タスクバーのハンドル取得
             IntPtr taskbarWin = FindWindow(TRAY_WINDOW, null);
             if (taskbarWin.Equals(IntPtr.Zero))
             {
                 return false;
             }
+            
             // 通知領域のハンドル取得
             IntPtr trayWin = FindWindowEx(taskbarWin, IntPtr.Zero, TRAY_NOTIFYWINDOW, null);
             if (trayWin.Equals(IntPtr.Zero))
             {
                 return false;
             }
+            
             // SysPagerの有無確認。（XP/2000はSysPagerあり）
             IntPtr tempWin = FindWindowEx(trayWin, IntPtr.Zero, TRAY_PAGER, null);
             if (tempWin.Equals(IntPtr.Zero))
             {
                 tempWin = trayWin;
             }
-            // タスクトレイがツールバーで出来ているか確認
-            // 　→　ツールバーでなければ終了
+            
+            // タスクトレイがツールバーで出来ているか確認　→　ツールバーでなければ終了
             IntPtr toolWin = FindWindowEx(tempWin, IntPtr.Zero, TOOLBAR_CONTROL, null);
             if (toolWin.Equals(IntPtr.Zero))
             {
                 return false;
             }
+
             // タスクトレイのプロセス（Explorer）を取得し、外部から参照するために開く
             int expPid = 0;
             GetWindowThreadProcessId(toolWin, ref expPid);
@@ -334,95 +351,105 @@ namespace Hoehoe
             // プロセスを閉じるためにTry-Finally
             try
             {
-                TBBUTTON tbButtonLocal = new TBBUTTON();
-                // 本プロセス内のタスクバーボタン情報作成（サイズ特定でのみ使用）
+                TBBUTTON tbButtonLocal = new TBBUTTON(); // 本プロセス内のタスクバーボタン情報作成（サイズ特定でのみ使用）
+                
                 // Explorer内のタスクバーボタン格納メモリ確保
                 IntPtr ptbSysButton = VirtualAllocEx(hProc, IntPtr.Zero, Marshal.SizeOf(tbButtonLocal), AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
                 if (ptbSysButton.Equals(IntPtr.Zero))
                 {
+                    // メモリ確保失敗
                     return false;
                 }
-                // メモリ確保失敗
+
                 try
                 {
-                    TBBUTTONINFO tbButtonInfoLocal = new TBBUTTONINFO();
-                    // 本プロセス内ツールバーボタン詳細情報作成
+                    TBBUTTONINFO tbButtonInfoLocal = new TBBUTTONINFO(); // 本プロセス内ツールバーボタン詳細情報作成
+                    
                     // Explorer内のタスクバーボタン詳細情報格納メモリ確保
                     IntPtr ptbSysInfo = VirtualAllocEx(hProc, IntPtr.Zero, Marshal.SizeOf(tbButtonInfoLocal), AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
                     if (ptbSysInfo.Equals(IntPtr.Zero))
                     {
+                        // メモリ確保失敗
                         return false;
                     }
-                    // メモリ確保失敗
+                    
                     try
                     {
-                        const int TitleSize = 256;
-                        // Tooltip文字列長
-                        string title = string.Empty;
-                        // Tooltip文字列
+                        const int TitleSize = 256;    // Tooltip文字列長
+                        string title = string.Empty;  // Tooltip文字列
+                        
                         // 共有メモリにTooltip読込メモリ確保
                         IntPtr pszTitle = Marshal.AllocCoTaskMem(TitleSize);
                         if (pszTitle.Equals(IntPtr.Zero))
                         {
+                            // メモリ確保失敗
                             return false;
                         }
-                        // メモリ確保失敗
+                
                         try
                         {
                             // Explorer内にTooltip読込メモリ確保
                             IntPtr pszSysTitle = VirtualAllocEx(hProc, IntPtr.Zero, TitleSize, AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
                             if (pszSysTitle.Equals(IntPtr.Zero))
                             {
+                                // メモリ確保失敗
                                 return false;
                             }
-                            // メモリ確保失敗
+                                                        
                             try
                             {
                                 // 通知領域ボタン数取得
                                 int iCount = SendMessage(toolWin, (int)Sm_Message.TB_BUTTONCOUNT, new IntPtr(0), new IntPtr(0));
+                                
                                 // 左から順に情報取得
                                 for (int i = 0; i < iCount; i++)
                                 {
-                                    int dwBytes = 0;
-                                    // 読み書きバイト数
-                                    TBBUTTON tbButtonLocal2 = default(TBBUTTON);
-                                    // ボタン情報
-                                    TBBUTTONINFO tbButtonInfoLocal2 = default(TBBUTTONINFO);
-                                    // ボタン詳細情報
+                                    int dwBytes = 0;                                              // 読み書きバイト数
+                                    TBBUTTON tbButtonLocal2 = default(TBBUTTON);                  // ボタン情報
+                                    TBBUTTONINFO tbButtonInfoLocal2 = default(TBBUTTONINFO);      // ボタン詳細情報
+                                    
                                     // 共有メモリにボタン情報読込メモリ確保
                                     IntPtr ptrLocal = Marshal.AllocCoTaskMem(Marshal.SizeOf(tbButtonLocal));
                                     if (ptrLocal.Equals(IntPtr.Zero))
                                     {
                                         return false;
                                     }
+
                                     // メモリ確保失敗
                                     try
                                     {
-                                        Marshal.StructureToPtr(tbButtonLocal, ptrLocal, true);
                                         // 共有メモリ初期化
+                                        Marshal.StructureToPtr(tbButtonLocal, ptrLocal, true);
+                                        
                                         // ボタン情報取得（idCommandを取得するため）
                                         SendMessage(toolWin, (int)Sm_Message.TB_GETBUTTON, new IntPtr(i), ptbSysButton);
+                                        
                                         // Explorer内のメモリを共有メモリに読み込み
                                         ReadProcessMemory(hProc, ptbSysButton, ptrLocal, Marshal.SizeOf(tbButtonLocal), ref dwBytes);
+                                    
                                         // 共有メモリの内容を構造体に変換
                                         tbButtonLocal2 = (TBBUTTON)Marshal.PtrToStructure(ptrLocal, typeof(TBBUTTON));
                                     }
                                     finally
                                     {
-                                        Marshal.FreeCoTaskMem(ptrLocal);
                                         // 共有メモリ解放
+                                        Marshal.FreeCoTaskMem(ptrLocal);
                                     }
 
                                     // ボタン詳細情報を取得するためのマスク等を設定
                                     tbButtonInfoLocal.cbSize = Marshal.SizeOf(tbButtonInfoLocal);
                                     tbButtonInfoLocal.dwMask = (int)(ToolbarButtonMask.TBIF_COMMAND | ToolbarButtonMask.TBIF_LPARAM | ToolbarButtonMask.TBIF_TEXT);
-                                    tbButtonInfoLocal.pszText = pszSysTitle;
+                                    
                                     // Tooltip書き込み先領域
+                                    tbButtonInfoLocal.pszText = pszSysTitle;
                                     tbButtonInfoLocal.cchText = TitleSize;
+                                                                        
                                     // マスク設定等をExplorerのメモリへ書き込み
                                     WriteProcessMemory(hProc, ptbSysInfo, ref tbButtonInfoLocal, Marshal.SizeOf(tbButtonInfoLocal), out dwBytes);
+                                    
                                     // ボタン詳細情報取得
                                     SendMessage(toolWin, (int)Sm_Message.TB_GETBUTTONINFO, tbButtonLocal2.idCommand, ptbSysInfo);
+                                    
                                     // 共有メモリにボタン詳細情報を読み込む領域確保
                                     IntPtr ptrInfo = Marshal.AllocCoTaskMem(Marshal.SizeOf(tbButtonInfoLocal));
                                     if (ptrInfo.Equals(IntPtr.Zero))
@@ -433,10 +460,11 @@ namespace Hoehoe
                                     
                                     try
                                     {
-                                        Marshal.StructureToPtr(tbButtonInfoLocal, ptrInfo, true);
-                                        // 共有メモリ初期化
+                                        Marshal.StructureToPtr(tbButtonInfoLocal, ptrInfo, true); // 共有メモリ初期化
+                                        
                                         // Explorer内のメモリを共有メモリに読み込み
                                         ReadProcessMemory(hProc, ptbSysInfo, ptrInfo, Marshal.SizeOf(tbButtonInfoLocal), ref dwBytes);
+                                        
                                         // 共有メモリの内容を構造体に変換
                                         tbButtonInfoLocal2 = (TBBUTTONINFO)Marshal.PtrToStructure(ptrInfo, typeof(TBBUTTONINFO));
                                     }
@@ -444,8 +472,10 @@ namespace Hoehoe
                                     {
                                         Marshal.FreeCoTaskMem(ptrInfo);
                                     }
+
                                     // Tooltipの内容をExplorer内のメモリから共有メモリへ読込
                                     ReadProcessMemory(hProc, pszSysTitle, pszTitle, TitleSize, ref dwBytes);
+                                    
                                     // ローカル変数へ変換
                                     title = Marshal.PtrToStringAnsi(pszTitle, TitleSize);
 
@@ -455,6 +485,7 @@ namespace Hoehoe
                                         // PostMessageでクリックを送るために、ボタン詳細情報のlParamでポイントされているTRAYNOTIFY情報が必要
                                         TRAYNOTIFY tNotify = new TRAYNOTIFY();
                                         TRAYNOTIFY tNotify2 = default(TRAYNOTIFY);
+                                        
                                         // 共有メモリ確保
                                         IntPtr ptNotify = Marshal.AllocCoTaskMem(Marshal.SizeOf(tNotify));
                                         if (ptNotify.Equals(IntPtr.Zero))
@@ -465,10 +496,11 @@ namespace Hoehoe
                                         
                                         try
                                         {
-                                            Marshal.StructureToPtr(tNotify, ptNotify, true);
-                                            // 初期化
+                                            Marshal.StructureToPtr(tNotify, ptNotify, true);   // 初期化
+                                            
                                             // lParamのメモリを読込
                                             ReadProcessMemory(hProc, tbButtonInfoLocal2.lParam, ptNotify, Marshal.SizeOf(tNotify), ref dwBytes);
+                                            
                                             // 構造体へ変換
                                             tNotify2 = (TRAYNOTIFY)Marshal.PtrToStructure(ptNotify, typeof(TRAYNOTIFY));
                                         }
@@ -476,14 +508,17 @@ namespace Hoehoe
                                         {
                                             Marshal.FreeCoTaskMem(ptNotify);
                                         }
+
                                         // クリックするためには通知領域がアクティブでなければならない
                                         SetForegroundWindow(tNotify2.hWnd);
+                                        
                                         // 左クリック
                                         PostMessage(tNotify2.hWnd, tNotify2.uCallbackMessage, tNotify2.uID, (uint)PM_Message.WM_LBUTTONDOWN);
                                         PostMessage(tNotify2.hWnd, tNotify2.uCallbackMessage, tNotify2.uID, (uint)PM_Message.WM_LBUTTONUP);
                                         return true;
                                     }
                                 }
+
                                 return false; // 該当なし
                             }
                             finally
@@ -561,9 +596,9 @@ namespace Hoehoe
         private const int FLASHW_ALL = 0x3;       // タスクバー・ボタンとタイトルバーを点滅させる
         private const int FLASHW_TIMER = 0x4;     // FLASHW_STOPが指定されるまでずっと点滅させる
         private const int FLASHW_TIMERNOFG = 0xc; // ウィンドウが最前面に来るまでずっと点滅させる
+
         #endregion "画面ブリンク用"
-
-
+        
         [DllImport("user32.dll")]
         public static extern bool ValidateRect(IntPtr hwnd, IntPtr rect);
 
@@ -598,9 +633,8 @@ namespace Hoehoe
         [DllImport("kernel32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         private static extern int GlobalDeleteAtom(int nAtom);
 
-        // register a global hot key
-        // use the GlobalAddAtom API to get a unique ID (as suggested by MSDN docs)
-        static int _registeredGlobalHotKeyCount;
+        // register a global hot key use the GlobalAddAtom API to get a unique ID (as suggested by MSDN docs)
+        private static int _registeredGlobalHotKeyCount;
 
         public static int RegisterGlobalHotKey(int hotkeyValue, int modifiers, Form targetForm)
         {
@@ -620,6 +654,7 @@ namespace Hoehoe
                 {
                     throw new Exception("Unable to register hotkey. Error code: " + Marshal.GetLastWin32Error().ToString());
                 }
+
                 return hotkeyID;
             }
             catch (Exception)
@@ -703,6 +738,7 @@ namespace Hoehoe
                 {
                     return;
                 }
+
                 try
                 {
                     // Converting structure to IntPtr
@@ -720,6 +756,7 @@ namespace Hoehoe
                 {
                     Marshal.FreeHGlobal(ipi.proxy);
                 }
+
                 if (ipi.proxyBypass != IntPtr.Zero)
                 {
                     Marshal.FreeHGlobal(ipi.proxyBypass);
@@ -771,6 +808,7 @@ namespace Hoehoe
                     proxy = host + (port > 0 ? ":" + port.ToString() : string.Empty);
                     break;
             }
+
             RefreshProxySettings(proxy);
             RefreshProxyAccount(username, password);
         }

@@ -120,11 +120,12 @@ namespace Hoehoe
         public static int URLACTION_JAVA_CURR_MAX = 0x1c00;
         public static int URLACTION_JAVA_MAX = 0x1cff;
 
+        /*
         // The following Infodelivery actions should have no default policies
         // in the registry.  They assume that no default policy means fall
         // back to the global restriction.  If an admin sets a policy per
         // zone, then it overrides the global restriction.
-
+        */
         public static int URLACTION_INFODELIVERY_MIN = 0x1d00;
         public static int URLACTION_INFODELIVERY_NO_ADDING_CHANNELS = 0x1d00;
         public static int URLACTION_INFODELIVERY_NO_EDITING_CHANNELS = 0x1d01;
@@ -309,11 +310,11 @@ namespace Hoehoe
             ppvObject = IntPtr.Zero;
             if (guidService.CompareTo(WebBrowserAPI.IID_IInternetSecurityManager) == 0)
             {
-                // 自分から IID_IInternetSecurityManager を
-                // QueryInterface して返す
+                // 自分から IID_IInternetSecurityManager を QueryInterface して返す
                 IntPtr punk = Marshal.GetIUnknownForObject(this);
                 return Marshal.QueryInterface(punk, ref riid, out ppvObject);
             }
+
             return HRESULT.E_NOINTERFACE;
         }
 
@@ -340,6 +341,7 @@ namespace Hoehoe
             {
                 return WebBrowserAPI.INET_E_DEFAULT_ACTION;
             }
+
             try
             {
                 string urlStr = MyCommon.IDNDecode(pwszUrl);
@@ -347,6 +349,7 @@ namespace Hoehoe
                 {
                     return WebBrowserAPI.URLPOLICY_DISALLOW;
                 }
+
                 Uri url = new Uri(urlStr);
                 if (url.Scheme == "data")
                 {
@@ -357,6 +360,7 @@ namespace Hoehoe
             {
                 return WebBrowserAPI.URLPOLICY_DISALLOW;
             }
+
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
@@ -374,12 +378,15 @@ namespace Hoehoe
                 {
                     pPolicy = WebBrowserAPI.URLPOLICY_DISALLOW;
                 }
+                
                 if (Regex.IsMatch(pwszUrl, "^https?://((api\\.)?twitter\\.com/|([a-zA-Z0-9]+\\.)?twimg\\.com/|ssl\\.google-analytics\\.com/)"))
                 {
                     pPolicy = WebBrowserAPI.URLPOLICY_ALLOW;
                 }
+
                 return HRESULT.S_OK;
             }
+
             // ActiveX実行状態かを検査しポリシー設定
             if (WebBrowserAPI.URLACTION_ACTIVEX_MIN <= dwAction & dwAction <= WebBrowserAPI.URLACTION_ACTIVEX_MAX)
             {
@@ -392,8 +399,10 @@ namespace Hoehoe
                 {
                     pPolicy = WebBrowserAPI.URLPOLICY_DISALLOW;
                 }
+
                 return HRESULT.S_OK;
             }
+
             // 他のものについてはデフォルト処理
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
