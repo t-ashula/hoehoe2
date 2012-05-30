@@ -50,7 +50,7 @@ namespace Hoehoe
 
         public string SelectedUrl
         {
-            get { return UrlList.SelectedItems.Count == 1 ? this.selectedUrl : string.Empty; }
+            get { return this.UrlList.SelectedItems.Count == 1 ? this.selectedUrl : string.Empty; }
         }
 
         #endregion properties
@@ -59,12 +59,12 @@ namespace Hoehoe
 
         public void ClearUrl()
         {
-            UrlList.Items.Clear();
+            this.UrlList.Items.Clear();
         }
 
         public void AddUrl(OpenUrlItem openUrlItem)
         {
-            UrlList.Items.Add(openUrlItem);
+            this.UrlList.Items.Add(openUrlItem);
         }
 
         #endregion public methods
@@ -83,26 +83,26 @@ namespace Hoehoe
 
         private void OpenURL_Shown(object sender, EventArgs e)
         {
-            UrlList.Focus();
-            if (UrlList.Items.Count > 0)
+            this.UrlList.Focus();
+            if (this.UrlList.Items.Count > 0)
             {
-                UrlList.SelectedIndex = 0;
+                this.UrlList.SelectedIndex = 0;
             }
         }
 
         private void UrlList_DoubleClick(object sender, EventArgs e)
         {
-            if (UrlList.SelectedItem == null)
+            if (this.UrlList.SelectedItem == null)
             {
                 return;
             }
 
-            if (UrlList.IndexFromPoint(UrlList.PointToClient(Control.MousePosition)) == ListBox.NoMatches)
+            if (this.UrlList.IndexFromPoint(this.UrlList.PointToClient(Control.MousePosition)) == ListBox.NoMatches)
             {
                 return;
             }
 
-            if (UrlList.Items[UrlList.IndexFromPoint(UrlList.PointToClient(Control.MousePosition))] == null)
+            if (this.UrlList.Items[this.UrlList.IndexFromPoint(this.UrlList.PointToClient(Control.MousePosition))] == null)
             {
                 return;
             }
@@ -112,16 +112,16 @@ namespace Hoehoe
 
         private void UrlList_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.J && UrlList.SelectedIndex < UrlList.Items.Count - 1)
+            if (e.KeyCode == Keys.J && this.UrlList.SelectedIndex < this.UrlList.Items.Count - 1)
             {
                 e.SuppressKeyPress = true;
-                UrlList.SelectedIndex += 1;
+                this.UrlList.SelectedIndex += 1;
             }
 
-            if (e.KeyCode == Keys.K && UrlList.SelectedIndex > 0)
+            if (e.KeyCode == Keys.K && this.UrlList.SelectedIndex > 0)
             {
                 e.SuppressKeyPress = true;
-                UrlList.SelectedIndex -= 1;
+                this.UrlList.SelectedIndex -= 1;
             }
 
             if (e.Control && e.KeyCode == Keys.Oem4)
@@ -137,13 +137,13 @@ namespace Hoehoe
 
         private void SelectUrlOrCancelDialog()
         {
-            if (UrlList.SelectedItems.Count == 0)
+            if (this.UrlList.SelectedItems.Count == 0)
             {
                 this.CloseWithCancel();
             }
             else
             {
-                this.selectedUrl = UrlList.SelectedItem.ToString();
+                this.selectedUrl = this.UrlList.SelectedItem.ToString();
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
