@@ -26,12 +26,11 @@
 
 namespace Hoehoe
 {
-    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
-    
-    public partial class TweenMain
+
+    partial class TweenMain
     {
         #region inner types
 
