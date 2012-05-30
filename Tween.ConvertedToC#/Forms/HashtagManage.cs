@@ -46,7 +46,7 @@ namespace Hoehoe
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
             this.hashSupl = hashSuplForm;
-            HistoryHashList.Items.AddRange(history);
+            this.HistoryHashList.Items.AddRange(history);
             this.useHash = permanentHash;
             this.isPermanent = isPermanent;
             this.isHead = isHead;
@@ -58,7 +58,7 @@ namespace Hoehoe
             get
             {
                 List<string> hash = new List<string>();
-                foreach (string item in HistoryHashList.Items)
+                foreach (string item in this.HistoryHashList.Items)
                 {
                     hash.Add(item);
                 }
@@ -95,38 +95,38 @@ namespace Hoehoe
                 if (isIgnorePermanent || !this.isPermanent)
                 {
                     // 無条件に先頭に挿入
-                    int idx = this.GetIndexOf(HistoryHashList.Items, hash);
+                    int idx = this.GetIndexOf(this.HistoryHashList.Items, hash);
                     if (idx != -1)
                     {
-                        HistoryHashList.Items.RemoveAt(idx);
+                        this.HistoryHashList.Items.RemoveAt(idx);
                     }
 
-                    HistoryHashList.Items.Insert(0, hash);
+                    this.HistoryHashList.Items.Insert(0, hash);
                 }
                 else
                 {
                     // 固定されていたら2行目に挿入
-                    int idx = this.GetIndexOf(HistoryHashList.Items, hash);
+                    int idx = this.GetIndexOf(this.HistoryHashList.Items, hash);
                     if (this.isPermanent)
                     {
                         if (idx > 0)
                         {
                             // 重複アイテムが2行目以降にあれば2行目へ
-                            HistoryHashList.Items.RemoveAt(idx);
-                            HistoryHashList.Items.Insert(1, hash);
+                            this.HistoryHashList.Items.RemoveAt(idx);
+                            this.HistoryHashList.Items.Insert(1, hash);
                         }
                         else if (idx == -1)
                         {
                             // 重複アイテムなし
-                            if (HistoryHashList.Items.Count == 0)
+                            if (this.HistoryHashList.Items.Count == 0)
                             {
                                 // リストが空なら追加
-                                HistoryHashList.Items.Add(hash);
+                                this.HistoryHashList.Items.Add(hash);
                             }
                             else
                             {
                                 // リストにアイテムがあれば2行目へ
-                                HistoryHashList.Items.Insert(1, hash);
+                                this.HistoryHashList.Items.Insert(1, hash);
                             }
                         }
                     }
@@ -214,19 +214,19 @@ namespace Hoehoe
                 return;
             }
 
-            for (int i = 0; i < HistoryHashList.SelectedIndices.Count; i++)
+            for (int i = 0; i < this.HistoryHashList.SelectedIndices.Count; i++)
             {
-                if (UseHashText.Text == HistoryHashList.SelectedItems[0].ToString())
+                if (this.UseHashText.Text == this.HistoryHashList.SelectedItems[0].ToString())
                 {
-                    UseHashText.Text = string.Empty;
+                    this.UseHashText.Text = string.Empty;
                 }
 
-                HistoryHashList.Items.RemoveAt(HistoryHashList.SelectedIndices[0]);
+                this.HistoryHashList.Items.RemoveAt(this.HistoryHashList.SelectedIndices[0]);
             }
 
-            if (HistoryHashList.Items.Count > 0)
+            if (this.HistoryHashList.Items.Count > 0)
             {
-                HistoryHashList.SelectedIndex = 0;
+                this.HistoryHashList.SelectedIndex = 0;
             }
         }
 
@@ -234,9 +234,9 @@ namespace Hoehoe
         {
             do
             {
-                HistoryHashList.SelectedIndices.Clear();
+                this.HistoryHashList.SelectedIndices.Clear();
             }
-            while (HistoryHashList.SelectedIndices.Count > 0);
+            while (this.HistoryHashList.SelectedIndices.Count > 0);
         }
 
         private int GetIndexOf(ListBox.ObjectCollection list, string value)
@@ -300,19 +300,19 @@ namespace Hoehoe
                 {
                     string front = string.Empty;
                     string last = string.Empty;
-                    int selStart = UseHashText.SelectionStart;
+                    int selStart = this.UseHashText.SelectionStart;
                     if (selStart > 0)
                     {
-                        front = UseHashText.Text.Substring(0, selStart);
+                        front = this.UseHashText.Text.Substring(0, selStart);
                     }
 
-                    if (selStart < UseHashText.Text.Length)
+                    if (selStart < this.UseHashText.Text.Length)
                     {
-                        last = UseHashText.Text.Substring(selStart);
+                        last = this.UseHashText.Text.Substring(selStart);
                     }
 
-                    UseHashText.Text = front + this.hashSupl.InputText + last;
-                    UseHashText.SelectionStart = selStart + this.hashSupl.InputText.Length;
+                    this.UseHashText.Text = front + this.hashSupl.InputText + last;
+                    this.UseHashText.SelectionStart = selStart + this.hashSupl.InputText.Length;
                 }
 
                 e.Handled = true;
@@ -327,13 +327,13 @@ namespace Hoehoe
         private void PermOkButton_Click(object sender, EventArgs e)
         {
             // ハッシュタグの整形
-            string hashStr = UseHashText.Text;
+            string hashStr = this.UseHashText.Text;
             if (!this.AdjustHashtags(ref hashStr, true))
             {
                 return;
             }
 
-            UseHashText.Text = hashStr;
+            this.UseHashText.Text = hashStr;
             int idx = 0;
             if (!this.isAdd && this.HistoryHashList.SelectedIndices.Count > 0)
             {
@@ -492,7 +492,7 @@ namespace Hoehoe
 
         private void CheckNotAddToAtReply_CheckedChanged(object sender, EventArgs e)
         {
-            this.isNotAddToAtReply = CheckNotAddToAtReply.Checked;
+            this.isNotAddToAtReply = this.CheckNotAddToAtReply.Checked;
         }
     }
 }
