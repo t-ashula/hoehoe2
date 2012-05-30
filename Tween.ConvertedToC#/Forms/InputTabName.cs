@@ -51,7 +51,7 @@ namespace Hoehoe
         public string TabName
         {
             get { return this.TextTabName.Text.Trim(); }
-            set { TextTabName.Text = value.Trim(); }
+            set { this.TextTabName.Text = value.Trim(); }
         }
 
         public TabUsageType Usage { get; private set; }
@@ -87,7 +87,7 @@ namespace Hoehoe
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            TextTabName.Text = string.Empty;
+            this.TextTabName.Text = string.Empty;
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
@@ -104,7 +104,7 @@ namespace Hoehoe
 
         private void InputTabName_Shown(object sender, EventArgs e)
         {
-            ActiveControl = TextTabName;
+            ActiveControl = this.TextTabName;
             if (this.isShowUsage)
             {
                 this.LabelUsage.Visible = true;
@@ -114,7 +114,7 @@ namespace Hoehoe
 
         private void ComboUsage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (ComboUsage.SelectedIndex)
+            switch (this.ComboUsage.SelectedIndex)
             {
                 case 0:
                     this.Usage = TabUsageType.UserDefined;
