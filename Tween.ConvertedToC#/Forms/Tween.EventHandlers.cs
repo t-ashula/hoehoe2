@@ -2074,7 +2074,7 @@ namespace Hoehoe
             this.StatusText_TextChanged(null, null);
         }
 
-        private void ImageSelection_KeyDown(object sender, KeyEventArgs e)
+        private void ImageSelection_KeyDownExtracted(KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
@@ -2089,21 +2089,36 @@ namespace Hoehoe
             }
         }
 
-        private void ImageSelection_KeyPress(object sender, KeyPressEventArgs e)
+        private void ImageSelection_KeyDown(object sender, KeyEventArgs e)
         {
-            if (Convert.ToInt32(e.KeyChar) == 0x1b)
+            ImageSelection_KeyDownExtracted(e);
+        }
+
+        private void ImageSelection_KeyPressExtracted(KeyPressEventArgs e)
+        {
+            if ((int)e.KeyChar == 0x1b)
             {
                 this.ImagefilePathText.CausesValidation = false;
                 e.Handled = true;
             }
         }
 
-        private void ImageSelection_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void ImageSelection_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            ImageSelection_KeyPressExtracted(e);
+        }
+
+        private void ImageSelection_PreviewKeyDownExtracted(PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
                 this.ImagefilePathText.CausesValidation = false;
             }
+        }
+
+        private void ImageSelection_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            ImageSelection_PreviewKeyDownExtracted(e);
         }
 
         private void ImageServiceCombo_SelectedIndexChanged(object sender, EventArgs e)
