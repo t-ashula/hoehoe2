@@ -2042,9 +2042,9 @@ namespace Hoehoe
             this.CancelPostImageSelecting();
         }
 
-        private void ImageSelectMenuItem_Click(object sender, EventArgs e)
+        private void ImageSelectMenuItem_ClickExtracted()
         {
-            if (this.ImageSelectionPanel.Visible == true)
+            if (this.ImageSelectionPanel.Visible)
             {
                 this.ImagefilePathText.CausesValidation = false;
                 this.TimelinePanel.Visible = true;
@@ -2062,6 +2062,11 @@ namespace Hoehoe
                 this.TimelinePanel.Enabled = false;
                 this.ImagefilePathText.Focus();
             }
+        }
+
+        private void ImageSelectMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ImageSelectMenuItem_ClickExtracted();
         }
 
         private void ImageSelectionPanel_VisibleChanged(object sender, EventArgs e)
