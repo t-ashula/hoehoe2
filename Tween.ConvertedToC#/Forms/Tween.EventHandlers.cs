@@ -7050,18 +7050,21 @@ namespace Hoehoe
             }
         }
 
-        private void UreadManageMenuItem_Click(object sender, EventArgs e)
+        private void ChangeCurrentTabUnreadManagement(bool isManage)
         {
-            this.UreadManageMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
-            this.UnreadMngTbMenuItem.Checked = this.UreadManageMenuItem.Checked;
-
+            this.UreadManageMenuItem.Checked = this.UnreadMngTbMenuItem.Checked = isManage;
             if (string.IsNullOrEmpty(this.rclickTabName))
             {
                 return;
             }
 
-            this.ChangeTabUnreadManage(this.rclickTabName, this.UreadManageMenuItem.Checked);
+            this.ChangeTabUnreadManage(this.rclickTabName, isManage);
             this.SaveConfigsTabs();
+        }
+
+        private void UreadManageMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ChangeCurrentTabUnreadManagement(((ToolStripMenuItem)sender).Checked);
         }
 
         private void ConvertUrlByAutoSelectedService()
