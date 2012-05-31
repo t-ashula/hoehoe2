@@ -717,10 +717,15 @@ namespace Hoehoe
             }
         }
 
-        private void EndToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitApplication()
         {
             MyCommon.IsEnding = true;
             this.Close();
+        }
+
+        private void EndToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExitApplication();
         }
 
         private void EventViewerMenuItem_Click(object sender, EventArgs e)
