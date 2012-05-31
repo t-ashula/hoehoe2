@@ -33,15 +33,6 @@ namespace Hoehoe
 
     public class WebBrowserAPI
     {
-        public enum URLZONE
-        {
-            URLZONE_LOCAL_MACHINE = 0,
-            URLZONE_INTRANET = URLZONE_LOCAL_MACHINE + 1,
-            URLZONE_TRUSTED = URLZONE_INTRANET + 1,
-            URLZONE_INTERNET = URLZONE_TRUSTED + 1,
-            URLZONE_UNTRUSTED = URLZONE_INTERNET + 1
-        }
-
         public static int INET_E_DEFAULT_ACTION = unchecked((int)0x800c0011);
         public static int URLACTION_MIN = 0x1000;
         public static int URLACTION_DOWNLOAD_MIN = 0x1000;
@@ -174,6 +165,15 @@ namespace Hoehoe
         public static Guid SID_SProfferService = new Guid("cb728b20-f786-11ce-92ad-00aa00a74cd0");
         public static Guid IID_IInternetSecurityManager = new Guid("79eac9ee-baf9-11ce-8c82-00aa004ba90b");
 
+        public enum URLZONE
+        {
+            URLZONE_LOCAL_MACHINE = 0,
+            URLZONE_INTRANET = URLZONE_LOCAL_MACHINE + 1,
+            URLZONE_TRUSTED = URLZONE_INTRANET + 1,
+            URLZONE_INTERNET = URLZONE_TRUSTED + 1,
+            URLZONE_UNTRUSTED = URLZONE_INTERNET + 1
+        }
+        
         [ComImport, Guid("6d5140c1-7436-11ce-8034-00aa006009fa"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IServiceProvider
         {

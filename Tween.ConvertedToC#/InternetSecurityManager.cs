@@ -40,12 +40,12 @@ namespace Hoehoe
         private WebBrowserAPI.IProfferService profferService;
 
         // DefaultですべてDisAllow
-        private POLICY _Policy = 0;
+        private POLICY policy = 0;
 
-        public InternetSecurityManager(System.Windows.Forms.WebBrowser _WebBrowser)
+        public InternetSecurityManager(System.Windows.Forms.WebBrowser webBrowser)
         {
             // ActiveXコントロール取得
-            _WebBrowser.DocumentText = "about:blank";
+            webBrowser.DocumentText = "about:blank";
 
             // ActiveXを初期化する
             do
@@ -53,13 +53,12 @@ namespace Hoehoe
                 Thread.Sleep(100);
                 Application.DoEvents();
             }
-            while (!(_WebBrowser.ReadyState == WebBrowserReadyState.Complete));
+            while (webBrowser.ReadyState != WebBrowserReadyState.Complete);
 
-            this.ocx = _WebBrowser.ActiveXInstance;
+            this.ocx = webBrowser.ActiveXInstance;
 
             // IServiceProvider.QueryService() を使って IProfferService を取得
             this.ocxServiceProvider = (WebBrowserAPI.IServiceProvider)this.ocx;
-
             int hresult = 0;
             try
             {
@@ -102,8 +101,8 @@ namespace Hoehoe
 
         public POLICY SecurityPolicy
         {
-            get { return this._Policy; }
-            set { this._Policy = value; }
+            get { return this.policy; }
+            set { this.policy = value; }
         }
 
         public int QueryService(ref System.Guid guidService, ref System.Guid riid, out System.IntPtr ppvObject)
@@ -119,7 +118,7 @@ namespace Hoehoe
             return HRESULT.E_NOINTERFACE;
         }
 
-        public int GetSecurityId(string pwszUrl, byte[] pbSecurityId, ref uint pcbSecurityId, uint dwReserved)
+        public int GetSecurityId(string url, byte[] securityId, ref uint pcbSecurityId, uint dwReserved)
         {
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
@@ -171,7 +170,7 @@ namespace Hoehoe
             if (WebBrowserAPI.URLACTION_SCRIPT_MIN <= dwAction & dwAction <= WebBrowserAPI.URLACTION_SCRIPT_MAX)
             {
                 // スクリプト実行状態
-                if ((this._Policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT)
+                if ((this.policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT)
                 {
                     pPolicy = WebBrowserAPI.URLPOLICY_ALLOW;
                 }
@@ -192,7 +191,7 @@ namespace Hoehoe
             if (WebBrowserAPI.URLACTION_ACTIVEX_MIN <= dwAction & dwAction <= WebBrowserAPI.URLACTION_ACTIVEX_MAX)
             {
                 // ActiveX実行状態
-                if ((this._Policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX)
+                if ((this.policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX)
                 {
                     pPolicy = WebBrowserAPI.URLPOLICY_ALLOW;
                 }
@@ -225,12 +224,12 @@ namespace Hoehoe
 
         #region "HRESULT"
 
-        private class HRESULT
+        private static class HRESULT
         {
-            public static int S_OK = 0x0;
-            public static int S_FALSE = 0x1;
-            public static int E_NOTIMPL = unchecked((int)0x80004001);
-            public static int E_NOINTERFACE = unchecked((int)0x80004002);
+            public const int S_OK = 0x0;
+            public const int S_FALSE = 0x1;
+            public const int E_NOTIMPL = unchecked((int)0x80004001);
+            public const int E_NOINTERFACE = unchecked((int)0x80004002);
         }
 
         #endregion "HRESULT"
