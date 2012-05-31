@@ -939,13 +939,18 @@ namespace Hoehoe
             this.ShowFriendshipOfAllUserInCurrentTweet();
         }
 
-        private void FriendshipContextMenuItem_Click(object sender, EventArgs e)
+        private void TryShowFriendshipOfCurrentTweetUser()
         {
             string name = this.GetUserId();
             if (name != null)
             {
                 this.ShowFriendship(name);
             }
+        }
+
+        private void FriendshipContextMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryShowFriendshipOfCurrentTweetUser();
         }
 
         private void FriendshipMenuItem_Click(object sender, EventArgs e)
