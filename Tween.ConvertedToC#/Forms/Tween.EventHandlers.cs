@@ -888,7 +888,7 @@ namespace Hoehoe
             this.FollowCommand(this.curPost != null ? this.curPost.ScreenName : string.Empty);
         }
 
-        private void TryFollowFromCurrentTweet()
+        private void TryFollowUserFromCurrentTweet()
         {
             string name = this.GetUserId();
             if (name != null)
@@ -899,10 +899,10 @@ namespace Hoehoe
 
         private void FollowContextMenuItem_Click(object sender, EventArgs e)
         {
-            TryFollowFromCurrentTweet();
+            TryFollowUserFromCurrentTweet();
         }
 
-        private void TryFollowFromCurrentTab()
+        private void TryFollowUserFromCurrentTab()
         {
             if (this.NameLabel.Tag != null)
             {
@@ -916,10 +916,10 @@ namespace Hoehoe
 
         private void FollowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.TryFollowFromCurrentTab();
+            this.TryFollowUserFromCurrentTab();
         }
 
-        private void FriendshipAllMenuItem_Click(object sender, EventArgs e)
+        private void ShowFriendshipOfAllUserInCurrentTweet()
         {
             MatchCollection ma = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"");
             List<string> ids = new List<string>();
@@ -932,6 +932,11 @@ namespace Hoehoe
             }
 
             this.ShowFriendship(ids.ToArray());
+        }
+
+        private void FriendshipAllMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ShowFriendshipOfAllUserInCurrentTweet();
         }
 
         private void FriendshipContextMenuItem_Click(object sender, EventArgs e)
