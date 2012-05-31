@@ -6971,7 +6971,7 @@ namespace Hoehoe
             this.UrlConvert(UrlConverter.Twurl);
         }
 
-        private void UnFollowToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryUnfollowCurrentTweetUser()
         {
             if (this.NameLabel.Tag != null)
             {
@@ -6981,6 +6981,11 @@ namespace Hoehoe
                     this.RemoveCommand(id, false);
                 }
             }
+        }
+
+        private void UnFollowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryUnfollowCurrentTweetUser();
         }
 
         private void UndoRemoveTab()
