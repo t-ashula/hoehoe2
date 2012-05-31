@@ -1821,10 +1821,8 @@ namespace Hoehoe
             this.ChangeWindowState();
         }
 
-        private void IDRuleMenuItem_Click(object sender, EventArgs e)
+        private void AddIdFilteringRuleFromSelectedTweets()
         {
-            string tabName = string.Empty;
-
             // 未選択なら処理終了
             if (this.curList.SelectedIndices.Count == 0)
             {
@@ -1832,6 +1830,7 @@ namespace Hoehoe
             }
 
             // タブ選択（or追加）
+            string tabName = string.Empty;
             if (!this.SelectTab(ref tabName))
             {
                 return;
@@ -1918,6 +1917,11 @@ namespace Hoehoe
             }
 
             this.SaveConfigsTabs();
+        }
+
+        private void IDRuleMenuItem_Click(object sender, EventArgs e)
+        {
+            this.AddIdFilteringRuleFromSelectedTweets();
         }
 
         private void IconNameToolStripMenuItem_Click(object sender, EventArgs e)
