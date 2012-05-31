@@ -57,7 +57,7 @@ namespace Hoehoe
         private string favorites;
         private string friendshipResult = string.Empty;
         private TweenMain owner;
-        private bool isEditing = false;
+        private bool isEditing;
         private string buttonEditText = string.Empty;
 
         #endregion private

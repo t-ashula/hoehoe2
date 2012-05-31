@@ -31,23 +31,23 @@ namespace Hoehoe
 
     public class UserInfo
     {
-        public long Id = 0;
-        public string Name = string.Empty;
-        public string ScreenName = string.Empty;
-        public string Location = string.Empty;
-        public string Description = string.Empty;
+        public long Id;
+        public string Name;
+        public string ScreenName;
+        public string Location;
+        public string Description;
         public Uri ImageUrl;
-        public string Url = string.Empty;
+        public string Url;
         public bool Protect;
         public int FriendsCount;
         public int FollowersCount;
         public int FavoriteCount;
-        public DateTime CreatedAt = new DateTime();
+        public DateTime CreatedAt;
         public int StatusesCount;
         public bool Verified;
-        public string RecentPost = string.Empty;
-        public DateTime PostCreatedAt = new DateTime();
-        public string PostSource = string.Empty; // html形式　"<a href="http://sourceforge.jp/projects/tween/wiki/FrontPage" rel="nofollow">Tween</a>"
+        public string RecentPost;
+        public DateTime PostCreatedAt;
+        public string PostSource; // html形式　"<a href="http://sourceforge.jp/projects/tween/wiki/FrontPage" rel="nofollow">Tween</a>"
         public bool IsFollowing;
         public bool IsFollowed;
 
