@@ -794,7 +794,7 @@ namespace Hoehoe
             this.FavoritesRetweetUnofficial();
         }
 
-        private void FilePickButton_Click(object sender, EventArgs e)
+        private void ShowPostImageFileSelectBox()
         {
             if (string.IsNullOrEmpty(this.ImageService))
             {
@@ -820,6 +820,11 @@ namespace Hoehoe
 
             this.ImagefilePathText.Text = this.OpenFileDialog1.FileName;
             this.ImageFromSelectedFile();
+        }
+        
+        private void FilePickButton_Click(object sender, EventArgs e)
+        {
+            this.ShowPostImageFileSelectBox();
         }
 
         private void FilterEditMenuItem_Click(object sender, EventArgs e)
