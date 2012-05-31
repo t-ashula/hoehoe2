@@ -5063,25 +5063,22 @@ namespace Hoehoe
             this.modifySettingLocal = true;
         }
 
-        private void StatusText_TextChanged(object sender, EventArgs e)
+        private void StatusText_TextChangedExtracted()
         {
             // 文字数カウント
             int len = this.GetRestStatusCount(true, false);
             this.lblLen.Text = len.ToString();
-            if (len < 0)
-            {
-                this.StatusText.ForeColor = Color.Red;
-            }
-            else
-            {
-                this.StatusText.ForeColor = this.clrInputForecolor;
-            }
-
+            this.StatusText.ForeColor = len < 0 ? Color.Red : this.clrInputForecolor;
             if (string.IsNullOrEmpty(this.StatusText.Text))
             {
                 this.replyToId = 0;
                 this.replyToName = string.Empty;
             }
+        }
+
+        private void StatusText_TextChanged(object sender, EventArgs e)
+        {
+            StatusText_TextChangedExtracted();
         }
 
         private void StopRefreshAllMenuItem_CheckedChanged(object sender, EventArgs e)
