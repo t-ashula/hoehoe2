@@ -6952,7 +6952,7 @@ namespace Hoehoe
             this.timerTimeline.Enabled = true;
         }
 
-        private void TweenRestartMenuItem_Click(object sender, EventArgs e)
+        private void TryRestartApplication()
         {
             MyCommon.IsEnding = true;
             try
@@ -6964,6 +6964,11 @@ namespace Hoehoe
             {
                 MessageBox.Show("Failed to restart. Please run Tween manually.");
             }
+        }
+
+        private void TweenRestartMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryRestartApplication();
         }
 
         private void TwurlnlToolStripMenuItem_Click(object sender, EventArgs e)
