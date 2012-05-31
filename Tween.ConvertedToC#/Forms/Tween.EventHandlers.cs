@@ -5048,21 +5048,18 @@ namespace Hoehoe
         {
             StatusText_LeaveExtracted();
         }
-
-        private void StatusText_MultilineChanged(object sender, EventArgs e)
+                
+        private void ChangeStatusTextMultiline(bool isMultiLine)
         {
-            if (this.StatusText.Multiline)
-            {
-                this.StatusText.ScrollBars = ScrollBars.Vertical;
-            }
-            else
-            {
-                this.StatusText.ScrollBars = ScrollBars.None;
-            }
-
+            this.StatusText.ScrollBars = isMultiLine ? ScrollBars.Vertical : ScrollBars.None;
             this.modifySettingLocal = true;
         }
 
+        private void StatusText_MultilineChanged(object sender, EventArgs e)
+        {
+            ChangeStatusTextMultiline(this.StatusText.Multiline);
+        }
+        
         private void StatusText_TextChangedExtracted()
         {
             // 文字数カウント
