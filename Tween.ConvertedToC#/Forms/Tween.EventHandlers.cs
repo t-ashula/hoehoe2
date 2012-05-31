@@ -7124,13 +7124,18 @@ namespace Hoehoe
             }
         }
 
-        private void UserFavorareToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryOpenUserFavorareWebPage()
         {
             string id = this.GetUserIdFromCurPostOrInput("Show Favstar");
             if (!string.IsNullOrEmpty(id))
             {
                 this.OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + id + "/recent");
             }
+        }
+
+        private void UserFavorareToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryOpenUserFavorareWebPage();
         }
 
         private void TryOpenCurrentNameLabelUserHome()
