@@ -5731,7 +5731,7 @@ namespace Hoehoe
             this.StatusText_Leave(this.StatusText, EventArgs.Empty);
         }
 
-        private void TweenMain_Disposed(object sender, EventArgs e)
+        private void DisposeAll()
         {
             // 後始末
             this.settingDialog.Dispose();
@@ -5889,6 +5889,11 @@ namespace Hoehoe
             Microsoft.Win32.SystemEvents.PowerModeChanged -= this.SystemEvents_PowerModeChanged;
         }
 
+        private void TweenMain_Disposed(object sender, EventArgs e)
+        {
+            this.DisposeAll();
+        }
+
         private void TweenMain_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -5970,9 +5975,10 @@ namespace Hoehoe
                 this.TimerRefreshIcon.Enabled = false;
             }
         }
+
         private void TweenMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            TweenMain_FormClosingExtracted(e);
+            this.TweenMain_FormClosingExtracted(e);
         }
 
         private void TweenMain_Load(object sender, EventArgs e)
