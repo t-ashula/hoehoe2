@@ -5028,7 +5028,7 @@ namespace Hoehoe
             this.StatusText_TextChanged(null, null);
         }
 
-        private void StatusText_Leave(object sender, EventArgs e)
+        private void StatusText_LeaveExtracted()
         {
             // フォーカスがメニューに遷移しないならばフォーカスはタブに移ることを期待
             if (this.ListTab.SelectedTab != null && this.MenuStrip1.Tag == null)
@@ -5037,6 +5037,11 @@ namespace Hoehoe
             }
 
             this.StatusText.BackColor = Color.FromKnownColor(KnownColor.Window);
+        }
+
+        private void StatusText_Leave(object sender, EventArgs e)
+        {
+            StatusText_LeaveExtracted();
         }
 
         private void StatusText_MultilineChanged(object sender, EventArgs e)
@@ -5728,7 +5733,7 @@ namespace Hoehoe
         private void TweenMain_Deactivate(object sender, EventArgs e)
         {
             // 画面が非アクティブになったら、発言欄の背景色をデフォルトへ
-            this.StatusText_Leave(this.StatusText, EventArgs.Empty);
+            this.StatusText_LeaveExtracted();
         }
 
         private void DisposeAll()
