@@ -5462,7 +5462,7 @@ namespace Hoehoe
             MyCommon.TraceFlag = this.TraceOutToolStripMenuItem.Checked;
         }
 
-        private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ChangeTrackWordStatus()
         {
             if (this.TrackToolStripMenuItem.Checked)
             {
@@ -5495,6 +5495,11 @@ namespace Hoehoe
             }
 
             this.modifySettingCommon = true;
+        }
+
+        private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeTrackWordStatus();
         }
 
         private void TranslateCurrentTweet()
