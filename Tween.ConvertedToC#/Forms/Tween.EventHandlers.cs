@@ -770,13 +770,18 @@ namespace Hoehoe
             this.FavoriteChange(false);
         }
 
-        private void FavorareMenuItem_Click(object sender, EventArgs e)
+        private void OpenFavorarePageForSelectedTweetUser()
         {
             if (this.curList.SelectedIndices.Count > 0)
             {
                 PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
-                this.OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + post.ScreenName + "/recent");
+                this.OpenUriAsync(string.Format("{0}users/{1}/recent", Hoehoe.Properties.Resources.FavstarUrl, post.ScreenName));
             }
+        }
+
+        private void FavorareMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFavorarePageForSelectedTweetUser();
         }
 
         private void FavoriteRetweetMenuItem_Click(object sender, EventArgs e)
