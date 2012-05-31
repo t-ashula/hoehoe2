@@ -728,7 +728,7 @@ namespace Hoehoe
             ExitApplication();
         }
 
-        private void EventViewerMenuItem_Click(object sender, EventArgs e)
+        private void ShowEventViewerBox()
         {
             if (this.evtDialog == null || this.evtDialog.IsDisposed)
             {
@@ -753,6 +753,11 @@ namespace Hoehoe
             }
 
             this.TopMost = this.settingDialog.AlwaysTop;
+        }
+        
+        private void EventViewerMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ShowEventViewerBox();
         }
 
         private void FavAddToolStripMenuItem_Click(object sender, EventArgs e)
