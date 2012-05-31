@@ -5190,10 +5190,15 @@ namespace Hoehoe
             this.TabRename(ref this.rclickTabName);
         }
 
-        private void Tabs_DoubleClick(object sender, MouseEventArgs e)
+        private void RenameSelectedTabName()
         {
             string tn = this.ListTab.SelectedTab.Text;
             this.TabRename(ref tn);
+        }
+
+        private void Tabs_DoubleClick(object sender, MouseEventArgs e)
+        {
+            RenameSelectedTabName();
         }
 
         private void Tabs_DragDrop(object sender, DragEventArgs e)
@@ -5208,11 +5213,10 @@ namespace Hoehoe
             bool bef = false;
             Point cpos = new Point(e.X, e.Y);
             Point spos = this.ListTab.PointToClient(cpos);
-            int i = 0;
-            for (i = 0; i < this.ListTab.TabPages.Count; i++)
+            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
             {
-                Rectangle rect = this.ListTab.GetTabRect(i);
-                if (rect.Left <= spos.X && spos.X <= rect.Right && rect.Top <= spos.Y && spos.Y <= rect.Bottom)
+                Rectangle rect = this.ListTab.GetTabRect(i);                
+                if (rect.Contains(spos))
                 {
                     tn = this.ListTab.TabPages[i].Text;
                     bef = spos.X <= (rect.Left + rect.Right) / 2;
@@ -5225,7 +5229,6 @@ namespace Hoehoe
             {
                 tn = this.ListTab.TabPages[this.ListTab.TabPages.Count - 1].Text;
                 bef = false;
-                i = this.ListTab.TabPages.Count - 1;
             }
 
             TabPage tp = (TabPage)e.Data.GetData(typeof(TabPage));
