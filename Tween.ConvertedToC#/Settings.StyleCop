@@ -224,10 +224,15 @@
       <AnalyzerSettings>
         <CollectionProperty Name="Hungarian">
           <Value>cb</Value>
+          <Value>dw</Value>
           <Value>f</Value>
           <Value>fn</Value>
           <Value>h</Value>
+          <Value>lp</Value>
           <Value>n</Value>
+          <Value>p</Value>
+          <Value>pb</Value>
+          <Value>pp</Value>
         </CollectionProperty>
       </AnalyzerSettings>
     </Analyzer>

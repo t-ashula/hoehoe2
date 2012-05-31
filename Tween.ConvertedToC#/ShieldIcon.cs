@@ -84,7 +84,7 @@ namespace Hoehoe
         }
 
         [DllImport("shell32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-        private static extern int SHGetStockIconInfo(int siid, uint uFlags, ref SHSTOCKICONINFO psii);
+        private static extern int SHGetStockIconInfo(int siid, uint flags, ref SHSTOCKICONINFO psii);
 
         [DllImport("shell32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         private static extern bool DestroyIcon(IntPtr hIcon);
