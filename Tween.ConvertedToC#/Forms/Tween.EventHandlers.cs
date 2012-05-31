@@ -5497,7 +5497,7 @@ namespace Hoehoe
             this.modifySettingCommon = true;
         }
 
-        private void TranslationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TranslateCurrentTweet()
         {
             if (!this.ExistCurrentPost)
             {
@@ -5505,6 +5505,11 @@ namespace Hoehoe
             }
 
             this.DoTranslation(this.curPost.TextFromApi);
+        }
+
+        private void TranslationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TranslateCurrentTweet();
         }
 
         private void Tw_NewPostFromStream()
