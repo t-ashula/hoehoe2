@@ -1924,7 +1924,7 @@ namespace Hoehoe
             this.AddIdFilteringRuleFromSelectedTweets();
         }
 
-        private void IconNameToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryOpenCurrentTweetIconUrl()
         {
             if (this.curPost == null)
             {
@@ -1933,6 +1933,11 @@ namespace Hoehoe
 
             string name = this.curPost.ImageUrl;
             this.OpenUriAsync(name.Remove(name.LastIndexOf("_normal"), 7));
+        }
+
+        private void IconNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryOpenCurrentTweetIconUrl();
         }
 
         private void IdFilterAddMenuItem_Click(object sender, EventArgs e)
