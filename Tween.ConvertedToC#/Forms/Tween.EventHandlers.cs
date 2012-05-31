@@ -6795,7 +6795,7 @@ namespace Hoehoe
             }
         }
 
-        private void TweenMain_Resize(object sender, EventArgs e)
+        private void ResizeMainForm()
         {
             if (!this.initialLayout && this.settingDialog.MinimizeToTray && WindowState == FormWindowState.Minimized)
             {
@@ -6846,6 +6846,11 @@ namespace Hoehoe
 
                 this.initialLayout = false;
             }
+        }
+
+        private void TweenMain_Resize(object sender, EventArgs e)
+        {
+            this.ResizeMainForm();
         }
 
         private void TweenMain_ShownExtracted()
