@@ -38,7 +38,9 @@ namespace Hoehoe
         }
     }
 
-    public class ParseException : Exception
+#if notyet
+    public sealed class ParseException : Exception
     {
     }
+#endif
 }

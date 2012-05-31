@@ -1189,7 +1189,7 @@ namespace Hoehoe
             {
                 LambdaExpression expr = DynamicExpression.ParseLambda<PostClass, bool>(text, new PostClass());
             }
-            catch (ParseException ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.IsValidLambdaExpText1 + ex.Message, Hoehoe.Properties.Resources.IsValidLambdaExpText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
