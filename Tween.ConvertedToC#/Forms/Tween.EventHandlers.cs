@@ -7012,7 +7012,7 @@ namespace Hoehoe
             }
         }
 
-        private void UnreadStripMenuItem_Click(object sender, EventArgs e)
+        private void ChangeSelectedTweetReadSateToUnread()
         {
             this.curList.BeginUpdate();
             if (this.settingDialog.UnreadManage)
@@ -7048,6 +7048,11 @@ namespace Hoehoe
             {
                 this.ListTab.Refresh();
             }
+        }
+        
+        private void UnreadStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ChangeSelectedTweetReadSateToUnread();
         }
 
         private void ChangeCurrentTabUnreadManagement(bool isManage)
