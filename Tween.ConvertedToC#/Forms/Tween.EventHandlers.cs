@@ -1599,7 +1599,7 @@ namespace Hoehoe
                             if (ToolStripFocusLockMenuItem.Checked)
                             {
                                 // 連投モードのときだけEnterイベントが起きないので強制的に背景色を戻す
-                                this.StatusText_Enter(this.StatusText, new EventArgs());
+                                this.StatusText_EnterExtracted();
                             }
                         }
                     }
@@ -4940,11 +4940,16 @@ namespace Hoehoe
             }
         }
 
-        private void StatusText_Enter(object sender, EventArgs e)
+        private void StatusText_EnterExtracted()
         {
-            // フォーカスの戻り先を StatusText に設定
+            /// フォーカスの戻り先を StatusText に設定
             this.Tag = this.StatusText;
             this.StatusText.BackColor = this.InputBackColor;
+        }
+
+        private void StatusText_Enter(object sender, EventArgs e)
+        {
+            this.StatusText_EnterExtracted();
         }
 
         private void StatusText_KeyDown(object sender, KeyEventArgs e)
@@ -5701,13 +5706,18 @@ namespace Hoehoe
             this.StatusLabel.Text = "UserStream Stopped.";
         }
 
-        private void TweenMain_Activated(object sender, EventArgs e)
+        private void ActivateMainFormControls()
         {
-            // 画面がアクティブになったら、発言欄の背景色戻す
+            /// 画面がアクティブになったら、発言欄の背景色戻す
             if (this.StatusText.Focused)
             {
-                this.StatusText_Enter(this.StatusText, EventArgs.Empty);
+                this.StatusText_EnterExtracted();
             }
+        }
+
+        private void TweenMain_Activated(object sender, EventArgs e)
+        {
+            this.ActivateMainFormControls();
         }
 
         private void TweenMain_ClientSizeChangedExtracted()
