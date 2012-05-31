@@ -7162,13 +7162,18 @@ namespace Hoehoe
             this.ShowUserStatus(id);
         }
 
-        private void UserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryAddNewUserTimelineTab()
         {
             string id = this.GetUserIdFromCurPostOrInput("Show UserTimeline");
             if (!string.IsNullOrEmpty(id))
             {
                 this.AddNewTabForUserTimeline(id);
             }
+        }
+
+        private void UserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryAddNewUserTimelineTab();
         }
 
         private void UxnuMenuItem_Click(object sender, EventArgs e)
