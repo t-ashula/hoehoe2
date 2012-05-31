@@ -5180,7 +5180,7 @@ namespace Hoehoe
             }
         }
 
-        private void TabRenameMenuItem_Click(object sender, EventArgs e)
+        private void RenameCurrentTabName()
         {
             if (string.IsNullOrEmpty(this.rclickTabName))
             {
@@ -5188,6 +5188,11 @@ namespace Hoehoe
             }
 
             this.TabRename(ref this.rclickTabName);
+        }
+
+        private void TabRenameMenuItem_Click(object sender, EventArgs e)
+        {
+            RenameCurrentTabName();
         }
 
         private void RenameSelectedTabName()
