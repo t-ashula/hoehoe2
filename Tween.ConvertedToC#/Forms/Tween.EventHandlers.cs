@@ -2023,10 +2023,10 @@ namespace Hoehoe
 
         private void IdeographicSpaceToSpaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.modifySettingCommon = true;
+            this.SetModifySettingCommon(true);
         }
 
-        private void ImageCancelButton_Click(object sender, EventArgs e)
+        private void CancelPostImageSelecting()
         {
             this.ImagefilePathText.CausesValidation = false;
             this.TimelinePanel.Visible = true;
@@ -2035,6 +2035,11 @@ namespace Hoehoe
             this.ImageSelectionPanel.Enabled = false;
             ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
             this.ImagefilePathText.CausesValidation = true;
+        }
+
+        private void ImageCancelButton_Click(object sender, EventArgs e)
+        {
+            this.CancelPostImageSelecting();
         }
 
         private void ImageSelectMenuItem_Click(object sender, EventArgs e)
