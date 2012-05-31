@@ -5954,23 +5954,25 @@ namespace Hoehoe
             }
         }
 
-        private void TweenMain_FormClosing(object sender, FormClosingEventArgs e)
+        private void TweenMain_FormClosingExtracted(FormClosingEventArgs e)
         {
             if (!this.settingDialog.CloseToExit && e.CloseReason == CloseReason.UserClosing && MyCommon.IsEnding == false)
             {
-                // _endingFlag=False:フォームの×ボタン
                 e.Cancel = true;
                 this.Visible = false;
             }
             else
             {
-                // Google.GASender.GetInstance().TrackEventWithCategory("post", "end", this.Tw.UserId_)
                 this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
                 this.ignoreConfigSave = true;
                 MyCommon.IsEnding = true;
                 this.timerTimeline.Enabled = false;
                 this.TimerRefreshIcon.Enabled = false;
             }
+        }
+        private void TweenMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            TweenMain_FormClosingExtracted(e);
         }
 
         private void TweenMain_Load(object sender, EventArgs e)
