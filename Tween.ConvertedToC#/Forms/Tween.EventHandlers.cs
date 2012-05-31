@@ -1794,9 +1794,10 @@ namespace Hoehoe
             this.ChangeUseHashTagSetting();
         }
 
-        private void HookGlobalHotkey_HotkeyPressed(object sender, KeyEventArgs e)
+        private void ChangeWindowState()
         {
-            if ((this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized) && this.Visible && object.ReferenceEquals(Form.ActiveForm, this))
+            if ((this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized)
+                            && this.Visible && object.ReferenceEquals(Form.ActiveForm, this))
             {
                 // アイコン化
                 this.Visible = false;
@@ -1813,6 +1814,11 @@ namespace Hoehoe
                 this.BringToFront();
                 this.StatusText.Focus();
             }
+        }
+
+        private void HookGlobalHotkey_HotkeyPressed(object sender, KeyEventArgs e)
+        {
+            this.ChangeWindowState();
         }
 
         private void IDRuleMenuItem_Click(object sender, EventArgs e)
