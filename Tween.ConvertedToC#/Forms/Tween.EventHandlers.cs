@@ -6786,13 +6786,18 @@ namespace Hoehoe
             }
         }
 
-        private void TweenMain_LocationChanged(object sender, EventArgs e)
+        private void TweenMain_LocationChangedExtracted()
         {
             if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
             {
                 this.myLoc = this.DesktopLocation;
                 this.modifySettingLocal = true;
             }
+        }
+
+        private void TweenMain_LocationChanged(object sender, EventArgs e)
+        {
+            this.TweenMain_LocationChangedExtracted();
         }
 
         private void ResizeMainForm()
