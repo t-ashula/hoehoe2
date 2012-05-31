@@ -7110,9 +7110,9 @@ namespace Hoehoe
             this.DoUrlUndo();
         }
 
-        private void UseHashtagMenuItem_Click(object sender, EventArgs e)
+        private void TrySetHashtagFromCurrentTweet()
         {
-            Match m = Regex.Match(this.postBrowserStatusText, "^https?:// twitter.com/search\\?q=%23(?<hash>.+)$");
+            Match m = Regex.Match(this.postBrowserStatusText, "^https?://twitter.com/search\\?q=%23(?<hash>.+)$");
             if (m.Success)
             {
                 // 使用ハッシュタグとして設定
@@ -7122,6 +7122,11 @@ namespace Hoehoe
                 this.HashToggleToolStripMenuItem.Checked = true;
                 this.modifySettingCommon = true;
             }
+        }
+
+        private void UseHashtagMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TrySetHashtagFromCurrentTweet();
         }
 
         private void TryOpenUserFavorareWebPage()
