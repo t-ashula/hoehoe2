@@ -7133,12 +7133,17 @@ namespace Hoehoe
             }
         }
 
-        private void UserPicture_DoubleClick(object sender, EventArgs e)
+        private void TryOpenCurrentNameLabelUserHome()
         {
             if (this.NameLabel.Tag != null)
             {
-                this.OpenUriAsync("http://twitter.com/" + this.NameLabel.Tag.ToString());
+                this.OpenUriAsync("https://twitter.com/" + (string)this.NameLabel.Tag);
             }
+        }
+
+        private void UserPicture_DoubleClick(object sender, EventArgs e)
+        {
+            TryOpenCurrentNameLabelUserHome();
         }
 
         private void UserPicture_MouseEnter(object sender, EventArgs e)
