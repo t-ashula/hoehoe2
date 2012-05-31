@@ -7151,7 +7151,7 @@ namespace Hoehoe
             this.UserPicture.Cursor = Cursors.Default;
         }
 
-        private void UserStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryShowCurrentTweetUserStatus()
         {
             string id = string.Empty;
             if (this.curPost != null)
@@ -7160,6 +7160,11 @@ namespace Hoehoe
             }
 
             this.ShowUserStatus(id);
+        }
+
+        private void UserStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryShowCurrentTweetUserStatus();
         }
 
         private void TryAddNewUserTimelineTab()
