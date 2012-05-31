@@ -7064,7 +7064,7 @@ namespace Hoehoe
             this.SaveConfigsTabs();
         }
 
-        private void UrlConvertAutoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ConvertUrlByAutoSelectedService()
         {
             if (!this.UrlConvert(this.settingDialog.AutoShortUrlFirst))
             {
@@ -7078,6 +7078,11 @@ namespace Hoehoe
                 while (!(svc != this.settingDialog.AutoShortUrlFirst && svc != UrlConverter.Nicoms && svc != UrlConverter.Unu));
                 this.UrlConvert(svc);
             }
+        }
+
+        private void UrlConvertAutoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ConvertUrlByAutoSelectedService();
         }
 
         private void TryCopyUrlInCurrentTweet()
