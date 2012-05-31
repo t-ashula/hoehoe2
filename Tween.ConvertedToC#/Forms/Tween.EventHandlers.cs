@@ -204,7 +204,7 @@ namespace Hoehoe
             this.ClearTab(this.rclickTabName, true);
         }
 
-        private void ContextMenuOperate_Opening(object sender, CancelEventArgs e)
+        private void SetupOperateContextMenu()
         {
             if (this.ListTab.SelectedTab == null)
             {
@@ -338,8 +338,13 @@ namespace Hoehoe
                 this.MoveToRTHomeMenuItem.Enabled = true;
             }
         }
+        
+        private void ContextMenuOperate_Opening(object sender, CancelEventArgs e)
+        {
+            this.SetupOperateContextMenu();
+        }
 
-        private void ContextMenuPostBrowser_Opening(object sender, CancelEventArgs e)
+        private void SetupPostBrowserContextMenu()
         {
             // URLコピーの項目の表示/非表示
             if (this.PostBrowser.StatusText.StartsWith("http"))
@@ -416,15 +421,25 @@ namespace Hoehoe
 
             this.FriendshipAllMenuItem.Enabled = fAllFlag;
             this.TranslationToolStripMenuItem.Enabled = this.curPost != null;
+        }
+        
+        private void ContextMenuPostBrowser_Opening(object sender, CancelEventArgs e)
+        {
+            SetupPostBrowserContextMenu();
             e.Cancel = false;
         }
 
-        private void ContextMenuPostMode_Opening(object sender, CancelEventArgs e)
+        private void SetupPostModeContextMenu()
         {
             this.ToolStripMenuItemUrlAutoShorten.Checked = this.settingDialog.UrlConvertAuto;
         }
 
-        private void ContextMenuSource_Opening(object sender, CancelEventArgs e)
+        private void ContextMenuPostMode_Opening(object sender, CancelEventArgs e)
+        {
+            SetupPostModeContextMenu();
+        }
+
+        private void SetupSourceContextMenu()
         {
             if (this.curPost == null || !this.ExistCurrentPost || this.curPost.IsDm)
             {
@@ -438,10 +453,15 @@ namespace Hoehoe
             }
         }
 
-        private void ContextMenuTabProperty_Opening(object sender, CancelEventArgs e)
+        private void ContextMenuSource_Opening(object sender, CancelEventArgs e)
+        {
+            SetupSourceContextMenu();
+        }
+
+        private void SetupTabPropertyContextMenu(bool fromMenuBar)
         {
             // 右クリックの場合はタブ名が設定済。アプリケーションキーの場合は現在のタブを対象とする
-            if (string.IsNullOrEmpty(this.rclickTabName) || !object.ReferenceEquals(sender, this.ContextMenuTabProperty))
+            if (string.IsNullOrEmpty(this.rclickTabName) || fromMenuBar)
             {
                 if (this.ListTab != null && this.ListTab.SelectedTab != null)
                 {
@@ -497,13 +517,19 @@ namespace Hoehoe
             this.SoundFileComboBox.SelectedIndex = idx;
             this.SoundFileTbComboBox.SelectedIndex = idx;
             this.soundfileListup = false;
+
             this.UreadManageMenuItem.Checked = tb.UnreadManage;
             this.UnreadMngTbMenuItem.Checked = tb.UnreadManage;
 
             this.TabMenuControl(this.rclickTabName);
         }
 
-        private void ContextMenuUserPicture_Opening(object sender, CancelEventArgs e)
+        private void ContextMenuTabProperty_Opening(object sender, CancelEventArgs e)
+        {
+            SetupTabPropertyContextMenu(fromMenuBar: false);
+        }
+
+        private void SetupUserPictureContextMenu()
         {
             // 発言詳細のアイコン右クリック時のメニュー制御
             if (this.curList.SelectedIndices.Count > 0 && this.curPost != null)
@@ -590,6 +616,11 @@ namespace Hoehoe
                 this.SearchAtPostsDetailNameToolStripMenuItem.Enabled = false;
                 this.ListManageUserContextToolStripMenuItem3.Enabled = false;
             }
+        }
+        
+        private void ContextMenuUserPicture_Opening(object sender, CancelEventArgs e)
+        {
+            this.SetupUserPictureContextMenu();
         }
 
         private void CopySTOTMenuItem_Click(object sender, EventArgs e)
@@ -2555,7 +2586,8 @@ namespace Hoehoe
 
         private void MenuItemTab_DropDownOpening(object sender, EventArgs e)
         {
-            this.ContextMenuTabProperty_Opening(sender, null);
+            ////this.ContextMenuTabProperty_Opening(sender, null);
+            this.SetupTabPropertyContextMenu(true);
         }
 
         private void MenuStrip1_MenuActivate(object sender, EventArgs e)
