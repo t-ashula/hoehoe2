@@ -5456,10 +5456,15 @@ namespace Hoehoe
         {
             this.settingDialog.UrlConvertAuto = this.ToolStripMenuItemUrlAutoShorten.Checked;
         }
-
+        
+        private static void ChangeTraceFlag(bool trace)
+        {
+            MyCommon.TraceFlag = trace;
+        }
+        
         private void TraceOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MyCommon.TraceFlag = this.TraceOutToolStripMenuItem.Checked;
+            ChangeTraceFlag(this.TraceOutToolStripMenuItem.Checked);
         }
 
         private void ChangeTrackWordStatus()
