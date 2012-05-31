@@ -638,19 +638,22 @@ namespace Hoehoe
             this.CopyUserId();
         }
 
-        private void CurrentTabToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchSelectedTextAtCurrentTab()
         {
             // 発言詳細の選択文字列で現在のタブを検索
             string txt = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
-
             if (txt != null)
             {
                 this.searchDialog.SWord = txt;
                 this.searchDialog.CheckCaseSensitive = false;
                 this.searchDialog.CheckRegex = false;
-
                 this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
             }
+        }
+
+        private void CurrentTabToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SearchSelectedTextAtCurrentTab();
         }
 
         private void DMStripMenuItem_Click(object sender, EventArgs e)
