@@ -902,7 +902,7 @@ namespace Hoehoe
             TryFollowFromCurrentTweet();
         }
 
-        private void FollowToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryFollowFromCurrentTab()
         {
             if (this.NameLabel.Tag != null)
             {
@@ -912,6 +912,11 @@ namespace Hoehoe
                     this.FollowCommand(id);
                 }
             }
+        }
+
+        private void FollowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryFollowFromCurrentTab();
         }
 
         private void FriendshipAllMenuItem_Click(object sender, EventArgs e)
