@@ -317,7 +317,7 @@ namespace Hoehoe
 
             if (this.IsRt)
             {
-                if (post.RetweetedId == 0)
+                if (!post.IsRetweeted)
                 {
                     isHit = false;
                 }
@@ -374,7 +374,11 @@ namespace Hoehoe
 
                 if (this.ExSearchBoth)
                 {
-                    if (string.IsNullOrEmpty(this.ExNameFilter) || (!this.ExUseRegex && (post.ScreenName.Equals(this.ExNameFilter, compOpt) || post.RetweetedBy.Equals(this.ExNameFilter, compOpt))) || (this.ExUseRegex && (Regex.IsMatch(post.ScreenName, this.ExNameFilter, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, this.ExNameFilter, regexOption)))))
+                    if (string.IsNullOrEmpty(this.ExNameFilter) 
+                        || (!this.ExUseRegex && (post.ScreenName.Equals(this.ExNameFilter, compOpt) 
+                        || post.RetweetedBy.Equals(this.ExNameFilter, compOpt)))
+                        || (this.ExUseRegex && (Regex.IsMatch(post.ScreenName, this.ExNameFilter, regexOption) 
+                        || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, this.ExNameFilter, regexOption)))))
                     {
                         if (this.exbody.Count > 0)
                         {
@@ -476,7 +480,7 @@ namespace Hoehoe
 
             if (this.IsExRt)
             {
-                if (post.RetweetedId > 0)
+                if (post.IsRetweeted)
                 {
                     isExclude = true;
                 }

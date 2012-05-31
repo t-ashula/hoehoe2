@@ -2308,7 +2308,7 @@ namespace Hoehoe
             {
                 cl = this.clrFav;
             }
-            else if (post.RetweetedId > 0)
+            else if (post.IsRetweeted)
             {
                 cl = this.clrRetweet;
             }
@@ -3139,19 +3139,15 @@ namespace Hoehoe
                 mk.Append("+" + post.FavoritedCount.ToString());
             }
 
-            ImageListViewItem itm = null;
-            if (post.RetweetedId == 0)
+            string postedByDetail = post.ScreenName;
+            if (post.IsRetweeted)
             {
-                string[] sitem = { string.Empty, post.Nickname, post.IsDeleted ? "(DELETED)" : post.TextFromApi, post.CreatedAt.ToString(this.settingDialog.DateTimeFormat), post.ScreenName, string.Empty, mk.ToString(), post.Source };
-                itm = new ImageListViewItem(sitem, (ImageDictionary)this.iconDict, post.ImageUrl);
+                postedByDetail += string.Format("{0}(RT:{1})", Environment.NewLine, post.RetweetedBy);
             }
-            else
-            {
-                string[] sitem = { string.Empty, post.Nickname, post.IsDeleted ? "(DELETED)" : post.TextFromApi, post.CreatedAt.ToString(this.settingDialog.DateTimeFormat), post.ScreenName + Environment.NewLine + "(RT:" + post.RetweetedBy + ")", string.Empty, mk.ToString(), post.Source };
-                itm = new ImageListViewItem(sitem, (ImageDictionary)this.iconDict, post.ImageUrl);
-            }
-
+            string[] sitem = { string.Empty, post.Nickname, post.IsDeleted ? "(DELETED)" : post.TextFromApi, post.CreatedAt.ToString(this.settingDialog.DateTimeFormat), postedByDetail, string.Empty, mk.ToString(), post.Source };
+            ImageListViewItem itm = new ImageListViewItem(sitem, (ImageDictionary)this.iconDict, post.ImageUrl);
             itm.StateImageIndex = post.StateIndex;
+
             bool read = post.IsRead;
             if (!this.statuses.Tabs[tabPage.Text].UnreadManage || !this.settingDialog.UnreadManage)
             {
@@ -3622,7 +3618,7 @@ namespace Hoehoe
             this.NameLabel.Tag = this.curPost.ScreenName;
             if (!string.IsNullOrEmpty(this.curPost.RetweetedBy))
             {
-                this.NameLabel.Text += " (RT:" + this.curPost.RetweetedBy + ")";
+                this.NameLabel.Text += string.Format(" (RT:{0})", this.curPost.RetweetedBy);
             }
 
             if (this.UserPicture.Image != null)
@@ -3653,7 +3649,7 @@ namespace Hoehoe
                 this.NameLabel.ForeColor = this.clrOWL;
             }
 
-            if (this.curPost.RetweetedId > 0)
+            if (this.curPost.IsRetweeted)
             {
                 this.NameLabel.ForeColor = this.clrRetweet;
             }
@@ -4576,14 +4572,7 @@ namespace Hoehoe
 
                 if (!isDm)
                 {
-                    if (post.RetweetedId > 0)
-                    {
-                        sb.AppendFormat("{0}:{1} [http://twitter.com/{0}/status/{2}]{3}", post.ScreenName, post.TextFromApi, post.RetweetedId, Environment.NewLine);
-                    }
-                    else
-                    {
-                        sb.AppendFormat("{0}:{1} [http://twitter.com/{0}/status/{2}]{3}", post.ScreenName, post.TextFromApi, post.StatusId, Environment.NewLine);
-                    }
+                    sb.AppendFormat("{0}:{1} [http://twitter.com/{0}/status/{2}]{3}", post.ScreenName, post.TextFromApi, post.OriginalStatusId, Environment.NewLine);                 
                 }
                 else
                 {
@@ -4634,14 +4623,7 @@ namespace Hoehoe
             foreach (int idx in this.curList.SelectedIndices)
             {
                 PostClass post = this.statuses.Item(this.curTab.Text, idx);
-                if (post.RetweetedId > 0)
-                {
-                    sb.AppendFormat("http://twitter.com/{0}/status/{1}{2}", post.ScreenName, post.RetweetedId, Environment.NewLine);
-                }
-                else
-                {
-                    sb.AppendFormat("http://twitter.com/{0}/status/{1}{2}", post.ScreenName, post.StatusId, Environment.NewLine);
-                }
+                sb.AppendFormat("http://twitter.com/{0}/status/{1}{2}", post.ScreenName, post.OriginalStatusId, Environment.NewLine);
             }
 
             if (sb.Length > 0)
@@ -4836,35 +4818,16 @@ namespace Hoehoe
                 stp = -1;
             }
 
-            string name = string.Empty;
-            if (this.curPost.RetweetedId == 0)
-            {
-                name = this.curPost.ScreenName;
-            }
-            else
-            {
-                name = this.curPost.RetweetedBy;
-            }
-
+            string name = this.curPost.IsRetweeted ? this.curPost.RetweetedBy : this.curPost.ScreenName;
             for (int idx = fIdx; idx <= toIdx; idx += stp)
             {
-                if (this.statuses.Item(this.curTab.Text, idx).RetweetedId == 0)
+                var statusesItem = this.statuses.Item(this.curTab.Text, idx);
+                var statusItemName = statusesItem.IsRetweeted ? statusesItem.RetweetedBy : statusesItem.ScreenName;
+                if (statusItemName == name)
                 {
-                    if (this.statuses.Item(this.curTab.Text, idx).ScreenName == name)
-                    {
-                        this.SelectListItem(this.curList, idx);
-                        this.curList.EnsureVisible(idx);
-                        break;
-                    }
-                }
-                else
-                {
-                    if (this.statuses.Item(this.curTab.Text, idx).RetweetedBy == name)
-                    {
-                        this.SelectListItem(this.curList, idx);
-                        this.curList.EnsureVisible(idx);
-                        break;
-                    }
+                    this.SelectListItem(this.curList, idx);
+                    this.curList.EnsureVisible(idx);
+                    break;
                 }
             }
         }
@@ -4924,7 +4887,14 @@ namespace Hoehoe
             for (int idx = fIdx; idx <= toIdx; idx += stp)
             {
                 PostClass post = this.statuses.Item(this.curTab.Text, idx);
-                if (post.ScreenName == this.anchorPost.ScreenName || post.RetweetedBy == this.anchorPost.ScreenName || post.ScreenName == this.anchorPost.RetweetedBy || (!string.IsNullOrEmpty(post.RetweetedBy) && post.RetweetedBy == this.anchorPost.RetweetedBy) || this.anchorPost.ReplyToList.Contains(post.ScreenName.ToLower()) || this.anchorPost.ReplyToList.Contains(post.RetweetedBy.ToLower()) || post.ReplyToList.Contains(this.anchorPost.ScreenName.ToLower()) || post.ReplyToList.Contains(this.anchorPost.RetweetedBy.ToLower()))
+                if (post.ScreenName == this.anchorPost.ScreenName 
+                    || post.RetweetedBy == this.anchorPost.ScreenName 
+                    || post.ScreenName == this.anchorPost.RetweetedBy 
+                    || (!string.IsNullOrEmpty(post.RetweetedBy) && post.RetweetedBy == this.anchorPost.RetweetedBy) 
+                    || this.anchorPost.ReplyToList.Contains(post.ScreenName.ToLower()) 
+                    || this.anchorPost.ReplyToList.Contains(post.RetweetedBy.ToLower()) 
+                    || post.ReplyToList.Contains(this.anchorPost.ScreenName.ToLower()) 
+                    || post.ReplyToList.Contains(this.anchorPost.RetweetedBy.ToLower()))
                 {
                     this.SelectListItem(this.curList, idx);
                     this.curList.EnsureVisible(idx);
@@ -5105,21 +5075,20 @@ namespace Hoehoe
                     }
                     catch (InvalidOperationException)
                     {
-                        this.OpenUriAsync("http://twitter.com/" + inReplyToUser + "/statuses/" + inReplyToId.ToString());
+                        this.OpenUriAsync(string.Format("http://twitter.com/{0}/statuses/{1}", inReplyToUser, inReplyToId));
                         return;
                     }
                 }
                 else
                 {
                     this.StatusLabel.Text = r;
-                    this.OpenUriAsync("http://twitter.com/" + inReplyToUser + "/statuses/" + inReplyToId.ToString());
+                    this.OpenUriAsync(string.Format("http://twitter.com/{0}/statuses/{1}", inReplyToUser, inReplyToId));
                     return;
                 }
             }
 
             var tabPage = this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == inReplyToTabName);
             var listView = (DetailsListView)tabPage.Tag;
-
             if (!object.ReferenceEquals(this.curTab, tabPage))
             {
                 this.ListTab.SelectTab(tabPage);
@@ -5163,7 +5132,7 @@ namespace Hoehoe
                             }
                         }
 
-                        var post = postList.FirstOrDefault(pst => object.ReferenceEquals(pst.Tab, curTabClass) && (bool)(isForward ? pst.Index > this.curItemIndex : pst.Index < this.curItemIndex));
+                        var post = postList.FirstOrDefault(pst => object.ReferenceEquals(pst.Tab, curTabClass) && (isForward ? pst.Index > this.curItemIndex : pst.Index < this.curItemIndex));
                         if (post == null)
                         {
                             post = postList.FirstOrDefault(pst => !object.ReferenceEquals(pst.Tab, curTabClass));
@@ -5659,18 +5628,9 @@ namespace Hoehoe
 
                     if (string.IsNullOrEmpty(this.StatusText.Text))
                     {
-                        // 空の場合
-                        // ステータステキストが入力されていない場合先頭に@ユーザー名を追加する
+                        // 空の場合 : ステータステキストが入力されていない場合先頭に@ユーザー名を追加する
                         this.StatusText.Text = "@" + this.curPost.ScreenName + " ";
-                        if (this.curPost.RetweetedId > 0)
-                        {
-                            this.replyToId = this.curPost.RetweetedId;
-                        }
-                        else
-                        {
-                            this.replyToId = this.curPost.StatusId;
-                        }
-
+                        this.replyToId = this.curPost.OriginalStatusId;
                         this.replyToName = this.curPost.ScreenName;
                     }
                     else
@@ -5684,15 +5644,7 @@ namespace Hoehoe
                                 if (this.replyToId > 0 && this.replyToName == this.curPost.ScreenName)
                                 {
                                     // 返信先書き換え
-                                    if (this.curPost.RetweetedId > 0)
-                                    {
-                                        this.replyToId = this.curPost.RetweetedId;
-                                    }
-                                    else
-                                    {
-                                        this.replyToId = this.curPost.StatusId;
-                                    }
-
+                                    this.replyToId = this.curPost.OriginalStatusId;
                                     this.replyToName = this.curPost.ScreenName;
                                 }
 
@@ -5713,15 +5665,7 @@ namespace Hoehoe
                                 {
                                     // 単独リプライ
                                     this.StatusText.Text = "@" + this.curPost.ScreenName + " " + this.StatusText.Text;
-                                    if (this.curPost.RetweetedId > 0)
-                                    {
-                                        this.replyToId = this.curPost.RetweetedId;
-                                    }
-                                    else
-                                    {
-                                        this.replyToId = this.curPost.StatusId;
-                                    }
-
+                                    this.replyToId = this.curPost.OriginalStatusId;
                                     this.replyToName = this.curPost.ScreenName;
                                 }
                             }
@@ -5895,15 +5839,7 @@ namespace Hoehoe
                                 this.StatusText.Text = ids;
                                 this.StatusText.SelectionStart = ids.Length;
                                 this.StatusText.Focus();
-                                if (post.RetweetedId > 0)
-                                {
-                                    this.replyToId = post.RetweetedId;
-                                }
-                                else
-                                {
-                                    this.replyToId = post.StatusId;
-                                }
-
+                                this.replyToId = post.OriginalStatusId;
                                 this.replyToName = post.ScreenName;
                                 return;
                             }
@@ -7138,15 +7074,7 @@ namespace Hoehoe
 
                 string rtdata = this.CreateRetweetUnofficial(this.curPost.Text);
                 this.StatusText.Text = " QT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
-                if (this.curPost.RetweetedId == 0)
-                {
-                    this.replyToId = this.curPost.StatusId;
-                }
-                else
-                {
-                    this.replyToId = this.curPost.RetweetedId;
-                }
-
+                this.replyToId = this.curPost.OriginalStatusId;
                 this.replyToName = this.curPost.ScreenName;
 
                 this.StatusText.SelectionStart = 0;
@@ -7158,10 +7086,10 @@ namespace Hoehoe
         {
             if (this.curList.SelectedIndices.Count > 0)
             {
-                PostClass post = this.GetCurTabPost(this.curList.SelectedIndices[0]);
-                if (post.RetweetedId > 0)
+                var post = this.GetCurTabPost(this.curList.SelectedIndices[0]);
+                if (post.IsRetweeted)
                 {
-                    this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).RetweetedBy);
+                    this.OpenUriAsync("https://twitter.com/" + post.RetweetedBy);
                 }
             }
         }
@@ -7336,14 +7264,7 @@ namespace Hoehoe
             else
             {
                 int idx = this.ImageServiceCombo.Items.IndexOf(svc);
-                if (idx == -1)
-                {
-                    this.ImageServiceCombo.SelectedIndex = 0;
-                }
-                else
-                {
-                    this.ImageServiceCombo.SelectedIndex = idx;
-                }
+                this.ImageServiceCombo.SelectedIndex = idx == -1 ? 0 : idx;
             }
         }
 
@@ -7378,12 +7299,10 @@ namespace Hoehoe
                     title.Append(" - ");
                 }
 
-                title.Append("Hoehoe [");
-                title.Append(ev.Event.ToUpper());
-                title.Append("] by ");
+                title.Append(string.Format("Hoehoe [{0}] ", ev.Event.ToUpper()));
                 if (!string.IsNullOrEmpty(ev.Username))
                 {
-                    title.Append(ev.Username.ToString());
+                    title.Append(string.Format("by {0}", ev.Username));
                 }
 
                 string text = !string.IsNullOrEmpty(ev.Target) ? ev.Target : " ";
@@ -7497,17 +7416,9 @@ namespace Hoehoe
                 {
                     if (this.curPost != null)
                     {
-                        string url = this.settingDialog.UserAppointUrl;
-                        url = url.Replace("{ID}", this.curPost.ScreenName);
-                        if (this.curPost.RetweetedId != 0)
-                        {
-                            url = url.Replace("{STATUS}", this.curPost.RetweetedId.ToString());
-                        }
-                        else
-                        {
-                            url = url.Replace("{STATUS}", this.curPost.StatusId.ToString());
-                        }
-
+                        string url = this.settingDialog.UserAppointUrl
+                            .Replace("{ID}", this.curPost.ScreenName)
+                            .Replace("{STATUS}", this.curPost.OriginalStatusId.ToString());
                         this.OpenUriAsync(url);
                     }
                 }

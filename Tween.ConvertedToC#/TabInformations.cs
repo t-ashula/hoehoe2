@@ -299,7 +299,7 @@ namespace Hoehoe
                     }
 
                     // FavタブからRetweet発言を削除する場合は、他の同一参照Retweetも削除
-                    if (tabUsage == TabUsageType.Favorites && post.RetweetedId > 0)
+                    if (tabUsage == TabUsageType.Favorites && post.IsRetweeted)
                     {
                         for (int i = 0; i < tab.AllCount; i++)
                         {
@@ -313,7 +313,7 @@ namespace Hoehoe
                                 break;
                             }
 
-                            if (toRemovePost.RetweetedId > 0 && toRemovePost.RetweetedId == post.RetweetedId)
+                            if (toRemovePost.IsRetweeted && toRemovePost.RetweetedId == post.RetweetedId)
                             {
                                 // 未読管理
                                 if (tab.UnreadManage && !toRemovePost.IsRead)
@@ -539,29 +539,32 @@ namespace Hoehoe
                         {
                             if (item.IsFav)
                             {
-                                if (item.RetweetedId == 0)
+                                if (item.IsRetweeted)
                                 {
-                                    this.statuses[item.StatusId].IsFav = true;
+                                    item.IsFav = false;
                                 }
                                 else
                                 {
-                                    item.IsFav = false;
+                                    this.statuses[item.StatusId].IsFav = true;
                                 }
                             }
                             else
                             {
-                                return;                                // 追加済みなら何もしない
+                                return; // 追加済みなら何もしない
                             }
                         }
                         else
                         {
-                            if (item.IsFav && item.RetweetedId > 0)
+                            if (item.IsFav && item.IsRetweeted)
                             {
                                 item.IsFav = false;
                             }
 
                             // 既に持っている公式RTは捨てる
-                            if (AppendSettingDialog.Instance.HideDuplicatedRetweets && !item.IsMe && this.retweets.ContainsKey(item.RetweetedId) && this.retweets[item.RetweetedId].RetweetedCount > 0)
+                            if (AppendSettingDialog.Instance.HideDuplicatedRetweets 
+                                && !item.IsMe
+                                && this.retweets.ContainsKey(item.RetweetedId) 
+                                && this.retweets[item.RetweetedId].RetweetedCount > 0)
                             {
                                 return;
                             }
@@ -574,7 +577,7 @@ namespace Hoehoe
                             this.statuses.Add(item.StatusId, item);
                         }
 
-                        if (item.RetweetedId > 0)
+                        if (item.IsRetweeted)
                         {
                             this.AddRetweet(item);
                         }

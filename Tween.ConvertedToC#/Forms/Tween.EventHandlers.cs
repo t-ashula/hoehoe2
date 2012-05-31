@@ -960,15 +960,7 @@ namespace Hoehoe
                             bw.ReportProgress(50, this.MakeStatusMessage(args, false));
                             if (!post.IsFav)
                             {
-                                if (post.RetweetedId == 0)
-                                {
-                                    ret = this.tw.PostFavAdd(post.StatusId);
-                                }
-                                else
-                                {
-                                    ret = this.tw.PostFavAdd(post.RetweetedId);
-                                }
-
+                                ret = this.tw.PostFavAdd(post.OriginalStatusId);
                                 if (ret.Length == 0)
                                 {
                                     // リスト再描画必要
@@ -1018,7 +1010,7 @@ namespace Hoehoe
                             bw.ReportProgress(50, this.MakeStatusMessage(args, false));
                             if (post.IsFav)
                             {
-                                ret = post.RetweetedId == 0 ? this.tw.PostFavRemove(post.StatusId) : this.tw.PostFavRemove(post.RetweetedId);
+                                ret = this.tw.PostFavRemove(post.OriginalStatusId);
                                 if (ret.Length == 0)
                                 {
                                     args.SIds.Add(post.StatusId);
@@ -1291,7 +1283,11 @@ namespace Hoehoe
             rslt.RetMsg = ret;
             rslt.WorkerType = args.WorkerType;
             rslt.TabName = args.TabName;
-            if (args.WorkerType == WorkerType.DirectMessegeRcv || args.WorkerType == WorkerType.DirectMessegeSnt || args.WorkerType == WorkerType.Reply || args.WorkerType == WorkerType.Timeline || args.WorkerType == WorkerType.Favorites)
+            if (args.WorkerType == WorkerType.DirectMessegeRcv
+                || args.WorkerType == WorkerType.DirectMessegeSnt
+                || args.WorkerType == WorkerType.Reply
+                || args.WorkerType == WorkerType.Timeline
+                || args.WorkerType == WorkerType.Favorites)
             {
                 // 値が正しいか後でチェック。10ページ毎の継続確認
                 rslt.Page = args.Page - 1;
@@ -1377,7 +1373,20 @@ namespace Hoehoe
                 this.RemovePostFromFavTab(rslt.SIds.ToArray());
             }
 
-            if (rslt.WorkerType == WorkerType.Timeline || rslt.WorkerType == WorkerType.Reply || rslt.WorkerType == WorkerType.List || rslt.WorkerType == WorkerType.PublicSearch || rslt.WorkerType == WorkerType.DirectMessegeRcv || rslt.WorkerType == WorkerType.DirectMessegeSnt || rslt.WorkerType == WorkerType.Favorites || rslt.WorkerType == WorkerType.Follower || rslt.WorkerType == WorkerType.FavAdd || rslt.WorkerType == WorkerType.FavRemove || rslt.WorkerType == WorkerType.Related || rslt.WorkerType == WorkerType.UserTimeline || rslt.WorkerType == WorkerType.BlockIds || rslt.WorkerType == WorkerType.Configuration)
+            if (rslt.WorkerType == WorkerType.Timeline
+                || rslt.WorkerType == WorkerType.Reply
+                || rslt.WorkerType == WorkerType.List
+                || rslt.WorkerType == WorkerType.PublicSearch
+                || rslt.WorkerType == WorkerType.DirectMessegeRcv
+                || rslt.WorkerType == WorkerType.DirectMessegeSnt
+                || rslt.WorkerType == WorkerType.Favorites
+                || rslt.WorkerType == WorkerType.Follower
+                || rslt.WorkerType == WorkerType.FavAdd
+                || rslt.WorkerType == WorkerType.FavRemove
+                || rslt.WorkerType == WorkerType.Related
+                || rslt.WorkerType == WorkerType.UserTimeline
+                || rslt.WorkerType == WorkerType.BlockIds
+                || rslt.WorkerType == WorkerType.Configuration)
             {
                 // リスト反映
                 this.RefreshTimeline(false);
@@ -1732,22 +1741,16 @@ namespace Hoehoe
                 PostClass post = this.statuses.Item(this.curTab.Text, idx);
                 if (!ids.Contains(post.ScreenName))
                 {
-                    FiltersClass fc = new FiltersClass();
                     ids.Add(post.ScreenName);
-                    if (post.RetweetedId == 0)
+                    FiltersClass fc = new FiltersClass()
                     {
-                        fc.NameFilter = post.ScreenName;
-                    }
-                    else
-                    {
-                        fc.NameFilter = post.RetweetedBy;
-                    }
-
-                    fc.SearchBoth = true;
-                    fc.MoveFrom = mv;
-                    fc.SetMark = mk;
-                    fc.UseRegex = false;
-                    fc.SearchUrl = false;
+                        NameFilter = post.IsRetweeted ? post.RetweetedBy : post.ScreenName,
+                        SearchBoth = true,
+                        MoveFrom = mv,
+                        SetMark = mk,
+                        UseRegex = false,
+                        SearchUrl = false
+                    };
                     this.statuses.Tabs[tabName].AddFilter(fc);
                 }
             }
@@ -2331,37 +2334,16 @@ namespace Hoehoe
 
         private void MenuItemCommand_DropDownOpening(object sender, EventArgs e)
         {
-            if (this.ExistCurrentPost && !this.curPost.IsDm)
-            {
-                this.RtCountMenuItem.Enabled = true;
-            }
-            else
-            {
-                this.RtCountMenuItem.Enabled = false;
-            }
+            this.RtCountMenuItem.Enabled = this.ExistCurrentPost && !this.curPost.IsDm;
         }
 
         private void MenuItemEdit_DropDownOpening(object sender, EventArgs e)
         {
-            if (this.statuses.RemovedTab.Count == 0)
-            {
-                this.UndoRemoveTabMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.UndoRemoveTabMenuItem.Enabled = true;
-            }
+            this.UndoRemoveTabMenuItem.Enabled = this.statuses.RemovedTab.Count != 0;
 
             if (this.ListTab.SelectedTab != null)
             {
-                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
-                {
-                    this.PublicSearchQueryMenuItem.Enabled = true;
-                }
-                else
-                {
-                    this.PublicSearchQueryMenuItem.Enabled = false;
-                }
+                this.PublicSearchQueryMenuItem.Enabled = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch;
             }
             else
             {
@@ -2393,14 +2375,8 @@ namespace Hoehoe
 
         private void MenuItemHelp_DropDownOpening(object sender, EventArgs e)
         {
-            if (MyCommon.DebugBuild || (this.IsKeyDown(Keys.CapsLock) && this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift)))
-            {
-                this.DebugModeToolStripMenuItem.Visible = true;
-            }
-            else
-            {
-                this.DebugModeToolStripMenuItem.Visible = false;
-            }
+            this.DebugModeToolStripMenuItem.Visible = MyCommon.DebugBuild
+                || this.IsKeyDown(Keys.CapsLock) && this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift);
         }
 
         private void MenuItemOperate_DropDownOpening(object sender, EventArgs e)
@@ -2496,32 +2472,9 @@ namespace Hoehoe
                 }
             }
 
-            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.Favorites)
-            {
-                this.RefreshPrevOpMenuItem.Enabled = true;
-            }
-            else
-            {
-                this.RefreshPrevOpMenuItem.Enabled = false;
-            }
-
-            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(this.curPost.InReplyToStatusId > 0))
-            {
-                this.OpenRepSourceOpMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.OpenRepSourceOpMenuItem.Enabled = true;
-            }
-
-            if (!this.ExistCurrentPost || string.IsNullOrEmpty(this.curPost.RetweetedBy))
-            {
-                this.OpenRterHomeMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.OpenRterHomeMenuItem.Enabled = true;
-            }
+            this.RefreshPrevOpMenuItem.Enabled = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.Favorites;
+            this.OpenRepSourceOpMenuItem.Enabled = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.PublicSearch && this.ExistCurrentPost && this.curPost.InReplyToStatusId > 0;
+            this.OpenRterHomeMenuItem.Enabled = this.ExistCurrentPost && !string.IsNullOrEmpty(this.curPost.RetweetedBy);
         }
 
         private void MenuItemSearchNext_Click(object sender, EventArgs e)
@@ -3135,8 +3088,7 @@ namespace Hoehoe
 
         private void MyList_HScrolled(object sender, EventArgs e)
         {
-            DetailsListView listView = (DetailsListView)sender;
-            listView.Refresh();
+            ((DetailsListView)sender).Refresh();
         }
 
         private void MyList_MouseClick(object sender, MouseEventArgs e)
@@ -4837,8 +4789,7 @@ namespace Hoehoe
             if (this.curList.SelectedIndices.Count > 0 && this.statuses.Tabs[this.curTab.Text].TabType != TabUsageType.DirectMessage)
             {
                 PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
-                var sid = post.RetweetedId == 0 ? post.StatusId : post.RetweetedId;
-                this.OpenUriAsync("http://twitter.com/" + post.ScreenName + "/status/" + sid.ToString());
+                this.OpenUriAsync("http://twitter.com/" + post.ScreenName + "/status/" + post.OriginalStatusId.ToString());
             }
         }
 
@@ -5022,15 +4973,8 @@ namespace Hoehoe
 
                 this.fltDialog.SetCurrent(tabName);
                 PostClass statusesItem = this.statuses.Item(this.curTab.Text, idx);
-                if (statusesItem.RetweetedId == 0)
-                {
-                    this.fltDialog.AddNewFilter(statusesItem.ScreenName, statusesItem.TextFromApi);
-                }
-                else
-                {
-                    this.fltDialog.AddNewFilter(statusesItem.RetweetedBy, statusesItem.TextFromApi);
-                }
-
+                string scname = statusesItem.IsRetweeted ? statusesItem.RetweetedBy : statusesItem.ScreenName;
+                this.fltDialog.AddNewFilter(scname, statusesItem.TextFromApi);
                 this.fltDialog.ShowDialog();
                 this.TopMost = this.settingDialog.AlwaysTop;
             }
@@ -7139,18 +7083,8 @@ namespace Hoehoe
 
         private void GetRetweet_DoWork(object sender, DoWorkEventArgs e)
         {
+            long statusid = this.CurPost.OriginalStatusId; 
             int counter = 0;
-
-            long statusid = 0;
-            if (this.curPost.RetweetedId > 0)
-            {
-                statusid = this.curPost.RetweetedId;
-            }
-            else
-            {
-                statusid = this.curPost.StatusId;
-            }
-
             this.tw.GetStatus_Retweeted_Count(statusid, ref counter);
             e.Result = counter;
         }

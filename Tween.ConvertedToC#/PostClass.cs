@@ -127,22 +127,24 @@ namespace Hoehoe
         {
             get
             {
-                if (this.RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(this.RetweetedId) != null)
-                {
-                    return TabInformations.GetInstance().RetweetSource(this.RetweetedId).IsFav;
-                }
-                else
+                if (!this.IsRetweeted)
                 {
                     return this.isFav;
                 }
+                var post = TabInformations.GetInstance().RetweetSource(this.RetweetedId);
+                return post != null ? post.IsFav : this.isFav;
             }
 
             set
             {
                 this.isFav = value;
-                if (this.RetweetedId > 0 && TabInformations.GetInstance().RetweetSource(this.RetweetedId) != null)
+                if (this.IsRetweeted)
                 {
-                    TabInformations.GetInstance().RetweetSource(this.RetweetedId).IsFav = value;
+                    var post = TabInformations.GetInstance().RetweetSource(this.RetweetedId);
+                    if (post != null)
+                    {
+                        post.IsFav = value;
+                    }
                 }
             }
         }
@@ -299,6 +301,19 @@ namespace Hoehoe
             get { return Convert.ToInt32(this.states) - 1; }
         }
 
+        /// <summary>
+        /// return this.RetweetedId > 0 ? this.RetweetedId : this.StatusId;
+        /// </summary>
+        /// <returns></returns>
+        public long OriginalStatusId
+        {
+            get { return this.IsRetweeted ? this.RetweetedId : this.StatusId; }
+        }
+
+        public bool IsRetweeted
+        {
+            get { return this.RetweetedId != 0; }
+        }
         #endregion properties
 
         #region public methods

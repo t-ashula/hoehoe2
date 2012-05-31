@@ -856,10 +856,10 @@ namespace Hoehoe
                 return "Err:Target isn't found.";
             }
 
-            if (TabInformations.GetInstance().Item(id).RetweetedId > 0)
+            if (post.IsRetweeted)
             {
                 // 再RTの場合は元発言をRT
-                target = TabInformations.GetInstance().Item(id).RetweetedId;
+                target = post.RetweetedId;
             }
 
             HttpStatusCode res = default(HttpStatusCode);
@@ -916,7 +916,7 @@ namespace Hoehoe
             }
             
             // Retweet判定
-            if (post.RetweetedId == 0)
+            if (!post.IsRetweeted)
             {
                 return "Invalid Json!";
             }
@@ -3835,7 +3835,7 @@ namespace Hoehoe
                 }
 
                 // RT禁止ユーザーによるもの
-                if (post.RetweetedId > 0 && this.noRetweetIds.Contains(post.RetweetedByUserId))
+                if (post.IsRetweeted && this.noRetweetIds.Contains(post.RetweetedByUserId))
                 {
                     continue;
                 }
@@ -3965,14 +3965,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                if (post.RetweetedId > 0)
-                {
-                    res = this.twitterConnection.GetRelatedResults(post.RetweetedId, ref content);
-                }
-                else
-                {
-                    res = this.twitterConnection.GetRelatedResults(post.StatusId, ref content);
-                }
+                res = this.twitterConnection.GetRelatedResults(post.OriginalStatusId, ref content);
             }
             catch (Exception ex)
             {
@@ -4014,11 +4007,8 @@ namespace Hoehoe
             {
                 return string.Empty;
             }
-            else
-            {
-                targetItem = targetItem.Copy();
-            }
 
+            targetItem = targetItem.Copy();
             targetItem.RelTabName = tab.TabName;
             TabInformations.GetInstance().AddPost(targetItem);
             PostClass replyToItem = null;
@@ -4045,13 +4035,13 @@ namespace Hoehoe
                     {
                         continue;
                     }
-                    
+
                     if (targetItem.InReplyToStatusId == item.StatusId)
                     {
                         replyToItem = null;
                         replyAdded = true;
                     }
-                    
+
                     item.IsRead = read;
                     if (item.IsMe && !read && this.readOwnPost)
                     {
@@ -4062,7 +4052,7 @@ namespace Hoehoe
                     {
                         item.RelTabName = tab.TabName;
                     }
-                    
+
                     // 非同期アイコン取得＆StatusDictionaryに追加
                     relatedPosts.Add(item);
                 }
