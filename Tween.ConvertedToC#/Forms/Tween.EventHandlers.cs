@@ -7143,12 +7143,17 @@ namespace Hoehoe
 
         private void UserPicture_MouseEnter(object sender, EventArgs e)
         {
-            this.UserPicture.Cursor = Cursors.Hand;
+            this.ChangeUserPictureCursor(Cursors.Hand);
+        }
+
+        private void ChangeUserPictureCursor(Cursor cursorsDefault)
+        {
+            this.UserPicture.Cursor = cursorsDefault;
         }
 
         private void UserPicture_MouseLeave(object sender, EventArgs e)
         {
-            this.UserPicture.Cursor = Cursors.Default;
+            ChangeUserPictureCursor(Cursors.Default);
         }
 
         private void TryShowCurrentTweetUserStatus()
