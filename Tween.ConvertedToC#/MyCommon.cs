@@ -43,37 +43,37 @@ namespace Hoehoe
     public sealed class MyCommon
     {
         /// <summary>
-        /// 終了フラグ
-        /// </summary>
-        public static bool IsEnding;
-
-        /// <summary>
-        ///
-        /// </summary>
-        public static string CultureStr = null;
-
-        /// <summary>
-        ///
-        /// </summary>
-        public static string SettingPath;
-
-        /// <summary>
-        ///
-        /// </summary>
-        public static bool TraceFlag = false;
-
-#if DEBUG
-		public static bool DebugBuild = true;
-#else
-        public static bool DebugBuild = false;
-#endif
-
-        /// <summary>
         ///
         /// </summary>
         public static ApiInformation TwitterApiInfo = new ApiInformation();
 
         private static readonly object lockObj = new object();
+
+        /// <summary>
+        /// 終了フラグ
+        /// </summary>
+        public static bool IsEnding { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public static string CultureStr { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public static string SettingPath { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public static bool TraceFlag { get; set; }
+
+#if DEBUG
+		public static bool DebugBuild = true;
+#else
+        public static bool DebugBuild { get; set; }
+#endif
 
         public static string FileVersion
         {
