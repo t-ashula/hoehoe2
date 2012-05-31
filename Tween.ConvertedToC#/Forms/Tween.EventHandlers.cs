@@ -375,7 +375,7 @@ namespace Hoehoe
                     this.SearchAtPostsDetailToolStripMenuItem.Enabled = false;
                 }
 
-                this.UseHashtagMenuItem.Enabled = Regex.IsMatch(this.postBrowserStatusText, "^https?:// twitter.com/search\\?q=%23");
+                this.UseHashtagMenuItem.Enabled = Regex.IsMatch(this.postBrowserStatusText, "^https?://twitter.com/search\\?q=%23");
             }
             else
             {
@@ -408,7 +408,7 @@ namespace Hoehoe
             }
 
             // 発言内に自分以外のユーザーが含まれてればフォロー状態全表示を有効に
-            MatchCollection ma = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"");
+            MatchCollection ma = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"");
             bool fAllFlag = false;
             foreach (Match mu in ma)
             {
@@ -1940,79 +1940,85 @@ namespace Hoehoe
             this.TryOpenCurrentTweetIconUrl();
         }
 
-        private void IdFilterAddMenuItem_Click(object sender, EventArgs e)
+        private void AddIdFilteringRuleFromCurrentTweet()
         {
             string name = this.GetUserId();
-            if (name != null)
+            if (name == null)
             {
-                string tabName = string.Empty;
-
-                // 未選択なら処理終了
-                if (this.curList.SelectedIndices.Count == 0)
-                {
-                    return;
-                }
-
-                // タブ選択（or追加）
-                if (!this.SelectTab(ref tabName))
-                {
-                    return;
-                }
-
-                bool mv = false;
-                bool mk = false;
-                this.MoveOrCopy(ref mv, ref mk);
-
-                FiltersClass fc = new FiltersClass()
-                {
-                    NameFilter = name,
-                    SearchBoth = true,
-                    MoveFrom = mv,
-                    SetMark = mk,
-                    UseRegex = false,
-                    SearchUrl = false
-                };
-                this.statuses.Tabs[tabName].AddFilter(fc);
-
-                try
-                {
-                    this.Cursor = Cursors.WaitCursor;
-                    this.itemCache = null;
-                    this.postCache = null;
-                    this.curPost = null;
-                    this.curItemIndex = -1;
-                    this.statuses.FilterAll();
-                    foreach (TabPage tb in this.ListTab.TabPages)
-                    {
-                        ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
-                        if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
-                        {
-                            if (this.settingDialog.TabIconDisp)
-                            {
-                                tb.ImageIndex = 0;
-                            }
-                        }
-                        else
-                        {
-                            if (this.settingDialog.TabIconDisp)
-                            {
-                                tb.ImageIndex = -1;
-                            }
-                        }
-                    }
-
-                    if (!this.settingDialog.TabIconDisp)
-                    {
-                        this.ListTab.Refresh();
-                    }
-                }
-                finally
-                {
-                    this.Cursor = Cursors.Default;
-                }
-
-                this.SaveConfigsTabs();
+                return;
             }
+
+            // 未選択なら処理終了
+            if (this.curList.SelectedIndices.Count == 0)
+            {
+                return;
+            }
+
+            // タブ選択（or追加）
+            string tabName = string.Empty;
+            if (!this.SelectTab(ref tabName))
+            {
+                return;
+            }
+
+            bool mv = false;
+            bool mk = false;
+            this.MoveOrCopy(ref mv, ref mk);
+
+            FiltersClass fc = new FiltersClass()
+            {
+                NameFilter = name,
+                SearchBoth = true,
+                MoveFrom = mv,
+                SetMark = mk,
+                UseRegex = false,
+                SearchUrl = false
+            };
+            this.statuses.Tabs[tabName].AddFilter(fc);
+
+            try
+            {
+                this.Cursor = Cursors.WaitCursor;
+                this.itemCache = null;
+                this.postCache = null;
+                this.curPost = null;
+                this.curItemIndex = -1;
+                this.statuses.FilterAll();
+                foreach (TabPage tb in this.ListTab.TabPages)
+                {
+                    ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
+                    if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
+                    {
+                        if (this.settingDialog.TabIconDisp)
+                        {
+                            tb.ImageIndex = 0;
+                        }
+                    }
+                    else
+                    {
+                        if (this.settingDialog.TabIconDisp)
+                        {
+                            tb.ImageIndex = -1;
+                        }
+                    }
+                }
+
+                if (!this.settingDialog.TabIconDisp)
+                {
+                    this.ListTab.Refresh();
+                }
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
+
+            this.SaveConfigsTabs();
+        }
+        
+        private void IdFilterAddMenuItem_Click(object sender, EventArgs e)
+        {
+            this.AddIdFilteringRuleFromCurrentTweet();
         }
 
         private void IdeographicSpaceToSpaceToolStripMenuItem_Click(object sender, EventArgs e)
