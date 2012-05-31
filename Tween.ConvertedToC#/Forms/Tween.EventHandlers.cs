@@ -666,15 +666,20 @@ namespace Hoehoe
             this.DoStatusDelete();
         }
 
-        private void DeleteTabMenuItem_Click(object sender, EventArgs e)
+        private void DeleteSelectedTab(bool fromMenuBar)
         {
-            if (string.IsNullOrEmpty(this.rclickTabName) || object.ReferenceEquals(sender, this.DeleteTbMenuItem))
+            if (string.IsNullOrEmpty(this.rclickTabName) || fromMenuBar)
             {
                 this.rclickTabName = this.ListTab.SelectedTab.Text;
             }
 
             this.RemoveSpecifiedTab(this.rclickTabName, true);
             this.SaveConfigsTabs();
+        }
+
+        private void DeleteTabMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteSelectedTab(fromMenuBar: object.ReferenceEquals(sender, this.DeleteTbMenuItem));
         }
 
         private void DisplayItemImage_Downloaded(object sender, EventArgs e)
