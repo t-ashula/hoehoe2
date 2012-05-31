@@ -4931,13 +4931,18 @@ namespace Hoehoe
             MessageBox.Show(this.StatusLabel.TextHistory, "Logs", MessageBoxButtons.OK, MessageBoxIcon.None);
         }
 
-        private void StatusOpenMenuItem_Click(object sender, EventArgs e)
+        private void TryOpenSelectedTweetWebPage()
         {
             if (this.curList.SelectedIndices.Count > 0 && this.statuses.Tabs[this.curTab.Text].TabType != TabUsageType.DirectMessage)
             {
                 PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
-                this.OpenUriAsync("http://twitter.com/" + post.ScreenName + "/status/" + post.OriginalStatusId.ToString());
+                this.OpenUriAsync(string.Format("https://twitter.com/{0}/status/{1}", post.ScreenName, post.OriginalStatusId));
             }
+        }
+
+        private void StatusOpenMenuItem_Click(object sender, EventArgs e)
+        {
+            TryOpenSelectedTweetWebPage();
         }
 
         private void StatusText_EnterExtracted()
@@ -4966,7 +4971,7 @@ namespace Hoehoe
                 e.SuppressKeyPress = true;
             }
 
-            this.StatusText_TextChanged(null, null);
+            this.StatusText_TextChangedExtracted();
         }
 
         private void StatusText_KeyPress(object sender, KeyPressEventArgs e)
@@ -5030,7 +5035,7 @@ namespace Hoehoe
                 }
             }
 
-            this.StatusText_TextChanged(null, null);
+            this.StatusText_TextChangedExtracted();
         }
 
         private void StatusText_LeaveExtracted()
