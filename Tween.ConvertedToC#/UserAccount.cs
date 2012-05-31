@@ -31,68 +31,24 @@ namespace Hoehoe
 
     public class UserAccount
     {
-        public string Username = string.Empty;
-        public long UserId = 0;
-        public string Token = string.Empty;
+        public string Username { get; set; }
+
+        public long UserId { get; set; }
+        
+        public string Token { get; set; }
 
         [XmlIgnore]
-        public string TokenSecret = string.Empty;
+        public string TokenSecret { get; set; }
 
         public string EncryptTokenSecret
         {
-            get { return this.Encrypt(this.TokenSecret); }
-            set { this.TokenSecret = this.Decrypt(value); }
+            get { return CryptoUtils.TryEncrypt(this.TokenSecret); }
+            set { this.TokenSecret = CryptoUtils.TryDecrypt(value); }
         }
 
         public override string ToString()
         {
             return this.Username;
-        }
-
-        private string Encrypt(string password)
-        {
-            if (string.IsNullOrEmpty(password))
-            {
-                password = string.Empty;
-            }
-
-            if (password.Length > 0)
-            {
-                try
-                {
-                    return CryptoUtils.EncryptString(password);
-                }
-                catch (Exception)
-                {
-                    return string.Empty;
-                }
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
-
-        private string Decrypt(string password)
-        {
-            if (string.IsNullOrEmpty(password))
-            {
-                password = string.Empty;
-            }
-
-            if (password.Length > 0)
-            {
-                try
-                {
-                    password = CryptoUtils.DecryptString(password);
-                }
-                catch (Exception)
-                {
-                    password = string.Empty;
-                }
-            }
-
-            return password;
         }
     }
 }

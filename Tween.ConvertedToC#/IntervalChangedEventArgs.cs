@@ -30,12 +30,18 @@ namespace Hoehoe
 
     public class IntervalChangedEventArgs : EventArgs
     {
-        public bool UserStream;
-        public bool Timeline;
-        public bool Reply;
-        public bool DirectMessage;
-        public bool PublicSearch;
-        public bool Lists;
-        public bool UserTimeline;
+        public bool UserStream { get; set; }
+
+        public bool Timeline { get; set; }
+
+        public bool Reply { get; set; }
+
+        public bool DirectMessage { get; set; }
+
+        public bool PublicSearch { get; set; }
+
+        public bool Lists { get; set; }
+
+        public bool UserTimeline { get; set; }
     }
 }
