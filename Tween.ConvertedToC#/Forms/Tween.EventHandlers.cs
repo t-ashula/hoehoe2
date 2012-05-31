@@ -955,13 +955,7 @@ namespace Hoehoe
 
         private void FriendshipMenuItem_Click(object sender, EventArgs e)
         {
-            string id = string.Empty;
-            if (this.curPost != null)
-            {
-                id = this.curPost.ScreenName;
-            }
-
-            this.ShowFriendship(id);
+            this.ShowFriendship(this.curPost != null ? this.curPost.ScreenName : string.Empty);
         }
 
         private void GetFollowersAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1387,23 +1381,23 @@ namespace Hoehoe
             e.Result = rslt;
         }
 
-        private void GetTimelineWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void DisplayTimelineWorkerProgressChanged(int progressPercentage, string msg)
         {
             if (MyCommon.IsEnding)
             {
                 return;
             }
 
-            if (e.ProgressPercentage > 100)
+            if (progressPercentage > 100)
             {
                 // 発言投稿
-                if (e.ProgressPercentage == 200)
+                if (progressPercentage == 200)
                 {
                     // 開始
                     this.StatusLabel.Text = "Posting...";
                 }
 
-                if (e.ProgressPercentage == 300)
+                if (progressPercentage == 300)
                 {
                     // 終了
                     this.StatusLabel.Text = Hoehoe.Properties.Resources.PostWorker_RunWorkerCompletedText4;
@@ -1411,12 +1405,16 @@ namespace Hoehoe
             }
             else
             {
-                string smsg = (string)e.UserState;
-                if (smsg.Length > 0)
+                if (msg.Length > 0)
                 {
-                    this.StatusLabel.Text = smsg;
+                    this.StatusLabel.Text = msg;
                 }
             }
+        }
+        
+        private void GetTimelineWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            this.DisplayTimelineWorkerProgressChanged(e.ProgressPercentage, (string)e.UserState);
         }
 
         private void GetTimelineWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
