@@ -5089,7 +5089,7 @@ namespace Hoehoe
             this.TimelineRefreshEnableChange(!this.StopRefreshAllMenuItem.Checked);
         }
 
-        private void StopToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ChangeUserStreamStatus()
         {
             this.MenuItemUserStream.Enabled = false;
             if (this.StopRefreshAllMenuItem.Checked)
@@ -5106,6 +5106,11 @@ namespace Hoehoe
             {
                 this.tw.StartUserStream();
             }
+        }
+
+        private void StopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeUserStreamStatus();
         }
 
         private void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
