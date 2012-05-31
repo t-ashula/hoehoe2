@@ -52,7 +52,7 @@ namespace Hoehoe
             this.aboutBox.ShowDialog();
             this.TopMost = this.settingDialog.AlwaysTop;
         }
-        
+
         private void AddNewTab()
         {
             string tabName = null;
@@ -119,7 +119,7 @@ namespace Hoehoe
                 }
             }
         }
-        
+
         private void ChangeAllrepliesSetting(bool useAllReply)
         {
             this.tw.AllAtReply = useAllReply;
@@ -166,7 +166,7 @@ namespace Hoehoe
             buf.AppendFormat("キャッシュエントリ破棄数     : {0}" + "\r\n", ((ImageDictionary)this.iconDict).CacheRemoveCount);
             MessageBox.Show(buf.ToString(), "アイコンキャッシュ使用状況");
         }
-        
+
         #region event handler
 
         private void AboutMenuItem_Click(object sender, EventArgs e)
@@ -338,7 +338,7 @@ namespace Hoehoe
                 this.MoveToRTHomeMenuItem.Enabled = true;
             }
         }
-        
+
         private void ContextMenuOperate_Opening(object sender, CancelEventArgs e)
         {
             this.SetupOperateContextMenu();
@@ -422,7 +422,7 @@ namespace Hoehoe
             this.FriendshipAllMenuItem.Enabled = fAllFlag;
             this.TranslationToolStripMenuItem.Enabled = this.curPost != null;
         }
-        
+
         private void ContextMenuPostBrowser_Opening(object sender, CancelEventArgs e)
         {
             SetupPostBrowserContextMenu();
@@ -617,7 +617,7 @@ namespace Hoehoe
                 this.ListManageUserContextToolStripMenuItem3.Enabled = false;
             }
         }
-        
+
         private void ContextMenuUserPicture_Opening(object sender, CancelEventArgs e)
         {
             this.SetupUserPictureContextMenu();
@@ -754,7 +754,7 @@ namespace Hoehoe
 
             this.TopMost = this.settingDialog.AlwaysTop;
         }
-        
+
         private void EventViewerMenuItem_Click(object sender, EventArgs e)
         {
             this.ShowEventViewerBox();
@@ -821,7 +821,7 @@ namespace Hoehoe
             this.ImagefilePathText.Text = this.OpenFileDialog1.FileName;
             this.ImageFromSelectedFile();
         }
-        
+
         private void FilePickButton_Click(object sender, EventArgs e)
         {
             this.ShowPostImageFileSelectBox();
@@ -877,7 +877,7 @@ namespace Hoehoe
 
             this.SaveConfigsTabs();
         }
-        
+
         private void FilterEditMenuItem_Click(object sender, EventArgs e)
         {
             this.ShowFilterEditBox();
@@ -1411,7 +1411,7 @@ namespace Hoehoe
                 }
             }
         }
-        
+
         private void GetTimelineWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             this.DisplayTimelineWorkerProgressChanged(e.ProgressPercentage, (string)e.UserState);
@@ -1788,7 +1788,7 @@ namespace Hoehoe
             this.modifySettingCommon = true;
             this.StatusText_TextChanged(null, null);
         }
-        
+
         private void HashToggleMenuItem_Click(object sender, EventArgs e)
         {
             this.ChangeUseHashTagSetting();
@@ -2015,7 +2015,7 @@ namespace Hoehoe
 
             this.SaveConfigsTabs();
         }
-        
+
         private void IdFilterAddMenuItem_Click(object sender, EventArgs e)
         {
             this.AddIdFilteringRuleFromCurrentTweet();
@@ -5249,30 +5249,35 @@ namespace Hoehoe
             }
         }
 
-        private void Tabs_MouseDown(object sender, MouseEventArgs e)
+        private void Tabs_MouseDownExtracted(MouseEventArgs e)
         {
             if (this.settingDialog.TabMouseLock)
             {
                 return;
             }
 
-            Point cpos = new Point(e.X, e.Y);
-            if (e.Button == MouseButtons.Left)
+            if (e.Button != MouseButtons.Left)
             {
+                this.tabDraging = false;
+            }
+            else
+            {
+                Point cpos = e.Location;
                 for (int i = 0; i < this.ListTab.TabPages.Count; i++)
                 {
-                    if (this.ListTab.GetTabRect(i).Contains(e.Location))
+                    if (this.ListTab.GetTabRect(i).Contains(cpos))
                     {
                         this.tabDraging = true;
-                        this.tabMouseDownPoint = e.Location;
+                        this.tabMouseDownPoint = cpos;
                         break;
                     }
                 }
             }
-            else
-            {
-                this.tabDraging = false;
-            }
+        }
+
+        private void Tabs_MouseDown(object sender, MouseEventArgs e)
+        {
+            Tabs_MouseDownExtracted(e);
         }
 
         private void TimerInterval_Changed(object sender, IntervalChangedEventArgs e)
@@ -5291,7 +5296,7 @@ namespace Hoehoe
             this.RefreshTasktrayIcon(false);
         }
 
-        private void TimerTimeline_Elapsed(object sender, EventArgs e)
+        private void TimerTimeline_ElapsedExtracted()
         {
             if (this.timerHomeCounter > 0)
             {
@@ -5442,6 +5447,11 @@ namespace Hoehoe
             }
         }
 
+        private void TimerTimeline_Elapsed(object sender, EventArgs e)
+        {
+            TimerTimeline_ElapsedExtracted();
+        }
+
         private void TinyURLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.UrlConvert(UrlConverter.TinyUrl);
@@ -5449,9 +5459,9 @@ namespace Hoehoe
 
         private void ToolStripFocusLockMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            this.modifySettingCommon = true;
+            this.SetModifySettingCommon(true);
         }
-        
+
         private void ChangeAutoUrlConvertFlag(bool autoConvert)
         {
             this.settingDialog.UrlConvertAuto = autoConvert;
@@ -5461,12 +5471,12 @@ namespace Hoehoe
         {
             ChangeAutoUrlConvertFlag(this.ToolStripMenuItemUrlAutoShorten.Checked);
         }
-        
+
         private static void ChangeTraceFlag(bool trace)
         {
             MyCommon.TraceFlag = trace;
         }
-        
+
         private void TraceOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeTraceFlag(this.TraceOutToolStripMenuItem.Checked);
@@ -5699,7 +5709,7 @@ namespace Hoehoe
             {
                 return;
             }
-        
+
             ChangeUserStreamStatusDisplay(start: true);
         }
 
@@ -7009,7 +7019,7 @@ namespace Hoehoe
             this.isInitializing = false;
             this.timerTimeline.Enabled = true;
         }
-        
+
         private void TweenMain_Shown(object sender, EventArgs e)
         {
             this.TweenMain_ShownExtracted();
@@ -7122,7 +7132,7 @@ namespace Hoehoe
                 this.ListTab.Refresh();
             }
         }
-        
+
         private void UnreadStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ChangeSelectedTweetReadSateToUnread();
@@ -7190,7 +7200,7 @@ namespace Hoehoe
                 MessageBox.Show(ex.Message);
             }
         }
-        
+
         private void UrlCopyContextMenuItem_Click(object sender, EventArgs e)
         {
             this.TryCopyUrlInCurrentTweet();
@@ -7351,7 +7361,7 @@ namespace Hoehoe
 
         private void GetRetweet_DoWork(object sender, DoWorkEventArgs e)
         {
-            long statusid = this.CurPost.OriginalStatusId; 
+            long statusid = this.CurPost.OriginalStatusId;
             int counter = 0;
             this.tw.GetStatus_Retweeted_Count(statusid, ref counter);
             e.Result = counter;
