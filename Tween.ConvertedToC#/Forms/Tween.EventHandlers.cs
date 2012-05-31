@@ -827,7 +827,7 @@ namespace Hoehoe
             this.ShowPostImageFileSelectBox();
         }
 
-        private void FilterEditMenuItem_Click(object sender, EventArgs e)
+        private void ShowFilterEditBox()
         {
             if (string.IsNullOrEmpty(this.rclickTabName))
             {
@@ -876,6 +876,11 @@ namespace Hoehoe
             }
 
             this.SaveConfigsTabs();
+        }
+        
+        private void FilterEditMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ShowFilterEditBox();
         }
 
         private void FollowCommandMenuItem_Click(object sender, EventArgs e)
