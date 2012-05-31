@@ -5528,7 +5528,7 @@ namespace Hoehoe
                     this.timeLineTimestamps.Add(tm, rsltAddCount);
                 }
 
-                DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                DateTime oneHour = tm.Subtract(new TimeSpan(1, 0, 0));
                 List<DateTime> keys = new List<DateTime>();
                 this.timeLineCount = 0;
                 foreach (System.DateTime key in this.timeLineTimestamps.Keys)
@@ -5651,6 +5651,15 @@ namespace Hoehoe
             }
         }
 
+        private void ChangeUserStreamStatusDisplay(bool start)
+        {
+            this.MenuItemUserStream.Text = start ? "&UserStream ▶" : "&UserStream ■";
+            this.MenuItemUserStream.Enabled = true;
+            this.StopToolStripMenuItem.Text = start ? "&Stop" : "&Start";
+            this.StopToolStripMenuItem.Enabled = true;
+            this.StatusLabel.Text = start ? "UserStream Started." : "UserStream Stopped.";
+        }
+
         private void Tw_UserStreamStarted()
         {
             this.isActiveUserstream = true;
@@ -5670,12 +5679,8 @@ namespace Hoehoe
             {
                 return;
             }
-
-            this.MenuItemUserStream.Text = "&UserStream ▶";
-            this.MenuItemUserStream.Enabled = true;
-            this.StopToolStripMenuItem.Text = "&Stop";
-            this.StopToolStripMenuItem.Enabled = true;
-            this.StatusLabel.Text = "UserStream Started.";
+        
+            ChangeUserStreamStatusDisplay(start: true);
         }
 
         private void Tw_UserStreamStopped()
@@ -5698,12 +5703,7 @@ namespace Hoehoe
                 return;
             }
 
-            this.MenuItemUserStream.Text = "&UserStream ■";
-            this.MenuItemUserStream.Enabled = true;
-            this.StopToolStripMenuItem.Text = "&Start";
-            this.StopToolStripMenuItem.Enabled = true;
-
-            this.StatusLabel.Text = "UserStream Stopped.";
+            ChangeUserStreamStatusDisplay(start: false);
         }
 
         private void ActivateMainFormControls()
