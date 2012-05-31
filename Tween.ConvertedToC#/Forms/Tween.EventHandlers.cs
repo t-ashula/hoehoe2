@@ -5451,10 +5451,15 @@ namespace Hoehoe
         {
             this.modifySettingCommon = true;
         }
+        
+        private void ChangeAutoUrlConvertFlag(bool autoConvert)
+        {
+            this.settingDialog.UrlConvertAuto = autoConvert;
+        }
 
         private void ToolStripMenuItemUrlAutoShorten_CheckedChanged(object sender, EventArgs e)
         {
-            this.settingDialog.UrlConvertAuto = this.ToolStripMenuItemUrlAutoShorten.Checked;
+            ChangeAutoUrlConvertFlag(this.ToolStripMenuItemUrlAutoShorten.Checked);
         }
         
         private static void ChangeTraceFlag(bool trace)
