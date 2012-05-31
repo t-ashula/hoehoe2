@@ -1769,7 +1769,7 @@ namespace Hoehoe
             this.HashToggleMenuItem_Click(null, null);
         }
 
-        private void HashToggleMenuItem_Click(object sender, EventArgs e)
+        private void ChangeUseHashTagSetting()
         {
             this.HashMgr.ToggleHash();
             if (!string.IsNullOrEmpty(this.HashMgr.UseHash))
@@ -1787,6 +1787,11 @@ namespace Hoehoe
 
             this.modifySettingCommon = true;
             this.StatusText_TextChanged(null, null);
+        }
+        
+        private void HashToggleMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ChangeUseHashTagSetting();
         }
 
         private void HookGlobalHotkey_HotkeyPressed(object sender, KeyEventArgs e)
