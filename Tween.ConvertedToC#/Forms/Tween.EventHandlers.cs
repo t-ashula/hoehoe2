@@ -6848,7 +6848,7 @@ namespace Hoehoe
             }
         }
 
-        private void TweenMain_Shown(object sender, EventArgs e)
+        private void TweenMain_ShownExtracted()
         {
             try
             {
@@ -6950,6 +6950,11 @@ namespace Hoehoe
 
             this.isInitializing = false;
             this.timerTimeline.Enabled = true;
+        }
+        
+        private void TweenMain_Shown(object sender, EventArgs e)
+        {
+            this.TweenMain_ShownExtracted();
         }
 
         private void TryRestartApplication()
