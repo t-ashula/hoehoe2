@@ -1439,7 +1439,6 @@ namespace Hoehoe
             }
 
             GetWorkerResult rslt = (GetWorkerResult)e.Result;
-
             if (rslt.WorkerType == WorkerType.OpenUri)
             {
                 return;
@@ -1582,7 +1581,9 @@ namespace Hoehoe
                         DialogResult retry = default(DialogResult);
                         try
                         {
-                            retry = MessageBox.Show(string.Format("{0}   --->   [ " + rslt.RetMsg + " ]" + Environment.NewLine + "\"" + rslt.PStatus.Status + "\"" + Environment.NewLine + "{1}", Hoehoe.Properties.Resources.StatusUpdateFailed1, Hoehoe.Properties.Resources.StatusUpdateFailed2), "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
+                            retry = MessageBox.Show(
+                                string.Format("{0}   --->   [ {1} ]{2}\"{3}\"{2}{4}", Hoehoe.Properties.Resources.StatusUpdateFailed1, rslt.RetMsg, Environment.NewLine, rslt.PStatus.Status, Hoehoe.Properties.Resources.StatusUpdateFailed2),
+                                "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
                         }
                         catch (Exception)
                         {
@@ -1723,7 +1724,7 @@ namespace Hoehoe
             }
         }
 
-        private void HashManageMenuItem_Click(object sender, EventArgs e)
+        private void TryShowHashManageBox()
         {
             DialogResult rslt = default(DialogResult);
             try
@@ -1756,6 +1757,11 @@ namespace Hoehoe
 
             this.modifySettingCommon = true;
             this.StatusText_TextChanged(null, null);
+        }
+
+        private void HashManageMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryShowHashManageBox();
         }
 
         private void HashStripSplitButton_ButtonClick(object sender, EventArgs e)
