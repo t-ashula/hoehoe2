@@ -6096,6 +6096,11 @@ namespace Hoehoe
 
         private void ClearTab(string tabName, bool showWarning)
         {
+            if (string.IsNullOrEmpty(tabName))
+            {
+                return;
+            }
+
             if (showWarning)
             {
                 string tmp = string.Format(Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);

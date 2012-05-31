@@ -42,9 +42,7 @@ namespace Hoehoe
 
     partial class TweenMain
     {
-        #region event handler
-
-        private void AboutMenuItem_Click(object sender, EventArgs e)
+        private void ShowAboutBox()
         {
             if (this.aboutBox == null)
             {
@@ -54,8 +52,8 @@ namespace Hoehoe
             this.aboutBox.ShowDialog();
             this.TopMost = this.settingDialog.AlwaysTop;
         }
-
-        private void AddTabMenuItem_Click(object sender, EventArgs e)
+        
+        private void AddNewTab()
         {
             string tabName = null;
             TabUsageType tabUsage = default(TabUsageType);
@@ -121,22 +119,17 @@ namespace Hoehoe
                 }
             }
         }
-
-        private void AllrepliesToolStripMenuItem_Click(object sender, EventArgs e)
+        
+        private void ChangeAllrepliesSetting(bool useAllReply)
         {
-            this.tw.AllAtReply = this.AllrepliesToolStripMenuItem.Checked;
+            this.tw.AllAtReply = useAllReply;
             this.modifySettingCommon = true;
             this.tw.ReconnectUserStream();
         }
 
-        private void ApiInfoMenuItem_Click(object sender, EventArgs e)
+        private void ShowApiInfoBox()
         {
-            GetApiInfoArgs args = new GetApiInfoArgs
-            {
-                Tw = this.tw,
-                Info = new ApiInfo()
-            };
-
+            GetApiInfoArgs args = new GetApiInfoArgs { Tw = this.tw, Info = new ApiInfo() };
             StringBuilder tmp = new StringBuilder();
             using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ApiInfo6, this.GetApiInfo_Dowork, null, args))
             {
@@ -147,11 +140,9 @@ namespace Hoehoe
                     tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo2 + args.Info.RemainCount.ToString());
                     tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo3 + args.Info.ResetTime.ToString());
                     tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo7 + (this.tw.UserStreamEnabled ? Hoehoe.Properties.Resources.Enable : Hoehoe.Properties.Resources.Disable).ToString());
-
                     tmp.AppendLine();
                     tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo8 + args.Info.AccessLevel.ToString());
                     this.SetStatusLabelUrl();
-
                     tmp.AppendLine();
                     tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo9 + (args.Info.MediaMaxCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaMaxCount.ToString()));
                     tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo10 + (args.Info.MediaRemainCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaRemainCount.ToString()));
@@ -166,12 +157,7 @@ namespace Hoehoe
             MessageBox.Show(tmp.ToString(), Hoehoe.Properties.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void BitlyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.UrlConvert(UrlConverter.Bitly);
-        }
-
-        private void CacheInfoMenuItem_Click(object sender, EventArgs e)
+        private void ShowCacheInfoBox()
         {
             StringBuilder buf = new StringBuilder();
             buf.AppendFormat("キャッシュメモリ容量         : {0}bytes({1}MB)" + "\r\n", ((ImageDictionary)this.iconDict).CacheMemoryLimit, ((ImageDictionary)this.iconDict).CacheMemoryLimit / 1048576);
@@ -180,14 +166,41 @@ namespace Hoehoe
             buf.AppendFormat("キャッシュエントリ破棄数     : {0}" + "\r\n", ((ImageDictionary)this.iconDict).CacheRemoveCount);
             MessageBox.Show(buf.ToString(), "アイコンキャッシュ使用状況");
         }
+        
+        #region event handler
+
+        private void AboutMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowAboutBox();
+        }
+
+        private void AddTabMenuItem_Click(object sender, EventArgs e)
+        {
+            AddNewTab();
+        }
+
+        private void AllrepliesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeAllrepliesSetting(this.AllrepliesToolStripMenuItem.Checked);
+        }
+
+        private void ApiInfoMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowApiInfoBox();
+        }
+
+        private void BitlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.UrlConvert(UrlConverter.Bitly);
+        }
+
+        private void CacheInfoMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowCacheInfoBox();
+        }
 
         private void ClearTabMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(this.rclickTabName))
-            {
-                return;
-            }
-
             this.ClearTab(this.rclickTabName, true);
         }
 
