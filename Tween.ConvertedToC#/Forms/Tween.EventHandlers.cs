@@ -7080,7 +7080,7 @@ namespace Hoehoe
             }
         }
 
-        private void UrlCopyContextMenuItem_Click(object sender, EventArgs e)
+        private void TryCopyUrlInCurrentTweet()
         {
             try
             {
@@ -7103,6 +7103,11 @@ namespace Hoehoe
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+        
+        private void UrlCopyContextMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryCopyUrlInCurrentTweet();
         }
 
         private void UrlUndoToolStripMenuItem_Click(object sender, EventArgs e)
