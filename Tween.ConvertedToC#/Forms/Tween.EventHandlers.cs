@@ -5710,9 +5710,9 @@ namespace Hoehoe
             }
         }
 
-        private void TweenMain_ClientSizeChanged(object sender, EventArgs e)
+        private void TweenMain_ClientSizeChangedExtracted()
         {
-            if ((!this.initialLayout) && this.Visible)
+            if (!this.initialLayout && this.Visible)
             {
                 if (this.WindowState == FormWindowState.Normal)
                 {
@@ -5728,6 +5728,11 @@ namespace Hoehoe
                     this.modifySettingLocal = true;
                 }
             }
+        }
+
+        private void TweenMain_ClientSizeChanged(object sender, EventArgs e)
+        {
+            this.TweenMain_ClientSizeChangedExtracted();
         }
 
         private void TweenMain_Deactivate(object sender, EventArgs e)
