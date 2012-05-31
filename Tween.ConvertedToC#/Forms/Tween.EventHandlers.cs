@@ -5116,7 +5116,7 @@ namespace Hoehoe
             }
         }
 
-        private void TabMenuItem_Click(object sender, EventArgs e)
+        private void AddFilteringRuleFromSelectedTweet()
         {
             // 選択発言を元にフィルタ追加
             foreach (int idx in this.curList.SelectedIndices)
@@ -5178,6 +5178,11 @@ namespace Hoehoe
             {
                 this.curPost = this.statuses.Item(this.ListTab.SelectedTab.Text, ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices[0]);
             }
+        }
+        
+        private void TabMenuItem_Click(object sender, EventArgs e)
+        {
+            AddFilteringRuleFromSelectedTweet();
         }
 
         private void RenameCurrentTabName()
