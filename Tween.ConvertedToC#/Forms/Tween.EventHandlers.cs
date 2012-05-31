@@ -885,22 +885,21 @@ namespace Hoehoe
 
         private void FollowCommandMenuItem_Click(object sender, EventArgs e)
         {
-            string id = string.Empty;
-            if (this.curPost != null)
-            {
-                id = this.curPost.ScreenName;
-            }
-
-            this.FollowCommand(id);
+            this.FollowCommand(this.curPost != null ? this.curPost.ScreenName : string.Empty);
         }
 
-        private void FollowContextMenuItem_Click(object sender, EventArgs e)
+        private void TryFollowFromCurrentTweet()
         {
             string name = this.GetUserId();
             if (name != null)
             {
                 this.FollowCommand(name);
             }
+        }
+
+        private void FollowContextMenuItem_Click(object sender, EventArgs e)
+        {
+            TryFollowFromCurrentTweet();
         }
 
         private void FollowToolStripMenuItem_Click(object sender, EventArgs e)

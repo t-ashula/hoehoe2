@@ -7049,7 +7049,7 @@ namespace Hoehoe
 
         private string GetUserId()
         {
-            Match m = Regex.Match(this.postBrowserStatusText, "^https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?$");
+            Match m = Regex.Match(this.postBrowserStatusText, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?$");
             if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
             {
                 return m.Result("${ScreenName}");
