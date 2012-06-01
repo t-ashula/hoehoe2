@@ -3547,61 +3547,68 @@ namespace Hoehoe
             }
         }
 
-        private void PostBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        private bool NavigateNextUrl(Uri url)
         {
-            if (e.Url.Scheme == "data")
+            if (url.Scheme == "data")
             {
                 this.StatusLabelUrl.Text = this.PostBrowser.StatusText.Replace("&", "&&");
+                return true;
             }
-            else if (e.Url.AbsoluteUri != "about:blank")
-            {
-                e.Cancel = true;
 
-                if (e.Url.AbsoluteUri.StartsWith("http://twitter.com/search?q=%23") || e.Url.AbsoluteUri.StartsWith("https:// twitter.com/search?q=%23"))
+            string eUrlAbsoluteUri = url.AbsoluteUri;
+            if (eUrlAbsoluteUri == "about:blank")
+            {
+                return false;
+            }
+
+            if (eUrlAbsoluteUri.StartsWith("http://twitter.com/search?q=%23") || eUrlAbsoluteUri.StartsWith("https://twitter.com/search?q=%23"))
+            {
+                // ハッシュタグの場合は、タブで開く
+                string urlStr = HttpUtility.UrlDecode(eUrlAbsoluteUri);
+                string hash = urlStr.Substring(urlStr.IndexOf("#"));
+                this.HashSupl.AddItem(hash);
+                this.HashMgr.AddHashToHistory(hash.Trim(), false);
+                this.AddNewTabForSearch(hash);
+                return true;
+            }
+            Match m = Regex.Match(eUrlAbsoluteUri, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
+            string eUrlOriginalString = url.OriginalString;
+            if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
+            {
+                // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
+                if (this.settingDialog.OpenUserTimeline)
                 {
-                    // ハッシュタグの場合は、タブで開く
-                    string urlStr = HttpUtility.UrlDecode(e.Url.AbsoluteUri);
-                    string hash = urlStr.Substring(urlStr.IndexOf("#"));
-                    this.HashSupl.AddItem(hash);
-                    this.HashMgr.AddHashToHistory(hash.Trim(), false);
-                    this.AddNewTabForSearch(hash);
-                    return;
-                }
-                else
-                {
-                    Match m = Regex.Match(e.Url.AbsoluteUri, "^https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
-                    if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
+                    if (this.IsKeyDown(Keys.Control))
                     {
-                        // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
-                        if (this.settingDialog.OpenUserTimeline)
-                        {
-                            if (this.IsKeyDown(Keys.Control))
-                            {
-                                this.OpenUriAsync(e.Url.OriginalString);
-                            }
-                            else
-                            {
-                                this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
-                            }
-                        }
-                        else
-                        {
-                            if (this.IsKeyDown(Keys.Control))
-                            {
-                                this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
-                            }
-                            else
-                            {
-                                this.OpenUriAsync(e.Url.OriginalString);
-                            }
-                        }
+                        this.OpenUriAsync(eUrlOriginalString);
                     }
                     else
                     {
-                        this.OpenUriAsync(e.Url.OriginalString);
+                        this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
+                    }
+                }
+                else
+                {
+                    if (this.IsKeyDown(Keys.Control))
+                    {
+                        this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
+                    }
+                    else
+                    {
+                        this.OpenUriAsync(eUrlOriginalString);
                     }
                 }
             }
+            else
+            {
+                this.OpenUriAsync(eUrlOriginalString);
+            }
+            return true;
+        }
+
+        private void PostBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        {
+            e.Cancel = NavigateNextUrl(e.Url);
         }
 
         private void PostBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
