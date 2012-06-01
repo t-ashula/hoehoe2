@@ -251,16 +251,8 @@ namespace Hoehoe
 
         private void SetupSourceContextMenu()
         {
-            if (this.curPost == null || !this.ExistCurrentPost || this.curPost.IsDm)
-            {
-                this.SourceCopyMenuItem.Enabled = false;
-                this.SourceUrlCopyMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.SourceCopyMenuItem.Enabled = true;
-                this.SourceUrlCopyMenuItem.Enabled = true;
-            }
+            bool dmOrNotExist = this.curPost == null || !this.ExistCurrentPost || this.curPost.IsDm;
+            this.SourceCopyMenuItem.Enabled = this.SourceUrlCopyMenuItem.Enabled = !dmOrNotExist;
         }
 
         private void SetupTabPropertyContextMenu(bool fromMenuBar)
