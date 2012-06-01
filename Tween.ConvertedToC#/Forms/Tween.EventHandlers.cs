@@ -370,37 +370,10 @@ namespace Hoehoe
         private void SetupEditMenu()
         {
             this.UndoRemoveTabMenuItem.Enabled = this.statuses.RemovedTab.Count != 0;
-
-            if (this.ListTab.SelectedTab != null)
-            {
-                this.PublicSearchQueryMenuItem.Enabled = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch;
-            }
-            else
-            {
-                this.PublicSearchQueryMenuItem.Enabled = false;
-            }
-
-            if (!this.ExistCurrentPost)
-            {
-                this.CopySTOTMenuItem.Enabled = false;
-                this.CopyURLMenuItem.Enabled = false;
-                this.CopyUserIdStripMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.CopySTOTMenuItem.Enabled = true;
-                this.CopyURLMenuItem.Enabled = true;
-                this.CopyUserIdStripMenuItem.Enabled = true;
-                if (this.curPost.IsDm)
-                {
-                    this.CopyURLMenuItem.Enabled = false;
-                }
-
-                if (this.curPost.IsProtect)
-                {
-                    this.CopySTOTMenuItem.Enabled = false;
-                }
-            }
+            this.PublicSearchQueryMenuItem.Enabled = this.ListTab.SelectedTab != null && this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch;
+            this.CopyUserIdStripMenuItem.Enabled = this.ExistCurrentPost;
+            this.CopyURLMenuItem.Enabled = this.ExistCurrentPost && !this.curPost.IsDm;
+            this.CopySTOTMenuItem.Enabled = this.ExistCurrentPost && !this.curPost.IsProtect;
         }
 
         private void SetupHelpMenu()
