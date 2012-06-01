@@ -3405,7 +3405,7 @@ namespace Hoehoe
             this.OpenUriAsync("http://twitter.com/" + this.tw.Username);
         }
 
-        private void OpenURLMenuItem_Click(object sender, EventArgs e)
+        private void TryOpenUrlInCurrentTweet()
         {
             if (this.PostBrowser.Document.Links.Count > 0)
             {
@@ -3413,10 +3413,15 @@ namespace Hoehoe
                 string openUrlStr = string.Empty;
                 if (this.PostBrowser.Document.Links.Count == 1)
                 {
-                    string urlStr = string.Empty;
                     try
                     {
-                        urlStr = MyCommon.IDNDecode(this.PostBrowser.Document.Links[0].GetAttribute("href"));
+                        string urlStr = MyCommon.IDNDecode(this.PostBrowser.Document.Links[0].GetAttribute("href"));
+                        if (string.IsNullOrEmpty(urlStr))
+                        {
+                            return;
+                        }
+
+                        openUrlStr = MyCommon.GetUrlEncodeMultibyteChar(urlStr);
                     }
                     catch (ArgumentException)
                     {
@@ -3427,13 +3432,6 @@ namespace Hoehoe
                     {
                         return;
                     }
-
-                    if (string.IsNullOrEmpty(urlStr))
-                    {
-                        return;
-                    }
-
-                    openUrlStr = MyCommon.GetUrlEncodeMultibyteChar(urlStr);
                 }
                 else
                 {
@@ -3495,7 +3493,7 @@ namespace Hoehoe
                     return;
                 }
 
-                if (openUrlStr.StartsWith("http://twitter.com/search?q=") || openUrlStr.StartsWith("https:// twitter.com/search?q="))
+                if (openUrlStr.StartsWith("http://twitter.com/search?q=") || openUrlStr.StartsWith("https://twitter.com/search?q="))
                 {
                     // ハッシュタグの場合は、タブで開く
                     string urlStr = HttpUtility.UrlDecode(openUrlStr);
@@ -3506,18 +3504,24 @@ namespace Hoehoe
                     return;
                 }
 
-                Match m = Regex.Match(openUrlStr, "^https?:// twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
-                if (this.settingDialog.OpenUserTimeline && m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
+                if (this.settingDialog.OpenUserTimeline)
                 {
-                    this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
+                    Match m = Regex.Match(openUrlStr, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");                
+                    if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
+                    {
+                        this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
+                    }
                 }
                 else
                 {
                     this.OpenUriAsync(openUrlStr);
                 }
-
-                return;
             }
+        }
+        
+        private void OpenURLMenuItem_Click(object sender, EventArgs e)
+        {
+            TryOpenUrlInCurrentTweet();
         }
 
         private void OpenUserSpecifiedUrlMenuItem_Click(object sender, EventArgs e)
