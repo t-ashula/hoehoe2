@@ -1410,7 +1410,7 @@ namespace Hoehoe
                     }
                     else if (doPost)
                     {
-                        this.PostButton_Click(null, null);
+                        this.TryPostTweet();
                         return true;
                     }
                 }
@@ -3940,18 +3940,18 @@ namespace Hoehoe
                             this.DoQuote();
                             return true;
                         case Keys.B:
-                            this.ReadedStripMenuItem_Click(null, null);
+                            this.ChangeSelectetdTweetReadStateToRead();
                             return true;
                         case Keys.T:
-                            this.HashManageMenuItem_Click(null, null);
+                            this.TryShowHashManageBox();
                             return true;
                         case Keys.L:
-                            this.UrlConvertAutoToolStripMenuItem_Click(null, null);
+                            this.ConvertUrlByAutoSelectedService();
                             return true;
                         case Keys.Y:
-                            if (!(focusedControl == FocusedControl.PostBrowser))
+                            if (focusedControl != FocusedControl.PostBrowser)
                             {
-                                this.MultiLineMenuItem_Click(null, null);
+                                this.ChangeStatusTextMultilineState(this.MultiLineMenuItem.Checked);
                                 return true;
                             }
 
@@ -3964,23 +3964,11 @@ namespace Hoehoe
                             return true;
                         case Keys.H:
                             // Webページを開く動作
-                            if (this.curList.SelectedIndices.Count > 0)
-                            {
-                                this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName);
-                            }
-                            else if (this.curList.SelectedIndices.Count == 0)
-                            {
-                                this.OpenUriAsync("http://twitter.com/");
-                            }
-
+                            this.TryOpenCurListSelectedUserHome();
                             return true;
                         case Keys.G:
                             // Webページを開く動作
-                            if (this.curList.SelectedIndices.Count > 0)
-                            {
-                                this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName + "/favorites");
-                            }
-
+                            this.TryOpenCurListSelectedUserFavorites();
                             return true;
                         case Keys.O:
                             // Webページを開く動作
@@ -3988,7 +3976,7 @@ namespace Hoehoe
                             return true;
                         case Keys.E:
                             // Webページを開く動作
-                            this.OpenURLMenuItem_Click(null, null);
+                            this.TryOpenUrlInCurrentTweet();
                             return true;
                     }
 
@@ -4125,7 +4113,7 @@ namespace Hoehoe
                                 return true;
                             case Keys.Y:
                                 MultiLineMenuItem.Checked = !MultiLineMenuItem.Checked;
-                                MultiLineMenuItem_Click(null, null);
+                                ChangeStatusTextMultilineState(this.MultiLineMenuItem.Checked);
                                 return true;
                         }
                     }
@@ -4271,19 +4259,19 @@ namespace Hoehoe
                             this.FavoriteChange(false);
                             return true;
                         case Keys.B:
-                            this.UnreadStripMenuItem_Click(null, null);
+                            this.ChangeSelectedTweetReadSateToUnread();
                             return true;
                         case Keys.T:
-                            this.HashToggleMenuItem_Click(null, null);
+                            this.ChangeUseHashTagSetting();
                             return true;
                         case Keys.P:
-                            this.ImageSelectMenuItem_Click(null, null);
+                            this.ImageSelectMenuItem_ClickExtracted();
                             return true;
                         case Keys.H:
                             this.DoMoveToRTHome();
                             return true;
                         case Keys.O:
-                            this.FavorareMenuItem_Click(null, null);
+                            this.OpenFavorarePageForSelectedTweetUser();
                             return true;
                     }
 
@@ -4350,7 +4338,7 @@ namespace Hoehoe
                                         }
                                         else
                                         {
-                                            break; // TODO: might not be correct. Was : Exit For
+                                            break;
                                         }
                                     }
 

@@ -1766,7 +1766,7 @@ namespace Hoehoe
 
         private void HashStripSplitButton_ButtonClick(object sender, EventArgs e)
         {
-            this.HashToggleMenuItem_Click(null, null);
+            this.ChangeUseHashTagSetting();
         }
 
         private void ChangeUseHashTagSetting()
@@ -3283,7 +3283,7 @@ namespace Hoehoe
                     this.AddRelatedStatusesTab();
                     break;
                 case 5:
-                    this.MoveToHomeToolStripMenuItem_Click(null, null);
+                    this.TryOpenCurListSelectedUserHome();
                     break;
                 case 6:
                     this.TryOpenSelectedTweetWebPage();
@@ -7008,7 +7008,7 @@ namespace Hoehoe
 #endif
 
             this.ignoreConfigSave = false;
-            this.TweenMain_Resize(null, null);
+            this.ResizeMainForm();
             if (saveRequired)
             {
                 this.SaveConfigsAll(false);
@@ -7205,7 +7205,7 @@ namespace Hoehoe
                 if (MyCommon.TwitterApiInfo.AccessLevel == ApiAccessLevel.ReadWrite)
                 {
                     MessageBox.Show(Hoehoe.Properties.Resources.ReAuthorizeText);
-                    this.SettingStripMenuItem_Click(null, null);
+                    this.TryShowSettingsBox();
                 }
             }
 
