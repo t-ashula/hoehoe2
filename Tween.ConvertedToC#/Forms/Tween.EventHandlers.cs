@@ -4006,7 +4006,7 @@ namespace Hoehoe
             this.MakeReplyOrDirectStatus(false, true);
         }
 
-        private void RtCountMenuItem_Click(object sender, EventArgs e)
+        private void ShowCurrentTweetRtCountBox()
         {
             if (this.ExistCurrentPost)
             {
@@ -4027,6 +4027,11 @@ namespace Hoehoe
                     }
                 }
             }
+        }
+
+        private void RtCountMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowCurrentTweetRtCountBox();
         }
 
         private void TrySaveCurrentTweetUserIcon()
