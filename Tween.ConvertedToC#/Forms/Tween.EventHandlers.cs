@@ -345,11 +345,10 @@ namespace Hoehoe
         private void ShowCacheInfoBox()
         {
             StringBuilder buf = new StringBuilder();
-            ImageDictionary icondict = (ImageDictionary)this.iconDict;
-            buf.AppendLine(string.Format("{0, -15} : {1}bytes ({2}MB)", "キャッシュメモリ容量", icondict.CacheMemoryLimit, icondict.CacheMemoryLimit / (1024 * 1024)));
-            buf.AppendLine(string.Format("{0, -15} : {1}%", "物理メモリ使用割合", icondict.PhysicalMemoryLimit));
-            buf.AppendLine(string.Format("{0, -15} : {1}", "キャッシュエントリ保持数", icondict.CacheCount));
-            buf.AppendLine(string.Format("{0, -15} : {1}", "キャッシュエントリ破棄数", icondict.CacheRemoveCount));
+            buf.AppendLine(string.Format("{0, -15} : {1}bytes ({2}MB)", "キャッシュメモリ容量", this.iconDict.CacheMemoryLimit, this.iconDict.CacheMemoryLimit / (1024 * 1024)));
+            buf.AppendLine(string.Format("{0, -15} : {1}%", "物理メモリ使用割合", this.iconDict.PhysicalMemoryLimit));
+            buf.AppendLine(string.Format("{0, -15} : {1}", "キャッシュエントリ保持数", this.iconDict.CacheCount));
+            buf.AppendLine(string.Format("{0, -15} : {1}", "キャッシュエントリ破棄数", this.iconDict.CacheRemoveCount));
             MessageBox.Show(buf.ToString(), "アイコンキャッシュ使用状況");
         }
         
@@ -5862,8 +5861,8 @@ namespace Hoehoe
             this.apiGauge.Dispose();
             if (this.iconDict != null)
             {
-                ((ImageDictionary)this.iconDict).PauseGetImage = true;
-                ((IDisposable)this.iconDict).Dispose();
+                this.iconDict.PauseGetImage = true;
+                this.iconDict.Dispose();
             }
 
             // 終了時にRemoveHandlerしておかないとメモリリークする
@@ -6326,7 +6325,7 @@ namespace Hoehoe
                 return;
             }
 
-            ((ImageDictionary)this.iconDict).PauseGetImage = false;
+            this.iconDict.PauseGetImage = false;
 
             bool saveRequired = false;
 

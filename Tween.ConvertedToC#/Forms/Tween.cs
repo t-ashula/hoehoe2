@@ -218,7 +218,7 @@ namespace Hoehoe
         private Font fntInputFont;
 
         // アイコン画像リスト
-        private IDictionary<string, Image> iconDict;
+        private ImageDictionary iconDict;
 
         // At.ico             タスクトレイアイコン：通常時
         private Icon iconAt;
@@ -3145,7 +3145,7 @@ namespace Hoehoe
                 postedByDetail += string.Format("{0}(RT:{1})", Environment.NewLine, post.RetweetedBy);
             }
             string[] sitem = { string.Empty, post.Nickname, post.IsDeleted ? "(DELETED)" : post.TextFromApi, post.CreatedAt.ToString(this.settingDialog.DateTimeFormat), postedByDetail, string.Empty, mk.ToString(), post.Source };
-            ImageListViewItem itm = new ImageListViewItem(sitem, (ImageDictionary)this.iconDict, post.ImageUrl);
+            ImageListViewItem itm = new ImageListViewItem(sitem, this.iconDict, post.ImageUrl);
             itm.StateImageIndex = post.StateIndex;
 
             bool read = post.IsRead;
