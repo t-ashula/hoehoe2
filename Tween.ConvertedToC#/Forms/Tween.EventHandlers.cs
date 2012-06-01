@@ -4368,17 +4368,10 @@ namespace Hoehoe
             }
         }
 
-        private void SettingStripMenuItem_Click(object sender, EventArgs e)
+        private void TryShowSettingsBox()
         {
             DialogResult result = default(DialogResult);
             string uid = this.tw.Username.ToLower();
-            foreach (UserAccount u in this.settingDialog.UserAccounts)
-            {
-                if (u.UserId == this.tw.UserId)
-                {
-                    break;
-                }
-            }
 
             try
             {
@@ -4686,6 +4679,11 @@ namespace Hoehoe
 
             this.TopMost = this.settingDialog.AlwaysTop;
             this.SaveConfigsAll(false);
+        }
+        
+        private void SettingStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryShowSettingsBox();
         }
 
         private void ShortcutKeyListMenuItem_Click(object sender, EventArgs e)
