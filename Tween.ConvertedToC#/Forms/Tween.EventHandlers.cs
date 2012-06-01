@@ -2262,7 +2262,7 @@ namespace Hoehoe
             this.modifySettingCommon = true;
         }
 
-        private void ListManageToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowListManageBox()
         {
             using (ListManage form = new ListManage(this.tw))
             {
@@ -2270,12 +2270,15 @@ namespace Hoehoe
             }
         }
 
+        private void ListManageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowListManageBox();
+        }
+
         private void ListManageUserContextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string user = null;
-
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-
+            string user = null;
             if (object.ReferenceEquals(menuItem.Owner, this.ContextMenuPostBrowser))
             {
                 user = this.GetUserId();
@@ -2296,7 +2299,6 @@ namespace Hoehoe
             if (TabInformations.GetInstance().SubscribableLists.Count == 0)
             {
                 string res = this.tw.GetListsApi();
-
                 if (!string.IsNullOrEmpty(res))
                 {
                     MessageBox.Show("Failed to get lists. (" + res + ")");
