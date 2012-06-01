@@ -3530,12 +3530,15 @@ namespace Hoehoe
             this.DoShowUserStatus(this.tw.Username, false);
         }
 
+        private void ChangePlaySoundSetting(bool play)
+        {
+            this.settingDialog.PlaySound = this.PlaySoundFileMenuItem.Checked = this.PlaySoundMenuItem.Checked = play;
+            this.modifySettingCommon = true;
+        }
+
         private void PlaySoundMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            this.PlaySoundMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
-            this.PlaySoundFileMenuItem.Checked = this.PlaySoundMenuItem.Checked;
-            this.settingDialog.PlaySound = this.PlaySoundMenuItem.Checked;
-            this.modifySettingCommon = true;
+            ChangePlaySoundSetting(((ToolStripMenuItem)sender).Checked);
         }
 
         private void PostBrowser_NavigatedExtracted(Uri eUrl)
