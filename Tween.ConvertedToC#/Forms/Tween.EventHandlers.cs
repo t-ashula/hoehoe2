@@ -4314,10 +4314,7 @@ namespace Hoehoe
             else
             {
                 // ListView上でのCtrl+A
-                for (int i = 0; i <= this.curList.VirtualListSize - 1; i++)
-                {
-                    this.curList.SelectedIndices.Add(i);
-                }
+                this.curList.SelectAllItem();
             }
         }
 

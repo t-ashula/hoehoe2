@@ -154,11 +154,19 @@ namespace Hoehoe.TweenCustomControl
             this.changeBounds = Rectangle.Empty;
         }
 
+        public void SelectAllItem()
+        {
+            //// foreach (ListViewItem lvi in this.Items) { lvi.Selected = true; }
+            for (int i = 0; i < VirtualListSize; i++)
+            {
+                SelectedIndices.Add(i);
+            }
+        }
         #endregion
 
         #region protected method
         [DebuggerStepThrough]
-        protected override void WndProc(ref System.Windows.Forms.Message m)
+        protected override void WndProc(ref Message m)
         {
             const int WM_ERASEBKGND = 0x14;
             const int WM_PAINT = 0xf;
