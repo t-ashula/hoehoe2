@@ -4761,13 +4761,18 @@ namespace Hoehoe
             }
         }
 
-        private void ShowUserStatusContextMenuItem_Click(object sender, EventArgs e)
+        private void ShowSelectedTweetUserStatusBox()
         {
             string name = this.GetUserId();
             if (name != null)
             {
                 this.ShowUserStatus(name);
             }
+        }
+
+        private void ShowUserStatusContextMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowSelectedTweetUserStatusBox();
         }
 
         private void ShowCurrentUserStatusBox()
