@@ -4029,7 +4029,7 @@ namespace Hoehoe
             }
         }
 
-        private void SaveIconPictureToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TrySaveCurrentTweetUserIcon()
         {
             if (this.curPost == null)
             {
@@ -4062,6 +4062,11 @@ namespace Hoehoe
                     System.Diagnostics.Debug.Write(ex);
                 }
             }
+        }
+
+        private void SaveIconPictureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TrySaveCurrentTweetUserIcon();
         }
 
         private void TrySaveLog()
