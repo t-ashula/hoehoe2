@@ -3971,7 +3971,7 @@ namespace Hoehoe
             this.DoRefresh();
         }
 
-        private void RemoveCommandMenuItem_Click(object sender, EventArgs e)
+        private void TryRemoveCurrentTweetUser()
         {
             string id = string.Empty;
             if (this.curPost != null)
@@ -3982,13 +3982,23 @@ namespace Hoehoe
             this.RemoveCommand(id, false);
         }
 
-        private void RemoveContextMenuItem_Click(object sender, EventArgs e)
+        private void RemoveCommandMenuItem_Click(object sender, EventArgs e)
+        {
+            TryRemoveCurrentTweetUser();
+        }
+
+        private void TryUnfollowUserInCurrentTweet()
         {
             string name = this.GetUserId();
             if (name != null)
             {
                 this.RemoveCommand(name, false);
             }
+        }
+
+        private void RemoveContextMenuItem_Click(object sender, EventArgs e)
+        {
+            TryUnfollowUserInCurrentTweet();
         }
 
         private void RepliedStatusOpenMenuItem_Click(object sender, EventArgs e)
