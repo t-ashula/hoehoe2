@@ -3894,7 +3894,7 @@ namespace Hoehoe
             this.UrlUndoToolStripMenuItem.Enabled = false; // Undoをできないように設定
         }
 
-        private void PublicSearchQueryMenuItem_Click(object sender, EventArgs e)
+        private void FocusCurrentPublicSearchTabSearchInput()
         {
             if (this.ListTab.SelectedTab != null)
             {
@@ -3905,6 +3905,11 @@ namespace Hoehoe
 
                 this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
             }
+        }
+
+        private void PublicSearchQueryMenuItem_Click(object sender, EventArgs e)
+        {
+            FocusCurrentPublicSearchTabSearchInput();
         }
 
         private void QuoteStripMenuItem_Click(object sender, EventArgs e)
@@ -3922,7 +3927,7 @@ namespace Hoehoe
             this.DoReTweetUnofficial();
         }
 
-        private void ReadedStripMenuItem_Click(object sender, EventArgs e)
+        private void ChangeSelectetdTweetReadStateToRead()
         {
             this.curList.BeginUpdate();
             if (this.settingDialog.UnreadManage)
@@ -3960,6 +3965,11 @@ namespace Hoehoe
             }
         }
 
+        private void ReadedStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeSelectetdTweetReadStateToRead();
+        }
+
         private void RefreshMoreStripMenuItem_Click(object sender, EventArgs e)
         {
             // もっと前を取得
@@ -3971,7 +3981,7 @@ namespace Hoehoe
             this.DoRefresh();
         }
 
-        private void TryRemoveCurrentTweetUser()
+        private void TryUnfollowCurrentTweetUser()
         {
             string id = string.Empty;
             if (this.curPost != null)
@@ -3984,7 +3994,7 @@ namespace Hoehoe
 
         private void RemoveCommandMenuItem_Click(object sender, EventArgs e)
         {
-            TryRemoveCurrentTweetUser();
+            TryUnfollowCurrentTweetUser();
         }
 
         private void TryUnfollowUserInCurrentTweet()
