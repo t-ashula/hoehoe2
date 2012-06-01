@@ -4280,13 +4280,18 @@ namespace Hoehoe
             }
         }
 
-        private void SearchPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryAddTimelineTabFromUserInCurrentTweet()
         {
             string name = this.GetUserId();
             if (name != null)
             {
                 this.AddNewTabForUserTimeline(name);
             }
+        }
+
+        private void SearchPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryAddTimelineTabFromUserInCurrentTweet();
         }
 
         private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
