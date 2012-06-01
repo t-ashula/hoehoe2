@@ -4713,7 +4713,7 @@ namespace Hoehoe
             }
         }
 
-        private void ShowRelatedStatusesMenuItem_Click(object sender, EventArgs e)
+        private void AddRelatedStatusesTab()
         {
             TabClass backToTab = this.curTab == null ? this.statuses.Tabs[this.ListTab.SelectedTab.Text] : this.statuses.Tabs[this.curTab.Text];
             if (this.ExistCurrentPost && !this.curPost.IsDm)
@@ -4759,6 +4759,11 @@ namespace Hoehoe
 
                 this.GetTimeline(WorkerType.Related, 1, 1, tb.TabName);
             }
+        }
+        
+        private void ShowRelatedStatusesMenuItem_Click(object sender, EventArgs e)
+        {
+            AddRelatedStatusesTab();
         }
 
         private void ShowSelectedTweetUserStatusBox()

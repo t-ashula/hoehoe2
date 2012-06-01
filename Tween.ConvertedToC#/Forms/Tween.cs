@@ -7160,14 +7160,9 @@ namespace Hoehoe
             }
         }
 
-        private void ShowUserStatus(string id, bool showInputDialog)
+        private void ShowUserStatus(string id, bool showInputDialog = true)
         {
             this.DoShowUserStatus(id, showInputDialog);
-        }
-
-        private void ShowUserStatus(string id)
-        {
-            this.DoShowUserStatus(id, true);
         }
 
         private void ImageFromSelectedFile()
