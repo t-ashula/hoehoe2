@@ -4693,7 +4693,7 @@ namespace Hoehoe
             this.OpenUriAsync(ApplicationShortcutKeyHelpWebPageUrl);
         }
 
-        private void ShowFriendShipToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryShowCurrentTweetUserFriendShipBox()
         {
             if (this.NameLabel.Tag != null)
             {
@@ -4703,6 +4703,11 @@ namespace Hoehoe
                     this.ShowFriendship(id);
                 }
             }
+        }
+
+        private void ShowFriendShipToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryShowCurrentTweetUserFriendShipBox();
         }
 
         private void ShowProfileMenuItem_Click(object sender, EventArgs e)
