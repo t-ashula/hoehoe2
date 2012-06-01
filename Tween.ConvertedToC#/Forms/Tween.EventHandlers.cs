@@ -4271,7 +4271,7 @@ namespace Hoehoe
             this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem2Url);
         }
 
-        private void SearchPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryAddTimelineTabForCurrentTweetUser()
         {
             if (this.NameLabel.Tag != null)
             {
@@ -4280,7 +4280,12 @@ namespace Hoehoe
             }
         }
 
-        private void TryAddTimelineTabFromUserInCurrentTweet()
+        private void SearchPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryAddTimelineTabForCurrentTweetUser();
+        }
+
+        private void TryAddTimelineTabForUserInCurrentTweet()
         {
             string name = this.GetUserId();
             if (name != null)
@@ -4291,7 +4296,7 @@ namespace Hoehoe
 
         private void SearchPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TryAddTimelineTabFromUserInCurrentTweet();
+            TryAddTimelineTabForUserInCurrentTweet();
         }
 
         private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
