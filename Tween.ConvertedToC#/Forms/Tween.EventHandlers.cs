@@ -214,79 +214,33 @@ namespace Hoehoe
         private void SetupPostBrowserContextMenu()
         {
             // URLコピーの項目の表示/非表示
-            if (this.PostBrowser.StatusText.StartsWith("http"))
-            {
-                this.postBrowserStatusText = this.PostBrowser.StatusText;
-                string name = this.GetUserId();
-                this.UrlCopyContextMenuItem.Enabled = true;
-                if (name != null)
-                {
-                    this.FollowContextMenuItem.Enabled = true;
-                    this.RemoveContextMenuItem.Enabled = true;
-                    this.FriendshipContextMenuItem.Enabled = true;
-                    this.ShowUserStatusContextMenuItem.Enabled = true;
-                    this.SearchPostsDetailToolStripMenuItem.Enabled = true;
-                    this.IdFilterAddMenuItem.Enabled = true;
-                    this.ListManageUserContextToolStripMenuItem.Enabled = true;
-                    this.SearchAtPostsDetailToolStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    this.FollowContextMenuItem.Enabled = false;
-                    this.RemoveContextMenuItem.Enabled = false;
-                    this.FriendshipContextMenuItem.Enabled = false;
-                    this.ShowUserStatusContextMenuItem.Enabled = false;
-                    this.SearchPostsDetailToolStripMenuItem.Enabled = false;
-                    this.IdFilterAddMenuItem.Enabled = false;
-                    this.ListManageUserContextToolStripMenuItem.Enabled = false;
-                    this.SearchAtPostsDetailToolStripMenuItem.Enabled = false;
-                }
+            string postBrowserStatusText1 = this.PostBrowser.StatusText;
+            bool isHttpUrl = postBrowserStatusText1.StartsWith("http");
+            this.postBrowserStatusText = isHttpUrl ? postBrowserStatusText1 : string.Empty;
+            this.UrlCopyContextMenuItem.Enabled = isHttpUrl;
 
-                this.UseHashtagMenuItem.Enabled = Regex.IsMatch(this.postBrowserStatusText, "^https?://twitter.com/search\\?q=%23");
-            }
-            else
-            {
-                this.postBrowserStatusText = string.Empty;
-                this.UrlCopyContextMenuItem.Enabled = false;
-                this.FollowContextMenuItem.Enabled = false;
-                this.RemoveContextMenuItem.Enabled = false;
-                this.FriendshipContextMenuItem.Enabled = false;
-                this.ShowUserStatusContextMenuItem.Enabled = false;
-                this.SearchPostsDetailToolStripMenuItem.Enabled = false;
-                this.SearchAtPostsDetailToolStripMenuItem.Enabled = false;
-                this.UseHashtagMenuItem.Enabled = false;
-                this.IdFilterAddMenuItem.Enabled = false;
-                this.ListManageUserContextToolStripMenuItem.Enabled = false;
-            }
+            bool enable = isHttpUrl && !string.IsNullOrEmpty(this.GetUserId());
+            this.FollowContextMenuItem.Enabled = enable;
+            this.RemoveContextMenuItem.Enabled = enable;
+            this.FriendshipContextMenuItem.Enabled = enable;
+            this.ShowUserStatusContextMenuItem.Enabled = enable;
+            this.SearchPostsDetailToolStripMenuItem.Enabled = enable;
+            this.IdFilterAddMenuItem.Enabled = enable;
+            this.ListManageUserContextToolStripMenuItem.Enabled = enable;
+            this.SearchAtPostsDetailToolStripMenuItem.Enabled = enable;
 
-            // 文字列選択されていないときは選択文字列関係の項目を非表示に
-            string selectText = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
-            if (selectText == null)
-            {
-                this.SelectionSearchContextMenuItem.Enabled = false;
-                this.SelectionCopyContextMenuItem.Enabled = false;
-                this.SelectionTranslationToolStripMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.SelectionSearchContextMenuItem.Enabled = true;
-                this.SelectionCopyContextMenuItem.Enabled = true;
-                this.SelectionTranslationToolStripMenuItem.Enabled = true;
-            }
+            this.UseHashtagMenuItem.Enabled = isHttpUrl && Regex.IsMatch(this.postBrowserStatusText, "^https?://twitter.com/search\\?q=%23");
+
+            // 文字列選択されてるときは選択文字列関係の項目を表示
+            bool hasSelection = !string.IsNullOrEmpty(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
+            this.SelectionSearchContextMenuItem.Enabled = hasSelection;
+            this.SelectionCopyContextMenuItem.Enabled = hasSelection;
+            this.SelectionTranslationToolStripMenuItem.Enabled = hasSelection;
 
             // 発言内に自分以外のユーザーが含まれてればフォロー状態全表示を有効に
-            MatchCollection ma = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"");
-            bool fAllFlag = false;
-            foreach (Match mu in ma)
-            {
-                if (mu.Result("${ScreenName}").ToLower() != this.tw.Username.ToLower())
-                {
-                    fAllFlag = true;
-                    break;
-                }
-            }
-
-            this.FriendshipAllMenuItem.Enabled = fAllFlag;
+            this.FriendshipAllMenuItem.Enabled = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"").Cast<Match>()
+                .Select(m => m.Result("${ScreenName}").ToLower())
+                .Any(s => s != this.tw.Username.ToLower());
             this.TranslationToolStripMenuItem.Enabled = this.curPost != null;
         }
 
