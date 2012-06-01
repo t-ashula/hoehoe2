@@ -2648,7 +2648,7 @@ namespace Hoehoe
             }
         }
 
-        private void MenuItemSearchPrev_Click(object sender, EventArgs e)
+        private void TrySearchWordInTabToTop()
         {
             // 前を検索
             if (string.IsNullOrEmpty(this.searchDialog.SWord))
@@ -2667,6 +2667,11 @@ namespace Hoehoe
             }
 
             this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
+        }
+
+        private void MenuItemSearchPrev_Click(object sender, EventArgs e)
+        {
+            TrySearchWordInTabToTop();
         }
 
         private void TrySearchWordInTab()

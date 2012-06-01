@@ -3957,7 +3957,7 @@ namespace Hoehoe
 
                             break;
                         case Keys.F:
-                            this.MenuItemSubSearch_Click(null, null);
+                            this.TrySearchWordInTab();
                             return true;
                         case Keys.U:
                             this.ShowUserTimeline();
@@ -4136,7 +4136,7 @@ namespace Hoehoe
                     switch (keyCode)
                     {
                         case Keys.F3:
-                            this.MenuItemSearchPrev_Click(null, null);
+                            this.TrySearchWordInTabToTop();
                             return true;
                         case Keys.F5:
                             this.DoRefreshMore();
