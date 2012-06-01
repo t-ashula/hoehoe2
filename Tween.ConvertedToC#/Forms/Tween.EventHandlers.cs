@@ -1756,7 +1756,7 @@ namespace Hoehoe
             }
 
             this.modifySettingCommon = true;
-            this.StatusText_TextChanged(null, null);
+            this.StatusText_TextChangedExtracted();
         }
 
         private void HashManageMenuItem_Click(object sender, EventArgs e)
@@ -1786,7 +1786,7 @@ namespace Hoehoe
             }
 
             this.modifySettingCommon = true;
-            this.StatusText_TextChanged(null, null);
+            this.StatusText_TextChangedExtracted();
         }
 
         private void HashToggleMenuItem_Click(object sender, EventArgs e)
@@ -2071,7 +2071,7 @@ namespace Hoehoe
 
         private void ImageSelectionPanel_VisibleChanged(object sender, EventArgs e)
         {
-            this.StatusText_TextChanged(null, null);
+            this.StatusText_TextChangedExtracted();
         }
 
         private void ImageSelection_KeyDownExtracted(KeyEventArgs e)
@@ -2121,7 +2121,7 @@ namespace Hoehoe
             ImageSelection_PreviewKeyDownExtracted(e);
         }
 
-        private void ImageServiceCombo_SelectedIndexChanged(object sender, EventArgs e)
+        private void TryChangeImageUploadService()
         {
             if (this.ImageSelectedPicture.Tag != null && !string.IsNullOrEmpty(this.ImageService))
             {
@@ -2143,9 +2143,14 @@ namespace Hoehoe
                 this.SaveConfigsAll(false);
                 if (this.ImageService == "Twitter")
                 {
-                    this.StatusText_TextChanged(null, null);
+                    this.StatusText_TextChangedExtracted();
                 }
             }
+        }
+
+        private void ImageServiceCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TryChangeImageUploadService();
         }
 
         private void ImagefilePathText_Validating(object sender, CancelEventArgs e)
@@ -4786,7 +4791,7 @@ namespace Hoehoe
 
                     try
                     {
-                        this.StatusText_TextChanged(null, null);
+                        this.StatusText_TextChangedExtracted();
                     }
                     catch (Exception)
                     {
