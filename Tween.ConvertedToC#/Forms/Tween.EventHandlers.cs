@@ -383,99 +383,43 @@ namespace Hoehoe
 
         private void SetupOperateMenu()
         {
-            if (this.ListTab.SelectedTab == null)
+            if (this.ListTab.SelectedTab == null
+                || this.statuses == null
+                || this.statuses.Tabs == null
+                || !this.statuses.Tabs.ContainsKey(this.ListTab.SelectedTab.Text))
             {
                 return;
             }
 
-            if (this.statuses == null || this.statuses.Tabs == null || !this.statuses.Tabs.ContainsKey(this.ListTab.SelectedTab.Text))
-            {
-                return;
-            }
+            this.ReplyOpMenuItem.Enabled = this.ExistCurrentPost;
+            this.ReplyAllOpMenuItem.Enabled = this.ExistCurrentPost;
+            this.DmOpMenuItem.Enabled = this.ExistCurrentPost;
+            this.ShowProfMenuItem.Enabled = this.ExistCurrentPost;
+            this.ShowUserTimelineToolStripMenuItem.Enabled = this.ExistCurrentPost;
+            this.ListManageMenuItem.Enabled = this.ExistCurrentPost;
+            this.OpenFavOpMenuItem.Enabled = this.ExistCurrentPost;
+            this.CreateTabRuleOpMenuItem.Enabled = this.ExistCurrentPost;
+            this.CreateIdRuleOpMenuItem.Enabled = this.ExistCurrentPost;
+            this.ReadOpMenuItem.Enabled = this.ExistCurrentPost;
+            this.UnreadOpMenuItem.Enabled = this.ExistCurrentPost;
 
-            if (!this.ExistCurrentPost)
-            {
-                this.ReplyOpMenuItem.Enabled = false;
-                this.ReplyAllOpMenuItem.Enabled = false;
-                this.DmOpMenuItem.Enabled = false;
-                this.ShowProfMenuItem.Enabled = false;
-                this.ShowUserTimelineToolStripMenuItem.Enabled = false;
-                this.ListManageMenuItem.Enabled = false;
-                this.OpenFavOpMenuItem.Enabled = false;
-                this.CreateTabRuleOpMenuItem.Enabled = false;
-                this.CreateIdRuleOpMenuItem.Enabled = false;
-                this.ReadOpMenuItem.Enabled = false;
-                this.UnreadOpMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.ReplyOpMenuItem.Enabled = true;
-                this.ReplyAllOpMenuItem.Enabled = true;
-                this.DmOpMenuItem.Enabled = true;
-                this.ShowProfMenuItem.Enabled = true;
-                this.ShowUserTimelineToolStripMenuItem.Enabled = true;
-                this.ListManageMenuItem.Enabled = true;
-                this.OpenFavOpMenuItem.Enabled = true;
-                this.CreateTabRuleOpMenuItem.Enabled = true;
-                this.CreateIdRuleOpMenuItem.Enabled = true;
-                this.ReadOpMenuItem.Enabled = true;
-                this.UnreadOpMenuItem.Enabled = true;
-            }
+            TabUsageType selectedTabType = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType;
+            bool dmOrNotExist = selectedTabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || this.curPost.IsDm;
+            this.FavOpMenuItem.Enabled = !dmOrNotExist;
+            this.UnFavOpMenuItem.Enabled = !dmOrNotExist;
+            this.OpenStatusOpMenuItem.Enabled = !dmOrNotExist;
+            this.OpenFavotterOpMenuItem.Enabled = !dmOrNotExist;
+            this.ShowRelatedStatusesMenuItem2.Enabled = !dmOrNotExist;
 
-            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || this.curPost.IsDm)
-            {
-                this.FavOpMenuItem.Enabled = false;
-                this.UnFavOpMenuItem.Enabled = false;
-                this.OpenStatusOpMenuItem.Enabled = false;
-                this.OpenFavotterOpMenuItem.Enabled = false;
-                this.ShowRelatedStatusesMenuItem2.Enabled = false;
-                this.RtOpMenuItem.Enabled = false;
-                this.RtUnOpMenuItem.Enabled = false;
-                this.QtOpMenuItem.Enabled = false;
-                this.FavoriteRetweetMenuItem.Enabled = false;
-                this.FavoriteRetweetUnofficialMenuItem.Enabled = false;
-                if (this.ExistCurrentPost && this.curPost.IsDm)
-                {
-                    this.DelOpMenuItem.Enabled = true;
-                }
-            }
-            else
-            {
-                this.FavOpMenuItem.Enabled = true;
-                this.UnFavOpMenuItem.Enabled = true;
-                this.OpenStatusOpMenuItem.Enabled = true;
-                this.OpenFavotterOpMenuItem.Enabled = true;
-                this.ShowRelatedStatusesMenuItem2.Enabled = true;
-                if (this.curPost.IsMe)
-                {
-                    this.RtOpMenuItem.Enabled = false;
-                    this.FavoriteRetweetMenuItem.Enabled = false;
-                    this.DelOpMenuItem.Enabled = true;
-                }
-                else
-                {
-                    this.DelOpMenuItem.Enabled = false;
-                    if (this.curPost.IsProtect)
-                    {
-                        this.RtOpMenuItem.Enabled = false;
-                        this.RtUnOpMenuItem.Enabled = false;
-                        this.QtOpMenuItem.Enabled = false;
-                        this.FavoriteRetweetMenuItem.Enabled = false;
-                        this.FavoriteRetweetUnofficialMenuItem.Enabled = false;
-                    }
-                    else
-                    {
-                        this.RtOpMenuItem.Enabled = true;
-                        this.RtUnOpMenuItem.Enabled = true;
-                        this.QtOpMenuItem.Enabled = true;
-                        this.FavoriteRetweetMenuItem.Enabled = true;
-                        this.FavoriteRetweetUnofficialMenuItem.Enabled = true;
-                    }
-                }
-            }
+            this.DelOpMenuItem.Enabled = !dmOrNotExist ? this.curPost.IsMe : this.ExistCurrentPost && this.curPost.IsDm;
+            this.RtOpMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
+            this.RtUnOpMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
+            this.QtOpMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect ;
+            this.FavoriteRetweetMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
+            this.FavoriteRetweetUnofficialMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
 
-            this.RefreshPrevOpMenuItem.Enabled = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.Favorites;
-            this.OpenRepSourceOpMenuItem.Enabled = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.PublicSearch && this.ExistCurrentPost && this.curPost.InReplyToStatusId > 0;
+            this.RefreshPrevOpMenuItem.Enabled = selectedTabType != TabUsageType.Favorites;
+            this.OpenRepSourceOpMenuItem.Enabled = selectedTabType != TabUsageType.PublicSearch && this.ExistCurrentPost && this.curPost.InReplyToStatusId > 0;
             this.OpenRterHomeMenuItem.Enabled = this.ExistCurrentPost && !string.IsNullOrEmpty(this.curPost.RetweetedBy);
         }
 
