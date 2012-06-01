@@ -4817,13 +4817,24 @@ namespace Hoehoe
             }
         }
 
-        private void SourceLinkLabel_MouseEnter(object sender, EventArgs e)
+        private void ChangeStatusLabelUrlText(string link, bool updateEmpty = false)
         {
-            string link = Convert.ToString(this.SourceLinkLabel.Tag);
-            if (!string.IsNullOrEmpty(link))
+            if (string.IsNullOrEmpty(link))
+            {
+                if (updateEmpty)
+                {
+                    this.StatusLabelUrl.Text = string.Empty;
+                }
+            }
+            else
             {
                 this.StatusLabelUrl.Text = link;
             }
+        }
+
+        private void SourceLinkLabel_MouseEnter(object sender, EventArgs e)
+        {
+            ChangeStatusLabelUrlText((string)this.SourceLinkLabel.Tag);
         }
 
         private void SourceLinkLabel_MouseLeave(object sender, EventArgs e)
