@@ -4304,7 +4304,7 @@ namespace Hoehoe
             this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem3Url);
         }
 
-        private void SelectAllMenuItem_Click(object sender, EventArgs e)
+        private void SelectAllItemInFocused()
         {
             if (this.StatusText.Focused)
             {
@@ -4319,6 +4319,11 @@ namespace Hoehoe
                     this.curList.SelectedIndices.Add(i);
                 }
             }
+        }
+
+        private void SelectAllMenuItem_Click(object sender, EventArgs e)
+        {
+            SelectAllItemInFocused();
         }
 
         private void SelectionAllContextMenuItem_Click(object sender, EventArgs e)
