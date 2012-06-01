@@ -4125,7 +4125,7 @@ namespace Hoehoe
             this.TopMost = this.settingDialog.AlwaysTop;
         }
 
-        private void SaveOriginalSizeIconPictureToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveCurrentTweetUserOriginalSizeIcon()
         {
             if (this.curPost == null)
             {
@@ -4141,7 +4141,12 @@ namespace Hoehoe
             }
         }
 
-        private void SearchAtPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveOriginalSizeIconPictureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveCurrentTweetUserOriginalSizeIcon();
+        }
+
+        private void TryAddSearchTabForAtUserOfCurrentTweet()
         {
             if (this.NameLabel.Tag != null)
             {
@@ -4150,7 +4155,12 @@ namespace Hoehoe
             }
         }
 
-        private void SearchAtPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchAtPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryAddSearchTabForAtUserOfCurrentTweet();
+        }
+
+        private void TryAddSearchTabForAtUserInCurrentTweet()
         {
             string name = this.GetUserId();
             if (name != null)
@@ -4159,15 +4169,13 @@ namespace Hoehoe
             }
         }
 
-        private void SearchButton_Click(object sender, EventArgs e)
+        private void SearchAtPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // 公式検索
-            Control pnl = ((Control)sender).Parent;
-            if (pnl == null)
-            {
-                return;
-            }
+            this.TryAddSearchTabForAtUserInCurrentTweet();
+        }
 
+        private void SearchButton_ClickExtracted(Control pnl)
+        {
             string tabName = pnl.Parent.Text;
             TabClass tb = this.statuses.Tabs[tabName];
             ComboBox cmb = (ComboBox)pnl.Controls["comboSearch"];
@@ -4236,6 +4244,18 @@ namespace Hoehoe
             this.GetTimeline(WorkerType.PublicSearch, 1, 0, tabName);
             ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
         }
+        
+        private void SearchButton_Click(object sender, EventArgs e)
+        {
+            // 公式検索
+            Control pnl = ((Control)sender).Parent;
+            if (pnl == null)
+            {
+                return;
+            }
+
+            SearchButton_ClickExtracted(pnl);
+        }
 
         private void SearchComboBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -4248,22 +4268,22 @@ namespace Hoehoe
             }
         }
 
-        private void SearchControls_Enter(object sender, EventArgs e)
+        private void ChangeSearchPanelControlsTabStop(Control pnl, bool newVariable)
         {
-            Control pnl = (Control)sender;
             foreach (Control ctl in pnl.Controls)
             {
-                ctl.TabStop = true;
+                ctl.TabStop = newVariable;
             }
+        }
+
+        private void SearchControls_Enter(object sender, EventArgs e)
+        {
+            ChangeSearchPanelControlsTabStop((Control)sender, true);
         }
 
         private void SearchControls_Leave(object sender, EventArgs e)
         {
-            Control pnl = (Control)sender;
-            foreach (Control ctl in pnl.Controls)
-            {
-                ctl.TabStop = false;
-            }
+            ChangeSearchPanelControlsTabStop((Control)sender, false);
         }
 
         private void SearchGoogleContextMenuItem_Click(object sender, EventArgs e)
