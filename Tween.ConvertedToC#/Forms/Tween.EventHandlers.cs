@@ -270,12 +270,7 @@ namespace Hoehoe
                 }
             }
 
-            if (this.statuses == null)
-            {
-                return;
-            }
-
-            if (this.statuses.Tabs == null)
+            if (this.statuses == null || this.statuses.Tabs == null)
             {
                 return;
             }
@@ -288,37 +283,46 @@ namespace Hoehoe
 
             this.NotifyDispMenuItem.Checked = tb.Notify;
             this.NotifyTbMenuItem.Checked = tb.Notify;
+
             this.soundfileListup = true;
-            this.SoundFileComboBox.Items.Clear();
-            this.SoundFileTbComboBox.Items.Clear();
-            this.SoundFileComboBox.Items.Add(string.Empty);
-            this.SoundFileTbComboBox.Items.Add(string.Empty);
-            DirectoryInfo soundDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
-            if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
-            {
-                soundDir = soundDir.GetDirectories("Sounds")[0];
-            }
-
-            foreach (FileInfo soundFile in soundDir.GetFiles("*.wav"))
-            {
-                this.SoundFileComboBox.Items.Add(soundFile.Name);
-                this.SoundFileTbComboBox.Items.Add(soundFile.Name);
-            }
-
-            int idx = this.SoundFileComboBox.Items.IndexOf(tb.SoundFile);
-            if (idx == -1)
-            {
-                idx = 0;
-            }
-
-            this.SoundFileComboBox.SelectedIndex = idx;
-            this.SoundFileTbComboBox.SelectedIndex = idx;
+            ReloadSoundSelector(this.SoundFileComboBox, tb.SoundFile);
+            ReloadSoundSelector(this.SoundFileTbComboBox, tb.SoundFile);
             this.soundfileListup = false;
 
             this.UreadManageMenuItem.Checked = tb.UnreadManage;
             this.UnreadMngTbMenuItem.Checked = tb.UnreadManage;
 
             this.TabMenuControl(this.rclickTabName);
+        }
+
+        private static void ReloadSoundSelector(ToolStripComboBox soundFileComboBox, string currentSoundFile)
+        {
+            soundFileComboBox.Items.Clear();
+            soundFileComboBox.Items.Add(string.Empty);
+            var names = GetSoundFileNames();
+            if (names.Length > 0)
+            {
+                soundFileComboBox.Items.AddRange(names);
+            }
+
+            int idx = soundFileComboBox.Items.IndexOf(currentSoundFile);
+            if (idx == -1)
+            {
+                idx = 0;
+            }
+
+            soundFileComboBox.SelectedIndex = idx;
+        }
+
+        private static string[] GetSoundFileNames()
+        {
+            DirectoryInfo soundDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
+            if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
+            {
+                soundDir = soundDir.GetDirectories("Sounds")[0];
+            }
+
+            return soundDir.GetFiles("*.wav").Select(f => f.Name).ToArray();
         }
 
         private void SetupUserPictureContextMenu()
@@ -2257,7 +2261,7 @@ namespace Hoehoe
 
             lst.Focus();
         }
-        
+
         private void JumpUnreadMenuItem_Click(object sender, EventArgs e)
         {
             TrySearchAndFocusUnreadTweet();
@@ -2625,7 +2629,7 @@ namespace Hoehoe
             // フォーカスがメニューに遷移したかどうかを表すフラグを降ろす
             this.MenuStrip1.Tag = null;
         }
-        
+
         private void MenuStrip1_MenuDeactivate(object sender, EventArgs e)
         {
             SetFocusFromMainMenu();
@@ -3378,7 +3382,7 @@ namespace Hoehoe
 
                 if (this.settingDialog.OpenUserTimeline)
                 {
-                    Match m = Regex.Match(openUrlStr, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");                
+                    Match m = Regex.Match(openUrlStr, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
                     if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
                     {
                         this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
@@ -3390,7 +3394,7 @@ namespace Hoehoe
                 }
             }
         }
-        
+
         private void OpenURLMenuItem_Click(object sender, EventArgs e)
         {
             TryOpenUrlInCurrentTweet();
@@ -3467,7 +3471,7 @@ namespace Hoehoe
                 {
                     if (isCtrlKeyDown)
                     {
-                        this.OpenUriAsync(eUrlOriginalString);   
+                        this.OpenUriAsync(eUrlOriginalString);
                     }
                     else
                     {
@@ -3795,7 +3799,7 @@ namespace Hoehoe
             this.urlUndoBuffer = null;
             this.UrlUndoToolStripMenuItem.Enabled = false; // Undoをできないように設定
         }
-        
+
         private void PostButton_Click(object sender, EventArgs e)
         {
             TryPostTweet();
@@ -4061,7 +4065,7 @@ namespace Hoehoe
 
             this.TopMost = this.settingDialog.AlwaysTop;
         }
-        
+
         private void SaveLogMenuItem_Click(object sender, EventArgs e)
         {
             TrySaveLog();
@@ -4186,7 +4190,7 @@ namespace Hoehoe
             this.GetTimeline(WorkerType.PublicSearch, 1, 0, tabName);
             ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
         }
-        
+
         private void SearchButton_Click(object sender, EventArgs e)
         {
             // 公式検索
@@ -4659,7 +4663,7 @@ namespace Hoehoe
             this.TopMost = this.settingDialog.AlwaysTop;
             this.SaveConfigsAll(false);
         }
-        
+
         private void SettingStripMenuItem_Click(object sender, EventArgs e)
         {
             TryShowSettingsBox();
@@ -4742,7 +4746,7 @@ namespace Hoehoe
                 this.GetTimeline(WorkerType.Related, 1, 1, tb.TabName);
             }
         }
-        
+
         private void ShowRelatedStatusesMenuItem_Click(object sender, EventArgs e)
         {
             AddRelatedStatusesTab();
@@ -5084,7 +5088,7 @@ namespace Hoehoe
         {
             StatusText_LeaveExtracted();
         }
-                
+
         private void ChangeStatusTextMultiline(bool isMultiLine)
         {
             this.StatusText.ScrollBars = isMultiLine ? ScrollBars.Vertical : ScrollBars.None;
@@ -5095,7 +5099,7 @@ namespace Hoehoe
         {
             ChangeStatusTextMultiline(this.StatusText.Multiline);
         }
-        
+
         private void StatusText_TextChangedExtracted()
         {
             // 文字数カウント
@@ -5214,7 +5218,7 @@ namespace Hoehoe
                 this.curPost = this.statuses.Item(this.ListTab.SelectedTab.Text, ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices[0]);
             }
         }
-        
+
         private void TabMenuItem_Click(object sender, EventArgs e)
         {
             AddFilteringRuleFromSelectedTweet();
@@ -5260,7 +5264,7 @@ namespace Hoehoe
             Point spos = this.ListTab.PointToClient(cpos);
             for (int i = 0; i < this.ListTab.TabPages.Count; i++)
             {
-                Rectangle rect = this.ListTab.GetTabRect(i);                
+                Rectangle rect = this.ListTab.GetTabRect(i);
                 if (rect.Contains(spos))
                 {
                     tn = this.ListTab.TabPages[i].Text;
