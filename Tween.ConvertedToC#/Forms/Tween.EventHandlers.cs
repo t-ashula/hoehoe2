@@ -2519,10 +2519,14 @@ namespace Hoehoe
             }
         }
 
+        private void SetupHelpMenu()
+        {
+            this.DebugModeToolStripMenuItem.Visible = MyCommon.DebugBuild || this.IsKeyDown(Keys.CapsLock) && this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift);
+        }
+
         private void MenuItemHelp_DropDownOpening(object sender, EventArgs e)
         {
-            this.DebugModeToolStripMenuItem.Visible = MyCommon.DebugBuild
-                || this.IsKeyDown(Keys.CapsLock) && this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift);
+            SetupHelpMenu();
         }
 
         private void SetupOperateMenu()
