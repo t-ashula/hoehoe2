@@ -6224,7 +6224,7 @@ namespace Hoehoe
             this.TweenMain_FormClosingExtracted(e);
         }
 
-        private void TweenMain_Load(object sender, EventArgs e)
+        private void TweenMain_LoadExtracted()
         {
             this.ignoreConfigSave = true;
             this.Visible = false;
@@ -7035,6 +7035,11 @@ namespace Hoehoe
                     break;
                 }
             }
+        }
+
+        private void TweenMain_Load(object sender, EventArgs e)
+        {
+            TweenMain_LoadExtracted();
         }
 
         private void TweenMain_LocationChangedExtracted()
