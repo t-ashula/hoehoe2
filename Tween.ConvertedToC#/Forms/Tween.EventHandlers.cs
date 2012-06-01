@@ -4831,7 +4831,7 @@ namespace Hoehoe
             this.SetStatusLabelUrl();
         }
 
-        private void SourceUrlCopyMenuItem_Click(object sender, EventArgs e)
+        private void TryCopySourceUrl()
         {
             string selText = Convert.ToString(this.SourceLinkLabel.Tag);
             try
@@ -4842,6 +4842,11 @@ namespace Hoehoe
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void SourceUrlCopyMenuItem_Click(object sender, EventArgs e)
+        {
+            TryCopySourceUrl();
         }
 
         private void SpaceKeyCanceler_SpaceCancel(object sender, EventArgs e)
