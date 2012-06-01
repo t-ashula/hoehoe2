@@ -166,7 +166,7 @@ namespace Hoehoe
             buf.AppendFormat("キャッシュエントリ破棄数     : {0}" + "\r\n", ((ImageDictionary)this.iconDict).CacheRemoveCount);
             MessageBox.Show(buf.ToString(), "アイコンキャッシュ使用状況");
         }
-        
+
         private void SetupOperateContextMenu()
         {
             if (this.ListTab.SelectedTab == null)
@@ -179,127 +179,36 @@ namespace Hoehoe
                 return;
             }
 
-            if (!this.ExistCurrentPost)
-            {
-                this.ReplyStripMenuItem.Enabled = false;
-                this.ReplyAllStripMenuItem.Enabled = false;
-                this.DMStripMenuItem.Enabled = false;
-                this.ShowProfileMenuItem.Enabled = false;
-                this.ShowUserTimelineContextMenuItem.Enabled = false;
-                this.ListManageUserContextToolStripMenuItem2.Enabled = false;
-                this.MoveToFavToolStripMenuItem.Enabled = false;
-                this.TabMenuItem.Enabled = false;
-                this.IDRuleMenuItem.Enabled = false;
-                this.ReadedStripMenuItem.Enabled = false;
-                this.UnreadStripMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.ShowProfileMenuItem.Enabled = true;
-                this.ListManageUserContextToolStripMenuItem2.Enabled = true;
-                this.ReplyStripMenuItem.Enabled = true;
-                this.ReplyAllStripMenuItem.Enabled = true;
-                this.DMStripMenuItem.Enabled = true;
-                this.ShowUserTimelineContextMenuItem.Enabled = true;
-                this.MoveToFavToolStripMenuItem.Enabled = true;
-                this.TabMenuItem.Enabled = true;
-                this.IDRuleMenuItem.Enabled = true;
-                this.ReadedStripMenuItem.Enabled = true;
-                this.UnreadStripMenuItem.Enabled = true;
-            }
+            bool existCurrentPost = this.ExistCurrentPost;
+            this.ReplyStripMenuItem.Enabled = existCurrentPost;
+            this.ReplyAllStripMenuItem.Enabled = existCurrentPost;
+            this.DMStripMenuItem.Enabled = existCurrentPost;
+            this.ShowProfileMenuItem.Enabled = existCurrentPost;
+            this.ShowUserTimelineContextMenuItem.Enabled = existCurrentPost;
+            this.ListManageUserContextToolStripMenuItem2.Enabled = existCurrentPost;
+            this.MoveToFavToolStripMenuItem.Enabled = existCurrentPost;
+            this.TabMenuItem.Enabled = existCurrentPost;
+            this.IDRuleMenuItem.Enabled = existCurrentPost;
+            this.UnreadStripMenuItem.Enabled = existCurrentPost;
+            this.ReadedStripMenuItem.Enabled = existCurrentPost;
 
-            this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
-            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage || !this.ExistCurrentPost || this.curPost.IsDm)
-            {
-                this.FavAddToolStripMenuItem.Enabled = false;
-                this.FavRemoveToolStripMenuItem.Enabled = false;
-                this.StatusOpenMenuItem.Enabled = false;
-                this.FavorareMenuItem.Enabled = false;
-                this.ShowRelatedStatusesMenuItem.Enabled = false;
-                this.ReTweetStripMenuItem.Enabled = false;
-                this.ReTweetOriginalStripMenuItem.Enabled = false;
-                this.QuoteStripMenuItem.Enabled = false;
-                this.FavoriteRetweetContextMenu.Enabled = false;
-                this.FavoriteRetweetUnofficialContextMenu.Enabled = false;
-                if (this.ExistCurrentPost && this.curPost.IsDm)
-                {
-                    this.DeleteStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    this.DeleteStripMenuItem.Enabled = false;
-                }
-            }
-            else
-            {
-                this.FavAddToolStripMenuItem.Enabled = true;
-                this.FavRemoveToolStripMenuItem.Enabled = true;
-                this.StatusOpenMenuItem.Enabled = true;
-                this.FavorareMenuItem.Enabled = true;
-                this.ShowRelatedStatusesMenuItem.Enabled = true;
-                if (this.curPost.IsMe)
-                {
-                    this.ReTweetOriginalStripMenuItem.Enabled = false;
-                    this.FavoriteRetweetContextMenu.Enabled = false;
-                    if (string.IsNullOrEmpty(this.curPost.RetweetedBy))
-                    {
-                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
-                    }
-                    else
-                    {
-                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
-                    }
+            TabUsageType selectedTabType = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType;
+            bool dmOrNotExist = selectedTabType == TabUsageType.DirectMessage || !existCurrentPost || this.curPost.IsDm;
 
-                    this.DeleteStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    if (string.IsNullOrEmpty(this.curPost.RetweetedBy))
-                    {
-                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText1;
-                    }
-                    else
-                    {
-                        this.DeleteStripMenuItem.Text = Hoehoe.Properties.Resources.DeleteMenuText2;
-                    }
-
-                    this.DeleteStripMenuItem.Enabled = false;
-                    if (this.curPost.IsProtect)
-                    {
-                        this.ReTweetOriginalStripMenuItem.Enabled = false;
-                        this.ReTweetStripMenuItem.Enabled = false;
-                        this.QuoteStripMenuItem.Enabled = false;
-                        this.FavoriteRetweetContextMenu.Enabled = false;
-                        this.FavoriteRetweetUnofficialContextMenu.Enabled = false;
-                    }
-                    else
-                    {
-                        this.ReTweetOriginalStripMenuItem.Enabled = true;
-                        this.ReTweetStripMenuItem.Enabled = true;
-                        this.QuoteStripMenuItem.Enabled = true;
-                        this.FavoriteRetweetContextMenu.Enabled = true;
-                        this.FavoriteRetweetUnofficialContextMenu.Enabled = true;
-                    }
-                }
-            }
-
-            if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch || !this.ExistCurrentPost || !(this.curPost.InReplyToStatusId > 0))
-            {
-                this.RepliedStatusOpenMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.RepliedStatusOpenMenuItem.Enabled = true;
-            }
-
-            if (!this.ExistCurrentPost || string.IsNullOrEmpty(this.curPost.RetweetedBy))
-            {
-                this.MoveToRTHomeMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.MoveToRTHomeMenuItem.Enabled = true;
-            }
+            this.FavAddToolStripMenuItem.Enabled = !dmOrNotExist;
+            this.FavRemoveToolStripMenuItem.Enabled = !dmOrNotExist;
+            this.StatusOpenMenuItem.Enabled = !dmOrNotExist;
+            this.FavorareMenuItem.Enabled = !dmOrNotExist;
+            this.ShowRelatedStatusesMenuItem.Enabled = !dmOrNotExist;
+            this.DeleteStripMenuItem.Text = !dmOrNotExist && this.curPost.IsRetweeted ? Hoehoe.Properties.Resources.DeleteMenuText2 : Hoehoe.Properties.Resources.DeleteMenuText1;
+            this.DeleteStripMenuItem.Enabled = !dmOrNotExist ? this.curPost.IsMe : existCurrentPost && this.curPost.IsDm;
+            this.ReTweetOriginalStripMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
+            this.FavoriteRetweetContextMenu.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
+            this.ReTweetStripMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe;
+            this.QuoteStripMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe;
+            this.FavoriteRetweetUnofficialContextMenu.Enabled = !dmOrNotExist && !this.curPost.IsMe;
+            this.RepliedStatusOpenMenuItem.Enabled = existCurrentPost && selectedTabType != TabUsageType.PublicSearch && this.curPost.InReplyToStatusId > 0;
+            this.MoveToRTHomeMenuItem.Enabled = existCurrentPost && this.curPost.IsRetweeted;
         }
 
         private void SetupPostBrowserContextMenu()
