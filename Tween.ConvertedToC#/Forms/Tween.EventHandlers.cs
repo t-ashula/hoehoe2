@@ -3538,13 +3538,18 @@ namespace Hoehoe
             this.modifySettingCommon = true;
         }
 
-        private void PostBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        private void PostBrowser_NavigatedExtracted(Uri eUrl)
         {
-            if (e.Url.AbsoluteUri != "about:blank")
+            if (eUrl.AbsoluteUri != "about:blank")
             {
                 this.DispSelectedPost();
-                this.OpenUriAsync(e.Url.OriginalString);
+                this.OpenUriAsync(eUrl.OriginalString);
             }
+        }
+
+        private void PostBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        {
+            PostBrowser_NavigatedExtracted(e.Url);
         }
 
         private bool NavigateNextUrl(Uri url)
@@ -3571,16 +3576,19 @@ namespace Hoehoe
                 this.AddNewTabForSearch(hash);
                 return true;
             }
+
             Match m = Regex.Match(eUrlAbsoluteUri, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
             string eUrlOriginalString = url.OriginalString;
             if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
             {
                 // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
-                if (this.settingDialog.OpenUserTimeline)
+                bool isCtrlKeyDown = this.IsKeyDown(Keys.Control);
+                bool isOpenInTab = this.settingDialog.OpenUserTimeline;
+                if (isOpenInTab)
                 {
-                    if (this.IsKeyDown(Keys.Control))
+                    if (isCtrlKeyDown)
                     {
-                        this.OpenUriAsync(eUrlOriginalString);
+                        this.OpenUriAsync(eUrlOriginalString);   
                     }
                     else
                     {
@@ -3589,7 +3597,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    if (this.IsKeyDown(Keys.Control))
+                    if (isCtrlKeyDown)
                     {
                         this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
                     }
