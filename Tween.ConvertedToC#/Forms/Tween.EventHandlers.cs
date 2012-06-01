@@ -3638,7 +3638,7 @@ namespace Hoehoe
             }
         }
 
-        private void PostButton_Click(object sender, EventArgs e)
+        private void TryPostTweet()
         {
             if (this.StatusText.Text.Trim().Length == 0)
             {
@@ -3892,6 +3892,11 @@ namespace Hoehoe
 
             this.urlUndoBuffer = null;
             this.UrlUndoToolStripMenuItem.Enabled = false; // Undoをできないように設定
+        }
+        
+        private void PostButton_Click(object sender, EventArgs e)
+        {
+            TryPostTweet();
         }
 
         private void FocusCurrentPublicSearchTabSearchInput()
