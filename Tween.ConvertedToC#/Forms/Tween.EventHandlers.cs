@@ -484,19 +484,13 @@ namespace Hoehoe
             {
                 using (FormInfo formInfo = new FormInfo(this, Hoehoe.Properties.Resources.RtCountMenuItem_ClickText1, this.GetRetweet_DoWork))
                 {
-                    int retweet_count = 0;
-
                     // ダイアログ表示
                     formInfo.ShowDialog();
-                    retweet_count = Convert.ToInt32(formInfo.Result);
-                    if (retweet_count < 0)
-                    {
-                        MessageBox.Show(Hoehoe.Properties.Resources.RtCountText2);
-                    }
-                    else
-                    {
-                        MessageBox.Show(retweet_count.ToString() + Hoehoe.Properties.Resources.RtCountText1);
-                    }
+                    int retweetCount = (int)formInfo.Result;
+                    string msg = retweetCount < 0 ? 
+                        Hoehoe.Properties.Resources.RtCountText2 : 
+                        string.Format("{0}{1}", retweetCount, Hoehoe.Properties.Resources.RtCountText1);
+                    MessageBox.Show(msg);
                 }
             }
         }
@@ -7283,9 +7277,8 @@ namespace Hoehoe
 
         private void GetRetweet_DoWork(object sender, DoWorkEventArgs e)
         {
-            long statusid = this.CurPost.OriginalStatusId;
             int counter = 0;
-            this.tw.GetStatus_Retweeted_Count(statusid, ref counter);
+            this.tw.GetStatusRetweetedCount(this.CurPost.OriginalStatusId, ref counter);
             e.Result = counter;
         }
 

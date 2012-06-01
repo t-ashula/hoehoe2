@@ -1286,7 +1286,7 @@ namespace Hoehoe
             }
         }
 
-        public string GetStatus_Retweeted_Count(long statusId, ref int retweetedCount)
+        public string GetStatusRetweetedCount(long statusId, ref int retweetedCount)
         {
             if (MyCommon.IsEnding)
             {
