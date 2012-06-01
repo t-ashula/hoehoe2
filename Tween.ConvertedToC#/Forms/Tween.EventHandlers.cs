@@ -2478,12 +2478,17 @@ namespace Hoehoe
             this.OpenUriAsync(ApplicationHelpWebPageUrl);
         }
 
-        private void MenuItemCommand_DropDownOpening(object sender, EventArgs e)
+        private void SetupCommandMenu()
         {
             this.RtCountMenuItem.Enabled = this.ExistCurrentPost && !this.curPost.IsDm;
         }
 
-        private void MenuItemEdit_DropDownOpening(object sender, EventArgs e)
+        private void MenuItemCommand_DropDownOpening(object sender, EventArgs e)
+        {
+            SetupCommandMenu();
+        }
+
+        private void SetupEditMenu()
         {
             this.UndoRemoveTabMenuItem.Enabled = this.statuses.RemovedTab.Count != 0;
 
@@ -2517,6 +2522,11 @@ namespace Hoehoe
                     this.CopySTOTMenuItem.Enabled = false;
                 }
             }
+        }
+        
+        private void MenuItemEdit_DropDownOpening(object sender, EventArgs e)
+        {
+            SetupEditMenu();
         }
 
         private void SetupHelpMenu()
