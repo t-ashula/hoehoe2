@@ -3360,7 +3360,7 @@ namespace Hoehoe
             this.SaveConfigsTabs();
         }
 
-        private void NotifyIcon1_BalloonTipClicked(object sender, EventArgs e)
+        private void ActivateMainForm()
         {
             this.Visible = true;
             if (this.WindowState == FormWindowState.Minimized)
@@ -3372,16 +3372,9 @@ namespace Hoehoe
             this.BringToFront();
         }
 
-        private void ActivateMainForm()
+        private void NotifyIcon1_BalloonTipClicked(object sender, EventArgs e)
         {
-            this.Visible = true;
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                this.WindowState = FormWindowState.Normal;
-            }
-
-            this.Activate();
-            this.BringToFront();
+            ActivateMainForm();
         }
 
         private void NotifyIcon1_MouseClick(object sender, MouseEventArgs e)
