@@ -254,7 +254,7 @@ namespace Hoehoe
 
         private void SetupHelpMenu()
         {
-            this.DebugModeToolStripMenuItem.Visible = MyCommon.DebugBuild || this.IsKeyDown(Keys.CapsLock) && this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift);
+            this.DebugModeToolStripMenuItem.Visible = MyCommon.DebugBuild || this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift);
         }
 
         private void SetupOperateMenu()
@@ -341,14 +341,15 @@ namespace Hoehoe
 
             MessageBox.Show(tmp.ToString(), Hoehoe.Properties.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        
+
         private void ShowCacheInfoBox()
         {
             StringBuilder buf = new StringBuilder();
-            buf.AppendFormat("キャッシュメモリ容量         : {0}bytes({1}MB)" + "\r\n", ((ImageDictionary)this.iconDict).CacheMemoryLimit, ((ImageDictionary)this.iconDict).CacheMemoryLimit / 1048576);
-            buf.AppendFormat("物理メモリ使用割合           : {0}%" + "\r\n", ((ImageDictionary)this.iconDict).PhysicalMemoryLimit);
-            buf.AppendFormat("キャッシュエントリ保持数     : {0}" + "\r\n", ((ImageDictionary)this.iconDict).CacheCount);
-            buf.AppendFormat("キャッシュエントリ破棄数     : {0}" + "\r\n", ((ImageDictionary)this.iconDict).CacheRemoveCount);
+            ImageDictionary icondict = (ImageDictionary)this.iconDict;
+            buf.AppendLine(string.Format("{0, -15} : {1}bytes ({2}MB)", "キャッシュメモリ容量", icondict.CacheMemoryLimit, icondict.CacheMemoryLimit / (1024 * 1024)));
+            buf.AppendLine(string.Format("{0, -15} : {1}%", "物理メモリ使用割合", icondict.PhysicalMemoryLimit));
+            buf.AppendLine(string.Format("{0, -15} : {1}", "キャッシュエントリ保持数", icondict.CacheCount));
+            buf.AppendLine(string.Format("{0, -15} : {1}", "キャッシュエントリ破棄数", icondict.CacheRemoveCount));
             MessageBox.Show(buf.ToString(), "アイコンキャッシュ使用状況");
         }
         
