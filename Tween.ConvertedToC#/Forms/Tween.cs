@@ -7153,7 +7153,7 @@ namespace Hoehoe
             this.DoShowUserStatus(id, showInputDialog);
         }
 
-        private void ImageFromSelectedFile()
+        private void LoadImageFromSelectedFile()
         {
             try
             {

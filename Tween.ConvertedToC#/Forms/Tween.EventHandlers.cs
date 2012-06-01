@@ -404,7 +404,7 @@ namespace Hoehoe
             }
 
             this.ImagefilePathText.Text = this.OpenFileDialog1.FileName;
-            this.ImageFromSelectedFile();
+            this.LoadImageFromSelectedFile();
         }
         
         private void ShowFilterEditBox()
@@ -2425,7 +2425,7 @@ namespace Hoehoe
             }
             else
             {
-                this.ImageFromSelectedFile();
+                this.LoadImageFromSelectedFile();
             }
         }
 
@@ -5884,7 +5884,7 @@ namespace Hoehoe
                 this.TimelinePanel.Visible = false;
                 this.TimelinePanel.Enabled = false;
                 this.ImagefilePathText.Text = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-                this.ImageFromSelectedFile();
+                this.LoadImageFromSelectedFile();
                 this.Activate();
                 this.BringToFront();
                 this.StatusText.Focus();
