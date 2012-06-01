@@ -460,17 +460,14 @@ namespace Hoehoe
         
         private void ShowFriendshipOfAllUserInCurrentTweet()
         {
-            MatchCollection ma = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"");
-            List<string> ids = new List<string>();
-            foreach (Match mu in ma)
+            var ma = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"")
+                .Cast<Match>()
+                .Select(m => m.Result("${ScreenName}").ToLower())
+                .Where(sn => sn != this.tw.Username.ToLower());
+            if (ma.Count() > 0)
             {
-                if (mu.Result("${ScreenName}").ToLower() != this.tw.Username.ToLower())
-                {
-                    ids.Add(mu.Result("${ScreenName}"));
-                }
+                this.ShowFriendship(ma.ToArray());
             }
-
-            this.ShowFriendship(ids.ToArray());
         }
         
         private void ShowListManageBox()
