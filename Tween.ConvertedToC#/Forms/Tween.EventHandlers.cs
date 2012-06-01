@@ -4327,9 +4327,8 @@ namespace Hoehoe
             this.PostBrowser.Document.ExecCommand("SelectAll", false, null);
         }
 
-        private void SelectionCopyContextMenuItem_Click(object sender, EventArgs e)
+        private void TryCopyCurrentTweetSelection()
         {
-            // 発言詳細で「選択文字列をコピー」
             try
             {
                 Clipboard.SetDataObject(this.WebBrowser_GetSelectionText(ref this.PostBrowser), false, 5, 100);
@@ -4338,6 +4337,12 @@ namespace Hoehoe
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void SelectionCopyContextMenuItem_Click(object sender, EventArgs e)
+        {
+            // 発言詳細で「選択文字列をコピー」
+            TryCopyCurrentTweetSelection();
         }
 
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
