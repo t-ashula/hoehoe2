@@ -2727,12 +2727,17 @@ namespace Hoehoe
             this.MenuStrip1.Tag = null;
         }
 
-        private void MoveToFavToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryOpenCurListSelectedUserFavorites()
         {
             if (this.curList.SelectedIndices.Count > 0)
             {
-                this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName + "/favorites");
+                this.OpenUriAsync("https://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName + "/favorites");
             }
+        }
+
+        private void MoveToFavToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryOpenCurListSelectedUserFavorites();
         }
 
         private void TryOpenCurListSelectedUserHome()
