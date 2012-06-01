@@ -4770,13 +4770,18 @@ namespace Hoehoe
             }
         }
 
-        private void ShowUserStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowCurrentUserStatusBox()
         {
             if (this.NameLabel.Tag != null)
             {
                 string id = (string)this.NameLabel.Tag;
                 this.ShowUserStatus(id, false);
             }
+        }
+
+        private void ShowUserStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowCurrentUserStatusBox();
         }
 
         private void ShowUserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
