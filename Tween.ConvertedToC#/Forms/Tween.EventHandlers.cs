@@ -2178,7 +2178,7 @@ namespace Hoehoe
             this.UrlConvert(UrlConverter.Jmp);
         }
 
-        private void JumpUnreadMenuItem_Click(object sender, EventArgs e)
+        private void TrySearchAndFocusUnreadTweet()
         {
             if (this.ImageSelectionPanel.Enabled)
             {
@@ -2253,13 +2253,21 @@ namespace Hoehoe
 
             lst.Focus();
         }
+        
+        private void JumpUnreadMenuItem_Click(object sender, EventArgs e)
+        {
+            TrySearchAndFocusUnreadTweet();
+        }
+
+        private void ChangeListLockSetting(bool locked)
+        {
+            this.cfgCommon.ListLock = this.LockListFileMenuItem.Checked = this.ListLockMenuItem.Checked = locked;
+            this.SetModifySettingCommon(true);
+        }
 
         private void ListLockMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            this.ListLockMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
-            this.LockListFileMenuItem.Checked = this.ListLockMenuItem.Checked;
-            this.cfgCommon.ListLock = this.ListLockMenuItem.Checked;
-            this.modifySettingCommon = true;
+            ChangeListLockSetting(((ToolStripMenuItem)sender).Checked);
         }
 
         private void ShowListManageBox()
@@ -5009,7 +5017,7 @@ namespace Hoehoe
 
         private void SpaceKeyCanceler_SpaceCancel(object sender, EventArgs e)
         {
-            this.JumpUnreadMenuItem_Click(null, null);
+            this.TrySearchAndFocusUnreadTweet();
         }
 
         private void SplitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
@@ -5193,7 +5201,7 @@ namespace Hoehoe
                     {
                         e.Handled = true;
                         this.StatusText.Text = string.Empty;
-                        this.JumpUnreadMenuItem_Click(null, null);
+                        this.TrySearchAndFocusUnreadTweet();
                     }
                 }
             }

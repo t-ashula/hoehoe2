@@ -3826,7 +3826,7 @@ namespace Hoehoe
                                     this.anchorFlag = false;
                                 }
 
-                                this.JumpUnreadMenuItem_Click(null, null);
+                                this.TrySearchAndFocusUnreadTweet();
                                 return true;
                             case Keys.G:
                                 if (focusedControl == FocusedControl.ListTab)
