@@ -319,19 +319,19 @@ namespace Hoehoe
             using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ApiInfo6, this.GetApiInfo_Dowork, null, args))
             {
                 dlg.ShowDialog();
-                if (Convert.ToBoolean(dlg.Result))
+                if ((bool)dlg.Result)
                 {
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo1 + args.Info.MaxCount.ToString());
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo2 + args.Info.RemainCount.ToString());
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo3 + args.Info.ResetTime.ToString());
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo7 + (this.tw.UserStreamEnabled ? Hoehoe.Properties.Resources.Enable : Hoehoe.Properties.Resources.Disable).ToString());
+                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo1, args.Info.MaxCount));
+                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo2, args.Info.RemainCount));
+                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo3, args.Info.ResetTime));
+                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo7, (this.tw.UserStreamEnabled ? Hoehoe.Properties.Resources.Enable : Hoehoe.Properties.Resources.Disable)));
                     tmp.AppendLine();
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo8 + args.Info.AccessLevel.ToString());
+                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo8, args.Info.AccessLevel));
+                    tmp.AppendLine();
+                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo9, (args.Info.MediaMaxCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaMaxCount.ToString())));
+                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo10, (args.Info.MediaRemainCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaRemainCount.ToString())));
+                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo11, (args.Info.MediaResetTime == new DateTime() ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaResetTime.ToString())));
                     this.SetStatusLabelUrl();
-                    tmp.AppendLine();
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo9 + (args.Info.MediaMaxCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaMaxCount.ToString()));
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo10 + (args.Info.MediaRemainCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaRemainCount.ToString()));
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo11 + (args.Info.MediaResetTime == new DateTime() ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaResetTime.ToString()));
                 }
                 else
                 {
