@@ -3619,16 +3619,19 @@ namespace Hoehoe
             }
         }
 
-        private void PostBrowser_StatusTextChanged(object sender, EventArgs e)
+        private void ChangeStatusLabelUrlTextByPostBrowserStatusText()
         {
             try
             {
-                if (this.PostBrowser.StatusText.StartsWith("http") || this.PostBrowser.StatusText.StartsWith("ftp") || this.PostBrowser.StatusText.StartsWith("data"))
+                string postBrowserStatusText1 = this.PostBrowser.StatusText;
+                if (postBrowserStatusText1.StartsWith("http")
+                    || postBrowserStatusText1.StartsWith("ftp")
+                    || postBrowserStatusText1.StartsWith("data"))
                 {
-                    this.StatusLabelUrl.Text = this.PostBrowser.StatusText.Replace("&", "&&");
+                    this.StatusLabelUrl.Text = postBrowserStatusText1.Replace("&", "&&");
                 }
 
-                if (string.IsNullOrEmpty(this.PostBrowser.StatusText))
+                if (string.IsNullOrEmpty(postBrowserStatusText1))
                 {
                     this.SetStatusLabelUrl();
                 }
@@ -3636,6 +3639,11 @@ namespace Hoehoe
             catch (Exception)
             {
             }
+        }
+
+        private void PostBrowser_StatusTextChanged(object sender, EventArgs e)
+        {
+            ChangeStatusLabelUrlTextByPostBrowserStatusText();
         }
 
         private void TryPostTweet()
