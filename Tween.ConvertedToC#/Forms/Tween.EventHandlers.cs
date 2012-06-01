@@ -4808,12 +4808,20 @@ namespace Hoehoe
             }
         }
 
-        private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void TryOpenSourceLink()
         {
-            string link = Convert.ToString(this.SourceLinkLabel.Tag);
-            if (!string.IsNullOrEmpty(link) && e.Button == MouseButtons.Left)
+            string link = (string)this.SourceLinkLabel.Tag;
+            if (!string.IsNullOrEmpty(link))
             {
                 this.OpenUriAsync(link);
+            }
+        }
+
+        private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                TryOpenSourceLink();
             }
         }
 
