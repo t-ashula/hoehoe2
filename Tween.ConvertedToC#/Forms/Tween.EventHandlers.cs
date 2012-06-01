@@ -3243,7 +3243,7 @@ namespace Hoehoe
             this.anchorFlag = false;
         }
 
-        private void MyList_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void MyList_MouseDoubleClickExtracted()
         {
             switch (this.settingDialog.ListDoubleClickAction)
             {
@@ -3264,18 +3264,23 @@ namespace Hoehoe
                     this.ShowUserTimeline();
                     break;
                 case 4:
-                    this.ShowRelatedStatusesMenuItem_Click(null, null);
+                    this.AddRelatedStatusesTab();
                     break;
                 case 5:
                     this.MoveToHomeToolStripMenuItem_Click(null, null);
                     break;
                 case 6:
-                    this.StatusOpenMenuItem_Click(null, null);
+                    this.TryOpenSelectedTweetWebPage();
                     break;
                 case 7:
                     // 動作なし
                     break;
             }
+        }
+
+        private void MyList_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            MyList_MouseDoubleClickExtracted();
         }
 
         private void MyList_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)

@@ -3834,7 +3834,7 @@ namespace Hoehoe
                                     this.anchorFlag = false;
                                 }
 
-                                this.ShowRelatedStatusesMenuItem_Click(null, null);
+                                this.AddRelatedStatusesTab();
                                 return true;
                         }
                     }
@@ -3984,7 +3984,7 @@ namespace Hoehoe
                             return true;
                         case Keys.O:
                             // Webページを開く動作
-                            this.StatusOpenMenuItem_Click(null, null);
+                            this.TryOpenSelectedTweetWebPage();
                             return true;
                         case Keys.E:
                             // Webページを開く動作
