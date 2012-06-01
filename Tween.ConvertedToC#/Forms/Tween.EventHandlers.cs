@@ -314,93 +314,52 @@ namespace Hoehoe
             soundFileComboBox.SelectedIndex = idx;
         }
 
+        /// <summary>
+        /// 発言詳細のアイコン右クリック時のメニュー制御            
+        /// </summary>
         private void SetupUserPictureContextMenu()
         {
-            // 発言詳細のアイコン右クリック時のメニュー制御
-            if (this.curList.SelectedIndices.Count > 0 && this.curPost != null)
+            var saveiconmenu = false;
+            var iconmenu = false;
+            var iconmenutxt = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText1;
+            if (this.curList.SelectedIndices.Count <= 0 || this.curPost == null)
+            {
+                iconmenutxt = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText2;
+            }
+            else
             {
                 string name = this.curPost.ImageUrl;
-                if (name != null && name.Length > 0)
+                if (!string.IsNullOrEmpty(name))
                 {
+                    saveiconmenu = this.iconDict[this.curPost.ImageUrl] != null;
                     int idx = name.LastIndexOf('/');
                     if (idx != -1)
                     {
                         name = Path.GetFileName(name.Substring(idx));
                         if (name.Contains("_normal.") || name.EndsWith("_normal"))
                         {
-                            name = name.Replace("_normal", string.Empty);
-                            this.IconNameToolStripMenuItem.Text = name;
-                            this.IconNameToolStripMenuItem.Enabled = true;
-                        }
-                        else
-                        {
-                            this.IconNameToolStripMenuItem.Enabled = false;
-                            this.IconNameToolStripMenuItem.Text = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText1;
+                            iconmenu = true;
+                            iconmenutxt = name.Replace("_normal", string.Empty);
                         }
                     }
-                    else
-                    {
-                        this.IconNameToolStripMenuItem.Enabled = false;
-                        this.IconNameToolStripMenuItem.Text = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText1;
-                    }
-
-                    if (this.iconDict[this.curPost.ImageUrl] != null)
-                    {
-                        this.SaveIconPictureToolStripMenuItem.Enabled = true;
-                    }
-                    else
-                    {
-                        this.SaveIconPictureToolStripMenuItem.Enabled = false;
-                    }
                 }
-                else
-                {
-                    this.IconNameToolStripMenuItem.Enabled = false;
-                    this.SaveIconPictureToolStripMenuItem.Enabled = false;
-                    this.IconNameToolStripMenuItem.Text = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText1;
-                }
-            }
-            else
-            {
-                this.IconNameToolStripMenuItem.Enabled = false;
-                this.SaveIconPictureToolStripMenuItem.Enabled = false;
-                this.IconNameToolStripMenuItem.Text = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText2;
             }
 
-            if (this.NameLabel.Tag != null)
-            {
-                string id = (string)this.NameLabel.Tag;
-                if (id == this.tw.Username)
-                {
-                    this.FollowToolStripMenuItem.Enabled = false;
-                    this.UnFollowToolStripMenuItem.Enabled = false;
-                    this.ShowFriendShipToolStripMenuItem.Enabled = false;
-                    this.ShowUserStatusToolStripMenuItem.Enabled = true;
-                    this.SearchPostsDetailNameToolStripMenuItem.Enabled = true;
-                    this.SearchAtPostsDetailNameToolStripMenuItem.Enabled = false;
-                    this.ListManageUserContextToolStripMenuItem3.Enabled = true;
-                }
-                else
-                {
-                    this.FollowToolStripMenuItem.Enabled = true;
-                    this.UnFollowToolStripMenuItem.Enabled = true;
-                    this.ShowFriendShipToolStripMenuItem.Enabled = true;
-                    this.ShowUserStatusToolStripMenuItem.Enabled = true;
-                    this.SearchPostsDetailNameToolStripMenuItem.Enabled = true;
-                    this.SearchAtPostsDetailNameToolStripMenuItem.Enabled = true;
-                    this.ListManageUserContextToolStripMenuItem3.Enabled = true;
-                }
-            }
-            else
-            {
-                this.FollowToolStripMenuItem.Enabled = false;
-                this.UnFollowToolStripMenuItem.Enabled = false;
-                this.ShowFriendShipToolStripMenuItem.Enabled = false;
-                this.ShowUserStatusToolStripMenuItem.Enabled = false;
-                this.SearchPostsDetailNameToolStripMenuItem.Enabled = false;
-                this.SearchAtPostsDetailNameToolStripMenuItem.Enabled = false;
-                this.ListManageUserContextToolStripMenuItem3.Enabled = false;
-            }
+            this.SaveIconPictureToolStripMenuItem.Enabled = saveiconmenu;
+            this.IconNameToolStripMenuItem.Enabled = iconmenu;
+            this.IconNameToolStripMenuItem.Text = iconmenutxt;
+
+            object tag = this.NameLabel.Tag;
+            bool hasName = tag != null;
+            this.ShowUserStatusToolStripMenuItem.Enabled = hasName;
+            this.SearchPostsDetailNameToolStripMenuItem.Enabled = hasName;
+            this.ListManageUserContextToolStripMenuItem3.Enabled = hasName;
+
+            bool enable = hasName && (string)tag != this.tw.Username;
+            this.FollowToolStripMenuItem.Enabled = enable;
+            this.UnFollowToolStripMenuItem.Enabled = enable;
+            this.ShowFriendShipToolStripMenuItem.Enabled = enable;
+            this.SearchAtPostsDetailNameToolStripMenuItem.Enabled = enable;
         }
 
         private void SetupCommandMenu()
