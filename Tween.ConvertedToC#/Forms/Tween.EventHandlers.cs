@@ -285,8 +285,8 @@ namespace Hoehoe
             this.NotifyTbMenuItem.Checked = tb.Notify;
 
             this.soundfileListup = true;
-            ReloadSoundSelector(this.SoundFileComboBox, tb.SoundFile);
-            ReloadSoundSelector(this.SoundFileTbComboBox, tb.SoundFile);
+            ReloadSoundSelector(this.SoundFileComboBox.ComboBox, tb.SoundFile);
+            ReloadSoundSelector(this.SoundFileTbComboBox.ComboBox, tb.SoundFile);
             this.soundfileListup = false;
 
             this.UreadManageMenuItem.Checked = tb.UnreadManage;
@@ -295,11 +295,11 @@ namespace Hoehoe
             this.TabMenuControl(this.rclickTabName);
         }
 
-        private static void ReloadSoundSelector(ToolStripComboBox soundFileComboBox, string currentSoundFile)
+        private static void ReloadSoundSelector(ComboBox soundFileComboBox, string currentSoundFile)
         {
             soundFileComboBox.Items.Clear();
             soundFileComboBox.Items.Add(string.Empty);
-            var names = GetSoundFileNames();
+            var names = MyCommon.GetSoundFileNames();
             if (names.Length > 0)
             {
                 soundFileComboBox.Items.AddRange(names);
@@ -312,17 +312,6 @@ namespace Hoehoe
             }
 
             soundFileComboBox.SelectedIndex = idx;
-        }
-
-        private static string[] GetSoundFileNames()
-        {
-            DirectoryInfo soundDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
-            if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
-            {
-                soundDir = soundDir.GetDirectories("Sounds")[0];
-            }
-
-            return soundDir.GetFiles("*.wav").Select(f => f.Name).ToArray();
         }
 
         private void SetupUserPictureContextMenu()

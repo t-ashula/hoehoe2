@@ -2386,15 +2386,10 @@ namespace Hoehoe
 
             this.ComboBoxEventNotifySound.Items.Clear();
             this.ComboBoxEventNotifySound.Items.Add(string.Empty);
-            DirectoryInfo dir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
-            if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
+            var names = MyCommon.GetSoundFileNames();
+            if (names.Length > 0)
             {
-                dir = dir.GetDirectories("Sounds")[0];
-            }
-
-            foreach (FileInfo file in dir.GetFiles("*.wav"))
-            {
-                this.ComboBoxEventNotifySound.Items.Add(file.Name);
+                this.ComboBoxEventNotifySound.Items.AddRange(names);
             }
 
             int idx = this.ComboBoxEventNotifySound.Items.IndexOf(this.EventSoundFile);

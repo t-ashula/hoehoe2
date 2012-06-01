@@ -33,6 +33,7 @@ namespace Hoehoe
     using System.Drawing.Imaging;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Net.NetworkInformation;
     using System.Reflection;
     using System.Security.Principal;
@@ -482,6 +483,17 @@ namespace Hoehoe
             {
                 return false;
             }
+        }
+
+        public static string[] GetSoundFileNames()
+        {
+            DirectoryInfo soundDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
+            if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
+            {
+                soundDir = soundDir.GetDirectories("Sounds")[0];
+            }
+
+            return soundDir.GetFiles("*.wav").Select(f => f.Name).ToArray();
         }
 
         private static T GetAppAssemblyCustomeAttr<T>() where T : Attribute

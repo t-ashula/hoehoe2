@@ -496,15 +496,10 @@ namespace Hoehoe
 
             this.ComboSound.Items.Clear();
             this.ComboSound.Items.Add(string.Empty);
-            var soundsDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
-            if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
+            var names = MyCommon.GetSoundFileNames();
+            if (names.Length > 0)
             {
-                soundsDir = soundsDir.GetDirectories("Sounds")[0];
-            }
-
-            foreach (var soundFile in soundsDir.GetFiles("*.wav"))
-            {
-                this.ComboSound.Items.Add(soundFile.Name);
+                this.ComboSound.Items.AddRange(names);
             }
 
             this.idList.Clear();
