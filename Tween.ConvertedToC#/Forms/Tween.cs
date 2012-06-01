@@ -3801,7 +3801,7 @@ namespace Hoehoe
                             this.OpenUriAsync(ApplicationHelpWebPageUrl);
                             return true;
                         case Keys.F3:
-                            this.MenuItemSearchNext_Click(null, null);
+                            this.TrySearchWordInTabToBottom();
                             return true;
                         case Keys.F5:
                             this.DoRefresh();

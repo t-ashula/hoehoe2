@@ -2623,7 +2623,7 @@ namespace Hoehoe
             this.OpenRterHomeMenuItem.Enabled = this.ExistCurrentPost && !string.IsNullOrEmpty(this.curPost.RetweetedBy);
         }
 
-        private void MenuItemSearchNext_Click(object sender, EventArgs e)
+        private void TrySearchWordInTabToBottom()
         {
             // 次を検索
             if (string.IsNullOrEmpty(this.searchDialog.SWord))
@@ -2634,6 +2634,11 @@ namespace Hoehoe
             {
                 this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
             }
+        }
+
+        private void MenuItemSearchNext_Click(object sender, EventArgs e)
+        {
+            TrySearchWordInTabToBottom();
         }
 
         private void TrySearchWordInTabToTop()
@@ -7203,7 +7208,7 @@ namespace Hoehoe
             this.UrlConvert(UrlConverter.Twurl);
         }
 
-        private void TryUnfollowCurrentTweetUser()
+        private void TryUnfollowCurrentIconUser()
         {
             if (this.NameLabel.Tag != null)
             {
@@ -7217,7 +7222,7 @@ namespace Hoehoe
 
         private void UnFollowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.TryUnfollowCurrentTweetUser();
+            this.TryUnfollowCurrentIconUser();
         }
 
         private void UndoRemoveTab()
