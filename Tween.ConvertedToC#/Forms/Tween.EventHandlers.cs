@@ -2735,16 +2735,21 @@ namespace Hoehoe
             }
         }
 
-        private void MoveToHomeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TryOpenCurListSelectedUserHome()
         {
             if (this.curList.SelectedIndices.Count > 0)
             {
-                this.OpenUriAsync("http://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName);
+                this.OpenUriAsync("https://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName);
             }
             else if (this.curList.SelectedIndices.Count == 0)
             {
-                this.OpenUriAsync("http://twitter.com/");
+                this.OpenUriAsync("https://twitter.com/");
             }
+        }
+
+        private void MoveToHomeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryOpenCurListSelectedUserHome();
         }
 
         private void MoveToRTHomeMenuItem_Click(object sender, EventArgs e)
