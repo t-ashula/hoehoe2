@@ -2669,7 +2669,7 @@ namespace Hoehoe
             this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
         }
 
-        private void MenuItemSubSearch_Click(object sender, EventArgs e)
+        private void TrySearchWordInTab()
         {
             // 検索メニュー
             this.searchDialog.Owner = this;
@@ -2686,9 +2686,13 @@ namespace Hoehoe
             }
         }
 
+        private void MenuItemSubSearch_Click(object sender, EventArgs e)
+        {
+            TrySearchWordInTab();
+        }
+
         private void MenuItemTab_DropDownOpening(object sender, EventArgs e)
         {
-            ////this.ContextMenuTabProperty_Opening(sender, null);
             this.SetupTabPropertyContextMenu(true);
         }
 
