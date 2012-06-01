@@ -4064,7 +4064,7 @@ namespace Hoehoe
             }
         }
 
-        private void SaveLogMenuItem_Click(object sender, EventArgs e)
+        private void TrySaveLog()
         {
             DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (rslt == DialogResult.Cancel)
@@ -4123,6 +4123,11 @@ namespace Hoehoe
             }
 
             this.TopMost = this.settingDialog.AlwaysTop;
+        }
+        
+        private void SaveLogMenuItem_Click(object sender, EventArgs e)
+        {
+            TrySaveLog();
         }
 
         private void SaveCurrentTweetUserOriginalSizeIcon()
