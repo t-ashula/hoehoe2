@@ -42,131 +42,7 @@ namespace Hoehoe
 
     partial class TweenMain
     {
-        private void ShowAboutBox()
-        {
-            if (this.aboutBox == null)
-            {
-                this.aboutBox = new TweenAboutBox();
-            }
-
-            this.aboutBox.ShowDialog();
-            this.TopMost = this.settingDialog.AlwaysTop;
-        }
-
-        private void AddNewTab()
-        {
-            string tabName = null;
-            TabUsageType tabUsage = default(TabUsageType);
-            using (InputTabName inputName = new InputTabName())
-            {
-                inputName.TabName = this.statuses.GetUniqueTabName();
-                inputName.SetIsShowUsage(true);
-                inputName.ShowDialog();
-                if (inputName.DialogResult == DialogResult.Cancel)
-                {
-                    return;
-                }
-
-                tabName = inputName.TabName;
-                tabUsage = inputName.Usage;
-            }
-
-            this.TopMost = this.settingDialog.AlwaysTop;
-            if (!string.IsNullOrEmpty(tabName))
-            {
-                // List対応
-                ListElement list = null;
-                if (tabUsage == TabUsageType.Lists)
-                {
-                    using (ListAvailable listAvail = new ListAvailable())
-                    {
-                        if (listAvail.ShowDialog(this) == DialogResult.Cancel)
-                        {
-                            return;
-                        }
-
-                        if (listAvail.SelectedList == null)
-                        {
-                            return;
-                        }
-
-                        list = listAvail.SelectedList;
-                    }
-                }
-
-                if (!this.statuses.AddTab(tabName, tabUsage, list) || !this.AddNewTab(tabName, false, tabUsage, list))
-                {
-                    string tmp = string.Format(Hoehoe.Properties.Resources.AddTabMenuItem_ClickText1, tabName);
-                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-                else
-                {
-                    // 成功
-                    this.SaveConfigsTabs();
-                    if (tabUsage == TabUsageType.PublicSearch)
-                    {
-                        this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
-                        this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
-                        this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
-                    }
-
-                    if (tabUsage == TabUsageType.Lists)
-                    {
-                        this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
-                        this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
-                        this.GetTimeline(WorkerType.List, 1, 0, tabName);
-                    }
-                }
-            }
-        }
-
-        private void ChangeAllrepliesSetting(bool useAllReply)
-        {
-            this.tw.AllAtReply = useAllReply;
-            this.modifySettingCommon = true;
-            this.tw.ReconnectUserStream();
-        }
-
-        private void ShowApiInfoBox()
-        {
-            GetApiInfoArgs args = new GetApiInfoArgs { Tw = this.tw, Info = new ApiInfo() };
-            StringBuilder tmp = new StringBuilder();
-            using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ApiInfo6, this.GetApiInfo_Dowork, null, args))
-            {
-                dlg.ShowDialog();
-                if (Convert.ToBoolean(dlg.Result))
-                {
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo1 + args.Info.MaxCount.ToString());
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo2 + args.Info.RemainCount.ToString());
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo3 + args.Info.ResetTime.ToString());
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo7 + (this.tw.UserStreamEnabled ? Hoehoe.Properties.Resources.Enable : Hoehoe.Properties.Resources.Disable).ToString());
-                    tmp.AppendLine();
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo8 + args.Info.AccessLevel.ToString());
-                    this.SetStatusLabelUrl();
-                    tmp.AppendLine();
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo9 + (args.Info.MediaMaxCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaMaxCount.ToString()));
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo10 + (args.Info.MediaRemainCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaRemainCount.ToString()));
-                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo11 + (args.Info.MediaResetTime == new DateTime() ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaResetTime.ToString()));
-                }
-                else
-                {
-                    tmp.Append(Hoehoe.Properties.Resources.ApiInfo5);
-                }
-            }
-
-            MessageBox.Show(tmp.ToString(), Hoehoe.Properties.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void ShowCacheInfoBox()
-        {
-            StringBuilder buf = new StringBuilder();
-            buf.AppendFormat("キャッシュメモリ容量         : {0}bytes({1}MB)" + "\r\n", ((ImageDictionary)this.iconDict).CacheMemoryLimit, ((ImageDictionary)this.iconDict).CacheMemoryLimit / 1048576);
-            buf.AppendFormat("物理メモリ使用割合           : {0}%" + "\r\n", ((ImageDictionary)this.iconDict).PhysicalMemoryLimit);
-            buf.AppendFormat("キャッシュエントリ保持数     : {0}" + "\r\n", ((ImageDictionary)this.iconDict).CacheCount);
-            buf.AppendFormat("キャッシュエントリ破棄数     : {0}" + "\r\n", ((ImageDictionary)this.iconDict).CacheRemoveCount);
-            MessageBox.Show(buf.ToString(), "アイコンキャッシュ使用状況");
-        }
-
+        #region done
         private void SetupOperateContextMenu()
         {
             if (this.ListTab.SelectedTab == null)
@@ -414,13 +290,140 @@ namespace Hoehoe
             this.DelOpMenuItem.Enabled = !dmOrNotExist ? this.curPost.IsMe : this.ExistCurrentPost && this.curPost.IsDm;
             this.RtOpMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
             this.RtUnOpMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
-            this.QtOpMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect ;
+            this.QtOpMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
             this.FavoriteRetweetMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
             this.FavoriteRetweetUnofficialMenuItem.Enabled = !dmOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
 
             this.RefreshPrevOpMenuItem.Enabled = selectedTabType != TabUsageType.Favorites;
             this.OpenRepSourceOpMenuItem.Enabled = selectedTabType != TabUsageType.PublicSearch && this.ExistCurrentPost && this.curPost.InReplyToStatusId > 0;
             this.OpenRterHomeMenuItem.Enabled = this.ExistCurrentPost && !string.IsNullOrEmpty(this.curPost.RetweetedBy);
+        }
+
+        #endregion done
+        
+        private void ShowAboutBox()
+        {
+            if (this.aboutBox == null)
+            {
+                this.aboutBox = new TweenAboutBox();
+            }
+
+            this.aboutBox.ShowDialog();
+            this.TopMost = this.settingDialog.AlwaysTop;
+        }
+
+        private void AddNewTab()
+        {
+            string tabName = null;
+            TabUsageType tabUsage = default(TabUsageType);
+            using (InputTabName inputName = new InputTabName())
+            {
+                inputName.TabName = this.statuses.GetUniqueTabName();
+                inputName.SetIsShowUsage(true);
+                inputName.ShowDialog();
+                if (inputName.DialogResult == DialogResult.Cancel)
+                {
+                    return;
+                }
+
+                tabName = inputName.TabName;
+                tabUsage = inputName.Usage;
+            }
+
+            this.TopMost = this.settingDialog.AlwaysTop;
+            if (!string.IsNullOrEmpty(tabName))
+            {
+                // List対応
+                ListElement list = null;
+                if (tabUsage == TabUsageType.Lists)
+                {
+                    using (ListAvailable listAvail = new ListAvailable())
+                    {
+                        if (listAvail.ShowDialog(this) == DialogResult.Cancel)
+                        {
+                            return;
+                        }
+
+                        if (listAvail.SelectedList == null)
+                        {
+                            return;
+                        }
+
+                        list = listAvail.SelectedList;
+                    }
+                }
+
+                if (!this.statuses.AddTab(tabName, tabUsage, list) || !this.AddNewTab(tabName, false, tabUsage, list))
+                {
+                    string tmp = string.Format(Hoehoe.Properties.Resources.AddTabMenuItem_ClickText1, tabName);
+                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    // 成功
+                    this.SaveConfigsTabs();
+                    if (tabUsage == TabUsageType.PublicSearch)
+                    {
+                        this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
+                        this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
+                        this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
+                    }
+
+                    if (tabUsage == TabUsageType.Lists)
+                    {
+                        this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
+                        this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
+                        this.GetTimeline(WorkerType.List, 1, 0, tabName);
+                    }
+                }
+            }
+        }
+
+        private void ChangeAllrepliesSetting(bool useAllReply)
+        {
+            this.tw.AllAtReply = useAllReply;
+            this.modifySettingCommon = true;
+            this.tw.ReconnectUserStream();
+        }
+
+        private void ShowApiInfoBox()
+        {
+            GetApiInfoArgs args = new GetApiInfoArgs { Tw = this.tw, Info = new ApiInfo() };
+            StringBuilder tmp = new StringBuilder();
+            using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ApiInfo6, this.GetApiInfo_Dowork, null, args))
+            {
+                dlg.ShowDialog();
+                if (Convert.ToBoolean(dlg.Result))
+                {
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo1 + args.Info.MaxCount.ToString());
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo2 + args.Info.RemainCount.ToString());
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo3 + args.Info.ResetTime.ToString());
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo7 + (this.tw.UserStreamEnabled ? Hoehoe.Properties.Resources.Enable : Hoehoe.Properties.Resources.Disable).ToString());
+                    tmp.AppendLine();
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo8 + args.Info.AccessLevel.ToString());
+                    this.SetStatusLabelUrl();
+                    tmp.AppendLine();
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo9 + (args.Info.MediaMaxCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaMaxCount.ToString()));
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo10 + (args.Info.MediaRemainCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaRemainCount.ToString()));
+                    tmp.AppendLine(Hoehoe.Properties.Resources.ApiInfo11 + (args.Info.MediaResetTime == new DateTime() ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaResetTime.ToString()));
+                }
+                else
+                {
+                    tmp.Append(Hoehoe.Properties.Resources.ApiInfo5);
+                }
+            }
+
+            MessageBox.Show(tmp.ToString(), Hoehoe.Properties.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void ShowCacheInfoBox()
+        {
+            StringBuilder buf = new StringBuilder();
+            buf.AppendFormat("キャッシュメモリ容量         : {0}bytes({1}MB)" + "\r\n", ((ImageDictionary)this.iconDict).CacheMemoryLimit, ((ImageDictionary)this.iconDict).CacheMemoryLimit / 1048576);
+            buf.AppendFormat("物理メモリ使用割合           : {0}%" + "\r\n", ((ImageDictionary)this.iconDict).PhysicalMemoryLimit);
+            buf.AppendFormat("キャッシュエントリ保持数     : {0}" + "\r\n", ((ImageDictionary)this.iconDict).CacheCount);
+            buf.AppendFormat("キャッシュエントリ破棄数     : {0}" + "\r\n", ((ImageDictionary)this.iconDict).CacheRemoveCount);
+            MessageBox.Show(buf.ToString(), "アイコンキャッシュ使用状況");
         }
 
         #region event handler
