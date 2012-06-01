@@ -3338,24 +3338,26 @@ namespace Hoehoe
             this.colorize = true;
         }
 
-        private void NewPostPopMenuItem_CheckStateChanged(object sender, EventArgs e)
+        private void ChangeNewPostPopupSetting(bool popup)
         {
-            this.NotifyFileMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
-            this.NewPostPopMenuItem.Checked = this.NotifyFileMenuItem.Checked;
-            this.cfgCommon.NewAllPop = this.NewPostPopMenuItem.Checked;
-            this.modifySettingCommon = true;
+            this.cfgCommon.NewAllPop = this.NewPostPopMenuItem.Checked = this.NotifyFileMenuItem.Checked = popup;
+            this.SetModifySettingCommon(true);
         }
 
-        private void ChangeNotifySetting(bool beNotice)
+        private void NewPostPopMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            this.NotifyDispMenuItem.Checked = beNotice;
-            this.NotifyTbMenuItem.Checked = beNotice;
+            ChangeNewPostPopupSetting(((ToolStripMenuItem)sender).Checked);
+        }
+
+        private void ChangeNotifySetting(bool notify)
+        {
+            this.NotifyTbMenuItem.Checked = this.NotifyDispMenuItem.Checked = notify;
             if (string.IsNullOrEmpty(this.rclickTabName))
             {
                 return;
             }
 
-            this.statuses.Tabs[this.rclickTabName].Notify = beNotice;
+            this.statuses.Tabs[this.rclickTabName].Notify = notify;
             this.SaveConfigsTabs();
         }
 
