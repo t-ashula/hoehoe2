@@ -4784,15 +4784,20 @@ namespace Hoehoe
             this.ShowUserTimeline();
         }
 
-        private void SoundFileComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void ChangeCurrentTabSoundFile(string soundfile)
         {
             if (this.soundfileListup || string.IsNullOrEmpty(this.rclickTabName))
             {
                 return;
             }
 
-            this.statuses.Tabs[this.rclickTabName].SoundFile = (string)((ToolStripComboBox)sender).SelectedItem;
+            this.statuses.Tabs[this.rclickTabName].SoundFile = soundfile;
             this.SaveConfigsTabs();
+        }
+
+        private void SoundFileComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChangeCurrentTabSoundFile((string)((ToolStripComboBox)sender).SelectedItem);
         }
 
         private void TryCopySourceName()
