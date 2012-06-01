@@ -3346,18 +3346,22 @@ namespace Hoehoe
             this.modifySettingCommon = true;
         }
 
-        private void NotifyDispMenuItem_Click(object sender, EventArgs e)
+        private void ChangeNotifySetting(bool beNotice)
         {
-            this.NotifyDispMenuItem.Checked = ((ToolStripMenuItem)sender).Checked;
-            this.NotifyTbMenuItem.Checked = this.NotifyDispMenuItem.Checked;
-
+            this.NotifyDispMenuItem.Checked = beNotice;
+            this.NotifyTbMenuItem.Checked = beNotice;
             if (string.IsNullOrEmpty(this.rclickTabName))
             {
                 return;
             }
 
-            this.statuses.Tabs[this.rclickTabName].Notify = this.NotifyDispMenuItem.Checked;
+            this.statuses.Tabs[this.rclickTabName].Notify = beNotice;
             this.SaveConfigsTabs();
+        }
+
+        private void NotifyDispMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeNotifySetting(((ToolStripMenuItem)sender).Checked);
         }
 
         private void ActivateMainForm()
