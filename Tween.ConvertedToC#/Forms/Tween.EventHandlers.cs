@@ -4795,7 +4795,7 @@ namespace Hoehoe
             this.SaveConfigsTabs();
         }
 
-        private void SourceCopyMenuItem_Click(object sender, EventArgs e)
+        private void TryCopySourceName()
         {
             string selText = this.SourceLinkLabel.Text;
             try
@@ -4806,6 +4806,11 @@ namespace Hoehoe
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void SourceCopyMenuItem_Click(object sender, EventArgs e)
+        {
+            TryCopySourceName();
         }
 
         private void TryOpenSourceLink()
