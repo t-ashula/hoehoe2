@@ -2628,19 +2628,7 @@ namespace Hoehoe
             // 次を検索
             if (string.IsNullOrEmpty(this.searchDialog.SWord))
             {
-                if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
-                {
-                    this.TopMost = this.settingDialog.AlwaysTop;
-                    return;
-                }
-
-                this.TopMost = this.settingDialog.AlwaysTop;
-                if (string.IsNullOrEmpty(this.searchDialog.SWord))
-                {
-                    return;
-                }
-
-                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
+                TrySearchWordInTab();
             }
             else
             {
@@ -2653,14 +2641,7 @@ namespace Hoehoe
             // 前を検索
             if (string.IsNullOrEmpty(this.searchDialog.SWord))
             {
-                if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
-                {
-                    this.TopMost = this.settingDialog.AlwaysTop;
-                    return;
-                }
-
-                this.TopMost = this.settingDialog.AlwaysTop;
-                if (string.IsNullOrEmpty(this.searchDialog.SWord))
+                if (TryGetSearchCondition())
                 {
                     return;
                 }
@@ -2674,21 +2655,31 @@ namespace Hoehoe
             TrySearchWordInTabToTop();
         }
 
-        private void TrySearchWordInTab()
+        private bool TryGetSearchCondition()
         {
-            // 検索メニュー
-            this.searchDialog.Owner = this;
             if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
             {
                 this.TopMost = this.settingDialog.AlwaysTop;
-                return;
+                return true;
             }
 
             this.TopMost = this.settingDialog.AlwaysTop;
-            if (!string.IsNullOrEmpty(this.searchDialog.SWord))
+            if (string.IsNullOrEmpty(this.searchDialog.SWord))
             {
-                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
+                return true;
             }
+            return false;
+        }
+
+        private void TrySearchWordInTab()
+        {
+            // 検索メニュー
+            // this.searchDialog.Owner = this;
+            if (TryGetSearchCondition())
+            {
+                return;
+            }
+            this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
         }
 
         private void MenuItemSubSearch_Click(object sender, EventArgs e)
