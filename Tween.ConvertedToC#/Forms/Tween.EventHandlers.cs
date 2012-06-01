@@ -3372,18 +3372,23 @@ namespace Hoehoe
             this.BringToFront();
         }
 
+        private void ActivateMainForm()
+        {
+            this.Visible = true;
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+
+            this.Activate();
+            this.BringToFront();
+        }
+
         private void NotifyIcon1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                this.Visible = true;
-                if (this.WindowState == FormWindowState.Minimized)
-                {
-                    this.WindowState = FormWindowState.Normal;
-                }
-
-                this.Activate();
-                this.BringToFront();
+                ActivateMainForm();
             }
         }
 
@@ -3394,15 +3399,12 @@ namespace Hoehoe
 
         private void OpenOwnFavedMenuItem_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.tw.Username))
-            {
-                this.OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + this.tw.Username + "/recent");
-            }
+            this.OpenUriAsync(string.Format("{0}users/{1}/recent", Hoehoe.Properties.Resources.FavstarUrl, this.tw.Username));
         }
 
         private void OpenOwnHomeMenuItem_Click(object sender, EventArgs e)
         {
-            this.OpenUriAsync("http://twitter.com/" + this.tw.Username);
+            this.OpenUriAsync("https://twitter.com/" + this.tw.Username);
         }
 
         private void TryOpenUrlInCurrentTweet()
