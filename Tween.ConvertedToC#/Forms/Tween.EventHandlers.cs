@@ -2525,7 +2525,7 @@ namespace Hoehoe
                 || this.IsKeyDown(Keys.CapsLock) && this.IsKeyDown(Keys.Control) && this.IsKeyDown(Keys.Shift);
         }
 
-        private void MenuItemOperate_DropDownOpening(object sender, EventArgs e)
+        private void SetupOperateMenu()
         {
             if (this.ListTab.SelectedTab == null)
             {
@@ -2621,6 +2621,11 @@ namespace Hoehoe
             this.RefreshPrevOpMenuItem.Enabled = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.Favorites;
             this.OpenRepSourceOpMenuItem.Enabled = this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.PublicSearch && this.ExistCurrentPost && this.curPost.InReplyToStatusId > 0;
             this.OpenRterHomeMenuItem.Enabled = this.ExistCurrentPost && !string.IsNullOrEmpty(this.curPost.RetweetedBy);
+        }
+        
+        private void MenuItemOperate_DropDownOpening(object sender, EventArgs e)
+        {
+            SetupOperateMenu();
         }
 
         private void TrySearchWordInTabToBottom()
