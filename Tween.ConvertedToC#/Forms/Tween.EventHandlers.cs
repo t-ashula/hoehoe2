@@ -457,16 +457,13 @@ namespace Hoehoe
 
             this.SaveConfigsTabs();
         }
-        
+
         private void ShowFriendshipOfAllUserInCurrentTweet()
         {
-            var ma = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"")
-                .Cast<Match>()
-                .Select(m => m.Result("${ScreenName}").ToLower())
-                .Where(sn => sn != this.tw.Username.ToLower());
-            if (ma.Count() > 0)
+            var ma = Regex.Matches(this.PostBrowser.DocumentText, "href=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?\"");
+            if (ma.Count > 0)
             {
-                this.ShowFriendship(ma.ToArray());
+                this.ShowFriendship(ma.Cast<Match>().Select(m => m.Result("${ScreenName}")).ToArray());
             }
         }
         
