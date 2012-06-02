@@ -491,22 +491,17 @@ namespace Hoehoe
                 }
             }
         }
-        
+
         private void ShowSelectedTweetUserStatusBox()
         {
-            string name = this.GetUserId();
-            if (name != null)
-            {
-                this.ShowUserStatus(name);
-            }
+            this.ShowUserStatus(this.GetUserId());
         }
         
         private void ShowCurrentUserStatusBox()
         {
             if (this.NameLabel.Tag != null)
             {
-                string id = (string)this.NameLabel.Tag;
-                this.ShowUserStatus(id, false);
+                this.ShowUserStatus((string)this.NameLabel.Tag, false);
             }
         }
         
@@ -3640,7 +3635,7 @@ namespace Hoehoe
 
         private void OwnStatusMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoShowUserStatus(this.tw.Username, false);
+            this.ShowUserStatus(this.tw.Username, false);
         }
 
         private void ChangePlaySoundSetting(bool play)

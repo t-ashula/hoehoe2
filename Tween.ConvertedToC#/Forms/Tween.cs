@@ -4199,7 +4199,7 @@ namespace Hoehoe
                         case Keys.P:
                             if (this.curPost != null)
                             {
-                                this.DoShowUserStatus(this.curPost.ScreenName, false);
+                                this.ShowUserStatus(this.curPost.ScreenName, false);
                                 return true;
                             }
 
@@ -7054,7 +7054,15 @@ namespace Hoehoe
 
         private void DoShowUserStatus(string id, bool showInputDialog)
         {
-            DataModels.Twitter.User user = null;
+        }
+
+        private void ShowUserStatus(string id, bool showInputDialog = true)
+        {
+            if (id == null)
+            {
+                return;
+            }
+
             if (showInputDialog)
             {
                 using (InputTabName inputName = new InputTabName())
@@ -7062,60 +7070,42 @@ namespace Hoehoe
                     inputName.SetFormTitle("Show UserStatus");
                     inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
                     inputName.TabName = id;
-                    if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
+                    if (inputName.ShowDialog() != DialogResult.OK)
                     {
-                        id = inputName.TabName.Trim();
-                        GetUserInfoArgs args = new GetUserInfoArgs() { Tw = this.tw, Id = id, User = user };
-                        using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
-                        {
-                            info.ShowDialog();
-                            string ret = (string)info.Result;
-                            if (string.IsNullOrEmpty(ret))
-                            {
-                                this.DoShowUserStatus(args.User);
-                            }
-                            else
-                            {
-                                MessageBox.Show(ret);
-                            }
-                        }
+                        return;
                     }
+                    id = inputName.TabName.Trim();
                 }
             }
-            else
+
+            if (string.IsNullOrEmpty(id))
             {
-                GetUserInfoArgs args = new GetUserInfoArgs() { Tw = this.tw, Id = id, User = user };
-                using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
+                return;
+            }
+
+            var user = new DataModels.Twitter.User();
+            GetUserInfoArgs args = new GetUserInfoArgs() { Tw = this.tw, Id = id, User = user };
+            using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
+            {
+                info.ShowDialog();
+                string ret = (string)info.Result;
+                if (string.IsNullOrEmpty(ret))
                 {
-                    info.ShowDialog();
-                    string ret = (string)info.Result;
-                    if (string.IsNullOrEmpty(ret))
+
+                    using (ShowUserInfo userinfo = new ShowUserInfo())
                     {
-                        this.DoShowUserStatus(args.User);
-                    }
-                    else
-                    {
-                        MessageBox.Show(ret);
+                        userinfo.Owner = this;
+                        userinfo.SetUser(user);
+                        userinfo.ShowDialog(this);
+                        this.Activate();
+                        this.BringToFront();
                     }
                 }
+                else
+                {
+                    MessageBox.Show(ret);
+                }
             }
-        }
-
-        private void DoShowUserStatus(DataModels.Twitter.User user)
-        {
-            using (ShowUserInfo userinfo = new ShowUserInfo())
-            {
-                userinfo.Owner = this;
-                userinfo.SetUser(user);
-                userinfo.ShowDialog(this);
-                this.Activate();
-                this.BringToFront();
-            }
-        }
-
-        private void ShowUserStatus(string id, bool showInputDialog = true)
-        {
-            this.DoShowUserStatus(id, showInputDialog);
         }
 
         private void LoadImageFromSelectedFile()
