@@ -540,40 +540,24 @@ namespace Hoehoe
         {
             this.ShowUserStatus(this.tw.Username, false);
         }
-       
-        private void TryShowHashManageBox()
+
+        private void ShowHashManageBox()
         {
-            DialogResult rslt = default(DialogResult);
             try
             {
-                rslt = this.HashMgr.ShowDialog();
+                DialogResult rslt = this.HashMgr.ShowDialog();
+                this.TopMost = this.settingDialog.AlwaysTop;
+                if (rslt == DialogResult.Cancel)
+                {
+                    return;
+                }
             }
             catch (Exception)
             {
                 return;
             }
 
-            this.TopMost = this.settingDialog.AlwaysTop;
-            if (rslt == DialogResult.Cancel)
-            {
-                return;
-            }
-
-            if (!string.IsNullOrEmpty(this.HashMgr.UseHash))
-            {
-                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
-                this.HashToggleMenuItem.Checked = true;
-                this.HashToggleToolStripMenuItem.Checked = true;
-            }
-            else
-            {
-                this.HashStripSplitButton.Text = "#[-]";
-                this.HashToggleMenuItem.Checked = false;
-                this.HashToggleToolStripMenuItem.Checked = false;
-            }
-
-            this.modifySettingCommon = true;
-            this.StatusText_TextChangedExtracted();
+            this.ChangeUseHashTagSetting(toggle: false);
         }
         
         private void TryShowSettingsBox()
@@ -2004,7 +1988,7 @@ namespace Hoehoe
 
         private void HashManageMenuItem_Click(object sender, EventArgs e)
         {
-            this.TryShowHashManageBox();
+            this.ShowHashManageBox();
         }
 
         private void HashStripSplitButton_ButtonClick(object sender, EventArgs e)
@@ -2012,9 +1996,13 @@ namespace Hoehoe
             this.ChangeUseHashTagSetting();
         }
 
-        private void ChangeUseHashTagSetting()
+        private void ChangeUseHashTagSetting(bool toggle = true)
         {
-            this.HashMgr.ToggleHash();
+            if (toggle)
+            {
+                this.HashMgr.ToggleHash();
+            }
+
             if (!string.IsNullOrEmpty(this.HashMgr.UseHash))
             {
                 this.HashStripSplitButton.Text = this.HashMgr.UseHash;

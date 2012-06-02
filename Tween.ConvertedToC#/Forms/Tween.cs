@@ -3943,7 +3943,7 @@ namespace Hoehoe
                             this.ChangeSelectetdTweetReadStateToRead();
                             return true;
                         case Keys.T:
-                            this.TryShowHashManageBox();
+                            this.ShowHashManageBox();
                             return true;
                         case Keys.L:
                             this.ConvertUrlByAutoSelectedService();
