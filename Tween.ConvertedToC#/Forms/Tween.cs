@@ -6926,6 +6926,11 @@ namespace Hoehoe
 
         private void ShowFriendship(string id)
         {
+            if (id == null)
+            {
+                return;
+            }
+
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.SetFormTitle("Show Friendships");

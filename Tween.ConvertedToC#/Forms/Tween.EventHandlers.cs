@@ -466,6 +466,24 @@ namespace Hoehoe
                 this.ShowFriendship(ma.Cast<Match>().Select(m => m.Result("${ScreenName}")).ToArray());
             }
         }
+
+        private void ShowFriendshipOfCurrentTweetUser()
+        {
+            this.ShowFriendship(this.curPost == null ? string.Empty : this.curPost.ScreenName);
+        }
+
+        private void ShowFriendshipOfUserInCurrentTweetLink()
+        {
+            this.ShowFriendship(this.GetUserId());
+        }
+
+        private void ShowFriendshipCurrentIconUser()
+        {
+            if (this.NameLabel.Tag != null)
+            {
+                this.ShowFriendship((string)this.NameLabel.Tag);
+            }
+        }
         
         private void ShowListManageBox()
         {
@@ -504,16 +522,7 @@ namespace Hoehoe
                 this.ShowUserStatus((string)this.NameLabel.Tag, false);
             }
         }
-        
-        private void TryShowFriendshipOfCurrentTweetUser()
-        {
-            string name = this.GetUserId();
-            if (name != null)
-            {
-                this.ShowFriendship(name);
-            }
-        }
-        
+                
         private void TryShowHashManageBox()
         {
             DialogResult rslt = default(DialogResult);
@@ -862,27 +871,9 @@ namespace Hoehoe
             this.SaveConfigsAll(false);
         }
         
-        private void TryShowCurrentTweetUserFriendShipBox()
-        {
-            if (this.NameLabel.Tag != null)
-            {
-                string id = (string)this.NameLabel.Tag;
-                if (id != this.tw.Username)
-                {
-                    this.ShowFriendship(id);
-                }
-            }
-        }
-        
         private void TryShowCurrentTweetUserStatus()
         {
-            string id = string.Empty;
-            if (this.curPost != null)
-            {
-                id = this.curPost.ScreenName;
-            }
-
-            this.ShowUserStatus(id);
+            this.ShowUserStatus(this.curPost == null ? string.Empty : this.curPost.ScreenName);
         }
 
         private void AddNewTab()
@@ -1224,12 +1215,12 @@ namespace Hoehoe
 
         private void FriendshipContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.TryShowFriendshipOfCurrentTweetUser();
+            this.ShowFriendshipOfUserInCurrentTweetLink();
         }
 
         private void FriendshipMenuItem_Click(object sender, EventArgs e)
         {
-            this.ShowFriendship(this.curPost != null ? this.curPost.ScreenName : string.Empty);
+            ShowFriendshipOfCurrentTweetUser();
         }
 
         private void GetFollowersAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -4568,7 +4559,7 @@ namespace Hoehoe
 
         private void ShowFriendShipToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TryShowCurrentTweetUserFriendShipBox();
+            ShowFriendshipCurrentIconUser();
         }
 
         private void ShowProfileMenuItem_Click(object sender, EventArgs e)
