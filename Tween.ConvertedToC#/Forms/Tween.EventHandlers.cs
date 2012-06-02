@@ -472,12 +472,12 @@ namespace Hoehoe
             this.ShowFriendship(this.curPost == null ? string.Empty : this.curPost.ScreenName);
         }
 
-        private void ShowFriendshipOfUserInCurrentTweetLink()
+        private void ShowFriendshipOfCurrentLinkUser()
         {
             this.ShowFriendship(this.GetUserId());
         }
 
-        private void ShowFriendshipCurrentIconUser()
+        private void ShowFriendshipOfCurrentIconUser()
         {
             if (this.NameLabel.Tag != null)
             {
@@ -510,19 +510,37 @@ namespace Hoehoe
             }
         }
 
-        private void ShowSelectedTweetUserStatusBox()
+        private void ShowtStatusOfCurrentLinkUser()
         {
-            this.ShowUserStatus(this.GetUserId());
+            this.ShowUserStatus(this.GetUserId(), false);
         }
         
-        private void ShowCurrentUserStatusBox()
+        private void ShowStatusOfCurrentIconUser()
         {
             if (this.NameLabel.Tag != null)
             {
                 this.ShowUserStatus((string)this.NameLabel.Tag, false);
             }
         }
-                
+
+        private void ShowStatusOfCurrentTweetUser()
+        {
+            if (this.curPost != null)
+            {
+                this.ShowUserStatus(this.curPost.ScreenName, false);
+            }
+        }
+
+        private void TryShowStatusOfCurrentTweetUser()
+        {
+            this.ShowUserStatus(this.curPost == null ? string.Empty : this.curPost.ScreenName);
+        }
+
+        private void ShowStatusOfUserSelf()
+        {
+            this.ShowUserStatus(this.tw.Username, false);
+        }
+       
         private void TryShowHashManageBox()
         {
             DialogResult rslt = default(DialogResult);
@@ -871,11 +889,6 @@ namespace Hoehoe
             this.SaveConfigsAll(false);
         }
         
-        private void TryShowCurrentTweetUserStatus()
-        {
-            this.ShowUserStatus(this.curPost == null ? string.Empty : this.curPost.ScreenName);
-        }
-
         private void AddNewTab()
         {
             string tabName = null;
@@ -1215,7 +1228,7 @@ namespace Hoehoe
 
         private void FriendshipContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.ShowFriendshipOfUserInCurrentTweetLink();
+            this.ShowFriendshipOfCurrentLinkUser();
         }
 
         private void FriendshipMenuItem_Click(object sender, EventArgs e)
@@ -3349,10 +3362,7 @@ namespace Hoehoe
                     this.FavoriteChange(true);
                     break;
                 case 2:
-                    if (this.curPost != null)
-                    {
-                        this.ShowUserStatus(this.curPost.ScreenName, false);
-                    }
+                    this.ShowStatusOfCurrentTweetUser();
                     break;
                 case 3:
                     this.ShowUserTimeline();
@@ -3626,7 +3636,7 @@ namespace Hoehoe
 
         private void OwnStatusMenuItem_Click(object sender, EventArgs e)
         {
-            this.ShowUserStatus(this.tw.Username, false);
+            ShowStatusOfUserSelf();
         }
 
         private void ChangePlaySoundSetting(bool play)
@@ -4559,15 +4569,12 @@ namespace Hoehoe
 
         private void ShowFriendShipToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowFriendshipCurrentIconUser();
+            ShowFriendshipOfCurrentIconUser();
         }
 
         private void ShowProfileMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.curPost != null)
-            {
-                this.ShowUserStatus(this.curPost.ScreenName, false);
-            }
+            ShowStatusOfCurrentTweetUser();
         }
 
         private void AddRelatedStatusesTab()
@@ -4625,12 +4632,12 @@ namespace Hoehoe
 
         private void ShowUserStatusContextMenuItem_Click(object sender, EventArgs e)
         {
-            ShowSelectedTweetUserStatusBox();
+            ShowtStatusOfCurrentLinkUser();
         }
 
         private void ShowUserStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowCurrentUserStatusBox();
+            ShowStatusOfCurrentIconUser();
         }
 
         private void ShowUserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
@@ -7184,7 +7191,7 @@ namespace Hoehoe
 
         private void UserStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.TryShowCurrentTweetUserStatus();
+            this.TryShowStatusOfCurrentTweetUser();
         }
 
         private void TryAddNewUserTimelineTab()

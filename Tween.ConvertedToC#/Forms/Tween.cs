@@ -7056,11 +7056,7 @@ namespace Hoehoe
                 }
             }
         }
-
-        private void DoShowUserStatus(string id, bool showInputDialog)
-        {
-        }
-
+        
         private void ShowUserStatus(string id, bool showInputDialog = true)
         {
             if (id == null)
