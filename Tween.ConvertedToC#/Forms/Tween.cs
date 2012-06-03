@@ -3525,12 +3525,7 @@ namespace Hoehoe
             }
         }
 
-        private void DispSelectedPost()
-        {
-            this.DispSelectedPost(false);
-        }
-
-        private void DispSelectedPost(bool forceupdate)
+        private void DispSelectedPost(bool forceupdate = false)
         {
             if (this.curList.SelectedIndices.Count == 0 || this.curPost == null)
             {

@@ -1234,16 +1234,13 @@ namespace Hoehoe
         {
             if (sender.Equals(this.displayItem))
             {
-                UserPicture.ReplaceImage(this.displayItem.Image);
+                this.UserPicture.ReplaceImage(this.displayItem.Image);
             }
         }
 
         private void DumpPostClassToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.curPost != null)
-            {
-                this.DispSelectedPost(true);
-            }
+            this.DispSelectedPost(true);
         }
         
         private void EndToolStripMenuItem_Click(object sender, EventArgs e)
