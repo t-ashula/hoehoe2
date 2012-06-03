@@ -1141,6 +1141,28 @@ namespace Hoehoe
             this.modifySettingCommon = true;
             this.StatusText_TextChangedExtracted();
         }
+        
+        private void ChangeWindowState()
+        {
+            if ((this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized)
+                && this.Visible && object.ReferenceEquals(Form.ActiveForm, this))
+            {
+                // アイコン化
+                this.Visible = false;
+            }
+            else if (Form.ActiveForm == null)
+            {
+                this.Visible = true;
+                if (this.WindowState == FormWindowState.Minimized)
+                {
+                    this.WindowState = FormWindowState.Normal;
+                }
+
+                this.Activate();
+                this.BringToFront();
+                this.StatusText.Focus();
+            }
+        }
 
         #endregion done
 
@@ -1367,34 +1389,12 @@ namespace Hoehoe
             this.ChangeUseHashTagSetting();
         }
 
-        #endregion
-
-        private void ChangeWindowState()
-        {
-            if ((this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized)
-                && this.Visible && object.ReferenceEquals(Form.ActiveForm, this))
-            {
-                // アイコン化
-                this.Visible = false;
-            }
-            else if (Form.ActiveForm == null)
-            {
-                this.Visible = true;
-                if (this.WindowState == FormWindowState.Minimized)
-                {
-                    this.WindowState = FormWindowState.Normal;
-                }
-
-                this.Activate();
-                this.BringToFront();
-                this.StatusText.Focus();
-            }
-        }
-
         private void HookGlobalHotkey_HotkeyPressed(object sender, KeyEventArgs e)
         {
             this.ChangeWindowState();
         }
+
+        #endregion
 
         private void AddIdFilteringRuleFromSelectedTweets()
         {
