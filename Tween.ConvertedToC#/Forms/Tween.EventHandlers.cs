@@ -43,6 +43,7 @@ namespace Hoehoe
     partial class TweenMain
     {
         #region done
+
         private void SetupOperateContextMenu()
         {
             if (this.ListTab.SelectedTab == null)
@@ -191,7 +192,7 @@ namespace Hoehoe
         }
 
         /// <summary>
-        /// 発言詳細のアイコン右クリック時のメニュー制御            
+        /// 発言詳細のアイコン右クリック時のメニュー制御
         /// </summary>
         private void SetupUserPictureContextMenu()
         {
@@ -299,8 +300,6 @@ namespace Hoehoe
             this.OpenRterHomeMenuItem.Enabled = this.ExistCurrentPost && !string.IsNullOrEmpty(this.curPost.RetweetedBy);
         }
 
-        #endregion done
-        
         private void ShowAboutBox()
         {
             if (this.aboutBox == null)
@@ -311,7 +310,7 @@ namespace Hoehoe
             this.aboutBox.ShowDialog();
             this.TopMost = this.settingDialog.AlwaysTop;
         }
-        
+
         private void ShowApiInfoBox()
         {
             GetApiInfoArgs args = new GetApiInfoArgs { Tw = this.tw, Info = new ApiInfo() };
@@ -351,7 +350,7 @@ namespace Hoehoe
             buf.AppendLine(string.Format("{0, -15} : {1}", "キャッシュエントリ破棄数", this.iconDict.CacheRemoveCount));
             MessageBox.Show(buf.ToString(), "アイコンキャッシュ使用状況");
         }
-        
+
         private void ShowEventViewerBox()
         {
             if (this.evtDialog == null || this.evtDialog.IsDisposed)
@@ -378,7 +377,7 @@ namespace Hoehoe
 
             this.TopMost = this.settingDialog.AlwaysTop;
         }
-        
+
         private void ShowPostImageFileSelectBox()
         {
             if (string.IsNullOrEmpty(this.ImageService))
@@ -406,7 +405,7 @@ namespace Hoehoe
             this.ImagefilePathText.Text = this.OpenFileDialog1.FileName;
             this.LoadImageFromSelectedFile();
         }
-        
+
         private void ShowFilterEditBox()
         {
             if (string.IsNullOrEmpty(this.rclickTabName))
@@ -484,7 +483,7 @@ namespace Hoehoe
                 this.ShowFriendship((string)this.NameLabel.Tag);
             }
         }
-        
+
         private void ShowListManageBox()
         {
             using (ListManage form = new ListManage(this.tw))
@@ -492,7 +491,7 @@ namespace Hoehoe
                 form.ShowDialog(this);
             }
         }
-        
+
         private void ShowCurrentTweetRtCountBox()
         {
             if (this.ExistCurrentPost)
@@ -502,8 +501,8 @@ namespace Hoehoe
                     // ダイアログ表示
                     formInfo.ShowDialog();
                     int retweetCount = (int)formInfo.Result;
-                    string msg = retweetCount < 0 ? 
-                        Hoehoe.Properties.Resources.RtCountText2 : 
+                    string msg = retweetCount < 0 ?
+                        Hoehoe.Properties.Resources.RtCountText2 :
                         string.Format("{0}{1}", retweetCount, Hoehoe.Properties.Resources.RtCountText1);
                     MessageBox.Show(msg);
                 }
@@ -514,7 +513,7 @@ namespace Hoehoe
         {
             this.ShowUserStatus(this.GetUserId(), false);
         }
-        
+
         private void ShowStatusOfCurrentIconUser()
         {
             if (this.NameLabel.Tag != null)
@@ -559,7 +558,7 @@ namespace Hoehoe
 
             this.ChangeUseHashTagSetting(toggle: false);
         }
-        
+
         private void TryShowSettingsBox()
         {
             DialogResult result = default(DialogResult);
@@ -591,11 +590,6 @@ namespace Hoehoe
 
                     HttpConnection.InitializeConnection(this.settingDialog.DefaultTimeOut, this.settingDialog.SelectedProxyType, this.settingDialog.ProxyAddress, this.settingDialog.ProxyPort, this.settingDialog.ProxyUser, this.settingDialog.ProxyPassword);
                     this.CreatePictureServices();
-#if UA // = "True"
-					this.SplitContainer4.Panel2.Controls.RemoveAt(0);
-					this.ab = new AdsBrowser();
-					this.SplitContainer4.Panel2.Controls.Add(ab);
-#endif
                     try
                     {
                         if (this.settingDialog.TabIconDisp)
@@ -811,10 +805,10 @@ namespace Hoehoe
                     switch (this.settingDialog.OutputzUrlmode)
                     {
                         case OutputzUrlmode.twittercom:
-                            Outputz.OutUrl = "http:// twitter.com/";
+                            Outputz.OutUrl = "http://twitter.com/";
                             break;
                         case OutputzUrlmode.twittercomWithUsername:
-                            Outputz.OutUrl = "http:// twitter.com/" + this.tw.Username;
+                            Outputz.OutUrl = "http://twitter.com/" + this.tw.Username;
                             break;
                     }
 
@@ -872,7 +866,9 @@ namespace Hoehoe
             this.TopMost = this.settingDialog.AlwaysTop;
             this.SaveConfigsAll(false);
         }
-        
+
+        #endregion done
+
         private void AddNewTab()
         {
             string tabName = null;
@@ -943,7 +939,7 @@ namespace Hoehoe
         private void ChangeAllrepliesSetting(bool useAllReply)
         {
             this.tw.AllAtReply = useAllReply;
-            this.modifySettingCommon = true;
+            this.SetModifySettingCommon(true);
             this.tw.ReconnectUserStream();
         }
 
@@ -6610,7 +6606,6 @@ namespace Hoehoe
             }
 
             this.tw.DetailIcon = this.iconDict;
-
             this.StatusLabel.Text = Hoehoe.Properties.Resources.Form1_LoadText1;  // 画面右下の状態表示を変更
             this.StatusLabelUrl.Text = string.Empty;  // 画面左下のリンク先URL表示部を初期化
             this.NameLabel.Text = string.Empty;       // 発言詳細部名前ラベル初期化
@@ -6707,13 +6702,7 @@ namespace Hoehoe
                 this.ListTab.ImageList = null;
             }
 
-#if UA // = "True"
-			ab = new AdsBrowser();
-			this.SplitContainer4.Panel2.Controls.Add(ab);
-#else
             this.SplitContainer4.Panel2Collapsed = true;
-#endif
-
             this.ignoreConfigSave = false;
             this.ResizeMainForm();
             if (saveRequired)
