@@ -867,6 +867,72 @@ namespace Hoehoe
             this.SaveConfigsAll(false);
         }
 
+        private void SearchSelectedTextAtCurrentTab()
+        {
+            // 発言詳細の選択文字列で現在のタブを検索
+            string txt = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
+            if (!string.IsNullOrEmpty(txt))
+            {
+                this.searchDialog.SWord = txt;
+                this.searchDialog.CheckCaseSensitive = false;
+                this.searchDialog.CheckRegex = false;
+                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
+            }
+        }
+
+        private void TrySearchWordInTabToBottom()
+        {
+            // 次を検索
+            if (string.IsNullOrEmpty(this.searchDialog.SWord))
+            {
+                TrySearchWordInTab();
+            }
+            else
+            {
+                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
+            }
+        }
+
+        private void TrySearchWordInTabToTop()
+        {
+            // 前を検索
+            if (string.IsNullOrEmpty(this.searchDialog.SWord))
+            {
+                if (!TryGetSearchCondition())
+                {
+                    return;
+                }
+            }
+
+            this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
+        }
+
+        private bool TryGetSearchCondition()
+        {
+            if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
+            {
+                this.TopMost = this.settingDialog.AlwaysTop;
+                return false;
+            }
+
+            this.TopMost = this.settingDialog.AlwaysTop;
+            if (string.IsNullOrEmpty(this.searchDialog.SWord))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void TrySearchWordInTab()
+        {
+            // 検索メニュー
+            if (!TryGetSearchCondition())
+            {
+                return;
+            }
+            this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
+        }
+
         #endregion done
 
         private void AddNewTab()
@@ -1024,19 +1090,6 @@ namespace Hoehoe
         private void CopyUserIdStripMenuItem_Click(object sender, EventArgs e)
         {
             this.CopyUserId();
-        }
-
-        private void SearchSelectedTextAtCurrentTab()
-        {
-            // 発言詳細の選択文字列で現在のタブを検索
-            string txt = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
-            if (txt != null)
-            {
-                this.searchDialog.SWord = txt;
-                this.searchDialog.CheckCaseSensitive = false;
-                this.searchDialog.CheckRegex = false;
-                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
-            }
         }
 
         private void CurrentTabToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2732,68 +2785,14 @@ namespace Hoehoe
             SetupOperateMenu();
         }
 
-        private void TrySearchWordInTabToBottom()
-        {
-            // 次を検索
-            if (string.IsNullOrEmpty(this.searchDialog.SWord))
-            {
-                TrySearchWordInTab();
-            }
-            else
-            {
-                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
-            }
-        }
-
         private void MenuItemSearchNext_Click(object sender, EventArgs e)
         {
             TrySearchWordInTabToBottom();
         }
 
-        private void TrySearchWordInTabToTop()
-        {
-            // 前を検索
-            if (string.IsNullOrEmpty(this.searchDialog.SWord))
-            {
-                if (TryGetSearchCondition())
-                {
-                    return;
-                }
-            }
-
-            this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
-        }
-
         private void MenuItemSearchPrev_Click(object sender, EventArgs e)
         {
             TrySearchWordInTabToTop();
-        }
-
-        private bool TryGetSearchCondition()
-        {
-            if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
-            {
-                this.TopMost = this.settingDialog.AlwaysTop;
-                return true;
-            }
-
-            this.TopMost = this.settingDialog.AlwaysTop;
-            if (string.IsNullOrEmpty(this.searchDialog.SWord))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private void TrySearchWordInTab()
-        {
-            // 検索メニュー
-            // this.searchDialog.Owner = this;
-            if (TryGetSearchCondition())
-            {
-                return;
-            }
-            this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
         }
 
         private void MenuItemSubSearch_Click(object sender, EventArgs e)
