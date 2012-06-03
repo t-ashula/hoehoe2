@@ -3610,27 +3610,15 @@ namespace Hoehoe
                 this.NameLabel.Text += string.Format(" (RT:{0})", this.curPost.RetweetedBy);
             }
 
-            if (this.UserPicture.Image != null)
+            if (!string.IsNullOrEmpty(this.curPost.ImageUrl))
             {
-                this.UserPicture.Image.Dispose();
-            }
-
-            if (!string.IsNullOrEmpty(this.curPost.ImageUrl) && this.iconDict[this.curPost.ImageUrl] != null)
-            {
-                try
-                {
-                    this.UserPicture.Image = new Bitmap(this.iconDict[this.curPost.ImageUrl]);
-                }
-                catch (Exception)
-                {
-                    this.UserPicture.Image = null;
-                }
+                this.UserPicture.ReplaceImage(this.iconDict[this.curPost.ImageUrl]);
             }
             else
             {
-                this.UserPicture.Image = null;
+                this.UserPicture.ClearImage();
             }
-
+            
             this.NameLabel.ForeColor = SystemColors.ControlText;
             this.DateTimeLabel.Text = this.curPost.CreatedAt.ToString();
             if (this.curPost.IsOwl && (this.settingDialog.OneWayLove || this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage))

@@ -27,10 +27,36 @@
 namespace Hoehoe.TweenCustomControl
 {
     using System;
+    using System.Drawing;
     using System.Windows.Forms;
 
     public class PictureBoxEx : PictureBox
     {
+        public void ReplaceImage(Image img)
+        {
+            ClearImage();
+            if (img != null)
+            {
+                try
+                {
+                    Image = new Bitmap(img);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        public void ClearImage()
+        {
+            if (Image != null)
+            {
+                Image.Dispose();
+            }
+
+            Image = null;
+        }
+
         protected override void OnPaint(PaintEventArgs pe)
         {
             try

@@ -1234,26 +1234,7 @@ namespace Hoehoe
         {
             if (sender.Equals(this.displayItem))
             {
-                if (this.UserPicture.Image != null)
-                {
-                    this.UserPicture.Image.Dispose();
-                }
-
-                if (this.displayItem.Image != null)
-                {
-                    try
-                    {
-                        this.UserPicture.Image = new Bitmap(this.displayItem.Image);
-                    }
-                    catch (Exception)
-                    {
-                        this.UserPicture.Image = null;
-                    }
-                }
-                else
-                {
-                    this.UserPicture.Image = null;
-                }
+                UserPicture.ReplaceImage(this.displayItem.Image);
             }
         }
 
