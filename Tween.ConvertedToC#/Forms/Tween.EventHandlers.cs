@@ -1394,6 +1394,21 @@ namespace Hoehoe
             this.ChangeWindowState();
         }
 
+        private void IDRuleMenuItem_Click(object sender, EventArgs e)
+        {
+            this.AddIdFilteringRuleFromSelectedTweets();
+        }
+
+        private void IconNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryOpenCurrentTweetIconUrl();
+        }
+
+        private void IdFilterAddMenuItem_Click(object sender, EventArgs e)
+        {
+            this.AddIdFilteringRuleFromCurrentTweet();
+        }
+
         #endregion
 
         private void AddIdFilteringRuleFromSelectedTweets()
@@ -1445,11 +1460,6 @@ namespace Hoehoe
             }
         }
 
-        private void IDRuleMenuItem_Click(object sender, EventArgs e)
-        {
-            this.AddIdFilteringRuleFromSelectedTweets();
-        }
-
         private void TryOpenCurrentTweetIconUrl()
         {
             if (this.curPost == null)
@@ -1459,11 +1469,6 @@ namespace Hoehoe
 
             string name = this.curPost.ImageUrl;
             this.OpenUriAsync(name.Remove(name.LastIndexOf("_normal"), 7));
-        }
-
-        private void IconNameToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.TryOpenCurrentTweetIconUrl();
         }
 
         private void AddIdFilteringRuleFromCurrentTweet()
@@ -1517,11 +1522,6 @@ namespace Hoehoe
             }
 
             this.SaveConfigsTabs();
-        }
-
-        private void IdFilterAddMenuItem_Click(object sender, EventArgs e)
-        {
-            this.AddIdFilteringRuleFromCurrentTweet();
         }
 
         private void IdeographicSpaceToSpaceToolStripMenuItem_Click(object sender, EventArgs e)
