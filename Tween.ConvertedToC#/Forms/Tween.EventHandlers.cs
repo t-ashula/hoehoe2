@@ -1833,8 +1833,6 @@ namespace Hoehoe
             this.OpenUriAsync(ApplicationHelpWebPageUrl);
         }
 
-        #endregion
-
         private void MenuItemCommand_DropDownOpening(object sender, EventArgs e)
         {
             SetupCommandMenu();
@@ -1854,6 +1852,8 @@ namespace Hoehoe
         {
             SetupOperateMenu();
         }
+
+        #endregion
 
         private void MenuItemSearchNext_Click(object sender, EventArgs e)
         {
