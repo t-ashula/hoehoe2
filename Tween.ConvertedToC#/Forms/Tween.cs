@@ -6860,30 +6860,39 @@ namespace Hoehoe
 
         private void FollowCommand(string id)
         {
+            if (id == null)
+            {
+                return;
+            }
+
             using (InputTabName inputName = new InputTabName())
             {
                 inputName.SetFormTitle("Follow");
                 inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
                 inputName.TabName = id;
-                if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
+                if (inputName.ShowDialog() != DialogResult.OK)
                 {
-                    FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs();
-                    arg.Tw = this.tw;
-                    arg.Id = inputName.TabName.Trim();
-                    using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.FollowCommandText1, this.FollowCommand_DoWork, null, arg))
-                    {
-                        info.ShowDialog();
-                        string ret = (string)info.Result;
-                        if (!string.IsNullOrEmpty(ret))
-                        {
-                            MessageBox.Show(Hoehoe.Properties.Resources.FRMessage2 + ret);
-                        }
-                        else
-                        {
-                            MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
-                        }
-                    }
+                    return;
                 }
+                id = inputName.TabName.Trim();
+            }
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return;
+            }
+
+            if (id == this.tw.Username)
+            {
+                return;
+            }
+
+            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs() { Tw = this.tw, Id = id };
+            using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.FollowCommandText1, this.FollowCommand_DoWork, null, arg))
+            {
+                info.ShowDialog();
+                string ret = (string)info.Result;
+                MessageBox.Show(!string.IsNullOrEmpty(ret) ? Hoehoe.Properties.Resources.FRMessage2 + ret : Hoehoe.Properties.Resources.FRMessage3);
             }
         }
 

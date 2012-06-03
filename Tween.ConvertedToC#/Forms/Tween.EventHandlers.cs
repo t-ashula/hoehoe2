@@ -933,33 +933,25 @@ namespace Hoehoe
             this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
         }
 
-        #endregion done
-
         private void TryFollowUserOfCurrentTweet()
         {
             this.FollowCommand(this.curPost != null ? this.curPost.ScreenName : string.Empty);
         }
 
-        private void TryFollowUserFromCurrentTweet()
+        private void TryFollowUserOfCurrentLinkUser()
         {
-            string name = this.GetUserId();
-            if (name != null)
-            {
-                this.FollowCommand(name);
-            }
+            this.FollowCommand(this.GetUserId());
         }
 
-        private void TryFollowUserFromCurrentTab()
+        private void TryFollowUserOfCurrentIconUser()
         {
             if (this.NameLabel.Tag != null)
             {
-                string id = (string)this.NameLabel.Tag;
-                if (id != this.tw.Username)
-                {
-                    this.FollowCommand(id);
-                }
+                this.FollowCommand((string)this.NameLabel.Tag);
             }
         }
+        
+        #endregion done
 
         private void AddNewTab()
         {
@@ -1251,12 +1243,12 @@ namespace Hoehoe
 
         private void FollowContextMenuItem_Click(object sender, EventArgs e)
         {
-            TryFollowUserFromCurrentTweet();
+            TryFollowUserOfCurrentLinkUser();
         }
 
         private void FollowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.TryFollowUserFromCurrentTab();
+            this.TryFollowUserOfCurrentIconUser();
         }
 
         private void FriendshipAllMenuItem_Click(object sender, EventArgs e)
