@@ -1873,6 +1873,16 @@ namespace Hoehoe
             this.SetupTabPropertyContextMenu(true);
         }
 
+        private void MenuStrip1_MenuActivate(object sender, EventArgs e)
+        {
+            SetFocusToMainMenu();
+        }
+
+        private void MenuStrip1_MenuDeactivate(object sender, EventArgs e)
+        {
+            SetFocusFromMainMenu();
+        }
+
         #endregion
 
         private void SetFocusToMainMenu()
@@ -1880,11 +1890,6 @@ namespace Hoehoe
             // フォーカスがメニューに移る (MenuStrip1.Tag フラグを立てる)
             this.MenuStrip1.Tag = new object();
             this.MenuStrip1.Select();
-        }
-
-        private void MenuStrip1_MenuActivate(object sender, EventArgs e)
-        {
-            SetFocusToMainMenu();
         }
 
         private void SetFocusFromMainMenu()
@@ -1913,11 +1918,6 @@ namespace Hoehoe
 
             // フォーカスがメニューに遷移したかどうかを表すフラグを降ろす
             this.MenuStrip1.Tag = null;
-        }
-
-        private void MenuStrip1_MenuDeactivate(object sender, EventArgs e)
-        {
-            SetFocusFromMainMenu();
         }
 
         private void TryOpenCurListSelectedUserFavorites()
