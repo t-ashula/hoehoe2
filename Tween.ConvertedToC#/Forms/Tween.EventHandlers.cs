@@ -1164,6 +1164,114 @@ namespace Hoehoe
             }
         }
 
+
+        private void AddIdFilteringRuleFromSelectedTweets()
+        {
+            // 未選択なら処理終了
+            if (this.curList.SelectedIndices.Count == 0)
+            {
+                return;
+            }
+
+            var names = this.curList.SelectedIndices.Cast<int>()
+                .Select(idx => this.statuses.Item(this.curTab.Text, idx))
+                .Select(pc => pc.IsRetweeted ? pc.RetweetedBy : pc.ScreenName);
+            this.TryAddIdsFilter(names);
+        }
+
+        private void ApplyNewFilters()
+        {
+            this.itemCache = null;
+            this.postCache = null;
+            this.curPost = null;
+            this.curItemIndex = -1;
+            this.statuses.FilterAll();
+            foreach (TabPage tb in this.ListTab.TabPages)
+            {
+                if (this.statuses.ContainsTab(tb.Text))
+                {
+                    ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
+                    if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
+                    {
+                        if (this.settingDialog.TabIconDisp)
+                        {
+                            tb.ImageIndex = 0;
+                        }
+                    }
+                    else
+                    {
+                        if (this.settingDialog.TabIconDisp)
+                        {
+                            tb.ImageIndex = -1;
+                        }
+                    }
+                }
+            }
+
+            if (!this.settingDialog.TabIconDisp)
+            {
+                this.ListTab.Refresh();
+            }
+        }
+
+        private void AddIdFilteringRuleFromCurrentTweet()
+        {
+            TryAddIdFilter(this.GetUserId());
+        }
+
+        private void TryAddIdFilter(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return;
+            }
+
+            this.TryAddIdsFilter(new[] { name });
+        }
+
+        private void TryAddIdsFilter(IEnumerable<string> names)
+        {
+            var uniNames = names.Select(n => n.Trim()).Where(n => !string.IsNullOrEmpty(n)).Distinct();
+            if (uniNames.Count() < 1)
+            {
+                return;
+            }
+
+            // タブ選択（or追加）
+            string tabName = string.Empty;
+            if (!this.SelectTab(ref tabName))
+            {
+                return;
+            }
+
+            bool mv = false;
+            bool mk = false;
+            this.MoveOrCopy(ref mv, ref mk);
+
+            this.statuses.Tabs[tabName].AddFilters(names.Select(name => new FiltersClass()
+            {
+                NameFilter = name,
+                SearchBoth = true,
+                MoveFrom = mv,
+                SetMark = mk,
+                UseRegex = false,
+                SearchUrl = false
+            }));
+            this.SetModifySettingAtId(this.AtIdSupl.AddRangeItem(names.Select(name => "@" + name)));
+
+            try
+            {
+                this.Cursor = Cursors.WaitCursor;
+                this.ApplyNewFilters();
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
+
+            this.SaveConfigsTabs();
+        }
+
         #endregion done
 
         #region event handler
@@ -1410,56 +1518,6 @@ namespace Hoehoe
         }
 
         #endregion
-
-        private void AddIdFilteringRuleFromSelectedTweets()
-        {
-            // 未選択なら処理終了
-            if (this.curList.SelectedIndices.Count == 0)
-            {
-                return;
-            }
-
-            var names = this.curList.SelectedIndices.Cast<int>()
-                .Select(idx => this.statuses.Item(this.curTab.Text, idx))
-                .Select(pc => pc.IsRetweeted ? pc.RetweetedBy : pc.ScreenName);
-            this.TryAddIdsFilter(names);
-        }
-
-        private void ApplyNewFilters()
-        {
-            this.itemCache = null;
-            this.postCache = null;
-            this.curPost = null;
-            this.curItemIndex = -1;
-            this.statuses.FilterAll();
-            foreach (TabPage tb in this.ListTab.TabPages)
-            {
-                if (this.statuses.ContainsTab(tb.Text))
-                {
-                    ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
-                    if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
-                    {
-                        if (this.settingDialog.TabIconDisp)
-                        {
-                            tb.ImageIndex = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (this.settingDialog.TabIconDisp)
-                        {
-                            tb.ImageIndex = -1;
-                        }
-                    }
-                }
-            }
-
-            if (!this.settingDialog.TabIconDisp)
-            {
-                this.ListTab.Refresh();
-            }
-        }
-
         private void TryOpenCurrentTweetIconUrl()
         {
             if (this.curPost == null)
@@ -1468,64 +1526,6 @@ namespace Hoehoe
             }
 
             this.OpenUriAsync(this.curPost.NormalImageUrl);
-        }
-
-        private void AddIdFilteringRuleFromCurrentTweet()
-        {
-            TryAddIdFilter(this.GetUserId());
-        }
-
-        private void TryAddIdFilter(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                return;
-            }
-
-            this.TryAddIdsFilter(new[] { name });
-        }
-
-        private void TryAddIdsFilter(IEnumerable<string> names)
-        {
-            var uniNames = names.Select(n => n.Trim()).Where(n => !string.IsNullOrEmpty(n)).Distinct();
-            if (uniNames.Count() < 1)
-            {
-                return;
-            }
-
-            // タブ選択（or追加）
-            string tabName = string.Empty;
-            if (!this.SelectTab(ref tabName))
-            {
-                return;
-            }
-
-            bool mv = false;
-            bool mk = false;
-            this.MoveOrCopy(ref mv, ref mk);
-
-            this.statuses.Tabs[tabName].AddFilters(names.Select(name => new FiltersClass()
-            {
-                NameFilter = name,
-                SearchBoth = true,
-                MoveFrom = mv,
-                SetMark = mk,
-                UseRegex = false,
-                SearchUrl = false
-            }));
-            this.SetModifySettingAtId(this.AtIdSupl.AddRangeItem(names.Select(name => "@" + name)));
-
-            try
-            {
-                this.Cursor = Cursors.WaitCursor;
-                this.ApplyNewFilters();
-            }
-            finally
-            {
-                this.Cursor = Cursors.Default;
-            }
-
-            this.SaveConfigsTabs();
         }
 
         private void IdeographicSpaceToSpaceToolStripMenuItem_Click(object sender, EventArgs e)
