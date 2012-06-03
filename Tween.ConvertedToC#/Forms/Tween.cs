@@ -3438,20 +3438,15 @@ namespace Hoehoe
                             {
                                 this.RunTweenUp();
                                 MyCommon.IsEnding = true;
-                                dialogAsShieldicon.Dispose();
                                 this.Close();
                                 return;
                             }
-                            else
+
+                            if (!startup)
                             {
-                                if (!startup)
-                                {
-                                    MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText5 + Environment.NewLine + retMsg, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                }
+                                MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText5 + Environment.NewLine + retMsg, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
-
-                        dialogAsShieldicon.Dispose();
                     }
                 }
                 else
@@ -3468,20 +3463,14 @@ namespace Hoehoe
                                 {
                                     this.RunTweenUp();
                                     MyCommon.IsEnding = true;
-                                    dialogAsShieldicon.Dispose();
                                     this.Close();
                                     return;
                                 }
-                                else
+                                if (!startup)
                                 {
-                                    if (!startup)
-                                    {
-                                        MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText5 + Environment.NewLine + retMsg, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                    }
+                                    MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText5 + Environment.NewLine + retMsg, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 }
                             }
-
-                            dialogAsShieldicon.Dispose();
                         }
                     }
                     else if (!startup)
@@ -4271,7 +4260,7 @@ namespace Hoehoe
                             this.DoMoveToRTHome();
                             return true;
                         case Keys.O:
-                            this.OpenFavorarePageForSelectedTweetUser();
+                            this.OpenFavorarePageOfSelectedTweetUser();
                             return true;
                     }
 

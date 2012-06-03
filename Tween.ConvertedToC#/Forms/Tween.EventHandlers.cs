@@ -1030,16 +1030,99 @@ namespace Hoehoe
             }
         }
 
-        #endregion done
-
         private void ChangeAllrepliesSetting(bool useAllReply)
         {
             this.tw.AllAtReply = useAllReply;
             this.SetModifySettingCommon(true);
             this.tw.ReconnectUserStream();
         }
+        
+        private void OpenFavorarePageOfSelectedTweetUser()
+        {
+            if (this.curList.SelectedIndices.Count > 0)
+            {
+                PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
+                this.OpenFavorarePageOfUser(post.ScreenName);
+            }
+        }
+
+        private void OpenFavorarePageOfSelf()
+        {
+            this.OpenFavorarePageOfUser(this.tw.Username);
+        }
+
+        private void TryOpenFavorarePageOfCurrentTweetUser()
+        {
+            string id = this.GetUserIdFromCurPostOrInput("Show Favstar");
+            if (!string.IsNullOrEmpty(id))
+            {
+                this.OpenFavorarePageOfUser(id);
+            }
+        }
+
+        private void OpenFavorarePageOfUser(string id)
+        {
+            this.OpenUriAsync(string.Format("{0}users/{1}/recent", Hoehoe.Properties.Resources.FavstarUrl, id));
+        }
+
+        private void ExitApplication()
+        {
+            MyCommon.IsEnding = true;
+            this.Close();
+        }
+
+        private void TryRestartApplication()
+        {
+            try
+            {
+                this.ExitApplication();
+                Application.Restart();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Failed to restart. Please run Tween manually.");
+            }
+        }
+
+        private void DisplayTimelineWorkerProgressChanged(int progressPercentage, string msg)
+        {
+            if (MyCommon.IsEnding)
+            {
+                return;
+            }
+
+            var progressMessage = this.StatusLabel.Text;
+            if (progressPercentage > 100)
+            {
+                // 発言投稿
+                if (progressPercentage == 200)
+                {
+                    // 開始
+                    progressMessage = "Posting...";
+                }
+
+                if (progressPercentage == 300)
+                {
+                    // 終了
+                    progressMessage = Hoehoe.Properties.Resources.PostWorker_RunWorkerCompletedText4;
+                }
+            }
+            else
+            {
+                if (msg.Length > 0)
+                {
+                    progressMessage = msg;
+                }
+            }
+
+            this.StatusLabel.Text = progressMessage;
+        }
+
+        #endregion done
 
         #region event handler
+
+        #region cleanuped
 
         private void AboutMenuItem_Click(object sender, EventArgs e)
         {
@@ -1181,13 +1264,7 @@ namespace Hoehoe
                 this.DispSelectedPost(true);
             }
         }
-
-        private void ExitApplication()
-        {
-            MyCommon.IsEnding = true;
-            this.Close();
-        }
-
+        
         private void EndToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExitApplication();
@@ -1207,19 +1284,10 @@ namespace Hoehoe
         {
             this.FavoriteChange(false);
         }
-
-        private void OpenFavorarePageForSelectedTweetUser()
-        {
-            if (this.curList.SelectedIndices.Count > 0)
-            {
-                PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
-                this.OpenUriAsync(string.Format("{0}users/{1}/recent", Hoehoe.Properties.Resources.FavstarUrl, post.ScreenName));
-            }
-        }
-
+        
         private void FavorareMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFavorarePageForSelectedTweetUser();
+            OpenFavorarePageOfSelectedTweetUser();
         }
 
         private void FavoriteRetweetMenuItem_Click(object sender, EventArgs e)
@@ -1695,41 +1763,17 @@ namespace Hoehoe
             e.Result = rslt;
         }
 
-        private void DisplayTimelineWorkerProgressChanged(int progressPercentage, string msg)
-        {
-            if (MyCommon.IsEnding)
-            {
-                return;
-            }
-
-            if (progressPercentage > 100)
-            {
-                // 発言投稿
-                if (progressPercentage == 200)
-                {
-                    // 開始
-                    this.StatusLabel.Text = "Posting...";
-                }
-
-                if (progressPercentage == 300)
-                {
-                    // 終了
-                    this.StatusLabel.Text = Hoehoe.Properties.Resources.PostWorker_RunWorkerCompletedText4;
-                }
-            }
-            else
-            {
-                if (msg.Length > 0)
-                {
-                    this.StatusLabel.Text = msg;
-                }
-            }
-        }
-
         private void GetTimelineWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             this.DisplayTimelineWorkerProgressChanged(e.ProgressPercentage, (string)e.UserState);
         }
+
+        private void HashManageMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ShowHashManageBox();
+        }
+
+        #endregion
 
         private void GetTimelineWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -2036,11 +2080,6 @@ namespace Hoehoe
                         }
                     }));
             }
-        }
-
-        private void HashManageMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ShowHashManageBox();
         }
 
         private void HashStripSplitButton_ButtonClick(object sender, EventArgs e)
@@ -3488,7 +3527,7 @@ namespace Hoehoe
 
         private void OpenOwnFavedMenuItem_Click(object sender, EventArgs e)
         {
-            this.OpenUriAsync(string.Format("{0}users/{1}/recent", Hoehoe.Properties.Resources.FavstarUrl, this.tw.Username));
+            OpenFavorarePageOfSelf();
         }
 
         private void OpenOwnHomeMenuItem_Click(object sender, EventArgs e)
@@ -6921,20 +6960,6 @@ namespace Hoehoe
             this.TweenMain_ShownExtracted();
         }
 
-        private void TryRestartApplication()
-        {
-            MyCommon.IsEnding = true;
-            try
-            {
-                this.Close();
-                Application.Restart();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Failed to restart. Please run Tween manually.");
-            }
-        }
-
         private void TweenRestartMenuItem_Click(object sender, EventArgs e)
         {
             this.TryRestartApplication();
@@ -7126,18 +7151,9 @@ namespace Hoehoe
             this.TrySetHashtagFromCurrentTweet();
         }
 
-        private void TryOpenUserFavorareWebPage()
-        {
-            string id = this.GetUserIdFromCurPostOrInput("Show Favstar");
-            if (!string.IsNullOrEmpty(id))
-            {
-                this.OpenUriAsync(Hoehoe.Properties.Resources.FavstarUrl + "users/" + id + "/recent");
-            }
-        }
-
         private void UserFavorareToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.TryOpenUserFavorareWebPage();
+            this.TryOpenFavorarePageOfCurrentTweetUser();
         }
 
         private void TryOpenCurrentNameLabelUserHome()
