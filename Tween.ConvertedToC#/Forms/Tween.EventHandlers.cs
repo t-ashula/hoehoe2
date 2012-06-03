@@ -1538,7 +1538,7 @@ namespace Hoehoe
 
         private void ImageSelectMenuItem_Click(object sender, EventArgs e)
         {
-            this.ImageSelectMenuItem_ClickExtracted();
+            this.ToggleImageSelectorView();
         }
 
         private void ImageSelectionPanel_VisibleChanged(object sender, EventArgs e)
@@ -1586,7 +1586,7 @@ namespace Hoehoe
             this.ImagefilePathText.CausesValidation = true;
         }
 
-        private void ImageSelectMenuItem_ClickExtracted()
+        private void ToggleImageSelectorView()
         {
             if (this.ImageSelectionPanel.Visible)
             {

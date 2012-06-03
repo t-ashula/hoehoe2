@@ -4237,7 +4237,7 @@ namespace Hoehoe
                             this.ChangeUseHashTagSetting();
                             return true;
                         case Keys.P:
-                            this.ImageSelectMenuItem_ClickExtracted();
+                            this.ToggleImageSelectorView();
                             return true;
                         case Keys.H:
                             this.DoMoveToRTHome();
