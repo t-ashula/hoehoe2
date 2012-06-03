@@ -416,7 +416,7 @@ namespace Hoehoe
                 {
                     return tb.IndexOf(tb.OldestUnreadId); // 最短経路
                 }
-                
+
                 // 状態不整合（最古未読ＩＤが実は既読）
                 lock (this.lockUnread)
                 {
@@ -425,21 +425,19 @@ namespace Hoehoe
 
                 return tb.OldestUnreadId == -1 ? -1 : tb.IndexOf(tb.OldestUnreadId);
             }
-            else
+
+            // 一見未読なさそうだが、未読カウントはあるので探索
+            if (!(tb.UnreadManage && AppendSettingDialog.Instance.UnreadManage))
             {
-                // 一見未読なさそうだが、未読カウントはあるので探索
-                if (!(tb.UnreadManage && AppendSettingDialog.Instance.UnreadManage))
-                {
-                    return -1;
-                }
-
-                lock (this.lockUnread)
-                {
-                    this.SetNextUnreadId(-1, tb);
-                }
-
-                return tb.OldestUnreadId == -1 ? -1 : tb.IndexOf(tb.OldestUnreadId);
+                return -1;
             }
+
+            lock (this.lockUnread)
+            {
+                this.SetNextUnreadId(-1, tb);
+            }
+
+            return tb.OldestUnreadId == -1 ? -1 : tb.IndexOf(tb.OldestUnreadId);
         }
 
         /// <summary>

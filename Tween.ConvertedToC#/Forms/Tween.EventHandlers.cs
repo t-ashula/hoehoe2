@@ -1704,33 +1704,18 @@ namespace Hoehoe
             }
 
             // 現在タブから最終タブまで探索
-            int bgnIdx = this.ListTab.TabPages.IndexOf(this.curTab);
             int idx = -1;
             DetailsListView lst = null;
-            for (int i = bgnIdx; i < this.ListTab.TabPages.Count; i++)
+            TabControl.TabPageCollection pages = this.ListTab.TabPages;
+            foreach (var i in Enumerable.Range(0, pages.Count).Select(i => (i + pages.IndexOf(this.curTab)) % pages.Count))
             {
                 // 未読Index取得
-                idx = this.statuses.GetOldestUnreadIndex(this.ListTab.TabPages[i].Text);
+                idx = this.statuses.GetOldestUnreadIndex(pages[i].Text);
                 if (idx > -1)
                 {
                     this.ListTab.SelectedIndex = i;
-                    lst = (DetailsListView)this.ListTab.TabPages[i].Tag;
+                    lst = (DetailsListView)pages[i].Tag;
                     break;
-                }
-            }
-
-            // 未読みつからず＆現在タブが先頭ではなかったら、先頭タブから現在タブの手前まで探索
-            if (idx == -1 && bgnIdx > 0)
-            {
-                for (int i = 0; i < bgnIdx; i++)
-                {
-                    idx = this.statuses.GetOldestUnreadIndex(this.ListTab.TabPages[i].Text);
-                    if (idx > -1)
-                    {
-                        this.ListTab.SelectedIndex = i;
-                        lst = (DetailsListView)this.ListTab.TabPages[i].Tag;
-                        break;
-                    }
                 }
             }
 
@@ -1738,7 +1723,7 @@ namespace Hoehoe
             if (idx == -1)
             {
                 this.ListTab.SelectedIndex = 0;
-                lst = (DetailsListView)this.ListTab.TabPages[0].Tag;
+                lst = (DetailsListView)pages[0].Tag;
                 if (this.statuses.SortOrder == SortOrder.Ascending)
                 {
                     idx = lst.VirtualListSize - 1;
@@ -1754,7 +1739,8 @@ namespace Hoehoe
                 this.SelectListItem(lst, idx);
                 if (this.statuses.SortMode == IdComparerClass.ComparerMode.Id)
                 {
-                    if ((this.statuses.SortOrder == SortOrder.Ascending && lst.Items[idx].Position.Y > lst.ClientSize.Height - this.iconSz - 10) || (this.statuses.SortOrder == SortOrder.Descending && lst.Items[idx].Position.Y < this.iconSz + 10))
+                    if ((this.statuses.SortOrder == SortOrder.Ascending && lst.Items[idx].Position.Y > lst.ClientSize.Height - this.iconSz - 10)
+                        || (this.statuses.SortOrder == SortOrder.Descending && lst.Items[idx].Position.Y < this.iconSz + 10))
                     {
                         this.MoveTop();
                     }
