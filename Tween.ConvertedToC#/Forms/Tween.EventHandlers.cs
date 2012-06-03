@@ -1339,6 +1339,68 @@ namespace Hoehoe
             }
         }
 
+        private void TrySearchAndFocusUnreadTweet()
+        {
+            if (this.ImageSelectionPanel.Enabled)
+            {
+                return;
+            }
+
+            // 現在タブから最終タブまで探索
+            int idx = -1;
+            DetailsListView lst = null;
+            TabControl.TabPageCollection pages = this.ListTab.TabPages;
+            foreach (var i in Enumerable.Range(0, pages.Count).Select(i => (i + pages.IndexOf(this.curTab)) % pages.Count))
+            {
+                // 未読Index取得
+                idx = this.statuses.GetOldestUnreadIndex(pages[i].Text);
+                if (idx > -1)
+                {
+                    this.ListTab.SelectedIndex = i;
+                    lst = (DetailsListView)pages[i].Tag;
+                    break;
+                }
+            }
+
+            // 全部調べたが未読見つからず→先頭タブの最新発言へ
+            if (idx == -1)
+            {
+                this.ListTab.SelectedIndex = 0;
+                lst = (DetailsListView)pages[0].Tag;
+                if (this.statuses.SortOrder == SortOrder.Ascending)
+                {
+                    idx = lst.VirtualListSize - 1;
+                }
+                else
+                {
+                    idx = 0;
+                }
+            }
+
+            if (lst.VirtualListSize > 0 && idx > -1 && lst.VirtualListSize > idx)
+            {
+                this.SelectListItem(lst, idx);
+                if (this.statuses.SortMode == IdComparerClass.ComparerMode.Id)
+                {
+                    if ((this.statuses.SortOrder == SortOrder.Ascending && lst.Items[idx].Position.Y > lst.ClientSize.Height - this.iconSz - 10)
+                        || (this.statuses.SortOrder == SortOrder.Descending && lst.Items[idx].Position.Y < this.iconSz + 10))
+                    {
+                        this.MoveTop();
+                    }
+                    else
+                    {
+                        lst.EnsureVisible(idx);
+                    }
+                }
+                else
+                {
+                    lst.EnsureVisible(idx);
+                }
+            }
+
+            lst.Focus();
+        }
+
         #endregion done
 
         #region event handler
@@ -1694,74 +1756,12 @@ namespace Hoehoe
             this.ConvertUrl(UrlConverter.Jmp);
         }
 
-        #endregion
-
-        private void TrySearchAndFocusUnreadTweet()
-        {
-            if (this.ImageSelectionPanel.Enabled)
-            {
-                return;
-            }
-
-            // 現在タブから最終タブまで探索
-            int idx = -1;
-            DetailsListView lst = null;
-            TabControl.TabPageCollection pages = this.ListTab.TabPages;
-            foreach (var i in Enumerable.Range(0, pages.Count).Select(i => (i + pages.IndexOf(this.curTab)) % pages.Count))
-            {
-                // 未読Index取得
-                idx = this.statuses.GetOldestUnreadIndex(pages[i].Text);
-                if (idx > -1)
-                {
-                    this.ListTab.SelectedIndex = i;
-                    lst = (DetailsListView)pages[i].Tag;
-                    break;
-                }
-            }
-
-            // 全部調べたが未読見つからず→先頭タブの最新発言へ
-            if (idx == -1)
-            {
-                this.ListTab.SelectedIndex = 0;
-                lst = (DetailsListView)pages[0].Tag;
-                if (this.statuses.SortOrder == SortOrder.Ascending)
-                {
-                    idx = lst.VirtualListSize - 1;
-                }
-                else
-                {
-                    idx = 0;
-                }
-            }
-
-            if (lst.VirtualListSize > 0 && idx > -1 && lst.VirtualListSize > idx)
-            {
-                this.SelectListItem(lst, idx);
-                if (this.statuses.SortMode == IdComparerClass.ComparerMode.Id)
-                {
-                    if ((this.statuses.SortOrder == SortOrder.Ascending && lst.Items[idx].Position.Y > lst.ClientSize.Height - this.iconSz - 10)
-                        || (this.statuses.SortOrder == SortOrder.Descending && lst.Items[idx].Position.Y < this.iconSz + 10))
-                    {
-                        this.MoveTop();
-                    }
-                    else
-                    {
-                        lst.EnsureVisible(idx);
-                    }
-                }
-                else
-                {
-                    lst.EnsureVisible(idx);
-                }
-            }
-
-            lst.Focus();
-        }
-
         private void JumpUnreadMenuItem_Click(object sender, EventArgs e)
         {
             TrySearchAndFocusUnreadTweet();
         }
+
+        #endregion
 
         private void ChangeListLockSetting(bool locked)
         {
