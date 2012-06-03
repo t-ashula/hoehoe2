@@ -1772,12 +1772,12 @@ namespace Hoehoe
             ChangeListLockSetting(((ToolStripMenuItem)sender).Checked);
         }
 
-        #endregion
-
         private void ListManageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowListManageBox();
         }
+
+        #endregion
 
         private void ListManageUserContextToolStripMenuItem_Click(object sender, EventArgs e)
         {
