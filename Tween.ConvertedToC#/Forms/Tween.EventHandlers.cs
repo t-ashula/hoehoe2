@@ -961,8 +961,6 @@ namespace Hoehoe
             this.RemoveSpecifiedTab(this.rclickTabName, true);
             this.SaveConfigsTabs();
         }
-        
-        #endregion done
 
         private void AddNewTab()
         {
@@ -983,53 +981,56 @@ namespace Hoehoe
             }
 
             this.TopMost = this.settingDialog.AlwaysTop;
-            if (!string.IsNullOrEmpty(tabName))
+            if (string.IsNullOrEmpty(tabName))
             {
-                // List対応
-                ListElement list = null;
-                if (tabUsage == TabUsageType.Lists)
+                return;
+            }
+
+            // List対応
+            ListElement list = null;
+            if (tabUsage == TabUsageType.Lists)
+            {
+                using (ListAvailable listAvail = new ListAvailable())
                 {
-                    using (ListAvailable listAvail = new ListAvailable())
+                    if (listAvail.ShowDialog(this) == DialogResult.Cancel)
                     {
-                        if (listAvail.ShowDialog(this) == DialogResult.Cancel)
-                        {
-                            return;
-                        }
-
-                        if (listAvail.SelectedList == null)
-                        {
-                            return;
-                        }
-
-                        list = listAvail.SelectedList;
-                    }
-                }
-
-                if (!this.statuses.AddTab(tabName, tabUsage, list) || !this.AddNewTab(tabName, false, tabUsage, list))
-                {
-                    string tmp = string.Format(Hoehoe.Properties.Resources.AddTabMenuItem_ClickText1, tabName);
-                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-                else
-                {
-                    // 成功
-                    this.SaveConfigsTabs();
-                    if (tabUsage == TabUsageType.PublicSearch)
-                    {
-                        this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
-                        this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
-                        this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
+                        return;
                     }
 
-                    if (tabUsage == TabUsageType.Lists)
+                    if (listAvail.SelectedList == null)
                     {
-                        this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
-                        this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
-                        this.GetTimeline(WorkerType.List, 1, 0, tabName);
+                        return;
                     }
+
+                    list = listAvail.SelectedList;
                 }
             }
+
+            if (!this.statuses.AddTab(tabName, tabUsage, list) || !this.AddNewTab(tabName, false, tabUsage, list))
+            {
+                string tmp = string.Format(Hoehoe.Properties.Resources.AddTabMenuItem_ClickText1, tabName);
+                MessageBox.Show(tmp, Hoehoe.Properties.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            // 成功
+            this.SaveConfigsTabs();
+            if (tabUsage == TabUsageType.PublicSearch)
+            {
+                this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
+                this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
+                this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
+            }
+
+            if (tabUsage == TabUsageType.Lists)
+            {
+                this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
+                this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
+                this.GetTimeline(WorkerType.List, 1, 0, tabName);
+            }
         }
+
+        #endregion done
 
         private void ChangeAllrepliesSetting(bool useAllReply)
         {
