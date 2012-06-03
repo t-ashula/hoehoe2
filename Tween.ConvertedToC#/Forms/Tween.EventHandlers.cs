@@ -1280,6 +1280,35 @@ namespace Hoehoe
 
             this.OpenUriAsync(this.curPost.NormalImageUrl);
         }
+
+        private void CancelPostImageSelecting()
+        {
+            this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+            this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+            this.ImagefilePathText.CausesValidation = false;
+            this.TimelinePanel.Visible = true;
+            this.TimelinePanel.Enabled = true;
+            this.ImageSelectionPanel.Visible = false;
+            this.ImageSelectionPanel.Enabled = false;
+            ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
+            this.ImagefilePathText.CausesValidation = true;
+        }
+
+        private void ToggleImageSelectorView()
+        {
+            if (this.ImageSelectionPanel.Visible)
+            {
+                CancelPostImageSelecting();
+            }
+            else
+            {
+                this.ImageSelectionPanel.Visible = true;
+                this.ImageSelectionPanel.Enabled = true;
+                this.TimelinePanel.Visible = false;
+                this.TimelinePanel.Enabled = false;
+                this.ImagefilePathText.Focus();
+            }
+        }
         
         #endregion done
 
@@ -1572,60 +1601,33 @@ namespace Hoehoe
         }
 
         #endregion
-
-        private void CancelPostImageSelecting()
-        {
-            this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-            this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-            this.ImagefilePathText.CausesValidation = false;
-            this.TimelinePanel.Visible = true;
-            this.TimelinePanel.Enabled = true;
-            this.ImageSelectionPanel.Visible = false;
-            this.ImageSelectionPanel.Enabled = false;
-            ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
-            this.ImagefilePathText.CausesValidation = true;
-        }
-
-        private void ToggleImageSelectorView()
-        {
-            if (this.ImageSelectionPanel.Visible)
-            {
-                CancelPostImageSelecting();
-            }
-            else
-            {
-                this.ImageSelectionPanel.Visible = true;
-                this.ImageSelectionPanel.Enabled = true;
-                this.TimelinePanel.Visible = false;
-                this.TimelinePanel.Enabled = false;
-                this.ImagefilePathText.Focus();
-            }
-        }
         
         private void TryChangeImageUploadService()
         {
-            if (this.ImageSelectedPicture.Tag != null && !string.IsNullOrEmpty(this.ImageService))
+            if (this.ImageSelectedPicture.Tag == null || string.IsNullOrEmpty(this.ImageService))
             {
-                try
-                {
-                    FileInfo fi = new FileInfo(this.ImagefilePathText.Text.Trim());
-                    if (!this.pictureServices[this.ImageService].CheckValidFilesize(fi.Extension, fi.Length))
-                    {
-                        this.ImagefilePathText.Text = string.Empty;
-                        this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                        this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                    }
-                }
-                catch (Exception)
-                {
-                }
+                return;
+            }
 
-                this.modifySettingCommon = true;
-                this.SaveConfigsAll(false);
-                if (this.ImageService == "Twitter")
+            try
+            {
+                FileInfo fi = new FileInfo(this.ImagefilePathText.Text.Trim());
+                if (!this.pictureServices[this.ImageService].CheckValidFilesize(fi.Extension, fi.Length))
                 {
-                    this.StatusText_TextChangedExtracted();
+                    this.ImagefilePathText.Text = string.Empty;
+                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
                 }
+            }
+            catch (Exception)
+            {
+            }
+
+            this.modifySettingCommon = true;
+            this.SaveConfigsAll(false);
+            if (this.ImageService == "Twitter")
+            {
+                this.StatusText_TextChangedExtracted();
             }
         }
 
