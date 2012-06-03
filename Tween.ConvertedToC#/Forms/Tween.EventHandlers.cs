@@ -1118,6 +1118,30 @@ namespace Hoehoe
             this.StatusLabel.Text = progressMessage;
         }
 
+        private void ChangeUseHashTagSetting(bool toggle = true)
+        {
+            if (toggle)
+            {
+                this.HashMgr.ToggleHash();
+            }
+
+            if (!string.IsNullOrEmpty(this.HashMgr.UseHash))
+            {
+                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
+                this.HashToggleMenuItem.Checked = true;
+                this.HashToggleToolStripMenuItem.Checked = true;
+            }
+            else
+            {
+                this.HashStripSplitButton.Text = "#[-]";
+                this.HashToggleMenuItem.Checked = false;
+                this.HashToggleToolStripMenuItem.Checked = false;
+            }
+
+            this.modifySettingCommon = true;
+            this.StatusText_TextChangedExtracted();
+        }
+
         #endregion done
 
         #region event handler
@@ -1323,424 +1347,6 @@ namespace Hoehoe
             this.DoGetFollowersMenu();
         }
 
-        private void GetTimelineWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker bw = (BackgroundWorker)sender;
-            if (bw.CancellationPending || MyCommon.IsEnding)
-            {
-                e.Cancel = true;
-                return;
-            }
-
-            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-            //// Tween.My.MyProject.Application.InitCulture(); // TODO: Need this here?
-            string ret = string.Empty;
-            GetWorkerResult rslt = new GetWorkerResult();
-            bool read = !this.settingDialog.UnreadManage;
-            if (this.isInitializing && this.settingDialog.UnreadManage)
-            {
-                read = this.settingDialog.Readed;
-            }
-
-            GetWorkerArg args = (GetWorkerArg)e.Argument;
-            if (!CheckAccountValid())
-            {
-                // エラー表示のみ行ない、後処理キャンセル
-                rslt.RetMsg = "Auth error. Check your account";
-                rslt.WorkerType = WorkerType.ErrorState;
-                rslt.TabName = args.TabName;
-                e.Result = rslt;
-                return;
-            }
-
-            if (args.WorkerType != WorkerType.OpenUri)
-            {
-                bw.ReportProgress(0, string.Empty);
-            }
-
-            // Notifyアイコンアニメーション開始
-            switch (args.WorkerType)
-            {
-                case WorkerType.Timeline:
-                case WorkerType.Reply:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = this.tw.GetTimelineApi(read, args.WorkerType, args.Page == -1, this.isInitializing);
-                    if (string.IsNullOrEmpty(ret) && args.WorkerType == WorkerType.Timeline && this.settingDialog.ReadOldPosts)
-                    {
-                        // 新着時未読クリア
-                        this.statuses.SetRead();
-                    }
-
-                    rslt.AddCount = this.statuses.DistributePosts();                    // 振り分け
-                    break;
-                case WorkerType.DirectMessegeRcv:
-                    // 送信分もまとめて取得
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = this.tw.GetDirectMessageApi(read, WorkerType.DirectMessegeRcv, args.Page == -1);
-                    if (string.IsNullOrEmpty(ret))
-                    {
-                        ret = this.tw.GetDirectMessageApi(read, WorkerType.DirectMessegeSnt, args.Page == -1);
-                    }
-
-                    rslt.AddCount = this.statuses.DistributePosts();
-                    break;
-                case WorkerType.FavAdd:
-                    // スレッド処理はしない
-                    if (this.statuses.Tabs.ContainsKey(args.TabName))
-                    {
-                        TabClass tbc = this.statuses.Tabs[args.TabName];
-                        for (int i = 0; i < args.Ids.Count; i++)
-                        {
-                            PostClass post = null;
-                            if (tbc.IsInnerStorageTabType)
-                            {
-                                post = tbc.Posts[args.Ids[i]];
-                            }
-                            else
-                            {
-                                post = this.statuses.Item(args.Ids[i]);
-                            }
-
-                            args.Page = i + 1;
-                            bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                            if (!post.IsFav)
-                            {
-                                ret = this.tw.PostFavAdd(post.OriginalStatusId);
-                                if (ret.Length == 0)
-                                {
-                                    // リスト再描画必要
-                                    args.SIds.Add(post.StatusId);
-                                    post.IsFav = true;
-                                    this.favTimestamps.Add(DateTime.Now);
-                                    if (string.IsNullOrEmpty(post.RelTabName))
-                                    {
-                                        // 検索,リストUserTimeline.Relatedタブからのfavは、favタブへ追加せず。それ以外は追加
-                                        this.statuses.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
-                                    }
-                                    else
-                                    {
-                                        // 検索,リスト,UserTimeline.Relatedタブからのfavで、TLでも取得済みならfav反映
-                                        if (this.statuses.ContainsKey(post.StatusId))
-                                        {
-                                            PostClass postTl = this.statuses.Item(post.StatusId);
-                                            postTl.IsFav = true;
-                                            this.statuses.GetTabByType(TabUsageType.Favorites).Add(postTl.StatusId, postTl.IsRead, false);
-                                        }
-                                    }
-
-                                    // 検索,リスト,UserTimeline,Relatedの各タブに反映
-                                    foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
-                                    {
-                                        if (tb.Contains(post.StatusId))
-                                        {
-                                            tb.Posts[post.StatusId].IsFav = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    rslt.SIds = args.SIds;
-                    break;
-                case WorkerType.FavRemove:
-                    // スレッド処理はしない
-                    if (this.statuses.Tabs.ContainsKey(args.TabName))
-                    {
-                        TabClass tbc = this.statuses.Tabs[args.TabName];
-                        for (int i = 0; i < args.Ids.Count; i++)
-                        {
-                            PostClass post = tbc.IsInnerStorageTabType ? tbc.Posts[args.Ids[i]] : this.statuses.Item(args.Ids[i]);
-                            args.Page = i + 1;
-                            bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                            if (post.IsFav)
-                            {
-                                ret = this.tw.PostFavRemove(post.OriginalStatusId);
-                                if (ret.Length == 0)
-                                {
-                                    args.SIds.Add(post.StatusId);
-                                    post.IsFav = false;
-
-                                    // リスト再描画必要
-                                    if (this.statuses.ContainsKey(post.StatusId))
-                                    {
-                                        this.statuses.Item(post.StatusId).IsFav = false;
-                                    }
-
-                                    // 検索,リスト,UserTimeline,Relatedの各タブに反映
-                                    foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
-                                    {
-                                        if (tb.Contains(post.StatusId))
-                                        {
-                                            tb.Posts[post.StatusId].IsFav = false;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    rslt.SIds = args.SIds;
-                    break;
-                case WorkerType.PostMessage:
-                    bw.ReportProgress(200);
-                    if (string.IsNullOrEmpty(args.PStatus.ImagePath))
-                    {
-                        for (int i = 0; i <= 1; i++)
-                        {
-                            ret = this.tw.PostStatus(args.PStatus.Status, args.PStatus.InReplyToId);
-                            if (string.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.PStatus.Status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.PStatus.Status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != AccountState.Valid)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ret = this.pictureServices[args.PStatus.ImageService].Upload(ref args.PStatus.ImagePath, ref args.PStatus.Status, args.PStatus.InReplyToId);
-                    }
-
-                    bw.ReportProgress(300);
-                    rslt.PStatus = args.PStatus;
-                    break;
-                case WorkerType.Retweet:
-                    bw.ReportProgress(200);
-                    for (int i = 0; i < args.Ids.Count; i++)
-                    {
-                        ret = this.tw.PostRetweet(args.Ids[i], read);
-                    }
-
-                    bw.ReportProgress(300);
-                    break;
-                case WorkerType.Follower:
-                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText1);
-                    ret = this.tw.GetFollowersApi();
-                    if (string.IsNullOrEmpty(ret))
-                    {
-                        ret = this.tw.GetNoRetweetIdsApi();
-                    }
-
-                    break;
-                case WorkerType.Configuration:
-                    ret = this.tw.ConfigurationApi();
-                    break;
-                case WorkerType.OpenUri:
-                    string myPath = Convert.ToString(args.Url);
-                    try
-                    {
-                        if (!string.IsNullOrEmpty(this.settingDialog.BrowserPath))
-                        {
-                            if (this.settingDialog.BrowserPath.StartsWith("\"") && this.settingDialog.BrowserPath.Length > 2 && this.settingDialog.BrowserPath.IndexOf("\"", 2) > -1)
-                            {
-                                int sep = this.settingDialog.BrowserPath.IndexOf("\"", 2);
-                                string browserPath = this.settingDialog.BrowserPath.Substring(1, sep - 1);
-                                string arg = string.Empty;
-                                if (sep < this.settingDialog.BrowserPath.Length - 1)
-                                {
-                                    arg = this.settingDialog.BrowserPath.Substring(sep + 1);
-                                }
-
-                                myPath = arg + " " + myPath;
-                                Process.Start(browserPath, myPath);
-                            }
-                            else
-                            {
-                                Process.Start(this.settingDialog.BrowserPath, myPath);
-                            }
-                        }
-                        else
-                        {
-                            Process.Start(myPath);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    break;
-                case WorkerType.Favorites:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = this.tw.GetFavoritesApi(read, args.WorkerType, args.Page == -1);
-                    rslt.AddCount = this.statuses.DistributePosts();
-                    break;
-                case WorkerType.PublicSearch:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    if (string.IsNullOrEmpty(args.TabName))
-                    {
-                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch))
-                        {
-                            if (!string.IsNullOrEmpty(tb.SearchWords))
-                            {
-                                ret = this.tw.GetSearch(read, tb, false);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        TabClass tb = this.statuses.GetTabByName(args.TabName);
-                        if (tb != null)
-                        {
-                            ret = this.tw.GetSearch(read, tb, false);
-                            if (string.IsNullOrEmpty(ret) && args.Page == -1)
-                            {
-                                ret = this.tw.GetSearch(read, tb, true);
-                            }
-                        }
-                    }
-
-                    rslt.AddCount = this.statuses.DistributePosts();                    // 振り分け
-                    break;
-                case WorkerType.UserTimeline:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    int count = 20;
-                    if (this.settingDialog.UseAdditionalCount)
-                    {
-                        count = this.settingDialog.UserTimelineCountApi;
-                    }
-
-                    if (string.IsNullOrEmpty(args.TabName))
-                    {
-                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.UserTimeline))
-                        {
-                            if (!string.IsNullOrEmpty(tb.User))
-                            {
-                                ret = this.tw.GetUserTimelineApi(read, count, tb.User, tb, false);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        TabClass tb = this.statuses.GetTabByName(args.TabName);
-                        if (tb != null)
-                        {
-                            ret = this.tw.GetUserTimelineApi(read, count, tb.User, tb, args.Page == -1);
-                        }
-                    }
-
-                    rslt.AddCount = this.statuses.DistributePosts();                     // 振り分け
-                    break;
-                case WorkerType.List:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    if (string.IsNullOrEmpty(args.TabName))
-                    {
-                        // 定期更新
-                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.Lists))
-                        {
-                            if (tb.ListInfo != null && tb.ListInfo.Id != 0)
-                            {
-                                ret = this.tw.GetListStatus(read, tb, false, this.isInitializing);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // 手動更新（特定タブのみ更新）
-                        TabClass tb = this.statuses.GetTabByName(args.TabName);
-                        if (tb != null)
-                        {
-                            ret = this.tw.GetListStatus(read, tb, args.Page == -1, this.isInitializing);
-                        }
-                    }
-
-                    rslt.AddCount = this.statuses.DistributePosts(); // 振り分け
-                    break;
-                case WorkerType.Related:
-                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
-                    ret = this.tw.GetRelatedResult(read, this.statuses.GetTabByName(args.TabName));
-                    rslt.AddCount = this.statuses.DistributePosts();
-                    break;
-                case WorkerType.BlockIds:
-                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateBlockUserText1);
-                    ret = this.tw.GetBlockUserIds();
-                    if (TabInformations.GetInstance().BlockIds.Count == 0)
-                    {
-                        this.tw.GetBlockUserIds();
-                    }
-
-                    break;
-            }
-
-            // キャンセル要求
-            if (bw.CancellationPending)
-            {
-                e.Cancel = true;
-                return;
-            }
-
-            // 時速表示用
-            if (args.WorkerType == WorkerType.FavAdd)
-            {
-                System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
-                for (int i = this.favTimestamps.Count - 1; i >= 0; i += -1)
-                {
-                    if (this.favTimestamps[i].CompareTo(oneHour) < 0)
-                    {
-                        this.favTimestamps.RemoveAt(i);
-                    }
-                }
-            }
-
-            if (args.WorkerType == WorkerType.Timeline && !this.isInitializing)
-            {
-                lock (this.syncObject)
-                {
-                    DateTime tm = DateTime.Now;
-                    if (this.timeLineTimestamps.ContainsKey(tm))
-                    {
-                        this.timeLineTimestamps[tm] += rslt.AddCount;
-                    }
-                    else
-                    {
-                        this.timeLineTimestamps.Add(tm, rslt.AddCount);
-                    }
-
-                    DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
-                    List<DateTime> keys = new List<DateTime>();
-                    this.timeLineCount = 0;
-                    foreach (DateTime key in this.timeLineTimestamps.Keys)
-                    {
-                        if (key.CompareTo(oneHour) < 0)
-                        {
-                            keys.Add(key);
-                        }
-                        else
-                        {
-                            this.timeLineCount += this.timeLineTimestamps[key];
-                        }
-                    }
-
-                    foreach (DateTime key in keys)
-                    {
-                        this.timeLineTimestamps.Remove(key);
-                    }
-
-                    keys.Clear();
-                }
-            }
-
-            // 終了ステータス
-            if (args.WorkerType != WorkerType.OpenUri)
-            {
-                bw.ReportProgress(100, this.MakeStatusMessage(args, true));
-            }
-
-            // ステータス書き換え、Notifyアイコンアニメーション開始
-            rslt.RetMsg = ret;
-            rslt.WorkerType = args.WorkerType;
-            rslt.TabName = args.TabName;
-            if (args.WorkerType == WorkerType.DirectMessegeRcv
-                || args.WorkerType == WorkerType.DirectMessegeSnt
-                || args.WorkerType == WorkerType.Reply
-                || args.WorkerType == WorkerType.Timeline
-                || args.WorkerType == WorkerType.Favorites)
-            {
-                // 値が正しいか後でチェック。10ページ毎の継続確認
-                rslt.Page = args.Page - 1;
-            }
-
-            e.Result = rslt;
-        }
-
         private void GetTimelineWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             this.DisplayTimelineWorkerProgressChanged(e.ProgressPercentage, (string)e.UserState);
@@ -1751,342 +1357,9 @@ namespace Hoehoe
             this.ShowHashManageBox();
         }
 
-        #endregion
-
-        private void GetTimelineWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (MyCommon.IsEnding || e.Cancelled)
-            {
-                // キャンセル
-                return;
-            }
-
-            if (e.Error != null)
-            {
-                this.myStatusError = true;
-                this.waitTimeline = false;
-                this.waitReply = false;
-                this.waitDm = false;
-                this.waitFav = false;
-                this.waitPubSearch = false;
-                this.waitUserTimeline = false;
-                this.waitLists = false;
-                throw new Exception("BackgroundWorker Exception", e.Error);
-            }
-
-            GetWorkerResult rslt = (GetWorkerResult)e.Result;
-            if (rslt.WorkerType == WorkerType.OpenUri)
-            {
-                return;
-            }
-
-            // エラー
-            if (rslt.RetMsg.Length > 0)
-            {
-                this.myStatusError = true;
-                this.StatusLabel.Text = rslt.RetMsg;
-            }
-
-            if (rslt.WorkerType == WorkerType.ErrorState)
-            {
-                return;
-            }
-
-            if (rslt.WorkerType == WorkerType.FavRemove)
-            {
-                this.RemovePostFromFavTab(rslt.SIds.ToArray());
-            }
-
-            if (rslt.WorkerType == WorkerType.Timeline
-                || rslt.WorkerType == WorkerType.Reply
-                || rslt.WorkerType == WorkerType.List
-                || rslt.WorkerType == WorkerType.PublicSearch
-                || rslt.WorkerType == WorkerType.DirectMessegeRcv
-                || rslt.WorkerType == WorkerType.DirectMessegeSnt
-                || rslt.WorkerType == WorkerType.Favorites
-                || rslt.WorkerType == WorkerType.Follower
-                || rslt.WorkerType == WorkerType.FavAdd
-                || rslt.WorkerType == WorkerType.FavRemove
-                || rslt.WorkerType == WorkerType.Related
-                || rslt.WorkerType == WorkerType.UserTimeline
-                || rslt.WorkerType == WorkerType.BlockIds
-                || rslt.WorkerType == WorkerType.Configuration)
-            {
-                // リスト反映
-                this.RefreshTimeline(false);
-            }
-
-            switch (rslt.WorkerType)
-            {
-                case WorkerType.Timeline:
-                    this.waitTimeline = false;
-                    if (!this.isInitializing)
-                    {
-                        // 'API使用時の取得調整は別途考える（カウント調整？）
-                    }
-
-                    break;
-                case WorkerType.Reply:
-                    this.waitReply = false;
-                    if (rslt.NewDM && !this.isInitializing)
-                    {
-                        this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
-                    }
-
-                    break;
-                case WorkerType.Favorites:
-                    this.waitFav = false;
-                    break;
-                case WorkerType.DirectMessegeRcv:
-                    this.waitDm = false;
-                    break;
-                case WorkerType.FavAdd:
-                case WorkerType.FavRemove:
-                    if (this.curList != null && this.curTab != null)
-                    {
-                        this.curList.BeginUpdate();
-                        if (rslt.WorkerType == WorkerType.FavRemove && this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.Favorites)
-                        {
-                            // 色変えは不要
-                        }
-                        else
-                        {
-                            for (int i = 0; i < rslt.SIds.Count; i++)
-                            {
-                                if (this.curTab.Text.Equals(rslt.TabName))
-                                {
-                                    int idx = this.statuses.Tabs[rslt.TabName].IndexOf(rslt.SIds[i]);
-                                    if (idx > -1)
-                                    {
-                                        TabClass tb = this.statuses.Tabs[rslt.TabName];
-                                        if (tb != null)
-                                        {
-                                            PostClass post = null;
-                                            if (tb.TabType == TabUsageType.Lists || tb.TabType == TabUsageType.PublicSearch)
-                                            {
-                                                post = tb.Posts[rslt.SIds[i]];
-                                            }
-                                            else
-                                            {
-                                                post = this.statuses.Item(rslt.SIds[i]);
-                                            }
-
-                                            this.ChangeCacheStyleRead(post.IsRead, idx, this.curTab);
-                                        }
-
-                                        if (idx == this.curItemIndex)
-                                        {
-                                            // 選択アイテム再表示
-                                            this.DispSelectedPost(true);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        this.curList.EndUpdate();
-                    }
-
-                    break;
-                case WorkerType.PostMessage:
-                    if (string.IsNullOrEmpty(rslt.RetMsg) || rslt.RetMsg.StartsWith("Outputz") || rslt.RetMsg.StartsWith("OK:") || rslt.RetMsg == "Warn:Status is a duplicate.")
-                    {
-                        this.postTimestamps.Add(DateTime.Now);
-                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
-                        for (int i = this.postTimestamps.Count - 1; i >= 0; i += -1)
-                        {
-                            if (this.postTimestamps[i].CompareTo(oneHour) < 0)
-                            {
-                                this.postTimestamps.RemoveAt(i);
-                            }
-                        }
-
-                        if (!this.HashMgr.IsPermanent && !string.IsNullOrEmpty(this.HashMgr.UseHash))
-                        {
-                            this.HashMgr.ClearHashtag();
-                            this.HashStripSplitButton.Text = "#[-]";
-                            this.HashToggleMenuItem.Checked = false;
-                            this.HashToggleToolStripMenuItem.Checked = false;
-                        }
-
-                        this.SetMainWindowTitle();
-                        rslt.RetMsg = string.Empty;
-                    }
-                    else
-                    {
-                        DialogResult retry = default(DialogResult);
-                        try
-                        {
-                            retry = MessageBox.Show(
-                                string.Format("{0}   --->   [ {1} ]{2}\"{3}\"{2}{4}", Hoehoe.Properties.Resources.StatusUpdateFailed1, rslt.RetMsg, Environment.NewLine, rslt.PStatus.Status, Hoehoe.Properties.Resources.StatusUpdateFailed2),
-                                "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
-                        }
-                        catch (Exception)
-                        {
-                            retry = DialogResult.Abort;
-                        }
-
-                        if (retry == DialogResult.Retry)
-                        {
-                            RunAsync(new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage, PStatus = rslt.PStatus });
-                        }
-                        else
-                        {
-                            if (ToolStripFocusLockMenuItem.Checked)
-                            {
-                                // 連投モードのときだけEnterイベントが起きないので強制的に背景色を戻す
-                                this.StatusText_EnterExtracted();
-                            }
-                        }
-                    }
-
-                    if (rslt.RetMsg.Length == 0 && this.settingDialog.PostAndGet)
-                    {
-                        if (this.isActiveUserstream)
-                        {
-                            this.RefreshTimeline(true);
-                        }
-                        else
-                        {
-                            this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
-                        }
-                    }
-
-                    break;
-                case WorkerType.Retweet:
-                    if (rslt.RetMsg.Length == 0)
-                    {
-                        this.postTimestamps.Add(DateTime.Now);
-                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
-                        for (int i = this.postTimestamps.Count - 1; i >= 0; i--)
-                        {
-                            if (this.postTimestamps[i].CompareTo(oneHour) < 0)
-                            {
-                                this.postTimestamps.RemoveAt(i);
-                            }
-                        }
-
-                        if (!this.isActiveUserstream && this.settingDialog.PostAndGet)
-                        {
-                            this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
-                        }
-                    }
-
-                    break;
-                case WorkerType.Follower:
-                    this.itemCache = null;
-                    this.postCache = null;
-                    if (this.curList != null)
-                    {
-                        this.curList.Refresh();
-                    }
-
-                    break;
-                case WorkerType.Configuration:
-                    // this._waitFollower = False
-                    if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit != 0)
-                    {
-                        this.pictureServices["Twitter"].Configuration("MaxUploadFilesize", this.settingDialog.TwitterConfiguration.PhotoSizeLimit);
-                    }
-
-                    this.itemCache = null;
-                    this.postCache = null;
-                    if (this.curList != null)
-                    {
-                        this.curList.Refresh();
-                    }
-
-                    break;
-                case WorkerType.PublicSearch:
-                    this.waitPubSearch = false;
-                    break;
-                case WorkerType.UserTimeline:
-                    this.waitUserTimeline = false;
-                    break;
-                case WorkerType.List:
-                    this.waitLists = false;
-                    break;
-                case WorkerType.Related:
-                    {
-                        TabClass tb = this.statuses.GetTabByType(TabUsageType.Related);
-                        if (tb != null && tb.RelationTargetPost != null && tb.Contains(tb.RelationTargetPost.StatusId))
-                        {
-                            foreach (TabPage tp in this.ListTab.TabPages)
-                            {
-                                if (tp.Text == tb.TabName)
-                                {
-                                    ((DetailsListView)tp.Tag).SelectedIndices.Add(tb.IndexOf(tb.RelationTargetPost.StatusId));
-                                    ((DetailsListView)tp.Tag).Items[tb.IndexOf(tb.RelationTargetPost.StatusId)].Focused = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    break;
-            }
-        }
-
-        private void GrowlHelper_Callback(object sender, GrowlHelper.NotifyCallbackEventArgs e)
-        {
-            if (Form.ActiveForm == null)
-            {
-                this.BeginInvoke(
-                    new Action(() =>
-                    {
-                        this.Visible = true;
-                        if (WindowState == FormWindowState.Minimized)
-                        {
-                            this.WindowState = FormWindowState.Normal;
-                        }
-
-                        this.Activate();
-                        this.BringToFront();
-                        if (e.NotifyType == GrowlHelper.NotifyType.DirectMessage)
-                        {
-                            if (!this.GoDirectMessage(e.StatusId))
-                            {
-                                this.StatusText.Focus();
-                            }
-                        }
-                        else
-                        {
-                            if (!this.GoStatus(e.StatusId))
-                            {
-                                this.StatusText.Focus();
-                            }
-                        }
-                    }));
-            }
-        }
-
         private void HashStripSplitButton_ButtonClick(object sender, EventArgs e)
         {
             this.ChangeUseHashTagSetting();
-        }
-
-        private void ChangeUseHashTagSetting(bool toggle = true)
-        {
-            if (toggle)
-            {
-                this.HashMgr.ToggleHash();
-            }
-
-            if (!string.IsNullOrEmpty(this.HashMgr.UseHash))
-            {
-                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
-                this.HashToggleMenuItem.Checked = true;
-                this.HashToggleToolStripMenuItem.Checked = true;
-            }
-            else
-            {
-                this.HashStripSplitButton.Text = "#[-]";
-                this.HashToggleMenuItem.Checked = false;
-                this.HashToggleToolStripMenuItem.Checked = false;
-            }
-
-            this.modifySettingCommon = true;
-            this.StatusText_TextChangedExtracted();
         }
 
         private void HashToggleMenuItem_Click(object sender, EventArgs e)
@@ -2094,10 +1367,12 @@ namespace Hoehoe
             this.ChangeUseHashTagSetting();
         }
 
+        #endregion
+
         private void ChangeWindowState()
         {
             if ((this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized)
-                            && this.Visible && object.ReferenceEquals(Form.ActiveForm, this))
+                && this.Visible && object.ReferenceEquals(Form.ActiveForm, this))
             {
                 // アイコン化
                 this.Visible = false;
@@ -7243,6 +6518,731 @@ namespace Hoehoe
             int counter = 0;
             this.tw.GetStatusRetweetedCount(this.CurPost.OriginalStatusId, ref counter);
             e.Result = counter;
+        }
+
+        private void GetTimelineWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker bw = (BackgroundWorker)sender;
+            if (bw.CancellationPending || MyCommon.IsEnding)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            //// Tween.My.MyProject.Application.InitCulture(); // TODO: Need this here?
+            string ret = string.Empty;
+            GetWorkerResult rslt = new GetWorkerResult();
+            bool read = !this.settingDialog.UnreadManage;
+            if (this.isInitializing && this.settingDialog.UnreadManage)
+            {
+                read = this.settingDialog.Readed;
+            }
+
+            GetWorkerArg args = (GetWorkerArg)e.Argument;
+            if (!CheckAccountValid())
+            {
+                // エラー表示のみ行ない、後処理キャンセル
+                rslt.RetMsg = "Auth error. Check your account";
+                rslt.WorkerType = WorkerType.ErrorState;
+                rslt.TabName = args.TabName;
+                e.Result = rslt;
+                return;
+            }
+
+            if (args.WorkerType != WorkerType.OpenUri)
+            {
+                bw.ReportProgress(0, string.Empty);
+            }
+
+            // Notifyアイコンアニメーション開始
+            switch (args.WorkerType)
+            {
+                case WorkerType.Timeline:
+                case WorkerType.Reply:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    ret = this.tw.GetTimelineApi(read, args.WorkerType, args.Page == -1, this.isInitializing);
+                    if (string.IsNullOrEmpty(ret) && args.WorkerType == WorkerType.Timeline && this.settingDialog.ReadOldPosts)
+                    {
+                        // 新着時未読クリア
+                        this.statuses.SetRead();
+                    }
+
+                    rslt.AddCount = this.statuses.DistributePosts();                    // 振り分け
+                    break;
+                case WorkerType.DirectMessegeRcv:
+                    // 送信分もまとめて取得
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    ret = this.tw.GetDirectMessageApi(read, WorkerType.DirectMessegeRcv, args.Page == -1);
+                    if (string.IsNullOrEmpty(ret))
+                    {
+                        ret = this.tw.GetDirectMessageApi(read, WorkerType.DirectMessegeSnt, args.Page == -1);
+                    }
+
+                    rslt.AddCount = this.statuses.DistributePosts();
+                    break;
+                case WorkerType.FavAdd:
+                    // スレッド処理はしない
+                    if (this.statuses.Tabs.ContainsKey(args.TabName))
+                    {
+                        TabClass tbc = this.statuses.Tabs[args.TabName];
+                        for (int i = 0; i < args.Ids.Count; i++)
+                        {
+                            PostClass post = null;
+                            if (tbc.IsInnerStorageTabType)
+                            {
+                                post = tbc.Posts[args.Ids[i]];
+                            }
+                            else
+                            {
+                                post = this.statuses.Item(args.Ids[i]);
+                            }
+
+                            args.Page = i + 1;
+                            bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                            if (!post.IsFav)
+                            {
+                                ret = this.tw.PostFavAdd(post.OriginalStatusId);
+                                if (ret.Length == 0)
+                                {
+                                    // リスト再描画必要
+                                    args.SIds.Add(post.StatusId);
+                                    post.IsFav = true;
+                                    this.favTimestamps.Add(DateTime.Now);
+                                    if (string.IsNullOrEmpty(post.RelTabName))
+                                    {
+                                        // 検索,リストUserTimeline.Relatedタブからのfavは、favタブへ追加せず。それ以外は追加
+                                        this.statuses.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                    }
+                                    else
+                                    {
+                                        // 検索,リスト,UserTimeline.Relatedタブからのfavで、TLでも取得済みならfav反映
+                                        if (this.statuses.ContainsKey(post.StatusId))
+                                        {
+                                            PostClass postTl = this.statuses.Item(post.StatusId);
+                                            postTl.IsFav = true;
+                                            this.statuses.GetTabByType(TabUsageType.Favorites).Add(postTl.StatusId, postTl.IsRead, false);
+                                        }
+                                    }
+
+                                    // 検索,リスト,UserTimeline,Relatedの各タブに反映
+                                    foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
+                                    {
+                                        if (tb.Contains(post.StatusId))
+                                        {
+                                            tb.Posts[post.StatusId].IsFav = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    rslt.SIds = args.SIds;
+                    break;
+                case WorkerType.FavRemove:
+                    // スレッド処理はしない
+                    if (this.statuses.Tabs.ContainsKey(args.TabName))
+                    {
+                        TabClass tbc = this.statuses.Tabs[args.TabName];
+                        for (int i = 0; i < args.Ids.Count; i++)
+                        {
+                            PostClass post = tbc.IsInnerStorageTabType ? tbc.Posts[args.Ids[i]] : this.statuses.Item(args.Ids[i]);
+                            args.Page = i + 1;
+                            bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                            if (post.IsFav)
+                            {
+                                ret = this.tw.PostFavRemove(post.OriginalStatusId);
+                                if (ret.Length == 0)
+                                {
+                                    args.SIds.Add(post.StatusId);
+                                    post.IsFav = false;
+
+                                    // リスト再描画必要
+                                    if (this.statuses.ContainsKey(post.StatusId))
+                                    {
+                                        this.statuses.Item(post.StatusId).IsFav = false;
+                                    }
+
+                                    // 検索,リスト,UserTimeline,Relatedの各タブに反映
+                                    foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch | TabUsageType.Lists | TabUsageType.UserTimeline | TabUsageType.Related))
+                                    {
+                                        if (tb.Contains(post.StatusId))
+                                        {
+                                            tb.Posts[post.StatusId].IsFav = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    rslt.SIds = args.SIds;
+                    break;
+                case WorkerType.PostMessage:
+                    bw.ReportProgress(200);
+                    if (string.IsNullOrEmpty(args.PStatus.ImagePath))
+                    {
+                        for (int i = 0; i <= 1; i++)
+                        {
+                            ret = this.tw.PostStatus(args.PStatus.Status, args.PStatus.InReplyToId);
+                            if (string.IsNullOrEmpty(ret) || ret.StartsWith("OK:") || ret.StartsWith("Outputz:") || ret.StartsWith("Warn:") || ret == "Err:Status is a duplicate." || args.PStatus.Status.StartsWith("D", StringComparison.OrdinalIgnoreCase) || args.PStatus.Status.StartsWith("DM", StringComparison.OrdinalIgnoreCase) || Twitter.AccountState != AccountState.Valid)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ret = this.pictureServices[args.PStatus.ImageService].Upload(ref args.PStatus.ImagePath, ref args.PStatus.Status, args.PStatus.InReplyToId);
+                    }
+
+                    bw.ReportProgress(300);
+                    rslt.PStatus = args.PStatus;
+                    break;
+                case WorkerType.Retweet:
+                    bw.ReportProgress(200);
+                    for (int i = 0; i < args.Ids.Count; i++)
+                    {
+                        ret = this.tw.PostRetweet(args.Ids[i], read);
+                    }
+
+                    bw.ReportProgress(300);
+                    break;
+                case WorkerType.Follower:
+                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText1);
+                    ret = this.tw.GetFollowersApi();
+                    if (string.IsNullOrEmpty(ret))
+                    {
+                        ret = this.tw.GetNoRetweetIdsApi();
+                    }
+
+                    break;
+                case WorkerType.Configuration:
+                    ret = this.tw.ConfigurationApi();
+                    break;
+                case WorkerType.OpenUri:
+                    string myPath = Convert.ToString(args.Url);
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(this.settingDialog.BrowserPath))
+                        {
+                            if (this.settingDialog.BrowserPath.StartsWith("\"") && this.settingDialog.BrowserPath.Length > 2 && this.settingDialog.BrowserPath.IndexOf("\"", 2) > -1)
+                            {
+                                int sep = this.settingDialog.BrowserPath.IndexOf("\"", 2);
+                                string browserPath = this.settingDialog.BrowserPath.Substring(1, sep - 1);
+                                string arg = string.Empty;
+                                if (sep < this.settingDialog.BrowserPath.Length - 1)
+                                {
+                                    arg = this.settingDialog.BrowserPath.Substring(sep + 1);
+                                }
+
+                                myPath = arg + " " + myPath;
+                                Process.Start(browserPath, myPath);
+                            }
+                            else
+                            {
+                                Process.Start(this.settingDialog.BrowserPath, myPath);
+                            }
+                        }
+                        else
+                        {
+                            Process.Start(myPath);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    break;
+                case WorkerType.Favorites:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    ret = this.tw.GetFavoritesApi(read, args.WorkerType, args.Page == -1);
+                    rslt.AddCount = this.statuses.DistributePosts();
+                    break;
+                case WorkerType.PublicSearch:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    if (string.IsNullOrEmpty(args.TabName))
+                    {
+                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch))
+                        {
+                            if (!string.IsNullOrEmpty(tb.SearchWords))
+                            {
+                                ret = this.tw.GetSearch(read, tb, false);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TabClass tb = this.statuses.GetTabByName(args.TabName);
+                        if (tb != null)
+                        {
+                            ret = this.tw.GetSearch(read, tb, false);
+                            if (string.IsNullOrEmpty(ret) && args.Page == -1)
+                            {
+                                ret = this.tw.GetSearch(read, tb, true);
+                            }
+                        }
+                    }
+
+                    rslt.AddCount = this.statuses.DistributePosts();                    // 振り分け
+                    break;
+                case WorkerType.UserTimeline:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    int count = 20;
+                    if (this.settingDialog.UseAdditionalCount)
+                    {
+                        count = this.settingDialog.UserTimelineCountApi;
+                    }
+
+                    if (string.IsNullOrEmpty(args.TabName))
+                    {
+                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.UserTimeline))
+                        {
+                            if (!string.IsNullOrEmpty(tb.User))
+                            {
+                                ret = this.tw.GetUserTimelineApi(read, count, tb.User, tb, false);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TabClass tb = this.statuses.GetTabByName(args.TabName);
+                        if (tb != null)
+                        {
+                            ret = this.tw.GetUserTimelineApi(read, count, tb.User, tb, args.Page == -1);
+                        }
+                    }
+
+                    rslt.AddCount = this.statuses.DistributePosts();                     // 振り分け
+                    break;
+                case WorkerType.List:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    if (string.IsNullOrEmpty(args.TabName))
+                    {
+                        // 定期更新
+                        foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.Lists))
+                        {
+                            if (tb.ListInfo != null && tb.ListInfo.Id != 0)
+                            {
+                                ret = this.tw.GetListStatus(read, tb, false, this.isInitializing);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // 手動更新（特定タブのみ更新）
+                        TabClass tb = this.statuses.GetTabByName(args.TabName);
+                        if (tb != null)
+                        {
+                            ret = this.tw.GetListStatus(read, tb, args.Page == -1, this.isInitializing);
+                        }
+                    }
+
+                    rslt.AddCount = this.statuses.DistributePosts(); // 振り分け
+                    break;
+                case WorkerType.Related:
+                    bw.ReportProgress(50, this.MakeStatusMessage(args, false));
+                    ret = this.tw.GetRelatedResult(read, this.statuses.GetTabByName(args.TabName));
+                    rslt.AddCount = this.statuses.DistributePosts();
+                    break;
+                case WorkerType.BlockIds:
+                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateBlockUserText1);
+                    ret = this.tw.GetBlockUserIds();
+                    if (TabInformations.GetInstance().BlockIds.Count == 0)
+                    {
+                        this.tw.GetBlockUserIds();
+                    }
+
+                    break;
+            }
+
+            // キャンセル要求
+            if (bw.CancellationPending)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            // 時速表示用
+            if (args.WorkerType == WorkerType.FavAdd)
+            {
+                System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                for (int i = this.favTimestamps.Count - 1; i >= 0; i += -1)
+                {
+                    if (this.favTimestamps[i].CompareTo(oneHour) < 0)
+                    {
+                        this.favTimestamps.RemoveAt(i);
+                    }
+                }
+            }
+
+            if (args.WorkerType == WorkerType.Timeline && !this.isInitializing)
+            {
+                lock (this.syncObject)
+                {
+                    DateTime tm = DateTime.Now;
+                    if (this.timeLineTimestamps.ContainsKey(tm))
+                    {
+                        this.timeLineTimestamps[tm] += rslt.AddCount;
+                    }
+                    else
+                    {
+                        this.timeLineTimestamps.Add(tm, rslt.AddCount);
+                    }
+
+                    DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                    List<DateTime> keys = new List<DateTime>();
+                    this.timeLineCount = 0;
+                    foreach (DateTime key in this.timeLineTimestamps.Keys)
+                    {
+                        if (key.CompareTo(oneHour) < 0)
+                        {
+                            keys.Add(key);
+                        }
+                        else
+                        {
+                            this.timeLineCount += this.timeLineTimestamps[key];
+                        }
+                    }
+
+                    foreach (DateTime key in keys)
+                    {
+                        this.timeLineTimestamps.Remove(key);
+                    }
+
+                    keys.Clear();
+                }
+            }
+
+            // 終了ステータス
+            if (args.WorkerType != WorkerType.OpenUri)
+            {
+                bw.ReportProgress(100, this.MakeStatusMessage(args, true));
+            }
+
+            // ステータス書き換え、Notifyアイコンアニメーション開始
+            rslt.RetMsg = ret;
+            rslt.WorkerType = args.WorkerType;
+            rslt.TabName = args.TabName;
+            if (args.WorkerType == WorkerType.DirectMessegeRcv
+                || args.WorkerType == WorkerType.DirectMessegeSnt
+                || args.WorkerType == WorkerType.Reply
+                || args.WorkerType == WorkerType.Timeline
+                || args.WorkerType == WorkerType.Favorites)
+            {
+                // 値が正しいか後でチェック。10ページ毎の継続確認
+                rslt.Page = args.Page - 1;
+            }
+
+            e.Result = rslt;
+        }
+
+        private void GetTimelineWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (MyCommon.IsEnding || e.Cancelled)
+            {
+                // キャンセル
+                return;
+            }
+
+            if (e.Error != null)
+            {
+                this.myStatusError = true;
+                this.waitTimeline = false;
+                this.waitReply = false;
+                this.waitDm = false;
+                this.waitFav = false;
+                this.waitPubSearch = false;
+                this.waitUserTimeline = false;
+                this.waitLists = false;
+                throw new Exception("BackgroundWorker Exception", e.Error);
+            }
+
+            GetWorkerResult rslt = (GetWorkerResult)e.Result;
+            if (rslt.WorkerType == WorkerType.OpenUri)
+            {
+                return;
+            }
+
+            // エラー
+            if (rslt.RetMsg.Length > 0)
+            {
+                this.myStatusError = true;
+                this.StatusLabel.Text = rslt.RetMsg;
+            }
+
+            if (rslt.WorkerType == WorkerType.ErrorState)
+            {
+                return;
+            }
+
+            if (rslt.WorkerType == WorkerType.FavRemove)
+            {
+                this.RemovePostFromFavTab(rslt.SIds.ToArray());
+            }
+
+            if (rslt.WorkerType == WorkerType.Timeline
+                || rslt.WorkerType == WorkerType.Reply
+                || rslt.WorkerType == WorkerType.List
+                || rslt.WorkerType == WorkerType.PublicSearch
+                || rslt.WorkerType == WorkerType.DirectMessegeRcv
+                || rslt.WorkerType == WorkerType.DirectMessegeSnt
+                || rslt.WorkerType == WorkerType.Favorites
+                || rslt.WorkerType == WorkerType.Follower
+                || rslt.WorkerType == WorkerType.FavAdd
+                || rslt.WorkerType == WorkerType.FavRemove
+                || rslt.WorkerType == WorkerType.Related
+                || rslt.WorkerType == WorkerType.UserTimeline
+                || rslt.WorkerType == WorkerType.BlockIds
+                || rslt.WorkerType == WorkerType.Configuration)
+            {
+                // リスト反映
+                this.RefreshTimeline(false);
+            }
+
+            switch (rslt.WorkerType)
+            {
+                case WorkerType.Timeline:
+                    this.waitTimeline = false;
+                    if (!this.isInitializing)
+                    {
+                        // 'API使用時の取得調整は別途考える（カウント調整？）
+                    }
+
+                    break;
+                case WorkerType.Reply:
+                    this.waitReply = false;
+                    if (rslt.NewDM && !this.isInitializing)
+                    {
+                        this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
+                    }
+
+                    break;
+                case WorkerType.Favorites:
+                    this.waitFav = false;
+                    break;
+                case WorkerType.DirectMessegeRcv:
+                    this.waitDm = false;
+                    break;
+                case WorkerType.FavAdd:
+                case WorkerType.FavRemove:
+                    if (this.curList != null && this.curTab != null)
+                    {
+                        this.curList.BeginUpdate();
+                        if (rslt.WorkerType == WorkerType.FavRemove && this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.Favorites)
+                        {
+                            // 色変えは不要
+                        }
+                        else
+                        {
+                            for (int i = 0; i < rslt.SIds.Count; i++)
+                            {
+                                if (this.curTab.Text.Equals(rslt.TabName))
+                                {
+                                    int idx = this.statuses.Tabs[rslt.TabName].IndexOf(rslt.SIds[i]);
+                                    if (idx > -1)
+                                    {
+                                        TabClass tb = this.statuses.Tabs[rslt.TabName];
+                                        if (tb != null)
+                                        {
+                                            PostClass post = null;
+                                            if (tb.TabType == TabUsageType.Lists || tb.TabType == TabUsageType.PublicSearch)
+                                            {
+                                                post = tb.Posts[rslt.SIds[i]];
+                                            }
+                                            else
+                                            {
+                                                post = this.statuses.Item(rslt.SIds[i]);
+                                            }
+
+                                            this.ChangeCacheStyleRead(post.IsRead, idx, this.curTab);
+                                        }
+
+                                        if (idx == this.curItemIndex)
+                                        {
+                                            // 選択アイテム再表示
+                                            this.DispSelectedPost(true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        this.curList.EndUpdate();
+                    }
+
+                    break;
+                case WorkerType.PostMessage:
+                    if (string.IsNullOrEmpty(rslt.RetMsg) || rslt.RetMsg.StartsWith("Outputz") || rslt.RetMsg.StartsWith("OK:") || rslt.RetMsg == "Warn:Status is a duplicate.")
+                    {
+                        this.postTimestamps.Add(DateTime.Now);
+                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                        for (int i = this.postTimestamps.Count - 1; i >= 0; i += -1)
+                        {
+                            if (this.postTimestamps[i].CompareTo(oneHour) < 0)
+                            {
+                                this.postTimestamps.RemoveAt(i);
+                            }
+                        }
+
+                        if (!this.HashMgr.IsPermanent && !string.IsNullOrEmpty(this.HashMgr.UseHash))
+                        {
+                            this.HashMgr.ClearHashtag();
+                            this.HashStripSplitButton.Text = "#[-]";
+                            this.HashToggleMenuItem.Checked = false;
+                            this.HashToggleToolStripMenuItem.Checked = false;
+                        }
+
+                        this.SetMainWindowTitle();
+                        rslt.RetMsg = string.Empty;
+                    }
+                    else
+                    {
+                        DialogResult retry = default(DialogResult);
+                        try
+                        {
+                            retry = MessageBox.Show(
+                                string.Format("{0}   --->   [ {1} ]{2}\"{3}\"{2}{4}", Hoehoe.Properties.Resources.StatusUpdateFailed1, rslt.RetMsg, Environment.NewLine, rslt.PStatus.Status, Hoehoe.Properties.Resources.StatusUpdateFailed2),
+                                "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
+                        }
+                        catch (Exception)
+                        {
+                            retry = DialogResult.Abort;
+                        }
+
+                        if (retry == DialogResult.Retry)
+                        {
+                            RunAsync(new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage, PStatus = rslt.PStatus });
+                        }
+                        else
+                        {
+                            if (ToolStripFocusLockMenuItem.Checked)
+                            {
+                                // 連投モードのときだけEnterイベントが起きないので強制的に背景色を戻す
+                                this.StatusText_EnterExtracted();
+                            }
+                        }
+                    }
+
+                    if (rslt.RetMsg.Length == 0 && this.settingDialog.PostAndGet)
+                    {
+                        if (this.isActiveUserstream)
+                        {
+                            this.RefreshTimeline(true);
+                        }
+                        else
+                        {
+                            this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                        }
+                    }
+
+                    break;
+                case WorkerType.Retweet:
+                    if (rslt.RetMsg.Length == 0)
+                    {
+                        this.postTimestamps.Add(DateTime.Now);
+                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                        for (int i = this.postTimestamps.Count - 1; i >= 0; i--)
+                        {
+                            if (this.postTimestamps[i].CompareTo(oneHour) < 0)
+                            {
+                                this.postTimestamps.RemoveAt(i);
+                            }
+                        }
+
+                        if (!this.isActiveUserstream && this.settingDialog.PostAndGet)
+                        {
+                            this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                        }
+                    }
+
+                    break;
+                case WorkerType.Follower:
+                    this.itemCache = null;
+                    this.postCache = null;
+                    if (this.curList != null)
+                    {
+                        this.curList.Refresh();
+                    }
+
+                    break;
+                case WorkerType.Configuration:
+                    // this._waitFollower = False
+                    if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit != 0)
+                    {
+                        this.pictureServices["Twitter"].Configuration("MaxUploadFilesize", this.settingDialog.TwitterConfiguration.PhotoSizeLimit);
+                    }
+
+                    this.itemCache = null;
+                    this.postCache = null;
+                    if (this.curList != null)
+                    {
+                        this.curList.Refresh();
+                    }
+
+                    break;
+                case WorkerType.PublicSearch:
+                    this.waitPubSearch = false;
+                    break;
+                case WorkerType.UserTimeline:
+                    this.waitUserTimeline = false;
+                    break;
+                case WorkerType.List:
+                    this.waitLists = false;
+                    break;
+                case WorkerType.Related:
+                    {
+                        TabClass tb = this.statuses.GetTabByType(TabUsageType.Related);
+                        if (tb != null && tb.RelationTargetPost != null && tb.Contains(tb.RelationTargetPost.StatusId))
+                        {
+                            foreach (TabPage tp in this.ListTab.TabPages)
+                            {
+                                if (tp.Text == tb.TabName)
+                                {
+                                    ((DetailsListView)tp.Tag).SelectedIndices.Add(tb.IndexOf(tb.RelationTargetPost.StatusId));
+                                    ((DetailsListView)tp.Tag).Items[tb.IndexOf(tb.RelationTargetPost.StatusId)].Focused = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+            }
+        }
+
+        private void GrowlHelper_Callback(object sender, GrowlHelper.NotifyCallbackEventArgs e)
+        {
+            if (Form.ActiveForm == null)
+            {
+                this.BeginInvoke(
+                    new Action(() =>
+                    {
+                        this.Visible = true;
+                        if (WindowState == FormWindowState.Minimized)
+                        {
+                            this.WindowState = FormWindowState.Normal;
+                        }
+
+                        this.Activate();
+                        this.BringToFront();
+                        if (e.NotifyType == GrowlHelper.NotifyType.DirectMessage)
+                        {
+                            if (!this.GoDirectMessage(e.StatusId))
+                            {
+                                this.StatusText.Focus();
+                            }
+                        }
+                        else
+                        {
+                            if (!this.GoStatus(e.StatusId))
+                            {
+                                this.StatusText.Focus();
+                            }
+                        }
+                    }));
+            }
         }
 
         #endregion callback
