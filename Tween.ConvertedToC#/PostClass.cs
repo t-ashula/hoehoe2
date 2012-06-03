@@ -117,6 +117,15 @@ namespace Hoehoe
 
         public string ImageUrl { get; set; }
 
+        public string NormalImageUrl
+        {
+            get
+            {
+                string name = this.ImageUrl;
+                return name.Remove(name.LastIndexOf("_normal"), 7);
+            }
+        }
+
         public string ScreenName { get; set; }
 
         public System.DateTime CreatedAt { get; set; }

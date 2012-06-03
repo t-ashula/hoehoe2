@@ -1467,8 +1467,7 @@ namespace Hoehoe
                 return;
             }
 
-            string name = this.curPost.ImageUrl;
-            this.OpenUriAsync(name.Remove(name.LastIndexOf("_normal"), 7));
+            this.OpenUriAsync(this.curPost.NormalImageUrl);
         }
 
         private void AddIdFilteringRuleFromCurrentTweet()
