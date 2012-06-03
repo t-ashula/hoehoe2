@@ -1531,44 +1531,9 @@ namespace Hoehoe
             this.SetModifySettingCommon(true);
         }
 
-        #endregion
-
-        private void CancelPostImageSelecting()
-        {
-            this.ImagefilePathText.CausesValidation = false;
-            this.TimelinePanel.Visible = true;
-            this.TimelinePanel.Enabled = true;
-            this.ImageSelectionPanel.Visible = false;
-            this.ImageSelectionPanel.Enabled = false;
-            ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
-            this.ImagefilePathText.CausesValidation = true;
-        }
-
         private void ImageCancelButton_Click(object sender, EventArgs e)
         {
             this.CancelPostImageSelecting();
-        }
-
-        private void ImageSelectMenuItem_ClickExtracted()
-        {
-            if (this.ImageSelectionPanel.Visible)
-            {
-                this.ImagefilePathText.CausesValidation = false;
-                this.TimelinePanel.Visible = true;
-                this.TimelinePanel.Enabled = true;
-                this.ImageSelectionPanel.Visible = false;
-                this.ImageSelectionPanel.Enabled = false;
-                ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
-                this.ImagefilePathText.CausesValidation = true;
-            }
-            else
-            {
-                this.ImageSelectionPanel.Visible = true;
-                this.ImageSelectionPanel.Enabled = true;
-                this.TimelinePanel.Visible = false;
-                this.TimelinePanel.Enabled = false;
-                this.ImagefilePathText.Focus();
-            }
         }
 
         private void ImageSelectMenuItem_Click(object sender, EventArgs e)
@@ -1581,27 +1546,15 @@ namespace Hoehoe
             this.StatusText_TextChangedExtracted();
         }
 
-        private void ImageSelection_KeyDownExtracted(KeyEventArgs e)
+        private void ImageSelection_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
-                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                this.TimelinePanel.Visible = true;
-                this.TimelinePanel.Enabled = true;
-                this.ImageSelectionPanel.Visible = false;
-                this.ImageSelectionPanel.Enabled = false;
-                ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
-                this.ImagefilePathText.CausesValidation = true;
+                CancelPostImageSelecting();
             }
         }
 
-        private void ImageSelection_KeyDown(object sender, KeyEventArgs e)
-        {
-            ImageSelection_KeyDownExtracted(e);
-        }
-
-        private void ImageSelection_KeyPressExtracted(KeyPressEventArgs e)
+        private void ImageSelection_KeyPress(object sender, KeyPressEventArgs e)
         {
             if ((int)e.KeyChar == 0x1b)
             {
@@ -1610,12 +1563,7 @@ namespace Hoehoe
             }
         }
 
-        private void ImageSelection_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            ImageSelection_KeyPressExtracted(e);
-        }
-
-        private void ImageSelection_PreviewKeyDownExtracted(PreviewKeyDownEventArgs e)
+        private void ImageSelection_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
@@ -1623,11 +1571,37 @@ namespace Hoehoe
             }
         }
 
-        private void ImageSelection_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        #endregion
+
+        private void CancelPostImageSelecting()
         {
-            ImageSelection_PreviewKeyDownExtracted(e);
+            this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+            this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+            this.ImagefilePathText.CausesValidation = false;
+            this.TimelinePanel.Visible = true;
+            this.TimelinePanel.Enabled = true;
+            this.ImageSelectionPanel.Visible = false;
+            this.ImageSelectionPanel.Enabled = false;
+            ((DetailsListView)this.ListTab.SelectedTab.Tag).Focus();
+            this.ImagefilePathText.CausesValidation = true;
         }
 
+        private void ImageSelectMenuItem_ClickExtracted()
+        {
+            if (this.ImageSelectionPanel.Visible)
+            {
+                CancelPostImageSelecting();
+            }
+            else
+            {
+                this.ImageSelectionPanel.Visible = true;
+                this.ImageSelectionPanel.Enabled = true;
+                this.TimelinePanel.Visible = false;
+                this.TimelinePanel.Enabled = false;
+                this.ImagefilePathText.Focus();
+            }
+        }
+        
         private void TryChangeImageUploadService()
         {
             if (this.ImageSelectedPicture.Tag != null && !string.IsNullOrEmpty(this.ImageService))
