@@ -1868,12 +1868,12 @@ namespace Hoehoe
             TrySearchWordInTab();
         }
 
-        #endregion
-
         private void MenuItemTab_DropDownOpening(object sender, EventArgs e)
         {
             this.SetupTabPropertyContextMenu(true);
         }
+
+        #endregion
 
         private void SetFocusToMainMenu()
         {
