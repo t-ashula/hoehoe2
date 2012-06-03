@@ -1828,12 +1828,12 @@ namespace Hoehoe
             ShowListSelectForm(this.GetUserId());
         }
 
-        #endregion
-
         private void MatomeMenuItem_Click(object sender, EventArgs e)
         {
             this.OpenUriAsync(ApplicationHelpWebPageUrl);
         }
+
+        #endregion
 
         private void MenuItemCommand_DropDownOpening(object sender, EventArgs e)
         {
