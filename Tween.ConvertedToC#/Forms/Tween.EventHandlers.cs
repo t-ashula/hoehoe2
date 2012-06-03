@@ -1367,7 +1367,7 @@ namespace Hoehoe
 
         private void BitlyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.UrlConvert(UrlConverter.Bitly);
+            this.ConvertUrl(UrlConverter.Bitly);
         }
 
         private void CacheInfoMenuItem_Click(object sender, EventArgs e)
@@ -1629,8 +1629,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion
-
         private void ImageServiceCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             TryChangeImageUploadService();
@@ -1658,13 +1656,45 @@ namespace Hoehoe
 
         private void IsgdToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.UrlConvert(UrlConverter.Isgd);
+            this.ConvertUrl(UrlConverter.Isgd);
         }
 
         private void JmpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.UrlConvert(UrlConverter.Jmp);
+            this.ConvertUrl(UrlConverter.Jmp);
         }
+
+        private void ImagefilePathText_Validating(object sender, CancelEventArgs e)
+        {
+            if (this.ImageCancelButton.Focused)
+            {
+                this.ImagefilePathText.CausesValidation = false;
+                return;
+            }
+
+            this.ImagefilePathText.Text = this.ImagefilePathText.Text.Trim();
+            if (string.IsNullOrEmpty(this.ImagefilePathText.Text))
+            {
+                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+            }
+            else
+            {
+                this.LoadImageFromSelectedFile();
+            }
+        }
+
+        private void IsgdToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ConvertUrl(UrlConverter.Isgd);
+        }
+
+        private void JmpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ConvertUrl(UrlConverter.Jmp);
+        }
+
+        #endregion
 
         private void TrySearchAndFocusUnreadTweet()
         {
@@ -2989,7 +3019,7 @@ namespace Hoehoe
             if (this.settingDialog.Nicoms)
             {
                 this.StatusText.SelectionStart = this.StatusText.Text.Length;
-                this.UrlConvert(UrlConverter.Nicoms);
+                this.ConvertUrl(UrlConverter.Nicoms);
             }
 
             this.StatusText.SelectionStart = this.StatusText.Text.Length;
@@ -4552,7 +4582,7 @@ namespace Hoehoe
 
         private void TinyURLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.UrlConvert(UrlConverter.TinyUrl);
+            this.ConvertUrl(UrlConverter.TinyUrl);
         }
 
         private void ToolStripFocusLockMenuItem_CheckedChanged(object sender, EventArgs e)
@@ -6128,7 +6158,7 @@ namespace Hoehoe
 
         private void TwurlnlToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.UrlConvert(UrlConverter.Twurl);
+            this.ConvertUrl(UrlConverter.Twurl);
         }
 
         private void TryUnfollowCurrentIconUser()
@@ -6239,7 +6269,7 @@ namespace Hoehoe
 
         private void ConvertUrlByAutoSelectedService()
         {
-            if (!this.UrlConvert(this.settingDialog.AutoShortUrlFirst))
+            if (!this.ConvertUrl(this.settingDialog.AutoShortUrlFirst))
             {
                 // 前回使用した短縮URLサービス以外を選択する
                 UrlConverter svc = this.settingDialog.AutoShortUrlFirst;
@@ -6249,7 +6279,7 @@ namespace Hoehoe
                     svc = (UrlConverter)rnd.Next(System.Enum.GetNames(typeof(UrlConverter)).Length);
                 }
                 while (!(svc != this.settingDialog.AutoShortUrlFirst && svc != UrlConverter.Nicoms && svc != UrlConverter.Unu));
-                this.UrlConvert(svc);
+                this.ConvertUrl(svc);
             }
         }
 
@@ -6366,7 +6396,7 @@ namespace Hoehoe
 
         private void UxnuMenuItem_Click(object sender, EventArgs e)
         {
-            this.UrlConvert(UrlConverter.Uxnu);
+            this.ConvertUrl(UrlConverter.Uxnu);
         }
 
         private void VerUpMenuItem_Click(object sender, EventArgs e)
