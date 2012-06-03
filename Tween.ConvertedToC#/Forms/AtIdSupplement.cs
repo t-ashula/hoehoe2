@@ -64,20 +64,25 @@ namespace Hoehoe
         #endregion
 
         #region public
-        public void AddItem(string id)
+        public bool AddItem(string id)
         {
             if (!this.TextId.AutoCompleteCustomSource.Contains(id))
             {
                 this.TextId.AutoCompleteCustomSource.Add(id);
+                return true;
             }
+            return false;
         }
 
-        public void AddRangeItem(string[] ids)
+        public bool AddRangeItem(IEnumerable<string> ids)
         {
-            foreach (string id in ids)
+            var cnt = this.ItemCount;
+            var q = ids.Distinct();
+            foreach (string id in q)
             {
                 this.AddItem(id);
             }
+            return cnt != this.ItemCount;
         }
 
         public List<string> GetItemList()

@@ -1404,94 +1404,45 @@ namespace Hoehoe
                 return;
             }
 
-            // タブ選択（or追加）
-            string tabName = string.Empty;
-            if (!this.SelectTab(ref tabName))
+            var idxs = this.curList.SelectedIndices.Cast<int>().Distinct();
+            var names = idxs.Select(idx => this.statuses.Item(this.curTab.Text, idx))
+                .Select(pc => pc.IsRetweeted ? pc.RetweetedBy : pc.ScreenName);
+            this.TryAddIdsFilter(names);
+        }
+
+        private void ApplyNewFilters()
+        {
+            this.itemCache = null;
+            this.postCache = null;
+            this.curPost = null;
+            this.curItemIndex = -1;
+            this.statuses.FilterAll();
+            foreach (TabPage tb in this.ListTab.TabPages)
             {
-                return;
-            }
-
-            bool mv = false;
-            bool mk = false;
-            this.MoveOrCopy(ref mv, ref mk);
-
-            List<string> ids = new List<string>();
-            foreach (int idx in this.curList.SelectedIndices)
-            {
-                PostClass post = this.statuses.Item(this.curTab.Text, idx);
-                if (!ids.Contains(post.ScreenName))
-                {
-                    ids.Add(post.ScreenName);
-                    FiltersClass fc = new FiltersClass()
-                    {
-                        NameFilter = post.IsRetweeted ? post.RetweetedBy : post.ScreenName,
-                        SearchBoth = true,
-                        MoveFrom = mv,
-                        SetMark = mk,
-                        UseRegex = false,
-                        SearchUrl = false
-                    };
-                    this.statuses.Tabs[tabName].AddFilter(fc);
-                }
-            }
-
-            if (ids.Count != 0)
-            {
-                List<string> atids = new List<string>();
-                foreach (string id in ids)
-                {
-                    atids.Add("@" + id);
-                }
-
-                int cnt = this.AtIdSupl.ItemCount;
-                this.AtIdSupl.AddRangeItem(atids.ToArray());
-                if (this.AtIdSupl.ItemCount != cnt)
-                {
-                    this.modifySettingAtId = true;
-                }
-            }
-
-            try
-            {
-                this.Cursor = Cursors.WaitCursor;
-                this.itemCache = null;
-                this.postCache = null;
-                this.curPost = null;
-                this.curItemIndex = -1;
-                this.statuses.FilterAll();
-                foreach (TabPage tb in this.ListTab.TabPages)
+                if (this.statuses.ContainsTab(tb.Text))
                 {
                     ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
-                    if (this.statuses.ContainsTab(tb.Text))
+                    if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
                     {
-                        if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
+                        if (this.settingDialog.TabIconDisp)
                         {
-                            if (this.settingDialog.TabIconDisp)
-                            {
-                                tb.ImageIndex = 0;
-                            }
+                            tb.ImageIndex = 0;
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (this.settingDialog.TabIconDisp)
                         {
-                            if (this.settingDialog.TabIconDisp)
-                            {
-                                tb.ImageIndex = -1;
-                            }
+                            tb.ImageIndex = -1;
                         }
                     }
                 }
-
-                if (!this.settingDialog.TabIconDisp)
-                {
-                    this.ListTab.Refresh();
-                }
             }
-            finally
+
+            if (!this.settingDialog.TabIconDisp)
             {
-                this.Cursor = Cursors.Default;
+                this.ListTab.Refresh();
             }
-
-            this.SaveConfigsTabs();
         }
 
         private void IDRuleMenuItem_Click(object sender, EventArgs e)
@@ -1523,12 +1474,16 @@ namespace Hoehoe
                 return;
             }
 
-            // 未選択なら処理終了
-            if (this.curList.SelectedIndices.Count == 0)
-            {
-                return;
-            }
+            TryAddIdFilter(name);
+        }
 
+        private void TryAddIdFilter(string name)
+        {
+            this.TryAddIdsFilter(new[] { name });
+        }
+
+        private void TryAddIdsFilter(IEnumerable<string> names)
+        {
             // タブ選択（or追加）
             string tabName = string.Empty;
             if (!this.SelectTab(ref tabName))
@@ -1540,7 +1495,7 @@ namespace Hoehoe
             bool mk = false;
             this.MoveOrCopy(ref mv, ref mk);
 
-            FiltersClass fc = new FiltersClass()
+            this.statuses.Tabs[tabName].AddFilters(names.Select(name => new FiltersClass()
             {
                 NameFilter = name,
                 SearchBoth = true,
@@ -1548,40 +1503,13 @@ namespace Hoehoe
                 SetMark = mk,
                 UseRegex = false,
                 SearchUrl = false
-            };
-            this.statuses.Tabs[tabName].AddFilter(fc);
+            }));
+            this.SetModifySettingAtId(this.AtIdSupl.AddRangeItem(names.Select(name => "@" + name)));
 
             try
             {
                 this.Cursor = Cursors.WaitCursor;
-                this.itemCache = null;
-                this.postCache = null;
-                this.curPost = null;
-                this.curItemIndex = -1;
-                this.statuses.FilterAll();
-                foreach (TabPage tb in this.ListTab.TabPages)
-                {
-                    ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
-                    if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
-                    {
-                        if (this.settingDialog.TabIconDisp)
-                        {
-                            tb.ImageIndex = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (this.settingDialog.TabIconDisp)
-                        {
-                            tb.ImageIndex = -1;
-                        }
-                    }
-                }
-
-                if (!this.settingDialog.TabIconDisp)
-                {
-                    this.ListTab.Refresh();
-                }
+                this.ApplyNewFilters();
             }
             finally
             {

@@ -558,6 +558,14 @@ namespace Hoehoe
             }
         }
 
+        public void AddFilters(IEnumerable<FiltersClass> fs)
+        {
+            foreach (var f in fs)
+            {
+                this.AddFilter(f);
+            }
+        }
+
         public void EditFilter(FiltersClass original, FiltersClass modified)
         {
             original.BodyFilter = modified.BodyFilter;
