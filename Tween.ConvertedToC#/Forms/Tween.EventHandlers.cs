@@ -1164,7 +1164,6 @@ namespace Hoehoe
             }
         }
 
-
         private void AddIdFilteringRuleFromSelectedTweets()
         {
             // 未選択なら処理終了
@@ -1271,7 +1270,17 @@ namespace Hoehoe
 
             this.SaveConfigsTabs();
         }
+        
+        private void TryOpenCurrentTweetIconUrl()
+        {
+            if (this.curPost == null)
+            {
+                return;
+            }
 
+            this.OpenUriAsync(this.curPost.NormalImageUrl);
+        }
+        
         #endregion done
 
         #region event handler
@@ -1518,15 +1527,6 @@ namespace Hoehoe
         }
 
         #endregion
-        private void TryOpenCurrentTweetIconUrl()
-        {
-            if (this.curPost == null)
-            {
-                return;
-            }
-
-            this.OpenUriAsync(this.curPost.NormalImageUrl);
-        }
 
         private void IdeographicSpaceToSpaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
