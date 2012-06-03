@@ -1309,7 +1309,36 @@ namespace Hoehoe
                 this.ImagefilePathText.Focus();
             }
         }
-        
+
+        private void TryChangeImageUploadService()
+        {
+            if (this.ImageSelectedPicture.Tag == null || string.IsNullOrEmpty(this.ImageService))
+            {
+                return;
+            }
+
+            try
+            {
+                FileInfo fi = new FileInfo(this.ImagefilePathText.Text.Trim());
+                if (!this.pictureServices[this.ImageService].CheckValidFilesize(fi.Extension, fi.Length))
+                {
+                    this.ImagefilePathText.Text = string.Empty;
+                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            this.modifySettingCommon = true;
+            this.SaveConfigsAll(false);
+            if (this.ImageService == "Twitter")
+            {
+                this.StatusText_TextChangedExtracted();
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -1601,35 +1630,6 @@ namespace Hoehoe
         }
 
         #endregion
-        
-        private void TryChangeImageUploadService()
-        {
-            if (this.ImageSelectedPicture.Tag == null || string.IsNullOrEmpty(this.ImageService))
-            {
-                return;
-            }
-
-            try
-            {
-                FileInfo fi = new FileInfo(this.ImagefilePathText.Text.Trim());
-                if (!this.pictureServices[this.ImageService].CheckValidFilesize(fi.Extension, fi.Length))
-                {
-                    this.ImagefilePathText.Text = string.Empty;
-                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                }
-            }
-            catch (Exception)
-            {
-            }
-
-            this.modifySettingCommon = true;
-            this.SaveConfigsAll(false);
-            if (this.ImageService == "Twitter")
-            {
-                this.StatusText_TextChangedExtracted();
-            }
-        }
 
         private void ImageServiceCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
