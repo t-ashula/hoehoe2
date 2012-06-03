@@ -1419,8 +1419,8 @@ namespace Hoehoe
                 return;
             }
 
-            var idxs = this.curList.SelectedIndices.Cast<int>().Distinct();
-            var names = idxs.Select(idx => this.statuses.Item(this.curTab.Text, idx))
+            var names = this.curList.SelectedIndices.Cast<int>()
+                .Select(idx => this.statuses.Item(this.curTab.Text, idx))
                 .Select(pc => pc.IsRetweeted ? pc.RetweetedBy : pc.ScreenName);
             this.TryAddIdsFilter(names);
         }
@@ -1472,22 +1472,27 @@ namespace Hoehoe
 
         private void AddIdFilteringRuleFromCurrentTweet()
         {
-            string name = this.GetUserId();
-            if (name == null)
-            {
-                return;
-            }
-
-            TryAddIdFilter(name);
+            TryAddIdFilter(this.GetUserId());
         }
 
         private void TryAddIdFilter(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return;
+            }
+
             this.TryAddIdsFilter(new[] { name });
         }
 
         private void TryAddIdsFilter(IEnumerable<string> names)
         {
+            var uniNames = names.Select(n => n.Trim()).Where(n => !string.IsNullOrEmpty(n)).Distinct();
+            if (uniNames.Count() < 1)
+            {
+                return;
+            }
+
             // タブ選択（or追加）
             string tabName = string.Empty;
             if (!this.SelectTab(ref tabName))
