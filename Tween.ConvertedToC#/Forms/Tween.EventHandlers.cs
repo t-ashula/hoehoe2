@@ -950,6 +950,17 @@ namespace Hoehoe
                 this.FollowCommand((string)this.NameLabel.Tag);
             }
         }
+                
+        private void DeleteSelectedTab(bool fromMenuBar)
+        {
+            if (string.IsNullOrEmpty(this.rclickTabName) || fromMenuBar)
+            {
+                this.rclickTabName = this.ListTab.SelectedTab.Text;
+            }
+
+            this.RemoveSpecifiedTab(this.rclickTabName, true);
+            this.SaveConfigsTabs();
+        }
         
         #endregion done
 
@@ -1124,21 +1135,15 @@ namespace Hoehoe
         {
             this.DoStatusDelete();
         }
-
-        private void DeleteSelectedTab(bool fromMenuBar)
-        {
-            if (string.IsNullOrEmpty(this.rclickTabName) || fromMenuBar)
-            {
-                this.rclickTabName = this.ListTab.SelectedTab.Text;
-            }
-
-            this.RemoveSpecifiedTab(this.rclickTabName, true);
-            this.SaveConfigsTabs();
-        }
-
+        
         private void DeleteTabMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteSelectedTab(fromMenuBar: object.ReferenceEquals(sender, this.DeleteTbMenuItem));
+            DeleteSelectedTab(fromMenuBar: false);
+        }
+
+        private void DeleteTbMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteSelectedTab(fromMenuBar: true);
         }
 
         private void DisplayItemImage_Downloaded(object sender, EventArgs e)

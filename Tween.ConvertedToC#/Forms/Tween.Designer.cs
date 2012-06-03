@@ -1723,7 +1723,7 @@ namespace Hoehoe
             // 
             this.DeleteTbMenuItem.Name = "DeleteTbMenuItem";
             resources.ApplyResources(this.DeleteTbMenuItem, "DeleteTbMenuItem");
-            this.DeleteTbMenuItem.Click += new System.EventHandler(this.DeleteTabMenuItem_Click);
+            this.DeleteTbMenuItem.Click += new System.EventHandler(this.DeleteTbMenuItem_Click);
             // 
             // MenuItemCommand
             // 
