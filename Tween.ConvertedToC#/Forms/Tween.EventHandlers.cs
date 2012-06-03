@@ -1401,6 +1401,12 @@ namespace Hoehoe
             lst.Focus();
         }
 
+        private void ChangeListLockSetting(bool locked)
+        {
+            this.cfgCommon.ListLock = this.LockListFileMenuItem.Checked = this.ListLockMenuItem.Checked = locked;
+            this.SetModifySettingCommon(true);
+        }
+
         #endregion done
 
         #region event handler
@@ -1761,18 +1767,12 @@ namespace Hoehoe
             TrySearchAndFocusUnreadTweet();
         }
 
-        #endregion
-
-        private void ChangeListLockSetting(bool locked)
-        {
-            this.cfgCommon.ListLock = this.LockListFileMenuItem.Checked = this.ListLockMenuItem.Checked = locked;
-            this.SetModifySettingCommon(true);
-        }
-
         private void ListLockMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
             ChangeListLockSetting(((ToolStripMenuItem)sender).Checked);
         }
+
+        #endregion
 
         private void ListManageToolStripMenuItem_Click(object sender, EventArgs e)
         {
