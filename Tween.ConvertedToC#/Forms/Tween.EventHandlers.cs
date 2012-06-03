@@ -1407,6 +1407,37 @@ namespace Hoehoe
             this.SetModifySettingCommon(true);
         }
 
+        private void ShowListSelectFormForCurrentTweetUser()
+        {
+            if (this.curPost != null)
+            {
+                ShowListSelectForm(this.curPost.ScreenName);
+            }
+        }
+
+        private void ShowListSelectForm(string user)
+        {
+            if (string.IsNullOrEmpty(user))
+            {
+                return;
+            }
+
+            if (this.statuses.SubscribableLists.Count == 0)
+            {
+                string res = this.tw.GetListsApi();
+                if (!string.IsNullOrEmpty(res))
+                {
+                    MessageBox.Show("Failed to get lists. (" + res + ")");
+                    return;
+                }
+            }
+
+            using (MyLists listSelectForm = new MyLists(user, this.tw))
+            {
+                listSelectForm.ShowDialog(this);
+            }
+        }
+     
         #endregion done
 
         #region event handler
@@ -1777,8 +1808,6 @@ namespace Hoehoe
             ShowListManageBox();
         }
 
-        #endregion
-
         private void ListManageUserContextToolStripMenuItem3_Click(object sender, EventArgs e)
         {
             ShowListSelectFormForCurrentTweetUser();
@@ -1799,36 +1828,7 @@ namespace Hoehoe
             ShowListSelectForm(this.GetUserId());
         }
 
-        private void ShowListSelectFormForCurrentTweetUser()
-        {
-            if (this.curPost != null)
-            {
-                ShowListSelectForm(this.curPost.ScreenName);
-            }
-        }
-
-        private void ShowListSelectForm(string user)
-        {
-            if (string.IsNullOrEmpty(user))
-            {
-                return;
-            }
-
-            if (this.statuses.SubscribableLists.Count == 0)
-            {
-                string res = this.tw.GetListsApi();
-                if (!string.IsNullOrEmpty(res))
-                {
-                    MessageBox.Show("Failed to get lists. (" + res + ")");
-                    return;
-                }
-            }
-
-            using (MyLists listSelectForm = new MyLists(user, this.tw))
-            {
-                listSelectForm.ShowDialog(this);
-            }
-        }
+        #endregion
 
         private void ListTab_Deselected(object sender, TabControlEventArgs e)
         {
