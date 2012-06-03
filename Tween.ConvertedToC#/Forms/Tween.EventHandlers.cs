@@ -1779,28 +1779,42 @@ namespace Hoehoe
 
         #endregion
 
+        private void ListManageUserContextToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            ShowListSelectFormForCurrentTweetUser();
+        }
+
+        private void ListManageUserContextToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            ShowListSelectFormForCurrentTweetUser();
+        }
+
+        private void ListManageMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowListSelectFormForCurrentTweetUser();
+        }
+
         private void ListManageUserContextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-            string user = null;
-            if (object.ReferenceEquals(menuItem.Owner, this.ContextMenuPostBrowser))
+            ShowListSelectForm(this.GetUserId());
+        }
+
+        private void ShowListSelectFormForCurrentTweetUser()
+        {
+            if (this.curPost != null)
             {
-                user = this.GetUserId();
-                if (user == null)
-                {
-                    return;
-                }
+                ShowListSelectForm(this.curPost.ScreenName);
             }
-            else if (this.curPost != null)
-            {
-                user = this.curPost.ScreenName;
-            }
-            else
+        }
+
+        private void ShowListSelectForm(string user)
+        {
+            if (string.IsNullOrEmpty(user))
             {
                 return;
             }
 
-            if (TabInformations.GetInstance().SubscribableLists.Count == 0)
+            if (this.statuses.SubscribableLists.Count == 0)
             {
                 string res = this.tw.GetListsApi();
                 if (!string.IsNullOrEmpty(res))
