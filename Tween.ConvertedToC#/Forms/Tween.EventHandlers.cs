@@ -1437,7 +1437,43 @@ namespace Hoehoe
                 listSelectForm.ShowDialog(this);
             }
         }
-     
+
+
+        private void SetFocusToMainMenu()
+        {
+            // フォーカスがメニューに移る (MenuStrip1.Tag フラグを立てる)
+            this.MenuStrip1.Tag = new object();
+            this.MenuStrip1.Select();
+        }
+
+        private void SetFocusFromMainMenu()
+        {
+            if (this.Tag != null)
+            {
+                // 設定された戻り先へ遷移
+                if (object.ReferenceEquals(this.Tag, this.ListTab.SelectedTab))
+                {
+                    ((Control)this.ListTab.SelectedTab.Tag).Select();
+                }
+                else
+                {
+                    ((Control)this.Tag).Select();
+                }
+            }
+            else
+            {
+                // 戻り先が指定されていない (初期状態) 場合はタブに遷移
+                if (this.ListTab.SelectedIndex > -1 && this.ListTab.SelectedTab.HasChildren)
+                {
+                    this.Tag = this.ListTab.SelectedTab.Tag;
+                    ((Control)this.Tag).Select();
+                }
+            }
+
+            // フォーカスがメニューに遷移したかどうかを表すフラグを降ろす
+            this.MenuStrip1.Tag = null;
+        }
+
         #endregion done
 
         #region event handler
@@ -1884,41 +1920,6 @@ namespace Hoehoe
         }
 
         #endregion
-
-        private void SetFocusToMainMenu()
-        {
-            // フォーカスがメニューに移る (MenuStrip1.Tag フラグを立てる)
-            this.MenuStrip1.Tag = new object();
-            this.MenuStrip1.Select();
-        }
-
-        private void SetFocusFromMainMenu()
-        {
-            if (this.Tag != null)
-            {
-                // 設定された戻り先へ遷移
-                if (object.ReferenceEquals(this.Tag, this.ListTab.SelectedTab))
-                {
-                    ((Control)this.ListTab.SelectedTab.Tag).Select();
-                }
-                else
-                {
-                    ((Control)this.Tag).Select();
-                }
-            }
-            else
-            {
-                // 戻り先が指定されていない (初期状態) 場合はタブに遷移
-                if (this.ListTab.SelectedIndex > -1 && this.ListTab.SelectedTab.HasChildren)
-                {
-                    this.Tag = this.ListTab.SelectedTab.Tag;
-                    ((Control)this.Tag).Select();
-                }
-            }
-
-            // フォーカスがメニューに遷移したかどうかを表すフラグを降ろす
-            this.MenuStrip1.Tag = null;
-        }
 
         private void TryOpenCurListSelectedUserFavorites()
         {
