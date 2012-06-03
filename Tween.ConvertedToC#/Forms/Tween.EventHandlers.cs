@@ -1853,8 +1853,6 @@ namespace Hoehoe
             SetupOperateMenu();
         }
 
-        #endregion
-
         private void MenuItemSearchNext_Click(object sender, EventArgs e)
         {
             TrySearchWordInTabToBottom();
@@ -1869,6 +1867,8 @@ namespace Hoehoe
         {
             TrySearchWordInTab();
         }
+
+        #endregion
 
         private void MenuItemTab_DropDownOpening(object sender, EventArgs e)
         {
