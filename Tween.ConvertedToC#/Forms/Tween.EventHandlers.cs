@@ -1830,169 +1830,6 @@ namespace Hoehoe
 
         #endregion
 
-        private void ListTab_Deselected(object sender, TabControlEventArgs e)
-        {
-            this.itemCache = null;
-            this.itemCacheIndex = -1;
-            this.postCache = null;
-            this.prevSelectedTab = e.TabPage;
-        }
-
-        private void ListTab_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            string txt = null;
-            try
-            {
-                txt = this.ListTab.TabPages[e.Index].Text;
-            }
-            catch (Exception)
-            {
-                return;
-            }
-
-            e.Graphics.FillRectangle(SystemBrushes.Control, e.Bounds);
-            if (e.State == DrawItemState.Selected)
-            {
-                e.DrawFocusRectangle();
-            }
-
-            Brush fore = null;
-            try
-            {
-                if (this.statuses.Tabs[txt].UnreadCount > 0)
-                {
-                    fore = Brushes.Red;
-                }
-                else
-                {
-                    fore = SystemBrushes.ControlText;
-                }
-            }
-            catch (Exception)
-            {
-                fore = SystemBrushes.ControlText;
-            }
-
-            e.Graphics.DrawString(txt, e.Font, fore, e.Bounds, this.tabStringFormat);
-        }
-
-        private void ListTab_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (this.ListTab.SelectedTab != null)
-            {
-                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
-                {
-                    Control pnl = this.ListTab.SelectedTab.Controls["panelSearch"];
-                    if (pnl.Controls["comboSearch"].Focused || pnl.Controls["comboLang"].Focused || pnl.Controls["buttonSearch"].Focused)
-                    {
-                        return;
-                    }
-                }
-
-                ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
-                if (modState == ModifierState.NotFlags)
-                {
-                    return;
-                }
-
-                if (modState != ModifierState.None)
-                {
-                    this.anchorFlag = false;
-                }
-
-                if (this.CommonKeyDown(e.KeyCode, FocusedControl.ListTab, modState))
-                {
-                    e.Handled = true;
-                    e.SuppressKeyPress = true;
-                }
-            }
-        }
-
-        private void ListTab_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Middle)
-            {
-                for (int i = 0; i < this.ListTab.TabPages.Count; i++)
-                {
-                    if (this.ListTab.GetTabRect(i).Contains(e.Location))
-                    {
-                        this.RemoveSpecifiedTab(this.ListTab.TabPages[i].Text, true);
-                        this.SaveConfigsTabs();
-                        break;
-                    }
-                }
-            }
-        }
-
-        private void ListTab_MouseMove(object sender, MouseEventArgs e)
-        {
-            // タブのD&D
-            if (!this.settingDialog.TabMouseLock && e.Button == MouseButtons.Left && this.tabDraging)
-            {
-                string tn = string.Empty;
-                Rectangle dragEnableRectangle = new Rectangle(Convert.ToInt32(this.tabMouseDownPoint.X - (SystemInformation.DragSize.Width / 2)), Convert.ToInt32(this.tabMouseDownPoint.Y - (SystemInformation.DragSize.Height / 2)), SystemInformation.DragSize.Width, SystemInformation.DragSize.Height);
-                if (!dragEnableRectangle.Contains(e.Location))
-                {
-                    // タブが多段の場合にはMouseDownの前の段階で選択されたタブの段が変わっているので、このタイミングでカーソルの位置からタブを判定出来ない。
-                    tn = this.ListTab.SelectedTab.Text;
-                }
-
-                if (string.IsNullOrEmpty(tn))
-                {
-                    return;
-                }
-
-                foreach (TabPage tb in this.ListTab.TabPages)
-                {
-                    if (tb.Text == tn)
-                    {
-                        this.ListTab.DoDragDrop(tb, DragDropEffects.All);
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                this.tabDraging = false;
-            }
-
-            Point cpos = new Point(e.X, e.Y);
-            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
-            {
-                Rectangle rect = this.ListTab.GetTabRect(i);
-                if (rect.Left <= cpos.X & cpos.X <= rect.Right & rect.Top <= cpos.Y & cpos.Y <= rect.Bottom)
-                {
-                    this.rclickTabName = this.ListTab.TabPages[i].Text;
-                    break;
-                }
-            }
-        }
-
-        private void ListTab_MouseUp(object sender, MouseEventArgs e)
-        {
-            this.tabDraging = false;
-        }
-
-        private void ListTab_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // this._curList.Refresh()
-            this.DispSelectedPost();
-            this.SetMainWindowTitle();
-            this.SetStatusLabelUrl();
-            if (this.ListTab.Focused || ((Control)this.ListTab.SelectedTab.Tag).Focused)
-            {
-                this.Tag = this.ListTab.Tag;
-            }
-
-            this.TabMenuControl(this.ListTab.SelectedTab.Text);
-            this.PushSelectPostChain();
-        }
-
-        private void ListTab_Selecting(object sender, TabControlCancelEventArgs e)
-        {
-            this.ListTabSelect(e.TabPage);
-        }
-
         private void MatomeMenuItem_Click(object sender, EventArgs e)
         {
             this.OpenUriAsync(ApplicationHelpWebPageUrl);
@@ -7184,6 +7021,173 @@ namespace Hoehoe
         }
 
         #endregion callback
+
+        #region ListTab events
+
+        private void ListTab_Deselected(object sender, TabControlEventArgs e)
+        {
+            this.itemCache = null;
+            this.itemCacheIndex = -1;
+            this.postCache = null;
+            this.prevSelectedTab = e.TabPage;
+        }
+
+        private void ListTab_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            string txt = null;
+            try
+            {
+                txt = this.ListTab.TabPages[e.Index].Text;
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            e.Graphics.FillRectangle(SystemBrushes.Control, e.Bounds);
+            if (e.State == DrawItemState.Selected)
+            {
+                e.DrawFocusRectangle();
+            }
+
+            Brush fore = null;
+            try
+            {
+                if (this.statuses.Tabs[txt].UnreadCount > 0)
+                {
+                    fore = Brushes.Red;
+                }
+                else
+                {
+                    fore = SystemBrushes.ControlText;
+                }
+            }
+            catch (Exception)
+            {
+                fore = SystemBrushes.ControlText;
+            }
+
+            e.Graphics.DrawString(txt, e.Font, fore, e.Bounds, this.tabStringFormat);
+        }
+
+        private void ListTab_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (this.ListTab.SelectedTab != null)
+            {
+                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch)
+                {
+                    Control pnl = this.ListTab.SelectedTab.Controls["panelSearch"];
+                    if (pnl.Controls["comboSearch"].Focused || pnl.Controls["comboLang"].Focused || pnl.Controls["buttonSearch"].Focused)
+                    {
+                        return;
+                    }
+                }
+
+                ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
+                if (modState == ModifierState.NotFlags)
+                {
+                    return;
+                }
+
+                if (modState != ModifierState.None)
+                {
+                    this.anchorFlag = false;
+                }
+
+                if (this.CommonKeyDown(e.KeyCode, FocusedControl.ListTab, modState))
+                {
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+            }
+        }
+
+        private void ListTab_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                for (int i = 0; i < this.ListTab.TabPages.Count; i++)
+                {
+                    if (this.ListTab.GetTabRect(i).Contains(e.Location))
+                    {
+                        this.RemoveSpecifiedTab(this.ListTab.TabPages[i].Text, true);
+                        this.SaveConfigsTabs();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void ListTab_MouseMove(object sender, MouseEventArgs e)
+        {
+            // タブのD&D
+            if (!this.settingDialog.TabMouseLock && e.Button == MouseButtons.Left && this.tabDraging)
+            {
+                string tn = string.Empty;
+                Rectangle dragEnableRectangle = new Rectangle(Convert.ToInt32(this.tabMouseDownPoint.X - (SystemInformation.DragSize.Width / 2)), Convert.ToInt32(this.tabMouseDownPoint.Y - (SystemInformation.DragSize.Height / 2)), SystemInformation.DragSize.Width, SystemInformation.DragSize.Height);
+                if (!dragEnableRectangle.Contains(e.Location))
+                {
+                    // タブが多段の場合にはMouseDownの前の段階で選択されたタブの段が変わっているので、このタイミングでカーソルの位置からタブを判定出来ない。
+                    tn = this.ListTab.SelectedTab.Text;
+                }
+
+                if (string.IsNullOrEmpty(tn))
+                {
+                    return;
+                }
+
+                foreach (TabPage tb in this.ListTab.TabPages)
+                {
+                    if (tb.Text == tn)
+                    {
+                        this.ListTab.DoDragDrop(tb, DragDropEffects.All);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                this.tabDraging = false;
+            }
+
+            Point cpos = new Point(e.X, e.Y);
+            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
+            {
+                Rectangle rect = this.ListTab.GetTabRect(i);
+                if (rect.Left <= cpos.X & cpos.X <= rect.Right & rect.Top <= cpos.Y & cpos.Y <= rect.Bottom)
+                {
+                    this.rclickTabName = this.ListTab.TabPages[i].Text;
+                    break;
+                }
+            }
+        }
+
+        private void ListTab_MouseUp(object sender, MouseEventArgs e)
+        {
+            this.tabDraging = false;
+        }
+
+        private void ListTab_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // this._curList.Refresh()
+            this.DispSelectedPost();
+            this.SetMainWindowTitle();
+            this.SetStatusLabelUrl();
+            if (this.ListTab.Focused || ((Control)this.ListTab.SelectedTab.Tag).Focused)
+            {
+                this.Tag = this.ListTab.Tag;
+            }
+
+            this.TabMenuControl(this.ListTab.SelectedTab.Text);
+            this.PushSelectPostChain();
+        }
+
+        private void ListTab_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            this.ListTabSelect(e.TabPage);
+        }
+
+        #endregion
 
         #endregion event handler
     }
