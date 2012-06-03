@@ -935,6 +935,32 @@ namespace Hoehoe
 
         #endregion done
 
+        private void TryFollowUserOfCurrentTweet()
+        {
+            this.FollowCommand(this.curPost != null ? this.curPost.ScreenName : string.Empty);
+        }
+
+        private void TryFollowUserFromCurrentTweet()
+        {
+            string name = this.GetUserId();
+            if (name != null)
+            {
+                this.FollowCommand(name);
+            }
+        }
+
+        private void TryFollowUserFromCurrentTab()
+        {
+            if (this.NameLabel.Tag != null)
+            {
+                string id = (string)this.NameLabel.Tag;
+                if (id != this.tw.Username)
+                {
+                    this.FollowCommand(id);
+                }
+            }
+        }
+
         private void AddNewTab()
         {
             string tabName = null;
@@ -1220,33 +1246,12 @@ namespace Hoehoe
 
         private void FollowCommandMenuItem_Click(object sender, EventArgs e)
         {
-            this.FollowCommand(this.curPost != null ? this.curPost.ScreenName : string.Empty);
-        }
-
-        private void TryFollowUserFromCurrentTweet()
-        {
-            string name = this.GetUserId();
-            if (name != null)
-            {
-                this.FollowCommand(name);
-            }
+            TryFollowUserOfCurrentTweet();
         }
 
         private void FollowContextMenuItem_Click(object sender, EventArgs e)
         {
             TryFollowUserFromCurrentTweet();
-        }
-
-        private void TryFollowUserFromCurrentTab()
-        {
-            if (this.NameLabel.Tag != null)
-            {
-                string id = (string)this.NameLabel.Tag;
-                if (id != this.tw.Username)
-                {
-                    this.FollowCommand(id);
-                }
-            }
         }
 
         private void FollowToolStripMenuItem_Click(object sender, EventArgs e)
