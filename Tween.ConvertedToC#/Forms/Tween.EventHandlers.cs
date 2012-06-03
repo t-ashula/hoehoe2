@@ -1526,12 +1526,12 @@ namespace Hoehoe
             this.AddIdFilteringRuleFromCurrentTweet();
         }
 
-        #endregion
-
         private void IdeographicSpaceToSpaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.SetModifySettingCommon(true);
         }
+
+        #endregion
 
         private void CancelPostImageSelecting()
         {
