@@ -3108,6 +3108,13 @@ namespace Hoehoe
             TryCopySourceName();
         }
 
+        private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                TryOpenSourceLink();
+            }
+        }
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3202,15 +3209,7 @@ namespace Hoehoe
                 e.SuppressKeyPress = true;
             }
         }
-
-        private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                TryOpenSourceLink();
-            }
-        }
-
+        
         private void ChangeStatusLabelUrlText(string link, bool updateEmpty = false)
         {
             if (string.IsNullOrEmpty(link))
