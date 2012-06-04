@@ -3156,6 +3156,83 @@ namespace Hoehoe
             this.TrySearchAndFocusUnreadTweet();
         }
 
+        private void SplitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
+            {
+                this.mySpDis = this.SplitContainer1.SplitterDistance;
+                if (this.StatusText.Multiline)
+                {
+                    this.mySpDis2 = this.StatusText.Height;
+                }
+
+                this.modifySettingLocal = true;
+            }
+        }
+
+        private void SplitContainer2_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ChangeStatusTextMultilineState(this.MultiLineMenuItem.Checked); // this.MultiLineMenuItem.PerformClick();
+        }
+
+        private void SplitContainer2_Panel2_Resize(object sender, EventArgs e)
+        {
+            this.StatusText.Multiline = this.SplitContainer2.Panel2.Height > this.SplitContainer2.Panel2MinSize + 2;
+            this.MultiLineMenuItem.Checked = this.StatusText.Multiline;
+            this.modifySettingLocal = true;
+        }
+
+        private void SplitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            if (this.StatusText.Multiline)
+            {
+                this.mySpDis2 = this.StatusText.Height;
+            }
+
+            this.modifySettingLocal = true;
+        }
+
+        private void SplitContainer3_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
+            {
+                this.mySpDis3 = this.SplitContainer3.SplitterDistance;
+                this.modifySettingLocal = true;
+            }
+        }
+
+        private void SplitContainer4_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                return;
+            }
+
+            if (this.SplitContainer4.Panel2Collapsed)
+            {
+                return;
+            }
+
+            if (this.SplitContainer4.Height < this.SplitContainer4.SplitterWidth + this.SplitContainer4.Panel2MinSize + this.SplitContainer4.SplitterDistance && this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - this.SplitContainer4.Panel2MinSize > 0)
+            {
+                this.SplitContainer4.SplitterDistance = this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - this.SplitContainer4.Panel2MinSize;
+            }
+
+            if (this.SplitContainer4.Panel2.Height > 90 && this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - 90 > 0)
+            {
+                this.SplitContainer4.SplitterDistance = this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - 90;
+            }
+        }
+
+        private void SplitContainer4_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
+            {
+                this.myAdSpDis = this.SplitContainer4.SplitterDistance;
+                this.modifySettingLocal = true;
+            }
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3248,83 +3325,6 @@ namespace Hoehoe
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void SplitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
-            {
-                this.mySpDis = this.SplitContainer1.SplitterDistance;
-                if (this.StatusText.Multiline)
-                {
-                    this.mySpDis2 = this.StatusText.Height;
-                }
-
-                this.modifySettingLocal = true;
-            }
-        }
-
-        private void SplitContainer2_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            this.MultiLineMenuItem.PerformClick();
-        }
-
-        private void SplitContainer2_Panel2_Resize(object sender, EventArgs e)
-        {
-            this.StatusText.Multiline = this.SplitContainer2.Panel2.Height > this.SplitContainer2.Panel2MinSize + 2;
-            this.MultiLineMenuItem.Checked = this.StatusText.Multiline;
-            this.modifySettingLocal = true;
-        }
-
-        private void SplitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            if (this.StatusText.Multiline)
-            {
-                this.mySpDis2 = this.StatusText.Height;
-            }
-
-            this.modifySettingLocal = true;
-        }
-
-        private void SplitContainer3_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
-            {
-                this.mySpDis3 = this.SplitContainer3.SplitterDistance;
-                this.modifySettingLocal = true;
-            }
-        }
-
-        private void SplitContainer4_Resize(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                return;
-            }
-
-            if (this.SplitContainer4.Panel2Collapsed)
-            {
-                return;
-            }
-
-            if (this.SplitContainer4.Height < this.SplitContainer4.SplitterWidth + this.SplitContainer4.Panel2MinSize + this.SplitContainer4.SplitterDistance && this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - this.SplitContainer4.Panel2MinSize > 0)
-            {
-                this.SplitContainer4.SplitterDistance = this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - this.SplitContainer4.Panel2MinSize;
-            }
-
-            if (this.SplitContainer4.Panel2.Height > 90 && this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - 90 > 0)
-            {
-                this.SplitContainer4.SplitterDistance = this.SplitContainer4.Height - this.SplitContainer4.SplitterWidth - 90;
-            }
-        }
-
-        private void SplitContainer4_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
-            {
-                this.myAdSpDis = this.SplitContainer4.SplitterDistance;
-                this.modifySettingLocal = true;
             }
         }
 
