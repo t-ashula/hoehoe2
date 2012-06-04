@@ -2639,8 +2639,6 @@ namespace Hoehoe
             this.DoReTweetUnofficial();
         }
 
-        #endregion
-
         private void ReadedStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeSelectetdTweetReadStateToRead();
@@ -2656,6 +2654,8 @@ namespace Hoehoe
         {
             this.DoRefresh();
         }
+
+        #endregion
 
         private void TryUnfollowCurrentTweetUser()
         {
