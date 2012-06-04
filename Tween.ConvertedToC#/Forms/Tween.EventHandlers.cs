@@ -3457,7 +3457,88 @@ namespace Hoehoe
         {
             RenameSelectedTabName();
         }
-        
+
+        private void Tabs_DragDrop(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(typeof(TabPage)))
+            {
+                return;
+            }
+
+            this.tabDraging = false;
+            string tn = string.Empty;
+            bool bef = false;
+            Point spos = this.ListTab.PointToClient(new Point(e.X, e.Y));
+            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
+            {
+                Rectangle rect = this.ListTab.GetTabRect(i);
+                if (rect.Contains(spos))
+                {
+                    tn = this.ListTab.TabPages[i].Text;
+                    bef = spos.X <= (rect.Left + rect.Right) / 2;
+                    break;
+                }
+            }
+
+            // タブのないところにドロップ->最後尾へ移動
+            if (string.IsNullOrEmpty(tn))
+            {
+                tn = this.ListTab.TabPages[this.ListTab.TabPages.Count - 1].Text;
+                bef = false;
+            }
+
+            TabPage tp = (TabPage)e.Data.GetData(typeof(TabPage));
+            if (tp.Text == tn)
+            {
+                return;
+            }
+
+            this.ReOrderTab(tp.Text, tn, bef);
+        }
+
+        private void Tabs_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(TabPage)))
+            {
+                e.Effect = DragDropEffects.Move;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void Tabs_MouseDownExtracted(MouseEventArgs e)
+        {
+            if (this.settingDialog.TabMouseLock)
+            {
+                return;
+            }
+
+            if (e.Button != MouseButtons.Left)
+            {
+                this.tabDraging = false;
+            }
+            else
+            {
+                Point cpos = e.Location;
+                for (int i = 0; i < this.ListTab.TabPages.Count; i++)
+                {
+                    if (this.ListTab.GetTabRect(i).Contains(cpos))
+                    {
+                        this.tabDraging = true;
+                        this.tabMouseDownPoint = cpos;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void Tabs_MouseDown(object sender, MouseEventArgs e)
+        {
+            Tabs_MouseDownExtracted(e);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3551,88 +3632,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void Tabs_DragDrop(object sender, DragEventArgs e)
-        {
-            if (!e.Data.GetDataPresent(typeof(TabPage)))
-            {
-                return;
-            }
-
-            this.tabDraging = false;
-            string tn = string.Empty;
-            bool bef = false;
-            Point cpos = new Point(e.X, e.Y);
-            Point spos = this.ListTab.PointToClient(cpos);
-            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
-            {
-                Rectangle rect = this.ListTab.GetTabRect(i);
-                if (rect.Contains(spos))
-                {
-                    tn = this.ListTab.TabPages[i].Text;
-                    bef = spos.X <= (rect.Left + rect.Right) / 2;
-                    break;
-                }
-            }
-
-            // タブのないところにドロップ->最後尾へ移動
-            if (string.IsNullOrEmpty(tn))
-            {
-                tn = this.ListTab.TabPages[this.ListTab.TabPages.Count - 1].Text;
-                bef = false;
-            }
-
-            TabPage tp = (TabPage)e.Data.GetData(typeof(TabPage));
-            if (tp.Text == tn)
-            {
-                return;
-            }
-
-            this.ReOrderTab(tp.Text, tn, bef);
-        }
-
-        private void Tabs_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(typeof(TabPage)))
-            {
-                e.Effect = DragDropEffects.Move;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
-        }
-
-        private void Tabs_MouseDownExtracted(MouseEventArgs e)
-        {
-            if (this.settingDialog.TabMouseLock)
-            {
-                return;
-            }
-
-            if (e.Button != MouseButtons.Left)
-            {
-                this.tabDraging = false;
-            }
-            else
-            {
-                Point cpos = e.Location;
-                for (int i = 0; i < this.ListTab.TabPages.Count; i++)
-                {
-                    if (this.ListTab.GetTabRect(i).Contains(cpos))
-                    {
-                        this.tabDraging = true;
-                        this.tabMouseDownPoint = cpos;
-                        break;
-                    }
-                }
-            }
-        }
-
-        private void Tabs_MouseDown(object sender, MouseEventArgs e)
-        {
-            Tabs_MouseDownExtracted(e);
         }
 
         private void TimerInterval_Changed(object sender, IntervalChangedEventArgs e)
