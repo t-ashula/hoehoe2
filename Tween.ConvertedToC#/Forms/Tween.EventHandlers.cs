@@ -2238,6 +2238,19 @@ namespace Hoehoe
             }
         }
 
+        private void AddTimelineTabForCurrentTweetUser()
+        {
+            if (this.NameLabel.Tag != null)
+            {
+                this.AddNewTabForUserTimeline((string)this.NameLabel.Tag);
+            }
+        }
+
+        private void AddTimelineTabForUserInCurrentTweet()
+        {
+            this.AddNewTabForUserTimeline(this.GetUserId());
+        }
+
         #endregion done
 
         #region event handler
@@ -2877,6 +2890,16 @@ namespace Hoehoe
             this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem2Url);
         }
 
+        private void SearchPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddTimelineTabForCurrentTweetUser();
+        }
+
+        private void SearchPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddTimelineTabForUserInCurrentTweet();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -2970,29 +2993,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void AddTimelineTabForCurrentTweetUser()
-        {
-            if (this.NameLabel.Tag != null)
-            {
-                this.AddNewTabForUserTimeline((string)this.NameLabel.Tag);
-            }
-        }
-
-        private void SearchPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AddTimelineTabForCurrentTweetUser();
-        }
-
-        private void AddTimelineTabForUserInCurrentTweet()
-        {
-            this.AddNewTabForUserTimeline(this.GetUserId());
-        }
-
-        private void SearchPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AddTimelineTabForUserInCurrentTweet();
         }
 
         private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
