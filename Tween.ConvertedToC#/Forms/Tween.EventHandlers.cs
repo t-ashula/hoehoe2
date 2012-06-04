@@ -2688,8 +2688,6 @@ namespace Hoehoe
             this.TryUnfollowCurrentIconUser();
         }
 
-        #endregion
-
         private void RepliedStatusOpenMenuItem_Click(object sender, EventArgs e)
         {
             this.DoRepliedStatusOpen();
@@ -2709,6 +2707,8 @@ namespace Hoehoe
         {
             ShowCurrentTweetRtCountBox();
         }
+
+        #endregion
 
         private void TrySaveCurrentTweetUserIcon()
         {
