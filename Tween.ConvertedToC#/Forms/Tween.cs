@@ -520,6 +520,11 @@ namespace Hoehoe
 
         public void AddNewTabForUserTimeline(string user)
         {
+            if (string.IsNullOrEmpty(user))
+            {
+                return;
+            }
+
             // 同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
             foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.UserTimeline))
             {

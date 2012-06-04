@@ -2972,32 +2972,27 @@ namespace Hoehoe
             }
         }
 
-        private void TryAddTimelineTabForCurrentTweetUser()
+        private void AddTimelineTabForCurrentTweetUser()
         {
             if (this.NameLabel.Tag != null)
             {
-                string id = (string)this.NameLabel.Tag;
-                this.AddNewTabForUserTimeline(id);
+                this.AddNewTabForUserTimeline((string)this.NameLabel.Tag);
             }
         }
 
         private void SearchPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TryAddTimelineTabForCurrentTweetUser();
+            AddTimelineTabForCurrentTweetUser();
         }
 
-        private void TryAddTimelineTabForUserInCurrentTweet()
+        private void AddTimelineTabForUserInCurrentTweet()
         {
-            string name = this.GetUserId();
-            if (name != null)
-            {
-                this.AddNewTabForUserTimeline(name);
-            }
+            this.AddNewTabForUserTimeline(this.GetUserId());
         }
 
         private void SearchPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TryAddTimelineTabForUserInCurrentTweet();
+            AddTimelineTabForUserInCurrentTweet();
         }
 
         private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
