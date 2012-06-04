@@ -1722,7 +1722,6 @@ namespace Hoehoe
             }
         }
 
-
         private void GetPostStatusHeaderFooter(bool isRemoveFooter, out string header, out string footer)
         {
             footer = string.Empty;
@@ -2144,6 +2143,55 @@ namespace Hoehoe
             }
         }
 
+
+        private void TrySaveLog()
+        {
+            DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine),
+                Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (rslt == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            this.SaveFileDialog1.FileName = string.Format("HoehoePosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
+            this.SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
+            this.SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
+            this.SaveFileDialog1.FilterIndex = 0;
+            this.SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
+            this.SaveFileDialog1.RestoreDirectory = true;
+
+            if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (!this.SaveFileDialog1.ValidateNames)
+                {
+                    return;
+                }
+
+                var idxs = rslt == DialogResult.Yes ?
+                    Enumerable.Range(0, this.curList.VirtualListSize) :
+                    this.curList.SelectedIndices.Cast<int>();
+                var lines = idxs
+                    .Select(idx => this.statuses.Item(this.curTab.Text, idx))
+                    .Select(post => string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}",
+                        post.Nickname,
+                        post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""),
+                        post.CreatedAt,
+                        post.ScreenName,
+                        post.StatusId,
+                        post.ImageUrl,
+                        post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""),
+                        post.IsProtect ? "Protect" : string.Empty));
+                using (StreamWriter sw = new StreamWriter(this.SaveFileDialog1.FileName, false, Encoding.UTF8))
+                {
+                    foreach (var line in lines)
+                    {
+                        sw.WriteLine(line);
+                    }
+                }
+            }
+
+            this.TopMost = this.settingDialog.AlwaysTop;
+        }
         #endregion done
 
         #region event handler
@@ -2748,61 +2796,12 @@ namespace Hoehoe
             TrySaveCurrentTweetUserIcon();
         }
 
-        #endregion
-
-        private void TrySaveLog()
-        {
-            DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine),
-                Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (rslt == DialogResult.Cancel)
-            {
-                return;
-            }
-
-            this.SaveFileDialog1.FileName = string.Format("HoehoePosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
-            this.SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
-            this.SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
-            this.SaveFileDialog1.FilterIndex = 0;
-            this.SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
-            this.SaveFileDialog1.RestoreDirectory = true;
-
-            if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (!this.SaveFileDialog1.ValidateNames)
-                {
-                    return;
-                }
-
-                var idxs = rslt == DialogResult.Yes ?
-                    Enumerable.Range(0, this.curList.VirtualListSize) :
-                    this.curList.SelectedIndices.Cast<int>();
-                var lines = idxs
-                    .Select(idx => this.statuses.Item(this.curTab.Text, idx))
-                    .Select(post => string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}",
-                        post.Nickname,
-                        post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""),
-                        post.CreatedAt,
-                        post.ScreenName,
-                        post.StatusId,
-                        post.ImageUrl,
-                        post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""),
-                        post.IsProtect ? "Protect" : string.Empty));
-                using (StreamWriter sw = new StreamWriter(this.SaveFileDialog1.FileName, false, Encoding.UTF8))
-                {
-                    foreach (var line in lines)
-                    {
-                        sw.WriteLine(line);
-                    }
-                }
-            }
-
-            this.TopMost = this.settingDialog.AlwaysTop;
-        }
-
         private void SaveLogMenuItem_Click(object sender, EventArgs e)
         {
             TrySaveLog();
         }
+
+        #endregion
 
         private void SaveCurrentTweetUserOriginalSizeIcon()
         {
