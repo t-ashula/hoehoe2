@@ -2265,6 +2265,11 @@ namespace Hoehoe
             }
         }
 
+        private void TryCopySelectionInPostBrowser()
+        {
+            CopyToClipboard(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
+        }
+
         #endregion done
 
         #region event handler
@@ -2940,6 +2945,12 @@ namespace Hoehoe
             this.PostBrowser.Document.ExecCommand("SelectAll", false, null);
         }
 
+        private void SelectionCopyContextMenuItem_Click(object sender, EventArgs e)
+        {
+            // 発言詳細で「選択文字列をコピー」
+            TryCopySelectionInPostBrowser();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3033,17 +3044,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TryCopySelectionInPostBrowser()
-        {
-            CopyToClipboard(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
-        }
-
-        private void SelectionCopyContextMenuItem_Click(object sender, EventArgs e)
-        {
-            // 発言詳細で「選択文字列をコピー」
-            TryCopySelectionInPostBrowser();
         }
 
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
