@@ -2367,6 +2367,21 @@ namespace Hoehoe
             }
         }
 
+        private void ChangeStatusLabelUrlText(string link, bool updateEmpty = false)
+        {
+            if (string.IsNullOrEmpty(link))
+            {
+                if (updateEmpty)
+                {
+                    this.StatusLabelUrl.Text = string.Empty;
+                }
+            }
+            else
+            {
+                this.StatusLabelUrl.Text = link;
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -3210,21 +3225,6 @@ namespace Hoehoe
             }
         }
         
-        private void ChangeStatusLabelUrlText(string link, bool updateEmpty = false)
-        {
-            if (string.IsNullOrEmpty(link))
-            {
-                if (updateEmpty)
-                {
-                    this.StatusLabelUrl.Text = string.Empty;
-                }
-            }
-            else
-            {
-                this.StatusLabelUrl.Text = link;
-            }
-        }
-
         private void SourceLinkLabel_MouseEnter(object sender, EventArgs e)
         {
             ChangeStatusLabelUrlText((string)this.SourceLinkLabel.Tag);
