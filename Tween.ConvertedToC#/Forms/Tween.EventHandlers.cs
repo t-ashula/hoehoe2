@@ -2396,6 +2396,13 @@ namespace Hoehoe
             }
         }
 
+        private void StatusText_EnterExtracted()
+        {
+            /// フォーカスの戻り先を StatusText に設定
+            this.Tag = this.StatusText;
+            this.StatusText.BackColor = this.InputBackColor;
+        }
+
         #endregion done
 
         #region event handler
@@ -3345,13 +3352,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void StatusText_EnterExtracted()
-        {
-            /// フォーカスの戻り先を StatusText に設定
-            this.Tag = this.StatusText;
-            this.StatusText.BackColor = this.InputBackColor;
         }
 
         private void StatusText_Enter(object sender, EventArgs e)
