@@ -2247,9 +2247,111 @@ namespace Hoehoe
 
         #endregion
 
+        private void GetPostStatusHeaderFooter(bool isRemoveFooter, out string header, out string footer)
+        {
+            footer = string.Empty;
+            header = string.Empty;
+            if (this.StatusText.Text.StartsWith("D ") || this.StatusText.Text.StartsWith("d "))
+            {
+                // DM時は何もつけない
+                footer = string.Empty;
+                return;
+            }
+
+            // ハッシュタグ
+            string hash = string.Empty;
+            if (this.HashMgr.IsNotAddToAtReply)
+            {
+                if (this.replyToId == 0 && string.IsNullOrEmpty(this.replyToName))
+                {
+                    hash = this.HashMgr.UseHash;
+                }
+            }
+            else
+            {
+                hash = this.HashMgr.UseHash;
+            }
+
+            if (!string.IsNullOrEmpty(hash))
+            {
+                if (this.HashMgr.IsHead)
+                {
+                    header = hash + " ";
+                }
+                else
+                {
+                    footer = " " + hash;
+                }
+            }
+
+
+            if (!isRemoveFooter)
+            {
+                if (this.settingDialog.UseRecommendStatus)
+                {
+                    // 推奨ステータスを使用する
+                    footer += this.settingDialog.RecommendStatusText;
+                }
+                else
+                {
+                    // テキストボックスに入力されている文字列を使用する
+                    footer += " " + this.settingDialog.Status.Trim();
+                }
+            }
+        }
+
+        private bool GetPostImageInfo(out string imgService, out string imgPath)
+        {
+            imgService = imgPath = string.Empty;
+            if (!this.ImageSelectionPanel.Visible)
+            {
+                return true;
+            }
+
+            // 画像投稿
+            if (object.ReferenceEquals(this.ImageSelectedPicture.Image, this.ImageSelectedPicture.InitialImage) 
+                || this.ImageServiceCombo.SelectedIndex < 0
+                || string.IsNullOrEmpty(this.ImagefilePathText.Text))
+            {
+                MessageBox.Show(Hoehoe.Properties.Resources.PostPictureWarn1, Hoehoe.Properties.Resources.PostPictureWarn2);
+                return false;
+            }
+            
+            var rslt = MessageBox.Show(Hoehoe.Properties.Resources.PostPictureConfirm1, Hoehoe.Properties.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+            if (rslt == DialogResult.Cancel)
+            {
+                this.TimelinePanel.Visible = true;
+                this.TimelinePanel.Enabled = true;
+                this.ImageSelectionPanel.Visible = false;
+                this.ImageSelectionPanel.Enabled = false;
+                if (this.curList != null)
+                {
+                    this.curList.Focus();
+                }
+                return false;
+            }
+
+            imgService = this.ImageServiceCombo.Text;
+            imgPath = this.ImagefilePathText.Text;
+            
+            this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+            this.ImagefilePathText.Text = string.Empty;
+            this.TimelinePanel.Visible = true;
+            this.TimelinePanel.Enabled = true;
+            this.ImageSelectionPanel.Visible = false;
+            this.ImageSelectionPanel.Enabled = false;
+            if (this.curList != null)
+            {
+                this.curList.Focus();
+            }
+
+            return true;
+        }
+
         private void TryPostTweet()
         {
-            if (this.StatusText.Text.Trim().Length == 0)
+            string statusTextTextTrim = this.StatusText.Text.Trim();
+            if (statusTextTextTrim.Length == 0)
             {
                 if (!this.ImageSelectionPanel.Enabled)
                 {
@@ -2258,7 +2360,7 @@ namespace Hoehoe
                 }
             }
 
-            if (this.ExistCurrentPost && this.StatusText.Text.Trim() == string.Format("RT @{0}: {1}", this.curPost.ScreenName, this.curPost.TextFromApi))
+            if (this.ExistCurrentPost && statusTextTextTrim == string.Format("RT @{0}: {1}", this.curPost.ScreenName, this.curPost.TextFromApi))
             {
                 DialogResult res = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (res)
@@ -2272,7 +2374,7 @@ namespace Hoehoe
                 }
             }
 
-            this.postHistory[this.postHistory.Count - 1] = new PostingStatus(this.StatusText.Text.Trim(), this.replyToId, this.replyToName);
+            this.postHistory[this.postHistory.Count - 1] = new PostingStatus(statusTextTextTrim, this.replyToId, this.replyToName);
 
             if (this.settingDialog.Nicoms)
             {
@@ -2281,16 +2383,16 @@ namespace Hoehoe
             }
 
             this.StatusText.SelectionStart = this.StatusText.Text.Length;
-            GetWorkerArg args = new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage };
             this.CheckReplyTo(this.StatusText.Text);
 
             // 整形によって増加する文字数を取得
             int adjustCount = 0;
-            string tmpStatus = this.StatusText.Text.Trim();
+            string tmpStatus = statusTextTextTrim;
             if (this.ToolStripMenuItemApiCommandEvasion.Checked)
             {
                 // APIコマンド回避
-                if (Regex.IsMatch(tmpStatus, "^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)", RegexOptions.IgnoreCase) && !tmpStatus.EndsWith(" ."))
+                if (Regex.IsMatch(tmpStatus, "^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)", RegexOptions.IgnoreCase)
+                    && !tmpStatus.EndsWith(" ."))
                 {
                     adjustCount += 2;
                 }
@@ -2336,157 +2438,80 @@ namespace Hoehoe
                 }
             }
 
-            string footer = string.Empty;
-            string header = string.Empty;
-            if (this.StatusText.Text.StartsWith("D ") || this.StatusText.Text.StartsWith("d "))
-            {
-                // DM時は何もつけない
-                footer = string.Empty;
-            }
-            else
-            {
-                // ハッシュタグ
-                if (this.HashMgr.IsNotAddToAtReply)
-                {
-                    if (!string.IsNullOrEmpty(this.HashMgr.UseHash) && this.replyToId == 0 && string.IsNullOrEmpty(this.replyToName))
-                    {
-                        if (this.HashMgr.IsHead)
-                        {
-                            header = this.HashMgr.UseHash + " ";
-                        }
-                        else
-                        {
-                            footer = " " + this.HashMgr.UseHash;
-                        }
-                    }
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(this.HashMgr.UseHash))
-                    {
-                        if (this.HashMgr.IsHead)
-                        {
-                            header = this.HashMgr.UseHash + " ";
-                        }
-                        else
-                        {
-                            footer = " " + this.HashMgr.UseHash;
-                        }
-                    }
-                }
-
-                if (!isRemoveFooter)
-                {
-                    if (this.settingDialog.UseRecommendStatus)
-                    {
-                        // 推奨ステータスを使用する
-                        footer += this.settingDialog.RecommendStatusText;
-                    }
-                    else
-                    {
-                        // テキストボックスに入力されている文字列を使用する
-                        footer += " " + this.settingDialog.Status.Trim();
-                    }
-                }
-            }
-
-            args.PStatus.Status = header + this.StatusText.Text.Trim() + footer;
-
+            string footer, header;
+            GetPostStatusHeaderFooter(isRemoveFooter, out header, out footer);
+            var postStatus = header + statusTextTextTrim + footer;
             if (this.ToolStripMenuItemApiCommandEvasion.Checked)
             {
                 // APIコマンド回避
-                if (Regex.IsMatch(args.PStatus.Status, "^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)", RegexOptions.IgnoreCase) && !args.PStatus.Status.EndsWith(" ."))
+                if (Regex.IsMatch(postStatus, "^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)", RegexOptions.IgnoreCase)
+                    && !postStatus.EndsWith(" ."))
                 {
-                    args.PStatus.Status += " .";
+                    postStatus += " .";
                 }
             }
 
             if (this.ToolStripMenuItemUrlMultibyteSplit.Checked)
             {
                 // URLと全角文字の切り離し
-                Match mc2 = Regex.Match(args.PStatus.Status, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+");
+                Match mc2 = Regex.Match(postStatus, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+");
                 if (mc2.Success)
                 {
-                    args.PStatus.Status = Regex.Replace(args.PStatus.Status, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+", "$& ");
+                    postStatus = Regex.Replace(postStatus, "https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#^]+", "$& ");
                 }
             }
 
             if (this.IdeographicSpaceToSpaceToolStripMenuItem.Checked)
             {
                 // 文中の全角スペースを半角スペース1個にする
-                args.PStatus.Status = args.PStatus.Status.Replace("　", " ");
+                postStatus = postStatus.Replace("　", " ");
             }
 
-            if (isCutOff && args.PStatus.Status.Length > 140)
+            if (isCutOff && postStatus.Length > 140)
             {
-                args.PStatus.Status = args.PStatus.Status.Substring(0, 140);
+                postStatus = postStatus.Substring(0, 140);
                 const string AtId = "(@|＠)[a-z0-9_/]+$";
                 const string HashTag = "(^|[^0-9A-Z&\\/\\?]+)(#|＃)([0-9A-Z_]*[A-Z_]+)$";
                 const string Url = "https?:\\/\\/[a-z0-9!\\*'\\(\\);:&=\\+\\$\\/%#\\[\\]\\-_\\.,~?]+$";
 
                 // 簡易判定
                 string pattern = string.Format("({0})|({1})|({2})", AtId, HashTag, Url);
-                Match mc = Regex.Match(args.PStatus.Status, pattern, RegexOptions.IgnoreCase);
+                Match mc = Regex.Match(postStatus, pattern, RegexOptions.IgnoreCase);
                 if (mc.Success)
                 {
                     // さらに@ID、ハッシュタグ、URLと推測される文字列をカットする
-                    args.PStatus.Status = args.PStatus.Status.Substring(0, 140 - mc.Value.Length);
+                    postStatus = postStatus.Substring(0, 140 - mc.Value.Length);
                 }
 
-                if (MessageBox.Show(args.PStatus.Status, "Post or Cancel?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                if (MessageBox.Show(postStatus, "Post or Cancel?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                 {
                     return;
                 }
             }
 
-            args.PStatus.InReplyToId = this.replyToId;
-            args.PStatus.InReplyToName = this.replyToName;
-            if (this.ImageSelectionPanel.Visible)
+            string imgService, imgPath;
+            if (!GetPostImageInfo(out imgService, out imgPath))
             {
-                // 画像投稿
-                if (!object.ReferenceEquals(this.ImageSelectedPicture.Image, this.ImageSelectedPicture.InitialImage) && this.ImageServiceCombo.SelectedIndex > -1 && !string.IsNullOrEmpty(this.ImagefilePathText.Text))
-                {
-                    if (MessageBox.Show(Hoehoe.Properties.Resources.PostPictureConfirm1, Hoehoe.Properties.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Cancel)
-                    {
-                        this.TimelinePanel.Visible = true;
-                        this.TimelinePanel.Enabled = true;
-                        this.ImageSelectionPanel.Visible = false;
-                        this.ImageSelectionPanel.Enabled = false;
-                        if (this.curList != null)
-                        {
-                            this.curList.Focus();
-                        }
-
-                        return;
-                    }
-
-                    args.PStatus.ImageService = this.ImageServiceCombo.Text;
-                    args.PStatus.ImagePath = this.ImagefilePathText.Text;
-                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                    this.ImagefilePathText.Text = string.Empty;
-                    this.TimelinePanel.Visible = true;
-                    this.TimelinePanel.Enabled = true;
-                    this.ImageSelectionPanel.Visible = false;
-                    this.ImageSelectionPanel.Enabled = false;
-                    if (this.curList != null)
-                    {
-                        this.curList.Focus();
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(Hoehoe.Properties.Resources.PostPictureWarn1, Hoehoe.Properties.Resources.PostPictureWarn2);
-                    return;
-                }
+                return;
             }
 
-            this.RunAsync(args);
+            this.RunAsync(new GetWorkerArg()
+            {
+                WorkerType = WorkerType.PostMessage,
+                PStatus = new PostingStatus()
+                {
+                    ImagePath = imgPath,
+                    ImageService = imgService,
+                    InReplyToId = this.replyToId,
+                    InReplyToName = this.replyToName,
+                    Status = postStatus
+                }
+            });
 
             // Google検索（試験実装）
-            if (this.StatusText.Text.StartsWith("Google:", StringComparison.OrdinalIgnoreCase) && this.StatusText.Text.Trim().Length > 7)
+            if (this.StatusText.Text.StartsWith("Google:", StringComparison.OrdinalIgnoreCase) && statusTextTextTrim.Length > 7)
             {
-                string tmp = string.Format(Hoehoe.Properties.Resources.SearchItem2Url, HttpUtility.UrlEncode(this.StatusText.Text.Substring(7)));
-                this.OpenUriAsync(tmp);
+                this.OpenUriAsync(string.Format(Hoehoe.Properties.Resources.SearchItem2Url, HttpUtility.UrlEncode(this.StatusText.Text.Substring(7))));
             }
 
             this.replyToId = 0;
