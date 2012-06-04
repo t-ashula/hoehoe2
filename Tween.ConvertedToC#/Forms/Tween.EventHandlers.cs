@@ -1438,7 +1438,6 @@ namespace Hoehoe
             }
         }
 
-
         private void SetFocusToMainMenu()
         {
             // フォーカスがメニューに移る (MenuStrip1.Tag フラグを立てる)
@@ -1472,6 +1471,26 @@ namespace Hoehoe
 
             // フォーカスがメニューに遷移したかどうかを表すフラグを降ろす
             this.MenuStrip1.Tag = null;
+        }
+
+        private void TryOpenCurListSelectedUserFavorites()
+        {
+            if (this.curList.SelectedIndices.Count > 0)
+            {
+                this.OpenUriAsync(string.Format("https://twitter.com/{0}/favorites", this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName));
+            }
+        }
+
+        private void TryOpenCurListSelectedUserHome()
+        {
+            if (this.curList.SelectedIndices.Count > 0)
+            {
+                this.OpenUriAsync("https://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName);
+            }
+            else if (this.curList.SelectedIndices.Count == 0)
+            {
+                this.OpenUriAsync("https://twitter.com/");
+            }
         }
 
         #endregion done
@@ -1921,29 +1940,9 @@ namespace Hoehoe
 
         #endregion
 
-        private void TryOpenCurListSelectedUserFavorites()
-        {
-            if (this.curList.SelectedIndices.Count > 0)
-            {
-                this.OpenUriAsync("https://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName + "/favorites");
-            }
-        }
-
         private void MoveToFavToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TryOpenCurListSelectedUserFavorites();
-        }
-
-        private void TryOpenCurListSelectedUserHome()
-        {
-            if (this.curList.SelectedIndices.Count > 0)
-            {
-                this.OpenUriAsync("https://twitter.com/" + this.GetCurTabPost(this.curList.SelectedIndices[0]).ScreenName);
-            }
-            else if (this.curList.SelectedIndices.Count == 0)
-            {
-                this.OpenUriAsync("https://twitter.com/");
-            }
         }
 
         private void MoveToHomeToolStripMenuItem_Click(object sender, EventArgs e)
