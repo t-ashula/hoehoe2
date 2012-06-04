@@ -3051,7 +3051,7 @@ namespace Hoehoe
             }
         }
 
-        private void SetStatusLabelApiHandler(object sender, ApiInformationChangedEventArgs e)
+        private void SetStatusLabelApiLuncher()
         {
             try
             {
@@ -3072,6 +3072,11 @@ namespace Hoehoe
             {
                 return;
             }
+        }
+
+        private void TwitterApiInfo_Changed(object sender, ApiInformationChangedEventArgs e)
+        {
+            SetStatusLabelApiLuncher();
         }
 
         private void SettingStripMenuItem_Click(object sender, EventArgs e)
@@ -4452,7 +4457,7 @@ namespace Hoehoe
             this.securityManager = new InternetSecurityManager(this.PostBrowser);
             this.thumbnail = new Thumbnail(this);
 
-            MyCommon.TwitterApiInfo.Changed += this.SetStatusLabelApiHandler;
+            MyCommon.TwitterApiInfo.Changed += this.TwitterApiInfo_Changed;
             Microsoft.Win32.SystemEvents.PowerModeChanged += this.SystemEvents_PowerModeChanged;
 
             this.VerUpMenuItem.Image = this.shield.Icon;
