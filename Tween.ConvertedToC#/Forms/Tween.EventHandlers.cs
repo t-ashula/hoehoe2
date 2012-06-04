@@ -1948,12 +1948,12 @@ namespace Hoehoe
             TryOpenCurListSelectedUserHome();
         }
 
-        #endregion
-
         private void MoveToRTHomeMenuItem_Click(object sender, EventArgs e)
         {
             this.TryOpenSelectedRtUserHome();
         }
+
+        #endregion
 
         private void ChangeStatusTextMultilineState(bool multi)
         {
