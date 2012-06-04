@@ -2872,6 +2872,11 @@ namespace Hoehoe
             ChangeSearchPanelControlsTabStop((Control)sender, false);
         }
 
+        private void SearchGoogleContextMenuItem_Click(object sender, EventArgs e)
+        {
+            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem2Url);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -2965,11 +2970,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void SearchGoogleContextMenuItem_Click(object sender, EventArgs e)
-        {
-            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem2Url);
         }
 
         private void TryAddTimelineTabForCurrentTweetUser()
