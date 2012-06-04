@@ -2900,6 +2900,21 @@ namespace Hoehoe
             AddTimelineTabForUserInCurrentTweet();
         }
 
+        private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
+        {
+            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem4Url);
+        }
+
+        private void SearchWikipediaContextMenuItem_Click(object sender, EventArgs e)
+        {
+            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem1Url);
+        }
+
+        private void SearchYatsContextMenuItem_Click(object sender, EventArgs e)
+        {
+            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem3Url);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -2993,21 +3008,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
-        {
-            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem4Url);
-        }
-
-        private void SearchWikipediaContextMenuItem_Click(object sender, EventArgs e)
-        {
-            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem1Url);
-        }
-
-        private void SearchYatsContextMenuItem_Click(object sender, EventArgs e)
-        {
-            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem3Url);
         }
 
         private void SelectAllItemInFocused()
