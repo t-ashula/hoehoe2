@@ -1493,6 +1493,18 @@ namespace Hoehoe
             }
         }
 
+        private void ChangeStatusTextMultilineState(bool multi)
+        {
+            // 発言欄複数行
+            this.StatusText.Multiline = multi;
+            this.cfgLocal.StatusMultiline = multi;
+            int baseHeight = this.SplitContainer2.Height - this.SplitContainer2.SplitterWidth;
+            baseHeight -= multi ? this.mySpDis2 : this.SplitContainer2.Panel2MinSize;
+
+            this.SplitContainer2.SplitterDistance = baseHeight < 0 ? 0 : baseHeight;
+            this.SetModifySettingLocal(true);
+        }
+
         #endregion done
 
         #region event handler
@@ -1954,18 +1966,6 @@ namespace Hoehoe
         }
 
         #endregion
-
-        private void ChangeStatusTextMultilineState(bool multi)
-        {
-            // 発言欄複数行
-            this.StatusText.Multiline = multi;
-            this.cfgLocal.StatusMultiline = multi;
-            int baseHeight = this.SplitContainer2.Height - this.SplitContainer2.SplitterWidth;
-            baseHeight -= multi ? this.mySpDis2 : this.SplitContainer2.Panel2MinSize;
-
-            this.SplitContainer2.SplitterDistance = baseHeight < 0 ? 0 : baseHeight;
-            this.SetModifySettingLocal(true);
-        }
 
         private void MultiLineMenuItem_Click(object sender, EventArgs e)
         {
