@@ -1700,6 +1700,28 @@ namespace Hoehoe
             return true;
         }
 
+        private void ChangeStatusLabelUrlTextByPostBrowserStatusText()
+        {
+            try
+            {
+                string postBrowserStatusText1 = this.PostBrowser.StatusText;
+                if (postBrowserStatusText1.StartsWith("http")
+                    || postBrowserStatusText1.StartsWith("ftp")
+                    || postBrowserStatusText1.StartsWith("data"))
+                {
+                    this.StatusLabelUrl.Text = postBrowserStatusText1.Replace("&", "&&");
+                }
+
+                if (string.IsNullOrEmpty(postBrowserStatusText1))
+                {
+                    this.SetStatusLabelUrl();
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -2203,8 +2225,6 @@ namespace Hoehoe
             e.Cancel = NavigateNextUrl(e.Url);
         }
 
-        #endregion
-
         private void PostBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
@@ -2220,27 +2240,7 @@ namespace Hoehoe
             }
         }
 
-        private void ChangeStatusLabelUrlTextByPostBrowserStatusText()
-        {
-            try
-            {
-                string postBrowserStatusText1 = this.PostBrowser.StatusText;
-                if (postBrowserStatusText1.StartsWith("http")
-                    || postBrowserStatusText1.StartsWith("ftp")
-                    || postBrowserStatusText1.StartsWith("data"))
-                {
-                    this.StatusLabelUrl.Text = postBrowserStatusText1.Replace("&", "&&");
-                }
-
-                if (string.IsNullOrEmpty(postBrowserStatusText1))
-                {
-                    this.SetStatusLabelUrl();
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
+        #endregion
 
         private void PostBrowser_StatusTextChanged(object sender, EventArgs e)
         {
