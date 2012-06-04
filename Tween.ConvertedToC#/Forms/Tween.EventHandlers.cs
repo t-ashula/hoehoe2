@@ -2444,6 +2444,34 @@ namespace Hoehoe
             }
         }
 
+        private void AddFilteringRuleFromSelectedTweet()
+        {
+            // 選択発言を元にフィルタ追加
+            foreach (int idx in this.curList.SelectedIndices)
+            {
+                // タブ選択（or追加）
+                string tabName = string.Empty;
+                if (!this.SelectTab(ref tabName))
+                {
+                    return;
+                }
+
+                this.fltDialog.SetCurrent(tabName);
+                PostClass statusesItem = this.statuses.Item(this.curTab.Text, idx);
+                string scname = statusesItem.IsRetweeted ? statusesItem.RetweetedBy : statusesItem.ScreenName;
+                this.fltDialog.AddNewFilter(scname, statusesItem.TextFromApi);
+                this.fltDialog.ShowDialog();
+                this.TopMost = this.settingDialog.AlwaysTop;
+            }
+
+            this.ApplyNewFilters();
+            this.SaveConfigsTabs();
+            if (this.ListTab.SelectedTab != null && ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices.Count > 0)
+            {
+                this.curPost = this.statuses.Item(this.ListTab.SelectedTab.Text, ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices[0]);
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -3491,34 +3519,6 @@ namespace Hoehoe
             if (e.Mode == Microsoft.Win32.PowerModes.Resume)
             {
                 this.isOsResumed = true;
-            }
-        }
-
-        private void AddFilteringRuleFromSelectedTweet()
-        {
-            // 選択発言を元にフィルタ追加
-            foreach (int idx in this.curList.SelectedIndices)
-            {
-                // タブ選択（or追加）
-                string tabName = string.Empty;
-                if (!this.SelectTab(ref tabName))
-                {
-                    return;
-                }
-
-                this.fltDialog.SetCurrent(tabName);
-                PostClass statusesItem = this.statuses.Item(this.curTab.Text, idx);
-                string scname = statusesItem.IsRetweeted ? statusesItem.RetweetedBy : statusesItem.ScreenName;
-                this.fltDialog.AddNewFilter(scname, statusesItem.TextFromApi);
-                this.fltDialog.ShowDialog();
-                this.TopMost = this.settingDialog.AlwaysTop;
-            }
-
-            this.ApplyNewFilters();
-            this.SaveConfigsTabs();
-            if (this.ListTab.SelectedTab != null && ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices.Count > 0)
-            {
-                this.curPost = this.statuses.Item(this.ListTab.SelectedTab.Text, ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices[0]);
             }
         }
 
