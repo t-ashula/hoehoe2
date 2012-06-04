@@ -1535,6 +1535,102 @@ namespace Hoehoe
             this.BringToFront();
         }
 
+        private static bool IsTwitterSearchUrl(string url)
+        {
+            return url.StartsWith("http://twitter.com/search?q=") || url.StartsWith("https://twitter.com/search?q=");
+        }
+
+        private void TryOpenUrlInCurrentTweet()
+        {
+            if (this.PostBrowser.Document.Links.Count < 1)
+            {
+                return;
+            }
+
+            this.urlDialog.ClearUrl();
+            string openUrlStr = string.Empty;
+            foreach (HtmlElement linkElm in this.PostBrowser.Document.Links)
+            {
+                try
+                {
+                    string urlStr = linkElm.GetAttribute("title");
+                    string href = MyCommon.IDNDecode(linkElm.GetAttribute("href"));
+                    if (string.IsNullOrEmpty(urlStr))
+                    {
+                        urlStr = href;
+                    }
+
+                    string linkText = linkElm.InnerText;
+                    if (!linkText.StartsWith("http") && !linkText.StartsWith("#") && !linkText.Contains("."))
+                    {
+                        linkText = "@" + linkText;
+                    }
+
+                    if (string.IsNullOrEmpty(urlStr))
+                    {
+                        continue;
+                    }
+
+                    openUrlStr = MyCommon.GetUrlEncodeMultibyteChar(urlStr);
+                    this.urlDialog.AddUrl(new OpenUrlItem(linkText, openUrlStr, href));
+                }
+                catch (ArgumentException)
+                {
+                    // 変なHTML？
+                    return;
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+            }
+
+            try
+            {
+                if (this.PostBrowser.Document.Links.Count != 1)
+                {
+                    if (this.urlDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        openUrlStr = this.urlDialog.SelectedUrl;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            this.TopMost = this.settingDialog.AlwaysTop;
+            if (string.IsNullOrEmpty(openUrlStr))
+            {
+                return;
+            }
+
+            if (IsTwitterSearchUrl(openUrlStr))
+            {
+                // ハッシュタグの場合は、タブで開く
+                string urlStr = HttpUtility.UrlDecode(openUrlStr);
+                string hash = urlStr.Substring(urlStr.IndexOf("#"));
+                this.HashSupl.AddItem(hash);
+                this.HashMgr.AddHashToHistory(hash.Trim(), false);
+                this.AddNewTabForSearch(hash);
+                return;
+            }
+
+            if (this.settingDialog.OpenUserTimeline)
+            {
+                Match m = Regex.Match(openUrlStr, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
+                if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
+                {
+                    this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
+                    return;
+                }
+            }
+            
+            openUrlStr = openUrlStr.Replace("://twitter.com/search?q=#", "://twitter.com/search?q=%23");
+            this.OpenUriAsync(openUrlStr);
+        }
+        
         #endregion done
 
         #region event handler
@@ -2009,102 +2105,6 @@ namespace Hoehoe
         }
 
         #endregion
-
-        private static bool IsTwitterSearchUrl(string url)
-        {
-            return url.StartsWith("http://twitter.com/search?q=") || url.StartsWith("https://twitter.com/search?q=");
-        }
-
-        private void TryOpenUrlInCurrentTweet()
-        {
-            if (this.PostBrowser.Document.Links.Count < 1)
-            {
-                return;
-            }
-
-            this.urlDialog.ClearUrl();
-            string openUrlStr = string.Empty;
-            foreach (HtmlElement linkElm in this.PostBrowser.Document.Links)
-            {
-                try
-                {
-                    string urlStr = linkElm.GetAttribute("title");
-                    string href = MyCommon.IDNDecode(linkElm.GetAttribute("href"));
-                    if (string.IsNullOrEmpty(urlStr))
-                    {
-                        urlStr = href;
-                    }
-
-                    string linkText = linkElm.InnerText;
-                    if (!linkText.StartsWith("http") && !linkText.StartsWith("#") && !linkText.Contains("."))
-                    {
-                        linkText = "@" + linkText;
-                    }
-
-                    if (string.IsNullOrEmpty(urlStr))
-                    {
-                        continue;
-                    }
-
-                    openUrlStr = MyCommon.GetUrlEncodeMultibyteChar(urlStr);
-                    this.urlDialog.AddUrl(new OpenUrlItem(linkText, openUrlStr, href));
-                }
-                catch (ArgumentException)
-                {
-                    // 変なHTML？
-                    return;
-                }
-                catch (Exception)
-                {
-                    return;
-                }
-            }
-
-            try
-            {
-                if (this.PostBrowser.Document.Links.Count != 1)
-                {
-                    if (this.urlDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        openUrlStr = this.urlDialog.SelectedUrl;
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                return;
-            }
-
-            this.TopMost = this.settingDialog.AlwaysTop;
-            if (string.IsNullOrEmpty(openUrlStr))
-            {
-                return;
-            }
-
-            if (IsTwitterSearchUrl(openUrlStr))
-            {
-                // ハッシュタグの場合は、タブで開く
-                string urlStr = HttpUtility.UrlDecode(openUrlStr);
-                string hash = urlStr.Substring(urlStr.IndexOf("#"));
-                this.HashSupl.AddItem(hash);
-                this.HashMgr.AddHashToHistory(hash.Trim(), false);
-                this.AddNewTabForSearch(hash);
-                return;
-            }
-
-            if (this.settingDialog.OpenUserTimeline)
-            {
-                Match m = Regex.Match(openUrlStr, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
-                if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
-                {
-                    this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
-                    return;
-                }
-            }
-            
-            openUrlStr = openUrlStr.Replace("://twitter.com/search?q=#", "://twitter.com/search?q=%23");
-            this.OpenUriAsync(openUrlStr);
-        }
 
         private void OpenURLMenuItem_Click(object sender, EventArgs e)
         {
