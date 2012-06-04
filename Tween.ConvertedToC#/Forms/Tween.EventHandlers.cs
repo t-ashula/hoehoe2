@@ -2442,6 +2442,12 @@ namespace Hoehoe
             this.StatusText.BackColor = Color.FromKnownColor(KnownColor.Window);
         }
 
+        private void ChangeStatusTextMultiline(bool isMultiLine)
+        {
+            this.StatusText.ScrollBars = isMultiLine ? ScrollBars.Vertical : ScrollBars.None;
+            this.modifySettingLocal = true;
+        }
+
         #endregion done
 
         #region event handler
@@ -3461,12 +3467,6 @@ namespace Hoehoe
         private void StatusText_Leave(object sender, EventArgs e)
         {
             StatusText_LeaveExtracted();
-        }
-
-        private void ChangeStatusTextMultiline(bool isMultiLine)
-        {
-            this.StatusText.ScrollBars = isMultiLine ? ScrollBars.Vertical : ScrollBars.None;
-            this.modifySettingLocal = true;
         }
 
         private void StatusText_MultilineChanged(object sender, EventArgs e)
