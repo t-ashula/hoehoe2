@@ -2192,6 +2192,23 @@ namespace Hoehoe
 
             this.TopMost = this.settingDialog.AlwaysTop;
         }
+
+        private void SaveCurrentTweetUserOriginalSizeIcon()
+        {
+            if (this.curPost == null)
+            {
+                return;
+            }
+
+            string name = this.curPost.ImageUrl;
+            name = Path.GetFileNameWithoutExtension(name.Substring(name.LastIndexOf('/')));
+            this.SaveFileDialog1.FileName = name.Substring(0, name.Length - 8);
+            if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                // STUB
+            }
+        }
+        
         #endregion done
 
         #region event handler
@@ -2801,28 +2818,12 @@ namespace Hoehoe
             TrySaveLog();
         }
 
-        #endregion
-
-        private void SaveCurrentTweetUserOriginalSizeIcon()
-        {
-            if (this.curPost == null)
-            {
-                return;
-            }
-
-            string name = this.curPost.ImageUrl;
-            name = Path.GetFileNameWithoutExtension(name.Substring(name.LastIndexOf('/')));
-            this.SaveFileDialog1.FileName = name.Substring(0, name.Length - 8);
-            if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                // STUB
-            }
-        }
-
         private void SaveOriginalSizeIconPictureToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveCurrentTweetUserOriginalSizeIcon();
         }
+
+        #endregion
 
         private void TryAddSearchTabForAtUserOfCurrentTweet()
         {
