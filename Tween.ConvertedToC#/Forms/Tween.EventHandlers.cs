@@ -3053,6 +3053,26 @@ namespace Hoehoe
             ShowStatusOfCurrentTweetUser();
         }
 
+        private void ShowRelatedStatusesMenuItem_Click(object sender, EventArgs e)
+        {
+            AddRelatedStatusesTab();
+        }
+
+        private void ShowUserStatusContextMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowtStatusOfCurrentLinkUser();
+        }
+
+        private void ShowUserStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowStatusOfCurrentIconUser();
+        }
+
+        private void ShowUserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ShowUserTimeline();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3146,26 +3166,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void ShowRelatedStatusesMenuItem_Click(object sender, EventArgs e)
-        {
-            AddRelatedStatusesTab();
-        }
-
-        private void ShowUserStatusContextMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowtStatusOfCurrentLinkUser();
-        }
-
-        private void ShowUserStatusToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowStatusOfCurrentIconUser();
-        }
-
-        private void ShowUserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ShowUserTimeline();
         }
 
         private void ChangeCurrentTabSoundFile(string soundfile)
