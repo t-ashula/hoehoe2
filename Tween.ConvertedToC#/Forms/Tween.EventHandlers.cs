@@ -3398,6 +3398,11 @@ namespace Hoehoe
             StatusText_TextChangedExtracted();
         }
 
+        private void StopRefreshAllMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            this.TimelineRefreshEnableChange(!this.StopRefreshAllMenuItem.Checked);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3491,11 +3496,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void StopRefreshAllMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            this.TimelineRefreshEnableChange(!this.StopRefreshAllMenuItem.Checked);
         }
 
         private void ChangeUserStreamStatus()
