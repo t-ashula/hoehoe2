@@ -3145,6 +3145,17 @@ namespace Hoehoe
         {
             this.SetStatusLabelUrl();
         }
+
+        private void SourceUrlCopyMenuItem_Click(object sender, EventArgs e)
+        {
+            TryCopySourceUrl();
+        }
+
+        private void SpaceKeyCanceler_SpaceCancel(object sender, EventArgs e)
+        {
+            this.TrySearchAndFocusUnreadTweet();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3238,16 +3249,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void SourceUrlCopyMenuItem_Click(object sender, EventArgs e)
-        {
-            TryCopySourceUrl();
-        }
-
-        private void SpaceKeyCanceler_SpaceCancel(object sender, EventArgs e)
-        {
-            this.TrySearchAndFocusUnreadTweet();
         }
 
         private void SplitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
