@@ -2659,13 +2659,7 @@ namespace Hoehoe
 
         private void TryUnfollowCurrentTweetUser()
         {
-            string id = string.Empty;
-            if (this.curPost != null)
-            {
-                id = this.curPost.ScreenName;
-            }
-
-            this.RemoveCommand(id, false);
+            this.RemoveCommand(this.curPost != null ? this.curPost.ScreenName : string.Empty, false);
         }
 
         private void RemoveCommandMenuItem_Click(object sender, EventArgs e)
@@ -2675,16 +2669,25 @@ namespace Hoehoe
 
         private void TryUnfollowUserInCurrentTweet()
         {
-            string name = this.GetUserId();
-            if (name != null)
-            {
-                this.RemoveCommand(name, false);
-            }
+            this.RemoveCommand(this.GetUserId(), false);
         }
 
         private void RemoveContextMenuItem_Click(object sender, EventArgs e)
         {
             TryUnfollowUserInCurrentTweet();
+        }
+
+        private void TryUnfollowCurrentIconUser()
+        {
+            if (this.NameLabel.Tag != null)
+            {
+                this.RemoveCommand((string)this.NameLabel.Tag, false);
+            }
+        }
+
+        private void UnFollowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryUnfollowCurrentIconUser();
         }
 
         private void RepliedStatusOpenMenuItem_Click(object sender, EventArgs e)
@@ -5479,23 +5482,6 @@ namespace Hoehoe
         private void TwurlnlToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ConvertUrl(UrlConverter.Twurl);
-        }
-
-        private void TryUnfollowCurrentIconUser()
-        {
-            if (this.NameLabel.Tag != null)
-            {
-                string id = (string)this.NameLabel.Tag;
-                if (id != this.tw.Username)
-                {
-                    this.RemoveCommand(id, false);
-                }
-            }
-        }
-
-        private void UnFollowToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.TryUnfollowCurrentIconUser();
         }
 
         private void UndoRemoveTab()

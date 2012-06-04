@@ -6870,7 +6870,11 @@ namespace Hoehoe
 
         private void RemoveCommand(string id, bool skipInput)
         {
-            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs() { Tw = this.tw, Id = id };
+            if (id == null)
+            {
+                return;
+            }
+
             if (!skipInput)
             {
                 using (InputTabName inputName = new InputTabName())
@@ -6878,30 +6882,25 @@ namespace Hoehoe
                     inputName.SetFormTitle("Unfollow");
                     inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
                     inputName.TabName = id;
-                    if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
-                    {
-                        arg.Tw = this.tw;
-                        arg.Id = inputName.TabName.Trim();
-                    }
-                    else
+                    if (inputName.ShowDialog() != DialogResult.OK)
                     {
                         return;
                     }
+                    id = inputName.TabName.Trim();
                 }
             }
 
+            if (string.IsNullOrEmpty(id) || id == this.tw.Username)
+            {
+                return;
+            }
+
+            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs() { Tw = this.tw, Id = id };
             using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.RemoveCommandText1, this.RemoveCommand_DoWork, null, arg))
             {
                 info.ShowDialog();
                 string ret = (string)info.Result;
-                if (!string.IsNullOrEmpty(ret))
-                {
-                    MessageBox.Show(Hoehoe.Properties.Resources.FRMessage2 + ret);
-                }
-                else
-                {
-                    MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
-                }
+                MessageBox.Show(!string.IsNullOrEmpty(ret) ? Hoehoe.Properties.Resources.FRMessage2 + ret : Hoehoe.Properties.Resources.FRMessage3);
             }
         }
 
