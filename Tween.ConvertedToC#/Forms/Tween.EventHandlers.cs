@@ -2403,6 +2403,34 @@ namespace Hoehoe
             this.StatusText.BackColor = this.InputBackColor;
         }
 
+        private void ShowSupplementBox(char eKeyChar)
+        {
+            if (eKeyChar == '@')
+            {
+                // @マーク
+                if (!this.settingDialog.UseAtIdSupplement)
+                {
+                    return;
+                }
+
+                int cnt = this.AtIdSupl.ItemCount;
+                this.ShowSuplDialog(this.StatusText, this.AtIdSupl);
+                if (cnt != this.AtIdSupl.ItemCount)
+                {
+                    this.modifySettingAtId = true;
+                }
+            }
+            else if (eKeyChar == '#')
+            {
+                if (!this.settingDialog.UseHashSupplement)
+                {
+                    return;
+                }
+
+                this.ShowSuplDialog(this.StatusText, this.HashSupl);
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -3378,32 +3406,11 @@ namespace Hoehoe
 
         private void StatusText_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == '@')
+            char eKeyChar = e.KeyChar;
+            if (eKeyChar == '@' || eKeyChar == '#')
             {
-                // @マーク
-                if (!this.settingDialog.UseAtIdSupplement)
-                {
-                    return;
-                }
-
-                int cnt = this.AtIdSupl.ItemCount;
-                this.ShowSuplDialog(this.StatusText, this.AtIdSupl);
-                if (cnt != this.AtIdSupl.ItemCount)
-                {
-                    this.modifySettingAtId = true;
-                }
-
                 e.Handled = true;
-            }
-            else if (e.KeyChar == '#')
-            {
-                if (!this.settingDialog.UseHashSupplement)
-                {
-                    return;
-                }
-
-                this.ShowSuplDialog(this.StatusText, this.HashSupl);
-                e.Handled = true;
+                ShowSupplementBox(eKeyChar);
             }
         }
 
