@@ -2003,6 +2003,20 @@ namespace Hoehoe
             this.urlUndoBuffer = null;
             this.UrlUndoToolStripMenuItem.Enabled = false; // Undoをできないように設定
         }
+
+        private void FocusCurrentPublicSearchTabSearchInput()
+        {
+            if (this.ListTab.SelectedTab != null)
+            {
+                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.PublicSearch)
+                {
+                    return;
+                }
+
+                this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
+            }
+        }
+        
         #endregion done
 
         #region event handler
@@ -2531,21 +2545,6 @@ namespace Hoehoe
             TryPostTweet();
         }
 
-        #endregion
-
-        private void FocusCurrentPublicSearchTabSearchInput()
-        {
-            if (this.ListTab.SelectedTab != null)
-            {
-                if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType != TabUsageType.PublicSearch)
-                {
-                    return;
-                }
-
-                this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
-            }
-        }
-
         private void PublicSearchQueryMenuItem_Click(object sender, EventArgs e)
         {
             FocusCurrentPublicSearchTabSearchInput();
@@ -2565,6 +2564,8 @@ namespace Hoehoe
         {
             this.DoReTweetUnofficial();
         }
+
+        #endregion
 
         private void ChangeSelectetdTweetReadStateToRead()
         {
