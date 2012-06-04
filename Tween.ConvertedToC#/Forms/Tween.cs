@@ -1279,7 +1279,10 @@ namespace Hoehoe
 
         public void OpenUriAsync(string uri)
         {
-            this.RunAsync(new GetWorkerArg() { WorkerType = WorkerType.OpenUri, Url = uri });
+            if (!string.IsNullOrEmpty(uri))
+            {
+                this.RunAsync(new GetWorkerArg() { WorkerType = WorkerType.OpenUri, Url = uri });
+            }
         }
 
         /// <summary>
