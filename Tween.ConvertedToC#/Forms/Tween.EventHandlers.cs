@@ -1523,6 +1523,18 @@ namespace Hoehoe
             this.SaveConfigsTabs();
         }
 
+        private void ActivateMainForm()
+        {
+            this.Visible = true;
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+
+            this.Activate();
+            this.BringToFront();
+        }
+
         #endregion done
 
         #region event handler
@@ -1998,20 +2010,6 @@ namespace Hoehoe
             ChangeNotifySetting(((ToolStripMenuItem)sender).Checked);
         }
 
-        #endregion
-
-        private void ActivateMainForm()
-        {
-            this.Visible = true;
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                this.WindowState = FormWindowState.Normal;
-            }
-
-            this.Activate();
-            this.BringToFront();
-        }
-
         private void NotifyIcon1_BalloonTipClicked(object sender, EventArgs e)
         {
             ActivateMainForm();
@@ -2024,6 +2022,8 @@ namespace Hoehoe
                 ActivateMainForm();
             }
         }
+
+        #endregion
 
         private void NotifyIcon1_MouseMove(object sender, MouseEventArgs e)
         {
