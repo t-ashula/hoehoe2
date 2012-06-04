@@ -2270,6 +2270,29 @@ namespace Hoehoe
             CopyToClipboard(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
         }
 
+        private void SetStatusLabelApiLuncher()
+        {
+            try
+            {
+                if (InvokeRequired && !IsDisposed)
+                {
+                    Invoke(new SetStatusLabelApiDelegate(this.SetStatusLabelApi));
+                }
+                else
+                {
+                    this.SetStatusLabelApi();
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
+            catch (InvalidOperationException)
+            {
+                return;
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -3048,29 +3071,6 @@ namespace Hoehoe
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void SetStatusLabelApiLuncher()
-        {
-            try
-            {
-                if (InvokeRequired && !IsDisposed)
-                {
-                    Invoke(new SetStatusLabelApiDelegate(this.SetStatusLabelApi));
-                }
-                else
-                {
-                    this.SetStatusLabelApi();
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                return;
-            }
-            catch (InvalidOperationException)
-            {
-                return;
             }
         }
 
