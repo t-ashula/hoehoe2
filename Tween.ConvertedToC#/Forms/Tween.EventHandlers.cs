@@ -2387,6 +2387,15 @@ namespace Hoehoe
             CopyToClipboard(Convert.ToString(this.SourceLinkLabel.Tag));
         }
 
+        private void TryOpenSelectedTweetWebPage()
+        {
+            if (this.curList.SelectedIndices.Count > 0 && this.statuses.Tabs[this.curTab.Text].TabType != TabUsageType.DirectMessage)
+            {
+                PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
+                this.OpenUriAsync(string.Format("https://twitter.com/{0}/status/{1}", post.ScreenName, post.OriginalStatusId));
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -3330,15 +3339,6 @@ namespace Hoehoe
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void TryOpenSelectedTweetWebPage()
-        {
-            if (this.curList.SelectedIndices.Count > 0 && this.statuses.Tabs[this.curTab.Text].TabType != TabUsageType.DirectMessage)
-            {
-                PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[0]);
-                this.OpenUriAsync(string.Format("https://twitter.com/{0}/status/{1}", post.ScreenName, post.OriginalStatusId));
             }
         }
 
