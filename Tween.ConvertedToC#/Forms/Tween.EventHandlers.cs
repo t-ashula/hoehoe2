@@ -2293,6 +2293,55 @@ namespace Hoehoe
             }
         }
 
+        private void AddRelatedStatusesTab()
+        {
+            if (!this.ExistCurrentPost || this.curPost.IsDm)
+            {
+                return;
+            }
+
+            // PublicSearchも除外した方がよい？
+            if (this.statuses.GetTabByType(TabUsageType.Related) == null)
+            {
+                const string TabName = "Related Tweets";
+                string newTabName = TabName;
+                if (this.AddNewTab(newTabName, false, TabUsageType.Related))
+                {
+                    this.statuses.AddTab(newTabName, TabUsageType.Related, null);
+                }
+                else
+                {
+                    for (int i = 2; i <= 100; i++)
+                    {
+                        newTabName = TabName + i.ToString();
+                        if (this.AddNewTab(newTabName, false, TabUsageType.Related))
+                        {
+                            this.statuses.AddTab(newTabName, TabUsageType.Related, null);
+                            break;
+                        }
+                    }
+                }
+
+                this.statuses.GetTabByName(newTabName).UnreadManage = false;
+                this.statuses.GetTabByName(newTabName).Notify = false;
+            }
+
+            TabClass tb = this.statuses.GetTabByType(TabUsageType.Related);
+            tb.RelationTargetPost = this.curPost;
+            this.ClearTab(tb.TabName, false);
+            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
+            {
+                if (tb.TabName == this.ListTab.TabPages[i].Text)
+                {
+                    this.ListTab.SelectedIndex = i;
+                    this.ListTabSelect(this.ListTab.TabPages[i]);
+                    break;
+                }
+            }
+
+            this.GetTimeline(WorkerType.Related, 1, 1, tb.TabName);
+        }
+
         #endregion done
 
         #region event handler
@@ -3097,55 +3146,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void AddRelatedStatusesTab()
-        {
-            if (!this.ExistCurrentPost || this.curPost.IsDm)
-            {
-                return;
-            }
-
-            // PublicSearchも除外した方がよい？
-            if (this.statuses.GetTabByType(TabUsageType.Related) == null)
-            {
-                const string TabName = "Related Tweets";
-                string newTabName = TabName;
-                if (this.AddNewTab(newTabName, false, TabUsageType.Related))
-                {
-                    this.statuses.AddTab(newTabName, TabUsageType.Related, null);
-                }
-                else
-                {
-                    for (int i = 2; i <= 100; i++)
-                    {
-                        newTabName = TabName + i.ToString();
-                        if (this.AddNewTab(newTabName, false, TabUsageType.Related))
-                        {
-                            this.statuses.AddTab(newTabName, TabUsageType.Related, null);
-                            break;
-                        }
-                    }
-                }
-
-                this.statuses.GetTabByName(newTabName).UnreadManage = false;
-                this.statuses.GetTabByName(newTabName).Notify = false;
-            }
-
-            TabClass tb = this.statuses.GetTabByType(TabUsageType.Related);
-            tb.RelationTargetPost = this.curPost;
-            this.ClearTab(tb.TabName, false);
-            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
-            {
-                if (tb.TabName == this.ListTab.TabPages[i].Text)
-                {
-                    this.ListTab.SelectedIndex = i;
-                    this.ListTabSelect(this.ListTab.TabPages[i]);
-                    break;
-                }
-            }
-
-            this.GetTimeline(WorkerType.Related, 1, 1, tb.TabName);
         }
 
         private void ShowRelatedStatusesMenuItem_Click(object sender, EventArgs e)
