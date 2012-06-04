@@ -3448,6 +3448,16 @@ namespace Hoehoe
             AddFilteringRuleFromSelectedTweet();
         }
 
+        private void TabRenameMenuItem_Click(object sender, EventArgs e)
+        {
+            RenameCurrentTabName();
+        }
+
+        private void Tabs_DoubleClick(object sender, MouseEventArgs e)
+        {
+            RenameSelectedTabName();
+        }
+        
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3543,15 +3553,6 @@ namespace Hoehoe
             }
         }
 
-        private void TabRenameMenuItem_Click(object sender, EventArgs e)
-        {
-            RenameCurrentTabName();
-        }
-
-        private void Tabs_DoubleClick(object sender, MouseEventArgs e)
-        {
-            RenameSelectedTabName();
-        }
         private void Tabs_DragDrop(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(typeof(TabPage)))
