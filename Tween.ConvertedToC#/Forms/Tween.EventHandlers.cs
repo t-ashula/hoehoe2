@@ -1972,529 +1972,6 @@ namespace Hoehoe
 
         #endregion
 
-        private void MyList_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
-        {
-            if (this.itemCache != null && e.StartIndex >= this.itemCacheIndex && e.EndIndex < this.itemCacheIndex + this.itemCache.Length && this.curList.Equals(sender))
-            {
-                // If the newly requested cache is a subset of the old cache,
-                // no need to rebuild everything, so do nothing.
-                return;
-            }
-
-            // Now we need to rebuild the cache.
-            if (this.curList.Equals(sender))
-            {
-                this.CreateCache(e.StartIndex, e.EndIndex);
-            }
-        }
-
-        private void MyList_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            if (this.settingDialog.SortOrderLock)
-            {
-                return;
-            }
-
-            IdComparerClass.ComparerMode mode = default(IdComparerClass.ComparerMode);
-            if (this.iconCol)
-            {
-                mode = IdComparerClass.ComparerMode.Id;
-            }
-            else
-            {
-                switch (e.Column)
-                {
-                    case 0:
-                    case 5:
-                    case 6:
-                        // 0:アイコン,5:未読マーク,6:プロテクト・フィルターマーク
-                        // ソートしない
-                        return;
-                    case 1:
-                        // ニックネーム
-                        mode = IdComparerClass.ComparerMode.Nickname;
-                        break;
-                    case 2:
-                        // 本文
-                        mode = IdComparerClass.ComparerMode.Data;
-                        break;
-                    case 3:
-                        // 時刻=発言Id
-                        mode = IdComparerClass.ComparerMode.Id;
-                        break;
-                    case 4:
-                        // 名前
-                        mode = IdComparerClass.ComparerMode.Name;
-                        break;
-                    case 7:
-                        // Source
-                        mode = IdComparerClass.ComparerMode.Source;
-                        break;
-                }
-            }
-
-            this.statuses.ToggleSortOrder(mode);
-            this.InitColumnText();
-
-            if (this.iconCol)
-            {
-                ((DetailsListView)sender).Columns[0].Text = this.columnOrgTexts[0];
-                ((DetailsListView)sender).Columns[1].Text = this.columnTexts[2];
-            }
-            else
-            {
-                for (int i = 0; i <= 7; i++)
-                {
-                    ((DetailsListView)sender).Columns[i].Text = this.columnOrgTexts[i];
-                }
-
-                ((DetailsListView)sender).Columns[e.Column].Text = this.columnTexts[e.Column];
-            }
-
-            this.itemCache = null;
-            this.postCache = null;
-
-            if (this.statuses.Tabs[this.curTab.Text].AllCount > 0 && this.curPost != null)
-            {
-                int idx = this.statuses.Tabs[this.curTab.Text].IndexOf(this.curPost.StatusId);
-                if (idx > -1)
-                {
-                    this.SelectListItem(this.curList, idx);
-                    this.curList.EnsureVisible(idx);
-                }
-            }
-
-            this.curList.Refresh();
-            this.modifySettingCommon = true;
-        }
-
-        private void MyList_ColumnReordered(object sender, ColumnReorderedEventArgs e)
-        {
-            if (this.cfgLocal == null)
-            {
-                return;
-            }
-
-            DetailsListView lst = (DetailsListView)sender;
-            if (this.iconCol)
-            {
-                this.cfgLocal.Width1 = lst.Columns[0].Width;
-                this.cfgLocal.Width3 = lst.Columns[1].Width;
-            }
-            else
-            {
-                int[] darr = new int[lst.Columns.Count];
-                for (int i = 0; i < lst.Columns.Count; i++)
-                {
-                    darr[lst.Columns[i].DisplayIndex] = i;
-                }
-
-                MoveArrayItem(darr, e.OldDisplayIndex, e.NewDisplayIndex);
-
-                for (int i = 0; i < lst.Columns.Count; i++)
-                {
-                    switch (darr[i])
-                    {
-                        case 0:
-                            this.cfgLocal.DisplayIndex1 = i;
-                            break;
-                        case 1:
-                            this.cfgLocal.DisplayIndex2 = i;
-                            break;
-                        case 2:
-                            this.cfgLocal.DisplayIndex3 = i;
-                            break;
-                        case 3:
-                            this.cfgLocal.DisplayIndex4 = i;
-                            break;
-                        case 4:
-                            this.cfgLocal.DisplayIndex5 = i;
-                            break;
-                        case 5:
-                            this.cfgLocal.DisplayIndex6 = i;
-                            break;
-                        case 6:
-                            this.cfgLocal.DisplayIndex7 = i;
-                            break;
-                        case 7:
-                            this.cfgLocal.DisplayIndex8 = i;
-                            break;
-                    }
-                }
-
-                this.cfgLocal.Width1 = lst.Columns[0].Width;
-                this.cfgLocal.Width2 = lst.Columns[1].Width;
-                this.cfgLocal.Width3 = lst.Columns[2].Width;
-                this.cfgLocal.Width4 = lst.Columns[3].Width;
-                this.cfgLocal.Width5 = lst.Columns[4].Width;
-                this.cfgLocal.Width6 = lst.Columns[5].Width;
-                this.cfgLocal.Width7 = lst.Columns[6].Width;
-                this.cfgLocal.Width8 = lst.Columns[7].Width;
-            }
-
-            this.modifySettingLocal = true;
-            this.isColumnChanged = true;
-        }
-
-        private void MyList_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
-        {
-            if (this.cfgLocal == null)
-            {
-                return;
-            }
-
-            DetailsListView lst = (DetailsListView)sender;
-            if (this.iconCol)
-            {
-                if (this.cfgLocal.Width1 != lst.Columns[0].Width)
-                {
-                    this.cfgLocal.Width1 = lst.Columns[0].Width;
-                    this.modifySettingLocal = true;
-                    this.isColumnChanged = true;
-                }
-
-                if (this.cfgLocal.Width3 != lst.Columns[1].Width)
-                {
-                    this.cfgLocal.Width3 = lst.Columns[1].Width;
-                    this.modifySettingLocal = true;
-                    this.isColumnChanged = true;
-                }
-            }
-            else
-            {
-                if (this.cfgLocal.Width1 != lst.Columns[0].Width)
-                {
-                    this.cfgLocal.Width1 = lst.Columns[0].Width;
-                    this.modifySettingLocal = true;
-                    this.isColumnChanged = true;
-                }
-
-                if (this.cfgLocal.Width2 != lst.Columns[1].Width)
-                {
-                    this.cfgLocal.Width2 = lst.Columns[1].Width;
-                    this.modifySettingLocal = true;
-                    this.isColumnChanged = true;
-                }
-
-                if (this.cfgLocal.Width3 != lst.Columns[2].Width)
-                {
-                    this.cfgLocal.Width3 = lst.Columns[2].Width;
-                    this.modifySettingLocal = true;
-                    this.isColumnChanged = true;
-                }
-
-                if (this.cfgLocal.Width4 != lst.Columns[3].Width)
-                {
-                    this.cfgLocal.Width4 = lst.Columns[3].Width;
-                    this.modifySettingLocal = true;
-                    this.isColumnChanged = true;
-                }
-
-                if (this.cfgLocal.Width5 != lst.Columns[4].Width)
-                {
-                    this.cfgLocal.Width5 = lst.Columns[4].Width;
-                    this.modifySettingLocal = true;
-                    this.isColumnChanged = true;
-                }
-
-                if (this.cfgLocal.Width6 != lst.Columns[5].Width)
-                {
-                    this.cfgLocal.Width6 = lst.Columns[5].Width;
-                    this.modifySettingLocal = true;
-                    this.isColumnChanged = true;
-                }
-
-                if (this.cfgLocal.Width7 != lst.Columns[6].Width)
-                {
-                    this.cfgLocal.Width7 = lst.Columns[6].Width;
-                    this.modifySettingLocal = true;
-                    this.isColumnChanged = true;
-                }
-
-                if (this.cfgLocal.Width8 != lst.Columns[7].Width)
-                {
-                    this.cfgLocal.Width8 = lst.Columns[7].Width;
-                    this.modifySettingLocal = true;
-                    this.isColumnChanged = true;
-                }
-            }
-        }
-
-        private void MyList_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
-        {
-            e.DrawDefault = true;
-        }
-
-        private void MyList_DrawItem(object sender, DrawListViewItemEventArgs e)
-        {
-            if (e.State == 0)
-            {
-                return;
-            }
-            e.DrawDefault = false;
-            if (e.Item.Selected)
-            {
-                // 選択中の行
-                SolidBrush brs1 = ((Control)sender).Focused ? this.brsHighLight : this.brsDeactiveSelection;
-                e.Graphics.FillRectangle(brs1, e.Bounds);
-            }
-            else
-            {
-                var cl = e.Item.BackColor;
-                SolidBrush brs2 = (cl == this.clrSelf) ? this.brsBackColorMine : (cl == this.clrAtSelf) ? this.brsBackColorAt : (cl == this.clrTarget) ? this.brsBackColorYou : (cl == this.clrAtTarget) ? this.brsBackColorAtYou : (cl == this.clrAtFromTarget) ? this.brsBackColorAtFromTarget : (cl == this.clrAtTo) ? this.brsBackColorAtTo : this.brsBackColorNone;
-                e.Graphics.FillRectangle(brs2, e.Bounds);
-            }
-            if ((e.State & ListViewItemStates.Focused) == ListViewItemStates.Focused)
-            {
-                e.DrawFocusRectangle();
-            }
-            this.DrawListViewItemIcon(e);
-        }
-
-        private void MyList_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
-        {
-            if (e.ItemState == 0)
-            {
-                return;
-            }
-            if (e.ColumnIndex < 1)
-            {
-                return;
-            }
-            // アイコン以外の列
-            RectangleF rct = e.Bounds;
-            RectangleF rctB = e.Bounds;
-            rct.Width = e.Header.Width;
-            rctB.Width = e.Header.Width;
-            if (this.iconCol)
-            {
-                rct.Y += e.Item.Font.Height;
-                rct.Height -= e.Item.Font.Height;
-                rctB.Height = e.Item.Font.Height;
-            }
-            int heightDiff = 0;
-            int drawLineCount = Math.Max(1, Math.DivRem(Convert.ToInt32(rct.Height), e.Item.Font.Height, out heightDiff));
-            // フォントの高さの半分を足してるのは保険。無くてもいいかも。
-            if (!this.iconCol && drawLineCount <= 1)
-            {
-            }
-            else
-                if (heightDiff < e.Item.Font.Height * 0.7)
-                {
-                    rct.Height = Convert.ToSingle(e.Item.Font.Height * drawLineCount) - 1;
-                }
-                else
-                {
-                    drawLineCount += 1;
-                }
-            if (!e.Item.Selected)
-            {
-                // 選択されていない行
-                // 文字色
-                SolidBrush brs = null;
-                bool flg = false;
-                var cl = e.Item.ForeColor;
-                if (cl == this.clrUnread)
-                {
-                    brs = this.brsForeColorUnread;
-                }
-                else
-                    if (cl == this.clrRead)
-                    {
-                        brs = this.brsForeColorReaded;
-                    }
-                    else
-                        if (cl == this.clrFav)
-                        {
-                            brs = this.brsForeColorFav;
-                        }
-                        else
-                            if (cl == this.clrOWL)
-                            {
-                                brs = this.brsForeColorOWL;
-                            }
-                            else
-                                if (cl == this.clrRetweet)
-                                {
-                                    brs = this.brsForeColorRetweet;
-                                }
-                                else
-                                {
-                                    brs = new SolidBrush(e.Item.ForeColor);
-                                    flg = true;
-                                }
-                if (rct.Width > 0)
-                {
-                    if (this.iconCol)
-                    {
-                        using (Font fnt = new Font(e.Item.Font, FontStyle.Bold))
-                        {
-                            TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                            TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), brs.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                        }
-                    }
-                    else
-                        if (drawLineCount == 1)
-                        {
-                            TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
-                        }
-                        else
-                        {
-                            TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                        }
-                }
-                if (flg)
-                {
-                    brs.Dispose();
-                }
-            }
-            else
-            {
-                if (rct.Width > 0)
-                {
-                    // 選択中の行
-                    using (Font fnt = new Font(e.Item.Font, FontStyle.Bold))
-                    {
-                        if (((Control)sender).Focused)
-                        {
-                            if (this.iconCol)
-                            {
-                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), this.brsHighLightText.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                            }
-                            else
-                                if (drawLineCount == 1)
-                                {
-                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
-                                }
-                                else
-                                {
-                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                }
-                        }
-                        else
-                        {
-                            if (this.iconCol)
-                            {
-                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), this.brsForeColorUnread.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                            }
-                            else
-                                if (drawLineCount == 1)
-                                {
-                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
-                                }
-                                else
-                                {
-                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
-                                }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void MyList_HScrolled(object sender, EventArgs e)
-        {
-            ((DetailsListView)sender).Refresh();
-        }
-
-        private void MyList_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.anchorFlag = false;
-        }
-
-        private void MyList_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            switch (this.settingDialog.ListDoubleClickAction)
-            {
-                case 0:
-                    this.MakeReplyOrDirectStatus();
-                    break;
-                case 1:
-                    this.FavoriteChange(true);
-                    break;
-                case 2:
-                    this.ShowStatusOfCurrentTweetUser();
-                    break;
-                case 3:
-                    this.ShowUserTimeline();
-                    break;
-                case 4:
-                    this.AddRelatedStatusesTab();
-                    break;
-                case 5:
-                    this.TryOpenCurListSelectedUserHome();
-                    break;
-                case 6:
-                    this.TryOpenSelectedTweetWebPage();
-                    break;
-                case 7:
-                    // 動作なし
-                    break;
-            }
-        }
-
-        private void MyList_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
-        {
-            if (this.itemCache != null && e.ItemIndex >= this.itemCacheIndex && e.ItemIndex < this.itemCacheIndex + this.itemCache.Length && this.curList.Equals(sender))
-            {
-                // A cache hit, so get the ListViewItem from the cache instead of making a new one.
-                e.Item = this.itemCache[e.ItemIndex - this.itemCacheIndex];
-            }
-            else
-            {
-                // A cache miss, so create a new ListViewItem and pass it back.
-                TabPage tb = (TabPage)((Hoehoe.TweenCustomControl.DetailsListView)sender).Parent;
-                try
-                {
-                    e.Item = this.CreateItem(tb, this.statuses.Item(tb.Text, e.ItemIndex), e.ItemIndex);
-                }
-                catch (Exception)
-                {
-                    // 不正な要求に対する間に合わせの応答
-                    e.Item = new ImageListViewItem(new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty }, string.Empty);
-                }
-            }
-        }
-
-        private void MyList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.curList == null || this.curList.SelectedIndices.Count != 1)
-            {
-                return;
-            }
-
-            this.curItemIndex = this.curList.SelectedIndices[0];
-            if (this.curItemIndex > this.curList.VirtualListSize - 1)
-            {
-                return;
-            }
-
-            try
-            {
-                this.curPost = this.GetCurTabPost(this.curItemIndex);
-            }
-            catch (ArgumentException)
-            {
-                return;
-            }
-
-            this.PushSelectPostChain();
-
-            if (this.settingDialog.UnreadManage)
-            {
-                this.statuses.SetReadAllTab(true, this.curTab.Text, this.curItemIndex);
-            }
-
-            // キャッシュの書き換え
-            this.ChangeCacheStyleRead(true, this.curItemIndex, this.curTab);
-
-            // 既読へ（フォント、文字色）
-            this.ColorizeList();
-            this.colorize = true;
-        }
-
         private void ChangeNewPostPopupSetting(bool popup)
         {
             this.cfgCommon.NewAllPop = this.NewPostPopMenuItem.Checked = this.NotifyFileMenuItem.Checked = popup;
@@ -7185,6 +6662,533 @@ namespace Hoehoe
         private void ListTab_Selecting(object sender, TabControlCancelEventArgs e)
         {
             this.ListTabSelect(e.TabPage);
+        }
+
+        #endregion
+
+        #region MyList events
+
+        private void MyList_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
+        {
+            if (this.itemCache != null && e.StartIndex >= this.itemCacheIndex && e.EndIndex < this.itemCacheIndex + this.itemCache.Length && this.curList.Equals(sender))
+            {
+                // If the newly requested cache is a subset of the old cache,
+                // no need to rebuild everything, so do nothing.
+                return;
+            }
+
+            // Now we need to rebuild the cache.
+            if (this.curList.Equals(sender))
+            {
+                this.CreateCache(e.StartIndex, e.EndIndex);
+            }
+        }
+
+        private void MyList_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (this.settingDialog.SortOrderLock)
+            {
+                return;
+            }
+
+            IdComparerClass.ComparerMode mode = default(IdComparerClass.ComparerMode);
+            if (this.iconCol)
+            {
+                mode = IdComparerClass.ComparerMode.Id;
+            }
+            else
+            {
+                switch (e.Column)
+                {
+                    case 0:
+                    case 5:
+                    case 6:
+                        // 0:アイコン,5:未読マーク,6:プロテクト・フィルターマーク
+                        // ソートしない
+                        return;
+                    case 1:
+                        // ニックネーム
+                        mode = IdComparerClass.ComparerMode.Nickname;
+                        break;
+                    case 2:
+                        // 本文
+                        mode = IdComparerClass.ComparerMode.Data;
+                        break;
+                    case 3:
+                        // 時刻=発言Id
+                        mode = IdComparerClass.ComparerMode.Id;
+                        break;
+                    case 4:
+                        // 名前
+                        mode = IdComparerClass.ComparerMode.Name;
+                        break;
+                    case 7:
+                        // Source
+                        mode = IdComparerClass.ComparerMode.Source;
+                        break;
+                }
+            }
+
+            this.statuses.ToggleSortOrder(mode);
+            this.InitColumnText();
+
+            if (this.iconCol)
+            {
+                ((DetailsListView)sender).Columns[0].Text = this.columnOrgTexts[0];
+                ((DetailsListView)sender).Columns[1].Text = this.columnTexts[2];
+            }
+            else
+            {
+                for (int i = 0; i <= 7; i++)
+                {
+                    ((DetailsListView)sender).Columns[i].Text = this.columnOrgTexts[i];
+                }
+
+                ((DetailsListView)sender).Columns[e.Column].Text = this.columnTexts[e.Column];
+            }
+
+            this.itemCache = null;
+            this.postCache = null;
+
+            if (this.statuses.Tabs[this.curTab.Text].AllCount > 0 && this.curPost != null)
+            {
+                int idx = this.statuses.Tabs[this.curTab.Text].IndexOf(this.curPost.StatusId);
+                if (idx > -1)
+                {
+                    this.SelectListItem(this.curList, idx);
+                    this.curList.EnsureVisible(idx);
+                }
+            }
+
+            this.curList.Refresh();
+            this.modifySettingCommon = true;
+        }
+
+        private void MyList_ColumnReordered(object sender, ColumnReorderedEventArgs e)
+        {
+            if (this.cfgLocal == null)
+            {
+                return;
+            }
+
+            DetailsListView lst = (DetailsListView)sender;
+            if (this.iconCol)
+            {
+                this.cfgLocal.Width1 = lst.Columns[0].Width;
+                this.cfgLocal.Width3 = lst.Columns[1].Width;
+            }
+            else
+            {
+                int[] darr = new int[lst.Columns.Count];
+                for (int i = 0; i < lst.Columns.Count; i++)
+                {
+                    darr[lst.Columns[i].DisplayIndex] = i;
+                }
+
+                MoveArrayItem(darr, e.OldDisplayIndex, e.NewDisplayIndex);
+
+                for (int i = 0; i < lst.Columns.Count; i++)
+                {
+                    switch (darr[i])
+                    {
+                        case 0:
+                            this.cfgLocal.DisplayIndex1 = i;
+                            break;
+                        case 1:
+                            this.cfgLocal.DisplayIndex2 = i;
+                            break;
+                        case 2:
+                            this.cfgLocal.DisplayIndex3 = i;
+                            break;
+                        case 3:
+                            this.cfgLocal.DisplayIndex4 = i;
+                            break;
+                        case 4:
+                            this.cfgLocal.DisplayIndex5 = i;
+                            break;
+                        case 5:
+                            this.cfgLocal.DisplayIndex6 = i;
+                            break;
+                        case 6:
+                            this.cfgLocal.DisplayIndex7 = i;
+                            break;
+                        case 7:
+                            this.cfgLocal.DisplayIndex8 = i;
+                            break;
+                    }
+                }
+
+                this.cfgLocal.Width1 = lst.Columns[0].Width;
+                this.cfgLocal.Width2 = lst.Columns[1].Width;
+                this.cfgLocal.Width3 = lst.Columns[2].Width;
+                this.cfgLocal.Width4 = lst.Columns[3].Width;
+                this.cfgLocal.Width5 = lst.Columns[4].Width;
+                this.cfgLocal.Width6 = lst.Columns[5].Width;
+                this.cfgLocal.Width7 = lst.Columns[6].Width;
+                this.cfgLocal.Width8 = lst.Columns[7].Width;
+            }
+
+            this.modifySettingLocal = true;
+            this.isColumnChanged = true;
+        }
+
+        private void MyList_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+        {
+            if (this.cfgLocal == null)
+            {
+                return;
+            }
+
+            DetailsListView lst = (DetailsListView)sender;
+            if (this.iconCol)
+            {
+                if (this.cfgLocal.Width1 != lst.Columns[0].Width)
+                {
+                    this.cfgLocal.Width1 = lst.Columns[0].Width;
+                    this.modifySettingLocal = true;
+                    this.isColumnChanged = true;
+                }
+
+                if (this.cfgLocal.Width3 != lst.Columns[1].Width)
+                {
+                    this.cfgLocal.Width3 = lst.Columns[1].Width;
+                    this.modifySettingLocal = true;
+                    this.isColumnChanged = true;
+                }
+            }
+            else
+            {
+                if (this.cfgLocal.Width1 != lst.Columns[0].Width)
+                {
+                    this.cfgLocal.Width1 = lst.Columns[0].Width;
+                    this.modifySettingLocal = true;
+                    this.isColumnChanged = true;
+                }
+
+                if (this.cfgLocal.Width2 != lst.Columns[1].Width)
+                {
+                    this.cfgLocal.Width2 = lst.Columns[1].Width;
+                    this.modifySettingLocal = true;
+                    this.isColumnChanged = true;
+                }
+
+                if (this.cfgLocal.Width3 != lst.Columns[2].Width)
+                {
+                    this.cfgLocal.Width3 = lst.Columns[2].Width;
+                    this.modifySettingLocal = true;
+                    this.isColumnChanged = true;
+                }
+
+                if (this.cfgLocal.Width4 != lst.Columns[3].Width)
+                {
+                    this.cfgLocal.Width4 = lst.Columns[3].Width;
+                    this.modifySettingLocal = true;
+                    this.isColumnChanged = true;
+                }
+
+                if (this.cfgLocal.Width5 != lst.Columns[4].Width)
+                {
+                    this.cfgLocal.Width5 = lst.Columns[4].Width;
+                    this.modifySettingLocal = true;
+                    this.isColumnChanged = true;
+                }
+
+                if (this.cfgLocal.Width6 != lst.Columns[5].Width)
+                {
+                    this.cfgLocal.Width6 = lst.Columns[5].Width;
+                    this.modifySettingLocal = true;
+                    this.isColumnChanged = true;
+                }
+
+                if (this.cfgLocal.Width7 != lst.Columns[6].Width)
+                {
+                    this.cfgLocal.Width7 = lst.Columns[6].Width;
+                    this.modifySettingLocal = true;
+                    this.isColumnChanged = true;
+                }
+
+                if (this.cfgLocal.Width8 != lst.Columns[7].Width)
+                {
+                    this.cfgLocal.Width8 = lst.Columns[7].Width;
+                    this.modifySettingLocal = true;
+                    this.isColumnChanged = true;
+                }
+            }
+        }
+
+        private void MyList_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        private void MyList_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            if (e.State == 0)
+            {
+                return;
+            }
+            e.DrawDefault = false;
+            if (e.Item.Selected)
+            {
+                // 選択中の行
+                SolidBrush brs1 = ((Control)sender).Focused ? this.brsHighLight : this.brsDeactiveSelection;
+                e.Graphics.FillRectangle(brs1, e.Bounds);
+            }
+            else
+            {
+                var cl = e.Item.BackColor;
+                SolidBrush brs2 = (cl == this.clrSelf) ? this.brsBackColorMine : (cl == this.clrAtSelf) ? this.brsBackColorAt : (cl == this.clrTarget) ? this.brsBackColorYou : (cl == this.clrAtTarget) ? this.brsBackColorAtYou : (cl == this.clrAtFromTarget) ? this.brsBackColorAtFromTarget : (cl == this.clrAtTo) ? this.brsBackColorAtTo : this.brsBackColorNone;
+                e.Graphics.FillRectangle(brs2, e.Bounds);
+            }
+            if ((e.State & ListViewItemStates.Focused) == ListViewItemStates.Focused)
+            {
+                e.DrawFocusRectangle();
+            }
+            this.DrawListViewItemIcon(e);
+        }
+
+        private void MyList_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            if (e.ItemState == 0)
+            {
+                return;
+            }
+            if (e.ColumnIndex < 1)
+            {
+                return;
+            }
+            // アイコン以外の列
+            RectangleF rct = e.Bounds;
+            RectangleF rctB = e.Bounds;
+            rct.Width = e.Header.Width;
+            rctB.Width = e.Header.Width;
+            if (this.iconCol)
+            {
+                rct.Y += e.Item.Font.Height;
+                rct.Height -= e.Item.Font.Height;
+                rctB.Height = e.Item.Font.Height;
+            }
+            int heightDiff = 0;
+            int drawLineCount = Math.Max(1, Math.DivRem(Convert.ToInt32(rct.Height), e.Item.Font.Height, out heightDiff));
+            // フォントの高さの半分を足してるのは保険。無くてもいいかも。
+            if (!this.iconCol && drawLineCount <= 1)
+            {
+            }
+            else
+                if (heightDiff < e.Item.Font.Height * 0.7)
+                {
+                    rct.Height = Convert.ToSingle(e.Item.Font.Height * drawLineCount) - 1;
+                }
+                else
+                {
+                    drawLineCount += 1;
+                }
+            if (!e.Item.Selected)
+            {
+                // 選択されていない行
+                // 文字色
+                SolidBrush brs = null;
+                bool flg = false;
+                var cl = e.Item.ForeColor;
+                if (cl == this.clrUnread)
+                {
+                    brs = this.brsForeColorUnread;
+                }
+                else
+                    if (cl == this.clrRead)
+                    {
+                        brs = this.brsForeColorReaded;
+                    }
+                    else
+                        if (cl == this.clrFav)
+                        {
+                            brs = this.brsForeColorFav;
+                        }
+                        else
+                            if (cl == this.clrOWL)
+                            {
+                                brs = this.brsForeColorOWL;
+                            }
+                            else
+                                if (cl == this.clrRetweet)
+                                {
+                                    brs = this.brsForeColorRetweet;
+                                }
+                                else
+                                {
+                                    brs = new SolidBrush(e.Item.ForeColor);
+                                    flg = true;
+                                }
+                if (rct.Width > 0)
+                {
+                    if (this.iconCol)
+                    {
+                        using (Font fnt = new Font(e.Item.Font, FontStyle.Bold))
+                        {
+                            TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                            TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), brs.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                        }
+                    }
+                    else
+                        if (drawLineCount == 1)
+                        {
+                            TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
+                        }
+                        else
+                        {
+                            TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                        }
+                }
+                if (flg)
+                {
+                    brs.Dispose();
+                }
+            }
+            else
+            {
+                if (rct.Width > 0)
+                {
+                    // 選択中の行
+                    using (Font fnt = new Font(e.Item.Font, FontStyle.Bold))
+                    {
+                        if (((Control)sender).Focused)
+                        {
+                            if (this.iconCol)
+                            {
+                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), this.brsHighLightText.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                            }
+                            else
+                                if (drawLineCount == 1)
+                                {
+                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
+                                }
+                                else
+                                {
+                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                }
+                        }
+                        else
+                        {
+                            if (this.iconCol)
+                            {
+                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[2].Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), this.brsForeColorUnread.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                            }
+                            else
+                                if (drawLineCount == 1)
+                                {
+                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
+                                }
+                                else
+                                {
+                                    TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
+                                }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void MyList_HScrolled(object sender, EventArgs e)
+        {
+            ((DetailsListView)sender).Refresh();
+        }
+
+        private void MyList_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.anchorFlag = false;
+        }
+
+        private void MyList_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            switch (this.settingDialog.ListDoubleClickAction)
+            {
+                case 0:
+                    this.MakeReplyOrDirectStatus();
+                    break;
+                case 1:
+                    this.FavoriteChange(true);
+                    break;
+                case 2:
+                    this.ShowStatusOfCurrentTweetUser();
+                    break;
+                case 3:
+                    this.ShowUserTimeline();
+                    break;
+                case 4:
+                    this.AddRelatedStatusesTab();
+                    break;
+                case 5:
+                    this.TryOpenCurListSelectedUserHome();
+                    break;
+                case 6:
+                    this.TryOpenSelectedTweetWebPage();
+                    break;
+                case 7:
+                    // 動作なし
+                    break;
+            }
+        }
+
+        private void MyList_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        {
+            if (this.itemCache != null && e.ItemIndex >= this.itemCacheIndex && e.ItemIndex < this.itemCacheIndex + this.itemCache.Length && this.curList.Equals(sender))
+            {
+                // A cache hit, so get the ListViewItem from the cache instead of making a new one.
+                e.Item = this.itemCache[e.ItemIndex - this.itemCacheIndex];
+            }
+            else
+            {
+                // A cache miss, so create a new ListViewItem and pass it back.
+                TabPage tb = (TabPage)((Hoehoe.TweenCustomControl.DetailsListView)sender).Parent;
+                try
+                {
+                    e.Item = this.CreateItem(tb, this.statuses.Item(tb.Text, e.ItemIndex), e.ItemIndex);
+                }
+                catch (Exception)
+                {
+                    // 不正な要求に対する間に合わせの応答
+                    e.Item = new ImageListViewItem(new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty }, string.Empty);
+                }
+            }
+        }
+
+        private void MyList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.curList == null || this.curList.SelectedIndices.Count != 1)
+            {
+                return;
+            }
+
+            this.curItemIndex = this.curList.SelectedIndices[0];
+            if (this.curItemIndex > this.curList.VirtualListSize - 1)
+            {
+                return;
+            }
+
+            try
+            {
+                this.curPost = this.GetCurTabPost(this.curItemIndex);
+            }
+            catch (ArgumentException)
+            {
+                return;
+            }
+
+            this.PushSelectPostChain();
+
+            if (this.settingDialog.UnreadManage)
+            {
+                this.statuses.SetReadAllTab(true, this.curTab.Text, this.curItemIndex);
+            }
+
+            // キャッシュの書き換え
+            this.ChangeCacheStyleRead(true, this.curItemIndex, this.curTab);
+
+            // 既読へ（フォント、文字色）
+            this.ColorizeList();
+            this.colorize = true;
         }
 
         #endregion
