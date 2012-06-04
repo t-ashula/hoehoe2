@@ -2951,6 +2951,11 @@ namespace Hoehoe
             TryCopySelectionInPostBrowser();
         }
 
+        private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.DoTranslation(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3044,11 +3049,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.DoTranslation(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
         }
 
         private void SetStatusLabelApiHandler(object sender, ApiInformationChangedEventArgs e)
