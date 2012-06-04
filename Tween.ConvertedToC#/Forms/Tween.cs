@@ -4240,7 +4240,7 @@ namespace Hoehoe
                             this.ToggleImageSelectorView();
                             return true;
                         case Keys.H:
-                            this.DoMoveToRTHome();
+                            this.TryOpenSelectedRtUserHome();
                             return true;
                         case Keys.O:
                             this.OpenFavorarePageOfSelectedTweetUser();
@@ -7026,7 +7026,7 @@ namespace Hoehoe
             }
         }
 
-        private void DoMoveToRTHome()
+        private void TryOpenSelectedRtUserHome()
         {
             if (this.curList.SelectedIndices.Count > 0)
             {

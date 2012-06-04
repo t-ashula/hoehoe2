@@ -1938,8 +1938,6 @@ namespace Hoehoe
             SetFocusFromMainMenu();
         }
 
-        #endregion
-
         private void MoveToFavToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TryOpenCurListSelectedUserFavorites();
@@ -1950,9 +1948,11 @@ namespace Hoehoe
             TryOpenCurListSelectedUserHome();
         }
 
+        #endregion
+
         private void MoveToRTHomeMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoMoveToRTHome();
+            this.TryOpenSelectedRtUserHome();
         }
 
         private void ChangeStatusTextMultilineState(bool multi)
