@@ -1965,12 +1965,12 @@ namespace Hoehoe
             this.TryOpenSelectedRtUserHome();
         }
 
-        #endregion
-
         private void MultiLineMenuItem_Click(object sender, EventArgs e)
         {
             ChangeStatusTextMultilineState(this.MultiLineMenuItem.Checked);
         }
+
+        #endregion
 
         private void MyList_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
         {
