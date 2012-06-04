@@ -416,44 +416,7 @@ namespace Hoehoe
             this.fltDialog.SetCurrent(this.rclickTabName);
             this.fltDialog.ShowDialog();
             this.TopMost = this.settingDialog.AlwaysTop;
-
-            try
-            {
-                this.Cursor = Cursors.WaitCursor;
-                this.itemCache = null;
-                this.postCache = null;
-                this.curPost = null;
-                this.curItemIndex = -1;
-                this.statuses.FilterAll();
-                foreach (TabPage tb in this.ListTab.TabPages)
-                {
-                    ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
-                    if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
-                    {
-                        if (this.settingDialog.TabIconDisp)
-                        {
-                            tb.ImageIndex = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (this.settingDialog.TabIconDisp)
-                        {
-                            tb.ImageIndex = -1;
-                        }
-                    }
-                }
-
-                if (!this.settingDialog.TabIconDisp)
-                {
-                    this.ListTab.Refresh();
-                }
-            }
-            finally
-            {
-                this.Cursor = Cursors.Default;
-            }
-
+            this.ApplyNewFilters();
             this.SaveConfigsTabs();
         }
 
@@ -1180,38 +1143,48 @@ namespace Hoehoe
 
         private void ApplyNewFilters()
         {
-            this.itemCache = null;
-            this.postCache = null;
-            this.curPost = null;
-            this.curItemIndex = -1;
-            this.statuses.FilterAll();
-            foreach (TabPage tb in this.ListTab.TabPages)
+            try
             {
-                if (this.statuses.ContainsTab(tb.Text))
+                this.Cursor = Cursors.WaitCursor;
+
+                this.itemCache = null;
+                this.postCache = null;
+                this.curPost = null;
+                this.curItemIndex = -1;
+                this.statuses.FilterAll();
+                foreach (TabPage tb in this.ListTab.TabPages)
                 {
-                    ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
-                    if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
+                    if (this.statuses.ContainsTab(tb.Text))
                     {
-                        if (this.settingDialog.TabIconDisp)
+                        ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
+                        if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
                         {
-                            tb.ImageIndex = 0;
+                            if (this.settingDialog.TabIconDisp)
+                            {
+                                tb.ImageIndex = 0;
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (this.settingDialog.TabIconDisp)
+                        else
                         {
-                            tb.ImageIndex = -1;
+                            if (this.settingDialog.TabIconDisp)
+                            {
+                                tb.ImageIndex = -1;
+                            }
                         }
                     }
                 }
-            }
 
-            if (!this.settingDialog.TabIconDisp)
+                if (!this.settingDialog.TabIconDisp)
+                {
+                    this.ListTab.Refresh();
+                }
+            }
+            finally
             {
-                this.ListTab.Refresh();
+                this.Cursor = Cursors.Default;
             }
         }
+        
 
         private void AddIdFilteringRuleFromCurrentTweet()
         {
@@ -1258,16 +1231,7 @@ namespace Hoehoe
             }));
             this.SetModifySettingAtId(this.AtIdSupl.AddRangeItem(names.Select(name => "@" + name)));
 
-            try
-            {
-                this.Cursor = Cursors.WaitCursor;
-                this.ApplyNewFilters();
-            }
-            finally
-            {
-                this.Cursor = Cursors.Default;
-            }
-
+            this.ApplyNewFilters();
             this.SaveConfigsTabs();
         }
 
@@ -3550,43 +3514,7 @@ namespace Hoehoe
                 this.TopMost = this.settingDialog.AlwaysTop;
             }
 
-            try
-            {
-                this.Cursor = Cursors.WaitCursor;
-                this.itemCache = null;
-                this.postCache = null;
-                this.curPost = null;
-                this.curItemIndex = -1;
-                this.statuses.FilterAll();
-                foreach (TabPage tb in this.ListTab.TabPages)
-                {
-                    ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
-                    if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
-                    {
-                        if (this.settingDialog.TabIconDisp)
-                        {
-                            tb.ImageIndex = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (this.settingDialog.TabIconDisp)
-                        {
-                            tb.ImageIndex = -1;
-                        }
-                    }
-                }
-
-                if (!this.settingDialog.TabIconDisp)
-                {
-                    this.ListTab.Refresh();
-                }
-            }
-            finally
-            {
-                this.Cursor = Cursors.Default;
-            }
-
+            this.ApplyNewFilters();
             this.SaveConfigsTabs();
             if (this.ListTab.SelectedTab != null && ((DetailsListView)this.ListTab.SelectedTab.Tag).SelectedIndices.Count > 0)
             {
