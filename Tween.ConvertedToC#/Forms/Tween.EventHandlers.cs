@@ -2461,6 +2461,25 @@ namespace Hoehoe
             }
         }
 
+        private void ChangeUserStreamStatus()
+        {
+            this.MenuItemUserStream.Enabled = false;
+            if (this.StopRefreshAllMenuItem.Checked)
+            {
+                this.StopRefreshAllMenuItem.Checked = false;
+                return;
+            }
+
+            if (this.isActiveUserstream)
+            {
+                this.tw.StopUserStream();
+            }
+            else
+            {
+                this.tw.StartUserStream();
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -3495,25 +3514,6 @@ namespace Hoehoe
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void ChangeUserStreamStatus()
-        {
-            this.MenuItemUserStream.Enabled = false;
-            if (this.StopRefreshAllMenuItem.Checked)
-            {
-                this.StopRefreshAllMenuItem.Checked = false;
-                return;
-            }
-
-            if (this.isActiveUserstream)
-            {
-                this.tw.StopUserStream();
-            }
-            else
-            {
-                this.tw.StartUserStream();
             }
         }
 
