@@ -2431,6 +2431,17 @@ namespace Hoehoe
             }
         }
 
+        private void StatusText_LeaveExtracted()
+        {
+            // フォーカスがメニューに遷移しないならばフォーカスはタブに移ることを期待
+            if (this.ListTab.SelectedTab != null && this.MenuStrip1.Tag == null)
+            {
+                this.Tag = this.ListTab.SelectedTab.Tag;
+            }
+
+            this.StatusText.BackColor = Color.FromKnownColor(KnownColor.Window);
+        }
+
         #endregion done
 
         #region event handler
@@ -3445,17 +3456,6 @@ namespace Hoehoe
             }
 
             this.StatusText_TextChangedExtracted();
-        }
-
-        private void StatusText_LeaveExtracted()
-        {
-            // フォーカスがメニューに遷移しないならばフォーカスはタブに移ることを期待
-            if (this.ListTab.SelectedTab != null && this.MenuStrip1.Tag == null)
-            {
-                this.Tag = this.ListTab.SelectedTab.Tag;
-            }
-
-            this.StatusText.BackColor = Color.FromKnownColor(KnownColor.Window);
         }
 
         private void StatusText_Leave(object sender, EventArgs e)
