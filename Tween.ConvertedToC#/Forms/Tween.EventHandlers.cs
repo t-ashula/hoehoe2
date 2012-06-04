@@ -2090,6 +2090,24 @@ namespace Hoehoe
                 this.ListTab.Refresh();
             }
         }
+        
+        private void TryUnfollowCurrentTweetUser()
+        {
+            this.RemoveCommand(this.curPost != null ? this.curPost.ScreenName : string.Empty, false);
+        }
+
+        private void TryUnfollowUserInCurrentTweet()
+        {
+            this.RemoveCommand(this.GetUserId(), false);
+        }
+
+        private void TryUnfollowCurrentIconUser()
+        {
+            if (this.NameLabel.Tag != null)
+            {
+                this.RemoveCommand((string)this.NameLabel.Tag, false);
+            }
+        }
 
         #endregion done
 
@@ -2654,22 +2672,10 @@ namespace Hoehoe
         {
             this.DoRefresh();
         }
-
-        #endregion
-
-        private void TryUnfollowCurrentTweetUser()
-        {
-            this.RemoveCommand(this.curPost != null ? this.curPost.ScreenName : string.Empty, false);
-        }
-
+        
         private void RemoveCommandMenuItem_Click(object sender, EventArgs e)
         {
             TryUnfollowCurrentTweetUser();
-        }
-
-        private void TryUnfollowUserInCurrentTweet()
-        {
-            this.RemoveCommand(this.GetUserId(), false);
         }
 
         private void RemoveContextMenuItem_Click(object sender, EventArgs e)
@@ -2677,18 +2683,12 @@ namespace Hoehoe
             TryUnfollowUserInCurrentTweet();
         }
 
-        private void TryUnfollowCurrentIconUser()
-        {
-            if (this.NameLabel.Tag != null)
-            {
-                this.RemoveCommand((string)this.NameLabel.Tag, false);
-            }
-        }
-
         private void UnFollowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.TryUnfollowCurrentIconUser();
         }
+
+        #endregion
 
         private void RepliedStatusOpenMenuItem_Click(object sender, EventArgs e)
         {
