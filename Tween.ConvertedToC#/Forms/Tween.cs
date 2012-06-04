@@ -4077,14 +4077,7 @@ namespace Hoehoe
                                 string selText = WebBrowser_GetSelectionText(ref this.PostBrowser);
                                 if (!string.IsNullOrEmpty(selText))
                                 {
-                                    try
-                                    {
-                                        Clipboard.SetDataObject(selText, false, 5, 100);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        MessageBox.Show(ex.Message);
-                                    }
+                                    CopyToClipboard(selText);
                                 }
 
                                 return true;
@@ -4554,15 +4547,7 @@ namespace Hoehoe
 
             if (sb.Length > 0)
             {
-                clstr = sb.ToString();
-                try
-                {
-                    Clipboard.SetDataObject(clstr, false, 5, 100);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                CopyToClipboard(sb.ToString());
             }
         }
 
@@ -4593,15 +4578,7 @@ namespace Hoehoe
 
             if (sb.Length > 0)
             {
-                clstr = sb.ToString();
-                try
-                {
-                    Clipboard.SetDataObject(clstr, false, 5, 100);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                CopyToClipboard(sb.ToString());
             }
         }
 
@@ -7197,14 +7174,8 @@ namespace Hoehoe
             }
         }
 
-        private void CopyUserId()
+        private static void CopyToClipboard(string clstr)
         {
-            if (this.curPost == null)
-            {
-                return;
-            }
-
-            string clstr = this.curPost.ScreenName;
             try
             {
                 Clipboard.SetDataObject(clstr, false, 5, 100);
@@ -7213,6 +7184,16 @@ namespace Hoehoe
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void CopyUserId()
+        {
+            if (this.curPost == null)
+            {
+                return;
+            }
+
+            CopyToClipboard(this.curPost.ScreenName);
         }
 
         private void NotifyEvent(Twitter.FormattedEvent ev)

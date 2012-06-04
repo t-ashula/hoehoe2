@@ -2929,6 +2929,17 @@ namespace Hoehoe
             this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem3Url);
         }
 
+        private void SelectAllMenuItem_Click(object sender, EventArgs e)
+        {
+            SelectAllItemInFocused();
+        }
+
+        private void SelectionAllContextMenuItem_Click(object sender, EventArgs e)
+        {
+            // 発言詳細ですべて選択
+            this.PostBrowser.Document.ExecCommand("SelectAll", false, null);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3024,33 +3035,15 @@ namespace Hoehoe
             }
         }
 
-        private void SelectAllMenuItem_Click(object sender, EventArgs e)
+        private void TryCopySelectionInPostBrowser()
         {
-            SelectAllItemInFocused();
-        }
-
-        private void SelectionAllContextMenuItem_Click(object sender, EventArgs e)
-        {
-            // 発言詳細ですべて選択
-            this.PostBrowser.Document.ExecCommand("SelectAll", false, null);
-        }
-
-        private void TryCopyCurrentTweetSelection()
-        {
-            try
-            {
-                Clipboard.SetDataObject(this.WebBrowser_GetSelectionText(ref this.PostBrowser), false, 5, 100);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            CopyToClipboard(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
         }
 
         private void SelectionCopyContextMenuItem_Click(object sender, EventArgs e)
         {
             // 発言詳細で「選択文字列をコピー」
-            TryCopyCurrentTweetSelection();
+            TryCopySelectionInPostBrowser();
         }
 
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3187,15 +3180,7 @@ namespace Hoehoe
 
         private void TryCopySourceName()
         {
-            string selText = this.SourceLinkLabel.Text;
-            try
-            {
-                Clipboard.SetDataObject(selText, false, 5, 100);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            CopyToClipboard(this.SourceLinkLabel.Text);
         }
 
         private void SourceCopyMenuItem_Click(object sender, EventArgs e)
@@ -3247,15 +3232,7 @@ namespace Hoehoe
 
         private void TryCopySourceUrl()
         {
-            string selText = Convert.ToString(this.SourceLinkLabel.Tag);
-            try
-            {
-                Clipboard.SetDataObject(selText, false, 5, 100);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            CopyToClipboard(Convert.ToString(this.SourceLinkLabel.Tag));
         }
 
         private void SourceUrlCopyMenuItem_Click(object sender, EventArgs e)
@@ -5543,26 +5520,19 @@ namespace Hoehoe
 
         private void TryCopyUrlInCurrentTweet()
         {
-            try
+            MatchCollection mc = Regex.Matches(this.PostBrowser.DocumentText, "<a[^>]*href=\"(?<url>" + this.postBrowserStatusText.Replace(".", "\\.") + ")\"[^>]*title=\"(?<title>https?:// [^\"]+)\"", RegexOptions.IgnoreCase);
+            foreach (Match m in mc)
             {
-                MatchCollection mc = Regex.Matches(this.PostBrowser.DocumentText, "<a[^>]*href=\"(?<url>" + this.postBrowserStatusText.Replace(".", "\\.") + ")\"[^>]*title=\"(?<title>https?:// [^\"]+)\"", RegexOptions.IgnoreCase);
-                foreach (Match m in mc)
+                if (m.Groups["url"].Value == this.postBrowserStatusText)
                 {
-                    if (m.Groups["url"].Value == this.postBrowserStatusText)
-                    {
-                        Clipboard.SetDataObject(m.Groups["title"].Value, false, 5, 100);
-                        break;
-                    }
-                }
-
-                if (mc.Count == 0)
-                {
-                    Clipboard.SetDataObject(this.postBrowserStatusText, false, 5, 100);
+                    CopyToClipboard(m.Groups["title"].Value);
+                    break;
                 }
             }
-            catch (Exception ex)
+
+            if (mc.Count == 0)
             {
-                MessageBox.Show(ex.Message);
+                CopyToClipboard(this.postBrowserStatusText);
             }
         }
 
