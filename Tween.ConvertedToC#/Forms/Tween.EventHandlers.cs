@@ -1630,7 +1630,13 @@ namespace Hoehoe
             openUrlStr = openUrlStr.Replace("://twitter.com/search?q=#", "://twitter.com/search?q=%23");
             this.OpenUriAsync(openUrlStr);
         }
-        
+
+        private void ChangePlaySoundSetting(bool play)
+        {
+            this.settingDialog.PlaySound = this.PlaySoundFileMenuItem.Checked = this.PlaySoundMenuItem.Checked = play;
+            this.SetModifySettingCommon(true);
+        }
+
         #endregion done
 
         #region event handler
@@ -2104,8 +2110,6 @@ namespace Hoehoe
             this.OpenUriAsync("https://twitter.com/" + this.tw.Username);
         }
 
-        #endregion
-
         private void OpenURLMenuItem_Click(object sender, EventArgs e)
         {
             TryOpenUrlInCurrentTweet();
@@ -2121,16 +2125,22 @@ namespace Hoehoe
             ShowStatusOfUserSelf();
         }
 
-        private void ChangePlaySoundSetting(bool play)
-        {
-            this.settingDialog.PlaySound = this.PlaySoundFileMenuItem.Checked = this.PlaySoundMenuItem.Checked = play;
-            this.modifySettingCommon = true;
-        }
-
         private void PlaySoundMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             ChangePlaySoundSetting(((ToolStripMenuItem)sender).Checked);
         }
+
+        private void PostBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        {
+            PostBrowser_NavigatedExtracted(e.Url);
+        }
+
+        private void PostBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        {
+            e.Cancel = NavigateNextUrl(e.Url);
+        }
+
+        #endregion
 
         private void PostBrowser_NavigatedExtracted(Uri eUrl)
         {
@@ -2139,11 +2149,6 @@ namespace Hoehoe
                 this.DispSelectedPost();
                 this.OpenUriAsync(eUrl.OriginalString);
             }
-        }
-
-        private void PostBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
-        {
-            PostBrowser_NavigatedExtracted(e.Url);
         }
 
         private bool NavigateNextUrl(Uri url)
@@ -2160,7 +2165,7 @@ namespace Hoehoe
                 return false;
             }
 
-            if (eUrlAbsoluteUri.StartsWith("http://twitter.com/search?q=%23") || eUrlAbsoluteUri.StartsWith("https://twitter.com/search?q=%23"))
+            if (IsTwitterSearchUrl(eUrlAbsoluteUri))
             {
                 // ハッシュタグの場合は、タブで開く
                 string urlStr = HttpUtility.UrlDecode(eUrlAbsoluteUri);
@@ -2173,44 +2178,31 @@ namespace Hoehoe
 
             Match m = Regex.Match(eUrlAbsoluteUri, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
             string eUrlOriginalString = url.OriginalString;
-            if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
+            if (!m.Success)
             {
-                // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
-                bool isCtrlKeyDown = this.IsKeyDown(Keys.Control);
-                bool isOpenInTab = this.settingDialog.OpenUserTimeline;
-                if (isOpenInTab)
-                {
-                    if (isCtrlKeyDown)
-                    {
-                        this.OpenUriAsync(eUrlOriginalString);
-                    }
-                    else
-                    {
-                        this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
-                    }
-                }
-                else
-                {
-                    if (isCtrlKeyDown)
-                    {
-                        this.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
-                    }
-                    else
-                    {
-                        this.OpenUriAsync(eUrlOriginalString);
-                    }
-                }
+                this.OpenUriAsync(eUrlOriginalString);
+                return true;
+            }
+
+            string screenName = m.Result("${ScreenName}");
+            if (!this.IsTwitterId(screenName))
+            {
+                this.OpenUriAsync(eUrlOriginalString);
+                return true;
+            }
+            
+            // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
+            bool isCtrlKeyDown = this.IsKeyDown(Keys.Control);
+            bool isOpenInTab = this.settingDialog.OpenUserTimeline;
+            if ((isOpenInTab && !isCtrlKeyDown) || (!isOpenInTab && isCtrlKeyDown))
+            {
+                this.AddNewTabForUserTimeline(screenName);
             }
             else
             {
                 this.OpenUriAsync(eUrlOriginalString);
             }
             return true;
-        }
-
-        private void PostBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
-        {
-            e.Cancel = NavigateNextUrl(e.Url);
         }
 
         private void PostBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
