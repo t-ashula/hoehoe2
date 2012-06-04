@@ -2251,6 +2251,20 @@ namespace Hoehoe
             this.AddNewTabForUserTimeline(this.GetUserId());
         }
 
+        private void SelectAllItemInFocused()
+        {
+            if (this.StatusText.Focused)
+            {
+                // 発言欄でのCtrl+A
+                this.StatusText.SelectAll();
+            }
+            else
+            {
+                // ListView上でのCtrl+A
+                this.curList.SelectAllItem();
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -3007,20 +3021,6 @@ namespace Hoehoe
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void SelectAllItemInFocused()
-        {
-            if (this.StatusText.Focused)
-            {
-                // 発言欄でのCtrl+A
-                this.StatusText.SelectAll();
-            }
-            else
-            {
-                // ListView上でのCtrl+A
-                this.curList.SelectAllItem();
             }
         }
 
