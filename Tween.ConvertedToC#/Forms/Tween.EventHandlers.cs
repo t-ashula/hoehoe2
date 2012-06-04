@@ -2824,33 +2824,36 @@ namespace Hoehoe
         }
 
         #endregion
+        private void AddNewTabForAtUserSearch(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return;
+            }
+            this.AddNewTabForSearch("@" + id);
+        }
 
-        private void TryAddSearchTabForAtUserOfCurrentTweet()
+        private void AddSearchTabForAtUserOfCurrentTweet()
         {
             if (this.NameLabel.Tag != null)
             {
-                string id = (string)this.NameLabel.Tag;
-                this.AddNewTabForSearch("@" + id);
+                AddNewTabForAtUserSearch((string)this.NameLabel.Tag);
             }
         }
 
         private void SearchAtPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TryAddSearchTabForAtUserOfCurrentTweet();
+            AddSearchTabForAtUserOfCurrentTweet();
         }
 
-        private void TryAddSearchTabForAtUserInCurrentTweet()
+        private void AddSearchTabForAtUserInCurrentTweet()
         {
-            string name = this.GetUserId();
-            if (name != null)
-            {
-                this.AddNewTabForSearch("@" + name);
-            }
+            this.AddNewTabForAtUserSearch(this.GetUserId());
         }
 
         private void SearchAtPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.TryAddSearchTabForAtUserInCurrentTweet();
+            this.AddSearchTabForAtUserInCurrentTweet();
         }
 
         private void SearchButton_ClickExtracted(Control pnl)
