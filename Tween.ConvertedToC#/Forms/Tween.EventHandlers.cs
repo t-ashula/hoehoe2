@@ -3422,6 +3422,11 @@ namespace Hoehoe
             this.TimelineRefreshEnableChange(!this.StopRefreshAllMenuItem.Checked);
         }
 
+        private void StopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeUserStreamStatus();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3515,11 +3520,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void StopToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ChangeUserStreamStatus();
         }
 
         private void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
