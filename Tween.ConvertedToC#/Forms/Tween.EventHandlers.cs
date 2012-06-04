@@ -2208,7 +2208,29 @@ namespace Hoehoe
                 // STUB
             }
         }
-        
+
+        private void AddNewTabForAtUserSearch(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return;
+            }
+            this.AddNewTabForSearch("@" + id);
+        }
+
+        private void AddSearchTabForAtUserOfCurrentTweet()
+        {
+            if (this.NameLabel.Tag != null)
+            {
+                AddNewTabForAtUserSearch((string)this.NameLabel.Tag);
+            }
+        }
+
+        private void AddSearchTabForAtUserInCurrentTweet()
+        {
+            this.AddNewTabForAtUserSearch(this.GetUserId());
+        }
+
         #endregion done
 
         #region event handler
@@ -2823,39 +2845,18 @@ namespace Hoehoe
             SaveCurrentTweetUserOriginalSizeIcon();
         }
 
-        #endregion
-        private void AddNewTabForAtUserSearch(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                return;
-            }
-            this.AddNewTabForSearch("@" + id);
-        }
-
-        private void AddSearchTabForAtUserOfCurrentTweet()
-        {
-            if (this.NameLabel.Tag != null)
-            {
-                AddNewTabForAtUserSearch((string)this.NameLabel.Tag);
-            }
-        }
-
         private void SearchAtPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AddSearchTabForAtUserOfCurrentTweet();
-        }
-
-        private void AddSearchTabForAtUserInCurrentTweet()
-        {
-            this.AddNewTabForAtUserSearch(this.GetUserId());
         }
 
         private void SearchAtPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.AddSearchTabForAtUserInCurrentTweet();
         }
-
+        
+        #endregion
+        
         private void SearchButton_ClickExtracted(Control pnl)
         {
             string tabName = pnl.Parent.Text;
