@@ -3233,6 +3233,11 @@ namespace Hoehoe
             }
         }
 
+        private void StatusLabel_DoubleClick(object sender, EventArgs e)
+        {
+            MessageBox.Show(this.StatusLabel.TextHistory, "Logs", MessageBoxButtons.OK, MessageBoxIcon.None);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3326,11 +3331,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void StatusLabel_DoubleClick(object sender, EventArgs e)
-        {
-            MessageBox.Show(this.StatusLabel.TextHistory, "Logs", MessageBoxButtons.OK, MessageBoxIcon.None);
         }
 
         private void TryOpenSelectedTweetWebPage()
