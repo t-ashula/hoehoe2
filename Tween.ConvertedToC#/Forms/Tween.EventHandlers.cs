@@ -3419,6 +3419,19 @@ namespace Hoehoe
             ChangeUserStreamStatus();
         }
 
+        private void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
+        {
+            if (e.Mode == Microsoft.Win32.PowerModes.Resume)
+            {
+                this.isOsResumed = true;
+            }
+        }
+
+        private void TabMenuItem_Click(object sender, EventArgs e)
+        {
+            AddFilteringRuleFromSelectedTweet();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3512,19 +3525,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
-        {
-            if (e.Mode == Microsoft.Win32.PowerModes.Resume)
-            {
-                this.isOsResumed = true;
-            }
-        }
-
-        private void TabMenuItem_Click(object sender, EventArgs e)
-        {
-            AddFilteringRuleFromSelectedTweet();
         }
 
         private void RenameCurrentTabName()
