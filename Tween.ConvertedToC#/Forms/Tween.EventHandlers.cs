@@ -1505,6 +1505,12 @@ namespace Hoehoe
             this.SetModifySettingLocal(true);
         }
 
+        private void ChangeNewPostPopupSetting(bool popup)
+        {
+            this.cfgCommon.NewAllPop = this.NewPostPopMenuItem.Checked = this.NotifyFileMenuItem.Checked = popup;
+            this.SetModifySettingCommon(true);
+        }
+
         #endregion done
 
         #region event handler
@@ -1970,18 +1976,12 @@ namespace Hoehoe
             ChangeStatusTextMultilineState(this.MultiLineMenuItem.Checked);
         }
 
-        #endregion
-
-        private void ChangeNewPostPopupSetting(bool popup)
-        {
-            this.cfgCommon.NewAllPop = this.NewPostPopMenuItem.Checked = this.NotifyFileMenuItem.Checked = popup;
-            this.SetModifySettingCommon(true);
-        }
-
         private void NewPostPopMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
             ChangeNewPostPopupSetting(((ToolStripMenuItem)sender).Checked);
         }
+
+        #endregion
 
         private void ChangeNotifySetting(bool notify)
         {
