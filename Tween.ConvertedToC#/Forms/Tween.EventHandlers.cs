@@ -2979,6 +2979,31 @@ namespace Hoehoe
             this.DoTranslation(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
         }
 
+        private void TwitterApiInfo_Changed(object sender, ApiInformationChangedEventArgs e)
+        {
+            SetStatusLabelApiLuncher();
+        }
+
+        private void SettingStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryShowSettingsBox();
+        }
+
+        private void ShortcutKeyListMenuItem_Click(object sender, EventArgs e)
+        {
+            this.OpenUriAsync(ApplicationShortcutKeyHelpWebPageUrl);
+        }
+
+        private void ShowFriendShipToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowFriendshipOfCurrentIconUser();
+        }
+
+        private void ShowProfileMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowStatusOfCurrentTweetUser();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3072,31 +3097,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TwitterApiInfo_Changed(object sender, ApiInformationChangedEventArgs e)
-        {
-            SetStatusLabelApiLuncher();
-        }
-
-        private void SettingStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TryShowSettingsBox();
-        }
-
-        private void ShortcutKeyListMenuItem_Click(object sender, EventArgs e)
-        {
-            this.OpenUriAsync(ApplicationShortcutKeyHelpWebPageUrl);
-        }
-
-        private void ShowFriendShipToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowFriendshipOfCurrentIconUser();
-        }
-
-        private void ShowProfileMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowStatusOfCurrentTweetUser();
         }
 
         private void AddRelatedStatusesTab()
