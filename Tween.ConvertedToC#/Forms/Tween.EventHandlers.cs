@@ -2342,6 +2342,17 @@ namespace Hoehoe
             this.GetTimeline(WorkerType.Related, 1, 1, tb.TabName);
         }
 
+        private void ChangeCurrentTabSoundFile(string soundfile)
+        {
+            if (this.soundfileListup || string.IsNullOrEmpty(this.rclickTabName))
+            {
+                return;
+            }
+
+            this.statuses.Tabs[this.rclickTabName].SoundFile = soundfile;
+            this.SaveConfigsTabs();
+        }
+
         #endregion done
 
         #region event handler
@@ -3166,17 +3177,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void ChangeCurrentTabSoundFile(string soundfile)
-        {
-            if (this.soundfileListup || string.IsNullOrEmpty(this.rclickTabName))
-            {
-                return;
-            }
-
-            this.statuses.Tabs[this.rclickTabName].SoundFile = soundfile;
-            this.SaveConfigsTabs();
         }
 
         private void SoundFileComboBox_SelectedIndexChanged(object sender, EventArgs e)
