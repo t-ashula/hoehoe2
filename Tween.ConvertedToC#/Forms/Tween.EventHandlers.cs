@@ -3317,6 +3317,87 @@ namespace Hoehoe
             TryOpenSelectedTweetWebPage();
         }
 
+
+        private void StatusText_Enter(object sender, EventArgs e)
+        {
+            this.StatusText_EnterExtracted();
+        }
+
+        private void StatusText_KeyDown(object sender, KeyEventArgs e)
+        {
+            ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
+            if (modState == ModifierState.NotFlags)
+            {
+                return;
+            }
+
+            if (this.CommonKeyDown(e.KeyCode, FocusedControl.StatusText, modState))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+
+            this.StatusText_TextChangedExtracted();
+        }
+
+        private void StatusText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char eKeyChar = e.KeyChar;
+            if (eKeyChar == '@' || eKeyChar == '#')
+            {
+                e.Handled = true;
+                ShowSupplementBox(eKeyChar);
+            }
+        }
+
+        private void StatusText_KeyUp(object sender, KeyEventArgs e)
+        {
+            // スペースキーで未読ジャンプ
+            if (!e.Alt && !e.Control && !e.Shift)
+            {
+                if (e.KeyCode == Keys.Space || e.KeyCode == Keys.ProcessKey)
+                {
+                    bool isSpace = false;
+                    foreach (char c in this.StatusText.Text.ToCharArray())
+                    {
+                        if (c == ' ' || c == '　')
+                        {
+                            isSpace = true;
+                        }
+                        else
+                        {
+                            isSpace = false;
+                            break;
+                        }
+                    }
+
+                    if (isSpace)
+                    {
+                        e.Handled = true;
+                        this.StatusText.Text = string.Empty;
+                        this.TrySearchAndFocusUnreadTweet();
+                    }
+                }
+            }
+
+            this.StatusText_TextChangedExtracted();
+        }
+
+        private void StatusText_Leave(object sender, EventArgs e)
+        {
+            StatusText_LeaveExtracted();
+        }
+
+        private void StatusText_MultilineChanged(object sender, EventArgs e)
+        {
+            ChangeStatusTextMultiline(this.StatusText.Multiline);
+        }
+
+        private void StatusText_TextChanged(object sender, EventArgs e)
+        {
+            StatusText_TextChangedExtracted();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3410,86 +3491,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void StatusText_Enter(object sender, EventArgs e)
-        {
-            this.StatusText_EnterExtracted();
-        }
-
-        private void StatusText_KeyDown(object sender, KeyEventArgs e)
-        {
-            ModifierState modState = this.GetModifierState(e.Control, e.Shift, e.Alt);
-            if (modState == ModifierState.NotFlags)
-            {
-                return;
-            }
-
-            if (this.CommonKeyDown(e.KeyCode, FocusedControl.StatusText, modState))
-            {
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-
-            this.StatusText_TextChangedExtracted();
-        }
-
-        private void StatusText_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            char eKeyChar = e.KeyChar;
-            if (eKeyChar == '@' || eKeyChar == '#')
-            {
-                e.Handled = true;
-                ShowSupplementBox(eKeyChar);
-            }
-        }
-
-        private void StatusText_KeyUp(object sender, KeyEventArgs e)
-        {
-            // スペースキーで未読ジャンプ
-            if (!e.Alt && !e.Control && !e.Shift)
-            {
-                if (e.KeyCode == Keys.Space || e.KeyCode == Keys.ProcessKey)
-                {
-                    bool isSpace = false;
-                    foreach (char c in this.StatusText.Text.ToCharArray())
-                    {
-                        if (c == ' ' || c == '　')
-                        {
-                            isSpace = true;
-                        }
-                        else
-                        {
-                            isSpace = false;
-                            break;
-                        }
-                    }
-
-                    if (isSpace)
-                    {
-                        e.Handled = true;
-                        this.StatusText.Text = string.Empty;
-                        this.TrySearchAndFocusUnreadTweet();
-                    }
-                }
-            }
-
-            this.StatusText_TextChangedExtracted();
-        }
-
-        private void StatusText_Leave(object sender, EventArgs e)
-        {
-            StatusText_LeaveExtracted();
-        }
-
-        private void StatusText_MultilineChanged(object sender, EventArgs e)
-        {
-            ChangeStatusTextMultiline(this.StatusText.Multiline);
-        }
-
-        private void StatusText_TextChanged(object sender, EventArgs e)
-        {
-            StatusText_TextChangedExtracted();
         }
 
         private void StopRefreshAllMenuItem_CheckedChanged(object sender, EventArgs e)
