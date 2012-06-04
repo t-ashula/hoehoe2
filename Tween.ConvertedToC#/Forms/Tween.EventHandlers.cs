@@ -2017,6 +2017,80 @@ namespace Hoehoe
             }
         }
 
+        private void ChangeSelectetdTweetReadState(bool read)
+        {
+            this.curList.BeginUpdate();
+            if (this.settingDialog.UnreadManage)
+            {
+                foreach (int idx in this.curList.SelectedIndices)
+                {
+                    this.statuses.SetReadAllTab(read, this.curTab.Text, idx);
+                }
+            }
+
+            foreach (int idx in this.curList.SelectedIndices)
+            {
+                this.ChangeCacheStyleRead(read, idx, this.curTab);
+            }
+
+            this.ColorizeList();
+            this.curList.EndUpdate();
+        }
+
+        private void ChangeTabsIconToRead()
+        {
+            foreach (TabPage tb in this.ListTab.TabPages)
+            {
+                if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
+                {
+                    if (tb.ImageIndex == 0)
+                    {
+                        tb.ImageIndex = -1;
+                    }
+                }
+            }
+        }
+
+        private void ChangeTabsIconToUnread()
+        {
+            foreach (TabPage tb in this.ListTab.TabPages)
+            {
+                if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
+                {
+                    if (tb.ImageIndex == -1)
+                    {
+                        tb.ImageIndex = 0;
+                    }
+                }
+            }
+        }
+
+        private void ChangeSelectetdTweetReadStateToRead()
+        {
+            ChangeSelectetdTweetReadState(read: true);
+            if (this.settingDialog.TabIconDisp)
+            {
+                ChangeTabsIconToRead();
+            }
+            else
+            {
+                this.ListTab.Refresh();
+            }
+        }
+
+        private void ChangeSelectedTweetReadSateToUnread()
+        {
+            ChangeSelectetdTweetReadState(read: false);
+            if (this.settingDialog.TabIconDisp)
+            {
+                ChangeTabsIconToUnread();
+            }
+            else
+            {
+                this.ListTab.Refresh();
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -2566,80 +2640,6 @@ namespace Hoehoe
         }
 
         #endregion
-
-        private void ChangeSelectetdTweetReadState(bool read)
-        {
-            this.curList.BeginUpdate();
-            if (this.settingDialog.UnreadManage)
-            {
-                foreach (int idx in this.curList.SelectedIndices)
-                {
-                    this.statuses.SetReadAllTab(read, this.curTab.Text, idx);
-                }
-            }
-
-            foreach (int idx in this.curList.SelectedIndices)
-            {
-                this.ChangeCacheStyleRead(read, idx, this.curTab);
-            }
-
-            this.ColorizeList();
-            this.curList.EndUpdate();
-        }
-
-        private void ChangeTabsIconToRead()
-        {
-            foreach (TabPage tb in this.ListTab.TabPages)
-            {
-                if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
-                {
-                    if (tb.ImageIndex == 0)
-                    {
-                        tb.ImageIndex = -1;
-                    }
-                }
-            }
-        }
-
-        private void ChangeTabsIconToUnread()
-        {
-            foreach (TabPage tb in this.ListTab.TabPages)
-            {
-                if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
-                {
-                    if (tb.ImageIndex == -1)
-                    {
-                        tb.ImageIndex = 0;
-                    }
-                }
-            }
-        }
-
-        private void ChangeSelectetdTweetReadStateToRead()
-        {
-            ChangeSelectetdTweetReadState(read: true);
-            if (this.settingDialog.TabIconDisp)
-            {
-                ChangeTabsIconToRead();
-            }
-            else
-            {
-                this.ListTab.Refresh();
-            }
-        }
-
-        private void ChangeSelectedTweetReadSateToUnread()
-        {
-            ChangeSelectetdTweetReadState(read: false);
-            if (this.settingDialog.TabIconDisp)
-            {
-                ChangeTabsIconToUnread();
-            }
-            else
-            {
-                this.ListTab.Refresh();
-            }
-        }
 
         private void ReadedStripMenuItem_Click(object sender, EventArgs e)
         {
