@@ -2752,7 +2752,8 @@ namespace Hoehoe
 
         private void TrySaveLog()
         {
-            DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine),
+                Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (rslt == DialogResult.Cancel)
             {
                 return;
@@ -2772,39 +2773,26 @@ namespace Hoehoe
                     return;
                 }
 
+                var idxs = rslt == DialogResult.Yes ?
+                    Enumerable.Range(0, this.curList.VirtualListSize) :
+                    this.curList.SelectedIndices.Cast<int>();
+                var lines = idxs
+                    .Select(idx => this.statuses.Item(this.curTab.Text, idx))
+                    .Select(post => string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}",
+                        post.Nickname,
+                        post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""),
+                        post.CreatedAt,
+                        post.ScreenName,
+                        post.StatusId,
+                        post.ImageUrl,
+                        post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""),
+                        post.IsProtect ? "Protect" : string.Empty));
                 using (StreamWriter sw = new StreamWriter(this.SaveFileDialog1.FileName, false, Encoding.UTF8))
                 {
-                    if (rslt == DialogResult.Yes)
+                    foreach (var line in lines)
                     {
-                        // All
-                        for (int idx = 0; idx <= this.curList.VirtualListSize - 1; idx++)
-                        {
-                            PostClass post = this.statuses.Item(this.curTab.Text, idx);
-                            string protect = string.Empty;
-                            if (post.IsProtect)
-                            {
-                                protect = "Protect";
-                            }
-
-                            sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}", post.Nickname, post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""), post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl, post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""), protect));
-                        }
+                        sw.WriteLine(line);
                     }
-                    else
-                    {
-                        foreach (int idx in this.curList.SelectedIndices)
-                        {
-                            PostClass post = this.statuses.Item(this.curTab.Text, idx);
-                            string protect = string.Empty;
-                            if (post.IsProtect)
-                            {
-                                protect = "Protect";
-                            }
-
-                            sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}", post.Nickname, post.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""), post.CreatedAt, post.ScreenName, post.StatusId, post.ImageUrl, post.Text.Replace("\n", string.Empty).Replace("\"", "\"\""), protect));
-                        }
-                    }
-
-                    sw.Close();
                 }
             }
 
