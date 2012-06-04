@@ -3084,6 +3084,11 @@ namespace Hoehoe
             this.ShowUserTimeline();
         }
 
+        private void SoundFileComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChangeCurrentTabSoundFile((string)((ToolStripComboBox)sender).SelectedItem);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3177,11 +3182,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void SoundFileComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ChangeCurrentTabSoundFile((string)((ToolStripComboBox)sender).SelectedItem);
         }
 
         private void TryCopySourceName()
