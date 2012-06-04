@@ -2472,6 +2472,22 @@ namespace Hoehoe
             }
         }
 
+        private void RenameCurrentTabName()
+        {
+            if (string.IsNullOrEmpty(this.rclickTabName))
+            {
+                return;
+            }
+
+            this.TabRename(ref this.rclickTabName);
+        }
+
+        private void RenameSelectedTabName()
+        {
+            string tn = this.ListTab.SelectedTab.Text;
+            this.TabRename(ref tn);
+        }
+
         #endregion done
 
         #region event handler
@@ -3527,32 +3543,15 @@ namespace Hoehoe
             }
         }
 
-        private void RenameCurrentTabName()
-        {
-            if (string.IsNullOrEmpty(this.rclickTabName))
-            {
-                return;
-            }
-
-            this.TabRename(ref this.rclickTabName);
-        }
-
         private void TabRenameMenuItem_Click(object sender, EventArgs e)
         {
             RenameCurrentTabName();
-        }
-
-        private void RenameSelectedTabName()
-        {
-            string tn = this.ListTab.SelectedTab.Text;
-            this.TabRename(ref tn);
         }
 
         private void Tabs_DoubleClick(object sender, MouseEventArgs e)
         {
             RenameSelectedTabName();
         }
-
         private void Tabs_DragDrop(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(typeof(TabPage)))
