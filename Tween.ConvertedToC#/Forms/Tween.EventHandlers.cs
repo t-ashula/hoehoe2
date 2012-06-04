@@ -2143,7 +2143,6 @@ namespace Hoehoe
             }
         }
 
-
         private void TrySaveLog()
         {
             DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine),
@@ -2229,6 +2228,14 @@ namespace Hoehoe
         private void AddSearchTabForAtUserInCurrentTweet()
         {
             this.AddNewTabForAtUserSearch(this.GetUserId());
+        }
+
+        private void ChangeSearchPanelControlsTabStop(Control pnl, bool newVariable)
+        {
+            foreach (Control ctl in pnl.Controls)
+            {
+                ctl.TabStop = newVariable;
+            }
         }
 
         #endregion done
@@ -2854,7 +2861,17 @@ namespace Hoehoe
         {
             this.AddSearchTabForAtUserInCurrentTweet();
         }
-        
+
+        private void SearchControls_Enter(object sender, EventArgs e)
+        {
+            ChangeSearchPanelControlsTabStop((Control)sender, true);
+        }
+
+        private void SearchControls_Leave(object sender, EventArgs e)
+        {
+            ChangeSearchPanelControlsTabStop((Control)sender, false);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -2896,7 +2913,6 @@ namespace Hoehoe
             }
 
             cmb.Text = buf.ToString();
-
             tb.SearchWords = cmb.Text;
             tb.SearchLang = cmbLang.Text;
             if (string.IsNullOrEmpty(cmb.Text))
@@ -2949,24 +2965,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void ChangeSearchPanelControlsTabStop(Control pnl, bool newVariable)
-        {
-            foreach (Control ctl in pnl.Controls)
-            {
-                ctl.TabStop = newVariable;
-            }
-        }
-
-        private void SearchControls_Enter(object sender, EventArgs e)
-        {
-            ChangeSearchPanelControlsTabStop((Control)sender, true);
-        }
-
-        private void SearchControls_Leave(object sender, EventArgs e)
-        {
-            ChangeSearchPanelControlsTabStop((Control)sender, false);
         }
 
         private void SearchGoogleContextMenuItem_Click(object sender, EventArgs e)
