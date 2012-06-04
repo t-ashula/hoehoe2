@@ -1511,6 +1511,18 @@ namespace Hoehoe
             this.SetModifySettingCommon(true);
         }
 
+        private void ChangeNotifySetting(bool notify)
+        {
+            this.NotifyTbMenuItem.Checked = this.NotifyDispMenuItem.Checked = notify;
+            if (string.IsNullOrEmpty(this.rclickTabName))
+            {
+                return;
+            }
+
+            this.statuses.Tabs[this.rclickTabName].Notify = notify;
+            this.SaveConfigsTabs();
+        }
+
         #endregion done
 
         #region event handler
@@ -1981,24 +1993,12 @@ namespace Hoehoe
             ChangeNewPostPopupSetting(((ToolStripMenuItem)sender).Checked);
         }
 
-        #endregion
-
-        private void ChangeNotifySetting(bool notify)
-        {
-            this.NotifyTbMenuItem.Checked = this.NotifyDispMenuItem.Checked = notify;
-            if (string.IsNullOrEmpty(this.rclickTabName))
-            {
-                return;
-            }
-
-            this.statuses.Tabs[this.rclickTabName].Notify = notify;
-            this.SaveConfigsTabs();
-        }
-
         private void NotifyDispMenuItem_Click(object sender, EventArgs e)
         {
             ChangeNotifySetting(((ToolStripMenuItem)sender).Checked);
         }
+
+        #endregion
 
         private void ActivateMainForm()
         {
