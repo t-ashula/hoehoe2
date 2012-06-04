@@ -3094,6 +3094,11 @@ namespace Hoehoe
             ChangeCurrentTabSoundFile((string)((ToolStripComboBox)sender).SelectedItem);
         }
 
+        private void SourceCopyMenuItem_Click(object sender, EventArgs e)
+        {
+            TryCopySourceName();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3187,11 +3192,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void SourceCopyMenuItem_Click(object sender, EventArgs e)
-        {
-            TryCopySourceName();
         }
 
         private void TryOpenSourceLink()
