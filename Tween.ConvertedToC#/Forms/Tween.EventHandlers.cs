@@ -2109,6 +2109,41 @@ namespace Hoehoe
             }
         }
 
+        private void TrySaveCurrentTweetUserIcon()
+        {
+            if (this.curPost == null)
+            {
+                return;
+            }
+
+            string name = this.curPost.ImageUrl;
+            this.SaveFileDialog1.FileName = name.Substring(name.LastIndexOf('/') + 1);
+            if (this.SaveFileDialog1.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            try
+            {
+                using (Image orgBmp = new Bitmap(this.iconDict[name]))
+                using (Bitmap bmp2 = new Bitmap(orgBmp.Size.Width, orgBmp.Size.Height))
+                {
+                    using (Graphics g = Graphics.FromImage(bmp2))
+                    {
+                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
+                        g.DrawImage(orgBmp, 0, 0, orgBmp.Size.Width, orgBmp.Size.Height);
+                    }
+
+                    bmp2.Save(this.SaveFileDialog1.FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                // 処理中にキャッシュアウトする可能性あり
+                System.Diagnostics.Debug.Write(ex);
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -2708,47 +2743,12 @@ namespace Hoehoe
             ShowCurrentTweetRtCountBox();
         }
 
-        #endregion
-
-        private void TrySaveCurrentTweetUserIcon()
-        {
-            if (this.curPost == null)
-            {
-                return;
-            }
-
-            string name = this.curPost.ImageUrl;
-            this.SaveFileDialog1.FileName = name.Substring(name.LastIndexOf('/') + 1);
-            if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    using (Image orgBmp = new Bitmap(this.iconDict[name]))
-                    {
-                        using (Bitmap bmp2 = new Bitmap(orgBmp.Size.Width, orgBmp.Size.Height))
-                        {
-                            using (Graphics g = Graphics.FromImage(bmp2))
-                            {
-                                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
-                                g.DrawImage(orgBmp, 0, 0, orgBmp.Size.Width, orgBmp.Size.Height);
-                            }
-
-                            bmp2.Save(this.SaveFileDialog1.FileName);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // 処理中にキャッシュアウトする可能性あり
-                    System.Diagnostics.Debug.Write(ex);
-                }
-            }
-        }
-
         private void SaveIconPictureToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TrySaveCurrentTweetUserIcon();
         }
+
+        #endregion
 
         private void TrySaveLog()
         {
