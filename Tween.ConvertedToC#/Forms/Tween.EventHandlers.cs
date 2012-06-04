@@ -2023,8 +2023,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion
-
         private void NotifyIcon1_MouseMove(object sender, MouseEventArgs e)
         {
             this.SetNotifyIconText();
@@ -2039,6 +2037,8 @@ namespace Hoehoe
         {
             this.OpenUriAsync("https://twitter.com/" + this.tw.Username);
         }
+
+        #endregion
 
         private void TryOpenUrlInCurrentTweet()
         {
