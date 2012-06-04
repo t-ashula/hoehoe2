@@ -2240,12 +2240,12 @@ namespace Hoehoe
             }
         }
 
-        #endregion
-
         private void PostBrowser_StatusTextChanged(object sender, EventArgs e)
         {
             ChangeStatusLabelUrlTextByPostBrowserStatusText();
         }
+
+        #endregion
 
         private void TryPostTweet()
         {
