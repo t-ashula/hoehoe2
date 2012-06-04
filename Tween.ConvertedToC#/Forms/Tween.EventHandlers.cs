@@ -3247,6 +3247,11 @@ namespace Hoehoe
             MessageBox.Show(this.StatusLabel.TextHistory, "Logs", MessageBoxButtons.OK, MessageBoxIcon.None);
         }
 
+        private void StatusOpenMenuItem_Click(object sender, EventArgs e)
+        {
+            TryOpenSelectedTweetWebPage();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3340,11 +3345,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void StatusOpenMenuItem_Click(object sender, EventArgs e)
-        {
-            TryOpenSelectedTweetWebPage();
         }
 
         private void StatusText_EnterExtracted()
