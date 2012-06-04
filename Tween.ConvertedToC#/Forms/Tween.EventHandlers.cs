@@ -2358,6 +2358,15 @@ namespace Hoehoe
             CopyToClipboard(this.SourceLinkLabel.Text);
         }
 
+        private void TryOpenSourceLink()
+        {
+            string link = (string)this.SourceLinkLabel.Tag;
+            if (!string.IsNullOrEmpty(link))
+            {
+                this.OpenUriAsync(link);
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -3191,15 +3200,6 @@ namespace Hoehoe
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void TryOpenSourceLink()
-        {
-            string link = (string)this.SourceLinkLabel.Tag;
-            if (!string.IsNullOrEmpty(link))
-            {
-                this.OpenUriAsync(link);
             }
         }
 
