@@ -2353,6 +2353,11 @@ namespace Hoehoe
             this.SaveConfigsTabs();
         }
 
+        private void TryCopySourceName()
+        {
+            CopyToClipboard(this.SourceLinkLabel.Text);
+        }
+
         #endregion done
 
         #region event handler
@@ -3182,11 +3187,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TryCopySourceName()
-        {
-            CopyToClipboard(this.SourceLinkLabel.Text);
         }
 
         private void SourceCopyMenuItem_Click(object sender, EventArgs e)
