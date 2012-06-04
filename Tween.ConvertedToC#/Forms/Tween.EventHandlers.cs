@@ -950,7 +950,7 @@ namespace Hoehoe
                 this.FollowCommand((string)this.NameLabel.Tag);
             }
         }
-                
+
         private void DeleteSelectedTab(bool fromMenuBar)
         {
             if (string.IsNullOrEmpty(this.rclickTabName) || fromMenuBar)
@@ -1036,7 +1036,7 @@ namespace Hoehoe
             this.SetModifySettingCommon(true);
             this.tw.ReconnectUserStream();
         }
-        
+
         private void OpenFavorarePageOfSelectedTweetUser()
         {
             if (this.curList.SelectedIndices.Count > 0)
@@ -1141,7 +1141,7 @@ namespace Hoehoe
             this.modifySettingCommon = true;
             this.StatusText_TextChangedExtracted();
         }
-        
+
         private void ChangeWindowState()
         {
             if ((this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized)
@@ -1270,7 +1270,7 @@ namespace Hoehoe
 
             this.SaveConfigsTabs();
         }
-        
+
         private void TryOpenCurrentTweetIconUrl()
         {
             if (this.curPost == null)
@@ -1626,7 +1626,7 @@ namespace Hoehoe
                     return;
                 }
             }
-            
+
             openUrlStr = openUrlStr.Replace("://twitter.com/search?q=#", "://twitter.com/search?q=%23");
             this.OpenUriAsync(openUrlStr);
         }
@@ -2016,7 +2016,7 @@ namespace Hoehoe
                 this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
             }
         }
-        
+
         #endregion done
 
         #region event handler
@@ -2118,7 +2118,7 @@ namespace Hoehoe
         {
             this.DoStatusDelete();
         }
-        
+
         private void DeleteTabMenuItem_Click(object sender, EventArgs e)
         {
             DeleteSelectedTab(fromMenuBar: false);
@@ -2141,7 +2141,7 @@ namespace Hoehoe
         {
             this.DispSelectedPost(true);
         }
-        
+
         private void EndToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExitApplication();
@@ -2161,7 +2161,7 @@ namespace Hoehoe
         {
             this.FavoriteChange(false);
         }
-        
+
         private void FavorareMenuItem_Click(object sender, EventArgs e)
         {
             OpenFavorarePageOfSelectedTweetUser();
@@ -2567,39 +2567,75 @@ namespace Hoehoe
 
         #endregion
 
-        private void ChangeSelectetdTweetReadStateToRead()
+        private void ChangeSelectetdTweetReadState(bool read)
         {
             this.curList.BeginUpdate();
             if (this.settingDialog.UnreadManage)
             {
                 foreach (int idx in this.curList.SelectedIndices)
                 {
-                    this.statuses.SetReadAllTab(true, this.curTab.Text, idx);
+                    this.statuses.SetReadAllTab(read, this.curTab.Text, idx);
                 }
             }
 
             foreach (int idx in this.curList.SelectedIndices)
             {
-                this.ChangeCacheStyleRead(true, idx, this.curTab);
+                this.ChangeCacheStyleRead(read, idx, this.curTab);
             }
 
             this.ColorizeList();
             this.curList.EndUpdate();
+        }
+
+        private void ChangeTabsIconToRead()
+        {
             foreach (TabPage tb in this.ListTab.TabPages)
             {
                 if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
                 {
-                    if (this.settingDialog.TabIconDisp)
+                    if (tb.ImageIndex == 0)
                     {
-                        if (tb.ImageIndex == 0)
-                        {
-                            tb.ImageIndex = -1;
-                        }
+                        tb.ImageIndex = -1;
                     }
                 }
             }
+        }
 
-            if (!this.settingDialog.TabIconDisp)
+        private void ChangeTabsIconToUnread()
+        {
+            foreach (TabPage tb in this.ListTab.TabPages)
+            {
+                if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
+                {
+                    if (tb.ImageIndex == -1)
+                    {
+                        tb.ImageIndex = 0;
+                    }
+                }
+            }
+        }
+
+        private void ChangeSelectetdTweetReadStateToRead()
+        {
+            ChangeSelectetdTweetReadState(read: true);
+            if (this.settingDialog.TabIconDisp)
+            {
+                ChangeTabsIconToRead();
+            }
+            else
+            {
+                this.ListTab.Refresh();
+            }
+        }
+
+        private void ChangeSelectedTweetReadSateToUnread()
+        {
+            ChangeSelectetdTweetReadState(read: false);
+            if (this.settingDialog.TabIconDisp)
+            {
+                ChangeTabsIconToUnread();
+            }
+            else
             {
                 this.ListTab.Refresh();
             }
@@ -5489,44 +5525,6 @@ namespace Hoehoe
         private void UndoRemoveTabMenuItem_Click(object sender, EventArgs e)
         {
             this.UndoRemoveTab();
-        }
-
-        private void ChangeSelectedTweetReadSateToUnread()
-        {
-            this.curList.BeginUpdate();
-            if (this.settingDialog.UnreadManage)
-            {
-                foreach (int idx in this.curList.SelectedIndices)
-                {
-                    this.statuses.SetReadAllTab(false, this.curTab.Text, idx);
-                }
-            }
-
-            foreach (int idx in this.curList.SelectedIndices)
-            {
-                this.ChangeCacheStyleRead(false, idx, this.curTab);
-            }
-
-            this.ColorizeList();
-            this.curList.EndUpdate();
-            foreach (TabPage tb in this.ListTab.TabPages)
-            {
-                if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
-                {
-                    if (this.settingDialog.TabIconDisp)
-                    {
-                        if (tb.ImageIndex == -1)
-                        {
-                            tb.ImageIndex = 0;
-                        }
-                    }
-                }
-            }
-
-            if (!this.settingDialog.TabIconDisp)
-            {
-                this.ListTab.Refresh();
-            }
         }
 
         private void UnreadStripMenuItem_Click(object sender, EventArgs e)
