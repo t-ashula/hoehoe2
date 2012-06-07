@@ -3642,6 +3642,21 @@ namespace Hoehoe
             this.RefreshTasktrayIcon(false);
         }
 
+        private void TimerTimeline_Elapsed(object sender, EventArgs e)
+        {
+            TimerTimeline_ElapsedExtracted();
+        }
+
+        private void TinyURLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ConvertUrl(UrlConverter.TinyUrl);
+        }
+
+        private void ToolStripFocusLockMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            this.SetModifySettingCommon(true);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3735,21 +3750,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TimerTimeline_Elapsed(object sender, EventArgs e)
-        {
-            TimerTimeline_ElapsedExtracted();
-        }
-
-        private void TinyURLToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ConvertUrl(UrlConverter.TinyUrl);
-        }
-
-        private void ToolStripFocusLockMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            this.SetModifySettingCommon(true);
         }
 
         private void ChangeAutoUrlConvertFlag(bool autoConvert)
