@@ -2575,6 +2575,11 @@ namespace Hoehoe
                 }
             }
         }
+
+        private void ChangeAutoUrlConvertFlag(bool autoConvert)
+        {
+            this.settingDialog.UrlConvertAuto = autoConvert;
+        }
         #endregion done
 
         #region event handler
@@ -3750,11 +3755,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void ChangeAutoUrlConvertFlag(bool autoConvert)
-        {
-            this.settingDialog.UrlConvertAuto = autoConvert;
         }
 
         private void ToolStripMenuItemUrlAutoShorten_CheckedChanged(object sender, EventArgs e)
