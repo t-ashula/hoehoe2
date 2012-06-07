@@ -3662,6 +3662,21 @@ namespace Hoehoe
             this.SetModifySettingCommon(true);
         }
 
+        private void ToolStripMenuItemUrlAutoShorten_CheckedChanged(object sender, EventArgs e)
+        {
+            ChangeAutoUrlConvertFlag(this.ToolStripMenuItemUrlAutoShorten.Checked);
+        }
+
+        private static void ChangeTraceFlag(bool trace)
+        {
+            MyCommon.TraceFlag = trace;
+        }
+
+        private void TraceOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeTraceFlag(this.TraceOutToolStripMenuItem.Checked);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3755,21 +3770,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void ToolStripMenuItemUrlAutoShorten_CheckedChanged(object sender, EventArgs e)
-        {
-            ChangeAutoUrlConvertFlag(this.ToolStripMenuItemUrlAutoShorten.Checked);
-        }
-
-        private static void ChangeTraceFlag(bool trace)
-        {
-            MyCommon.TraceFlag = trace;
-        }
-
-        private void TraceOutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ChangeTraceFlag(this.TraceOutToolStripMenuItem.Checked);
         }
 
         private void ChangeTrackWordStatus()
