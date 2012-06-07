@@ -3650,112 +3650,46 @@ namespace Hoehoe
             }
         }
 
+        private void DecrementTimer(ref int counter)
+        {
+            if (counter > 0)
+            {
+                Interlocked.Decrement(ref counter);
+            }
+        }
+
+        private bool ResetWorkerTimer(ref int counter, int initailValue, WorkerType worker, bool reset)
+        {
+            if (reset || counter < 1 && initailValue > 0)
+            {
+                Interlocked.Exchange(ref counter, initailValue);
+                if (!this.tw.IsUserstreamDataReceived && !reset)
+                {
+                    this.GetTimeline(worker, 1, 0, string.Empty);
+                }
+                return false;
+            }
+            return reset;
+        }
+
         private void TimerTimeline_ElapsedExtracted()
         {
-            if (this.timerHomeCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerHomeCounter);
-            }
-
-            if (this.timerMentionCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerMentionCounter);
-            }
-
-            if (this.timerDmCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerDmCounter);
-            }
-
-            if (this.timerPubSearchCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerPubSearchCounter);
-            }
-
-            if (this.timerUserTimelineCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerUserTimelineCounter);
-            }
-
-            if (this.timerListsCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerListsCounter);
-            }
-
-            if (this.timerUsCounter > 0)
-            {
-                Interlocked.Decrement(ref this.timerUsCounter);
-            }
-
-            Interlocked.Increment(ref this.timerRefreshFollowers);
+            DecrementTimer(ref this.timerHomeCounter);
+            DecrementTimer(ref this.timerMentionCounter);
+            DecrementTimer(ref this.timerDmCounter);
+            DecrementTimer(ref this.timerPubSearchCounter);
+            DecrementTimer(ref this.timerUserTimelineCounter);
+            DecrementTimer(ref this.timerListsCounter);
+            DecrementTimer(ref this.timerUsCounter);
+            DecrementTimer(ref this.timerRefreshFollowers);
 
             // 'タイマー初期化
-            if (this.resetTimers.Timeline || (this.timerHomeCounter <= 0 && this.settingDialog.TimelinePeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerHomeCounter, this.settingDialog.TimelinePeriodInt);
-                if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.Timeline)
-                {
-                    this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.Timeline = false;
-            }
-
-            if (this.resetTimers.Reply || (this.timerMentionCounter <= 0 && this.settingDialog.ReplyPeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerMentionCounter, this.settingDialog.ReplyPeriodInt);
-                if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.Reply)
-                {
-                    this.GetTimeline(WorkerType.Reply, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.Reply = false;
-            }
-
-            if (this.resetTimers.DirectMessage || (this.timerDmCounter <= 0 && this.settingDialog.DMPeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerDmCounter, this.settingDialog.DMPeriodInt);
-                if (!this.tw.IsUserstreamDataReceived && !this.resetTimers.DirectMessage)
-                {
-                    this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.DirectMessage = false;
-            }
-
-            if (this.resetTimers.PublicSearch || (this.timerPubSearchCounter <= 0 && this.settingDialog.PubSearchPeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerPubSearchCounter, this.settingDialog.PubSearchPeriodInt);
-                if (!this.resetTimers.PublicSearch)
-                {
-                    this.GetTimeline(WorkerType.PublicSearch, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.PublicSearch = false;
-            }
-
-            if (this.resetTimers.UserTimeline || (this.timerUserTimelineCounter <= 0 && this.settingDialog.UserTimelinePeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerUserTimelineCounter, this.settingDialog.UserTimelinePeriodInt);
-                if (!this.resetTimers.UserTimeline)
-                {
-                    this.GetTimeline(WorkerType.UserTimeline, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.UserTimeline = false;
-            }
-
-            if (this.resetTimers.Lists || (this.timerListsCounter <= 0 && this.settingDialog.ListsPeriodInt > 0))
-            {
-                Interlocked.Exchange(ref this.timerListsCounter, this.settingDialog.ListsPeriodInt);
-                if (!this.resetTimers.Lists)
-                {
-                    this.GetTimeline(WorkerType.List, 1, 0, string.Empty);
-                }
-
-                this.resetTimers.Lists = false;
-            }
-
+            this.resetTimers.Timeline = ResetWorkerTimer(ref this.timerHomeCounter, this.settingDialog.TimelinePeriodInt, WorkerType.Timeline, this.resetTimers.Timeline);
+            this.resetTimers.Reply = ResetWorkerTimer(ref this.timerMentionCounter, this.settingDialog.ReplyPeriodInt, WorkerType.Reply, this.resetTimers.Reply);
+            this.resetTimers.DirectMessage = ResetWorkerTimer(ref this.timerDmCounter, this.settingDialog.DMPeriodInt, WorkerType.DirectMessegeRcv, this.resetTimers.DirectMessage);
+            this.resetTimers.PublicSearch = ResetWorkerTimer(ref this.timerPubSearchCounter, this.settingDialog.PubSearchPeriodInt, WorkerType.PublicSearch, this.resetTimers.PublicSearch);
+            this.resetTimers.UserTimeline = ResetWorkerTimer(ref this.timerUserTimelineCounter, this.settingDialog.UserTimelinePeriodInt, WorkerType.UserTimeline, this.resetTimers.UserTimeline);
+            this.resetTimers.Lists = ResetWorkerTimer(ref this.timerListsCounter, this.settingDialog.ListsPeriodInt, WorkerType.List, this.resetTimers.Lists);
             if (this.resetTimers.UserStream || (this.timerUsCounter <= 0 && this.settingDialog.UserstreamPeriodInt > 0))
             {
                 Interlocked.Exchange(ref this.timerUsCounter, this.settingDialog.UserstreamPeriodInt);
@@ -3767,9 +3701,9 @@ namespace Hoehoe
                 this.resetTimers.UserStream = false;
             }
 
-            if (this.timerRefreshFollowers > 6 * 3600)
+            if (this.timerRefreshFollowers < 1)
             {
-                Interlocked.Exchange(ref this.timerRefreshFollowers, 0);
+                Interlocked.Exchange(ref this.timerRefreshFollowers, 6 * 3600);
                 this.DoGetFollowersMenu();
                 this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
                 if (InvokeRequired && !IsDisposed)
@@ -3778,25 +3712,27 @@ namespace Hoehoe
                 }
             }
 
-            if (this.isOsResumed)
+            if (!this.isOsResumed)
             {
-                Interlocked.Increment(ref this.timerResumeWait);
-                if (this.timerResumeWait > 30)
+                return;
+            }
+
+            Interlocked.Increment(ref this.timerResumeWait);
+            if (this.timerResumeWait > 30)
+            {
+                this.isOsResumed = false;
+                Interlocked.Exchange(ref this.timerResumeWait, 0);
+                this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                this.GetTimeline(WorkerType.Reply, 1, 0, string.Empty);
+                this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
+                this.GetTimeline(WorkerType.PublicSearch, 1, 0, string.Empty);
+                this.GetTimeline(WorkerType.UserTimeline, 1, 0, string.Empty);
+                this.GetTimeline(WorkerType.List, 1, 0, string.Empty);
+                this.DoGetFollowersMenu();
+                this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
+                if (InvokeRequired && !IsDisposed)
                 {
-                    this.isOsResumed = false;
-                    Interlocked.Exchange(ref this.timerResumeWait, 0);
-                    this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
-                    this.GetTimeline(WorkerType.Reply, 1, 0, string.Empty);
-                    this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
-                    this.GetTimeline(WorkerType.PublicSearch, 1, 0, string.Empty);
-                    this.GetTimeline(WorkerType.UserTimeline, 1, 0, string.Empty);
-                    this.GetTimeline(WorkerType.List, 1, 0, string.Empty);
-                    this.DoGetFollowersMenu();
-                    this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
-                    if (InvokeRequired && !IsDisposed)
-                    {
-                        this.Invoke(new MethodInvoker(this.TrimPostChain));
-                    }
+                    this.Invoke(new MethodInvoker(this.TrimPostChain));
                 }
             }
         }
