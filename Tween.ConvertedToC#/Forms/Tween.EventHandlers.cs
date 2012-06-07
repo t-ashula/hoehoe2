@@ -3539,6 +3539,22 @@ namespace Hoehoe
             Tabs_MouseDownExtracted(e);
         }
 
+        private void TimerInterval_Changed(object sender, IntervalChangedEventArgs e)
+        {
+            if (!this.timerTimeline.Enabled)
+            {
+                return;
+            }
+
+            this.resetTimers = e;
+        }
+
+        private void TimerRefreshIcon_Tick(object sender, EventArgs e)
+        {
+            // 200ms
+            this.RefreshTasktrayIcon(false);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3632,22 +3648,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TimerInterval_Changed(object sender, IntervalChangedEventArgs e)
-        {
-            if (!this.timerTimeline.Enabled)
-            {
-                return;
-            }
-
-            this.resetTimers = e;
-        }
-
-        private void TimerRefreshIcon_Tick(object sender, EventArgs e)
-        {
-            // 200ms
-            this.RefreshTasktrayIcon(false);
         }
 
         private void TimerTimeline_ElapsedExtracted()
