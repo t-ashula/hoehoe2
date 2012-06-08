@@ -4404,6 +4404,21 @@ namespace Hoehoe
             this.TryShowStatusOfCurrentTweetUser();
         }
 
+        private void UserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.AddNewTabForUserTimeline(this.GetUserIdFromCurPostOrInput("Show UserTimeline"));
+        }
+
+        private void UxnuMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ConvertUrl(UrlConverter.Uxnu);
+        }
+
+        private void VerUpMenuItem_Click(object sender, EventArgs e)
+        {
+            this.CheckNewVersion();
+        }
+
         #endregion
 
         private void SearchButton_ClickExtracted(Control pnl)
@@ -5297,21 +5312,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void UserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.AddNewTabForUserTimeline(this.GetUserIdFromCurPostOrInput("Show UserTimeline"));
-        }
-
-        private void UxnuMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ConvertUrl(UrlConverter.Uxnu);
-        }
-
-        private void VerUpMenuItem_Click(object sender, EventArgs e)
-        {
-            this.CheckNewVersion();
         }
 
         #region callback
