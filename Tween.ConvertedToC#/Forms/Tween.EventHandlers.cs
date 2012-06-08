@@ -3019,6 +3019,31 @@ namespace Hoehoe
             this.timerTimeline.Enabled = true;
         }
 
+        private void UndoRemoveTab()
+        {
+            if (this.statuses.RemovedTab.Count == 0)
+            {
+                MessageBox.Show("There isn't removed tab.", "Undo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            TabClass tb = this.statuses.RemovedTab.Pop();
+            string renamed = tb.TabName;
+            for (int i = 1; i <= int.MaxValue; i++)
+            {
+                if (!this.statuses.ContainsTab(renamed))
+                {
+                    break;
+                }
+                renamed = string.Format("{0}({1})", tb.TabName, i);
+            }
+            tb.TabName = renamed;
+            this.statuses.Tabs.Add(renamed, tb);
+            this.AddNewTab(renamed, false, tb.TabType, tb.ListInfo);
+            this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
+            this.SaveConfigsTabs();
+        }
+
         #endregion done
 
         #region event handler
@@ -5139,30 +5164,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void UndoRemoveTab()
-        {
-            if (this.statuses.RemovedTab.Count == 0)
-            {
-                MessageBox.Show("There isn't removed tab.", "Undo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            TabClass tb = this.statuses.RemovedTab.Pop();
-            string renamed = tb.TabName;
-            for (int i = 1; i <= int.MaxValue; i++)
-            {
-                if (!this.statuses.ContainsTab(renamed))
-                {
-                    break;
-                }
-                renamed = string.Format("{0}({1})", tb.TabName, i);
-            }
-            tb.TabName = renamed;
-            this.statuses.Tabs.Add(renamed, tb);
-            this.AddNewTab(renamed, false, tb.TabType, tb.ListInfo);
-            this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
-            this.SaveConfigsTabs();
         }
 
         private void UndoRemoveTabMenuItem_Click(object sender, EventArgs e)
