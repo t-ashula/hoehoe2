@@ -4384,6 +4384,26 @@ namespace Hoehoe
             this.TryOpenFavorarePageOfCurrentTweetUser();
         }
 
+        private void UserPicture_DoubleClick(object sender, EventArgs e)
+        {
+            TryOpenCurrentNameLabelUserHome();
+        }
+
+        private void UserPicture_MouseEnter(object sender, EventArgs e)
+        {
+            this.ChangeUserPictureCursor(Cursors.Hand);
+        }
+
+        private void UserPicture_MouseLeave(object sender, EventArgs e)
+        {
+            ChangeUserPictureCursor(Cursors.Default);
+        }
+
+        private void UserStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryShowStatusOfCurrentTweetUser();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -5277,26 +5297,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void UserPicture_DoubleClick(object sender, EventArgs e)
-        {
-            TryOpenCurrentNameLabelUserHome();
-        }
-
-        private void UserPicture_MouseEnter(object sender, EventArgs e)
-        {
-            this.ChangeUserPictureCursor(Cursors.Hand);
-        }
-
-        private void UserPicture_MouseLeave(object sender, EventArgs e)
-        {
-            ChangeUserPictureCursor(Cursors.Default);
-        }
-
-        private void UserStatusToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.TryShowStatusOfCurrentTweetUser();
         }
 
         private void TryAddNewUserTimelineTab()
