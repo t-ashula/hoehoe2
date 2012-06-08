@@ -4052,6 +4052,11 @@ namespace Hoehoe
             TweenMain_LoadExtracted();
         }
 
+        private void TweenMain_LocationChanged(object sender, EventArgs e)
+        {
+            this.TweenMain_LocationChangedExtracted();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -4954,11 +4959,6 @@ namespace Hoehoe
                 this.myLoc = this.DesktopLocation;
                 this.modifySettingLocal = true;
             }
-        }
-
-        private void TweenMain_LocationChanged(object sender, EventArgs e)
-        {
-            this.TweenMain_LocationChangedExtracted();
         }
 
         private void ResizeMainForm()
