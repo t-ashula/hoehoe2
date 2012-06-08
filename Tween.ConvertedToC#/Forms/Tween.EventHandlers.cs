@@ -3791,6 +3791,12 @@ namespace Hoehoe
             this.TweenMain_ClientSizeChangedExtracted();
         }
 
+        private void TweenMain_Deactivate(object sender, EventArgs e)
+        {
+            // 画面が非アクティブになったら、発言欄の背景色をデフォルトへ
+            this.StatusText_LeaveExtracted();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3884,12 +3890,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TweenMain_Deactivate(object sender, EventArgs e)
-        {
-            // 画面が非アクティブになったら、発言欄の背景色をデフォルトへ
-            this.StatusText_LeaveExtracted();
         }
 
         private void DisposeAll()
