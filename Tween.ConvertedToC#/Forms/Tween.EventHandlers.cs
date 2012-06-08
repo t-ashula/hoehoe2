@@ -927,21 +927,13 @@ namespace Hoehoe
 
         private void AddNewTab()
         {
-            string tabName = null;
+            string tabName = this.statuses.GetUniqueTabName();
             TabUsageType tabUsage = default(TabUsageType);
-            using (InputTabName inputName = new InputTabName())
+            if (!TryGetTabInfo(ref tabName, ref tabUsage, showusage: true))
             {
-                inputName.TabName = this.statuses.GetUniqueTabName();
-                inputName.SetIsShowUsage(true);
-                inputName.ShowDialog();
-                if (inputName.DialogResult == DialogResult.Cancel)
-                {
-                    return;
-                }
-
-                tabName = inputName.TabName;
-                tabUsage = inputName.Usage;
+                return;
             }
+
 
             this.TopMost = this.settingDialog.AlwaysTop;
             if (string.IsNullOrEmpty(tabName))
@@ -3772,20 +3764,31 @@ namespace Hoehoe
             }
         }
 
-        private bool TryUserInputText(ref string val, string title, string desc)
+        private bool TryGetTabInfo(ref string name, ref TabUsageType usageType, string title = "", string desc = "", bool showusage = false)
         {
-            using (var form = new InputTabName() { TabName = val })
+            using (var form = new InputTabName() { TabName = name })
             {
                 form.SetFormTitle(title);
                 form.SetFormDescription(desc);
+                form.SetIsShowUsage(showusage);
                 var result = form.ShowDialog();
                 if (result != System.Windows.Forms.DialogResult.OK)
                 {
                     return false;
                 }
-                val = form.TabName;
+                name = form.TabName;
+                if (showusage)
+                {
+                    usageType = form.Usage;
+                }
             }
             return true;
+        }
+
+        private bool TryUserInputText(ref string val, string title = "", string desc = "")
+        {
+            TabUsageType tmp = TabUsageType.UserDefined;
+            return TryGetTabInfo(ref val, ref tmp, title, desc, false);
         }
 
         private void ChangeTrackWordStatus()
