@@ -2655,6 +2655,26 @@ namespace Hoehoe
             }
         }
 
+        private void TweenMain_ClientSizeChangedExtracted()
+        {
+            if (!this.initialLayout && this.Visible)
+            {
+                if (this.WindowState == FormWindowState.Normal)
+                {
+                    this.mySize = this.ClientSize;
+                    this.mySpDis = this.SplitContainer1.SplitterDistance;
+                    this.mySpDis3 = this.SplitContainer3.SplitterDistance;
+                    if (this.StatusText.Multiline)
+                    {
+                        this.mySpDis2 = this.StatusText.Height;
+                    }
+
+                    this.myAdSpDis = this.SplitContainer4.SplitterDistance;
+                    this.modifySettingLocal = true;
+                }
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -3858,26 +3878,6 @@ namespace Hoehoe
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void TweenMain_ClientSizeChangedExtracted()
-        {
-            if (!this.initialLayout && this.Visible)
-            {
-                if (this.WindowState == FormWindowState.Normal)
-                {
-                    this.mySize = this.ClientSize;
-                    this.mySpDis = this.SplitContainer1.SplitterDistance;
-                    this.mySpDis3 = this.SplitContainer3.SplitterDistance;
-                    if (this.StatusText.Multiline)
-                    {
-                        this.mySpDis2 = this.StatusText.Height;
-                    }
-
-                    this.myAdSpDis = this.SplitContainer4.SplitterDistance;
-                    this.modifySettingLocal = true;
-                }
             }
         }
 
