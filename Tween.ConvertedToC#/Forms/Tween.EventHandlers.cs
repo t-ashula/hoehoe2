@@ -4271,6 +4271,16 @@ namespace Hoehoe
             this.ConvertUrl(UrlConverter.Twurl);
         }
 
+        private void UndoRemoveTabMenuItem_Click(object sender, EventArgs e)
+        {
+            this.UndoRemoveTab();
+        }
+
+        private void UnreadStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ChangeSelectedTweetReadSateToUnread();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -5164,16 +5174,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void UndoRemoveTabMenuItem_Click(object sender, EventArgs e)
-        {
-            this.UndoRemoveTab();
-        }
-
-        private void UnreadStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ChangeSelectedTweetReadSateToUnread();
         }
 
         private void ChangeCurrentTabUnreadManagement(bool isManage)
