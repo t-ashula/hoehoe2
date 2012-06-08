@@ -4314,6 +4314,11 @@ namespace Hoehoe
             this.ChangeCurrentTabUnreadManagement(((ToolStripMenuItem)sender).Checked);
         }
 
+        private void UrlConvertAutoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ConvertUrlByAutoSelectedService();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -5207,11 +5212,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void UrlConvertAutoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ConvertUrlByAutoSelectedService();
         }
 
         private void TryCopyUrlInCurrentTweet()
