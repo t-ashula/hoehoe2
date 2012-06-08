@@ -198,6 +198,9 @@
       <DependentUpon>Tween.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Tween.Privates.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="IntervalChangedEventArgs.cs" />
     <Compile Include="WebBrowserAPI.cs" />
     <Compile Include="WebServices\bing.cs" />
