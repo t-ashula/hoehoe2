@@ -4047,6 +4047,11 @@ namespace Hoehoe
             this.TweenMain_FormClosingExtracted(e);
         }
 
+        private void TweenMain_Load(object sender, EventArgs e)
+        {
+            TweenMain_LoadExtracted();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -4146,13 +4151,10 @@ namespace Hoehoe
         {
             this.ignoreConfigSave = true;
             this.Visible = false;
-
             this.securityManager = new InternetSecurityManager(this.PostBrowser);
             this.thumbnail = new Thumbnail(this);
-
             MyCommon.TwitterApiInfo.Changed += this.TwitterApiInfo_Changed;
             Microsoft.Win32.SystemEvents.PowerModeChanged += this.SystemEvents_PowerModeChanged;
-
             this.VerUpMenuItem.Image = this.shield.Icon;
             var cmdArgs = System.Environment.GetCommandLineArgs().Skip(1).ToArray();
             if (cmdArgs.Length != 0 && cmdArgs.Contains("/d"))
@@ -4167,14 +4169,11 @@ namespace Hoehoe
 
             this.InitializeTraceFrag();
 
-            // アイコン読み込み
-            this.LoadIcons();
-
-            // 発言保持クラス
-            this.statuses = TabInformations.GetInstance();
+            this.statuses = TabInformations.GetInstance(); // 発言保持クラス
 
             // アイコン設定
-            this.Icon = this.mainIcon;          // メインフォーム（TweenMain）
+            this.LoadIcons();                        // アイコン読み込み
+            this.Icon = this.mainIcon;               // メインフォーム（TweenMain）
             this.NotifyIcon1.Icon = this.iconAt;     // タスクトレイ
             this.TabImage.Images.Add(this.tabIcon);  // タブ見出し
 
@@ -4946,11 +4945,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void TweenMain_Load(object sender, EventArgs e)
-        {
-            TweenMain_LoadExtracted();
         }
 
         private void TweenMain_LocationChangedExtracted()
