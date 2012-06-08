@@ -3786,6 +3786,11 @@ namespace Hoehoe
             this.ActivateMainFormControls();
         }
 
+        private void TweenMain_ClientSizeChanged(object sender, EventArgs e)
+        {
+            this.TweenMain_ClientSizeChangedExtracted();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3879,11 +3884,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TweenMain_ClientSizeChanged(object sender, EventArgs e)
-        {
-            this.TweenMain_ClientSizeChangedExtracted();
         }
 
         private void TweenMain_Deactivate(object sender, EventArgs e)
