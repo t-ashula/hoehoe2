@@ -4360,6 +4360,16 @@ namespace Hoehoe
             this.DoUrlUndo();
         }
 
+        private void UseHashtagMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TrySetHashtagFromCurrentTweet();
+        }
+
+        private void UserFavorareToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryOpenFavorarePageOfCurrentTweetUser();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -5253,16 +5263,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-                
-        private void UseHashtagMenuItem_Click(object sender, EventArgs e)
-        {
-            this.TrySetHashtagFromCurrentTweet();
-        }
-
-        private void UserFavorareToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.TryOpenFavorarePageOfCurrentTweetUser();
         }
 
         private void TryOpenCurrentNameLabelUserHome()
