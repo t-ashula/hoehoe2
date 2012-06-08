@@ -3848,196 +3848,6 @@ namespace Hoehoe
             }
         }
 
-        private void Tw_NewPostFromStream()
-        {
-            if (this.settingDialog.ReadOldPosts)
-            {
-                // 新着時未読クリア
-                this.statuses.SetRead();
-            }
-
-            int rsltAddCount = this.statuses.DistributePosts();
-            lock (this.syncObject)
-            {
-                DateTime tm = DateTime.Now;
-                if (this.timeLineTimestamps.ContainsKey(tm))
-                {
-                    this.timeLineTimestamps[tm] += rsltAddCount;
-                }
-                else
-                {
-                    this.timeLineTimestamps.Add(tm, rsltAddCount);
-                }
-
-                DateTime oneHour = tm.Subtract(new TimeSpan(1, 0, 0));
-                List<DateTime> keys = new List<DateTime>();
-                this.timeLineCount = 0;
-                foreach (System.DateTime key in this.timeLineTimestamps.Keys)
-                {
-                    if (key.CompareTo(oneHour) < 0)
-                    {
-                        keys.Add(key);
-                    }
-                    else
-                    {
-                        this.timeLineCount += this.timeLineTimestamps[key];
-                    }
-                }
-
-                foreach (DateTime key in keys)
-                {
-                    this.timeLineTimestamps.Remove(key);
-                }
-
-                keys.Clear();
-            }
-
-            if (this.settingDialog.UserstreamPeriodInt > 0)
-            {
-                return;
-            }
-
-            try
-            {
-                if (InvokeRequired && !IsDisposed)
-                {
-                    Invoke(new Action<bool>(this.RefreshTimeline), true);
-                    return;
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                return;
-            }
-            catch (InvalidOperationException)
-            {
-                return;
-            }
-        }
-
-        private void Tw_PostDeleted(long id)
-        {
-            try
-            {
-                if (InvokeRequired && !IsDisposed)
-                {
-                    Invoke(new Action(() =>
-                    {
-                        this.statuses.RemovePostReserve(id);
-                        if (this.curTab != null && this.statuses.Tabs[this.curTab.Text].Contains(id))
-                        {
-                            this.itemCache = null;
-                            this.itemCacheIndex = -1;
-                            this.postCache = null;
-                            ((DetailsListView)this.curTab.Tag).Update();
-                            if (this.curPost != null & this.curPost.StatusId == id)
-                            {
-                                DispSelectedPost(true);
-                            }
-                        }
-                    }));
-                    return;
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                return;
-            }
-            catch (InvalidOperationException)
-            {
-                return;
-            }
-        }
-
-        private void Tw_UserIdChanged()
-        {
-            this.modifySettingCommon = true;
-        }
-
-        private void Tw_UserStreamEventArrived(Twitter.FormattedEvent ev)
-        {
-            try
-            {
-                if (InvokeRequired && !IsDisposed)
-                {
-                    Invoke(new Action<Twitter.FormattedEvent>(this.Tw_UserStreamEventArrived), ev);
-                    return;
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                return;
-            }
-            catch (InvalidOperationException)
-            {
-                return;
-            }
-
-            this.StatusLabel.Text = "Event: " + ev.Event;
-            this.NotifyEvent(ev);
-            if (ev.Event == "favorite" || ev.Event == "unfavorite")
-            {
-                if (this.curTab != null && this.statuses.Tabs[this.curTab.Text].Contains(ev.Id))
-                {
-                    this.itemCache = null;
-                    this.itemCacheIndex = -1;
-                    this.postCache = null;
-                    ((DetailsListView)this.curTab.Tag).Update();
-                }
-
-                if (ev.Event == "unfavorite" && ev.Username.ToLower().Equals(this.tw.Username.ToLower()))
-                {
-                    this.RemovePostFromFavTab(new long[] { ev.Id });
-                }
-            }
-        }
-
-        private void Tw_UserStreamStarted()
-        {
-            this.isActiveUserstream = true;
-            try
-            {
-                if (InvokeRequired && !IsDisposed)
-                {
-                    Invoke(new MethodInvoker(this.Tw_UserStreamStarted));
-                    return;
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                return;
-            }
-            catch (InvalidOperationException)
-            {
-                return;
-            }
-
-            ChangeUserStreamStatusDisplay(start: true);
-        }
-
-        private void Tw_UserStreamStopped()
-        {
-            this.isActiveUserstream = false;
-            try
-            {
-                if (InvokeRequired && !IsDisposed)
-                {
-                    Invoke(new MethodInvoker(this.Tw_UserStreamStopped));
-                    return;
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                return;
-            }
-            catch (InvalidOperationException)
-            {
-                return;
-            }
-
-            ChangeUserStreamStatusDisplay(start: false);
-        }
-
         private void ActivateMainFormControls()
         {
             /// 画面がアクティブになったら、発言欄の背景色戻す
@@ -6991,6 +6801,198 @@ namespace Hoehoe
 
         #endregion
 
+        #region userstream
+        private void Tw_NewPostFromStream()
+        {
+            if (this.settingDialog.ReadOldPosts)
+            {
+                // 新着時未読クリア
+                this.statuses.SetRead();
+            }
+
+            int rsltAddCount = this.statuses.DistributePosts();
+            lock (this.syncObject)
+            {
+                DateTime tm = DateTime.Now;
+                if (this.timeLineTimestamps.ContainsKey(tm))
+                {
+                    this.timeLineTimestamps[tm] += rsltAddCount;
+                }
+                else
+                {
+                    this.timeLineTimestamps.Add(tm, rsltAddCount);
+                }
+
+                DateTime oneHour = tm.Subtract(new TimeSpan(1, 0, 0));
+                List<DateTime> keys = new List<DateTime>();
+                this.timeLineCount = 0;
+                foreach (System.DateTime key in this.timeLineTimestamps.Keys)
+                {
+                    if (key.CompareTo(oneHour) < 0)
+                    {
+                        keys.Add(key);
+                    }
+                    else
+                    {
+                        this.timeLineCount += this.timeLineTimestamps[key];
+                    }
+                }
+
+                foreach (DateTime key in keys)
+                {
+                    this.timeLineTimestamps.Remove(key);
+                }
+
+                keys.Clear();
+            }
+
+            if (this.settingDialog.UserstreamPeriodInt > 0)
+            {
+                return;
+            }
+
+            try
+            {
+                if (InvokeRequired && !IsDisposed)
+                {
+                    Invoke(new Action<bool>(this.RefreshTimeline), true);
+                    return;
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
+            catch (InvalidOperationException)
+            {
+                return;
+            }
+        }
+
+        private void Tw_PostDeleted(long id)
+        {
+            try
+            {
+                if (InvokeRequired && !IsDisposed)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        this.statuses.RemovePostReserve(id);
+                        if (this.curTab != null && this.statuses.Tabs[this.curTab.Text].Contains(id))
+                        {
+                            this.itemCache = null;
+                            this.itemCacheIndex = -1;
+                            this.postCache = null;
+                            ((DetailsListView)this.curTab.Tag).Update();
+                            if (this.curPost != null & this.curPost.StatusId == id)
+                            {
+                                DispSelectedPost(true);
+                            }
+                        }
+                    }));
+                    return;
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
+            catch (InvalidOperationException)
+            {
+                return;
+            }
+        }
+
+        private void Tw_UserIdChanged()
+        {
+            this.modifySettingCommon = true;
+        }
+
+        private void Tw_UserStreamEventArrived(Twitter.FormattedEvent ev)
+        {
+            try
+            {
+                if (InvokeRequired && !IsDisposed)
+                {
+                    Invoke(new Action<Twitter.FormattedEvent>(this.Tw_UserStreamEventArrived), ev);
+                    return;
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
+            catch (InvalidOperationException)
+            {
+                return;
+            }
+
+            this.StatusLabel.Text = "Event: " + ev.Event;
+            this.NotifyEvent(ev);
+            if (ev.Event == "favorite" || ev.Event == "unfavorite")
+            {
+                if (this.curTab != null && this.statuses.Tabs[this.curTab.Text].Contains(ev.Id))
+                {
+                    this.itemCache = null;
+                    this.itemCacheIndex = -1;
+                    this.postCache = null;
+                    ((DetailsListView)this.curTab.Tag).Update();
+                }
+
+                if (ev.Event == "unfavorite" && ev.Username.ToLower().Equals(this.tw.Username.ToLower()))
+                {
+                    this.RemovePostFromFavTab(new long[] { ev.Id });
+                }
+            }
+        }
+
+        private void Tw_UserStreamStarted()
+        {
+            this.isActiveUserstream = true;
+            try
+            {
+                if (InvokeRequired && !IsDisposed)
+                {
+                    Invoke(new MethodInvoker(this.Tw_UserStreamStarted));
+                    return;
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
+            catch (InvalidOperationException)
+            {
+                return;
+            }
+
+            ChangeUserStreamStatusDisplay(start: true);
+        }
+
+        private void Tw_UserStreamStopped()
+        {
+            this.isActiveUserstream = false;
+            try
+            {
+                if (InvokeRequired && !IsDisposed)
+                {
+                    Invoke(new MethodInvoker(this.Tw_UserStreamStopped));
+                    return;
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
+            catch (InvalidOperationException)
+            {
+                return;
+            }
+
+            ChangeUserStreamStatusDisplay(start: false);
+        }
+
+        #endregion 
         #endregion event handler
     }
 }
