@@ -4042,6 +4042,11 @@ namespace Hoehoe
             }
         }
 
+        private void TweenMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.TweenMain_FormClosingExtracted(e);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -4135,11 +4140,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TweenMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.TweenMain_FormClosingExtracted(e);
         }
 
         private void TweenMain_LoadExtracted()
