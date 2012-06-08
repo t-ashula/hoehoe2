@@ -2572,6 +2572,7 @@ namespace Hoehoe
         {
             this.settingDialog.UrlConvertAuto = autoConvert;
         }
+
         private bool TryGetTabInfo(ref string name, ref TabUsageType usageType, string title = "", string desc = "", bool showusage = false)
         {
             using (var form = new InputTabName() { TabName = name })
@@ -2637,6 +2638,14 @@ namespace Hoehoe
             this.DoTranslation(this.curPost.TextFromApi);
         }
 
+        private void ChangeUserStreamStatusDisplay(bool start)
+        {
+            this.MenuItemUserStream.Text = start ? "&UserStream ▶" : "&UserStream ■";
+            this.MenuItemUserStream.Enabled = true;
+            this.StopToolStripMenuItem.Text = start ? "&Stop" : "&Start";
+            this.StopToolStripMenuItem.Enabled = true;
+            this.StatusLabel.Text = start ? "UserStream Started." : "UserStream Stopped.";
+        }
         #endregion done
 
         #region event handler
@@ -3981,15 +3990,6 @@ namespace Hoehoe
                     this.RemovePostFromFavTab(new long[] { ev.Id });
                 }
             }
-        }
-
-        private void ChangeUserStreamStatusDisplay(bool start)
-        {
-            this.MenuItemUserStream.Text = start ? "&UserStream ▶" : "&UserStream ■";
-            this.MenuItemUserStream.Enabled = true;
-            this.StopToolStripMenuItem.Text = start ? "&Stop" : "&Start";
-            this.StopToolStripMenuItem.Enabled = true;
-            this.StatusLabel.Text = start ? "UserStream Started." : "UserStream Stopped.";
         }
 
         private void Tw_UserStreamStarted()
