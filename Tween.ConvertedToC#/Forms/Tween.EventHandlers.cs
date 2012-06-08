@@ -4231,6 +4231,21 @@ namespace Hoehoe
             this.ResizeMainForm();
         }
 
+        private void TweenMain_Shown(object sender, EventArgs e)
+        {
+            this.TweenMain_ShownExtracted();
+        }
+
+        private void TweenRestartMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryRestartApplication();
+        }
+
+        private void TwurlnlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ConvertUrl(UrlConverter.Twurl);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -5124,21 +5139,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void TweenMain_Shown(object sender, EventArgs e)
-        {
-            this.TweenMain_ShownExtracted();
-        }
-
-        private void TweenRestartMenuItem_Click(object sender, EventArgs e)
-        {
-            this.TryRestartApplication();
-        }
-
-        private void TwurlnlToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ConvertUrl(UrlConverter.Twurl);
         }
 
         private void UndoRemoveTab()
