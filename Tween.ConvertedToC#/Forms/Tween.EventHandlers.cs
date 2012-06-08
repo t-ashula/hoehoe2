@@ -2912,6 +2912,113 @@ namespace Hoehoe
             }
         }
 
+        private void TweenMain_ShownExtracted()
+        {
+            try
+            {
+                // 発言詳細部初期化
+                this.PostBrowser.Url = new Uri("about:blank");
+                this.PostBrowser.DocumentText = string.Empty;
+            }
+            catch (Exception)
+            {
+            }
+
+            this.NotifyIcon1.Visible = true;
+            this.tw.UserIdChanged += this.Tw_UserIdChanged;
+
+            if (!MyCommon.IsNetworkAvailable())
+            {
+                this.isInitializing = false;
+                this.timerTimeline.Enabled = true;
+                return;
+            }
+
+            string tabNameAny = string.Empty;
+            this.GetTimeline(WorkerType.BlockIds, 0, 0, tabNameAny);
+            if (this.settingDialog.StartupFollowers)
+            {
+                this.GetTimeline(WorkerType.Follower, 0, 0, tabNameAny);
+            }
+
+            this.GetTimeline(WorkerType.Configuration, 0, 0, tabNameAny);
+            this.StartUserStream();
+            this.waitTimeline = true;
+            this.GetTimeline(WorkerType.Timeline, 1, 1, tabNameAny);
+            this.waitReply = true;
+            this.GetTimeline(WorkerType.Reply, 1, 1, tabNameAny);
+            this.waitDm = true;
+            this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 1, tabNameAny);
+            if (this.settingDialog.GetFav)
+            {
+                this.waitFav = true;
+                this.GetTimeline(WorkerType.Favorites, 1, 1, tabNameAny);
+            }
+
+            this.waitPubSearch = true;
+            this.GetTimeline(WorkerType.PublicSearch, 1, 0, tabNameAny);
+            this.waitUserTimeline = true;
+            this.GetTimeline(WorkerType.UserTimeline, 1, 0, tabNameAny);
+            this.waitLists = true;
+            this.GetTimeline(WorkerType.List, 1, 0, tabNameAny);
+            int i = 0, j = 0;
+            while (this.IsInitialRead() && !MyCommon.IsEnding)
+            {
+                Thread.Sleep(100);
+                Application.DoEvents();
+                i += 1;
+                j += 1;
+                if (j > 1200)
+                {
+                    // 120秒間初期処理が終了しなかったら強制的に打ち切る
+                    break;
+                }
+
+                if (i > 50)
+                {
+                    if (MyCommon.IsEnding)
+                    {
+                        return;
+                    }
+
+                    i = 0;
+                }
+            }
+
+            if (MyCommon.IsEnding)
+            {
+                return;
+            }
+
+            // バージョンチェック（引数：起動時チェックの場合はTrue･･･チェック結果のメッセージを表示しない）
+            if (this.settingDialog.StartupVersion)
+            {
+                this.CheckNewVersion(true);
+            }
+
+            // 取得失敗の場合は再試行する
+            if (!this.tw.GetFollowersSuccess && this.settingDialog.StartupFollowers)
+            {
+                this.GetTimeline(WorkerType.Follower, 0, 0, tabNameAny);
+            }
+
+            // 取得失敗の場合は再試行する
+            if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit == 0)
+            {
+                this.GetTimeline(WorkerType.Configuration, 0, 0, tabNameAny);
+            }
+
+            // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
+            if (MyCommon.TwitterApiInfo.AccessLevel == ApiAccessLevel.ReadWrite)
+            {
+                MessageBox.Show(Hoehoe.Properties.Resources.ReAuthorizeText);
+                this.TryShowSettingsBox();
+            }
+
+            this.isInitializing = false;
+            this.timerTimeline.Enabled = true;
+        }
+
         #endregion done
 
         #region event handler
@@ -5017,113 +5124,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void TweenMain_ShownExtracted()
-        {
-            try
-            {
-                // 発言詳細部初期化
-                this.PostBrowser.Url = new Uri("about:blank");
-                this.PostBrowser.DocumentText = string.Empty;
-            }
-            catch (Exception)
-            {
-            }
-
-            this.NotifyIcon1.Visible = true;
-            this.tw.UserIdChanged += this.Tw_UserIdChanged;
-
-            if (!MyCommon.IsNetworkAvailable())
-            {
-                this.isInitializing = false;
-                this.timerTimeline.Enabled = true;
-                return;
-            }
-            
-            string tabNameAny = string.Empty;
-            this.GetTimeline(WorkerType.BlockIds, 0, 0, tabNameAny);
-            if (this.settingDialog.StartupFollowers)
-            {
-                this.GetTimeline(WorkerType.Follower, 0, 0, tabNameAny);
-            }
-            
-            this.GetTimeline(WorkerType.Configuration, 0, 0, tabNameAny);
-            this.StartUserStream();
-            this.waitTimeline = true;
-            this.GetTimeline(WorkerType.Timeline, 1, 1, tabNameAny);
-            this.waitReply = true;
-            this.GetTimeline(WorkerType.Reply, 1, 1, tabNameAny);
-            this.waitDm = true;
-            this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 1, tabNameAny);
-            if (this.settingDialog.GetFav)
-            {
-                this.waitFav = true;
-                this.GetTimeline(WorkerType.Favorites, 1, 1, tabNameAny);
-            }
-            
-            this.waitPubSearch = true;
-            this.GetTimeline(WorkerType.PublicSearch, 1, 0, tabNameAny);
-            this.waitUserTimeline = true;
-            this.GetTimeline(WorkerType.UserTimeline, 1, 0, tabNameAny);
-            this.waitLists = true;
-            this.GetTimeline(WorkerType.List, 1, 0, tabNameAny);
-            int i = 0, j = 0;
-            while (this.IsInitialRead() && !MyCommon.IsEnding)
-            {
-                Thread.Sleep(100);
-                Application.DoEvents();
-                i += 1;
-                j += 1;
-                if (j > 1200)
-                {
-                    // 120秒間初期処理が終了しなかったら強制的に打ち切る
-                    break;
-                }
-
-                if (i > 50)
-                {
-                    if (MyCommon.IsEnding)
-                    {
-                        return;
-                    }
-
-                    i = 0;
-                }
-            }
-            
-            if (MyCommon.IsEnding)
-            {
-                return;
-            }
-            
-            // バージョンチェック（引数：起動時チェックの場合はTrue･･･チェック結果のメッセージを表示しない）
-            if (this.settingDialog.StartupVersion)
-            {
-                this.CheckNewVersion(true);
-            }
-            
-            // 取得失敗の場合は再試行する
-            if (!this.tw.GetFollowersSuccess && this.settingDialog.StartupFollowers)
-            {
-                this.GetTimeline(WorkerType.Follower, 0, 0, tabNameAny);
-            }
-            
-            // 取得失敗の場合は再試行する
-            if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit == 0)
-            {
-                this.GetTimeline(WorkerType.Configuration, 0, 0, tabNameAny);
-            }
-            
-            // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
-            if (MyCommon.TwitterApiInfo.AccessLevel == ApiAccessLevel.ReadWrite)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.ReAuthorizeText);
-                this.TryShowSettingsBox();
-            }
-            
-            this.isInitializing = false;
-            this.timerTimeline.Enabled = true;
         }
 
         private void TweenMain_Shown(object sender, EventArgs e)
