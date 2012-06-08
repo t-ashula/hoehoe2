@@ -3739,6 +3739,11 @@ namespace Hoehoe
             ChangeTrackWordStatus();
         }
 
+        private void TranslationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TranslateCurrentTweet();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3832,11 +3837,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TranslationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.TranslateCurrentTweet();
         }
 
         private void Tw_NewPostFromStream()
