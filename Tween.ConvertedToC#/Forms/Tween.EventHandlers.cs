@@ -3955,6 +3955,76 @@ namespace Hoehoe
             this.StatusText_LeaveExtracted();
         }
 
+        private void TweenMain_Disposed(object sender, EventArgs e)
+        {
+            this.DisposeAll();
+        }
+
+        private void TweenMain_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                this.ImageSelectionPanel.Visible = true;
+                this.ImageSelectionPanel.Enabled = true;
+                this.TimelinePanel.Visible = false;
+                this.TimelinePanel.Enabled = false;
+                this.ImagefilePathText.Text = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
+                this.LoadImageFromSelectedFile();
+                this.Activate();
+                this.BringToFront();
+                this.StatusText.Focus();
+            }
+            else if (e.Data.GetDataPresent(DataFormats.StringFormat))
+            {
+                string data = e.Data.GetData(DataFormats.StringFormat, true) as string;
+                if (data != null)
+                {
+                    this.StatusText.Text += data;
+                }
+            }
+        }
+
+        private void TweenMain_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string filename = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
+                FileInfo fl = new FileInfo(filename);
+                string ext = fl.Extension;
+
+                if (!string.IsNullOrEmpty(this.ImageService) && this.pictureServices[this.ImageService].CheckValidFilesize(ext, fl.Length))
+                {
+                    e.Effect = DragDropEffects.Copy;
+                    return;
+                }
+
+                foreach (string svc in this.ImageServiceCombo.Items)
+                {
+                    if (string.IsNullOrEmpty(svc))
+                    {
+                        continue;
+                    }
+
+                    if (this.pictureServices[svc].CheckValidFilesize(ext, fl.Length))
+                    {
+                        this.ImageServiceCombo.SelectedItem = svc;
+                        e.Effect = DragDropEffects.Copy;
+                        return;
+                    }
+                }
+
+                e.Effect = DragDropEffects.None;
+            }
+            else if (e.Data.GetDataPresent(DataFormats.StringFormat))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -4047,76 +4117,6 @@ namespace Hoehoe
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void TweenMain_Disposed(object sender, EventArgs e)
-        {
-            this.DisposeAll();
-        }
-
-        private void TweenMain_DragDrop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                this.ImageSelectionPanel.Visible = true;
-                this.ImageSelectionPanel.Enabled = true;
-                this.TimelinePanel.Visible = false;
-                this.TimelinePanel.Enabled = false;
-                this.ImagefilePathText.Text = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-                this.LoadImageFromSelectedFile();
-                this.Activate();
-                this.BringToFront();
-                this.StatusText.Focus();
-            }
-            else if (e.Data.GetDataPresent(DataFormats.StringFormat))
-            {
-                string data = e.Data.GetData(DataFormats.StringFormat, true) as string;
-                if (data != null)
-                {
-                    this.StatusText.Text += data;
-                }
-            }
-        }
-
-        private void TweenMain_DragOver(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                string filename = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-                FileInfo fl = new FileInfo(filename);
-                string ext = fl.Extension;
-
-                if (!string.IsNullOrEmpty(this.ImageService) && this.pictureServices[this.ImageService].CheckValidFilesize(ext, fl.Length))
-                {
-                    e.Effect = DragDropEffects.Copy;
-                    return;
-                }
-
-                foreach (string svc in this.ImageServiceCombo.Items)
-                {
-                    if (string.IsNullOrEmpty(svc))
-                    {
-                        continue;
-                    }
-
-                    if (this.pictureServices[svc].CheckValidFilesize(ext, fl.Length))
-                    {
-                        this.ImageServiceCombo.SelectedItem = svc;
-                        e.Effect = DragDropEffects.Copy;
-                        return;
-                    }
-                }
-
-                e.Effect = DragDropEffects.None;
-            }
-            else if (e.Data.GetDataPresent(DataFormats.StringFormat))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
             }
         }
 
