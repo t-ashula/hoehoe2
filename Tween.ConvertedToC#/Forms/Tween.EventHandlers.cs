@@ -2859,6 +2859,59 @@ namespace Hoehoe
             }
         }
 
+        private void ResizeMainForm()
+        {
+            if (!this.initialLayout && this.settingDialog.MinimizeToTray && WindowState == FormWindowState.Minimized)
+            {
+                this.Visible = false;
+            }
+
+            if (this.initialLayout && this.cfgLocal != null && this.WindowState == FormWindowState.Normal && this.Visible)
+            {
+                this.ClientSize = this.cfgLocal.FormSize;          // 'サイズ保持（最小化・最大化されたまま終了した場合の対応用）
+                this.DesktopLocation = this.cfgLocal.FormLocation; // '位置保持（最小化・最大化されたまま終了した場合の対応用）
+
+                if (!this.SplitContainer4.Panel2Collapsed && this.cfgLocal.AdSplitterDistance > this.SplitContainer4.Panel1MinSize)
+                {
+                    // Splitterの位置設定
+                    this.SplitContainer4.SplitterDistance = this.cfgLocal.AdSplitterDistance;
+                }
+
+                if (this.cfgLocal.SplitterDistance > this.SplitContainer1.Panel1MinSize && this.cfgLocal.SplitterDistance < this.SplitContainer1.Height - this.SplitContainer1.Panel2MinSize - this.SplitContainer1.SplitterWidth)
+                {
+                    // Splitterの位置設定
+                    this.SplitContainer1.SplitterDistance = this.cfgLocal.SplitterDistance;
+                }
+
+                // 発言欄複数行
+                this.StatusText.Multiline = this.cfgLocal.StatusMultiline;
+                if (this.StatusText.Multiline)
+                {
+                    int dis = this.SplitContainer2.Height - this.cfgLocal.StatusTextHeight - this.SplitContainer2.SplitterWidth;
+                    if (dis > this.SplitContainer2.Panel1MinSize && dis < this.SplitContainer2.Height - this.SplitContainer2.Panel2MinSize - this.SplitContainer2.SplitterWidth)
+                    {
+                        this.SplitContainer2.SplitterDistance = this.SplitContainer2.Height - this.cfgLocal.StatusTextHeight - this.SplitContainer2.SplitterWidth;
+                    }
+
+                    this.StatusText.Height = this.cfgLocal.StatusTextHeight;
+                }
+                else
+                {
+                    if (this.SplitContainer2.Height - this.SplitContainer2.Panel2MinSize - this.SplitContainer2.SplitterWidth > 0)
+                    {
+                        this.SplitContainer2.SplitterDistance = this.SplitContainer2.Height - this.SplitContainer2.Panel2MinSize - this.SplitContainer2.SplitterWidth;
+                    }
+                }
+
+                if (this.cfgLocal.PreviewDistance > this.SplitContainer3.Panel1MinSize && this.cfgLocal.PreviewDistance < this.SplitContainer3.Width - this.SplitContainer3.Panel2MinSize - this.SplitContainer3.SplitterWidth)
+                {
+                    this.SplitContainer3.SplitterDistance = this.cfgLocal.PreviewDistance;
+                }
+
+                this.initialLayout = false;
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -4958,59 +5011,6 @@ namespace Hoehoe
                     ua.UserId = this.tw.UserId;
                     break;
                 }
-            }
-        }
-
-        private void ResizeMainForm()
-        {
-            if (!this.initialLayout && this.settingDialog.MinimizeToTray && WindowState == FormWindowState.Minimized)
-            {
-                this.Visible = false;
-            }
-
-            if (this.initialLayout && this.cfgLocal != null && this.WindowState == FormWindowState.Normal && this.Visible)
-            {
-                this.ClientSize = this.cfgLocal.FormSize;          // 'サイズ保持（最小化・最大化されたまま終了した場合の対応用）
-                this.DesktopLocation = this.cfgLocal.FormLocation; // '位置保持（最小化・最大化されたまま終了した場合の対応用）
-
-                if (!this.SplitContainer4.Panel2Collapsed && this.cfgLocal.AdSplitterDistance > this.SplitContainer4.Panel1MinSize)
-                {
-                    // Splitterの位置設定
-                    this.SplitContainer4.SplitterDistance = this.cfgLocal.AdSplitterDistance;
-                }
-
-                if (this.cfgLocal.SplitterDistance > this.SplitContainer1.Panel1MinSize && this.cfgLocal.SplitterDistance < this.SplitContainer1.Height - this.SplitContainer1.Panel2MinSize - this.SplitContainer1.SplitterWidth)
-                {
-                    // Splitterの位置設定
-                    this.SplitContainer1.SplitterDistance = this.cfgLocal.SplitterDistance;
-                }
-
-                // 発言欄複数行
-                this.StatusText.Multiline = this.cfgLocal.StatusMultiline;
-                if (this.StatusText.Multiline)
-                {
-                    int dis = this.SplitContainer2.Height - this.cfgLocal.StatusTextHeight - this.SplitContainer2.SplitterWidth;
-                    if (dis > this.SplitContainer2.Panel1MinSize && dis < this.SplitContainer2.Height - this.SplitContainer2.Panel2MinSize - this.SplitContainer2.SplitterWidth)
-                    {
-                        this.SplitContainer2.SplitterDistance = this.SplitContainer2.Height - this.cfgLocal.StatusTextHeight - this.SplitContainer2.SplitterWidth;
-                    }
-
-                    this.StatusText.Height = this.cfgLocal.StatusTextHeight;
-                }
-                else
-                {
-                    if (this.SplitContainer2.Height - this.SplitContainer2.Panel2MinSize - this.SplitContainer2.SplitterWidth > 0)
-                    {
-                        this.SplitContainer2.SplitterDistance = this.SplitContainer2.Height - this.SplitContainer2.Panel2MinSize - this.SplitContainer2.SplitterWidth;
-                    }
-                }
-
-                if (this.cfgLocal.PreviewDistance > this.SplitContainer3.Panel1MinSize && this.cfgLocal.PreviewDistance < this.SplitContainer3.Width - this.SplitContainer3.Panel2MinSize - this.SplitContainer3.SplitterWidth)
-                {
-                    this.SplitContainer3.SplitterDistance = this.cfgLocal.PreviewDistance;
-                }
-
-                this.initialLayout = false;
             }
         }
 
