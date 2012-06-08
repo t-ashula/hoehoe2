@@ -3056,6 +3056,22 @@ namespace Hoehoe
             this.SaveConfigsTabs();
         }
 
+        private void ConvertUrlByAutoSelectedService()
+        {
+            if (!this.ConvertUrl(this.settingDialog.AutoShortUrlFirst))
+            {
+                // 前回使用した短縮URLサービス以外を選択する
+                UrlConverter svc = this.settingDialog.AutoShortUrlFirst;
+                Random rnd = new Random();
+                do
+                {
+                    svc = (UrlConverter)rnd.Next(System.Enum.GetNames(typeof(UrlConverter)).Length);
+                }
+                while (!(svc != this.settingDialog.AutoShortUrlFirst && svc != UrlConverter.Nicoms && svc != UrlConverter.Unu));
+                this.ConvertUrl(svc);
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -5190,22 +5206,6 @@ namespace Hoehoe
                     ua.UserId = this.tw.UserId;
                     break;
                 }
-            }
-        }
-
-        private void ConvertUrlByAutoSelectedService()
-        {
-            if (!this.ConvertUrl(this.settingDialog.AutoShortUrlFirst))
-            {
-                // 前回使用した短縮URLサービス以外を選択する
-                UrlConverter svc = this.settingDialog.AutoShortUrlFirst;
-                Random rnd = new Random();
-                do
-                {
-                    svc = (UrlConverter)rnd.Next(System.Enum.GetNames(typeof(UrlConverter)).Length);
-                }
-                while (!(svc != this.settingDialog.AutoShortUrlFirst && svc != UrlConverter.Nicoms && svc != UrlConverter.Unu));
-                this.ConvertUrl(svc);
             }
         }
 
