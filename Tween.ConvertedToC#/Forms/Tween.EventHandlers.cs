@@ -5034,91 +5034,94 @@ namespace Hoehoe
             this.NotifyIcon1.Visible = true;
             this.tw.UserIdChanged += this.Tw_UserIdChanged;
 
-            if (MyCommon.IsNetworkAvailable())
+            if (!MyCommon.IsNetworkAvailable())
             {
-                string tabNameAny = string.Empty;
-                this.GetTimeline(WorkerType.BlockIds, 0, 0, tabNameAny);
-                if (this.settingDialog.StartupFollowers)
+                this.isInitializing = false;
+                this.timerTimeline.Enabled = true;
+                return;
+            }
+            
+            string tabNameAny = string.Empty;
+            this.GetTimeline(WorkerType.BlockIds, 0, 0, tabNameAny);
+            if (this.settingDialog.StartupFollowers)
+            {
+                this.GetTimeline(WorkerType.Follower, 0, 0, tabNameAny);
+            }
+            
+            this.GetTimeline(WorkerType.Configuration, 0, 0, tabNameAny);
+            this.StartUserStream();
+            this.waitTimeline = true;
+            this.GetTimeline(WorkerType.Timeline, 1, 1, tabNameAny);
+            this.waitReply = true;
+            this.GetTimeline(WorkerType.Reply, 1, 1, tabNameAny);
+            this.waitDm = true;
+            this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 1, tabNameAny);
+            if (this.settingDialog.GetFav)
+            {
+                this.waitFav = true;
+                this.GetTimeline(WorkerType.Favorites, 1, 1, tabNameAny);
+            }
+            
+            this.waitPubSearch = true;
+            this.GetTimeline(WorkerType.PublicSearch, 1, 0, tabNameAny);
+            this.waitUserTimeline = true;
+            this.GetTimeline(WorkerType.UserTimeline, 1, 0, tabNameAny);
+            this.waitLists = true;
+            this.GetTimeline(WorkerType.List, 1, 0, tabNameAny);
+            int i = 0, j = 0;
+            while (this.IsInitialRead() && !MyCommon.IsEnding)
+            {
+                Thread.Sleep(100);
+                Application.DoEvents();
+                i += 1;
+                j += 1;
+                if (j > 1200)
                 {
-                    this.GetTimeline(WorkerType.Follower, 0, 0, tabNameAny);
+                    // 120秒間初期処理が終了しなかったら強制的に打ち切る
+                    break;
                 }
 
-                this.GetTimeline(WorkerType.Configuration, 0, 0, tabNameAny);
-                this.StartUserStream();
-                this.waitTimeline = true;
-                this.GetTimeline(WorkerType.Timeline, 1, 1, tabNameAny);
-                this.waitReply = true;
-                this.GetTimeline(WorkerType.Reply, 1, 1, tabNameAny);
-                this.waitDm = true;
-                this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 1, tabNameAny);
-                if (this.settingDialog.GetFav)
+                if (i > 50)
                 {
-                    this.waitFav = true;
-                    this.GetTimeline(WorkerType.Favorites, 1, 1, tabNameAny);
-                }
-
-                this.waitPubSearch = true;
-                this.GetTimeline(WorkerType.PublicSearch, 1, 0, tabNameAny);
-                this.waitUserTimeline = true;
-                this.GetTimeline(WorkerType.UserTimeline, 1, 0, tabNameAny);
-                this.waitLists = true;
-                this.GetTimeline(WorkerType.List, 1, 0, tabNameAny);
-                int i = 0;
-                int j = 0;
-                while (this.IsInitialRead() && !MyCommon.IsEnding)
-                {
-                    Thread.Sleep(100);
-                    Application.DoEvents();
-                    i += 1;
-                    j += 1;
-                    if (j > 1200)
+                    if (MyCommon.IsEnding)
                     {
-                        // 120秒間初期処理が終了しなかったら強制的に打ち切る
-                        break;
+                        return;
                     }
 
-                    if (i > 50)
-                    {
-                        if (MyCommon.IsEnding)
-                        {
-                            return;
-                        }
-
-                        i = 0;
-                    }
-                }
-
-                if (MyCommon.IsEnding)
-                {
-                    return;
-                }
-
-                // バージョンチェック（引数：起動時チェックの場合はTrue･･･チェック結果のメッセージを表示しない）
-                if (this.settingDialog.StartupVersion)
-                {
-                    this.CheckNewVersion(true);
-                }
-
-                // 取得失敗の場合は再試行する
-                if (!this.tw.GetFollowersSuccess && this.settingDialog.StartupFollowers)
-                {
-                    this.GetTimeline(WorkerType.Follower, 0, 0, tabNameAny);
-                }
-
-                // 取得失敗の場合は再試行する
-                if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit == 0)
-                {
-                    this.GetTimeline(WorkerType.Configuration, 0, 0, tabNameAny);
-                }
-
-                // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
-                if (MyCommon.TwitterApiInfo.AccessLevel == ApiAccessLevel.ReadWrite)
-                {
-                    MessageBox.Show(Hoehoe.Properties.Resources.ReAuthorizeText);
-                    this.TryShowSettingsBox();
+                    i = 0;
                 }
             }
-
+            
+            if (MyCommon.IsEnding)
+            {
+                return;
+            }
+            
+            // バージョンチェック（引数：起動時チェックの場合はTrue･･･チェック結果のメッセージを表示しない）
+            if (this.settingDialog.StartupVersion)
+            {
+                this.CheckNewVersion(true);
+            }
+            
+            // 取得失敗の場合は再試行する
+            if (!this.tw.GetFollowersSuccess && this.settingDialog.StartupFollowers)
+            {
+                this.GetTimeline(WorkerType.Follower, 0, 0, tabNameAny);
+            }
+            
+            // 取得失敗の場合は再試行する
+            if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit == 0)
+            {
+                this.GetTimeline(WorkerType.Configuration, 0, 0, tabNameAny);
+            }
+            
+            // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
+            if (MyCommon.TwitterApiInfo.AccessLevel == ApiAccessLevel.ReadWrite)
+            {
+                MessageBox.Show(Hoehoe.Properties.Resources.ReAuthorizeText);
+                this.TryShowSettingsBox();
+            }
+            
             this.isInitializing = false;
             this.timerTimeline.Enabled = true;
         }
