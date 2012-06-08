@@ -83,6 +83,11 @@ namespace Hoehoe
             values[toIndex] = movedValue;
         }
 
+        private static void ChangeTraceFlag(bool trace)
+        {
+            MyCommon.TraceFlag = trace;
+        }
+        
         private void CheckReplyTo(string statusText)
         {
             // ハッシュタグの保存

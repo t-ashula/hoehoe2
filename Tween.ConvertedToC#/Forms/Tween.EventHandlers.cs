@@ -39,11 +39,8 @@ namespace Hoehoe
     using System.Windows.Forms;
     using Hoehoe.TweenCustomControl;
 
-    partial class TweenMain
+    public partial class TweenMain
     {
-        #region done
-        #endregion done
-
         #region event handler
 
         #region cleanuped
@@ -55,7 +52,7 @@ namespace Hoehoe
 
         private void AddTabMenuItem_Click(object sender, EventArgs e)
         {
-            AddNewTab();
+            this.AddNewTab();
         }
 
         private void AllrepliesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -922,11 +919,11 @@ namespace Hoehoe
 
         private void StatusText_KeyPress(object sender, KeyPressEventArgs e)
         {
-            char eKeyChar = e.KeyChar;
-            if (eKeyChar == '@' || eKeyChar == '#')
+            char keyChar = e.KeyChar;
+            if (keyChar == '@' || keyChar == '#')
             {
                 e.Handled = true;
-                ShowSupplementBox(eKeyChar);
+                ShowSupplementBox(keyChar);
             }
         }
 
@@ -1089,7 +1086,7 @@ namespace Hoehoe
 
         private void Tabs_MouseDown(object sender, MouseEventArgs e)
         {
-            Tabs_MouseDownExtracted(e);
+            this.Tabs_MouseDownExtracted(e);
         }
 
         private void TimerInterval_Changed(object sender, IntervalChangedEventArgs e)
@@ -1126,11 +1123,6 @@ namespace Hoehoe
         private void ToolStripMenuItemUrlAutoShorten_CheckedChanged(object sender, EventArgs e)
         {
             ChangeAutoUrlConvertFlag(this.ToolStripMenuItemUrlAutoShorten.Checked);
-        }
-
-        private static void ChangeTraceFlag(bool trace)
-        {
-            MyCommon.TraceFlag = trace;
         }
 
         private void TraceOutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1241,7 +1233,7 @@ namespace Hoehoe
 
         private void TweenMain_Load(object sender, EventArgs e)
         {
-            TweenMain_LoadExtracted();
+            this.TweenMain_LoadExtracted();
         }
 
         private void TweenMain_LocationChanged(object sender, EventArgs e)
@@ -1425,7 +1417,7 @@ namespace Hoehoe
                 return;
             }
 
-            SearchButton_ClickExtracted(pnl);
+            this.SearchButton_ClickExtracted(pnl);
         }
 
         private void SearchComboBox_KeyDown(object sender, KeyEventArgs e)
@@ -3448,6 +3440,7 @@ namespace Hoehoe
             {
                 return;
             }
+
             e.DrawDefault = false;
             if (e.Item.Selected)
             {
@@ -3461,10 +3454,12 @@ namespace Hoehoe
                 SolidBrush brs2 = (cl == this.clrSelf) ? this.brsBackColorMine : (cl == this.clrAtSelf) ? this.brsBackColorAt : (cl == this.clrTarget) ? this.brsBackColorYou : (cl == this.clrAtTarget) ? this.brsBackColorAtYou : (cl == this.clrAtFromTarget) ? this.brsBackColorAtFromTarget : (cl == this.clrAtTo) ? this.brsBackColorAtTo : this.brsBackColorNone;
                 e.Graphics.FillRectangle(brs2, e.Bounds);
             }
+            
             if ((e.State & ListViewItemStates.Focused) == ListViewItemStates.Focused)
             {
                 e.DrawFocusRectangle();
             }
+
             this.DrawListViewItemIcon(e);
         }
 
@@ -3474,10 +3469,12 @@ namespace Hoehoe
             {
                 return;
             }
+
             if (e.ColumnIndex < 1)
             {
                 return;
             }
+
             // アイコン以外の列
             RectangleF rct = e.Bounds;
             RectangleF rctB = e.Bounds;
@@ -3489,13 +3486,16 @@ namespace Hoehoe
                 rct.Height -= e.Item.Font.Height;
                 rctB.Height = e.Item.Font.Height;
             }
+
             int heightDiff = 0;
             int drawLineCount = Math.Max(1, Math.DivRem(Convert.ToInt32(rct.Height), e.Item.Font.Height, out heightDiff));
+            
             // フォントの高さの半分を足してるのは保険。無くてもいいかも。
             if (!this.iconCol && drawLineCount <= 1)
             {
             }
             else
+            {
                 if (heightDiff < e.Item.Font.Height * 0.7)
                 {
                     rct.Height = Convert.ToSingle(e.Item.Font.Height * drawLineCount) - 1;
@@ -3504,6 +3504,8 @@ namespace Hoehoe
                 {
                     drawLineCount += 1;
                 }
+            }
+
             if (!e.Item.Selected)
             {
                 // 選択されていない行
@@ -3515,31 +3517,28 @@ namespace Hoehoe
                 {
                     brs = this.brsForeColorUnread;
                 }
+                else if (cl == this.clrRead)
+                {
+                    brs = this.brsForeColorReaded;
+                }
+                else if (cl == this.clrFav)
+                {
+                    brs = this.brsForeColorFav;
+                }
+                else if (cl == this.clrOWL)
+                {
+                    brs = this.brsForeColorOWL;
+                }
+                else if (cl == this.clrRetweet)
+                {
+                    brs = this.brsForeColorRetweet;
+                }
                 else
-                    if (cl == this.clrRead)
-                    {
-                        brs = this.brsForeColorReaded;
-                    }
-                    else
-                        if (cl == this.clrFav)
-                        {
-                            brs = this.brsForeColorFav;
-                        }
-                        else
-                            if (cl == this.clrOWL)
-                            {
-                                brs = this.brsForeColorOWL;
-                            }
-                            else
-                                if (cl == this.clrRetweet)
-                                {
-                                    brs = this.brsForeColorRetweet;
-                                }
-                                else
-                                {
-                                    brs = new SolidBrush(e.Item.ForeColor);
-                                    flg = true;
-                                }
+                {
+                    brs = new SolidBrush(e.Item.ForeColor);
+                    flg = true;
+                }
+
                 if (rct.Width > 0)
                 {
                     if (this.iconCol)
@@ -3551,6 +3550,7 @@ namespace Hoehoe
                         }
                     }
                     else
+                    {
                         if (drawLineCount == 1)
                         {
                             TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
@@ -3559,7 +3559,9 @@ namespace Hoehoe
                         {
                             TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), brs.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
                         }
+                    }
                 }
+
                 if (flg)
                 {
                     brs.Dispose();
@@ -3580,6 +3582,7 @@ namespace Hoehoe
                                 TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), this.brsHighLightText.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
                             }
                             else
+                            {
                                 if (drawLineCount == 1)
                                 {
                                     TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
@@ -3588,6 +3591,7 @@ namespace Hoehoe
                                 {
                                     TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsHighLightText.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
                                 }
+                            }
                         }
                         else
                         {
@@ -3597,6 +3601,7 @@ namespace Hoehoe
                                 TextRenderer.DrawText(e.Graphics, e.Item.SubItems[4].Text + " / " + e.Item.SubItems[1].Text + " (" + e.Item.SubItems[3].Text + ") " + e.Item.SubItems[5].Text + e.Item.SubItems[6].Text + " [" + e.Item.SubItems[7].Text + "]", fnt, Rectangle.Round(rctB), this.brsForeColorUnread.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
                             }
                             else
+                            {
                                 if (drawLineCount == 1)
                                 {
                                     TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
@@ -3605,6 +3610,7 @@ namespace Hoehoe
                                 {
                                     TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, Rectangle.Round(rct), this.brsForeColorUnread.Color, TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix);
                                 }
+                            }
                         }
                     }
                 }

@@ -348,7 +348,7 @@ namespace Hoehoe
         private long prevFollowerCount = 0;
         private HookGlobalHotkey hookGlobalHotkey;
         private bool isActiveUserstream = false;
-        private string prevTrackWord = "";
+        private string prevTrackWord = string.Empty;
 
         #endregion private fields
 
@@ -1426,6 +1426,5 @@ namespace Hoehoe
         }
 
         #endregion protected methods
-
     }
 }

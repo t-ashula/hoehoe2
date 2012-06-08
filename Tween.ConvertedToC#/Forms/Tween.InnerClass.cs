@@ -30,7 +30,7 @@ namespace Hoehoe
     using System.Drawing;
     using System.Windows.Forms;
 
-    partial class TweenMain
+    public partial class TweenMain
     {
         #region inner types
 
