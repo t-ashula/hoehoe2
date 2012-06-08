@@ -3772,36 +3772,45 @@ namespace Hoehoe
             }
         }
 
+        private bool TryUserInputText(ref string val, string title, string desc)
+        {
+            using (var form = new InputTabName() { TabName = val })
+            {
+                form.SetFormTitle(title);
+                form.SetFormDescription(desc);
+                var result = form.ShowDialog();
+                if (result != System.Windows.Forms.DialogResult.OK)
+                {
+                    return false;
+                }
+                val = form.TabName;
+            }
+            return true;
+        }
+
         private void ChangeTrackWordStatus()
         {
-            if (this.TrackToolStripMenuItem.Checked)
-            {
-                using (InputTabName inputForm = new InputTabName())
-                {
-                    inputForm.TabName = this.prevTrackWord;
-                    inputForm.SetFormTitle("Input track word");
-                    inputForm.SetFormDescription("Track word");
-                    if (inputForm.ShowDialog() != DialogResult.OK)
-                    {
-                        this.TrackToolStripMenuItem.Checked = false;
-                        return;
-                    }
-
-                    this.prevTrackWord = inputForm.TabName.Trim();
-                }
-
-                if (this.prevTrackWord != this.tw.TrackWord)
-                {
-                    this.tw.TrackWord = this.prevTrackWord;
-                    this.modifySettingCommon = true;
-                    this.TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.prevTrackWord);
-                    this.tw.ReconnectUserStream();
-                }
-            }
-            else
+            if (!this.TrackToolStripMenuItem.Checked)
             {
                 this.tw.TrackWord = string.Empty;
                 this.tw.ReconnectUserStream();
+            }
+            else
+            {
+                string q = this.prevTrackWord;
+                if (!TryUserInputText(ref q, "Input track word", "Track word"))
+                {
+                    this.TrackToolStripMenuItem.Checked = false;
+                    return;
+                }
+
+                this.prevTrackWord = q;
+                if (this.prevTrackWord != this.tw.TrackWord)
+                {
+                    this.tw.TrackWord = this.prevTrackWord;
+                    this.TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.prevTrackWord);
+                    this.tw.ReconnectUserStream();
+                }
             }
 
             this.modifySettingCommon = true;
