@@ -5299,14 +5299,9 @@ namespace Hoehoe
             }
         }
 
-        private void TryAddNewUserTimelineTab()
-        {
-            this.AddNewTabForUserTimeline(this.GetUserIdFromCurPostOrInput("Show UserTimeline"));
-        }
-
         private void UserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.TryAddNewUserTimelineTab();
+            this.AddNewTabForUserTimeline(this.GetUserIdFromCurPostOrInput("Show UserTimeline"));
         }
 
         private void UxnuMenuItem_Click(object sender, EventArgs e)
