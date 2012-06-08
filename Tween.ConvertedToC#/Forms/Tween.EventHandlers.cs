@@ -2850,6 +2850,15 @@ namespace Hoehoe
             }
         }
 
+        private void TweenMain_LocationChangedExtracted()
+        {
+            if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
+            {
+                this.myLoc = this.DesktopLocation;
+                this.modifySettingLocal = true;
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -4949,15 +4958,6 @@ namespace Hoehoe
                     ua.UserId = this.tw.UserId;
                     break;
                 }
-            }
-        }
-
-        private void TweenMain_LocationChangedExtracted()
-        {
-            if (this.WindowState == FormWindowState.Normal && !this.initialLayout)
-            {
-                this.myLoc = this.DesktopLocation;
-                this.modifySettingLocal = true;
             }
         }
 
