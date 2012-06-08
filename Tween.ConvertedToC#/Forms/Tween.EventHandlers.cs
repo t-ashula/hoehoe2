@@ -3044,6 +3044,18 @@ namespace Hoehoe
             this.SaveConfigsTabs();
         }
 
+        private void ChangeCurrentTabUnreadManagement(bool isManage)
+        {
+            this.UreadManageMenuItem.Checked = this.UnreadMngTbMenuItem.Checked = isManage;
+            if (string.IsNullOrEmpty(this.rclickTabName))
+            {
+                return;
+            }
+
+            this.ChangeTabUnreadManage(this.rclickTabName, isManage);
+            this.SaveConfigsTabs();
+        }
+
         #endregion done
 
         #region event handler
@@ -5174,18 +5186,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void ChangeCurrentTabUnreadManagement(bool isManage)
-        {
-            this.UreadManageMenuItem.Checked = this.UnreadMngTbMenuItem.Checked = isManage;
-            if (string.IsNullOrEmpty(this.rclickTabName))
-            {
-                return;
-            }
-
-            this.ChangeTabUnreadManage(this.rclickTabName, isManage);
-            this.SaveConfigsTabs();
         }
 
         private void UreadManageMenuItem_Click(object sender, EventArgs e)
