@@ -3724,6 +3724,11 @@ namespace Hoehoe
             ChangeTraceFlag(this.TraceOutToolStripMenuItem.Checked);
         }
 
+        private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeTrackWordStatus();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3817,11 +3822,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ChangeTrackWordStatus();
         }
 
         private void TranslateCurrentTweet()
