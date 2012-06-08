@@ -2833,6 +2833,23 @@ namespace Hoehoe
             Microsoft.Win32.SystemEvents.PowerModeChanged -= this.SystemEvents_PowerModeChanged;
         }
 
+        private void TweenMain_FormClosingExtracted(FormClosingEventArgs e)
+        {
+            if (!this.settingDialog.CloseToExit && e.CloseReason == CloseReason.UserClosing && !MyCommon.IsEnding)
+            {
+                e.Cancel = true;
+                this.Visible = false;
+            }
+            else
+            {
+                this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
+                this.ignoreConfigSave = true;
+                MyCommon.IsEnding = true;
+                this.timerTimeline.Enabled = false;
+                this.TimerRefreshIcon.Enabled = false;
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -4117,23 +4134,6 @@ namespace Hoehoe
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void TweenMain_FormClosingExtracted(FormClosingEventArgs e)
-        {
-            if (!this.settingDialog.CloseToExit && e.CloseReason == CloseReason.UserClosing && MyCommon.IsEnding == false)
-            {
-                e.Cancel = true;
-                this.Visible = false;
-            }
-            else
-            {
-                this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
-                this.ignoreConfigSave = true;
-                MyCommon.IsEnding = true;
-                this.timerTimeline.Enabled = false;
-                this.TimerRefreshIcon.Enabled = false;
             }
         }
 
