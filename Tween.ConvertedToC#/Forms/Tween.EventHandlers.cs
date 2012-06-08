@@ -2572,6 +2572,61 @@ namespace Hoehoe
         {
             this.settingDialog.UrlConvertAuto = autoConvert;
         }
+        private bool TryGetTabInfo(ref string name, ref TabUsageType usageType, string title = "", string desc = "", bool showusage = false)
+        {
+            using (var form = new InputTabName() { TabName = name })
+            {
+                form.SetFormTitle(title);
+                form.SetFormDescription(desc);
+                form.SetIsShowUsage(showusage);
+                var result = form.ShowDialog();
+                if (result != System.Windows.Forms.DialogResult.OK)
+                {
+                    return false;
+                }
+                name = form.TabName;
+                if (showusage)
+                {
+                    usageType = form.Usage;
+                }
+            }
+            return true;
+        }
+
+        private bool TryUserInputText(ref string val, string title = "", string desc = "")
+        {
+            TabUsageType tmp = TabUsageType.UserDefined;
+            return TryGetTabInfo(ref val, ref tmp, title, desc, false);
+        }
+
+        private void ChangeTrackWordStatus()
+        {
+            if (!this.TrackToolStripMenuItem.Checked)
+            {
+                this.tw.TrackWord = string.Empty;
+                this.tw.ReconnectUserStream();
+            }
+            else
+            {
+                string q = this.prevTrackWord;
+                if (!TryUserInputText(ref q, "Input track word", "Track word"))
+                {
+                    this.TrackToolStripMenuItem.Checked = false;
+                    return;
+                }
+
+                this.prevTrackWord = q;
+                if (this.prevTrackWord != this.tw.TrackWord)
+                {
+                    this.tw.TrackWord = this.prevTrackWord;
+                    this.TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.prevTrackWord);
+                    this.tw.ReconnectUserStream();
+                }
+            }
+
+            this.modifySettingCommon = true;
+        }
+
         #endregion done
 
         #region event handler
@@ -3762,61 +3817,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private bool TryGetTabInfo(ref string name, ref TabUsageType usageType, string title = "", string desc = "", bool showusage = false)
-        {
-            using (var form = new InputTabName() { TabName = name })
-            {
-                form.SetFormTitle(title);
-                form.SetFormDescription(desc);
-                form.SetIsShowUsage(showusage);
-                var result = form.ShowDialog();
-                if (result != System.Windows.Forms.DialogResult.OK)
-                {
-                    return false;
-                }
-                name = form.TabName;
-                if (showusage)
-                {
-                    usageType = form.Usage;
-                }
-            }
-            return true;
-        }
-
-        private bool TryUserInputText(ref string val, string title = "", string desc = "")
-        {
-            TabUsageType tmp = TabUsageType.UserDefined;
-            return TryGetTabInfo(ref val, ref tmp, title, desc, false);
-        }
-
-        private void ChangeTrackWordStatus()
-        {
-            if (!this.TrackToolStripMenuItem.Checked)
-            {
-                this.tw.TrackWord = string.Empty;
-                this.tw.ReconnectUserStream();
-            }
-            else
-            {
-                string q = this.prevTrackWord;
-                if (!TryUserInputText(ref q, "Input track word", "Track word"))
-                {
-                    this.TrackToolStripMenuItem.Checked = false;
-                    return;
-                }
-
-                this.prevTrackWord = q;
-                if (this.prevTrackWord != this.tw.TrackWord)
-                {
-                    this.tw.TrackWord = this.prevTrackWord;
-                    this.TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(this.prevTrackWord);
-                    this.tw.ReconnectUserStream();
-                }
-            }
-
-            this.modifySettingCommon = true;
         }
 
         private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
