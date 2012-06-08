@@ -3112,6 +3112,11 @@ namespace Hoehoe
             }
         }
 
+        private void ChangeUserPictureCursor(Cursor cursorsDefault)
+        {
+            this.UserPicture.Cursor = cursorsDefault;
+        }
+
         #endregion done
 
         #region event handler
@@ -5282,11 +5287,6 @@ namespace Hoehoe
         private void UserPicture_MouseEnter(object sender, EventArgs e)
         {
             this.ChangeUserPictureCursor(Cursors.Hand);
-        }
-
-        private void ChangeUserPictureCursor(Cursor cursorsDefault)
-        {
-            this.UserPicture.Cursor = cursorsDefault;
         }
 
         private void UserPicture_MouseLeave(object sender, EventArgs e)
