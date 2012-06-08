@@ -2675,6 +2675,164 @@ namespace Hoehoe
             }
         }
 
+        private void DisposeAll()
+        {
+            // 後始末
+            this.settingDialog.Dispose();
+            this.tabDialog.Dispose();
+            this.searchDialog.Dispose();
+            this.fltDialog.Dispose();
+            this.urlDialog.Dispose();
+            this.spaceKeyCanceler.Dispose();
+            if (this.iconAt != null)
+            {
+                this.iconAt.Dispose();
+            }
+
+            if (this.iconAtRed != null)
+            {
+                this.iconAtRed.Dispose();
+            }
+
+            if (this.iconAtSmoke != null)
+            {
+                this.iconAtSmoke.Dispose();
+            }
+
+            if (this.iconRefresh[0] != null)
+            {
+                this.iconRefresh[0].Dispose();
+            }
+
+            if (this.iconRefresh[1] != null)
+            {
+                this.iconRefresh[1].Dispose();
+            }
+
+            if (this.iconRefresh[2] != null)
+            {
+                this.iconRefresh[2].Dispose();
+            }
+
+            if (this.iconRefresh[3] != null)
+            {
+                this.iconRefresh[3].Dispose();
+            }
+
+            if (this.tabIcon != null)
+            {
+                this.tabIcon.Dispose();
+            }
+
+            if (this.mainIcon != null)
+            {
+                this.mainIcon.Dispose();
+            }
+
+            if (this.replyIcon != null)
+            {
+                this.replyIcon.Dispose();
+            }
+
+            if (this.replyIconBlink != null)
+            {
+                this.replyIconBlink.Dispose();
+            }
+
+            this.brsHighLight.Dispose();
+            this.brsHighLightText.Dispose();
+            if (this.brsForeColorUnread != null)
+            {
+                this.brsForeColorUnread.Dispose();
+            }
+
+            if (this.brsForeColorReaded != null)
+            {
+                this.brsForeColorReaded.Dispose();
+            }
+
+            if (this.brsForeColorFav != null)
+            {
+                this.brsForeColorFav.Dispose();
+            }
+
+            if (this.brsForeColorOWL != null)
+            {
+                this.brsForeColorOWL.Dispose();
+            }
+
+            if (this.brsForeColorRetweet != null)
+            {
+                this.brsForeColorRetweet.Dispose();
+            }
+
+            if (this.brsBackColorMine != null)
+            {
+                this.brsBackColorMine.Dispose();
+            }
+
+            if (this.brsBackColorAt != null)
+            {
+                this.brsBackColorAt.Dispose();
+            }
+
+            if (this.brsBackColorYou != null)
+            {
+                this.brsBackColorYou.Dispose();
+            }
+
+            if (this.brsBackColorAtYou != null)
+            {
+                this.brsBackColorAtYou.Dispose();
+            }
+
+            if (this.brsBackColorAtFromTarget != null)
+            {
+                this.brsBackColorAtFromTarget.Dispose();
+            }
+
+            if (this.brsBackColorAtTo != null)
+            {
+                this.brsBackColorAtTo.Dispose();
+            }
+
+            if (this.brsBackColorNone != null)
+            {
+                this.brsBackColorNone.Dispose();
+            }
+
+            if (this.brsDeactiveSelection != null)
+            {
+                this.brsDeactiveSelection.Dispose();
+            }
+
+            this.shield.Dispose();
+            this.tabStringFormat.Dispose();
+            foreach (BackgroundWorker bw in this.bworkers)
+            {
+                if (bw != null)
+                {
+                    bw.Dispose();
+                }
+            }
+
+            if (this.followerFetchWorker != null)
+            {
+                this.followerFetchWorker.Dispose();
+            }
+
+            this.apiGauge.Dispose();
+            if (this.iconDict != null)
+            {
+                this.iconDict.PauseGetImage = true;
+                this.iconDict.Dispose();
+            }
+
+            // 終了時にRemoveHandlerしておかないとメモリリークする
+            // http://msdn.microsoft.com/ja-jp/library/microsoft.win32.systemevents.powermodechanged.aspx
+            Microsoft.Win32.SystemEvents.PowerModeChanged -= this.SystemEvents_PowerModeChanged;
+        }
+
         #endregion done
 
         #region event handler
@@ -3890,164 +4048,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void DisposeAll()
-        {
-            // 後始末
-            this.settingDialog.Dispose();
-            this.tabDialog.Dispose();
-            this.searchDialog.Dispose();
-            this.fltDialog.Dispose();
-            this.urlDialog.Dispose();
-            this.spaceKeyCanceler.Dispose();
-            if (this.iconAt != null)
-            {
-                this.iconAt.Dispose();
-            }
-
-            if (this.iconAtRed != null)
-            {
-                this.iconAtRed.Dispose();
-            }
-
-            if (this.iconAtSmoke != null)
-            {
-                this.iconAtSmoke.Dispose();
-            }
-
-            if (this.iconRefresh[0] != null)
-            {
-                this.iconRefresh[0].Dispose();
-            }
-
-            if (this.iconRefresh[1] != null)
-            {
-                this.iconRefresh[1].Dispose();
-            }
-
-            if (this.iconRefresh[2] != null)
-            {
-                this.iconRefresh[2].Dispose();
-            }
-
-            if (this.iconRefresh[3] != null)
-            {
-                this.iconRefresh[3].Dispose();
-            }
-
-            if (this.tabIcon != null)
-            {
-                this.tabIcon.Dispose();
-            }
-
-            if (this.mainIcon != null)
-            {
-                this.mainIcon.Dispose();
-            }
-
-            if (this.replyIcon != null)
-            {
-                this.replyIcon.Dispose();
-            }
-
-            if (this.replyIconBlink != null)
-            {
-                this.replyIconBlink.Dispose();
-            }
-
-            this.brsHighLight.Dispose();
-            this.brsHighLightText.Dispose();
-            if (this.brsForeColorUnread != null)
-            {
-                this.brsForeColorUnread.Dispose();
-            }
-
-            if (this.brsForeColorReaded != null)
-            {
-                this.brsForeColorReaded.Dispose();
-            }
-
-            if (this.brsForeColorFav != null)
-            {
-                this.brsForeColorFav.Dispose();
-            }
-
-            if (this.brsForeColorOWL != null)
-            {
-                this.brsForeColorOWL.Dispose();
-            }
-
-            if (this.brsForeColorRetweet != null)
-            {
-                this.brsForeColorRetweet.Dispose();
-            }
-
-            if (this.brsBackColorMine != null)
-            {
-                this.brsBackColorMine.Dispose();
-            }
-
-            if (this.brsBackColorAt != null)
-            {
-                this.brsBackColorAt.Dispose();
-            }
-
-            if (this.brsBackColorYou != null)
-            {
-                this.brsBackColorYou.Dispose();
-            }
-
-            if (this.brsBackColorAtYou != null)
-            {
-                this.brsBackColorAtYou.Dispose();
-            }
-
-            if (this.brsBackColorAtFromTarget != null)
-            {
-                this.brsBackColorAtFromTarget.Dispose();
-            }
-
-            if (this.brsBackColorAtTo != null)
-            {
-                this.brsBackColorAtTo.Dispose();
-            }
-
-            if (this.brsBackColorNone != null)
-            {
-                this.brsBackColorNone.Dispose();
-            }
-
-            if (this.brsDeactiveSelection != null)
-            {
-                this.brsDeactiveSelection.Dispose();
-            }
-
-            this.shield.Dispose();
-            this.tabStringFormat.Dispose();
-            foreach (BackgroundWorker bw in this.bworkers)
-            {
-                if (bw != null)
-                {
-                    bw.Dispose();
-                }
-            }
-
-            if (this.followerFetchWorker != null)
-            {
-                this.followerFetchWorker.Dispose();
-            }
-
-            this.apiGauge.Dispose();
-            if (this.iconDict != null)
-            {
-                this.iconDict.PauseGetImage = true;
-                this.iconDict.Dispose();
-            }
-
-            // 終了時にRemoveHandlerしておかないとメモリリークする
-            // http://msdn.microsoft.com/ja-jp/library/microsoft.win32.systemevents.powermodechanged.aspx
-            Microsoft.Win32.SystemEvents.PowerModeChanged -= this.SystemEvents_PowerModeChanged;
         }
 
         private void TweenMain_Disposed(object sender, EventArgs e)
