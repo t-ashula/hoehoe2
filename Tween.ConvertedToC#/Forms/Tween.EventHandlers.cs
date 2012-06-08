@@ -1176,7 +1176,7 @@ namespace Hoehoe
                 this.Cursor = Cursors.Default;
             }
         }
-       
+
 
         private void AddIdFilteringRuleFromCurrentTweet()
         {
@@ -2045,7 +2045,7 @@ namespace Hoehoe
                 this.ListTab.Refresh();
             }
         }
-        
+
         private void TryUnfollowCurrentTweetUser()
         {
             this.RemoveCommand(this.curPost != null ? this.curPost.ScreenName : string.Empty, false);
@@ -3680,7 +3680,7 @@ namespace Hoehoe
         {
             this.DoRefresh();
         }
-        
+
         private void RemoveCommandMenuItem_Click(object sender, EventArgs e)
         {
             TryUnfollowCurrentTweetUser();
@@ -3972,7 +3972,7 @@ namespace Hoehoe
         {
             TryOpenSelectedTweetWebPage();
         }
-        
+
         private void StatusText_Enter(object sender, EventArgs e)
         {
             this.StatusText_EnterExtracted();
@@ -4405,7 +4405,7 @@ namespace Hoehoe
         }
 
         #endregion
-        
+
         private void SearchButton_ClickExtracted(Control pnl)
         {
             string tabName = pnl.Parent.Text;
@@ -5301,11 +5301,7 @@ namespace Hoehoe
 
         private void TryAddNewUserTimelineTab()
         {
-            string id = this.GetUserIdFromCurPostOrInput("Show UserTimeline");
-            if (!string.IsNullOrEmpty(id))
-            {
-                this.AddNewTabForUserTimeline(id);
-            }
+            this.AddNewTabForUserTimeline(this.GetUserIdFromCurPostOrInput("Show UserTimeline"));
         }
 
         private void UserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
