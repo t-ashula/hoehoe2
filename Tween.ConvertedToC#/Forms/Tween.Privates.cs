@@ -24,10 +24,6 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-// コンパイル後コマンド
-// "c:\Program Files\Microsoft.NET\SDK\v2.0\Bin\sgen.exe" /f /a:"$(TargetPath)"
-// "C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\Bin\sgen.exe" /f /a:"$(TargetPath)"
-
 namespace Hoehoe
 {
     using System;
@@ -39,14 +35,13 @@ namespace Hoehoe
     using System.IO;
     using System.Linq;
     using System.Media;
-    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Threading;
     using System.Web;
     using System.Windows.Forms;
     using Hoehoe.TweenCustomControl;
-    using System.Threading;
 
     public partial class TweenMain
     {

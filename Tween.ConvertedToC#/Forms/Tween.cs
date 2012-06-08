@@ -31,19 +31,12 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Drawing;
-    using System.IO;
     using System.Linq;
-    using System.Media;
     using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Text;
     using System.Text.RegularExpressions;
-    using System.Web;
     using System.Windows.Forms;
     using Hoehoe.TweenCustomControl;
 
