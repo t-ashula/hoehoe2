@@ -3072,6 +3072,24 @@ namespace Hoehoe
             }
         }
 
+        private void TryCopyUrlInCurrentTweet()
+        {
+            MatchCollection mc = Regex.Matches(this.PostBrowser.DocumentText, "<a[^>]*href=\"(?<url>" + this.postBrowserStatusText.Replace(".", "\\.") + ")\"[^>]*title=\"(?<title>https?:// [^\"]+)\"", RegexOptions.IgnoreCase);
+            foreach (Match m in mc)
+            {
+                if (m.Groups["url"].Value == this.postBrowserStatusText)
+                {
+                    CopyToClipboard(m.Groups["title"].Value);
+                    break;
+                }
+            }
+
+            if (mc.Count == 0)
+            {
+                CopyToClipboard(this.postBrowserStatusText);
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -5211,24 +5229,6 @@ namespace Hoehoe
                     ua.UserId = this.tw.UserId;
                     break;
                 }
-            }
-        }
-
-        private void TryCopyUrlInCurrentTweet()
-        {
-            MatchCollection mc = Regex.Matches(this.PostBrowser.DocumentText, "<a[^>]*href=\"(?<url>" + this.postBrowserStatusText.Replace(".", "\\.") + ")\"[^>]*title=\"(?<title>https?:// [^\"]+)\"", RegexOptions.IgnoreCase);
-            foreach (Match m in mc)
-            {
-                if (m.Groups["url"].Value == this.postBrowserStatusText)
-                {
-                    CopyToClipboard(m.Groups["title"].Value);
-                    break;
-                }
-            }
-
-            if (mc.Count == 0)
-            {
-                CopyToClipboard(this.postBrowserStatusText);
             }
         }
 
