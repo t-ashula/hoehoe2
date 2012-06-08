@@ -4337,6 +4337,16 @@ namespace Hoehoe
             this.ConvertUrlByAutoSelectedService();
         }
 
+        private void UrlCopyContextMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TryCopyUrlInCurrentTweet();
+        }
+
+        private void UrlUndoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.DoUrlUndo();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -5230,16 +5240,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void UrlCopyContextMenuItem_Click(object sender, EventArgs e)
-        {
-            this.TryCopyUrlInCurrentTweet();
-        }
-
-        private void UrlUndoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.DoUrlUndo();
         }
 
         private void TrySetHashtagFromCurrentTweet()
