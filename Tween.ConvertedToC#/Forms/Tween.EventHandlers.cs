@@ -3510,8 +3510,7 @@ namespace Hoehoe
         {
             TryOpenSelectedTweetWebPage();
         }
-
-
+        
         private void StatusText_Enter(object sender, EventArgs e)
         {
             this.StatusText_EnterExtracted();
@@ -3762,6 +3761,11 @@ namespace Hoehoe
             this.TranslateCurrentTweet();
         }
 
+        private void TweenMain_Activated(object sender, EventArgs e)
+        {
+            this.ActivateMainFormControls();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -3855,11 +3859,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TweenMain_Activated(object sender, EventArgs e)
-        {
-            this.ActivateMainFormControls();
         }
 
         private void TweenMain_ClientSizeChangedExtracted()
