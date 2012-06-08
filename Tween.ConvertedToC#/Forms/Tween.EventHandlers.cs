@@ -3103,6 +3103,15 @@ namespace Hoehoe
                 this.modifySettingCommon = true;
             }
         }
+
+        private void TryOpenCurrentNameLabelUserHome()
+        {
+            if (this.NameLabel.Tag != null)
+            {
+                this.OpenUriAsync(string.Format("https://twitter.com/{0}", (string)this.NameLabel.Tag));
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -5262,14 +5271,6 @@ namespace Hoehoe
                     ua.UserId = this.tw.UserId;
                     break;
                 }
-            }
-        }
-
-        private void TryOpenCurrentNameLabelUserHome()
-        {
-            if (this.NameLabel.Tag != null)
-            {
-                this.OpenUriAsync("https://twitter.com/" + (string)this.NameLabel.Tag);
             }
         }
 
