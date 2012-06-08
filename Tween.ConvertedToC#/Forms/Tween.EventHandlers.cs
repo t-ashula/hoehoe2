@@ -4293,6 +4293,11 @@ namespace Hoehoe
             this.ChangeSelectedTweetReadSateToUnread();
         }
 
+        private void UreadManageMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ChangeCurrentTabUnreadManagement(((ToolStripMenuItem)sender).Checked);
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -5186,11 +5191,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void UreadManageMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ChangeCurrentTabUnreadManagement(((ToolStripMenuItem)sender).Checked);
         }
 
         private void ConvertUrlByAutoSelectedService()
