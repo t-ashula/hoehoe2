@@ -2627,6 +2627,16 @@ namespace Hoehoe
             this.modifySettingCommon = true;
         }
 
+        private void TranslateCurrentTweet()
+        {
+            if (!this.ExistCurrentPost)
+            {
+                return;
+            }
+
+            this.DoTranslation(this.curPost.TextFromApi);
+        }
+
         #endregion done
 
         #region event handler
@@ -3822,16 +3832,6 @@ namespace Hoehoe
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void TranslateCurrentTweet()
-        {
-            if (!this.ExistCurrentPost)
-            {
-                return;
-            }
-
-            this.DoTranslation(this.curPost.TextFromApi);
         }
 
         private void TranslationToolStripMenuItem_Click(object sender, EventArgs e)
