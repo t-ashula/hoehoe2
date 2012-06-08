@@ -3090,6 +3090,19 @@ namespace Hoehoe
             }
         }
 
+        private void TrySetHashtagFromCurrentTweet()
+        {
+            Match m = Regex.Match(this.postBrowserStatusText, "^https?://twitter.com/search\\?q=%23(?<hash>.+)$");
+            if (m.Success)
+            {
+                // 使用ハッシュタグとして設定
+                this.HashMgr.SetPermanentHash("#" + m.Result("${hash}"));
+                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
+                this.HashToggleMenuItem.Checked = true;
+                this.HashToggleToolStripMenuItem.Checked = true;
+                this.modifySettingCommon = true;
+            }
+        }
         #endregion done
 
         #region event handler
@@ -5241,21 +5254,7 @@ namespace Hoehoe
                 }
             }
         }
-
-        private void TrySetHashtagFromCurrentTweet()
-        {
-            Match m = Regex.Match(this.postBrowserStatusText, "^https?://twitter.com/search\\?q=%23(?<hash>.+)$");
-            if (m.Success)
-            {
-                // 使用ハッシュタグとして設定
-                this.HashMgr.SetPermanentHash("#" + m.Result("${hash}"));
-                this.HashStripSplitButton.Text = this.HashMgr.UseHash;
-                this.HashToggleMenuItem.Checked = true;
-                this.HashToggleToolStripMenuItem.Checked = true;
-                this.modifySettingCommon = true;
-            }
-        }
-
+                
         private void UseHashtagMenuItem_Click(object sender, EventArgs e)
         {
             this.TrySetHashtagFromCurrentTweet();
