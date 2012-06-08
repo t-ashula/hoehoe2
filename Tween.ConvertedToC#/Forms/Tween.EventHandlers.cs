@@ -1176,7 +1176,7 @@ namespace Hoehoe
                 this.Cursor = Cursors.Default;
             }
         }
-        
+       
 
         private void AddIdFilteringRuleFromCurrentTweet()
         {
@@ -2480,7 +2480,6 @@ namespace Hoehoe
             this.TabRename(ref tn);
         }
 
-
         private void DecrementTimer(ref int counter)
         {
             if (counter > 0)
@@ -2646,6 +2645,16 @@ namespace Hoehoe
             this.StopToolStripMenuItem.Enabled = true;
             this.StatusLabel.Text = start ? "UserStream Started." : "UserStream Stopped.";
         }
+
+        private void ActivateMainFormControls()
+        {
+            /// 画面がアクティブになったら、発言欄の背景色戻す
+            if (this.StatusText.Focused)
+            {
+                this.StatusText_EnterExtracted();
+            }
+        }
+
         #endregion done
 
         #region event handler
@@ -3845,15 +3854,6 @@ namespace Hoehoe
                 this.RemoveSpecifiedTab(relTp.Text, false);
                 this.SaveConfigsTabs();
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void ActivateMainFormControls()
-        {
-            /// 画面がアクティブになったら、発言欄の背景色戻す
-            if (this.StatusText.Focused)
-            {
-                this.StatusText_EnterExtracted();
             }
         }
 
