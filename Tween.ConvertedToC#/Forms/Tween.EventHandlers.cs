@@ -4119,6 +4119,11 @@ namespace Hoehoe
             this.TweenMain_LocationChangedExtracted();
         }
 
+        private void TweenMain_Resize(object sender, EventArgs e)
+        {
+            this.ResizeMainForm();
+        }
+
         #endregion
         
         private void SearchButton_ClickExtracted(Control pnl)
@@ -5012,11 +5017,6 @@ namespace Hoehoe
                     break;
                 }
             }
-        }
-
-        private void TweenMain_Resize(object sender, EventArgs e)
-        {
-            this.ResizeMainForm();
         }
 
         private void TweenMain_ShownExtracted()
