@@ -2184,7 +2184,7 @@ namespace Hoehoe
                 {
                     string src = mc.Groups["sourceurl"].Value;
                     this.SourceLinkLabel.Tag = mc.Groups["sourceurl"].Value;
-                    mc = Regex.Match(src, "^https?:// ");
+                    mc = Regex.Match(src, "^https?://");
                     if (!mc.Success)
                     {
                         src = src.Insert(0, "http://twitter.com");
@@ -4872,7 +4872,7 @@ namespace Hoehoe
             {
                 if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
                 {
-                    this.OpenUriAsync(string.Format("https:// twitter.com/{0}/status/{1}", this.curPost.InReplyToUser, this.curPost.InReplyToStatusId));
+                    this.OpenUriAsync(string.Format("httpstwitter.com/{0}/status/{1}", this.curPost.InReplyToUser, this.curPost.InReplyToStatusId));
                     return;
                 }
 
@@ -5394,7 +5394,7 @@ namespace Hoehoe
         /// <returns></returns>
         private string CreateRetweetUnofficial(string status)
         {
-            MatchCollection ms = Regex.Matches(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\"[^>]*>(?<link>(https?|shttp|ftps?):// [^<]+)</a>");
+            MatchCollection ms = Regex.Matches(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\"[^>]*>(?<link>(https?|shttp|ftps?)://[^<]+)</a>");
             foreach (Match m in ms)
             {
                 if (m.Result("${link}").EndsWith("..."))
@@ -5406,7 +5406,7 @@ namespace Hoehoe
             status = Regex.Replace(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\" title=\"(?<title>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "${title}");
 
             // その他のリンク(@IDなど)を置き換える
-            status = Regex.Replace(status, "@<a target=\"_self\" href=\"https?:// twitter.com/(#!/)?(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "@${url}");
+            status = Regex.Replace(status, "@<a target=\"_self\" href=\"https?://twitter.com/(#!/)?(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "@${url}");
 
             // ハッシュタグ
             status = Regex.Replace(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "${link}");
@@ -8989,7 +8989,7 @@ namespace Hoehoe
 
         private void TryCopyUrlInCurrentTweet()
         {
-            MatchCollection mc = Regex.Matches(this.PostBrowser.DocumentText, "<a[^>]*href=\"(?<url>" + this.postBrowserStatusText.Replace(".", "\\.") + ")\"[^>]*title=\"(?<title>https?:// [^\"]+)\"", RegexOptions.IgnoreCase);
+            MatchCollection mc = Regex.Matches(this.PostBrowser.DocumentText, "<a[^>]*href=\"(?<url>" + this.postBrowserStatusText.Replace(".", "\\.") + ")\"[^>]*title=\"(?<title>https?://[^\"]+)\"", RegexOptions.IgnoreCase);
             foreach (Match m in mc)
             {
                 if (m.Groups["url"].Value == this.postBrowserStatusText)
