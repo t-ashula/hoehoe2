@@ -138,7 +138,7 @@ namespace Hoehoe
 
         private void DeleteStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoStatusDelete();
+            this.DeleteSelected();
         }
 
         private void DeleteTabMenuItem_Click(object sender, EventArgs e)

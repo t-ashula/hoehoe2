@@ -1178,13 +1178,10 @@ namespace Hoehoe
             {
                 return this.postCache[index - this.itemCacheIndex];
             }
-            else
-            {
-                return this.statuses.Item(this.curTab.Text, index);
-            }
+            return this.statuses.Item(this.curTab.Text, index);
         }
 
-        private void DoStatusDelete()
+        private void DeleteSelected()
         {
             if (this.curTab == null || this.curList == null)
             {
@@ -2315,7 +2312,7 @@ namespace Hoehoe
                             this.MakeReplyOrDirectStatus(false, true);
                             return true;
                         case Keys.D:
-                            this.DoStatusDelete();
+                            this.DeleteSelected();
                             return true;
                         case Keys.M:
                             this.MakeReplyOrDirectStatus(false, false);
