@@ -206,77 +206,51 @@ namespace Hoehoe
             this.iconRefresh[3] = LoadIcon(iconDir, "Refresh4.ico", Hoehoe.Properties.Resources.Refresh4);
         }
 
-        private void InitColumnText()
+        private int GetSortColumnIndex(IdComparerClass.ComparerMode sortMode)
         {
-            this.columnTexts[0] = string.Empty;
-            this.columnTexts[1] = Hoehoe.Properties.Resources.AddNewTabText2;
-            this.columnTexts[2] = Hoehoe.Properties.Resources.AddNewTabText3;
-            this.columnTexts[3] = Hoehoe.Properties.Resources.AddNewTabText4_2;
-            this.columnTexts[4] = Hoehoe.Properties.Resources.AddNewTabText5;
-            this.columnTexts[5] = string.Empty;
-            this.columnTexts[6] = string.Empty;
-            this.columnTexts[7] = "Source";
-
-            this.columnOrgTexts[0] = string.Empty;
-            this.columnOrgTexts[1] = Hoehoe.Properties.Resources.AddNewTabText2;
-            this.columnOrgTexts[2] = Hoehoe.Properties.Resources.AddNewTabText3;
-            this.columnOrgTexts[3] = Hoehoe.Properties.Resources.AddNewTabText4_2;
-            this.columnOrgTexts[4] = Hoehoe.Properties.Resources.AddNewTabText5;
-            this.columnOrgTexts[5] = string.Empty;
-            this.columnOrgTexts[6] = string.Empty;
-            this.columnOrgTexts[7] = "Source";
-
             int c = 0;
-            switch (this.statuses.SortMode)
+            switch (sortMode)
             {
-                case IdComparerClass.ComparerMode.Nickname:
-                    // ニックネーム
+                case IdComparerClass.ComparerMode.Nickname: // ニックネーム
                     c = 1;
                     break;
-                case IdComparerClass.ComparerMode.Data:
-                    // 本文
+                case IdComparerClass.ComparerMode.Data:     // 本文
                     c = 2;
                     break;
-                case IdComparerClass.ComparerMode.Id:
-                    // 時刻=発言Id
+                case IdComparerClass.ComparerMode.Id:       // 時刻=発言Id
                     c = 3;
                     break;
-                case IdComparerClass.ComparerMode.Name:
-                    // 名前
+                case IdComparerClass.ComparerMode.Name:     // 名前
                     c = 4;
                     break;
-                case IdComparerClass.ComparerMode.Source:
-                    // Source
+                case IdComparerClass.ComparerMode.Source:   // Source
                     c = 7;
                     break;
             }
+            return c;
+        }
 
-            if (this.iconCol)
+        private void InitColumnText()
+        {
+            var columns = new[] { 
+                string.Empty, 
+                Hoehoe.Properties.Resources.AddNewTabText2, 
+                Hoehoe.Properties.Resources.AddNewTabText3, 
+                Hoehoe.Properties.Resources.AddNewTabText4_2, 
+                Hoehoe.Properties.Resources.AddNewTabText5, 
+                string.Empty, 
+                string.Empty, 
+                "Source" 
+            };
+            for (var i = 0; i < columns.Length; ++i)
             {
-                if (this.statuses.SortOrder == SortOrder.Descending)
-                {
-                    // U+25BE BLACK DOWN-POINTING SMALL TRIANGLE
-                    this.columnTexts[2] = this.columnOrgTexts[2] + "▾";
-                }
-                else
-                {
-                    // U+25B4 BLACK UP-POINTING SMALL TRIANGLE
-                    this.columnTexts[2] = this.columnOrgTexts[2] + "▴";
-                }
+                this.columnTexts[i] = this.columnOrgTexts[i] = columns[i];
             }
-            else
-            {
-                if (this.statuses.SortOrder == SortOrder.Descending)
-                {
-                    // U+25BE BLACK DOWN-POINTING SMALL TRIANGLE
-                    this.columnTexts[c] = this.columnOrgTexts[c] + "▾";
-                }
-                else
-                {
-                    // U+25B4 BLACK UP-POINTING SMALL TRIANGLE
-                    this.columnTexts[c] = this.columnOrgTexts[c] + "▴";
-                }
-            }
+
+            // U+25BE BLACK DOWN-POINTING SMALL TRIANGLE, U+25B4 BLACK UP-POINTING SMALL TRIANGLE
+            string mark = this.statuses.SortOrder == SortOrder.Descending ? "▾" : "▴";
+            int c = this.iconCol ? 2 : GetSortColumnIndex(this.statuses.SortMode);
+            this.columnTexts[c] = this.columnOrgTexts[c] + mark;
         }
 
         private void InitializeTraceFrag()
@@ -3928,30 +3902,7 @@ namespace Hoehoe
                 this.cfgCommon.PreviewEnable = this.settingDialog.PreviewEnable;
                 this.cfgCommon.Language = this.settingDialog.Language;
                 this.cfgCommon.SortOrder = (int)this.statuses.SortOrder;
-                switch (this.statuses.SortMode)
-                {
-                    case IdComparerClass.ComparerMode.Nickname:
-                        // ニックネーム
-                        this.cfgCommon.SortColumn = 1;
-                        break;
-                    case IdComparerClass.ComparerMode.Data:
-                        // 本文
-                        this.cfgCommon.SortColumn = 2;
-                        break;
-                    case IdComparerClass.ComparerMode.Id:
-                        // 時刻=発言Id
-                        this.cfgCommon.SortColumn = 3;
-                        break;
-                    case IdComparerClass.ComparerMode.Name:
-                        // 名前
-                        this.cfgCommon.SortColumn = 4;
-                        break;
-                    case IdComparerClass.ComparerMode.Source:
-                        // Source
-                        this.cfgCommon.SortColumn = 7;
-                        break;
-                }
-
+                this.cfgCommon.SortColumn = this.GetSortColumnIndex(this.statuses.SortMode);
                 this.cfgCommon.Nicoms = this.settingDialog.Nicoms;
                 this.cfgCommon.HashTags = this.HashMgr.HashHistories;
                 if (this.HashMgr.IsPermanent)
