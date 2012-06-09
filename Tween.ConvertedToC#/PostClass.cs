@@ -378,41 +378,41 @@ namespace Hoehoe
         public string GetDump()
         {
             StringBuilder sb = new StringBuilder(512);
-            var format = "{0,-20}:{1}<br/>";
+            var format1 = "{0,-20}:{1}<br/>";
+            var format2 = "{0,-20}:<xmp>{1}</xmp><br/>";
             sb.Append("-----Start PostClass Dump<br>");
-            sb.AppendFormat(format,  "TextFromApi", this.TextFromApi);
-            sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", this.TextFromApi);
-            sb.AppendFormat("StatusId             : {0}<br>", this.StatusId);
-            //// sb.AppendFormat("ImageIndex     : {0}<br>", this._curPost.ImageIndex.ToString)
-            sb.AppendFormat("ImageUrl       : {0}<br>", this.ImageUrl);
-            sb.AppendFormat("InReplyToStatusId    : {0}<br>", this.InReplyToStatusId);
-            sb.AppendFormat("InReplyToUser  : {0}<br>", this.InReplyToUser);
-            sb.AppendFormat("IsDM           : {0}<br>", this.IsDm);
-            sb.AppendFormat("IsFav          : {0}<br>", this.IsFav);
-            sb.AppendFormat("IsMark         : {0}<br>", this.IsMark);
-            sb.AppendFormat("IsMe           : {0}<br>", this.IsMe);
-            sb.AppendFormat("IsOwl          : {0}<br>", this.IsOwl);
-            sb.AppendFormat("IsProtect      : {0}<br>", this.IsProtect);
-            sb.AppendFormat("IsRead         : {0}<br>", this.IsRead);
-            sb.AppendFormat("IsReply        : {0}<br>", this.IsReply);
-            foreach (string nm in this.ReplyToList)
+            sb.AppendFormat(format1, "TextFromApi", this.TextFromApi);
+            sb.AppendFormat(format2, "(PlainText)", this.TextFromApi);
+            sb.AppendFormat(format1, "StatusId", this.StatusId);
+            sb.AppendFormat(format1, "ImageUrl", this.ImageUrl);
+            sb.AppendFormat(format1, "InReplyToStatusId", this.InReplyToStatusId);
+            sb.AppendFormat(format1, "InReplyToUser", this.InReplyToUser);
+            sb.AppendFormat(format1, "IsDM", this.IsDm);
+            sb.AppendFormat(format1, "IsFav", this.IsFav);
+            sb.AppendFormat(format1, "IsMark", this.IsMark);
+            sb.AppendFormat(format1, "IsMe", this.IsMe);
+            sb.AppendFormat(format1, "IsOwl", this.IsOwl);
+            sb.AppendFormat(format1, "IsProtect", this.IsProtect);
+            sb.AppendFormat(format1, "IsRead", this.IsRead);
+            sb.AppendFormat(format1, "IsReply", this.IsReply);
+            foreach (var nm in this.ReplyToList)
             {
-                sb.AppendFormat("ReplyToList    : {0}<br>", nm);
+                sb.AppendFormat(format1, "ReplyToList", nm);
             }
 
-            sb.AppendFormat("ScreenName     : {0}<br>", this.ScreenName);
-            sb.AppendFormat("NickName       : {0}<br>", this.Nickname);
-            sb.AppendFormat("Text           : {0}<br>", this.Text);
-            sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", this.Text);
-            sb.AppendFormat("CreatedAt      : {0}<br>", this.CreatedAt);
-            sb.AppendFormat("Source         : {0}<br>", this.Source);
-            sb.AppendFormat("UserId         : {0}<br>", this.UserId);
-            sb.AppendFormat("FilterHit      : {0}<br>", this.FilterHit);
-            sb.AppendFormat("RetweetedBy    : {0}<br>", this.RetweetedBy);
-            sb.AppendFormat("RetweetedId    : {0}<br>", this.RetweetedId);
-            sb.AppendFormat("SearchTabName  : {0}<br>", this.RelTabName);
+            sb.AppendFormat(format1, "ScreenName", this.ScreenName);
+            sb.AppendFormat(format1, "NickName", this.Nickname);
+            sb.AppendFormat(format1, "Text", this.Text);
+            sb.AppendFormat(format2, "(PlainText)", this.Text);
+            sb.AppendFormat(format1, "CreatedAt", this.CreatedAt);
+            sb.AppendFormat(format1, "Source", this.Source);
+            sb.AppendFormat(format1, "UserId", this.UserId);
+            sb.AppendFormat(format1, "FilterHit", this.FilterHit);
+            sb.AppendFormat(format1, "RetweetedBy", this.RetweetedBy);
+            sb.AppendFormat(format1, "RetweetedId", this.RetweetedId);
+            sb.AppendFormat(format1, "SearchTabName", this.RelTabName);
             sb.Append("-----End PostClass Dump<br>");
-            return sb.ToString() ;
+            return sb.ToString();
         }
         #endregion public methods
 
