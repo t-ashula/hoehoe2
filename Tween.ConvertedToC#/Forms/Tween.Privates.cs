@@ -1307,103 +1307,57 @@ namespace Hoehoe
 
         private void DoRefresh()
         {
-            if (this.curTab == null)
-            {
-                this.GetTimeline(WorkerType.Timeline);
-                return;
-            }
-
-            switch (this.statuses.Tabs[this.curTab.Text].TabType)
-            {
-                case TabUsageType.Mentions:
-                    this.GetTimeline(WorkerType.Reply);
-                    break;
-                case TabUsageType.DirectMessage:
-                    this.GetTimeline(WorkerType.DirectMessegeRcv);
-                    break;
-                case TabUsageType.Favorites:
-                    this.GetTimeline(WorkerType.Favorites);
-                    break;
-                case TabUsageType.PublicSearch:
-                    {
-                        // ' TODO
-                        TabClass tb = this.statuses.Tabs[this.curTab.Text];
-                        if (string.IsNullOrEmpty(tb.SearchWords))
-                        {
-                            return;
-                        }
-                        this.GetTimeline(WorkerType.PublicSearch, 1, 0, this.curTab.Text);
-                    }
-                    break;
-                case TabUsageType.UserTimeline:
-                    this.GetTimeline(WorkerType.UserTimeline, 1, 0, this.curTab.Text);
-                    break;
-                case TabUsageType.Lists:
-                    {
-                        // ' TODO
-                        TabClass tb = this.statuses.Tabs[this.curTab.Text];
-                        if (tb.ListInfo == null || tb.ListInfo.Id == 0)
-                        {
-                            return;
-                        }
-                        this.GetTimeline(WorkerType.List, 1, 0, this.curTab.Text);
-                    }
-                    break;
-                default:
-                    this.GetTimeline(WorkerType.Timeline);
-                    break;
-            }
+            RefreshTab();
         }
 
         private void DoRefreshMore()
         {
-            // ページ指定をマイナス1に
+            RefreshTab(more: true);
+        }
+
+        private void RefreshTab(bool more = false)
+        {
+            int startPage = more ? -1 : 1;
             if (this.curTab == null)
             {
-                this.GetTimeline(WorkerType.Timeline, -1);
+                this.GetTimeline(WorkerType.Timeline, startPage);
                 return;
             }
 
-            switch (this.statuses.Tabs[this.curTab.Text].TabType)
+            TabClass tb = this.statuses.Tabs[this.curTab.Text];
+            switch (tb.TabType)
             {
                 case TabUsageType.Mentions:
-                    this.GetTimeline(WorkerType.Reply, -1);
+                    this.GetTimeline(WorkerType.Reply, startPage);
                     break;
                 case TabUsageType.DirectMessage:
-                    this.GetTimeline(WorkerType.DirectMessegeRcv, -1);
+                    this.GetTimeline(WorkerType.DirectMessegeRcv, startPage);
                     break;
                 case TabUsageType.Favorites:
-                    this.GetTimeline(WorkerType.Favorites, -1);
-                    break;
-                case TabUsageType.Profile:
-                    break;
-                case TabUsageType.PublicSearch:
-                    {
-                        // TODO
-                        TabClass tb = this.statuses.Tabs[this.curTab.Text];
-                        if (string.IsNullOrEmpty(tb.SearchWords))
-                        {
-                            return;
-                        }
-                        this.GetTimeline(WorkerType.PublicSearch, -1, 0, this.curTab.Text);
-                    }
+                    this.GetTimeline(WorkerType.Favorites, startPage);
                     break;
                 case TabUsageType.UserTimeline:
-                    this.GetTimeline(WorkerType.UserTimeline, -1, 0, this.curTab.Text);
+                    this.GetTimeline(WorkerType.UserTimeline, startPage, 0, this.curTab.Text);
+                    break;
+                case TabUsageType.PublicSearch:
+                    if (string.IsNullOrEmpty(tb.SearchWords))
+                    {
+                        return;
+                    }
+                    this.GetTimeline(WorkerType.PublicSearch, startPage, 0, this.curTab.Text);
                     break;
                 case TabUsageType.Lists:
+                    if (tb.ListInfo == null || tb.ListInfo.Id == 0)
                     {
-                        // ' TODO
-                        TabClass tb = this.statuses.Tabs[this.curTab.Text];
-                        if (tb.ListInfo == null || tb.ListInfo.Id == 0)
-                        {
-                            return;
-                        }
-                        this.GetTimeline(WorkerType.List, -1, 0, this.curTab.Text);
+                        return;
                     }
+                    this.GetTimeline(WorkerType.List, startPage, 0, this.curTab.Text);
+                    break;
+                case TabUsageType.Profile: 
+                    /* TODO: profile tab ? */
                     break;
                 default:
-                    this.GetTimeline(WorkerType.Timeline, -1);
+                    this.GetTimeline(WorkerType.Timeline, startPage);
                     break;
             }
         }
