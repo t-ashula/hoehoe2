@@ -1307,114 +1307,104 @@ namespace Hoehoe
 
         private void DoRefresh()
         {
-            if (this.curTab != null)
-            {
-                switch (this.statuses.Tabs[this.curTab.Text].TabType)
-                {
-                    case TabUsageType.Mentions:
-                        this.GetTimeline(WorkerType.Reply);
-                        break;
-                    case TabUsageType.DirectMessage:
-                        this.GetTimeline(WorkerType.DirectMessegeRcv);
-                        break;
-                    case TabUsageType.Favorites:
-                        this.GetTimeline(WorkerType.Favorites);
-                        break;
-                    case TabUsageType.PublicSearch:
-                        {
-                            // ' TODO
-                            TabClass tb = this.statuses.Tabs[this.curTab.Text];
-                            if (string.IsNullOrEmpty(tb.SearchWords))
-                            {
-                                return;
-                            }
-
-                            this.GetTimeline(WorkerType.PublicSearch, 1, 0, this.curTab.Text);
-                        }
-
-                        break;
-                    case TabUsageType.UserTimeline:
-                        this.GetTimeline(WorkerType.UserTimeline, 1, 0, this.curTab.Text);
-                        break;
-                    case TabUsageType.Lists:
-                        {
-                            // ' TODO
-                            TabClass tb = this.statuses.Tabs[this.curTab.Text];
-                            if (tb.ListInfo == null || tb.ListInfo.Id == 0)
-                            {
-                                return;
-                            }
-
-                            this.GetTimeline(WorkerType.List, 1, 0, this.curTab.Text);
-                        }
-
-                        break;
-                    default:
-                        this.GetTimeline(WorkerType.Timeline);
-                        break;
-                }
-            }
-            else
+            if (this.curTab == null)
             {
                 this.GetTimeline(WorkerType.Timeline);
+                return;
+            }
+
+            switch (this.statuses.Tabs[this.curTab.Text].TabType)
+            {
+                case TabUsageType.Mentions:
+                    this.GetTimeline(WorkerType.Reply);
+                    break;
+                case TabUsageType.DirectMessage:
+                    this.GetTimeline(WorkerType.DirectMessegeRcv);
+                    break;
+                case TabUsageType.Favorites:
+                    this.GetTimeline(WorkerType.Favorites);
+                    break;
+                case TabUsageType.PublicSearch:
+                    {
+                        // ' TODO
+                        TabClass tb = this.statuses.Tabs[this.curTab.Text];
+                        if (string.IsNullOrEmpty(tb.SearchWords))
+                        {
+                            return;
+                        }
+                        this.GetTimeline(WorkerType.PublicSearch, 1, 0, this.curTab.Text);
+                    }
+                    break;
+                case TabUsageType.UserTimeline:
+                    this.GetTimeline(WorkerType.UserTimeline, 1, 0, this.curTab.Text);
+                    break;
+                case TabUsageType.Lists:
+                    {
+                        // ' TODO
+                        TabClass tb = this.statuses.Tabs[this.curTab.Text];
+                        if (tb.ListInfo == null || tb.ListInfo.Id == 0)
+                        {
+                            return;
+                        }
+                        this.GetTimeline(WorkerType.List, 1, 0, this.curTab.Text);
+                    }
+                    break;
+                default:
+                    this.GetTimeline(WorkerType.Timeline);
+                    break;
             }
         }
 
         private void DoRefreshMore()
         {
             // ページ指定をマイナス1に
-            if (this.curTab != null)
-            {
-                switch (this.statuses.Tabs[this.curTab.Text].TabType)
-                {
-                    case TabUsageType.Mentions:
-                        this.GetTimeline(WorkerType.Reply, -1);
-                        break;
-                    case TabUsageType.DirectMessage:
-                        this.GetTimeline(WorkerType.DirectMessegeRcv, -1);
-                        break;
-                    case TabUsageType.Favorites:
-                        this.GetTimeline(WorkerType.Favorites, -1);
-                        break;
-                    case TabUsageType.Profile:
-                        break;
-                    case TabUsageType.PublicSearch:
-                        {
-                            // TODO
-                            TabClass tb = this.statuses.Tabs[this.curTab.Text];
-                            if (string.IsNullOrEmpty(tb.SearchWords))
-                            {
-                                return;
-                            }
-
-                            this.GetTimeline(WorkerType.PublicSearch, -1, 0, this.curTab.Text);
-                        }
-
-                        break;
-                    case TabUsageType.UserTimeline:
-                        this.GetTimeline(WorkerType.UserTimeline, -1, 0, this.curTab.Text);
-                        break;
-                    case TabUsageType.Lists:
-                        {
-                            // ' TODO
-                            TabClass tb = this.statuses.Tabs[this.curTab.Text];
-                            if (tb.ListInfo == null || tb.ListInfo.Id == 0)
-                            {
-                                return;
-                            }
-
-                            this.GetTimeline(WorkerType.List, -1, 0, this.curTab.Text);
-                        }
-
-                        break;
-                    default:
-                        this.GetTimeline(WorkerType.Timeline, -1);
-                        break;
-                }
-            }
-            else
+            if (this.curTab == null)
             {
                 this.GetTimeline(WorkerType.Timeline, -1);
+                return;
+            }
+
+            switch (this.statuses.Tabs[this.curTab.Text].TabType)
+            {
+                case TabUsageType.Mentions:
+                    this.GetTimeline(WorkerType.Reply, -1);
+                    break;
+                case TabUsageType.DirectMessage:
+                    this.GetTimeline(WorkerType.DirectMessegeRcv, -1);
+                    break;
+                case TabUsageType.Favorites:
+                    this.GetTimeline(WorkerType.Favorites, -1);
+                    break;
+                case TabUsageType.Profile:
+                    break;
+                case TabUsageType.PublicSearch:
+                    {
+                        // TODO
+                        TabClass tb = this.statuses.Tabs[this.curTab.Text];
+                        if (string.IsNullOrEmpty(tb.SearchWords))
+                        {
+                            return;
+                        }
+                        this.GetTimeline(WorkerType.PublicSearch, -1, 0, this.curTab.Text);
+                    }
+                    break;
+                case TabUsageType.UserTimeline:
+                    this.GetTimeline(WorkerType.UserTimeline, -1, 0, this.curTab.Text);
+                    break;
+                case TabUsageType.Lists:
+                    {
+                        // ' TODO
+                        TabClass tb = this.statuses.Tabs[this.curTab.Text];
+                        if (tb.ListInfo == null || tb.ListInfo.Id == 0)
+                        {
+                            return;
+                        }
+                        this.GetTimeline(WorkerType.List, -1, 0, this.curTab.Text);
+                    }
+                    break;
+                default:
+                    this.GetTimeline(WorkerType.Timeline, -1);
+                    break;
             }
         }
 
