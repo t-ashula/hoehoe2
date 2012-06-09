@@ -2725,54 +2725,59 @@ namespace Hoehoe
                 return;
             }
 
-            int fIdx = 0;
-            int toIdx = 0;
-            int stp = 1;
-
+            int fromIndex = 0;
+            int toIndex = 0;
+            bool noselect = this.curList.SelectedIndices.Count == 0;
             if (forward)
             {
-                if (this.curList.SelectedIndices.Count == 0)
+                if (noselect)
                 {
-                    fIdx = 0;
+                    fromIndex = 0;
                 }
                 else
                 {
-                    fIdx = this.curList.SelectedIndices[0] + 1;
-                    if (fIdx > this.curList.VirtualListSize - 1)
+                    fromIndex = this.curList.SelectedIndices[0] + 1;
+                    if (fromIndex > this.curList.VirtualListSize - 1)
                     {
                         return;
                     }
                 }
 
-                toIdx = this.curList.VirtualListSize - 1;
-                stp = 1;
+                toIndex = this.curList.VirtualListSize - 1;
+                for (int idx = fromIndex; idx <= toIndex; ++idx )
+                {
+                    if (this.statuses.Item(this.curTab.Text, idx).IsFav)
+                    {
+                        this.SelectListItem(this.curList, idx);
+                        this.curList.EnsureVisible(idx);
+                        break;
+                    }
+                }
             }
             else
             {
-                if (this.curList.SelectedIndices.Count == 0)
+                if (noselect)
                 {
-                    fIdx = this.curList.VirtualListSize - 1;
+                    fromIndex = this.curList.VirtualListSize - 1;
                 }
                 else
                 {
-                    fIdx = this.curList.SelectedIndices[0] - 1;
-                    if (fIdx < 0)
+                    fromIndex = this.curList.SelectedIndices[0] - 1;
+                    if (fromIndex < 0)
                     {
                         return;
                     }
                 }
 
-                toIdx = 0;
-                stp = -1;
-            }
-
-            for (int idx = fIdx; idx <= toIdx; idx += stp)
-            {
-                if (this.statuses.Item(this.curTab.Text, idx).IsFav)
+                toIndex = 0;
+                for (int idx = fromIndex; idx >= toIndex; idx--)
                 {
-                    this.SelectListItem(this.curList, idx);
-                    this.curList.EnsureVisible(idx);
-                    break;
+                    if (this.statuses.Item(this.curTab.Text, idx).IsFav)
+                    {
+                        this.SelectListItem(this.curList, idx);
+                        this.curList.EnsureVisible(idx);
+                        break;
+                    }
                 }
             }
         }
