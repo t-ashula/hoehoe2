@@ -860,14 +860,13 @@ namespace Hoehoe
 
         private void ColorizeList()
         {
-            // Index:更新対象のListviewItem.Index。Colorを返す。-1は全キャッシュ。Colorは返さない（ダミーを戻す）
-            PostClass post = this.anchorFlag ? this.anchorPost : this.curPost;
-
             if (this.itemCache == null)
             {
                 return;
             }
 
+            // Index:更新対象のListviewItem.Index。Colorを返す。-1は全キャッシュ。Colorは返さない（ダミーを戻す）
+            var post = this.anchorFlag ? this.anchorPost : this.curPost; 
             if (post == null)
             {
                 return;
@@ -875,7 +874,7 @@ namespace Hoehoe
 
             try
             {
-                for (int cnt = 0; cnt < this.itemCache.Length; cnt++)
+                for (var cnt = 0; cnt < this.itemCache.Length; ++cnt)
                 {
                     this.curList.ChangeItemBackColor(this.itemCacheIndex + cnt, this.JudgeColor(post, this.postCache[cnt]));
                 }
