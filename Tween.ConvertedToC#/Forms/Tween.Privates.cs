@@ -2702,32 +2702,19 @@ namespace Hoehoe
 
         private void CopyIdUri()
         {
-            string clstr = string.Empty;
-            StringBuilder sb = new StringBuilder();
-            if (this.curTab == null)
+            if (this.curTab == null
+                || this.statuses.GetTabByName(this.curTab.Text) == null
+                || this.statuses.GetTabByName(this.curTab.Text).TabType == TabUsageType.DirectMessage
+                || this.curList.SelectedIndices.Count < 1)
             {
                 return;
             }
 
-            if (this.statuses.GetTabByName(this.curTab.Text) == null)
-            {
-                return;
-            }
-
-            if (this.statuses.GetTabByName(this.curTab.Text).TabType == TabUsageType.DirectMessage)
-            {
-                return;
-            }
-
-            foreach (int idx in this.curList.SelectedIndices)
-            {
-                PostClass post = this.statuses.Item(this.curTab.Text, idx);
-                sb.AppendFormat("http://twitter.com/{0}/status/{1}{2}", post.ScreenName, post.OriginalStatusId, Environment.NewLine);
-            }
-
+            var sb = string.Join(Environment.NewLine,
+                this.curList.SelectedIndices.Cast<int>().Select(i => this.statuses.Item(this.curTab.Text, i)).Select(p => p.MakeStatusUrl()));
             if (sb.Length > 0)
             {
-                CopyToClipboard(sb.ToString());
+                CopyToClipboard(sb);
             }
         }
 

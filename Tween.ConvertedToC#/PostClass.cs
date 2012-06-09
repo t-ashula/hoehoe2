@@ -439,6 +439,17 @@ namespace Hoehoe
             } 
             return false;
         }
+
+        public string MakeStatusUrl()
+        {
+            if (this.IsDm || this.IsDeleted)
+            {
+                return string.Empty;
+            }
+
+            return string.Format("https://twitter.com/{0}/status/{1}", this.ScreenName, this.OriginalStatusId);
+        }
+        
         #endregion public methods
 
         #region inner types
