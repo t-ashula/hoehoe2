@@ -1305,16 +1305,6 @@ namespace Hoehoe
             return p.IsMe || p.RetweetedBy.ToLower() == this.tw.Username.ToLower();
         }
 
-        private void DoRefresh()
-        {
-            RefreshTab();
-        }
-
-        private void DoRefreshMore()
-        {
-            RefreshTab(more: true);
-        }
-
         private void RefreshTab(bool more = false)
         {
             int startPage = more ? -1 : 1;
@@ -2101,7 +2091,7 @@ namespace Hoehoe
                             this.TrySearchWordInTabToBottom();
                             return true;
                         case Keys.F5:
-                            this.DoRefresh();
+                            this.RefreshTab();
                             return true;
                         case Keys.F6:
                             this.GetTimeline(WorkerType.Reply);
@@ -2164,7 +2154,7 @@ namespace Hoehoe
                                 this.MakeReplyOrDirectStatus();
                                 return true;
                             case Keys.R:
-                                this.DoRefresh();
+                                this.RefreshTab();
                                 return true;
                         }
 
@@ -2417,7 +2407,7 @@ namespace Hoehoe
                             this.TrySearchWordInTabToTop();
                             return true;
                         case Keys.F5:
-                            this.DoRefreshMore();
+                            this.RefreshTab(more: true);
                             return true;
                         case Keys.F6:
                             this.GetTimeline(WorkerType.Reply, -1);
@@ -2432,7 +2422,7 @@ namespace Hoehoe
                     {
                         if (keyCode == Keys.R)
                         {
-                            this.DoRefreshMore();
+                            this.RefreshTab(more: true);
                             return true;
                         }
                     }
@@ -7366,7 +7356,7 @@ namespace Hoehoe
             {
                 if (!this.ImageSelectionPanel.Enabled)
                 {
-                    this.DoRefresh();
+                    this.RefreshTab();
                     return;
                 }
             }

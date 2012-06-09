@@ -595,12 +595,12 @@ namespace Hoehoe
         private void RefreshMoreStripMenuItem_Click(object sender, EventArgs e)
         {
             // もっと前を取得
-            this.DoRefreshMore();
+            this.RefreshTab(more: true);
         }
 
         private void RefreshStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoRefresh();
+            this.RefreshTab();
         }
 
         private void RemoveCommandMenuItem_Click(object sender, EventArgs e)
