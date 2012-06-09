@@ -2028,10 +2028,10 @@ namespace Hoehoe
                         switch (keyCode)
                         {
                             case Keys.L:
-                                this.GoPost(true);
+                                this.GoSameUsersPost(true);
                                 return true;
                             case Keys.H:
-                                this.GoPost(false);
+                                this.GoSameUsersPost(false);
                                 return true;
                             case Keys.Z:
                             case Keys.Oemcomma:
@@ -2808,7 +2808,7 @@ namespace Hoehoe
             }
         }
 
-        private void GoPost(bool forward)
+        private void GoSameUsersPost(bool forward)
         {
             if (this.curList.SelectedIndices.Count == 0 || this.curPost == null)
             {
