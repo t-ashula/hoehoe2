@@ -1565,7 +1565,7 @@ namespace Hoehoe
             }
         }
 
-        private void SearchInTab(string word, bool isCaseSensitive, bool isUseRegex, SEARCHTYPE searchType)
+        private void SearchInTab(string word, bool isCaseSensitive, bool isUseRegex, InTabSearchType searchType)
         {
             if (this.curList.VirtualListSize == 0)
             {
@@ -1595,14 +1595,14 @@ namespace Hoehoe
             }
 
             int cidx = this.curList.SelectedIndices.Count > 0 ? this.curList.SelectedIndices[0] : 0;
-            if (searchType == SEARCHTYPE.NextSearch)
+            if (searchType == InTabSearchType.NextSearch)
             {
                 cidx++;
             }
 
             var listsize = this.curList.VirtualListSize;
             var indecies = Enumerable.Range(0, listsize).Select(i => (i + cidx) % listsize);
-            if (searchType == SEARCHTYPE.PrevSearch)
+            if (searchType == InTabSearchType.PrevSearch)
             {
                 indecies = indecies.Reverse();
             }
@@ -6310,7 +6310,7 @@ namespace Hoehoe
                 this.searchDialog.SWord = txt;
                 this.searchDialog.CheckCaseSensitive = false;
                 this.searchDialog.CheckRegex = false;
-                this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
+                this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, InTabSearchType.NextSearch);
             }
         }
 
@@ -6323,7 +6323,7 @@ namespace Hoehoe
             }
             else
             {
-                this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
+                this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, InTabSearchType.NextSearch);
             }
         }
 
@@ -6338,7 +6338,7 @@ namespace Hoehoe
                 }
             }
 
-            this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
+            this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, InTabSearchType.PrevSearch);
         }
 
         private bool TryGetSearchCondition()
@@ -6364,7 +6364,7 @@ namespace Hoehoe
             {
                 return;
             }
-            this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
+            this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, InTabSearchType.DialogSearch);
         }
 
         private void TryFollowUserOfCurrentTweet()

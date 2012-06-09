@@ -385,7 +385,7 @@ namespace Hoehoe
         #region enums
 
         // 検索処理タイプ
-        private enum SEARCHTYPE
+        private enum InTabSearchType
         {
             DialogSearch,
             NextSearch,
