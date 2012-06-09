@@ -2815,35 +2815,24 @@ namespace Hoehoe
                 return;
             }
 
-            int fIdx = 0;
-            int toIdx = 0;
-            int stp = 1;
-
-            if (forward)
+            int selected = this.curList.SelectedIndices[0];
+            int toIdx = forward ? this.curList.VirtualListSize - 1 : 0;
+            int fIdx = forward ? selected + 1 : selected - 1;
+            if (forward && fIdx > toIdx)
             {
-                fIdx = this.curList.SelectedIndices[0] + 1;
-                if (fIdx > this.curList.VirtualListSize - 1)
-                {
-                    return;
-                }
-
-                toIdx = this.curList.VirtualListSize - 1;
-                stp = 1;
-            }
-            else
-            {
-                fIdx = this.curList.SelectedIndices[0] - 1;
-                if (fIdx < 0)
-                {
-                    return;
-                }
-
-                toIdx = 0;
-                stp = -1;
+                return;
             }
 
+            if (!forward && toIdx > fIdx)
+            {
+                return;
+            }
+
+            var idxs = forward ?
+                Enumerable.Range(fIdx, toIdx - fIdx + 1) :
+                Enumerable.Range(toIdx + 1, fIdx - toIdx).Reverse();
             string name = this.curPost.IsRetweeted ? this.curPost.RetweetedBy : this.curPost.ScreenName;
-            for (int idx = fIdx; idx <= toIdx; idx += stp)
+            foreach (int idx in idxs)
             {
                 var statusesItem = this.statuses.Item(this.curTab.Text, idx);
                 var statusItemName = statusesItem.IsRetweeted ? statusesItem.RetweetedBy : statusesItem.ScreenName;
