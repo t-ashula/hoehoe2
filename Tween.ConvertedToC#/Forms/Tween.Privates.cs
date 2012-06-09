@@ -2970,17 +2970,11 @@ namespace Hoehoe
                 return;
             }
 
-            int idx = this.curList.SelectedIndices[0];
-            if (this.statuses.SortOrder == SortOrder.Ascending)
-            {
-                this.curList.EnsureVisible(this.curList.VirtualListSize - 1);
-            }
-            else
-            {
-                this.curList.EnsureVisible(0);
-            }
-
+            int selected = this.curList.SelectedIndices[0];
+            var idx = (this.statuses.SortOrder == SortOrder.Ascending) ?
+                this.curList.VirtualListSize - 1 : 0;
             this.curList.EnsureVisible(idx);
+            this.curList.EnsureVisible(selected);
         }
 
         private void GoInReplyToPostTree()
