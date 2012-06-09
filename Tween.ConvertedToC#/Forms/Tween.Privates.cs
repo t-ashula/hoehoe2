@@ -2622,24 +2622,13 @@ namespace Hoehoe
         private void PageDownPostBrowser(bool forward)
         {
             HtmlDocument doc = this.PostBrowser.Document;
-            if (doc == null)
+            if (doc == null || doc.Body == null)
             {
                 return;
             }
 
-            if (doc.Body == null)
-            {
-                return;
-            }
-
-            if (forward)
-            {
-                doc.Body.ScrollTop += this.PostBrowser.ClientRectangle.Height - this.settingDialog.FontDetail.Height;
-            }
-            else
-            {
-                doc.Body.ScrollTop -= this.PostBrowser.ClientRectangle.Height - this.settingDialog.FontDetail.Height;
-            }
+            int delta = this.PostBrowser.ClientRectangle.Height - this.settingDialog.FontDetail.Height;
+            doc.Body.ScrollTop += forward ? delta : -delta;
         }
 
         private void GoNextTab(bool forward)
