@@ -2927,7 +2927,6 @@ namespace Hoehoe
         {
             ListViewItem item = null;
             int idx = 0;
-
             if (top)
             {
                 item = this.curList.GetItemAt(0, 25);
@@ -2945,11 +2944,9 @@ namespace Hoehoe
         private void GoMiddle()
         {
             ListViewItem item = this.curList.GetItemAt(0, 0);
-            int idx1 = item == null ? 0 : item.Index;
-
+            int idx1 = item != null ? item.Index : 0;
             item = this.curList.GetItemAt(0, this.curList.ClientSize.Height - 1);
-            int idx2 = item == null ? this.curList.VirtualListSize - 1 : item.Index;
-
+            int idx2 = item != null ? item.Index : this.curList.VirtualListSize - 1;
             this.SelectListItem(this.curList, (idx1 + idx2) / 2);
         }
 
@@ -2960,16 +2957,10 @@ namespace Hoehoe
                 return;
             }
 
-            if (this.statuses.SortOrder == SortOrder.Ascending)
-            {
-                this.SelectListItem(this.curList, this.curList.VirtualListSize - 1);
-                this.curList.EnsureVisible(this.curList.VirtualListSize - 1);
-            }
-            else
-            {
-                this.SelectListItem(this.curList, 0);
-                this.curList.EnsureVisible(0);
-            }
+            var idx = (this.statuses.SortOrder == SortOrder.Ascending) ?
+                this.curList.VirtualListSize - 1 : 0;
+            this.SelectListItem(this.curList, idx);
+            this.curList.EnsureVisible(idx);
         }
 
         private void MoveTop()
