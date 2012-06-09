@@ -1383,7 +1383,7 @@ namespace Hoehoe
                     if (this.curList.Columns[j].DisplayIndex == i)
                     {
                         dispOrder[i] = j;
-                        break; // TODO: might not be correct. Was : Exit For
+                        break;
                     }
                 }
             }
@@ -1396,7 +1396,7 @@ namespace Hoehoe
                     if (tb.Tag != null && tb.Controls.Count > 0)
                     {
                         DetailsListView lst = (DetailsListView)tb.Tag;
-                        for (int i = 0; i <= lst.Columns.Count - 1; i++)
+                        for (int i = 0; i < lst.Columns.Count ; ++i)
                         {
                             lst.Columns[dispOrder[i]].DisplayIndex = i;
                             lst.Columns[i].Width = this.curList.Columns[i].Width;
@@ -1484,10 +1484,10 @@ namespace Hoehoe
 
         private ListViewItem CreateItem(TabPage tabPage, PostClass post, int index)
         {
-            StringBuilder mk = new StringBuilder();
+            var mk = new StringBuilder();
             if (post.FavoritedCount > 0)
             {
-                mk.Append("+" + post.FavoritedCount.ToString());
+                mk.AppendFormat("+{0}", post.FavoritedCount);
             }
 
             string postedByDetail = post.ScreenName;
@@ -1495,9 +1495,6 @@ namespace Hoehoe
             {
                 postedByDetail += string.Format("{0}(RT:{1})", Environment.NewLine, post.RetweetedBy);
             }
-            string[] sitem = { string.Empty, post.Nickname, post.IsDeleted ? "(DELETED)" : post.TextFromApi, post.CreatedAt.ToString(this.settingDialog.DateTimeFormat), postedByDetail, string.Empty, mk.ToString(), post.Source };
-            ImageListViewItem itm = new ImageListViewItem(sitem, this.iconDict, post.ImageUrl);
-            itm.StateImageIndex = post.StateIndex;
 
             bool read = post.IsRead;
             if (!this.statuses.Tabs[tabPage.Text].UnreadManage || !this.settingDialog.UnreadManage)
@@ -1505,6 +1502,12 @@ namespace Hoehoe
                 // 未読管理していなかったら既読として扱う
                 read = true;
             }
+
+            var subitem = new string[] { string.Empty, post.Nickname, post.IsDeleted ? "(DELETED)" : post.TextFromApi, post.CreatedAt.ToString(this.settingDialog.DateTimeFormat), postedByDetail, string.Empty, mk.ToString(), post.Source };
+            var itm = new ImageListViewItem(subitem, this.iconDict, post.ImageUrl)
+            {
+                StateImageIndex = post.StateIndex
+            };
 
             this.ChangeItemStyleRead(read, itm, post, null);
             if (tabPage.Equals(this.curTab))
