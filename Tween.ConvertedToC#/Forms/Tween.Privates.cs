@@ -1565,7 +1565,7 @@ namespace Hoehoe
             }
         }
 
-        private void DoTabSearch(string word, bool isCaseSensitive, bool isUseRegex, SEARCHTYPE searchType)
+        private void SearchInTab(string word, bool isCaseSensitive, bool isUseRegex, SEARCHTYPE searchType)
         {
             if (this.curList.VirtualListSize == 0)
             {
@@ -6310,7 +6310,7 @@ namespace Hoehoe
                 this.searchDialog.SWord = txt;
                 this.searchDialog.CheckCaseSensitive = false;
                 this.searchDialog.CheckRegex = false;
-                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
+                this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
             }
         }
 
@@ -6323,7 +6323,7 @@ namespace Hoehoe
             }
             else
             {
-                this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
+                this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.NextSearch);
             }
         }
 
@@ -6338,7 +6338,7 @@ namespace Hoehoe
                 }
             }
 
-            this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
+            this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.PrevSearch);
         }
 
         private bool TryGetSearchCondition()
@@ -6364,7 +6364,7 @@ namespace Hoehoe
             {
                 return;
             }
-            this.DoTabSearch(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
+            this.SearchInTab(this.searchDialog.SWord, this.searchDialog.CheckCaseSensitive, this.searchDialog.CheckRegex, SEARCHTYPE.DialogSearch);
         }
 
         private void TryFollowUserOfCurrentTweet()
