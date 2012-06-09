@@ -865,7 +865,6 @@ namespace Hoehoe
                 return;
             }
 
-            // Index:更新対象のListviewItem.Index。Colorを返す。-1は全キャッシュ。Colorは返さない（ダミーを戻す）
             var post = this.anchorFlag ? this.anchorPost : this.curPost; 
             if (post == null)
             {
@@ -886,14 +885,14 @@ namespace Hoehoe
 
         private void ColorizeList(ListViewItem item, int index)
         {
-            // Index:更新対象のListviewItem.Index。Colorを返す。-1は全キャッシュ。Colorは返さない（ダミーを戻す）
-            PostClass post = this.anchorFlag ? this.anchorPost : this.curPost;
-            PostClass target = this.GetCurTabPost(index);
+            // Index:更新対象のListviewItem.Index。Colorを返す。-1は全キャッシュ。Colorは返さない（ダミーを戻す）    
+            var post = this.anchorFlag ? this.anchorPost : this.curPost;
             if (post == null)
             {
                 return;
             }
 
+            var target = this.GetCurTabPost(index);
             if (item.Index == -1)
             {
                 item.BackColor = this.JudgeColor(post, target);
@@ -906,43 +905,31 @@ namespace Hoehoe
 
         private Color JudgeColor(PostClass basePost, PostClass targetPost)
         {
-            Color cl = default(Color);
+            Color cl = this.clrListBackcolor;  // その他
             if (targetPost.StatusId == basePost.InReplyToStatusId)
             {
-                // @先
-                cl = this.clrAtTo;
+                cl = this.clrAtTo;             // @先
             }
             else if (targetPost.IsMe)
             {
-                // 自分=発言者
-                cl = this.clrSelf;
+                cl = this.clrSelf;            // 自分=発言者
             }
             else if (targetPost.IsReply)
             {
-                // 自分宛返信
-                cl = this.clrAtSelf;
+                cl = this.clrAtSelf;          // 自分宛返信
             }
             else if (basePost.ReplyToList.Contains(targetPost.ScreenName.ToLower()))
             {
-                // 返信先
-                cl = this.clrAtFromTarget;
+                cl = this.clrAtFromTarget;    // 返信先
             }
             else if (targetPost.ReplyToList.Contains(basePost.ScreenName.ToLower()))
             {
-                // その人への返信
-                cl = this.clrAtTarget;
+                cl = this.clrAtTarget;        // その人への返信
             }
             else if (targetPost.ScreenName.Equals(basePost.ScreenName, StringComparison.OrdinalIgnoreCase))
             {
-                // 発言者
-                cl = this.clrTarget;
+                cl = this.clrTarget;          // 発言者
             }
-            else
-            {
-                // その他
-                cl = this.clrListBackcolor;
-            }
-
             return cl;
         }
 
