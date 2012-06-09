@@ -1083,7 +1083,7 @@ namespace Hoehoe
             }
         }
 
-        private void GetTimeline(WorkerType workerType, int fromPage, int toPage, string tabName)
+        private void GetTimeline(WorkerType workerType, int fromPage = 1, int toPage = 0, string tabName = "")
         {
             if (!MyCommon.IsNetworkAvailable())
             {
@@ -1371,13 +1371,13 @@ namespace Hoehoe
                 switch (this.statuses.Tabs[this.curTab.Text].TabType)
                 {
                     case TabUsageType.Mentions:
-                        this.GetTimeline(WorkerType.Reply, 1, 0, string.Empty);
+                        this.GetTimeline(WorkerType.Reply);
                         break;
                     case TabUsageType.DirectMessage:
-                        this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
+                        this.GetTimeline(WorkerType.DirectMessegeRcv);
                         break;
                     case TabUsageType.Favorites:
-                        this.GetTimeline(WorkerType.Favorites, 1, 0, string.Empty);
+                        this.GetTimeline(WorkerType.Favorites);
                         break;
                     case TabUsageType.PublicSearch:
                         {
@@ -1409,13 +1409,13 @@ namespace Hoehoe
 
                         break;
                     default:
-                        this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                        this.GetTimeline(WorkerType.Timeline);
                         break;
                 }
             }
             else
             {
-                this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                this.GetTimeline(WorkerType.Timeline);
             }
         }
 
@@ -1427,13 +1427,13 @@ namespace Hoehoe
                 switch (this.statuses.Tabs[this.curTab.Text].TabType)
                 {
                     case TabUsageType.Mentions:
-                        this.GetTimeline(WorkerType.Reply, -1, 0, string.Empty);
+                        this.GetTimeline(WorkerType.Reply, -1);
                         break;
                     case TabUsageType.DirectMessage:
-                        this.GetTimeline(WorkerType.DirectMessegeRcv, -1, 0, string.Empty);
+                        this.GetTimeline(WorkerType.DirectMessegeRcv, -1);
                         break;
                     case TabUsageType.Favorites:
-                        this.GetTimeline(WorkerType.Favorites, -1, 0, string.Empty);
+                        this.GetTimeline(WorkerType.Favorites, -1);
                         break;
                     case TabUsageType.Profile:
                         break;
@@ -1467,13 +1467,13 @@ namespace Hoehoe
 
                         break;
                     default:
-                        this.GetTimeline(WorkerType.Timeline, -1, 0, string.Empty);
+                        this.GetTimeline(WorkerType.Timeline, -1);
                         break;
                 }
             }
             else
             {
-                this.GetTimeline(WorkerType.Timeline, -1, 0, string.Empty);
+                this.GetTimeline(WorkerType.Timeline, -1);
             }
         }
 
@@ -2219,10 +2219,10 @@ namespace Hoehoe
                             this.DoRefresh();
                             return true;
                         case Keys.F6:
-                            this.GetTimeline(WorkerType.Reply, 1, 0, string.Empty);
+                            this.GetTimeline(WorkerType.Reply);
                             return true;
                         case Keys.F7:
-                            this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
+                            this.GetTimeline(WorkerType.DirectMessegeRcv);
                             return true;
                     }
 
@@ -2535,10 +2535,10 @@ namespace Hoehoe
                             this.DoRefreshMore();
                             return true;
                         case Keys.F6:
-                            this.GetTimeline(WorkerType.Reply, -1, 0, string.Empty);
+                            this.GetTimeline(WorkerType.Reply, -1);
                             return true;
                         case Keys.F7:
-                            this.GetTimeline(WorkerType.DirectMessegeRcv, -1, 0, string.Empty);
+                            this.GetTimeline(WorkerType.DirectMessegeRcv);
                             return true;
                     }
 
@@ -5045,7 +5045,7 @@ namespace Hoehoe
 
         private void DoGetFollowersMenu()
         {
-            this.GetTimeline(WorkerType.Follower, 1, 0, string.Empty);
+            this.GetTimeline(WorkerType.Follower);
             this.DispSelectedPost(true);
         }
 
@@ -8190,7 +8190,7 @@ namespace Hoehoe
                 Interlocked.Exchange(ref counter, initailValue);
                 if (!this.tw.IsUserstreamDataReceived && !reset)
                 {
-                    this.GetTimeline(worker, 1, 0, string.Empty);
+                    this.GetTimeline(worker);
                 }
                 return false;
             }
@@ -8230,7 +8230,7 @@ namespace Hoehoe
             {
                 Interlocked.Exchange(ref this.timerRefreshFollowers, 6 * 3600);
                 this.DoGetFollowersMenu();
-                this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
+                this.GetTimeline(WorkerType.Configuration);
                 if (InvokeRequired && !IsDisposed)
                 {
                     this.Invoke(new MethodInvoker(this.TrimPostChain));
@@ -8247,14 +8247,14 @@ namespace Hoehoe
             {
                 this.isOsResumed = false;
                 Interlocked.Exchange(ref this.timerResumeWait, 0);
-                this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
-                this.GetTimeline(WorkerType.Reply, 1, 0, string.Empty);
-                this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
-                this.GetTimeline(WorkerType.PublicSearch, 1, 0, string.Empty);
-                this.GetTimeline(WorkerType.UserTimeline, 1, 0, string.Empty);
-                this.GetTimeline(WorkerType.List, 1, 0, string.Empty);
+                this.GetTimeline(WorkerType.Timeline);
+                this.GetTimeline(WorkerType.Reply);
+                this.GetTimeline(WorkerType.DirectMessegeRcv);
+                this.GetTimeline(WorkerType.PublicSearch);
+                this.GetTimeline(WorkerType.UserTimeline);
+                this.GetTimeline(WorkerType.List);
                 this.DoGetFollowersMenu();
-                this.GetTimeline(WorkerType.Configuration, 0, 0, string.Empty);
+                this.GetTimeline(WorkerType.Configuration);
                 if (InvokeRequired && !IsDisposed)
                 {
                     this.Invoke(new MethodInvoker(this.TrimPostChain));
@@ -8630,32 +8630,32 @@ namespace Hoehoe
             }
 
             string tabNameAny = string.Empty;
-            this.GetTimeline(WorkerType.BlockIds, 0, 0, tabNameAny);
+            this.GetTimeline(WorkerType.BlockIds);
             if (this.settingDialog.StartupFollowers)
             {
-                this.GetTimeline(WorkerType.Follower, 0, 0, tabNameAny);
+                this.GetTimeline(WorkerType.Follower);
             }
 
-            this.GetTimeline(WorkerType.Configuration, 0, 0, tabNameAny);
+            this.GetTimeline(WorkerType.Configuration);
             this.StartUserStream();
             this.waitTimeline = true;
-            this.GetTimeline(WorkerType.Timeline, 1, 1, tabNameAny);
+            this.GetTimeline(WorkerType.Timeline, 1, 1);
             this.waitReply = true;
-            this.GetTimeline(WorkerType.Reply, 1, 1, tabNameAny);
+            this.GetTimeline(WorkerType.Reply, 1, 1);
             this.waitDm = true;
-            this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 1, tabNameAny);
+            this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 1);
             if (this.settingDialog.GetFav)
             {
                 this.waitFav = true;
-                this.GetTimeline(WorkerType.Favorites, 1, 1, tabNameAny);
+                this.GetTimeline(WorkerType.Favorites, 1, 1);
             }
 
             this.waitPubSearch = true;
-            this.GetTimeline(WorkerType.PublicSearch, 1, 0, tabNameAny);
+            this.GetTimeline(WorkerType.PublicSearch);
             this.waitUserTimeline = true;
-            this.GetTimeline(WorkerType.UserTimeline, 1, 0, tabNameAny);
+            this.GetTimeline(WorkerType.UserTimeline);
             this.waitLists = true;
-            this.GetTimeline(WorkerType.List, 1, 0, tabNameAny);
+            this.GetTimeline(WorkerType.List);
             int i = 0, j = 0;
             while (this.IsInitialRead() && !MyCommon.IsEnding)
             {
@@ -8694,13 +8694,13 @@ namespace Hoehoe
             // 取得失敗の場合は再試行する
             if (!this.tw.GetFollowersSuccess && this.settingDialog.StartupFollowers)
             {
-                this.GetTimeline(WorkerType.Follower, 0, 0, tabNameAny);
+                this.GetTimeline(WorkerType.Follower);
             }
 
             // 取得失敗の場合は再試行する
             if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit == 0)
             {
-                this.GetTimeline(WorkerType.Configuration, 0, 0, tabNameAny);
+                this.GetTimeline(WorkerType.Configuration);
             }
 
             // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す

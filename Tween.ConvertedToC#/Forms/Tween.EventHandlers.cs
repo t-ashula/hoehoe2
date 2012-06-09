@@ -2780,7 +2780,7 @@ namespace Hoehoe
                     this.waitReply = false;
                     if (rslt.NewDM && !this.isInitializing)
                     {
-                        this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 0, string.Empty);
+                        this.GetTimeline(WorkerType.DirectMessegeRcv);
                     }
 
                     break;
@@ -2898,7 +2898,7 @@ namespace Hoehoe
                         }
                         else
                         {
-                            this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                            this.GetTimeline(WorkerType.Timeline);
                         }
                     }
 
@@ -2918,7 +2918,7 @@ namespace Hoehoe
 
                         if (!this.isActiveUserstream && this.settingDialog.PostAndGet)
                         {
-                            this.GetTimeline(WorkerType.Timeline, 1, 0, string.Empty);
+                            this.GetTimeline(WorkerType.Timeline);
                         }
                     }
 
