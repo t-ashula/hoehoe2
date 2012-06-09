@@ -70,7 +70,6 @@ namespace Hoehoe
         {
             int movedValue = values[fromIndex];
             int numMoved = Math.Abs(fromIndex - toIndex);
-
             if (toIndex < fromIndex)
             {
                 Array.Copy(values, toIndex, values, toIndex + 1, numMoved);
@@ -116,15 +115,9 @@ namespace Hoehoe
             m = Regex.Matches(statusText, "(^|[ -/:-@[-^`{-~])(?<id>@[a-zA-Z0-9_]+)");
             if (this.settingDialog.UseAtIdSupplement)
             {
-                int cnt = this.AtIdSupl.ItemCount;
-                foreach (Match mid in m)
+                if (this.AtIdSupl.AddRangeItem(m.Cast<Match>().Select(mid => mid.Result("${id}"))))
                 {
-                    this.AtIdSupl.AddItem(mid.Result("${id}"));
-                }
-
-                if (cnt != this.AtIdSupl.ItemCount)
-                {
-                    this.modifySettingAtId = true;
+                    this.SetModifySettingAtId(true);
                 }
             }
 
@@ -171,70 +164,46 @@ namespace Hoehoe
             this.replyToName = string.Empty;
         }
 
-        private void LoadIcon(ref Icon iconInstance, string fileName)
+        private Icon LoadIcon(string dir, string fileName, Icon defIcon)
         {
-            string dir = Application.StartupPath;
-            if (File.Exists(Path.Combine(dir, fileName)))
+            if (!Directory.Exists(dir))
             {
-                try
-                {
-                    iconInstance = new Icon(Path.Combine(dir, fileName));
-                }
-                catch (Exception)
-                {
-                }
+                return defIcon;
+            }
+
+            var fullname = Path.Combine(dir, fileName);
+            if (File.Exists(fullname))
+            {
+                return defIcon;
+            }
+
+            try
+            {
+                return new Icon(fullname);
+            }
+            catch
+            {
+                return defIcon;
             }
         }
 
         private void LoadIcons()
         {
             // 着せ替えアイコン対応
-            // タスクトレイ通常時アイコン
-            string dir = Application.StartupPath;
+            string iconDir = Path.Combine(Application.StartupPath, "Icons");
+            this.iconAt = LoadIcon(iconDir, "At.ico", Hoehoe.Properties.Resources.At);                 // タスクトレイ通常時アイコン
+            this.iconAtRed = LoadIcon(iconDir, "AtRed.ico", Hoehoe.Properties.Resources.AtRed);        // タスクトレイエラー時アイコン
+            this.iconAtSmoke = LoadIcon(iconDir, "AtSmoke.ico", Hoehoe.Properties.Resources.AtSmoke);  // タスクトレイオフライン時アイコン
+            this.tabIcon = LoadIcon(iconDir, "Tab.ico", Hoehoe.Properties.Resources.TabIcon);          // タブ見出し未読表示アイコン
+            this.mainIcon = LoadIcon(iconDir, "MIcon.ico", Hoehoe.Properties.Resources.MIcon);         // 画面のアイコン
+            this.replyIcon = LoadIcon(iconDir, "Reply.ico", Hoehoe.Properties.Resources.Reply);         // Replyのアイコン
+            this.replyIconBlink = LoadIcon(iconDir, "ReplyBlink.ico", Hoehoe.Properties.Resources.ReplyBlink);            // Reply点滅のアイコン
 
-            this.iconAt = Hoehoe.Properties.Resources.At;
-            this.iconAtRed = Hoehoe.Properties.Resources.AtRed;
-            this.iconAtSmoke = Hoehoe.Properties.Resources.AtSmoke;
-            this.iconRefresh[0] = Hoehoe.Properties.Resources.Refresh;
-            this.iconRefresh[1] = Hoehoe.Properties.Resources.Refresh2;
-            this.iconRefresh[2] = Hoehoe.Properties.Resources.Refresh3;
-            this.iconRefresh[3] = Hoehoe.Properties.Resources.Refresh4;
-            this.tabIcon = Hoehoe.Properties.Resources.TabIcon;
-            this.mainIcon = Hoehoe.Properties.Resources.MIcon;
-            this.replyIcon = Hoehoe.Properties.Resources.Reply;
-            this.replyIconBlink = Hoehoe.Properties.Resources.ReplyBlink;
-
-            if (!Directory.Exists(Path.Combine(dir, "Icons")))
-            {
-                return;
-            }
-
-            this.LoadIcon(ref this.iconAt, "Icons\\At.ico");
-
-            // タスクトレイエラー時アイコン
-            this.LoadIcon(ref this.iconAtRed, "Icons\\AtRed.ico");
-
-            // タスクトレイオフライン時アイコン
-            this.LoadIcon(ref this.iconAtSmoke, "Icons\\AtSmoke.ico");
-
-            // タスクトレイ更新中アイコン
-            // アニメーション対応により4種類読み込み
-            this.LoadIcon(ref this.iconRefresh[0], "Icons\\Refresh.ico");
-            this.LoadIcon(ref this.iconRefresh[1], "Icons\\Refresh2.ico");
-            this.LoadIcon(ref this.iconRefresh[2], "Icons\\Refresh3.ico");
-            this.LoadIcon(ref this.iconRefresh[3], "Icons\\Refresh4.ico");
-
-            // タブ見出し未読表示アイコン
-            this.LoadIcon(ref this.tabIcon, "Icons\\Tab.ico");
-
-            // 画面のアイコン
-            this.LoadIcon(ref this.mainIcon, "Icons\\MIcon.ico");
-
-            // Replyのアイコン
-            this.LoadIcon(ref this.replyIcon, "Icons\\Reply.ico");
-
-            // Reply点滅のアイコン
-            this.LoadIcon(ref this.replyIconBlink, "Icons\\ReplyBlink.ico");
+            // タスクトレイ更新中アイコン アニメーション対応により4種類読み込み
+            this.iconRefresh[0] = LoadIcon(iconDir, "Refresh.ico", Hoehoe.Properties.Resources.Refresh);
+            this.iconRefresh[1] = LoadIcon(iconDir, "Refresh2.ico", Hoehoe.Properties.Resources.Refresh2);
+            this.iconRefresh[2] = LoadIcon(iconDir, "Refresh3.ico", Hoehoe.Properties.Resources.Refresh3);
+            this.iconRefresh[3] = LoadIcon(iconDir, "Refresh4.ico", Hoehoe.Properties.Resources.Refresh4);
         }
 
         private void InitColumnText()
