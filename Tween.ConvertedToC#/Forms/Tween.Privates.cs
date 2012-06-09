@@ -569,7 +569,7 @@ namespace Hoehoe
 
             foreach (TabPage tab in this.ListTab.TabPages)
             {
-                DetailsListView lst = (DetailsListView)tab.Tag;
+                var lst = (DetailsListView)tab.Tag;
                 if (lst.SelectedIndices.Count > 0 && lst.SelectedIndices.Count < 61)
                 {
                     selId.Add(tab.Text, this.statuses.GetId(tab.Text, lst.SelectedIndices));
@@ -595,6 +595,16 @@ namespace Hoehoe
             return this.BalloonRequired(new Twitter.FormattedEvent { Eventtype = EventType.None });
         }
 
+        private bool BalloonRequired(Twitter.FormattedEvent ev)
+        {
+            return this.IsEventNotifyAsEventType(ev.Eventtype)
+                && this.IsMyEventNotityAsEventType(ev)
+                && (this.NewPostPopMenuItem.Checked || (this.settingDialog.ForceEventNotify && ev.Eventtype != EventType.None))
+                && !this.isInitializing
+                && ((this.settingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !this.settingDialog.LimitBalloon)
+                && !Win32Api.IsScreenSaverRunning();
+        }
+
         private bool IsEventNotifyAsEventType(EventType type)
         {
             return (this.settingDialog.EventNotifyEnabled && Convert.ToBoolean(type & this.settingDialog.EventNotifyFlag)) || type == EventType.None;
@@ -603,11 +613,6 @@ namespace Hoehoe
         private bool IsMyEventNotityAsEventType(Twitter.FormattedEvent ev)
         {
             return Convert.ToBoolean(ev.Eventtype & this.settingDialog.IsMyEventNotifyFlag) ? true : !ev.IsMe;
-        }
-
-        private bool BalloonRequired(Twitter.FormattedEvent ev)
-        {
-            return this.IsEventNotifyAsEventType(ev.Eventtype) && this.IsMyEventNotityAsEventType(ev) && (this.NewPostPopMenuItem.Checked || (this.settingDialog.ForceEventNotify && ev.Eventtype != EventType.None)) && !this.isInitializing && ((this.settingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !this.settingDialog.LimitBalloon) && !Win32Api.IsScreenSaverRunning();
         }
 
         private void NotifyNewPosts(PostClass[] notifyPosts, string soundFile, int addCount, bool newMentions)
