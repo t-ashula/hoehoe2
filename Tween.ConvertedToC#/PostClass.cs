@@ -414,6 +414,31 @@ namespace Hoehoe
             sb.Append("-----End PostClass Dump<br>");
             return sb.ToString();
         }
+
+        public bool IsMatch(string word, StringComparison opt)
+        {
+            if (!string.IsNullOrEmpty(word))
+            {
+                if (this.Nickname.IndexOf(word, opt) > -1 || this.TextFromApi.IndexOf(word, opt) > -1 || this.ScreenName.IndexOf(word, opt) > -1)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool IsMatch(System.Text.RegularExpressions.Regex regex)
+        {
+            if (regex != null)
+            {
+                if (regex.IsMatch(this.Nickname) || regex.IsMatch(this.TextFromApi) || regex.IsMatch(this.ScreenName))
+                {
+                    return true;
+                }
+            } 
+            return false;
+        }
         #endregion public methods
 
         #region inner types

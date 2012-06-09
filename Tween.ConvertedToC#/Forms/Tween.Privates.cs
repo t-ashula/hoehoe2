@@ -1572,65 +1572,6 @@ namespace Hoehoe
                 MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText2, Hoehoe.Properties.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            int cidx = 0;
-            if (this.curList.SelectedIndices.Count > 0)
-            {
-                cidx = this.curList.SelectedIndices[0];
-            }
-
-            int toIdx = this.curList.VirtualListSize - 1;
-            int stp = 1;
-            switch (searchType)
-            {
-                case SEARCHTYPE.DialogSearch:
-                    // ダイアログからの検索
-                    if (this.curList.SelectedIndices.Count > 0)
-                    {
-                        cidx = this.curList.SelectedIndices[0];
-                    }
-                    else
-                    {
-                        cidx = 0;
-                    }
-
-                    break;
-                case SEARCHTYPE.NextSearch:
-                    // 次を検索
-                    if (this.curList.SelectedIndices.Count > 0)
-                    {
-                        cidx = this.curList.SelectedIndices[0] + 1;
-                        if (cidx > toIdx)
-                        {
-                            cidx = toIdx;
-                        }
-                    }
-                    else
-                    {
-                        cidx = 0;
-                    }
-
-                    break;
-                case SEARCHTYPE.PrevSearch:
-                    // 前を検索
-                    if (this.curList.SelectedIndices.Count > 0)
-                    {
-                        cidx = this.curList.SelectedIndices[0] - 1;
-                        if (cidx < 0)
-                        {
-                            cidx = 0;
-                        }
-                    }
-                    else
-                    {
-                        cidx = toIdx;
-                    }
-
-                    toIdx = 0;
-                    stp = -1;
-                    break;
-            }
-
-            bool fnd = false;
             RegexOptions regOpt = RegexOptions.None;
             StringComparison fndOpt = StringComparison.Ordinal;
             if (!isCaseSensitive)
@@ -1639,86 +1580,50 @@ namespace Hoehoe
                 fndOpt = StringComparison.OrdinalIgnoreCase;
             }
 
-            try
+            Regex searchRegex = null;
+            if (isUseRegex)
             {
-            RETRY:
-                if (isUseRegex)
+                try
                 {
-                    // 正規表現検索
-                    try
-                    {
-                        Regex searchRegex = new Regex(word, regOpt);
-                        for (int idx = cidx; idx <= toIdx; idx += stp)
-                        {
-                            PostClass post = null;
-                            try
-                            {
-                                post = this.statuses.Item(this.curTab.Text, idx);
-                            }
-                            catch (Exception)
-                            {
-                                continue;
-                            }
+                    searchRegex = new Regex(word, regOpt);
+                }
+                catch (ArgumentException)
+                {
+                    MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText1, "Hoehoe", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
 
-                            if (searchRegex.IsMatch(post.Nickname) || searchRegex.IsMatch(post.TextFromApi) || searchRegex.IsMatch(post.ScreenName))
-                            {
-                                this.SelectListItem(this.curList, idx);
-                                this.curList.EnsureVisible(idx);
-                                return;
-                            }
-                        }
-                    }
-                    catch (ArgumentException)
+            int cidx = this.curList.SelectedIndices.Count > 0 ? this.curList.SelectedIndices[0] : 0;
+            if (searchType == SEARCHTYPE.NextSearch)
+            {
+                cidx++;
+            }
+
+            var listsize = this.curList.VirtualListSize;
+            var indecies = Enumerable.Range(0, listsize).Select(i => (i + cidx) % listsize);
+            if (searchType == SEARCHTYPE.PrevSearch)
+            {
+                indecies = indecies.Reverse();
+            }
+
+            // 検索 : TODO: maybe slow.
+            foreach(int idx in indecies)
+            {
+                try
+                {
+                    PostClass post = this.statuses.Item(this.curTab.Text, idx);
+                    if ((isUseRegex && post.IsMatch(searchRegex)) || post.IsMatch(word, fndOpt))
                     {
-                        MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText1, "Hoehoe", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.SelectListItem(this.curList, idx);
+                        this.curList.EnsureVisible(idx);
                         return;
                     }
                 }
-                else
+                catch (Exception)
                 {
-                    // 通常検索
-                    for (int idx = cidx; idx <= toIdx; idx += stp)
-                    {
-                        PostClass post = null;
-                        try
-                        {
-                            post = this.statuses.Item(this.curTab.Text, idx);
-                        }
-                        catch (Exception)
-                        {
-                            continue;
-                        }
-
-                        if (post.Nickname.IndexOf(word, fndOpt) > -1 || post.TextFromApi.IndexOf(word, fndOpt) > -1 || post.ScreenName.IndexOf(word, fndOpt) > -1)
-                        {
-                            this.SelectListItem(this.curList, idx);
-                            this.curList.EnsureVisible(idx);
-                            return;
-                        }
-                    }
+                    continue;
                 }
-
-                if (!fnd)
-                {
-                    switch (searchType)
-                    {
-                        case SEARCHTYPE.DialogSearch:
-                        case SEARCHTYPE.NextSearch:
-                            toIdx = cidx;
-                            cidx = 0;
-                            break;
-                        case SEARCHTYPE.PrevSearch:
-                            toIdx = cidx;
-                            cidx = this.curList.Items.Count - 1;
-                            break;
-                    }
-
-                    fnd = true;
-                    goto RETRY;
-                }
-            }
-            catch (ArgumentOutOfRangeException)
-            {
             }
 
             MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText2, Hoehoe.Properties.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
