@@ -2657,15 +2657,14 @@ namespace Hoehoe
 
         private void CopyStot()
         {
-            string clstr = string.Empty;
-            StringBuilder sb = new StringBuilder();
-            bool isProtected = false;
             bool isDm = false;
             if (this.curTab != null && this.statuses.GetTabByName(this.curTab.Text) != null)
             {
                 isDm = this.statuses.GetTabByName(this.curTab.Text).TabType == TabUsageType.DirectMessage;
             }
 
+            StringBuilder sb = new StringBuilder();
+            bool isProtected = false;
             foreach (int idx in this.curList.SelectedIndices)
             {
                 PostClass post = this.statuses.Item(this.curTab.Text, idx);
@@ -2682,7 +2681,7 @@ namespace Hoehoe
 
                 if (!isDm)
                 {
-                    sb.AppendFormat("{0}:{1} [http://twitter.com/{0}/status/{2}]{3}", post.ScreenName, post.TextFromApi, post.OriginalStatusId, Environment.NewLine);
+                    sb.AppendFormat("{0}:{1} [https://twitter.com/{0}/status/{2}]{3}", post.ScreenName, post.TextFromApi, post.OriginalStatusId, Environment.NewLine);
                 }
                 else
                 {
@@ -2691,10 +2690,8 @@ namespace Hoehoe
             }
 
             if (isProtected)
-            {
-                // MessageBox.Show(My.Resources.CopyStotText1)
-                MessageForm w = new MessageForm();
-                w.ShowDialog(Hoehoe.Properties.Resources.CopyStotText1);
+            {                
+                new MessageForm().ShowDialog(Hoehoe.Properties.Resources.CopyStotText1);
             }
 
             if (sb.Length > 0)
