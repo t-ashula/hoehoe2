@@ -1109,9 +1109,13 @@ namespace Hoehoe
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isFavAdd">TrueでFavAdd,FalseでFavRemove</param>
+        /// <param name="multiFavoriteChangeDialogEnable"></param>
         private void FavoriteChange(bool isFavAdd, bool multiFavoriteChangeDialogEnable = true)
-        {
-            // TrueでFavAdd,FalseでFavRemove
+        {            
             if (this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage || this.curList.SelectedIndices.Count == 0 || !this.ExistCurrentPost)
             {
                 return;
@@ -1129,13 +1133,11 @@ namespace Hoehoe
             {
                 if (isFavAdd)
                 {
-                    string confirmMessage = Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText1;
-                    if (this.doFavRetweetFlags)
-                    {
-                        confirmMessage = Hoehoe.Properties.Resources.FavoriteRetweetQuestionText3;
-                    }
-
-                    if (MessageBox.Show(confirmMessage, Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                    string confirmMessage = this.doFavRetweetFlags ? 
+                        Hoehoe.Properties.Resources.FavoriteRetweetQuestionText3 :
+                        Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText1;
+                    var result = MessageBox.Show(confirmMessage, Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    if (result == DialogResult.Cancel)
                     {
                         this.doFavRetweetFlags = false;
                         return;
@@ -1143,55 +1145,31 @@ namespace Hoehoe
                 }
                 else
                 {
-                    if (MessageBox.Show(Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText1, Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                    var result = MessageBox.Show(Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText1, Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    if (result == DialogResult.Cancel)
                     {
                         return;
                     }
                 }
             }
 
-            GetWorkerArg args = new GetWorkerArg()
+            var selcteds = this.curList.SelectedIndices.Cast<int>().Select(i => this.GetCurTabPost(i));
+            var ids = isFavAdd ? selcteds.Where(p => !p.IsFav) : selcteds.Where(p => p.IsFav);
+            if (ids.Count() == 0)
             {
-                Ids = new List<long>(),
-                SIds = new List<long>(),
-                TabName = this.curTab.Text,
-                WorkerType = isFavAdd ? WorkerType.FavAdd : WorkerType.FavRemove
-            };
-
-            foreach (int idx in this.curList.SelectedIndices)
-            {
-                PostClass post = this.GetCurTabPost(idx);
-                if (isFavAdd)
-                {
-                    if (!post.IsFav)
-                    {
-                        args.Ids.Add(post.StatusId);
-                    }
-                }
-                else
-                {
-                    if (post.IsFav)
-                    {
-                        args.Ids.Add(post.StatusId);
-                    }
-                }
-            }
-
-            if (args.Ids.Count == 0)
-            {
-                if (isFavAdd)
-                {
-                    this.StatusLabel.Text = Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText4;
-                }
-                else
-                {
-                    this.StatusLabel.Text = Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText4;
-                }
-
+                this.StatusLabel.Text = isFavAdd ? 
+                    Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText4 : 
+                    Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText4;
                 return;
             }
 
-            this.RunAsync(args);
+            this.RunAsync(new GetWorkerArg()
+            {
+                Ids = ids.Select(p => p.StatusId).ToList(),
+                SIds = new List<long>(),
+                TabName = this.curTab.Text,
+                WorkerType = isFavAdd ? WorkerType.FavAdd : WorkerType.FavRemove
+            });
         }
 
         private PostClass GetCurTabPost(int index)
