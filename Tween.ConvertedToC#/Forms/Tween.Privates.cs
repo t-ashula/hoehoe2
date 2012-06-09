@@ -338,8 +338,8 @@ namespace Hoehoe
             int befCnt = this.curList.VirtualListSize;
 
             // 現在の選択状態を退避
-            Dictionary<string, long[]> selId = new Dictionary<string, long[]>();
-            Dictionary<string, long> focusedId = new Dictionary<string, long>();
+            var selId = new Dictionary<string, long[]>();
+            var focusedId = new Dictionary<string, long>();
             this.SaveSelectedStatus(selId, focusedId);
 
             // mentionsの更新前件数を保持
@@ -472,79 +472,56 @@ namespace Hoehoe
         private long GetScrollPos(ref int smode)
         {
             long topId = -1;
-            if (this.curList != null && this.curTab != null && this.curList.VirtualListSize > 0)
+            if (this.curList == null || this.curTab == null || this.curList.VirtualListSize <= 0)
             {
-                if (this.statuses.SortMode == IdComparerClass.ComparerMode.Id)
-                {
-                    if (this.statuses.SortOrder == SortOrder.Ascending)
-                    {
-                        // Id昇順
-                        if (this.ListLockMenuItem.Checked)
-                        {
-                            // 制御しない(現在表示位置へ強制スクロール)
-                            smode = -1;
-                        }
-                        else
-                        {
-                            // 最下行が表示されていたら、最下行へ強制スクロール。最下行が表示されていなかったら制御しない
-                            ListViewItem item = this.curList.GetItemAt(0, this.curList.ClientSize.Height - 1);
-                            if (item == null)
-                            {
-                                // 一番下
-                                item = this.curList.Items[this.curList.Items.Count - 1];
-                            }
+                smode = -1;
+                return topId;
+            }
 
-                            if (item.Index == this.curList.Items.Count - 1)
-                            {
-                                smode = -2;
-                            }
-                            else
-                            {
-                                smode = -1;
-                            }
-                        }
+            if (this.statuses.SortMode != IdComparerClass.ComparerMode.Id)
+            {
+                // 現在表示位置へ強制スクロール
+                if (this.curList.TopItem != null)
+                {
+                    topId = this.statuses.GetId(this.curTab.Text, this.curList.TopItem.Index);
+                }
+
+                smode = 0;
+                return topId;
+            }
+
+            if (this.statuses.SortOrder == SortOrder.Ascending)
+            {
+                // Id昇順
+                if (this.ListLockMenuItem.Checked)
+                {
+                    // 制御しない(現在表示位置へ強制スクロール)
+                    smode = -1;
+                }
+                else
+                {
+                    // 最下行が表示されていたら、最下行へ強制スクロール。最下行が表示されていなかったら制御しない
+                    ListViewItem item = this.curList.GetItemAt(0, this.curList.ClientSize.Height - 1);
+                    if (item == null)
+                    {
+                        // 一番下
+                        item = this.curList.Items[this.curList.Items.Count - 1];
+                    }
+
+                    if (item.Index == this.curList.Items.Count - 1)
+                    {
+                        smode = -2;
                     }
                     else
                     {
-                        // Id降順
-                        if (this.ListLockMenuItem.Checked)
-                        {
-                            // 現在表示位置へ強制スクロール
-                            if (this.curList.TopItem != null)
-                            {
-                                topId = this.statuses.GetId(this.curTab.Text, this.curList.TopItem.Index);
-                            }
-
-                            smode = 0;
-                        }
-                        else
-                        {
-                            // 最上行が表示されていたら、制御しない。最上行が表示されていなかったら、現在表示位置へ強制スクロール
-                            ListViewItem item = this.curList.GetItemAt(0, 10);
-                            if (item == null)
-                            {
-                                // 一番上
-                                item = this.curList.Items[0];
-                            }
-
-                            if (item.Index == 0)
-                            {
-                                // 最上行
-                                smode = -3;
-                            }
-                            else
-                            {
-                                if (this.curList.TopItem != null)
-                                {
-                                    topId = this.statuses.GetId(this.curTab.Text, this.curList.TopItem.Index);
-                                }
-
-                                smode = 0;
-                            }
-                        }
+                        smode = -1;
                     }
                 }
-                else
+            }
+            else
+            {
+                // Id降順
+                if (this.ListLockMenuItem.Checked)
                 {
                     // 現在表示位置へ強制スクロール
                     if (this.curList.TopItem != null)
@@ -554,10 +531,30 @@ namespace Hoehoe
 
                     smode = 0;
                 }
-            }
-            else
-            {
-                smode = -1;
+                else
+                {
+                    // 最上行が表示されていたら、制御しない。最上行が表示されていなかったら、現在表示位置へ強制スクロール
+                    ListViewItem item = this.curList.GetItemAt(0, 10);
+                    if (item == null)
+                    {
+                        // 一番上
+                        item = this.curList.Items[0];
+                    }
+
+                    if (item.Index == 0)
+                    {
+                        // 最上行
+                        smode = -3;
+                    }
+                    else
+                    {
+                        if (this.curList.TopItem != null)
+                        {
+                            topId = this.statuses.GetId(this.curTab.Text, this.curList.TopItem.Index);
+                        }
+                        smode = 0;
+                    }
+                }
             }
 
             return topId;
