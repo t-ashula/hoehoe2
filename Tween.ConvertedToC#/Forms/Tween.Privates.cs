@@ -2608,27 +2608,27 @@ namespace Hoehoe
             return functionReturnValue;
         }
 
-        private void ScrollDownPostBrowser(bool forward)
+        private void ScrollPostBrowser(int delta)
         {
-            HtmlDocument doc = this.PostBrowser.Document;
+            var doc = this.PostBrowser.Document;
             if (doc == null || doc.Body == null)
             {
                 return;
             }
 
-            doc.Body.ScrollTop += (forward ? +1 : -1) * this.settingDialog.FontDetail.Height;
+            doc.Body.ScrollTop += delta;
+        }
+
+        private void ScrollDownPostBrowser(bool forward)
+        {
+            int delta = this.settingDialog.FontDetail.Height;
+            ScrollPostBrowser(forward ? delta : -delta);
         }
 
         private void PageDownPostBrowser(bool forward)
         {
-            HtmlDocument doc = this.PostBrowser.Document;
-            if (doc == null || doc.Body == null)
-            {
-                return;
-            }
-
             int delta = this.PostBrowser.ClientRectangle.Height - this.settingDialog.FontDetail.Height;
-            doc.Body.ScrollTop += forward ? delta : -delta;
+            ScrollPostBrowser(forward ? delta : -delta);
         }
 
         private void GoNextTab(bool forward)
