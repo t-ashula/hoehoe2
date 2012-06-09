@@ -1910,7 +1910,10 @@ namespace Hoehoe
             if (focusedControl == FocusedControl.ListTab)
             {
                 // リストのカーソル移動関係（上下キー、PageUp/Downに該当）
-                if (modifierState == (ModifierState.Ctrl | ModifierState.Shift) || modifierState == ModifierState.Ctrl || modifierState == ModifierState.None || modifierState == ModifierState.Shift)
+                if (modifierState == (ModifierState.Ctrl | ModifierState.Shift) 
+                    || modifierState == ModifierState.Ctrl 
+                    || modifierState == ModifierState.None 
+                    || modifierState == ModifierState.Shift)
                 {
                     if (keyCode == Keys.J)
                     {
@@ -1939,9 +1942,9 @@ namespace Hoehoe
                 }
             }
 
-            // 修飾キーなし
             switch (modifierState)
             {
+                // 修飾キーなし
                 case ModifierState.None:
                     // フォーカス関係なし
                     switch (keyCode)
@@ -2608,24 +2611,12 @@ namespace Hoehoe
         private void ScrollDownPostBrowser(bool forward)
         {
             HtmlDocument doc = this.PostBrowser.Document;
-            if (doc == null)
+            if (doc == null || doc.Body == null)
             {
                 return;
             }
 
-            if (doc.Body == null)
-            {
-                return;
-            }
-
-            if (forward)
-            {
-                doc.Body.ScrollTop += this.settingDialog.FontDetail.Height;
-            }
-            else
-            {
-                doc.Body.ScrollTop -= this.settingDialog.FontDetail.Height;
-            }
+            doc.Body.ScrollTop += (forward ? +1 : -1) * this.settingDialog.FontDetail.Height;
         }
 
         private void PageDownPostBrowser(bool forward)
