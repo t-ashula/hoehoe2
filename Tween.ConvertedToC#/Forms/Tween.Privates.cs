@@ -571,7 +571,7 @@ namespace Hoehoe
                 var lst = (DetailsListView)tab.Tag;
                 if (lst.SelectedIndices.Count > 0 && lst.SelectedIndices.Count < 61)
                 {
-                    selId.Add(tab.Text, this.statuses.GetId(tab.Text, lst.SelectedIndices));
+                    selId.Add(tab.Text, this.statuses.GetId(tab.Text, lst.SelectedIndices.Cast<int>()));
                 }
                 else
                 {
@@ -1188,97 +1188,75 @@ namespace Hoehoe
                 return;
             }
 
-            if (this.statuses.Tabs[this.curTab.Text].TabType != TabUsageType.DirectMessage)
-            {
-                bool myPost = false;
-                foreach (int idx in this.curList.SelectedIndices)
-                {
-                    if (this.GetCurTabPost(idx).IsMe || this.GetCurTabPost(idx).RetweetedBy.ToLower() == this.tw.Username.ToLower())
-                    {
-                        myPost = true;
-                        break;
-                    }
-                }
-
-                if (!myPost)
-                {
-                    return;
-                }
-            }
-            else
-            {
-                if (this.curList.SelectedIndices.Count == 0)
-                {
-                    return;
-                }
-            }
-
-            string tmp = string.Format(Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText1, Environment.NewLine);
-
-            if (MessageBox.Show(tmp, Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+            if (this.curList.SelectedIndices.Count == 0)
             {
                 return;
             }
 
-            int fidx = 0;
+            bool isDmTab = this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage;
+            if (!isDmTab)
+            {
+                if (!this.curList.SelectedIndices.Cast<int>().Select(i => this.GetCurTabPost(i)).Any(p => IsPostMine(p)))
+                {
+                    return;
+                }
+            }
+
+            var tmp = string.Format(Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText1, Environment.NewLine);
+            var rslt = MessageBox.Show(tmp, Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            if (rslt == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            int prevFocused = 0;
             if (this.curList.FocusedItem != null)
             {
-                fidx = this.curList.FocusedItem.Index;
+                prevFocused = this.curList.FocusedItem.Index;
             }
             else if (this.curList.TopItem != null)
             {
-                fidx = this.curList.TopItem.Index;
-            }
-            else
-            {
-                fidx = 0;
+                prevFocused = this.curList.TopItem.Index;
             }
 
             try
             {
                 this.Cursor = Cursors.WaitCursor;
-
-                bool rslt = true;
-                foreach (long id in this.statuses.GetId(this.curTab.Text, this.curList.SelectedIndices))
+                bool deleted = true;
+                var statusIds = this.curList.SelectedIndices.Cast<int>().Select(i => this.statuses.GetId(this.curTab.Text, i));
+                foreach (var statusId in statusIds)
                 {
-                    string rtn = string.Empty;
-                    if (this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage)
+                    string ret = string.Empty;
+                    var post = this.statuses.Item(statusId);
+                    if (isDmTab)
                     {
-                        rtn = this.tw.RemoveDirectMessage(id, this.statuses.Item(id));
+                        ret = this.tw.RemoveDirectMessage(statusId, post);
                     }
                     else
                     {
-                        if (this.statuses.Item(id).IsMe || this.statuses.Item(id).RetweetedBy.ToLower() == this.tw.Username.ToLower())
+                        if (this.IsPostMine(post))
                         {
-                            rtn = this.tw.RemoveStatus(id);
+                            ret = this.tw.RemoveStatus(statusId);
                         }
                         else
                         {
                             continue;
                         }
                     }
-
-                    if (rtn.Length > 0)
+                    
+                    if (string.IsNullOrEmpty(ret))
                     {
-                        // エラー
-                        rslt = false;
+                        this.statuses.RemovePost(statusId);
                     }
                     else
                     {
-                        this.statuses.RemovePost(id);
+                        deleted = false;
                     }
                 }
 
-                if (rslt)
-                {
-                    // 成功
-                    this.StatusLabel.Text = Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText4;
-                }
-                else
-                {
-                    // 失敗
-                    this.StatusLabel.Text = Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText3;
-                }
+                this.StatusLabel.Text = deleted ?
+                    Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText4 :
+                    Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText3;
 
                 // キャッシュ破棄
                 this.itemCache = null;
@@ -1298,9 +1276,9 @@ namespace Hoehoe
 
                         if (this.statuses.Tabs[tb.Text].AllCount > 0)
                         {
-                            if (this.statuses.Tabs[tb.Text].AllCount - 1 > fidx && fidx > -1)
+                            if (this.statuses.Tabs[tb.Text].AllCount - 1 > prevFocused && prevFocused > -1)
                             {
-                                this.curList.SelectedIndices.Add(fidx);
+                                this.curList.SelectedIndices.Add(prevFocused);
                             }
                             else
                             {
@@ -1337,6 +1315,11 @@ namespace Hoehoe
             {
                 this.Cursor = Cursors.Default;
             }
+        }
+
+        private bool IsPostMine(PostClass p)
+        {
+            return p.IsMe || p.RetweetedBy.ToLower() == this.tw.Username.ToLower();
         }
 
         private void DoRefresh()

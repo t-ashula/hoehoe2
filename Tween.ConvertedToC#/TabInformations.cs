@@ -1157,23 +1157,16 @@ namespace Hoehoe
                 this.SortPosts();
             }
         }
-
-        public long[] GetId(string tabName, ListView.SelectedIndexCollection indexCollection)
+        
+        public long[] GetId(string tabName, IEnumerable<int> indecies)
         {
-            if (indexCollection.Count == 0)
+            if (indecies.Count() == 0)
             {
                 return null;
             }
 
-            TabClass tb = this.Tabs[tabName];
-            long[] ids = new long[indexCollection.Count];
-            for (int i = 0; i < ids.Length; i++)
-            {
-                ids[i] = tb.GetId(indexCollection[i]);
-            }
-
-            return ids;
-        }
+            return indecies.Select(i => this.Tabs[tabName].GetId(i)).ToArray();
+        } 
 
         public long GetId(string tabName, int index)
         {
