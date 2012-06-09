@@ -273,7 +273,6 @@ namespace Hoehoe
                 this.pictureServices.Clear();
             }
 
-            this.pictureServices = null;
             this.pictureServices = new Dictionary<string, IMultimediaShareService>
             {
                 { "TwitPic", new TwitPic(this.tw) },
@@ -303,8 +302,8 @@ namespace Hoehoe
             }
 
             this.cfgLocal = SettingLocal.Load();
-            List<TabClass> tabs = SettingTabs.Load().Tabs;
-            foreach (TabClass tb in tabs)
+            var tabs = SettingTabs.Load().Tabs;
+            foreach (var tb in tabs)
             {
                 try
                 {
@@ -319,10 +318,10 @@ namespace Hoehoe
 
             if (this.statuses.Tabs.Count == 0)
             {
-                this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.RECENT, TabUsageType.Home, null);
-                this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
-                this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
-                this.statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, TabUsageType.Favorites, null);
+                this.statuses.AddTab(MyCommon.DEFAULTTAB.RECENT, TabUsageType.Home, null);
+                this.statuses.AddTab(MyCommon.DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
+                this.statuses.AddTab(MyCommon.DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
+                this.statuses.AddTab(MyCommon.DEFAULTTAB.FAV, TabUsageType.Favorites, null);
             }
         }
 
