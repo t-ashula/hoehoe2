@@ -1012,8 +1012,9 @@ namespace Hoehoe
         private void RemovePostFromFavTab(long[] ids)
         {
             string favTabName = this.statuses.GetTabByType(TabUsageType.Favorites).TabName;
+            bool isCurFavTab = this.curTab.Text.Equals(favTabName);
             int fidx = 0;
-            if (this.curTab.Text.Equals(favTabName))
+            if (isCurFavTab)
             {
                 if (this.curList.FocusedItem != null)
                 {
@@ -1022,10 +1023,6 @@ namespace Hoehoe
                 else if (this.curList.TopItem != null)
                 {
                     fidx = this.curList.TopItem.Index;
-                }
-                else
-                {
-                    fidx = 0;
                 }
             }
 
@@ -1037,11 +1034,10 @@ namespace Hoehoe
                 }
                 catch (Exception)
                 {
-                    continue;
                 }
             }
 
-            if (this.curTab != null && this.curTab.Text.Equals(favTabName))
+            if (this.curTab != null && isCurFavTab)
             {
                 // キャッシュ破棄
                 this.itemCache = null;
@@ -1059,7 +1055,7 @@ namespace Hoehoe
                 }
             }
 
-            if (this.curTab.Text.Equals(favTabName))
+            if (isCurFavTab)
             {
                 do
                 {
