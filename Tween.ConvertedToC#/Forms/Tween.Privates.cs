@@ -1057,29 +1057,7 @@ namespace Hoehoe
 
             if (isCurFavTab)
             {
-                do
-                {
-                    this.curList.SelectedIndices.Clear();
-                }
-                while (this.curList.SelectedIndices.Count > 0);
-
-                if (this.statuses.Tabs[favTabName].AllCount > 0)
-                {
-                    if (this.statuses.Tabs[favTabName].AllCount - 1 > fidx && fidx > -1)
-                    {
-                        this.curList.SelectedIndices.Add(fidx);
-                    }
-                    else
-                    {
-                        this.curList.SelectedIndices.Add(this.statuses.Tabs[favTabName].AllCount - 1);
-                    }
-
-                    if (this.curList.SelectedIndices.Count > 0)
-                    {
-                        this.curList.EnsureVisible(this.curList.SelectedIndices[0]);
-                        this.curList.FocusedItem = this.curList.Items[this.curList.SelectedIndices[0]];
-                    }
-                }
+                this.ResetFocusedItem(favTabName, fidx);
             }
         }
 
@@ -1268,29 +1246,7 @@ namespace Hoehoe
                     ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
                     if (this.curTab.Equals(tb))
                     {
-                        do
-                        {
-                            this.curList.SelectedIndices.Clear();
-                        }
-                        while (this.curList.SelectedIndices.Count > 0);
-
-                        if (this.statuses.Tabs[tb.Text].AllCount > 0)
-                        {
-                            if (this.statuses.Tabs[tb.Text].AllCount - 1 > prevFocused && prevFocused > -1)
-                            {
-                                this.curList.SelectedIndices.Add(prevFocused);
-                            }
-                            else
-                            {
-                                this.curList.SelectedIndices.Add(this.statuses.Tabs[tb.Text].AllCount - 1);
-                            }
-
-                            if (this.curList.SelectedIndices.Count > 0)
-                            {
-                                this.curList.EnsureVisible(this.curList.SelectedIndices[0]);
-                                this.curList.FocusedItem = this.curList.Items[this.curList.SelectedIndices[0]];
-                            }
-                        }
+                        ResetFocusedItem(tb.Text, prevFocused);
                     }
 
                     if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
@@ -1314,6 +1270,33 @@ namespace Hoehoe
             finally
             {
                 this.Cursor = Cursors.Default;
+            }
+        }
+
+        private void ResetFocusedItem(string tabName, int prevFocused)
+        {
+            do
+            {
+                this.curList.SelectedIndices.Clear();
+            }
+            while (this.curList.SelectedIndices.Count > 0);
+
+            if (this.statuses.Tabs[tabName].AllCount > 0)
+            {
+                if (this.statuses.Tabs[tabName].AllCount - 1 > prevFocused && prevFocused > -1)
+                {
+                    this.curList.SelectedIndices.Add(prevFocused);
+                }
+                else
+                {
+                    this.curList.SelectedIndices.Add(this.statuses.Tabs[tabName].AllCount - 1);
+                }
+
+                if (this.curList.SelectedIndices.Count > 0)
+                {
+                    this.curList.EnsureVisible(this.curList.SelectedIndices[0]);
+                    this.curList.FocusedItem = this.curList.Items[this.curList.SelectedIndices[0]];
+                }
             }
         }
 
