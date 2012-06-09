@@ -2724,60 +2724,41 @@ namespace Hoehoe
             {
                 return;
             }
+            
+            int toIndex = forward ? this.curList.VirtualListSize - 1 : 0;
+            int fromIndex = forward ? 0 : this.curList.VirtualListSize - 1;
+            if (this.curList.SelectedIndices.Count != 0)
+            {
+                fromIndex = forward ? 
+                    this.curList.SelectedIndices[0] + 1 :
+                    this.curList.SelectedIndices[0] - 1;
+            }
 
-            int fromIndex = 0;
-            int toIndex = 0;
-            bool noselect = this.curList.SelectedIndices.Count == 0;
             if (forward)
             {
-                if (noselect)
+                if (fromIndex > toIndex)
                 {
-                    fromIndex = 0;
-                }
-                else
-                {
-                    fromIndex = this.curList.SelectedIndices[0] + 1;
-                    if (fromIndex > this.curList.VirtualListSize - 1)
-                    {
-                        return;
-                    }
-                }
-
-                toIndex = this.curList.VirtualListSize - 1;
-                for (int idx = fromIndex; idx <= toIndex; ++idx )
-                {
-                    if (this.statuses.Item(this.curTab.Text, idx).IsFav)
-                    {
-                        this.SelectListItem(this.curList, idx);
-                        this.curList.EnsureVisible(idx);
-                        break;
-                    }
+                    return;
                 }
             }
             else
             {
-                if (noselect)
+                if (fromIndex < toIndex)
                 {
-                    fromIndex = this.curList.VirtualListSize - 1;
+                    return;
                 }
-                else
-                {
-                    fromIndex = this.curList.SelectedIndices[0] - 1;
-                    if (fromIndex < 0)
-                    {
-                        return;
-                    }
-                }
+            }
 
-                toIndex = 0;
-                for (int idx = fromIndex; idx >= toIndex; idx--)
+            var idxs = forward ?
+                Enumerable.Range(fromIndex, toIndex - fromIndex + 1) :
+                Enumerable.Range(toIndex + 1, fromIndex - toIndex).Reverse();
+            foreach (int idx in idxs)
+            {
+                if (this.statuses.Item(this.curTab.Text, idx).IsFav)
                 {
-                    if (this.statuses.Item(this.curTab.Text, idx).IsFav)
-                    {
-                        this.SelectListItem(this.curList, idx);
-                        this.curList.EnsureVisible(idx);
-                        break;
-                    }
+                    this.SelectListItem(this.curList, idx);
+                    this.curList.EnsureVisible(idx);
+                    break;
                 }
             }
         }
