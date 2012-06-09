@@ -1249,21 +1249,13 @@ namespace Hoehoe
                     {
                         ResetFocusedItem(tb.Text, prevFocused);
                     }
-
-                    if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
-                    {
-                        if (this.settingDialog.TabIconDisp)
-                        {
-                            if (tb.ImageIndex == 0)
-                            {
-                                // タブアイコン
-                                tb.ImageIndex = -1;
-                            }
-                        }
-                    }
                 }
 
-                if (!this.settingDialog.TabIconDisp)
+                if (this.settingDialog.TabIconDisp)
+                {
+                    ChangeTabsIconToRead();
+                }
+                else
                 {
                     this.ListTab.Refresh();
                 }
@@ -1654,7 +1646,6 @@ namespace Hoehoe
             string strVer = string.Empty;
             string strDetail = string.Empty;
             bool forceUpdate = this.IsKeyDown(Keys.Shift);
-
             try
             {
                 retMsg = this.tw.GetVersionInfo();
@@ -1747,7 +1738,10 @@ namespace Hoehoe
             this.DispSelectedPost();
 
             // 件数関連の場合、タイトル即時書き換え
-            if (this.settingDialog.DispLatestPost != DispTitleEnum.None && this.settingDialog.DispLatestPost != DispTitleEnum.Post && this.settingDialog.DispLatestPost != DispTitleEnum.Ver && this.settingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
+            if (this.settingDialog.DispLatestPost != DispTitleEnum.None 
+                && this.settingDialog.DispLatestPost != DispTitleEnum.Post
+                && this.settingDialog.DispLatestPost != DispTitleEnum.Ver 
+                && this.settingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
             {
                 this.SetMainWindowTitle();
             }
@@ -1757,21 +1751,11 @@ namespace Hoehoe
                 this.SetStatusLabelUrl();
             }
 
-            foreach (TabPage tb in this.ListTab.TabPages)
+            if (this.settingDialog.TabIconDisp)
             {
-                if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
-                {
-                    if (this.settingDialog.TabIconDisp)
-                    {
-                        if (tb.ImageIndex == 0)
-                        {
-                            tb.ImageIndex = -1;
-                        }
-                    }
-                }
+                ChangeTabsIconToRead();
             }
-
-            if (!this.settingDialog.TabIconDisp)
+            else
             {
                 this.ListTab.Refresh();
             }
