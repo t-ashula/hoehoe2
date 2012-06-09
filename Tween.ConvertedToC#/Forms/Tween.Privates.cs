@@ -2784,75 +2784,35 @@ namespace Hoehoe
 
         private void GoSamePostToAnotherTab(bool left)
         {
-            if (this.curList.VirtualListSize == 0)
+            if (this.curList.VirtualListSize == 0
+                || this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage
+                || this.curList.SelectedIndices.Count == 0)
             {
+                // Directタブは対象外（見つかるはずがない）// 未選択も処理しない
                 return;
             }
 
-            int fIdx = 0;
-            int toIdx = 0;
-            int stp = 1;
-            long targetId = 0;
-
-            if (this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage)
-            {
-                // Directタブは対象外（見つかるはずがない）
-                return;
-            }
-
-            if (this.curList.SelectedIndices.Count == 0)
-            {
-                // 未選択も処理しない
-                return;
-            }
-
-            targetId = this.GetCurTabPost(this.curList.SelectedIndices[0]).StatusId;
-            if (left)
-            {
-                // 左のタブへ
-                if (this.ListTab.SelectedIndex == 0)
-                {
-                    return;
-                }
-                else
-                {
-                    fIdx = this.ListTab.SelectedIndex - 1;
-                }
-
-                toIdx = 0;
-                stp = -1;
-            }
-            else
-            {
-                // 右のタブへ
-                if (this.ListTab.SelectedIndex == this.ListTab.TabCount - 1)
-                {
-                    return;
-                }
-                else
-                {
-                    fIdx = this.ListTab.SelectedIndex + 1;
-                }
-
-                toIdx = this.ListTab.TabCount - 1;
-                stp = 1;
-            }
+            long targetId = this.GetCurTabPost(this.curList.SelectedIndices[0]).StatusId;
+            var tabIdxs = left ?
+                Enumerable.Range(0, this.ListTab.SelectedIndex).Reverse() :
+                Enumerable.Range(this.ListTab.SelectedIndex + 1, this.ListTab.TabCount - this.ListTab.SelectedIndex);
 
             bool found = false;
-            for (int tabidx = fIdx; tabidx <= toIdx; tabidx += stp)
+            foreach (int tabidx in tabIdxs)
             {
-                if (this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].TabType == TabUsageType.DirectMessage)
+                TabPage tab = this.ListTab.TabPages[tabidx];
+                if (this.statuses.Tabs[tab.Text].TabType == TabUsageType.DirectMessage)
                 {
                     // Directタブは対象外
                     continue;
                 }
 
-                for (int idx = 0; idx <= ((DetailsListView)this.ListTab.TabPages[tabidx].Tag).VirtualListSize - 1; idx++)
+                for (int idx = 0; idx < ((DetailsListView)tab.Tag).VirtualListSize; ++idx)
                 {
-                    if (this.statuses.Item(this.ListTab.TabPages[tabidx].Text, idx).StatusId == targetId)
+                    if (this.statuses.Item(tab.Text, idx).StatusId == targetId)
                     {
                         this.ListTab.SelectedIndex = tabidx;
-                        this.ListTabSelect(this.ListTab.TabPages[tabidx]);
+                        this.ListTabSelect(tab);
                         this.SelectListItem(this.curList, idx);
                         this.curList.EnsureVisible(idx);
                         found = true;
