@@ -40,6 +40,7 @@ namespace Hoehoe
     using System.Text;
     using System.Web;
     using System.Windows.Forms;
+    using System.Media;
 
     public sealed class MyCommon
     {
@@ -487,13 +488,33 @@ namespace Hoehoe
 
         public static string[] GetSoundFileNames()
         {
-            DirectoryInfo soundDir = new DirectoryInfo(MyCommon.AppDir + Path.DirectorySeparatorChar);
-            if (Directory.Exists(Path.Combine(MyCommon.AppDir, "Sounds")))
+            return new DirectoryInfo(GetSoundDir()).GetFiles("*.wav").Select(f => f.Name).ToArray();
+        }
+
+        public static void PlaySound(string snd)
+        {
+            if (string.IsNullOrEmpty(snd))
             {
-                soundDir = soundDir.GetDirectories("Sounds")[0];
+                return;
             }
 
-            return soundDir.GetFiles("*.wav").Select(f => f.Name).ToArray();
+            try
+            {
+                using (var sndPlayer = new SoundPlayer(Path.Combine(GetSoundDir(), snd)))
+                {
+                    sndPlayer.Play();
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public static string GetSoundDir()
+        {
+            var basedir = MyCommon.AppDir;
+            var dir = Path.Combine(basedir, "Sounds");
+            return Directory.Exists(dir) ? dir : basedir;
         }
 
         private static T GetAppAssemblyCustomeAttr<T>() where T : Attribute

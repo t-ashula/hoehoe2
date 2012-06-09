@@ -34,7 +34,6 @@ namespace Hoehoe
     using System.Drawing;
     using System.IO;
     using System.Linq;
-    using System.Media;
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -617,7 +616,10 @@ namespace Hoehoe
 
         private void NotifyNewPosts(PostClass[] notifyPosts, string soundFile, int addCount, bool newMentions)
         {
-            if (notifyPosts != null && notifyPosts.Count() > 0 && this.settingDialog.ReadOwnPost && notifyPosts.All(post => post.UserId == this.tw.UserId || post.ScreenName == this.tw.Username))
+            if (notifyPosts != null
+                && notifyPosts.Count() > 0
+                && this.settingDialog.ReadOwnPost
+                && notifyPosts.All(post => post.UserId == this.tw.UserId || post.ScreenName == this.tw.Username))
             {
                 return;
             }
@@ -677,7 +679,6 @@ namespace Hoehoe
                             }
 
                             StringBuilder title = new StringBuilder();
-                            GrowlHelper.NotifyType nt = default(GrowlHelper.NotifyType);
                             if (this.settingDialog.DispUsername)
                             {
                                 title.Append(this.tw.Username);
@@ -688,6 +689,7 @@ namespace Hoehoe
                                 // title.Clear()
                             }
 
+                            GrowlHelper.NotifyType nt = default(GrowlHelper.NotifyType);
                             if (dm)
                             {
                                 title.Append("Hoehoe [DM] ");
@@ -744,7 +746,7 @@ namespace Hoehoe
 
                             if (sb.Length > 0)
                             {
-                                sb.Append(System.Environment.NewLine);
+                                sb.Append(Environment.NewLine);
                             }
 
                             switch (this.settingDialog.NameBalloon)
@@ -814,21 +816,9 @@ namespace Hoehoe
             }
 
             // サウンド再生
-            if (!this.isInitializing && this.settingDialog.PlaySound && !string.IsNullOrEmpty(soundFile))
+            if (!this.isInitializing && this.settingDialog.PlaySound)
             {
-                try
-                {
-                    string dir = MyCommon.AppDir;
-                    if (Directory.Exists(Path.Combine(dir, "Sounds")))
-                    {
-                        dir = Path.Combine(dir, "Sounds");
-                    }
-
-                    new SoundPlayer(Path.Combine(dir, soundFile)).Play();
-                }
-                catch (Exception)
-                {
-                }
+                MyCommon.PlaySound(soundFile);
             }
 
             // mentions新着時に画面ブリンク
@@ -5734,25 +5724,12 @@ namespace Hoehoe
                 }
             }
 
-            // サウンド再生
-            string snd = this.settingDialog.EventSoundFile;
-            if (!this.isInitializing && this.settingDialog.PlaySound && !string.IsNullOrEmpty(snd))
+            if (Convert.ToBoolean(ev.Eventtype & this.settingDialog.EventNotifyFlag) && this.IsMyEventNotityAsEventType(ev))
             {
-                if (Convert.ToBoolean(ev.Eventtype & this.settingDialog.EventNotifyFlag) && this.IsMyEventNotityAsEventType(ev))
+                // サウンド再生
+                if (!this.isInitializing && this.settingDialog.PlaySound)
                 {
-                    try
-                    {
-                        string dir = MyCommon.AppDir;
-                        if (Directory.Exists(Path.Combine(dir, "Sounds")))
-                        {
-                            dir = Path.Combine(dir, "Sounds");
-                        }
-
-                        new SoundPlayer(Path.Combine(dir, snd)).Play();
-                    }
-                    catch (Exception)
-                    {
-                    }
+                    MyCommon.PlaySound(this.settingDialog.EventSoundFile);
                 }
             }
         }
