@@ -1783,13 +1783,9 @@ namespace Hoehoe
             this.displayItem = (ImageListViewItem)this.curList.Items[this.curList.SelectedIndices[0]];
             this.displayItem.ImageDownloaded += this.DisplayItemImage_Downloaded;
 
-            string detailText = this.CreateDetailHtml(this.curPost.IsDeleted ? "(DELETED)" : this.curPost.Text);
-            if (this.curPost.IsDm)
-            {
-                this.SourceLinkLabel.Tag = null;
-                this.SourceLinkLabel.Text = string.Empty;
-            }
-            else
+            object tag = null;
+            var txt = string.Empty;
+            if (!this.curPost.IsDm)
             {
                 Match mc = Regex.Match(this.curPost.SourceHtml, "<a href=\"(?<sourceurl>.+?)\"");
                 if (mc.Success)
@@ -1799,47 +1795,30 @@ namespace Hoehoe
                     mc = Regex.Match(src, "^https?://");
                     if (!mc.Success)
                     {
-                        src = src.Insert(0, "http://twitter.com");
+                        src = src.Insert(0, "https://twitter.com");
                     }
 
-                    this.SourceLinkLabel.Tag = src;
-                }
-                else
-                {
-                    this.SourceLinkLabel.Tag = null;
+                    tag = src;
                 }
 
-                if (string.IsNullOrEmpty(this.curPost.Source))
-                {
-                    this.SourceLinkLabel.Text = string.Empty;
-                }
-                else
-                {
-                    this.SourceLinkLabel.Text = this.curPost.Source;
-                }
+                txt = string.IsNullOrEmpty(this.curPost.Source) ? string.Empty : this.curPost.Source;
             }
 
+            this.SourceLinkLabel.Tag = tag;
+            this.SourceLinkLabel.Text = txt;
             this.SourceLinkLabel.TabStop = false;
 
-            if (this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage && !this.curPost.IsOwl)
+            bool isCurTabDm = this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage;
+            
+            var name = !isCurTabDm ? string.Empty : this.curPost.IsOwl ? "DM FROM <- " : "DM TO -> ";
+            name += this.curPost.ScreenName + "/" + this.curPost.Nickname;
+            if (this.curPost.IsRetweeted)
             {
-                this.NameLabel.Text = "DM TO -> ";
-            }
-            else if (this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage)
-            {
-                this.NameLabel.Text = "DM FROM <- ";
-            }
-            else
-            {
-                this.NameLabel.Text = string.Empty;
+                name += string.Format(" (RT:{0})", this.curPost.RetweetedBy);
             }
 
-            this.NameLabel.Text += this.curPost.ScreenName + "/" + this.curPost.Nickname;
+            this.NameLabel.Text = name;
             this.NameLabel.Tag = this.curPost.ScreenName;
-            if (!string.IsNullOrEmpty(this.curPost.RetweetedBy))
-            {
-                this.NameLabel.Text += string.Format(" (RT:{0})", this.curPost.RetweetedBy);
-            }
 
             if (!string.IsNullOrEmpty(this.curPost.ImageUrl))
             {
@@ -1850,22 +1829,23 @@ namespace Hoehoe
                 this.UserPicture.ClearImage();
             }
 
-            this.NameLabel.ForeColor = SystemColors.ControlText;
             this.DateTimeLabel.Text = this.curPost.CreatedAt.ToString();
-            if (this.curPost.IsOwl && (this.settingDialog.OneWayLove || this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage))
+
+            var foreColor = SystemColors.ControlText;
+            if (this.curPost.IsOwl && (this.settingDialog.OneWayLove || isCurTabDm))
             {
-                this.NameLabel.ForeColor = this.clrOWL;
+                foreColor = this.clrOWL;
+            }
+            else if (this.curPost.IsRetweeted)
+            {
+                foreColor = this.clrRetweet;
+            }
+            else if (this.curPost.IsFav)
+            {
+                foreColor = this.clrFav;
             }
 
-            if (this.curPost.IsRetweeted)
-            {
-                this.NameLabel.ForeColor = this.clrRetweet;
-            }
-
-            if (this.curPost.IsFav)
-            {
-                this.NameLabel.ForeColor = this.clrFav;
-            }
+            this.NameLabel.ForeColor = foreColor;
 
             if (this.DumpPostClassToolStripMenuItem.Checked)
             {
@@ -1875,18 +1855,15 @@ namespace Hoehoe
             }
             else
             {
+                string detailText = this.CreateDetailHtml((this.curPost.IsDeleted ? "(DELETED)" : "") + this.curPost.Text);
                 try
                 {
                     if (this.PostBrowser.DocumentText != detailText)
                     {
                         this.PostBrowser.Visible = false;
                         this.PostBrowser.DocumentText = detailText;
-                        List<string> lnks = new List<string>();
-                        foreach (Match lnk in Regex.Matches(detailText, "<a target=\"_self\" href=\"(?<url>http[^\"]+)\"", RegexOptions.IgnoreCase))
-                        {
-                            lnks.Add(lnk.Result("${url}"));
-                        }
-
+                        var lnks = Regex.Matches(detailText, "<a target=\"_self\" href=\"(?<url>http[^\"]+)\"", RegexOptions.IgnoreCase).Cast<Match>()
+                            .Select(m => m.Result("${url}")).ToList();
                         this.thumbnail.GenThumbnail(this.curPost.StatusId, lnks, this.curPost.PostGeo, this.curPost.Media);
                     }
                 }
