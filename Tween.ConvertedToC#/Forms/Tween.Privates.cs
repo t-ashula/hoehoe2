@@ -41,6 +41,7 @@ namespace Hoehoe
     using System.Web;
     using System.Windows.Forms;
     using Hoehoe.TweenCustomControl;
+    using System.Drawing.Drawing2D;
 
     public partial class TweenMain
     {
@@ -1521,38 +1522,30 @@ namespace Hoehoe
         private void DrawListViewItemIcon(DrawListViewItemEventArgs e)
         {
             ImageListViewItem item = (ImageListViewItem)e.Item;
-            Rectangle stateRect = default(Rectangle);
-
             // e.Bounds.Leftが常に0を指すから自前で計算
             Rectangle itemRect = item.Bounds;
-            itemRect.Width = e.Item.ListView.Columns[0].Width;
-
-            foreach (ColumnHeader clm in e.Item.ListView.Columns)
+            itemRect.Width = item.ListView.Columns[0].Width;
+            foreach (ColumnHeader clm in item.ListView.Columns)
             {
-                if (clm.DisplayIndex < e.Item.ListView.Columns[0].DisplayIndex)
+                if (clm.DisplayIndex < item.ListView.Columns[0].DisplayIndex)
                 {
                     itemRect.X += clm.Width;
                 }
             }
-
-            Rectangle iconRect = default(Rectangle);
+            
+            var iconSize = (item.Image != null) ? this.iconSz : 1;
+            var iconRect = Rectangle.Intersect(new Rectangle(item.GetBounds(ItemBoundsPortion.Icon).Location, new Size(iconSize, iconSize)), itemRect);
             if (item.Image != null)
             {
-                iconRect = Rectangle.Intersect(new Rectangle(e.Item.GetBounds(ItemBoundsPortion.Icon).Location, new Size(this.iconSz, this.iconSz)), itemRect);
-                iconRect.Offset(0, Convert.ToInt32(Math.Max(0, (itemRect.Height - this.iconSz) / 2)));
-                stateRect = Rectangle.Intersect(new Rectangle(iconRect.Location.X + this.iconSz + 2, iconRect.Location.Y, 18, 16), itemRect);
+                iconRect.Offset(0, (int)(Math.Max(0.0, (itemRect.Height - this.iconSz) / 2)));
             }
-            else
-            {
-                iconRect = Rectangle.Intersect(new Rectangle(e.Item.GetBounds(ItemBoundsPortion.Icon).Location, new Size(1, 1)), itemRect);
-                //// iconRect.Offset(0, CType(Math.Max(0, (itemRect.Height - this._iconSz) / 2), Integer))
-                stateRect = Rectangle.Intersect(new Rectangle(iconRect.Location.X + this.iconSz + 2, iconRect.Location.Y, 18, 16), itemRect);
-            }
+
+            var stateRect = Rectangle.Intersect(new Rectangle(iconRect.Location.X + this.iconSz + 2, iconRect.Location.Y, 18, 16), itemRect);
 
             if (item.Image != null && iconRect.Width > 0)
             {
                 e.Graphics.FillRectangle(Brushes.White, iconRect);
-                e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
+                e.Graphics.InterpolationMode = InterpolationMode.High;
                 try
                 {
                     e.Graphics.DrawImage(item.Image, iconRect);
