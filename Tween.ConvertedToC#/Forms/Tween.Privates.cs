@@ -625,180 +625,55 @@ namespace Hoehoe
             }
 
             // 新着通知
-            if (this.BalloonRequired())
+            if (this.BalloonRequired() && notifyPosts != null && notifyPosts.Length > 0)
             {
-                if (notifyPosts != null && notifyPosts.Length > 0)
+                // Growlは一個ずつばらして通知。ただし、3ポスト以上あるときはまとめる
+                if (this.settingDialog.IsNotifyUseGrowl)
                 {
-                    // Growlは一個ずつばらして通知。ただし、3ポスト以上あるときはまとめる
-                    if (this.settingDialog.IsNotifyUseGrowl)
+                    StringBuilder sb = new StringBuilder();
+                    bool reply = false;
+                    bool dm = false;
+                    foreach (var post in notifyPosts)
                     {
-                        StringBuilder sb = new StringBuilder();
-                        bool reply = false;
-                        bool dm = false;
-                        foreach (var post in notifyPosts)
+                        if (!(notifyPosts.Count() > 3))
                         {
-                            if (!(notifyPosts.Count() > 3))
-                            {
-                                sb.Clear();
-                                reply = false;
-                                dm = false;
-                            }
-
-                            if (post.IsReply && !post.IsExcludeReply)
-                            {
-                                reply = true;
-                            }
-
-                            if (post.IsDm)
-                            {
-                                dm = true;
-                            }
-
-                            if (sb.Length > 0)
-                            {
-                                sb.Append(Environment.NewLine);
-                            }
-
-                            switch (this.settingDialog.NameBalloon)
-                            {
-                                case NameBalloonEnum.UserID:
-                                    sb.Append(post.ScreenName).Append(" : ");
-                                    break;
-                                case NameBalloonEnum.NickName:
-                                    sb.Append(post.Nickname).Append(" : ");
-                                    break;
-                            }
-
-                            sb.Append(post.TextFromApi);
-                            if (notifyPosts.Count() > 3)
-                            {
-                                if (!object.ReferenceEquals(notifyPosts.Last(), post))
-                                {
-                                    continue;
-                                }
-                            }
-
-                            StringBuilder title = new StringBuilder();
-                            if (this.settingDialog.DispUsername)
-                            {
-                                title.Append(this.tw.Username);
-                                title.Append(" - ");
-                            }
-                            else
-                            {
-                                // title.Clear()
-                            }
-
-                            GrowlHelper.NotifyType nt = default(GrowlHelper.NotifyType);
-                            if (dm)
-                            {
-                                title.Append("Hoehoe [DM] ");
-                                title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText1);
-                                title.Append(" ");
-                                title.Append(addCount);
-                                title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText2);
-                                nt = GrowlHelper.NotifyType.DirectMessage;
-                            }
-                            else if (reply)
-                            {
-                                title.Append("Hoehoe [Reply!] ");
-                                title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
-                                title.Append(" ");
-                                title.Append(addCount);
-                                title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
-                                nt = GrowlHelper.NotifyType.Reply;
-                            }
-                            else
-                            {
-                                title.Append("Hoehoe ");
-                                title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
-                                title.Append(" ");
-                                title.Append(addCount);
-                                title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
-                                nt = GrowlHelper.NotifyType.Notify;
-                            }
-
-                            string notifyText = sb.ToString();
-                            if (string.IsNullOrEmpty(notifyText))
-                            {
-                                return;
-                            }
-
-                            this.growlHelper.Notify(nt, post.StatusId.ToString(), title.ToString(), notifyText, this.iconDict[post.ImageUrl], post.ImageUrl);
-                        }
-                    }
-                    else
-                    {
-                        StringBuilder sb = new StringBuilder();
-                        bool reply = false;
-                        bool dm = false;
-                        foreach (PostClass post in notifyPosts)
-                        {
-                            if (post.IsReply && !post.IsExcludeReply)
-                            {
-                                reply = true;
-                            }
-
-                            if (post.IsDm)
-                            {
-                                dm = true;
-                            }
-
-                            if (sb.Length > 0)
-                            {
-                                sb.Append(Environment.NewLine);
-                            }
-
-                            switch (this.settingDialog.NameBalloon)
-                            {
-                                case NameBalloonEnum.UserID:
-                                    sb.Append(post.ScreenName).Append(" : ");
-                                    break;
-                                case NameBalloonEnum.NickName:
-                                    sb.Append(post.Nickname).Append(" : ");
-                                    break;
-                            }
-
-                            sb.Append(post.TextFromApi);
+                            sb.Clear();
+                            reply = false;
+                            dm = false;
                         }
 
-                        StringBuilder title = new StringBuilder();
-                        ToolTipIcon notifyIcon = default(ToolTipIcon);
-                        if (this.settingDialog.DispUsername)
+                        if (post.IsReply && !post.IsExcludeReply)
                         {
-                            title.Append(this.tw.Username);
-                            title.Append(" - ");
-                        }
-                        else
-                        {
+                            reply = true;
                         }
 
-                        if (dm)
+                        if (post.IsDm)
                         {
-                            notifyIcon = ToolTipIcon.Warning;
-                            title.Append("Hoehoe [DM] ");
-                            title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText1);
-                            title.Append(" ");
-                            title.Append(addCount);
-                            title.Append(Hoehoe.Properties.Resources.RefreshDirectMessageText2);
+                            dm = true;
                         }
-                        else if (reply)
+
+                        if (sb.Length > 0)
                         {
-                            notifyIcon = ToolTipIcon.Warning;
-                            title.Append("Hoehoe [Reply!] ");
-                            title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
-                            title.Append(" ");
-                            title.Append(addCount);
-                            title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
+                            sb.Append(Environment.NewLine);
                         }
-                        else
+
+                        switch (this.settingDialog.NameBalloon)
                         {
-                            notifyIcon = ToolTipIcon.Info;
-                            title.Append("Hoehoe ");
-                            title.Append(Hoehoe.Properties.Resources.RefreshTimelineText1);
-                            title.Append(" ");
-                            title.Append(addCount);
-                            title.Append(Hoehoe.Properties.Resources.RefreshTimelineText2);
+                            case NameBalloonEnum.UserID:
+                                sb.Append(post.ScreenName).Append(" : ");
+                                break;
+                            case NameBalloonEnum.NickName:
+                                sb.Append(post.Nickname).Append(" : ");
+                                break;
+                        }
+
+                        sb.Append(post.TextFromApi);
+                        if (notifyPosts.Count() > 3)
+                        {
+                            if (!object.ReferenceEquals(notifyPosts.Last(), post))
+                            {
+                                continue;
+                            }
                         }
 
                         string notifyText = sb.ToString();
@@ -807,11 +682,62 @@ namespace Hoehoe
                             return;
                         }
 
-                        this.NotifyIcon1.BalloonTipTitle = title.ToString();
-                        this.NotifyIcon1.BalloonTipText = notifyText;
-                        this.NotifyIcon1.BalloonTipIcon = notifyIcon;
-                        this.NotifyIcon1.ShowBalloonTip(500);
+                        var titleStr = GetNotifyTitlteText(addCount, reply, dm);
+                        var nt = dm ? GrowlHelper.NotifyType.DirectMessage :
+                            reply ? GrowlHelper.NotifyType.Reply :
+                            GrowlHelper.NotifyType.Notify;
+                        this.growlHelper.Notify(nt, post.StatusId.ToString(), titleStr, notifyText, this.iconDict[post.ImageUrl], post.ImageUrl);
                     }
+                }
+                else
+                {
+                    StringBuilder sb = new StringBuilder();
+                    bool reply = false;
+                    bool dm = false;
+                    foreach (var post in notifyPosts)
+                    {
+                        if (post.IsReply && !post.IsExcludeReply)
+                        {
+                            reply = true;
+                        }
+
+                        if (post.IsDm)
+                        {
+                            dm = true;
+                        }
+
+                        if (sb.Length > 0)
+                        {
+                            sb.Append(Environment.NewLine);
+                        }
+
+                        switch (this.settingDialog.NameBalloon)
+                        {
+                            case NameBalloonEnum.UserID:
+                                sb.Append(post.ScreenName).Append(" : ");
+                                break;
+                            case NameBalloonEnum.NickName:
+                                sb.Append(post.Nickname).Append(" : ");
+                                break;
+                        }
+
+                        sb.Append(post.TextFromApi);
+                    }
+
+                    string notifyText = sb.ToString();
+                    if (string.IsNullOrEmpty(notifyText))
+                    {
+                        return;
+                    }
+
+                    var titleStr = this.GetNotifyTitlteText(addCount, reply, dm);
+                    var notifyIcon = dm ? ToolTipIcon.Warning :
+                        reply ? ToolTipIcon.Warning :
+                        ToolTipIcon.Info;
+                    this.NotifyIcon1.BalloonTipTitle = titleStr;
+                    this.NotifyIcon1.BalloonTipText = notifyText;
+                    this.NotifyIcon1.BalloonTipIcon = notifyIcon;
+                    this.NotifyIcon1.ShowBalloonTip(500);
                 }
             }
 
@@ -826,6 +752,34 @@ namespace Hoehoe
             {
                 Win32Api.FlashMyWindow(this.Handle, Hoehoe.Win32Api.FlashSpecification.FlashTray, 3);
             }
+        }
+
+        private string GetNotifyTitlteText(int addCount, bool reply, bool dm)
+        {
+            var title = new StringBuilder();
+            if (this.settingDialog.DispUsername)
+            {
+                title.AppendFormat("{0} - ", this.tw.Username);
+            }
+
+            string notifyType = string.Empty,
+                msg1 = Hoehoe.Properties.Resources.RefreshTimelineText1,
+                msg2 = Hoehoe.Properties.Resources.RefreshTimelineText2;
+            if (dm)
+            {
+                notifyType = "[DM]";
+                msg1 = Hoehoe.Properties.Resources.RefreshDirectMessageText1;
+                msg2 = Hoehoe.Properties.Resources.RefreshDirectMessageText2;
+            }
+            else if (reply)
+            {
+                notifyType = "[Reply!]";
+                msg1 = Hoehoe.Properties.Resources.RefreshTimelineText1;
+                msg2 = Hoehoe.Properties.Resources.RefreshTimelineText2;
+            }
+
+            title.AppendFormat("Hoehoe {0} {1} {2} {3}", notifyType, msg1, addCount, msg2);
+            return title.ToString();
         }
 
         private void ChangeCacheStyleRead(bool read, int index, TabPage tab)
