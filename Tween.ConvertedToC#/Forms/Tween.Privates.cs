@@ -2257,44 +2257,8 @@ namespace Hoehoe
 
             if (this.DumpPostClassToolStripMenuItem.Checked)
             {
-                StringBuilder sb = new StringBuilder(512);
-                sb.Append("-----Start PostClass Dump<br>");
-                sb.AppendFormat("TextFromApi           : {0}<br>", this.curPost.TextFromApi);
-                sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", this.curPost.TextFromApi);
-                sb.AppendFormat("StatusId             : {0}<br>", this.curPost.StatusId.ToString());
-                //// sb.AppendFormat("ImageIndex     : {0}<br>", this._curPost.ImageIndex.ToString)
-                sb.AppendFormat("ImageUrl       : {0}<br>", this.curPost.ImageUrl);
-                sb.AppendFormat("InReplyToStatusId    : {0}<br>", this.curPost.InReplyToStatusId.ToString());
-                sb.AppendFormat("InReplyToUser  : {0}<br>", this.curPost.InReplyToUser);
-                sb.AppendFormat("IsDM           : {0}<br>", this.curPost.IsDm);
-                sb.AppendFormat("IsFav          : {0}<br>", this.curPost.IsFav);
-                sb.AppendFormat("IsMark         : {0}<br>", this.curPost.IsMark);
-                sb.AppendFormat("IsMe           : {0}<br>", this.curPost.IsMe);
-                sb.AppendFormat("IsOwl          : {0}<br>", this.curPost.IsOwl);
-                sb.AppendFormat("IsProtect      : {0}<br>", this.curPost.IsProtect);
-                sb.AppendFormat("IsRead         : {0}<br>", this.curPost.IsRead);
-                sb.AppendFormat("IsReply        : {0}<br>", this.curPost.IsReply);
-
-                foreach (string nm in this.curPost.ReplyToList)
-                {
-                    sb.AppendFormat("ReplyToList    : {0}<br>", nm);
-                }
-
-                sb.AppendFormat("ScreenName     : {0}<br>", this.curPost.ScreenName);
-                sb.AppendFormat("NickName       : {0}<br>", this.curPost.Nickname);
-                sb.AppendFormat("Text           : {0}<br>", this.curPost.Text);
-                sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", this.curPost.Text);
-                sb.AppendFormat("CreatedAt      : {0}<br>", this.curPost.CreatedAt);
-                sb.AppendFormat("Source         : {0}<br>", this.curPost.Source);
-                sb.AppendFormat("UserId         : {0}<br>", this.curPost.UserId);
-                sb.AppendFormat("FilterHit      : {0}<br>", this.curPost.FilterHit);
-                sb.AppendFormat("RetweetedBy    : {0}<br>", this.curPost.RetweetedBy);
-                sb.AppendFormat("RetweetedId    : {0}<br>", this.curPost.RetweetedId);
-                sb.AppendFormat("SearchTabName  : {0}<br>", this.curPost.RelTabName);
-                sb.Append("-----End PostClass Dump<br>");
-
                 this.PostBrowser.Visible = false;
-                this.PostBrowser.DocumentText = this.detailHtmlFormatHeader + sb.ToString() + this.detailHtmlFormatFooter;
+                this.PostBrowser.DocumentText = this.detailHtmlFormatHeader + this.curPost.GetDump() + this.detailHtmlFormatFooter;
                 this.PostBrowser.Visible = true;
             }
             else

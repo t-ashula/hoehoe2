@@ -23,6 +23,8 @@
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
+using System.Text;
+using Hoehoe;
 
 namespace Hoehoe
 {
@@ -372,6 +374,44 @@ namespace Hoehoe
             return this.MemberwiseClone();
         }
 
+        public string GetDump()
+        {
+            StringBuilder sb = new StringBuilder(512);
+            sb.Append("-----Start PostClass Dump<br>");
+            sb.AppendFormat("TextFromApi           : {0}<br>", TextFromApi);
+            sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", TextFromApi);
+            sb.AppendFormat("StatusId             : {0}<br>", StatusId);
+            //// sb.AppendFormat("ImageIndex     : {0}<br>", this._curPost.ImageIndex.ToString)
+            sb.AppendFormat("ImageUrl       : {0}<br>", ImageUrl);
+            sb.AppendFormat("InReplyToStatusId    : {0}<br>", InReplyToStatusId);
+            sb.AppendFormat("InReplyToUser  : {0}<br>", InReplyToUser);
+            sb.AppendFormat("IsDM           : {0}<br>", IsDm);
+            sb.AppendFormat("IsFav          : {0}<br>", IsFav);
+            sb.AppendFormat("IsMark         : {0}<br>", IsMark);
+            sb.AppendFormat("IsMe           : {0}<br>", IsMe);
+            sb.AppendFormat("IsOwl          : {0}<br>", IsOwl);
+            sb.AppendFormat("IsProtect      : {0}<br>", IsProtect);
+            sb.AppendFormat("IsRead         : {0}<br>", IsRead);
+            sb.AppendFormat("IsReply        : {0}<br>", IsReply);
+            foreach (string nm in ReplyToList)
+            {
+                sb.AppendFormat("ReplyToList    : {0}<br>", nm);
+            }
+
+            sb.AppendFormat("ScreenName     : {0}<br>", ScreenName);
+            sb.AppendFormat("NickName       : {0}<br>", Nickname);
+            sb.AppendFormat("Text           : {0}<br>", Text);
+            sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", Text);
+            sb.AppendFormat("CreatedAt      : {0}<br>", CreatedAt);
+            sb.AppendFormat("Source         : {0}<br>", Source);
+            sb.AppendFormat("UserId         : {0}<br>", UserId);
+            sb.AppendFormat("FilterHit      : {0}<br>", FilterHit);
+            sb.AppendFormat("RetweetedBy    : {0}<br>", RetweetedBy);
+            sb.AppendFormat("RetweetedId    : {0}<br>", RetweetedId);
+            sb.AppendFormat("SearchTabName  : {0}<br>", RelTabName);
+            sb.Append("-----End PostClass Dump<br>");
+            return sb.ToString() ;
+        }
         #endregion public methods
 
         #region inner types
