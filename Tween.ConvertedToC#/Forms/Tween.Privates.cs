@@ -589,12 +589,12 @@ namespace Hoehoe
             }
         }
 
-        private bool BalloonRequired()
+        private bool IsBalloonRequired()
         {
-            return this.BalloonRequired(new Twitter.FormattedEvent { Eventtype = EventType.None });
+            return this.IsBalloonRequired(new Twitter.FormattedEvent { Eventtype = EventType.None });
         }
 
-        private bool BalloonRequired(Twitter.FormattedEvent ev)
+        private bool IsBalloonRequired(Twitter.FormattedEvent ev)
         {
             return this.IsEventNotifyAsEventType(ev.Eventtype)
                 && this.IsMyEventNotityAsEventType(ev)
@@ -625,7 +625,7 @@ namespace Hoehoe
             }
 
             // 新着通知
-            if (this.BalloonRequired() && notifyPosts != null && notifyPosts.Length > 0)
+            if (this.IsBalloonRequired() && notifyPosts != null && notifyPosts.Length > 0)
             {
                 // Growlは一個ずつばらして通知。ただし、3ポスト以上あるときはまとめる
                 if (this.settingDialog.IsNotifyUseGrowl)
@@ -810,12 +810,13 @@ namespace Hoehoe
 
         private void ChangeItemStyleRead(bool read, ListViewItem item, PostClass post, DetailsListView listView)
         {
+            bool useUnreadStyle = this.settingDialog.UseUnreadStyle;
+
             // フォント
             Font fnt = read ? this.fntReaded : this.fntUnread;
-            item.SubItems[5].Text = read ? string.Empty : "★";
 
             // 文字色
-            Color cl = default(Color);
+            Color cl = this.clrUnread;
             if (post.IsFav)
             {
                 cl = this.clrFav;
@@ -828,19 +829,17 @@ namespace Hoehoe
             {
                 cl = this.clrOWL;
             }
-            else if (read || !this.settingDialog.UseUnreadStyle)
+            else if (read || !useUnreadStyle)
             {
                 cl = this.clrRead;
             }
-            else
-            {
-                cl = this.clrUnread;
-            }
+
+            item.SubItems[5].Text = read ? string.Empty : "★";
 
             if (listView == null || item.Index == -1)
             {
                 item.ForeColor = cl;
-                if (this.settingDialog.UseUnreadStyle)
+                if (useUnreadStyle)
                 {
                     item.Font = fnt;
                 }
@@ -848,7 +847,7 @@ namespace Hoehoe
             else
             {
                 listView.Update();
-                if (this.settingDialog.UseUnreadStyle)
+                if (useUnreadStyle)
                 {
                     listView.ChangeItemFontAndColor(item.Index, cl, fnt);
                 }
@@ -5647,7 +5646,7 @@ namespace Hoehoe
         private void NotifyEvent(Twitter.FormattedEvent ev)
         {
             // 新着通知
-            if (this.BalloonRequired(ev))
+            if (this.IsBalloonRequired(ev))
             {
                 this.NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
                 StringBuilder title = new StringBuilder();
