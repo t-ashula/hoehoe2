@@ -55,9 +55,10 @@ namespace Hoehoe
             this.RetweetedBy = string.Empty;
             this.ReplyToList = new List<string>();
             this.postGeo = new StatusGeo();
+            this.Media = new Dictionary<string, string>();
         }
 
-        public PostClass(string nickname, string textFromApi, string text, string imageUrl, string screenName, DateTime createdAt, long statusId, bool isFav, bool isRead, bool isReply, bool isExcludeReply, bool isProtect, bool isOwl, bool isMark, string inReplyToUser, long inReplyToStatusId, string source, string sourceHtml, List<string> replyToList, bool isMe, bool isDm, long userId, bool filterHit, string retweetedBy, long retweetedId, StatusGeo geo)
+        public PostClass(string nickname, string textFromApi, string text, string imageUrl, string screenName, DateTime createdAt, long statusId, bool isFav, bool isRead, bool isReply, bool isExcludeReply, bool isProtect, bool isOwl, bool isMark, string inReplyToUser, long inReplyToStatusId, string source, string sourceHtml, List<string> replyToList, bool isMe, bool isDm, long userId, bool filterHit, string retweetedBy, long retweetedId, StatusGeo geo) :this()
         {
             this.Nickname = nickname;
             this.TextFromApi = textFromApi;
@@ -377,38 +378,39 @@ namespace Hoehoe
         public string GetDump()
         {
             StringBuilder sb = new StringBuilder(512);
+            var format = "{0,-20}:{1}<br/>";
             sb.Append("-----Start PostClass Dump<br>");
-            sb.AppendFormat("TextFromApi           : {0}<br>", TextFromApi);
-            sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", TextFromApi);
-            sb.AppendFormat("StatusId             : {0}<br>", StatusId);
+            sb.AppendFormat(format,  "TextFromApi", this.TextFromApi);
+            sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", this.TextFromApi);
+            sb.AppendFormat("StatusId             : {0}<br>", this.StatusId);
             //// sb.AppendFormat("ImageIndex     : {0}<br>", this._curPost.ImageIndex.ToString)
-            sb.AppendFormat("ImageUrl       : {0}<br>", ImageUrl);
-            sb.AppendFormat("InReplyToStatusId    : {0}<br>", InReplyToStatusId);
-            sb.AppendFormat("InReplyToUser  : {0}<br>", InReplyToUser);
-            sb.AppendFormat("IsDM           : {0}<br>", IsDm);
-            sb.AppendFormat("IsFav          : {0}<br>", IsFav);
-            sb.AppendFormat("IsMark         : {0}<br>", IsMark);
-            sb.AppendFormat("IsMe           : {0}<br>", IsMe);
-            sb.AppendFormat("IsOwl          : {0}<br>", IsOwl);
-            sb.AppendFormat("IsProtect      : {0}<br>", IsProtect);
-            sb.AppendFormat("IsRead         : {0}<br>", IsRead);
-            sb.AppendFormat("IsReply        : {0}<br>", IsReply);
-            foreach (string nm in ReplyToList)
+            sb.AppendFormat("ImageUrl       : {0}<br>", this.ImageUrl);
+            sb.AppendFormat("InReplyToStatusId    : {0}<br>", this.InReplyToStatusId);
+            sb.AppendFormat("InReplyToUser  : {0}<br>", this.InReplyToUser);
+            sb.AppendFormat("IsDM           : {0}<br>", this.IsDm);
+            sb.AppendFormat("IsFav          : {0}<br>", this.IsFav);
+            sb.AppendFormat("IsMark         : {0}<br>", this.IsMark);
+            sb.AppendFormat("IsMe           : {0}<br>", this.IsMe);
+            sb.AppendFormat("IsOwl          : {0}<br>", this.IsOwl);
+            sb.AppendFormat("IsProtect      : {0}<br>", this.IsProtect);
+            sb.AppendFormat("IsRead         : {0}<br>", this.IsRead);
+            sb.AppendFormat("IsReply        : {0}<br>", this.IsReply);
+            foreach (string nm in this.ReplyToList)
             {
                 sb.AppendFormat("ReplyToList    : {0}<br>", nm);
             }
 
-            sb.AppendFormat("ScreenName     : {0}<br>", ScreenName);
-            sb.AppendFormat("NickName       : {0}<br>", Nickname);
-            sb.AppendFormat("Text           : {0}<br>", Text);
-            sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", Text);
-            sb.AppendFormat("CreatedAt      : {0}<br>", CreatedAt);
-            sb.AppendFormat("Source         : {0}<br>", Source);
-            sb.AppendFormat("UserId         : {0}<br>", UserId);
-            sb.AppendFormat("FilterHit      : {0}<br>", FilterHit);
-            sb.AppendFormat("RetweetedBy    : {0}<br>", RetweetedBy);
-            sb.AppendFormat("RetweetedId    : {0}<br>", RetweetedId);
-            sb.AppendFormat("SearchTabName  : {0}<br>", RelTabName);
+            sb.AppendFormat("ScreenName     : {0}<br>", this.ScreenName);
+            sb.AppendFormat("NickName       : {0}<br>", this.Nickname);
+            sb.AppendFormat("Text           : {0}<br>", this.Text);
+            sb.AppendFormat("(PlainText)    : <xmp>{0}</xmp><br>", this.Text);
+            sb.AppendFormat("CreatedAt      : {0}<br>", this.CreatedAt);
+            sb.AppendFormat("Source         : {0}<br>", this.Source);
+            sb.AppendFormat("UserId         : {0}<br>", this.UserId);
+            sb.AppendFormat("FilterHit      : {0}<br>", this.FilterHit);
+            sb.AppendFormat("RetweetedBy    : {0}<br>", this.RetweetedBy);
+            sb.AppendFormat("RetweetedId    : {0}<br>", this.RetweetedId);
+            sb.AppendFormat("SearchTabName  : {0}<br>", this.RelTabName);
             sb.Append("-----End PostClass Dump<br>");
             return sb.ToString() ;
         }
