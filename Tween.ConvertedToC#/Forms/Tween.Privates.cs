@@ -1114,7 +1114,7 @@ namespace Hoehoe
         /// </summary>
         /// <param name="isFavAdd">TrueでFavAdd,FalseでFavRemove</param>
         /// <param name="multiFavoriteChangeDialogEnable"></param>
-        private void FavoriteChange(bool isFavAdd, bool multiFavoriteChangeDialogEnable = true)
+        private void ChangeSelectedFavStatus(bool isFavAdd, bool multiFavoriteChangeDialogEnable = true)
         {            
             if (this.statuses.Tabs[this.curTab.Text].TabType == TabUsageType.DirectMessage || this.curList.SelectedIndices.Count == 0 || !this.ExistCurrentPost)
             {
@@ -2321,7 +2321,7 @@ namespace Hoehoe
                             this.MakeReplyOrDirectStatus(false, false);
                             return true;
                         case Keys.S:
-                            this.FavoriteChange(true);
+                            this.ChangeSelectedFavStatus(true);
                             return true;
                         case Keys.I:
                             this.DoRepliedStatusOpen();
@@ -2639,7 +2639,7 @@ namespace Hoehoe
 
                             break;
                         case Keys.S:
-                            this.FavoriteChange(false);
+                            this.ChangeSelectedFavStatus(false);
                             return true;
                         case Keys.B:
                             this.ChangeSelectedTweetReadSateToUnread();
@@ -5140,7 +5140,7 @@ namespace Hoehoe
             if (this.doFavRetweetFlags)
             {
                 this.doFavRetweetFlags = false;
-                this.FavoriteChange(true, false);
+                this.ChangeSelectedFavStatus(true, false);
             }
         }
 
@@ -5149,7 +5149,7 @@ namespace Hoehoe
             if (this.ExistCurrentPost && !this.curPost.IsDm)
             {
                 this.doFavRetweetFlags = true;
-                this.FavoriteChange(true);
+                this.ChangeSelectedFavStatus(true);
                 if (!this.curPost.IsProtect && this.doFavRetweetFlags)
                 {
                     this.doFavRetweetFlags = false;

@@ -176,12 +176,12 @@ namespace Hoehoe
 
         private void FavAddToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.FavoriteChange(true);
+            this.ChangeSelectedFavStatus(true);
         }
 
         private void FavRemoveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.FavoriteChange(false);
+            this.ChangeSelectedFavStatus(false);
         }
 
         private void FavorareMenuItem_Click(object sender, EventArgs e)
@@ -3635,7 +3635,7 @@ namespace Hoehoe
                     this.MakeReplyOrDirectStatus();
                     break;
                 case 1:
-                    this.FavoriteChange(true);
+                    this.ChangeSelectedFavStatus(true);
                     break;
                 case 2:
                     this.ShowStatusOfCurrentTweetUser();
