@@ -936,91 +936,74 @@ namespace Hoehoe
         private string MakeStatusMessage(GetWorkerArg asyncArg, bool isFinish)
         {
             string smsg = string.Empty;
-            if (!isFinish)
+            // 継続中メッセージ
+            switch (asyncArg.WorkerType)
             {
-                // 継続中メッセージ
-                switch (asyncArg.WorkerType)
-                {
-                    case WorkerType.Timeline:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText5 + asyncArg.Page.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
-                        break;
-                    case WorkerType.Reply:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText4 + asyncArg.Page.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
-                        break;
-                    case WorkerType.DirectMessegeRcv:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText8 + asyncArg.Page.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6;
-                        break;
-                    case WorkerType.FavAdd:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText15 + asyncArg.Page.ToString() + "/" + asyncArg.Ids.Count.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText16 + (asyncArg.Page - asyncArg.SIds.Count - 1).ToString();
-                        break;
-                    case WorkerType.FavRemove:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText17 + asyncArg.Page.ToString() + "/" + asyncArg.Ids.Count.ToString() + Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText18 + (asyncArg.Page - asyncArg.SIds.Count - 1).ToString();
-                        break;
-                    case WorkerType.Favorites:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText19;
-                        break;
-                    case WorkerType.PublicSearch:
-                        smsg = "Search refreshing...";
-                        break;
-                    case WorkerType.List:
-                        smsg = "List refreshing...";
-                        break;
-                    case WorkerType.Related:
-                        smsg = "Related refreshing...";
-                        break;
-                    case WorkerType.UserTimeline:
-                        smsg = "UserTimeline refreshing...";
-                        break;
-                }
-            }
-            else
-            {
-                // 完了メッセージ
-                switch (asyncArg.WorkerType)
-                {
-                    case WorkerType.Timeline:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText1;
-                        break;
-                    case WorkerType.Reply:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText9;
-                        break;
-                    case WorkerType.DirectMessegeRcv:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText11;
-                        break;
-                    case WorkerType.DirectMessegeSnt:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText13;
-                        break;
-                    case WorkerType.FavAdd:
-                        // 進捗メッセージ残す
-                        break;
-                    case WorkerType.FavRemove:
-                        // 進捗メッセージ残す
-                        break;
-                    case WorkerType.Favorites:
-                        smsg = Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText20;
-                        break;
-                    case WorkerType.Follower:
-                        smsg = Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText3;
-                        break;
-                    case WorkerType.Configuration:
-                        // 進捗メッセージ残す
-                        break;
-                    case WorkerType.PublicSearch:
-                        smsg = "Search refreshed";
-                        break;
-                    case WorkerType.List:
-                        smsg = "List refreshed";
-                        break;
-                    case WorkerType.Related:
-                        smsg = "Related refreshed";
-                        break;
-                    case WorkerType.UserTimeline:
-                        smsg = "UserTimeline refreshed";
-                        break;
-                    case WorkerType.BlockIds:
-                        smsg = Hoehoe.Properties.Resources.UpdateBlockUserText3;
-                        break;
-                }
+                case WorkerType.Timeline:
+                    smsg = isFinish ?
+                        Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText1 :
+                        string.Format("{0}{1}{2}", Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText5, asyncArg.Page, Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6);
+                    break;
+                case WorkerType.Reply:
+                    smsg = isFinish ?
+                        Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText9 :
+                        string.Format("{0}{1}{2}", Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText4, asyncArg.Page, Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6);
+                    break;
+                case WorkerType.DirectMessegeRcv:
+                    smsg = isFinish ?
+                        Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText11 :
+                        string.Format("{0}{1}{2}", Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText8, asyncArg.Page, Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6);
+                    break;
+                case WorkerType.FavAdd:
+                    // 進捗メッセージ残す
+                    smsg = isFinish ?
+                        string.Empty :
+                        string.Format("{0}{1}/{2}{3}{4}", Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText15, asyncArg.Page, asyncArg.Ids.Count, Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText16, asyncArg.Page - asyncArg.SIds.Count - 1);
+                    break;
+                case WorkerType.FavRemove:
+                    // 進捗メッセージ残す
+                    smsg = isFinish ?
+                        string.Empty :
+                        string.Format("{0}{1}/{2}{3}{4}", Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText17, asyncArg.Page, asyncArg.Ids.Count, Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText18, asyncArg.Page - asyncArg.SIds.Count - 1);
+                    break;
+                case WorkerType.Favorites:
+                    smsg = isFinish ?
+                        Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText20 :
+                        Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText19;
+                    break;
+                case WorkerType.PublicSearch:
+                    smsg = isFinish ?
+                        "Search refreshed" :
+                        "Search refreshing...";
+                    break;
+                case WorkerType.List:
+                    smsg = isFinish ?
+                        "List refreshed" :
+                        "List refreshing...";
+                    break;
+                case WorkerType.Related:
+                    smsg = isFinish ?
+                        "Related refreshed" :
+                        "Related refreshing...";
+                    break;
+                case WorkerType.UserTimeline:
+                    smsg = isFinish ?
+                        "UserTimeline refreshed" :
+                        "UserTimeline refreshing...";
+                    break;
+                case WorkerType.Follower:
+                    smsg = isFinish ?
+                        Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText3 :
+                        string.Empty;
+                    break;
+                case WorkerType.Configuration:
+                    // 進捗メッセージ残す
+                    break;
+                case WorkerType.BlockIds:
+                    smsg = isFinish ?
+                        Hoehoe.Properties.Resources.UpdateBlockUserText3 :
+                        string.Empty;
+                    break;
             }
 
             return smsg;
