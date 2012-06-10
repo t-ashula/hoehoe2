@@ -34,13 +34,13 @@ namespace Hoehoe
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Media;
     using System.Net.NetworkInformation;
     using System.Reflection;
     using System.Security.Principal;
     using System.Text;
     using System.Web;
     using System.Windows.Forms;
-    using System.Media;
 
     public sealed class MyCommon
     {
@@ -72,7 +72,7 @@ namespace Hoehoe
         public static bool TraceFlag { get; set; }
 
 #if DEBUG
-		public static bool DebugBuild = true;
+        public static bool DebugBuild = true;
 #else
         public static bool DebugBuild { get; set; }
 #endif
@@ -549,7 +549,7 @@ namespace Hoehoe
                 img.Dispose();
             }
         }
-        
+
         private static T GetAppAssemblyCustomeAttr<T>() where T : Attribute
         {
             return (T)Attribute.GetCustomAttribute(AppAssembly, typeof(T));

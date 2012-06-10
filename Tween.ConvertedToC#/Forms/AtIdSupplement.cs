@@ -71,6 +71,7 @@ namespace Hoehoe
                 this.TextId.AutoCompleteCustomSource.Add(id);
                 return true;
             }
+
             return false;
         }
 
@@ -82,6 +83,7 @@ namespace Hoehoe
             {
                 this.AddItem(id);
             }
+
             return cnt != this.ItemCount;
         }
 

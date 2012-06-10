@@ -46,12 +46,12 @@ namespace Hoehoe
         /// <summary>
         /// OAuth署名のoauth_timestamp算出用基準日付（1970/1/1 00:00:00）
         /// </summary>
-        private static readonly DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
+        private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
 
         /// <summary>
         /// OAuth署名のoauth_nonce算出用乱数クラス
         /// </summary>
-        private static readonly Random nonceRandom = new Random();
+        private static readonly Random NonceRandom = new Random();
 
         /// <summary>
         /// OAuthのアクセストークン。永続化可能（ユーザー取り消しの可能性はある）。
@@ -520,8 +520,8 @@ namespace Hoehoe
             Dictionary<string, string> parameter = new Dictionary<string, string>();
             parameter.Add("oauth_consumer_key", this.consumerKey);
             parameter.Add("oauth_signature_method", "HMAC-SHA1");
-            parameter.Add("oauth_timestamp", Convert.ToInt64((DateTime.UtcNow - unixEpoch).TotalSeconds).ToString()); // epoch秒
-            parameter.Add("oauth_nonce", nonceRandom.Next(123400, 9999999).ToString());
+            parameter.Add("oauth_timestamp", Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds).ToString()); // epoch秒
+            parameter.Add("oauth_nonce", NonceRandom.Next(123400, 9999999).ToString());
             parameter.Add("oauth_version", "1.0");
 
             // トークンがあれば追加

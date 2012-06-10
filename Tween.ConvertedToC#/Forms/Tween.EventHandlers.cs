@@ -47,7 +47,7 @@ namespace Hoehoe
 
         private void AboutMenuItem_Click(object sender, EventArgs e)
         {
-            ShowAboutBox();
+            this.ShowAboutBox();
         }
 
         private void AddTabMenuItem_Click(object sender, EventArgs e)
@@ -57,12 +57,12 @@ namespace Hoehoe
 
         private void AllrepliesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeAllrepliesSetting(this.AllrepliesToolStripMenuItem.Checked);
+            this.ChangeAllrepliesSetting(this.AllrepliesToolStripMenuItem.Checked);
         }
 
         private void ApiInfoMenuItem_Click(object sender, EventArgs e)
         {
-            ShowApiInfoBox();
+            this.ShowApiInfoBox();
         }
 
         private void BitlyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -72,7 +72,7 @@ namespace Hoehoe
 
         private void CacheInfoMenuItem_Click(object sender, EventArgs e)
         {
-            ShowCacheInfoBox();
+            this.ShowCacheInfoBox();
         }
 
         private void ClearTabMenuItem_Click(object sender, EventArgs e)
@@ -87,23 +87,23 @@ namespace Hoehoe
 
         private void ContextMenuPostBrowser_Opening(object sender, CancelEventArgs e)
         {
-            SetupPostBrowserContextMenu();
+            this.SetupPostBrowserContextMenu();
             e.Cancel = false;
         }
 
         private void ContextMenuPostMode_Opening(object sender, CancelEventArgs e)
         {
-            SetupPostModeContextMenu();
+            this.SetupPostModeContextMenu();
         }
 
         private void ContextMenuSource_Opening(object sender, CancelEventArgs e)
         {
-            SetupSourceContextMenu();
+            this.SetupSourceContextMenu();
         }
 
         private void ContextMenuTabProperty_Opening(object sender, CancelEventArgs e)
         {
-            SetupTabPropertyContextMenu(fromMenuBar: false);
+            this.SetupTabPropertyContextMenu(fromMenuBar: false);
         }
 
         private void ContextMenuUserPicture_Opening(object sender, CancelEventArgs e)
@@ -128,7 +128,7 @@ namespace Hoehoe
 
         private void CurrentTabToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SearchSelectedTextAtCurrentTab();
+            this.SearchSelectedTextAtCurrentTab();
         }
 
         private void DMStripMenuItem_Click(object sender, EventArgs e)
@@ -143,12 +143,12 @@ namespace Hoehoe
 
         private void DeleteTabMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteSelectedTab(fromMenuBar: false);
+            this.DeleteSelectedTab(fromMenuBar: false);
         }
 
         private void DeleteTbMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteSelectedTab(fromMenuBar: true);
+            this.DeleteSelectedTab(fromMenuBar: true);
         }
 
         private void DisplayItemImage_Downloaded(object sender, EventArgs e)
@@ -166,7 +166,7 @@ namespace Hoehoe
 
         private void EndToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExitApplication();
+            this.ExitApplication();
         }
 
         private void EventViewerMenuItem_Click(object sender, EventArgs e)
@@ -186,7 +186,7 @@ namespace Hoehoe
 
         private void FavorareMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFavorarePageOfSelectedTweetUser();
+            this.OpenFavorarePageOfSelectedTweetUser();
         }
 
         private void FavoriteRetweetMenuItem_Click(object sender, EventArgs e)
@@ -211,12 +211,12 @@ namespace Hoehoe
 
         private void FollowCommandMenuItem_Click(object sender, EventArgs e)
         {
-            TryFollowUserOfCurrentTweet();
+            this.TryFollowUserOfCurrentTweet();
         }
 
         private void FollowContextMenuItem_Click(object sender, EventArgs e)
         {
-            TryFollowUserOfCurrentLinkUser();
+            this.TryFollowUserOfCurrentLinkUser();
         }
 
         private void FollowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -236,7 +236,7 @@ namespace Hoehoe
 
         private void FriendshipMenuItem_Click(object sender, EventArgs e)
         {
-            ShowFriendshipOfCurrentTweetUser();
+            this.ShowFriendshipOfCurrentTweetUser();
         }
 
         private void GetFollowersAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -308,7 +308,7 @@ namespace Hoehoe
         {
             if (e.KeyCode == Keys.Escape)
             {
-                CancelPostImageSelecting();
+                this.CancelPostImageSelecting();
             }
         }
 
@@ -331,7 +331,7 @@ namespace Hoehoe
 
         private void ImageServiceCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            TryChangeImageUploadService();
+            this.TryChangeImageUploadService();
         }
 
         private void ImagefilePathText_Validating(object sender, CancelEventArgs e)
@@ -366,37 +366,37 @@ namespace Hoehoe
 
         private void JumpUnreadMenuItem_Click(object sender, EventArgs e)
         {
-            TrySearchAndFocusUnreadTweet();
+            this.TrySearchAndFocusUnreadTweet();
         }
 
         private void ListLockMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            ChangeListLockSetting(((ToolStripMenuItem)sender).Checked);
+            this.ChangeListLockSetting(((ToolStripMenuItem)sender).Checked);
         }
 
         private void ListManageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowListManageBox();
+            this.ShowListManageBox();
         }
 
         private void ListManageUserContextToolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            ShowListSelectFormForCurrentTweetUser();
+            this.ShowListSelectFormForCurrentTweetUser();
         }
 
         private void ListManageUserContextToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            ShowListSelectFormForCurrentTweetUser();
+            this.ShowListSelectFormForCurrentTweetUser();
         }
 
         private void ListManageMenuItem_Click(object sender, EventArgs e)
         {
-            ShowListSelectFormForCurrentTweetUser();
+            this.ShowListSelectFormForCurrentTweetUser();
         }
 
         private void ListManageUserContextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowListSelectForm(this.GetUserId());
+            this.ShowListSelectForm(this.GetUserId());
         }
 
         private void MatomeMenuItem_Click(object sender, EventArgs e)
@@ -406,37 +406,37 @@ namespace Hoehoe
 
         private void MenuItemCommand_DropDownOpening(object sender, EventArgs e)
         {
-            SetupCommandMenu();
+            this.SetupCommandMenu();
         }
 
         private void MenuItemEdit_DropDownOpening(object sender, EventArgs e)
         {
-            SetupEditMenu();
+            this.SetupEditMenu();
         }
 
         private void MenuItemHelp_DropDownOpening(object sender, EventArgs e)
         {
-            SetupHelpMenu();
+            this.SetupHelpMenu();
         }
 
         private void MenuItemOperate_DropDownOpening(object sender, EventArgs e)
         {
-            SetupOperateMenu();
+            this.SetupOperateMenu();
         }
 
         private void MenuItemSearchNext_Click(object sender, EventArgs e)
         {
-            TrySearchWordInTabToBottom();
+            this.TrySearchWordInTabToBottom();
         }
 
         private void MenuItemSearchPrev_Click(object sender, EventArgs e)
         {
-            TrySearchWordInTabToTop();
+            this.TrySearchWordInTabToTop();
         }
 
         private void MenuItemSubSearch_Click(object sender, EventArgs e)
         {
-            TrySearchWordInTab();
+            this.TrySearchWordInTab();
         }
 
         private void MenuItemTab_DropDownOpening(object sender, EventArgs e)
@@ -446,22 +446,22 @@ namespace Hoehoe
 
         private void MenuStrip1_MenuActivate(object sender, EventArgs e)
         {
-            SetFocusToMainMenu();
+            this.SetFocusToMainMenu();
         }
 
         private void MenuStrip1_MenuDeactivate(object sender, EventArgs e)
         {
-            SetFocusFromMainMenu();
+            this.SetFocusFromMainMenu();
         }
 
         private void MoveToFavToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TryOpenCurListSelectedUserFavorites();
+            this.TryOpenCurListSelectedUserFavorites();
         }
 
         private void MoveToHomeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TryOpenCurListSelectedUserHome();
+            this.TryOpenCurListSelectedUserHome();
         }
 
         private void MoveToRTHomeMenuItem_Click(object sender, EventArgs e)
@@ -471,29 +471,29 @@ namespace Hoehoe
 
         private void MultiLineMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeStatusTextMultilineState(this.MultiLineMenuItem.Checked);
+            this.ChangeStatusTextMultilineState(this.MultiLineMenuItem.Checked);
         }
 
         private void NewPostPopMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            ChangeNewPostPopupSetting(((ToolStripMenuItem)sender).Checked);
+            this.ChangeNewPostPopupSetting(((ToolStripMenuItem)sender).Checked);
         }
 
         private void NotifyDispMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeNotifySetting(((ToolStripMenuItem)sender).Checked);
+            this.ChangeNotifySetting(((ToolStripMenuItem)sender).Checked);
         }
 
         private void NotifyIcon1_BalloonTipClicked(object sender, EventArgs e)
         {
-            ActivateMainForm();
+            this.ActivateMainForm();
         }
 
         private void NotifyIcon1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                ActivateMainForm();
+                this.ActivateMainForm();
             }
         }
 
@@ -504,7 +504,7 @@ namespace Hoehoe
 
         private void OpenOwnFavedMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFavorarePageOfSelf();
+            this.OpenFavorarePageOfSelf();
         }
 
         private void OpenOwnHomeMenuItem_Click(object sender, EventArgs e)
@@ -514,7 +514,7 @@ namespace Hoehoe
 
         private void OpenURLMenuItem_Click(object sender, EventArgs e)
         {
-            TryOpenUrlInCurrentTweet();
+            this.TryOpenUrlInCurrentTweet();
         }
 
         private void OpenUserSpecifiedUrlMenuItem_Click(object sender, EventArgs e)
@@ -524,22 +524,22 @@ namespace Hoehoe
 
         private void OwnStatusMenuItem_Click(object sender, EventArgs e)
         {
-            ShowStatusOfUserSelf();
+            this.ShowStatusOfUserSelf();
         }
 
         private void PlaySoundMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            ChangePlaySoundSetting(((ToolStripMenuItem)sender).Checked);
+            this.ChangePlaySoundSetting(((ToolStripMenuItem)sender).Checked);
         }
 
         private void PostBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            PostBrowser_NavigatedExtracted(e.Url);
+            this.PostBrowser_NavigatedExtracted(e.Url);
         }
 
         private void PostBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
-            e.Cancel = NavigateNextUrl(e.Url);
+            e.Cancel = this.NavigateNextUrl(e.Url);
         }
 
         private void PostBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -559,17 +559,17 @@ namespace Hoehoe
 
         private void PostBrowser_StatusTextChanged(object sender, EventArgs e)
         {
-            ChangeStatusLabelUrlTextByPostBrowserStatusText();
+            this.ChangeStatusLabelUrlTextByPostBrowserStatusText();
         }
 
         private void PostButton_Click(object sender, EventArgs e)
         {
-            TryPostTweet();
+            this.TryPostTweet();
         }
 
         private void PublicSearchQueryMenuItem_Click(object sender, EventArgs e)
         {
-            FocusCurrentPublicSearchTabSearchInput();
+            this.FocusCurrentPublicSearchTabSearchInput();
         }
 
         private void QuoteStripMenuItem_Click(object sender, EventArgs e)
@@ -589,7 +589,7 @@ namespace Hoehoe
 
         private void ReadedStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeSelectedTweetReadStateToRead();
+            this.ChangeSelectedTweetReadStateToRead();
         }
 
         private void RefreshMoreStripMenuItem_Click(object sender, EventArgs e)
@@ -605,12 +605,12 @@ namespace Hoehoe
 
         private void RemoveCommandMenuItem_Click(object sender, EventArgs e)
         {
-            TryUnfollowCurrentTweetUser();
+            this.TryUnfollowCurrentTweetUser();
         }
 
         private void RemoveContextMenuItem_Click(object sender, EventArgs e)
         {
-            TryUnfollowUserInCurrentTweet();
+            this.TryUnfollowUserInCurrentTweet();
         }
 
         private void UnFollowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -635,27 +635,27 @@ namespace Hoehoe
 
         private void RtCountMenuItem_Click(object sender, EventArgs e)
         {
-            ShowCurrentTweetRtCountBox();
+            this.ShowCurrentTweetRtCountBox();
         }
 
         private void SaveIconPictureToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TrySaveCurrentTweetUserIcon();
+            this.TrySaveCurrentTweetUserIcon();
         }
 
         private void SaveLogMenuItem_Click(object sender, EventArgs e)
         {
-            TrySaveLog();
+            this.TrySaveLog();
         }
 
         private void SaveOriginalSizeIconPictureToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveCurrentTweetUserOriginalSizeIcon();
+            this.SaveCurrentTweetUserOriginalSizeIcon();
         }
 
         private void SearchAtPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddSearchTabForAtUserOfCurrentTweet();
+            this.AddSearchTabForAtUserOfCurrentTweet();
         }
 
         private void SearchAtPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
@@ -665,12 +665,12 @@ namespace Hoehoe
 
         private void SearchControls_Enter(object sender, EventArgs e)
         {
-            ChangeSearchPanelControlsTabStop((Control)sender, true);
+            this.ChangeSearchPanelControlsTabStop((Control)sender, true);
         }
 
         private void SearchControls_Leave(object sender, EventArgs e)
         {
-            ChangeSearchPanelControlsTabStop((Control)sender, false);
+            this.ChangeSearchPanelControlsTabStop((Control)sender, false);
         }
 
         private void SearchGoogleContextMenuItem_Click(object sender, EventArgs e)
@@ -680,12 +680,12 @@ namespace Hoehoe
 
         private void SearchPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddTimelineTabForCurrentTweetUser();
+            this.AddTimelineTabForCurrentTweetUser();
         }
 
         private void SearchPostsDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddTimelineTabForUserInCurrentTweet();
+            this.AddTimelineTabForUserInCurrentTweet();
         }
 
         private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
@@ -705,7 +705,7 @@ namespace Hoehoe
 
         private void SelectAllMenuItem_Click(object sender, EventArgs e)
         {
-            SelectAllItemInFocused();
+            this.SelectAllItemInFocused();
         }
 
         private void SelectionAllContextMenuItem_Click(object sender, EventArgs e)
@@ -717,7 +717,7 @@ namespace Hoehoe
         private void SelectionCopyContextMenuItem_Click(object sender, EventArgs e)
         {
             // 発言詳細で「選択文字列をコピー」
-            TryCopySelectionInPostBrowser();
+            this.TryCopySelectionInPostBrowser();
         }
 
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -727,12 +727,12 @@ namespace Hoehoe
 
         private void TwitterApiInfo_Changed(object sender, ApiInformationChangedEventArgs e)
         {
-            SetStatusLabelApiLuncher();
+            this.SetStatusLabelApiLuncher();
         }
 
         private void SettingStripMenuItem_Click(object sender, EventArgs e)
         {
-            TryShowSettingsBox();
+            this.TryShowSettingsBox();
         }
 
         private void ShortcutKeyListMenuItem_Click(object sender, EventArgs e)
@@ -742,27 +742,27 @@ namespace Hoehoe
 
         private void ShowFriendShipToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowFriendshipOfCurrentIconUser();
+            this.ShowFriendshipOfCurrentIconUser();
         }
 
         private void ShowProfileMenuItem_Click(object sender, EventArgs e)
         {
-            ShowStatusOfCurrentTweetUser();
+            this.ShowStatusOfCurrentTweetUser();
         }
 
         private void ShowRelatedStatusesMenuItem_Click(object sender, EventArgs e)
         {
-            AddRelatedStatusesTab();
+            this.AddRelatedStatusesTab();
         }
 
         private void ShowUserStatusContextMenuItem_Click(object sender, EventArgs e)
         {
-            ShowtStatusOfCurrentLinkUser();
+            this.ShowtStatusOfCurrentLinkUser();
         }
 
         private void ShowUserStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowStatusOfCurrentIconUser();
+            this.ShowStatusOfCurrentIconUser();
         }
 
         private void ShowUserTimelineToolStripMenuItem_Click(object sender, EventArgs e)
@@ -772,25 +772,25 @@ namespace Hoehoe
 
         private void SoundFileComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ChangeCurrentTabSoundFile((string)((ToolStripComboBox)sender).SelectedItem);
+            this.ChangeCurrentTabSoundFile((string)((ToolStripComboBox)sender).SelectedItem);
         }
 
         private void SourceCopyMenuItem_Click(object sender, EventArgs e)
         {
-            TryCopySourceName();
+            this.TryCopySourceName();
         }
 
         private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                TryOpenSourceLink();
+                this.TryOpenSourceLink();
             }
         }
 
         private void SourceLinkLabel_MouseEnter(object sender, EventArgs e)
         {
-            ChangeStatusLabelUrlText((string)this.SourceLinkLabel.Tag);
+            this.ChangeStatusLabelUrlText((string)this.SourceLinkLabel.Tag);
         }
 
         private void SourceLinkLabel_MouseLeave(object sender, EventArgs e)
@@ -800,7 +800,7 @@ namespace Hoehoe
 
         private void SourceUrlCopyMenuItem_Click(object sender, EventArgs e)
         {
-            TryCopySourceUrl();
+            this.TryCopySourceUrl();
         }
 
         private void SpaceKeyCanceler_SpaceCancel(object sender, EventArgs e)
@@ -824,7 +824,7 @@ namespace Hoehoe
 
         private void SplitContainer2_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            ChangeStatusTextMultilineState(this.MultiLineMenuItem.Checked); // this.MultiLineMenuItem.PerformClick();
+            this.ChangeStatusTextMultilineState(this.MultiLineMenuItem.Checked); // this.MultiLineMenuItem.PerformClick();
         }
 
         private void SplitContainer2_Panel2_Resize(object sender, EventArgs e)
@@ -892,7 +892,7 @@ namespace Hoehoe
 
         private void StatusOpenMenuItem_Click(object sender, EventArgs e)
         {
-            TryOpenSelectedTweetWebPage();
+            this.TryOpenSelectedTweetWebPage();
         }
 
         private void StatusText_Enter(object sender, EventArgs e)
@@ -923,7 +923,7 @@ namespace Hoehoe
             if (keyChar == '@' || keyChar == '#')
             {
                 e.Handled = true;
-                ShowSupplementBox(keyChar);
+                this.ShowSupplementBox(keyChar);
             }
         }
 
@@ -962,17 +962,17 @@ namespace Hoehoe
 
         private void StatusText_Leave(object sender, EventArgs e)
         {
-            StatusText_LeaveExtracted();
+            this.StatusText_LeaveExtracted();
         }
 
         private void StatusText_MultilineChanged(object sender, EventArgs e)
         {
-            ChangeStatusTextMultiline(this.StatusText.Multiline);
+            this.ChangeStatusTextMultiline(this.StatusText.Multiline);
         }
 
         private void StatusText_TextChanged(object sender, EventArgs e)
         {
-            StatusText_TextChangedExtracted();
+            this.StatusText_TextChangedExtracted();
         }
 
         private void StopRefreshAllMenuItem_CheckedChanged(object sender, EventArgs e)
@@ -982,7 +982,7 @@ namespace Hoehoe
 
         private void StopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeUserStreamStatus();
+            this.ChangeUserStreamStatus();
         }
 
         private void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
@@ -995,17 +995,17 @@ namespace Hoehoe
 
         private void TabMenuItem_Click(object sender, EventArgs e)
         {
-            AddFilteringRuleFromSelectedTweet();
+            this.AddFilteringRuleFromSelectedTweet();
         }
 
         private void TabRenameMenuItem_Click(object sender, EventArgs e)
         {
-            RenameCurrentTabName();
+            this.RenameCurrentTabName();
         }
 
         private void Tabs_DoubleClick(object sender, MouseEventArgs e)
         {
-            RenameSelectedTabName();
+            this.RenameSelectedTabName();
         }
 
         private void Tabs_DragDrop(object sender, DragEventArgs e)
@@ -1107,7 +1107,7 @@ namespace Hoehoe
 
         private void TimerTimeline_Elapsed(object sender, EventArgs e)
         {
-            TimerTimeline_ElapsedExtracted();
+            this.TimerTimeline_ElapsedExtracted();
         }
 
         private void TinyURLToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1122,7 +1122,7 @@ namespace Hoehoe
 
         private void ToolStripMenuItemUrlAutoShorten_CheckedChanged(object sender, EventArgs e)
         {
-            ChangeAutoUrlConvertFlag(this.ToolStripMenuItemUrlAutoShorten.Checked);
+            this.ChangeAutoUrlConvertFlag(this.ToolStripMenuItemUrlAutoShorten.Checked);
         }
 
         private void TraceOutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1132,7 +1132,7 @@ namespace Hoehoe
 
         private void TrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeTrackWordStatus();
+            this.ChangeTrackWordStatus();
         }
 
         private void TranslationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1303,7 +1303,7 @@ namespace Hoehoe
 
         private void UserPicture_DoubleClick(object sender, EventArgs e)
         {
-            TryOpenCurrentNameLabelUserHome();
+            this.TryOpenCurrentNameLabelUserHome();
         }
 
         private void UserPicture_MouseEnter(object sender, EventArgs e)
@@ -1313,7 +1313,7 @@ namespace Hoehoe
 
         private void UserPicture_MouseLeave(object sender, EventArgs e)
         {
-            ChangeUserPictureCursor(Cursors.Default);
+            this.ChangeUserPictureCursor(Cursors.Default);
         }
 
         private void UserStatusToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3454,7 +3454,7 @@ namespace Hoehoe
                 SolidBrush brs2 = (cl == this.clrSelf) ? this.brsBackColorMine : (cl == this.clrAtSelf) ? this.brsBackColorAt : (cl == this.clrTarget) ? this.brsBackColorYou : (cl == this.clrAtTarget) ? this.brsBackColorAtYou : (cl == this.clrAtFromTarget) ? this.brsBackColorAtFromTarget : (cl == this.clrAtTo) ? this.brsBackColorAtTo : this.brsBackColorNone;
                 e.Graphics.FillRectangle(brs2, e.Bounds);
             }
-            
+
             if ((e.State & ListViewItemStates.Focused) == ListViewItemStates.Focused)
             {
                 e.DrawFocusRectangle();
@@ -3489,7 +3489,7 @@ namespace Hoehoe
 
             int heightDiff = 0;
             int drawLineCount = Math.Max(1, Math.DivRem(Convert.ToInt32(rct.Height), e.Item.Font.Height, out heightDiff));
-            
+
             // フォントの高さの半分を足してるのは保険。無くてもいいかも。
             if (!this.iconCol && drawLineCount <= 1)
             {
@@ -3885,7 +3885,7 @@ namespace Hoehoe
                 return;
             }
 
-            ChangeUserStreamStatusDisplay(start: true);
+            this.ChangeUserStreamStatusDisplay(start: true);
         }
 
         private void Tw_UserStreamStopped()
@@ -3908,10 +3908,10 @@ namespace Hoehoe
                 return;
             }
 
-            ChangeUserStreamStatusDisplay(start: false);
+            this.ChangeUserStreamStatusDisplay(start: false);
         }
 
-        #endregion 
+        #endregion
         #endregion event handler
     }
 }

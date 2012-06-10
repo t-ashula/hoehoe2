@@ -23,13 +23,12 @@
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
-using System.Text;
-using Hoehoe;
 
 namespace Hoehoe
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
 
     public sealed class PostClass : ICloneable
     {
@@ -58,7 +57,8 @@ namespace Hoehoe
             this.Media = new Dictionary<string, string>();
         }
 
-        public PostClass(string nickname, string textFromApi, string text, string imageUrl, string screenName, DateTime createdAt, long statusId, bool isFav, bool isRead, bool isReply, bool isExcludeReply, bool isProtect, bool isOwl, bool isMark, string inReplyToUser, long inReplyToStatusId, string source, string sourceHtml, List<string> replyToList, bool isMe, bool isDm, long userId, bool filterHit, string retweetedBy, long retweetedId, StatusGeo geo) :this()
+        public PostClass(string nickname, string textFromApi, string text, string imageUrl, string screenName, DateTime createdAt, long statusId, bool isFav, bool isRead, bool isReply, bool isExcludeReply, bool isProtect, bool isOwl, bool isMark, string inReplyToUser, long inReplyToStatusId, string source, string sourceHtml, List<string> replyToList, bool isMe, bool isDm, long userId, bool filterHit, string retweetedBy, long retweetedId, StatusGeo geo)
+            : this()
         {
             this.Nickname = nickname;
             this.TextFromApi = textFromApi;
@@ -143,6 +143,7 @@ namespace Hoehoe
                 {
                     return this.isFav;
                 }
+
                 var post = TabInformations.GetInstance().RetweetSource(this.RetweetedId);
                 return post != null ? post.IsFav : this.isFav;
             }
@@ -326,6 +327,7 @@ namespace Hoehoe
         {
             get { return this.RetweetedId != 0; }
         }
+
         #endregion properties
 
         #region public methods
@@ -436,7 +438,8 @@ namespace Hoehoe
                 {
                     return true;
                 }
-            } 
+            }
+
             return false;
         }
 
@@ -449,7 +452,25 @@ namespace Hoehoe
 
             return string.Format("https://twitter.com/{0}/status/{1}", this.ScreenName, this.OriginalStatusId);
         }
-        
+
+        public string MakeTsvLine()
+        {
+            return string.Format(
+                "{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}",
+                this.Nickname,
+                this.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""),
+                this.CreatedAt,
+                this.ScreenName,
+                this.StatusId,
+                this.ImageUrl,
+                this.Text.Replace("\n", string.Empty).Replace("\"", "\"\""),
+                this.IsProtect ? "Protect" : string.Empty);
+        }
+
+        public string MakeReplyPostInfoLine()
+        {
+            return string.Format("{0} / {1}   ({2}){3}{4}", this.ScreenName, this.Nickname, this.CreatedAt, Environment.NewLine, this.TextFromApi);
+        }
         #endregion public methods
 
         #region inner types

@@ -157,7 +157,7 @@ namespace Hoehoe.TweenCustomControl
         public void SelectAllItem()
         {
             //// foreach (ListViewItem lvi in this.Items) { lvi.Selected = true; }
-            for (int i = 0; i < VirtualListSize; i++)
+            for (int i = 0; i < this.VirtualListSize; i++)
             {
                 SelectedIndices.Add(i);
             }
