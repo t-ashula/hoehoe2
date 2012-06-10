@@ -4664,22 +4664,9 @@ namespace Hoehoe
             }
 
             status = Regex.Replace(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\" title=\"(?<title>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "${title}");
-
-            // その他のリンク(@IDなど)を置き換える
             status = Regex.Replace(status, "@<a target=\"_self\" href=\"https?://twitter.com/(#!/)?(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "@${url}");
-
-            // ハッシュタグ
             status = Regex.Replace(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "${link}");
-
-            // <br>タグ除去
-            if (this.StatusText.Multiline)
-            {
-                status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", "\r\n", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            }
-            else
-            {
-                status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            }
+            status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", this.StatusText.Multiline ? Environment.NewLine : string.Empty, RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
             this.replyToId = 0;
             this.replyToName = string.Empty;
