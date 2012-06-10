@@ -4949,7 +4949,7 @@ namespace Hoehoe
                             img = Image.FromStream(fs);
                         }
 
-                        this.ImageSelectedPicture.Image = (new HttpVarious()).CheckValidImage(img, img.Width, img.Height);
+                        this.ImageSelectedPicture.Image = MyCommon.CheckValidImage(img, img.Width, img.Height);
                         this.ImageSelectedPicture.Tag = UploadFileType.Picture;
                         break;
                     case UploadFileType.MultiMedia:

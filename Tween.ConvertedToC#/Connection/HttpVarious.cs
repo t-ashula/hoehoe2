@@ -80,7 +80,7 @@ namespace Hoehoe
 
         public Image GetImage(string url, string referer, int timeout, ref string errmsg)
         {
-            return this.GetImageInternal(this.CheckValidImage, url, referer, timeout, ref errmsg);
+            return this.GetImageInternal(MyCommon.CheckValidImage, url, referer, timeout, ref errmsg);
         }
 
         public Image GetIconImage(string url, int timeout)
@@ -214,39 +214,6 @@ namespace Hoehoe
             }
         }
 
-        public Image CheckValidImage(Image img, int width, int height)
-        {
-            if (img == null)
-            {
-                return null;
-            }
-
-            Bitmap bmp = new Bitmap(width, height);
-            try
-            {
-                using (Graphics g = Graphics.FromImage(bmp))
-                {
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                    g.DrawImage(img, 0, 0, width, height);
-                }
-
-                bmp.Tag = img.Tag;
-                return bmp;
-            }
-            catch (Exception)
-            {
-                bmp.Dispose();
-                bmp = new Bitmap(width, height);
-                bmp.Tag = img.Tag;
-                return bmp;
-            }
-            finally
-            {
-                img.Dispose();
-            }
-        }
-
         private Image GetImageInternal(CheckValidImageDelegate checkImage, string url, string referer, int timeout, ref string errmsg)
         {
             try
@@ -309,7 +276,7 @@ namespace Hoehoe
 
         private Image CheckValidIconImage(Image img, int width, int height)
         {
-            return this.CheckValidImage(img, 48, 48);
+            return MyCommon.CheckValidImage(img, 48, 48);
         }
     }
 }

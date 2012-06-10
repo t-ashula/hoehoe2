@@ -517,6 +517,39 @@ namespace Hoehoe
             return Directory.Exists(dir) ? dir : basedir;
         }
 
+        public static Image CheckValidImage(Image img, int width, int height)
+        {
+            if (img == null)
+            {
+                return null;
+            }
+
+            Bitmap bmp = new Bitmap(width, height);
+            try
+            {
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                    g.DrawImage(img, 0, 0, width, height);
+                }
+
+                bmp.Tag = img.Tag;
+                return bmp;
+            }
+            catch (Exception)
+            {
+                bmp.Dispose();
+                bmp = new Bitmap(width, height);
+                bmp.Tag = img.Tag;
+                return bmp;
+            }
+            finally
+            {
+                img.Dispose();
+            }
+        }
+        
         private static T GetAppAssemblyCustomeAttr<T>() where T : Attribute
         {
             return (T)Attribute.GetCustomAttribute(AppAssembly, typeof(T));
