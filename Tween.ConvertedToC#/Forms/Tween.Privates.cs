@@ -4546,78 +4546,74 @@ namespace Hoehoe
         private void DoReTweetOfficial(bool isConfirm)
         {
             // 公式RT
-            if (this.ExistCurrentPost)
+            if (!this.ExistCurrentPost)
             {
-                if (this.curPost.IsProtect)
+                return;
+            }
+
+            if (this.curPost.IsProtect)
+            {
+                MessageBox.Show("Protected.");
+                this.doFavRetweetFlags = false;
+                return;
+            }
+
+            if (this.curList.SelectedIndices.Count > 15)
+            {
+                MessageBox.Show(Hoehoe.Properties.Resources.RetweetLimitText);
+                this.doFavRetweetFlags = false;
+                return;
+            }
+
+            if (this.curList.SelectedIndices.Count > 1)
+            {
+                string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion2;
+                if (this.doFavRetweetFlags)
                 {
-                    MessageBox.Show("Protected.");
+                    confirmMessage = Hoehoe.Properties.Resources.FavoriteRetweetQuestionText1;
+                }
+
+                var result = MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result != System.Windows.Forms.DialogResult.Yes)
+                {
+                    this.doFavRetweetFlags = false;
+                    return;
+                }
+            }
+            else
+            {
+                if (this.curPost.IsDm || this.curPost.IsMe)
+                {
                     this.doFavRetweetFlags = false;
                     return;
                 }
 
-                if (this.curList.SelectedIndices.Count > 15)
+                if (!this.settingDialog.RetweetNoConfirm)
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.RetweetLimitText);
-                    this.doFavRetweetFlags = false;
-                    return;
-                }
-                else if (this.curList.SelectedIndices.Count > 1)
-                {
-                    string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion2;
+                    string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion1;
                     if (this.doFavRetweetFlags)
                     {
-                        confirmMessage = Hoehoe.Properties.Resources.FavoriteRetweetQuestionText1;
+                        confirmMessage = Hoehoe.Properties.Resources.FavoritesRetweetQuestionText2;
                     }
 
-                    switch (MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
-                    {
-                        case DialogResult.Cancel:
-                        case DialogResult.No:
-                            this.doFavRetweetFlags = false;
-                            return;
-                    }
-                }
-                else
-                {
-                    if (this.curPost.IsDm || this.curPost.IsMe)
+                    if (isConfirm && MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                     {
                         this.doFavRetweetFlags = false;
                         return;
                     }
-
-                    if (!this.settingDialog.RetweetNoConfirm)
-                    {
-                        string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion1;
-                        if (this.doFavRetweetFlags)
-                        {
-                            confirmMessage = Hoehoe.Properties.Resources.FavoritesRetweetQuestionText2;
-                        }
-
-                        if (isConfirm && MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
-                        {
-                            this.doFavRetweetFlags = false;
-                            return;
-                        }
-                    }
                 }
+            }
 
-                GetWorkerArg args = new GetWorkerArg()
+            var ids = this.curList.SelectedIndices.Cast<int>().Select(i => this.GetCurTabPost(i)).Where(p => !p.IsMe && !p.IsProtect && !p.IsDm);
+            if (ids.Count() > 0)
+            {
+                this.RunAsync(new GetWorkerArg()
                 {
-                    Ids = new List<long>(),
+                    Ids = ids.Select(p => p.StatusId).ToList(),
                     SIds = new List<long>(),
                     TabName = this.curTab.Text,
                     WorkerType = WorkerType.Retweet
-                };
-                foreach (int idx in this.curList.SelectedIndices)
-                {
-                    PostClass post = this.GetCurTabPost(idx);
-                    if (!post.IsMe && !post.IsProtect && !post.IsDm)
-                    {
-                        args.Ids.Add(post.StatusId);
-                    }
-                }
-
-                this.RunAsync(args);
+                });
             }
         }
 
