@@ -3995,7 +3995,6 @@ namespace Hoehoe
         // メインウインドウタイトルの書き換え
         private void SetMainWindowTitle()
         {
-            StringBuilder ttl = new StringBuilder(256);
             int ur = 0;
             int al = 0;
             if (this.settingDialog.DispLatestPost != DispTitleEnum.None
@@ -4003,13 +4002,11 @@ namespace Hoehoe
                 && this.settingDialog.DispLatestPost != DispTitleEnum.Ver
                 && this.settingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
             {
-                foreach (string key in this.statuses.Tabs.Keys)
-                {
-                    ur += this.statuses.Tabs[key].UnreadCount;
-                    al += this.statuses.Tabs[key].AllCount;
-                }
+                ur = this.statuses.GetAllUnreadCount();
+                al = this.statuses.GetAllCount();
             }
 
+            var ttl = new StringBuilder(256);
             if (this.settingDialog.DispUsername)
             {
                 ttl.Append(this.tw.Username).Append(" - ");

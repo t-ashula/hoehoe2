@@ -1402,6 +1402,16 @@ namespace Hoehoe
             return tabNameTemp;
         }
 
+        public int GetAllUnreadCount()
+        {
+            return this.Tabs.Values.Select(tc => tc.UnreadCount).Sum();
+        }
+
+        public int GetAllCount()
+        {
+            return this.Tabs.Values.Select(tc => tc.AllCount).Sum();
+        }
+
         private void ScrubGeo(long userId, long uptoStatusId)
         {
             lock (this.lockObj)
