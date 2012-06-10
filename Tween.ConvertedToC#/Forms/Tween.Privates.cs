@@ -3929,13 +3929,10 @@ namespace Hoehoe
             }
 
             int idx = this.curList.SelectedIndices[0];
-
-            ListViewItem item = this.curList.GetItemAt(0, 25);
-            int idx1 = item == null ? 0 : item.Index;
-
-            item = this.curList.GetItemAt(0, this.curList.ClientSize.Height - 1);
-            int idx2 = item == null ? this.curList.VirtualListSize - 1 : item.Index;
-
+            var item1 = this.curList.GetItemAt(0, 25);
+            int idx1 = item1 == null ? 0 : item1.Index;
+            var item2 = this.curList.GetItemAt(0, this.curList.ClientSize.Height - 1);
+            int idx2 = item2 == null ? this.curList.VirtualListSize - 1 : item2.Index;
             idx -= Math.Abs(idx1 - idx2) / 2;
             if (idx < 0)
             {
