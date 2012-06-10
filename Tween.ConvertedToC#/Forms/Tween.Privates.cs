@@ -2985,7 +2985,6 @@ namespace Hoehoe
             }
 
             TabClass curTabClass = this.statuses.Tabs[this.curTab.Text];
-
             if (curTabClass.TabType == TabUsageType.PublicSearch && this.curPost.InReplyToStatusId == 0 && this.curPost.TextFromApi.Contains("@"))
             {
                 PostClass post = null;
@@ -3016,21 +3015,8 @@ namespace Hoehoe
 
             this.replyChains.Push(new ReplyChain(this.curPost.StatusId, this.curPost.InReplyToStatusId, this.curTab));
 
-            int inReplyToIndex = 0;
-            string inReplyToTabName = null;
+            Dictionary<long, PostClass> curTabPosts = this.statuses.Tabs[this.curTab.Text].IsInnerStorageTabType ? curTabClass.Posts : this.statuses.Posts;
             long inReplyToId = this.curPost.InReplyToStatusId;
-            string inReplyToUser = this.curPost.InReplyToUser;
-            Dictionary<long, PostClass> curTabPosts = null;
-
-            if (this.statuses.Tabs[this.curTab.Text].IsInnerStorageTabType)
-            {
-                curTabPosts = curTabClass.Posts;
-            }
-            else
-            {
-                curTabPosts = this.statuses.Posts;
-            }
-
             var inReplyToPosts = from tab in this.statuses.Tabs.Values
                                  orderby !object.ReferenceEquals(tab, curTabClass)
                                  from post in ((Dictionary<long, PostClass>)(tab.IsInnerStorageTabType ? tab.Posts : this.statuses.Posts)).Values
@@ -3039,6 +3025,8 @@ namespace Hoehoe
                                  where index != -1
                                  select new { Tab = tab, Index = index };
 
+            int inReplyToIndex = 0;
+            string inReplyToTabName = null;
             try
             {
                 var inReplyPost = inReplyToPosts.First();
@@ -3049,6 +3037,7 @@ namespace Hoehoe
             {
                 PostClass post = null;
                 string r = this.tw.GetStatusApi(false, this.curPost.InReplyToStatusId, ref post);
+                string inReplyToUser = this.curPost.InReplyToUser;
                 if (string.IsNullOrEmpty(r) && post != null)
                 {
                     post.IsRead = true;
@@ -3063,14 +3052,14 @@ namespace Hoehoe
                     }
                     catch (InvalidOperationException)
                     {
-                        this.OpenUriAsync(string.Format("http://twitter.com/{0}/statuses/{1}", inReplyToUser, inReplyToId));
+                        this.OpenUriAsync(string.Format("https://twitter.com/{0}/statuses/{1}", inReplyToUser, inReplyToId));
                         return;
                     }
                 }
                 else
                 {
                     this.StatusLabel.Text = r;
-                    this.OpenUriAsync(string.Format("http://twitter.com/{0}/statuses/{1}", inReplyToUser, inReplyToId));
+                    this.OpenUriAsync(string.Format("https://twitter.com/{0}/statuses/{1}", inReplyToUser, inReplyToId));
                     return;
                 }
             }
@@ -3093,111 +3082,109 @@ namespace Hoehoe
                 return;
             }
 
-            TabClass curTabClass = this.statuses.Tabs[this.curTab.Text];
-            Dictionary<long, PostClass> curTabPosts = (Dictionary<long, PostClass>)(curTabClass.IsInnerStorageTabType ? curTabClass.Posts : this.statuses.Posts);
-
+            var curTabClass = this.statuses.Tabs[this.curTab.Text];
+            var curTabPosts = curTabClass.IsInnerStorageTabType ? curTabClass.Posts : this.statuses.Posts;
             if (parallel)
             {
-                if (this.curPost.InReplyToStatusId != 0)
+                if (this.curPost.InReplyToStatusId == 0)
                 {
-                    var posts = from t in this.statuses.Tabs
-                                from p in (Dictionary<long, PostClass>)(t.Value.IsInnerStorageTabType ? t.Value.Posts : this.statuses.Posts)
-                                where p.Value.StatusId != this.curPost.StatusId && p.Value.InReplyToStatusId == this.curPost.InReplyToStatusId
-                                let indexOf = t.Value.IndexOf(p.Value.StatusId)
-                                where indexOf > -1
-                                orderby (isForward ? indexOf : indexOf * -1)
-                                orderby !object.ReferenceEquals(t.Value, curTabClass)
-                                select new { Tab = t.Value, Post = p.Value, Index = indexOf };
+                    return;
+                }
+
+                var posts = from t in this.statuses.Tabs
+                            from p in (Dictionary<long, PostClass>)(t.Value.IsInnerStorageTabType ? t.Value.Posts : this.statuses.Posts)
+                            where p.Value.StatusId != this.curPost.StatusId && p.Value.InReplyToStatusId == this.curPost.InReplyToStatusId
+                            let indexOf = t.Value.IndexOf(p.Value.StatusId)
+                            where indexOf > -1
+                            orderby (isForward ? indexOf : indexOf * -1)
+                            orderby !object.ReferenceEquals(t.Value, curTabClass)
+                            select new { Tab = t.Value, Post = p.Value, Index = indexOf };
+                try
+                {
+                    var postList = posts.ToList();
+                    for (int i = postList.Count - 1; i >= 0; i--)
+                    {
+                        int index = i;
+                        if (postList.FindIndex(pst => pst.Post.StatusId == postList[index].Post.StatusId) != index)
+                        {
+                            postList.RemoveAt(index);
+                        }
+                    }
+
+                    var post = postList.FirstOrDefault(pst => object.ReferenceEquals(pst.Tab, curTabClass) && (isForward ? pst.Index > this.curItemIndex : pst.Index < this.curItemIndex));
+                    if (post == null)
+                    {
+                        post = postList.FirstOrDefault(pst => !object.ReferenceEquals(pst.Tab, curTabClass));
+                    }
+
+                    if (post == null)
+                    {
+                        post = postList.First();
+                    }
+
+                    this.ListTab.SelectTab(this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == post.Tab.TabName));
+                    var listView = (DetailsListView)this.ListTab.SelectedTab.Tag;
+                    this.SelectListItem(listView, post.Index);
+                    listView.EnsureVisible(post.Index);
+                }
+                catch (InvalidOperationException)
+                {
+                }
+
+                return;
+            }
+
+            if (this.replyChains == null || this.replyChains.Count < 1)
+            {
+                var posts = from t in this.statuses.Tabs
+                            from p in (Dictionary<long, PostClass>)(t.Value.IsInnerStorageTabType ? t.Value.Posts : this.statuses.Posts)
+                            where p.Value.InReplyToStatusId == this.curPost.StatusId
+                            let indexOf = t.Value.IndexOf(p.Value.StatusId)
+                            where indexOf > -1
+                            orderby indexOf
+                            orderby !object.ReferenceEquals(t.Value, curTabClass)
+                            select new { Tab = t.Value, Index = indexOf };
+                try
+                {
+                    var post = posts.First();
+                    this.ListTab.SelectTab(this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == post.Tab.TabName));
+                    var listView = (DetailsListView)this.ListTab.SelectedTab.Tag;
+                    this.SelectListItem(listView, post.Index);
+                    listView.EnsureVisible(post.Index);
+                }
+                catch (InvalidOperationException)
+                {
+                }
+
+                return;
+            }
+
+            ReplyChain chainHead = this.replyChains.Pop();
+            if (chainHead.InReplyToId == this.curPost.StatusId)
+            {
+                int idx = this.statuses.Tabs[chainHead.OriginalTab.Text].IndexOf(chainHead.OriginalId);
+                if (idx == -1)
+                {
+                    this.replyChains = null;
+                }
+                else
+                {
                     try
                     {
-                        var postList = posts.ToList();
-                        for (int i = postList.Count - 1; i >= 0; i--)
-                        {
-                            int index = i;
-                            if (postList.FindIndex(pst => pst.Post.StatusId == postList[index].Post.StatusId) != index)
-                            {
-                                postList.RemoveAt(index);
-                            }
-                        }
-
-                        var post = postList.FirstOrDefault(pst => object.ReferenceEquals(pst.Tab, curTabClass) && (isForward ? pst.Index > this.curItemIndex : pst.Index < this.curItemIndex));
-                        if (post == null)
-                        {
-                            post = postList.FirstOrDefault(pst => !object.ReferenceEquals(pst.Tab, curTabClass));
-                        }
-
-                        if (post == null)
-                        {
-                            post = postList.First();
-                        }
-
-                        this.ListTab.SelectTab(this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == post.Tab.TabName));
-                        var listView = (DetailsListView)this.ListTab.SelectedTab.Tag;
-                        this.SelectListItem(listView, post.Index);
-                        listView.EnsureVisible(post.Index);
+                        this.ListTab.SelectTab(chainHead.OriginalTab);
                     }
-                    catch (InvalidOperationException)
+                    catch (Exception)
                     {
-                        return;
+                        this.replyChains = null;
                     }
+                    this.SelectListItem(this.curList, idx);
+                    this.curList.EnsureVisible(idx);
                 }
             }
             else
             {
-                if (this.replyChains == null || this.replyChains.Count < 1)
-                {
-                    var posts = from t in this.statuses.Tabs
-                                from p in (Dictionary<long, PostClass>)(t.Value.IsInnerStorageTabType ? t.Value.Posts : this.statuses.Posts)
-                                where p.Value.InReplyToStatusId == this.curPost.StatusId
-                                let indexOf = t.Value.IndexOf(p.Value.StatusId)
-                                where indexOf > -1
-                                orderby indexOf
-                                orderby !object.ReferenceEquals(t.Value, curTabClass)
-                                select new { Tab = t.Value, Index = indexOf };
-                    try
-                    {
-                        var post = posts.First();
-                        this.ListTab.SelectTab(this.ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == post.Tab.TabName));
-                        var listView = (DetailsListView)this.ListTab.SelectedTab.Tag;
-                        this.SelectListItem(listView, post.Index);
-                        listView.EnsureVisible(post.Index);
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    ReplyChain chainHead = this.replyChains.Pop();
-                    if (chainHead.InReplyToId == this.curPost.StatusId)
-                    {
-                        int idx = this.statuses.Tabs[chainHead.OriginalTab.Text].IndexOf(chainHead.OriginalId);
-                        if (idx == -1)
-                        {
-                            this.replyChains = null;
-                        }
-                        else
-                        {
-                            try
-                            {
-                                this.ListTab.SelectTab(chainHead.OriginalTab);
-                            }
-                            catch (Exception)
-                            {
-                                this.replyChains = null;
-                            }
-
-                            this.SelectListItem(this.curList, idx);
-                            this.curList.EnsureVisible(idx);
-                        }
-                    }
-                    else
-                    {
-                        this.replyChains = null;
-                        this.GoBackInReplyToPostTree(parallel);
-                    }
-                }
+                this.replyChains = null;
+                this.GoBackInReplyToPostTree(parallel);
             }
         }
 
