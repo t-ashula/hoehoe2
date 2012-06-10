@@ -4818,14 +4818,15 @@ namespace Hoehoe
         private string GetUserId()
         {
             Match m = Regex.Match(this.postBrowserStatusText, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/[0-9]+)?$");
-            if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
+            if (m.Success)
             {
-                return m.Result("${ScreenName}");
+                string screenname = m.Result("${ScreenName}");
+                if (this.IsTwitterId(screenname))
+                {
+                    return screenname;
+                }
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         private void DoQuote()
