@@ -3217,7 +3217,9 @@ namespace Hoehoe
 
         private void PushSelectPostChain()
         {
-            if (this.selectPostChains.Count == 0 || (this.selectPostChains.Peek().Item1.Text != this.curTab.Text || !object.ReferenceEquals(this.curPost, this.selectPostChains.Peek().Item2)))
+            if (this.selectPostChains.Count == 0 
+                || (this.selectPostChains.Peek().Item1.Text != this.curTab.Text 
+                || !object.ReferenceEquals(this.curPost, this.selectPostChains.Peek().Item2)))
             {
                 this.selectPostChains.Push(Tuple.Create(this.curTab, this.curPost));
             }
@@ -3225,19 +3227,20 @@ namespace Hoehoe
 
         private void TrimPostChain()
         {
-            if (this.selectPostChains.Count < 2000)
+            int chainLimit = 2000;
+            if (this.selectPostChains.Count < chainLimit)
             {
                 return;
             }
 
-            Stack<Tuple<TabPage, PostClass>> p = new Stack<Tuple<TabPage, PostClass>>();
-            for (var i = 0; i < 2000; i++)
+            var p = new Stack<Tuple<TabPage, PostClass>>();
+            for (var i = 0; i < chainLimit; i++)
             {
                 p.Push(this.selectPostChains.Pop());
             }
 
             this.selectPostChains.Clear();
-            for (var i = 0; i < 2000; i++)
+            for (var i = 0; i < chainLimit; i++)
             {
                 this.selectPostChains.Push(p.Pop());
             }
@@ -3250,11 +3253,12 @@ namespace Hoehoe
                 return false;
             }
 
-            for (int tabidx = 0; tabidx <= this.ListTab.TabCount - 1; tabidx++)
+            for (int tabidx = 0; tabidx < this.ListTab.TabCount; ++tabidx)
             {
-                if (this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].TabType != TabUsageType.DirectMessage && this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].Contains(statusId))
+                var tab = this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text];
+                if (tab.TabType != TabUsageType.DirectMessage && tab.Contains(statusId))
                 {
-                    var idx = this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].IndexOf(statusId);
+                    var idx = tab.IndexOf(statusId);
                     this.ListTab.SelectedIndex = tabidx;
                     this.ListTabSelect(this.ListTab.TabPages[tabidx]);
                     this.SelectListItem(this.curList, idx);
