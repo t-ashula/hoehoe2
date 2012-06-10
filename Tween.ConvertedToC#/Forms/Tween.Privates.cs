@@ -4746,19 +4746,13 @@ namespace Hoehoe
                 return;
             }
 
-            using (InputTabName inputName = new InputTabName())
+            var frid = id;
+            if (!TryUserInputText(ref frid, "Show Friendships", Hoehoe.Properties.Resources.FRMessage1))
             {
-                inputName.SetFormTitle("Show Friendships");
-                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
-                inputName.TabName = id;
-                if (inputName.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-                id = inputName.TabName;
+                return;
             }
 
-            ShowFriendshipCore(id);
+            ShowFriendshipCore(frid);
         }
 
         private void ShowFriendship(string[] ids)
