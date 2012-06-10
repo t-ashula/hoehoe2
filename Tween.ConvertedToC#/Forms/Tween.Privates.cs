@@ -4765,52 +4765,53 @@ namespace Hoehoe
 
         private void ShowFriendshipCore(string id)
         {
-            if (!string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id))
             {
-                id = id.Trim();
-                if (id.ToLower() == this.tw.Username.ToLower())
-                {
-                    return;
-                }
+                return;
+            }
 
-                ShowFriendshipArgs args = new ShowFriendshipArgs() { Tw = this.tw };
-                args.Ids.Add(new ShowFriendshipArgs.FriendshipInfo(id));
-                string ret = string.Empty;
-                using (FormInfo formInfo = new FormInfo(this, Hoehoe.Properties.Resources.ShowFriendshipText1, this.ShowFriendship_DoWork, null, args))
-                {
-                    formInfo.ShowDialog();
-                    ret = (string)formInfo.Result;
-                }
+            id = id.Trim();
+            if (id.ToLower() == this.tw.Username.ToLower())
+            {
+                return;
+            }
 
-                if (string.IsNullOrEmpty(ret))
+            ShowFriendshipArgs args = new ShowFriendshipArgs() { Tw = this.tw };
+            args.Ids.Add(new ShowFriendshipArgs.FriendshipInfo(id));
+            string ret = string.Empty;
+            using (FormInfo formInfo = new FormInfo(this, Hoehoe.Properties.Resources.ShowFriendshipText1, this.ShowFriendship_DoWork, null, args))
+            {
+                formInfo.ShowDialog();
+                ret = (string)formInfo.Result;
+            }
+
+            if (!string.IsNullOrEmpty(ret))
+            {
+                MessageBox.Show(ret);
+                return;
+            }
+
+            ShowFriendshipArgs.FriendshipInfo frsinfo = args.Ids[0];
+            string fing = frsinfo.IsFollowing ?
+                Hoehoe.Properties.Resources.GetFriendshipInfo1 :
+                Hoehoe.Properties.Resources.GetFriendshipInfo2;
+            string fed = frsinfo.IsFollowed ?
+                Hoehoe.Properties.Resources.GetFriendshipInfo3 :
+                Hoehoe.Properties.Resources.GetFriendshipInfo4;
+            string result = frsinfo.Id + Hoehoe.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine;
+            result += "  " + fing + System.Environment.NewLine;
+            result += "  " + fed;
+            if (frsinfo.IsFollowing)
+            {
+                if (MessageBox.Show(Hoehoe.Properties.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result,
+                    Hoehoe.Properties.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                 {
-                    ShowFriendshipArgs.FriendshipInfo frsinfo = args.Ids[0];
-                    string fing = frsinfo.IsFollowing ?
-                        Hoehoe.Properties.Resources.GetFriendshipInfo1 :
-                        Hoehoe.Properties.Resources.GetFriendshipInfo2;
-                    string fed = frsinfo.IsFollowed ?
-                        Hoehoe.Properties.Resources.GetFriendshipInfo3 :
-                        Hoehoe.Properties.Resources.GetFriendshipInfo4;
-                    string result = frsinfo.Id + Hoehoe.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine;
-                    result += "  " + fing + System.Environment.NewLine;
-                    result += "  " + fed;
-                    if (frsinfo.IsFollowing)
-                    {
-                        if (MessageBox.Show(Hoehoe.Properties.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result,
-                            Hoehoe.Properties.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
-                        {
-                            this.RemoveCommand(frsinfo.Id, true);
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show(result);
-                    }
+                    this.RemoveCommand(frsinfo.Id, true);
                 }
-                else
-                {
-                    MessageBox.Show(ret);
-                }
+            }
+            else
+            {
+                MessageBox.Show(result);
             }
         }
 
