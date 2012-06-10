@@ -4911,52 +4911,42 @@ namespace Hoehoe
                 this.BringToFront();
             }
         }
-
+        
         private void LoadImageFromSelectedFile()
         {
             try
             {
-                if (string.IsNullOrEmpty(this.ImagefilePathText.Text.Trim()) || string.IsNullOrEmpty(this.ImageService))
+                string imagePath = this.ImagefilePathText.Text.Trim();
+                if (string.IsNullOrEmpty(imagePath) || string.IsNullOrEmpty(this.ImageService))
                 {
-                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                    this.ImagefilePathText.Text = string.Empty;
+                    ClearImageSelectionForms();
                     return;
                 }
 
-                FileInfo fl = new FileInfo(this.ImagefilePathText.Text.Trim());
-                if (!this.pictureServices[this.ImageService].CheckValidExtension(fl.Extension))
+                IMultimediaShareService service = this.pictureServices[this.ImageService];
+                FileInfo fl = new FileInfo(imagePath); 
+                if (!service.CheckValidExtension(fl.Extension))
                 {
                     // 画像以外の形式
-                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                    this.ImagefilePathText.Text = string.Empty;
+                    ClearImageSelectionForms();
                     return;
                 }
 
-                if (!this.pictureServices[this.ImageService].CheckValidFilesize(fl.Extension, fl.Length))
+                if (!service.CheckValidFilesize(fl.Extension, fl.Length))
                 {
                     // ファイルサイズが大きすぎる
-                    this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                    this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                    this.ImagefilePathText.Text = string.Empty;
+                    ClearImageSelectionForms();
                     MessageBox.Show("File is too large.");
                     return;
                 }
 
-                switch (this.pictureServices[this.ImageService].GetFileType(fl.Extension))
+                switch (service.GetFileType(fl.Extension))
                 {
-                    case UploadFileType.Invalid:
-                        this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                        this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                        this.ImagefilePathText.Text = string.Empty;
-                        break;
                     case UploadFileType.Picture:
                         Image img = null;
                         using (FileStream fs = new FileStream(this.ImagefilePathText.Text, FileMode.Open, FileAccess.Read))
                         {
                             img = Image.FromStream(fs);
-                            fs.Close();
                         }
 
                         this.ImageSelectedPicture.Image = (new HttpVarious()).CheckValidImage(img, img.Width, img.Height);
@@ -4966,27 +4956,29 @@ namespace Hoehoe
                         this.ImageSelectedPicture.Image = Hoehoe.Properties.Resources.MultiMediaImage;
                         this.ImageSelectedPicture.Tag = UploadFileType.MultiMedia;
                         break;
+                    case UploadFileType.Invalid:
                     default:
-                        this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                        this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                        this.ImagefilePathText.Text = string.Empty;
+                        ClearImageSelectionForms();
                         break;
                 }
             }
             catch (FileNotFoundException)
             {
-                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                this.ImagefilePathText.Text = string.Empty;
+                ClearImageSelectionForms();
                 MessageBox.Show("File not found.");
             }
             catch (Exception)
             {
-                this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
-                this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
-                this.ImagefilePathText.Text = string.Empty;
+                ClearImageSelectionForms();
                 MessageBox.Show("The type of this file is not image.");
             }
+        }
+
+        private void ClearImageSelectionForms()
+        {
+            this.ImageSelectedPicture.Image = this.ImageSelectedPicture.InitialImage;
+            this.ImageSelectedPicture.Tag = UploadFileType.Invalid;
+            this.ImagefilePathText.Text = string.Empty;
         }
 
         private void SetImageServiceCombo()
