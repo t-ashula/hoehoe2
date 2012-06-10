@@ -4329,11 +4329,9 @@ namespace Hoehoe
         private void ListTabSelect(TabPage tab)
         {
             this.SetListProperty();
-
             this.itemCache = null;
             this.itemCacheIndex = -1;
             this.postCache = null;
-
             this.curTab = tab;
             this.curList = (DetailsListView)tab.Tag;
             if (this.curList.SelectedIndices.Count > 0)
@@ -4356,7 +4354,7 @@ namespace Hoehoe
             }
             else
             {
-                for (int i = 0; i <= this.curList.Columns.Count - 1; i++)
+                for (int i = 0; i < this.curList.Columns.Count; i++)
                 {
                     ((DetailsListView)tab.Tag).Columns[i].Text = this.columnTexts[i];
                 }
@@ -4379,6 +4377,7 @@ namespace Hoehoe
                 listView.SelectedIndices.Clear();
             }
             while (listView.SelectedIndices.Count > 0);
+
             listView.Items[index].Selected = true;
             listView.Items[index].Focused = true;
 
@@ -4439,7 +4438,21 @@ namespace Hoehoe
         private void RunAsync(GetWorkerArg args)
         {
             BackgroundWorker bw = null;
-            if (args.WorkerType != WorkerType.Follower)
+            if (args.WorkerType == WorkerType.Follower)
+            {
+                if (this.followerFetchWorker == null)
+                {
+                    bw = this.followerFetchWorker = CreateTimelineWorker();
+                }
+                else
+                {
+                    if (!this.followerFetchWorker.IsBusy)
+                    {
+                        bw = this.followerFetchWorker;
+                    }
+                }
+            }
+            else
             {
                 for (int i = 0; i < this.bworkers.Length; i++)
                 {
@@ -4456,35 +4469,10 @@ namespace Hoehoe
                     {
                         if (this.bworkers[i] == null)
                         {
-                            this.bworkers[i] = new BackgroundWorker();
+                            this.bworkers[i] = CreateTimelineWorker();
                             bw = this.bworkers[i];
-                            bw.WorkerReportsProgress = true;
-                            bw.WorkerSupportsCancellation = true;
-                            bw.DoWork += this.GetTimelineWorker_DoWork;
-                            bw.ProgressChanged += this.GetTimelineWorker_ProgressChanged;
-                            bw.RunWorkerCompleted += this.GetTimelineWorker_RunWorkerCompleted;
                             break;
                         }
-                    }
-                }
-            }
-            else
-            {
-                if (this.followerFetchWorker == null)
-                {
-                    this.followerFetchWorker = new BackgroundWorker();
-                    bw = this.followerFetchWorker;
-                    bw.WorkerReportsProgress = true;
-                    bw.WorkerSupportsCancellation = true;
-                    bw.DoWork += this.GetTimelineWorker_DoWork;
-                    bw.ProgressChanged += this.GetTimelineWorker_ProgressChanged;
-                    bw.RunWorkerCompleted += this.GetTimelineWorker_RunWorkerCompleted;
-                }
-                else
-                {
-                    if (this.followerFetchWorker.IsBusy == false)
-                    {
-                        bw = this.followerFetchWorker;
                     }
                 }
             }
@@ -4495,6 +4483,17 @@ namespace Hoehoe
             }
 
             bw.RunWorkerAsync(args);
+        }
+
+        private BackgroundWorker CreateTimelineWorker()
+        {
+            var bw = new BackgroundWorker();
+            bw.WorkerReportsProgress = true;
+            bw.WorkerSupportsCancellation = true;
+            bw.DoWork += this.GetTimelineWorker_DoWork;
+            bw.ProgressChanged += this.GetTimelineWorker_ProgressChanged;
+            bw.RunWorkerCompleted += this.GetTimelineWorker_RunWorkerCompleted;
+            return bw;
         }
 
         private void StartUserStream()
