@@ -4074,44 +4074,31 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            int urat = mentionTab.UnreadCount + dmessageTab.UnreadCount;
-            int ur = 0;
-            int al = 0;
-            int tur = 0;
-            int tal = 0;
-            StringBuilder slbl = new StringBuilder(256);
             try
             {
-                foreach (string key in this.statuses.Tabs.Keys)
+                int ur = this.statuses.GetAllUnreadCount();
+                int al = this.statuses.GetAllCount();
+                int tur = this.statuses.Tabs[this.curTab.Text].UnreadCount;
+                int tal = this.statuses.Tabs[this.curTab.Text].AllCount;
+                this.unreadCounter = ur;
+                this.unreadAtCounter = mentionTab.UnreadCount + dmessageTab.UnreadCount;
+                StringBuilder slbl = new StringBuilder(256);
+                slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, this.unreadAtCounter, this.postTimestamps.Count, this.favTimestamps.Count, this.timeLineCount);
+                if (this.settingDialog.TimelinePeriodInt == 0)
                 {
-                    ur += this.statuses.Tabs[key].UnreadCount;
-                    al += this.statuses.Tabs[key].AllCount;
-                    if (key.Equals(this.curTab.Text))
-                    {
-                        tur = this.statuses.Tabs[key].UnreadCount;
-                        tal = this.statuses.Tabs[key].AllCount;
-                    }
+                    slbl.Append(Hoehoe.Properties.Resources.SetStatusLabelText2);
                 }
+                else
+                {
+                    slbl.Append(string.Format("{0}{1}", this.settingDialog.TimelinePeriodInt, Hoehoe.Properties.Resources.SetStatusLabelText3));
+                }
+
+                return slbl.ToString();
             }
             catch (Exception)
             {
                 return string.Empty;
             }
-
-            this.unreadCounter = ur;
-            this.unreadAtCounter = urat;
-
-            slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, urat, this.postTimestamps.Count, this.favTimestamps.Count, this.timeLineCount);
-            if (this.settingDialog.TimelinePeriodInt == 0)
-            {
-                slbl.Append(Hoehoe.Properties.Resources.SetStatusLabelText2);
-            }
-            else
-            {
-                slbl.Append(this.settingDialog.TimelinePeriodInt.ToString() + Hoehoe.Properties.Resources.SetStatusLabelText3);
-            }
-
-            return slbl.ToString();
         }
 
         private void SetStatusLabelApi()
