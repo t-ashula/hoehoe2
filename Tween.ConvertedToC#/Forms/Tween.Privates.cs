@@ -3906,31 +3906,18 @@ namespace Hoehoe
             while (true);
         }
 
-        private void MoveOrCopy(ref bool move, ref bool mark)
+        private void GetMoveOrCopy(ref bool move, ref bool mark)
         {
             // 移動するか？
             string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText4, Environment.NewLine);
-            if (MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                move = false;
-            }
-            else
-            {
-                move = true;
-            }
-
+            var reslut = MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            move = reslut != DialogResult.Yes;
             if (!move)
             {
                 // マークするか？
-                tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText6, "\r\n");
-                if (MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    mark = true;
-                }
-                else
-                {
-                    mark = false;
-                }
+                tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText6, Environment.NewLine);
+                reslut = MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                mark = reslut == DialogResult.Yes;
             }
         }
 
@@ -6420,7 +6407,7 @@ namespace Hoehoe
 
             bool mv = false;
             bool mk = false;
-            this.MoveOrCopy(ref mv, ref mk);
+            this.GetMoveOrCopy(ref mv, ref mk);
 
             this.statuses.Tabs[tabName].AddFilters(names.Select(name => new FiltersClass()
             {
