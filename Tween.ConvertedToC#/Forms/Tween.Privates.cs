@@ -4690,14 +4690,9 @@ namespace Hoehoe
             {
                 return;
             }
+
             id = followid;
-
-            if (string.IsNullOrEmpty(id))
-            {
-                return;
-            }
-
-            if (id == this.tw.Username)
+            if (string.IsNullOrEmpty(id) || id == this.tw.Username)
             {
                 return;
             }
@@ -4721,17 +4716,13 @@ namespace Hoehoe
 
             if (!skipInput)
             {
-                using (InputTabName inputName = new InputTabName())
+                var removeid = id;
+                if (!TryUserInputText(ref removeid, "Unfollow", Hoehoe.Properties.Resources.FRMessage1))
                 {
-                    inputName.SetFormTitle("Unfollow");
-                    inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
-                    inputName.TabName = id;
-                    if (inputName.ShowDialog() != DialogResult.OK)
-                    {
-                        return;
-                    }
-                    id = inputName.TabName.Trim();
+                    return;
                 }
+
+                id = removeid;
             }
 
             if (string.IsNullOrEmpty(id) || id == this.tw.Username)
