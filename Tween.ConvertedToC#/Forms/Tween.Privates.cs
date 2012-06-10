@@ -2165,12 +2165,10 @@ namespace Hoehoe
                                     return functionReturnValue;
                                 }
 
-                                this.ListTab.SelectedIndex = tabNo;
-                                this.ListTabSelect(this.ListTab.TabPages[tabNo]);
+                                this.ListTabSelect(tabNo);
                                 return true;
                             case Keys.D9:
-                                this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
-                                this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
+                                this.ListTabSelect(this.ListTab.TabPages.Count - 1);
                                 return true;
                         }
                     }
@@ -2651,8 +2649,7 @@ namespace Hoehoe
                 }
             }
 
-            this.ListTab.SelectedIndex = idx;
-            this.ListTabSelect(this.ListTab.TabPages[idx]);
+            this.ListTabSelect(idx);
         }
 
         private void CopyStot()
@@ -2792,8 +2789,7 @@ namespace Hoehoe
                 {
                     if (this.statuses.Item(tab.Text, idx).StatusId == targetId)
                     {
-                        this.ListTab.SelectedIndex = tabidx;
-                        this.ListTabSelect(tab);
+                        this.ListTabSelect(tabidx);
                         this.SelectListItem(this.curList, idx);
                         this.curList.EnsureVisible(idx);
                         found = true;
@@ -3202,7 +3198,7 @@ namespace Hoehoe
                 this.ListTab.SelectedTab = tabPostPair.Item1;
                 if (tabPostPair.Item2 != null)
                 {
-                    var idx = this.statuses.Tabs[this.curTab.Text].IndexOf(tabPostPair.Item2.StatusId)
+                    var idx = this.statuses.Tabs[this.curTab.Text].IndexOf(tabPostPair.Item2.StatusId);
                     if (idx > -1)
                     {
                         this.SelectListItem(this.curList, idx);
@@ -3245,7 +3241,7 @@ namespace Hoehoe
                 this.selectPostChains.Push(p.Pop());
             }
         }
-
+        
         private bool GoStatus(long statusId)
         {
             if (statusId == 0)
@@ -3259,8 +3255,7 @@ namespace Hoehoe
                 if (tab.TabType != TabUsageType.DirectMessage && tab.Contains(statusId))
                 {
                     var idx = tab.IndexOf(statusId);
-                    this.ListTab.SelectedIndex = tabidx;
-                    this.ListTabSelect(this.ListTab.TabPages[tabidx]);
+                    this.ListTabSelect(tabidx);
                     this.SelectListItem(this.curList, idx);
                     this.curList.EnsureVisible(idx);
                     return true;
@@ -3277,13 +3272,13 @@ namespace Hoehoe
                 return false;
             }
 
-            for (int tabidx = 0; tabidx < this.ListTab.TabCount; tabidx++)
+            for (int tabidx = 0; tabidx < this.ListTab.TabCount; ++tabidx)
             {
-                if (this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].TabType == TabUsageType.DirectMessage && this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].Contains(statusId))
+                var tab = this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text];
+                if (tab.TabType == TabUsageType.DirectMessage && tab.Contains(statusId))
                 {
-                    var idx = this.statuses.Tabs[this.ListTab.TabPages[tabidx].Text].IndexOf(statusId);
-                    this.ListTab.SelectedIndex = tabidx;
-                    this.ListTabSelect(this.ListTab.TabPages[tabidx]);
+                    var idx = tab.IndexOf(statusId);
+                    this.ListTabSelect(tabidx);
                     this.SelectListItem(this.curList, idx);
                     this.curList.EnsureVisible(idx);
                     return true;
@@ -3402,7 +3397,7 @@ namespace Hoehoe
                 this.cfgCommon.ReadOwnPost = this.settingDialog.ReadOwnPost;
                 this.cfgCommon.GetFav = this.settingDialog.GetFav;
                 this.cfgCommon.IsMonospace = this.settingDialog.IsMonospace;
-                if (this.IdeographicSpaceToSpaceToolStripMenuItem != null && this.IdeographicSpaceToSpaceToolStripMenuItem.IsDisposed == false)
+                if (this.IdeographicSpaceToSpaceToolStripMenuItem != null && !this.IdeographicSpaceToSpaceToolStripMenuItem.IsDisposed)
                 {
                     this.cfgCommon.WideSpaceConvert = this.IdeographicSpaceToSpaceToolStripMenuItem.Checked;
                 }
@@ -3420,15 +3415,7 @@ namespace Hoehoe
                 this.cfgCommon.SortColumn = this.GetSortColumnIndex(this.statuses.SortMode);
                 this.cfgCommon.Nicoms = this.settingDialog.Nicoms;
                 this.cfgCommon.HashTags = this.HashMgr.HashHistories;
-                if (this.HashMgr.IsPermanent)
-                {
-                    this.cfgCommon.HashSelected = this.HashMgr.UseHash;
-                }
-                else
-                {
-                    this.cfgCommon.HashSelected = string.Empty;
-                }
-
+                this.cfgCommon.HashSelected = this.HashMgr.IsPermanent ? this.HashMgr.UseHash : string.Empty;
                 this.cfgCommon.HashIsHead = this.HashMgr.IsHead;
                 this.cfgCommon.HashIsPermanent = this.HashMgr.IsPermanent;
                 this.cfgCommon.HashIsNotAddToAtReply = this.HashMgr.IsNotAddToAtReply;
@@ -3528,16 +3515,13 @@ namespace Hoehoe
 
         private void SaveConfigsTabs()
         {
-            SettingTabs tabSetting = new SettingTabs();
-            for (int i = 0; i < this.ListTab.TabPages.Count; i++)
-            {
-                if (this.statuses.Tabs[this.ListTab.TabPages[i].Text].TabType != TabUsageType.Related)
-                {
-                    tabSetting.Tabs.Add(this.statuses.Tabs[this.ListTab.TabPages[i].Text]);
-                }
-            }
-
-            tabSetting.Save();
+            var nonrel = this.ListTab.TabPages.Cast<TabPage>()
+                .Select(tp => tp.Text)
+                .Select(tp => this.statuses.Tabs[tp])
+                .Where(tab => tab.TabType != TabUsageType.Related);
+            var settings = new SettingTabs();
+            settings.Tabs.AddRange(nonrel);
+            settings.Save();
         }
 
         /// <summary>
@@ -4454,6 +4438,12 @@ namespace Hoehoe
                 string tmp = string.Format(url, HttpUtility.UrlEncode(selText));
                 this.OpenUriAsync(tmp);
             }
+        }
+
+        private void ListTabSelect(int index)
+        {
+            this.ListTab.SelectedIndex = index;
+            this.ListTabSelect(this.ListTab.TabPages[index]);
         }
 
         private void ListTabSelect(TabPage tab)
@@ -6273,15 +6263,13 @@ namespace Hoehoe
             this.SaveConfigsTabs();
             if (tabUsage == TabUsageType.PublicSearch)
             {
-                this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
-                this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
+                this.ListTabSelect(this.ListTab.TabPages.Count - 1);
                 this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focus();
             }
 
             if (tabUsage == TabUsageType.Lists)
             {
-                this.ListTab.SelectedIndex = this.ListTab.TabPages.Count - 1;
-                this.ListTabSelect(this.ListTab.TabPages[this.ListTab.TabPages.Count - 1]);
+                this.ListTabSelect(this.ListTab.TabPages.Count - 1);
                 this.GetTimeline(WorkerType.List, 1, 0, tabName);
             }
         }
@@ -7590,8 +7578,7 @@ namespace Hoehoe
             {
                 if (tb.TabName == this.ListTab.TabPages[i].Text)
                 {
-                    this.ListTab.SelectedIndex = i;
-                    this.ListTabSelect(this.ListTab.TabPages[i]);
+                    this.ListTabSelect(i);
                     break;
                 }
             }
