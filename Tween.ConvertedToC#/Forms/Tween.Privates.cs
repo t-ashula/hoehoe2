@@ -4523,7 +4523,6 @@ namespace Hoehoe
 
         private void DoReTweetUnofficial()
         {
-            // RT @id:内容
             if (this.ExistCurrentPost)
             {
                 if (this.curPost.IsDm || !this.StatusText.Enabled)
@@ -4537,8 +4536,8 @@ namespace Hoehoe
                     return;
                 }
 
-                string rtdata = this.CreateRetweetUnofficial(this.curPost.Text);
-                this.StatusText.Text = "RT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
+                // RT @id:内容
+                this.StatusText.Text = string.Format("RT @{0}: {1}", this.curPost.ScreenName, HttpUtility.HtmlDecode(this.CreateRetweetUnofficial(this.curPost.Text)));
                 this.StatusText.SelectionStart = 0;
                 this.StatusText.Focus();
             }
