@@ -173,7 +173,7 @@ namespace Hoehoe
                 {
                     return; // 念のため
                 }
-                
+
                 if (!this.Tabs[tabName].IsInnerStorageTabType)
                 {
                     TabClass homeTab = this.GetTabByType(TabUsageType.Home);
@@ -199,7 +199,7 @@ namespace Hoehoe
                                 }
                             }
                         }
-                        
+
                         if (!exist)
                         {
                             homeTab.Add(id, this.statuses[id].IsRead, false);
@@ -281,7 +281,7 @@ namespace Hoehoe
                 string tn = tab.TabName;
                 if (this.statuses.ContainsKey(id))
                 {
-                    post = this.statuses[id];                    
+                    post = this.statuses[id];
                     TabUsageType tabUsage = tab.TabType;
                     if (tab.Contains(id))
                     {
@@ -367,7 +367,7 @@ namespace Hoehoe
                         // 未読数がずれる可能性があるためtab.Postsの未読も確認する
                         if (!tab.IsInnerStorageTabType)
                         {
-                            post = this.statuses[id];                            
+                            post = this.statuses[id];
                             if (tab.UnreadManage && !post.IsRead)
                             {
                                 // 未読管理
@@ -382,7 +382,7 @@ namespace Hoehoe
                         {
                             if (tab.UnreadManage && !tab.Posts[id].IsRead)
                             {
-                                // 未読管理                            
+                                // 未読管理
                                 lock (this.lockUnread)
                                 {
                                     tab.UnreadCount -= 1;
@@ -441,7 +441,7 @@ namespace Hoehoe
         }
 
         /// <summary>
-        /// 戻り値は追加件数        
+        /// 戻り値は追加件数
         /// </summary>
         /// <returns>追加件数</returns>
         public int DistributePosts()
@@ -452,7 +452,7 @@ namespace Hoehoe
                 {
                     this.addedIds = new List<long>();
                 }
-                
+
                 if (this.notifyPosts == null)
                 {
                     this.notifyPosts = new List<PostClass>();
@@ -559,9 +559,9 @@ namespace Hoehoe
                             }
 
                             // 既に持っている公式RTは捨てる
-                            if (AppendSettingDialog.Instance.HideDuplicatedRetweets 
+                            if (AppendSettingDialog.Instance.HideDuplicatedRetweets
                                 && !item.IsMe
-                                && this.retweets.ContainsKey(item.RetweetedId) 
+                                && this.retweets.ContainsKey(item.RetweetedId)
                                 && this.retweets[item.RetweetedId].RetweetedCount > 0)
                             {
                                 return;
@@ -589,7 +589,7 @@ namespace Hoehoe
                         {
                             this.addedIds = new List<long>();
                         }
-                        
+
                         // タブ追加用IDコレクション準備
                         this.addedIds.Add(item.StatusId);
                     }
@@ -601,7 +601,7 @@ namespace Hoehoe
                         {
                             return;
                         }
-                        
+
                         tb.AddPostToInnerStorage(item);
                     }
                 }
@@ -622,32 +622,32 @@ namespace Hoehoe
                     {
                         return;
                     }
-                    
+
                     if (tb.Contains(item.StatusId))
                     {
                         return;
                     }
-                    
+
                     tb.AddPostToInnerStorage(item);
                 }
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="read">true=既読へ　false=未読へ</param>
         /// <param name="tabName"></param>
         /// <param name="index"></param>
         public void SetReadAllTab(bool read, string tabName, int index)
-        {            
+        {
             TabClass tb = this.Tabs[tabName];
 
             if (!tb.UnreadManage)
             {
                 // 未読管理していなければ終了
                 return;
-            }            
+            }
 
             long id = tb.GetId(index);
             if (id < 0)
@@ -670,7 +670,7 @@ namespace Hoehoe
                 {
                     tb.UnreadCount -= 1;
                     this.SetNextUnreadId(id, tb); // 次の未読セット
-                    
+
                     // 他タブの最古未読ＩＤはタブ切り替え時に。
                     if (tb.IsInnerStorageTabType)
                     {
@@ -824,13 +824,13 @@ namespace Hoehoe
                 {
                     tb.UnreadCount -= 1;
                     this.SetNextUnreadId(id, tb); // 次の未読セット
-                                       
+
                     // 他タブの最古未読ＩＤはタブ切り替え時に。
                     if (tb.IsInnerStorageTabType)
                     {
                         return;
                     }
-                    
+
                     foreach (string key in this.Tabs.Keys)
                     {
                         if (key != tabName && this.Tabs[key].UnreadManage && this.Tabs[key].Contains(id) && !this.Tabs[key].IsInnerStorageTabType)
@@ -850,12 +850,12 @@ namespace Hoehoe
                     {
                         tb.OldestUnreadId = id;
                     }
-                    
+
                     if (tb.IsInnerStorageTabType)
                     {
                         return;
                     }
-                    
+
                     foreach (string key in this.Tabs.Keys)
                     {
                         if (!(key == tabName) && this.Tabs[key].UnreadManage && this.Tabs[key].Contains(id) && !this.Tabs[key].IsInnerStorageTabType)
@@ -893,7 +893,7 @@ namespace Hoehoe
                     {
                         this.statuses[id].IsRead = true;
                         this.SetNextUnreadId(id, tb);
-                        
+
                         // 次の未読セット
                         foreach (string key in this.Tabs.Keys)
                         {
@@ -917,7 +917,7 @@ namespace Hoehoe
             {
                 return this.statuses[id];
             }
-            
+
             foreach (TabClass tb in this.GetTabsInnerStorageType())
             {
                 if (tb.Contains(id))
@@ -925,7 +925,7 @@ namespace Hoehoe
                     return tb.Posts[id];
                 }
             }
-            
+
             return null;
         }
 
@@ -935,13 +935,13 @@ namespace Hoehoe
             {
                 throw new ArgumentException("TabName=" + tabName + " is not contained.");
             }
-            
+
             long id = this.Tabs[tabName].GetId(index);
             if (id < 0)
             {
                 throw new ArgumentException(string.Format("Index can't find. Index={0}/TabName={1}", index, tabName));
             }
-            
+
             try
             {
                 if (this.Tabs[tabName].IsInnerStorageTabType)
@@ -1013,7 +1013,7 @@ namespace Hoehoe
                             int cnt = 0;
                             long oldest = long.MaxValue;
                             Dictionary<long, PostClass> posts = tb.IsInnerStorageTabType ? tb.Posts : this.statuses;
-                            
+
                             foreach (long id in tb.BackupIds())
                             {
                                 if (!posts[id].IsRead)
@@ -1025,7 +1025,7 @@ namespace Hoehoe
                                     }
                                 }
                             }
-                            
+
                             if (oldest == long.MaxValue)
                             {
                                 oldest = -1;
@@ -1075,7 +1075,7 @@ namespace Hoehoe
                         tb.FilterModified = false;
                         long[] orgIds = tb.BackupIds();
                         tb.ClearIDs();
-                        
+
                         // フィルター前のIDsを退避。どのタブにも含まれないidはrecentへ追加
                         // moveフィルターにヒットした際、recentに該当あればrecentから削除
                         foreach (long id in this.statuses.Keys)
@@ -1107,12 +1107,12 @@ namespace Hoehoe
                                     {
                                         post.IsExcludeReply = true;
                                     }
-                                    
+
                                     if (post.IsFav)
                                     {
                                         this.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
                                     }
-                                    
+
                                     post.FilterHit = false;
                                     break;
                                 case HITRESULT.None:
@@ -1120,7 +1120,7 @@ namespace Hoehoe
                                     {
                                         replyTab.Add(post.StatusId, post.IsRead, true);
                                     }
-                                    
+
                                     if (post.IsFav)
                                     {
                                         this.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
@@ -1130,7 +1130,7 @@ namespace Hoehoe
                                     break;
                             }
                         }
-                        
+
                         tb.AddSubmit();
 
                         // 振分確定
@@ -1145,7 +1145,7 @@ namespace Hoehoe
                                     break;
                                 }
                             }
-                
+
                             if (!hit)
                             {
                                 tbr.Add(id, this.statuses[id].IsRead, false);
@@ -1157,7 +1157,7 @@ namespace Hoehoe
                 this.SortPosts();
             }
         }
-        
+
         public long[] GetId(string tabName, IEnumerable<int> indecies)
         {
             if (indecies.Count() == 0)
@@ -1166,7 +1166,7 @@ namespace Hoehoe
             }
 
             return indecies.Select(i => this.Tabs[tabName].GetId(i)).ToArray();
-        } 
+        }
 
         public long GetId(string tabName, int index)
         {
@@ -1179,7 +1179,7 @@ namespace Hoehoe
             {
                 return null;
             }
-            
+
             int[] idx = new int[ids.Length];
             TabClass tb = this.Tabs[tabName];
             for (int i = 0; i < ids.Length; i++)
@@ -1236,7 +1236,7 @@ namespace Hoehoe
                     int cnt = 0;
                     long oldest = long.MaxValue;
                     Dictionary<long, PostClass> posts = tb.IsInnerStorageTabType ? tb.Posts : this.statuses;
-                    
+
                     foreach (long id in tb.BackupIds())
                     {
                         if (!posts[id].IsRead)
@@ -1466,7 +1466,7 @@ namespace Hoehoe
             try
             {
                 Dictionary<long, PostClass> posts = tab.IsInnerStorageTabType ? tab.Posts : this.statuses;
-                
+
                 // 次の未読探索
                 if (tab.OldestUnreadId > -1 && posts.ContainsKey(tab.OldestUnreadId) && posts[tab.OldestUnreadId].IsRead && this.sorter.Mode == IdComparerClass.ComparerMode.Id)
                 {
@@ -1532,14 +1532,14 @@ namespace Hoehoe
                     if (startIdx > tab.AllCount - 1)
                     {
                         startIdx = tab.AllCount - 1; // 念のため
-                    }                    
+                    }
                 }
-                
+
                 toIdx = tab.AllCount - 1;
                 if (toIdx < 0)
                 {
                     toIdx = 0; // 念のため
-                }                
+                }
 
                 stp = 1;
             }
@@ -1598,19 +1598,19 @@ namespace Hoehoe
                         {
                             post.IsMark = true;
                         }
-                        
+
                         // マークあり
                         if (rslt == HITRESULT.Move)
                         {
                             mv = true; // 移動
                             post.IsMark = false;
                         }
-                        
+
                         if (this.Tabs[tn].Notify)
                         {
                             @add = true;
                         }
-                        
+
                         // 通知あり
                         if (!string.IsNullOrEmpty(this.Tabs[tn].SoundFile) && string.IsNullOrEmpty(this.soundFile))
                         {

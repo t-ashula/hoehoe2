@@ -94,7 +94,7 @@ namespace Hoehoe
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public Dictionary<long, PostClass> Posts { get; set; }
 
@@ -178,6 +178,7 @@ namespace Hoehoe
         }
 
         #region "比較用関数群"
+
         // 比較用関数群 いずれもステータスIDの順序を考慮する
         // 本文比較　昇順
         public int Compare_ModeData_Ascending(long x, long y)
@@ -199,7 +200,7 @@ namespace Hoehoe
             {
                 result = y.CompareTo(x);
             }
-            
+
             return result;
         }
 
@@ -223,7 +224,7 @@ namespace Hoehoe
             {
                 result = x.CompareTo(y);
             }
-            
+
             return result;
         }
 
@@ -235,7 +236,7 @@ namespace Hoehoe
             {
                 result = y.CompareTo(x);
             }
-            
+
             return result;
         }
 
@@ -247,7 +248,7 @@ namespace Hoehoe
             {
                 result = x.CompareTo(y);
             }
-            
+
             return result;
         }
 
@@ -259,7 +260,7 @@ namespace Hoehoe
             {
                 result = y.CompareTo(x);
             }
-            
+
             return result;
         }
 
@@ -271,7 +272,7 @@ namespace Hoehoe
             {
                 result = x.CompareTo(y);
             }
-            
+
             return result;
         }
 
@@ -283,10 +284,12 @@ namespace Hoehoe
             {
                 result = y.CompareTo(x);
             }
- 
+
             return result;
         }
-        #endregion
+
+        #endregion "比較用関数群"
+
         // ソートモードとソートオーダーに従い比較関数のアドレスを切り替え
         private void SetCompareMethod(ComparerMode mode, SortOrder order)
         {

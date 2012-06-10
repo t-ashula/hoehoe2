@@ -33,14 +33,17 @@ namespace Hoehoe
     public class ToolStripAPIGauge : ToolStripControlHost
     {
         #region private
+
         private Size originalSize;
         private int gaugeHeight;
         private int maxCount = 350;
         private int remainCount;
         private DateTime resetTime;
-        #endregion
+
+        #endregion private
 
         #region constructor
+
         public ToolStripAPIGauge()
             : base(new Control())
         {
@@ -49,9 +52,11 @@ namespace Hoehoe
             this.Control.TextChanged += this.Control_TextChanged;
             this.Control.SizeChanged += this.Control_SizeChanged;
         }
-        #endregion
+
+        #endregion constructor
 
         #region properties
+
         public int GaugeHeight
         {
             get
@@ -122,9 +127,11 @@ namespace Hoehoe
                 }
             }
         }
-        #endregion
+
+        #endregion properties
 
         #region event handler
+
         private void Draw(object sender, PaintEventArgs e)
         {
             double minute = (this.ResetTime - DateTime.Now).TotalMinutes;
@@ -150,9 +157,11 @@ namespace Hoehoe
         {
             this.originalSize = this.Control.Size;
         }
-        #endregion
+
+        #endregion event handler
 
         #region private methods
+
         private void SetText(int remain, int max)
         {
             string textFormat = "API {0}/{1}";
@@ -182,6 +191,7 @@ namespace Hoehoe
             string minuteText = minute >= 0 ? minute.ToString() : "???";
             this.ToolTipText = string.Format(toolTipTextFormat, this.remainCount, this.maxCount, minuteText);
         }
-        #endregion
+
+        #endregion private methods
     }
 }

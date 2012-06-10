@@ -31,11 +31,8 @@ namespace Hoehoe
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Drawing;
-    using System.IO;
-    using System.Reflection;
     using System.Threading;
     using System.Windows.Forms;
-    using Hoehoe.DataModels;
 
     public partial class AppendSettingDialog
     {
@@ -2307,15 +2304,15 @@ namespace Hoehoe
         {
             if (this.eventCheckboxTableElements == null)
             {
-                this.eventCheckboxTableElements = new EventCheckboxTblElement[] 
-                { 
-                    new EventCheckboxTblElement(this.CheckFavoritesEvent, EventType.Favorite), 
-                    new EventCheckboxTblElement(this.CheckUnfavoritesEvent, EventType.Unfavorite), 
-                    new EventCheckboxTblElement(this.CheckFollowEvent, EventType.Follow), 
-                    new EventCheckboxTblElement(this.CheckListMemberAddedEvent, EventType.ListMemberAdded), 
-                    new EventCheckboxTblElement(this.CheckListMemberRemovedEvent, EventType.ListMemberRemoved), 
-                    new EventCheckboxTblElement(this.CheckBlockEvent, EventType.Block), 
-                    new EventCheckboxTblElement(this.CheckUserUpdateEvent, EventType.UserUpdate), 
+                this.eventCheckboxTableElements = new EventCheckboxTblElement[]
+                {
+                    new EventCheckboxTblElement(this.CheckFavoritesEvent, EventType.Favorite),
+                    new EventCheckboxTblElement(this.CheckUnfavoritesEvent, EventType.Unfavorite),
+                    new EventCheckboxTblElement(this.CheckFollowEvent, EventType.Follow),
+                    new EventCheckboxTblElement(this.CheckListMemberAddedEvent, EventType.ListMemberAdded),
+                    new EventCheckboxTblElement(this.CheckListMemberRemovedEvent, EventType.ListMemberRemoved),
+                    new EventCheckboxTblElement(this.CheckBlockEvent, EventType.Block),
+                    new EventCheckboxTblElement(this.CheckUserUpdateEvent, EventType.UserUpdate),
                     new EventCheckboxTblElement(this.CheckListCreatedEvent, EventType.ListCreated)
                 };
             }

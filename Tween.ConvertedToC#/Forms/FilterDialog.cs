@@ -29,7 +29,6 @@ namespace Hoehoe
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
-    using System.IO;
     using System.Linq.Expressions;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
@@ -37,38 +36,47 @@ namespace Hoehoe
     public partial class FilterDialog
     {
         #region privates
+
         private EDITMODE editMode;
         private bool isDirectAdd;
         private TabInformations sts;
         private string cur;
         private List<string> idList = new List<string>();
         private TabsDialog tabDialog = new TabsDialog(true);
-        #endregion
+
+        #endregion privates
 
         #region constructor
+
         public FilterDialog()
         {
             this.InitializeComponent();
         }
-        #endregion
+
+        #endregion constructor
 
         #region enums
+
         private enum EDITMODE
         {
             AddNew,
             Edit,
             None
         }
-        #endregion
+
+        #endregion enums
 
         #region properties
+
         private TweenMain TwMain
         {
             get { return (TweenMain)this.Owner; }
         }
-        #endregion
+
+        #endregion properties
 
         #region public methods
+
         public void SetCurrent(string tabName)
         {
             this.cur = tabName;
@@ -132,9 +140,11 @@ namespace Hoehoe
             this.editMode = EDITMODE.AddNew;
             this.isDirectAdd = true;
         }
-        #endregion
+
+        #endregion public methods
 
         #region event handler
+
         private void ButtonNew_Click(object sender, EventArgs e)
         {
             this.ButtonNew.Enabled = false;
@@ -885,9 +895,10 @@ namespace Hoehoe
             }
         }
 
-        #endregion
-        
+        #endregion event handler
+
         #region private methods
+
         private void SetFilters(string tabName)
         {
             if (this.ListTabs.Items.Count == 0)
@@ -1259,7 +1270,7 @@ namespace Hoehoe
                 {
                     this.MSG2.Text = this.MSG2.Text.Replace("　", " ");
                 }
-                
+
                 if (string.IsNullOrEmpty(this.MSG2.Text) && string.IsNullOrEmpty(this.TextSource.Text) && !this.CheckRetweet.Checked)
                 {
                     isBlank = true;
@@ -1295,7 +1306,7 @@ namespace Hoehoe
                 {
                     this.ExMSG1.Text = this.ExMSG1.Text.Replace("　", " ");
                 }
-                
+
                 this.ExUID.Text = this.ExUID.Text.Trim();
                 if (string.IsNullOrEmpty(this.ExUID.Text) && string.IsNullOrEmpty(this.ExMSG1.Text) && string.IsNullOrEmpty(this.TextExSource.Text) && !this.CheckExRetweet.Checked)
                 {
@@ -1372,6 +1383,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion
+        #endregion private methods
     }
 }

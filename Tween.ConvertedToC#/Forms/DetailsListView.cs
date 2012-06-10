@@ -36,12 +36,15 @@ namespace Hoehoe.TweenCustomControl
     public sealed class DetailsListView : ListView
     {
         #region private fields
+
         private Rectangle changeBounds;
         private EventHandlerList handlers = new EventHandlerList();
         private SCROLLINFO scrollInfo;
-        #endregion
+
+        #endregion private fields
 
         #region constructor
+
         public DetailsListView()
         {
             this.View = View.Details;
@@ -54,13 +57,16 @@ namespace Hoehoe.TweenCustomControl
                 fMask = (uint)ScrollInfoMask.SIF_POS
             };
         }
-        #endregion
+
+        #endregion constructor
 
         #region events
+
         public event EventHandler VScrolled;
 
         public event EventHandler HScrolled;
-        #endregion
+
+        #endregion events
 
         #region enums
 
@@ -82,10 +88,10 @@ namespace Hoehoe.TweenCustomControl
             SIF_ALL = (SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS)
         }
 
-        #endregion
+        #endregion enums
 
         #region public methods
-        
+
         public void ChangeItemBackColor(int index, Color backColor)
         {
             this.ChangeSubItemBackColor(index, 0, backColor);
@@ -162,9 +168,11 @@ namespace Hoehoe.TweenCustomControl
                 SelectedIndices.Add(i);
             }
         }
-        #endregion
+
+        #endregion public methods
 
         #region protected method
+
         [DebuggerStepThrough]
         protected override void WndProc(ref Message m)
         {
@@ -259,7 +267,8 @@ namespace Hoehoe.TweenCustomControl
                 }
             }
         }
-        #endregion
+
+        #endregion protected method
 
         #region private methods
 
@@ -295,7 +304,7 @@ namespace Hoehoe.TweenCustomControl
                 {
                     throw new ArgumentOutOfRangeException("subItemIndex");
                 }
-                
+
                 ListViewItem item = this.Items[itemIndex];
                 if (item.UseItemStyleForSubItems)
                 {
@@ -326,9 +335,11 @@ namespace Hoehoe.TweenCustomControl
                 return item.SubItems[subitemIndex].Bounds;
             }
         }
-        #endregion
+
+        #endregion private methods
 
         #region inner types
+
         [StructLayout(LayoutKind.Sequential)]
         private struct SCROLLINFO
         {
@@ -340,6 +351,7 @@ namespace Hoehoe.TweenCustomControl
             public int nPos;
             public int nTrackPos;
         }
-        #endregion
+
+        #endregion inner types
     }
 }

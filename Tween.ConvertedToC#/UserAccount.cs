@@ -26,7 +26,6 @@
 
 namespace Hoehoe
 {
-    using System;
     using System.Xml.Serialization;
 
     public class UserAccount
@@ -34,7 +33,7 @@ namespace Hoehoe
         public string Username { get; set; }
 
         public long UserId { get; set; }
-        
+
         public string Token { get; set; }
 
         [XmlIgnore]

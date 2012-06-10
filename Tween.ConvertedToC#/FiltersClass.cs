@@ -374,10 +374,10 @@ namespace Hoehoe
 
                 if (this.ExSearchBoth)
                 {
-                    if (string.IsNullOrEmpty(this.ExNameFilter) 
-                        || (!this.ExUseRegex && (post.ScreenName.Equals(this.ExNameFilter, compOpt) 
+                    if (string.IsNullOrEmpty(this.ExNameFilter)
+                        || (!this.ExUseRegex && (post.ScreenName.Equals(this.ExNameFilter, compOpt)
                         || post.RetweetedBy.Equals(this.ExNameFilter, compOpt)))
-                        || (this.ExUseRegex && (Regex.IsMatch(post.ScreenName, this.ExNameFilter, regexOption) 
+                        || (this.ExUseRegex && (Regex.IsMatch(post.ScreenName, this.ExNameFilter, regexOption)
                         || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, this.ExNameFilter, regexOption)))))
                     {
                         if (this.exbody.Count > 0)
@@ -818,7 +818,7 @@ namespace Hoehoe
             this.lambdaExp = null;
             this.lambdaExpDelegate = null;
         }
-        
+
         private void ClearExLambdaExp()
         {
             this.exlambdaExp = null;

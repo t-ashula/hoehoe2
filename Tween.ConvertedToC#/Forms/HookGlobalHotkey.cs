@@ -39,11 +39,15 @@ namespace Hoehoe
     public class HookGlobalHotkey : NativeWindow, IDisposable
     {
         #region privates
+
         private Form targetForm;
         private Dictionary<int, KeyEventValue> hotkeyIds;
         private bool disposedValue = false; // 重複する呼び出しを検出するには
-        #endregion
+
+        #endregion privates
+
         #region constructor
+
         public HookGlobalHotkey(Form targetForm)
         {
             this.hotkeyIds = new Dictionary<int, KeyEventValue>();
@@ -56,13 +60,17 @@ namespace Hoehoe
         {
             this.Dispose(false);
         }
-        #endregion
+
+        #endregion constructor
 
         #region event
+
         public event KeyEventHandler HotkeyPressed;
-        #endregion
+
+        #endregion event
 
         #region enums
+
         [Flags]
         public enum ModKeys : int
         {
@@ -72,9 +80,11 @@ namespace Hoehoe
             Shift = 0x4,
             Win = 0x8
         }
-        #endregion
+
+        #endregion enums
 
         #region public methods
+
         public void OnHandleCreated(object sender, EventArgs e)
         {
             this.AssignHandle(this.targetForm.Handle);
@@ -149,9 +159,11 @@ namespace Hoehoe
         }
 
         #endregion " IDisposable Support "
-        #endregion
+
+        #endregion public methods
 
         #region protected methods
+
         protected override void WndProc(ref System.Windows.Forms.Message m)
         {
             const int WM_HOTKEY = 0x312;
@@ -193,9 +205,11 @@ namespace Hoehoe
 
             this.disposedValue = true;
         }
-        #endregion
+
+        #endregion protected methods
 
         #region inner classes
+
         private class KeyEventValue
         {
             public KeyEventValue(KeyEventArgs keyEvent, int value)
@@ -208,6 +222,7 @@ namespace Hoehoe
 
             public int Value { get; private set; }
         }
-        #endregion
+
+        #endregion inner classes
     }
 }

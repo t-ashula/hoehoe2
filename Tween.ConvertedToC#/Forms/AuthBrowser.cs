@@ -33,25 +33,32 @@ namespace Hoehoe
     public partial class AuthBrowser
     {
         #region private fields
+
         private InternetSecurityManager securityManager;
-        #endregion
+
+        #endregion private fields
 
         #region constructor
+
         public AuthBrowser()
         {
             this.InitializeComponent();
         }
-        #endregion
+
+        #endregion constructor
 
         #region properties
+
         public string UrlString { get; set; }
 
         public string PinString { get; set; }
 
         public bool IsAuthorized { get; set; }
-        #endregion
+
+        #endregion properties
 
         #region event handler
+
         private void AuthWebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             if (this.AuthWebBrowser.Url.OriginalString == "https://api.twitter.com/oauth/authorize")
@@ -93,6 +100,7 @@ namespace Hoehoe
             this.PinString = string.Empty;
             this.DialogResult = DialogResult.Cancel;
         }
-        #endregion
+
+        #endregion event handler
     }
 }

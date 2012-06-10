@@ -471,6 +471,7 @@ namespace Hoehoe
         {
             return string.Format("{0} / {1}   ({2}){3}{4}", this.ScreenName, this.Nickname, this.CreatedAt, Environment.NewLine, this.TextFromApi);
         }
+
         #endregion public methods
 
         #region inner types

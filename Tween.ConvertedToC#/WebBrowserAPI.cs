@@ -173,7 +173,7 @@ namespace Hoehoe
             URLZONE_INTERNET = URLZONE_TRUSTED + 1,
             URLZONE_UNTRUSTED = URLZONE_INTERNET + 1
         }
-        
+
         [ComImport, Guid("6d5140c1-7436-11ce-8034-00aa006009fa"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IServiceProvider
         {

@@ -1336,7 +1336,7 @@ namespace Hoehoe
             this.CheckNewVersion();
         }
 
-        #endregion
+        #endregion cleanuped
 
         private void SearchButton_ClickExtracted(Control pnl)
         {
@@ -3177,7 +3177,7 @@ namespace Hoehoe
             this.ListTabSelect(e.TabPage);
         }
 
-        #endregion
+        #endregion ListTab events
 
         #region MyList events
 
@@ -3718,9 +3718,10 @@ namespace Hoehoe
             this.colorize = true;
         }
 
-        #endregion
+        #endregion MyList events
 
         #region userstream
+
         private void Tw_NewPostFromStream()
         {
             if (this.settingDialog.ReadOldPosts)
@@ -3911,7 +3912,8 @@ namespace Hoehoe
             this.ChangeUserStreamStatusDisplay(start: false);
         }
 
-        #endregion
+        #endregion userstream
+
         #endregion event handler
     }
 }

@@ -220,7 +220,7 @@ namespace Hoehoe
             {
                 return x.Username.Contains(this.TextBoxKeyword.Text) || x.Target.Contains(this.TextBoxKeyword.Text);
             }
-            
+
             try
             {
                 Regex rx = new Regex(this.TextBoxKeyword.Text);

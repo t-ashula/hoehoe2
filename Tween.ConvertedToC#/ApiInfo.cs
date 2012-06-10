@@ -43,21 +43,21 @@ namespace Hoehoe
         }
 
         public int MaxCount { get; set; }
-        
+
         public int RemainCount { get; set; }
-        
+
         public DateTime ResetTime { get; set; }
-        
+
         public int ResetTimeInSeconds { get; set; }
-        
+
         public int UsingCount { get; set; }
-        
+
         public ApiAccessLevel AccessLevel { get; set; }
-        
+
         public int MediaMaxCount { get; set; }
-        
+
         public int MediaRemainCount { get; set; }
-        
+
         public DateTime MediaResetTime { get; set; }
     }
 }

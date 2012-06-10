@@ -34,11 +34,14 @@ namespace Hoehoe
     public partial class MyLists
     {
         #region private
+
         private string contextUserName;
         private Twitter twitter;
-        #endregion
+
+        #endregion private
 
         #region constructor
+
         public MyLists(string userName, Twitter tw)
         {
             this.InitializeComponent();
@@ -46,9 +49,11 @@ namespace Hoehoe
             this.twitter = tw;
             this.Text = this.contextUserName + Hoehoe.Properties.Resources.MyLists1;
         }
-        #endregion
+
+        #endregion constructor
 
         #region eventhandler
+
         private void MyLists_Load(object sender, EventArgs e)
         {
             this.LoadList();
@@ -189,9 +194,11 @@ namespace Hoehoe
         {
             this.Close();
         }
-        #endregion
+
+        #endregion eventhandler
 
         #region private method
+
         private void LoadList()
         {
             this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
@@ -283,6 +290,7 @@ namespace Hoehoe
 
             this.ListsCheckedListBox.ItemCheck += this.ListsCheckedListBox_ItemCheck;
         }
-        #endregion
+
+        #endregion private method
     }
 }

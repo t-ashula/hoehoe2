@@ -328,7 +328,7 @@ namespace Hoehoe
             {
                 ApiInformation.remainCount = tmp;
             }
-            
+
             tmpd = this.GetResetTimeFromHttpHeader();
             if (tmpd != new DateTime())
             {
@@ -340,13 +340,13 @@ namespace Hoehoe
             {
                 ApiInformation.mediaMaxCount = tmp;
             }
-            
+
             tmp = this.GetMediaRemainCountFromHttpHeader();
             if (tmp != -1)
             {
                 ApiInformation.mediaRemainCount = tmp;
             }
-            
+
             tmpd = this.GetMediaResetTimeFromHttpHeader();
             if (tmpd != new DateTime())
             {
@@ -409,7 +409,7 @@ namespace Hoehoe
             {
                 return result;
             }
-            
+
             return -1;
         }
 
@@ -445,7 +445,7 @@ namespace Hoehoe
             {
                 return result;
             }
-            
+
             return -1;
         }
 
@@ -456,12 +456,12 @@ namespace Hoehoe
             {
                 return -1;
             }
-            
+
             if (int.TryParse(this.HttpHeaders["X-MediaRateLimit-Limit"], out result))
             {
                 return result;
             }
-            
+
             return -1;
         }
 
@@ -472,7 +472,7 @@ namespace Hoehoe
             {
                 return i >= 0 ? TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i)) : new DateTime();
             }
-            
+
             return new DateTime();
         }
 

@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Drawing;
@@ -103,14 +102,14 @@ namespace Hoehoe
         private long minDirectmessageSent = long.MaxValue;
 
         private HttpTwitter twitterConnection = new HttpTwitter();
-        
+
         private PostInfo prevPostInfo = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
 
         private int prevFavPage = 1;
         private DateTime lastUserstreamDataReceived;
         private TwitterUserstream withEventsFielduserStream;
 
-        private EventTypeTableElement[] eventsTable = 
+        private EventTypeTableElement[] eventsTable =
         {
             new EventTypeTableElement("favorite", EventType.Favorite),
             new EventTypeTableElement("unfavorite", EventType.Unfavorite),
@@ -134,25 +133,25 @@ namespace Hoehoe
         }
 
         public delegate void GetIconImageDelegate(PostClass post);
-        
+
         public delegate void UserIdChangedEventHandler();
-        
+
         public delegate void ApiInformationChangedEventHandler(object sender, ApiInformationChangedEventArgs e);
-        
+
         public delegate void NewPostFromStreamEventHandler();
 
         public delegate void UserStreamStartedEventHandler();
 
         public delegate void UserStreamStoppedEventHandler();
-        
+
         public delegate void UserStreamGetFriendsListEventHandler();
-        
+
         public delegate void PostDeletedEventHandler(long id);
 
         public delegate void UserStreamEventReceivedEventHandler(FormattedEvent eventType);
 
         public event UserIdChangedEventHandler UserIdChanged;
-        
+
         public event ApiInformationChangedEventHandler ApiInformationChanged;
 
         public event NewPostFromStreamEventHandler NewPostFromStream;
@@ -482,7 +481,7 @@ namespace Hoehoe
                 if (orgData.IndexOf(href, posl2, StringComparison.Ordinal) > -1)
                 {
                     string urlStr = string.Empty;
-                    
+
                     // IDN展開
                     posl1 = orgData.IndexOf(href, posl2, StringComparison.Ordinal);
                     posl1 += href.Length;
@@ -504,7 +503,7 @@ namespace Hoehoe
                     {
                         continue;
                     }
-                    
+
                     orgData = orgData.Replace("<a href=\"" + urlStr, "<a href=\"" + replacedUrl);
                     posl2 = 0;
                 }
@@ -914,7 +913,7 @@ namespace Hoehoe
                     return string.Empty;
                 }
             }
-            
+
             // Retweet判定
             if (!post.IsRetweeted)
             {
@@ -1598,7 +1597,7 @@ namespace Hoehoe
                 {
                     return "Err:Download failed";
                 }
-                
+
                 // 英語リソース
                 if (!Directory.Exists(Path.Combine(MyCommon.SettingPath, "en")))
                 {
@@ -1609,7 +1608,7 @@ namespace Hoehoe
                 {
                     return "Err:Download failed";
                 }
-                
+
                 // その他言語圏のリソース。取得失敗しても継続
                 // UIの言語圏のリソース
                 string curCul = string.Empty;
@@ -1642,7 +1641,7 @@ namespace Hoehoe
                         // Return "Err:Download failed"
                     }
                 }
-                
+
                 // スレッドの言語圏のリソース
                 string curCul2 = null;
                 if (!Thread.CurrentThread.CurrentCulture.IsNeutralCulture)
@@ -1680,7 +1679,7 @@ namespace Hoehoe
                 {
                     return "Err:Download failed";
                 }
-                
+
                 // シリアライザDLL
                 if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenDll" + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenNew.XmlSerializers.dll")))
                 {
@@ -1886,7 +1885,7 @@ namespace Hoehoe
                 {
                     item.RelTabName = tab.TabName;
                 }
-                
+
                 // 非同期アイコン取得＆StatusDictionaryに追加
                 TabInformations.GetInstance().AddPost(item);
             }
@@ -1975,7 +1974,7 @@ namespace Hoehoe
                 {
                     post.RelTabName = tab.TabName;
                 }
-                
+
                 // 非同期アイコン取得＆StatusDictionaryに追加
                 TabInformations.GetInstance().AddPost(post);
             }
@@ -2182,10 +2181,10 @@ namespace Hoehoe
                     }
 
                     post.CreatedAt = DateTime.Parse(xentry["published"].InnerText);
-                    
+
                     // 本文
                     post.TextFromApi = xentry["title"].InnerText;
-                    
+
                     // Source取得（htmlの場合は、中身を取り出し）
                     post.Source = xentry["twitter:source"].InnerText;
                     post.InReplyToStatusId = 0;
@@ -2217,11 +2216,11 @@ namespace Hoehoe
                     {
                         post.Nickname = post.ScreenName;
                     }
-                    
+
                     post.ImageUrl = ((XmlElement)xentry.SelectSingleNode("./search:link[@type='image/png']", nsmgr)).GetAttribute("href");
                     post.IsProtect = false;
                     post.IsMe = post.ScreenName.ToLower().Equals(this.uname);
-                    
+
                     // HTMLに整形
                     post.Text = this.CreateHtmlAnchor(HttpUtility.HtmlEncode(post.TextFromApi), post.ReplyToList, post.Media);
                     post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
@@ -2476,7 +2475,7 @@ namespace Hoehoe
                 try
                 {
                     post.StatusId = status.Id;
-                    
+
                     // 二重取得回避
                     lock (this.lockObj)
                     {
@@ -2491,17 +2490,17 @@ namespace Hoehoe
                     {
                         var retweeted = status.RetweetedStatus;
                         post.CreatedAt = MyCommon.DateTimeParse(retweeted.CreatedAt);
-                        
+
                         // Id
                         post.RetweetedId = post.StatusId;
-                        
+
                         // 本文
                         post.TextFromApi = retweeted.Text;
                         entities = retweeted.Entities;
-                        
+
                         // Source取得（htmlの場合は、中身を取り出し）
                         post.Source = retweeted.Source;
-                        
+
                         // Reply先
                         {
                             long t;
@@ -2517,7 +2516,7 @@ namespace Hoehoe
                         }
 
                         post.IsFav = true;
-                        
+
                         // 以下、ユーザー情報
                         var user = retweeted.User;
                         post.UserId = user.Id;
@@ -2525,7 +2524,7 @@ namespace Hoehoe
                         post.Nickname = user.Name.Trim();
                         post.ImageUrl = user.ProfileImageUrl;
                         post.IsProtect = user.Protected;
-                        
+
                         // Retweetした人
                         post.RetweetedBy = status.User.ScreenName;
                         post.IsMe = post.RetweetedBy.ToLower().Equals(this.uname);
@@ -2533,11 +2532,11 @@ namespace Hoehoe
                     else
                     {
                         post.CreatedAt = MyCommon.DateTimeParse(status.CreatedAt);
-                        
+
                         // 本文
                         post.TextFromApi = status.Text;
                         entities = status.Entities;
-                        
+
                         // Source取得（htmlの場合は、中身を取り出し）
                         post.Source = status.Source;
                         {
@@ -2554,7 +2553,7 @@ namespace Hoehoe
                         }
 
                         post.IsFav = true;
-                        
+
                         // 以下、ユーザー情報
                         var user = status.User;
                         post.UserId = user.Id;
@@ -2564,7 +2563,7 @@ namespace Hoehoe
                         post.IsProtect = user.Protected;
                         post.IsMe = post.ScreenName.ToLower().Equals(this.uname);
                     }
-                    
+
                     // HTMLに整形
                     {
                         var t = post.TextFromApi;
@@ -3116,7 +3115,7 @@ namespace Hoehoe
             {
                 return null;
             }
-            
+
             // 絶対パス表現のUriをリンクに置換
             string retStr = text.Replace("&gt;", "<<<<<tweenだいなり>>>>>").Replace("&lt;", "<<<<<tweenしょうなり>>>>>");
             MatchEvaluator mev = mu =>
@@ -3151,7 +3150,7 @@ namespace Hoehoe
 
                 m = m.NextMatch();
             }
-            
+
             // @先をリンクに置換
             retStr = Regex.Replace(retStr, "(^|[^a-zA-Z0-9_/])([@＠])([a-zA-Z0-9_]{1,20})", "$1$2<a href=\"/$3\">$3</a>");
 
@@ -3203,7 +3202,7 @@ namespace Hoehoe
             if (entities != null)
             {
                 var entityInfos = new SortedList<int, EntityInfo>();
-                
+
                 // URL
                 if (entities.Urls != null)
                 {
@@ -3622,7 +3621,7 @@ namespace Hoehoe
             {
                 currentPost.Text = status.Text;
             }
-            
+
             currentPost.UserId = status.User.IdStr;
 
             if (currentPost.Equals(this.prevPostInfo))
@@ -3647,17 +3646,17 @@ namespace Hoehoe
             {
                 RetweetedStatus retweeted = status.RetweetedStatus;
                 post.CreatedAt = MyCommon.DateTimeParse(retweeted.CreatedAt);
-                
+
                 // Id
                 post.RetweetedId = retweeted.Id;
-                
+
                 // 本文
                 post.TextFromApi = retweeted.Text;
                 entities = retweeted.Entities;
-                
+
                 // Source取得（htmlの場合は、中身を取り出し）
                 post.Source = retweeted.Source;
-                
+
                 // Reply先
                 {
                     long t;
@@ -3697,7 +3696,7 @@ namespace Hoehoe
                 post.Nickname = user.Name.Trim();
                 post.ImageUrl = user.ProfileImageUrl;
                 post.IsProtect = user.Protected;
-                
+
                 // Retweetした人
                 post.RetweetedBy = status.User.ScreenName;
                 post.RetweetedByUserId = status.User.Id;
@@ -3706,11 +3705,11 @@ namespace Hoehoe
             else
             {
                 post.CreatedAt = MyCommon.DateTimeParse(status.CreatedAt);
-                
+
                 // 本文
                 post.TextFromApi = status.Text;
                 entities = status.Entities;
-                
+
                 // Source取得（htmlの場合は、中身を取り出し）
                 post.Source = status.Source;
                 {
@@ -3814,7 +3813,7 @@ namespace Hoehoe
                 {
                     minimumId = post.StatusId;
                 }
-                
+
                 // 二重取得回避
                 lock (this.lockObj)
                 {
@@ -3850,7 +3849,7 @@ namespace Hoehoe
                 {
                     post.RelTabName = tab.TabName;
                 }
-                
+
                 // 非同期アイコン取得＆StatusDictionaryに追加
                 TabInformations.GetInstance().AddPost(post);
             }
@@ -3890,7 +3889,7 @@ namespace Hoehoe
                 {
                     minimumId = post.StatusId;
                 }
-                
+
                 // 二重取得回避
                 lock (this.lockObj)
                 {
@@ -3920,7 +3919,7 @@ namespace Hoehoe
                 {
                     post.RelTabName = tab.TabName;
                 }
-                
+
                 // 非同期アイコン取得＆StatusDictionaryに追加
                 TabInformations.GetInstance().AddPost(post);
             }
@@ -4168,12 +4167,12 @@ namespace Hoehoe
                             continue;
                         }
                     }
-                    
+
                     post.CreatedAt = MyCommon.DateTimeParse(message.CreatedAt);
-                    
+
                     // 本文
                     post.TextFromApi = message.Text;
-                    
+
                     // HTMLに整形
                     post.Text = this.CreateHtmlAnchor(post.TextFromApi, post.ReplyToList, post.Media);
                     post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
@@ -4467,7 +4466,7 @@ namespace Hoehoe
                             MyCommon.TraceOut("delete:" + line);
                             return;
                         }
-                        
+
                         for (int i = this.StoredEvent.Count - 1; i >= 0; i--)
                         {
                             var stored = this.StoredEvent[i];
@@ -4728,9 +4727,9 @@ namespace Hoehoe
             }
 
             public string CreatedAt { get; set; }
-            
+
             public string Id { get; set; }
-            
+
             public string Text { get; set; }
 
             public string UserId { get; set; }
@@ -4740,7 +4739,7 @@ namespace Hoehoe
                 return this.CreatedAt == dst.CreatedAt && this.Id == dst.Id && this.Text == dst.Text && this.UserId == dst.UserId;
             }
         }
-        
+
         private class Range
         {
             public Range(int fromIndex, int toIndex)
@@ -4776,7 +4775,7 @@ namespace Hoehoe
             }
 
             public string Name { get; set; }
-            
+
             public EventType Type { get; set; }
         }
 
@@ -4795,17 +4794,17 @@ namespace Hoehoe
             {
                 this.twitterConnection = (HttpTwitter)twitterConnection.Clone();
             }
-            
+
             public delegate void StatusArrivedEventHandler(string status);
-            
+
             public delegate void StoppedEventHandler();
-            
+
             public delegate void StartedEventHandler();
 
             public event StatusArrivedEventHandler StatusArrived;
-            
+
             public event StoppedEventHandler Stopped;
-            
+
             public event StartedEventHandler Started;
 
             public bool Enabled
@@ -4871,7 +4870,7 @@ namespace Hoehoe
 
                 this.disposedValue = true;
             }
-            
+
             private void UserStreamLoop()
             {
                 Stream st = null;
@@ -4972,7 +4971,7 @@ namespace Hoehoe
                                 this.Stopped();
                             }
                         }
-                        
+
                         this.twitterConnection.RequestAbort();
                         if (sr != null)
                         {
@@ -4983,7 +4982,7 @@ namespace Hoehoe
                         {
                             st.Close();
                         }
-                        
+
                         if (sleepSec > 0)
                         {
                             int ms = 0;

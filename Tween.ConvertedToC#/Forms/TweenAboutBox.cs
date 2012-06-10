@@ -28,18 +28,20 @@ namespace Hoehoe
 {
     using System;
     using System.IO;
-    using System.Reflection;
 
     public partial class TweenAboutBox
     {
-        #region constructor        
+        #region constructor
+
         public TweenAboutBox()
         {
             this.InitializeComponent();
         }
-        #endregion
 
-        #region event handler        
+        #endregion constructor
+
+        #region event handler
+
         private void TweenAboutBox_Load(object sender, EventArgs e)
         {
             this.SetAboutInfoStrings();
@@ -54,9 +56,11 @@ namespace Hoehoe
         {
             this.OKButton.Focus();
         }
-        #endregion
+
+        #endregion event handler
 
         #region privates
+
         private void SetAboutInfoStrings()
         {
             // フォームのタイトルを設定します。
@@ -70,6 +74,7 @@ namespace Hoehoe
             this.ChangeLog.Text = Hoehoe.Properties.Resources.ChangeLog;
             this.TextBoxDescription.Text = Hoehoe.Properties.Resources.Description;
         }
-        #endregion
+
+        #endregion privates
     }
 }

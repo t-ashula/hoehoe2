@@ -281,7 +281,7 @@ namespace Hoehoe
             {
                 qry.Add("lang", this.searchLang);
             }
-            
+
             this.beforeQuery = qry;
         }
 
@@ -309,7 +309,7 @@ namespace Hoehoe
                     return true;
                 }
             }
-            
+
             return false;
         }
 
@@ -320,7 +320,7 @@ namespace Hoehoe
             {
                 return tempPosts.ToArray();
             }
-            
+
             foreach (TemporaryId tempId in this.tmpIds)
             {
                 tempPosts.Add(this.Posts[tempId.Id]);
@@ -404,7 +404,7 @@ namespace Hoehoe
             }
 
             HITRESULT rslt = HITRESULT.None;
-            
+
             // 全フィルタ評価（優先順位あり）
             lock (this.lockObj)
             {
@@ -471,7 +471,7 @@ namespace Hoehoe
             {
                 return;
             }
-            
+
             this.tmpIds.Sort((TemporaryId x, TemporaryId y) => x.Id.CompareTo(y.Id));
             foreach (TemporaryId tId in this.tmpIds)
             {

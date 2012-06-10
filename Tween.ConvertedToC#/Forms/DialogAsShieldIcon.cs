@@ -34,18 +34,23 @@ namespace Hoehoe
     public partial class DialogAsShieldIcon
     {
         #region privates
+
         private DialogResult result;
-        #endregion
+
+        #endregion privates
 
         #region constructor
+
         public DialogAsShieldIcon()
         {
             this.InitializeComponent();
             this.result = DialogResult.None;
         }
-        #endregion
+
+        #endregion constructor
 
         #region public methods
+
         public DialogResult ShowDialog(string text, string detail = "", string caption = "DialogAsShieldIcon", MessageBoxButtons buttons = MessageBoxButtons.OKCancel, MessageBoxIcon icon = MessageBoxIcon.Question)
         {
             this.Label1.Text = text;
@@ -88,9 +93,11 @@ namespace Hoehoe
 
             return this.result;
         }
-        #endregion
+
+        #endregion public methods
 
         #region event handler
+
         private void OkButton_Click(object sender, EventArgs e)
         {
             this.result = DialogResult.OK;
@@ -117,6 +124,7 @@ namespace Hoehoe
         {
             this.PictureBox1.Image = SystemIcons.Question.ToBitmap();
         }
-        #endregion 
+
+        #endregion event handler
     }
 }

@@ -33,11 +33,14 @@ namespace Hoehoe
     public class ImageListViewItem : ListViewItem
     {
         #region privates
+
         private ImageDictionary images;
         private string imageUrl;
-        #endregion
+
+        #endregion privates
 
         #region constructor
+
         public ImageListViewItem(string[] items, string imageKey)
             : base(items, imageKey)
         {
@@ -50,17 +53,23 @@ namespace Hoehoe
             this.imageUrl = imageKey;
             Image dummy = this.GetImage(false);
         }
-        #endregion
+
+        #endregion constructor
 
         #region delegates
+
         public delegate void ImageDownloadedEventHandler(object sender, EventArgs e);
-        #endregion
+
+        #endregion delegates
 
         #region events
+
         public event ImageDownloadedEventHandler ImageDownloaded;
-        #endregion
+
+        #endregion events
 
         #region properties
+
         public Image Image
         {
             get
@@ -68,16 +77,20 @@ namespace Hoehoe
                 return string.IsNullOrEmpty(this.imageUrl) ? null : this.images[this.imageUrl];
             }
         }
-        #endregion
+
+        #endregion properties
 
         #region public methods
+
         public void RegetImage()
         {
             Image dummy = this.GetImage(true);
         }
-        #endregion
+
+        #endregion public methods
 
         #region private methods
+
         private Image GetImage(bool force)
         {
             return this.images[this.imageUrl, force, new Action<Image>(img =>
@@ -108,6 +121,7 @@ namespace Hoehoe
                 this.ImageDownloaded(this, EventArgs.Empty);
             }
         }
-        #endregion
+
+        #endregion private methods
     }
 }

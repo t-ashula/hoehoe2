@@ -35,8 +35,10 @@ namespace Hoehoe
     public partial class AtIdSupplement
     {
         #region private fields
+
         private string startChar = string.Empty;
-        #endregion
+
+        #endregion private fields
 
         #region constructor
 
@@ -46,7 +48,8 @@ namespace Hoehoe
             this.startChar = startCharacter;
             this.TextId.AutoCompleteCustomSource.AddRange(itemList.ToArray());
         }
-        #endregion
+
+        #endregion constructor
 
         #region properties
 
@@ -61,9 +64,10 @@ namespace Hoehoe
 
         public bool IsBack { get; private set; }
 
-        #endregion
+        #endregion properties
 
         #region public
+
         public bool AddItem(string id)
         {
             if (!this.TextId.AutoCompleteCustomSource.Contains(id))
@@ -91,7 +95,9 @@ namespace Hoehoe
         {
             return this.TextId.AutoCompleteCustomSource.Cast<string>().ToList();
         }
-        #endregion
+
+        #endregion public
+
         #region event handler
 
         private void ButtonOK_Click(object sender, EventArgs e)
@@ -173,6 +179,6 @@ namespace Hoehoe
             this.DialogResult = this.IsBack ? DialogResult.Cancel : DialogResult.OK;
         }
 
-        #endregion
+        #endregion event handler
     }
 }

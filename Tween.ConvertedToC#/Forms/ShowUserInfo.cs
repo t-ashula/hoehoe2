@@ -34,7 +34,6 @@ namespace Hoehoe
     using System.Text.RegularExpressions;
     using System.Web;
     using System.Windows.Forms;
-    using Hoehoe.DataModels;
 
     public partial class ShowUserInfo
     {

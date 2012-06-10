@@ -34,18 +34,23 @@ namespace Hoehoe
     public partial class ListManage
     {
         #region private
+
         private Twitter twitter;
-        #endregion
+
+        #endregion private
 
         #region constructor
+
         public ListManage(Twitter tw)
         {
             this.InitializeComponent();
             this.twitter = tw;
         }
-        #endregion
+
+        #endregion constructor
 
         #region eventhandler
+
         private void ListManage_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && this.EditCheckBox.Checked)
@@ -341,9 +346,11 @@ namespace Hoehoe
                 this.CancelButton.PerformClick();
             }
         }
-        #endregion
+
+        #endregion eventhandler
 
         #region private methods
+
         private void GetListMembersCallback(string result)
         {
             if (result == this.ListsList.SelectedItem.ToString())
@@ -382,9 +389,11 @@ namespace Hoehoe
                 }
             }
         }
-        #endregion
+
+        #endregion private methods
 
         #region inner class
+
         private class NewListElement : ListElement
         {
             public NewListElement(Twitter tw)
@@ -412,6 +421,7 @@ namespace Hoehoe
                 return this.IsCreated ? base.ToString() : "NewList";
             }
         }
-        #endregion
+
+        #endregion inner class
     }
 }

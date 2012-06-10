@@ -30,25 +30,32 @@ namespace Hoehoe
     public class DoubleClickCopyCanceller : NativeWindow, IDisposable
     {
         #region privates
+
         private bool doubleClick;
-        #endregion
+
+        #endregion privates
 
         #region constructor
+
         public DoubleClickCopyCanceller(Control control)
         {
             this.AssignHandle(control.Handle);
         }
-        #endregion
+
+        #endregion constructor
 
         #region public methods
+
         public void Dispose()
         {
             this.ReleaseHandle();
             GC.SuppressFinalize(this);
         }
-        #endregion
+
+        #endregion public methods
 
         #region protected methods
+
         protected override void WndProc(ref System.Windows.Forms.Message m)
         {
             const int WM_GETTEXTLENGTH = 0xe;
@@ -71,6 +78,7 @@ namespace Hoehoe
 
             base.WndProc(ref m);
         }
-        #endregion
+
+        #endregion protected methods
     }
 }

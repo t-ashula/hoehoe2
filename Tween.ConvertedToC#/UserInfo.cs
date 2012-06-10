@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using Hoehoe.DataModels;
 
     public class UserInfo
     {

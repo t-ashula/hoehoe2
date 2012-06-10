@@ -26,10 +26,8 @@
 
 namespace Hoehoe
 {
-    using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;
-    using Hoehoe.DataModels;
     using Hoehoe.DataModels.Twitter;
 
     public class ListElement

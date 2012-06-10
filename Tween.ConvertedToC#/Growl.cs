@@ -267,7 +267,7 @@ namespace Hoehoe
             {
                 // 定数取得
                 object constClick = this.core.GetType("Growl.CoreLibrary.CallbackResult").GetField("CLICK", BindingFlags.Public | BindingFlags.Static).GetRawConstantValue();
-                
+
                 // 実際の値
                 object valResult = callbackData.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance).GetGetMethod().Invoke(callbackData, null);
                 valResult = Convert.ToInt32(valResult);

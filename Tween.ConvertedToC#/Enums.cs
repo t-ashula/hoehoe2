@@ -78,7 +78,7 @@ namespace Hoehoe
         Bitly,
         Jmp,
         Uxnu,
-        Nicoms,        // 特殊        
+        Nicoms,        // 特殊
         Unu = -1 // 廃止
     }
 
@@ -114,55 +114,55 @@ namespace Hoehoe
 
         /// <summary>返信取得</summary>
         Reply,
-        
+
         /// <summary>受信DM取得</summary>
         DirectMessegeRcv,
-        
+
         /// <summary>送信DM取得</summary>
         DirectMessegeSnt,
-        
+
         /// <summary>発言POST</summary>
         PostMessage,
-        
+
         /// <summary>Fav追加</summary>
         FavAdd,
-        
+
         /// <summary>Fav削除</summary>
         FavRemove,
-        
+
         /// <summary>Followerリスト取得</summary>
         Follower,
-        
+
         /// <summary>Uri開く</summary>
         OpenUri,
-        
+
         /// <summary>Fav取得</summary>
         Favorites,
-        
+
         /// <summary>Retweetする</summary>
         Retweet,
-        
+
         /// <summary>公式検索</summary>
         PublicSearch,
-        
+
         /// <summary>Lists</summary>
         List,
-        
+
         /// <summary>関連発言</summary>
         Related,
-        
+
         /// <summary>UserStream</summary>
         UserStream,
-        
+
         /// <summary>UserTimeline</summary>
         UserTimeline,
-        
+
         /// <summary>Blocking/ids</summary>
         BlockIds,
-        
+
         /// <summary>Twitter Configuration読み込み</summary>
         Configuration,
-        
+
         /// <summary>エラー表示のみで後処理終了(認証エラー時など)</summary>
         ErrorState
     }

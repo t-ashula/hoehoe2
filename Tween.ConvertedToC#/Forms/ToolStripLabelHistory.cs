@@ -34,18 +34,23 @@ namespace Hoehoe.TweenCustomControl
     public sealed class ToolStripLabelHistory : ToolStripStatusLabel
     {
         #region private
+
         private const int MAXCNT = 20;
         private LinkedList<LogEntry> logEntries;
-        #endregion
+
+        #endregion private
 
         #region constructor
+
         public ToolStripLabelHistory()
         {
             this.logEntries = new LinkedList<LogEntry>();
         }
-        #endregion
+
+        #endregion constructor
 
         #region enums
+
         public enum LogLevel
         {
             Lowest = 0,
@@ -57,9 +62,11 @@ namespace Hoehoe.TweenCustomControl
             Fatal = 255,
             Highest = 256
         }
-        #endregion
+
+        #endregion enums
 
         #region properties
+
         public override string Text
         {
             get
@@ -92,9 +99,11 @@ namespace Hoehoe.TweenCustomControl
                 return sb.ToString();
             }
         }
-        #endregion
+
+        #endregion properties
 
         #region inner class
+
         public class LogEntry
         {
             public LogEntry(LogLevel logLevel, DateTime timestamp, string summary, string detail)
@@ -123,6 +132,7 @@ namespace Hoehoe.TweenCustomControl
                 return string.Format("{0:T}: {1}", this.Timestamp, this.Summary);
             }
         }
-        #endregion
+
+        #endregion inner class
     }
 }
