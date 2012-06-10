@@ -4831,8 +4831,7 @@ namespace Hoehoe
 
         private void DoQuote()
         {
-            // QT @id:内容
-            // 返信先情報付加
+            // QT @id:内容 返信先情報付加
             if (this.ExistCurrentPost)
             {
                 if (this.curPost.IsDm || !this.StatusText.Enabled)
@@ -4850,7 +4849,6 @@ namespace Hoehoe
                 this.StatusText.Text = " QT @" + this.curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
                 this.replyToId = this.curPost.OriginalStatusId;
                 this.replyToName = this.curPost.ScreenName;
-
                 this.StatusText.SelectionStart = 0;
                 this.StatusText.Focus();
             }
@@ -4875,19 +4873,15 @@ namespace Hoehoe
                 return;
             }
 
+            var sid = id;
             if (showInputDialog)
             {
-                using (InputTabName inputName = new InputTabName())
+                if (!TryUserInputText(ref sid, "Show UserStatus", Hoehoe.Properties.Resources.FRMessage1))
                 {
-                    inputName.SetFormTitle("Show UserStatus");
-                    inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
-                    inputName.TabName = id;
-                    if (inputName.ShowDialog() != DialogResult.OK)
-                    {
-                        return;
-                    }
-                    id = inputName.TabName.Trim();
+                    return;
                 }
+
+                id = sid;
             }
 
             if (string.IsNullOrEmpty(id))
@@ -4901,22 +4895,20 @@ namespace Hoehoe
             {
                 info.ShowDialog();
                 string ret = (string)info.Result;
-                if (string.IsNullOrEmpty(ret))
-                {
-
-                    using (ShowUserInfo userinfo = new ShowUserInfo())
-                    {
-                        userinfo.Owner = this;
-                        userinfo.SetUser(user);
-                        userinfo.ShowDialog(this);
-                        this.Activate();
-                        this.BringToFront();
-                    }
-                }
-                else
+                if (!string.IsNullOrEmpty(ret))
                 {
                     MessageBox.Show(ret);
+                    return;
                 }
+            }
+
+            using (ShowUserInfo userinfo = new ShowUserInfo())
+            {
+                userinfo.Owner = this;
+                userinfo.SetUser(user);
+                userinfo.ShowDialog(this);
+                this.Activate();
+                this.BringToFront();
             }
         }
 
