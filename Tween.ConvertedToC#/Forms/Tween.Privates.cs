@@ -2086,7 +2086,7 @@ namespace Hoehoe
                             this.ChangeSelectedFavStatus(true);
                             return true;
                         case Keys.I:
-                            this.DoRepliedStatusOpen();
+                            this.OpenRepliedStatus();
                             return true;
                         case Keys.Q:
                             this.DoQuote();
@@ -4135,20 +4135,19 @@ namespace Hoehoe
             this.NotifyIcon1.Text = ur.ToString();
         }
 
-        private void DoRepliedStatusOpen()
+        private void OpenRepliedStatus()
         {
             if (this.ExistCurrentPost && this.curPost.InReplyToUser != null && this.curPost.InReplyToStatusId > 0)
             {
                 if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
                 {
-                    this.OpenUriAsync(string.Format("httpstwitter.com/{0}/status/{1}", this.curPost.InReplyToUser, this.curPost.InReplyToStatusId));
+                    this.OpenUriAsync(string.Format("https://twitter.com/{0}/status/{1}", this.curPost.InReplyToUser, this.curPost.InReplyToStatusId));
                     return;
                 }
 
                 if (this.statuses.ContainsKey(this.curPost.InReplyToStatusId))
                 {
-                    PostClass repPost = this.statuses.Item(this.curPost.InReplyToStatusId);
-                    MessageBox.Show(repPost.ScreenName + " / " + repPost.Nickname + "   (" + repPost.CreatedAt.ToString() + ")" + Environment.NewLine + repPost.TextFromApi);
+                    MessageBox.Show(GetReplyPostMessage(this.statuses.Item(this.curPost.InReplyToStatusId)));
                 }
                 else
                 {
@@ -4159,14 +4158,18 @@ namespace Hoehoe
                             break;
                         }
 
-                        PostClass repPost = this.statuses.Item(this.curPost.InReplyToStatusId);
-                        MessageBox.Show(repPost.ScreenName + " / " + repPost.Nickname + "   (" + repPost.CreatedAt.ToString() + ")" + Environment.NewLine + repPost.TextFromApi);
+                        MessageBox.Show(GetReplyPostMessage(this.statuses.Item(this.curPost.InReplyToStatusId)));
                         return;
                     }
 
-                    this.OpenUriAsync("http://twitter.com/" + this.curPost.InReplyToUser + "/status/" + this.curPost.InReplyToStatusId.ToString());
+                    this.OpenUriAsync(string.Format("https://twitter.com/{0}/status/{1}", this.curPost.InReplyToUser, this.curPost.InReplyToStatusId));
                 }
             }
+        }
+
+        private static string GetReplyPostMessage(PostClass repPost)
+        {          
+            return string.Format("{0} / {1}   ({2}){3}{4}", repPost.ScreenName, repPost.Nickname, repPost.CreatedAt, Environment.NewLine, repPost.TextFromApi);
         }
 
         /// <summary>

@@ -620,7 +620,7 @@ namespace Hoehoe
 
         private void RepliedStatusOpenMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoRepliedStatusOpen();
+            this.OpenRepliedStatus();
         }
 
         private void ReplyAllStripMenuItem_Click(object sender, EventArgs e)
