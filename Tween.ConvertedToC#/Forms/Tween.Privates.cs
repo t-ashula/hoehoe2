@@ -3532,282 +3532,247 @@ namespace Hoehoe
         /// <param name="isAll"></param>
         private void MakeReplyOrDirectStatus(bool isAuto = true, bool isReply = true, bool isAll = false)
         {
-            if (!this.StatusText.Enabled)
+            if (!this.StatusText.Enabled || this.curList == null || this.curTab == null || !this.ExistCurrentPost)
             {
                 return;
             }
 
-            if (this.curList == null)
+            // アイテムが選択されてない
+            if (this.curList.SelectedIndices.Count < 1)
             {
                 return;
             }
 
-            if (this.curTab == null)
+            // 単独ユーザー宛リプライまたはDM
+            if (this.curList.SelectedIndices.Count == 1 && !isAll && this.ExistCurrentPost)
             {
-                return;
-            }
-
-            if (!this.ExistCurrentPost)
-            {
-                return;
-            }
-
-            // 複数あてリプライはReplyではなく通常ポスト
-            if (this.curList.SelectedIndices.Count > 0)
-            {
-                // アイテムが1件以上選択されている
-                if (this.curList.SelectedIndices.Count == 1 && !isAll && this.ExistCurrentPost)
+                if ((this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage && isAuto) || (!isAuto && !isReply))
                 {
-                    // 単独ユーザー宛リプライまたはDM
-                    if ((this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage && isAuto) || (!isAuto && !isReply))
-                    {
-                        // ダイレクトメッセージ
-                        this.StatusText.Text = "D " + this.curPost.ScreenName + " " + this.StatusText.Text;
-                        this.StatusText.SelectionStart = this.StatusText.Text.Length;
-                        this.StatusText.Focus();
-                        this.replyToId = 0;
-                        this.replyToName = string.Empty;
-                        return;
-                    }
+                    // ダイレクトメッセージ
+                    this.StatusText.Text = "D " + this.curPost.ScreenName + " " + this.StatusText.Text;
+                    this.StatusText.SelectionStart = this.StatusText.Text.Length;
+                    this.StatusText.Focus();
+                    this.replyToId = 0;
+                    this.replyToName = string.Empty;
+                    return;
+                }
 
-                    if (string.IsNullOrEmpty(this.StatusText.Text))
-                    {
-                        // 空の場合 : ステータステキストが入力されていない場合先頭に@ユーザー名を追加する
-                        this.StatusText.Text = "@" + this.curPost.ScreenName + " ";
-                        this.replyToId = this.curPost.OriginalStatusId;
-                        this.replyToName = this.curPost.ScreenName;
-                    }
-                    else
-                    {
-                        // 何か入力済の場合
-                        if (isAuto)
-                        {
-                            // 1件選んでEnter or DoubleClick
-                            if (this.StatusText.Text.Contains("@" + this.curPost.ScreenName + " "))
-                            {
-                                if (this.replyToId > 0 && this.replyToName == this.curPost.ScreenName)
-                                {
-                                    // 返信先書き換え
-                                    this.replyToId = this.curPost.OriginalStatusId;
-                                    this.replyToName = this.curPost.ScreenName;
-                                }
-
-                                return;
-                            }
-
-                            if (!this.StatusText.Text.StartsWith("@"))
-                            {
-                                // 文頭＠以外
-                                if (this.StatusText.Text.StartsWith(". "))
-                                {
-                                    // 複数リプライ
-                                    this.StatusText.Text = this.StatusText.Text.Insert(2, "@" + this.curPost.ScreenName + " ");
-                                    this.replyToId = 0;
-                                    this.replyToName = string.Empty;
-                                }
-                                else
-                                {
-                                    // 単独リプライ
-                                    this.StatusText.Text = "@" + this.curPost.ScreenName + " " + this.StatusText.Text;
-                                    this.replyToId = this.curPost.OriginalStatusId;
-                                    this.replyToName = this.curPost.ScreenName;
-                                }
-                            }
-                            else
-                            {
-                                // 文頭＠
-                                // 複数リプライ
-                                this.StatusText.Text = ". @" + this.curPost.ScreenName + " " + this.StatusText.Text;
-                                this.replyToId = 0;
-                                this.replyToName = string.Empty;
-                            }
-                        }
-                        else
-                        {
-                            // 1件選んでCtrl-Rの場合（返信先操作せず）
-                            int sidx = this.StatusText.SelectionStart;
-                            string id = "@" + this.curPost.ScreenName + " ";
-                            if (sidx > 0)
-                            {
-                                if (this.StatusText.Text.Substring(sidx - 1, 1) != " ")
-                                {
-                                    id = " " + id;
-                                }
-                            }
-
-                            this.StatusText.Text = this.StatusText.Text.Insert(sidx, id);
-                            sidx += id.Length;
-                            this.StatusText.SelectionStart = sidx;
-                            this.StatusText.Focus();
-                            return;
-                        }
-                    }
+                if (string.IsNullOrEmpty(this.StatusText.Text))
+                {
+                    // 空の場合 : ステータステキストが入力されていない場合先頭に@ユーザー名を追加する
+                    this.StatusText.Text = "@" + this.curPost.ScreenName + " ";
+                    this.replyToId = this.curPost.OriginalStatusId;
+                    this.replyToName = this.curPost.ScreenName;
                 }
                 else
                 {
-                    // 複数リプライ
-                    if (!isAuto && !isReply)
-                    {
-                        return;
-                    }
-
-                    // C-S-rか、複数の宛先を選択中にEnter/DoubleClick/C-r/C-S-r
+                    // 何か入力済の場合
                     if (isAuto)
                     {
-                        // Enter or DoubleClick
-                        string statusTxt = this.StatusText.Text;
-                        if (!statusTxt.StartsWith(". "))
+                        // 1件選んでEnter or DoubleClick
+                        if (this.StatusText.Text.Contains("@" + this.curPost.ScreenName + " "))
                         {
-                            statusTxt = ". " + statusTxt;
-                            this.replyToId = 0;
-                            this.replyToName = string.Empty;
+                            if (this.replyToId > 0 && this.replyToName == this.curPost.ScreenName)
+                            {
+                                // 返信先書き換え
+                                this.replyToId = this.curPost.OriginalStatusId;
+                                this.replyToName = this.curPost.ScreenName;
+                            }
+
+                            return;
                         }
 
-                        for (int cnt = 0; cnt <= this.curList.SelectedIndices.Count - 1; cnt++)
+                        if (!this.StatusText.Text.StartsWith("@"))
                         {
-                            PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[cnt]);
-                            if (!statusTxt.Contains("@" + post.ScreenName + " "))
+                            // 文頭＠以外
+                            if (this.StatusText.Text.StartsWith(". "))
                             {
-                                statusTxt = statusTxt.Insert(2, "@" + post.ScreenName + " ");
-                            }
-                        }
-
-                        this.StatusText.Text = statusTxt;
-                    }
-                    else
-                    {
-                        // C-S-r or C-r
-                        if (this.curList.SelectedIndices.Count > 1)
-                        {
-                            // 複数ポスト選択
-                            string ids = string.Empty;
-                            int sidx = this.StatusText.SelectionStart;
-                            for (int cnt = 0; cnt <= this.curList.SelectedIndices.Count - 1; cnt++)
-                            {
-                                PostClass post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[cnt]);
-                                if (!ids.Contains("@" + post.ScreenName + " ") && !post.ScreenName.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
-                                {
-                                    ids += "@" + post.ScreenName + " ";
-                                }
-
-                                if (isAll)
-                                {
-                                    foreach (string nm in post.ReplyToList)
-                                    {
-                                        if (!ids.Contains("@" + nm + " ") && !nm.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
-                                        {
-                                            Match m = Regex.Match(post.TextFromApi, "[@＠](?<id>" + nm + ")([^a-zA-Z0-9]|$)", RegexOptions.IgnoreCase);
-                                            if (m.Success)
-                                            {
-                                                ids += "@" + m.Result("${id}") + " ";
-                                            }
-                                            else
-                                            {
-                                                ids += "@" + nm + " ";
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (ids.Length == 0)
-                            {
-                                return;
-                            }
-
-                            if (!this.StatusText.Text.StartsWith(". "))
-                            {
-                                this.StatusText.Text = ". " + this.StatusText.Text;
-                                sidx += 2;
+                                // 複数リプライ
+                                this.StatusText.Text = this.StatusText.Text.Insert(2, "@" + this.curPost.ScreenName + " ");
                                 this.replyToId = 0;
                                 this.replyToName = string.Empty;
                             }
-
-                            if (sidx > 0)
+                            else
                             {
-                                if (this.StatusText.Text.Substring(sidx - 1, 1) != " ")
-                                {
-                                    ids = " " + ids;
-                                }
+                                // 単独リプライ
+                                this.StatusText.Text = "@" + this.curPost.ScreenName + " " + this.StatusText.Text;
+                                this.replyToId = this.curPost.OriginalStatusId;
+                                this.replyToName = this.curPost.ScreenName;
                             }
-
-                            this.StatusText.Text = this.StatusText.Text.Insert(sidx, ids);
-                            sidx += ids.Length;
-                            this.StatusText.SelectionStart = sidx;
-                            this.StatusText.Focus();
-                            return;
                         }
                         else
                         {
-                            // 1件のみ選択のC-S-r（返信元付加する可能性あり）
-                            string ids = string.Empty;
-                            int sidx = this.StatusText.SelectionStart;
-                            PostClass post = this.curPost;
-                            if (!ids.Contains("@" + post.ScreenName + " ") && !post.ScreenName.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                ids += "@" + post.ScreenName + " ";
-                            }
-
-                            foreach (string nm in post.ReplyToList)
-                            {
-                                if (!ids.Contains("@" + nm + " ") && !nm.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
-                                {
-                                    Match m = Regex.Match(post.TextFromApi, "[@＠](?<id>" + nm + ")([^a-zA-Z0-9]|$)", RegexOptions.IgnoreCase);
-                                    if (m.Success)
-                                    {
-                                        ids += "@" + m.Result("${id}") + " ";
-                                    }
-                                    else
-                                    {
-                                        ids += "@" + nm + " ";
-                                    }
-                                }
-                            }
-
-                            if (!string.IsNullOrEmpty(post.RetweetedBy))
-                            {
-                                if (!ids.Contains("@" + post.RetweetedBy + " ") && !post.RetweetedBy.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
-                                {
-                                    ids += "@" + post.RetweetedBy + " ";
-                                }
-                            }
-
-                            if (ids.Length == 0)
-                            {
-                                return;
-                            }
-
-                            if (string.IsNullOrEmpty(this.StatusText.Text))
-                            {
-                                // 未入力の場合のみ返信先付加
-                                this.StatusText.Text = ids;
-                                this.StatusText.SelectionStart = ids.Length;
-                                this.StatusText.Focus();
-                                this.replyToId = post.OriginalStatusId;
-                                this.replyToName = post.ScreenName;
-                                return;
-                            }
-
-                            if (sidx > 0)
-                            {
-                                if (this.StatusText.Text.Substring(sidx - 1, 1) != " ")
-                                {
-                                    ids = " " + ids;
-                                }
-                            }
-
-                            this.StatusText.Text = this.StatusText.Text.Insert(sidx, ids);
-                            sidx += ids.Length;
-                            this.StatusText.SelectionStart = sidx;
-                            this.StatusText.Focus();
-                            return;
+                            // 文頭＠
+                            // 複数リプライ
+                            this.StatusText.Text = ". @" + this.curPost.ScreenName + " " + this.StatusText.Text;
+                            this.replyToId = 0;
+                            this.replyToName = string.Empty;
                         }
+                    }
+                    else
+                    {
+                        // 1件選んでCtrl-Rの場合（返信先操作せず）
+                        int selectionStart = this.StatusText.SelectionStart;
+                        string id = "@" + this.curPost.ScreenName + " ";
+                        if (selectionStart > 0)
+                        {
+                            if (this.StatusText.Text.Substring(selectionStart - 1, 1) != " ")
+                            {
+                                id = " " + id;
+                            }
+                        }
+
+                        this.StatusText.Text = this.StatusText.Text.Insert(selectionStart, id);
+                        selectionStart += id.Length;
+                        this.StatusText.SelectionStart = selectionStart;
+                        this.StatusText.Focus();
+                        return;
                     }
                 }
 
                 this.StatusText.SelectionStart = this.StatusText.Text.Length;
                 this.StatusText.Focus();
+                return;
             }
+
+            // 複数リプライ
+            if (!isAuto && !isReply)
+            {
+                return;
+            }
+
+            // C-S-rか、複数の宛先を選択中にEnter/DoubleClick/C-r/C-S-r
+            if (isAuto)
+            {
+                // Enter or DoubleClick
+                string statusTxt = this.StatusText.Text;
+                if (!statusTxt.StartsWith(". "))
+                {
+                    statusTxt = ". " + statusTxt;
+                    this.replyToId = 0;
+                    this.replyToName = string.Empty;
+                }
+
+                for (int cnt = 0; cnt < this.curList.SelectedIndices.Count; ++cnt)
+                {
+                    var name = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[cnt]).ScreenName;
+                    if (!statusTxt.Contains("@" + name + " "))
+                    {
+                        statusTxt = statusTxt.Insert(2, "@" + name + " ");
+                    }
+                }
+
+                this.StatusText.Text = statusTxt;
+                this.StatusText.SelectionStart = this.StatusText.Text.Length;
+                this.StatusText.Focus();
+                return;
+            }
+
+            // C-S-r or C-r
+            string ids = string.Empty;
+            int sidx = this.StatusText.SelectionStart;
+            PostClass post;
+            if (this.curList.SelectedIndices.Count > 1)
+            {
+                // 複数ポスト選択
+                for (int cnt = 0; cnt <= this.curList.SelectedIndices.Count - 1; cnt++)
+                {
+                     post = this.statuses.Item(this.curTab.Text, this.curList.SelectedIndices[cnt]);
+                    if (!ids.Contains("@" + post.ScreenName + " ") && !post.ScreenName.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        ids += "@" + post.ScreenName + " ";
+                    }
+
+                    if (isAll)
+                    {
+                        foreach (string nm in post.ReplyToList)
+                        {
+                            if (!ids.Contains("@" + nm + " ") && !nm.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                Match m = Regex.Match(post.TextFromApi, "[@＠](?<id>" + nm + ")([^a-zA-Z0-9]|$)", RegexOptions.IgnoreCase);
+                                ids += string.Format("@{0} ", m.Success ? m.Result("${id}") : nm);
+                            }
+                        }
+                    }
+                }
+
+                if (ids.Length == 0)
+                {
+                    return;
+                }
+
+                if (!this.StatusText.Text.StartsWith(". "))
+                {
+                    this.StatusText.Text = ". " + this.StatusText.Text;
+                    sidx += 2;
+                    this.replyToId = 0;
+                    this.replyToName = string.Empty;
+                }
+
+                if (sidx > 0)
+                {
+                    if (this.StatusText.Text.Substring(sidx - 1, 1) != " ")
+                    {
+                        ids = " " + ids;
+                    }
+                }
+
+                this.StatusText.Text = this.StatusText.Text.Insert(sidx, ids);
+                sidx += ids.Length;
+                this.StatusText.SelectionStart = sidx;
+                this.StatusText.Focus();
+                return;
+            }
+
+            // 1件のみ選択のC-S-r（返信元付加する可能性あり）
+            ids = string.Empty;
+            sidx = this.StatusText.SelectionStart;
+            post = this.curPost;
+            if (!ids.Contains("@" + post.ScreenName + " ") && !post.ScreenName.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
+            {
+                ids += "@" + post.ScreenName + " ";
+            }
+            foreach (string nm in post.ReplyToList)
+            {
+                if (!ids.Contains("@" + nm + " ") && !nm.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Match m = Regex.Match(post.TextFromApi, "[@＠](?<id>" + nm + ")([^a-zA-Z0-9]|$)", RegexOptions.IgnoreCase);
+                    ids += string.Format("@{0} ", m.Success ? m.Result("${id}") : nm);
+                }
+            }
+            if (!string.IsNullOrEmpty(post.RetweetedBy))
+            {
+                if (!ids.Contains("@" + post.RetweetedBy + " ") && !post.RetweetedBy.Equals(this.tw.Username, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    ids += "@" + post.RetweetedBy + " ";
+                }
+            }
+            if (ids.Length == 0)
+            {
+                return;
+            }
+            if (string.IsNullOrEmpty(this.StatusText.Text))
+            {
+                // 未入力の場合のみ返信先付加
+                this.StatusText.Text = ids;
+                this.StatusText.SelectionStart = ids.Length;
+                this.StatusText.Focus();
+                this.replyToId = post.OriginalStatusId;
+                this.replyToName = post.ScreenName;
+                return;
+            }
+            if (sidx > 0)
+            {
+                if (this.StatusText.Text.Substring(sidx - 1, 1) != " ")
+                {
+                    ids = " " + ids;
+                }
+            }
+            this.StatusText.Text = this.StatusText.Text.Insert(sidx, ids);
+            sidx += ids.Length;
+            this.StatusText.SelectionStart = sidx;
+            this.StatusText.Focus();
+            return;
         }
 
         private void RefreshTasktrayIcon(bool forceRefresh)
