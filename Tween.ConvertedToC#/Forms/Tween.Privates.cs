@@ -4285,7 +4285,7 @@ namespace Hoehoe
             }
         }
 
-        private void DoUrlUndo()
+        private void UndoUrlShortening()
         {
             if (this.urlUndoBuffer != null)
             {

@@ -1288,7 +1288,7 @@ namespace Hoehoe
 
         private void UrlUndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoUrlUndo();
+            this.UndoUrlShortening();
         }
 
         private void UseHashtagMenuItem_Click(object sender, EventArgs e)
