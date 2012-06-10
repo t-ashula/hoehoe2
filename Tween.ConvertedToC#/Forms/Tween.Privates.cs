@@ -4515,7 +4515,7 @@ namespace Hoehoe
             return this.waitTimeline || this.waitReply || this.waitDm || this.waitFav || this.waitPubSearch || this.waitUserTimeline || this.waitLists;
         }
 
-        private void DoGetFollowersMenu()
+        private void GetFollowers()
         {
             this.GetTimeline(WorkerType.Follower);
             this.DispSelectedPost(true);
@@ -5972,7 +5972,7 @@ namespace Hoehoe
 
                     if (uid != this.tw.Username)
                     {
-                        this.DoGetFollowersMenu();
+                        this.GetFollowers();
                     }
 
                     this.SetImageServiceCombo();
@@ -7698,7 +7698,7 @@ namespace Hoehoe
             if (this.timerRefreshFollowers < 1)
             {
                 Interlocked.Exchange(ref this.timerRefreshFollowers, 6 * 3600);
-                this.DoGetFollowersMenu();
+                this.GetFollowers();
                 this.GetTimeline(WorkerType.Configuration);
                 if (InvokeRequired && !IsDisposed)
                 {
@@ -7722,7 +7722,7 @@ namespace Hoehoe
                 this.GetTimeline(WorkerType.PublicSearch);
                 this.GetTimeline(WorkerType.UserTimeline);
                 this.GetTimeline(WorkerType.List);
-                this.DoGetFollowersMenu();
+                this.GetFollowers();
                 this.GetTimeline(WorkerType.Configuration);
                 if (InvokeRequired && !IsDisposed)
                 {

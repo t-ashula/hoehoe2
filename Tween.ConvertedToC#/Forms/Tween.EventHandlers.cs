@@ -241,7 +241,7 @@ namespace Hoehoe
 
         private void GetFollowersAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoGetFollowersMenu();
+            this.GetFollowers();
         }
 
         private void GetTimelineWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
