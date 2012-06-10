@@ -4685,17 +4685,12 @@ namespace Hoehoe
                 return;
             }
 
-            using (InputTabName inputName = new InputTabName())
+            var followid = id;
+            if (!TryUserInputText(ref followid, "Follow", Hoehoe.Properties.Resources.FRMessage1))
             {
-                inputName.SetFormTitle("Follow");
-                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
-                inputName.TabName = id;
-                if (inputName.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-                id = inputName.TabName.Trim();
+                return;
             }
+            id = followid;
 
             if (string.IsNullOrEmpty(id))
             {
@@ -4707,8 +4702,9 @@ namespace Hoehoe
                 return;
             }
 
-            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs() { Tw = this.tw, Id = id };
-            using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.FollowCommandText1, this.FollowCommand_DoWork, null, arg))
+            using (var info = new FormInfo(this, 
+                Hoehoe.Properties.Resources.FollowCommandText1, this.FollowCommand_DoWork, null, 
+                new FollowRemoveCommandArgs() { Tw = this.tw, Id = id }))
             {
                 info.ShowDialog();
                 string ret = (string)info.Result;
