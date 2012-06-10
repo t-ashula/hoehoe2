@@ -3876,42 +3876,31 @@ namespace Hoehoe
                 this.TopMost = this.settingDialog.AlwaysTop;
                 tabName = this.tabDialog.SelectedTabName;
                 this.ListTab.SelectedTab.Focus();
-
-                // 新規タブを選択→タブ作成
-                if (tabName == Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText1)
-                {
-                    using (InputTabName inputName = new InputTabName())
-                    {
-                        inputName.TabName = this.statuses.GetUniqueTabName();
-                        inputName.ShowDialog();
-                        if (inputName.DialogResult == DialogResult.Cancel)
-                        {
-                            return false;
-                        }
-
-                        tabName = inputName.TabName;
-                        inputName.Dispose();
-                    }
-
-                    this.TopMost = this.settingDialog.AlwaysTop;
-                    if (!string.IsNullOrEmpty(tabName))
-                    {
-                        if (!this.statuses.AddTab(tabName, TabUsageType.UserDefined, null) || !this.AddNewTab(tabName, false, TabUsageType.UserDefined))
-                        {
-                            // もう一度タブ名入力
-                            string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText2, tabName);
-                            MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else
+                if (tabName != Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText1)
                 {
                     // 既存タブを選択
                     return true;
+                }
+
+                // 新規タブを選択→タブ作成
+                var tn = this.statuses.GetUniqueTabName();
+                if (!this.TryUserInputText(ref tn))
+                {
+                    return false;
+                } 
+
+                tabName = tn;
+                this.TopMost = this.settingDialog.AlwaysTop;
+                if (!string.IsNullOrEmpty(tabName))
+                {
+                    if (this.statuses.AddTab(tabName, TabUsageType.UserDefined, null) && this.AddNewTab(tabName, false, TabUsageType.UserDefined))
+                    {
+                        return true;
+                    }
+                    
+                    // もう一度タブ名入力
+                    string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText2, tabName);
+                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
             while (true);
