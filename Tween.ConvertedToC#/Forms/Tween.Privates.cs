@@ -4503,10 +4503,7 @@ namespace Hoehoe
             this.tw.UserStreamStopped += this.Tw_UserStreamStopped;
             this.tw.PostDeleted += this.Tw_PostDeleted;
             this.tw.UserStreamEventReceived += this.Tw_UserStreamEventArrived;
-            this.MenuItemUserStream.Text = "&UserStream ■";
-            this.MenuItemUserStream.Enabled = true;
-            this.StopToolStripMenuItem.Text = "&Start";
-            this.StopToolStripMenuItem.Enabled = true;
+            ChangeUserStreamStatusDisplay(true);
             if (this.settingDialog.UserstreamStartup)
             {
                 this.tw.StartUserStream();
