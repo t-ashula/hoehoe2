@@ -3200,10 +3200,14 @@ namespace Hoehoe
                 }
 
                 this.ListTab.SelectedTab = tabPostPair.Item1;
-                if (tabPostPair.Item2 != null && this.statuses.Tabs[this.curTab.Text].IndexOf(tabPostPair.Item2.StatusId) > -1)
+                if (tabPostPair.Item2 != null)
                 {
-                    this.SelectListItem(this.curList, this.statuses.Tabs[this.curTab.Text].IndexOf(tabPostPair.Item2.StatusId));
-                    this.curList.EnsureVisible(this.statuses.Tabs[this.curTab.Text].IndexOf(tabPostPair.Item2.StatusId));
+                    var idx = this.statuses.Tabs[this.curTab.Text].IndexOf(tabPostPair.Item2.StatusId)
+                    if (idx > -1)
+                    {
+                        this.SelectListItem(this.curList, idx);
+                        this.curList.EnsureVisible(idx);
+                    }
                 }
             }
             catch (InvalidOperationException)
