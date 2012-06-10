@@ -5104,22 +5104,13 @@ namespace Hoehoe
                 id = this.curPost.ScreenName;
             }
 
-            using (InputTabName inputName = new InputTabName())
+            var uid = id;
+            if (!TryUserInputText(ref uid, caption, Hoehoe.Properties.Resources.FRMessage1))
             {
-                inputName.SetFormTitle(caption);
-                inputName.SetFormDescription(Hoehoe.Properties.Resources.FRMessage1);
-                inputName.TabName = id;
-                if (inputName.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(inputName.TabName.Trim()))
-                {
-                    id = inputName.TabName.Trim();
-                }
-                else
-                {
-                    id = string.Empty;
-                }
+                return string.Empty;
             }
 
-            return id;
+            return uid;
         }
 
         private void TimelineRefreshEnableChange(bool isEnable)
