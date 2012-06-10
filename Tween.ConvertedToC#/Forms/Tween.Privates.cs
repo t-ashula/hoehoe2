@@ -4120,8 +4120,7 @@ namespace Hoehoe
             StringBuilder ur = new StringBuilder(64);
             if (this.settingDialog.DispUsername)
             {
-                ur.Append(this.tw.Username);
-                ur.Append(" - ");
+                ur.AppendFormat("{0} - ", this.tw.Username);
             }
 
             ur.Append("Hoehoe");
@@ -4130,11 +4129,7 @@ namespace Hoehoe
 #endif
             if (this.unreadCounter != -1 && this.unreadAtCounter != -1)
             {
-                ur.Append(" [");
-                ur.Append(this.unreadCounter);
-                ur.Append("/@");
-                ur.Append(this.unreadAtCounter);
-                ur.Append("]");
+                ur.AppendFormat(" [{0}/@{1}]", this.unreadCounter, this.unreadAtCounter);
             }
 
             this.NotifyIcon1.Text = ur.ToString();
