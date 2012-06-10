@@ -5038,18 +5038,16 @@ namespace Hoehoe
                 StringBuilder title = new StringBuilder();
                 if (this.settingDialog.DispUsername)
                 {
-                    title.Append(this.tw.Username);
-                    title.Append(" - ");
+                    title.AppendFormat("{0} - ", this.tw.Username);
                 }
 
-                title.Append(string.Format("Hoehoe [{0}] ", ev.Event.ToUpper()));
+                title.AppendFormat("Hoehoe [{0}] ", ev.Event.ToUpper());
                 if (!string.IsNullOrEmpty(ev.Username))
                 {
-                    title.Append(string.Format("by {0}", ev.Username));
+                    title.AppendFormat("by {0}", ev.Username);
                 }
 
                 string text = !string.IsNullOrEmpty(ev.Target) ? ev.Target : " ";
-
                 if (this.settingDialog.IsNotifyUseGrowl)
                 {
                     this.growlHelper.Notify(GrowlHelper.NotifyType.UserStreamEvent, ev.Id.ToString(), title.ToString(), text);
