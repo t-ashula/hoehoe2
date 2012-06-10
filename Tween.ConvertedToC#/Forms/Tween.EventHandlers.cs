@@ -589,7 +589,7 @@ namespace Hoehoe
 
         private void ReadedStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeSelectetdTweetReadStateToRead();
+            ChangeSelectedTweetReadStateToRead();
         }
 
         private void RefreshMoreStripMenuItem_Click(object sender, EventArgs e)
