@@ -4215,20 +4215,7 @@ namespace Hoehoe
                         return true;
                     }
 
-                    if (!string.IsNullOrEmpty(result))
-                    {
-                        this.StatusText.Select(this.StatusText.Text.IndexOf(tmp, StringComparison.Ordinal), tmp.Length);
-                        this.StatusText.SelectedText = result;
-
-                        // undoバッファにセット
-                        if (this.urlUndoBuffer == null)
-                        {
-                            this.urlUndoBuffer = new List<UrlUndoInfo>();
-                            this.UrlUndoToolStripMenuItem.Enabled = true;
-                        }
-
-                        this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = tmp, After = result });
-                    }
+                    SetUrlUndoInfo(before: tmp, after: result);
                 }
             }
             else
@@ -4238,19 +4225,20 @@ namespace Hoehoe
                 // 正規表現にマッチしたURL文字列をtinyurl化
                 foreach (Match mt in Regex.Matches(this.StatusText.Text, UrlPattern, RegexOptions.IgnoreCase))
                 {
-                    if (this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal) == -1)
+                    string mtResult = mt.Result("${url}");
+                    if (this.StatusText.Text.IndexOf(mtResult, StringComparison.Ordinal) == -1)
                     {
                         continue;
                     }
 
-                    string tmp = mt.Result("${url}");
+                    string tmp = mtResult;
                     if (tmp.StartsWith("w", StringComparison.OrdinalIgnoreCase))
                     {
                         tmp = "http://" + tmp;
                     }
 
                     // 選んだURLを選択（？）
-                    this.StatusText.Select(this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
+                    this.StatusText.Select(this.StatusText.Text.IndexOf(mtResult, StringComparison.Ordinal), mtResult.Length);
 
                     // nico.ms使用、nicovideoにマッチしたら変換
                     if (this.settingDialog.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
@@ -4272,24 +4260,29 @@ namespace Hoehoe
                         continue;
                     }
 
-                    if (!string.IsNullOrEmpty(result))
-                    {
-                        this.StatusText.Select(this.StatusText.Text.IndexOf(mt.Result("${url}"), StringComparison.Ordinal), mt.Result("${url}").Length);
-                        this.StatusText.SelectedText = result;
-
-                        // undoバッファにセット
-                        if (this.urlUndoBuffer == null)
-                        {
-                            this.urlUndoBuffer = new List<UrlUndoInfo>();
-                            this.UrlUndoToolStripMenuItem.Enabled = true;
-                        }
-
-                        this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = mt.Result("${url}"), After = result });
-                    }
+                    SetUrlUndoInfo(before: mtResult, after: result);
                 }
             }
 
             return true;
+        }
+
+        private void SetUrlUndoInfo(string before, string after)
+        {
+            if (!string.IsNullOrEmpty(after))
+            {
+                this.StatusText.Select(this.StatusText.Text.IndexOf(before, StringComparison.Ordinal), before.Length);
+                this.StatusText.SelectedText = after;
+
+                // undoバッファにセット
+                if (this.urlUndoBuffer == null)
+                {
+                    this.urlUndoBuffer = new List<UrlUndoInfo>();
+                    this.UrlUndoToolStripMenuItem.Enabled = true;
+                }
+
+                this.urlUndoBuffer.Add(new UrlUndoInfo() { Before = before, After = after });
+            }
         }
 
         private void DoUrlUndo()
