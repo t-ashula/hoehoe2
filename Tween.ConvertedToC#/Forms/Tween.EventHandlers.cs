@@ -3168,7 +3168,7 @@ namespace Hoehoe
                 this.Tag = this.ListTab.Tag;
             }
 
-            this.TabMenuControl(this.ListTab.SelectedTab.Text);
+            this.ChangeTabMenuControl(this.ListTab.SelectedTab.Text);
             this.PushSelectPostChain();
         }
 

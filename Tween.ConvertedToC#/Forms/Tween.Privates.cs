@@ -3794,7 +3794,6 @@ namespace Hoehoe
 
             this.iconCnt += 1;
             this.blinkCnt += 1;
-
             bool busy = false;
             foreach (BackgroundWorker bw in this.bworkers)
             {
@@ -3833,15 +3832,8 @@ namespace Hoehoe
                 }
 
                 this.doBlink = !this.doBlink;
-                if (this.doBlink || this.settingDialog.ReplyIconState == ReplyIconState.StaticIcon)
-                {
-                    this.NotifyIcon1.Icon = this.replyIcon;
-                }
-                else
-                {
-                    this.NotifyIcon1.Icon = this.replyIconBlink;
-                }
-
+                this.NotifyIcon1.Icon = this.doBlink || this.settingDialog.ReplyIconState == ReplyIconState.StaticIcon ? 
+                    this.replyIcon : this.replyIconBlink;
                 this.isIdle = false;
                 return;
             }
@@ -3860,39 +3852,14 @@ namespace Hoehoe
                 return;
             }
 
-            if (MyCommon.IsNetworkAvailable())
-            {
-                this.NotifyIcon1.Icon = this.iconAt;
-            }
-            else
-            {
-                this.NotifyIcon1.Icon = this.iconAtSmoke;
-            }
+            this.NotifyIcon1.Icon = MyCommon.IsNetworkAvailable() ? this.iconAt : this.iconAtSmoke;
         }
 
-        private void TabMenuControl(string tabName)
+        private void ChangeTabMenuControl(string tabName)
         {
-            if (this.statuses.Tabs[tabName].TabType != TabUsageType.Mentions && this.statuses.IsDefaultTab(tabName))
-            {
-                this.FilterEditMenuItem.Enabled = true;
-                this.EditRuleTbMenuItem.Enabled = true;
-                this.DeleteTabMenuItem.Enabled = false;
-                this.DeleteTbMenuItem.Enabled = false;
-            }
-            else if (this.statuses.Tabs[tabName].TabType == TabUsageType.Mentions)
-            {
-                this.FilterEditMenuItem.Enabled = true;
-                this.EditRuleTbMenuItem.Enabled = true;
-                this.DeleteTabMenuItem.Enabled = false;
-                this.DeleteTbMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.FilterEditMenuItem.Enabled = true;
-                this.EditRuleTbMenuItem.Enabled = true;
-                this.DeleteTabMenuItem.Enabled = true;
-                this.DeleteTbMenuItem.Enabled = true;
-            }
+            this.FilterEditMenuItem.Enabled = this.EditRuleTbMenuItem.Enabled = true;
+            var deletetab = this.statuses.Tabs[tabName].TabType != TabUsageType.Mentions ? !this.statuses.IsDefaultTab(tabName) : false;
+            this.DeleteTabMenuItem.Enabled = this.DeleteTbMenuItem.Enabled = deletetab;
         }
 
         private bool SelectTab(ref string tabName)
@@ -5425,7 +5392,7 @@ namespace Hoehoe
             this.UreadManageMenuItem.Checked = tb.UnreadManage;
             this.UnreadMngTbMenuItem.Checked = tb.UnreadManage;
 
-            this.TabMenuControl(this.rclickTabName);
+            this.ChangeTabMenuControl(this.rclickTabName);
         }
 
         private static void ReloadSoundSelector(ComboBox soundFileComboBox, string currentSoundFile)
