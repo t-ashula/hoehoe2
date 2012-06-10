@@ -4303,11 +4303,10 @@ namespace Hoehoe
             }
         }
 
-        private void DoSearchToolStrip(string url)
+        private void SearchWebBySelectedWord(string url)
         {
             // 発言詳細で「選択文字列で検索」（選択文字列取得）
             string selText = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
-
             if (selText != null)
             {
                 if (url == Hoehoe.Properties.Resources.SearchItem4Url)
@@ -4317,8 +4316,7 @@ namespace Hoehoe
                     return;
                 }
 
-                string tmp = string.Format(url, HttpUtility.UrlEncode(selText));
-                this.OpenUriAsync(tmp);
+                this.OpenUriAsync(string.Format(url, HttpUtility.UrlEncode(selText)));
             }
         }
 

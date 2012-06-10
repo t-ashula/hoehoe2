@@ -675,7 +675,7 @@ namespace Hoehoe
 
         private void SearchGoogleContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem2Url);
+            this.SearchWebBySelectedWord(Hoehoe.Properties.Resources.SearchItem2Url);
         }
 
         private void SearchPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -690,17 +690,17 @@ namespace Hoehoe
 
         private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem4Url);
+            this.SearchWebBySelectedWord(Hoehoe.Properties.Resources.SearchItem4Url);
         }
 
         private void SearchWikipediaContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem1Url);
+            this.SearchWebBySelectedWord(Hoehoe.Properties.Resources.SearchItem1Url);
         }
 
         private void SearchYatsContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoSearchToolStrip(Hoehoe.Properties.Resources.SearchItem3Url);
+            this.SearchWebBySelectedWord(Hoehoe.Properties.Resources.SearchItem3Url);
         }
 
         private void SelectAllMenuItem_Click(object sender, EventArgs e)
