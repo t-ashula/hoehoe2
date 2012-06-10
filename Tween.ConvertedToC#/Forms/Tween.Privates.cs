@@ -4989,13 +4989,13 @@ namespace Hoehoe
                 svc = this.ImageServiceCombo.SelectedItem.ToString();
             }
 
-            this.ImageServiceCombo.Items.Clear();
-            this.ImageServiceCombo.Items.Add("TwitPic");
-            this.ImageServiceCombo.Items.Add("img.ly");
-            this.ImageServiceCombo.Items.Add("yfrog");
-            this.ImageServiceCombo.Items.Add("lockerz");
-            this.ImageServiceCombo.Items.Add("Twitter");
+            if (this.pictureServices == null)
+            {
+                this.CreatePictureServices();
+            }
 
+            this.ImageServiceCombo.Items.Clear();
+            this.ImageServiceCombo.Items.AddRange(this.pictureServices.Keys.ToArray());
             if (string.IsNullOrEmpty(svc))
             {
                 this.ImageServiceCombo.SelectedIndex = 0;
