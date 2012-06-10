@@ -3952,8 +3952,10 @@ namespace Hoehoe
 
             if (showWarning)
             {
-                string tmp = string.Format(Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, tabName + " " + Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                string msg = string.Format(Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
+                string caption = string.Format("{0} {1}", tabName, Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText2);
+                var reslt = MessageBox.Show(msg, caption, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                if (reslt == DialogResult.Cancel)
                 {
                     return;
                 }
