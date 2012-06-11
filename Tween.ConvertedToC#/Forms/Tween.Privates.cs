@@ -2289,7 +2289,7 @@ namespace Hoehoe
                                 return true;
                             case Keys.C:
                             case Keys.Insert:
-                                string selText = WebBrowser_GetSelectionText(ref this.PostBrowser);
+                                string selText = WebBrowser_GetSelectionText( this.PostBrowser);
                                 if (!string.IsNullOrEmpty(selText))
                                 {
                                     CopyToClipboard(selText);
@@ -4349,7 +4349,7 @@ namespace Hoehoe
         private void SearchWebBySelectedWord(string url)
         {
             // 発言詳細で「選択文字列で検索」（選択文字列取得）
-            string selText = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
+            string selText = this.WebBrowser_GetSelectionText( this.PostBrowser);
             if (selText != null)
             {
                 if (url == Hoehoe.Properties.Resources.SearchItem4Url)
@@ -5242,7 +5242,7 @@ namespace Hoehoe
             this.UseHashtagMenuItem.Enabled = isHttpUrl && Regex.IsMatch(this.postBrowserStatusText, "^https?://twitter.com/search\\?q=%23");
 
             // 文字列選択されてるときは選択文字列関係の項目を表示
-            bool hasSelection = !string.IsNullOrEmpty(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
+            bool hasSelection = !string.IsNullOrEmpty(this.WebBrowser_GetSelectionText( this.PostBrowser));
             this.SelectionSearchContextMenuItem.Enabled = hasSelection;
             this.SelectionCopyContextMenuItem.Enabled = hasSelection;
             this.SelectionTranslationToolStripMenuItem.Enabled = hasSelection;
@@ -5948,7 +5948,7 @@ namespace Hoehoe
         private void SearchSelectedTextAtCurrentTab()
         {
             // 発言詳細の選択文字列で現在のタブを検索
-            string txt = this.WebBrowser_GetSelectionText(ref this.PostBrowser);
+            string txt = this.WebBrowser_GetSelectionText( this.PostBrowser);
             if (!string.IsNullOrEmpty(txt))
             {
                 this.searchDialog.SWord = txt;
@@ -7323,7 +7323,7 @@ namespace Hoehoe
 
         private void TryCopySelectionInPostBrowser()
         {
-            CopyToClipboard(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
+            CopyToClipboard(this.WebBrowser_GetSelectionText( this.PostBrowser));
         }
 
         private void SetStatusLabelApiLuncher()

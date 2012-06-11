@@ -466,7 +466,11 @@ namespace Hoehoe
             // タブタイプ重複チェック
             if (!startup)
             {
-                if (tabType == TabUsageType.DirectMessage || tabType == TabUsageType.Favorites || tabType == TabUsageType.Home || tabType == TabUsageType.Mentions || tabType == TabUsageType.Related)
+                if (tabType == TabUsageType.DirectMessage 
+                    || tabType == TabUsageType.Favorites 
+                    || tabType == TabUsageType.Home 
+                    || tabType == TabUsageType.Mentions 
+                    || tabType == TabUsageType.Related)
                 {
                     if (this.statuses.GetTabByType(tabType) != null)
                     {
@@ -488,7 +492,7 @@ namespace Hoehoe
 
             int cnt = this.ListTab.TabPages.Count;
 
-            ///ToDo:Create and set controls follow tabtypes
+            //// ToDo:Create and set controls follow tabtypes
 
             this.SplitContainer1.Panel1.SuspendLayout();
             this.SplitContainer1.Panel2.SuspendLayout();
@@ -1152,7 +1156,7 @@ namespace Hoehoe
             this.StatusLabel.Text = text;
         }
 
-        public string WebBrowser_GetSelectionText(ref WebBrowser componentInstance)
+        public string WebBrowser_GetSelectionText(WebBrowser componentInstance)
         {
             // 発言詳細で「選択文字列をコピー」を行う
             // WebBrowserコンポーネントのインスタンスを渡す

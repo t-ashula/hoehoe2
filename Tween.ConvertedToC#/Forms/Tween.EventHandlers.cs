@@ -722,7 +722,7 @@ namespace Hoehoe
 
         private void SelectionTranslationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.DoTranslation(this.WebBrowser_GetSelectionText(ref this.PostBrowser));
+            this.DoTranslation(this.WebBrowser_GetSelectionText( this.PostBrowser));
         }
 
         private void TwitterApiInfo_Changed(object sender, ApiInformationChangedEventArgs e)
