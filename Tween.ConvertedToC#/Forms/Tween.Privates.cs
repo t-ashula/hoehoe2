@@ -8065,13 +8065,16 @@ namespace Hoehoe
             this.waitLists = true;
             this.GetTimeline(WorkerType.List);
             int i = 0, j = 0;
+            /**/
+            int stth = 12 * 1000;
+            int sl = 100;
             while (this.IsInitialRead() && !MyCommon.IsEnding)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(sl);
                 Application.DoEvents();
                 i += 1;
                 j += 1;
-                if (j > 1200)
+                if (j > (stth / sl))
                 {
                     // 120秒間初期処理が終了しなかったら強制的に打ち切る
                     break;
@@ -8087,7 +8090,7 @@ namespace Hoehoe
                     i = 0;
                 }
             }
-
+            /**/
             if (MyCommon.IsEnding)
             {
                 return;
