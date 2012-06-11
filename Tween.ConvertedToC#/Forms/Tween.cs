@@ -1156,14 +1156,12 @@ namespace Hoehoe
         /// <returns></returns>
         public bool IsTwitterId(string name)
         {
-            if (this.settingDialog.TwitterConfiguration.NonUsernamePaths == null || this.settingDialog.TwitterConfiguration.NonUsernamePaths.Length == 0)
+            string[] nonUsernames = this.settingDialog.TwitterConfiguration.NonUsernamePaths;
+            if (nonUsernames == null || nonUsernames.Length == 0)
             {
                 return !Regex.Match(name, "^(about|jobs|tos|privacy|who_to_follow|download|messages)$", RegexOptions.IgnoreCase).Success;
             }
-            else
-            {
-                return !this.settingDialog.TwitterConfiguration.NonUsernamePaths.Contains(name.ToLower());
-            }
+            return !nonUsernames.Contains(name.ToLower());
         }
 
         public void SetModifySettingCommon(bool value)
