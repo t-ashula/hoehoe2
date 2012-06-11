@@ -3451,7 +3451,12 @@ namespace Hoehoe
             else
             {
                 var cl = e.Item.BackColor;
-                SolidBrush brs2 = (cl == this.clrSelf) ? this.brsBackColorMine : (cl == this.clrAtSelf) ? this.brsBackColorAt : (cl == this.clrTarget) ? this.brsBackColorYou : (cl == this.clrAtTarget) ? this.brsBackColorAtYou : (cl == this.clrAtFromTarget) ? this.brsBackColorAtFromTarget : (cl == this.clrAtTo) ? this.brsBackColorAtTo : this.brsBackColorNone;
+                SolidBrush brs2 = (cl == this.clrSelf) ? this.brsBackColorMine : 
+                    (cl == this.clrAtSelf) ? this.brsBackColorAt : 
+                    (cl == this.clrTarget) ? this.brsBackColorYou : 
+                    (cl == this.clrAtTarget) ? this.brsBackColorAtYou :
+                    (cl == this.clrAtFromTarget) ? this.brsBackColorAtFromTarget : 
+                    (cl == this.clrAtTo) ? this.brsBackColorAtTo : this.brsBackColorNone;
                 e.Graphics.FillRectangle(brs2, e.Bounds);
             }
 
