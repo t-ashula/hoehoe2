@@ -7570,13 +7570,13 @@ namespace Hoehoe
                 return;
             }
 
-            this.TabRename(ref this.rclickTabName);
+            this.RenameTab(ref this.rclickTabName);
         }
 
         private void RenameSelectedTabName()
         {
             string tn = this.ListTab.SelectedTab.Text;
-            this.TabRename(ref tn);
+            this.RenameTab(ref tn);
         }
 
         private void DecrementTimer(ref int counter)

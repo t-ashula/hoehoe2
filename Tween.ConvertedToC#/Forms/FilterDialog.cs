@@ -641,7 +641,7 @@ namespace Hoehoe
             {
                 string tb = this.ListTabs.SelectedItem.ToString();
                 int idx = this.ListTabs.SelectedIndex;
-                if (((TweenMain)this.Owner).TabRename(ref tb))
+                if (((TweenMain)this.Owner).RenameTab(ref tb))
                 {
                     this.ListTabs.Items.RemoveAt(idx);
                     this.ListTabs.Items.Insert(idx, tb);

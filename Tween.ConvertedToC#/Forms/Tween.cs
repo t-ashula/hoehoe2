@@ -992,20 +992,13 @@ namespace Hoehoe
             return this.detailHtmlFormatHeader + orgdata + this.detailHtmlFormatFooter;
         }
 
-        public bool TabRename(ref string tabName)
+        public bool RenameTab(ref string tabName)
         {
             // タブ名変更
-            string newTabText = null;
-            using (InputTabName inputName = new InputTabName())
+            string newTabText = tabName;
+            if (!TryUserInputText(ref newTabText))
             {
-                inputName.TabName = tabName;
-                inputName.ShowDialog();
-                if (inputName.DialogResult == DialogResult.Cancel)
-                {
-                    return false;
-                }
-
-                newTabText = inputName.TabName;
+                return false;
             }
 
             this.TopMost = this.settingDialog.AlwaysTop;
