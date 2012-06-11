@@ -26,12 +26,43 @@
 
 namespace Hoehoe
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
 
     public partial class TweenMain
     {
+        #region enums
+
+        // 検索処理タイプ
+        private enum InTabSearchType
+        {
+            DialogSearch,
+            NextSearch,
+            PrevSearch
+        }
+
+        [Flags]
+        private enum ModifierState : int
+        {
+            None = 0,
+            Alt = 1,
+            Shift = 2,
+            Ctrl = 4,
+            NotFlags = 8
+        }
+
+        private enum FocusedControl : int
+        {
+            None,
+            ListTab,
+            StatusText,
+            PostBrowser
+        }
+
+        #endregion enums
+
         #region inner types
 
         /// <summary>

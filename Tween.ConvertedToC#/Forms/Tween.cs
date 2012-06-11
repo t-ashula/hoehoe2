@@ -71,49 +71,26 @@ namespace Hoehoe
         private readonly object syncObject = new object();
 
         // 各種設定
-        // 画面サイズ
-        private Size mySize;
+        private Size mySize; // 画面サイズ
 
-        // 画面位置
-        private Point myLoc;
-
-        // 区切り位置
-        private int mySpDis;
-
-        // 発言欄区切り位置
-        private int mySpDis2;
-
-        // プレビュー区切り位置
-        private int mySpDis3;
-
-        // Ad区切り位置
-        private int myAdSpDis;
-
-        // アイコンサイズ（現在は16、24、48の3種類。将来直接数字指定可能とする 注：24x24の場合に26と指定しているのはMSゴシック系フォントのための仕様）
-        private int iconSz;
-
-        // 1列表示の時True（48サイズのとき）
-        private bool iconCol;
+        private Point myLoc; // 画面位置
+        private int mySpDis; // 区切り位置
+        private int mySpDis2; // 発言欄区切り位置
+        private int mySpDis3; // プレビュー区切り位置
+        private int myAdSpDis; // Ad区切り位置
+        private int iconSz; // アイコンサイズ（現在は16、24、48の3種類。将来直接数字指定可能とする 注：24x24の場合に26と指定しているのはMSゴシック系フォントのための仕様）
+        private bool iconCol; // 1列表示の時True（48サイズのとき）
 
         // 雑多なフラグ類
-        // True:起動時処理中
-        private bool isInitializing;
+        private bool isInitializing; // True:起動時処理中
 
-        private bool initialLayout = true;
-
-        // True:起動時処理中
+        private bool initialLayout = true; // True:起動時処理中
         private bool ignoreConfigSave;
 
-        // タブドラッグ中フラグ（DoDragDropを実行するかの判定用）
-        private bool tabDraging;
-
-        // タブが削除されたときに前回選択されていたときのタブを選択する為に保持
-        private TabPage prevSelectedTab;
-
+        private bool tabDraging; // タブドラッグ中フラグ（DoDragDropを実行するかの判定用）
+        private TabPage prevSelectedTab; // タブが削除されたときに前回選択されていたときのタブを選択する為に保持
         private Point tabMouseDownPoint;
-
-        // 右クリックしたタブの名前（Tabコントロール機能不足対応）
-        private string rclickTabName;
+        private string rclickTabName; // 右クリックしたタブの名前（Tabコントロール機能不足対応）
 
         private string detailHtmlFormatHeader;
         private string detailHtmlFormatFooter;
@@ -143,99 +120,44 @@ namespace Hoehoe
         private SearchWord searchDialog = new SearchWord();   // 検索画面インスタンス
         private FilterDialog fltDialog = new FilterDialog();  // フィルター編集画面
         private OpenURL urlDialog = new OpenURL();
-
         private TweenAboutBox aboutBox;
         private EventViewerDialog evtDialog;
 
         // 表示フォント、色、アイコン
-        // 未読用フォント
-        private Font fntUnread;
+        private Font fntUnread; // 未読用フォント
 
-        // 未読用文字色
-        private Color clrUnread;
-
-        // 既読用フォント
-        private Font fntReaded;
-
-        // 既読用文字色
-        private Color clrRead;
-
-        // Fav用文字色
-        private Color clrFav;
-
-        // 片思い用文字色
-        private Color clrOWL;
-
-        // Retweet用文字色
-        private Color clrRetweet;
-
-        // 発言詳細部用フォント
-        private Font fntDetail;
-
-        // 発言詳細部用色
-        private Color clrDetail;
-
-        // 発言詳細部用リンク文字色
-        private Color clrDetailLink;
-
-        // 発言詳細部用背景色
-        private Color clrDetailBackcolor;
-
-        // 自分の発言用背景色
-        private Color clrSelf;
-
-        // 自分宛返信用背景色
-        private Color clrAtSelf;
-
-        // 選択発言者の他の発言用背景色
-        private Color clrTarget;
-
-        // 選択発言中の返信先用背景色
-        private Color clrAtTarget;
-
-        // 選択発言者への返信発言用背景色
-        private Color clrAtFromTarget;
-
-        // 選択発言の唯一＠先
-        private Color clrAtTo;
-
-        // リスト部通常発言背景色
-        private Color clrListBackcolor;
-
-        // 入力欄背景色
-
-        // 入力欄文字色
-        private Color clrInputForecolor;
-
-        // 入力欄フォント
-        private Font fntInputFont;
+        private Color clrUnread; // 未読用文字色
+        private Font fntReaded; // 既読用フォント
+        private Color clrRead; // 既読用文字色
+        private Color clrFav; // Fav用文字色
+        private Color clrOWL; // 片思い用文字色
+        private Color clrRetweet; // Retweet用文字色
+        private Font fntDetail; // 発言詳細部用フォント
+        private Color clrDetail; // 発言詳細部用色
+        private Color clrDetailLink; // 発言詳細部用リンク文字色
+        private Color clrDetailBackcolor; // 発言詳細部用背景色
+        private Color clrSelf; // 自分の発言用背景色
+        private Color clrAtSelf; // 自分宛返信用背景色
+        private Color clrTarget; // 選択発言者の他の発言用背景色
+        private Color clrAtTarget; // 選択発言中の返信先用背景色
+        private Color clrAtFromTarget; // 選択発言者への返信発言用背景色
+        private Color clrAtTo; // 選択発言の唯一＠先
+        private Color clrListBackcolor; // リスト部通常発言背景色
+        private Color clrInputBackcolor; // 入力欄背景色
+        private Color clrInputForecolor; // 入力欄文字色
+        private Font fntInputFont; // 入力欄フォント
 
         // アイコン画像リスト
         private ImageDictionary iconDict;
 
-        // At.ico             タスクトレイアイコン：通常時
-        private Icon iconAt;
-
-        // AtRed.ico          タスクトレイアイコン：通信エラー時
-        private Icon iconAtRed;
-
-        // AtSmoke.ico        タスクトレイアイコン：オフライン時
-        private Icon iconAtSmoke;
-
-        // Refresh.ico        タスクトレイアイコン：更新中（アニメーション用に4種類を保持するリスト）
-        private Icon[] iconRefresh = new Icon[4];
-
-        // Tab.ico            未読のあるタブ用アイコン
-        private Icon tabIcon;
-
-        // Main.ico           画面左上のアイコン
-        private Icon mainIcon;
-
-        // 5g
-        private Icon replyIcon;
-
-        // 6g
-        private Icon replyIconBlink;
+        private Icon iconAt;         // At.ico             タスクトレイアイコン：通常時
+        private Icon iconAtRed;      // AtRed.ico          タスクトレイアイコン：通信エラー時
+        private Icon iconAtSmoke;    // AtSmoke.ico        タスクトレイアイコン：オフライン時
+        private Icon[] iconRefresh = new Icon[4]; // Refresh.ico        タスクトレイアイコン：更新中（アニメーション用に4種類を保持するリスト）
+        private Icon tabIcon;        // Tab.ico            未読のあるタブ用アイコン
+        private Icon mainIcon;       // Main.ico           画面左上のアイコン
+        private Icon replyIcon;      // 5g
+        private Icon replyIconBlink; // 6g
 
         private PostClass anchorPost;
 
@@ -381,37 +303,7 @@ namespace Hoehoe
         public delegate void SetStatusLabelApiDelegate();
 
         #endregion delegates
-
-        #region enums
-
-        // 検索処理タイプ
-        private enum InTabSearchType
-        {
-            DialogSearch,
-            NextSearch,
-            PrevSearch
-        }
-
-        [Flags]
-        private enum ModifierState : int
-        {
-            None = 0,
-            Alt = 1,
-            Shift = 2,
-            Ctrl = 4,
-            NotFlags = 8
-        }
-
-        private enum FocusedControl : int
-        {
-            None,
-            ListTab,
-            StatusText,
-            PostBrowser
-        }
-
-        #endregion enums
-
+        
         #region properties
 
         public Color InputBackColor { get; set; }
