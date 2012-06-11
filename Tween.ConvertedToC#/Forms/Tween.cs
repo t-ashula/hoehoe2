@@ -931,17 +931,7 @@ namespace Hoehoe
             return true;
         }
 
-        public void ShowSuplDialog(TextBox owner, AtIdSupplement dialog)
-        {
-            this.ShowSuplDialog(owner, dialog, 0, string.Empty);
-        }
-
-        public void ShowSuplDialog(TextBox owner, AtIdSupplement dialog, int offset)
-        {
-            this.ShowSuplDialog(owner, dialog, offset, string.Empty);
-        }
-
-        public void ShowSuplDialog(TextBox owner, AtIdSupplement dialog, int offset, string startswith)
+        public void ShowSuplDialog(TextBox owner, AtIdSupplement dialog, int offset = 0, string startswith = "")
         {
             dialog.StartsWith = startswith;
             if (dialog.Visible)
