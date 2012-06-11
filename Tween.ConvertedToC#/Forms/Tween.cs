@@ -1053,7 +1053,7 @@ namespace Hoehoe
             return true;
         }
 
-        public void ReOrderTab(string targetTabText, string baseTabText, bool isBeforeBaseTab)
+        public void ReorderTab(string targetTabText, string baseTabText, bool isBeforeBaseTab)
         {
             int baseIndex = 0;
             for (baseIndex = 0; baseIndex < this.ListTab.TabPages.Count; baseIndex++)
@@ -1065,14 +1065,13 @@ namespace Hoehoe
             }
 
             this.ListTab.SuspendLayout();
-
-            TabPage mTp = null;
+            TabPage tp = null;
             for (int j = 0; j < this.ListTab.TabPages.Count; j++)
             {
                 if (this.ListTab.TabPages[j].Text == targetTabText)
                 {
-                    mTp = this.ListTab.TabPages[j];
-                    this.ListTab.TabPages.Remove(mTp);
+                    tp = this.ListTab.TabPages[j];
+                    this.ListTab.TabPages.Remove(tp);
                     if (j < baseIndex)
                     {
                         baseIndex -= 1;
@@ -1084,11 +1083,11 @@ namespace Hoehoe
 
             if (isBeforeBaseTab)
             {
-                this.ListTab.TabPages.Insert(baseIndex, mTp);
+                this.ListTab.TabPages.Insert(baseIndex, tp);
             }
             else
             {
-                this.ListTab.TabPages.Insert(baseIndex + 1, mTp);
+                this.ListTab.TabPages.Insert(baseIndex + 1, tp);
             }
 
             this.ListTab.ResumeLayout();

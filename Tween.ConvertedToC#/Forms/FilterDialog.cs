@@ -665,7 +665,7 @@ namespace Hoehoe
             {
                 string selName = this.ListTabs.SelectedItem.ToString();
                 string tgtName = this.ListTabs.Items[this.ListTabs.SelectedIndex - 1].ToString();
-                ((TweenMain)this.Owner).ReOrderTab(selName, tgtName, true);
+                ((TweenMain)this.Owner).ReorderTab(selName, tgtName, true);
                 int idx = this.ListTabs.SelectedIndex;
                 this.ListTabs.Items.RemoveAt(idx - 1);
                 this.ListTabs.Items.Insert(idx, tgtName);
@@ -678,7 +678,7 @@ namespace Hoehoe
             {
                 string selName = this.ListTabs.SelectedItem.ToString();
                 string tgtName = this.ListTabs.Items[this.ListTabs.SelectedIndex + 1].ToString();
-                ((TweenMain)this.Owner).ReOrderTab(selName, tgtName, false);
+                ((TweenMain)this.Owner).ReorderTab(selName, tgtName, false);
                 int idx = this.ListTabs.SelectedIndex;
                 this.ListTabs.Items.RemoveAt(idx + 1);
                 this.ListTabs.Items.Insert(idx, tgtName);

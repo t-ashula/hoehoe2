@@ -1043,7 +1043,7 @@ namespace Hoehoe
                 return;
             }
 
-            this.ReOrderTab(tp.Text, tn, bef);
+            this.ReorderTab(tp.Text, tn, bef);
         }
 
         private void Tabs_DragEnter(object sender, DragEventArgs e)
