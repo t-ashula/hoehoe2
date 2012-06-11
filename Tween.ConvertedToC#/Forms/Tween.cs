@@ -1108,14 +1108,7 @@ namespace Hoehoe
             this.statuses.SetTabUnreadManage(tabName, isManage);
             if (this.settingDialog.TabIconDisp)
             {
-                if (this.statuses.Tabs[tabName].UnreadCount > 0)
-                {
-                    this.ListTab.TabPages[idx].ImageIndex = 0;
-                }
-                else
-                {
-                    this.ListTab.TabPages[idx].ImageIndex = -1;
-                }
+                this.ListTab.TabPages[idx].ImageIndex = this.statuses.Tabs[tabName].UnreadCount > 0 ? 0 : -1;
             }
 
             if (this.curTab.Text == tabName)
