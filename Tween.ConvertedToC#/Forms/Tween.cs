@@ -65,6 +65,7 @@ namespace Hoehoe
         private const string DetailHtmlFormat6 = ");\"><p>";
         private const string DetailHtmlFormat7 = "</p></body></html>";
 
+        private readonly string[] TwitterSearchLangs = { "ja", "en", "ar", "da", "nl", "fa", "fi", "fr", "de", "hu", "is", "it", "no", "pl", "pt", "ru", "es", "sv", "th" };
         private static int accountCheckErrorCount;
 
         // ロック用
@@ -491,25 +492,7 @@ namespace Hoehoe
             cmbLang.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbLang.TabStop = false;
             cmbLang.Items.Add(string.Empty);
-            cmbLang.Items.Add("ja");
-            cmbLang.Items.Add("en");
-            cmbLang.Items.Add("ar");
-            cmbLang.Items.Add("da");
-            cmbLang.Items.Add("nl");
-            cmbLang.Items.Add("fa");
-            cmbLang.Items.Add("fi");
-            cmbLang.Items.Add("fr");
-            cmbLang.Items.Add("de");
-            cmbLang.Items.Add("hu");
-            cmbLang.Items.Add("is");
-            cmbLang.Items.Add("it");
-            cmbLang.Items.Add("no");
-            cmbLang.Items.Add("pl");
-            cmbLang.Items.Add("pt");
-            cmbLang.Items.Add("ru");
-            cmbLang.Items.Add("es");
-            cmbLang.Items.Add("sv");
-            cmbLang.Items.Add("th");
+            cmbLang.Items.AddRange(TwitterSearchLangs);
             if (this.statuses.ContainsTab(tabName))
             {
                 cmbLang.Text = this.statuses.Tabs[tabName].SearchLang;
@@ -603,7 +586,6 @@ namespace Hoehoe
 
                 tabPage.Controls.Add(label);
             }
-
 
             this.ListTab.Controls.Add(tabPage);
             tabPage.Controls.Add(listCustom);
