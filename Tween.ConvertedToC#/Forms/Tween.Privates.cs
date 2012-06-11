@@ -5775,30 +5775,9 @@ namespace Hoehoe
                     MessageBox.Show(ex.Message);
                 }
 
-                this.brsForeColorUnread.Dispose();
-                this.brsForeColorReaded.Dispose();
-                this.brsForeColorFav.Dispose();
-                this.brsForeColorOWL.Dispose();
-                this.brsForeColorRetweet.Dispose();
-                this.brsForeColorUnread = new SolidBrush(this.clrUnread);
-                this.brsForeColorReaded = new SolidBrush(this.clrRead);
-                this.brsForeColorFav = new SolidBrush(this.clrFav);
-                this.brsForeColorOWL = new SolidBrush(this.clrOWL);
-                this.brsForeColorRetweet = new SolidBrush(this.clrRetweet);
-                this.brsBackColorMine.Dispose();
-                this.brsBackColorAt.Dispose();
-                this.brsBackColorYou.Dispose();
-                this.brsBackColorAtYou.Dispose();
-                this.brsBackColorAtFromTarget.Dispose();
-                this.brsBackColorAtTo.Dispose();
-                this.brsBackColorNone.Dispose();
-                this.brsBackColorMine = new SolidBrush(this.clrSelf);
-                this.brsBackColorAt = new SolidBrush(this.clrAtSelf);
-                this.brsBackColorYou = new SolidBrush(this.clrTarget);
-                this.brsBackColorAtYou = new SolidBrush(this.clrAtTarget);
-                this.brsBackColorAtFromTarget = new SolidBrush(this.clrAtFromTarget);
-                this.brsBackColorAtTo = new SolidBrush(this.clrAtTo);
-                this.brsBackColorNone = new SolidBrush(this.clrListBackcolor);
+                this.DisposeUserBrushes();
+                this.InitUserBrushes();
+
                 try
                 {
                     if (this.settingDialog.IsMonospace)
@@ -7782,8 +7761,9 @@ namespace Hoehoe
         {
             // 後始末
             this.DisposeForms();
-            this.DisposeIcons(); 
-            this.DisposeBrushes();
+            this.DisposeIcons();
+            this.DisposeInnerBrushes();
+            this.DisposeUserBrushes();
             this.DisposeBworkers();
             this.tabStringFormat.Dispose();
             if (this.iconDict != null)
@@ -7824,11 +7804,32 @@ namespace Hoehoe
                 this.followerFetchWorker.Dispose();
             }
         }
-
-        private void DisposeBrushes()
+        
+        private void DisposeInnerBrushes()
         {
             this.brsHighLight.Dispose();
             this.brsHighLightText.Dispose();
+            this.brsDeactiveSelection.Dispose();
+        }
+
+        private void InitUserBrushes()
+        {
+            this.brsForeColorUnread = new SolidBrush(this.clrUnread);
+            this.brsForeColorReaded = new SolidBrush(this.clrRead);
+            this.brsForeColorFav = new SolidBrush(this.clrFav);
+            this.brsForeColorOWL = new SolidBrush(this.clrOWL);
+            this.brsForeColorRetweet = new SolidBrush(this.clrRetweet);
+            this.brsBackColorMine = new SolidBrush(this.clrSelf);
+            this.brsBackColorAt = new SolidBrush(this.clrAtSelf);
+            this.brsBackColorYou = new SolidBrush(this.clrTarget);
+            this.brsBackColorAtYou = new SolidBrush(this.clrAtTarget);
+            this.brsBackColorAtFromTarget = new SolidBrush(this.clrAtFromTarget);
+            this.brsBackColorAtTo = new SolidBrush(this.clrAtTo);
+            this.brsBackColorNone = new SolidBrush(this.clrListBackcolor);
+        }
+
+        private void DisposeUserBrushes()
+        {            
             if (this.brsForeColorUnread != null)
             {
                 this.brsForeColorUnread.Dispose();
@@ -7887,11 +7888,6 @@ namespace Hoehoe
             if (this.brsBackColorNone != null)
             {
                 this.brsBackColorNone.Dispose();
-            }
-
-            if (this.brsDeactiveSelection != null)
-            {
-                this.brsDeactiveSelection.Dispose();
             }
         }
 

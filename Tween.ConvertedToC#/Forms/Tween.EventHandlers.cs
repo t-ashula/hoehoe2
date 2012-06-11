@@ -1503,18 +1503,7 @@ namespace Hoehoe
             this.clrInputForecolor = this.cfgLocal.ColorInputFont;
             this.fntInputFont = this.cfgLocal.FontInputFont;
 
-            this.brsForeColorUnread = new SolidBrush(this.clrUnread);
-            this.brsForeColorReaded = new SolidBrush(this.clrRead);
-            this.brsForeColorFav = new SolidBrush(this.clrFav);
-            this.brsForeColorOWL = new SolidBrush(this.clrOWL);
-            this.brsForeColorRetweet = new SolidBrush(this.clrRetweet);
-            this.brsBackColorMine = new SolidBrush(this.clrSelf);
-            this.brsBackColorAt = new SolidBrush(this.clrAtSelf);
-            this.brsBackColorYou = new SolidBrush(this.clrTarget);
-            this.brsBackColorAtYou = new SolidBrush(this.clrAtTarget);
-            this.brsBackColorAtFromTarget = new SolidBrush(this.clrAtFromTarget);
-            this.brsBackColorAtTo = new SolidBrush(this.clrAtTo);
-            this.brsBackColorNone = new SolidBrush(this.clrListBackcolor);
+            this.InitUserBrushes();
 
             // StringFormatオブジェクトへの事前設定
             this.tabStringFormat.Alignment = StringAlignment.Center;
@@ -1835,30 +1824,8 @@ namespace Hoehoe
                 this.InputBackColor = this.settingDialog.ColorInputBackcolor;
                 this.clrInputForecolor = this.settingDialog.ColorInputFont;
                 this.fntInputFont = this.settingDialog.FontInputFont;
-                this.brsForeColorUnread.Dispose();
-                this.brsForeColorReaded.Dispose();
-                this.brsForeColorFav.Dispose();
-                this.brsForeColorOWL.Dispose();
-                this.brsForeColorRetweet.Dispose();
-                this.brsForeColorUnread = new SolidBrush(this.clrUnread);
-                this.brsForeColorReaded = new SolidBrush(this.clrRead);
-                this.brsForeColorFav = new SolidBrush(this.clrFav);
-                this.brsForeColorOWL = new SolidBrush(this.clrOWL);
-                this.brsForeColorRetweet = new SolidBrush(this.clrRetweet);
-                this.brsBackColorMine.Dispose();
-                this.brsBackColorAt.Dispose();
-                this.brsBackColorYou.Dispose();
-                this.brsBackColorAtYou.Dispose();
-                this.brsBackColorAtFromTarget.Dispose();
-                this.brsBackColorAtTo.Dispose();
-                this.brsBackColorNone.Dispose();
-                this.brsBackColorMine = new SolidBrush(this.clrSelf);
-                this.brsBackColorAt = new SolidBrush(this.clrAtSelf);
-                this.brsBackColorYou = new SolidBrush(this.clrTarget);
-                this.brsBackColorAtYou = new SolidBrush(this.clrAtTarget);
-                this.brsBackColorAtFromTarget = new SolidBrush(this.clrAtFromTarget);
-                this.brsBackColorAtTo = new SolidBrush(this.clrAtTo);
-                this.brsBackColorNone = new SolidBrush(this.clrListBackcolor);
+                this.DisposeUserBrushes();
+                this.InitUserBrushes();
 
                 if (this.settingDialog.IsMonospace)
                 {
