@@ -446,6 +446,91 @@ namespace Hoehoe
             this.GetTimeline(WorkerType.UserTimeline, 1, 0, tabName);
         }
 
+        private Panel CreateSearchPanel(string tabName)
+        {
+            Panel pnl = new Panel();
+
+            Label lbl = new Label();
+            ComboBox cmb = new ComboBox();
+            Button btn = new Button();
+            ComboBox cmbLang = new ComboBox();
+
+            pnl.SuspendLayout();
+
+            pnl.Controls.Add(cmb);
+            pnl.Controls.Add(cmbLang);
+            pnl.Controls.Add(btn);
+            pnl.Controls.Add(lbl);
+            pnl.Name = "panelSearch";
+            pnl.Dock = DockStyle.Top;
+            pnl.Height = cmb.Height;
+            pnl.Enter += this.SearchControls_Enter;
+            pnl.Leave += this.SearchControls_Leave;
+
+            cmb.Text = string.Empty;
+            cmb.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            cmb.Dock = DockStyle.Fill;
+            cmb.Name = "comboSearch";
+            cmb.DropDownStyle = ComboBoxStyle.DropDown;
+            cmb.ImeMode = ImeMode.NoControl;
+            cmb.TabStop = false;
+            cmb.AutoCompleteMode = AutoCompleteMode.None;
+            cmb.KeyDown += this.SearchComboBox_KeyDown;
+
+            if (this.statuses.ContainsTab(tabName))
+            {
+                cmb.Items.Add(this.statuses.Tabs[tabName].SearchWords);
+                cmb.Text = this.statuses.Tabs[tabName].SearchWords;
+            }
+
+            cmbLang.Text = string.Empty;
+            cmbLang.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            cmbLang.Dock = DockStyle.Right;
+            cmbLang.Width = 50;
+            cmbLang.Name = "comboLang";
+            cmbLang.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbLang.TabStop = false;
+            cmbLang.Items.Add(string.Empty);
+            cmbLang.Items.Add("ja");
+            cmbLang.Items.Add("en");
+            cmbLang.Items.Add("ar");
+            cmbLang.Items.Add("da");
+            cmbLang.Items.Add("nl");
+            cmbLang.Items.Add("fa");
+            cmbLang.Items.Add("fi");
+            cmbLang.Items.Add("fr");
+            cmbLang.Items.Add("de");
+            cmbLang.Items.Add("hu");
+            cmbLang.Items.Add("is");
+            cmbLang.Items.Add("it");
+            cmbLang.Items.Add("no");
+            cmbLang.Items.Add("pl");
+            cmbLang.Items.Add("pt");
+            cmbLang.Items.Add("ru");
+            cmbLang.Items.Add("es");
+            cmbLang.Items.Add("sv");
+            cmbLang.Items.Add("th");
+            if (this.statuses.ContainsTab(tabName))
+            {
+                cmbLang.Text = this.statuses.Tabs[tabName].SearchLang;
+            }
+
+            lbl.Text = "Search(C-S-f)";
+            lbl.Name = "label1";
+            lbl.Dock = DockStyle.Left;
+            lbl.Width = 90;
+            lbl.Height = cmb.Height;
+            lbl.TextAlign = ContentAlignment.MiddleLeft;
+
+            btn.Text = "Search";
+            btn.Name = "buttonSearch";
+            btn.UseVisualStyleBackColor = true;
+            btn.Dock = DockStyle.Right;
+            btn.TabStop = false;
+            btn.Click += this.SearchButton_Click;
+            return pnl;
+        }
+        
         public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
         {
             // 重複チェック
@@ -519,97 +604,15 @@ namespace Hoehoe
                 tabPage.Controls.Add(label);
             }
 
-            /// 検索関連の準備
-            Panel pnl = null;
-            if (tabType == TabUsageType.PublicSearch)
-            {
-                pnl = new Panel();
-
-                Label lbl = new Label();
-                ComboBox cmb = new ComboBox();
-                Button btn = new Button();
-                ComboBox cmbLang = new ComboBox();
-
-                pnl.SuspendLayout();
-
-                pnl.Controls.Add(cmb);
-                pnl.Controls.Add(cmbLang);
-                pnl.Controls.Add(btn);
-                pnl.Controls.Add(lbl);
-                pnl.Name = "panelSearch";
-                pnl.Dock = DockStyle.Top;
-                pnl.Height = cmb.Height;
-                pnl.Enter += this.SearchControls_Enter;
-                pnl.Leave += this.SearchControls_Leave;
-
-                cmb.Text = string.Empty;
-                cmb.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-                cmb.Dock = DockStyle.Fill;
-                cmb.Name = "comboSearch";
-                cmb.DropDownStyle = ComboBoxStyle.DropDown;
-                cmb.ImeMode = ImeMode.NoControl;
-                cmb.TabStop = false;
-                cmb.AutoCompleteMode = AutoCompleteMode.None;
-                cmb.KeyDown += this.SearchComboBox_KeyDown;
-
-                if (this.statuses.ContainsTab(tabName))
-                {
-                    cmb.Items.Add(this.statuses.Tabs[tabName].SearchWords);
-                    cmb.Text = this.statuses.Tabs[tabName].SearchWords;
-                }
-
-                cmbLang.Text = string.Empty;
-                cmbLang.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-                cmbLang.Dock = DockStyle.Right;
-                cmbLang.Width = 50;
-                cmbLang.Name = "comboLang";
-                cmbLang.DropDownStyle = ComboBoxStyle.DropDownList;
-                cmbLang.TabStop = false;
-                cmbLang.Items.Add(string.Empty);
-                cmbLang.Items.Add("ja");
-                cmbLang.Items.Add("en");
-                cmbLang.Items.Add("ar");
-                cmbLang.Items.Add("da");
-                cmbLang.Items.Add("nl");
-                cmbLang.Items.Add("fa");
-                cmbLang.Items.Add("fi");
-                cmbLang.Items.Add("fr");
-                cmbLang.Items.Add("de");
-                cmbLang.Items.Add("hu");
-                cmbLang.Items.Add("is");
-                cmbLang.Items.Add("it");
-                cmbLang.Items.Add("no");
-                cmbLang.Items.Add("pl");
-                cmbLang.Items.Add("pt");
-                cmbLang.Items.Add("ru");
-                cmbLang.Items.Add("es");
-                cmbLang.Items.Add("sv");
-                cmbLang.Items.Add("th");
-                if (this.statuses.ContainsTab(tabName))
-                {
-                    cmbLang.Text = this.statuses.Tabs[tabName].SearchLang;
-                }
-
-                lbl.Text = "Search(C-S-f)";
-                lbl.Name = "label1";
-                lbl.Dock = DockStyle.Left;
-                lbl.Width = 90;
-                lbl.Height = cmb.Height;
-                lbl.TextAlign = ContentAlignment.MiddleLeft;
-
-                btn.Text = "Search";
-                btn.Name = "buttonSearch";
-                btn.UseVisualStyleBackColor = true;
-                btn.Dock = DockStyle.Right;
-                btn.TabStop = false;
-                btn.Click += this.SearchButton_Click;
-            }
 
             this.ListTab.Controls.Add(tabPage);
             tabPage.Controls.Add(listCustom);
 
+            /// 検索関連の準備
+            Panel pnl = null;
             if (tabType == TabUsageType.PublicSearch)
             {
+                pnl = CreateSearchPanel(tabName);
                 tabPage.Controls.Add(pnl);
             }
 
