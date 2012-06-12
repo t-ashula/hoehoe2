@@ -1435,10 +1435,6 @@ namespace Hoehoe
         {
             this.ignoreConfigSave = true;
             this.Visible = false;
-            this.securityManager = new InternetSecurityManager(this.PostBrowser);
-            this.thumbnail = new Thumbnail(this);
-            MyCommon.TwitterApiInfo.Changed += this.TwitterApiInfo_Changed;
-            Microsoft.Win32.SystemEvents.PowerModeChanged += this.SystemEvents_PowerModeChanged;
             this.VerUpMenuItem.Image = this.shield.Icon;
             var cmdArgs = System.Environment.GetCommandLineArgs().Skip(1).ToArray();
             if (cmdArgs.Length != 0 && cmdArgs.Contains("/d"))

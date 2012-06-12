@@ -295,6 +295,12 @@ namespace Hoehoe
             this.growlHelper.NotifyClicked += this.GrowlHelper_Callback;
             this.timerTimeline = new System.Timers.Timer();
             this.timerTimeline.Elapsed += this.TimerTimeline_Elapsed;
+
+            this.securityManager = new InternetSecurityManager(this.PostBrowser);
+            this.thumbnail = new Thumbnail(this);
+            MyCommon.TwitterApiInfo.Changed += this.TwitterApiInfo_Changed;
+            Microsoft.Win32.SystemEvents.PowerModeChanged += this.SystemEvents_PowerModeChanged;
+
         }
 
         #endregion constructor
