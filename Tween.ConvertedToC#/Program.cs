@@ -29,6 +29,7 @@ namespace Hoehoe
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Threading;
     using System.Windows.Forms;
@@ -70,7 +71,14 @@ namespace Hoehoe
             {
                 return;
             }
+
             //// this.ShutdownStyle = global::Microsoft.VisualBasic.ApplicationServices.ShutdownMode.AfterMainFormCloses;
+            if (args.Length != 0)
+            {
+                MyCommon.TraceFlag = args.Contains("/d");
+                MyCommon.NoLimit = args.Contains("nolimit");
+            }
+
             Application.Run(new TweenMain());
         }
 

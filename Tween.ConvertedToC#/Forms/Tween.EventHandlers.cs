@@ -1436,12 +1436,6 @@ namespace Hoehoe
             this.ignoreConfigSave = true;
             this.Visible = false;
             this.VerUpMenuItem.Image = this.shield.Icon;
-            var cmdArgs = System.Environment.GetCommandLineArgs().Skip(1).ToArray();
-            if (cmdArgs.Length != 0 && cmdArgs.Contains("/d"))
-            {
-                MyCommon.TraceFlag = true;
-            }
-
             this.spaceKeyCanceler = new SpaceKeyCanceler(this.PostButton);
             this.spaceKeyCanceler.SpaceCancel += this.SpaceKeyCanceler_SpaceCancel;
 
@@ -1528,7 +1522,7 @@ namespace Hoehoe
             this.settingDialog.ListsPeriodInt = this.cfgCommon.ListsPeriod;
 
             // 不正値チェック
-            if (!cmdArgs.Contains("nolimit"))
+            if (!MyCommon.NoLimit)
             {
                 if (this.settingDialog.TimelinePeriodInt < 15 && this.settingDialog.TimelinePeriodInt > 0)
                 {

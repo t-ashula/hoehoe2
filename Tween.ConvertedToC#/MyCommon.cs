@@ -66,11 +66,13 @@ namespace Hoehoe
         /// </summary>
         public static string SettingPath { get; set; }
 
+        public static bool NoLimit { get; set; }
+
         /// <summary>
         ///
         /// </summary>
         public static bool TraceFlag { get; set; }
-
+        
 #if DEBUG
         public static bool DebugBuild = true;
 #else
@@ -562,5 +564,6 @@ namespace Hoehoe
             public const string DM = "Direct";
             public const string FAV = "Favorites";
         }
+
     }
 }
