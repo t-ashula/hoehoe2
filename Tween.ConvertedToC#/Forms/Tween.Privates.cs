@@ -694,7 +694,7 @@ namespace Hoehoe
                             sb.Append(Environment.NewLine);
                         }
 
-                        switch (this.settingDialog.NameBalloon)
+                        switch (this.configs.NameBalloon)
                         {
                             case NameBalloonEnum.UserID:
                                 sb.Append(post.ScreenName).Append(" : ");
@@ -748,7 +748,7 @@ namespace Hoehoe
                             sb.Append(Environment.NewLine);
                         }
 
-                        switch (this.settingDialog.NameBalloon)
+                        switch (this.configs.NameBalloon)
                         {
                             case NameBalloonEnum.UserID:
                                 sb.Append(post.ScreenName).Append(" : ");
@@ -3397,7 +3397,7 @@ namespace Hoehoe
                 this.cfgCommon.UnreadManage = this.configs.UnreadManage;
                 this.cfgCommon.PlaySound = this.configs.PlaySound;
                 this.cfgCommon.OneWayLove = this.configs.OneWayLove;
-                this.cfgCommon.NameBalloon = this.settingDialog.NameBalloon;
+                this.cfgCommon.NameBalloon = this.configs.NameBalloon;
                 this.cfgCommon.PostCtrlEnter = this.settingDialog.PostCtrlEnter;
                 this.cfgCommon.PostShiftEnter = this.settingDialog.PostShiftEnter;
                 this.cfgCommon.CountApi = this.settingDialog.CountApi;

@@ -85,5 +85,7 @@ namespace Hoehoe
         public Font FontInputFont { get; set; }
         public Color ColorListBackcolor { get; set; }
         public Color ColorDetailBackcolor { get; set; }
+
+        public NameBalloonEnum NameBalloon { get; set; }
     }
 }

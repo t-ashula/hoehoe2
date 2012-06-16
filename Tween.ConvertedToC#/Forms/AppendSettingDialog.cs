@@ -84,8 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public NameBalloonEnum NameBalloon { get; set; }
-
         public bool PostCtrlEnter { get; set; }
 
         public bool PostShiftEnter { get; set; }
@@ -470,13 +468,13 @@ namespace Hoehoe
                 switch (this.cmbNameBalloon.SelectedIndex)
                 {
                     case 0:
-                        this.NameBalloon = NameBalloonEnum.None;
+                        this.configurations.NameBalloon = NameBalloonEnum.None;
                         break;
                     case 1:
-                        this.NameBalloon = NameBalloonEnum.UserID;
+                        this.configurations.NameBalloon = NameBalloonEnum.UserID;
                         break;
                     case 2:
-                        this.NameBalloon = NameBalloonEnum.NickName;
+                        this.configurations.NameBalloon = NameBalloonEnum.NickName;
                         break;
                 }
 
@@ -848,7 +846,7 @@ namespace Hoehoe
             this.lblDetail.ForeColor = this.configurations.ColorDetail;
             this.lblDetailLink.ForeColor = this.configurations.ColorDetailLink;
 
-            switch (this.NameBalloon)
+            switch (this.configurations.NameBalloon)
             {
                 case NameBalloonEnum.None:
                     this.cmbNameBalloon.SelectedIndex = 0;

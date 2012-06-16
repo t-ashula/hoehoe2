@@ -1599,7 +1599,7 @@ namespace Hoehoe
             this.configs.ColorInputBackcolor = this.InputBackColor;
             this.configs.ColorInputFont = this.clrInputForecolor;
             this.configs.FontInputFont = this.fntInputFont;
-            this.settingDialog.NameBalloon = this.cfgCommon.NameBalloon;
+            this.configs.NameBalloon = this.cfgCommon.NameBalloon;
             this.settingDialog.PostCtrlEnter = this.cfgCommon.PostCtrlEnter;
             this.settingDialog.PostShiftEnter = this.cfgCommon.PostShiftEnter;
             this.settingDialog.CountApi = this.cfgCommon.CountApi;
