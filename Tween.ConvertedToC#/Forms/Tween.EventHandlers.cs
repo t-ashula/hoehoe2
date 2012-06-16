@@ -1618,7 +1618,7 @@ namespace Hoehoe
             this.configs.PostAndGet = this.cfgCommon.PostAndGet;
             this.configs.UseRecommendStatus = this.cfgLocal.UseRecommendStatus;
             this.configs.DispUsername = this.cfgCommon.DispUsername;
-            this.settingDialog.CloseToExit = this.cfgCommon.CloseToExit;
+            this.configs.CloseToExit = this.cfgCommon.CloseToExit;
             this.settingDialog.MinimizeToTray = this.cfgCommon.MinimizeToTray;
             this.settingDialog.DispLatestPost = this.cfgCommon.DispLatestPost;
             this.settingDialog.SortOrderLock = this.cfgCommon.SortOrderLock;

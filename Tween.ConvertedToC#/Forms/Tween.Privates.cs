@@ -3405,7 +3405,7 @@ namespace Hoehoe
                 this.cfgCommon.PostAndGet = this.configs.PostAndGet;
                 this.cfgCommon.DispUsername = this.configs.DispUsername;
                 this.cfgCommon.MinimizeToTray = this.settingDialog.MinimizeToTray;
-                this.cfgCommon.CloseToExit = this.settingDialog.CloseToExit;
+                this.cfgCommon.CloseToExit = this.configs.CloseToExit;
                 this.cfgCommon.DispLatestPost = this.settingDialog.DispLatestPost;
                 this.cfgCommon.SortOrderLock = this.settingDialog.SortOrderLock;
                 this.cfgCommon.TinyUrlResolve = this.settingDialog.TinyUrlResolve;
@@ -7921,7 +7921,7 @@ namespace Hoehoe
 
         private void TweenMain_FormClosingExtracted(FormClosingEventArgs e)
         {
-            if (!this.settingDialog.CloseToExit && e.CloseReason == CloseReason.UserClosing && !MyCommon.IsEnding)
+            if (!this.configs.CloseToExit && e.CloseReason == CloseReason.UserClosing && !MyCommon.IsEnding)
             {
                 e.Cancel = true;
                 this.Visible = false;

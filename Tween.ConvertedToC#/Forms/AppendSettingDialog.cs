@@ -84,7 +84,7 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public bool CloseToExit { get; set; }
+
 
         public bool MinimizeToTray { get; set; }
 
@@ -472,7 +472,7 @@ namespace Hoehoe
                 this.configurations.PostAndGet = this.CheckPostAndGet.Checked;
                 this.configurations.UseRecommendStatus = this.CheckUseRecommendStatus.Checked;
                 this.configurations.DispUsername = this.CheckDispUsername.Checked;
-                this.CloseToExit = this.CheckCloseToExit.Checked;
+                this.configurations.CloseToExit = this.CheckCloseToExit.Checked;
                 this.MinimizeToTray = this.CheckMinimizeToTray.Checked;
                 switch (this.ComboDispTitle.SelectedIndex)
                 {
@@ -850,7 +850,7 @@ namespace Hoehoe
             this.CheckPostAndGet.Checked = this.configurations.PostAndGet;
             this.CheckUseRecommendStatus.Checked = this.configurations.UseRecommendStatus;
             this.CheckDispUsername.Checked = this.configurations.DispUsername;
-            this.CheckCloseToExit.Checked = this.CloseToExit;
+            this.CheckCloseToExit.Checked = this.configurations.CloseToExit;
             this.CheckMinimizeToTray.Checked = this.MinimizeToTray;
             switch (this.DispLatestPost)
             {
