@@ -52,5 +52,6 @@ namespace Hoehoe
         public bool IsNotifyUseGrowl { get; set; }
         public Configuration TwitterConfiguration { get; set; }
         public int UserstreamPeriodInt { get; set; }
+        public bool UserstreamStartup { get; set; }
     }
 }

@@ -303,7 +303,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     Twitter.AccountState = AccountState.Valid;
                     this.uname = username.ToLower();
-                    if (AppendSettingDialog.Instance.UserstreamStartup)
+                    if (Configs.Instance.UserstreamStartup)
                     {
                         this.ReconnectUserStream();
                     }
@@ -378,7 +378,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     Twitter.AccountState = AccountState.Valid;
                     this.uname = this.Username.ToLower();
-                    if (AppendSettingDialog.Instance.UserstreamStartup)
+                    if (Configs.Instance.UserstreamStartup)
                     {
                         this.ReconnectUserStream();
                     }
@@ -464,7 +464,7 @@ namespace Hoehoe
             MyCommon.TwitterApiInfo.Initialize();
             this.twitterConnection.Initialize(token, tokenSecret, username, userId);
             this.uname = username.ToLower();
-            if (AppendSettingDialog.Instance.UserstreamStartup)
+            if (Configs.Instance.UserstreamStartup)
             {
                 this.ReconnectUserStream();
             }

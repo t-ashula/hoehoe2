@@ -102,7 +102,7 @@ namespace Hoehoe
 
         
 
-        public bool UserstreamStartup { get; set; }
+
 
         public int TimelinePeriodInt { get; set; }
 
@@ -451,7 +451,7 @@ namespace Hoehoe
 
             try
             {
-                this.UserstreamStartup = this.StartupUserstreamCheck.Checked;
+                this.configurations.UserstreamStartup = this.StartupUserstreamCheck.Checked;
 
                 if (this.configurations.UserstreamPeriodInt != Convert.ToInt32(this.UserstreamPeriod.Text))
                 {
@@ -880,7 +880,7 @@ namespace Hoehoe
                 }
             }
 
-            this.StartupUserstreamCheck.Checked = this.UserstreamStartup;
+            this.StartupUserstreamCheck.Checked = this.configurations.UserstreamStartup;
             this.UserstreamPeriod.Text = this.configurations.UserstreamPeriodInt.ToString();
             this.TimelinePeriod.Text = this.TimelinePeriodInt.ToString();
             this.ReplyPeriod.Text = this.ReplyPeriodInt.ToString();

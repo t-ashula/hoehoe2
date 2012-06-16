@@ -1712,7 +1712,7 @@ namespace Hoehoe
             this.settingDialog.FavoritesCountApi = this.cfgCommon.FavoritesCountApi;
             this.settingDialog.UserTimelineCountApi = this.cfgCommon.UserTimelineCountApi;
             this.settingDialog.ListCountApi = this.cfgCommon.ListCountApi;
-            this.settingDialog.UserstreamStartup = this.cfgCommon.UserstreamStartup;
+            this.configs.UserstreamStartup = this.cfgCommon.UserstreamStartup;
             this.configs.UserstreamPeriodInt = this.cfgCommon.UserstreamPeriod;
             this.settingDialog.OpenUserTimeline = this.cfgCommon.OpenUserTimeline;
             this.settingDialog.ListDoubleClickAction = this.cfgCommon.ListDoubleClickAction;

@@ -3384,7 +3384,7 @@ namespace Hoehoe
                 this.cfgCommon.Token = this.tw.AccessToken;
                 this.cfgCommon.TokenSecret = this.tw.AccessTokenSecret;
                 this.cfgCommon.UserAccounts = this.configs.UserAccounts;
-                this.cfgCommon.UserstreamStartup = this.settingDialog.UserstreamStartup;
+                this.cfgCommon.UserstreamStartup = this.configs.UserstreamStartup;
                 this.cfgCommon.UserstreamPeriod = this.configs.UserstreamPeriodInt;
                 this.cfgCommon.TimelinePeriod = this.settingDialog.TimelinePeriodInt;
                 this.cfgCommon.ReplyPeriod = this.settingDialog.ReplyPeriodInt;
@@ -4540,7 +4540,7 @@ namespace Hoehoe
             this.tw.PostDeleted += this.Tw_PostDeleted;
             this.tw.UserStreamEventReceived += this.Tw_UserStreamEventArrived;
             this.ChangeUserStreamStatusDisplay(true);
-            if (this.settingDialog.UserstreamStartup)
+            if (this.configs.UserstreamStartup)
             {
                 this.tw.StartUserStream();
             }
