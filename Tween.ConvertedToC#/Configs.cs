@@ -46,5 +46,6 @@ namespace Hoehoe
         public int FoursquarePreviewZoom { get; set; }
         public bool IsListStatusesIncludeRts { get; set; }
         public List<UserAccount> UserAccounts { get; set; }
+        public bool TabMouseLock { get; set; }
     }
 }

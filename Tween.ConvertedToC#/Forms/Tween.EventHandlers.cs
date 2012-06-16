@@ -1060,7 +1060,7 @@ namespace Hoehoe
 
         private void Tabs_MouseDownExtracted(MouseEventArgs e)
         {
-            if (this.settingDialog.TabMouseLock)
+            if (this.configs.TabMouseLock)
             {
                 return;
             }
@@ -1723,7 +1723,7 @@ namespace Hoehoe
             this.configs.FoursquarePreviewWidth = this.cfgCommon.FoursquarePreviewWidth;
             this.configs.FoursquarePreviewZoom = this.cfgCommon.FoursquarePreviewZoom;
             this.configs.IsListStatusesIncludeRts = this.cfgCommon.IsListsIncludeRts;
-            this.settingDialog.TabMouseLock = this.cfgCommon.TabMouseLock;
+            this.configs.TabMouseLock = this.cfgCommon.TabMouseLock;
             this.settingDialog.IsRemoveSameEvent = this.cfgCommon.IsRemoveSameEvent;
             this.settingDialog.IsNotifyUseGrowl = this.cfgCommon.IsUseNotifyGrowl;
 
@@ -3024,7 +3024,7 @@ namespace Hoehoe
         private void ListTab_MouseMove(object sender, MouseEventArgs e)
         {
             // タブのD&D
-            if (!this.settingDialog.TabMouseLock && e.Button == MouseButtons.Left && this.tabDraging)
+            if (!this.configs.TabMouseLock && e.Button == MouseButtons.Left && this.tabDraging)
             {
                 string tn = string.Empty;
                 Rectangle dragEnableRectangle = new Rectangle(Convert.ToInt32(this.tabMouseDownPoint.X - (SystemInformation.DragSize.Width / 2)), Convert.ToInt32(this.tabMouseDownPoint.Y - (SystemInformation.DragSize.Height / 2)), SystemInformation.DragSize.Width, SystemInformation.DragSize.Height);

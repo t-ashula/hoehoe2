@@ -92,7 +92,7 @@ namespace Hoehoe
 
         
 
-        public bool TabMouseLock { get; set; }
+        
 
         public bool IsRemoveSameEvent { get; set; }
 
@@ -777,7 +777,7 @@ namespace Hoehoe
                 this.configurations.FoursquarePreviewWidth = Convert.ToInt32(this.FoursquarePreviewWidthTextBox.Text);
                 this.configurations.FoursquarePreviewZoom = Convert.ToInt32(this.FoursquarePreviewZoomTextBox.Text);
                 this.configurations.IsListStatusesIncludeRts = this.IsListsIncludeRtsCheckBox.Checked;
-                this.TabMouseLock = this.TabMouseLockCheck.Checked;
+                this.configurations.TabMouseLock = this.TabMouseLockCheck.Checked;
                 this.IsRemoveSameEvent = this.IsRemoveSameFavEventCheckBox.Checked;
                 this.IsNotifyUseGrowl = this.IsNotifyUseGrowlCheckBox.Checked;
             }
@@ -1157,7 +1157,7 @@ namespace Hoehoe
             this.FoursquarePreviewWidthTextBox.Text = this.configurations.FoursquarePreviewWidth.ToString();
             this.FoursquarePreviewZoomTextBox.Text = this.configurations.FoursquarePreviewZoom.ToString();
             this.IsListsIncludeRtsCheckBox.Checked = this.configurations.IsListStatusesIncludeRts;
-            this.TabMouseLockCheck.Checked = this.TabMouseLock;
+            this.TabMouseLockCheck.Checked = this.configurations.TabMouseLock;
             this.IsRemoveSameFavEventCheckBox.Checked = this.IsRemoveSameEvent;
             this.IsNotifyUseGrowlCheckBox.Checked = this.IsNotifyUseGrowl;
 
