@@ -3388,7 +3388,7 @@ namespace Hoehoe
                 this.cfgCommon.UserstreamPeriod = this.configs.UserstreamPeriodInt;
                 this.cfgCommon.TimelinePeriod = this.configs.TimelinePeriodInt;
                 this.cfgCommon.ReplyPeriod = this.configs.ReplyPeriodInt;
-                this.cfgCommon.DMPeriod = this.settingDialog.DMPeriodInt;
+                this.cfgCommon.DMPeriod = this.configs.DMPeriodInt;
                 this.cfgCommon.PubSearchPeriod = this.settingDialog.PubSearchPeriodInt;
                 this.cfgCommon.ListsPeriod = this.settingDialog.ListsPeriodInt;
                 this.cfgCommon.UserTimelinePeriod = this.settingDialog.UserTimelinePeriodInt;
@@ -7566,7 +7566,7 @@ namespace Hoehoe
             // 'タイマー初期化
             this.resetTimers.Timeline = this.ResetWorkerTimer(ref this.timerHomeCounter, this.configs.TimelinePeriodInt, WorkerType.Timeline, this.resetTimers.Timeline);
             this.resetTimers.Reply = this.ResetWorkerTimer(ref this.timerMentionCounter, this.configs.ReplyPeriodInt, WorkerType.Reply, this.resetTimers.Reply);
-            this.resetTimers.DirectMessage = this.ResetWorkerTimer(ref this.timerDmCounter, this.settingDialog.DMPeriodInt, WorkerType.DirectMessegeRcv, this.resetTimers.DirectMessage);
+            this.resetTimers.DirectMessage = this.ResetWorkerTimer(ref this.timerDmCounter, this.configs.DMPeriodInt, WorkerType.DirectMessegeRcv, this.resetTimers.DirectMessage);
             this.resetTimers.PublicSearch = this.ResetWorkerTimer(ref this.timerPubSearchCounter, this.settingDialog.PubSearchPeriodInt, WorkerType.PublicSearch, this.resetTimers.PublicSearch);
             this.resetTimers.UserTimeline = this.ResetWorkerTimer(ref this.timerUserTimelineCounter, this.settingDialog.UserTimelinePeriodInt, WorkerType.UserTimeline, this.resetTimers.UserTimeline);
             this.resetTimers.Lists = this.ResetWorkerTimer(ref this.timerListsCounter, this.settingDialog.ListsPeriodInt, WorkerType.List, this.resetTimers.Lists);

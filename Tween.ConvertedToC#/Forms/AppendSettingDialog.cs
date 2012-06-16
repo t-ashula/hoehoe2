@@ -84,8 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public int DMPeriodInt { get; set; }
-
         public int PubSearchPeriodInt { get; set; }
 
         public int ListsPeriodInt { get; set; }
@@ -443,9 +441,9 @@ namespace Hoehoe
                     isIntervalChanged = true;
                 }
 
-                if (this.DMPeriodInt != Convert.ToInt32(this.DMPeriod.Text))
+                if (this.configurations.DMPeriodInt != Convert.ToInt32(this.DMPeriod.Text))
                 {
-                    this.DMPeriodInt = Convert.ToInt32(this.DMPeriod.Text);
+                    this.configurations.DMPeriodInt = Convert.ToInt32(this.DMPeriod.Text);
                     arg.DirectMessage = true;
                     isIntervalChanged = true;
                 }
@@ -860,7 +858,7 @@ namespace Hoehoe
             this.UserstreamPeriod.Text = this.configurations.UserstreamPeriodInt.ToString();
             this.TimelinePeriod.Text = this.configurations.TimelinePeriodInt.ToString();
             this.ReplyPeriod.Text = this.configurations.ReplyPeriodInt.ToString();
-            this.DMPeriod.Text = this.DMPeriodInt.ToString();
+            this.DMPeriod.Text = this.configurations.DMPeriodInt.ToString();
             this.PubSearchPeriod.Text = this.PubSearchPeriodInt.ToString();
             this.ListsPeriod.Text = this.ListsPeriodInt.ToString();
             this.UserTimelinePeriod.Text = this.UserTimelinePeriodInt.ToString();
