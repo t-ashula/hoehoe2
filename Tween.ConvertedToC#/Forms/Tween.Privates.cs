@@ -3402,7 +3402,7 @@ namespace Hoehoe
                 this.cfgCommon.PostShiftEnter = this.configs.PostShiftEnter;
                 this.cfgCommon.CountApi = this.configs.CountApi;
                 this.cfgCommon.CountApiReply = this.configs.CountApiReply;
-                this.cfgCommon.PostAndGet = this.settingDialog.PostAndGet;
+                this.cfgCommon.PostAndGet = this.configs.PostAndGet;
                 this.cfgCommon.DispUsername = this.settingDialog.DispUsername;
                 this.cfgCommon.MinimizeToTray = this.settingDialog.MinimizeToTray;
                 this.cfgCommon.CloseToExit = this.settingDialog.CloseToExit;

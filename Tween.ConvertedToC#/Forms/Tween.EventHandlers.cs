@@ -1615,7 +1615,7 @@ namespace Hoehoe
             }
 
             this.settingDialog.BrowserPath = this.cfgLocal.BrowserPath;
-            this.settingDialog.PostAndGet = this.cfgCommon.PostAndGet;
+            this.configs.PostAndGet = this.cfgCommon.PostAndGet;
             this.settingDialog.UseRecommendStatus = this.cfgLocal.UseRecommendStatus;
             this.settingDialog.DispUsername = this.cfgCommon.DispUsername;
             this.settingDialog.CloseToExit = this.cfgCommon.CloseToExit;
@@ -2803,7 +2803,7 @@ namespace Hoehoe
                         }
                     }
 
-                    if (rslt.RetMsg.Length == 0 && this.settingDialog.PostAndGet)
+                    if (rslt.RetMsg.Length == 0 && this.configs.PostAndGet)
                     {
                         if (this.isActiveUserstream)
                         {
@@ -2829,7 +2829,7 @@ namespace Hoehoe
                             }
                         }
 
-                        if (!this.isActiveUserstream && this.settingDialog.PostAndGet)
+                        if (!this.isActiveUserstream && this.configs.PostAndGet)
                         {
                             this.GetTimeline(WorkerType.Timeline);
                         }

@@ -84,14 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
 
-
-
-
-
-
-
-        public bool PostAndGet { get; set; }
-
         public bool UseRecommendStatus { get; set; }
 
         public string RecommendStatusText { get; set; }
@@ -483,7 +475,7 @@ namespace Hoehoe
                 this.configurations.CountApi = Convert.ToInt32(this.TextCountApi.Text);
                 this.configurations.CountApiReply = Convert.ToInt32(this.TextCountApiReply.Text);
                 this.BrowserPath = this.BrowserPathText.Text.Trim();
-                this.PostAndGet = this.CheckPostAndGet.Checked;
+                this.configurations.PostAndGet = this.CheckPostAndGet.Checked;
                 this.UseRecommendStatus = this.CheckUseRecommendStatus.Checked;
                 this.DispUsername = this.CheckDispUsername.Checked;
                 this.CloseToExit = this.CheckCloseToExit.Checked;
@@ -861,7 +853,7 @@ namespace Hoehoe
             this.TextCountApi.Text = this.configurations.CountApi.ToString();
             this.TextCountApiReply.Text = this.configurations.CountApiReply.ToString();
             this.BrowserPathText.Text = this.BrowserPath;
-            this.CheckPostAndGet.Checked = this.PostAndGet;
+            this.CheckPostAndGet.Checked = this.configurations.PostAndGet;
             this.CheckUseRecommendStatus.Checked = this.UseRecommendStatus;
             this.CheckDispUsername.Checked = this.DispUsername;
             this.CheckCloseToExit.Checked = this.CloseToExit;

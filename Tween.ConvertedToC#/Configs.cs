@@ -99,5 +99,7 @@ namespace Hoehoe
         public int FavoritesCountApi { get; set; }
         public int UserTimelineCountApi { get; set; }
         public int ListCountApi { get; set; }
+
+        public bool PostAndGet { get; set; }
     }
 }
