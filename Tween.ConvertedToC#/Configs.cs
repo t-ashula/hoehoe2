@@ -90,5 +90,14 @@ namespace Hoehoe
 
         public bool PostCtrlEnter { get; set; }
         public bool PostShiftEnter { get; set; }
+
+        public int CountApi { get; set; }
+        public int CountApiReply { get; set; }
+        public int MoreCountApi { get; set; }
+        public int FirstCountApi { get; set; }
+        public int SearchCountApi { get; set; }
+        public int FavoritesCountApi { get; set; }
+        public int UserTimelineCountApi { get; set; }
+        public int ListCountApi { get; set; }
     }
 }

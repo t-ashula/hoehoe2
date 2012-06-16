@@ -3400,8 +3400,8 @@ namespace Hoehoe
                 this.cfgCommon.NameBalloon = this.configs.NameBalloon;
                 this.cfgCommon.PostCtrlEnter = this.configs.PostCtrlEnter;
                 this.cfgCommon.PostShiftEnter = this.configs.PostShiftEnter;
-                this.cfgCommon.CountApi = this.settingDialog.CountApi;
-                this.cfgCommon.CountApiReply = this.settingDialog.CountApiReply;
+                this.cfgCommon.CountApi = this.configs.CountApi;
+                this.cfgCommon.CountApiReply = this.configs.CountApiReply;
                 this.cfgCommon.PostAndGet = this.settingDialog.PostAndGet;
                 this.cfgCommon.DispUsername = this.settingDialog.DispUsername;
                 this.cfgCommon.MinimizeToTray = this.settingDialog.MinimizeToTray;
@@ -3472,15 +3472,15 @@ namespace Hoehoe
                 }
 
                 this.cfgCommon.UseAdditionalCount = this.settingDialog.UseAdditionalCount;
-                this.cfgCommon.MoreCountApi = this.settingDialog.MoreCountApi;
-                this.cfgCommon.FirstCountApi = this.settingDialog.FirstCountApi;
-                this.cfgCommon.SearchCountApi = this.settingDialog.SearchCountApi;
-                this.cfgCommon.FavoritesCountApi = this.settingDialog.FavoritesCountApi;
-                this.cfgCommon.UserTimelineCountApi = this.settingDialog.UserTimelineCountApi;
+                this.cfgCommon.MoreCountApi = this.configs.MoreCountApi;
+                this.cfgCommon.FirstCountApi = this.configs.FirstCountApi;
+                this.cfgCommon.SearchCountApi = this.configs.SearchCountApi;
+                this.cfgCommon.FavoritesCountApi = this.configs.FavoritesCountApi;
+                this.cfgCommon.UserTimelineCountApi = this.configs.UserTimelineCountApi;
                 this.cfgCommon.TrackWord = this.tw.TrackWord;
                 this.cfgCommon.AllAtReply = this.tw.AllAtReply;
                 this.cfgCommon.OpenUserTimeline = this.settingDialog.OpenUserTimeline;
-                this.cfgCommon.ListCountApi = this.settingDialog.ListCountApi;
+                this.cfgCommon.ListCountApi = this.configs.ListCountApi;
                 this.cfgCommon.UseImageService = this.ImageServiceCombo.SelectedIndex;
                 this.cfgCommon.ListDoubleClickAction = this.settingDialog.ListDoubleClickAction;
                 this.cfgCommon.UserAppointUrl = this.settingDialog.UserAppointUrl;

@@ -88,21 +88,7 @@ namespace Hoehoe
 
 
 
-        public int CountApi { get; set; }
 
-        public int CountApiReply { get; set; }
-
-        public int MoreCountApi { get; set; }
-
-        public int FirstCountApi { get; set; }
-
-        public int SearchCountApi { get; set; }
-
-        public int FavoritesCountApi { get; set; }
-
-        public int UserTimelineCountApi { get; set; }
-
-        public int ListCountApi { get; set; }
 
         public bool PostAndGet { get; set; }
 
@@ -494,8 +480,8 @@ namespace Hoehoe
                         break;
                 }
 
-                this.CountApi = Convert.ToInt32(this.TextCountApi.Text);
-                this.CountApiReply = Convert.ToInt32(this.TextCountApiReply.Text);
+                this.configurations.CountApi = Convert.ToInt32(this.TextCountApi.Text);
+                this.configurations.CountApiReply = Convert.ToInt32(this.TextCountApiReply.Text);
                 this.BrowserPath = this.BrowserPathText.Text.Trim();
                 this.PostAndGet = this.CheckPostAndGet.Checked;
                 this.UseRecommendStatus = this.CheckUseRecommendStatus.Checked;
@@ -672,12 +658,12 @@ namespace Hoehoe
                 this.HotkeyKey = (Keys)this.HotkeyText.Tag;
                 this.BlinkNewMentions = this.CheckNewMentionsBlink.Checked;
                 this.UseAdditionalCount = this.UseChangeGetCount.Checked;
-                this.MoreCountApi = Convert.ToInt32(this.GetMoreTextCountApi.Text);
-                this.FirstCountApi = Convert.ToInt32(this.FirstTextCountApi.Text);
-                this.SearchCountApi = Convert.ToInt32(this.SearchTextCountApi.Text);
-                this.FavoritesCountApi = Convert.ToInt32(this.FavoritesTextCountApi.Text);
-                this.UserTimelineCountApi = Convert.ToInt32(this.UserTimelineTextCountApi.Text);
-                this.ListCountApi = Convert.ToInt32(this.ListTextCountApi.Text);
+                this.configurations.MoreCountApi = Convert.ToInt32(this.GetMoreTextCountApi.Text);
+                this.configurations.FirstCountApi = Convert.ToInt32(this.FirstTextCountApi.Text);
+                this.configurations.SearchCountApi = Convert.ToInt32(this.SearchTextCountApi.Text);
+                this.configurations.FavoritesCountApi = Convert.ToInt32(this.FavoritesTextCountApi.Text);
+                this.configurations.UserTimelineCountApi = Convert.ToInt32(this.UserTimelineTextCountApi.Text);
+                this.configurations.ListCountApi = Convert.ToInt32(this.ListTextCountApi.Text);
                 this.OpenUserTimeline = this.CheckOpenUserTimeline.Checked;
                 this.ListDoubleClickAction = this.ListDoubleClickActionComboBox.SelectedIndex;
                 this.UserAppointUrl = this.UserAppointUrlText.Text;
@@ -872,8 +858,8 @@ namespace Hoehoe
                 this.ComboBoxPostKeySelect.SelectedIndex = 0;
             }
 
-            this.TextCountApi.Text = this.CountApi.ToString();
-            this.TextCountApiReply.Text = this.CountApiReply.ToString();
+            this.TextCountApi.Text = this.configurations.CountApi.ToString();
+            this.TextCountApiReply.Text = this.configurations.CountApiReply.ToString();
             this.BrowserPathText.Text = this.BrowserPath;
             this.CheckPostAndGet.Checked = this.PostAndGet;
             this.CheckUseRecommendStatus.Checked = this.UseRecommendStatus;
@@ -1038,12 +1024,12 @@ namespace Hoehoe
 
             this.CheckOutputz_CheckedChanged(sender, e);
 
-            this.GetMoreTextCountApi.Text = this.MoreCountApi.ToString();
-            this.FirstTextCountApi.Text = this.FirstCountApi.ToString();
-            this.SearchTextCountApi.Text = this.SearchCountApi.ToString();
-            this.FavoritesTextCountApi.Text = this.FavoritesCountApi.ToString();
-            this.UserTimelineTextCountApi.Text = this.UserTimelineCountApi.ToString();
-            this.ListTextCountApi.Text = this.ListCountApi.ToString();
+            this.GetMoreTextCountApi.Text = this.configurations.MoreCountApi.ToString();
+            this.FirstTextCountApi.Text = this.configurations.FirstCountApi.ToString();
+            this.SearchTextCountApi.Text = this.configurations.SearchCountApi.ToString();
+            this.FavoritesTextCountApi.Text = this.configurations.FavoritesCountApi.ToString();
+            this.UserTimelineTextCountApi.Text = this.configurations.UserTimelineCountApi.ToString();
+            this.ListTextCountApi.Text = this.configurations.ListCountApi.ToString();
             this.UseChangeGetCount.Checked = this.UseAdditionalCount;
             this.Label28.Enabled = this.UseChangeGetCount.Checked;
             this.Label30.Enabled = this.UseChangeGetCount.Checked;

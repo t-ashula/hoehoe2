@@ -1602,16 +1602,16 @@ namespace Hoehoe
             this.configs.NameBalloon = this.cfgCommon.NameBalloon;
             this.configs.PostCtrlEnter = this.cfgCommon.PostCtrlEnter;
             this.configs.PostShiftEnter = this.cfgCommon.PostShiftEnter;
-            this.settingDialog.CountApi = this.cfgCommon.CountApi;
-            this.settingDialog.CountApiReply = this.cfgCommon.CountApiReply;
-            if (this.settingDialog.CountApi < 20 || this.settingDialog.CountApi > 200)
+            this.configs.CountApi = this.cfgCommon.CountApi;
+            this.configs.CountApiReply = this.cfgCommon.CountApiReply;
+            if (this.configs.CountApi < 20 || this.configs.CountApi > 200)
             {
-                this.settingDialog.CountApi = 60;
+                this.configs.CountApi = 60;
             }
 
-            if (this.settingDialog.CountApiReply < 20 || this.settingDialog.CountApiReply > 200)
+            if (this.configs.CountApiReply < 20 || this.configs.CountApiReply > 200)
             {
-                this.settingDialog.CountApiReply = 40;
+                this.configs.CountApiReply = 40;
             }
 
             this.settingDialog.BrowserPath = this.cfgLocal.BrowserPath;
@@ -1706,12 +1706,12 @@ namespace Hoehoe
             this.settingDialog.HotkeyValue = this.cfgCommon.HotkeyValue;
             this.settingDialog.BlinkNewMentions = this.cfgCommon.BlinkNewMentions;
             this.settingDialog.UseAdditionalCount = this.cfgCommon.UseAdditionalCount;
-            this.settingDialog.MoreCountApi = this.cfgCommon.MoreCountApi;
-            this.settingDialog.FirstCountApi = this.cfgCommon.FirstCountApi;
-            this.settingDialog.SearchCountApi = this.cfgCommon.SearchCountApi;
-            this.settingDialog.FavoritesCountApi = this.cfgCommon.FavoritesCountApi;
-            this.settingDialog.UserTimelineCountApi = this.cfgCommon.UserTimelineCountApi;
-            this.settingDialog.ListCountApi = this.cfgCommon.ListCountApi;
+            this.configs.MoreCountApi = this.cfgCommon.MoreCountApi;
+            this.configs.FirstCountApi = this.cfgCommon.FirstCountApi;
+            this.configs.SearchCountApi = this.cfgCommon.SearchCountApi;
+            this.configs.FavoritesCountApi = this.cfgCommon.FavoritesCountApi;
+            this.configs.UserTimelineCountApi = this.cfgCommon.UserTimelineCountApi;
+            this.configs.ListCountApi = this.cfgCommon.ListCountApi;
             this.configs.UserstreamStartup = this.cfgCommon.UserstreamStartup;
             this.configs.UserstreamPeriodInt = this.cfgCommon.UserstreamPeriod;
             this.settingDialog.OpenUserTimeline = this.cfgCommon.OpenUserTimeline;
@@ -2470,7 +2470,7 @@ namespace Hoehoe
                     int count = 20;
                     if (this.settingDialog.UseAdditionalCount)
                     {
-                        count = this.settingDialog.UserTimelineCountApi;
+                        count = this.configs.UserTimelineCountApi;
                     }
 
                     if (string.IsNullOrEmpty(args.TabName))

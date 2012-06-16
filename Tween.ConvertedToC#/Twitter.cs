@@ -1716,21 +1716,21 @@ namespace Hoehoe
 
             HttpStatusCode res = default(HttpStatusCode);
             string content = string.Empty;
-            int count = AppendSettingDialog.Instance.CountApi;
+            int count = Configs.Instance.CountApi;
             if (workerType == WorkerType.Reply)
             {
-                count = AppendSettingDialog.Instance.CountApiReply;
+                count = Configs.Instance.CountApiReply;
             }
 
             if (AppendSettingDialog.Instance.UseAdditionalCount)
             {
-                if (more && AppendSettingDialog.Instance.MoreCountApi != 0)
+                if (more && Configs.Instance.MoreCountApi != 0)
                 {
-                    count = AppendSettingDialog.Instance.MoreCountApi;
+                    count = Configs.Instance.MoreCountApi;
                 }
-                else if (startup && AppendSettingDialog.Instance.FirstCountApi != 0 && workerType == WorkerType.Timeline)
+                else if (startup && Configs.Instance.FirstCountApi != 0 && workerType == WorkerType.Timeline)
                 {
-                    count = AppendSettingDialog.Instance.FirstCountApi;
+                    count = Configs.Instance.FirstCountApi;
                 }
             }
 
@@ -1994,26 +1994,26 @@ namespace Hoehoe
             int count = 0;
             if (AppendSettingDialog.Instance.UseAdditionalCount)
             {
-                count = AppendSettingDialog.Instance.ListCountApi;
+                count = Configs.Instance.ListCountApi;
                 if (count == 0)
                 {
-                    if (more && AppendSettingDialog.Instance.MoreCountApi != 0)
+                    if (more && Configs.Instance.MoreCountApi != 0)
                     {
-                        count = AppendSettingDialog.Instance.MoreCountApi;
+                        count = Configs.Instance.MoreCountApi;
                     }
-                    else if (startup && AppendSettingDialog.Instance.FirstCountApi != 0)
+                    else if (startup && Configs.Instance.FirstCountApi != 0)
                     {
-                        count = AppendSettingDialog.Instance.FirstCountApi;
+                        count = Configs.Instance.FirstCountApi;
                     }
                     else
                     {
-                        count = AppendSettingDialog.Instance.CountApi;
+                        count = Configs.Instance.CountApi;
                     }
                 }
             }
             else
             {
-                count = AppendSettingDialog.Instance.CountApi;
+                count = Configs.Instance.CountApi;
             }
 
             try
@@ -2105,13 +2105,13 @@ namespace Hoehoe
             int page = 0;
             long sinceId = 0;
             int count = 100;
-            if (AppendSettingDialog.Instance.UseAdditionalCount && AppendSettingDialog.Instance.SearchCountApi != 0)
+            if (AppendSettingDialog.Instance.UseAdditionalCount && Configs.Instance.SearchCountApi != 0)
             {
-                count = AppendSettingDialog.Instance.SearchCountApi;
+                count = Configs.Instance.SearchCountApi;
             }
             else
             {
-                count = AppendSettingDialog.Instance.CountApi;
+                count = Configs.Instance.CountApi;
             }
 
             if (more)
@@ -2266,9 +2266,9 @@ namespace Hoehoe
             long sinceId = 0;
             int count = 100;
             string querystr = string.Empty;
-            if (AppendSettingDialog.Instance.UseAdditionalCount && AppendSettingDialog.Instance.SearchCountApi != 0)
+            if (AppendSettingDialog.Instance.UseAdditionalCount && Configs.Instance.SearchCountApi != 0)
             {
-                count = AppendSettingDialog.Instance.SearchCountApi;
+                count = Configs.Instance.SearchCountApi;
             }
 
             if (more)
@@ -2411,10 +2411,10 @@ namespace Hoehoe
 
             HttpStatusCode res = default(HttpStatusCode);
             string content = string.Empty;
-            int count = AppendSettingDialog.Instance.CountApi;
-            if (AppendSettingDialog.Instance.UseAdditionalCount && AppendSettingDialog.Instance.FavoritesCountApi != 0)
+            int count = Configs.Instance.CountApi;
+            if (AppendSettingDialog.Instance.UseAdditionalCount && Configs.Instance.FavoritesCountApi != 0)
             {
-                count = AppendSettingDialog.Instance.FavoritesCountApi;
+                count = Configs.Instance.FavoritesCountApi;
             }
 
             // 前ページ取得の場合はページカウンタをインクリメント、それ以外の場合はページカウンタリセット
