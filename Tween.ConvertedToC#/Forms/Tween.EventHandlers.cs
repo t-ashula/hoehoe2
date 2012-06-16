@@ -1459,6 +1459,7 @@ namespace Hoehoe
 
             this.postHistory.Add(new PostingStatus());
             this.postHistoryIndex = 0;
+
             this.replyToId = 0;
             this.replyToName = string.Empty;
 
@@ -2015,14 +2016,7 @@ namespace Hoehoe
 
             this.tw.SetTinyUrlResolve(this.settingDialog.TinyUrlResolve);
             ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
-
-            // 発言詳細部アイコンをリストアイコンにサイズ変更
-            int sz = this.iconSz;
-            if (this.iconSz == 0)
-            {
-                sz = 16;
-            }
-
+            
             this.tw.DetailIcon = this.iconDict;
             this.StatusLabel.Text = Hoehoe.Properties.Resources.Form1_LoadText1;  // 画面右下の状態表示を変更
             this.StatusLabelUrl.Text = string.Empty;  // 画面左下のリンク先URL表示部を初期化
