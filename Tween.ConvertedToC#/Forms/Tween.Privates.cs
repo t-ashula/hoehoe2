@@ -665,7 +665,7 @@ namespace Hoehoe
             if (this.IsBalloonRequired() && notifyPosts != null && notifyPosts.Length > 0)
             {
                 // Growlは一個ずつばらして通知。ただし、3ポスト以上あるときはまとめる
-                if (this.settingDialog.IsNotifyUseGrowl)
+                if (this.configs.IsNotifyUseGrowl)
                 {
                     StringBuilder sb = new StringBuilder();
                     bool reply = false;
@@ -3492,7 +3492,7 @@ namespace Hoehoe
                 this.cfgCommon.IsListsIncludeRts = this.configs.IsListStatusesIncludeRts;
                 this.cfgCommon.TabMouseLock = this.configs.TabMouseLock;
                 this.cfgCommon.IsRemoveSameEvent = this.configs.IsRemoveSameEvent;
-                this.cfgCommon.IsUseNotifyGrowl = this.settingDialog.IsNotifyUseGrowl;
+                this.cfgCommon.IsUseNotifyGrowl = this.configs.IsNotifyUseGrowl;
 
                 this.cfgCommon.Save();
             }
@@ -5069,7 +5069,7 @@ namespace Hoehoe
                 }
 
                 string text = !string.IsNullOrEmpty(ev.Target) ? ev.Target : " ";
-                if (this.settingDialog.IsNotifyUseGrowl)
+                if (this.configs.IsNotifyUseGrowl)
                 {
                     this.growlHelper.Notify(GrowlHelper.NotifyType.UserStreamEvent, ev.Id.ToString(), title.ToString(), text);
                 }
@@ -5878,7 +5878,7 @@ namespace Hoehoe
                 }
 
                 this.SetImageServiceCombo();
-                if (this.settingDialog.IsNotifyUseGrowl)
+                if (this.configs.IsNotifyUseGrowl)
                 {
                     this.growlHelper.RegisterGrowl();
                 }

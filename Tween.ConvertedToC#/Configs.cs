@@ -48,5 +48,6 @@ namespace Hoehoe
         public List<UserAccount> UserAccounts { get; set; }
         public bool TabMouseLock { get; set; }
         public bool IsRemoveSameEvent { get; set; }
+        public bool IsNotifyUseGrowl { get; set; }
     }
 }

@@ -96,7 +96,7 @@ namespace Hoehoe
 
         
 
-        public bool IsNotifyUseGrowl { get; set; }
+        
 
         public DataModels.Twitter.Configuration TwitterConfiguration { get; set; }
 
@@ -779,7 +779,7 @@ namespace Hoehoe
                 this.configurations.IsListStatusesIncludeRts = this.IsListsIncludeRtsCheckBox.Checked;
                 this.configurations.TabMouseLock = this.TabMouseLockCheck.Checked;
                 this.configurations.IsRemoveSameEvent = this.IsRemoveSameFavEventCheckBox.Checked;
-                this.IsNotifyUseGrowl = this.IsNotifyUseGrowlCheckBox.Checked;
+                this.configurations.IsNotifyUseGrowl = this.IsNotifyUseGrowlCheckBox.Checked;
             }
             catch (Exception)
             {
@@ -1159,7 +1159,7 @@ namespace Hoehoe
             this.IsListsIncludeRtsCheckBox.Checked = this.configurations.IsListStatusesIncludeRts;
             this.TabMouseLockCheck.Checked = this.configurations.TabMouseLock;
             this.IsRemoveSameFavEventCheckBox.Checked = this.configurations.IsRemoveSameEvent;
-            this.IsNotifyUseGrowlCheckBox.Checked = this.IsNotifyUseGrowl;
+            this.IsNotifyUseGrowlCheckBox.Checked = this.configurations.IsNotifyUseGrowl;
 
             this.IsNotifyUseGrowlCheckBox.Enabled = GrowlHelper.IsDllExists;
 

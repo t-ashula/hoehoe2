@@ -1725,7 +1725,7 @@ namespace Hoehoe
             this.configs.IsListStatusesIncludeRts = this.cfgCommon.IsListsIncludeRts;
             this.configs.TabMouseLock = this.cfgCommon.TabMouseLock;
             this.configs.IsRemoveSameEvent = this.cfgCommon.IsRemoveSameEvent;
-            this.settingDialog.IsNotifyUseGrowl = this.cfgCommon.IsUseNotifyGrowl;
+            this.configs.IsNotifyUseGrowl = this.cfgCommon.IsUseNotifyGrowl;
 
             // ハッシュタグ関連
             this.HashSupl = new AtIdSupplement(this.cfgCommon.HashTags, "#");
@@ -1923,7 +1923,7 @@ namespace Hoehoe
                 this.UnreadStripMenuItem.Enabled = false;
             }
 
-            if (this.settingDialog.IsNotifyUseGrowl)
+            if (this.configs.IsNotifyUseGrowl)
             {
                 this.growlHelper.RegisterGrowl();
             }
