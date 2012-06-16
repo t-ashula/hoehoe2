@@ -862,7 +862,7 @@ namespace Hoehoe
             {
                 cl = this.clrRetweet;
             }
-            else if (post.IsOwl && (post.IsDm || this.settingDialog.OneWayLove))
+            else if (post.IsOwl && (post.IsDm || this.configs.OneWayLove))
             {
                 cl = this.clrOWL;
             }
@@ -1872,7 +1872,7 @@ namespace Hoehoe
             this.DateTimeLabel.Text = this.curPost.CreatedAt.ToString();
 
             var foreColor = SystemColors.ControlText;
-            if (this.curPost.IsOwl && (this.settingDialog.OneWayLove || isCurTabDm))
+            if (this.curPost.IsOwl && (this.configs.OneWayLove || isCurTabDm))
             {
                 foreColor = this.clrOWL;
             }
@@ -3396,7 +3396,7 @@ namespace Hoehoe
                 this.cfgCommon.IconSize = this.configs.IconSz;
                 this.cfgCommon.UnreadManage = this.configs.UnreadManage;
                 this.cfgCommon.PlaySound = this.configs.PlaySound;
-                this.cfgCommon.OneWayLove = this.settingDialog.OneWayLove;
+                this.cfgCommon.OneWayLove = this.configs.OneWayLove;
                 this.cfgCommon.NameBalloon = this.settingDialog.NameBalloon;
                 this.cfgCommon.PostCtrlEnter = this.settingDialog.PostCtrlEnter;
                 this.cfgCommon.PostShiftEnter = this.settingDialog.PostShiftEnter;

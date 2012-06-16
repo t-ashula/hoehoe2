@@ -1575,7 +1575,7 @@ namespace Hoehoe
             this.PlaySoundFileMenuItem.Checked = this.configs.PlaySound;
 
             // 片思い表示。Trueなら片思い表示する
-            this.settingDialog.OneWayLove = this.cfgCommon.OneWayLove;
+            this.configs.OneWayLove = this.cfgCommon.OneWayLove;
 
             // フォント＆文字色＆背景色
             this.settingDialog.FontUnread = this.fntUnread;
