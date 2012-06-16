@@ -84,8 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
         
-        public bool Readed { get; set; }
-
         public IconSizes IconSz { get; set; }
 
         public string Status { get; set; }
@@ -478,7 +476,7 @@ namespace Hoehoe
                     }
                 }
 
-                this.Readed = this.StartupReaded.Checked;
+                this.configurations.Readed = this.StartupReaded.Checked;
                 switch (this.IconSize.SelectedIndex)
                 {
                     case 0:
@@ -856,7 +854,7 @@ namespace Hoehoe
             this.PubSearchPeriod.Text = this.configurations.PubSearchPeriodInt.ToString();
             this.ListsPeriod.Text = this.configurations.ListsPeriodInt.ToString();
             this.UserTimelinePeriod.Text = this.configurations.UserTimelinePeriodInt.ToString();
-            this.StartupReaded.Checked = this.Readed;
+            this.StartupReaded.Checked = this.configurations.Readed;
 
             switch (this.IconSz)
             {

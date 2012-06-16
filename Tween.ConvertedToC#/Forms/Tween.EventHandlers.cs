@@ -1556,7 +1556,7 @@ namespace Hoehoe
             }
 
             // 起動時読み込み分を既読にするか。Trueなら既読として処理
-            this.settingDialog.Readed = this.cfgCommon.Read;
+            this.configs.Readed = this.cfgCommon.Read;
 
             // 新着取得時のリストスクロールをするか。Trueならスクロールしない
             this.ListLockMenuItem.Checked = this.cfgCommon.ListLock;
@@ -2214,7 +2214,7 @@ namespace Hoehoe
             bool read = !this.settingDialog.UnreadManage;
             if (this.isInitializing && this.settingDialog.UnreadManage)
             {
-                read = this.settingDialog.Readed;
+                read = this.configs.Readed;
             }
 
             GetWorkerArg args = (GetWorkerArg)e.Argument;
