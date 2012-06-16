@@ -21,10 +21,8 @@
 
 namespace Hoehoe
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using System.Drawing;
     using Hoehoe.DataModels.Twitter;
 
     public class Configs
@@ -65,5 +63,7 @@ namespace Hoehoe
         public bool UnreadManage { get; set; }
         public bool PlaySound { get; set; }
         public bool OneWayLove { get; set; }
+        public Font FontUnread { get; set; }
+        public Color ColorUnread { get; set; }
     }
 }

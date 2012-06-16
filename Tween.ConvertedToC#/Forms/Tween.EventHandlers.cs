@@ -1578,8 +1578,8 @@ namespace Hoehoe
             this.configs.OneWayLove = this.cfgCommon.OneWayLove;
 
             // フォント＆文字色＆背景色
-            this.settingDialog.FontUnread = this.fntUnread;
-            this.settingDialog.ColorUnread = this.clrUnread;
+            this.configs.FontUnread = this.fntUnread;
+            this.configs.ColorUnread = this.clrUnread;
             this.settingDialog.FontReaded = this.fntReaded;
             this.settingDialog.ColorReaded = this.clrRead;
             this.settingDialog.ColorFav = this.clrFav;
@@ -1775,8 +1775,8 @@ namespace Hoehoe
                 }
 
                 // フォント＆文字色＆背景色保持
-                this.fntUnread = this.settingDialog.FontUnread;
-                this.clrUnread = this.settingDialog.ColorUnread;
+                this.fntUnread = this.configs.FontUnread;
+                this.clrUnread = this.configs.ColorUnread;
                 this.fntReaded = this.settingDialog.FontReaded;
                 this.clrRead = this.settingDialog.ColorReaded;
                 this.clrFav = this.settingDialog.ColorFav;

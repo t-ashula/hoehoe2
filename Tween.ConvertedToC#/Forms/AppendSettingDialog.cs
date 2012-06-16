@@ -84,11 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
         
-        // 未使用
-        public Font FontUnread { get; set; }
-
-        public Color ColorUnread { get; set; }
-
         // リストフォントとして使用
         public Font FontReaded { get; set; }
 
@@ -490,8 +485,8 @@ namespace Hoehoe
                 this.configurations.PlaySound = this.PlaySnd.Checked;
                 this.configurations.UnreadManage = this.UReadMng.Checked;
                 this.configurations.OneWayLove = this.OneWayLv.Checked;
-                this.FontUnread = this.lblUnread.Font;                // 未使用
-                this.ColorUnread = this.lblUnread.ForeColor;
+                this.configurations.FontUnread = this.lblUnread.Font;                // 未使用
+                this.configurations.ColorUnread = this.lblUnread.ForeColor;
                 this.FontReaded = this.lblListFont.Font;              // リストフォントとして使用
                 this.ColorReaded = this.lblListFont.ForeColor;
                 this.ColorFav = this.lblFav.ForeColor;
@@ -870,10 +865,9 @@ namespace Hoehoe
             this.StartupReaded.Enabled = this.configurations.UnreadManage != false;
             this.PlaySnd.Checked = this.configurations.PlaySound;
             this.OneWayLv.Checked = this.configurations.OneWayLove;
-
             this.lblListFont.Font = this.FontReaded;
-            this.lblUnread.Font = this.FontUnread;
-            this.lblUnread.ForeColor = this.ColorUnread;
+            this.lblUnread.Font = this.configurations.FontUnread;
+            this.lblUnread.ForeColor = this.configurations.ColorUnread;
             this.lblListFont.ForeColor = this.ColorReaded;
             this.lblFav.ForeColor = this.ColorFav;
             this.lblOWL.ForeColor = this.ColorOWL;

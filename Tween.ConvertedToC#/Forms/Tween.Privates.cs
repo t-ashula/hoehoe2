@@ -5730,8 +5730,8 @@ namespace Hoehoe
 
                 this.PlaySoundMenuItem.Checked = this.configs.PlaySound;
                 this.PlaySoundFileMenuItem.Checked = this.configs.PlaySound;
-                this.fntUnread = this.settingDialog.FontUnread;
-                this.clrUnread = this.settingDialog.ColorUnread;
+                this.fntUnread = this.configs.FontUnread;
+                this.clrUnread = this.configs.ColorUnread;
                 this.fntReaded = this.settingDialog.FontReaded;
                 this.clrRead = this.settingDialog.ColorReaded;
                 this.clrFav = this.settingDialog.ColorFav;
