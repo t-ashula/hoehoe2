@@ -3390,7 +3390,7 @@ namespace Hoehoe
                 this.cfgCommon.ReplyPeriod = this.configs.ReplyPeriodInt;
                 this.cfgCommon.DMPeriod = this.configs.DMPeriodInt;
                 this.cfgCommon.PubSearchPeriod = this.configs.PubSearchPeriodInt;
-                this.cfgCommon.ListsPeriod = this.settingDialog.ListsPeriodInt;
+                this.cfgCommon.ListsPeriod = this.configs.ListsPeriodInt;
                 this.cfgCommon.UserTimelinePeriod = this.settingDialog.UserTimelinePeriodInt;
                 this.cfgCommon.Read = this.settingDialog.Readed;
                 this.cfgCommon.IconSize = this.settingDialog.IconSz;
@@ -7569,7 +7569,7 @@ namespace Hoehoe
             this.resetTimers.DirectMessage = this.ResetWorkerTimer(ref this.timerDmCounter, this.configs.DMPeriodInt, WorkerType.DirectMessegeRcv, this.resetTimers.DirectMessage);
             this.resetTimers.PublicSearch = this.ResetWorkerTimer(ref this.timerPubSearchCounter, this.configs.PubSearchPeriodInt, WorkerType.PublicSearch, this.resetTimers.PublicSearch);
             this.resetTimers.UserTimeline = this.ResetWorkerTimer(ref this.timerUserTimelineCounter, this.settingDialog.UserTimelinePeriodInt, WorkerType.UserTimeline, this.resetTimers.UserTimeline);
-            this.resetTimers.Lists = this.ResetWorkerTimer(ref this.timerListsCounter, this.settingDialog.ListsPeriodInt, WorkerType.List, this.resetTimers.Lists);
+            this.resetTimers.Lists = this.ResetWorkerTimer(ref this.timerListsCounter, this.configs.ListsPeriodInt, WorkerType.List, this.resetTimers.Lists);
             if (this.resetTimers.UserStream || (this.timerUsCounter <= 0 && this.configs.UserstreamPeriodInt > 0))
             {
                 Interlocked.Exchange(ref this.timerUsCounter, this.configs.UserstreamPeriodInt);

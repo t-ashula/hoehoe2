@@ -57,5 +57,6 @@ namespace Hoehoe
         public int ReplyPeriodInt { get; set; }
         public int DMPeriodInt { get; set; }
         public int PubSearchPeriodInt { get; set; }
+        public int ListsPeriodInt { get; set; }
     }
 }

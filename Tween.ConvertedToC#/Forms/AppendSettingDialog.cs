@@ -84,9 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
 
-
-        public int ListsPeriodInt { get; set; }
-
         public int UserTimelinePeriodInt { get; set; }
 
         public bool Readed { get; set; }
@@ -454,9 +451,9 @@ namespace Hoehoe
                     isIntervalChanged = true;
                 }
 
-                if (this.ListsPeriodInt != Convert.ToInt32(this.ListsPeriod.Text))
+                if (this.configurations.ListsPeriodInt != Convert.ToInt32(this.ListsPeriod.Text))
                 {
-                    this.ListsPeriodInt = Convert.ToInt32(this.ListsPeriod.Text);
+                    this.configurations.ListsPeriodInt = Convert.ToInt32(this.ListsPeriod.Text);
                     arg.Lists = true;
                     isIntervalChanged = true;
                 }
@@ -859,7 +856,7 @@ namespace Hoehoe
             this.ReplyPeriod.Text = this.configurations.ReplyPeriodInt.ToString();
             this.DMPeriod.Text = this.configurations.DMPeriodInt.ToString();
             this.PubSearchPeriod.Text = this.configurations.PubSearchPeriodInt.ToString();
-            this.ListsPeriod.Text = this.ListsPeriodInt.ToString();
+            this.ListsPeriod.Text = this.configurations.ListsPeriodInt.ToString();
             this.UserTimelinePeriod.Text = this.UserTimelinePeriodInt.ToString();
             this.StartupReaded.Checked = this.Readed;
 
