@@ -1718,7 +1718,7 @@ namespace Hoehoe
             this.settingDialog.ListDoubleClickAction = this.cfgCommon.ListDoubleClickAction;
             this.settingDialog.UserAppointUrl = this.cfgCommon.UserAppointUrl;
             this.configs.HideDuplicatedRetweets = this.cfgCommon.HideDuplicatedRetweets;
-            this.settingDialog.IsPreviewFoursquare = this.cfgCommon.IsPreviewFoursquare;
+            this.configs.IsPreviewFoursquare = this.cfgCommon.IsPreviewFoursquare;
             this.settingDialog.FoursquarePreviewHeight = this.cfgCommon.FoursquarePreviewHeight;
             this.settingDialog.FoursquarePreviewWidth = this.cfgCommon.FoursquarePreviewWidth;
             this.settingDialog.FoursquarePreviewZoom = this.cfgCommon.FoursquarePreviewZoom;

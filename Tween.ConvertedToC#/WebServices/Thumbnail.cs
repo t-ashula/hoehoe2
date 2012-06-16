@@ -2512,7 +2512,7 @@ namespace Hoehoe
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                if (!AppendSettingDialog.Instance.IsPreviewFoursquare)
+                if (!Configs.Instance.IsPreviewFoursquare)
                 {
                     return false;
                 }

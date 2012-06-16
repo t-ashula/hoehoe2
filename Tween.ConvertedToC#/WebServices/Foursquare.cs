@@ -55,7 +55,7 @@ namespace Hoehoe
 
         public string GetMapsUri(string url, ref string refText)
         {
-            if (!AppendSettingDialog.Instance.IsPreviewFoursquare)
+            if (!Configs.Instance.IsPreviewFoursquare)
             {
                 return null;
             }
