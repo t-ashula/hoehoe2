@@ -5732,7 +5732,7 @@ namespace Hoehoe
                 this.PlaySoundFileMenuItem.Checked = this.configs.PlaySound;
                 this.fntUnread = this.configs.FontUnread;
                 this.clrUnread = this.configs.ColorUnread;
-                this.fntReaded = this.settingDialog.FontReaded;
+                this.fntReaded = this.configs.FontReaded;
                 this.clrRead = this.settingDialog.ColorReaded;
                 this.clrFav = this.settingDialog.ColorFav;
                 this.clrOWL = this.settingDialog.ColorOWL;

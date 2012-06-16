@@ -83,9 +83,6 @@ namespace Hoehoe
         {
             get { return instance; }
         }
-        
-        // リストフォントとして使用
-        public Font FontReaded { get; set; }
 
         public Color ColorReaded { get; set; }
 
@@ -487,7 +484,7 @@ namespace Hoehoe
                 this.configurations.OneWayLove = this.OneWayLv.Checked;
                 this.configurations.FontUnread = this.lblUnread.Font;                // 未使用
                 this.configurations.ColorUnread = this.lblUnread.ForeColor;
-                this.FontReaded = this.lblListFont.Font;              // リストフォントとして使用
+                this.configurations.FontReaded = this.lblListFont.Font;              // リストフォントとして使用
                 this.ColorReaded = this.lblListFont.ForeColor;
                 this.ColorFav = this.lblFav.ForeColor;
                 this.ColorOWL = this.lblOWL.ForeColor;
@@ -865,7 +862,7 @@ namespace Hoehoe
             this.StartupReaded.Enabled = this.configurations.UnreadManage != false;
             this.PlaySnd.Checked = this.configurations.PlaySound;
             this.OneWayLv.Checked = this.configurations.OneWayLove;
-            this.lblListFont.Font = this.FontReaded;
+            this.lblListFont.Font = this.configurations.FontReaded;
             this.lblUnread.Font = this.configurations.FontUnread;
             this.lblUnread.ForeColor = this.configurations.ColorUnread;
             this.lblListFont.ForeColor = this.ColorReaded;

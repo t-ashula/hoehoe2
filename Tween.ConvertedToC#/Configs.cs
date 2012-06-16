@@ -65,5 +65,6 @@ namespace Hoehoe
         public bool OneWayLove { get; set; }
         public Font FontUnread { get; set; }
         public Color ColorUnread { get; set; }
+        public Font FontReaded { get; set; } // リストフォントとして使用
     }
 }

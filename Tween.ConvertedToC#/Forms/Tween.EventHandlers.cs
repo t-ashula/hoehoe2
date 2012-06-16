@@ -1580,7 +1580,7 @@ namespace Hoehoe
             // フォント＆文字色＆背景色
             this.configs.FontUnread = this.fntUnread;
             this.configs.ColorUnread = this.clrUnread;
-            this.settingDialog.FontReaded = this.fntReaded;
+            this.configs.FontReaded = this.fntReaded;
             this.settingDialog.ColorReaded = this.clrRead;
             this.settingDialog.ColorFav = this.clrFav;
             this.settingDialog.ColorOWL = this.clrOWL;
@@ -1777,7 +1777,7 @@ namespace Hoehoe
                 // フォント＆文字色＆背景色保持
                 this.fntUnread = this.configs.FontUnread;
                 this.clrUnread = this.configs.ColorUnread;
-                this.fntReaded = this.settingDialog.FontReaded;
+                this.fntReaded = this.configs.FontReaded;
                 this.clrRead = this.settingDialog.ColorReaded;
                 this.clrFav = this.settingDialog.ColorFav;
                 this.clrOWL = this.settingDialog.ColorOWL;
