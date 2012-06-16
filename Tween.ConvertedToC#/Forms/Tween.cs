@@ -316,12 +316,12 @@ namespace Hoehoe
 
         public bool IsPreviewEnable
         {
-            get { return this.settingDialog.PreviewEnable; }
+            get { return this.configs.PreviewEnable; }
         }
 
         public bool FavEventChangeUnread
         {
-            get { return this.settingDialog.FavEventUnread; }
+            get { return this.configs.FavEventUnread; }
         }
 
         /// <summary>
@@ -630,7 +630,7 @@ namespace Hoehoe
             listCustom.VirtualMode = true;
             listCustom.Font = this.fntReaded;
             listCustom.BackColor = this.clrListBackcolor;
-            listCustom.GridLines = this.settingDialog.ShowGrid;
+            listCustom.GridLines = this.configs.ShowGrid;
             listCustom.AllowDrop = true;
             listCustom.SelectedIndexChanged += this.MyList_SelectedIndexChanged;
             listCustom.MouseDoubleClick += this.MyList_MouseDoubleClick;
@@ -923,7 +923,7 @@ namespace Hoehoe
                 dialog.ShowDialog();
             }
 
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
             int selStart = owner.SelectionStart;
             string frontHalf = string.Empty;
             string lastHalf = string.Empty;
@@ -981,7 +981,7 @@ namespace Hoehoe
                 return false;
             }
 
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
             if (string.IsNullOrEmpty(newTabText))
             {
                 return false;
@@ -1086,7 +1086,7 @@ namespace Hoehoe
             }
 
             this.statuses.SetTabUnreadManage(tabName, isManage);
-            if (this.settingDialog.TabIconDisp)
+            if (this.configs.TabIconDisp)
             {
                 this.ListTab.TabPages[idx].ImageIndex = this.statuses.Tabs[tabName].UnreadCount > 0 ? 0 : -1;
             }
@@ -1100,7 +1100,7 @@ namespace Hoehoe
 
             this.SetMainWindowTitle();
             this.SetStatusLabelUrl();
-            if (!this.settingDialog.TabIconDisp)
+            if (!this.configs.TabIconDisp)
             {
                 this.ListTab.Refresh();
             }

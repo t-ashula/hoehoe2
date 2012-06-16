@@ -1502,8 +1502,8 @@ namespace Hoehoe
             // 設定画面への反映
             HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
             HttpTwitter.SetTwitterSearchUrl(this.cfgCommon.TwitterSearchUrl);
-            this.settingDialog.TwitterApiUrl = this.cfgCommon.TwitterUrl;
-            this.settingDialog.TwitterSearchApiUrl = this.cfgCommon.TwitterSearchUrl;
+            this.configs.TwitterApiUrl = this.cfgCommon.TwitterUrl;
+            this.configs.TwitterSearchApiUrl = this.cfgCommon.TwitterSearchUrl;
 
             // 認証関連
             if (string.IsNullOrEmpty(this.cfgCommon.Token))
@@ -1624,33 +1624,33 @@ namespace Hoehoe
             this.configs.SortOrderLock = this.cfgCommon.SortOrderLock;
             this.configs.TinyUrlResolve = this.cfgCommon.TinyUrlResolve;
             this.configs.ShortUrlForceResolve = this.cfgCommon.ShortUrlForceResolve;
-            this.settingDialog.SelectedProxyType = this.cfgLocal.ProxyType;
-            this.settingDialog.ProxyAddress = this.cfgLocal.ProxyAddress;
-            this.settingDialog.ProxyPort = this.cfgLocal.ProxyPort;
-            this.settingDialog.ProxyUser = this.cfgLocal.ProxyUser;
-            this.settingDialog.ProxyPassword = this.cfgLocal.ProxyPassword;
-            this.settingDialog.PeriodAdjust = this.cfgCommon.PeriodAdjust;
-            this.settingDialog.StartupVersion = this.cfgCommon.StartupVersion;
-            this.settingDialog.StartupFollowers = this.cfgCommon.StartupFollowers;
-            this.settingDialog.RestrictFavCheck = this.cfgCommon.RestrictFavCheck;
-            this.settingDialog.AlwaysTop = this.cfgCommon.AlwaysTop;
-            this.settingDialog.UrlConvertAuto = false;
-            this.settingDialog.OutputzEnabled = this.cfgCommon.Outputz;
-            this.settingDialog.OutputzKey = this.cfgCommon.OutputzKey;
-            this.settingDialog.OutputzUrlmode = this.cfgCommon.OutputzUrlMode;
-            this.settingDialog.UseUnreadStyle = this.cfgCommon.UseUnreadStyle;
-            this.settingDialog.DefaultTimeOut = this.cfgCommon.DefaultTimeOut;
-            this.settingDialog.RetweetNoConfirm = this.cfgCommon.RetweetNoConfirm;
+            this.configs.SelectedProxyType = this.cfgLocal.ProxyType;
+            this.configs.ProxyAddress = this.cfgLocal.ProxyAddress;
+            this.configs.ProxyPort = this.cfgLocal.ProxyPort;
+            this.configs.ProxyUser = this.cfgLocal.ProxyUser;
+            this.configs.ProxyPassword = this.cfgLocal.ProxyPassword;
+            this.configs.PeriodAdjust = this.cfgCommon.PeriodAdjust;
+            this.configs.StartupVersion = this.cfgCommon.StartupVersion;
+            this.configs.StartupFollowers = this.cfgCommon.StartupFollowers;
+            this.configs.RestrictFavCheck = this.cfgCommon.RestrictFavCheck;
+            this.configs.AlwaysTop = this.cfgCommon.AlwaysTop;
+            this.configs.UrlConvertAuto = false;
+            this.configs.OutputzEnabled = this.cfgCommon.Outputz;
+            this.configs.OutputzKey = this.cfgCommon.OutputzKey;
+            this.configs.OutputzUrlmode = this.cfgCommon.OutputzUrlMode;
+            this.configs.UseUnreadStyle = this.cfgCommon.UseUnreadStyle;
+            this.configs.DefaultTimeOut = this.cfgCommon.DefaultTimeOut;
+            this.configs.RetweetNoConfirm = this.cfgCommon.RetweetNoConfirm;
             this.configs.PlaySound = this.cfgCommon.PlaySound;
-            this.settingDialog.DateTimeFormat = this.cfgCommon.DateTimeFormat;
-            this.settingDialog.LimitBalloon = this.cfgCommon.LimitBalloon;
-            this.settingDialog.EventNotifyEnabled = this.cfgCommon.EventNotifyEnabled;
+            this.configs.DateTimeFormat = this.cfgCommon.DateTimeFormat;
+            this.configs.LimitBalloon = this.cfgCommon.LimitBalloon;
+            this.configs.EventNotifyEnabled = this.cfgCommon.EventNotifyEnabled;
             this.settingDialog.EventNotifyFlag = this.cfgCommon.EventNotifyFlag;
             this.settingDialog.IsMyEventNotifyFlag = this.cfgCommon.IsMyEventNotifyFlag;
-            this.settingDialog.ForceEventNotify = this.cfgCommon.ForceEventNotify;
-            this.settingDialog.FavEventUnread = this.cfgCommon.FavEventUnread;
+            this.configs.ForceEventNotify = this.cfgCommon.ForceEventNotify;
+            this.configs.FavEventUnread = this.cfgCommon.FavEventUnread;
             this.settingDialog.TranslateLanguage = this.cfgCommon.TranslateLanguage;
-            this.settingDialog.EventSoundFile = this.cfgCommon.EventSoundFile;
+            this.configs.EventSoundFile = this.cfgCommon.EventSoundFile;
 
             // 廃止サービスが選択されていた場合bit.lyへ読み替え
             if (this.cfgCommon.AutoShortUrlFirst < 0)
@@ -1658,25 +1658,25 @@ namespace Hoehoe
                 this.cfgCommon.AutoShortUrlFirst = UrlConverter.Bitly;
             }
 
-            this.settingDialog.AutoShortUrlFirst = this.cfgCommon.AutoShortUrlFirst;
-            this.settingDialog.TabIconDisp = this.cfgCommon.TabIconDisp;
-            this.settingDialog.ReplyIconState = this.cfgCommon.ReplyIconState;
-            this.settingDialog.ReadOwnPost = this.cfgCommon.ReadOwnPost;
-            this.settingDialog.GetFav = this.cfgCommon.GetFav;
-            this.settingDialog.ReadOldPosts = this.cfgCommon.ReadOldPosts;
-            this.settingDialog.UseSsl = this.cfgCommon.UseSsl;
-            this.settingDialog.BitlyUser = this.cfgCommon.BilyUser;
-            this.settingDialog.BitlyPwd = this.cfgCommon.BitlyPwd;
-            this.settingDialog.ShowGrid = this.cfgCommon.ShowGrid;
-            this.settingDialog.Language = this.cfgCommon.Language;
-            this.settingDialog.UseAtIdSupplement = this.cfgCommon.UseAtIdSupplement;
-            this.settingDialog.UseHashSupplement = this.cfgCommon.UseHashSupplement;
-            this.settingDialog.PreviewEnable = this.cfgCommon.PreviewEnable;
+            this.configs.AutoShortUrlFirst = this.cfgCommon.AutoShortUrlFirst;
+            this.configs.TabIconDisp = this.cfgCommon.TabIconDisp;
+            this.configs.ReplyIconState = this.cfgCommon.ReplyIconState;
+            this.configs.ReadOwnPost = this.cfgCommon.ReadOwnPost;
+            this.configs.GetFav = this.cfgCommon.GetFav;
+            this.configs.ReadOldPosts = this.cfgCommon.ReadOldPosts;
+            this.configs.UseSsl = this.cfgCommon.UseSsl;
+            this.configs.BitlyUser = this.cfgCommon.BilyUser;
+            this.configs.BitlyPwd = this.cfgCommon.BitlyPwd;
+            this.configs.ShowGrid = this.cfgCommon.ShowGrid;
+            this.configs.Language = this.cfgCommon.Language;
+            this.configs.UseAtIdSupplement = this.cfgCommon.UseAtIdSupplement;
+            this.configs.UseHashSupplement = this.cfgCommon.UseHashSupplement;
+            this.configs.PreviewEnable = this.cfgCommon.PreviewEnable;
             this.AtIdSupl = new AtIdSupplement(SettingAtIdList.Load().AtIdList, "@");
 
-            this.settingDialog.IsMonospace = this.cfgCommon.IsMonospace;
-            this.detailHtmlFormatFooter = this.GetDetailHtmlFormatFooter(this.settingDialog.IsMonospace);
-            this.detailHtmlFormatHeader = this.GetDetailHtmlFormatHeader(this.settingDialog.IsMonospace);
+            this.configs.IsMonospace = this.cfgCommon.IsMonospace;
+            this.detailHtmlFormatFooter = this.GetDetailHtmlFormatFooter(this.configs.IsMonospace);
+            this.detailHtmlFormatHeader = this.GetDetailHtmlFormatHeader(this.configs.IsMonospace);
 
             this.IdeographicSpaceToSpaceToolStripMenuItem.Checked = this.cfgCommon.WideSpaceConvert;
             this.ToolStripFocusLockMenuItem.Checked = this.cfgCommon.FocusLockToStatusText;
@@ -1686,26 +1686,26 @@ namespace Hoehoe
             // 書式指定文字列エラーチェック
             try
             {
-                if (DateTime.Now.ToString(this.settingDialog.DateTimeFormat).Length == 0)
+                if (DateTime.Now.ToString(this.configs.DateTimeFormat).Length == 0)
                 {
                     // このブロックは絶対に実行されないはず
                     // 変換が成功した場合にLengthが0にならない
-                    this.settingDialog.DateTimeFormat = "yyyy/MM/dd H:mm:ss";
+                    this.configs.DateTimeFormat = "yyyy/MM/dd H:mm:ss";
                 }
             }
             catch (FormatException)
             {
                 // FormatExceptionが発生したら初期値を設定 (=yyyy/MM/dd H:mm:ssとみなされる)
-                this.settingDialog.DateTimeFormat = "yyyy/MM/dd H:mm:ss";
+                this.configs.DateTimeFormat = "yyyy/MM/dd H:mm:ss";
             }
 
-            this.settingDialog.Nicoms = this.cfgCommon.Nicoms;
-            this.settingDialog.HotkeyEnabled = this.cfgCommon.HotkeyEnabled;
-            this.settingDialog.HotkeyMod = this.cfgCommon.HotkeyModifier;
-            this.settingDialog.HotkeyKey = this.cfgCommon.HotkeyKey;
-            this.settingDialog.HotkeyValue = this.cfgCommon.HotkeyValue;
-            this.settingDialog.BlinkNewMentions = this.cfgCommon.BlinkNewMentions;
-            this.settingDialog.UseAdditionalCount = this.cfgCommon.UseAdditionalCount;
+            this.configs.Nicoms = this.cfgCommon.Nicoms;
+            this.configs.HotkeyEnabled = this.cfgCommon.HotkeyEnabled;
+            this.configs.HotkeyMod = this.cfgCommon.HotkeyModifier;
+            this.configs.HotkeyKey = this.cfgCommon.HotkeyKey;
+            this.configs.HotkeyValue = this.cfgCommon.HotkeyValue;
+            this.configs.BlinkNewMentions = this.cfgCommon.BlinkNewMentions;
+            this.configs.UseAdditionalCount = this.cfgCommon.UseAdditionalCount;
             this.configs.MoreCountApi = this.cfgCommon.MoreCountApi;
             this.configs.FirstCountApi = this.cfgCommon.FirstCountApi;
             this.configs.SearchCountApi = this.cfgCommon.SearchCountApi;
@@ -1714,9 +1714,9 @@ namespace Hoehoe
             this.configs.ListCountApi = this.cfgCommon.ListCountApi;
             this.configs.UserstreamStartup = this.cfgCommon.UserstreamStartup;
             this.configs.UserstreamPeriodInt = this.cfgCommon.UserstreamPeriod;
-            this.settingDialog.OpenUserTimeline = this.cfgCommon.OpenUserTimeline;
-            this.settingDialog.ListDoubleClickAction = this.cfgCommon.ListDoubleClickAction;
-            this.settingDialog.UserAppointUrl = this.cfgCommon.UserAppointUrl;
+            this.configs.OpenUserTimeline = this.cfgCommon.OpenUserTimeline;
+            this.configs.ListDoubleClickAction = this.cfgCommon.ListDoubleClickAction;
+            this.configs.UserAppointUrl = this.cfgCommon.UserAppointUrl;
             this.configs.HideDuplicatedRetweets = this.cfgCommon.HideDuplicatedRetweets;
             this.configs.IsPreviewFoursquare = this.cfgCommon.IsPreviewFoursquare;
             this.configs.FoursquarePreviewHeight = this.cfgCommon.FoursquarePreviewHeight;
@@ -1798,47 +1798,47 @@ namespace Hoehoe
                 this.fntInputFont = this.configs.FontInputFont;
                 this.DisposeUserBrushes();
                 this.InitUserBrushes();
-                this.detailHtmlFormatFooter = this.GetDetailHtmlFormatFooter(this.settingDialog.IsMonospace);
-                this.detailHtmlFormatHeader = this.GetDetailHtmlFormatHeader(this.settingDialog.IsMonospace);
+                this.detailHtmlFormatFooter = this.GetDetailHtmlFormatFooter(this.configs.IsMonospace);
+                this.detailHtmlFormatHeader = this.GetDetailHtmlFormatHeader(this.configs.IsMonospace);
             }
 
-            if (this.settingDialog.HotkeyEnabled)
+            if (this.configs.HotkeyEnabled)
             {
                 // グローバルホットキーの登録
                 HookGlobalHotkey.ModKeys modKey = HookGlobalHotkey.ModKeys.None;
-                if ((this.settingDialog.HotkeyMod & Keys.Alt) == Keys.Alt)
+                if ((this.configs.HotkeyMod & Keys.Alt) == Keys.Alt)
                 {
                     modKey = modKey | HookGlobalHotkey.ModKeys.Alt;
                 }
 
-                if ((this.settingDialog.HotkeyMod & Keys.Control) == Keys.Control)
+                if ((this.configs.HotkeyMod & Keys.Control) == Keys.Control)
                 {
                     modKey = modKey | HookGlobalHotkey.ModKeys.Ctrl;
                 }
 
-                if ((this.settingDialog.HotkeyMod & Keys.Shift) == Keys.Shift)
+                if ((this.configs.HotkeyMod & Keys.Shift) == Keys.Shift)
                 {
                     modKey = modKey | HookGlobalHotkey.ModKeys.Shift;
                 }
 
-                if ((this.settingDialog.HotkeyMod & Keys.LWin) == Keys.LWin)
+                if ((this.configs.HotkeyMod & Keys.LWin) == Keys.LWin)
                 {
                     modKey = modKey | HookGlobalHotkey.ModKeys.Win;
                 }
 
-                this.hookGlobalHotkey.RegisterOriginalHotkey(this.settingDialog.HotkeyKey, this.settingDialog.HotkeyValue, modKey);
+                this.hookGlobalHotkey.RegisterOriginalHotkey(this.configs.HotkeyKey, this.configs.HotkeyValue, modKey);
             }
 
             // Twitter用通信クラス初期化
-            HttpConnection.InitializeConnection(this.settingDialog.DefaultTimeOut, this.settingDialog.SelectedProxyType, this.settingDialog.ProxyAddress, this.settingDialog.ProxyPort, this.settingDialog.ProxyUser, this.settingDialog.ProxyPassword);
+            HttpConnection.InitializeConnection(this.configs.DefaultTimeOut, this.configs.SelectedProxyType, this.configs.ProxyAddress, this.configs.ProxyPort, this.configs.ProxyUser, this.configs.ProxyPassword);
 
-            this.tw.SetRestrictFavCheck(this.settingDialog.RestrictFavCheck);
-            this.tw.ReadOwnPost = this.settingDialog.ReadOwnPost;
-            this.tw.SetUseSsl(this.settingDialog.UseSsl);
+            this.tw.SetRestrictFavCheck(this.configs.RestrictFavCheck);
+            this.tw.ReadOwnPost = this.configs.ReadOwnPost;
+            this.tw.SetUseSsl(this.configs.UseSsl);
             ShortUrl.IsResolve = this.configs.TinyUrlResolve;
             ShortUrl.IsForceResolve = this.configs.ShortUrlForceResolve;
-            ShortUrl.SetBitlyId(this.settingDialog.BitlyUser);
-            ShortUrl.SetBitlyKey(this.settingDialog.BitlyPwd);
+            ShortUrl.SetBitlyId(this.configs.BitlyUser);
+            ShortUrl.SetBitlyKey(this.configs.BitlyPwd);
             HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
             HttpTwitter.SetTwitterSearchUrl(this.cfgCommon.TwitterSearchUrl);
             this.tw.TrackWord = this.cfgCommon.TrackWord;
@@ -1846,9 +1846,9 @@ namespace Hoehoe
             this.tw.AllAtReply = this.cfgCommon.AllAtReply;
             this.AllrepliesToolStripMenuItem.Checked = this.tw.AllAtReply;
 
-            Outputz.Key = this.settingDialog.OutputzKey;
-            Outputz.Enabled = this.settingDialog.OutputzEnabled;
-            switch (this.settingDialog.OutputzUrlmode)
+            Outputz.Key = this.configs.OutputzKey;
+            Outputz.Enabled = this.configs.OutputzEnabled;
+            switch (this.configs.OutputzUrlmode)
             {
                 case OutputzUrlmode.twittercom:
                     Outputz.OutUrl = "http://twitter.com/";
@@ -1892,7 +1892,7 @@ namespace Hoehoe
                 }
             }
 
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
             this.mySpDis = this.cfgLocal.SplitterDistance;
             this.mySpDis2 = this.cfgLocal.StatusTextHeight;
             this.mySpDis3 = this.cfgLocal.PreviewDistance;
@@ -2102,7 +2102,7 @@ namespace Hoehoe
             this.SetMainWindowTitle();
             this.SetNotifyIconText();
 
-            if (this.settingDialog.TabIconDisp)
+            if (this.configs.TabIconDisp)
             {
                 this.ListTab.DrawMode = TabDrawMode.Normal;
             }
@@ -2240,7 +2240,7 @@ namespace Hoehoe
                 case WorkerType.Reply:
                     bw.ReportProgress(50, this.MakeStatusMessage(args, false));
                     ret = this.tw.GetTimelineApi(read, args.WorkerType, args.Page == -1, this.isInitializing);
-                    if (string.IsNullOrEmpty(ret) && args.WorkerType == WorkerType.Timeline && this.settingDialog.ReadOldPosts)
+                    if (string.IsNullOrEmpty(ret) && args.WorkerType == WorkerType.Timeline && this.configs.ReadOldPosts)
                     {
                         // 新着時未読クリア
                         this.statuses.SetRead();
@@ -2469,7 +2469,7 @@ namespace Hoehoe
                 case WorkerType.UserTimeline:
                     bw.ReportProgress(50, this.MakeStatusMessage(args, false));
                     int count = 20;
-                    if (this.settingDialog.UseAdditionalCount)
+                    if (this.configs.UseAdditionalCount)
                     {
                         count = this.configs.UserTimelineCountApi;
                     }
@@ -3478,7 +3478,7 @@ namespace Hoehoe
 
         private void MyList_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            switch (this.settingDialog.ListDoubleClickAction)
+            switch (this.configs.ListDoubleClickAction)
             {
                 case 0:
                     this.MakeReplyOrDirectStatus();
@@ -3573,7 +3573,7 @@ namespace Hoehoe
 
         private void Tw_NewPostFromStream()
         {
-            if (this.settingDialog.ReadOldPosts)
+            if (this.configs.ReadOldPosts)
             {
                 // 新着時未読クリア
                 this.statuses.SetRead();

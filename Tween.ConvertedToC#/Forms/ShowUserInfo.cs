@@ -320,7 +320,7 @@ namespace Hoehoe
                 else
                 {
                     Match m = Regex.Match(e.Url.AbsoluteUri, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
-                    if (AppendSettingDialog.Instance.OpenUserTimeline && m.Success && this.owner.IsTwitterId(m.Result("${ScreenName}")))
+                    if (Configs.Instance.OpenUserTimeline && m.Success && this.owner.IsTwitterId(m.Result("${ScreenName}")))
                     {
                         this.owner.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
                     }

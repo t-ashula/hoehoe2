@@ -84,102 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
 
-
-
-
-
-
-
-        
-
-        
-
-        
-
-        
-
-        public HttpConnection.ProxyType SelectedProxyType { get; set; }
-
-        public string ProxyAddress { get; set; }
-
-        public int ProxyPort { get; set; }
-
-        public string ProxyUser { get; set; }
-
-        public string ProxyPassword { get; set; }
-
-        public bool PeriodAdjust { get; set; }
-
-        public bool StartupVersion { get; set; }
-
-        public bool StartupFollowers { get; set; }
-
-        public bool RestrictFavCheck { get; set; }
-
-        public bool AlwaysTop { get; set; }
-
-        public bool UrlConvertAuto { get; set; }
-
-        public bool ShortenTco { get; set; }
-
-        public bool OutputzEnabled { get; set; }
-
-        public string OutputzKey { get; set; }
-
-        public OutputzUrlmode OutputzUrlmode { get; set; }
-
-        public bool Nicoms { get; set; }
-
-        public UrlConverter AutoShortUrlFirst { get; set; }
-
-        public bool UseUnreadStyle { get; set; }
-
-        public string DateTimeFormat { get; set; }
-
-        public int DefaultTimeOut { get; set; }
-
-        public bool RetweetNoConfirm { get; set; }
-
-        public bool TabIconDisp { get; set; }
-
-        public ReplyIconState ReplyIconState { get; set; }
-
-        public bool ReadOwnPost { get; set; }
-
-        public bool GetFav { get; set; }
-
-        public bool IsMonospace { get; set; }
-
-        public bool ReadOldPosts { get; set; }
-
-        public bool UseSsl { get; set; }
-
-        public string BitlyUser { get; set; }
-
-        public string BitlyPwd { get; set; }
-
-        public bool ShowGrid { get; set; }
-
-        public bool UseAtIdSupplement { get; set; }
-
-        public bool UseHashSupplement { get; set; }
-
-        public bool PreviewEnable { get; set; }
-
-        public bool UseAdditionalCount { get; set; }
-
-        public bool OpenUserTimeline { get; set; }
-
-        public string TwitterApiUrl { get; set; }
-
-        public string TwitterSearchApiUrl { get; set; }
-
-        public string Language { get; set; }
-
-        public bool LimitBalloon { get; set; }
-
-        public bool EventNotifyEnabled { get; set; }
-
         public EventType EventNotifyFlag
         {
             get { return this.myEventNotifyFlag; }
@@ -191,10 +95,6 @@ namespace Hoehoe
             get { return this.isMyEventNotifyFlag; }
             set { this.isMyEventNotifyFlag = value; }
         }
-
-        public bool ForceEventNotify { get; set; }
-
-        public bool FavEventUnread { get; set; }
 
         public string TranslateLanguage
         {
@@ -209,22 +109,6 @@ namespace Hoehoe
                 this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(value);
             }
         }
-
-        public string EventSoundFile { get; set; }
-
-        public int ListDoubleClickAction { get; set; }
-
-        public string UserAppointUrl { get; set; }
-
-        public bool HotkeyEnabled { get; set; }
-
-        public Keys HotkeyKey { get; set; }
-
-        public int HotkeyValue { get; set; }
-
-        public Keys HotkeyMod { get; set; }
-
-        public bool BlinkNewMentions { get; set; }
 
         #endregion properties
 
@@ -517,142 +401,142 @@ namespace Hoehoe
                 ShortUrl.IsForceResolve = this.configurations.ShortUrlForceResolve;
                 if (this.RadioProxyNone.Checked)
                 {
-                    this.SelectedProxyType = HttpConnection.ProxyType.None;
+                    this.configurations.SelectedProxyType = HttpConnection.ProxyType.None;
                 }
                 else if (this.RadioProxyIE.Checked)
                 {
-                    this.SelectedProxyType = HttpConnection.ProxyType.IE;
+                    this.configurations.SelectedProxyType = HttpConnection.ProxyType.IE;
                 }
                 else
                 {
-                    this.SelectedProxyType = HttpConnection.ProxyType.Specified;
+                    this.configurations.SelectedProxyType = HttpConnection.ProxyType.Specified;
                 }
 
-                this.ProxyAddress = this.TextProxyAddress.Text.Trim();
-                this.ProxyPort = int.Parse(this.TextProxyPort.Text.Trim());
-                this.ProxyUser = this.TextProxyUser.Text.Trim();
-                this.ProxyPassword = this.TextProxyPassword.Text.Trim();
-                this.PeriodAdjust = this.CheckPeriodAdjust.Checked;
-                this.StartupVersion = this.CheckStartupVersion.Checked;
-                this.StartupFollowers = this.CheckStartupFollowers.Checked;
-                this.RestrictFavCheck = this.CheckFavRestrict.Checked;
-                this.AlwaysTop = this.CheckAlwaysTop.Checked;
-                this.UrlConvertAuto = this.CheckAutoConvertUrl.Checked;
-                this.ShortenTco = this.ShortenTcoCheck.Checked;
-                this.OutputzEnabled = this.CheckOutputz.Checked;
-                this.OutputzKey = this.TextBoxOutputzKey.Text.Trim();
+                this.configurations.ProxyAddress = this.TextProxyAddress.Text.Trim();
+                this.configurations.ProxyPort = int.Parse(this.TextProxyPort.Text.Trim());
+                this.configurations.ProxyUser = this.TextProxyUser.Text.Trim();
+                this.configurations.ProxyPassword = this.TextProxyPassword.Text.Trim();
+                this.configurations.PeriodAdjust = this.CheckPeriodAdjust.Checked;
+                this.configurations.StartupVersion = this.CheckStartupVersion.Checked;
+                this.configurations.StartupFollowers = this.CheckStartupFollowers.Checked;
+                this.configurations.RestrictFavCheck = this.CheckFavRestrict.Checked;
+                this.configurations.AlwaysTop = this.CheckAlwaysTop.Checked;
+                this.configurations.UrlConvertAuto = this.CheckAutoConvertUrl.Checked;
+                this.configurations.ShortenTco = this.ShortenTcoCheck.Checked;
+                this.configurations.OutputzEnabled = this.CheckOutputz.Checked;
+                this.configurations.OutputzKey = this.TextBoxOutputzKey.Text.Trim();
 
                 switch (this.ComboBoxOutputzUrlmode.SelectedIndex)
                 {
                     case 0:
-                        this.OutputzUrlmode = OutputzUrlmode.twittercom;
+                        this.configurations.OutputzUrlmode = OutputzUrlmode.twittercom;
                         break;
                     case 1:
-                        this.OutputzUrlmode = OutputzUrlmode.twittercomWithUsername;
+                        this.configurations.OutputzUrlmode = OutputzUrlmode.twittercomWithUsername;
                         break;
                 }
 
-                this.Nicoms = this.CheckNicoms.Checked;
-                this.UseUnreadStyle = this.chkUnreadStyle.Checked;
-                this.DateTimeFormat = this.CmbDateTimeFormat.Text;
-                this.DefaultTimeOut = Convert.ToInt32(this.ConnectionTimeOut.Text);
-                this.RetweetNoConfirm = this.CheckRetweetNoConfirm.Checked;
-                this.LimitBalloon = this.CheckBalloonLimit.Checked;
-                this.EventNotifyEnabled = this.CheckEventNotify.Checked;
+                this.configurations.Nicoms = this.CheckNicoms.Checked;
+                this.configurations.UseUnreadStyle = this.chkUnreadStyle.Checked;
+                this.configurations.DateTimeFormat = this.CmbDateTimeFormat.Text;
+                this.configurations.DefaultTimeOut = Convert.ToInt32(this.ConnectionTimeOut.Text);
+                this.configurations.RetweetNoConfirm = this.CheckRetweetNoConfirm.Checked;
+                this.configurations.LimitBalloon = this.CheckBalloonLimit.Checked;
+                this.configurations.EventNotifyEnabled = this.CheckEventNotify.Checked;
                 this.GetEventNotifyFlag(ref this.myEventNotifyFlag, ref this.isMyEventNotifyFlag);
-                this.ForceEventNotify = this.CheckForceEventNotify.Checked;
-                this.FavEventUnread = this.CheckFavEventUnread.Checked;
+                this.configurations.ForceEventNotify = this.CheckForceEventNotify.Checked;
+                this.configurations.FavEventUnread = this.CheckFavEventUnread.Checked;
                 this.myTranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(this.ComboBoxTranslateLanguage.SelectedIndex);
-                this.EventSoundFile = Convert.ToString(this.ComboBoxEventNotifySound.SelectedItem);
-                this.AutoShortUrlFirst = (UrlConverter)this.ComboBoxAutoShortUrlFirst.SelectedIndex;
-                this.TabIconDisp = this.CheckTabIconDisp.Checked;
-                this.ReadOwnPost = this.chkReadOwnPost.Checked;
-                this.GetFav = this.CheckGetFav.Checked;
-                this.IsMonospace = this.CheckMonospace.Checked;
-                this.ReadOldPosts = this.CheckReadOldPosts.Checked;
-                this.UseSsl = this.CheckUseSsl.Checked;
-                this.BitlyUser = this.TextBitlyId.Text;
-                this.BitlyPwd = this.TextBitlyPw.Text;
-                this.ShowGrid = this.CheckShowGrid.Checked;
-                this.UseAtIdSupplement = this.CheckAtIdSupple.Checked;
-                this.UseHashSupplement = this.CheckHashSupple.Checked;
-                this.PreviewEnable = this.CheckPreviewEnable.Checked;
-                this.TwitterApiUrl = this.TwitterAPIText.Text.Trim();
-                this.TwitterSearchApiUrl = this.TwitterSearchAPIText.Text.Trim();
+                this.configurations.EventSoundFile = Convert.ToString(this.ComboBoxEventNotifySound.SelectedItem);
+                this.configurations.AutoShortUrlFirst = (UrlConverter)this.ComboBoxAutoShortUrlFirst.SelectedIndex;
+                this.configurations.TabIconDisp = this.CheckTabIconDisp.Checked;
+                this.configurations.ReadOwnPost = this.chkReadOwnPost.Checked;
+                this.configurations.GetFav = this.CheckGetFav.Checked;
+                this.configurations.IsMonospace = this.CheckMonospace.Checked;
+                this.configurations.ReadOldPosts = this.CheckReadOldPosts.Checked;
+                this.configurations.UseSsl = this.CheckUseSsl.Checked;
+                this.configurations.BitlyUser = this.TextBitlyId.Text;
+                this.configurations.BitlyPwd = this.TextBitlyPw.Text;
+                this.configurations.ShowGrid = this.CheckShowGrid.Checked;
+                this.configurations.UseAtIdSupplement = this.CheckAtIdSupple.Checked;
+                this.configurations.UseHashSupplement = this.CheckHashSupple.Checked;
+                this.configurations.PreviewEnable = this.CheckPreviewEnable.Checked;
+                this.configurations.TwitterApiUrl = this.TwitterAPIText.Text.Trim();
+                this.configurations.TwitterSearchApiUrl = this.TwitterSearchAPIText.Text.Trim();
                 switch (this.ReplyIconStateCombo.SelectedIndex)
                 {
                     case 0:
-                        this.ReplyIconState = ReplyIconState.None;
+                        this.configurations.ReplyIconState = ReplyIconState.None;
                         break;
                     case 1:
-                        this.ReplyIconState = ReplyIconState.StaticIcon;
+                        this.configurations.ReplyIconState = ReplyIconState.StaticIcon;
                         break;
                     case 2:
-                        this.ReplyIconState = ReplyIconState.BlinkIcon;
+                        this.configurations.ReplyIconState = ReplyIconState.BlinkIcon;
                         break;
                 }
 
                 switch (this.LanguageCombo.SelectedIndex)
                 {
                     case 0:
-                        this.Language = "OS";
+                        this.configurations.Language = "OS";
                         break;
                     case 1:
-                        this.Language = "ja";
+                        this.configurations.Language = "ja";
                         break;
                     case 2:
-                        this.Language = "en";
+                        this.configurations.Language = "en";
                         break;
                     case 3:
-                        this.Language = "zh-CN";
+                        this.configurations.Language = "zh-CN";
                         break;
                     default:
-                        this.Language = "en";
+                        this.configurations.Language = "en";
                         break;
                 }
 
-                this.HotkeyEnabled = this.HotkeyCheck.Checked;
-                this.HotkeyMod = Keys.None;
+                this.configurations.HotkeyEnabled = this.HotkeyCheck.Checked;
+                this.configurations.HotkeyMod = Keys.None;
                 if (this.HotkeyAlt.Checked)
                 {
-                    this.HotkeyMod = this.HotkeyMod | Keys.Alt;
+                    this.configurations.HotkeyMod = this.configurations.HotkeyMod | Keys.Alt;
                 }
 
                 if (this.HotkeyShift.Checked)
                 {
-                    this.HotkeyMod = this.HotkeyMod | Keys.Shift;
+                    this.configurations.HotkeyMod = this.configurations.HotkeyMod | Keys.Shift;
                 }
 
                 if (this.HotkeyCtrl.Checked)
                 {
-                    this.HotkeyMod = this.HotkeyMod | Keys.Control;
+                    this.configurations.HotkeyMod = this.configurations.HotkeyMod | Keys.Control;
                 }
 
                 if (this.HotkeyWin.Checked)
                 {
-                    this.HotkeyMod = this.HotkeyMod | Keys.LWin;
+                    this.configurations.HotkeyMod = this.configurations.HotkeyMod | Keys.LWin;
                 }
 
                 {
-                    int tmp = this.HotkeyValue;
+                    int tmp = this.configurations.HotkeyValue;
                     if (int.TryParse(this.HotkeyCode.Text, out tmp))
                     {
-                        this.HotkeyValue = tmp;
+                        this.configurations.HotkeyValue = tmp;
                     }
                 }
 
-                this.HotkeyKey = (Keys)this.HotkeyText.Tag;
-                this.BlinkNewMentions = this.CheckNewMentionsBlink.Checked;
-                this.UseAdditionalCount = this.UseChangeGetCount.Checked;
+                this.configurations.HotkeyKey = (Keys)this.HotkeyText.Tag;
+                this.configurations.BlinkNewMentions = this.CheckNewMentionsBlink.Checked;
+                this.configurations.UseAdditionalCount = this.UseChangeGetCount.Checked;
                 this.configurations.MoreCountApi = Convert.ToInt32(this.GetMoreTextCountApi.Text);
                 this.configurations.FirstCountApi = Convert.ToInt32(this.FirstTextCountApi.Text);
                 this.configurations.SearchCountApi = Convert.ToInt32(this.SearchTextCountApi.Text);
                 this.configurations.FavoritesCountApi = Convert.ToInt32(this.FavoritesTextCountApi.Text);
                 this.configurations.UserTimelineCountApi = Convert.ToInt32(this.UserTimelineTextCountApi.Text);
                 this.configurations.ListCountApi = Convert.ToInt32(this.ListTextCountApi.Text);
-                this.OpenUserTimeline = this.CheckOpenUserTimeline.Checked;
-                this.ListDoubleClickAction = this.ListDoubleClickActionComboBox.SelectedIndex;
-                this.UserAppointUrl = this.UserAppointUrlText.Text;
+                this.configurations.OpenUserTimeline = this.CheckOpenUserTimeline.Checked;
+                this.configurations.ListDoubleClickAction = this.ListDoubleClickActionComboBox.SelectedIndex;
+                this.configurations.UserAppointUrl = this.UserAppointUrlText.Text;
                 this.configurations.HideDuplicatedRetweets = this.HideDuplicatedRetweetsCheck.Checked;
                 this.configurations.IsPreviewFoursquare = this.IsPreviewFoursquareCheckBox.Checked;
                 this.configurations.FoursquarePreviewHeight = Convert.ToInt32(this.FoursquarePreviewHeightTextBox.Text);
@@ -883,7 +767,7 @@ namespace Hoehoe
             this.CheckSortOrderLock.Checked = this.configurations.SortOrderLock;
             this.CheckTinyURL.Checked = this.configurations.TinyUrlResolve;
             this.CheckForceResolve.Checked = this.configurations.ShortUrlForceResolve;
-            switch (this.SelectedProxyType)
+            switch (this.configurations.SelectedProxyType)
             {
                 case HttpConnection.ProxyType.None:
                     this.RadioProxyNone.Checked = true;
@@ -906,23 +790,23 @@ namespace Hoehoe
             this.LabelProxyPassword.Enabled = chk;
             this.TextProxyPassword.Enabled = chk;
 
-            this.TextProxyAddress.Text = this.ProxyAddress;
-            this.TextProxyPort.Text = this.ProxyPort.ToString();
-            this.TextProxyUser.Text = this.ProxyUser;
-            this.TextProxyPassword.Text = this.ProxyPassword;
+            this.TextProxyAddress.Text = this.configurations.ProxyAddress;
+            this.TextProxyPort.Text = this.configurations.ProxyPort.ToString();
+            this.TextProxyUser.Text = this.configurations.ProxyUser;
+            this.TextProxyPassword.Text = this.configurations.ProxyPassword;
 
-            this.CheckPeriodAdjust.Checked = this.PeriodAdjust;
-            this.CheckStartupVersion.Checked = this.StartupVersion;
-            this.CheckStartupFollowers.Checked = this.StartupFollowers;
-            this.CheckFavRestrict.Checked = this.RestrictFavCheck;
-            this.CheckAlwaysTop.Checked = this.AlwaysTop;
-            this.CheckAutoConvertUrl.Checked = this.UrlConvertAuto;
-            this.ShortenTcoCheck.Checked = this.ShortenTco;
+            this.CheckPeriodAdjust.Checked = this.configurations.PeriodAdjust;
+            this.CheckStartupVersion.Checked = this.configurations.StartupVersion;
+            this.CheckStartupFollowers.Checked = this.configurations.StartupFollowers;
+            this.CheckFavRestrict.Checked = this.configurations.RestrictFavCheck;
+            this.CheckAlwaysTop.Checked = this.configurations.AlwaysTop;
+            this.CheckAutoConvertUrl.Checked = this.configurations.UrlConvertAuto;
+            this.ShortenTcoCheck.Checked = this.configurations.ShortenTco;
             this.ShortenTcoCheck.Enabled = this.CheckAutoConvertUrl.Checked;
-            this.CheckOutputz.Checked = this.OutputzEnabled;
-            this.TextBoxOutputzKey.Text = this.OutputzKey;
+            this.CheckOutputz.Checked = this.configurations.OutputzEnabled;
+            this.TextBoxOutputzKey.Text = this.configurations.OutputzKey;
 
-            switch (this.OutputzUrlmode)
+            switch (this.configurations.OutputzUrlmode)
             {
                 case OutputzUrlmode.twittercom:
                     this.ComboBoxOutputzUrlmode.SelectedIndex = 0;
@@ -932,35 +816,35 @@ namespace Hoehoe
                     break;
             }
 
-            this.CheckNicoms.Checked = this.Nicoms;
-            this.chkUnreadStyle.Checked = this.UseUnreadStyle;
-            this.CmbDateTimeFormat.Text = this.DateTimeFormat;
-            this.ConnectionTimeOut.Text = this.DefaultTimeOut.ToString();
-            this.CheckRetweetNoConfirm.Checked = this.RetweetNoConfirm;
-            this.CheckBalloonLimit.Checked = this.LimitBalloon;
-            this.ApplyEventNotifyFlag(this.EventNotifyEnabled, this.myEventNotifyFlag, this.isMyEventNotifyFlag);
-            this.CheckForceEventNotify.Checked = this.ForceEventNotify;
-            this.CheckFavEventUnread.Checked = this.FavEventUnread;
+            this.CheckNicoms.Checked = this.configurations.Nicoms;
+            this.chkUnreadStyle.Checked = this.configurations.UseUnreadStyle;
+            this.CmbDateTimeFormat.Text = this.configurations.DateTimeFormat;
+            this.ConnectionTimeOut.Text = this.configurations.DefaultTimeOut.ToString();
+            this.CheckRetweetNoConfirm.Checked = this.configurations.RetweetNoConfirm;
+            this.CheckBalloonLimit.Checked = this.configurations.LimitBalloon;
+            this.ApplyEventNotifyFlag(this.configurations.EventNotifyEnabled, this.myEventNotifyFlag, this.isMyEventNotifyFlag);
+            this.CheckForceEventNotify.Checked = this.configurations.ForceEventNotify;
+            this.CheckFavEventUnread.Checked = this.configurations.FavEventUnread;
             this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this.myTranslateLanguage);
             this.SoundFileListup();
-            this.ComboBoxAutoShortUrlFirst.SelectedIndex = (int)this.AutoShortUrlFirst;
-            this.CheckTabIconDisp.Checked = this.TabIconDisp;
-            this.chkReadOwnPost.Checked = this.ReadOwnPost;
-            this.CheckGetFav.Checked = this.GetFav;
-            this.CheckMonospace.Checked = this.IsMonospace;
-            this.CheckReadOldPosts.Checked = this.ReadOldPosts;
-            this.CheckUseSsl.Checked = this.UseSsl;
-            this.TextBitlyId.Text = this.BitlyUser;
-            this.TextBitlyPw.Text = this.BitlyPwd;
+            this.ComboBoxAutoShortUrlFirst.SelectedIndex = (int)this.configurations.AutoShortUrlFirst;
+            this.CheckTabIconDisp.Checked = this.configurations.TabIconDisp;
+            this.chkReadOwnPost.Checked = this.configurations.ReadOwnPost;
+            this.CheckGetFav.Checked = this.configurations.GetFav;
+            this.CheckMonospace.Checked = this.configurations.IsMonospace;
+            this.CheckReadOldPosts.Checked = this.configurations.ReadOldPosts;
+            this.CheckUseSsl.Checked = this.configurations.UseSsl;
+            this.TextBitlyId.Text = this.configurations.BitlyUser;
+            this.TextBitlyPw.Text = this.configurations.BitlyPwd;
             this.TextBitlyId.Modified = false;
             this.TextBitlyPw.Modified = false;
-            this.CheckShowGrid.Checked = this.ShowGrid;
-            this.CheckAtIdSupple.Checked = this.UseAtIdSupplement;
-            this.CheckHashSupple.Checked = this.UseHashSupplement;
-            this.CheckPreviewEnable.Checked = this.PreviewEnable;
-            this.TwitterAPIText.Text = this.TwitterApiUrl;
-            this.TwitterSearchAPIText.Text = this.TwitterSearchApiUrl;
-            switch (this.ReplyIconState)
+            this.CheckShowGrid.Checked = this.configurations.ShowGrid;
+            this.CheckAtIdSupple.Checked = this.configurations.UseAtIdSupplement;
+            this.CheckHashSupple.Checked = this.configurations.UseHashSupplement;
+            this.CheckPreviewEnable.Checked = this.configurations.PreviewEnable;
+            this.TwitterAPIText.Text = this.configurations.TwitterApiUrl;
+            this.TwitterSearchAPIText.Text = this.configurations.TwitterSearchApiUrl;
+            switch (this.configurations.ReplyIconState)
             {
                 case ReplyIconState.None:
                     this.ReplyIconStateCombo.SelectedIndex = 0;
@@ -973,7 +857,7 @@ namespace Hoehoe
                     break;
             }
 
-            switch (this.Language)
+            switch (this.configurations.Language)
             {
                 case "OS":
                     this.LanguageCombo.SelectedIndex = 0;
@@ -992,21 +876,21 @@ namespace Hoehoe
                     break;
             }
 
-            this.HotkeyCheck.Checked = this.HotkeyEnabled;
-            this.HotkeyAlt.Checked = (this.HotkeyMod & Keys.Alt) == Keys.Alt;
-            this.HotkeyCtrl.Checked = (this.HotkeyMod & Keys.Control) == Keys.Control;
-            this.HotkeyShift.Checked = (this.HotkeyMod & Keys.Shift) == Keys.Shift;
-            this.HotkeyWin.Checked = (this.HotkeyMod & Keys.LWin) == Keys.LWin;
-            this.HotkeyCode.Text = this.HotkeyValue.ToString();
-            this.HotkeyText.Text = this.HotkeyKey.ToString();
-            this.HotkeyText.Tag = this.HotkeyKey;
-            this.HotkeyAlt.Enabled = this.HotkeyEnabled;
-            this.HotkeyShift.Enabled = this.HotkeyEnabled;
-            this.HotkeyCtrl.Enabled = this.HotkeyEnabled;
-            this.HotkeyWin.Enabled = this.HotkeyEnabled;
-            this.HotkeyText.Enabled = this.HotkeyEnabled;
-            this.HotkeyCode.Enabled = this.HotkeyEnabled;
-            this.CheckNewMentionsBlink.Checked = this.BlinkNewMentions;
+            this.HotkeyCheck.Checked = this.configurations.HotkeyEnabled;
+            this.HotkeyAlt.Checked = (this.configurations.HotkeyMod & Keys.Alt) == Keys.Alt;
+            this.HotkeyCtrl.Checked = (this.configurations.HotkeyMod & Keys.Control) == Keys.Control;
+            this.HotkeyShift.Checked = (this.configurations.HotkeyMod & Keys.Shift) == Keys.Shift;
+            this.HotkeyWin.Checked = (this.configurations.HotkeyMod & Keys.LWin) == Keys.LWin;
+            this.HotkeyCode.Text = this.configurations.HotkeyValue.ToString();
+            this.HotkeyText.Text = this.configurations.HotkeyKey.ToString();
+            this.HotkeyText.Tag = this.configurations.HotkeyKey;
+            this.HotkeyAlt.Enabled = this.configurations.HotkeyEnabled;
+            this.HotkeyShift.Enabled = this.configurations.HotkeyEnabled;
+            this.HotkeyCtrl.Enabled = this.configurations.HotkeyEnabled;
+            this.HotkeyWin.Enabled = this.configurations.HotkeyEnabled;
+            this.HotkeyText.Enabled = this.configurations.HotkeyEnabled;
+            this.HotkeyCode.Enabled = this.configurations.HotkeyEnabled;
+            this.CheckNewMentionsBlink.Checked = this.configurations.BlinkNewMentions;
 
             this.CheckOutputz_CheckedChanged(sender, e);
 
@@ -1016,7 +900,7 @@ namespace Hoehoe
             this.FavoritesTextCountApi.Text = this.configurations.FavoritesCountApi.ToString();
             this.UserTimelineTextCountApi.Text = this.configurations.UserTimelineCountApi.ToString();
             this.ListTextCountApi.Text = this.configurations.ListCountApi.ToString();
-            this.UseChangeGetCount.Checked = this.UseAdditionalCount;
+            this.UseChangeGetCount.Checked = this.configurations.UseAdditionalCount;
             this.Label28.Enabled = this.UseChangeGetCount.Checked;
             this.Label30.Enabled = this.UseChangeGetCount.Checked;
             this.Label53.Enabled = this.UseChangeGetCount.Checked;
@@ -1029,9 +913,9 @@ namespace Hoehoe
             this.FavoritesTextCountApi.Enabled = this.UseChangeGetCount.Checked;
             this.UserTimelineTextCountApi.Enabled = this.UseChangeGetCount.Checked;
             this.ListTextCountApi.Enabled = this.UseChangeGetCount.Checked;
-            this.CheckOpenUserTimeline.Checked = this.OpenUserTimeline;
-            this.ListDoubleClickActionComboBox.SelectedIndex = this.ListDoubleClickAction;
-            this.UserAppointUrlText.Text = this.UserAppointUrl;
+            this.CheckOpenUserTimeline.Checked = this.configurations.OpenUserTimeline;
+            this.ListDoubleClickActionComboBox.SelectedIndex = this.configurations.ListDoubleClickAction;
+            this.UserAppointUrlText.Text = this.configurations.UserAppointUrl;
             this.HideDuplicatedRetweetsCheck.Checked = this.configurations.HideDuplicatedRetweets;
             this.IsPreviewFoursquareCheckBox.Checked = this.configurations.IsPreviewFoursquare;
             this.FoursquarePreviewHeightTextBox.Text = this.configurations.FoursquarePreviewHeight.ToString();
@@ -1688,7 +1572,7 @@ namespace Hoehoe
                 }
             }
             while (!this.IsHandleCreated);
-            this.TopMost = this.AlwaysTop;
+            this.TopMost = this.configurations.AlwaysTop;
             this.CalcApiUsing();
         }
 
@@ -2253,9 +2137,9 @@ namespace Hoehoe
 
         private void SoundFileListup()
         {
-            if (string.IsNullOrEmpty(this.EventSoundFile))
+            if (string.IsNullOrEmpty(this.configurations.EventSoundFile))
             {
-                this.EventSoundFile = string.Empty;
+                this.configurations.EventSoundFile = string.Empty;
             }
 
             this.ComboBoxEventNotifySound.Items.Clear();
@@ -2266,7 +2150,7 @@ namespace Hoehoe
                 this.ComboBoxEventNotifySound.Items.AddRange(names);
             }
 
-            int idx = this.ComboBoxEventNotifySound.Items.IndexOf(this.EventSoundFile);
+            int idx = this.ComboBoxEventNotifySound.Items.IndexOf(this.configurations.EventSoundFile);
             if (idx == -1)
             {
                 idx = 0;

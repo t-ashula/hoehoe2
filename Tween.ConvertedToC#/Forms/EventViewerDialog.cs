@@ -80,7 +80,7 @@ namespace Hoehoe
             this.curTab = this.TabEventType.SelectedTab;
             this.CreateFilterdEventSource();
             this.EventList.EndUpdate();
-            this.TopMost = AppendSettingDialog.Instance.AlwaysTop;
+            this.TopMost = Configs.Instance.AlwaysTop;
         }
 
         private void EventList_DoubleClick(object sender, EventArgs e)
@@ -192,7 +192,7 @@ namespace Hoehoe
                 }
             }
 
-            this.TopMost = AppendSettingDialog.Instance.AlwaysTop;
+            this.TopMost = Configs.Instance.AlwaysTop;
         }
 
         #endregion event handler

@@ -23,6 +23,7 @@ namespace Hoehoe
 {
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Windows.Forms;
     using Hoehoe.DataModels.Twitter;
 
     public class Configs
@@ -116,5 +117,107 @@ namespace Hoehoe
         public bool ShortUrlForceResolve { get; set; }
 
         public bool SortOrderLock { get; set; }
+
+        public HttpConnection.ProxyType SelectedProxyType { get; set; }
+        public string ProxyAddress { get; set; }
+        public int ProxyPort { get; set; }
+        public string ProxyUser { get; set; }
+        public string ProxyPassword { get; set; }
+
+        public bool PeriodAdjust { get; set; }
+
+        public bool StartupVersion { get; set; }
+        public bool StartupFollowers { get; set; }
+
+        public bool RestrictFavCheck { get; set; }
+
+        public bool AlwaysTop { get; set; }
+
+        public bool UrlConvertAuto { get; set; }
+
+        public bool ShortenTco { get; set; }
+
+        public bool OutputzEnabled { get; set; }
+
+        public string OutputzKey { get; set; }
+
+        public OutputzUrlmode OutputzUrlmode { get; set; }
+
+        public bool Nicoms { get; set; }
+
+        public UrlConverter AutoShortUrlFirst { get; set; }
+
+        public bool UseUnreadStyle { get; set; }
+
+        public string DateTimeFormat { get; set; }
+
+        public int DefaultTimeOut { get; set; }
+
+        public bool RetweetNoConfirm { get; set; }
+
+        public bool TabIconDisp { get; set; }
+
+        public ReplyIconState ReplyIconState { get; set; }
+
+        public bool ReadOwnPost { get; set; }
+
+        public bool GetFav { get; set; }
+
+        public bool IsMonospace { get; set; }
+
+        public bool ReadOldPosts { get; set; }
+
+        public bool UseSsl { get; set; }
+
+        public string BitlyUser { get; set; }
+
+        public string BitlyPwd { get; set; }
+
+        public bool ShowGrid { get; set; }
+
+        public bool UseAtIdSupplement { get; set; }
+
+        public bool UseHashSupplement { get; set; }
+
+        public bool PreviewEnable { get; set; }
+
+        public bool UseAdditionalCount { get; set; }
+
+        public bool OpenUserTimeline { get; set; }
+
+        public string TwitterApiUrl { get; set; }
+
+        public string TwitterSearchApiUrl { get; set; }
+
+        public string Language { get; set; }
+
+        public bool LimitBalloon { get; set; }
+
+        public bool EventNotifyEnabled { get; set; }
+
+        // public EventType EventNotifyFlag
+        // public EventType IsMyEventNotifyFlag
+
+        public bool ForceEventNotify { get; set; }
+
+        public bool FavEventUnread { get; set; }
+
+        // public string TranslateLanguage
+
+        public string EventSoundFile { get; set; }
+
+        public int ListDoubleClickAction { get; set; }
+
+        public string UserAppointUrl { get; set; }
+
+        public bool HotkeyEnabled { get; set; }
+
+        public Keys HotkeyKey { get; set; }
+
+        public int HotkeyValue { get; set; }
+
+        public Keys HotkeyMod { get; set; }
+
+        public bool BlinkNewMentions { get; set; }
     }
 }

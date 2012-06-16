@@ -148,7 +148,7 @@ namespace Hoehoe
 
             // 本当にリプライ先指定すべきかどうかの判定
             m = Regex.Matches(statusText, "(^|[ -/:-@[-^`{-~])(?<id>@[a-zA-Z0-9_]+)");
-            if (this.settingDialog.UseAtIdSupplement)
+            if (this.configs.UseAtIdSupplement)
             {
                 if (this.AtIdSupl.AddRangeItem(m.Cast<Match>().Select(mid => mid.Result("${id}"))))
                 {
@@ -425,7 +425,7 @@ namespace Hoehoe
                     lst.EndUpdate();
                     if (tabInfo.UnreadCount > 0)
                     {
-                        if (this.settingDialog.TabIconDisp)
+                        if (this.configs.TabIconDisp)
                         {
                             if (tab.ImageIndex == -1)
                             {
@@ -436,7 +436,7 @@ namespace Hoehoe
                     }
                 }
 
-                if (!this.settingDialog.TabIconDisp)
+                if (!this.configs.TabIconDisp)
                 {
                     this.ListTab.Refresh();
                 }
@@ -635,15 +635,15 @@ namespace Hoehoe
         {
             return this.IsEventNotifyAsEventType(ev.Eventtype)
                 && this.IsMyEventNotityAsEventType(ev)
-                && (this.NewPostPopMenuItem.Checked || (this.settingDialog.ForceEventNotify && ev.Eventtype != EventType.None))
+                && (this.NewPostPopMenuItem.Checked || (this.configs.ForceEventNotify && ev.Eventtype != EventType.None))
                 && !this.isInitializing
-                && ((this.settingDialog.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !this.settingDialog.LimitBalloon)
+                && ((this.configs.LimitBalloon && (this.WindowState == FormWindowState.Minimized || !this.Visible || Form.ActiveForm == null)) || !this.configs.LimitBalloon)
                 && !Win32Api.IsScreenSaverRunning();
         }
 
         private bool IsEventNotifyAsEventType(EventType type)
         {
-            return (this.settingDialog.EventNotifyEnabled && Convert.ToBoolean(type & this.settingDialog.EventNotifyFlag)) || type == EventType.None;
+            return (this.configs.EventNotifyEnabled && Convert.ToBoolean(type & this.settingDialog.EventNotifyFlag)) || type == EventType.None;
         }
 
         private bool IsMyEventNotityAsEventType(Twitter.FormattedEvent ev)
@@ -655,7 +655,7 @@ namespace Hoehoe
         {
             if (notifyPosts != null
                 && notifyPosts.Count() > 0
-                && this.settingDialog.ReadOwnPost
+                && this.configs.ReadOwnPost
                 && notifyPosts.All(post => post.UserId == this.tw.UserId || post.ScreenName == this.tw.Username))
             {
                 return;
@@ -785,7 +785,7 @@ namespace Hoehoe
             }
 
             // mentions新着時に画面ブリンク
-            if (!this.isInitializing && this.settingDialog.BlinkNewMentions && newMentions && Form.ActiveForm == null)
+            if (!this.isInitializing && this.configs.BlinkNewMentions && newMentions && Form.ActiveForm == null)
             {
                 Win32Api.FlashMyWindow(this.Handle, Hoehoe.Win32Api.FlashSpecification.FlashTray, 3);
             }
@@ -847,7 +847,7 @@ namespace Hoehoe
 
         private void ChangeItemStyleRead(bool read, ListViewItem item, PostClass post, DetailsListView listView)
         {
-            bool useUnreadStyle = this.settingDialog.UseUnreadStyle;
+            bool useUnreadStyle = this.configs.UseUnreadStyle;
 
             // フォント
             Font fnt = read ? this.fntReaded : this.fntUnread;
@@ -1288,7 +1288,7 @@ namespace Hoehoe
                     }
                 }
 
-                if (this.settingDialog.TabIconDisp)
+                if (this.configs.TabIconDisp)
                 {
                     this.ChangeTabsIconToRead();
                 }
@@ -1535,7 +1535,7 @@ namespace Hoehoe
                 read = true;
             }
 
-            var subitem = new string[] { string.Empty, post.Nickname, post.IsDeleted ? "(DELETED)" : post.TextFromApi, post.CreatedAt.ToString(this.settingDialog.DateTimeFormat), postedByDetail, string.Empty, mk.ToString(), post.Source };
+            var subitem = new string[] { string.Empty, post.Nickname, post.IsDeleted ? "(DELETED)" : post.TextFromApi, post.CreatedAt.ToString(this.configs.DateTimeFormat), postedByDetail, string.Empty, mk.ToString(), post.Source };
             var itm = new ImageListViewItem(subitem, this.iconDict, post.ImageUrl)
             {
                 StateImageIndex = post.StateIndex
@@ -1791,7 +1791,7 @@ namespace Hoehoe
                 this.SetStatusLabelUrl();
             }
 
-            if (this.settingDialog.TabIconDisp)
+            if (this.configs.TabIconDisp)
             {
                 this.ChangeTabsIconToRead();
             }
@@ -3358,7 +3358,7 @@ namespace Hoehoe
 
         private void SaveConfigsAtId()
         {
-            if (this.ignoreConfigSave || (!this.settingDialog.UseAtIdSupplement && this.AtIdSupl == null))
+            if (this.ignoreConfigSave || (!this.configs.UseAtIdSupplement && this.AtIdSupl == null))
             {
                 return;
             }
@@ -3410,68 +3410,68 @@ namespace Hoehoe
                 this.cfgCommon.SortOrderLock = this.configs.SortOrderLock;
                 this.cfgCommon.TinyUrlResolve = this.configs.TinyUrlResolve;
                 this.cfgCommon.ShortUrlForceResolve = this.configs.ShortUrlForceResolve;
-                this.cfgCommon.PeriodAdjust = this.settingDialog.PeriodAdjust;
-                this.cfgCommon.StartupVersion = this.settingDialog.StartupVersion;
-                this.cfgCommon.StartupFollowers = this.settingDialog.StartupFollowers;
-                this.cfgCommon.RestrictFavCheck = this.settingDialog.RestrictFavCheck;
-                this.cfgCommon.AlwaysTop = this.settingDialog.AlwaysTop;
-                this.cfgCommon.UrlConvertAuto = this.settingDialog.UrlConvertAuto;
-                this.cfgCommon.Outputz = this.settingDialog.OutputzEnabled;
-                this.cfgCommon.OutputzKey = this.settingDialog.OutputzKey;
-                this.cfgCommon.OutputzUrlMode = this.settingDialog.OutputzUrlmode;
-                this.cfgCommon.UseUnreadStyle = this.settingDialog.UseUnreadStyle;
-                this.cfgCommon.DateTimeFormat = this.settingDialog.DateTimeFormat;
-                this.cfgCommon.DefaultTimeOut = this.settingDialog.DefaultTimeOut;
-                this.cfgCommon.RetweetNoConfirm = this.settingDialog.RetweetNoConfirm;
-                this.cfgCommon.LimitBalloon = this.settingDialog.LimitBalloon;
-                this.cfgCommon.EventNotifyEnabled = this.settingDialog.EventNotifyEnabled;
+                this.cfgCommon.PeriodAdjust = this.configs.PeriodAdjust;
+                this.cfgCommon.StartupVersion = this.configs.StartupVersion;
+                this.cfgCommon.StartupFollowers = this.configs.StartupFollowers;
+                this.cfgCommon.RestrictFavCheck = this.configs.RestrictFavCheck;
+                this.cfgCommon.AlwaysTop = this.configs.AlwaysTop;
+                this.cfgCommon.UrlConvertAuto = this.configs.UrlConvertAuto;
+                this.cfgCommon.Outputz = this.configs.OutputzEnabled;
+                this.cfgCommon.OutputzKey = this.configs.OutputzKey;
+                this.cfgCommon.OutputzUrlMode = this.configs.OutputzUrlmode;
+                this.cfgCommon.UseUnreadStyle = this.configs.UseUnreadStyle;
+                this.cfgCommon.DateTimeFormat = this.configs.DateTimeFormat;
+                this.cfgCommon.DefaultTimeOut = this.configs.DefaultTimeOut;
+                this.cfgCommon.RetweetNoConfirm = this.configs.RetweetNoConfirm;
+                this.cfgCommon.LimitBalloon = this.configs.LimitBalloon;
+                this.cfgCommon.EventNotifyEnabled = this.configs.EventNotifyEnabled;
                 this.cfgCommon.EventNotifyFlag = this.settingDialog.EventNotifyFlag;
                 this.cfgCommon.IsMyEventNotifyFlag = this.settingDialog.IsMyEventNotifyFlag;
-                this.cfgCommon.ForceEventNotify = this.settingDialog.ForceEventNotify;
-                this.cfgCommon.FavEventUnread = this.settingDialog.FavEventUnread;
+                this.cfgCommon.ForceEventNotify = this.configs.ForceEventNotify;
+                this.cfgCommon.FavEventUnread = this.configs.FavEventUnread;
                 this.cfgCommon.TranslateLanguage = this.settingDialog.TranslateLanguage;
-                this.cfgCommon.EventSoundFile = this.settingDialog.EventSoundFile;
-                this.cfgCommon.AutoShortUrlFirst = this.settingDialog.AutoShortUrlFirst;
-                this.cfgCommon.TabIconDisp = this.settingDialog.TabIconDisp;
-                this.cfgCommon.ReplyIconState = this.settingDialog.ReplyIconState;
-                this.cfgCommon.ReadOwnPost = this.settingDialog.ReadOwnPost;
-                this.cfgCommon.GetFav = this.settingDialog.GetFav;
-                this.cfgCommon.IsMonospace = this.settingDialog.IsMonospace;
+                this.cfgCommon.EventSoundFile = this.configs.EventSoundFile;
+                this.cfgCommon.AutoShortUrlFirst = this.configs.AutoShortUrlFirst;
+                this.cfgCommon.TabIconDisp = this.configs.TabIconDisp;
+                this.cfgCommon.ReplyIconState = this.configs.ReplyIconState;
+                this.cfgCommon.ReadOwnPost = this.configs.ReadOwnPost;
+                this.cfgCommon.GetFav = this.configs.GetFav;
+                this.cfgCommon.IsMonospace = this.configs.IsMonospace;
                 if (this.IdeographicSpaceToSpaceToolStripMenuItem != null && !this.IdeographicSpaceToSpaceToolStripMenuItem.IsDisposed)
                 {
                     this.cfgCommon.WideSpaceConvert = this.IdeographicSpaceToSpaceToolStripMenuItem.Checked;
                 }
 
-                this.cfgCommon.ReadOldPosts = this.settingDialog.ReadOldPosts;
-                this.cfgCommon.UseSsl = this.settingDialog.UseSsl;
-                this.cfgCommon.BilyUser = this.settingDialog.BitlyUser;
-                this.cfgCommon.BitlyPwd = this.settingDialog.BitlyPwd;
-                this.cfgCommon.ShowGrid = this.settingDialog.ShowGrid;
-                this.cfgCommon.UseAtIdSupplement = this.settingDialog.UseAtIdSupplement;
-                this.cfgCommon.UseHashSupplement = this.settingDialog.UseHashSupplement;
-                this.cfgCommon.PreviewEnable = this.settingDialog.PreviewEnable;
-                this.cfgCommon.Language = this.settingDialog.Language;
+                this.cfgCommon.ReadOldPosts = this.configs.ReadOldPosts;
+                this.cfgCommon.UseSsl = this.configs.UseSsl;
+                this.cfgCommon.BilyUser = this.configs.BitlyUser;
+                this.cfgCommon.BitlyPwd = this.configs.BitlyPwd;
+                this.cfgCommon.ShowGrid = this.configs.ShowGrid;
+                this.cfgCommon.UseAtIdSupplement = this.configs.UseAtIdSupplement;
+                this.cfgCommon.UseHashSupplement = this.configs.UseHashSupplement;
+                this.cfgCommon.PreviewEnable = this.configs.PreviewEnable;
+                this.cfgCommon.Language = this.configs.Language;
                 this.cfgCommon.SortOrder = (int)this.statuses.SortOrder;
                 this.cfgCommon.SortColumn = this.GetSortColumnIndex(this.statuses.SortMode);
-                this.cfgCommon.Nicoms = this.settingDialog.Nicoms;
+                this.cfgCommon.Nicoms = this.configs.Nicoms;
                 this.cfgCommon.HashTags = this.HashMgr.HashHistories;
                 this.cfgCommon.HashSelected = this.HashMgr.IsPermanent ? this.HashMgr.UseHash : string.Empty;
                 this.cfgCommon.HashIsHead = this.HashMgr.IsHead;
                 this.cfgCommon.HashIsPermanent = this.HashMgr.IsPermanent;
                 this.cfgCommon.HashIsNotAddToAtReply = this.HashMgr.IsNotAddToAtReply;
-                this.cfgCommon.TwitterUrl = this.settingDialog.TwitterApiUrl;
-                this.cfgCommon.TwitterSearchUrl = this.settingDialog.TwitterSearchApiUrl;
-                this.cfgCommon.HotkeyEnabled = this.settingDialog.HotkeyEnabled;
-                this.cfgCommon.HotkeyModifier = this.settingDialog.HotkeyMod;
-                this.cfgCommon.HotkeyKey = this.settingDialog.HotkeyKey;
-                this.cfgCommon.HotkeyValue = this.settingDialog.HotkeyValue;
-                this.cfgCommon.BlinkNewMentions = this.settingDialog.BlinkNewMentions;
+                this.cfgCommon.TwitterUrl = this.configs.TwitterApiUrl;
+                this.cfgCommon.TwitterSearchUrl = this.configs.TwitterSearchApiUrl;
+                this.cfgCommon.HotkeyEnabled = this.configs.HotkeyEnabled;
+                this.cfgCommon.HotkeyModifier = this.configs.HotkeyMod;
+                this.cfgCommon.HotkeyKey = this.configs.HotkeyKey;
+                this.cfgCommon.HotkeyValue = this.configs.HotkeyValue;
+                this.cfgCommon.BlinkNewMentions = this.configs.BlinkNewMentions;
                 if (this.ToolStripFocusLockMenuItem != null && !this.ToolStripFocusLockMenuItem.IsDisposed)
                 {
                     this.cfgCommon.FocusLockToStatusText = this.ToolStripFocusLockMenuItem.Checked;
                 }
 
-                this.cfgCommon.UseAdditionalCount = this.settingDialog.UseAdditionalCount;
+                this.cfgCommon.UseAdditionalCount = this.configs.UseAdditionalCount;
                 this.cfgCommon.MoreCountApi = this.configs.MoreCountApi;
                 this.cfgCommon.FirstCountApi = this.configs.FirstCountApi;
                 this.cfgCommon.SearchCountApi = this.configs.SearchCountApi;
@@ -3479,11 +3479,11 @@ namespace Hoehoe
                 this.cfgCommon.UserTimelineCountApi = this.configs.UserTimelineCountApi;
                 this.cfgCommon.TrackWord = this.tw.TrackWord;
                 this.cfgCommon.AllAtReply = this.tw.AllAtReply;
-                this.cfgCommon.OpenUserTimeline = this.settingDialog.OpenUserTimeline;
+                this.cfgCommon.OpenUserTimeline = this.configs.OpenUserTimeline;
                 this.cfgCommon.ListCountApi = this.configs.ListCountApi;
                 this.cfgCommon.UseImageService = this.ImageServiceCombo.SelectedIndex;
-                this.cfgCommon.ListDoubleClickAction = this.settingDialog.ListDoubleClickAction;
-                this.cfgCommon.UserAppointUrl = this.settingDialog.UserAppointUrl;
+                this.cfgCommon.ListDoubleClickAction = this.configs.ListDoubleClickAction;
+                this.cfgCommon.UserAppointUrl = this.configs.UserAppointUrl;
                 this.cfgCommon.HideDuplicatedRetweets = this.configs.HideDuplicatedRetweets; 
                 this.cfgCommon.IsPreviewFoursquare = this.configs.IsPreviewFoursquare;
                 this.cfgCommon.FoursquarePreviewHeight = this.configs.FoursquarePreviewHeight;
@@ -3539,11 +3539,11 @@ namespace Hoehoe
                 this.cfgLocal.FontInputFont = this.fntInputFont;
                 this.cfgLocal.BrowserPath = this.configs.BrowserPath;
                 this.cfgLocal.UseRecommendStatus = this.configs.UseRecommendStatus;
-                this.cfgLocal.ProxyType = this.settingDialog.SelectedProxyType;
-                this.cfgLocal.ProxyAddress = this.settingDialog.ProxyAddress;
-                this.cfgLocal.ProxyPort = this.settingDialog.ProxyPort;
-                this.cfgLocal.ProxyUser = this.settingDialog.ProxyUser;
-                this.cfgLocal.ProxyPassword = this.settingDialog.ProxyPassword;
+                this.cfgLocal.ProxyType = this.configs.SelectedProxyType;
+                this.cfgLocal.ProxyAddress = this.configs.ProxyAddress;
+                this.cfgLocal.ProxyPort = this.configs.ProxyPort;
+                this.cfgLocal.ProxyUser = this.configs.ProxyUser;
+                this.cfgLocal.ProxyPassword = this.configs.ProxyPassword;
                 if (this.ignoreConfigSave)
                 {
                     return;
@@ -3865,7 +3865,7 @@ namespace Hoehoe
             }
 
             TabClass tb = this.statuses.GetTabByType(TabUsageType.Mentions);
-            if (this.settingDialog.ReplyIconState != ReplyIconState.None && tb != null && tb.UnreadCount > 0)
+            if (this.configs.ReplyIconState != ReplyIconState.None && tb != null && tb.UnreadCount > 0)
             {
                 if (this.blinkCnt > 0)
                 {
@@ -3873,7 +3873,7 @@ namespace Hoehoe
                 }
 
                 this.doBlink = !this.doBlink;
-                this.NotifyIcon1.Icon = this.doBlink || this.settingDialog.ReplyIconState == ReplyIconState.StaticIcon ?
+                this.NotifyIcon1.Icon = this.doBlink || this.configs.ReplyIconState == ReplyIconState.StaticIcon ?
                     this.replyIcon : this.replyIconBlink;
                 this.isIdle = false;
                 return;
@@ -3910,11 +3910,11 @@ namespace Hoehoe
                 // 振り分け先タブ選択
                 if (this.tabDialog.ShowDialog() == DialogResult.Cancel)
                 {
-                    this.TopMost = this.settingDialog.AlwaysTop;
+                    this.TopMost = this.configs.AlwaysTop;
                     return false;
                 }
 
-                this.TopMost = this.settingDialog.AlwaysTop;
+                this.TopMost = this.configs.AlwaysTop;
                 tabName = this.tabDialog.SelectedTabName;
                 this.ListTab.SelectedTab.Focus();
                 if (tabName != Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText1)
@@ -3931,7 +3931,7 @@ namespace Hoehoe
                 }
 
                 tabName = tn;
-                this.TopMost = this.settingDialog.AlwaysTop;
+                this.TopMost = this.configs.AlwaysTop;
                 if (!string.IsNullOrEmpty(tabName))
                 {
                     if (this.statuses.AddTab(tabName, TabUsageType.UserDefined, null) && this.AddNewTab(tabName, false, TabUsageType.UserDefined))
@@ -4024,7 +4024,7 @@ namespace Hoehoe
                 }
             }
 
-            if (!this.settingDialog.TabIconDisp)
+            if (!this.configs.TabIconDisp)
             {
                 this.ListTab.Refresh();
             }
@@ -4232,7 +4232,7 @@ namespace Hoehoe
                 if (tmp.StartsWith("http"))
                 {
                     // nico.ms使用、nicovideoにマッチしたら変換
-                    if (this.settingDialog.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
+                    if (this.configs.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
                     {
                         result = nicoms.Shorten(tmp);
                     }
@@ -4277,7 +4277,7 @@ namespace Hoehoe
                     this.StatusText.Select(this.StatusText.Text.IndexOf(url, StringComparison.Ordinal), url.Length);
 
                     // nico.ms使用、nicovideoにマッチしたら変換
-                    if (this.settingDialog.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
+                    if (this.configs.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
                     {
                         result = nicoms.Shorten(tmp);
                     }
@@ -4624,7 +4624,7 @@ namespace Hoehoe
                     return;
                 }
 
-                if (!this.settingDialog.RetweetNoConfirm)
+                if (!this.configs.RetweetNoConfirm)
                 {
                     string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion1;
                     if (this.doFavRetweetFlags)
@@ -5087,7 +5087,7 @@ namespace Hoehoe
                 // サウンド再生
                 if (!this.isInitializing && this.configs.PlaySound)
                 {
-                    MyCommon.PlaySound(this.settingDialog.EventSoundFile);
+                    MyCommon.PlaySound(this.configs.EventSoundFile);
                 }
             }
         }
@@ -5150,13 +5150,13 @@ namespace Hoehoe
 
         private void OpenUserAppointUrl()
         {
-            if (this.settingDialog.UserAppointUrl != null)
+            if (this.configs.UserAppointUrl != null)
             {
-                if (this.settingDialog.UserAppointUrl.Contains("{ID}") || this.settingDialog.UserAppointUrl.Contains("{STATUS}"))
+                if (this.configs.UserAppointUrl.Contains("{ID}") || this.configs.UserAppointUrl.Contains("{STATUS}"))
                 {
                     if (this.curPost != null)
                     {
-                        string url = this.settingDialog.UserAppointUrl
+                        string url = this.configs.UserAppointUrl
                             .Replace("{ID}", this.curPost.ScreenName)
                             .Replace("{STATUS}", this.curPost.OriginalStatusId.ToString());
                         this.OpenUriAsync(url);
@@ -5164,7 +5164,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    this.OpenUriAsync(this.settingDialog.UserAppointUrl);
+                    this.OpenUriAsync(this.configs.UserAppointUrl);
                 }
             }
         }
@@ -5247,7 +5247,7 @@ namespace Hoehoe
 
         private void SetupPostModeContextMenu()
         {
-            this.ToolStripMenuItemUrlAutoShorten.Checked = this.settingDialog.UrlConvertAuto;
+            this.ToolStripMenuItemUrlAutoShorten.Checked = this.configs.UrlConvertAuto;
         }
 
         private void SetupSourceContextMenu()
@@ -5414,7 +5414,7 @@ namespace Hoehoe
             }
 
             this.aboutBox.ShowDialog();
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
         }
 
         private void ShowApiInfoBox()
@@ -5481,7 +5481,7 @@ namespace Hoehoe
                 this.evtDialog.Activate();
             }
 
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
         }
 
         private void ShowPostImageFileSelectBox()
@@ -5521,7 +5521,7 @@ namespace Hoehoe
 
             this.fltDialog.SetCurrent(this.rclickTabName);
             this.fltDialog.ShowDialog();
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
             this.ApplyNewFilters();
             this.SaveConfigsTabs();
         }
@@ -5614,7 +5614,7 @@ namespace Hoehoe
             try
             {
                 DialogResult rslt = this.HashMgr.ShowDialog();
-                this.TopMost = this.settingDialog.AlwaysTop;
+                this.TopMost = this.configs.AlwaysTop;
                 if (rslt == DialogResult.Cancel)
                 {
                     return;
@@ -5644,7 +5644,7 @@ namespace Hoehoe
             if (result != DialogResult.OK)
             {
                 Twitter.AccountState = AccountState.Valid;
-                this.TopMost = this.settingDialog.AlwaysTop;
+                this.TopMost = this.configs.AlwaysTop;
                 this.SaveConfigsAll(false);
                 return;
             }
@@ -5652,20 +5652,20 @@ namespace Hoehoe
             lock (this.syncObject)
             {
                 this.tw.SetTinyUrlResolve(this.configs.TinyUrlResolve);
-                this.tw.SetRestrictFavCheck(this.settingDialog.RestrictFavCheck);
-                this.tw.ReadOwnPost = this.settingDialog.ReadOwnPost;
-                this.tw.SetUseSsl(this.settingDialog.UseSsl);
+                this.tw.SetRestrictFavCheck(this.configs.RestrictFavCheck);
+                this.tw.ReadOwnPost = this.configs.ReadOwnPost;
+                this.tw.SetUseSsl(this.configs.UseSsl);
                 ShortUrl.IsResolve = this.configs.TinyUrlResolve;
                 ShortUrl.IsForceResolve = this.configs.ShortUrlForceResolve;
-                ShortUrl.SetBitlyId(this.settingDialog.BitlyUser);
-                ShortUrl.SetBitlyKey(this.settingDialog.BitlyPwd);
+                ShortUrl.SetBitlyId(this.configs.BitlyUser);
+                ShortUrl.SetBitlyKey(this.configs.BitlyPwd);
                 HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
                 HttpTwitter.SetTwitterSearchUrl(this.cfgCommon.TwitterSearchUrl);
-                HttpConnection.InitializeConnection(this.settingDialog.DefaultTimeOut, this.settingDialog.SelectedProxyType, this.settingDialog.ProxyAddress, this.settingDialog.ProxyPort, this.settingDialog.ProxyUser, this.settingDialog.ProxyPassword);
+                HttpConnection.InitializeConnection(this.configs.DefaultTimeOut, this.configs.SelectedProxyType, this.configs.ProxyAddress, this.configs.ProxyPort, this.configs.ProxyUser, this.configs.ProxyPassword);
                 this.CreatePictureServices();
                 try
                 {
-                    if (this.settingDialog.TabIconDisp)
+                    if (this.configs.TabIconDisp)
                     {
                         this.ListTab.DrawItem -= this.ListTab_DrawItem;
                         this.ListTab.DrawMode = TabDrawMode.Normal;
@@ -5692,7 +5692,7 @@ namespace Hoehoe
                     {
                         this.ReadedStripMenuItem.Enabled = false;
                         this.UnreadStripMenuItem.Enabled = false;
-                        if (this.settingDialog.TabIconDisp)
+                        if (this.configs.TabIconDisp)
                         {
                             foreach (TabPage myTab in this.ListTab.TabPages)
                             {
@@ -5718,7 +5718,7 @@ namespace Hoehoe
                     foreach (TabPage mytab in this.ListTab.TabPages)
                     {
                         DetailsListView lst = (DetailsListView)mytab.Tag;
-                        lst.GridLines = this.settingDialog.ShowGrid;
+                        lst.GridLines = this.configs.ShowGrid;
                     }
                 }
                 catch (Exception ex)
@@ -5771,8 +5771,8 @@ namespace Hoehoe
 
                 try
                 {
-                    this.detailHtmlFormatFooter = this.GetDetailHtmlFormatFooter(this.settingDialog.IsMonospace);
-                    this.detailHtmlFormatHeader = this.GetDetailHtmlFormatHeader(this.settingDialog.IsMonospace);
+                    this.detailHtmlFormatFooter = this.GetDetailHtmlFormatFooter(this.configs.IsMonospace);
+                    this.detailHtmlFormatHeader = this.GetDetailHtmlFormatHeader(this.configs.IsMonospace);
                 }
                 catch (Exception ex)
                 {
@@ -5796,7 +5796,7 @@ namespace Hoehoe
                 {
                     foreach (TabPage tb in this.ListTab.TabPages)
                     {
-                        if (this.settingDialog.TabIconDisp)
+                        if (this.configs.TabIconDisp)
                         {
                             if (this.statuses.Tabs[tb.Text].UnreadCount == 0)
                             {
@@ -5832,9 +5832,9 @@ namespace Hoehoe
                 }
 
                 this.ListTab.Refresh();
-                Outputz.Key = this.settingDialog.OutputzKey;
-                Outputz.Enabled = this.settingDialog.OutputzEnabled;
-                switch (this.settingDialog.OutputzUrlmode)
+                Outputz.Key = this.configs.OutputzKey;
+                Outputz.Enabled = this.configs.OutputzEnabled;
+                switch (this.configs.OutputzUrlmode)
                 {
                     case OutputzUrlmode.twittercom:
                         Outputz.OutUrl = "http://twitter.com/";
@@ -5845,31 +5845,31 @@ namespace Hoehoe
                 }
 
                 this.hookGlobalHotkey.UnregisterAllOriginalHotkey();
-                if (this.settingDialog.HotkeyEnabled)
+                if (this.configs.HotkeyEnabled)
                 {
                     ///グローバルホットキーの登録。設定で変更可能にするかも
                     HookGlobalHotkey.ModKeys modKey = HookGlobalHotkey.ModKeys.None;
-                    if ((this.settingDialog.HotkeyMod & Keys.Alt) == Keys.Alt)
+                    if ((this.configs.HotkeyMod & Keys.Alt) == Keys.Alt)
                     {
                         modKey = modKey | HookGlobalHotkey.ModKeys.Alt;
                     }
 
-                    if ((this.settingDialog.HotkeyMod & Keys.Control) == Keys.Control)
+                    if ((this.configs.HotkeyMod & Keys.Control) == Keys.Control)
                     {
                         modKey = modKey | HookGlobalHotkey.ModKeys.Ctrl;
                     }
 
-                    if ((this.settingDialog.HotkeyMod & Keys.Shift) == Keys.Shift)
+                    if ((this.configs.HotkeyMod & Keys.Shift) == Keys.Shift)
                     {
                         modKey = modKey | HookGlobalHotkey.ModKeys.Shift;
                     }
 
-                    if ((this.settingDialog.HotkeyMod & Keys.LWin) == Keys.LWin)
+                    if ((this.configs.HotkeyMod & Keys.LWin) == Keys.LWin)
                     {
                         modKey = modKey | HookGlobalHotkey.ModKeys.Win;
                     }
 
-                    this.hookGlobalHotkey.RegisterOriginalHotkey(this.settingDialog.HotkeyKey, this.settingDialog.HotkeyValue, modKey);
+                    this.hookGlobalHotkey.RegisterOriginalHotkey(this.configs.HotkeyKey, this.configs.HotkeyValue, modKey);
                 }
 
                 if (uid != this.tw.Username)
@@ -5893,7 +5893,7 @@ namespace Hoehoe
             }
 
             Twitter.AccountState = AccountState.Valid;
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
             this.SaveConfigsAll(false);
         }
 
@@ -5941,11 +5941,11 @@ namespace Hoehoe
         {
             if (this.searchDialog.ShowDialog() == DialogResult.Cancel)
             {
-                this.TopMost = this.settingDialog.AlwaysTop;
+                this.TopMost = this.configs.AlwaysTop;
                 return false;
             }
 
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
             if (string.IsNullOrEmpty(this.searchDialog.SWord))
             {
                 return false;
@@ -6003,7 +6003,7 @@ namespace Hoehoe
                 return;
             }
 
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
             if (string.IsNullOrEmpty(tabName))
             {
                 return;
@@ -6216,14 +6216,14 @@ namespace Hoehoe
                         ((DetailsListView)tb.Tag).VirtualListSize = this.statuses.Tabs[tb.Text].AllCount;
                         if (this.statuses.Tabs[tb.Text].UnreadCount > 0)
                         {
-                            if (this.settingDialog.TabIconDisp)
+                            if (this.configs.TabIconDisp)
                             {
                                 tb.ImageIndex = 0;
                             }
                         }
                         else
                         {
-                            if (this.settingDialog.TabIconDisp)
+                            if (this.configs.TabIconDisp)
                             {
                                 tb.ImageIndex = -1;
                             }
@@ -6231,7 +6231,7 @@ namespace Hoehoe
                     }
                 }
 
-                if (!this.settingDialog.TabIconDisp)
+                if (!this.configs.TabIconDisp)
                 {
                     this.ListTab.Refresh();
                 }
@@ -6615,7 +6615,7 @@ namespace Hoehoe
                 return;
             }
 
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
             if (string.IsNullOrEmpty(openUrlStr))
             {
                 return;
@@ -6632,7 +6632,7 @@ namespace Hoehoe
                 return;
             }
 
-            if (this.settingDialog.OpenUserTimeline)
+            if (this.configs.OpenUserTimeline)
             {
                 Match m = Regex.Match(openUrlStr, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
                 if (m.Success && this.IsTwitterId(m.Result("${ScreenName}")))
@@ -6703,7 +6703,7 @@ namespace Hoehoe
 
             // Ctrlを押しながらリンクをクリックした場合は設定と逆の動作をする
             bool isCtrlKeyDown = this.IsKeyDown(Keys.Control);
-            bool isOpenInTab = this.settingDialog.OpenUserTimeline;
+            bool isOpenInTab = this.configs.OpenUserTimeline;
             if ((isOpenInTab && !isCtrlKeyDown) || (!isOpenInTab && isCtrlKeyDown))
             {
                 this.AddNewTabForUserTimeline(screenName);
@@ -6867,7 +6867,7 @@ namespace Hoehoe
 
             this.postHistory[this.postHistory.Count - 1] = new PostingStatus(statusTextTextTrim, this.replyToId, this.replyToName);
 
-            if (this.settingDialog.Nicoms)
+            if (this.configs.Nicoms)
             {
                 this.StatusText.SelectionStart = this.StatusText.Text.Length;
                 this.ConvertUrl(UrlConverter.Nicoms);
@@ -7081,7 +7081,7 @@ namespace Hoehoe
         private void ChangeSelectedTweetReadStateToRead()
         {
             this.ChangeSelectetdTweetReadState(read: true);
-            if (this.settingDialog.TabIconDisp)
+            if (this.configs.TabIconDisp)
             {
                 this.ChangeTabsIconToRead();
             }
@@ -7094,7 +7094,7 @@ namespace Hoehoe
         private void ChangeSelectedTweetReadSateToUnread()
         {
             this.ChangeSelectetdTweetReadState(read: false);
-            if (this.settingDialog.TabIconDisp)
+            if (this.configs.TabIconDisp)
             {
                 this.ChangeTabsIconToUnread();
             }
@@ -7194,7 +7194,7 @@ namespace Hoehoe
                 }
             }
 
-            this.TopMost = this.settingDialog.AlwaysTop;
+            this.TopMost = this.configs.AlwaysTop;
         }
 
         private void SaveCurrentTweetUserOriginalSizeIcon()
@@ -7413,7 +7413,7 @@ namespace Hoehoe
             if (keyChar == '@')
             {
                 // @マーク
-                if (!this.settingDialog.UseAtIdSupplement)
+                if (!this.configs.UseAtIdSupplement)
                 {
                     return;
                 }
@@ -7427,7 +7427,7 @@ namespace Hoehoe
             }
             else if (keyChar == '#')
             {
-                if (!this.settingDialog.UseHashSupplement)
+                if (!this.configs.UseHashSupplement)
                 {
                     return;
                 }
@@ -7501,7 +7501,7 @@ namespace Hoehoe
                 string scname = statusesItem.IsRetweeted ? statusesItem.RetweetedBy : statusesItem.ScreenName;
                 this.fltDialog.AddNewFilter(scname, statusesItem.TextFromApi);
                 this.fltDialog.ShowDialog();
-                this.TopMost = this.settingDialog.AlwaysTop;
+                this.TopMost = this.configs.AlwaysTop;
             }
 
             this.ApplyNewFilters();
@@ -7619,7 +7619,7 @@ namespace Hoehoe
 
         private void ChangeAutoUrlConvertFlag(bool autoConvert)
         {
-            this.settingDialog.UrlConvertAuto = autoConvert;
+            this.configs.UrlConvertAuto = autoConvert;
         }
 
         private bool TryGetTabInfo(ref string name, ref TabUsageType usageType, string title = "", string desc = "", bool showusage = false)
@@ -8022,7 +8022,7 @@ namespace Hoehoe
 
             string tabNameAny = string.Empty;
             this.GetTimeline(WorkerType.BlockIds);
-            if (this.settingDialog.StartupFollowers)
+            if (this.configs.StartupFollowers)
             {
                 this.GetTimeline(WorkerType.Follower);
             }
@@ -8035,7 +8035,7 @@ namespace Hoehoe
             this.GetTimeline(WorkerType.Reply, 1, 1);
             this.waitDm = true;
             this.GetTimeline(WorkerType.DirectMessegeRcv, 1, 1);
-            if (this.settingDialog.GetFav)
+            if (this.configs.GetFav)
             {
                 this.waitFav = true;
                 this.GetTimeline(WorkerType.Favorites, 1, 1);
@@ -8080,13 +8080,13 @@ namespace Hoehoe
             }
 
             // バージョンチェック（引数：起動時チェックの場合はTrue･･･チェック結果のメッセージを表示しない）
-            if (this.settingDialog.StartupVersion)
+            if (this.configs.StartupVersion)
             {
                 this.CheckNewVersion(true);
             }
 
             // 取得失敗の場合は再試行する
-            if (!this.tw.GetFollowersSuccess && this.settingDialog.StartupFollowers)
+            if (!this.tw.GetFollowersSuccess && this.configs.StartupFollowers)
             {
                 this.GetTimeline(WorkerType.Follower);
             }
@@ -8149,16 +8149,16 @@ namespace Hoehoe
 
         private void ConvertUrlByAutoSelectedService()
         {
-            if (!this.ConvertUrl(this.settingDialog.AutoShortUrlFirst))
+            if (!this.ConvertUrl(this.configs.AutoShortUrlFirst))
             {
                 // 前回使用した短縮URLサービス以外を選択する
-                UrlConverter svc = this.settingDialog.AutoShortUrlFirst;
+                UrlConverter svc = this.configs.AutoShortUrlFirst;
                 Random rnd = new Random();
                 do
                 {
                     svc = (UrlConverter)rnd.Next(System.Enum.GetNames(typeof(UrlConverter)).Length);
                 }
-                while (!(svc != this.settingDialog.AutoShortUrlFirst && svc != UrlConverter.Nicoms && svc != UrlConverter.Unu));
+                while (!(svc != this.configs.AutoShortUrlFirst && svc != UrlConverter.Nicoms && svc != UrlConverter.Unu));
                 this.ConvertUrl(svc);
             }
         }

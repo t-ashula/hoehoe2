@@ -1722,7 +1722,7 @@ namespace Hoehoe
                 count = Configs.Instance.CountApiReply;
             }
 
-            if (AppendSettingDialog.Instance.UseAdditionalCount)
+            if (Configs.Instance.UseAdditionalCount)
             {
                 if (more && Configs.Instance.MoreCountApi != 0)
                 {
@@ -1992,7 +1992,7 @@ namespace Hoehoe
             HttpStatusCode res = default(HttpStatusCode);
             string content = string.Empty;
             int count = 0;
-            if (AppendSettingDialog.Instance.UseAdditionalCount)
+            if (Configs.Instance.UseAdditionalCount)
             {
                 count = Configs.Instance.ListCountApi;
                 if (count == 0)
@@ -2105,7 +2105,7 @@ namespace Hoehoe
             int page = 0;
             long sinceId = 0;
             int count = 100;
-            if (AppendSettingDialog.Instance.UseAdditionalCount && Configs.Instance.SearchCountApi != 0)
+            if (Configs.Instance.UseAdditionalCount && Configs.Instance.SearchCountApi != 0)
             {
                 count = Configs.Instance.SearchCountApi;
             }
@@ -2266,7 +2266,7 @@ namespace Hoehoe
             long sinceId = 0;
             int count = 100;
             string querystr = string.Empty;
-            if (AppendSettingDialog.Instance.UseAdditionalCount && Configs.Instance.SearchCountApi != 0)
+            if (Configs.Instance.UseAdditionalCount && Configs.Instance.SearchCountApi != 0)
             {
                 count = Configs.Instance.SearchCountApi;
             }
@@ -2412,7 +2412,7 @@ namespace Hoehoe
             HttpStatusCode res = default(HttpStatusCode);
             string content = string.Empty;
             int count = Configs.Instance.CountApi;
-            if (AppendSettingDialog.Instance.UseAdditionalCount && Configs.Instance.FavoritesCountApi != 0)
+            if (Configs.Instance.UseAdditionalCount && Configs.Instance.FavoritesCountApi != 0)
             {
                 count = Configs.Instance.FavoritesCountApi;
             }
@@ -4608,7 +4608,7 @@ namespace Hoehoe
                                 post.FavoritedCount += 1;
                                 if (!TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Contains(post.StatusId))
                                 {
-                                    if (AppendSettingDialog.Instance.FavEventUnread && post.IsRead)
+                                    if (Configs.Instance.FavEventUnread && post.IsRead)
                                     {
                                         post.IsRead = false;
                                     }
@@ -4617,7 +4617,7 @@ namespace Hoehoe
                                 }
                                 else
                                 {
-                                    if (AppendSettingDialog.Instance.FavEventUnread)
+                                    if (Configs.Instance.FavEventUnread)
                                     {
                                         TabInformations.GetInstance().SetRead(false, TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).TabName, TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).IndexOf(post.StatusId));
                                     }
