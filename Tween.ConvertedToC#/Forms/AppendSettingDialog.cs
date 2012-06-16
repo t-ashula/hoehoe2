@@ -84,7 +84,7 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public int FoursquarePreviewWidth { get; set; }
+        
 
         public int FoursquarePreviewZoom { get; set; }
 
@@ -774,7 +774,7 @@ namespace Hoehoe
                 this.configurations.HideDuplicatedRetweets = this.HideDuplicatedRetweetsCheck.Checked;
                 this.configurations.IsPreviewFoursquare = this.IsPreviewFoursquareCheckBox.Checked;
                 this.configurations.FoursquarePreviewHeight = Convert.ToInt32(this.FoursquarePreviewHeightTextBox.Text);
-                this.FoursquarePreviewWidth = Convert.ToInt32(this.FoursquarePreviewWidthTextBox.Text);
+                this.configurations.FoursquarePreviewWidth = Convert.ToInt32(this.FoursquarePreviewWidthTextBox.Text);
                 this.FoursquarePreviewZoom = Convert.ToInt32(this.FoursquarePreviewZoomTextBox.Text);
                 this.IsListStatusesIncludeRts = this.IsListsIncludeRtsCheckBox.Checked;
                 this.TabMouseLock = this.TabMouseLockCheck.Checked;
@@ -1154,7 +1154,7 @@ namespace Hoehoe
             this.HideDuplicatedRetweetsCheck.Checked = this.configurations.HideDuplicatedRetweets;
             this.IsPreviewFoursquareCheckBox.Checked = this.configurations.IsPreviewFoursquare;
             this.FoursquarePreviewHeightTextBox.Text = this.configurations.FoursquarePreviewHeight.ToString();
-            this.FoursquarePreviewWidthTextBox.Text = this.FoursquarePreviewWidth.ToString();
+            this.FoursquarePreviewWidthTextBox.Text = this.configurations.FoursquarePreviewWidth.ToString();
             this.FoursquarePreviewZoomTextBox.Text = this.FoursquarePreviewZoom.ToString();
             this.IsListsIncludeRtsCheckBox.Checked = this.IsListStatusesIncludeRts;
             this.TabMouseLockCheck.Checked = this.TabMouseLock;

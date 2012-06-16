@@ -1720,7 +1720,7 @@ namespace Hoehoe
             this.configs.HideDuplicatedRetweets = this.cfgCommon.HideDuplicatedRetweets;
             this.configs.IsPreviewFoursquare = this.cfgCommon.IsPreviewFoursquare;
             this.configs.FoursquarePreviewHeight = this.cfgCommon.FoursquarePreviewHeight;
-            this.settingDialog.FoursquarePreviewWidth = this.cfgCommon.FoursquarePreviewWidth;
+            this.configs.FoursquarePreviewWidth = this.cfgCommon.FoursquarePreviewWidth;
             this.settingDialog.FoursquarePreviewZoom = this.cfgCommon.FoursquarePreviewZoom;
             this.settingDialog.IsListStatusesIncludeRts = this.cfgCommon.IsListsIncludeRts;
             this.settingDialog.TabMouseLock = this.cfgCommon.TabMouseLock;
