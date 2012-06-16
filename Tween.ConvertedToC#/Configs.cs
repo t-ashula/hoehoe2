@@ -63,8 +63,27 @@ namespace Hoehoe
         public bool UnreadManage { get; set; }
         public bool PlaySound { get; set; }
         public bool OneWayLove { get; set; }
+
         public Font FontUnread { get; set; }
         public Color ColorUnread { get; set; }
         public Font FontReaded { get; set; } // リストフォントとして使用
+        public Color ColorReaded { get; set; }
+        public Color ColorFav { get; set; }
+        public Color ColorOWL { get; set; }
+        public Color ColorRetweet { get; set; }
+        public Font FontDetail { get; set; }
+        public Color ColorDetail { get; set; }
+        public Color ColorDetailLink { get; set; }
+        public Color ColorSelf { get; set; }
+        public Color ColorAtSelf { get; set; }
+        public Color ColorTarget { get; set; }
+        public Color ColorAtTarget { get; set; }
+        public Color ColorAtFromTarget { get; set; }
+        public Color ColorAtTo { get; set; }
+        public Color ColorInputBackcolor { get; set; }
+        public Color ColorInputFont { get; set; }
+        public Font FontInputFont { get; set; }
+        public Color ColorListBackcolor { get; set; }
+        public Color ColorDetailBackcolor { get; set; }
     }
 }

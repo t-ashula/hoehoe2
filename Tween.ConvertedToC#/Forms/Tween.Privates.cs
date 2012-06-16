@@ -2659,13 +2659,13 @@ namespace Hoehoe
 
         private void ScrollDownPostBrowser(bool forward)
         {
-            int delta = this.settingDialog.FontDetail.Height;
+            int delta = this.configs.FontDetail.Height;
             this.ScrollPostBrowser(forward ? delta : -delta);
         }
 
         private void PageDownPostBrowser(bool forward)
         {
-            int delta = this.PostBrowser.ClientRectangle.Height - this.settingDialog.FontDetail.Height;
+            int delta = this.PostBrowser.ClientRectangle.Height - this.configs.FontDetail.Height;
             this.ScrollPostBrowser(forward ? delta : -delta);
         }
 
@@ -5733,24 +5733,24 @@ namespace Hoehoe
                 this.fntUnread = this.configs.FontUnread;
                 this.clrUnread = this.configs.ColorUnread;
                 this.fntReaded = this.configs.FontReaded;
-                this.clrRead = this.settingDialog.ColorReaded;
-                this.clrFav = this.settingDialog.ColorFav;
-                this.clrOWL = this.settingDialog.ColorOWL;
-                this.clrRetweet = this.settingDialog.ColorRetweet;
-                this.fntDetail = this.settingDialog.FontDetail;
-                this.clrDetail = this.settingDialog.ColorDetail;
-                this.clrDetailLink = this.settingDialog.ColorDetailLink;
-                this.clrDetailBackcolor = this.settingDialog.ColorDetailBackcolor;
-                this.clrSelf = this.settingDialog.ColorSelf;
-                this.clrAtSelf = this.settingDialog.ColorAtSelf;
-                this.clrTarget = this.settingDialog.ColorTarget;
-                this.clrAtTarget = this.settingDialog.ColorAtTarget;
-                this.clrAtFromTarget = this.settingDialog.ColorAtFromTarget;
-                this.clrAtTo = this.settingDialog.ColorAtTo;
-                this.clrListBackcolor = this.settingDialog.ColorListBackcolor;
-                this.InputBackColor = this.settingDialog.ColorInputBackcolor;
-                this.clrInputForecolor = this.settingDialog.ColorInputFont;
-                this.fntInputFont = this.settingDialog.FontInputFont;
+                this.clrRead = this.configs.ColorReaded;
+                this.clrFav = this.configs.ColorFav;
+                this.clrOWL = this.configs.ColorOWL;
+                this.clrRetweet = this.configs.ColorRetweet;
+                this.fntDetail = this.configs.FontDetail;
+                this.clrDetail = this.configs.ColorDetail;
+                this.clrDetailLink = this.configs.ColorDetailLink;
+                this.clrDetailBackcolor = this.configs.ColorDetailBackcolor;
+                this.clrSelf = this.configs.ColorSelf;
+                this.clrAtSelf = this.configs.ColorAtSelf;
+                this.clrTarget = this.configs.ColorTarget;
+                this.clrAtTarget = this.configs.ColorAtTarget;
+                this.clrAtFromTarget = this.configs.ColorAtFromTarget;
+                this.clrAtTo = this.configs.ColorAtTo;
+                this.clrListBackcolor = this.configs.ColorListBackcolor;
+                this.InputBackColor = this.configs.ColorInputBackcolor;
+                this.clrInputForecolor = this.configs.ColorInputFont;
+                this.fntInputFont = this.configs.FontInputFont;
                 try
                 {
                     if (this.StatusText.Focused)

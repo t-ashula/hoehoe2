@@ -84,42 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public Color ColorReaded { get; set; }
-
-        public Color ColorFav { get; set; }
-
-        public Color ColorOWL { get; set; }
-
-        public Color ColorRetweet { get; set; }
-
-        public Font FontDetail { get; set; }
-
-        public Color ColorDetail { get; set; }
-
-        public Color ColorDetailLink { get; set; }
-
-        public Color ColorSelf { get; set; }
-
-        public Color ColorAtSelf { get; set; }
-
-        public Color ColorTarget { get; set; }
-
-        public Color ColorAtTarget { get; set; }
-
-        public Color ColorAtFromTarget { get; set; }
-
-        public Color ColorAtTo { get; set; }
-
-        public Color ColorInputBackcolor { get; set; }
-
-        public Color ColorInputFont { get; set; }
-
-        public Font FontInputFont { get; set; }
-
-        public Color ColorListBackcolor { get; set; }
-
-        public Color ColorDetailBackcolor { get; set; }
-
         public NameBalloonEnum NameBalloon { get; set; }
 
         public bool PostCtrlEnter { get; set; }
@@ -485,24 +449,24 @@ namespace Hoehoe
                 this.configurations.FontUnread = this.lblUnread.Font;                // 未使用
                 this.configurations.ColorUnread = this.lblUnread.ForeColor;
                 this.configurations.FontReaded = this.lblListFont.Font;              // リストフォントとして使用
-                this.ColorReaded = this.lblListFont.ForeColor;
-                this.ColorFav = this.lblFav.ForeColor;
-                this.ColorOWL = this.lblOWL.ForeColor;
-                this.ColorRetweet = this.lblRetweet.ForeColor;
-                this.FontDetail = this.lblDetail.Font;
-                this.ColorSelf = this.lblSelf.BackColor;
-                this.ColorAtSelf = this.lblAtSelf.BackColor;
-                this.ColorTarget = this.lblTarget.BackColor;
-                this.ColorAtTarget = this.lblAtTarget.BackColor;
-                this.ColorAtFromTarget = this.lblAtFromTarget.BackColor;
-                this.ColorAtTo = this.lblAtTo.BackColor;
-                this.ColorInputBackcolor = this.lblInputBackcolor.BackColor;
-                this.ColorInputFont = this.lblInputFont.ForeColor;
-                this.ColorListBackcolor = this.lblListBackcolor.BackColor;
-                this.ColorDetailBackcolor = this.lblDetailBackcolor.BackColor;
-                this.ColorDetail = this.lblDetail.ForeColor;
-                this.ColorDetailLink = this.lblDetailLink.ForeColor;
-                this.FontInputFont = this.lblInputFont.Font;
+                this.configurations.ColorReaded = this.lblListFont.ForeColor;
+                this.configurations.ColorFav = this.lblFav.ForeColor;
+                this.configurations.ColorOWL = this.lblOWL.ForeColor;
+                this.configurations.ColorRetweet = this.lblRetweet.ForeColor;
+                this.configurations.FontDetail = this.lblDetail.Font;
+                this.configurations.ColorSelf = this.lblSelf.BackColor;
+                this.configurations.ColorAtSelf = this.lblAtSelf.BackColor;
+                this.configurations.ColorTarget = this.lblTarget.BackColor;
+                this.configurations.ColorAtTarget = this.lblAtTarget.BackColor;
+                this.configurations.ColorAtFromTarget = this.lblAtFromTarget.BackColor;
+                this.configurations.ColorAtTo = this.lblAtTo.BackColor;
+                this.configurations.ColorInputBackcolor = this.lblInputBackcolor.BackColor;
+                this.configurations.ColorInputFont = this.lblInputFont.ForeColor;
+                this.configurations.ColorListBackcolor = this.lblListBackcolor.BackColor;
+                this.configurations.ColorDetailBackcolor = this.lblDetailBackcolor.BackColor;
+                this.configurations.ColorDetail = this.lblDetail.ForeColor;
+                this.configurations.ColorDetailLink = this.lblDetailLink.ForeColor;
+                this.configurations.FontInputFont = this.lblInputFont.Font;
                 switch (this.cmbNameBalloon.SelectedIndex)
                 {
                     case 0:
@@ -865,24 +829,24 @@ namespace Hoehoe
             this.lblListFont.Font = this.configurations.FontReaded;
             this.lblUnread.Font = this.configurations.FontUnread;
             this.lblUnread.ForeColor = this.configurations.ColorUnread;
-            this.lblListFont.ForeColor = this.ColorReaded;
-            this.lblFav.ForeColor = this.ColorFav;
-            this.lblOWL.ForeColor = this.ColorOWL;
-            this.lblRetweet.ForeColor = this.ColorRetweet;
-            this.lblDetail.Font = this.FontDetail;
-            this.lblSelf.BackColor = this.ColorSelf;
-            this.lblAtSelf.BackColor = this.ColorAtSelf;
-            this.lblTarget.BackColor = this.ColorTarget;
-            this.lblAtTarget.BackColor = this.ColorAtTarget;
-            this.lblAtFromTarget.BackColor = this.ColorAtFromTarget;
-            this.lblAtTo.BackColor = this.ColorAtTo;
-            this.lblInputBackcolor.BackColor = this.ColorInputBackcolor;
-            this.lblInputFont.ForeColor = this.ColorInputFont;
-            this.lblInputFont.Font = this.FontInputFont;
-            this.lblListBackcolor.BackColor = this.ColorListBackcolor;
-            this.lblDetailBackcolor.BackColor = this.ColorDetailBackcolor;
-            this.lblDetail.ForeColor = this.ColorDetail;
-            this.lblDetailLink.ForeColor = this.ColorDetailLink;
+            this.lblListFont.ForeColor = this.configurations.ColorReaded;
+            this.lblFav.ForeColor = this.configurations.ColorFav;
+            this.lblOWL.ForeColor = this.configurations.ColorOWL;
+            this.lblRetweet.ForeColor = this.configurations.ColorRetweet;
+            this.lblDetail.Font = this.configurations.FontDetail;
+            this.lblSelf.BackColor = this.configurations.ColorSelf;
+            this.lblAtSelf.BackColor = this.configurations.ColorAtSelf;
+            this.lblTarget.BackColor = this.configurations.ColorTarget;
+            this.lblAtTarget.BackColor = this.configurations.ColorAtTarget;
+            this.lblAtFromTarget.BackColor = this.configurations.ColorAtFromTarget;
+            this.lblAtTo.BackColor = this.configurations.ColorAtTo;
+            this.lblInputBackcolor.BackColor = this.configurations.ColorInputBackcolor;
+            this.lblInputFont.ForeColor = this.configurations.ColorInputFont;
+            this.lblInputFont.Font = this.configurations.FontInputFont;
+            this.lblListBackcolor.BackColor = this.configurations.ColorListBackcolor;
+            this.lblDetailBackcolor.BackColor = this.configurations.ColorDetailBackcolor;
+            this.lblDetail.ForeColor = this.configurations.ColorDetail;
+            this.lblDetailLink.ForeColor = this.configurations.ColorDetailLink;
 
             switch (this.NameBalloon)
             {
