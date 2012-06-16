@@ -165,7 +165,7 @@ namespace Hoehoe
             // リプライ先ユーザー名がない場合も指定しない
             if (string.IsNullOrEmpty(this.replyToName))
             {
-                this.replyToId = 0;
+                this.ClearReplyToInfo();
                 return;
             }
 
@@ -194,9 +194,7 @@ namespace Hoehoe
                     }
                 }
             }
-
-            this.replyToId = 0;
-            this.replyToName = string.Empty;
+            this.ClearReplyToInfo();
         }
 
         private Icon LoadIcon(string dir, string fileName, Icon defIcon)
@@ -3594,8 +3592,7 @@ namespace Hoehoe
                     this.StatusText.Text = "D " + this.curPost.ScreenName + " " + this.StatusText.Text;
                     this.StatusText.SelectionStart = this.StatusText.Text.Length;
                     this.StatusText.Focus();
-                    this.replyToId = 0;
-                    this.replyToName = string.Empty;
+                    this.ClearReplyToInfo();
                     return;
                 }
 
@@ -3631,8 +3628,7 @@ namespace Hoehoe
                             {
                                 // 複数リプライ
                                 this.StatusText.Text = this.StatusText.Text.Insert(2, "@" + this.curPost.ScreenName + " ");
-                                this.replyToId = 0;
-                                this.replyToName = string.Empty;
+                                this.ClearReplyToInfo();
                             }
                             else
                             {
@@ -3647,8 +3643,7 @@ namespace Hoehoe
                             // 文頭＠
                             // 複数リプライ
                             this.StatusText.Text = ". @" + this.curPost.ScreenName + " " + this.StatusText.Text;
-                            this.replyToId = 0;
-                            this.replyToName = string.Empty;
+                            this.ClearReplyToInfo();
                         }
                     }
                     else
@@ -3691,8 +3686,7 @@ namespace Hoehoe
                 if (!statusTxt.StartsWith(". "))
                 {
                     statusTxt = ". " + statusTxt;
-                    this.replyToId = 0;
-                    this.replyToName = string.Empty;
+                    this.ClearReplyToInfo();
                 }
 
                 for (int cnt = 0; cnt < this.curList.SelectedIndices.Count; ++cnt)
@@ -3746,9 +3740,8 @@ namespace Hoehoe
                 if (!this.StatusText.Text.StartsWith(". "))
                 {
                     this.StatusText.Text = ". " + this.StatusText.Text;
-                    sidx += 2;
-                    this.replyToId = 0;
-                    this.replyToName = string.Empty;
+                    sidx += 2; 
+                    this.ClearReplyToInfo();
                 }
 
                 if (sidx > 0)
@@ -4710,9 +4703,7 @@ namespace Hoehoe
             status = Regex.Replace(status, "@<a target=\"_self\" href=\"https?://twitter.com/(#!/)?(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "@${url}");
             status = Regex.Replace(status, "<a target=\"_self\" href=\"(?<url>[^\"]+)\"[^>]*>(?<link>[^<]+)</a>", "${link}");
             status = Regex.Replace(status, "(\\r\\n|\\n|\\r)?<br>", this.StatusText.Multiline ? Environment.NewLine : string.Empty, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            this.replyToId = 0;
-            this.replyToName = string.Empty;
+            this.ClearReplyToInfo();
             return status.Replace("&nbsp;", " ");
         }
 
@@ -7013,9 +7004,7 @@ namespace Hoehoe
             {
                 this.OpenUriAsync(string.Format(Hoehoe.Properties.Resources.SearchItem2Url, HttpUtility.UrlEncode(this.StatusText.Text.Substring(7))));
             }
-
-            this.replyToId = 0;
-            this.replyToName = string.Empty;
+            this.ClearReplyToInfo();
             this.StatusText.Text = string.Empty;
             this.postHistory.Add(new PostingStatus());
             this.postHistoryIndex = this.postHistory.Count - 1;
@@ -7472,8 +7461,7 @@ namespace Hoehoe
             this.StatusText.ForeColor = len < 0 ? Color.Red : this.clrInputForecolor;
             if (string.IsNullOrEmpty(this.StatusText.Text))
             {
-                this.replyToId = 0;
-                this.replyToName = string.Empty;
+                this.ClearReplyToInfo();
             }
         }
 
@@ -8252,6 +8240,12 @@ namespace Hoehoe
         private string GetMonoEle(bool useMonospace)
         {
             return useMonospace ? "pre" : "p";
+        }
+
+        private void ClearReplyToInfo()
+        {
+            this.replyToId = 0;
+            this.replyToName = string.Empty;
         }
 
         #endregion private methods

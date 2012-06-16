@@ -1460,8 +1460,7 @@ namespace Hoehoe
             this.postHistory.Add(new PostingStatus());
             this.postHistoryIndex = 0;
 
-            this.replyToId = 0;
-            this.replyToName = string.Empty;
+            this.ClearReplyToInfo();
 
             // <<<<<<<<<設定関連>>>>>>>>>
             // '設定読み出し
