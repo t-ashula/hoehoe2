@@ -779,7 +779,7 @@ namespace Hoehoe
             }
 
             // サウンド再生
-            if (!this.isInitializing && this.settingDialog.PlaySound)
+            if (!this.isInitializing && this.configs.PlaySound)
             {
                 MyCommon.PlaySound(soundFile);
             }
@@ -3395,7 +3395,7 @@ namespace Hoehoe
                 this.cfgCommon.Read = this.configs.Readed;
                 this.cfgCommon.IconSize = this.configs.IconSz;
                 this.cfgCommon.UnreadManage = this.configs.UnreadManage;
-                this.cfgCommon.PlaySound = this.settingDialog.PlaySound;
+                this.cfgCommon.PlaySound = this.configs.PlaySound;
                 this.cfgCommon.OneWayLove = this.settingDialog.OneWayLove;
                 this.cfgCommon.NameBalloon = this.settingDialog.NameBalloon;
                 this.cfgCommon.PostCtrlEnter = this.settingDialog.PostCtrlEnter;
@@ -5085,7 +5085,7 @@ namespace Hoehoe
             if (Convert.ToBoolean(ev.Eventtype & this.settingDialog.EventNotifyFlag) && this.IsMyEventNotityAsEventType(ev))
             {
                 // サウンド再生
-                if (!this.isInitializing && this.settingDialog.PlaySound)
+                if (!this.isInitializing && this.configs.PlaySound)
                 {
                     MyCommon.PlaySound(this.settingDialog.EventSoundFile);
                 }
@@ -5728,8 +5728,8 @@ namespace Hoehoe
                     throw;
                 }
 
-                this.PlaySoundMenuItem.Checked = this.settingDialog.PlaySound;
-                this.PlaySoundFileMenuItem.Checked = this.settingDialog.PlaySound;
+                this.PlaySoundMenuItem.Checked = this.configs.PlaySound;
+                this.PlaySoundFileMenuItem.Checked = this.configs.PlaySound;
                 this.fntUnread = this.settingDialog.FontUnread;
                 this.clrUnread = this.settingDialog.ColorUnread;
                 this.fntReaded = this.settingDialog.FontReaded;
@@ -6648,7 +6648,7 @@ namespace Hoehoe
 
         private void ChangePlaySoundSetting(bool play)
         {
-            this.settingDialog.PlaySound = this.PlaySoundFileMenuItem.Checked = this.PlaySoundMenuItem.Checked = play;
+            this.configs.PlaySound = this.PlaySoundFileMenuItem.Checked = this.PlaySoundMenuItem.Checked = play;
             this.SetModifySettingCommon(true);
         }
 

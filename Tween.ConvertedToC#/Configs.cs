@@ -63,5 +63,6 @@ namespace Hoehoe
         public IconSizes IconSz { get; set; }
         public string Status { get; set; }
         public bool UnreadManage { get; set; }
+        public bool PlaySound { get; set; }
     }
 }

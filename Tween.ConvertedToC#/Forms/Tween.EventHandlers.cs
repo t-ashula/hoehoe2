@@ -1570,9 +1570,9 @@ namespace Hoehoe
             this.configs.UnreadManage = this.cfgCommon.UnreadManage;
 
             // サウンド再生（タブ別設定より優先）
-            this.settingDialog.PlaySound = this.cfgCommon.PlaySound;
-            this.PlaySoundMenuItem.Checked = this.settingDialog.PlaySound;
-            this.PlaySoundFileMenuItem.Checked = this.settingDialog.PlaySound;
+            this.configs.PlaySound = this.cfgCommon.PlaySound;
+            this.PlaySoundMenuItem.Checked = this.configs.PlaySound;
+            this.PlaySoundFileMenuItem.Checked = this.configs.PlaySound;
 
             // 片思い表示。Trueなら片思い表示する
             this.settingDialog.OneWayLove = this.cfgCommon.OneWayLove;
@@ -1641,7 +1641,7 @@ namespace Hoehoe
             this.settingDialog.UseUnreadStyle = this.cfgCommon.UseUnreadStyle;
             this.settingDialog.DefaultTimeOut = this.cfgCommon.DefaultTimeOut;
             this.settingDialog.RetweetNoConfirm = this.cfgCommon.RetweetNoConfirm;
-            this.settingDialog.PlaySound = this.cfgCommon.PlaySound;
+            this.configs.PlaySound = this.cfgCommon.PlaySound;
             this.settingDialog.DateTimeFormat = this.cfgCommon.DateTimeFormat;
             this.settingDialog.LimitBalloon = this.cfgCommon.LimitBalloon;
             this.settingDialog.EventNotifyEnabled = this.cfgCommon.EventNotifyEnabled;
@@ -1909,8 +1909,8 @@ namespace Hoehoe
 
             this.myAdSpDis = this.cfgLocal.AdSplitterDistance;
             this.MultiLineMenuItem.Checked = this.cfgLocal.StatusMultiline;
-            this.PlaySoundMenuItem.Checked = this.settingDialog.PlaySound;
-            this.PlaySoundFileMenuItem.Checked = this.settingDialog.PlaySound;
+            this.PlaySoundMenuItem.Checked = this.configs.PlaySound;
+            this.PlaySoundFileMenuItem.Checked = this.configs.PlaySound;
 
             // 入力欄
             this.StatusText.Font = this.fntInputFont;
