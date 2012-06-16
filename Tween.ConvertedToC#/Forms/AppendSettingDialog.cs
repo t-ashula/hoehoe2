@@ -41,8 +41,6 @@ namespace Hoehoe
         private static AppendSettingDialog instance = new AppendSettingDialog();
         private Twitter tw;
         private bool validationError;
-        private EventType myEventNotifyFlag;
-        private EventType isMyEventNotifyFlag;
         private string myTranslateLanguage;
         private long initialUserId;
         private string pin;
@@ -84,17 +82,9 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public EventType EventNotifyFlag
-        {
-            get { return this.myEventNotifyFlag; }
-            set { this.myEventNotifyFlag = value; }
-        }
+        public EventType EventNotifyFlag { get; set; }
 
-        public EventType IsMyEventNotifyFlag
-        {
-            get { return this.isMyEventNotifyFlag; }
-            set { this.isMyEventNotifyFlag = value; }
-        }
+        public EventType IsMyEventNotifyFlag { get; set; }
 
         public string TranslateLanguage
         {
@@ -443,7 +433,13 @@ namespace Hoehoe
                 this.configurations.RetweetNoConfirm = this.CheckRetweetNoConfirm.Checked;
                 this.configurations.LimitBalloon = this.CheckBalloonLimit.Checked;
                 this.configurations.EventNotifyEnabled = this.CheckEventNotify.Checked;
-                this.GetEventNotifyFlag(ref this.myEventNotifyFlag, ref this.isMyEventNotifyFlag);
+                {
+                    var m = this.EventNotifyFlag;
+                    var i = this.IsMyEventNotifyFlag;
+                    this.GetEventNotifyFlag(ref m, ref i);
+                    this.EventNotifyFlag = m;
+                    this.IsMyEventNotifyFlag = i;
+                }
                 this.configurations.ForceEventNotify = this.CheckForceEventNotify.Checked;
                 this.configurations.FavEventUnread = this.CheckFavEventUnread.Checked;
                 this.myTranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(this.ComboBoxTranslateLanguage.SelectedIndex);
@@ -822,7 +818,7 @@ namespace Hoehoe
             this.ConnectionTimeOut.Text = this.configurations.DefaultTimeOut.ToString();
             this.CheckRetweetNoConfirm.Checked = this.configurations.RetweetNoConfirm;
             this.CheckBalloonLimit.Checked = this.configurations.LimitBalloon;
-            this.ApplyEventNotifyFlag(this.configurations.EventNotifyEnabled, this.myEventNotifyFlag, this.isMyEventNotifyFlag);
+            this.ApplyEventNotifyFlag(this.configurations.EventNotifyEnabled, this.EventNotifyFlag, this.IsMyEventNotifyFlag);
             this.CheckForceEventNotify.Checked = this.configurations.ForceEventNotify;
             this.CheckFavEventUnread.Checked = this.configurations.FavEventUnread;
             this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this.myTranslateLanguage);
