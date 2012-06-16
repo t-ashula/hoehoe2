@@ -88,7 +88,7 @@ namespace Hoehoe
 
 
 
-        public DispTitleEnum DispLatestPost { get; set; }
+
 
         public string BrowserPath { get; set; }
 
@@ -478,35 +478,35 @@ namespace Hoehoe
                 {
                     case 0:
                         // None
-                        this.DispLatestPost = DispTitleEnum.None;
+                        this.configurations.DispLatestPost = DispTitleEnum.None;
                         break;
                     case 1:
                         // Ver
-                        this.DispLatestPost = DispTitleEnum.Ver;
+                        this.configurations.DispLatestPost = DispTitleEnum.Ver;
                         break;
                     case 2:
                         // Post
-                        this.DispLatestPost = DispTitleEnum.Post;
+                        this.configurations.DispLatestPost = DispTitleEnum.Post;
                         break;
                     case 3:
                         // RepCount
-                        this.DispLatestPost = DispTitleEnum.UnreadRepCount;
+                        this.configurations.DispLatestPost = DispTitleEnum.UnreadRepCount;
                         break;
                     case 4:
                         // AllCount
-                        this.DispLatestPost = DispTitleEnum.UnreadAllCount;
+                        this.configurations.DispLatestPost = DispTitleEnum.UnreadAllCount;
                         break;
                     case 5:
                         // Rep+All
-                        this.DispLatestPost = DispTitleEnum.UnreadAllRepCount;
+                        this.configurations.DispLatestPost = DispTitleEnum.UnreadAllRepCount;
                         break;
                     case 6:
                         // Unread/All
-                        this.DispLatestPost = DispTitleEnum.UnreadCountAllCount;
+                        this.configurations.DispLatestPost = DispTitleEnum.UnreadCountAllCount;
                         break;
                     case 7:
                         // Count of Status/Follow/Follower
-                        this.DispLatestPost = DispTitleEnum.OwnStatus;
+                        this.configurations.DispLatestPost = DispTitleEnum.OwnStatus;
                         break;
                 }
 
@@ -852,7 +852,7 @@ namespace Hoehoe
             this.CheckDispUsername.Checked = this.configurations.DispUsername;
             this.CheckCloseToExit.Checked = this.configurations.CloseToExit;
             this.CheckMinimizeToTray.Checked = this.configurations.MinimizeToTray;
-            switch (this.DispLatestPost)
+            switch (this.configurations.DispLatestPost)
             {
                 case DispTitleEnum.None:
                     this.ComboDispTitle.SelectedIndex = 0;

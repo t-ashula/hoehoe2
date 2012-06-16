@@ -1778,10 +1778,10 @@ namespace Hoehoe
             this.DispSelectedPost();
 
             // 件数関連の場合、タイトル即時書き換え
-            if (this.settingDialog.DispLatestPost != DispTitleEnum.None
-                && this.settingDialog.DispLatestPost != DispTitleEnum.Post
-                && this.settingDialog.DispLatestPost != DispTitleEnum.Ver
-                && this.settingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
+            if (this.configs.DispLatestPost != DispTitleEnum.None
+                && this.configs.DispLatestPost != DispTitleEnum.Post
+                && this.configs.DispLatestPost != DispTitleEnum.Ver
+                && this.configs.DispLatestPost != DispTitleEnum.OwnStatus)
             {
                 this.SetMainWindowTitle();
             }
@@ -3406,7 +3406,7 @@ namespace Hoehoe
                 this.cfgCommon.DispUsername = this.configs.DispUsername;
                 this.cfgCommon.MinimizeToTray = this.configs.MinimizeToTray;
                 this.cfgCommon.CloseToExit = this.configs.CloseToExit;
-                this.cfgCommon.DispLatestPost = this.settingDialog.DispLatestPost;
+                this.cfgCommon.DispLatestPost = this.configs.DispLatestPost;
                 this.cfgCommon.SortOrderLock = this.settingDialog.SortOrderLock;
                 this.cfgCommon.TinyUrlResolve = this.settingDialog.TinyUrlResolve;
                 this.cfgCommon.ShortUrlForceResolve = this.settingDialog.ShortUrlForceResolve;
@@ -4038,10 +4038,10 @@ namespace Hoehoe
         {
             int ur = 0;
             int al = 0;
-            if (this.settingDialog.DispLatestPost != DispTitleEnum.None
-                && this.settingDialog.DispLatestPost != DispTitleEnum.Post
-                && this.settingDialog.DispLatestPost != DispTitleEnum.Ver
-                && this.settingDialog.DispLatestPost != DispTitleEnum.OwnStatus)
+            if (this.configs.DispLatestPost != DispTitleEnum.None
+                && this.configs.DispLatestPost != DispTitleEnum.Post
+                && this.configs.DispLatestPost != DispTitleEnum.Ver
+                && this.configs.DispLatestPost != DispTitleEnum.OwnStatus)
             {
                 ur = this.statuses.GetAllUnreadCount();
                 al = this.statuses.GetAllCount();
@@ -4054,7 +4054,7 @@ namespace Hoehoe
             }
 
             ttl.Append("Hoehoe  ");
-            switch (this.settingDialog.DispLatestPost)
+            switch (this.configs.DispLatestPost)
             {
                 case DispTitleEnum.Ver:
                     ttl.Append("Ver:").Append(MyCommon.FileVersion);

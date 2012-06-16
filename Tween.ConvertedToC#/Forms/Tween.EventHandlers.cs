@@ -1620,7 +1620,7 @@ namespace Hoehoe
             this.configs.DispUsername = this.cfgCommon.DispUsername;
             this.configs.CloseToExit = this.cfgCommon.CloseToExit;
             this.configs.MinimizeToTray = this.cfgCommon.MinimizeToTray;
-            this.settingDialog.DispLatestPost = this.cfgCommon.DispLatestPost;
+            this.configs.DispLatestPost = this.cfgCommon.DispLatestPost;
             this.settingDialog.SortOrderLock = this.cfgCommon.SortOrderLock;
             this.settingDialog.TinyUrlResolve = this.cfgCommon.TinyUrlResolve;
             this.settingDialog.ShortUrlForceResolve = this.cfgCommon.ShortUrlForceResolve;
