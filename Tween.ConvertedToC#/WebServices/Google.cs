@@ -272,12 +272,8 @@ namespace Hoehoe
 
         public string CreateGoogleStaticMapsUri(double lat, double lng)
         {
-            return "http://maps.google.com/maps/api/staticmap?center=" + lat.ToString() + "," + lng.ToString()
-                + "&size=" + Configs.Instance.FoursquarePreviewWidth.ToString()
-                + "x" + Configs.Instance.FoursquarePreviewHeight.ToString()
-                + "&zoom=" + AppendSettingDialog.Instance.FoursquarePreviewZoom.ToString()
-                + "&markers=" + lat.ToString() + "," + lng.ToString()
-                + "&sensor=false";
+            return string.Format("http://maps.google.com/maps/api/staticmap?center={0},{1}&size={2}x{3}&zoom={4}&markers={0},{1}&sensor=false", 
+                lat, lng, Configs.Instance.FoursquarePreviewWidth, Configs.Instance.FoursquarePreviewHeight, Configs.Instance.FoursquarePreviewZoom);
         }
 
         public string CreateGoogleMapsUri(GlobalLocation locate)
@@ -287,7 +283,7 @@ namespace Hoehoe
 
         public string CreateGoogleMapsUri(double lat, double lng)
         {
-            return "http://maps.google.com/maps?ll=" + lat.ToString() + "," + lng.ToString() + "&z=" + AppendSettingDialog.Instance.FoursquarePreviewZoom.ToString() + "&q=" + lat.ToString() + "," + lng.ToString();
+            return string.Format("http://maps.google.com/maps?ll={0},{1}&z={2}&q={0},{1}", lat, lng, Configs.Instance.FoursquarePreviewZoom);
         }
 
         public class GlobalLocation

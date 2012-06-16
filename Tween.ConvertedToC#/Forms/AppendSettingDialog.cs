@@ -86,7 +86,7 @@ namespace Hoehoe
 
         
 
-        public int FoursquarePreviewZoom { get; set; }
+
 
         public bool IsListStatusesIncludeRts { get; set; }
 
@@ -775,7 +775,7 @@ namespace Hoehoe
                 this.configurations.IsPreviewFoursquare = this.IsPreviewFoursquareCheckBox.Checked;
                 this.configurations.FoursquarePreviewHeight = Convert.ToInt32(this.FoursquarePreviewHeightTextBox.Text);
                 this.configurations.FoursquarePreviewWidth = Convert.ToInt32(this.FoursquarePreviewWidthTextBox.Text);
-                this.FoursquarePreviewZoom = Convert.ToInt32(this.FoursquarePreviewZoomTextBox.Text);
+                this.configurations.FoursquarePreviewZoom = Convert.ToInt32(this.FoursquarePreviewZoomTextBox.Text);
                 this.IsListStatusesIncludeRts = this.IsListsIncludeRtsCheckBox.Checked;
                 this.TabMouseLock = this.TabMouseLockCheck.Checked;
                 this.IsRemoveSameEvent = this.IsRemoveSameFavEventCheckBox.Checked;
@@ -1155,7 +1155,7 @@ namespace Hoehoe
             this.IsPreviewFoursquareCheckBox.Checked = this.configurations.IsPreviewFoursquare;
             this.FoursquarePreviewHeightTextBox.Text = this.configurations.FoursquarePreviewHeight.ToString();
             this.FoursquarePreviewWidthTextBox.Text = this.configurations.FoursquarePreviewWidth.ToString();
-            this.FoursquarePreviewZoomTextBox.Text = this.FoursquarePreviewZoom.ToString();
+            this.FoursquarePreviewZoomTextBox.Text = this.configurations.FoursquarePreviewZoom.ToString();
             this.IsListsIncludeRtsCheckBox.Checked = this.IsListStatusesIncludeRts;
             this.TabMouseLockCheck.Checked = this.TabMouseLock;
             this.IsRemoveSameFavEventCheckBox.Checked = this.IsRemoveSameEvent;

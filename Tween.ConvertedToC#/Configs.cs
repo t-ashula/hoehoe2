@@ -43,5 +43,6 @@ namespace Hoehoe
         public bool IsPreviewFoursquare { get; set; }
         public int FoursquarePreviewHeight { get; set; }
         public int FoursquarePreviewWidth { get; set; }
+        public int FoursquarePreviewZoom { get; set; }
     }
 }
