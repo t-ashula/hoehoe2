@@ -1513,7 +1513,7 @@ namespace Hoehoe
 
             this.tw.Initialize(this.cfgCommon.Token, this.cfgCommon.TokenSecret, this.cfgCommon.UserName, this.cfgCommon.UserId);
 
-            this.settingDialog.UserAccounts = this.cfgCommon.UserAccounts;
+            this.configs.UserAccounts = this.cfgCommon.UserAccounts;
             this.settingDialog.TimelinePeriodInt = this.cfgCommon.TimelinePeriod;
             this.settingDialog.ReplyPeriodInt = this.cfgCommon.ReplyPeriod;
             this.settingDialog.DMPeriodInt = this.cfgCommon.DMPeriod;
@@ -2134,7 +2134,7 @@ namespace Hoehoe
                 }
             }
 
-            foreach (var ua in this.settingDialog.UserAccounts)
+            foreach (var ua in this.configs.UserAccounts)
             {
                 if (ua.UserId == 0 && ua.Username.ToLower() == this.tw.Username.ToLower())
                 {

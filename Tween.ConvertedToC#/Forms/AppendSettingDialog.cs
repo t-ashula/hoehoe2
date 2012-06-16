@@ -90,7 +90,7 @@ namespace Hoehoe
 
         
 
-        public List<UserAccount> UserAccounts { get; set; }
+        
 
         public bool TabMouseLock { get; set; }
 
@@ -417,15 +417,15 @@ namespace Hoehoe
                 this.validationError = false;
             }
 
-            this.UserAccounts.Clear();
+            this.configurations.UserAccounts.Clear();
             foreach (var u in this.AuthUserCombo.Items)
             {
-                this.UserAccounts.Add((UserAccount)u);
+                this.configurations.UserAccounts.Add((UserAccount)u);
             }
 
             if (this.AuthUserCombo.SelectedIndex > -1)
             {
-                foreach (UserAccount u in this.UserAccounts)
+                foreach (UserAccount u in this.configurations.UserAccounts)
                 {
                     if (u.Username.ToLower() == ((UserAccount)this.AuthUserCombo.SelectedItem).Username.ToLower())
                     {
@@ -800,17 +800,17 @@ namespace Hoehoe
             {
                 // キャンセル時は画面表示時のアカウントに戻す
                 // キャンセル時でも認証済みアカウント情報は保存する
-                this.UserAccounts.Clear();
+                this.configurations.UserAccounts.Clear();
                 foreach (var u in this.AuthUserCombo.Items)
                 {
-                    this.UserAccounts.Add((UserAccount)u);
+                    this.configurations.UserAccounts.Add((UserAccount)u);
                 }
 
                 // アクティブユーザーを起動時のアカウントに戻す（起動時アカウントなければ何もしない）
                 bool userSet = false;
                 if (this.initialUserId > 0)
                 {
-                    foreach (UserAccount u in this.UserAccounts)
+                    foreach (UserAccount u in this.configurations.UserAccounts)
                     {
                         if (u.UserId == this.initialUserId)
                         {
@@ -866,10 +866,10 @@ namespace Hoehoe
             this.AuthClearButton.Enabled = true;
 
             this.AuthUserCombo.Items.Clear();
-            if (this.UserAccounts.Count > 0)
+            if (this.configurations.UserAccounts.Count > 0)
             {
-                this.AuthUserCombo.Items.AddRange(this.UserAccounts.ToArray());
-                foreach (UserAccount u in this.UserAccounts)
+                this.AuthUserCombo.Items.AddRange(this.configurations.UserAccounts.ToArray());
+                foreach (UserAccount u in this.configurations.UserAccounts)
                 {
                     if (u.UserId == this.tw.UserId)
                     {

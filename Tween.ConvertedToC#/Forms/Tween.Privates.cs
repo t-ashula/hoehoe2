@@ -3383,7 +3383,7 @@ namespace Hoehoe
                 this.cfgCommon.Password = this.tw.Password;
                 this.cfgCommon.Token = this.tw.AccessToken;
                 this.cfgCommon.TokenSecret = this.tw.AccessTokenSecret;
-                this.cfgCommon.UserAccounts = this.settingDialog.UserAccounts;
+                this.cfgCommon.UserAccounts = this.configs.UserAccounts;
                 this.cfgCommon.UserstreamStartup = this.settingDialog.UserstreamStartup;
                 this.cfgCommon.UserstreamPeriod = this.settingDialog.UserstreamPeriodInt;
                 this.cfgCommon.TimelinePeriod = this.settingDialog.TimelinePeriodInt;
