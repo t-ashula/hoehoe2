@@ -86,7 +86,7 @@ namespace Hoehoe
 
 
 
-        public bool MinimizeToTray { get; set; }
+
 
         public DispTitleEnum DispLatestPost { get; set; }
 
@@ -473,7 +473,7 @@ namespace Hoehoe
                 this.configurations.UseRecommendStatus = this.CheckUseRecommendStatus.Checked;
                 this.configurations.DispUsername = this.CheckDispUsername.Checked;
                 this.configurations.CloseToExit = this.CheckCloseToExit.Checked;
-                this.MinimizeToTray = this.CheckMinimizeToTray.Checked;
+                this.configurations.MinimizeToTray = this.CheckMinimizeToTray.Checked;
                 switch (this.ComboDispTitle.SelectedIndex)
                 {
                     case 0:
@@ -851,7 +851,7 @@ namespace Hoehoe
             this.CheckUseRecommendStatus.Checked = this.configurations.UseRecommendStatus;
             this.CheckDispUsername.Checked = this.configurations.DispUsername;
             this.CheckCloseToExit.Checked = this.configurations.CloseToExit;
-            this.CheckMinimizeToTray.Checked = this.MinimizeToTray;
+            this.CheckMinimizeToTray.Checked = this.configurations.MinimizeToTray;
             switch (this.DispLatestPost)
             {
                 case DispTitleEnum.None:

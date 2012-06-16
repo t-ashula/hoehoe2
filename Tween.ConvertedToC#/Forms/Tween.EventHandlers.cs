@@ -1619,7 +1619,7 @@ namespace Hoehoe
             this.configs.UseRecommendStatus = this.cfgLocal.UseRecommendStatus;
             this.configs.DispUsername = this.cfgCommon.DispUsername;
             this.configs.CloseToExit = this.cfgCommon.CloseToExit;
-            this.settingDialog.MinimizeToTray = this.cfgCommon.MinimizeToTray;
+            this.configs.MinimizeToTray = this.cfgCommon.MinimizeToTray;
             this.settingDialog.DispLatestPost = this.cfgCommon.DispLatestPost;
             this.settingDialog.SortOrderLock = this.cfgCommon.SortOrderLock;
             this.settingDialog.TinyUrlResolve = this.cfgCommon.TinyUrlResolve;
@@ -2091,7 +2091,7 @@ namespace Hoehoe
             this.CopyURLMenuItem.ShortcutKeyDisplayString = "Ctrl+Shift+C";
             this.CopyUserIdStripMenuItem.ShortcutKeyDisplayString = "Shift+Alt+C";
 
-            if (this.settingDialog.MinimizeToTray == false || this.WindowState != FormWindowState.Minimized)
+            if (!this.configs.MinimizeToTray || this.WindowState != FormWindowState.Minimized)
             {
                 this.Visible = true;
             }

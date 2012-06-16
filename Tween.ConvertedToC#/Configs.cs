@@ -107,5 +107,6 @@ namespace Hoehoe
 
         public bool DispUsername { get; set; }  
         public bool CloseToExit { get; set; }
+        public bool MinimizeToTray { get; set; }
     }
 }

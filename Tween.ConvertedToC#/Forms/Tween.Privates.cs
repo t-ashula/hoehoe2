@@ -3404,7 +3404,7 @@ namespace Hoehoe
                 this.cfgCommon.CountApiReply = this.configs.CountApiReply;
                 this.cfgCommon.PostAndGet = this.configs.PostAndGet;
                 this.cfgCommon.DispUsername = this.configs.DispUsername;
-                this.cfgCommon.MinimizeToTray = this.settingDialog.MinimizeToTray;
+                this.cfgCommon.MinimizeToTray = this.configs.MinimizeToTray;
                 this.cfgCommon.CloseToExit = this.configs.CloseToExit;
                 this.cfgCommon.DispLatestPost = this.settingDialog.DispLatestPost;
                 this.cfgCommon.SortOrderLock = this.settingDialog.SortOrderLock;
@@ -7947,7 +7947,7 @@ namespace Hoehoe
 
         private void ResizeMainForm()
         {
-            if (!this.initialLayout && this.settingDialog.MinimizeToTray && WindowState == FormWindowState.Minimized)
+            if (!this.initialLayout && this.configs.MinimizeToTray && WindowState == FormWindowState.Minimized)
             {
                 this.Visible = false;
             }
