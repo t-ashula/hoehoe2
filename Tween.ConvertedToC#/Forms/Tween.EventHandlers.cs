@@ -1713,7 +1713,7 @@ namespace Hoehoe
             this.settingDialog.UserTimelineCountApi = this.cfgCommon.UserTimelineCountApi;
             this.settingDialog.ListCountApi = this.cfgCommon.ListCountApi;
             this.settingDialog.UserstreamStartup = this.cfgCommon.UserstreamStartup;
-            this.settingDialog.UserstreamPeriodInt = this.cfgCommon.UserstreamPeriod;
+            this.configs.UserstreamPeriodInt = this.cfgCommon.UserstreamPeriod;
             this.settingDialog.OpenUserTimeline = this.cfgCommon.OpenUserTimeline;
             this.settingDialog.ListDoubleClickAction = this.cfgCommon.ListDoubleClickAction;
             this.settingDialog.UserAppointUrl = this.cfgCommon.UserAppointUrl;
@@ -2847,9 +2847,9 @@ namespace Hoehoe
                     break;
                 case WorkerType.Configuration:
                     // this._waitFollower = False
-                    if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit != 0)
+                    if (this.configs.TwitterConfiguration.PhotoSizeLimit != 0)
                     {
-                        this.pictureServices["Twitter"].Configuration("MaxUploadFilesize", this.settingDialog.TwitterConfiguration.PhotoSizeLimit);
+                        this.pictureServices["Twitter"].Configuration("MaxUploadFilesize", this.configs.TwitterConfiguration.PhotoSizeLimit);
                     }
 
                     this.itemCache = null;
@@ -3614,7 +3614,7 @@ namespace Hoehoe
                 keys.Clear();
             }
 
-            if (this.settingDialog.UserstreamPeriodInt > 0)
+            if (this.configs.UserstreamPeriodInt > 0)
             {
                 return;
             }

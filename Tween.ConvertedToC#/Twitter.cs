@@ -2691,7 +2691,7 @@ namespace Hoehoe
 
             try
             {
-                AppendSettingDialog.Instance.TwitterConfiguration = D.CreateDataFromJson<Configuration>(content);
+                Configs.Instance.TwitterConfiguration = D.CreateDataFromJson<Configuration>(content);
                 return string.Empty;
             }
             catch (SerializationException ex)

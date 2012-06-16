@@ -1470,12 +1470,12 @@ namespace Hoehoe
 
             foreach (Match m in Regex.Matches(this.StatusText.Text, Twitter.UrlRegexPattern, RegexOptions.IgnoreCase))
             {
-                len += m.Result("${url}").Length - this.settingDialog.TwitterConfiguration.ShortUrlLength;
+                len += m.Result("${url}").Length - this.configs.TwitterConfiguration.ShortUrlLength;
             }
 
             if (this.ImageSelectionPanel.Visible && this.ImageSelectedPicture.Tag != null && !string.IsNullOrEmpty(this.ImageService))
             {
-                len -= this.settingDialog.TwitterConfiguration.CharactersReservedPerMedia;
+                len -= this.configs.TwitterConfiguration.CharactersReservedPerMedia;
             }
 
             return len;
@@ -3385,7 +3385,7 @@ namespace Hoehoe
                 this.cfgCommon.TokenSecret = this.tw.AccessTokenSecret;
                 this.cfgCommon.UserAccounts = this.configs.UserAccounts;
                 this.cfgCommon.UserstreamStartup = this.settingDialog.UserstreamStartup;
-                this.cfgCommon.UserstreamPeriod = this.settingDialog.UserstreamPeriodInt;
+                this.cfgCommon.UserstreamPeriod = this.configs.UserstreamPeriodInt;
                 this.cfgCommon.TimelinePeriod = this.settingDialog.TimelinePeriodInt;
                 this.cfgCommon.ReplyPeriod = this.settingDialog.ReplyPeriodInt;
                 this.cfgCommon.DMPeriod = this.settingDialog.DMPeriodInt;
@@ -7570,9 +7570,9 @@ namespace Hoehoe
             this.resetTimers.PublicSearch = this.ResetWorkerTimer(ref this.timerPubSearchCounter, this.settingDialog.PubSearchPeriodInt, WorkerType.PublicSearch, this.resetTimers.PublicSearch);
             this.resetTimers.UserTimeline = this.ResetWorkerTimer(ref this.timerUserTimelineCounter, this.settingDialog.UserTimelinePeriodInt, WorkerType.UserTimeline, this.resetTimers.UserTimeline);
             this.resetTimers.Lists = this.ResetWorkerTimer(ref this.timerListsCounter, this.settingDialog.ListsPeriodInt, WorkerType.List, this.resetTimers.Lists);
-            if (this.resetTimers.UserStream || (this.timerUsCounter <= 0 && this.settingDialog.UserstreamPeriodInt > 0))
+            if (this.resetTimers.UserStream || (this.timerUsCounter <= 0 && this.configs.UserstreamPeriodInt > 0))
             {
-                Interlocked.Exchange(ref this.timerUsCounter, this.settingDialog.UserstreamPeriodInt);
+                Interlocked.Exchange(ref this.timerUsCounter, this.configs.UserstreamPeriodInt);
                 if (this.isActiveUserstream)
                 {
                     this.RefreshTimeline(true);
@@ -8092,7 +8092,7 @@ namespace Hoehoe
             }
 
             // 取得失敗の場合は再試行する
-            if (this.settingDialog.TwitterConfiguration.PhotoSizeLimit == 0)
+            if (this.configs.TwitterConfiguration.PhotoSizeLimit == 0)
             {
                 this.GetTimeline(WorkerType.Configuration);
             }

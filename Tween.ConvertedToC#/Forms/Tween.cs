@@ -1136,7 +1136,7 @@ namespace Hoehoe
         /// <returns></returns>
         public bool IsTwitterId(string name)
         {
-            string[] nonUsernames = this.settingDialog.TwitterConfiguration.NonUsernamePaths;
+            string[] nonUsernames = this.configs.TwitterConfiguration.NonUsernamePaths;
             if (nonUsernames == null || nonUsernames.Length == 0)
             {
                 return !Regex.Match(name, "^(about|jobs|tos|privacy|who_to_follow|download|messages)$", RegexOptions.IgnoreCase).Success;

@@ -98,9 +98,9 @@ namespace Hoehoe
 
         
 
-        public DataModels.Twitter.Configuration TwitterConfiguration { get; set; }
 
-        public int UserstreamPeriodInt { get; set; }
+
+        
 
         public bool UserstreamStartup { get; set; }
 
@@ -453,9 +453,9 @@ namespace Hoehoe
             {
                 this.UserstreamStartup = this.StartupUserstreamCheck.Checked;
 
-                if (this.UserstreamPeriodInt != Convert.ToInt32(this.UserstreamPeriod.Text))
+                if (this.configurations.UserstreamPeriodInt != Convert.ToInt32(this.UserstreamPeriod.Text))
                 {
-                    this.UserstreamPeriodInt = Convert.ToInt32(this.UserstreamPeriod.Text);
+                    this.configurations.UserstreamPeriodInt = Convert.ToInt32(this.UserstreamPeriod.Text);
                     arg.UserStream = true;
                     isIntervalChanged = true;
                 }
@@ -881,7 +881,7 @@ namespace Hoehoe
             }
 
             this.StartupUserstreamCheck.Checked = this.UserstreamStartup;
-            this.UserstreamPeriod.Text = this.UserstreamPeriodInt.ToString();
+            this.UserstreamPeriod.Text = this.configurations.UserstreamPeriodInt.ToString();
             this.TimelinePeriod.Text = this.TimelinePeriodInt.ToString();
             this.ReplyPeriod.Text = this.ReplyPeriodInt.ToString();
             this.DMPeriod.Text = this.DMPeriodInt.ToString();

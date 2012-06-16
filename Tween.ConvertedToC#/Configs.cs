@@ -25,6 +25,7 @@ namespace Hoehoe
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using Hoehoe.DataModels.Twitter;
 
     public class Configs
     {
@@ -49,5 +50,7 @@ namespace Hoehoe
         public bool TabMouseLock { get; set; }
         public bool IsRemoveSameEvent { get; set; }
         public bool IsNotifyUseGrowl { get; set; }
+        public Configuration TwitterConfiguration { get; set; }
+        public int UserstreamPeriodInt { get; set; }
     }
 }
