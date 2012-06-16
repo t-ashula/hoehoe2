@@ -48,6 +48,8 @@ namespace Hoehoe
         private string pin;
         private EventCheckboxTblElement[] eventCheckboxTableElements = null;
 
+        private Configs configurations = Configs.Instance;
+
         #endregion privates
 
         #region constructor
@@ -82,7 +84,11 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public bool HideDuplicatedRetweets { get; set; }
+        public bool HideDuplicatedRetweets
+        {
+            get { return this.configurations.HideDuplicatedRetweets; }
+            set { this.configurations.HideDuplicatedRetweets = value; }
+        }
 
         public bool IsPreviewFoursquare { get; set; }
 

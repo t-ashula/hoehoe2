@@ -28,8 +28,17 @@ namespace Hoehoe
 
     public class Configs
     {
-        public Configs()
+        private static Configs instance = new Configs();
+
+        private Configs()
         {
         }
+
+        public static Configs Instance
+        {
+            get { return instance; }
+        }
+
+        public bool HideDuplicatedRetweets { get; set; }
     }
 }
