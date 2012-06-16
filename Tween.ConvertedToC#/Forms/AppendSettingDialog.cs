@@ -83,13 +83,7 @@ namespace Hoehoe
         {
             get { return instance; }
         }
-
-        public bool HideDuplicatedRetweets
-        {
-            get { return this.configurations.HideDuplicatedRetweets; }
-            set { this.configurations.HideDuplicatedRetweets = value; }
-        }
-
+        
         public bool IsPreviewFoursquare { get; set; }
 
         public int FoursquarePreviewHeight { get; set; }
@@ -781,7 +775,7 @@ namespace Hoehoe
                 this.OpenUserTimeline = this.CheckOpenUserTimeline.Checked;
                 this.ListDoubleClickAction = this.ListDoubleClickActionComboBox.SelectedIndex;
                 this.UserAppointUrl = this.UserAppointUrlText.Text;
-                this.HideDuplicatedRetweets = this.HideDuplicatedRetweetsCheck.Checked;
+                this.configurations.HideDuplicatedRetweets = this.HideDuplicatedRetweetsCheck.Checked;
                 this.IsPreviewFoursquare = this.IsPreviewFoursquareCheckBox.Checked;
                 this.FoursquarePreviewHeight = Convert.ToInt32(this.FoursquarePreviewHeightTextBox.Text);
                 this.FoursquarePreviewWidth = Convert.ToInt32(this.FoursquarePreviewWidthTextBox.Text);
@@ -1161,7 +1155,7 @@ namespace Hoehoe
             this.CheckOpenUserTimeline.Checked = this.OpenUserTimeline;
             this.ListDoubleClickActionComboBox.SelectedIndex = this.ListDoubleClickAction;
             this.UserAppointUrlText.Text = this.UserAppointUrl;
-            this.HideDuplicatedRetweetsCheck.Checked = this.HideDuplicatedRetweets;
+            this.HideDuplicatedRetweetsCheck.Checked = this.configurations.HideDuplicatedRetweets;
             this.IsPreviewFoursquareCheckBox.Checked = this.IsPreviewFoursquare;
             this.FoursquarePreviewHeightTextBox.Text = this.FoursquarePreviewHeight.ToString();
             this.FoursquarePreviewWidthTextBox.Text = this.FoursquarePreviewWidth.ToString();

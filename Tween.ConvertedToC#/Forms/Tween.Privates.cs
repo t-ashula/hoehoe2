@@ -3484,7 +3484,7 @@ namespace Hoehoe
                 this.cfgCommon.UseImageService = this.ImageServiceCombo.SelectedIndex;
                 this.cfgCommon.ListDoubleClickAction = this.settingDialog.ListDoubleClickAction;
                 this.cfgCommon.UserAppointUrl = this.settingDialog.UserAppointUrl;
-                this.cfgCommon.HideDuplicatedRetweets = this.settingDialog.HideDuplicatedRetweets;
+                this.cfgCommon.HideDuplicatedRetweets = this.configs.HideDuplicatedRetweets; 
                 this.cfgCommon.IsPreviewFoursquare = this.settingDialog.IsPreviewFoursquare;
                 this.cfgCommon.FoursquarePreviewHeight = this.settingDialog.FoursquarePreviewHeight;
                 this.cfgCommon.FoursquarePreviewWidth = this.settingDialog.FoursquarePreviewWidth;

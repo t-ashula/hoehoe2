@@ -90,6 +90,8 @@ namespace Hoehoe
         private SpaceKeyCanceler spaceKeyCanceler;
 
         /// 設定関連
+        private Configs configs = Configs.Instance;
+
         private SettingLocal cfgLocal;
         private SettingCommon cfgCommon;
         private bool modifySettingLocal;

@@ -559,7 +559,7 @@ namespace Hoehoe
                             }
 
                             // 既に持っている公式RTは捨てる
-                            if (AppendSettingDialog.Instance.HideDuplicatedRetweets
+                            if (Configs.Instance.HideDuplicatedRetweets
                                 && !item.IsMe
                                 && this.retweets.ContainsKey(item.RetweetedId)
                                 && this.retweets[item.RetweetedId].RetweetedCount > 0)
