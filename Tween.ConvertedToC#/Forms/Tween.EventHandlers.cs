@@ -1518,7 +1518,7 @@ namespace Hoehoe
             this.configs.ReplyPeriodInt = this.cfgCommon.ReplyPeriod;
             this.configs.DMPeriodInt = this.cfgCommon.DMPeriod;
             this.configs.PubSearchPeriodInt = this.cfgCommon.PubSearchPeriod;
-            this.settingDialog.UserTimelinePeriodInt = this.cfgCommon.UserTimelinePeriod;
+            this.configs.UserTimelinePeriodInt = this.cfgCommon.UserTimelinePeriod;
             this.configs.ListsPeriodInt = this.cfgCommon.ListsPeriod;
 
             // 不正値チェック
@@ -1544,9 +1544,9 @@ namespace Hoehoe
                     this.configs.PubSearchPeriodInt = 30;
                 }
 
-                if (this.settingDialog.UserTimelinePeriodInt < 15 && this.settingDialog.UserTimelinePeriodInt > 0)
+                if (this.configs.UserTimelinePeriodInt < 15 && this.configs.UserTimelinePeriodInt > 0)
                 {
-                    this.settingDialog.UserTimelinePeriodInt = 15;
+                    this.configs.UserTimelinePeriodInt = 15;
                 }
 
                 if (this.configs.ListsPeriodInt < 15 && this.configs.ListsPeriodInt > 0)
