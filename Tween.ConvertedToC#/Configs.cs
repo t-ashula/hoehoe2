@@ -114,5 +114,7 @@ namespace Hoehoe
 
         public bool TinyUrlResolve { get; set; }
         public bool ShortUrlForceResolve { get; set; }
+
+        public bool SortOrderLock { get; set; }
     }
 }

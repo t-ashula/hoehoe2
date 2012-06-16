@@ -3407,7 +3407,7 @@ namespace Hoehoe
                 this.cfgCommon.MinimizeToTray = this.configs.MinimizeToTray;
                 this.cfgCommon.CloseToExit = this.configs.CloseToExit;
                 this.cfgCommon.DispLatestPost = this.configs.DispLatestPost;
-                this.cfgCommon.SortOrderLock = this.settingDialog.SortOrderLock;
+                this.cfgCommon.SortOrderLock = this.configs.SortOrderLock;
                 this.cfgCommon.TinyUrlResolve = this.configs.TinyUrlResolve;
                 this.cfgCommon.ShortUrlForceResolve = this.configs.ShortUrlForceResolve;
                 this.cfgCommon.PeriodAdjust = this.settingDialog.PeriodAdjust;

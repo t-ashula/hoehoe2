@@ -1621,7 +1621,7 @@ namespace Hoehoe
             this.configs.CloseToExit = this.cfgCommon.CloseToExit;
             this.configs.MinimizeToTray = this.cfgCommon.MinimizeToTray;
             this.configs.DispLatestPost = this.cfgCommon.DispLatestPost;
-            this.settingDialog.SortOrderLock = this.cfgCommon.SortOrderLock;
+            this.configs.SortOrderLock = this.cfgCommon.SortOrderLock;
             this.configs.TinyUrlResolve = this.cfgCommon.TinyUrlResolve;
             this.configs.ShortUrlForceResolve = this.cfgCommon.ShortUrlForceResolve;
             this.settingDialog.SelectedProxyType = this.cfgLocal.ProxyType;
@@ -3113,7 +3113,7 @@ namespace Hoehoe
 
         private void MyList_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            if (this.settingDialog.SortOrderLock)
+            if (this.configs.SortOrderLock)
             {
                 return;
             }
