@@ -2020,11 +2020,11 @@ namespace Hoehoe
             {
                 if (more)
                 {
-                    res = this.twitterConnection.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, tab.OldestId, 0, AppendSettingDialog.Instance.IsListStatusesIncludeRts, ref content);
+                    res = this.twitterConnection.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, tab.OldestId, 0, Configs.Instance.IsListStatusesIncludeRts, ref content);
                 }
                 else
                 {
-                    res = this.twitterConnection.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, 0, 0, AppendSettingDialog.Instance.IsListStatusesIncludeRts, ref content);
+                    res = this.twitterConnection.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, 0, 0, Configs.Instance.IsListStatusesIncludeRts, ref content);
                 }
             }
             catch (Exception ex)

@@ -44,5 +44,6 @@ namespace Hoehoe
         public int FoursquarePreviewHeight { get; set; }
         public int FoursquarePreviewWidth { get; set; }
         public int FoursquarePreviewZoom { get; set; }
+        public bool IsListStatusesIncludeRts { get; set; }
     }
 }

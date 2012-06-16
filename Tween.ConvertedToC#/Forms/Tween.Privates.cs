@@ -3489,7 +3489,7 @@ namespace Hoehoe
                 this.cfgCommon.FoursquarePreviewHeight = this.configs.FoursquarePreviewHeight;
                 this.cfgCommon.FoursquarePreviewWidth = this.configs.FoursquarePreviewWidth;
                 this.cfgCommon.FoursquarePreviewZoom = this.configs.FoursquarePreviewZoom;
-                this.cfgCommon.IsListsIncludeRts = this.settingDialog.IsListStatusesIncludeRts;
+                this.cfgCommon.IsListsIncludeRts = this.configs.IsListStatusesIncludeRts;
                 this.cfgCommon.TabMouseLock = this.settingDialog.TabMouseLock;
                 this.cfgCommon.IsRemoveSameEvent = this.settingDialog.IsRemoveSameEvent;
                 this.cfgCommon.IsUseNotifyGrowl = this.settingDialog.IsNotifyUseGrowl;
