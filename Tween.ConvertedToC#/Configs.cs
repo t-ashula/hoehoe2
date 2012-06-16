@@ -106,7 +106,7 @@ namespace Hoehoe
         public bool UseRecommendStatus { get; set; }
         public string RecommendStatusText { get; set; }
 
-        public bool DispUsername { get; set; }  
+        public bool DispUsername { get; set; }
         public bool CloseToExit { get; set; }
         public bool MinimizeToTray { get; set; }
         public DispTitleEnum DispLatestPost { get; set; }
@@ -195,8 +195,8 @@ namespace Hoehoe
 
         public bool EventNotifyEnabled { get; set; }
 
-        // public EventType EventNotifyFlag
-        // public EventType IsMyEventNotifyFlag
+        public EventType EventNotifyFlag { get; set; }
+        public EventType IsMyEventNotifyFlag { get; set; }
 
         public bool ForceEventNotify { get; set; }
 

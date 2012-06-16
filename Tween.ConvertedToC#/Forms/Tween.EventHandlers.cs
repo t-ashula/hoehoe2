@@ -1645,8 +1645,8 @@ namespace Hoehoe
             this.configs.DateTimeFormat = this.cfgCommon.DateTimeFormat;
             this.configs.LimitBalloon = this.cfgCommon.LimitBalloon;
             this.configs.EventNotifyEnabled = this.cfgCommon.EventNotifyEnabled;
-            this.settingDialog.EventNotifyFlag = this.cfgCommon.EventNotifyFlag;
-            this.settingDialog.IsMyEventNotifyFlag = this.cfgCommon.IsMyEventNotifyFlag;
+            this.configs.EventNotifyFlag = this.cfgCommon.EventNotifyFlag;
+            this.configs.IsMyEventNotifyFlag = this.cfgCommon.IsMyEventNotifyFlag;
             this.configs.ForceEventNotify = this.cfgCommon.ForceEventNotify;
             this.configs.FavEventUnread = this.cfgCommon.FavEventUnread;
             this.settingDialog.TranslateLanguage = this.cfgCommon.TranslateLanguage;

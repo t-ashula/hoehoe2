@@ -643,12 +643,12 @@ namespace Hoehoe
 
         private bool IsEventNotifyAsEventType(EventType type)
         {
-            return (this.configs.EventNotifyEnabled && Convert.ToBoolean(type & this.settingDialog.EventNotifyFlag)) || type == EventType.None;
+            return (this.configs.EventNotifyEnabled && Convert.ToBoolean(type & this.configs.EventNotifyFlag)) || type == EventType.None;
         }
 
         private bool IsMyEventNotityAsEventType(Twitter.FormattedEvent ev)
         {
-            return Convert.ToBoolean(ev.Eventtype & this.settingDialog.IsMyEventNotifyFlag) ? true : !ev.IsMe;
+            return Convert.ToBoolean(ev.Eventtype & this.configs.IsMyEventNotifyFlag) ? true : !ev.IsMe;
         }
 
         private void NotifyNewPosts(PostClass[] notifyPosts, string soundFile, int addCount, bool newMentions)
@@ -3425,8 +3425,8 @@ namespace Hoehoe
                 this.cfgCommon.RetweetNoConfirm = this.configs.RetweetNoConfirm;
                 this.cfgCommon.LimitBalloon = this.configs.LimitBalloon;
                 this.cfgCommon.EventNotifyEnabled = this.configs.EventNotifyEnabled;
-                this.cfgCommon.EventNotifyFlag = this.settingDialog.EventNotifyFlag;
-                this.cfgCommon.IsMyEventNotifyFlag = this.settingDialog.IsMyEventNotifyFlag;
+                this.cfgCommon.EventNotifyFlag = this.configs.EventNotifyFlag;
+                this.cfgCommon.IsMyEventNotifyFlag = this.configs.IsMyEventNotifyFlag;
                 this.cfgCommon.ForceEventNotify = this.configs.ForceEventNotify;
                 this.cfgCommon.FavEventUnread = this.configs.FavEventUnread;
                 this.cfgCommon.TranslateLanguage = this.settingDialog.TranslateLanguage;
@@ -5082,7 +5082,7 @@ namespace Hoehoe
                 }
             }
 
-            if (Convert.ToBoolean(ev.Eventtype & this.settingDialog.EventNotifyFlag) && this.IsMyEventNotityAsEventType(ev))
+            if (Convert.ToBoolean(ev.Eventtype & this.configs.EventNotifyFlag) && this.IsMyEventNotityAsEventType(ev))
             {
                 // サウンド再生
                 if (!this.isInitializing && this.configs.PlaySound)

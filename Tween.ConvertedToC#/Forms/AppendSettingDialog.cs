@@ -82,10 +82,6 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public EventType EventNotifyFlag { get; set; }
-
-        public EventType IsMyEventNotifyFlag { get; set; }
-
         public string TranslateLanguage
         {
             get
@@ -434,11 +430,11 @@ namespace Hoehoe
                 this.configurations.LimitBalloon = this.CheckBalloonLimit.Checked;
                 this.configurations.EventNotifyEnabled = this.CheckEventNotify.Checked;
                 {
-                    var m = this.EventNotifyFlag;
-                    var i = this.IsMyEventNotifyFlag;
+                    var m = this.configurations.EventNotifyFlag;
+                    var i = this.configurations.IsMyEventNotifyFlag;
                     this.GetEventNotifyFlag(ref m, ref i);
-                    this.EventNotifyFlag = m;
-                    this.IsMyEventNotifyFlag = i;
+                    this.configurations.EventNotifyFlag = m;
+                    this.configurations.IsMyEventNotifyFlag = i;
                 }
                 this.configurations.ForceEventNotify = this.CheckForceEventNotify.Checked;
                 this.configurations.FavEventUnread = this.CheckFavEventUnread.Checked;
@@ -818,7 +814,7 @@ namespace Hoehoe
             this.ConnectionTimeOut.Text = this.configurations.DefaultTimeOut.ToString();
             this.CheckRetweetNoConfirm.Checked = this.configurations.RetweetNoConfirm;
             this.CheckBalloonLimit.Checked = this.configurations.LimitBalloon;
-            this.ApplyEventNotifyFlag(this.configurations.EventNotifyEnabled, this.EventNotifyFlag, this.IsMyEventNotifyFlag);
+            this.ApplyEventNotifyFlag(this.configurations.EventNotifyEnabled, this.configurations.EventNotifyFlag, this.configurations.IsMyEventNotifyFlag);
             this.CheckForceEventNotify.Checked = this.configurations.ForceEventNotify;
             this.CheckFavEventUnread.Checked = this.configurations.FavEventUnread;
             this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this.myTranslateLanguage);
