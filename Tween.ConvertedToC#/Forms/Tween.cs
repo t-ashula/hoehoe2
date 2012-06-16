@@ -89,9 +89,8 @@ namespace Hoehoe
 
         private SpaceKeyCanceler spaceKeyCanceler;
 
-        // 設定ファイル関連
+        /// 設定関連
         private SettingLocal cfgLocal;
-
         private SettingCommon cfgCommon;
         private bool modifySettingLocal;
         private bool modifySettingCommon;
@@ -289,7 +288,6 @@ namespace Hoehoe
             this.thumbnail = new Thumbnail(this);
             MyCommon.TwitterApiInfo.Changed += this.TwitterApiInfo_Changed;
             Microsoft.Win32.SystemEvents.PowerModeChanged += this.SystemEvents_PowerModeChanged;
-
         }
 
         #endregion constructor

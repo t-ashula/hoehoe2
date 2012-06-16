@@ -111,6 +111,7 @@
     <Compile Include="ApiInfoBase.cs" />
     <Compile Include="ApiInformation.cs" />
     <Compile Include="ApiInformationChangedEventArgs.cs" />
+    <Compile Include="Configs.cs" />
     <Compile Include="CryptoUtils.cs" />
     <Compile Include="DataModels\D.cs" />
     <Compile Include="DataModels\FourSquare\FourSquareData.cs" />
