@@ -1616,7 +1616,7 @@ namespace Hoehoe
 
             this.settingDialog.BrowserPath = this.cfgLocal.BrowserPath;
             this.configs.PostAndGet = this.cfgCommon.PostAndGet;
-            this.settingDialog.UseRecommendStatus = this.cfgLocal.UseRecommendStatus;
+            this.configs.UseRecommendStatus = this.cfgLocal.UseRecommendStatus;
             this.settingDialog.DispUsername = this.cfgCommon.DispUsername;
             this.settingDialog.CloseToExit = this.cfgCommon.CloseToExit;
             this.settingDialog.MinimizeToTray = this.cfgCommon.MinimizeToTray;
@@ -1681,7 +1681,7 @@ namespace Hoehoe
             this.IdeographicSpaceToSpaceToolStripMenuItem.Checked = this.cfgCommon.WideSpaceConvert;
             this.ToolStripFocusLockMenuItem.Checked = this.cfgCommon.FocusLockToStatusText;
 
-            this.settingDialog.RecommendStatusText = " [TWNv" + Regex.Replace(MyCommon.FileVersion.Replace(".", string.Empty), "^0*", string.Empty) + "]";
+            this.configs.RecommendStatusText = " [HH2v" + Regex.Replace(MyCommon.FileVersion.Replace(".", string.Empty), "^0*", string.Empty) + "]";
 
             // 書式指定文字列エラーチェック
             try

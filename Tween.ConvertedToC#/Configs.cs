@@ -101,5 +101,8 @@ namespace Hoehoe
         public int ListCountApi { get; set; }
 
         public bool PostAndGet { get; set; }
+
+        public bool UseRecommendStatus { get; set; }
+        public string RecommendStatusText { get; set; }
     }
 }

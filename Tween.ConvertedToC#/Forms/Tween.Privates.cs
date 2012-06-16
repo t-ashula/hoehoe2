@@ -1453,9 +1453,9 @@ namespace Hoehoe
                 || (isAuto && !this.IsKeyDown(Keys.Shift) && !this.configs.PostShiftEnter)
                 || (!isAuto && isAddFooter))
             {
-                if (this.settingDialog.UseRecommendStatus)
+                if (this.configs.UseRecommendStatus)
                 {
-                    len -= this.settingDialog.RecommendStatusText.Length;
+                    len -= this.configs.RecommendStatusText.Length;
                 }
                 else if (this.configs.Status.Length > 0)
                 {
@@ -3538,7 +3538,7 @@ namespace Hoehoe
                 this.cfgLocal.ColorInputFont = this.clrInputForecolor;
                 this.cfgLocal.FontInputFont = this.fntInputFont;
                 this.cfgLocal.BrowserPath = this.settingDialog.BrowserPath;
-                this.cfgLocal.UseRecommendStatus = this.settingDialog.UseRecommendStatus;
+                this.cfgLocal.UseRecommendStatus = this.configs.UseRecommendStatus;
                 this.cfgLocal.ProxyType = this.settingDialog.SelectedProxyType;
                 this.cfgLocal.ProxyAddress = this.settingDialog.ProxyAddress;
                 this.cfgLocal.ProxyPort = this.settingDialog.ProxyPort;
@@ -6777,10 +6777,10 @@ namespace Hoehoe
 
             if (!isRemoveFooter)
             {
-                if (this.settingDialog.UseRecommendStatus)
+                if (this.configs.UseRecommendStatus)
                 {
                     // 推奨ステータスを使用する
-                    footer += this.settingDialog.RecommendStatusText;
+                    footer += this.configs.RecommendStatusText;
                 }
                 else
                 {
