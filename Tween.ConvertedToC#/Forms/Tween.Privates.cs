@@ -3398,7 +3398,7 @@ namespace Hoehoe
                 this.cfgCommon.PlaySound = this.configs.PlaySound;
                 this.cfgCommon.OneWayLove = this.configs.OneWayLove;
                 this.cfgCommon.NameBalloon = this.configs.NameBalloon;
-                this.cfgCommon.PostCtrlEnter = this.settingDialog.PostCtrlEnter;
+                this.cfgCommon.PostCtrlEnter = this.configs.PostCtrlEnter;
                 this.cfgCommon.PostShiftEnter = this.settingDialog.PostShiftEnter;
                 this.cfgCommon.CountApi = this.settingDialog.CountApi;
                 this.cfgCommon.CountApiReply = this.settingDialog.CountApiReply;
@@ -6897,7 +6897,7 @@ namespace Hoehoe
 
             bool isCutOff = false;
             bool isRemoveFooter = this.IsKeyDown(Keys.Shift);
-            if (this.StatusText.Multiline && !this.settingDialog.PostCtrlEnter)
+            if (this.StatusText.Multiline && !this.configs.PostCtrlEnter)
             {
                 // 複数行でEnter投稿の場合、Ctrlも押されていたらフッタ付加しない
                 isRemoveFooter = this.IsKeyDown(Keys.Control);

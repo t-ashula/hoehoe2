@@ -1600,7 +1600,7 @@ namespace Hoehoe
             this.configs.ColorInputFont = this.clrInputForecolor;
             this.configs.FontInputFont = this.fntInputFont;
             this.configs.NameBalloon = this.cfgCommon.NameBalloon;
-            this.settingDialog.PostCtrlEnter = this.cfgCommon.PostCtrlEnter;
+            this.configs.PostCtrlEnter = this.cfgCommon.PostCtrlEnter;
             this.settingDialog.PostShiftEnter = this.cfgCommon.PostShiftEnter;
             this.settingDialog.CountApi = this.cfgCommon.CountApi;
             this.settingDialog.CountApiReply = this.cfgCommon.CountApiReply;

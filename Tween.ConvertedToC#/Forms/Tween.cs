@@ -1174,7 +1174,7 @@ namespace Hoehoe
                     bool doPost = false;
 
                     // Ctrl+Enter投稿時
-                    if (this.settingDialog.PostCtrlEnter)
+                    if (this.configs.PostCtrlEnter)
                     {
                         if (this.StatusText.Multiline)
                         {

@@ -87,5 +87,7 @@ namespace Hoehoe
         public Color ColorDetailBackcolor { get; set; }
 
         public NameBalloonEnum NameBalloon { get; set; }
+
+        public bool PostCtrlEnter { get; set; }
     }
 }
