@@ -3409,7 +3409,7 @@ namespace Hoehoe
                 this.cfgCommon.DispLatestPost = this.configs.DispLatestPost;
                 this.cfgCommon.SortOrderLock = this.settingDialog.SortOrderLock;
                 this.cfgCommon.TinyUrlResolve = this.configs.TinyUrlResolve;
-                this.cfgCommon.ShortUrlForceResolve = this.settingDialog.ShortUrlForceResolve;
+                this.cfgCommon.ShortUrlForceResolve = this.configs.ShortUrlForceResolve;
                 this.cfgCommon.PeriodAdjust = this.settingDialog.PeriodAdjust;
                 this.cfgCommon.StartupVersion = this.settingDialog.StartupVersion;
                 this.cfgCommon.StartupFollowers = this.settingDialog.StartupFollowers;
@@ -5656,7 +5656,7 @@ namespace Hoehoe
                 this.tw.ReadOwnPost = this.settingDialog.ReadOwnPost;
                 this.tw.SetUseSsl(this.settingDialog.UseSsl);
                 ShortUrl.IsResolve = this.configs.TinyUrlResolve;
-                ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
+                ShortUrl.IsForceResolve = this.configs.ShortUrlForceResolve;
                 ShortUrl.SetBitlyId(this.settingDialog.BitlyUser);
                 ShortUrl.SetBitlyKey(this.settingDialog.BitlyPwd);
                 HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);

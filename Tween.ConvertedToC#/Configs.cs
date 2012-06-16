@@ -113,5 +113,6 @@ namespace Hoehoe
         public string BrowserPath { get; set; }
 
         public bool TinyUrlResolve { get; set; }
+        public bool ShortUrlForceResolve { get; set; }
     }
 }

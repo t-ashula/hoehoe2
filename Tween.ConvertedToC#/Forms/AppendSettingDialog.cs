@@ -94,7 +94,7 @@ namespace Hoehoe
 
         
 
-        public bool ShortUrlForceResolve { get; set; }
+        
 
         public bool SortOrderLock { get; set; }
 
@@ -512,9 +512,9 @@ namespace Hoehoe
 
                 this.SortOrderLock = this.CheckSortOrderLock.Checked;
                 this.configurations.TinyUrlResolve = this.CheckTinyURL.Checked;
-                this.ShortUrlForceResolve = this.CheckForceResolve.Checked;
+                this.configurations.ShortUrlForceResolve = this.CheckForceResolve.Checked;
                 ShortUrl.IsResolve = this.configurations.TinyUrlResolve;
-                ShortUrl.IsForceResolve = this.ShortUrlForceResolve;
+                ShortUrl.IsForceResolve = this.configurations.ShortUrlForceResolve;
                 if (this.RadioProxyNone.Checked)
                 {
                     this.SelectedProxyType = HttpConnection.ProxyType.None;
@@ -882,7 +882,7 @@ namespace Hoehoe
 
             this.CheckSortOrderLock.Checked = this.SortOrderLock;
             this.CheckTinyURL.Checked = this.configurations.TinyUrlResolve;
-            this.CheckForceResolve.Checked = this.ShortUrlForceResolve;
+            this.CheckForceResolve.Checked = this.configurations.ShortUrlForceResolve;
             switch (this.SelectedProxyType)
             {
                 case HttpConnection.ProxyType.None:

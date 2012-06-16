@@ -1623,7 +1623,7 @@ namespace Hoehoe
             this.configs.DispLatestPost = this.cfgCommon.DispLatestPost;
             this.settingDialog.SortOrderLock = this.cfgCommon.SortOrderLock;
             this.configs.TinyUrlResolve = this.cfgCommon.TinyUrlResolve;
-            this.settingDialog.ShortUrlForceResolve = this.cfgCommon.ShortUrlForceResolve;
+            this.configs.ShortUrlForceResolve = this.cfgCommon.ShortUrlForceResolve;
             this.settingDialog.SelectedProxyType = this.cfgLocal.ProxyType;
             this.settingDialog.ProxyAddress = this.cfgLocal.ProxyAddress;
             this.settingDialog.ProxyPort = this.cfgLocal.ProxyPort;
@@ -1836,7 +1836,7 @@ namespace Hoehoe
             this.tw.ReadOwnPost = this.settingDialog.ReadOwnPost;
             this.tw.SetUseSsl(this.settingDialog.UseSsl);
             ShortUrl.IsResolve = this.configs.TinyUrlResolve;
-            ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
+            ShortUrl.IsForceResolve = this.configs.ShortUrlForceResolve;
             ShortUrl.SetBitlyId(this.settingDialog.BitlyUser);
             ShortUrl.SetBitlyKey(this.settingDialog.BitlyPwd);
             HttpTwitter.SetTwitterUrl(this.cfgCommon.TwitterUrl);
@@ -2014,7 +2014,7 @@ namespace Hoehoe
             }
 
             this.tw.SetTinyUrlResolve(this.configs.TinyUrlResolve);
-            ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
+            ShortUrl.IsForceResolve = this.configs.ShortUrlForceResolve;
             
             this.tw.DetailIcon = this.iconDict;
             this.StatusLabel.Text = Hoehoe.Properties.Resources.Form1_LoadText1;  // 画面右下の状態表示を変更
