@@ -25,8 +25,8 @@
 // Boston, MA 02110-1301, USA.
 
 // コンパイル後コマンド
-// "c:\Program Files\Microsoft.NET\SDK\v2.0\Bin\sgen.exe" /f /a:"$(TargetPath)"
-// "C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\Bin\sgen.exe" /f /a:"$(TargetPath)"
+// "c:\Program Files\Microsoft.NET\SDK\v2.0\Bin\sgen.exe" /h2 /a:"$(TargetPath)"
+// "C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\Bin\sgen.exe" /h2 /a:"$(TargetPath)"
 
 namespace Hoehoe
 {
@@ -53,17 +53,6 @@ namespace Hoehoe
         /// TODO: hoehoe webpage
         /// </summary>
         private const string ApplicationShortcutKeyHelpWebPageUrl = "http://sourceforge.jp/projects/tween/wiki/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E3%82%AD%E3%83%BC";
-
-        private const string DetailHtmlFormatMono1 = "<html><head><style type=\"text/css\"><!-- pre {font-family: \"";
-        private const string DetailHtmlFormat2 = "\", sans-serif; font-size: ";
-        private const string DetailHtmlFormat3 = "pt; word-wrap: break-word; color:rgb(";
-        private const string DetailHtmlFormat4 = ");} a:link, a:visited, a:active, a:hover {color:rgb(";
-        private const string DetailHtmlFormat5 = "); } --></style></head><body style=\"margin:0px; background-color:rgb(";
-        private const string DetailHtmlFormatMono6 = ");\"><pre>";
-        private const string DetailHtmlFormatMono7 = "</pre></body></html>";
-        private const string DetailHtmlFormat1 = "<html><head><style type=\"text/css\"><!-- p {font-family: \"";
-        private const string DetailHtmlFormat6 = ");\"><p>";
-        private const string DetailHtmlFormat7 = "</p></body></html>";
 
         private readonly string[] TwitterSearchLangs = { "ja", "en", "ar", "da", "nl", "fa", "fi", "fr", "de", "hu", "is", "it", "no", "pl", "pt", "ru", "es", "sv", "th" };
         private static int accountCheckErrorCount;

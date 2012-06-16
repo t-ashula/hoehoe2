@@ -2333,7 +2333,7 @@ namespace Hoehoe.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 消費API数 :  {0} / h    (最大 :  {1} / h).
+        ///   Looks up a localized string similar to 消費API数 :  {0} / h1    (最大 :  {1} / h1).
         /// </summary>
         internal static string SettingAPIUse1 {
             get {
@@ -2342,7 +2342,7 @@ namespace Hoehoe.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UserStream有効時の消費API数 :  {0} / h.
+        ///   Looks up a localized string similar to UserStream有効時の消費API数 :  {0} / h1.
         /// </summary>
         internal static string SettingAPIUse2 {
             get {

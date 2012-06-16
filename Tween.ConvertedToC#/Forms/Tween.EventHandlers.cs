@@ -2153,22 +2153,46 @@ namespace Hoehoe
 
         private string GetDetailHtmlFormatHeader(bool useMonospace)
         {
-            var dhheader = string.Format("{0}{1}{2}{3}{4},{5},{6}{7}{8},{9},{10}{11}{12},{13},{14}",
-                this.fntDetail.Name, DetailHtmlFormat2,
-                this.fntDetail.Size, DetailHtmlFormat3,
-                this.clrDetail.R, this.clrDetail.G, this.clrDetail.B, DetailHtmlFormat4,
-                this.clrDetailLink.R, this.clrDetailLink.G, this.clrDetailLink.B, DetailHtmlFormat5,
-                this.clrDetailBackcolor.R, this.clrDetailBackcolor.G, this.clrDetailBackcolor.B);
-            return useMonospace ?
-                string.Format("{0}{1}{2}", DetailHtmlFormatMono1, dhheader, DetailHtmlFormatMono6) :
-                string.Format("{0}{1}{2}", DetailHtmlFormat1, dhheader, DetailHtmlFormat6);
-        }
-        
-        private string GetDetailHtmlFormatFooter(bool useMonospace)
-        {
-            return useMonospace ? DetailHtmlFormatMono7 : DetailHtmlFormat7;
+            var ele = GetMonoEle(useMonospace);
+            return
+                "<html><head><style type=\"text/css\">"
+                + ele + " {"
+                + GetCssSettingString("word-wrap", "break-word")
+                + GetCssSettingString("font-family", "\"" + this.fntDetail.Name + "\", sans-serif;")
+                + GetCssSettingString("font-size", string.Format("{0}pt", this.fntDetail.Size))
+                + GetCssSettingString("color", GetCssRgbString(this.clrDetail))
+                + " }"
+                + " a:link, a:visited, a:active, a:hover {"
+                + GetCssSettingString("color", GetCssRgbString(this.clrDetailLink))
+                + " }"
+                + " body {"
+                + GetCssSettingString("margin", "0px")
+                + GetCssSettingString("background-color", GetCssRgbString(this.clrDetailBackcolor))
+                + " }"
+                + "</style></head><body>"
+                + "<" + ele + ">";
         }
 
+        private string GetDetailHtmlFormatFooter(bool useMonospace)
+        {
+            return string.Format("</{0}></body></html>", GetMonoEle(useMonospace));
+        }
+
+        private string GetMonoEle(bool useMonospace)
+        {
+            return useMonospace ? "pre" : "p";
+        }
+        
+        private string GetCssRgbString(Color color)
+        {
+            return string.Format("rgb({0},{1},{2})", color.R, color.G, color.B);
+        }
+
+        private string GetCssSettingString(string p, string v)
+        {
+            return string.Format("{0}: {1};", p, v);
+        }
+        
         #region callback
 
         private void GetApiInfo_Dowork(object sender, DoWorkEventArgs e)
