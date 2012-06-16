@@ -47,5 +47,6 @@ namespace Hoehoe
         public bool IsListStatusesIncludeRts { get; set; }
         public List<UserAccount> UserAccounts { get; set; }
         public bool TabMouseLock { get; set; }
+        public bool IsRemoveSameEvent { get; set; }
     }
 }

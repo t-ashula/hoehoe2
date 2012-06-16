@@ -1724,7 +1724,7 @@ namespace Hoehoe
             this.configs.FoursquarePreviewZoom = this.cfgCommon.FoursquarePreviewZoom;
             this.configs.IsListStatusesIncludeRts = this.cfgCommon.IsListsIncludeRts;
             this.configs.TabMouseLock = this.cfgCommon.TabMouseLock;
-            this.settingDialog.IsRemoveSameEvent = this.cfgCommon.IsRemoveSameEvent;
+            this.configs.IsRemoveSameEvent = this.cfgCommon.IsRemoveSameEvent;
             this.settingDialog.IsNotifyUseGrowl = this.cfgCommon.IsUseNotifyGrowl;
 
             // ハッシュタグ関連

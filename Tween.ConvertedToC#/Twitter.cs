@@ -4585,7 +4585,7 @@ namespace Hoehoe
                 case "unfavorite":
                     evt.Target = "@" + eventData.TargetObject.User.ScreenName + ":" + HttpUtility.HtmlDecode(eventData.TargetObject.Text);
                     evt.Id = eventData.TargetObject.Id;
-                    if (AppendSettingDialog.Instance.IsRemoveSameEvent)
+                    if (Configs.Instance.IsRemoveSameEvent)
                     {
                         if (this.StoredEvent.Any((FormattedEvent ev) => { return ev.Username == evt.Username && ev.Eventtype == evt.Eventtype && ev.Target == evt.Target; }))
                         {

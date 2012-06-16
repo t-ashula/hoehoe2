@@ -3491,7 +3491,7 @@ namespace Hoehoe
                 this.cfgCommon.FoursquarePreviewZoom = this.configs.FoursquarePreviewZoom;
                 this.cfgCommon.IsListsIncludeRts = this.configs.IsListStatusesIncludeRts;
                 this.cfgCommon.TabMouseLock = this.configs.TabMouseLock;
-                this.cfgCommon.IsRemoveSameEvent = this.settingDialog.IsRemoveSameEvent;
+                this.cfgCommon.IsRemoveSameEvent = this.configs.IsRemoveSameEvent;
                 this.cfgCommon.IsUseNotifyGrowl = this.settingDialog.IsNotifyUseGrowl;
 
                 this.cfgCommon.Save();

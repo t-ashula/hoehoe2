@@ -94,7 +94,7 @@ namespace Hoehoe
 
         
 
-        public bool IsRemoveSameEvent { get; set; }
+        
 
         public bool IsNotifyUseGrowl { get; set; }
 
@@ -778,7 +778,7 @@ namespace Hoehoe
                 this.configurations.FoursquarePreviewZoom = Convert.ToInt32(this.FoursquarePreviewZoomTextBox.Text);
                 this.configurations.IsListStatusesIncludeRts = this.IsListsIncludeRtsCheckBox.Checked;
                 this.configurations.TabMouseLock = this.TabMouseLockCheck.Checked;
-                this.IsRemoveSameEvent = this.IsRemoveSameFavEventCheckBox.Checked;
+                this.configurations.IsRemoveSameEvent = this.IsRemoveSameFavEventCheckBox.Checked;
                 this.IsNotifyUseGrowl = this.IsNotifyUseGrowlCheckBox.Checked;
             }
             catch (Exception)
@@ -1158,7 +1158,7 @@ namespace Hoehoe
             this.FoursquarePreviewZoomTextBox.Text = this.configurations.FoursquarePreviewZoom.ToString();
             this.IsListsIncludeRtsCheckBox.Checked = this.configurations.IsListStatusesIncludeRts;
             this.TabMouseLockCheck.Checked = this.configurations.TabMouseLock;
-            this.IsRemoveSameFavEventCheckBox.Checked = this.IsRemoveSameEvent;
+            this.IsRemoveSameFavEventCheckBox.Checked = this.configurations.IsRemoveSameEvent;
             this.IsNotifyUseGrowlCheckBox.Checked = this.IsNotifyUseGrowl;
 
             this.IsNotifyUseGrowlCheckBox.Enabled = GrowlHelper.IsDllExists;
