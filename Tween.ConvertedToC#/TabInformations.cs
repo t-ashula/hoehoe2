@@ -427,7 +427,7 @@ namespace Hoehoe
             }
 
             // 一見未読なさそうだが、未読カウントはあるので探索
-            if (!(tb.UnreadManage && AppendSettingDialog.Instance.UnreadManage))
+            if (!(tb.UnreadManage && Configs.Instance.UnreadManage))
             {
                 return -1;
             }

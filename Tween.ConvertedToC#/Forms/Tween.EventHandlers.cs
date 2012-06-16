@@ -1567,7 +1567,7 @@ namespace Hoehoe
             this.configs.Status = this.cfgLocal.StatusText;
 
             // 未読管理。Trueなら未読管理する
-            this.settingDialog.UnreadManage = this.cfgCommon.UnreadManage;
+            this.configs.UnreadManage = this.cfgCommon.UnreadManage;
 
             // サウンド再生（タブ別設定より優先）
             this.settingDialog.PlaySound = this.cfgCommon.PlaySound;
@@ -1917,7 +1917,7 @@ namespace Hoehoe
             this.StatusText.ForeColor = this.clrInputForecolor;
 
             // 全新着通知のチェック状態により、Reply＆DMの新着通知有効無効切り替え（タブ別設定にするため削除予定）
-            if (this.settingDialog.UnreadManage == false)
+            if (!this.configs.UnreadManage)
             {
                 this.ReadedStripMenuItem.Enabled = false;
                 this.UnreadStripMenuItem.Enabled = false;
@@ -2211,8 +2211,8 @@ namespace Hoehoe
             //// Tween.My.MyProject.Application.InitCulture(); // TODO: Need this here?
             string ret = string.Empty;
             GetWorkerResult rslt = new GetWorkerResult();
-            bool read = !this.settingDialog.UnreadManage;
-            if (this.isInitializing && this.settingDialog.UnreadManage)
+            bool read = !this.configs.UnreadManage;
+            if (this.isInitializing && this.configs.UnreadManage)
             {
                 read = this.configs.Readed;
             }
@@ -3553,7 +3553,7 @@ namespace Hoehoe
 
             this.PushSelectPostChain();
 
-            if (this.settingDialog.UnreadManage)
+            if (this.configs.UnreadManage)
             {
                 this.statuses.SetReadAllTab(true, this.curTab.Text, this.curItemIndex);
             }

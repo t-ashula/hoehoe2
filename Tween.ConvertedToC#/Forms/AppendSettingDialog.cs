@@ -84,8 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public bool UnreadManage { get; set; }
-
         public bool PlaySound { get; set; }
 
         public bool OneWayLove { get; set; }
@@ -494,7 +492,7 @@ namespace Hoehoe
 
                 this.configurations.Status = this.StatusText.Text;
                 this.PlaySound = this.PlaySnd.Checked;
-                this.UnreadManage = this.UReadMng.Checked;
+                this.configurations.UnreadManage = this.UReadMng.Checked;
                 this.OneWayLove = this.OneWayLv.Checked;
                 this.FontUnread = this.lblUnread.Font;                // 未使用
                 this.ColorUnread = this.lblUnread.ForeColor;
@@ -872,8 +870,8 @@ namespace Hoehoe
             }
 
             this.StatusText.Text = this.configurations.Status;
-            this.UReadMng.Checked = this.UnreadManage;
-            this.StartupReaded.Enabled = this.UnreadManage != false;
+            this.UReadMng.Checked = this.configurations.UnreadManage;
+            this.StartupReaded.Enabled = this.configurations.UnreadManage != false;
             this.PlaySnd.Checked = this.PlaySound;
             this.OneWayLv.Checked = this.OneWayLove;
 

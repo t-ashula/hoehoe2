@@ -823,7 +823,7 @@ namespace Hoehoe
         {
             // Read_:True=既読 False=未読
             // 未読管理していなかったら既読として扱う
-            if (!this.statuses.Tabs[this.curTab.Text].UnreadManage || !this.settingDialog.UnreadManage)
+            if (!this.statuses.Tabs[this.curTab.Text].UnreadManage || !this.configs.UnreadManage)
             {
                 read = true;
             }
@@ -1529,7 +1529,7 @@ namespace Hoehoe
             }
 
             bool read = post.IsRead;
-            if (!this.statuses.Tabs[tabPage.Text].UnreadManage || !this.settingDialog.UnreadManage)
+            if (!this.statuses.Tabs[tabPage.Text].UnreadManage || !this.configs.UnreadManage)
             {
                 // 未読管理していなかったら既読として扱う
                 read = true;
@@ -3394,7 +3394,7 @@ namespace Hoehoe
                 this.cfgCommon.UserTimelinePeriod = this.configs.UserTimelinePeriodInt;
                 this.cfgCommon.Read = this.configs.Readed;
                 this.cfgCommon.IconSize = this.configs.IconSz;
-                this.cfgCommon.UnreadManage = this.settingDialog.UnreadManage;
+                this.cfgCommon.UnreadManage = this.configs.UnreadManage;
                 this.cfgCommon.PlaySound = this.settingDialog.PlaySound;
                 this.cfgCommon.OneWayLove = this.settingDialog.OneWayLove;
                 this.cfgCommon.NameBalloon = this.settingDialog.NameBalloon;
@@ -5688,7 +5688,7 @@ namespace Hoehoe
 
                 try
                 {
-                    if (!this.settingDialog.UnreadManage)
+                    if (!this.configs.UnreadManage)
                     {
                         this.ReadedStripMenuItem.Enabled = false;
                         this.UnreadStripMenuItem.Enabled = false;
@@ -5783,7 +5783,7 @@ namespace Hoehoe
 
                 try
                 {
-                    this.statuses.SetUnreadManage(this.settingDialog.UnreadManage);
+                    this.statuses.SetUnreadManage(this.configs.UnreadManage);
                 }
                 catch (Exception ex)
                 {
@@ -7033,7 +7033,7 @@ namespace Hoehoe
         private void ChangeSelectetdTweetReadState(bool read)
         {
             this.curList.BeginUpdate();
-            if (this.settingDialog.UnreadManage)
+            if (this.configs.UnreadManage)
             {
                 foreach (int idx in this.curList.SelectedIndices)
                 {

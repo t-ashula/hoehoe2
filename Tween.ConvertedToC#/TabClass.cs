@@ -173,7 +173,7 @@ namespace Hoehoe
         [System.Xml.Serialization.XmlIgnore]
         public int UnreadCount
         {
-            get { return this.UnreadManage && AppendSettingDialog.Instance.UnreadManage ? this.unreadCount : 0; }
+            get { return this.UnreadManage && Configs.Instance.UnreadManage ? this.unreadCount : 0; }
             set { this.unreadCount = value < 0 ? 0 : value; }
         }
 
