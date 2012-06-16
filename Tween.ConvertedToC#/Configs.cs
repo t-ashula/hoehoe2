@@ -53,5 +53,6 @@ namespace Hoehoe
         public Configuration TwitterConfiguration { get; set; }
         public int UserstreamPeriodInt { get; set; }
         public bool UserstreamStartup { get; set; }
+        public int TimelinePeriodInt { get; set; }
     }
 }

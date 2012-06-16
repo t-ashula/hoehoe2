@@ -104,7 +104,7 @@ namespace Hoehoe
 
 
 
-        public int TimelinePeriodInt { get; set; }
+        
 
         public int ReplyPeriodInt { get; set; }
 
@@ -460,9 +460,9 @@ namespace Hoehoe
                     isIntervalChanged = true;
                 }
 
-                if (this.TimelinePeriodInt != Convert.ToInt32(this.TimelinePeriod.Text))
+                if (this.configurations.TimelinePeriodInt != Convert.ToInt32(this.TimelinePeriod.Text))
                 {
-                    this.TimelinePeriodInt = Convert.ToInt32(this.TimelinePeriod.Text);
+                    this.configurations.TimelinePeriodInt = Convert.ToInt32(this.TimelinePeriod.Text);
                     arg.Timeline = true;
                     isIntervalChanged = true;
                 }
@@ -882,7 +882,7 @@ namespace Hoehoe
 
             this.StartupUserstreamCheck.Checked = this.configurations.UserstreamStartup;
             this.UserstreamPeriod.Text = this.configurations.UserstreamPeriodInt.ToString();
-            this.TimelinePeriod.Text = this.TimelinePeriodInt.ToString();
+            this.TimelinePeriod.Text = this.configurations.TimelinePeriodInt.ToString();
             this.ReplyPeriod.Text = this.ReplyPeriodInt.ToString();
             this.DMPeriod.Text = this.DMPeriodInt.ToString();
             this.PubSearchPeriod.Text = this.PubSearchPeriodInt.ToString();

@@ -1514,7 +1514,7 @@ namespace Hoehoe
             this.tw.Initialize(this.cfgCommon.Token, this.cfgCommon.TokenSecret, this.cfgCommon.UserName, this.cfgCommon.UserId);
 
             this.configs.UserAccounts = this.cfgCommon.UserAccounts;
-            this.settingDialog.TimelinePeriodInt = this.cfgCommon.TimelinePeriod;
+            this.configs.TimelinePeriodInt = this.cfgCommon.TimelinePeriod;
             this.settingDialog.ReplyPeriodInt = this.cfgCommon.ReplyPeriod;
             this.settingDialog.DMPeriodInt = this.cfgCommon.DMPeriod;
             this.settingDialog.PubSearchPeriodInt = this.cfgCommon.PubSearchPeriod;
@@ -1524,9 +1524,9 @@ namespace Hoehoe
             // 不正値チェック
             if (!MyCommon.NoLimit)
             {
-                if (this.settingDialog.TimelinePeriodInt < 15 && this.settingDialog.TimelinePeriodInt > 0)
+                if (this.configs.TimelinePeriodInt < 15 && this.configs.TimelinePeriodInt > 0)
                 {
-                    this.settingDialog.TimelinePeriodInt = 15;
+                    this.configs.TimelinePeriodInt = 15;
                 }
 
                 if (this.settingDialog.ReplyPeriodInt < 15 && this.settingDialog.ReplyPeriodInt > 0)

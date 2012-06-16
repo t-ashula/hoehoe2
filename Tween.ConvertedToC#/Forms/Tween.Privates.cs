@@ -3386,7 +3386,7 @@ namespace Hoehoe
                 this.cfgCommon.UserAccounts = this.configs.UserAccounts;
                 this.cfgCommon.UserstreamStartup = this.configs.UserstreamStartup;
                 this.cfgCommon.UserstreamPeriod = this.configs.UserstreamPeriodInt;
-                this.cfgCommon.TimelinePeriod = this.settingDialog.TimelinePeriodInt;
+                this.cfgCommon.TimelinePeriod = this.configs.TimelinePeriodInt;
                 this.cfgCommon.ReplyPeriod = this.settingDialog.ReplyPeriodInt;
                 this.cfgCommon.DMPeriod = this.settingDialog.DMPeriodInt;
                 this.cfgCommon.PubSearchPeriod = this.settingDialog.PubSearchPeriodInt;
@@ -4125,13 +4125,13 @@ namespace Hoehoe
                 this.unreadAtCounter = mentionTab.UnreadCount + dmessageTab.UnreadCount;
                 StringBuilder slbl = new StringBuilder(256);
                 slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, this.unreadAtCounter, this.postTimestamps.Count, this.favTimestamps.Count, this.timeLineCount);
-                if (this.settingDialog.TimelinePeriodInt == 0)
+                if (this.configs.TimelinePeriodInt == 0)
                 {
                     slbl.Append(Hoehoe.Properties.Resources.SetStatusLabelText2);
                 }
                 else
                 {
-                    slbl.Append(string.Format("{0}{1}", this.settingDialog.TimelinePeriodInt, Hoehoe.Properties.Resources.SetStatusLabelText3));
+                    slbl.Append(string.Format("{0}{1}", this.configs.TimelinePeriodInt, Hoehoe.Properties.Resources.SetStatusLabelText3));
                 }
 
                 return slbl.ToString();
@@ -7564,7 +7564,7 @@ namespace Hoehoe
             this.DecrementTimer(ref this.timerRefreshFollowers);
 
             // 'タイマー初期化
-            this.resetTimers.Timeline = this.ResetWorkerTimer(ref this.timerHomeCounter, this.settingDialog.TimelinePeriodInt, WorkerType.Timeline, this.resetTimers.Timeline);
+            this.resetTimers.Timeline = this.ResetWorkerTimer(ref this.timerHomeCounter, this.configs.TimelinePeriodInt, WorkerType.Timeline, this.resetTimers.Timeline);
             this.resetTimers.Reply = this.ResetWorkerTimer(ref this.timerMentionCounter, this.settingDialog.ReplyPeriodInt, WorkerType.Reply, this.resetTimers.Reply);
             this.resetTimers.DirectMessage = this.ResetWorkerTimer(ref this.timerDmCounter, this.settingDialog.DMPeriodInt, WorkerType.DirectMessegeRcv, this.resetTimers.DirectMessage);
             this.resetTimers.PublicSearch = this.ResetWorkerTimer(ref this.timerPubSearchCounter, this.settingDialog.PubSearchPeriodInt, WorkerType.PublicSearch, this.resetTimers.PublicSearch);
