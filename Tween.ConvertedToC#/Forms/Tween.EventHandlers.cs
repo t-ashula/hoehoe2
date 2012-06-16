@@ -2150,40 +2150,6 @@ namespace Hoehoe
                 }
             }
         }
-
-        private string GetDetailHtmlFormatHeader(bool useMonospace)
-        {
-            var ele = GetMonoEle(useMonospace);
-            var ss = new Dictionary<string, Dictionary<string, string>>(){ 
-                { "a:link, a:visited, a:active, a:hover", new Dictionary<string, string>(){ 
-                    { "color", this.clrDetailLink.AsCssRgb() } } 
-                },
-                { "body", new Dictionary<string, string>(){ 
-                    { "margin", "0px" }, 
-                    { "background-color", this.clrDetailBackcolor.AsCssRgb() } } 
-                },
-                { ele, new Dictionary<string, string>(){
-                    { "word-wrap", "break-word" },
-                    { "font-family", string.Format("\"{0}\", sans-serif;", this.fntDetail.Name) },
-                    { "font-size", string.Format("{0}pt", this.fntDetail.Size) },
-                    { "color", this.clrDetail.AsCssRgb() } } 
-                }
-            };
-
-            return "<html><head><style type=\"text/css\">"
-                + string.Join("", ss.Select(sel => string.Format("{0}{{{1}}}", sel.Key, string.Join("", sel.Value.Select(ps => string.Format("{0}: {1};", ps.Key, ps.Value))))))
-                + "</style></head><body>" + "<" + ele + ">";
-        }
-
-        private string GetDetailHtmlFormatFooter(bool useMonospace)
-        {
-            return string.Format("</{0}></body></html>", GetMonoEle(useMonospace));
-        }
-
-        private string GetMonoEle(bool useMonospace)
-        {
-            return useMonospace ? "pre" : "p";
-        }
                 
         #region callback
 
@@ -3804,13 +3770,5 @@ namespace Hoehoe
         #endregion userstream
 
         #endregion event handler
-    }
-
-    public static class Extensions
-    {
-        public static string AsCssRgb(this Color c)
-        {
-            return string.Format("rgb({0},{1},{2})", c.R, c.G, c.B);
-        }
     }
 }
