@@ -131,7 +131,7 @@ namespace Hoehoe
                                     req = this.waitStack.Pop();
                                 }
 
-                                if (AppendSettingDialog.Instance.IconSz == IconSizes.IconNone)
+                                if (Configs.Instance.IconSz == IconSizes.IconNone)
                                 {
                                     continue;
                                 }

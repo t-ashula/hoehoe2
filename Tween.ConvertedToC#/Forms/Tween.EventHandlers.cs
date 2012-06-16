@@ -1561,7 +1561,7 @@ namespace Hoehoe
             // 新着取得時のリストスクロールをするか。Trueならスクロールしない
             this.ListLockMenuItem.Checked = this.cfgCommon.ListLock;
             this.LockListFileMenuItem.Checked = this.cfgCommon.ListLock;
-            this.settingDialog.IconSz = this.cfgCommon.IconSize;
+            this.configs.IconSz = this.cfgCommon.IconSize;
 
             // 文末ステータス
             this.settingDialog.Status = this.cfgLocal.StatusText;
@@ -1983,7 +1983,7 @@ namespace Hoehoe
 
             this.statuses.SortMode = mode;
 
-            switch (this.settingDialog.IconSz)
+            switch (this.configs.IconSz)
             {
                 case IconSizes.IconNone:
                     this.iconSz = 0;

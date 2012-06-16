@@ -84,8 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
         
-        public IconSizes IconSz { get; set; }
-
         public string Status { get; set; }
 
         public bool UnreadManage { get; set; }
@@ -480,19 +478,19 @@ namespace Hoehoe
                 switch (this.IconSize.SelectedIndex)
                 {
                     case 0:
-                        this.IconSz = IconSizes.IconNone;
+                        this.configurations.IconSz = IconSizes.IconNone;
                         break;
                     case 1:
-                        this.IconSz = IconSizes.Icon16;
+                        this.configurations.IconSz = IconSizes.Icon16;
                         break;
                     case 2:
-                        this.IconSz = IconSizes.Icon24;
+                        this.configurations.IconSz = IconSizes.Icon24;
                         break;
                     case 3:
-                        this.IconSz = IconSizes.Icon48;
+                        this.configurations.IconSz = IconSizes.Icon48;
                         break;
                     case 4:
-                        this.IconSz = IconSizes.Icon48_2;
+                        this.configurations.IconSz = IconSizes.Icon48_2;
                         break;
                 }
 
@@ -856,7 +854,7 @@ namespace Hoehoe
             this.UserTimelinePeriod.Text = this.configurations.UserTimelinePeriodInt.ToString();
             this.StartupReaded.Checked = this.configurations.Readed;
 
-            switch (this.IconSz)
+            switch (this.configurations.IconSz)
             {
                 case IconSizes.IconNone:
                     this.IconSize.SelectedIndex = 0;

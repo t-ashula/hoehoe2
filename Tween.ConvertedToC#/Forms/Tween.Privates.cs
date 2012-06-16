@@ -3393,7 +3393,7 @@ namespace Hoehoe
                 this.cfgCommon.ListsPeriod = this.configs.ListsPeriodInt;
                 this.cfgCommon.UserTimelinePeriod = this.configs.UserTimelinePeriodInt;
                 this.cfgCommon.Read = this.configs.Readed;
-                this.cfgCommon.IconSize = this.settingDialog.IconSz;
+                this.cfgCommon.IconSize = this.configs.IconSz;
                 this.cfgCommon.UnreadManage = this.settingDialog.UnreadManage;
                 this.cfgCommon.PlaySound = this.settingDialog.PlaySound;
                 this.cfgCommon.OneWayLove = this.settingDialog.OneWayLove;
