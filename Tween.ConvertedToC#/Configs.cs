@@ -54,5 +54,6 @@ namespace Hoehoe
         public int UserstreamPeriodInt { get; set; }
         public bool UserstreamStartup { get; set; }
         public int TimelinePeriodInt { get; set; }
+        public int ReplyPeriodInt { get; set; }
     }
 }
