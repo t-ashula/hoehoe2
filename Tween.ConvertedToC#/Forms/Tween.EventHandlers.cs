@@ -1622,7 +1622,7 @@ namespace Hoehoe
             this.configs.MinimizeToTray = this.cfgCommon.MinimizeToTray;
             this.configs.DispLatestPost = this.cfgCommon.DispLatestPost;
             this.settingDialog.SortOrderLock = this.cfgCommon.SortOrderLock;
-            this.settingDialog.TinyUrlResolve = this.cfgCommon.TinyUrlResolve;
+            this.configs.TinyUrlResolve = this.cfgCommon.TinyUrlResolve;
             this.settingDialog.ShortUrlForceResolve = this.cfgCommon.ShortUrlForceResolve;
             this.settingDialog.SelectedProxyType = this.cfgLocal.ProxyType;
             this.settingDialog.ProxyAddress = this.cfgLocal.ProxyAddress;
@@ -1835,7 +1835,7 @@ namespace Hoehoe
             this.tw.SetRestrictFavCheck(this.settingDialog.RestrictFavCheck);
             this.tw.ReadOwnPost = this.settingDialog.ReadOwnPost;
             this.tw.SetUseSsl(this.settingDialog.UseSsl);
-            ShortUrl.IsResolve = this.settingDialog.TinyUrlResolve;
+            ShortUrl.IsResolve = this.configs.TinyUrlResolve;
             ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
             ShortUrl.SetBitlyId(this.settingDialog.BitlyUser);
             ShortUrl.SetBitlyKey(this.settingDialog.BitlyPwd);
@@ -2013,7 +2013,7 @@ namespace Hoehoe
                 this.tw.SetIconSize(this.iconSz);
             }
 
-            this.tw.SetTinyUrlResolve(this.settingDialog.TinyUrlResolve);
+            this.tw.SetTinyUrlResolve(this.configs.TinyUrlResolve);
             ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
             
             this.tw.DetailIcon = this.iconDict;

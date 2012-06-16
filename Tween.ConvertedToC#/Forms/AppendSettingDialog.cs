@@ -92,7 +92,7 @@ namespace Hoehoe
 
         
 
-        public bool TinyUrlResolve { get; set; }
+        
 
         public bool ShortUrlForceResolve { get; set; }
 
@@ -511,9 +511,9 @@ namespace Hoehoe
                 }
 
                 this.SortOrderLock = this.CheckSortOrderLock.Checked;
-                this.TinyUrlResolve = this.CheckTinyURL.Checked;
+                this.configurations.TinyUrlResolve = this.CheckTinyURL.Checked;
                 this.ShortUrlForceResolve = this.CheckForceResolve.Checked;
-                ShortUrl.IsResolve = this.TinyUrlResolve;
+                ShortUrl.IsResolve = this.configurations.TinyUrlResolve;
                 ShortUrl.IsForceResolve = this.ShortUrlForceResolve;
                 if (this.RadioProxyNone.Checked)
                 {
@@ -881,7 +881,7 @@ namespace Hoehoe
             }
 
             this.CheckSortOrderLock.Checked = this.SortOrderLock;
-            this.CheckTinyURL.Checked = this.TinyUrlResolve;
+            this.CheckTinyURL.Checked = this.configurations.TinyUrlResolve;
             this.CheckForceResolve.Checked = this.ShortUrlForceResolve;
             switch (this.SelectedProxyType)
             {

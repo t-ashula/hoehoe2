@@ -111,5 +111,7 @@ namespace Hoehoe
         public DispTitleEnum DispLatestPost { get; set; }
 
         public string BrowserPath { get; set; }
+
+        public bool TinyUrlResolve { get; set; }
     }
 }

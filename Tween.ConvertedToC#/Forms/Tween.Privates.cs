@@ -3408,7 +3408,7 @@ namespace Hoehoe
                 this.cfgCommon.CloseToExit = this.configs.CloseToExit;
                 this.cfgCommon.DispLatestPost = this.configs.DispLatestPost;
                 this.cfgCommon.SortOrderLock = this.settingDialog.SortOrderLock;
-                this.cfgCommon.TinyUrlResolve = this.settingDialog.TinyUrlResolve;
+                this.cfgCommon.TinyUrlResolve = this.configs.TinyUrlResolve;
                 this.cfgCommon.ShortUrlForceResolve = this.settingDialog.ShortUrlForceResolve;
                 this.cfgCommon.PeriodAdjust = this.settingDialog.PeriodAdjust;
                 this.cfgCommon.StartupVersion = this.settingDialog.StartupVersion;
@@ -5651,11 +5651,11 @@ namespace Hoehoe
 
             lock (this.syncObject)
             {
-                this.tw.SetTinyUrlResolve(this.settingDialog.TinyUrlResolve);
+                this.tw.SetTinyUrlResolve(this.configs.TinyUrlResolve);
                 this.tw.SetRestrictFavCheck(this.settingDialog.RestrictFavCheck);
                 this.tw.ReadOwnPost = this.settingDialog.ReadOwnPost;
                 this.tw.SetUseSsl(this.settingDialog.UseSsl);
-                ShortUrl.IsResolve = this.settingDialog.TinyUrlResolve;
+                ShortUrl.IsResolve = this.configs.TinyUrlResolve;
                 ShortUrl.IsForceResolve = this.settingDialog.ShortUrlForceResolve;
                 ShortUrl.SetBitlyId(this.settingDialog.BitlyUser);
                 ShortUrl.SetBitlyKey(this.settingDialog.BitlyPwd);
