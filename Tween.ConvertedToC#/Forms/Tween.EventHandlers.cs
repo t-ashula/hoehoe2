@@ -1675,26 +1675,8 @@ namespace Hoehoe
             this.AtIdSupl = new AtIdSupplement(SettingAtIdList.Load().AtIdList, "@");
 
             this.settingDialog.IsMonospace = this.cfgCommon.IsMonospace;
-            if (this.settingDialog.IsMonospace)
-            {
-                this.detailHtmlFormatHeader = DetailHtmlFormatMono1;
-                this.detailHtmlFormatFooter = DetailHtmlFormatMono7;
-            }
-            else
-            {
-                this.detailHtmlFormatHeader = DetailHtmlFormat1;
-                this.detailHtmlFormatFooter = DetailHtmlFormat7;
-            }
-
-            this.detailHtmlFormatHeader += this.fntDetail.Name + DetailHtmlFormat2 + this.fntDetail.Size.ToString() + DetailHtmlFormat3 + this.clrDetail.R.ToString() + "," + this.clrDetail.G.ToString() + "," + this.clrDetail.B.ToString() + DetailHtmlFormat4 + this.clrDetailLink.R.ToString() + "," + this.clrDetailLink.G.ToString() + "," + this.clrDetailLink.B.ToString() + DetailHtmlFormat5 + this.clrDetailBackcolor.R.ToString() + "," + this.clrDetailBackcolor.G.ToString() + "," + this.clrDetailBackcolor.B.ToString();
-            if (this.settingDialog.IsMonospace)
-            {
-                this.detailHtmlFormatHeader += DetailHtmlFormatMono6;
-            }
-            else
-            {
-                this.detailHtmlFormatHeader += DetailHtmlFormat6;
-            }
+            this.detailHtmlFormatFooter = this.GetDetailHtmlFormatFooter(this.settingDialog.IsMonospace);
+            this.detailHtmlFormatHeader = this.GetDetailHtmlFormatHeader(this.settingDialog.IsMonospace);
 
             this.IdeographicSpaceToSpaceToolStripMenuItem.Checked = this.cfgCommon.WideSpaceConvert;
             this.ToolStripFocusLockMenuItem.Checked = this.cfgCommon.FocusLockToStatusText;
@@ -1815,28 +1797,9 @@ namespace Hoehoe
                 this.clrInputForecolor = this.settingDialog.ColorInputFont;
                 this.fntInputFont = this.settingDialog.FontInputFont;
                 this.DisposeUserBrushes();
-                this.InitUserBrushes();
-
-                if (this.settingDialog.IsMonospace)
-                {
-                    this.detailHtmlFormatHeader = DetailHtmlFormatMono1;
-                    this.detailHtmlFormatFooter = DetailHtmlFormatMono7;
-                }
-                else
-                {
-                    this.detailHtmlFormatHeader = DetailHtmlFormat1;
-                    this.detailHtmlFormatFooter = DetailHtmlFormat7;
-                }
-
-                this.detailHtmlFormatHeader += this.fntDetail.Name + DetailHtmlFormat2 + this.fntDetail.Size.ToString() + DetailHtmlFormat3 + this.clrDetail.R.ToString() + "," + this.clrDetail.G.ToString() + "," + this.clrDetail.B.ToString() + DetailHtmlFormat4 + this.clrDetailLink.R.ToString() + "," + this.clrDetailLink.G.ToString() + "," + this.clrDetailLink.B.ToString() + DetailHtmlFormat5 + this.clrDetailBackcolor.R.ToString() + "," + this.clrDetailBackcolor.G.ToString() + "," + this.clrDetailBackcolor.B.ToString();
-                if (this.settingDialog.IsMonospace)
-                {
-                    this.detailHtmlFormatHeader += DetailHtmlFormatMono6;
-                }
-                else
-                {
-                    this.detailHtmlFormatHeader += DetailHtmlFormat6;
-                }
+                this.InitUserBrushes(); 
+                this.detailHtmlFormatFooter = this.GetDetailHtmlFormatFooter(this.settingDialog.IsMonospace);
+                this.detailHtmlFormatHeader = this.GetDetailHtmlFormatHeader(this.settingDialog.IsMonospace);
             }
 
             if (this.settingDialog.HotkeyEnabled)
@@ -2186,6 +2149,24 @@ namespace Hoehoe
                     break;
                 }
             }
+        }
+
+        private string GetDetailHtmlFormatHeader(bool useMonospace)
+        {
+            var dhheader = string.Format("{0}{1}{2}{3}{4},{5},{6}{7}{8},{9},{10}{11}{12},{13},{14}",
+                this.fntDetail.Name, DetailHtmlFormat2,
+                this.fntDetail.Size, DetailHtmlFormat3,
+                this.clrDetail.R, this.clrDetail.G, this.clrDetail.B, DetailHtmlFormat4,
+                this.clrDetailLink.R, this.clrDetailLink.G, this.clrDetailLink.B, DetailHtmlFormat5,
+                this.clrDetailBackcolor.R, this.clrDetailBackcolor.G, this.clrDetailBackcolor.B);
+            return useMonospace ?
+                string.Format("{0}{1}{2}", DetailHtmlFormatMono1, dhheader, DetailHtmlFormatMono6) :
+                string.Format("{0}{1}{2}", DetailHtmlFormat1, dhheader, DetailHtmlFormat6);
+        }
+        
+        private string GetDetailHtmlFormatFooter(bool useMonospace)
+        {
+            return useMonospace ? DetailHtmlFormatMono7 : DetailHtmlFormat7;
         }
 
         #region callback

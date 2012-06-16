@@ -5780,26 +5780,8 @@ namespace Hoehoe
 
                 try
                 {
-                    if (this.settingDialog.IsMonospace)
-                    {
-                        this.detailHtmlFormatHeader = DetailHtmlFormatMono1;
-                        this.detailHtmlFormatFooter = DetailHtmlFormatMono7;
-                    }
-                    else
-                    {
-                        this.detailHtmlFormatHeader = DetailHtmlFormat1;
-                        this.detailHtmlFormatFooter = DetailHtmlFormat7;
-                    }
-
-                    this.detailHtmlFormatHeader += this.fntDetail.Name + DetailHtmlFormat2 + this.fntDetail.Size.ToString() + DetailHtmlFormat3 + this.clrDetail.R.ToString() + "," + this.clrDetail.G.ToString() + "," + this.clrDetail.B.ToString() + DetailHtmlFormat4 + this.clrDetailLink.R.ToString() + "," + this.clrDetailLink.G.ToString() + "," + this.clrDetailLink.B.ToString() + DetailHtmlFormat5 + this.clrDetailBackcolor.R.ToString() + "," + this.clrDetailBackcolor.G.ToString() + "," + this.clrDetailBackcolor.B.ToString();
-                    if (this.settingDialog.IsMonospace)
-                    {
-                        this.detailHtmlFormatHeader += DetailHtmlFormatMono6;
-                    }
-                    else
-                    {
-                        this.detailHtmlFormatHeader += DetailHtmlFormat6;
-                    }
+                    this.detailHtmlFormatFooter = this.GetDetailHtmlFormatFooter(this.settingDialog.IsMonospace);
+                    this.detailHtmlFormatHeader = this.GetDetailHtmlFormatHeader(this.settingDialog.IsMonospace);
                 }
                 catch (Exception ex)
                 {
