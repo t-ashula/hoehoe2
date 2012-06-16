@@ -1457,9 +1457,9 @@ namespace Hoehoe
                 {
                     len -= this.settingDialog.RecommendStatusText.Length;
                 }
-                else if (this.settingDialog.Status.Length > 0)
+                else if (this.configs.Status.Length > 0)
                 {
-                    len -= this.settingDialog.Status.Length + 1;
+                    len -= this.configs.Status.Length + 1;
                 }
             }
 
@@ -3515,7 +3515,7 @@ namespace Hoehoe
                 this.cfgLocal.StatusMultiline = this.StatusText.Multiline;
                 this.cfgLocal.StatusTextHeight = this.mySpDis2;
                 this.cfgLocal.AdSplitterDistance = this.myAdSpDis;
-                this.cfgLocal.StatusText = this.settingDialog.Status;
+                this.cfgLocal.StatusText = this.configs.Status;
                 this.cfgLocal.FontUnread = this.fntUnread;
                 this.cfgLocal.ColorUnread = this.clrUnread;
                 this.cfgLocal.FontRead = this.fntReaded;
@@ -6785,7 +6785,7 @@ namespace Hoehoe
                 else
                 {
                     // テキストボックスに入力されている文字列を使用する
-                    footer += " " + this.settingDialog.Status.Trim();
+                    footer += " " + this.configs.Status.Trim();
                 }
             }
         }

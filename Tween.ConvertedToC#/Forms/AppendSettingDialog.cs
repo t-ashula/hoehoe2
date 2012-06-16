@@ -83,8 +83,6 @@ namespace Hoehoe
         {
             get { return instance; }
         }
-        
-        public string Status { get; set; }
 
         public bool UnreadManage { get; set; }
 
@@ -494,7 +492,7 @@ namespace Hoehoe
                         break;
                 }
 
-                this.Status = this.StatusText.Text;
+                this.configurations.Status = this.StatusText.Text;
                 this.PlaySound = this.PlaySnd.Checked;
                 this.UnreadManage = this.UReadMng.Checked;
                 this.OneWayLove = this.OneWayLv.Checked;
@@ -873,7 +871,7 @@ namespace Hoehoe
                     break;
             }
 
-            this.StatusText.Text = this.Status;
+            this.StatusText.Text = this.configurations.Status;
             this.UReadMng.Checked = this.UnreadManage;
             this.StartupReaded.Enabled = this.UnreadManage != false;
             this.PlaySnd.Checked = this.PlaySound;

@@ -1564,7 +1564,7 @@ namespace Hoehoe
             this.configs.IconSz = this.cfgCommon.IconSize;
 
             // 文末ステータス
-            this.settingDialog.Status = this.cfgLocal.StatusText;
+            this.configs.Status = this.cfgLocal.StatusText;
 
             // 未読管理。Trueなら未読管理する
             this.settingDialog.UnreadManage = this.cfgCommon.UnreadManage;

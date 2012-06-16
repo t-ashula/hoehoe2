@@ -61,5 +61,6 @@ namespace Hoehoe
         public int UserTimelinePeriodInt { get; set; }
         public bool Readed { get; set; }
         public IconSizes IconSz { get; set; }
+        public string Status { get; set; }
     }
 }
