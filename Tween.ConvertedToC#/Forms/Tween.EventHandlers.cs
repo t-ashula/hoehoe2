@@ -1719,7 +1719,7 @@ namespace Hoehoe
             this.settingDialog.UserAppointUrl = this.cfgCommon.UserAppointUrl;
             this.configs.HideDuplicatedRetweets = this.cfgCommon.HideDuplicatedRetweets;
             this.configs.IsPreviewFoursquare = this.cfgCommon.IsPreviewFoursquare;
-            this.settingDialog.FoursquarePreviewHeight = this.cfgCommon.FoursquarePreviewHeight;
+            this.configs.FoursquarePreviewHeight = this.cfgCommon.FoursquarePreviewHeight;
             this.settingDialog.FoursquarePreviewWidth = this.cfgCommon.FoursquarePreviewWidth;
             this.settingDialog.FoursquarePreviewZoom = this.cfgCommon.FoursquarePreviewZoom;
             this.settingDialog.IsListStatusesIncludeRts = this.cfgCommon.IsListsIncludeRts;

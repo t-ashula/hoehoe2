@@ -41,5 +41,6 @@ namespace Hoehoe
 
         public bool HideDuplicatedRetweets { get; set; }
         public bool IsPreviewFoursquare { get; set; }
+        public int FoursquarePreviewHeight { get; set; }
     }
 }
