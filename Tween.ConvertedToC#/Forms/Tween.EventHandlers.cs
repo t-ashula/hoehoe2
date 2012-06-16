@@ -1797,7 +1797,7 @@ namespace Hoehoe
                 this.clrInputForecolor = this.settingDialog.ColorInputFont;
                 this.fntInputFont = this.settingDialog.FontInputFont;
                 this.DisposeUserBrushes();
-                this.InitUserBrushes(); 
+                this.InitUserBrushes();
                 this.detailHtmlFormatFooter = this.GetDetailHtmlFormatFooter(this.settingDialog.IsMonospace);
                 this.detailHtmlFormatHeader = this.GetDetailHtmlFormatHeader(this.settingDialog.IsMonospace);
             }
@@ -2154,23 +2154,20 @@ namespace Hoehoe
         private string GetDetailHtmlFormatHeader(bool useMonospace)
         {
             var ele = GetMonoEle(useMonospace);
-            return
-                "<html><head><style type=\"text/css\">"
-                + ele + " {"
-                + GetCssSettingString("word-wrap", "break-word")
-                + GetCssSettingString("font-family", "\"" + this.fntDetail.Name + "\", sans-serif;")
-                + GetCssSettingString("font-size", string.Format("{0}pt", this.fntDetail.Size))
-                + GetCssSettingString("color", GetCssRgbString(this.clrDetail))
-                + " }"
-                + " a:link, a:visited, a:active, a:hover {"
-                + GetCssSettingString("color", GetCssRgbString(this.clrDetailLink))
-                + " }"
-                + " body {"
-                + GetCssSettingString("margin", "0px")
-                + GetCssSettingString("background-color", GetCssRgbString(this.clrDetailBackcolor))
-                + " }"
-                + "</style></head><body>"
-                + "<" + ele + ">";
+            var ss = new Dictionary<string, Dictionary<string, string>>(){ 
+                { "a:link, a:visited, a:active, a:hover", new Dictionary<string, string>(){ { "color", GetCssRgbString(this.clrDetailLink) } } },
+                { "body", new Dictionary<string, string>(){ { "margin", "0px" }, { "background-color", GetCssRgbString(this.clrDetailBackcolor) } } },
+                { ele, new Dictionary<string, string>(){
+                    { "word-wrap", "break-word" },
+                    { "font-family", string.Format("\"{0}\", sans-serif;", this.fntDetail.Name) },
+                    { "font-size", string.Format("{0}pt", this.fntDetail.Size) },
+                    { "color", GetCssRgbString(this.clrDetail) } } 
+                }
+            };
+
+            return "<html><head><style type=\"text/css\">"
+                + string.Join("", ss.Select(sel => string.Format("{0}{{{1}}}", sel.Key, string.Join("", sel.Value.Select(ps => string.Format("{0}: {1};", ps.Key, ps.Value))))))
+                + "</style></head><body>" + "<" + ele + ">";
         }
 
         private string GetDetailHtmlFormatFooter(bool useMonospace)
@@ -2182,17 +2179,12 @@ namespace Hoehoe
         {
             return useMonospace ? "pre" : "p";
         }
-        
+
         private string GetCssRgbString(Color color)
         {
             return string.Format("rgb({0},{1},{2})", color.R, color.G, color.B);
         }
-
-        private string GetCssSettingString(string p, string v)
-        {
-            return string.Format("{0}: {1};", p, v);
-        }
-        
+                
         #region callback
 
         private void GetApiInfo_Dowork(object sender, DoWorkEventArgs e)
@@ -3413,11 +3405,11 @@ namespace Hoehoe
             else
             {
                 var cl = e.Item.BackColor;
-                SolidBrush brs2 = (cl == this.clrSelf) ? this.brsBackColorMine : 
-                    (cl == this.clrAtSelf) ? this.brsBackColorAt : 
-                    (cl == this.clrTarget) ? this.brsBackColorYou : 
+                SolidBrush brs2 = (cl == this.clrSelf) ? this.brsBackColorMine :
+                    (cl == this.clrAtSelf) ? this.brsBackColorAt :
+                    (cl == this.clrTarget) ? this.brsBackColorYou :
                     (cl == this.clrAtTarget) ? this.brsBackColorAtYou :
-                    (cl == this.clrAtFromTarget) ? this.brsBackColorAtFromTarget : 
+                    (cl == this.clrAtFromTarget) ? this.brsBackColorAtFromTarget :
                     (cl == this.clrAtTo) ? this.brsBackColorAtTo : this.brsBackColorNone;
                 e.Graphics.FillRectangle(brs2, e.Bounds);
             }
