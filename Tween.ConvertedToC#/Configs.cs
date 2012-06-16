@@ -109,5 +109,7 @@ namespace Hoehoe
         public bool CloseToExit { get; set; }
         public bool MinimizeToTray { get; set; }
         public DispTitleEnum DispLatestPost { get; set; }
+
+        public string BrowserPath { get; set; }
     }
 }

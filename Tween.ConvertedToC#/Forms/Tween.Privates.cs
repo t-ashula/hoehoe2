@@ -3537,7 +3537,7 @@ namespace Hoehoe
                 this.cfgLocal.ColorInputBackcolor = this.InputBackColor;
                 this.cfgLocal.ColorInputFont = this.clrInputForecolor;
                 this.cfgLocal.FontInputFont = this.fntInputFont;
-                this.cfgLocal.BrowserPath = this.settingDialog.BrowserPath;
+                this.cfgLocal.BrowserPath = this.configs.BrowserPath;
                 this.cfgLocal.UseRecommendStatus = this.configs.UseRecommendStatus;
                 this.cfgLocal.ProxyType = this.settingDialog.SelectedProxyType;
                 this.cfgLocal.ProxyAddress = this.settingDialog.ProxyAddress;

@@ -90,7 +90,7 @@ namespace Hoehoe
 
 
 
-        public string BrowserPath { get; set; }
+        
 
         public bool TinyUrlResolve { get; set; }
 
@@ -468,7 +468,7 @@ namespace Hoehoe
 
                 this.configurations.CountApi = Convert.ToInt32(this.TextCountApi.Text);
                 this.configurations.CountApiReply = Convert.ToInt32(this.TextCountApiReply.Text);
-                this.BrowserPath = this.BrowserPathText.Text.Trim();
+                this.configurations.BrowserPath = this.BrowserPathText.Text.Trim();
                 this.configurations.PostAndGet = this.CheckPostAndGet.Checked;
                 this.configurations.UseRecommendStatus = this.CheckUseRecommendStatus.Checked;
                 this.configurations.DispUsername = this.CheckDispUsername.Checked;
@@ -846,7 +846,7 @@ namespace Hoehoe
 
             this.TextCountApi.Text = this.configurations.CountApi.ToString();
             this.TextCountApiReply.Text = this.configurations.CountApiReply.ToString();
-            this.BrowserPathText.Text = this.BrowserPath;
+            this.BrowserPathText.Text = this.configurations.BrowserPath;
             this.CheckPostAndGet.Checked = this.configurations.PostAndGet;
             this.CheckUseRecommendStatus.Checked = this.configurations.UseRecommendStatus;
             this.CheckDispUsername.Checked = this.configurations.DispUsername;
@@ -2281,7 +2281,7 @@ namespace Hoehoe
             string path = this.BrowserPathText.Text;
             try
             {
-                if (string.IsNullOrEmpty(this.BrowserPath))
+                if (string.IsNullOrEmpty(this.configurations.BrowserPath))
                 {
                     Process.Start(myPath);
                 }

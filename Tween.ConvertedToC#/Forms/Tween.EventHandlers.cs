@@ -1614,7 +1614,7 @@ namespace Hoehoe
                 this.configs.CountApiReply = 40;
             }
 
-            this.settingDialog.BrowserPath = this.cfgLocal.BrowserPath;
+            this.configs.BrowserPath = this.cfgLocal.BrowserPath;
             this.configs.PostAndGet = this.cfgCommon.PostAndGet;
             this.configs.UseRecommendStatus = this.cfgLocal.UseRecommendStatus;
             this.configs.DispUsername = this.cfgCommon.DispUsername;
@@ -2403,16 +2403,17 @@ namespace Hoehoe
                     string myPath = Convert.ToString(args.Url);
                     try
                     {
-                        if (!string.IsNullOrEmpty(this.settingDialog.BrowserPath))
+                        string browserPath = this.configs.BrowserPath;
+                        if (!string.IsNullOrEmpty(browserPath))
                         {
-                            if (this.settingDialog.BrowserPath.StartsWith("\"") && this.settingDialog.BrowserPath.Length > 2 && this.settingDialog.BrowserPath.IndexOf("\"", 2) > -1)
+                            if (browserPath.StartsWith("\"") && browserPath.Length > 2 && browserPath.IndexOf("\"", 2) > -1)
                             {
-                                int sep = this.settingDialog.BrowserPath.IndexOf("\"", 2);
-                                string browserPath = this.settingDialog.BrowserPath.Substring(1, sep - 1);
+                                int sep = browserPath.IndexOf("\"", 2);
+                                browserPath = browserPath.Substring(1, sep - 1);
                                 string arg = string.Empty;
-                                if (sep < this.settingDialog.BrowserPath.Length - 1)
+                                if (sep < browserPath.Length - 1)
                                 {
-                                    arg = this.settingDialog.BrowserPath.Substring(sep + 1);
+                                    arg = browserPath.Substring(sep + 1);
                                 }
 
                                 myPath = arg + " " + myPath;
@@ -2420,7 +2421,7 @@ namespace Hoehoe
                             }
                             else
                             {
-                                Process.Start(this.settingDialog.BrowserPath, myPath);
+                                Process.Start(browserPath, myPath);
                             }
                         }
                         else
