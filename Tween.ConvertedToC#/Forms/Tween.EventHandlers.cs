@@ -1617,7 +1617,7 @@ namespace Hoehoe
             this.settingDialog.BrowserPath = this.cfgLocal.BrowserPath;
             this.configs.PostAndGet = this.cfgCommon.PostAndGet;
             this.configs.UseRecommendStatus = this.cfgLocal.UseRecommendStatus;
-            this.settingDialog.DispUsername = this.cfgCommon.DispUsername;
+            this.configs.DispUsername = this.cfgCommon.DispUsername;
             this.settingDialog.CloseToExit = this.cfgCommon.CloseToExit;
             this.settingDialog.MinimizeToTray = this.cfgCommon.MinimizeToTray;
             this.settingDialog.DispLatestPost = this.cfgCommon.DispLatestPost;

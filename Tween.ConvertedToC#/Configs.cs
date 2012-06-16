@@ -104,5 +104,7 @@ namespace Hoehoe
 
         public bool UseRecommendStatus { get; set; }
         public string RecommendStatusText { get; set; }
+
+        public bool DispUsername { get; set; }
     }
 }

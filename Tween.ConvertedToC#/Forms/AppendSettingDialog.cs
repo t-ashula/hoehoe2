@@ -84,8 +84,6 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public bool DispUsername { get; set; }
-
         public bool CloseToExit { get; set; }
 
         public bool MinimizeToTray { get; set; }
@@ -473,7 +471,7 @@ namespace Hoehoe
                 this.BrowserPath = this.BrowserPathText.Text.Trim();
                 this.configurations.PostAndGet = this.CheckPostAndGet.Checked;
                 this.configurations.UseRecommendStatus = this.CheckUseRecommendStatus.Checked;
-                this.DispUsername = this.CheckDispUsername.Checked;
+                this.configurations.DispUsername = this.CheckDispUsername.Checked;
                 this.CloseToExit = this.CheckCloseToExit.Checked;
                 this.MinimizeToTray = this.CheckMinimizeToTray.Checked;
                 switch (this.ComboDispTitle.SelectedIndex)
@@ -851,7 +849,7 @@ namespace Hoehoe
             this.BrowserPathText.Text = this.BrowserPath;
             this.CheckPostAndGet.Checked = this.configurations.PostAndGet;
             this.CheckUseRecommendStatus.Checked = this.configurations.UseRecommendStatus;
-            this.CheckDispUsername.Checked = this.DispUsername;
+            this.CheckDispUsername.Checked = this.configurations.DispUsername;
             this.CheckCloseToExit.Checked = this.CloseToExit;
             this.CheckMinimizeToTray.Checked = this.MinimizeToTray;
             switch (this.DispLatestPost)

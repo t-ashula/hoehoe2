@@ -794,7 +794,7 @@ namespace Hoehoe
         private string GetNotifyTitlteText(int addCount, bool reply, bool dm)
         {
             var title = new StringBuilder();
-            if (this.settingDialog.DispUsername)
+            if (this.configs.DispUsername)
             {
                 title.AppendFormat("{0} - ", this.tw.Username);
             }
@@ -3403,7 +3403,7 @@ namespace Hoehoe
                 this.cfgCommon.CountApi = this.configs.CountApi;
                 this.cfgCommon.CountApiReply = this.configs.CountApiReply;
                 this.cfgCommon.PostAndGet = this.configs.PostAndGet;
-                this.cfgCommon.DispUsername = this.settingDialog.DispUsername;
+                this.cfgCommon.DispUsername = this.configs.DispUsername;
                 this.cfgCommon.MinimizeToTray = this.settingDialog.MinimizeToTray;
                 this.cfgCommon.CloseToExit = this.settingDialog.CloseToExit;
                 this.cfgCommon.DispLatestPost = this.settingDialog.DispLatestPost;
@@ -4048,7 +4048,7 @@ namespace Hoehoe
             }
 
             var ttl = new StringBuilder(256);
-            if (this.settingDialog.DispUsername)
+            if (this.configs.DispUsername)
             {
                 ttl.Append(this.tw.Username).Append(" - ");
             }
@@ -4159,7 +4159,7 @@ namespace Hoehoe
         private void SetNotifyIconText()
         {
             StringBuilder ur = new StringBuilder(64);
-            if (this.settingDialog.DispUsername)
+            if (this.configs.DispUsername)
             {
                 ur.AppendFormat("{0} - ", this.tw.Username);
             }
@@ -5057,7 +5057,7 @@ namespace Hoehoe
             {
                 this.NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
                 StringBuilder title = new StringBuilder();
-                if (this.settingDialog.DispUsername)
+                if (this.configs.DispUsername)
                 {
                     title.AppendFormat("{0} - ", this.tw.Username);
                 }
