@@ -1449,8 +1449,8 @@ namespace Hoehoe
                 return len;
             }
 
-            if ((isAuto && !this.IsKeyDown(Keys.Control) && this.settingDialog.PostShiftEnter)
-                || (isAuto && !this.IsKeyDown(Keys.Shift) && !this.settingDialog.PostShiftEnter)
+            if ((isAuto && !this.IsKeyDown(Keys.Control) && this.configs.PostShiftEnter)
+                || (isAuto && !this.IsKeyDown(Keys.Shift) && !this.configs.PostShiftEnter)
                 || (!isAuto && isAddFooter))
             {
                 if (this.settingDialog.UseRecommendStatus)
@@ -3399,7 +3399,7 @@ namespace Hoehoe
                 this.cfgCommon.OneWayLove = this.configs.OneWayLove;
                 this.cfgCommon.NameBalloon = this.configs.NameBalloon;
                 this.cfgCommon.PostCtrlEnter = this.configs.PostCtrlEnter;
-                this.cfgCommon.PostShiftEnter = this.settingDialog.PostShiftEnter;
+                this.cfgCommon.PostShiftEnter = this.configs.PostShiftEnter;
                 this.cfgCommon.CountApi = this.settingDialog.CountApi;
                 this.cfgCommon.CountApiReply = this.settingDialog.CountApiReply;
                 this.cfgCommon.PostAndGet = this.settingDialog.PostAndGet;
@@ -6903,7 +6903,7 @@ namespace Hoehoe
                 isRemoveFooter = this.IsKeyDown(Keys.Control);
             }
 
-            if (this.settingDialog.PostShiftEnter)
+            if (this.configs.PostShiftEnter)
             {
                 isRemoveFooter = this.IsKeyDown(Keys.Control);
             }

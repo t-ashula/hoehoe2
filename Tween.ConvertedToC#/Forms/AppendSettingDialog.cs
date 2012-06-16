@@ -86,7 +86,7 @@ namespace Hoehoe
 
 
 
-        public bool PostShiftEnter { get; set; }
+
 
         public int CountApi { get; set; }
 
@@ -481,16 +481,16 @@ namespace Hoehoe
                 switch (this.ComboBoxPostKeySelect.SelectedIndex)
                 {
                     case 2:
-                        this.PostShiftEnter = true;
+                        this.configurations.PostShiftEnter = true;
                         this.configurations.PostCtrlEnter = false;
                         break;
                     case 1:
                         this.configurations.PostCtrlEnter = true;
-                        this.PostShiftEnter = false;
+                        this.configurations.PostShiftEnter = false;
                         break;
                     case 0:
                         this.configurations.PostCtrlEnter = false;
-                        this.PostShiftEnter = false;
+                        this.configurations.PostShiftEnter = false;
                         break;
                 }
 
@@ -863,7 +863,7 @@ namespace Hoehoe
             {
                 this.ComboBoxPostKeySelect.SelectedIndex = 1;
             }
-            else if (this.PostShiftEnter)
+            else if (this.configurations.PostShiftEnter)
             {
                 this.ComboBoxPostKeySelect.SelectedIndex = 2;
             }

@@ -1198,7 +1198,7 @@ namespace Hoehoe
 
                         // SHift+Enter投稿時
                     }
-                    else if (this.settingDialog.PostShiftEnter)
+                    else if (this.configs.PostShiftEnter)
                     {
                         if (this.StatusText.Multiline)
                         {

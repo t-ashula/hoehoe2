@@ -89,5 +89,6 @@ namespace Hoehoe
         public NameBalloonEnum NameBalloon { get; set; }
 
         public bool PostCtrlEnter { get; set; }
+        public bool PostShiftEnter { get; set; }
     }
 }
