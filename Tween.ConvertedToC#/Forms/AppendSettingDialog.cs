@@ -1032,16 +1032,6 @@ namespace Hoehoe
 
         private bool TrySelectFontAndColor(ref Color c, ref Font f)
         {
-            this.FontDialog1.AllowVerticalFonts = false;
-            this.FontDialog1.AllowScriptChange = true;
-            this.FontDialog1.AllowSimulations = true;
-            this.FontDialog1.AllowVectorFonts = true;
-            this.FontDialog1.FixedPitchOnly = false;
-            this.FontDialog1.FontMustExist = true;
-            this.FontDialog1.ScriptsOnly = false;
-            this.FontDialog1.ShowApply = false;
-            this.FontDialog1.ShowEffects = true;
-            this.FontDialog1.ShowColor = true;
             this.FontDialog1.Color = c;
             this.FontDialog1.Font = f;
 
@@ -1094,106 +1084,57 @@ namespace Hoehoe
             }
         }
 
-        private void ButtonColor_Click(object sender, EventArgs e)
+        private bool TrySelectColor(ref Color c)
         {
-            Button btn = (Button)sender;
-            DialogResult rtn = default(DialogResult);
-
             this.ColorDialog1.AllowFullOpen = true;
             this.ColorDialog1.AnyColor = true;
             this.ColorDialog1.FullOpen = false;
             this.ColorDialog1.SolidColorOnly = false;
-
-            switch (btn.Name)
-            {
-                case "btnSelf":
-                    this.ColorDialog1.Color = this.lblSelf.BackColor;
-                    break;
-                case "btnAtSelf":
-                    this.ColorDialog1.Color = this.lblAtSelf.BackColor;
-                    break;
-                case "btnTarget":
-                    this.ColorDialog1.Color = this.lblTarget.BackColor;
-                    break;
-                case "btnAtTarget":
-                    this.ColorDialog1.Color = this.lblAtTarget.BackColor;
-                    break;
-                case "btnAtFromTarget":
-                    this.ColorDialog1.Color = this.lblAtFromTarget.BackColor;
-                    break;
-                case "btnFav":
-                    this.ColorDialog1.Color = this.lblFav.ForeColor;
-                    break;
-                case "btnOWL":
-                    this.ColorDialog1.Color = this.lblOWL.ForeColor;
-                    break;
-                case "btnRetweet":
-                    this.ColorDialog1.Color = this.lblRetweet.ForeColor;
-                    break;
-                case "btnInputBackcolor":
-                    this.ColorDialog1.Color = this.lblInputBackcolor.BackColor;
-                    break;
-                case "btnAtTo":
-                    this.ColorDialog1.Color = this.lblAtTo.BackColor;
-                    break;
-                case "btnListBack":
-                    this.ColorDialog1.Color = this.lblListBackcolor.BackColor;
-                    break;
-                case "btnDetailBack":
-                    this.ColorDialog1.Color = this.lblDetailBackcolor.BackColor;
-                    break;
-                case "btnDetailLink":
-                    this.ColorDialog1.Color = this.lblDetailLink.ForeColor;
-                    break;
-            }
-
-            rtn = this.ColorDialog1.ShowDialog();
+            this.ColorDialog1.Color = c;
+            var rtn = this.ColorDialog1.ShowDialog();
             if (rtn == DialogResult.Cancel)
             {
-                return;
+                return false;
             }
 
+            c = this.ColorDialog1.Color;
+            return true;
+        }
+
+        private void ButtonColor_ClickExtractd(Label lb, bool back=true)
+        {
+            var c = back ? lb.BackColor : lb.ForeColor;
+            if (TrySelectColor(ref c))
+            {
+                if (back)
+                {
+                    lb.BackColor = c;
+                }
+                else
+                {
+                    lb.ForeColor = c;
+                }
+            }
+        }
+
+        private void ButtonColor_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
             switch (btn.Name)
             {
-                case "btnSelf":
-                    this.lblSelf.BackColor = this.ColorDialog1.Color;
-                    break;
-                case "btnAtSelf":
-                    this.lblAtSelf.BackColor = this.ColorDialog1.Color;
-                    break;
-                case "btnTarget":
-                    this.lblTarget.BackColor = this.ColorDialog1.Color;
-                    break;
-                case "btnAtTarget":
-                    this.lblAtTarget.BackColor = this.ColorDialog1.Color;
-                    break;
-                case "btnAtFromTarget":
-                    this.lblAtFromTarget.BackColor = this.ColorDialog1.Color;
-                    break;
-                case "btnFav":
-                    this.lblFav.ForeColor = this.ColorDialog1.Color;
-                    break;
-                case "btnOWL":
-                    this.lblOWL.ForeColor = this.ColorDialog1.Color;
-                    break;
-                case "btnRetweet":
-                    this.lblRetweet.ForeColor = this.ColorDialog1.Color;
-                    break;
-                case "btnInputBackcolor":
-                    this.lblInputBackcolor.BackColor = this.ColorDialog1.Color;
-                    break;
-                case "btnAtTo":
-                    this.lblAtTo.BackColor = this.ColorDialog1.Color;
-                    break;
-                case "btnListBack":
-                    this.lblListBackcolor.BackColor = this.ColorDialog1.Color;
-                    break;
-                case "btnDetailBack":
-                    this.lblDetailBackcolor.BackColor = this.ColorDialog1.Color;
-                    break;
-                case "btnDetailLink":
-                    this.lblDetailLink.ForeColor = this.ColorDialog1.Color;
-                    break;
+                case "btnSelf": this.ButtonColor_ClickExtractd(this.lblSelf); break;
+                case "btnAtSelf": this.ButtonColor_ClickExtractd(this.lblAtSelf); break;
+                case "btnTarget": this.ButtonColor_ClickExtractd(this.lblTarget); break;
+                case "btnAtTarget": this.ButtonColor_ClickExtractd(this.lblAtTarget); break;
+                case "btnAtFromTarget": this.ButtonColor_ClickExtractd(this.lblAtFromTarget); break;
+                case "btnFav": this.ButtonColor_ClickExtractd(this.lblFav, false); break;
+                case "btnOWL": this.ButtonColor_ClickExtractd(this.lblOWL, false); break;
+                case "btnRetweet": this.ButtonColor_ClickExtractd(this.lblRetweet, false); break;
+                case "btnInputBackcolor": this.ButtonColor_ClickExtractd(this.lblInputBackcolor); break;
+                case "btnAtTo": this.ButtonColor_ClickExtractd(this.lblAtTo); break;
+                case "btnListBack": this.ButtonColor_ClickExtractd(this.lblListBackcolor); break;
+                case "btnDetailBack": this.ButtonColor_ClickExtractd(this.lblDetailBackcolor); break;
+                case "btnDetailLink": this.ButtonColor_ClickExtractd(this.lblDetailLink, false); break;
             }
         }
 

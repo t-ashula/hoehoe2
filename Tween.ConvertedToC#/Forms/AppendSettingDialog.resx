@@ -345,34 +345,34 @@
   <data name="&gt;&gt;CheckStartupVersion.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="chkGetFav.AutoSize" type="System.Boolean, mscorlib">
+  <data name="CheckGetFav.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="chkGetFav.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="CheckGetFav.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="chkGetFav.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="CheckGetFav.Location" type="System.Drawing.Point, System.Drawing">
     <value>22, 93</value>
   </data>
-  <data name="chkGetFav.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="CheckGetFav.Size" type="System.Drawing.Size, System.Drawing">
     <value>124, 16</value>
   </data>
-  <data name="chkGetFav.TabIndex" type="System.Int32, mscorlib">
+  <data name="CheckGetFav.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
-  <data name="chkGetFav.Text" xml:space="preserve">
+  <data name="CheckGetFav.Text" xml:space="preserve">
     <value>Favoritesを取得する</value>
   </data>
-  <data name="&gt;&gt;chkGetFav.Name" xml:space="preserve">
-    <value>chkGetFav</value>
+  <data name="&gt;&gt;CheckGetFav.Name" xml:space="preserve">
+    <value>CheckGetFav</value>
   </data>
-  <data name="&gt;&gt;chkGetFav.Type" xml:space="preserve">
+  <data name="&gt;&gt;CheckGetFav.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;chkGetFav.Parent" xml:space="preserve">
+  <data name="&gt;&gt;CheckGetFav.Parent" xml:space="preserve">
     <value>StartupPanel</value>
   </data>
-  <data name="&gt;&gt;chkGetFav.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;CheckGetFav.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
   <data name="StartupPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
@@ -528,64 +528,64 @@ Growl.CoreLibrary.DLL</value>
   <data name="&gt;&gt;Label72.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="ChkNewMentionsBlink.AutoSize" type="System.Boolean, mscorlib">
+  <data name="CheckNewMentionsBlink.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="ChkNewMentionsBlink.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="CheckNewMentionsBlink.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="ChkNewMentionsBlink.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="CheckNewMentionsBlink.Location" type="System.Drawing.Point, System.Drawing">
     <value>22, 166</value>
   </data>
-  <data name="ChkNewMentionsBlink.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="CheckNewMentionsBlink.Size" type="System.Drawing.Size, System.Drawing">
     <value>256, 16</value>
   </data>
-  <data name="ChkNewMentionsBlink.TabIndex" type="System.Int32, mscorlib">
+  <data name="CheckNewMentionsBlink.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
   </data>
-  <data name="ChkNewMentionsBlink.Text" xml:space="preserve">
+  <data name="CheckNewMentionsBlink.Text" xml:space="preserve">
     <value>Mentionsの新着があるときにウインドウを点滅する</value>
   </data>
-  <data name="&gt;&gt;ChkNewMentionsBlink.Name" xml:space="preserve">
-    <value>ChkNewMentionsBlink</value>
+  <data name="&gt;&gt;CheckNewMentionsBlink.Name" xml:space="preserve">
+    <value>CheckNewMentionsBlink</value>
   </data>
-  <data name="&gt;&gt;ChkNewMentionsBlink.Type" xml:space="preserve">
+  <data name="&gt;&gt;CheckNewMentionsBlink.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ChkNewMentionsBlink.Parent" xml:space="preserve">
+  <data name="&gt;&gt;CheckNewMentionsBlink.Parent" xml:space="preserve">
     <value>PreviewPanel</value>
   </data>
-  <data name="&gt;&gt;ChkNewMentionsBlink.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;CheckNewMentionsBlink.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="chkTabIconDisp.AutoSize" type="System.Boolean, mscorlib">
+  <data name="CheckTabIconDisp.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="chkTabIconDisp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="CheckTabIconDisp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="chkTabIconDisp.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="CheckTabIconDisp.Location" type="System.Drawing.Point, System.Drawing">
     <value>22, 118</value>
   </data>
-  <data name="chkTabIconDisp.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="CheckTabIconDisp.Size" type="System.Drawing.Size, System.Drawing">
     <value>161, 16</value>
   </data>
-  <data name="chkTabIconDisp.TabIndex" type="System.Int32, mscorlib">
+  <data name="CheckTabIconDisp.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
-  <data name="chkTabIconDisp.Text" xml:space="preserve">
+  <data name="CheckTabIconDisp.Text" xml:space="preserve">
     <value>タブに未読アイコンを表示する</value>
   </data>
-  <data name="&gt;&gt;chkTabIconDisp.Name" xml:space="preserve">
-    <value>chkTabIconDisp</value>
+  <data name="&gt;&gt;CheckTabIconDisp.Name" xml:space="preserve">
+    <value>CheckTabIconDisp</value>
   </data>
-  <data name="&gt;&gt;chkTabIconDisp.Type" xml:space="preserve">
+  <data name="&gt;&gt;CheckTabIconDisp.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;chkTabIconDisp.Parent" xml:space="preserve">
+  <data name="&gt;&gt;CheckTabIconDisp.Parent" xml:space="preserve">
     <value>PreviewPanel</value>
   </data>
-  <data name="&gt;&gt;chkTabIconDisp.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;CheckTabIconDisp.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
   <data name="CheckPreviewEnable.AutoSize" type="System.Boolean, mscorlib">

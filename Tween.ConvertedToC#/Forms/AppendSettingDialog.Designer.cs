@@ -391,10 +391,10 @@ namespace Hoehoe
             this.CheckStartupVersion.Name = "CheckStartupVersion";
             this.CheckStartupVersion.UseVisualStyleBackColor = true;
             // 
-            // chkGetFav
+            // CheckGetFav
             // 
-            resources.ApplyResources(this.CheckGetFav, "chkGetFav");
-            this.CheckGetFav.Name = "chkGetFav";
+            resources.ApplyResources(this.CheckGetFav, "CheckGetFav");
+            this.CheckGetFav.Name = "CheckGetFav";
             this.CheckGetFav.UseVisualStyleBackColor = true;
             // 
             // PreviewPanel
@@ -449,16 +449,16 @@ namespace Hoehoe
             resources.ApplyResources(this.Label72, "Label72");
             this.Label72.Name = "Label72";
             // 
-            // ChkNewMentionsBlink
+            // CheckNewMentionsBlink
             // 
-            resources.ApplyResources(this.CheckNewMentionsBlink, "ChkNewMentionsBlink");
-            this.CheckNewMentionsBlink.Name = "ChkNewMentionsBlink";
+            resources.ApplyResources(this.CheckNewMentionsBlink, "CheckNewMentionsBlink");
+            this.CheckNewMentionsBlink.Name = "CheckNewMentionsBlink";
             this.CheckNewMentionsBlink.UseVisualStyleBackColor = true;
             // 
-            // chkTabIconDisp
+            // CheckTabIconDisp
             // 
-            resources.ApplyResources(this.CheckTabIconDisp, "chkTabIconDisp");
-            this.CheckTabIconDisp.Name = "chkTabIconDisp";
+            resources.ApplyResources(this.CheckTabIconDisp, "CheckTabIconDisp");
+            this.CheckTabIconDisp.Name = "CheckTabIconDisp";
             this.CheckTabIconDisp.UseVisualStyleBackColor = true;
             // 
             // CheckPreviewEnable
@@ -982,7 +982,7 @@ namespace Hoehoe
             resources.ApplyResources(this.Label11, "Label11");
             this.Label11.Name = "Label11";
             // 
-            // IconSize_
+            // IconSize
             // 
             this.IconSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.IconSize.FormattingEnabled = true;
@@ -1589,7 +1589,7 @@ namespace Hoehoe
             resources.ApplyResources(this.GetPeriodPanel, "GetPeriodPanel");
             this.GetPeriodPanel.Name = "GetPeriodPanel";
             // 
-            // UserstreamPeriod_
+            // UserstreamPeriod
             // 
             resources.ApplyResources(this.UserstreamPeriod, "UserstreamPeriod");
             this.UserstreamPeriod.Name = "UserstreamPeriod";
@@ -1615,13 +1615,13 @@ namespace Hoehoe
             resources.ApplyResources(this.Label21, "Label21");
             this.Label21.Name = "Label21";
             // 
-            // UserTimelinePeriod_
+            // UserTimelinePeriod
             // 
             resources.ApplyResources(this.UserTimelinePeriod, "UserTimelinePeriod");
             this.UserTimelinePeriod.Name = "UserTimelinePeriod";
             this.UserTimelinePeriod.Validating += new System.ComponentModel.CancelEventHandler(this.UserTimeline_Validating);
             // 
-            // TimelinePeriod_
+            // TimelinePeriod
             // 
             resources.ApplyResources(this.TimelinePeriod, "TimelinePeriod");
             this.TimelinePeriod.Name = "TimelinePeriod";
@@ -1654,7 +1654,7 @@ namespace Hoehoe
             resources.ApplyResources(this.Label33, "Label33");
             this.Label33.Name = "Label33";
             // 
-            // ListsPeriod_
+            // ListsPeriod
             // 
             resources.ApplyResources(this.ListsPeriod, "ListsPeriod");
             this.ListsPeriod.Name = "ListsPeriod";
@@ -1665,7 +1665,7 @@ namespace Hoehoe
             resources.ApplyResources(this.Label7, "Label7");
             this.Label7.Name = "Label7";
             // 
-            // PubSearchPeriod_
+            // PubSearchPeriod
             // 
             resources.ApplyResources(this.PubSearchPeriod, "PubSearchPeriod");
             this.PubSearchPeriod.Name = "PubSearchPeriod";
@@ -1676,7 +1676,7 @@ namespace Hoehoe
             resources.ApplyResources(this.Label69, "Label69");
             this.Label69.Name = "Label69";
             // 
-            // ReplyPeriod_
+            // ReplyPeriod
             // 
             resources.ApplyResources(this.ReplyPeriod, "ReplyPeriod");
             this.ReplyPeriod.Name = "ReplyPeriod";
@@ -1700,7 +1700,7 @@ namespace Hoehoe
             resources.ApplyResources(this.Label5, "Label5");
             this.Label5.Name = "Label5";
             // 
-            // DMPeriod_
+            // DMPeriod
             // 
             resources.ApplyResources(this.DMPeriod, "DMPeriod");
             this.DMPeriod.Name = "DMPeriod";
@@ -2294,6 +2294,12 @@ namespace Hoehoe
             this.ButtonBackToDefaultFontColor2.Name = "ButtonBackToDefaultFontColor2";
             this.ButtonBackToDefaultFontColor2.UseVisualStyleBackColor = true;
             this.ButtonBackToDefaultFontColor2.Click += new System.EventHandler(this.ButtonBackToDefaultFontColor_Click);
+            // 
+            // FontDialog1
+            // 
+            this.FontDialog1.AllowVerticalFonts = false;
+            this.FontDialog1.FontMustExist = true;
+            this.FontDialog1.ShowColor = true;
             // 
             // cancelButton
             // 
