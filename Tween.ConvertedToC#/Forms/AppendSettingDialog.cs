@@ -549,11 +549,6 @@ namespace Hoehoe
             this.GroupBox2.Visible = false;
 #endif
             this.tw = ((TweenMain)this.Owner).TwitterInstance;
-            /*string uname = this.tw.Username;
-            string pw = this.tw.Password;
-            string tk = this.tw.AccessToken;
-            string tks = this.tw.AccessTokenSecret;
-            */
             this.AuthClearButton.Enabled = true;
 
             this.AuthUserCombo.Items.Clear();
@@ -965,7 +960,7 @@ namespace Hoehoe
                     Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
             }
 
-            e.Cancel = rpPV.IsValidPeriod(this.DMPeriod.Text);
+            e.Cancel = dmPV.IsValidPeriod(this.DMPeriod.Text);
             if (e.Cancel)
             {
                 return;
@@ -1035,11 +1030,8 @@ namespace Hoehoe
             this.StartupReaded.Enabled = this.UReadMng.Checked;
         }
 
-        private void ButtonFontAndColor_Click(object sender, EventArgs e)
+        private bool TrySelectFontAndColor(ref Color c, ref Font f)
         {
-            Button btn = (Button)sender;
-            DialogResult rtn = default(DialogResult);
-
             this.FontDialog1.AllowVerticalFonts = false;
             this.FontDialog1.AllowScriptChange = true;
             this.FontDialog1.AllowSimulations = true;
@@ -1050,59 +1042,54 @@ namespace Hoehoe
             this.FontDialog1.ShowApply = false;
             this.FontDialog1.ShowEffects = true;
             this.FontDialog1.ShowColor = true;
-
-            switch (btn.Name)
-            {
-                case "btnUnread":
-                    this.FontDialog1.Color = this.lblUnread.ForeColor;
-                    this.FontDialog1.Font = this.lblUnread.Font;
-                    break;
-                case "btnDetail":
-                    this.FontDialog1.Color = this.lblDetail.ForeColor;
-                    this.FontDialog1.Font = this.lblDetail.Font;
-                    break;
-                case "btnListFont":
-                    this.FontDialog1.Color = this.lblListFont.ForeColor;
-                    this.FontDialog1.Font = this.lblListFont.Font;
-                    break;
-                case "btnInputFont":
-                    this.FontDialog1.Color = this.lblInputFont.ForeColor;
-                    this.FontDialog1.Font = this.lblInputFont.Font;
-                    break;
-            }
+            this.FontDialog1.Color = c;
+            this.FontDialog1.Font = f;
 
             try
             {
-                rtn = this.FontDialog1.ShowDialog();
+                if (this.FontDialog1.ShowDialog() == DialogResult.Cancel)
+                {
+                    return false;
+                }
             }
             catch (ArgumentException ex)
             {
                 MessageBox.Show(ex.Message);
-                return;
+                return false;
             }
 
-            if (rtn == DialogResult.Cancel)
+            c = this.FontDialog1.Color;
+            f = this.FontDialog1.Font;
+            return true;
+        }
+
+        private void ButtonFontAndColor_Click_Extract(Label lb)
+        {
+            var c = lb.ForeColor;
+            var f = lb.Font;
+            if (this.TrySelectFontAndColor(ref c, ref f))
             {
-                return;
+                lb.ForeColor = c;
+                lb.Font = f;
             }
+        }
 
+        private void ButtonFontAndColor_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;            
             switch (btn.Name)
             {
                 case "btnUnread":
-                    this.lblUnread.ForeColor = this.FontDialog1.Color;
-                    this.lblUnread.Font = this.FontDialog1.Font;
+                    ButtonFontAndColor_Click_Extract(this.lblUnread);
                     break;
                 case "btnDetail":
-                    this.lblDetail.ForeColor = this.FontDialog1.Color;
-                    this.lblDetail.Font = this.FontDialog1.Font;
+                    ButtonFontAndColor_Click_Extract(this.lblDetail);
                     break;
                 case "btnListFont":
-                    this.lblListFont.ForeColor = this.FontDialog1.Color;
-                    this.lblListFont.Font = this.FontDialog1.Font;
+                    ButtonFontAndColor_Click_Extract(this.lblListFont);
                     break;
                 case "btnInputFont":
-                    this.lblInputFont.ForeColor = this.FontDialog1.Color;
-                    this.lblInputFont.Font = this.FontDialog1.Font;
+                    ButtonFontAndColor_Click_Extract(this.lblInputFont);
                     break;
             }
         }
