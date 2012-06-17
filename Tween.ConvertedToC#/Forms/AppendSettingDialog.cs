@@ -146,6 +146,7 @@ namespace Hoehoe
                     return;
                 }
             }
+
             this.validationError = false;            
             this.configurations.UserAccounts.Clear();
             this.configurations.UserAccounts.AddRange(this.AuthUserCombo.Items.Cast<UserAccount>());
@@ -548,11 +549,11 @@ namespace Hoehoe
             this.GroupBox2.Visible = false;
 #endif
             this.tw = ((TweenMain)this.Owner).TwitterInstance;
-            string uname = this.tw.Username;
+            /*string uname = this.tw.Username;
             string pw = this.tw.Password;
             string tk = this.tw.AccessToken;
             string tks = this.tw.AccessTokenSecret;
-
+            */
             this.AuthClearButton.Enabled = true;
 
             this.AuthUserCombo.Items.Clear();
@@ -704,15 +705,7 @@ namespace Hoehoe
                     break;
             }
 
-            bool chk = this.RadioProxySpecified.Checked;
-            this.LabelProxyAddress.Enabled = chk;
-            this.TextProxyAddress.Enabled = chk;
-            this.LabelProxyPort.Enabled = chk;
-            this.TextProxyPort.Enabled = chk;
-            this.LabelProxyUser.Enabled = chk;
-            this.TextProxyUser.Enabled = chk;
-            this.LabelProxyPassword.Enabled = chk;
-            this.TextProxyPassword.Enabled = chk;
+            this.ChangeProxySettingControlsStatus(this.RadioProxySpecified.Checked);
 
             this.TextProxyAddress.Text = this.configurations.ProxyAddress;
             this.TextProxyPort.Text = this.configurations.ProxyPort.ToString();
@@ -728,6 +721,7 @@ namespace Hoehoe
             this.ShortenTcoCheck.Checked = this.configurations.ShortenTco;
             this.ShortenTcoCheck.Enabled = this.CheckAutoConvertUrl.Checked;
             this.CheckOutputz.Checked = this.configurations.OutputzEnabled;
+            this.ChangeOutputzControlsStatus(this.CheckOutputz.Checked); 
             this.TextBoxOutputzKey.Text = this.configurations.OutputzKey;
 
             switch (this.configurations.OutputzUrlmode)
@@ -815,9 +809,6 @@ namespace Hoehoe
             this.HotkeyText.Enabled = this.configurations.HotkeyEnabled;
             this.HotkeyCode.Enabled = this.configurations.HotkeyEnabled;
             this.CheckNewMentionsBlink.Checked = this.configurations.BlinkNewMentions;
-
-            this.CheckOutputz_CheckedChanged(sender, e);
-
             this.GetMoreTextCountApi.Text = this.configurations.MoreCountApi.ToString();
             this.FirstTextCountApi.Text = this.configurations.FirstCountApi.ToString();
             this.SearchTextCountApi.Text = this.configurations.SearchCountApi.ToString();
@@ -1236,7 +1227,11 @@ namespace Hoehoe
 
         private void RadioProxySpecified_CheckedChanged(object sender, EventArgs e)
         {
-            bool chk = this.RadioProxySpecified.Checked;
+            ChangeProxySettingControlsStatus(this.RadioProxySpecified.Checked);
+        }
+
+        private void ChangeProxySettingControlsStatus(bool chk)
+        {
             this.LabelProxyAddress.Enabled = chk;
             this.TextProxyAddress.Enabled = chk;
             this.LabelProxyPort.Enabled = chk;
@@ -1272,7 +1267,11 @@ namespace Hoehoe
 
         private void CheckOutputz_CheckedChanged(object sender, EventArgs e)
         {
-            var cheked = this.CheckOutputz.Checked;
+            ChangeOutputzControlsStatus(this.CheckOutputz.Checked);
+        }
+
+        private void ChangeOutputzControlsStatus(bool cheked)
+        {
             this.Label59.Enabled = cheked;
             this.Label60.Enabled = cheked;
             this.TextBoxOutputzKey.Enabled = cheked;
