@@ -31,6 +31,7 @@ namespace Hoehoe
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Drawing;
+    using System.Linq;
     using System.Threading;
     using System.Windows.Forms;
 
@@ -155,90 +156,30 @@ namespace Hoehoe
             }
 
             this.configurations.UserAccounts.Clear();
-            foreach (var u in this.AuthUserCombo.Items)
-            {
-                this.configurations.UserAccounts.Add((UserAccount)u);
-            }
-
-            if (this.AuthUserCombo.SelectedIndex > -1)
-            {
-                foreach (UserAccount u in this.configurations.UserAccounts)
-                {
-                    if (u.Username.ToLower() == ((UserAccount)this.AuthUserCombo.SelectedItem).Username.ToLower())
-                    {
-                        this.tw.Initialize(u.Token, u.TokenSecret, u.Username, u.UserId);
-                        if (u.UserId == 0)
-                        {
-                            this.tw.VerifyCredentials();
-                            u.UserId = this.tw.UserId;
-                        }
-
-                        break;
-                    }
-                }
-            }
-            else
+            this.configurations.UserAccounts.AddRange(this.AuthUserCombo.Items.Cast<UserAccount>());
+            if (this.AuthUserCombo.SelectedIndex < 0)
             {
                 this.tw.ClearAuthInfo();
                 this.tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
             }
-
-            IntervalChangedEventArgs arg = new IntervalChangedEventArgs();
-            bool isIntervalChanged = false;
+            else
+            {
+                string selectedUser = ((UserAccount)this.AuthUserCombo.SelectedItem).Username.ToLower();
+                var newuser = this.configurations.UserAccounts.Where(u => u.Username.ToLower() == selectedUser).First();
+                this.tw.Initialize(newuser.Token, newuser.TokenSecret, newuser.Username, newuser.UserId);
+                if (newuser.UserId == 0)
+                {
+                    this.tw.VerifyCredentials();
+                    newuser.UserId = this.tw.UserId;
+                }
+            }
 
             try
             {
                 this.configurations.UserstreamStartup = this.StartupUserstreamCheck.Checked;
 
-                if (this.configurations.UserstreamPeriodInt != Convert.ToInt32(this.UserstreamPeriod.Text))
-                {
-                    this.configurations.UserstreamPeriodInt = Convert.ToInt32(this.UserstreamPeriod.Text);
-                    arg.UserStream = true;
-                    isIntervalChanged = true;
-                }
-
-                if (this.configurations.TimelinePeriodInt != Convert.ToInt32(this.TimelinePeriod.Text))
-                {
-                    this.configurations.TimelinePeriodInt = Convert.ToInt32(this.TimelinePeriod.Text);
-                    arg.Timeline = true;
-                    isIntervalChanged = true;
-                }
-
-                if (this.configurations.DMPeriodInt != Convert.ToInt32(this.DMPeriod.Text))
-                {
-                    this.configurations.DMPeriodInt = Convert.ToInt32(this.DMPeriod.Text);
-                    arg.DirectMessage = true;
-                    isIntervalChanged = true;
-                }
-
-                if (this.configurations.PubSearchPeriodInt != Convert.ToInt32(this.PubSearchPeriod.Text))
-                {
-                    this.configurations.PubSearchPeriodInt = Convert.ToInt32(this.PubSearchPeriod.Text);
-                    arg.PublicSearch = true;
-                    isIntervalChanged = true;
-                }
-
-                if (this.configurations.ListsPeriodInt != Convert.ToInt32(this.ListsPeriod.Text))
-                {
-                    this.configurations.ListsPeriodInt = Convert.ToInt32(this.ListsPeriod.Text);
-                    arg.Lists = true;
-                    isIntervalChanged = true;
-                }
-
-                if (this.configurations.ReplyPeriodInt != Convert.ToInt32(this.ReplyPeriod.Text))
-                {
-                    this.configurations.ReplyPeriodInt = Convert.ToInt32(this.ReplyPeriod.Text);
-                    arg.Reply = true;
-                    isIntervalChanged = true;
-                }
-
-                if (this.configurations.UserTimelinePeriodInt != Convert.ToInt32(this.UserTimelinePeriod.Text))
-                {
-                    this.configurations.UserTimelinePeriodInt = Convert.ToInt32(this.UserTimelinePeriod.Text);
-                    arg.UserTimeline = true;
-                    isIntervalChanged = true;
-                }
-
+                var arg = new IntervalChangedEventArgs();
+                bool isIntervalChanged = SaveIntarvals(arg);
                 if (isIntervalChanged)
                 {
                     if (this.IntervalChanged != null)
@@ -532,6 +473,53 @@ namespace Hoehoe
             }
         }
 
+        private bool SaveIntarvals(IntervalChangedEventArgs arg)
+        {
+            if (this.configurations.UserstreamPeriodInt != Convert.ToInt32(this.UserstreamPeriod.Text))
+            {
+                this.configurations.UserstreamPeriodInt = Convert.ToInt32(this.UserstreamPeriod.Text);
+                arg.UserStream = true;
+            }
+
+            if (this.configurations.TimelinePeriodInt != Convert.ToInt32(this.TimelinePeriod.Text))
+            {
+                this.configurations.TimelinePeriodInt = Convert.ToInt32(this.TimelinePeriod.Text);
+                arg.Timeline = true;
+            }
+
+            if (this.configurations.DMPeriodInt != Convert.ToInt32(this.DMPeriod.Text))
+            {
+                this.configurations.DMPeriodInt = Convert.ToInt32(this.DMPeriod.Text);
+                arg.DirectMessage = true;
+            }
+
+            if (this.configurations.PubSearchPeriodInt != Convert.ToInt32(this.PubSearchPeriod.Text))
+            {
+                this.configurations.PubSearchPeriodInt = Convert.ToInt32(this.PubSearchPeriod.Text);
+                arg.PublicSearch = true;
+            }
+
+            if (this.configurations.ListsPeriodInt != Convert.ToInt32(this.ListsPeriod.Text))
+            {
+                this.configurations.ListsPeriodInt = Convert.ToInt32(this.ListsPeriod.Text);
+                arg.Lists = true;
+            }
+
+            if (this.configurations.ReplyPeriodInt != Convert.ToInt32(this.ReplyPeriod.Text))
+            {
+                this.configurations.ReplyPeriodInt = Convert.ToInt32(this.ReplyPeriod.Text);
+                arg.Reply = true;
+            }
+
+            if (this.configurations.UserTimelinePeriodInt != Convert.ToInt32(this.UserTimelinePeriod.Text))
+            {
+                this.configurations.UserTimelinePeriodInt = Convert.ToInt32(this.UserTimelinePeriod.Text);
+                arg.UserTimeline = true;
+            }
+
+            return arg.UserStream || arg.Timeline || arg.DirectMessage || arg.PublicSearch || arg.Lists || arg.Reply || arg.UserTimeline;
+        }
+
         private void Setting_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (MyCommon.IsEnding)
@@ -553,7 +541,7 @@ namespace Hoehoe
                 bool userSet = false;
                 if (this.initialUserId > 0)
                 {
-                    foreach (UserAccount u in this.configurations.UserAccounts)
+                    foreach (var u in this.configurations.UserAccounts)
                     {
                         if (u.UserId == this.initialUserId)
                         {

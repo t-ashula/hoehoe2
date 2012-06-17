@@ -33,7 +33,7 @@ namespace Hoehoe
         private Configs()
         {
         }
-
+        
         public static Configs Instance
         {
             get { return instance; }
@@ -50,14 +50,16 @@ namespace Hoehoe
         public bool IsRemoveSameEvent { get; set; }
         public bool IsNotifyUseGrowl { get; set; }
         public Configuration TwitterConfiguration { get; set; }
-        public int UserstreamPeriodInt { get; set; }
+
         public bool UserstreamStartup { get; set; }
+        public int UserstreamPeriodInt { get; set; }
         public int TimelinePeriodInt { get; set; }
-        public int ReplyPeriodInt { get; set; }
         public int DMPeriodInt { get; set; }
         public int PubSearchPeriodInt { get; set; }
         public int ListsPeriodInt { get; set; }
+        public int ReplyPeriodInt { get; set; }
         public int UserTimelinePeriodInt { get; set; }
+
         public bool Readed { get; set; }
         public IconSizes IconSz { get; set; }
         public string Status { get; set; }
@@ -196,6 +198,7 @@ namespace Hoehoe
         public bool EventNotifyEnabled { get; set; }
 
         public EventType EventNotifyFlag { get; set; }
+
         public EventType IsMyEventNotifyFlag { get; set; }
 
         public bool ForceEventNotify { get; set; }
