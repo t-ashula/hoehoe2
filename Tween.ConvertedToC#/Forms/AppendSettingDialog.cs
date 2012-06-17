@@ -41,7 +41,6 @@ namespace Hoehoe
         private static AppendSettingDialog instance = new AppendSettingDialog();
         private Twitter tw;
         private bool validationError;
-        private string myTranslateLanguage;
         private long initialUserId;
         private string pin;
         private EventCheckboxTblElement[] eventCheckboxTableElements = null;
@@ -82,19 +81,7 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public string TranslateLanguage
-        {
-            get
-            {
-                return this.myTranslateLanguage;
-            }
-
-            set
-            {
-                this.myTranslateLanguage = value;
-                this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(value);
-            }
-        }
+        public string TranslateLanguage { get; set; }
 
         #endregion properties
 
@@ -438,7 +425,7 @@ namespace Hoehoe
                 }
                 this.configurations.ForceEventNotify = this.CheckForceEventNotify.Checked;
                 this.configurations.FavEventUnread = this.CheckFavEventUnread.Checked;
-                this.myTranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(this.ComboBoxTranslateLanguage.SelectedIndex);
+                this.TranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(this.ComboBoxTranslateLanguage.SelectedIndex);
                 this.configurations.EventSoundFile = Convert.ToString(this.ComboBoxEventNotifySound.SelectedItem);
                 this.configurations.AutoShortUrlFirst = (UrlConverter)this.ComboBoxAutoShortUrlFirst.SelectedIndex;
                 this.configurations.TabIconDisp = this.CheckTabIconDisp.Checked;
@@ -817,7 +804,7 @@ namespace Hoehoe
             this.ApplyEventNotifyFlag(this.configurations.EventNotifyEnabled, this.configurations.EventNotifyFlag, this.configurations.IsMyEventNotifyFlag);
             this.CheckForceEventNotify.Checked = this.configurations.ForceEventNotify;
             this.CheckFavEventUnread.Checked = this.configurations.FavEventUnread;
-            this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this.myTranslateLanguage);
+            this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this.TranslateLanguage);
             this.SoundFileListup();
             this.ComboBoxAutoShortUrlFirst.SelectedIndex = (int)this.configurations.AutoShortUrlFirst;
             this.CheckTabIconDisp.Checked = this.configurations.TabIconDisp;
