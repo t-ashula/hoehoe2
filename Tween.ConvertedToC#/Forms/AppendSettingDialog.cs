@@ -723,7 +723,6 @@ namespace Hoehoe
             this.CheckOutputz.Checked = this.configurations.OutputzEnabled;
             this.ChangeOutputzControlsStatus(this.CheckOutputz.Checked); 
             this.TextBoxOutputzKey.Text = this.configurations.OutputzKey;
-
             switch (this.configurations.OutputzUrlmode)
             {
                 case OutputzUrlmode.twittercom:
@@ -840,7 +839,6 @@ namespace Hoehoe
             this.TabMouseLockCheck.Checked = this.configurations.TabMouseLock;
             this.IsRemoveSameFavEventCheckBox.Checked = this.configurations.IsRemoveSameEvent;
             this.IsNotifyUseGrowlCheckBox.Checked = this.configurations.IsNotifyUseGrowl;
-
             this.IsNotifyUseGrowlCheckBox.Enabled = GrowlHelper.IsDllExists;
 
             this.TreeViewSetting.Nodes["BasedNode"].Tag = this.BasedPanel;
@@ -864,165 +862,168 @@ namespace Hoehoe
             ActiveControl = this.StartAuthButton;
         }
 
+        private class PeriodValidator
+        {
+            private Func<int, bool> validator;
+            private string msg1;
+            private string msg2;
+
+            public PeriodValidator(Func<int, bool> f, string err1, string err2)
+            {
+                this.validator = f;
+                this.msg1 = err1;
+                this.msg2 = err2;
+            }
+
+            public bool IsValidPeriod(string input)
+            {
+                int t = 0;
+                if (Int32.TryParse(input, out t))
+                {
+                    MessageBox.Show(this.msg1);
+                    return false;
+                }
+
+                if (!validator(t))
+                {
+                    MessageBox.Show(this.msg2);
+                    return false;
+                }
+
+                return true;
+            }
+        };
+
+        private PeriodValidator usPV;
         private void UserstreamPeriod_Validating(object sender, CancelEventArgs e)
         {
-            int prd = 0;
-            try
+            if (this.usPV == null)
             {
-                prd = Convert.ToInt32(this.UserstreamPeriod.Text);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1);
-                e.Cancel = true;
-                return;
+                usPV = new PeriodValidator(
+                    i => i >= 0 && i <= 60,
+                    Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1,
+                    Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1);
             }
 
-            if (prd < 0 || prd > 60)
+            e.Cancel = usPV.IsValidPeriod(this.UserstreamPeriod.Text);
+            if (e.Cancel)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1);
-                e.Cancel = true;
                 return;
             }
 
             this.CalcApiUsing();
         }
 
+        private PeriodValidator tlPV;
         private void TimelinePeriod_Validating(object sender, CancelEventArgs e)
         {
-            int prd = 0;
-            try
+            if (tlPV == null)
             {
-                prd = Convert.ToInt32(this.TimelinePeriod.Text);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText1);
-                e.Cancel = true;
-                return;
+                tlPV = new PeriodValidator(
+                    i => !(i != 0 && (i < 15 || i > 6000)),
+                    Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText1,
+                    Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
             }
 
-            if (prd != 0 && (prd < 15 || prd > 6000))
+            e.Cancel = tlPV.IsValidPeriod(this.TimelinePeriod.Text);
+            if (e.Cancel)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
-                e.Cancel = true;
                 return;
             }
 
             this.CalcApiUsing();
         }
 
+        private PeriodValidator rpPV;
         private void ReplyPeriod_Validating(object sender, CancelEventArgs e)
         {
-            int prd = 0;
-            try
+            if (rpPV == null)
             {
-                prd = Convert.ToInt32(this.ReplyPeriod.Text);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText1);
-                e.Cancel = true;
-                return;
+                rpPV = new PeriodValidator(
+                    i => !(i != 0 && (i < 15 || i > 6000)),
+                    Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText1,
+                    Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
             }
 
-            if (prd != 0 && (prd < 15 || prd > 6000))
+            e.Cancel = rpPV.IsValidPeriod(this.ReplyPeriod.Text);
+            if (e.Cancel)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
-                e.Cancel = true;
                 return;
             }
 
             this.CalcApiUsing();
         }
 
+        private PeriodValidator dmPV;
         private void DMPeriod_Validating(object sender, CancelEventArgs e)
         {
-            int prd = 0;
-            try
+            if (dmPV == null)
             {
-                prd = Convert.ToInt32(this.DMPeriod.Text);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText1);
-                e.Cancel = true;
-                return;
+                dmPV = new PeriodValidator(
+                    i => !(i != 0 && (i < 15 || i > 6000)),
+                    Hoehoe.Properties.Resources.DMPeriod_ValidatingText1,
+                    Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
             }
 
-            if (prd != 0 && (prd < 15 || prd > 6000))
+            e.Cancel = rpPV.IsValidPeriod(this.DMPeriod.Text);
+            if (e.Cancel)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
-                e.Cancel = true;
                 return;
             }
 
             this.CalcApiUsing();
         }
 
+        private PeriodValidator psPV;
         private void PubSearchPeriod_Validating(object sender, CancelEventArgs e)
         {
-            int prd = 0;
-            try
+            if (psPV == null)
             {
-                prd = Convert.ToInt32(this.PubSearchPeriod.Text);
+                psPV = new PeriodValidator(
+                    i => !(i != 0 && (i < 30 || i > 6000)),
+                    Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText1,
+                    Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText2);
             }
-            catch (Exception)
+            
+            e.Cancel = psPV.IsValidPeriod(this.PubSearchPeriod.Text);
+            if (e.Cancel)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText1);
-                e.Cancel = true;
                 return;
-            }
-
-            if (prd != 0 && (prd < 30 || prd > 6000))
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText2);
-                e.Cancel = true;
             }
         }
 
+        private PeriodValidator lsPV;
         private void ListsPeriod_Validating(object sender, CancelEventArgs e)
         {
-            int prd = 0;
-            try
+            if (lsPV == null)
             {
-                prd = Convert.ToInt32(this.ListsPeriod.Text);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText1);
-                e.Cancel = true;
-                return;
+                lsPV = new PeriodValidator(prd => !(prd != 0 && (prd < 15 || prd > 6000)),
+                    Hoehoe.Properties.Resources.DMPeriod_ValidatingText1,
+                    Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
             }
 
-            if (prd != 0 && (prd < 15 || prd > 6000))
+            e.Cancel = lsPV.IsValidPeriod(this.ListsPeriod.Text);
+            if (e.Cancel)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
-                e.Cancel = true;
                 return;
             }
 
             this.CalcApiUsing();
         }
 
+        private PeriodValidator utPV;
         private void UserTimeline_Validating(object sender, CancelEventArgs e)
         {
-            int prd = 0;
-            try
+            if (utPV == null)
             {
-                prd = Convert.ToInt32(this.UserTimelinePeriod.Text);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText1);
-                e.Cancel = true;
-                return;
+                utPV = new PeriodValidator(prd => !(prd != 0 && (prd < 15 || prd > 6000)),
+                    Hoehoe.Properties.Resources.DMPeriod_ValidatingText1,
+                    Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
             }
 
-            if (prd != 0 && (prd < 15 || prd > 6000))
+            e.Cancel = utPV.IsValidPeriod(this.UserTimelinePeriod.Text);
+            if (e.Cancel)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
-                e.Cancel = true;
                 return;
             }
 
@@ -1031,7 +1032,7 @@ namespace Hoehoe
 
         private void UReadMng_CheckedChanged(object sender, EventArgs e)
         {
-            this.StartupReaded.Enabled = this.UReadMng.Checked == true;
+            this.StartupReaded.Enabled = this.UReadMng.Checked;
         }
 
         private void ButtonFontAndColor_Click(object sender, EventArgs e)
