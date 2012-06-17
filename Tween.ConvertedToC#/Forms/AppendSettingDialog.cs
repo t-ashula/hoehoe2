@@ -145,16 +145,8 @@ namespace Hoehoe
                     this.TextBitlyId.Focus();
                     return;
                 }
-                else
-                {
-                    this.validationError = false;
-                }
             }
-            else
-            {
-                this.validationError = false;
-            }
-
+            this.validationError = false;            
             this.configurations.UserAccounts.Clear();
             this.configurations.UserAccounts.AddRange(this.AuthUserCombo.Items.Cast<UserAccount>());
             if (this.AuthUserCombo.SelectedIndex < 0)
@@ -189,25 +181,7 @@ namespace Hoehoe
                 }
 
                 this.configurations.Readed = this.StartupReaded.Checked;
-                switch (this.IconSize.SelectedIndex)
-                {
-                    case 0:
-                        this.configurations.IconSz = IconSizes.IconNone;
-                        break;
-                    case 1:
-                        this.configurations.IconSz = IconSizes.Icon16;
-                        break;
-                    case 2:
-                        this.configurations.IconSz = IconSizes.Icon24;
-                        break;
-                    case 3:
-                        this.configurations.IconSz = IconSizes.Icon48;
-                        break;
-                    case 4:
-                        this.configurations.IconSz = IconSizes.Icon48_2;
-                        break;
-                }
-
+                this.configurations.IconSz = this.IconSize.SelectedIndex < 0 ? IconSizes.IconNone : (IconSizes)this.IconSize.SelectedIndex;
                 this.configurations.Status = this.StatusText.Text;
                 this.configurations.PlaySound = this.PlaySnd.Checked;
                 this.configurations.UnreadManage = this.UReadMng.Checked;
@@ -394,24 +368,9 @@ namespace Hoehoe
                         break;
                 }
 
-                switch (this.LanguageCombo.SelectedIndex)
-                {
-                    case 0:
-                        this.configurations.Language = "OS";
-                        break;
-                    case 1:
-                        this.configurations.Language = "ja";
-                        break;
-                    case 2:
-                        this.configurations.Language = "en";
-                        break;
-                    case 3:
-                        this.configurations.Language = "zh-CN";
-                        break;
-                    default:
-                        this.configurations.Language = "en";
-                        break;
-                }
+                var lngs = new[] { "OS", "ja", "en", "zh-CN" };
+                this.configurations.Language = this.LanguageCombo.SelectedIndex < 0
+                    || this.LanguageCombo.SelectedIndex > lngs.Length ? "en" : lngs[this.LanguageCombo.SelectedIndex];
 
                 this.configurations.HotkeyEnabled = this.HotkeyCheck.Checked;
                 this.configurations.HotkeyMod = Keys.None;
@@ -1313,20 +1272,11 @@ namespace Hoehoe
 
         private void CheckOutputz_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.CheckOutputz.Checked == true)
-            {
-                this.Label59.Enabled = true;
-                this.Label60.Enabled = true;
-                this.TextBoxOutputzKey.Enabled = true;
-                this.ComboBoxOutputzUrlmode.Enabled = true;
-            }
-            else
-            {
-                this.Label59.Enabled = false;
-                this.Label60.Enabled = false;
-                this.TextBoxOutputzKey.Enabled = false;
-                this.ComboBoxOutputzUrlmode.Enabled = false;
-            }
+            var cheked = this.CheckOutputz.Checked;
+            this.Label59.Enabled = cheked;
+            this.Label60.Enabled = cheked;
+            this.TextBoxOutputzKey.Enabled = cheked;
+            this.ComboBoxOutputzUrlmode.Enabled = cheked;
         }
 
         private void TextBoxOutputzKey_Validating(object sender, CancelEventArgs e)
@@ -1434,21 +1384,12 @@ namespace Hoehoe
 
         private void ComboBoxAutoShortUrlFirst_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly
-                || this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp)
-            {
-                this.Label76.Enabled = true;
-                this.Label77.Enabled = true;
-                this.TextBitlyId.Enabled = true;
-                this.TextBitlyPw.Enabled = true;
-            }
-            else
-            {
-                this.Label76.Enabled = false;
-                this.Label77.Enabled = false;
-                this.TextBitlyId.Enabled = false;
-                this.TextBitlyPw.Enabled = false;
-            }
+            bool newVariable = (this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly 
+                || this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp);
+            this.Label76.Enabled = newVariable;
+            this.Label77.Enabled = newVariable;
+            this.TextBitlyId.Enabled = newVariable;
+            this.TextBitlyPw.Enabled = newVariable;
         }
 
         private void ButtonBackToDefaultFontColor_Click(object sender, EventArgs e)
@@ -1466,29 +1407,17 @@ namespace Hoehoe
             this.lblInputFont.Font = SystemFonts.DefaultFont;
 
             this.lblSelf.BackColor = Color.FromKnownColor(KnownColor.AliceBlue);
-
             this.lblAtSelf.BackColor = Color.FromKnownColor(KnownColor.AntiqueWhite);
-
             this.lblTarget.BackColor = Color.FromKnownColor(KnownColor.LemonChiffon);
-
             this.lblAtTarget.BackColor = Color.FromKnownColor(KnownColor.LavenderBlush);
-
             this.lblAtFromTarget.BackColor = Color.FromKnownColor(KnownColor.Honeydew);
-
             this.lblFav.ForeColor = Color.FromKnownColor(KnownColor.Red);
-
             this.lblOWL.ForeColor = Color.FromKnownColor(KnownColor.Blue);
-
             this.lblInputBackcolor.BackColor = Color.FromKnownColor(KnownColor.LemonChiffon);
-
             this.lblAtTo.BackColor = Color.FromKnownColor(KnownColor.Pink);
-
             this.lblListBackcolor.BackColor = Color.FromKnownColor(KnownColor.Window);
-
             this.lblDetailBackcolor.BackColor = Color.FromKnownColor(KnownColor.Window);
-
             this.lblDetailLink.ForeColor = Color.FromKnownColor(KnownColor.Blue);
-
             this.lblRetweet.ForeColor = Color.FromKnownColor(KnownColor.Green);
         }
 
@@ -1625,7 +1554,7 @@ namespace Hoehoe
                 return;
             }
 
-            if (!(cnt == 0) && (cnt < 20 || cnt > 200))
+            if (cnt != 0 && (cnt < 20 || cnt > 200))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
@@ -1647,7 +1576,7 @@ namespace Hoehoe
                 return;
             }
 
-            if (!(cnt == 0) && (cnt < 20 || cnt > 100))
+            if (cnt != 0 && (cnt < 20 || cnt > 100))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.TextSearchCountApi_Validating1);
                 e.Cancel = true;
@@ -1669,7 +1598,7 @@ namespace Hoehoe
                 return;
             }
 
-            if (!(cnt == 0) && (cnt < 20 || cnt > 200))
+            if (cnt != 0 && (cnt < 20 || cnt > 200))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
@@ -1691,7 +1620,7 @@ namespace Hoehoe
                 return;
             }
 
-            if (!(cnt == 0) && (cnt < 20 || cnt > 200))
+            if (cnt != 0 && (cnt < 20 || cnt > 200))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
@@ -1713,7 +1642,7 @@ namespace Hoehoe
                 return;
             }
 
-            if (!(cnt == 0) && (cnt < 20 || cnt > 200))
+            if (cnt != 0 && (cnt < 20 || cnt > 200))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
                 e.Cancel = true;
