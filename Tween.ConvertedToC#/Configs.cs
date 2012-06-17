@@ -202,8 +202,8 @@ namespace Hoehoe
 
         public bool FavEventUnread { get; set; }
 
-        // public string TranslateLanguage
-
+        public string TranslateLanguage { get; set; }
+        
         public string EventSoundFile { get; set; }
 
         public int ListDoubleClickAction { get; set; }

@@ -81,8 +81,6 @@ namespace Hoehoe
             get { return instance; }
         }
 
-        public string TranslateLanguage { get; set; }
-
         #endregion properties
 
         #region event handler
@@ -425,7 +423,7 @@ namespace Hoehoe
                 }
                 this.configurations.ForceEventNotify = this.CheckForceEventNotify.Checked;
                 this.configurations.FavEventUnread = this.CheckFavEventUnread.Checked;
-                this.TranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(this.ComboBoxTranslateLanguage.SelectedIndex);
+                this.configurations.TranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(this.ComboBoxTranslateLanguage.SelectedIndex);
                 this.configurations.EventSoundFile = Convert.ToString(this.ComboBoxEventNotifySound.SelectedItem);
                 this.configurations.AutoShortUrlFirst = (UrlConverter)this.ComboBoxAutoShortUrlFirst.SelectedIndex;
                 this.configurations.TabIconDisp = this.CheckTabIconDisp.Checked;
@@ -804,7 +802,7 @@ namespace Hoehoe
             this.ApplyEventNotifyFlag(this.configurations.EventNotifyEnabled, this.configurations.EventNotifyFlag, this.configurations.IsMyEventNotifyFlag);
             this.CheckForceEventNotify.Checked = this.configurations.ForceEventNotify;
             this.CheckFavEventUnread.Checked = this.configurations.FavEventUnread;
-            this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this.TranslateLanguage);
+            this.ComboBoxTranslateLanguage.SelectedIndex = (new Bing()).GetIndexFromLanguageEnum(this.configurations.TranslateLanguage);
             this.SoundFileListup();
             this.ComboBoxAutoShortUrlFirst.SelectedIndex = (int)this.configurations.AutoShortUrlFirst;
             this.CheckTabIconDisp.Checked = this.configurations.TabIconDisp;

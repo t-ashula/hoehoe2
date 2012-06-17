@@ -3429,7 +3429,7 @@ namespace Hoehoe
                 this.cfgCommon.IsMyEventNotifyFlag = this.configs.IsMyEventNotifyFlag;
                 this.cfgCommon.ForceEventNotify = this.configs.ForceEventNotify;
                 this.cfgCommon.FavEventUnread = this.configs.FavEventUnread;
-                this.cfgCommon.TranslateLanguage = this.settingDialog.TranslateLanguage;
+                this.cfgCommon.TranslateLanguage = this.configs.TranslateLanguage;
                 this.cfgCommon.EventSoundFile = this.configs.EventSoundFile;
                 this.cfgCommon.AutoShortUrlFirst = this.configs.AutoShortUrlFirst;
                 this.cfgCommon.TabIconDisp = this.configs.TabIconDisp;
@@ -5102,7 +5102,7 @@ namespace Hoehoe
             }
 
             string srclng = string.Empty;
-            string dstlng = this.settingDialog.TranslateLanguage;
+            string dstlng = this.configs.TranslateLanguage;
             string msg = string.Empty;
             if (srclng != dstlng && bing.Translate(string.Empty, dstlng, str, ref buf))
             {

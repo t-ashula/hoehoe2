@@ -1649,7 +1649,7 @@ namespace Hoehoe
             this.configs.IsMyEventNotifyFlag = this.cfgCommon.IsMyEventNotifyFlag;
             this.configs.ForceEventNotify = this.cfgCommon.ForceEventNotify;
             this.configs.FavEventUnread = this.cfgCommon.FavEventUnread;
-            this.settingDialog.TranslateLanguage = this.cfgCommon.TranslateLanguage;
+            this.configs.TranslateLanguage = this.cfgCommon.TranslateLanguage;
             this.configs.EventSoundFile = this.cfgCommon.EventSoundFile;
 
             // 廃止サービスが選択されていた場合bit.lyへ読み替え
