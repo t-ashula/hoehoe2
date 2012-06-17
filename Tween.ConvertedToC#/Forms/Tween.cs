@@ -105,7 +105,7 @@ namespace Hoehoe
         private GrowlHelper growlHelper;
 
         // サブ画面インスタンス
-        private AppendSettingDialog settingDialog = AppendSettingDialog.Instance; // 設定画面インスタンス
+        private AppendSettingDialog settingDialog = new AppendSettingDialog(); // 設定画面インスタンス
 
         private TabsDialog tabDialog = new TabsDialog();      // タブ選択ダイアログインスタンス
         private SearchWord searchDialog = new SearchWord();   // 検索画面インスタンス

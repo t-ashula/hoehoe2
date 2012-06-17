@@ -38,8 +38,6 @@ namespace Hoehoe
     public partial class AppendSettingDialog
     {
         #region privates
-
-        private static AppendSettingDialog instance = new AppendSettingDialog();
         private Twitter tw;
         private bool validationError;
         private long initialUserId;
@@ -74,15 +72,6 @@ namespace Hoehoe
         public event IntervalChangedEventHandler IntervalChanged;
 
         #endregion events
-
-        #region properties
-
-        public static AppendSettingDialog Instance
-        {
-            get { return instance; }
-        }
-
-        #endregion properties
 
         #region event handler
 
@@ -1101,7 +1090,7 @@ namespace Hoehoe
             return true;
         }
 
-        private void ButtonColor_ClickExtractd(Label lb, bool back=true)
+        private void ButtonColor_ClickExtractd(Label lb, bool back = true)
         {
             var c = back ? lb.BackColor : lb.ForeColor;
             if (TrySelectColor(ref c))
