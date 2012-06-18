@@ -131,6 +131,7 @@ namespace Hoehoe
         public Twitter()
         {
             this.ApiInformationChanged += this.Twitter_ApiInformationChanged;
+            this.StoredEvent = new List<FormattedEvent>();
         }
 
         public delegate void GetIconImageDelegate(PostClass post);
@@ -4556,12 +4557,14 @@ namespace Hoehoe
                 MyCommon.TraceOut(ex, "Event Exception!" + Environment.NewLine + content);
             }
 
-            FormattedEvent evt = new FormattedEvent();
-            evt.CreatedAt = MyCommon.DateTimeParse(eventData.CreatedAt);
-            evt.Event = eventData.Event;
-            evt.Username = eventData.Source.ScreenName;
-            evt.IsMe = evt.Username.ToLower().Equals(this.Username.ToLower());
-            evt.Eventtype = this.EventNameToEventType(evt.Event);
+            var evt = new FormattedEvent()
+            {
+                CreatedAt = MyCommon.DateTimeParse(eventData.CreatedAt),
+                Event = eventData.Event,
+                Username = eventData.Source.ScreenName,
+                IsMe = eventData.Source.ScreenName.ToLower().Equals(this.Username.ToLower()),
+                Eventtype = this.EventNameToEventType(eventData.Event)
+            };
             switch (eventData.Event)
             {
                 case "access_revoked":

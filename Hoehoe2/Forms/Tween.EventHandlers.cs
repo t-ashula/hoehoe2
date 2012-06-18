@@ -3624,7 +3624,7 @@ namespace Hoehoe
                             this.itemCacheIndex = -1;
                             this.postCache = null;
                             ((DetailsListView)this.curTab.Tag).Update();
-                            if (this.curPost != null & this.curPost.StatusId == id)
+                            if (this.curPost != null && this.curPost.StatusId == id)
                             {
                                 DispSelectedPost(true);
                             }
