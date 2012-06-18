@@ -889,16 +889,16 @@ namespace Hoehoe
             switch (btn.Name)
             {
                 case "btnUnread":
-                    ButtonFontAndColor_Click_Extract(this.lblUnread);
+                    ChangeLabelFontAndColor(this.lblUnread);
                     break;
                 case "btnDetail":
-                    ButtonFontAndColor_Click_Extract(this.lblDetail);
+                    ChangeLabelFontAndColor(this.lblDetail);
                     break;
                 case "btnListFont":
-                    ButtonFontAndColor_Click_Extract(this.lblListFont);
+                    ChangeLabelFontAndColor(this.lblListFont);
                     break;
                 case "btnInputFont":
-                    ButtonFontAndColor_Click_Extract(this.lblInputFont);
+                    ChangeLabelFontAndColor(this.lblInputFont);
                     break;
             }
         }
@@ -908,19 +908,19 @@ namespace Hoehoe
             Button btn = (Button)sender;
             switch (btn.Name)
             {
-                case "btnSelf": this.ButtonColor_ClickExtractd(this.lblSelf); break;
-                case "btnAtSelf": this.ButtonColor_ClickExtractd(this.lblAtSelf); break;
-                case "btnTarget": this.ButtonColor_ClickExtractd(this.lblTarget); break;
-                case "btnAtTarget": this.ButtonColor_ClickExtractd(this.lblAtTarget); break;
-                case "btnAtFromTarget": this.ButtonColor_ClickExtractd(this.lblAtFromTarget); break;
-                case "btnFav": this.ButtonColor_ClickExtractd(this.lblFav, false); break;
-                case "btnOWL": this.ButtonColor_ClickExtractd(this.lblOWL, false); break;
-                case "btnRetweet": this.ButtonColor_ClickExtractd(this.lblRetweet, false); break;
-                case "btnInputBackcolor": this.ButtonColor_ClickExtractd(this.lblInputBackcolor); break;
-                case "btnAtTo": this.ButtonColor_ClickExtractd(this.lblAtTo); break;
-                case "btnListBack": this.ButtonColor_ClickExtractd(this.lblListBackcolor); break;
-                case "btnDetailBack": this.ButtonColor_ClickExtractd(this.lblDetailBackcolor); break;
-                case "btnDetailLink": this.ButtonColor_ClickExtractd(this.lblDetailLink, false); break;
+                case "btnSelf": this.ChangeLabelColor(this.lblSelf); break;
+                case "btnAtSelf": this.ChangeLabelColor(this.lblAtSelf); break;
+                case "btnTarget": this.ChangeLabelColor(this.lblTarget); break;
+                case "btnAtTarget": this.ChangeLabelColor(this.lblAtTarget); break;
+                case "btnAtFromTarget": this.ChangeLabelColor(this.lblAtFromTarget); break;
+                case "btnFav": this.ChangeLabelColor(this.lblFav, false); break;
+                case "btnOWL": this.ChangeLabelColor(this.lblOWL, false); break;
+                case "btnRetweet": this.ChangeLabelColor(this.lblRetweet, false); break;
+                case "btnInputBackcolor": this.ChangeLabelColor(this.lblInputBackcolor); break;
+                case "btnAtTo": this.ChangeLabelColor(this.lblAtTo); break;
+                case "btnListBack": this.ChangeLabelColor(this.lblListBackcolor); break;
+                case "btnDetailBack": this.ChangeLabelColor(this.lblDetailBackcolor); break;
+                case "btnDetailLink": this.ChangeLabelColor(this.lblDetailLink, false); break;
             }
         }
 
@@ -1268,7 +1268,7 @@ namespace Hoehoe
             return arg.UserStream || arg.Timeline || arg.DirectMessage || arg.PublicSearch || arg.Lists || arg.Reply || arg.UserTimeline;
         }
         
-        private bool TrySelectFontAndColor(ref Color c, ref Font f)
+        private bool TrySelectFontAndColor(ref Font f, ref Color c)
         {
             this.FontDialog1.Color = c;
             this.FontDialog1.Font = f;
@@ -1279,23 +1279,23 @@ namespace Hoehoe
                 {
                     return false;
                 }
+
+                c = this.FontDialog1.Color;
+                f = this.FontDialog1.Font;
+                return true;
             }
             catch (ArgumentException ex)
             {
                 MessageBox.Show(ex.Message);
                 return false;
             }
-
-            c = this.FontDialog1.Color;
-            f = this.FontDialog1.Font;
-            return true;
         }
 
-        private void ButtonFontAndColor_Click_Extract(Label lb)
+        private void ChangeLabelFontAndColor(Label lb)
         {
             var c = lb.ForeColor;
             var f = lb.Font;
-            if (this.TrySelectFontAndColor(ref c, ref f))
+            if (this.TrySelectFontAndColor(ref f, ref c))
             {
                 lb.ForeColor = c;
                 lb.Font = f;
@@ -1319,7 +1319,7 @@ namespace Hoehoe
             return true;
         }
 
-        private void ButtonColor_ClickExtractd(Label lb, bool back = true)
+        private void ChangeLabelColor(Label lb, bool back = true)
         {
             var c = back ? lb.BackColor : lb.ForeColor;
             if (TrySelectColor(ref c))
