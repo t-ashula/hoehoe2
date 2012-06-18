@@ -3570,7 +3570,7 @@ namespace Hoehoe
             string retStr = orgData;
             retStr = Regex.Replace(retStr, "<a [^>]*href=\"/", "<a href=\"" + this.protocol + "twitter.com/");
             retStr = retStr.Replace("<a href=", "<a target=\"_self\" href=");
-            retStr = retStr.Replace("\r\n", "<br>");
+            retStr = retStr.Replace("\n", "<br/>");
 
             // 半角スペースを置換(Thanks @anis774)
             bool ret = false;
