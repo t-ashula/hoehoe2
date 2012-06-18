@@ -84,42 +84,6 @@ namespace Hoehoe
 
         #region event handler
 
-        private void InitPeriodValidators()
-        {
-            this.apiCountValidator = new PeriodValidator(
-                cnt => !(cnt != 0 && (cnt < 20 || cnt > 200)),
-                Hoehoe.Properties.Resources.TextCountApi_Validating1,
-                Hoehoe.Properties.Resources.TextCountApi_Validating1);
-            this.searchApiCountValidator = new PeriodValidator(
-                cnt => !(cnt != 0 && (cnt < 20 || cnt > 100)),
-                Hoehoe.Properties.Resources.TextSearchCountApi_Validating1,
-                Hoehoe.Properties.Resources.TextSearchCountApi_Validating1);
-            this.proxyPortNumberValidator = new PeriodValidator(
-                p => !(p < 0 && p > 65535),
-                Hoehoe.Properties.Resources.TextProxyPort_ValidatingText1,
-                Hoehoe.Properties.Resources.TextProxyPort_ValidatingText2);
-            this.timeoutLimitsValidator = new PeriodValidator(
-                tm => !(tm < (int)HttpTimeOut.MinValue || tm > (int)HttpTimeOut.MaxValue),
-                Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1,
-                Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1);
-            this.userStreamPeriodValidator = new PeriodValidator(
-                i => !(i < 0 || i > 60),
-                Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1,
-                Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1);
-            this.timelilePeriodValidator = new PeriodValidator(
-                i => !(i != 0 && (i < 15 || i > 6000)),
-                Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText1,
-                Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
-            this.dmessagesPeriodValidator = new PeriodValidator(
-                i => !(i != 0 && (i < 15 || i > 6000)),
-                Hoehoe.Properties.Resources.DMPeriod_ValidatingText1,
-                Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
-            this.publicSearchPeriodValidator = new PeriodValidator(
-                i => !(i != 0 && (i < 30 || i > 6000)),
-                Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText1,
-                Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText2);
-        }
-
         private void CheckUseRecommendStatus_CheckedChanged(object sender, EventArgs e)
         {
             this.StatusText.Enabled = !this.CheckUseRecommendStatus.Checked;
@@ -181,7 +145,7 @@ namespace Hoehoe
                 }
             }
 
-            this.validationError = false;            
+            this.validationError = false;
             this.configurations.UserAccounts.Clear();
             this.configurations.UserAccounts.AddRange(this.AuthUserCombo.Items.Cast<UserAccount>());
             if (this.AuthUserCombo.SelectedIndex < 0)
@@ -463,55 +427,7 @@ namespace Hoehoe
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.Save_ClickText3);
                 this.DialogResult = DialogResult.Cancel;
-                return;
             }
-        }
-
-        private bool SaveIntarvals(IntervalChangedEventArgs arg)
-        {
-            if (this.configurations.UserstreamPeriodInt != Convert.ToInt32(this.UserstreamPeriod.Text))
-            {
-                this.configurations.UserstreamPeriodInt = Convert.ToInt32(this.UserstreamPeriod.Text);
-                arg.UserStream = true;
-            }
-
-            if (this.configurations.TimelinePeriodInt != Convert.ToInt32(this.TimelinePeriod.Text))
-            {
-                this.configurations.TimelinePeriodInt = Convert.ToInt32(this.TimelinePeriod.Text);
-                arg.Timeline = true;
-            }
-
-            if (this.configurations.DMPeriodInt != Convert.ToInt32(this.DMPeriod.Text))
-            {
-                this.configurations.DMPeriodInt = Convert.ToInt32(this.DMPeriod.Text);
-                arg.DirectMessage = true;
-            }
-
-            if (this.configurations.PubSearchPeriodInt != Convert.ToInt32(this.PubSearchPeriod.Text))
-            {
-                this.configurations.PubSearchPeriodInt = Convert.ToInt32(this.PubSearchPeriod.Text);
-                arg.PublicSearch = true;
-            }
-
-            if (this.configurations.ListsPeriodInt != Convert.ToInt32(this.ListsPeriod.Text))
-            {
-                this.configurations.ListsPeriodInt = Convert.ToInt32(this.ListsPeriod.Text);
-                arg.Lists = true;
-            }
-
-            if (this.configurations.ReplyPeriodInt != Convert.ToInt32(this.ReplyPeriod.Text))
-            {
-                this.configurations.ReplyPeriodInt = Convert.ToInt32(this.ReplyPeriod.Text);
-                arg.Reply = true;
-            }
-
-            if (this.configurations.UserTimelinePeriodInt != Convert.ToInt32(this.UserTimelinePeriod.Text))
-            {
-                this.configurations.UserTimelinePeriodInt = Convert.ToInt32(this.UserTimelinePeriod.Text);
-                arg.UserTimeline = true;
-            }
-
-            return arg.UserStream || arg.Timeline || arg.DirectMessage || arg.PublicSearch || arg.Lists || arg.Reply || arg.UserTimeline;
         }
 
         private void Setting_FormClosing(object sender, FormClosingEventArgs e)
@@ -746,7 +662,7 @@ namespace Hoehoe
             this.ShortenTcoCheck.Checked = this.configurations.ShortenTco;
             this.ShortenTcoCheck.Enabled = this.CheckAutoConvertUrl.Checked;
             this.CheckOutputz.Checked = this.configurations.OutputzEnabled;
-            this.ChangeOutputzControlsStatus(this.CheckOutputz.Checked); 
+            this.ChangeOutputzControlsStatus(this.CheckOutputz.Checked);
             this.TextBoxOutputzKey.Text = this.configurations.OutputzKey;
             switch (this.configurations.OutputzUrlmode)
             {
@@ -922,7 +838,7 @@ namespace Hoehoe
 
         private void DMPeriod_Validating(object sender, CancelEventArgs e)
         {
-            if(!dmessagesPeriodValidator.IsValidPeriod(this.DMPeriod.Text))
+            if (!dmessagesPeriodValidator.IsValidPeriod(this.DMPeriod.Text))
             {
                 e.Cancel = true;
                 return;
@@ -932,7 +848,7 @@ namespace Hoehoe
         }
 
         private void PubSearchPeriod_Validating(object sender, CancelEventArgs e)
-        {   
+        {
             if (!publicSearchPeriodValidator.IsValidPeriod(this.PubSearchPeriod.Text))
             {
                 e.Cancel = true;
@@ -967,43 +883,9 @@ namespace Hoehoe
             this.StartupReaded.Enabled = this.UReadMng.Checked;
         }
 
-        private bool TrySelectFontAndColor(ref Color c, ref Font f)
-        {
-            this.FontDialog1.Color = c;
-            this.FontDialog1.Font = f;
-
-            try
-            {
-                if (this.FontDialog1.ShowDialog() == DialogResult.Cancel)
-                {
-                    return false;
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                MessageBox.Show(ex.Message);
-                return false;
-            }
-
-            c = this.FontDialog1.Color;
-            f = this.FontDialog1.Font;
-            return true;
-        }
-
-        private void ButtonFontAndColor_Click_Extract(Label lb)
-        {
-            var c = lb.ForeColor;
-            var f = lb.Font;
-            if (this.TrySelectFontAndColor(ref c, ref f))
-            {
-                lb.ForeColor = c;
-                lb.Font = f;
-            }
-        }
-
         private void ButtonFontAndColor_Click(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;            
+            Button btn = (Button)sender;
             switch (btn.Name)
             {
                 case "btnUnread":
@@ -1018,39 +900,6 @@ namespace Hoehoe
                 case "btnInputFont":
                     ButtonFontAndColor_Click_Extract(this.lblInputFont);
                     break;
-            }
-        }
-
-        private bool TrySelectColor(ref Color c)
-        {
-            this.ColorDialog1.AllowFullOpen = true;
-            this.ColorDialog1.AnyColor = true;
-            this.ColorDialog1.FullOpen = false;
-            this.ColorDialog1.SolidColorOnly = false;
-            this.ColorDialog1.Color = c;
-            var rtn = this.ColorDialog1.ShowDialog();
-            if (rtn == DialogResult.Cancel)
-            {
-                return false;
-            }
-
-            c = this.ColorDialog1.Color;
-            return true;
-        }
-
-        private void ButtonColor_ClickExtractd(Label lb, bool back = true)
-        {
-            var c = back ? lb.BackColor : lb.ForeColor;
-            if (TrySelectColor(ref c))
-            {
-                if (back)
-                {
-                    lb.BackColor = c;
-                }
-                else
-                {
-                    lb.ForeColor = c;
-                }
             }
         }
 
@@ -1096,18 +945,6 @@ namespace Hoehoe
             ChangeProxySettingControlsStatus(this.RadioProxySpecified.Checked);
         }
 
-        private void ChangeProxySettingControlsStatus(bool chk)
-        {
-            this.LabelProxyAddress.Enabled = chk;
-            this.TextProxyAddress.Enabled = chk;
-            this.LabelProxyPort.Enabled = chk;
-            this.TextProxyPort.Enabled = chk;
-            this.LabelProxyUser.Enabled = chk;
-            this.TextProxyUser.Enabled = chk;
-            this.LabelProxyPassword.Enabled = chk;
-            this.TextProxyPassword.Enabled = chk;
-        }
-
         private void TextProxyPort_Validating(object sender, CancelEventArgs e)
         {
             e.Cancel = !proxyPortNumberValidator.IsValidPeriod(this.TextProxyPort.Text);
@@ -1116,14 +953,6 @@ namespace Hoehoe
         private void CheckOutputz_CheckedChanged(object sender, EventArgs e)
         {
             ChangeOutputzControlsStatus(this.CheckOutputz.Checked);
-        }
-
-        private void ChangeOutputzControlsStatus(bool cheked)
-        {
-            this.Label59.Enabled = cheked;
-            this.Label60.Enabled = cheked;
-            this.TextBoxOutputzKey.Enabled = cheked;
-            this.ComboBoxOutputzUrlmode.Enabled = cheked;
         }
 
         private void TextBoxOutputzKey_Validating(object sender, CancelEventArgs e)
@@ -1181,7 +1010,7 @@ namespace Hoehoe
 
         private void ComboBoxAutoShortUrlFirst_SelectedIndexChanged(object sender, EventArgs e)
         {
-            bool newVariable = (this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly 
+            bool newVariable = (this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly
                 || this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp);
             this.Label76.Enabled = newVariable;
             this.Label77.Enabled = newVariable;
@@ -1285,16 +1114,6 @@ namespace Hoehoe
             ChangeHotkeyControlsStatus(this.HotkeyCheck.Checked);
         }
 
-        private void ChangeHotkeyControlsStatus(bool chk)
-        {
-            this.HotkeyCtrl.Enabled = chk;
-            this.HotkeyAlt.Enabled = chk;
-            this.HotkeyShift.Enabled = chk;
-            this.HotkeyWin.Enabled = chk;
-            this.HotkeyText.Enabled = chk;
-            this.HotkeyCode.Enabled = chk;
-        }
-
         private void GetMoreTextCountApi_Validating(object sender, CancelEventArgs e)
         {
             e.Cancel = !apiCountValidator.IsValidPeriod(this.GetMoreTextCountApi.Text);
@@ -1303,22 +1122,6 @@ namespace Hoehoe
         private void UseChangeGetCount_CheckedChanged(object sender, EventArgs e)
         {
             ChangeUseChangeGetCountControlStatus(this.UseChangeGetCount.Checked);
-        }
-
-        private void ChangeUseChangeGetCountControlStatus(bool check)
-        {
-            this.GetMoreTextCountApi.Enabled = check;
-            this.FirstTextCountApi.Enabled = check;
-            this.Label28.Enabled = check;
-            this.Label30.Enabled = check;
-            this.Label53.Enabled = check;
-            this.Label66.Enabled = check;
-            this.Label17.Enabled = check;
-            this.Label25.Enabled = check;
-            this.SearchTextCountApi.Enabled = check;
-            this.FavoritesTextCountApi.Enabled = check;
-            this.UserTimelineTextCountApi.Enabled = check;
-            this.ListTextCountApi.Enabled = check;
         }
 
         private void FirstTextCountApi_Validating(object sender, CancelEventArgs e)
@@ -1330,7 +1133,7 @@ namespace Hoehoe
         {
             e.Cancel = !searchApiCountValidator.IsValidPeriod(this.SearchTextCountApi.Text);
         }
-        
+
         private void FavoritesTextCountApi_Validating(object sender, CancelEventArgs e)
         {
             e.Cancel = !apiCountValidator.IsValidPeriod(this.FavoritesTextCountApi.Text);
@@ -1381,6 +1184,202 @@ namespace Hoehoe
         #endregion event handler
 
         #region private methods
+
+        private void InitPeriodValidators()
+        {
+            this.apiCountValidator = new PeriodValidator(
+                cnt => !(cnt != 0 && (cnt < 20 || cnt > 200)),
+                Hoehoe.Properties.Resources.TextCountApi_Validating1,
+                Hoehoe.Properties.Resources.TextCountApi_Validating1);
+            this.searchApiCountValidator = new PeriodValidator(
+                cnt => !(cnt != 0 && (cnt < 20 || cnt > 100)),
+                Hoehoe.Properties.Resources.TextSearchCountApi_Validating1,
+                Hoehoe.Properties.Resources.TextSearchCountApi_Validating1);
+            this.proxyPortNumberValidator = new PeriodValidator(
+                p => !(p < 0 && p > 65535),
+                Hoehoe.Properties.Resources.TextProxyPort_ValidatingText1,
+                Hoehoe.Properties.Resources.TextProxyPort_ValidatingText2);
+            this.timeoutLimitsValidator = new PeriodValidator(
+                tm => !(tm < (int)HttpTimeOut.MinValue || tm > (int)HttpTimeOut.MaxValue),
+                Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1,
+                Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1);
+            this.userStreamPeriodValidator = new PeriodValidator(
+                i => !(i < 0 || i > 60),
+                Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1,
+                Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1);
+            this.timelilePeriodValidator = new PeriodValidator(
+                i => !(i != 0 && (i < 15 || i > 6000)),
+                Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText1,
+                Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
+            this.dmessagesPeriodValidator = new PeriodValidator(
+                i => !(i != 0 && (i < 15 || i > 6000)),
+                Hoehoe.Properties.Resources.DMPeriod_ValidatingText1,
+                Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
+            this.publicSearchPeriodValidator = new PeriodValidator(
+                i => !(i != 0 && (i < 30 || i > 6000)),
+                Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText1,
+                Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText2);
+        }
+
+        private bool SaveIntarvals(IntervalChangedEventArgs arg)
+        {
+            if (this.configurations.UserstreamPeriodInt != Convert.ToInt32(this.UserstreamPeriod.Text))
+            {
+                this.configurations.UserstreamPeriodInt = Convert.ToInt32(this.UserstreamPeriod.Text);
+                arg.UserStream = true;
+            }
+
+            if (this.configurations.TimelinePeriodInt != Convert.ToInt32(this.TimelinePeriod.Text))
+            {
+                this.configurations.TimelinePeriodInt = Convert.ToInt32(this.TimelinePeriod.Text);
+                arg.Timeline = true;
+            }
+
+            if (this.configurations.DMPeriodInt != Convert.ToInt32(this.DMPeriod.Text))
+            {
+                this.configurations.DMPeriodInt = Convert.ToInt32(this.DMPeriod.Text);
+                arg.DirectMessage = true;
+            }
+
+            if (this.configurations.PubSearchPeriodInt != Convert.ToInt32(this.PubSearchPeriod.Text))
+            {
+                this.configurations.PubSearchPeriodInt = Convert.ToInt32(this.PubSearchPeriod.Text);
+                arg.PublicSearch = true;
+            }
+
+            if (this.configurations.ListsPeriodInt != Convert.ToInt32(this.ListsPeriod.Text))
+            {
+                this.configurations.ListsPeriodInt = Convert.ToInt32(this.ListsPeriod.Text);
+                arg.Lists = true;
+            }
+
+            if (this.configurations.ReplyPeriodInt != Convert.ToInt32(this.ReplyPeriod.Text))
+            {
+                this.configurations.ReplyPeriodInt = Convert.ToInt32(this.ReplyPeriod.Text);
+                arg.Reply = true;
+            }
+
+            if (this.configurations.UserTimelinePeriodInt != Convert.ToInt32(this.UserTimelinePeriod.Text))
+            {
+                this.configurations.UserTimelinePeriodInt = Convert.ToInt32(this.UserTimelinePeriod.Text);
+                arg.UserTimeline = true;
+            }
+
+            return arg.UserStream || arg.Timeline || arg.DirectMessage || arg.PublicSearch || arg.Lists || arg.Reply || arg.UserTimeline;
+        }
+        
+        private bool TrySelectFontAndColor(ref Color c, ref Font f)
+        {
+            this.FontDialog1.Color = c;
+            this.FontDialog1.Font = f;
+
+            try
+            {
+                if (this.FontDialog1.ShowDialog() == DialogResult.Cancel)
+                {
+                    return false;
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+
+            c = this.FontDialog1.Color;
+            f = this.FontDialog1.Font;
+            return true;
+        }
+
+        private void ButtonFontAndColor_Click_Extract(Label lb)
+        {
+            var c = lb.ForeColor;
+            var f = lb.Font;
+            if (this.TrySelectFontAndColor(ref c, ref f))
+            {
+                lb.ForeColor = c;
+                lb.Font = f;
+            }
+        }
+
+        private bool TrySelectColor(ref Color c)
+        {
+            this.ColorDialog1.AllowFullOpen = true;
+            this.ColorDialog1.AnyColor = true;
+            this.ColorDialog1.FullOpen = false;
+            this.ColorDialog1.SolidColorOnly = false;
+            this.ColorDialog1.Color = c;
+            var rtn = this.ColorDialog1.ShowDialog();
+            if (rtn == DialogResult.Cancel)
+            {
+                return false;
+            }
+
+            c = this.ColorDialog1.Color;
+            return true;
+        }
+
+        private void ButtonColor_ClickExtractd(Label lb, bool back = true)
+        {
+            var c = back ? lb.BackColor : lb.ForeColor;
+            if (TrySelectColor(ref c))
+            {
+                if (back)
+                {
+                    lb.BackColor = c;
+                }
+                else
+                {
+                    lb.ForeColor = c;
+                }
+            }
+        }
+
+        private void ChangeProxySettingControlsStatus(bool chk)
+        {
+            this.LabelProxyAddress.Enabled = chk;
+            this.TextProxyAddress.Enabled = chk;
+            this.LabelProxyPort.Enabled = chk;
+            this.TextProxyPort.Enabled = chk;
+            this.LabelProxyUser.Enabled = chk;
+            this.TextProxyUser.Enabled = chk;
+            this.LabelProxyPassword.Enabled = chk;
+            this.TextProxyPassword.Enabled = chk;
+        }
+
+        private void ChangeOutputzControlsStatus(bool cheked)
+        {
+            this.Label59.Enabled = cheked;
+            this.Label60.Enabled = cheked;
+            this.TextBoxOutputzKey.Enabled = cheked;
+            this.ComboBoxOutputzUrlmode.Enabled = cheked;
+        }
+
+        private void ChangeHotkeyControlsStatus(bool chk)
+        {
+            this.HotkeyCtrl.Enabled = chk;
+            this.HotkeyAlt.Enabled = chk;
+            this.HotkeyShift.Enabled = chk;
+            this.HotkeyWin.Enabled = chk;
+            this.HotkeyText.Enabled = chk;
+            this.HotkeyCode.Enabled = chk;
+        }
+
+        private void ChangeUseChangeGetCountControlStatus(bool check)
+        {
+            this.GetMoreTextCountApi.Enabled = check;
+            this.FirstTextCountApi.Enabled = check;
+            this.Label28.Enabled = check;
+            this.Label30.Enabled = check;
+            this.Label53.Enabled = check;
+            this.Label66.Enabled = check;
+            this.Label17.Enabled = check;
+            this.Label25.Enabled = check;
+            this.SearchTextCountApi.Enabled = check;
+            this.FavoritesTextCountApi.Enabled = check;
+            this.UserTimelineTextCountApi.Enabled = check;
+            this.ListTextCountApi.Enabled = check;
+        }
 
         private bool CreateDateTimeFormatSample()
         {
