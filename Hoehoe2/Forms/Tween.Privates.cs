@@ -8203,15 +8203,18 @@ namespace Hoehoe
                     { "margin", "0px" }, 
                     { "background-color", this.clrDetailBackcolor.AsCssRgb() } } 
                 },
+                { "body > p", new Dictionary<string, string>(){
+                    { "vertical-align", "text-bottom" } }
+                },
                 { ele, new Dictionary<string, string>(){
                     { "word-wrap", "break-word" },
                     { "font-family", string.Format("\"{0}\", sans-serif;", this.fntDetail.Name) },
                     { "font-size", string.Format("{0}pt", this.fntDetail.Size) },
-                    { "color", this.clrDetail.AsCssRgb() } } 
+                    { "color", this.clrDetail.AsCssRgb() } }
                 }
             };
 
-            return "<html><head><style type=\"text/css\">"
+            return "<html><head><meta http-equiv=\"X-UA-Compatible\" content=\"IE=10;IE=9;IE=8\"/><style type=\"text/css\">"
                 + string.Join("", ss.Select(sel => string.Format("{0}{{{1}}}", sel.Key, string.Join("", sel.Value.Select(ps => string.Format("{0}: {1};", ps.Key, ps.Value))))))
                 + "</style></head><body>" + "<" + ele + ">";
         }
