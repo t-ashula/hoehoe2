@@ -325,7 +325,7 @@ namespace Hoehoe.TweenCustomControl
         private Rectangle GetSubItemBounds(int itemIndex, int subitemIndex)
         {
             ListViewItem item = this.Items[itemIndex];
-            if (subitemIndex == 0 & this.Columns.Count > 0)
+            if (subitemIndex == 0 && this.Columns.Count > 0)
             {
                 Rectangle col0 = item.Bounds;
                 return new Rectangle(col0.Left, col0.Top, item.SubItems[1].Bounds.X + 1, col0.Height);

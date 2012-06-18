@@ -395,6 +395,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AppendSettingDialog.zh-CHS.resx">
       <DependentUpon>AppendSettingDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AtIdSupplement.en.resx">
       <SubType>Designer</SubType>
@@ -410,6 +411,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AuthBrowser.resx">
       <DependentUpon>AuthBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DialogAsShieldIcon.resx">
       <DependentUpon>DialogAsShieldIcon.cs</DependentUpon>
@@ -421,6 +423,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EventViewerDialog.en.resx">
       <DependentUpon>EventViewerDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EventViewerDialog.resx">
       <DependentUpon>EventViewerDialog.cs</DependentUpon>
@@ -480,15 +483,19 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ListManage.en.resx">
       <DependentUpon>ListManage.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ListManage.resx">
       <DependentUpon>ListManage.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ListManage.zh-CHS.resx">
       <DependentUpon>ListManage.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MessageForm.resx">
       <DependentUpon>MessageForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.en.resx">
       <SubType>Designer</SubType>
@@ -503,12 +510,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MyLists.en.resx">
       <DependentUpon>MyLists.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MyLists.resx">
       <DependentUpon>MyLists.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MyLists.zh-CHS.resx">
       <DependentUpon>MyLists.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OpenURL.en.resx">
       <DependentUpon>OpenURL.cs</DependentUpon>

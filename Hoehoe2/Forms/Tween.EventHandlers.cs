@@ -3029,7 +3029,7 @@ namespace Hoehoe
             for (int i = 0; i < this.ListTab.TabPages.Count; i++)
             {
                 Rectangle rect = this.ListTab.GetTabRect(i);
-                if (rect.Left <= cpos.X & cpos.X <= rect.Right & rect.Top <= cpos.Y & cpos.Y <= rect.Bottom)
+                if (rect.Contains(cpos))
                 {
                     this.rclickTabName = this.ListTab.TabPages[i].Text;
                     break;

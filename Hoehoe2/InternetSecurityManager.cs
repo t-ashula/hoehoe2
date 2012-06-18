@@ -167,7 +167,7 @@ namespace Hoehoe
         public int ProcessUrlAction(string pwszUrl, int dwAction, ref byte pPolicy, int cbPolicy, byte pContext, int cbContext, int dwFlags, int dwReserved)
         {
             // スクリプト実行状態かを検査しポリシー設定
-            if (WebBrowserAPI.URLACTION_SCRIPT_MIN <= dwAction & dwAction <= WebBrowserAPI.URLACTION_SCRIPT_MAX)
+            if (WebBrowserAPI.URLACTION_SCRIPT_MIN <= dwAction && dwAction <= WebBrowserAPI.URLACTION_SCRIPT_MAX)
             {
                 // スクリプト実行状態
                 if ((this.policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT)
@@ -188,7 +188,7 @@ namespace Hoehoe
             }
 
             // ActiveX実行状態かを検査しポリシー設定
-            if (WebBrowserAPI.URLACTION_ACTIVEX_MIN <= dwAction & dwAction <= WebBrowserAPI.URLACTION_ACTIVEX_MAX)
+            if (WebBrowserAPI.URLACTION_ACTIVEX_MIN <= dwAction && dwAction <= WebBrowserAPI.URLACTION_ACTIVEX_MAX)
             {
                 // ActiveX実行状態
                 if ((this.policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX)
