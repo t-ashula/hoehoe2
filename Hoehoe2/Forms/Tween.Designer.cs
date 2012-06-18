@@ -853,7 +853,7 @@ namespace Hoehoe
             // 
             this.ListManageUserContextToolStripMenuItem3.Name = "ListManageUserContextToolStripMenuItem3";
             resources.ApplyResources(this.ListManageUserContextToolStripMenuItem3, "ListManageUserContextToolStripMenuItem3");
-            this.ListManageUserContextToolStripMenuItem3.Click +=new EventHandler(this.ListManageUserContextToolStripMenuItem3_Click); 
+            this.ListManageUserContextToolStripMenuItem3.Click += new System.EventHandler(this.ListManageUserContextToolStripMenuItem3_Click);
             // 
             // ToolStripSeparator37
             // 
@@ -2264,7 +2264,7 @@ namespace Hoehoe
             // 
             this.ListManageUserContextToolStripMenuItem2.Name = "ListManageUserContextToolStripMenuItem2";
             resources.ApplyResources(this.ListManageUserContextToolStripMenuItem2, "ListManageUserContextToolStripMenuItem2");
-            this.ListManageUserContextToolStripMenuItem2.Click += new EventHandler(this.ListManageUserContextToolStripMenuItem2_Click);
+            this.ListManageUserContextToolStripMenuItem2.Click += new System.EventHandler(this.ListManageUserContextToolStripMenuItem2_Click);
             // 
             // ToolStripSeparator4
             // 

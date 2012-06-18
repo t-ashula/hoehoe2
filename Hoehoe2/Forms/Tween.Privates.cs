@@ -1858,11 +1858,13 @@ namespace Hoehoe
             {
                 foreColor = this.clrOWL;
             }
-            else if (this.curPost.IsRetweeted)
+            
+            if (this.curPost.IsRetweeted)
             {
                 foreColor = this.clrRetweet;
             }
-            else if (this.curPost.IsFav)
+            
+            if (this.curPost.IsFav)
             {
                 foreColor = this.clrFav;
             }

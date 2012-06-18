@@ -58,7 +58,8 @@
     <DocumentationFile />
     <NoWarn>42353,42354,42355</NoWarn>
     <DebugSymbols>true</DebugSymbols>
-    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
     <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
   </PropertyGroup>
