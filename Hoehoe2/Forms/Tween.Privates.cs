@@ -8207,6 +8207,7 @@ namespace Hoehoe
                     { "vertical-align", "text-bottom" } }
                 },
                 { ele, new Dictionary<string, string>(){
+                    { "margin", "0" },
                     { "word-wrap", "break-word" },
                     { "font-family", string.Format("\"{0}\", sans-serif;", this.fntDetail.Name) },
                     { "font-size", string.Format("{0}pt", this.fntDetail.Size) },

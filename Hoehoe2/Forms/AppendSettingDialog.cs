@@ -1217,7 +1217,7 @@ namespace Hoehoe
                 R.DMPeriod_ValidatingText1,
                 R.DMPeriod_ValidatingText2);
             this.publicSearchPeriodValidator = new PeriodValidator(
-                i => !(i != 0 && (i < 30 || i > 6000)),
+                i => (i == 0 || i >= 30 && i <= 6000),
                 R.PubSearchPeriod_ValidatingText1,
                 R.PubSearchPeriod_ValidatingText2);
         }
@@ -1759,7 +1759,7 @@ namespace Hoehoe
             public bool IsValidPeriod(string input)
             {
                 int t = 0;
-                if (Int32.TryParse(input, out t))
+                if (!Int32.TryParse(input, out t))
                 {
                     MessageBox.Show(this.msg1);
                     return false;
