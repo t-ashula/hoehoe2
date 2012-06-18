@@ -7520,12 +7520,12 @@ namespace Hoehoe
             }
         }
 
-        private bool ResetWorkerTimer(ref int counter, int initailValue, WorkerType worker, bool reset)
+        private bool ResetWorkerTimer(ref int counter, int initailValue, WorkerType worker, bool reset, bool usflag = false)
         {
             if (reset || (counter < 1 && initailValue > 0))
             {
                 Interlocked.Exchange(ref counter, initailValue);
-                if (!this.tw.IsUserstreamDataReceived && !reset)
+                if (!usflag && !reset)
                 {
                     this.GetTimeline(worker);
                 }
@@ -7548,9 +7548,9 @@ namespace Hoehoe
             this.DecrementTimer(ref this.timerRefreshFollowers);
 
             // 'タイマー初期化
-            this.resetTimers.Timeline = this.ResetWorkerTimer(ref this.timerHomeCounter, this.configs.TimelinePeriodInt, WorkerType.Timeline, this.resetTimers.Timeline);
-            this.resetTimers.Reply = this.ResetWorkerTimer(ref this.timerMentionCounter, this.configs.ReplyPeriodInt, WorkerType.Reply, this.resetTimers.Reply);
-            this.resetTimers.DirectMessage = this.ResetWorkerTimer(ref this.timerDmCounter, this.configs.DMPeriodInt, WorkerType.DirectMessegeRcv, this.resetTimers.DirectMessage);
+            this.resetTimers.Timeline = this.ResetWorkerTimer(ref this.timerHomeCounter, this.configs.TimelinePeriodInt, WorkerType.Timeline, this.resetTimers.Timeline, this.tw.IsUserstreamDataReceived);
+            this.resetTimers.Reply = this.ResetWorkerTimer(ref this.timerMentionCounter, this.configs.ReplyPeriodInt, WorkerType.Reply, this.resetTimers.Reply, this.tw.IsUserstreamDataReceived);
+            this.resetTimers.DirectMessage = this.ResetWorkerTimer(ref this.timerDmCounter, this.configs.DMPeriodInt, WorkerType.DirectMessegeRcv, this.resetTimers.DirectMessage, this.tw.IsUserstreamDataReceived);
             this.resetTimers.PublicSearch = this.ResetWorkerTimer(ref this.timerPubSearchCounter, this.configs.PubSearchPeriodInt, WorkerType.PublicSearch, this.resetTimers.PublicSearch);
             this.resetTimers.UserTimeline = this.ResetWorkerTimer(ref this.timerUserTimelineCounter, this.configs.UserTimelinePeriodInt, WorkerType.UserTimeline, this.resetTimers.UserTimeline);
             this.resetTimers.Lists = this.ResetWorkerTimer(ref this.timerListsCounter, this.configs.ListsPeriodInt, WorkerType.List, this.resetTimers.Lists);
