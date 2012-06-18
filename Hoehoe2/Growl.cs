@@ -34,6 +34,7 @@ namespace Hoehoe
     using System.IO;
     using System.Reflection;
     using System.Windows.Forms;
+    using R = Hoehoe.Properties.Resources;
 
     public class GrowlHelper
     {
@@ -146,7 +147,7 @@ namespace Hoehoe
                     // 内蔵アイコンリソースを使用
                     ConstructorInfo cibd = this.core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(byte[]) }, null);
                     TypeConverter tc = new TypeConverter();
-                    object bdata = cibd.Invoke(new object[] { this.IconToByteArray(Hoehoe.Properties.Resources.MIcon) });
+                    object bdata = cibd.Invoke(new object[] { this.IconToByteArray(R.MIcon) });
                     ConstructorInfo cires = this.core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { bdata.GetType() }, null);
                     object data = cires.Invoke(new object[] { bdata });
                     PropertyInfo pi = this.growlApp.GetType().GetProperty("Icon");

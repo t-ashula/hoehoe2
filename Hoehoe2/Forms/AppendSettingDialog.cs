@@ -34,6 +34,7 @@ namespace Hoehoe
     using System.Linq;
     using System.Threading;
     using System.Windows.Forms;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class AppendSettingDialog
     {
@@ -63,7 +64,7 @@ namespace Hoehoe
             this.InitializeComponent();
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
-            this.Icon = Hoehoe.Properties.Resources.MIcon;
+            this.Icon = R.MIcon;
             this.InitEventCheckboxTable();
             this.InitPeriodValidators();
         }
@@ -137,7 +138,7 @@ namespace Hoehoe
             {
                 if (!this.BitlyValidation(this.TextBitlyId.Text, this.TextBitlyPw.Text))
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.SettingSave_ClickText1);
+                    MessageBox.Show(R.SettingSave_ClickText1);
                     this.validationError = true;
                     this.TreeViewSetting.SelectedNode.Name = "TweetActNode"; // 動作タブを選択
                     this.TextBitlyId.Focus();
@@ -425,7 +426,7 @@ namespace Hoehoe
             }
             catch (Exception)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.Save_ClickText3);
+                MessageBox.Show(R.Save_ClickText3);
                 this.DialogResult = DialogResult.Cancel;
             }
         }
@@ -472,7 +473,7 @@ namespace Hoehoe
 
             if (this.tw != null && string.IsNullOrEmpty(this.tw.Username) && e.CloseReason == CloseReason.None)
             {
-                if (MessageBox.Show(Hoehoe.Properties.Resources.Setting_FormClosing1, "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                if (MessageBox.Show(R.Setting_FormClosing1, "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
                 {
                     e.Cancel = true;
                 }
@@ -928,9 +929,9 @@ namespace Hoehoe
         {
             using (OpenFileDialog filedlg = new OpenFileDialog())
             {
-                filedlg.Filter = Hoehoe.Properties.Resources.Button3_ClickText1;
+                filedlg.Filter = R.Button3_ClickText1;
                 filedlg.FilterIndex = 1;
-                filedlg.Title = Hoehoe.Properties.Resources.Button3_ClickText2;
+                filedlg.Title = R.Button3_ClickText2;
                 filedlg.RestoreDirectory = true;
 
                 if (filedlg.ShowDialog() == DialogResult.OK)
@@ -962,7 +963,7 @@ namespace Hoehoe
                 this.TextBoxOutputzKey.Text = this.TextBoxOutputzKey.Text.Trim();
                 if (this.TextBoxOutputzKey.Text.Length == 0)
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.TextBoxOutputzKey_Validating);
+                    MessageBox.Show(R.TextBoxOutputzKey_Validating);
                     e.Cancel = true;
                     return;
                 }
@@ -983,7 +984,7 @@ namespace Hoehoe
         {
             if (!this.CreateDateTimeFormatSample())
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.CmbDateTimeFormat_Validating);
+                MessageBox.Show(R.CmbDateTimeFormat_Validating);
                 e.Cancel = true;
             }
         }
@@ -1189,36 +1190,36 @@ namespace Hoehoe
         {
             this.apiCountValidator = new PeriodValidator(
                 cnt => !(cnt != 0 && (cnt < 20 || cnt > 200)),
-                Hoehoe.Properties.Resources.TextCountApi_Validating1,
-                Hoehoe.Properties.Resources.TextCountApi_Validating1);
+                R.TextCountApi_Validating1,
+                R.TextCountApi_Validating1);
             this.searchApiCountValidator = new PeriodValidator(
                 cnt => !(cnt != 0 && (cnt < 20 || cnt > 100)),
-                Hoehoe.Properties.Resources.TextSearchCountApi_Validating1,
-                Hoehoe.Properties.Resources.TextSearchCountApi_Validating1);
+                R.TextSearchCountApi_Validating1,
+                R.TextSearchCountApi_Validating1);
             this.proxyPortNumberValidator = new PeriodValidator(
                 p => !(p < 0 && p > 65535),
-                Hoehoe.Properties.Resources.TextProxyPort_ValidatingText1,
-                Hoehoe.Properties.Resources.TextProxyPort_ValidatingText2);
+                R.TextProxyPort_ValidatingText1,
+                R.TextProxyPort_ValidatingText2);
             this.timeoutLimitsValidator = new PeriodValidator(
                 tm => !(tm < (int)HttpTimeOut.MinValue || tm > (int)HttpTimeOut.MaxValue),
-                Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1,
-                Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1);
+                R.ConnectionTimeOut_ValidatingText1,
+                R.ConnectionTimeOut_ValidatingText1);
             this.userStreamPeriodValidator = new PeriodValidator(
                 i => !(i < 0 || i > 60),
-                Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1,
-                Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1);
+                R.UserstreamPeriod_ValidatingText1,
+                R.UserstreamPeriod_ValidatingText1);
             this.timelilePeriodValidator = new PeriodValidator(
                 i => !(i != 0 && (i < 15 || i > 6000)),
-                Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText1,
-                Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
+                R.TimelinePeriod_ValidatingText1,
+                R.TimelinePeriod_ValidatingText2);
             this.dmessagesPeriodValidator = new PeriodValidator(
                 i => !(i != 0 && (i < 15 || i > 6000)),
-                Hoehoe.Properties.Resources.DMPeriod_ValidatingText1,
-                Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
+                R.DMPeriod_ValidatingText1,
+                R.DMPeriod_ValidatingText2);
             this.publicSearchPeriodValidator = new PeriodValidator(
                 i => !(i != 0 && (i < 30 || i > 6000)),
-                Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText1,
-                Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText2);
+                R.PubSearchPeriod_ValidatingText1,
+                R.PubSearchPeriod_ValidatingText2);
         }
 
         private bool SaveIntarvals(IntervalChangedEventArgs arg)
@@ -1389,7 +1390,7 @@ namespace Hoehoe
             }
             catch (FormatException)
             {
-                this.LabelDateTimeFormatApplied.Text = Hoehoe.Properties.Resources.CreateDateTimeFormatSampleText1;
+                this.LabelDateTimeFormatApplied.Text = R.CreateDateTimeFormatSampleText1;
                 return false;
             }
 
@@ -1418,7 +1419,7 @@ namespace Hoehoe
             string rslt = this.tw.StartAuthentication(ref pinPageUrl);
             if (!string.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
+                MessageBox.Show(R.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
                 return false;
             }
 
@@ -1441,11 +1442,11 @@ namespace Hoehoe
             string rslt = this.tw.Authenticate(pin);
             if (!string.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
+                MessageBox.Show(R.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
                 return false;
             }
 
-            MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
+            MessageBox.Show(R.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
             int idx = -1;
             var user = new UserAccount
             {
@@ -1481,7 +1482,7 @@ namespace Hoehoe
         private void DisplayApiMaxCount()
         {
             string v = (MyCommon.TwitterApiInfo.MaxCount > -1) ? MyCommon.TwitterApiInfo.MaxCount.ToString() : "???";
-            this.LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, v);
+            this.LabelApiUsing.Text = string.Format(R.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, v);
         }
 
         private void CalcApiUsing()
@@ -1578,19 +1579,19 @@ namespace Hoehoe
                     }
                     else
                     {
-                        this.LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, "???");
+                        this.LabelApiUsing.Text = string.Format(R.SettingAPIUse1, usingApi, "???");
                     }
                 }
                 else
                 {
-                    this.LabelApiUsing.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse1, usingApi, MyCommon.TwitterApiInfo.MaxCount);
+                    this.LabelApiUsing.Text = string.Format(R.SettingAPIUse1, usingApi, MyCommon.TwitterApiInfo.MaxCount);
                 }
             }
 
             this.LabelPostAndGet.Visible = this.CheckPostAndGet.Checked && !this.tw.UserStreamEnabled;
             this.LabelUserStreamActive.Visible = this.tw.UserStreamEnabled;
 
-            this.LabelApiUsingUserStreamEnabled.Text = string.Format(Hoehoe.Properties.Resources.SettingAPIUse2, apiLists + apiUserTimeline);
+            this.LabelApiUsingUserStreamEnabled.Text = string.Format(R.SettingAPIUse2, apiLists + apiUserTimeline);
             this.LabelApiUsingUserStreamEnabled.Visible = this.tw.UserStreamEnabled;
         }
 

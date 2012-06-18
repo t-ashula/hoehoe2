@@ -28,6 +28,7 @@ namespace Hoehoe
 {
     using System;
     using System.Windows.Forms;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class InputTabName
     {
@@ -96,7 +97,7 @@ namespace Hoehoe
         {
             this.LabelUsage.Visible = false;
             this.ComboUsage.Visible = false;
-            this.ComboUsage.Items.Add(Hoehoe.Properties.Resources.InputTabName_Load1);
+            this.ComboUsage.Items.Add(R.InputTabName_Load1);
             this.ComboUsage.Items.Add("Lists");
             this.ComboUsage.Items.Add("PublicSearch");
             this.ComboUsage.SelectedIndex = 0;

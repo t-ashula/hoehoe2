@@ -41,6 +41,7 @@ namespace Hoehoe
     using System.Text;
     using System.Web;
     using System.Windows.Forms;
+    using R = Hoehoe.Properties.Resources;
 
     public sealed class MyCommon
     {
@@ -161,13 +162,13 @@ namespace Hoehoe
                 using (var writer = new StreamWriter(fileName))
                 {
                     writer.WriteLine("**** TraceOut: {0} ****", now.ToString());
-                    writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText1);
-                    writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText2);
+                    writer.WriteLine(R.TraceOutText1);
+                    writer.WriteLine(R.TraceOutText2);
                     writer.WriteLine();
-                    writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText3);
-                    writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText4, Environment.OSVersion.VersionString);
-                    writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText5, Environment.Version.ToString());
-                    writer.WriteLine(Hoehoe.Properties.Resources.TraceOutText6, FileVersion);
+                    writer.WriteLine(R.TraceOutText3);
+                    writer.WriteLine(R.TraceOutText4, Environment.OSVersion.VersionString);
+                    writer.WriteLine(R.TraceOutText5, Environment.Version.ToString());
+                    writer.WriteLine(R.TraceOutText6, FileVersion);
                     writer.WriteLine(message);
                     writer.WriteLine();
                 }
@@ -191,7 +192,7 @@ namespace Hoehoe
             }
 
             StringBuilder buf = new StringBuilder();
-            buf.AppendFormat(Hoehoe.Properties.Resources.UnhandledExceptionText8, ex.GetType().FullName, ex.Message);
+            buf.AppendFormat(R.UnhandledExceptionText8, ex.GetType().FullName, ex.Message);
             buf.AppendLine();
             if (ex.Data != null)
             {
@@ -229,7 +230,7 @@ namespace Hoehoe
             {
                 buf.AppendFormat("-----InnerException[{0}]-----" + Environment.NewLine, nesting);
                 buf.AppendLine();
-                buf.AppendFormat(Hoehoe.Properties.Resources.UnhandledExceptionText8, innerEx.GetType().FullName, innerEx.Message);
+                buf.AppendFormat(R.UnhandledExceptionText8, innerEx.GetType().FullName, innerEx.Message);
                 buf.AppendLine();
                 if (innerEx.Data != null)
                 {
@@ -279,26 +280,26 @@ namespace Hoehoe
                     WindowsIdentity ident = WindowsIdentity.GetCurrent();
                     WindowsPrincipal princ = new WindowsPrincipal(ident);
 
-                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText1, DateTime.Now.ToString());
-                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText2);
-                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText3);
+                    writer.WriteLine(R.UnhandledExceptionText1, DateTime.Now.ToString());
+                    writer.WriteLine(R.UnhandledExceptionText2);
+                    writer.WriteLine(R.UnhandledExceptionText3);
 
                     // 権限書き出し
-                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText11 + princ.IsInRole(WindowsBuiltInRole.Administrator).ToString());
-                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText12 + princ.IsInRole(WindowsBuiltInRole.User).ToString());
+                    writer.WriteLine(R.UnhandledExceptionText11 + princ.IsInRole(WindowsBuiltInRole.Administrator).ToString());
+                    writer.WriteLine(R.UnhandledExceptionText12 + princ.IsInRole(WindowsBuiltInRole.User).ToString());
                     writer.WriteLine();
 
                     // OSVersion,AppVersion書き出し
-                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText4);
-                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText5, Environment.OSVersion.VersionString);
-                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText6, Environment.Version.ToString());
-                    writer.WriteLine(Hoehoe.Properties.Resources.UnhandledExceptionText7, FileVersion);
+                    writer.WriteLine(R.UnhandledExceptionText4);
+                    writer.WriteLine(R.UnhandledExceptionText5, Environment.OSVersion.VersionString);
+                    writer.WriteLine(R.UnhandledExceptionText6, Environment.Version.ToString());
+                    writer.WriteLine(R.UnhandledExceptionText7, FileVersion);
 
                     writer.Write(ExceptionOutMessage(ex, ref isTerminatePermission));
                     writer.Flush();
                 }
 
-                switch (MessageBox.Show(string.Format(Hoehoe.Properties.Resources.UnhandledExceptionText9, fileName, Environment.NewLine), Hoehoe.Properties.Resources.UnhandledExceptionText10, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error))
+                switch (MessageBox.Show(string.Format(R.UnhandledExceptionText9, fileName, Environment.NewLine), R.UnhandledExceptionText10, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error))
                 {
                     case DialogResult.Yes:
                         Process.Start(fileName);

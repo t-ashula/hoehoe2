@@ -34,6 +34,7 @@ namespace Hoehoe
     using System.Text.RegularExpressions;
     using System.Web;
     using System.Windows.Forms;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class ShowUserInfo
     {
@@ -90,7 +91,7 @@ namespace Hoehoe
             this.owner = (TweenMain)this.Owner;
             if (!this.AnalizeUserInfo(this.userInfo))
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.ShowUserInfo1);
+                MessageBox.Show(R.ShowUserInfo1);
                 this.Close();
                 return;
             }
@@ -121,8 +122,8 @@ namespace Hoehoe
             this.LinkLabelFav.Text = this.info.FavoriteCount.ToString();
             this.LinkLabelTweet.Text = this.info.StatusesCount.ToString();
             this.LabelCreatedAt.Text = this.info.CreatedAt.ToString();
-            this.LabelIsProtected.Text = this.info.Protect ? Hoehoe.Properties.Resources.Yes : Hoehoe.Properties.Resources.No;
-            this.LabelIsVerified.Text = this.info.Verified ? Hoehoe.Properties.Resources.Yes : Hoehoe.Properties.Resources.No;
+            this.LabelIsProtected.Text = this.info.Protect ? R.Yes : R.No;
+            this.LabelIsVerified.Text = this.info.Verified ? R.Yes : R.No;
 
             if (this.owner.TwitterInstance.Username == this.info.ScreenName)
             {
@@ -180,12 +181,12 @@ namespace Hoehoe
             string ret = this.owner.TwitterInstance.PostFollowCommand(this.info.ScreenName);
             if (!string.IsNullOrEmpty(ret))
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.FRMessage2 + ret);
+                MessageBox.Show(R.FRMessage2 + ret);
             }
             else
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
-                this.LabelIsFollowing.Text = Hoehoe.Properties.Resources.GetFriendshipInfo1;
+                MessageBox.Show(R.FRMessage3);
+                this.LabelIsFollowing.Text = R.GetFriendshipInfo1;
                 this.ButtonFollow.Enabled = false;
                 this.ButtonUnFollow.Enabled = true;
             }
@@ -193,17 +194,17 @@ namespace Hoehoe
 
         private void ButtonUnFollow_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this.info.ScreenName + Hoehoe.Properties.Resources.ButtonUnFollow_ClickText1, Hoehoe.Properties.Resources.ButtonUnFollow_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(this.info.ScreenName + R.ButtonUnFollow_ClickText1, R.ButtonUnFollow_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 string ret = this.owner.TwitterInstance.PostRemoveCommand(this.info.ScreenName);
                 if (!string.IsNullOrEmpty(ret))
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.FRMessage2 + ret);
+                    MessageBox.Show(R.FRMessage2 + ret);
                 }
                 else
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.FRMessage3);
-                    this.LabelIsFollowing.Text = Hoehoe.Properties.Resources.GetFriendshipInfo2;
+                    MessageBox.Show(R.FRMessage3);
+                    this.LabelIsFollowing.Text = R.GetFriendshipInfo2;
                     this.ButtonFollow.Enabled = true;
                     this.ButtonUnFollow.Enabled = false;
                 }
@@ -268,9 +269,9 @@ namespace Hoehoe
             {
                 if (string.IsNullOrEmpty(this.friendshipResult))
                 {
-                    this.LabelIsFollowing.Text = this.info.IsFollowing ? Hoehoe.Properties.Resources.GetFriendshipInfo1 : Hoehoe.Properties.Resources.GetFriendshipInfo2;
+                    this.LabelIsFollowing.Text = this.info.IsFollowing ? R.GetFriendshipInfo1 : R.GetFriendshipInfo2;
                     this.ButtonFollow.Enabled = !this.info.IsFollowing;
-                    this.LabelIsFollowed.Text = this.info.IsFollowed ? Hoehoe.Properties.Resources.GetFriendshipInfo3 : Hoehoe.Properties.Resources.GetFriendshipInfo4;
+                    this.LabelIsFollowed.Text = this.info.IsFollowed ? R.GetFriendshipInfo3 : R.GetFriendshipInfo4;
                     this.ButtonUnFollow.Enabled = this.info.IsFollowing;
                 }
                 else
@@ -278,8 +279,8 @@ namespace Hoehoe
                     MessageBox.Show(this.friendshipResult);
                     this.ButtonUnFollow.Enabled = false;
                     this.ButtonFollow.Enabled = false;
-                    this.LabelIsFollowed.Text = Hoehoe.Properties.Resources.GetFriendshipInfo6;
-                    this.LabelIsFollowing.Text = Hoehoe.Properties.Resources.GetFriendshipInfo6;
+                    this.LabelIsFollowed.Text = R.GetFriendshipInfo6;
+                    this.LabelIsFollowing.Text = R.GetFriendshipInfo6;
                 }
             }
         }
@@ -295,7 +296,7 @@ namespace Hoehoe
             }
             else
             {
-                this.LabelRecentPost.Text = Hoehoe.Properties.Resources.ShowUserInfo2;
+                this.LabelRecentPost.Text = R.ShowUserInfo2;
             }
 
             this.ButtonClose.Focus();
@@ -456,7 +457,7 @@ namespace Hoehoe
             if (!this.isEditing)
             {
                 this.buttonEditText = this.ButtonEdit.Text;
-                this.ButtonEdit.Text = Hoehoe.Properties.Resources.UserInfoButtonEdit_ClickText1;
+                this.ButtonEdit.Text = R.UserInfoButtonEdit_ClickText1;
 
                 // 座標初期化,プロパティ設定
                 this.TextBoxName.Location = this.LabelName.Location;
@@ -519,7 +520,7 @@ namespace Hoehoe
                         Description = this.TextBoxDescription.Text.Trim()
                     };
 
-                    using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.UserInfoButtonEdit_ClickText2, this.UpdateProfile_Dowork, this.UpddateProfile_RunWorkerCompleted, arg))
+                    using (FormInfo dlg = new FormInfo(this, R.UserInfoButtonEdit_ClickText2, this.UpdateProfile_Dowork, this.UpddateProfile_RunWorkerCompleted, arg))
                     {
                         dlg.ShowDialog();
                         if (!string.IsNullOrEmpty(dlg.Result.ToString()))
@@ -592,8 +593,8 @@ namespace Hoehoe
 
         private void ChangeIconToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.OpenFileDialogIcon.Filter = Hoehoe.Properties.Resources.ChangeIconToolStripMenuItem_ClickText1;
-            this.OpenFileDialogIcon.Title = Hoehoe.Properties.Resources.ChangeIconToolStripMenuItem_ClickText2;
+            this.OpenFileDialogIcon.Filter = R.ChangeIconToolStripMenuItem_ClickText1;
+            this.OpenFileDialogIcon.Title = R.ChangeIconToolStripMenuItem_ClickText2;
             this.OpenFileDialogIcon.FileName = string.Empty;
 
             DialogResult rslt = this.OpenFileDialogIcon.ShowDialog();
@@ -609,54 +610,54 @@ namespace Hoehoe
             }
             else
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.ChangeIconToolStripMenuItem_ClickText6);
+                MessageBox.Show(R.ChangeIconToolStripMenuItem_ClickText6);
             }
         }
 
         private void ButtonBlock_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this.info.ScreenName + Hoehoe.Properties.Resources.ButtonBlock_ClickText1, Hoehoe.Properties.Resources.ButtonBlock_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(this.info.ScreenName + R.ButtonBlock_ClickText1, R.ButtonBlock_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 string res = this.owner.TwitterInstance.PostCreateBlock(this.info.ScreenName);
                 if (!string.IsNullOrEmpty(res))
                 {
-                    MessageBox.Show(res + Environment.NewLine + Hoehoe.Properties.Resources.ButtonBlock_ClickText3);
+                    MessageBox.Show(res + Environment.NewLine + R.ButtonBlock_ClickText3);
                 }
                 else
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.ButtonBlock_ClickText4);
+                    MessageBox.Show(R.ButtonBlock_ClickText4);
                 }
             }
         }
 
         private void ButtonReportSpam_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this.info.ScreenName + Hoehoe.Properties.Resources.ButtonReportSpam_ClickText1, Hoehoe.Properties.Resources.ButtonReportSpam_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(this.info.ScreenName + R.ButtonReportSpam_ClickText1, R.ButtonReportSpam_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 string res = this.owner.TwitterInstance.PostReportSpam(this.info.ScreenName);
                 if (!string.IsNullOrEmpty(res))
                 {
-                    MessageBox.Show(res + Environment.NewLine + Hoehoe.Properties.Resources.ButtonReportSpam_ClickText3);
+                    MessageBox.Show(res + Environment.NewLine + R.ButtonReportSpam_ClickText3);
                 }
                 else
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.ButtonReportSpam_ClickText4);
+                    MessageBox.Show(R.ButtonReportSpam_ClickText4);
                 }
             }
         }
 
         private void ButtonBlockDestroy_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this.info.ScreenName + Hoehoe.Properties.Resources.ButtonBlockDestroy_ClickText1, Hoehoe.Properties.Resources.ButtonBlockDestroy_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(this.info.ScreenName + R.ButtonBlockDestroy_ClickText1, R.ButtonBlockDestroy_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 string res = this.owner.TwitterInstance.PostDestroyBlock(this.info.ScreenName);
                 if (!string.IsNullOrEmpty(res))
                 {
-                    MessageBox.Show(res + Environment.NewLine + Hoehoe.Properties.Resources.ButtonBlockDestroy_ClickText3);
+                    MessageBox.Show(res + Environment.NewLine + R.ButtonBlockDestroy_ClickText3);
                 }
                 else
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.ButtonBlockDestroy_ClickText4);
+                    MessageBox.Show(R.ButtonBlockDestroy_ClickText4);
                 }
             }
         }
@@ -781,18 +782,18 @@ namespace Hoehoe
                 FileName = filename
             };
 
-            using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ChangeIconToolStripMenuItem_ClickText3, this.UpdateProfileImage_Dowork, this.UpdateProfileImage_RunWorkerCompleted, arg))
+            using (FormInfo dlg = new FormInfo(this, R.ChangeIconToolStripMenuItem_ClickText3, this.UpdateProfileImage_Dowork, this.UpdateProfileImage_RunWorkerCompleted, arg))
             {
                 dlg.ShowDialog();
                 res = dlg.Result as string;
                 if (!string.IsNullOrEmpty(res))
                 {
                     // "Err:"が付いたエラーメッセージが返ってくる
-                    MessageBox.Show(res + System.Environment.NewLine + Hoehoe.Properties.Resources.ChangeIconToolStripMenuItem_ClickText4);
+                    MessageBox.Show(res + System.Environment.NewLine + R.ChangeIconToolStripMenuItem_ClickText4);
                 }
                 else
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.ChangeIconToolStripMenuItem_ClickText5);
+                    MessageBox.Show(R.ChangeIconToolStripMenuItem_ClickText5);
                 }
             }
         }

@@ -37,6 +37,7 @@ namespace Hoehoe
     using System.Windows.Forms;
     using System.Xml;
     using Hoehoe.DataModels;
+    using R = Hoehoe.Properties.Resources;
 
     public class Thumbnail
     {
@@ -1031,7 +1032,7 @@ namespace Hoehoe
                             tmp = xentry["media:title"].InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Hoehoe.Properties.Resources.YouTubeInfoText1);
+                                sb.Append(R.YouTubeInfoText1);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1045,7 +1046,7 @@ namespace Hoehoe
                             int sec = 0;
                             if (int.TryParse(xentry["yt:duration"].Attributes["seconds"].Value, out sec))
                             {
-                                sb.Append(Hoehoe.Properties.Resources.YouTubeInfoText2);
+                                sb.Append(R.YouTubeInfoText2);
                                 sb.AppendFormat("{0:d}:{1:d2}", sec / 60, sec % 60);
                                 sb.AppendLine();
                             }
@@ -1060,7 +1061,7 @@ namespace Hoehoe
                             xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry", nsmgr);
                             if (DateTime.TryParse(xentry["published"].InnerText, out tmpdate))
                             {
-                                sb.Append(Hoehoe.Properties.Resources.YouTubeInfoText3);
+                                sb.Append(R.YouTubeInfoText3);
                                 sb.Append(tmpdate);
                                 sb.AppendLine();
                             }
@@ -1076,7 +1077,7 @@ namespace Hoehoe
                             tmp = xentry["yt:statistics"].Attributes["viewCount"].Value;
                             if (int.TryParse(tmp, out count))
                             {
-                                sb.Append(Hoehoe.Properties.Resources.YouTubeInfoText4);
+                                sb.Append(R.YouTubeInfoText4);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1185,7 +1186,7 @@ namespace Hoehoe
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/title").InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Hoehoe.Properties.Resources.NiconicoInfoText1);
+                                sb.Append(R.NiconicoInfoText1);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1199,7 +1200,7 @@ namespace Hoehoe
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/length").InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Hoehoe.Properties.Resources.NiconicoInfoText2);
+                                sb.Append(R.NiconicoInfoText2);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1214,7 +1215,7 @@ namespace Hoehoe
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/first_retrieve").InnerText;
                             if (DateTime.TryParse(tmp, out tm))
                             {
-                                sb.Append(Hoehoe.Properties.Resources.NiconicoInfoText3);
+                                sb.Append(R.NiconicoInfoText3);
                                 sb.Append(tm.ToString());
                                 sb.AppendLine();
                             }
@@ -1228,7 +1229,7 @@ namespace Hoehoe
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/view_counter").InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Hoehoe.Properties.Resources.NiconicoInfoText4);
+                                sb.Append(R.NiconicoInfoText4);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1242,7 +1243,7 @@ namespace Hoehoe
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/comment_num").InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Hoehoe.Properties.Resources.NiconicoInfoText5);
+                                sb.Append(R.NiconicoInfoText5);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -1256,7 +1257,7 @@ namespace Hoehoe
                             tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/mylist_counter").InnerText;
                             if (!string.IsNullOrEmpty(tmp))
                             {
-                                sb.Append(Hoehoe.Properties.Resources.NiconicoInfoText6);
+                                sb.Append(R.NiconicoInfoText6);
                                 sb.Append(tmp);
                                 sb.AppendLine();
                             }
@@ -2080,7 +2081,7 @@ namespace Hoehoe
                         string tmp = xdoc.SelectSingleNode("videos/video/title").InnerText;
                         if (!string.IsNullOrEmpty(tmp))
                         {
-                            sb.Append(Hoehoe.Properties.Resources.VimeoInfoText1);
+                            sb.Append(R.VimeoInfoText1);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
@@ -2094,7 +2095,7 @@ namespace Hoehoe
                         DateTime tmpdate = new DateTime();
                         if (DateTime.TryParse(xdoc.SelectSingleNode("videos/video/upload_date").InnerText, out tmpdate))
                         {
-                            sb.Append(Hoehoe.Properties.Resources.VimeoInfoText2);
+                            sb.Append(R.VimeoInfoText2);
                             sb.Append(tmpdate);
                             sb.AppendLine();
                         }
@@ -2108,7 +2109,7 @@ namespace Hoehoe
                         string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_likes").InnerText;
                         if (!string.IsNullOrEmpty(tmp))
                         {
-                            sb.Append(Hoehoe.Properties.Resources.VimeoInfoText3);
+                            sb.Append(R.VimeoInfoText3);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
@@ -2122,7 +2123,7 @@ namespace Hoehoe
                         string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_plays").InnerText;
                         if (!string.IsNullOrEmpty(tmp))
                         {
-                            sb.Append(Hoehoe.Properties.Resources.VimeoInfoText4);
+                            sb.Append(R.VimeoInfoText4);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
@@ -2136,7 +2137,7 @@ namespace Hoehoe
                         string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_comments").InnerText;
                         if (!string.IsNullOrEmpty(tmp))
                         {
-                            sb.Append(Hoehoe.Properties.Resources.VimeoInfoText5);
+                            sb.Append(R.VimeoInfoText5);
                             sb.Append(tmp);
                             sb.AppendLine();
                         }
@@ -2150,7 +2151,7 @@ namespace Hoehoe
                         int sec = 0;
                         if (int.TryParse(xdoc.SelectSingleNode("videos/video/duration").InnerText, out sec))
                         {
-                            sb.Append(Hoehoe.Properties.Resources.VimeoInfoText6);
+                            sb.Append(R.VimeoInfoText6);
                             sb.AppendFormat("{0:d}:{1:d2}", sec / 60, sec % 60);
                             sb.AppendLine();
                         }

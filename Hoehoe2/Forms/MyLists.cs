@@ -30,6 +30,7 @@ namespace Hoehoe
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows.Forms;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class MyLists
     {
@@ -47,7 +48,7 @@ namespace Hoehoe
             this.InitializeComponent();
             this.contextUserName = userName;
             this.twitter = tw;
-            this.Text = this.contextUserName + Hoehoe.Properties.Resources.MyLists1;
+            this.Text = this.contextUserName + R.MyLists1;
         }
 
         #endregion constructor
@@ -64,7 +65,7 @@ namespace Hoehoe
             string rslt = this.twitter.GetListsApi();
             if (!string.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListsDeleteFailed, rslt));
+                MessageBox.Show(string.Format(R.ListsDeleteFailed, rslt));
             }
             else
             {
@@ -85,7 +86,7 @@ namespace Hoehoe
                         string rslt = this.twitter.ContainsUserAtList(listItem.Id.ToString(), this.contextUserName, ref ret);
                         if (!string.IsNullOrEmpty(rslt))
                         {
-                            MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListManageOKButton2, rslt));
+                            MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
                             e.NewValue = CheckState.Indeterminate;
                         }
                         else
@@ -108,7 +109,7 @@ namespace Hoehoe
                         string rslt = this.twitter.AddUserToList(list.Id.ToString(), this.contextUserName.ToString());
                         if (!string.IsNullOrEmpty(rslt))
                         {
-                            MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListManageOKButton2, rslt));
+                            MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
                             e.NewValue = CheckState.Indeterminate;
                         }
                     }
@@ -120,7 +121,7 @@ namespace Hoehoe
                         string rslt = this.twitter.RemoveUserToList(list.Id.ToString(), this.contextUserName.ToString());
                         if (!string.IsNullOrEmpty(rslt))
                         {
-                            MessageBox.Show(string.Format(Hoehoe.Properties.Resources.ListManageOKButton2, rslt));
+                            MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
                             e.NewValue = CheckState.Indeterminate;
                         }
                     }

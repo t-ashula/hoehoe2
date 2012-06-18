@@ -32,6 +32,7 @@ namespace Hoehoe
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml.Serialization;
+    using R = Hoehoe.Properties.Resources;
 
     [Serializable]
     public sealed class FiltersClass : IEquatable<FiltersClass>
@@ -652,17 +653,17 @@ namespace Hoehoe
                 {
                     if (!string.IsNullOrEmpty(this.NameFilter))
                     {
-                        fs.AppendFormat(Hoehoe.Properties.Resources.SetFiltersText1, this.NameFilter);
+                        fs.AppendFormat(R.SetFiltersText1, this.NameFilter);
                     }
                     else
                     {
-                        fs.Append(Hoehoe.Properties.Resources.SetFiltersText2);
+                        fs.Append(R.SetFiltersText2);
                     }
                 }
 
                 if (this.body.Count > 0)
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText3);
+                    fs.Append(R.SetFiltersText3);
                     foreach (string bf in this.body)
                     {
                         fs.Append(bf);
@@ -670,32 +671,32 @@ namespace Hoehoe
                     }
 
                     fs.Length -= 1;
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText4);
+                    fs.Append(R.SetFiltersText4);
                 }
 
                 fs.Append("(");
                 if (this.SearchBoth)
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText5);
+                    fs.Append(R.SetFiltersText5);
                 }
                 else
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText6);
+                    fs.Append(R.SetFiltersText6);
                 }
 
                 if (this.UseRegex)
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText7);
+                    fs.Append(R.SetFiltersText7);
                 }
 
                 if (this.SearchUrl)
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText8);
+                    fs.Append(R.SetFiltersText8);
                 }
 
                 if (this.CaseSensitive)
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText13);
+                    fs.Append(R.SetFiltersText13);
                 }
 
                 if (this.IsRt)
@@ -720,22 +721,22 @@ namespace Hoehoe
             if (!string.IsNullOrEmpty(this.ExNameFilter) || this.exbody.Count > 0 || this.IsExRt || !string.IsNullOrEmpty(this.ExSource))
             {
                 // 除外
-                fs.Append(Hoehoe.Properties.Resources.SetFiltersText12);
+                fs.Append(R.SetFiltersText12);
                 if (this.ExSearchBoth)
                 {
                     if (!string.IsNullOrEmpty(this.ExNameFilter))
                     {
-                        fs.AppendFormat(Hoehoe.Properties.Resources.SetFiltersText1, this.ExNameFilter);
+                        fs.AppendFormat(R.SetFiltersText1, this.ExNameFilter);
                     }
                     else
                     {
-                        fs.Append(Hoehoe.Properties.Resources.SetFiltersText2);
+                        fs.Append(R.SetFiltersText2);
                     }
                 }
 
                 if (this.exbody.Count > 0)
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText3);
+                    fs.Append(R.SetFiltersText3);
                     foreach (string bf in this.exbody)
                     {
                         fs.Append(bf);
@@ -743,32 +744,32 @@ namespace Hoehoe
                     }
 
                     fs.Length -= 1;
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText4);
+                    fs.Append(R.SetFiltersText4);
                 }
 
                 fs.Append("(");
                 if (this.ExSearchBoth)
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText5);
+                    fs.Append(R.SetFiltersText5);
                 }
                 else
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText6);
+                    fs.Append(R.SetFiltersText6);
                 }
 
                 if (this.ExUseRegex)
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText7);
+                    fs.Append(R.SetFiltersText7);
                 }
 
                 if (this.ExSearchUrl)
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText8);
+                    fs.Append(R.SetFiltersText8);
                 }
 
                 if (this.ExCaseSensitive)
                 {
-                    fs.Append(Hoehoe.Properties.Resources.SetFiltersText13);
+                    fs.Append(R.SetFiltersText13);
                 }
 
                 if (this.IsExRt)
@@ -793,16 +794,16 @@ namespace Hoehoe
             fs.Append("(");
             if (this.MoveFrom)
             {
-                fs.Append(Hoehoe.Properties.Resources.SetFiltersText9);
+                fs.Append(R.SetFiltersText9);
             }
             else
             {
-                fs.Append(Hoehoe.Properties.Resources.SetFiltersText11);
+                fs.Append(R.SetFiltersText11);
             }
 
             if (!this.MoveFrom && this.SetMark)
             {
-                fs.Append(Hoehoe.Properties.Resources.SetFiltersText10);
+                fs.Append(R.SetFiltersText10);
             }
             else if (!this.MoveFrom)
             {

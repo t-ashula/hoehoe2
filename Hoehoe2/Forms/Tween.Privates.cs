@@ -41,6 +41,7 @@ namespace Hoehoe
     using System.Web;
     using System.Windows.Forms;
     using Hoehoe.TweenCustomControl;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class TweenMain
     {
@@ -205,19 +206,19 @@ namespace Hoehoe
         {
             // 着せ替えアイコン対応
             string iconDir = Path.Combine(Application.StartupPath, "Icons");
-            this.iconAt = this.LoadIcon(iconDir, "At.ico", Hoehoe.Properties.Resources.At);                 // タスクトレイ通常時アイコン
-            this.iconAtRed = this.LoadIcon(iconDir, "AtRed.ico", Hoehoe.Properties.Resources.AtRed);        // タスクトレイエラー時アイコン
-            this.iconAtSmoke = this.LoadIcon(iconDir, "AtSmoke.ico", Hoehoe.Properties.Resources.AtSmoke);  // タスクトレイオフライン時アイコン
-            this.tabIcon = this.LoadIcon(iconDir, "Tab.ico", Hoehoe.Properties.Resources.TabIcon);          // タブ見出し未読表示アイコン
-            this.mainIcon = this.LoadIcon(iconDir, "MIcon.ico", Hoehoe.Properties.Resources.MIcon);         // 画面のアイコン
-            this.replyIcon = this.LoadIcon(iconDir, "Reply.ico", Hoehoe.Properties.Resources.Reply);         // Replyのアイコン
-            this.replyIconBlink = this.LoadIcon(iconDir, "ReplyBlink.ico", Hoehoe.Properties.Resources.ReplyBlink);            // Reply点滅のアイコン
+            this.iconAt = this.LoadIcon(iconDir, "At.ico", R.At);                 // タスクトレイ通常時アイコン
+            this.iconAtRed = this.LoadIcon(iconDir, "AtRed.ico", R.AtRed);        // タスクトレイエラー時アイコン
+            this.iconAtSmoke = this.LoadIcon(iconDir, "AtSmoke.ico", R.AtSmoke);  // タスクトレイオフライン時アイコン
+            this.tabIcon = this.LoadIcon(iconDir, "Tab.ico", R.TabIcon);          // タブ見出し未読表示アイコン
+            this.mainIcon = this.LoadIcon(iconDir, "MIcon.ico", R.MIcon);         // 画面のアイコン
+            this.replyIcon = this.LoadIcon(iconDir, "Reply.ico", R.Reply);         // Replyのアイコン
+            this.replyIconBlink = this.LoadIcon(iconDir, "ReplyBlink.ico", R.ReplyBlink);            // Reply点滅のアイコン
 
             // タスクトレイ更新中アイコン アニメーション対応により4種類読み込み
-            this.iconRefresh[0] = this.LoadIcon(iconDir, "Refresh.ico", Hoehoe.Properties.Resources.Refresh);
-            this.iconRefresh[1] = this.LoadIcon(iconDir, "Refresh2.ico", Hoehoe.Properties.Resources.Refresh2);
-            this.iconRefresh[2] = this.LoadIcon(iconDir, "Refresh3.ico", Hoehoe.Properties.Resources.Refresh3);
-            this.iconRefresh[3] = this.LoadIcon(iconDir, "Refresh4.ico", Hoehoe.Properties.Resources.Refresh4);
+            this.iconRefresh[0] = this.LoadIcon(iconDir, "Refresh.ico", R.Refresh);
+            this.iconRefresh[1] = this.LoadIcon(iconDir, "Refresh2.ico", R.Refresh2);
+            this.iconRefresh[2] = this.LoadIcon(iconDir, "Refresh3.ico", R.Refresh3);
+            this.iconRefresh[3] = this.LoadIcon(iconDir, "Refresh4.ico", R.Refresh4);
         }
 
         private int GetSortColumnIndex(IdComparerClass.ComparerMode sortMode)
@@ -250,10 +251,10 @@ namespace Hoehoe
             var columns = new[]
             {
                 string.Empty,
-                Hoehoe.Properties.Resources.AddNewTabText2,
-                Hoehoe.Properties.Resources.AddNewTabText3,
-                Hoehoe.Properties.Resources.AddNewTabText4_2,
-                Hoehoe.Properties.Resources.AddNewTabText5,
+                R.AddNewTabText2,
+                R.AddNewTabText3,
+                R.AddNewTabText4_2,
+                R.AddNewTabText5,
                 string.Empty,
                 string.Empty,
                 "Source"
@@ -781,19 +782,19 @@ namespace Hoehoe
             }
 
             string notifyType = string.Empty,
-                msg1 = Hoehoe.Properties.Resources.RefreshTimelineText1,
-                msg2 = Hoehoe.Properties.Resources.RefreshTimelineText2;
+                msg1 = R.RefreshTimelineText1,
+                msg2 = R.RefreshTimelineText2;
             if (dm)
             {
                 notifyType = "[DM]";
-                msg1 = Hoehoe.Properties.Resources.RefreshDirectMessageText1;
-                msg2 = Hoehoe.Properties.Resources.RefreshDirectMessageText2;
+                msg1 = R.RefreshDirectMessageText1;
+                msg2 = R.RefreshDirectMessageText2;
             }
             else if (reply)
             {
                 notifyType = "[Reply!]";
-                msg1 = Hoehoe.Properties.Resources.RefreshTimelineText1;
-                msg2 = Hoehoe.Properties.Resources.RefreshTimelineText2;
+                msg1 = R.RefreshTimelineText1;
+                msg2 = R.RefreshTimelineText2;
             }
 
             title.AppendFormat("Hoehoe {0} {1} {2} {3}", notifyType, msg1, addCount, msg2);
@@ -959,35 +960,35 @@ namespace Hoehoe
             {
                 case WorkerType.Timeline:
                     smsg = isFinish ?
-                        Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText1 :
-                        string.Format("{0}{1}{2}", Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText5, asyncArg.Page, Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6);
+                        R.GetTimelineWorker_RunWorkerCompletedText1 :
+                        string.Format("{0}{1}{2}", R.GetTimelineWorker_RunWorkerCompletedText5, asyncArg.Page, R.GetTimelineWorker_RunWorkerCompletedText6);
                     break;
                 case WorkerType.Reply:
                     smsg = isFinish ?
-                        Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText9 :
-                        string.Format("{0}{1}{2}", Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText4, asyncArg.Page, Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6);
+                        R.GetTimelineWorker_RunWorkerCompletedText9 :
+                        string.Format("{0}{1}{2}", R.GetTimelineWorker_RunWorkerCompletedText4, asyncArg.Page, R.GetTimelineWorker_RunWorkerCompletedText6);
                     break;
                 case WorkerType.DirectMessegeRcv:
                     smsg = isFinish ?
-                        Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText11 :
-                        string.Format("{0}{1}{2}", Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText8, asyncArg.Page, Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText6);
+                        R.GetTimelineWorker_RunWorkerCompletedText11 :
+                        string.Format("{0}{1}{2}", R.GetTimelineWorker_RunWorkerCompletedText8, asyncArg.Page, R.GetTimelineWorker_RunWorkerCompletedText6);
                     break;
                 case WorkerType.FavAdd:
                     // 進捗メッセージ残す
                     smsg = isFinish ?
                         string.Empty :
-                        string.Format("{0}{1}/{2}{3}{4}", Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText15, asyncArg.Page, asyncArg.Ids.Count, Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText16, asyncArg.Page - asyncArg.SIds.Count - 1);
+                        string.Format("{0}{1}/{2}{3}{4}", R.GetTimelineWorker_RunWorkerCompletedText15, asyncArg.Page, asyncArg.Ids.Count, R.GetTimelineWorker_RunWorkerCompletedText16, asyncArg.Page - asyncArg.SIds.Count - 1);
                     break;
                 case WorkerType.FavRemove:
                     // 進捗メッセージ残す
                     smsg = isFinish ?
                         string.Empty :
-                        string.Format("{0}{1}/{2}{3}{4}", Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText17, asyncArg.Page, asyncArg.Ids.Count, Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText18, asyncArg.Page - asyncArg.SIds.Count - 1);
+                        string.Format("{0}{1}/{2}{3}{4}", R.GetTimelineWorker_RunWorkerCompletedText17, asyncArg.Page, asyncArg.Ids.Count, R.GetTimelineWorker_RunWorkerCompletedText18, asyncArg.Page - asyncArg.SIds.Count - 1);
                     break;
                 case WorkerType.Favorites:
                     smsg = isFinish ?
-                        Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText20 :
-                        Hoehoe.Properties.Resources.GetTimelineWorker_RunWorkerCompletedText19;
+                        R.GetTimelineWorker_RunWorkerCompletedText20 :
+                        R.GetTimelineWorker_RunWorkerCompletedText19;
                     break;
                 case WorkerType.PublicSearch:
                     smsg = isFinish ?
@@ -1011,7 +1012,7 @@ namespace Hoehoe
                     break;
                 case WorkerType.Follower:
                     smsg = isFinish ?
-                        Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText3 :
+                        R.UpdateFollowersMenuItem1_ClickText3 :
                         string.Empty;
                     break;
                 case WorkerType.Configuration:
@@ -1019,7 +1020,7 @@ namespace Hoehoe
                     break;
                 case WorkerType.BlockIds:
                     smsg = isFinish ?
-                        Hoehoe.Properties.Resources.UpdateBlockUserText3 :
+                        R.UpdateBlockUserText3 :
                         string.Empty;
                     break;
             }
@@ -1120,7 +1121,7 @@ namespace Hoehoe
             // 複数fav確認msg
             if (this.curList.SelectedIndices.Count > 250 && isFavAdd)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.FavoriteLimitCountText);
+                MessageBox.Show(R.FavoriteLimitCountText);
                 this.doFavRetweetFlags = false;
                 return;
             }
@@ -1130,9 +1131,9 @@ namespace Hoehoe
                 if (isFavAdd)
                 {
                     string confirmMessage = this.doFavRetweetFlags ?
-                        Hoehoe.Properties.Resources.FavoriteRetweetQuestionText3 :
-                        Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText1;
-                    var result = MessageBox.Show(confirmMessage, Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                        R.FavoriteRetweetQuestionText3 :
+                        R.FavAddToolStripMenuItem_ClickText1;
+                    var result = MessageBox.Show(confirmMessage, R.FavAddToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if (result == DialogResult.Cancel)
                     {
                         this.doFavRetweetFlags = false;
@@ -1141,7 +1142,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    var result = MessageBox.Show(Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText1, Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    var result = MessageBox.Show(R.FavRemoveToolStripMenuItem_ClickText1, R.FavRemoveToolStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if (result == DialogResult.Cancel)
                     {
                         return;
@@ -1154,8 +1155,8 @@ namespace Hoehoe
             if (ids.Count() == 0)
             {
                 this.StatusLabel.Text = isFavAdd ?
-                    Hoehoe.Properties.Resources.FavAddToolStripMenuItem_ClickText4 :
-                    Hoehoe.Properties.Resources.FavRemoveToolStripMenuItem_ClickText4;
+                    R.FavAddToolStripMenuItem_ClickText4 :
+                    R.FavRemoveToolStripMenuItem_ClickText4;
                 return;
             }
 
@@ -1199,8 +1200,8 @@ namespace Hoehoe
                 }
             }
 
-            var tmp = string.Format(Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText1, Environment.NewLine);
-            var rslt = MessageBox.Show(tmp, Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            var tmp = string.Format(R.DeleteStripMenuItem_ClickText1, Environment.NewLine);
+            var rslt = MessageBox.Show(tmp, R.DeleteStripMenuItem_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (rslt == DialogResult.Cancel)
             {
                 return;
@@ -1252,8 +1253,8 @@ namespace Hoehoe
                 }
 
                 this.StatusLabel.Text = deleted ?
-                    Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText4 :
-                    Hoehoe.Properties.Resources.DeleteStripMenuItem_ClickText3;
+                    R.DeleteStripMenuItem_ClickText4 :
+                    R.DeleteStripMenuItem_ClickText3;
 
                 // キャッシュ破棄
                 this.itemCache = null;
@@ -1581,7 +1582,7 @@ namespace Hoehoe
         {
             if (this.curList.VirtualListSize == 0)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText2, Hoehoe.Properties.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(R.DoTabSearchText2, R.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             RegexOptions regOpt = RegexOptions.None;
@@ -1601,7 +1602,7 @@ namespace Hoehoe
                 }
                 catch (ArgumentException)
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText1, "Hoehoe", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(R.DoTabSearchText1, "Hoehoe", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -1638,7 +1639,7 @@ namespace Hoehoe
                 }
             }
 
-            MessageBox.Show(Hoehoe.Properties.Resources.DoTabSearchText2, Hoehoe.Properties.Resources.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(R.DoTabSearchText2, R.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // TODO: to hoehoe2
@@ -1672,10 +1673,10 @@ namespace Hoehoe
             }
             catch (Exception)
             {
-                this.StatusLabel.Text = Hoehoe.Properties.Resources.CheckNewVersionText9;
+                this.StatusLabel.Text = R.CheckNewVersionText9;
                 if (!startup)
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText10, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                    MessageBox.Show(R.CheckNewVersionText10, R.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                 }
 
                 return;
@@ -1691,10 +1692,10 @@ namespace Hoehoe
 
                 if (!string.IsNullOrEmpty(MyCommon.FileVersion) && strVer.CompareTo(MyCommon.FileVersion.Replace(".", string.Empty)) > 0)
                 {
-                    string tmp = string.Format(Hoehoe.Properties.Resources.CheckNewVersionText3, strVer);
+                    string tmp = string.Format(R.CheckNewVersionText3, strVer);
                     using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                     {
-                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Hoehoe.Properties.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, R.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             retMsg = this.tw.GetTweenBinary(strVer);
                             if (retMsg.Length == 0)
@@ -1707,7 +1708,7 @@ namespace Hoehoe
 
                             if (!startup)
                             {
-                                MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText5 + Environment.NewLine + retMsg, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show(R.CheckNewVersionText5 + Environment.NewLine + retMsg, R.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
                     }
@@ -1716,10 +1717,10 @@ namespace Hoehoe
                 {
                     if (forceUpdate)
                     {
-                        string tmp = string.Format(Hoehoe.Properties.Resources.CheckNewVersionText6, strVer);
+                        string tmp = string.Format(R.CheckNewVersionText6, strVer);
                         using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                         {
-                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, Hoehoe.Properties.Resources.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, R.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 retMsg = this.tw.GetTweenBinary(strVer);
                                 if (retMsg.Length == 0)
@@ -1732,23 +1733,23 @@ namespace Hoehoe
 
                                 if (!startup)
                                 {
-                                    MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText5 + Environment.NewLine + retMsg, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show(R.CheckNewVersionText5 + Environment.NewLine + retMsg, R.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 }
                             }
                         }
                     }
                     else if (!startup)
                     {
-                        MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText7 + MyCommon.FileVersion.Replace(".", string.Empty) + Hoehoe.Properties.Resources.CheckNewVersionText8 + strVer, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(R.CheckNewVersionText7 + MyCommon.FileVersion.Replace(".", string.Empty) + R.CheckNewVersionText8 + strVer, R.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             else
             {
-                this.StatusLabel.Text = Hoehoe.Properties.Resources.CheckNewVersionText9;
+                this.StatusLabel.Text = R.CheckNewVersionText9;
                 if (!startup)
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.CheckNewVersionText10, Hoehoe.Properties.Resources.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(R.CheckNewVersionText10, R.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
         }
@@ -2709,7 +2710,7 @@ namespace Hoehoe
 
             if (isProtected)
             {
-                new MessageForm().ShowDialog(Hoehoe.Properties.Resources.CopyStotText1);
+                new MessageForm().ShowDialog(R.CopyStotText1);
             }
 
             if (sb.Length > 0)
@@ -3898,7 +3899,7 @@ namespace Hoehoe
                 this.TopMost = this.configs.AlwaysTop;
                 tabName = this.tabDialog.SelectedTabName;
                 this.ListTab.SelectedTab.Focus();
-                if (tabName != Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText1)
+                if (tabName != R.IDRuleMenuItem_ClickText1)
                 {
                     // 既存タブを選択
                     return true;
@@ -3921,8 +3922,8 @@ namespace Hoehoe
                     }
 
                     // もう一度タブ名入力
-                    string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText2, tabName);
-                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string tmp = string.Format(R.IDRuleMenuItem_ClickText2, tabName);
+                    MessageBox.Show(tmp, R.IDRuleMenuItem_ClickText3, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
             while (true);
@@ -3931,14 +3932,14 @@ namespace Hoehoe
         private void GetMoveOrCopy(ref bool move, ref bool mark)
         {
             // 移動するか？
-            string tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText4, Environment.NewLine);
-            var reslut = MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            string tmp = string.Format(R.IDRuleMenuItem_ClickText4, Environment.NewLine);
+            var reslut = MessageBox.Show(tmp, R.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             move = reslut != DialogResult.Yes;
             if (!move)
             {
                 // マークするか？
-                tmp = string.Format(Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText6, Environment.NewLine);
-                reslut = MessageBox.Show(tmp, Hoehoe.Properties.Resources.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                tmp = string.Format(R.IDRuleMenuItem_ClickText6, Environment.NewLine);
+                reslut = MessageBox.Show(tmp, R.IDRuleMenuItem_ClickText7, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 mark = reslut == DialogResult.Yes;
             }
         }
@@ -3974,8 +3975,8 @@ namespace Hoehoe
 
             if (showWarning)
             {
-                string msg = string.Format(Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText1, Environment.NewLine);
-                string caption = string.Format("{0} {1}", tabName, Hoehoe.Properties.Resources.ClearTabMenuItem_ClickText2);
+                string msg = string.Format(R.ClearTabMenuItem_ClickText1, Environment.NewLine);
+                string caption = string.Format("{0} {1}", tabName, R.ClearTabMenuItem_ClickText2);
                 var reslt = MessageBox.Show(msg, caption, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                 if (reslt == DialogResult.Cancel)
                 {
@@ -4048,16 +4049,16 @@ namespace Hoehoe
 
                     break;
                 case DispTitleEnum.UnreadRepCount:
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText1, this.statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + this.statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
+                    ttl.AppendFormat(R.SetMainWindowTitleText1, this.statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + this.statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
                     break;
                 case DispTitleEnum.UnreadAllCount:
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText2, ur);
+                    ttl.AppendFormat(R.SetMainWindowTitleText2, ur);
                     break;
                 case DispTitleEnum.UnreadAllRepCount:
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText3, ur, this.statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + this.statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
+                    ttl.AppendFormat(R.SetMainWindowTitleText3, ur, this.statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + this.statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
                     break;
                 case DispTitleEnum.UnreadCountAllCount:
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.SetMainWindowTitleText4, ur, al);
+                    ttl.AppendFormat(R.SetMainWindowTitleText4, ur, al);
                     break;
                 case DispTitleEnum.OwnStatus:
                     if (this.prevFollowerCount == 0 && this.tw.FollowersCount > 0)
@@ -4065,7 +4066,7 @@ namespace Hoehoe
                         this.prevFollowerCount = this.tw.FollowersCount;
                     }
 
-                    ttl.AppendFormat(Hoehoe.Properties.Resources.OwnStatusTitle, this.tw.StatusesCount, this.tw.FriendsCount, this.tw.FollowersCount, this.tw.FollowersCount - this.prevFollowerCount);
+                    ttl.AppendFormat(R.OwnStatusTitle, this.tw.StatusesCount, this.tw.FriendsCount, this.tw.FollowersCount, this.tw.FollowersCount - this.prevFollowerCount);
                     break;
             }
 
@@ -4105,14 +4106,14 @@ namespace Hoehoe
                 this.unreadCounter = ur;
                 this.unreadAtCounter = mentionTab.UnreadCount + dmessageTab.UnreadCount;
                 StringBuilder slbl = new StringBuilder(256);
-                slbl.AppendFormat(Hoehoe.Properties.Resources.SetStatusLabelText1, tur, tal, ur, al, this.unreadAtCounter, this.postTimestamps.Count, this.favTimestamps.Count, this.timeLineCount);
+                slbl.AppendFormat(R.SetStatusLabelText1, tur, tal, ur, al, this.unreadAtCounter, this.postTimestamps.Count, this.favTimestamps.Count, this.timeLineCount);
                 if (this.configs.TimelinePeriodInt == 0)
                 {
-                    slbl.Append(Hoehoe.Properties.Resources.SetStatusLabelText2);
+                    slbl.Append(R.SetStatusLabelText2);
                 }
                 else
                 {
-                    slbl.Append(string.Format("{0}{1}", this.configs.TimelinePeriodInt, Hoehoe.Properties.Resources.SetStatusLabelText3));
+                    slbl.Append(string.Format("{0}{1}", this.configs.TimelinePeriodInt, R.SetStatusLabelText3));
                 }
 
                 return slbl.ToString();
@@ -4326,7 +4327,7 @@ namespace Hoehoe
             string selText = this.WebBrowser_GetSelectionText( this.PostBrowser);
             if (selText != null)
             {
-                if (url == Hoehoe.Properties.Resources.SearchItem4Url)
+                if (url == R.SearchItem4Url)
                 {
                     // 公式検索
                     this.AddNewTabForSearch(selText);
@@ -4577,17 +4578,17 @@ namespace Hoehoe
 
             if (this.curList.SelectedIndices.Count > 15)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.RetweetLimitText);
+                MessageBox.Show(R.RetweetLimitText);
                 this.doFavRetweetFlags = false;
                 return;
             }
 
             if (this.curList.SelectedIndices.Count > 1)
             {
-                string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion2;
+                string confirmMessage = R.RetweetQuestion2;
                 if (this.doFavRetweetFlags)
                 {
-                    confirmMessage = Hoehoe.Properties.Resources.FavoriteRetweetQuestionText1;
+                    confirmMessage = R.FavoriteRetweetQuestionText1;
                 }
 
                 var result = MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -4607,10 +4608,10 @@ namespace Hoehoe
 
                 if (!this.configs.RetweetNoConfirm)
                 {
-                    string confirmMessage = Hoehoe.Properties.Resources.RetweetQuestion1;
+                    string confirmMessage = R.RetweetQuestion1;
                     if (this.doFavRetweetFlags)
                     {
-                        confirmMessage = Hoehoe.Properties.Resources.FavoritesRetweetQuestionText2;
+                        confirmMessage = R.FavoritesRetweetQuestionText2;
                     }
 
                     if (isConfirm && MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
@@ -4701,7 +4702,7 @@ namespace Hoehoe
             }
 
             var followid = id;
-            if (!this.TryUserInputText(ref followid, "Follow", Hoehoe.Properties.Resources.FRMessage1))
+            if (!this.TryUserInputText(ref followid, "Follow", R.FRMessage1))
             {
                 return;
             }
@@ -4712,11 +4713,11 @@ namespace Hoehoe
                 return;
             }
 
-            using (var info = new FormInfo(this, Hoehoe.Properties.Resources.FollowCommandText1, this.FollowCommand_DoWork, null, new FollowRemoveCommandArgs() { Tw = this.tw, Id = id }))
+            using (var info = new FormInfo(this, R.FollowCommandText1, this.FollowCommand_DoWork, null, new FollowRemoveCommandArgs() { Tw = this.tw, Id = id }))
             {
                 info.ShowDialog();
                 string ret = (string)info.Result;
-                MessageBox.Show(!string.IsNullOrEmpty(ret) ? Hoehoe.Properties.Resources.FRMessage2 + ret : Hoehoe.Properties.Resources.FRMessage3);
+                MessageBox.Show(!string.IsNullOrEmpty(ret) ? R.FRMessage2 + ret : R.FRMessage3);
             }
         }
 
@@ -4730,7 +4731,7 @@ namespace Hoehoe
             if (!skipInput)
             {
                 var removeid = id;
-                if (!this.TryUserInputText(ref removeid, "Unfollow", Hoehoe.Properties.Resources.FRMessage1))
+                if (!this.TryUserInputText(ref removeid, "Unfollow", R.FRMessage1))
                 {
                     return;
                 }
@@ -4744,11 +4745,11 @@ namespace Hoehoe
             }
 
             FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs() { Tw = this.tw, Id = id };
-            using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.RemoveCommandText1, this.RemoveCommand_DoWork, null, arg))
+            using (FormInfo info = new FormInfo(this, R.RemoveCommandText1, this.RemoveCommand_DoWork, null, arg))
             {
                 info.ShowDialog();
                 string ret = (string)info.Result;
-                MessageBox.Show(!string.IsNullOrEmpty(ret) ? Hoehoe.Properties.Resources.FRMessage2 + ret : Hoehoe.Properties.Resources.FRMessage3);
+                MessageBox.Show(!string.IsNullOrEmpty(ret) ? R.FRMessage2 + ret : R.FRMessage3);
             }
         }
 
@@ -4760,7 +4761,7 @@ namespace Hoehoe
             }
 
             var frid = id;
-            if (!this.TryUserInputText(ref frid, "Show Friendships", Hoehoe.Properties.Resources.FRMessage1))
+            if (!this.TryUserInputText(ref frid, "Show Friendships", R.FRMessage1))
             {
                 return;
             }
@@ -4792,7 +4793,7 @@ namespace Hoehoe
             ShowFriendshipArgs args = new ShowFriendshipArgs() { Tw = this.tw };
             args.Ids.Add(new ShowFriendshipArgs.FriendshipInfo(id));
             string ret = string.Empty;
-            using (FormInfo formInfo = new FormInfo(this, Hoehoe.Properties.Resources.ShowFriendshipText1, this.ShowFriendship_DoWork, null, args))
+            using (FormInfo formInfo = new FormInfo(this, R.ShowFriendshipText1, this.ShowFriendship_DoWork, null, args))
             {
                 formInfo.ShowDialog();
                 ret = (string)formInfo.Result;
@@ -4806,17 +4807,17 @@ namespace Hoehoe
 
             ShowFriendshipArgs.FriendshipInfo frsinfo = args.Ids[0];
             string fing = frsinfo.IsFollowing ?
-                Hoehoe.Properties.Resources.GetFriendshipInfo1 :
-                Hoehoe.Properties.Resources.GetFriendshipInfo2;
+                R.GetFriendshipInfo1 :
+                R.GetFriendshipInfo2;
             string fed = frsinfo.IsFollowed ?
-                Hoehoe.Properties.Resources.GetFriendshipInfo3 :
-                Hoehoe.Properties.Resources.GetFriendshipInfo4;
-            string result = frsinfo.Id + Hoehoe.Properties.Resources.GetFriendshipInfo5 + System.Environment.NewLine;
+                R.GetFriendshipInfo3 :
+                R.GetFriendshipInfo4;
+            string result = frsinfo.Id + R.GetFriendshipInfo5 + System.Environment.NewLine;
             result += "  " + fing + System.Environment.NewLine;
             result += "  " + fed;
             if (frsinfo.IsFollowing)
             {
-                var rslt = MessageBox.Show(Hoehoe.Properties.Resources.GetFriendshipInfo7 + System.Environment.NewLine + result, Hoehoe.Properties.Resources.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                var rslt = MessageBox.Show(R.GetFriendshipInfo7 + System.Environment.NewLine + result, R.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (rslt == DialogResult.Yes)
                 {
                     this.RemoveCommand(frsinfo.Id, true);
@@ -4890,7 +4891,7 @@ namespace Hoehoe
             var sid = id;
             if (showInputDialog)
             {
-                if (!this.TryUserInputText(ref sid, "Show UserStatus", Hoehoe.Properties.Resources.FRMessage1))
+                if (!this.TryUserInputText(ref sid, "Show UserStatus", R.FRMessage1))
                 {
                     return;
                 }
@@ -4905,7 +4906,7 @@ namespace Hoehoe
 
             var user = new DataModels.Twitter.User();
             GetUserInfoArgs args = new GetUserInfoArgs() { Tw = this.tw, Id = id, User = user };
-            using (FormInfo info = new FormInfo(this, Hoehoe.Properties.Resources.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
+            using (FormInfo info = new FormInfo(this, R.doShowUserStatusText1, this.GetUserInfo_DoWork, null, args))
             {
                 info.ShowDialog();
                 string ret = (string)info.Result;
@@ -4967,7 +4968,7 @@ namespace Hoehoe
                         this.ImageSelectedPicture.Tag = UploadFileType.Picture;
                         break;
                     case UploadFileType.MultiMedia:
-                        this.ImageSelectedPicture.Image = Hoehoe.Properties.Resources.MultiMediaImage;
+                        this.ImageSelectedPicture.Image = R.MultiMediaImage;
                         this.ImageSelectedPicture.Tag = UploadFileType.MultiMedia;
                         break;
                     case UploadFileType.Invalid:
@@ -5107,7 +5108,7 @@ namespace Hoehoe
             }
 
             var uid = id;
-            if (!this.TryUserInputText(ref uid, caption, Hoehoe.Properties.Resources.FRMessage1))
+            if (!this.TryUserInputText(ref uid, caption, R.FRMessage1))
             {
                 return string.Empty;
             }
@@ -5183,7 +5184,7 @@ namespace Hoehoe
             this.StatusOpenMenuItem.Enabled = !dmsgOrNotExist;
             this.FavorareMenuItem.Enabled = !dmsgOrNotExist;
             this.ShowRelatedStatusesMenuItem.Enabled = !dmsgOrNotExist;
-            this.DeleteStripMenuItem.Text = !dmsgOrNotExist && this.curPost.IsRetweeted ? Hoehoe.Properties.Resources.DeleteMenuText2 : Hoehoe.Properties.Resources.DeleteMenuText1;
+            this.DeleteStripMenuItem.Text = !dmsgOrNotExist && this.curPost.IsRetweeted ? R.DeleteMenuText2 : R.DeleteMenuText1;
             this.DeleteStripMenuItem.Enabled = !dmsgOrNotExist ? this.curPost.IsMe : existCurrentPost && this.curPost.IsDm;
             this.ReTweetOriginalStripMenuItem.Enabled = !dmsgOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
             this.FavoriteRetweetContextMenu.Enabled = !dmsgOrNotExist && !this.curPost.IsMe && !this.curPost.IsProtect;
@@ -5284,10 +5285,10 @@ namespace Hoehoe
         {
             var saveiconmenu = false;
             var iconmenu = false;
-            var iconmenutxt = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText1;
+            var iconmenutxt = R.ContextMenuStrip3_OpeningText1;
             if (this.curList.SelectedIndices.Count <= 0 || this.curPost == null)
             {
-                iconmenutxt = Hoehoe.Properties.Resources.ContextMenuStrip3_OpeningText2;
+                iconmenutxt = R.ContextMenuStrip3_OpeningText2;
             }
             else
             {
@@ -5402,30 +5403,30 @@ namespace Hoehoe
         {
             GetApiInfoArgs args = new GetApiInfoArgs { Tw = this.tw, Info = new ApiInfo() };
             StringBuilder tmp = new StringBuilder();
-            using (FormInfo dlg = new FormInfo(this, Hoehoe.Properties.Resources.ApiInfo6, this.GetApiInfo_Dowork, null, args))
+            using (FormInfo dlg = new FormInfo(this, R.ApiInfo6, this.GetApiInfo_Dowork, null, args))
             {
                 dlg.ShowDialog();
                 if ((bool)dlg.Result)
                 {
-                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo1, args.Info.MaxCount));
-                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo2, args.Info.RemainCount));
-                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo3, args.Info.ResetTime));
-                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo7, this.tw.UserStreamEnabled ? Hoehoe.Properties.Resources.Enable : Hoehoe.Properties.Resources.Disable));
+                    tmp.AppendLine(string.Format("{0}{1}", R.ApiInfo1, args.Info.MaxCount));
+                    tmp.AppendLine(string.Format("{0}{1}", R.ApiInfo2, args.Info.RemainCount));
+                    tmp.AppendLine(string.Format("{0}{1}", R.ApiInfo3, args.Info.ResetTime));
+                    tmp.AppendLine(string.Format("{0}{1}", R.ApiInfo7, this.tw.UserStreamEnabled ? R.Enable : R.Disable));
                     tmp.AppendLine();
-                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo8, args.Info.AccessLevel));
+                    tmp.AppendLine(string.Format("{0}{1}", R.ApiInfo8, args.Info.AccessLevel));
                     tmp.AppendLine();
-                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo9, args.Info.MediaMaxCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaMaxCount.ToString()));
-                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo10, args.Info.MediaRemainCount < 0 ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaRemainCount.ToString()));
-                    tmp.AppendLine(string.Format("{0}{1}", Hoehoe.Properties.Resources.ApiInfo11, args.Info.MediaResetTime == new DateTime() ? Hoehoe.Properties.Resources.ApiInfo91 : args.Info.MediaResetTime.ToString()));
+                    tmp.AppendLine(string.Format("{0}{1}", R.ApiInfo9, args.Info.MediaMaxCount < 0 ? R.ApiInfo91 : args.Info.MediaMaxCount.ToString()));
+                    tmp.AppendLine(string.Format("{0}{1}", R.ApiInfo10, args.Info.MediaRemainCount < 0 ? R.ApiInfo91 : args.Info.MediaRemainCount.ToString()));
+                    tmp.AppendLine(string.Format("{0}{1}", R.ApiInfo11, args.Info.MediaResetTime == new DateTime() ? R.ApiInfo91 : args.Info.MediaResetTime.ToString()));
                     this.SetStatusLabelUrl();
                 }
                 else
                 {
-                    tmp.Append(Hoehoe.Properties.Resources.ApiInfo5);
+                    tmp.Append(R.ApiInfo5);
                 }
             }
 
-            MessageBox.Show(tmp.ToString(), Hoehoe.Properties.Resources.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(tmp.ToString(), R.ApiInfo4, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ShowCacheInfoBox()
@@ -5473,7 +5474,7 @@ namespace Hoehoe
             }
 
             this.OpenFileDialog1.Filter = this.pictureServices[this.ImageService].GetFileOpenDialogFilter();
-            this.OpenFileDialog1.Title = Hoehoe.Properties.Resources.PickPictureDialog1;
+            this.OpenFileDialog1.Title = R.PickPictureDialog1;
             this.OpenFileDialog1.FileName = string.Empty;
 
             try
@@ -5546,14 +5547,14 @@ namespace Hoehoe
         {
             if (this.ExistCurrentPost)
             {
-                using (FormInfo formInfo = new FormInfo(this, Hoehoe.Properties.Resources.RtCountMenuItem_ClickText1, this.GetRetweet_DoWork))
+                using (FormInfo formInfo = new FormInfo(this, R.RtCountMenuItem_ClickText1, this.GetRetweet_DoWork))
                 {
                     // ダイアログ表示
                     formInfo.ShowDialog();
                     int retweetCount = (int)formInfo.Result;
                     string msg = retweetCount < 0 ?
-                        Hoehoe.Properties.Resources.RtCountText2 :
-                        string.Format("{0}{1}", retweetCount, Hoehoe.Properties.Resources.RtCountText1);
+                        R.RtCountText2 :
+                        string.Format("{0}{1}", retweetCount, R.RtCountText1);
                     MessageBox.Show(msg);
                 }
             }
@@ -6012,8 +6013,8 @@ namespace Hoehoe
 
             if (!this.statuses.AddTab(tabName, tabUsage, list) || !this.AddNewTab(tabName, false, tabUsage, list))
             {
-                string tmp = string.Format(Hoehoe.Properties.Resources.AddTabMenuItem_ClickText1, tabName);
-                MessageBox.Show(tmp, Hoehoe.Properties.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                string tmp = string.Format(R.AddTabMenuItem_ClickText1, tabName);
+                MessageBox.Show(tmp, R.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -6063,7 +6064,7 @@ namespace Hoehoe
 
         private void OpenFavorarePageOfUser(string id)
         {
-            this.OpenUriAsync(string.Format("{0}users/{1}/recent", Hoehoe.Properties.Resources.FavstarUrl, id));
+            this.OpenUriAsync(string.Format("{0}users/{1}/recent", R.FavstarUrl, id));
         }
 
         private void ExitApplication()
@@ -6105,7 +6106,7 @@ namespace Hoehoe
                 if (progressPercentage == 300)
                 {
                     // 終了
-                    progressMessage = Hoehoe.Properties.Resources.PostWorker_RunWorkerCompletedText4;
+                    progressMessage = R.PostWorker_RunWorkerCompletedText4;
                 }
             }
             else
@@ -6784,11 +6785,11 @@ namespace Hoehoe
                 || this.ImageServiceCombo.SelectedIndex < 0
                 || string.IsNullOrEmpty(this.ImagefilePathText.Text))
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.PostPictureWarn1, Hoehoe.Properties.Resources.PostPictureWarn2);
+                MessageBox.Show(R.PostPictureWarn1, R.PostPictureWarn2);
                 return false;
             }
 
-            var rslt = MessageBox.Show(Hoehoe.Properties.Resources.PostPictureConfirm1, Hoehoe.Properties.Resources.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+            var rslt = MessageBox.Show(R.PostPictureConfirm1, R.PostPictureConfirm2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
             if (rslt == DialogResult.Cancel)
             {
                 this.TimelinePanel.Visible = true;
@@ -6834,7 +6835,7 @@ namespace Hoehoe
 
             if (this.ExistCurrentPost && statusTextTextTrim == string.Format("RT @{0}: {1}", this.curPost.ScreenName, this.curPost.TextFromApi))
             {
-                DialogResult res = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult res = MessageBox.Show(string.Format(R.PostButton_Click1, Environment.NewLine), "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (res)
                 {
                     case DialogResult.Yes:
@@ -6896,7 +6897,7 @@ namespace Hoehoe
 
             if (this.GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
             {
-                if (MessageBox.Show(Hoehoe.Properties.Resources.PostLengthOverMessage1, Hoehoe.Properties.Resources.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
+                if (MessageBox.Show(R.PostLengthOverMessage1, R.PostLengthOverMessage2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
                 {
                     isCutOff = true;
                     if (this.GetRestStatusCount(false, !isRemoveFooter) - adjustCount < 0)
@@ -6983,7 +6984,7 @@ namespace Hoehoe
             // Google検索（試験実装）
             if (this.StatusText.Text.StartsWith("Google:", StringComparison.OrdinalIgnoreCase) && statusTextTextTrim.Length > 7)
             {
-                this.OpenUriAsync(string.Format(Hoehoe.Properties.Resources.SearchItem2Url, HttpUtility.UrlEncode(this.StatusText.Text.Substring(7))));
+                this.OpenUriAsync(string.Format(R.SearchItem2Url, HttpUtility.UrlEncode(this.StatusText.Text.Substring(7))));
             }
             this.ClearReplyToInfo();
             this.StatusText.Text = string.Empty;
@@ -7140,7 +7141,7 @@ namespace Hoehoe
 
         private void TrySaveLog()
         {
-            DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText1, Environment.NewLine), Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult rslt = MessageBox.Show(string.Format(R.SaveLogMenuItem_ClickText1, Environment.NewLine), R.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (rslt == DialogResult.Cancel)
             {
                 return;
@@ -7148,9 +7149,9 @@ namespace Hoehoe
 
             this.SaveFileDialog1.FileName = string.Format("HoehoePosts{0:yyMMdd-HHmmss}.tsv", DateTime.Now);
             this.SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
-            this.SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
+            this.SaveFileDialog1.Filter = R.SaveLogMenuItem_ClickText3;
             this.SaveFileDialog1.FilterIndex = 0;
-            this.SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
+            this.SaveFileDialog1.Title = R.SaveLogMenuItem_ClickText4;
             this.SaveFileDialog1.RestoreDirectory = true;
 
             if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -8081,7 +8082,7 @@ namespace Hoehoe
             // 権限チェック read/write権限(xAuthで取得したトークン)の場合は再認証を促す
             if (MyCommon.TwitterApiInfo.AccessLevel == ApiAccessLevel.ReadWrite)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.ReAuthorizeText);
+                MessageBox.Show(R.ReAuthorizeText);
                 this.TryShowSettingsBox();
             }
 

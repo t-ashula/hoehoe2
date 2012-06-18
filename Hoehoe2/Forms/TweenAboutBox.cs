@@ -28,6 +28,7 @@ namespace Hoehoe
 {
     using System;
     using System.IO;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class TweenAboutBox
     {
@@ -65,14 +66,14 @@ namespace Hoehoe
         {
             // フォームのタイトルを設定します。
             string applicationTitle = !string.IsNullOrEmpty(MyCommon.AppTitle) ? MyCommon.AppTitle : Path.GetFileNameWithoutExtension(MyCommon.AppAssemblyName);
-            this.Text = string.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText1, applicationTitle);
+            this.Text = string.Format(R.TweenAboutBox_LoadText1, applicationTitle);
             this.LabelProductName.Text = MyCommon.AppAssemblyProductName;
-            this.LabelVersion.Text = string.Format(Hoehoe.Properties.Resources.TweenAboutBox_LoadText2, MyCommon.FileVersion + "(" + MyCommon.AppVersion.ToString() + ")");
+            this.LabelVersion.Text = string.Format(R.TweenAboutBox_LoadText2, MyCommon.FileVersion + "(" + MyCommon.AppVersion.ToString() + ")");
             this.LabelCopyright.Text = MyCommon.AppAssemblyCopyright;
             this.LabelCompanyName.Text = MyCommon.AppAssemblyCompanyName;
             this.TextBoxDescription.Text = MyCommon.AppAssemblyDescription;
-            this.ChangeLog.Text = Hoehoe.Properties.Resources.ChangeLog;
-            this.TextBoxDescription.Text = Hoehoe.Properties.Resources.Description;
+            this.ChangeLog.Text = R.ChangeLog;
+            this.TextBoxDescription.Text = R.Description;
         }
 
         #endregion privates

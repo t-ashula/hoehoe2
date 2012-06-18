@@ -39,6 +39,7 @@ namespace Hoehoe
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
     using Hoehoe.TweenCustomControl;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class TweenMain
     {
@@ -521,7 +522,7 @@ namespace Hoehoe
             }
 
             // 新規タブ名チェック
-            if (tabName == Hoehoe.Properties.Resources.AddNewTabText1)
+            if (tabName == R.AddNewTabText1)
             {
                 return false;
             }
@@ -798,8 +799,8 @@ namespace Hoehoe
 
             if (confirm)
             {
-                string tmp = string.Format(Hoehoe.Properties.Resources.RemoveSpecifiedTabText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, tabName + " " + Hoehoe.Properties.Resources.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Cancel)
+                string tmp = string.Format(R.RemoveSpecifiedTabText1, Environment.NewLine);
+                if (MessageBox.Show(tmp, tabName + " " + R.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Cancel)
                 {
                     return false;
                 }
@@ -992,8 +993,8 @@ namespace Hoehoe
             {
                 if (this.ListTab.TabPages[i].Text == newTabText)
                 {
-                    string tmp = string.Format(Hoehoe.Properties.Resources.Tabs_DoubleClickText1, newTabText);
-                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string tmp = string.Format(R.Tabs_DoubleClickText1, newTabText);
+                    MessageBox.Show(tmp, R.Tabs_DoubleClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return false;
                 }
             }

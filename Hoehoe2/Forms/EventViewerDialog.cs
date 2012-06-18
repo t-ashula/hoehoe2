@@ -33,6 +33,7 @@ namespace Hoehoe
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class EventViewerDialog
     {
@@ -149,7 +150,7 @@ namespace Hoehoe
 
         private void SaveLogButton_Click(object sender, EventArgs e)
         {
-            DialogResult rslt = MessageBox.Show(string.Format(Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText5, Environment.NewLine), Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult rslt = MessageBox.Show(string.Format(R.SaveLogMenuItem_ClickText5, Environment.NewLine), R.SaveLogMenuItem_ClickText2, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             string tabName = string.Empty;
             switch (rslt)
             {
@@ -164,9 +165,9 @@ namespace Hoehoe
 
             this.SaveFileDialog1.FileName = string.Format("HoehoeEvents{0}{1:yyMMdd-HHmmss}.tsv", tabName, DateTime.Now);
             this.SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
-            this.SaveFileDialog1.Filter = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText3;
+            this.SaveFileDialog1.Filter = R.SaveLogMenuItem_ClickText3;
             this.SaveFileDialog1.FilterIndex = 0;
-            this.SaveFileDialog1.Title = Hoehoe.Properties.Resources.SaveLogMenuItem_ClickText4;
+            this.SaveFileDialog1.Title = R.SaveLogMenuItem_ClickText4;
             this.SaveFileDialog1.RestoreDirectory = true;
 
             if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -228,7 +229,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.ButtonOK_ClickText3 + ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(R.ButtonOK_ClickText3 + ex.Message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
         }

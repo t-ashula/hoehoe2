@@ -30,6 +30,7 @@ namespace Hoehoe
     using System.Collections.Generic;
     using System.Windows.Forms;
     using System.Xml.Serialization;
+    using R = Hoehoe.Properties.Resources;
 
     [Serializable]
     public class SettingCommon : SettingBase<SettingCommon>
@@ -56,7 +57,7 @@ namespace Hoehoe
             this.IsMyEventNotifyFlag = EventType.All;
             this.ForceEventNotify = false;
             this.FavEventUnread = true;
-            this.TranslateLanguage = Hoehoe.Properties.Resources.TranslateDefaultLanguage;
+            this.TranslateLanguage = R.TranslateDefaultLanguage;
             this.EventSoundFile = string.Empty;
             this.PlaySound = false;
             this.UnreadManage = true;

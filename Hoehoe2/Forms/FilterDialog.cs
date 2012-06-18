@@ -32,6 +32,7 @@ namespace Hoehoe
     using System.Linq.Expressions;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class FilterDialog
     {
@@ -238,13 +239,13 @@ namespace Hoehoe
 
             if (this.ListFilters.SelectedIndices.Count == 1)
             {
-                tmp = string.Format(Hoehoe.Properties.Resources.ButtonDelete_ClickText1, Environment.NewLine, this.ListFilters.SelectedItem.ToString());
-                rslt = MessageBox.Show(tmp, Hoehoe.Properties.Resources.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                tmp = string.Format(R.ButtonDelete_ClickText1, Environment.NewLine, this.ListFilters.SelectedItem.ToString());
+                rslt = MessageBox.Show(tmp, R.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             }
             else
             {
-                tmp = string.Format(Hoehoe.Properties.Resources.ButtonDelete_ClickText3, this.ListFilters.SelectedIndices.Count.ToString());
-                rslt = MessageBox.Show(tmp, Hoehoe.Properties.Resources.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                tmp = string.Format(R.ButtonDelete_ClickText3, this.ListFilters.SelectedIndices.Count.ToString());
+                rslt = MessageBox.Show(tmp, R.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             }
 
             if (rslt == DialogResult.Cancel)
@@ -322,7 +323,7 @@ namespace Hoehoe
 
             if (isBlankMatch && isBlankExclude)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.ButtonOK_ClickText1, Hoehoe.Properties.Resources.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(R.ButtonOK_ClickText1, R.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -416,7 +417,7 @@ namespace Hoehoe
             {
                 if (!this.sts.Tabs[this.ListTabs.SelectedItem.ToString()].AddFilter(ft))
                 {
-                    MessageBox.Show(Hoehoe.Properties.Resources.ButtonOK_ClickText4, Hoehoe.Properties.Resources.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(R.ButtonOK_ClickText4, R.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -601,8 +602,8 @@ namespace Hoehoe
 
                 if (!this.sts.AddTab(tabName, tabType, list) || !((TweenMain)this.Owner).AddNewTab(tabName, false, tabType, list))
                 {
-                    string tmp = string.Format(Hoehoe.Properties.Resources.AddTabMenuItem_ClickText1, tabName);
-                    MessageBox.Show(tmp, Hoehoe.Properties.Resources.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string tmp = string.Format(R.AddTabMenuItem_ClickText1, tabName);
+                    MessageBox.Show(tmp, R.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
                 else
@@ -754,7 +755,7 @@ namespace Hoehoe
         {
             if (this.ListTabs.SelectedIndex > -1 && this.ListFilters.SelectedItem != null)
             {
-                this.tabDialog.Text = Hoehoe.Properties.Resources.ButtonRuleCopy_ClickText1;
+                this.tabDialog.Text = R.ButtonRuleCopy_ClickText1;
                 if (this.tabDialog.ShowDialog() == DialogResult.Cancel)
                 {
                     return;
@@ -791,7 +792,7 @@ namespace Hoehoe
         {
             if (this.ListTabs.SelectedIndex > -1 && this.ListFilters.SelectedItem != null)
             {
-                this.tabDialog.Text = Hoehoe.Properties.Resources.ButtonRuleMove_ClickText1;
+                this.tabDialog.Text = R.ButtonRuleMove_ClickText1;
                 if (this.tabDialog.ShowDialog() == DialogResult.Cancel)
                 {
                     return;
@@ -982,31 +983,31 @@ namespace Hoehoe
             switch (TabInformations.GetInstance().Tabs[tabName].TabType)
             {
                 case TabUsageType.Home:
-                    this.LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_Home;
+                    this.LabelTabType.Text = R.TabUsageTypeName_Home;
                     break;
                 case TabUsageType.Mentions:
-                    this.LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_Mentions;
+                    this.LabelTabType.Text = R.TabUsageTypeName_Mentions;
                     break;
                 case TabUsageType.DirectMessage:
-                    this.LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_DirectMessage;
+                    this.LabelTabType.Text = R.TabUsageTypeName_DirectMessage;
                     break;
                 case TabUsageType.Favorites:
-                    this.LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_Favorites;
+                    this.LabelTabType.Text = R.TabUsageTypeName_Favorites;
                     break;
                 case TabUsageType.UserDefined:
-                    this.LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_UserDefined;
+                    this.LabelTabType.Text = R.TabUsageTypeName_UserDefined;
                     break;
                 case TabUsageType.PublicSearch:
-                    this.LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_PublicSearch;
+                    this.LabelTabType.Text = R.TabUsageTypeName_PublicSearch;
                     break;
                 case TabUsageType.Lists:
-                    this.LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_Lists;
+                    this.LabelTabType.Text = R.TabUsageTypeName_Lists;
                     break;
                 case TabUsageType.Related:
-                    this.LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_Related;
+                    this.LabelTabType.Text = R.TabUsageTypeName_Related;
                     break;
                 case TabUsageType.UserTimeline:
-                    this.LabelTabType.Text = Hoehoe.Properties.Resources.TabUsageTypeName_UserTimeline;
+                    this.LabelTabType.Text = R.TabUsageTypeName_UserTimeline;
                     break;
                 default:
                     this.LabelTabType.Text = "UNKNOWN";
@@ -1197,7 +1198,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.IsValidLambdaExpText1 + ex.Message, Hoehoe.Properties.Resources.IsValidLambdaExpText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(R.IsValidLambdaExpText1 + ex.Message, R.IsValidLambdaExpText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
 
@@ -1212,7 +1213,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Hoehoe.Properties.Resources.ButtonOK_ClickText3 + ex.Message, Hoehoe.Properties.Resources.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(R.ButtonOK_ClickText3 + ex.Message, R.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
 

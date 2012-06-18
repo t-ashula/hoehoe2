@@ -29,13 +29,14 @@ namespace Hoehoe
     using System;
     using System.Collections.Specialized;
     using System.Windows.Forms;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class TabsDialog
     {
         #region private
 
         private bool multiSelect = false;
-        private string newtabItem = Hoehoe.Properties.Resources.AddNewTabText1;
+        private string newtabItem = R.AddNewTabText1;
 
         #endregion private
 
@@ -96,7 +97,7 @@ namespace Hoehoe
                 if (value)
                 {
                     this.TabList.SelectionMode = SelectionMode.MultiExtended;
-                    if (this.TabList.Items[0].ToString() == Hoehoe.Properties.Resources.AddNewTabText1)
+                    if (this.TabList.Items[0].ToString() == R.AddNewTabText1)
                     {
                         this.TabList.Items.RemoveAt(0);
                     }
@@ -104,9 +105,9 @@ namespace Hoehoe
                 else
                 {
                     this.TabList.SelectionMode = SelectionMode.One;
-                    if (this.TabList.Items[0].ToString() != Hoehoe.Properties.Resources.AddNewTabText1)
+                    if (this.TabList.Items[0].ToString() != R.AddNewTabText1)
                     {
-                        this.TabList.Items.Insert(0, Hoehoe.Properties.Resources.AddNewTabText1);
+                        this.TabList.Items.Insert(0, R.AddNewTabText1);
                     }
                 }
             }

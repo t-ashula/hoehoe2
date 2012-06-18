@@ -38,6 +38,7 @@ namespace Hoehoe
     using System.Threading;
     using System.Windows.Forms;
     using Hoehoe.TweenCustomControl;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class TweenMain
     {
@@ -675,7 +676,7 @@ namespace Hoehoe
 
         private void SearchGoogleContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.SearchWebBySelectedWord(Hoehoe.Properties.Resources.SearchItem2Url);
+            this.SearchWebBySelectedWord(R.SearchItem2Url);
         }
 
         private void SearchPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -690,17 +691,17 @@ namespace Hoehoe
 
         private void SearchPublicSearchContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.SearchWebBySelectedWord(Hoehoe.Properties.Resources.SearchItem4Url);
+            this.SearchWebBySelectedWord(R.SearchItem4Url);
         }
 
         private void SearchWikipediaContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.SearchWebBySelectedWord(Hoehoe.Properties.Resources.SearchItem1Url);
+            this.SearchWebBySelectedWord(R.SearchItem1Url);
         }
 
         private void SearchYatsContextMenuItem_Click(object sender, EventArgs e)
         {
-            this.SearchWebBySelectedWord(Hoehoe.Properties.Resources.SearchItem3Url);
+            this.SearchWebBySelectedWord(R.SearchItem3Url);
         }
 
         private void SelectAllMenuItem_Click(object sender, EventArgs e)
@@ -2017,7 +2018,7 @@ namespace Hoehoe
             ShortUrl.IsForceResolve = this.configs.ShortUrlForceResolve;
             
             this.tw.DetailIcon = this.iconDict;
-            this.StatusLabel.Text = Hoehoe.Properties.Resources.Form1_LoadText1;  // 画面右下の状態表示を変更
+            this.StatusLabel.Text = R.Form1_LoadText1;  // 画面右下の状態表示を変更
             this.StatusLabelUrl.Text = string.Empty;  // 画面左下のリンク先URL表示部を初期化
             this.NameLabel.Text = string.Empty;       // 発言詳細部名前ラベル初期化
             this.DateTimeLabel.Text = string.Empty;   // 発言詳細部日時ラベル初期化
@@ -2082,7 +2083,7 @@ namespace Hoehoe
 
                 if (!this.AddNewTab(tn, true, this.statuses.Tabs[tn].TabType, this.statuses.Tabs[tn].ListInfo))
                 {
-                    throw new Exception(Hoehoe.Properties.Resources.TweenMain_LoadText1);
+                    throw new Exception(R.TweenMain_LoadText1);
                 }
             }
 
@@ -2388,7 +2389,7 @@ namespace Hoehoe
                     bw.ReportProgress(300);
                     break;
                 case WorkerType.Follower:
-                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateFollowersMenuItem1_ClickText1);
+                    bw.ReportProgress(50, R.UpdateFollowersMenuItem1_ClickText1);
                     ret = this.tw.GetFollowersApi();
                     if (string.IsNullOrEmpty(ret))
                     {
@@ -2496,7 +2497,7 @@ namespace Hoehoe
                     rslt.AddCount = this.statuses.DistributePosts();
                     break;
                 case WorkerType.BlockIds:
-                    bw.ReportProgress(50, Hoehoe.Properties.Resources.UpdateBlockUserText1);
+                    bw.ReportProgress(50, R.UpdateBlockUserText1);
                     ret = this.tw.GetBlockUserIds();
                     if (TabInformations.GetInstance().BlockIds.Count == 0)
                     {
@@ -2752,7 +2753,7 @@ namespace Hoehoe
                         try
                         {
                             retry = MessageBox.Show(
-                                string.Format("{0}   --->   [ {1} ]{2}\"{3}\"{2}{4}", Hoehoe.Properties.Resources.StatusUpdateFailed1, rslt.RetMsg, Environment.NewLine, rslt.PStatus.Status, Hoehoe.Properties.Resources.StatusUpdateFailed2),
+                                string.Format("{0}   --->   [ {1} ]{2}\"{3}\"{2}{4}", R.StatusUpdateFailed1, rslt.RetMsg, Environment.NewLine, rslt.PStatus.Status, R.StatusUpdateFailed2),
                                 "Failed to update status", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
                         }
                         catch (Exception)

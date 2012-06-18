@@ -29,6 +29,7 @@ namespace Hoehoe
     using System;
     using System.Collections.Generic;
     using System.Windows.Forms;
+    using R = Hoehoe.Properties.Resources;
 
     public partial class HashtagManage
     {
@@ -209,7 +210,7 @@ namespace Hoehoe
                 return;
             }
 
-            if (MessageBox.Show(Hoehoe.Properties.Resources.DeleteHashtagsMessage1, "Delete Hashtags", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
+            if (MessageBox.Show(R.DeleteHashtagsMessage1, "Delete Hashtags", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Cancel)
             {
                 return;
             }

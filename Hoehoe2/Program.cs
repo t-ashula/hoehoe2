@@ -33,7 +33,7 @@ namespace Hoehoe
     using System.Reflection;
     using System.Threading;
     using System.Windows.Forms;
-    using Hoehoe.Properties;
+    using R = Hoehoe.Properties.Resources;
 
     internal static class Program
     {
@@ -66,7 +66,7 @@ namespace Hoehoe
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += MyApplication_UnhandledException;
-            Application.ApplicationExit += (_, __) => { RelaseMutex(); Settings.Default.Save(); };
+            Application.ApplicationExit += (_, __) => { RelaseMutex(); Hoehoe.Properties.Settings.Default.Save(); };
             if (!MyApplication_Startup())
             {
                 return;
@@ -127,13 +127,13 @@ namespace Hoehoe
                             if (!rslt)
                             {
                                 // 警告を表示（見つからない、またはその他の原因で失敗）
-                                MessageBox.Show(Resources.StartupText1, Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show(R.StartupText1, R.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                         }
                         else
                         {
                             // 警告を表示（プロセス見つからない場合）
-                            MessageBox.Show(Resources.StartupText1, Resources.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(R.StartupText1, R.StartupText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
 
