@@ -42,8 +42,7 @@ namespace Hoehoe
         private bool validationError;
         private long initialUserId;
         private string pin;
-        private EventCheckboxTblElement[] eventCheckboxTableElements = null;
-
+        private EventCheckboxTblElement[] eventCheckboxTableElements;
         private Configs configurations = Configs.Instance;
 
         #endregion privates
@@ -57,6 +56,7 @@ namespace Hoehoe
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
             this.Icon = Hoehoe.Properties.Resources.MIcon;
+            this.InitEventCheckboxTable();
         }
 
         #endregion constructor
@@ -1467,7 +1467,7 @@ namespace Hoehoe
 
         private void CheckEventNotify_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (EventCheckboxTblElement tbl in this.GetEventCheckboxTable())
+            foreach (var tbl in this.eventCheckboxTableElements)
             {
                 tbl.CheckBox.Enabled = this.CheckEventNotify.Checked;
             }
@@ -1754,8 +1754,8 @@ namespace Hoehoe
             // 規定外応答：通信エラーの可能性があるためとりあえずチェックを通ったことにする
             return true;
         }
-
-        private EventCheckboxTblElement[] GetEventCheckboxTable()
+        
+        private void InitEventCheckboxTable()
         {
             if (this.eventCheckboxTableElements == null)
             {
@@ -1771,8 +1771,6 @@ namespace Hoehoe
                     new EventCheckboxTblElement(this.CheckListCreatedEvent, EventType.ListCreated)
                 };
             }
-
-            return this.eventCheckboxTableElements;
         }
 
         private void GetEventNotifyFlag(ref EventType eventnotifyflag, ref EventType isMyeventnotifyflag)
@@ -1780,7 +1778,7 @@ namespace Hoehoe
             EventType evt = EventType.None;
             EventType myevt = EventType.None;
 
-            foreach (EventCheckboxTblElement tbl in this.GetEventCheckboxTable())
+            foreach (EventCheckboxTblElement tbl in this.eventCheckboxTableElements)
             {
                 switch (tbl.CheckBox.CheckState)
                 {
@@ -1807,7 +1805,7 @@ namespace Hoehoe
 
             this.CheckEventNotify.Checked = rootEnabled;
 
-            foreach (EventCheckboxTblElement tbl in this.GetEventCheckboxTable())
+            foreach (var tbl in this.eventCheckboxTableElements)
             {
                 if (Convert.ToBoolean(evt & tbl.EventType))
                 {
@@ -1841,11 +1839,10 @@ namespace Hoehoe
 
         private void OpenUrl(string url)
         {
-            string myPath = url;
             string browserPath = !string.IsNullOrEmpty(this.configurations.BrowserPath) ? 
                 this.configurations.BrowserPath :
                 this.BrowserPathText.Text;
-            MyCommon.TryOpenUrl(myPath, browserPath);
+            MyCommon.TryOpenUrl(url, browserPath);
         }
 
         #endregion private methods
