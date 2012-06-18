@@ -2400,39 +2400,9 @@ namespace Hoehoe
                     ret = this.tw.ConfigurationApi();
                     break;
                 case WorkerType.OpenUri:
-                    string myPath = Convert.ToString(args.Url);
-                    try
-                    {
-                        string browserPath = this.configs.BrowserPath;
-                        if (!string.IsNullOrEmpty(browserPath))
-                        {
-                            if (browserPath.StartsWith("\"") && browserPath.Length > 2 && browserPath.IndexOf("\"", 2) > -1)
-                            {
-                                int sep = browserPath.IndexOf("\"", 2);
-                                browserPath = browserPath.Substring(1, sep - 1);
-                                string arg = string.Empty;
-                                if (sep < browserPath.Length - 1)
-                                {
-                                    arg = browserPath.Substring(sep + 1);
-                                }
-
-                                myPath = arg + " " + myPath;
-                                Process.Start(browserPath, myPath);
-                            }
-                            else
-                            {
-                                Process.Start(browserPath, myPath);
-                            }
-                        }
-                        else
-                        {
-                            Process.Start(myPath);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-
+                    string myPath = args.Url;
+                    string browserPath = this.configs.BrowserPath;
+                    MyCommon.TryOpenUrl(myPath, browserPath);
                     break;
                 case WorkerType.Favorites:
                     bw.ReportProgress(50, this.MakeStatusMessage(args, false));

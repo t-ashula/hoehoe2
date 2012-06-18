@@ -519,6 +519,25 @@ namespace Hoehoe
             return Directory.Exists(dir) ? dir : basedir;
         }
 
+        public static void ReloadSoundSelector(ComboBox soundFileComboBox, string currentSoundFile)
+        {
+            soundFileComboBox.Items.Clear();
+            soundFileComboBox.Items.Add(string.Empty);
+            var names = MyCommon.GetSoundFileNames();
+            if (names.Length > 0)
+            {
+                soundFileComboBox.Items.AddRange(names);
+            }
+
+            int idx = soundFileComboBox.Items.IndexOf(currentSoundFile);
+            if (idx == -1)
+            {
+                idx = 0;
+            }
+
+            soundFileComboBox.SelectedIndex = idx;
+        }
+
         public static Image CheckValidImage(Image img, int width, int height)
         {
             if (img == null)
@@ -549,6 +568,39 @@ namespace Hoehoe
             finally
             {
                 img.Dispose();
+            }
+        }
+
+        public static void TryOpenUrl(string myPath, string browserPath)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(browserPath))
+                {
+                    Process.Start(myPath);
+                }
+                else
+                {
+                    if (browserPath.StartsWith("\"") && browserPath.Length > 2 && browserPath.IndexOf("\"", 2) > -1)
+                    {
+                        int sep = browserPath.IndexOf("\"", 2);
+                        browserPath = browserPath.Substring(1, sep - 1);
+                        string arg = string.Empty;
+                        if (sep < browserPath.Length - 1)
+                        {
+                            arg = browserPath.Substring(sep + 1);
+                        }
+                        myPath = arg + " " + myPath;
+                        Process.Start(browserPath, myPath);
+                    }
+                    else
+                    {
+                        Process.Start(browserPath, myPath);
+                    }
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 

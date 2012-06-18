@@ -532,11 +532,7 @@ namespace Hoehoe
 
         private void Setting_Load(object sender, EventArgs e)
         {
-#if UA //= "True"
-			this.GroupBox2.Visible = true;
-#else
             this.GroupBox2.Visible = false;
-#endif
             this.tw = ((TweenMain)this.Owner).TwitterInstance;
             this.AuthClearButton.Enabled = true;
 
@@ -889,9 +885,9 @@ namespace Hoehoe
                     Hoehoe.Properties.Resources.UserstreamPeriod_ValidatingText1);
             }
 
-            e.Cancel = usPV.IsValidPeriod(this.UserstreamPeriod.Text);
-            if (e.Cancel)
+            if (!usPV.IsValidPeriod(this.UserstreamPeriod.Text))
             {
+                e.Cancel = true;
                 return;
             }
 
@@ -909,9 +905,9 @@ namespace Hoehoe
                     Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
             }
 
-            e.Cancel = tlPV.IsValidPeriod(this.TimelinePeriod.Text);
-            if (e.Cancel)
+            if (!tlPV.IsValidPeriod(this.TimelinePeriod.Text))
             {
+                e.Cancel = true;
                 return;
             }
 
@@ -929,9 +925,9 @@ namespace Hoehoe
                     Hoehoe.Properties.Resources.TimelinePeriod_ValidatingText2);
             }
 
-            e.Cancel = rpPV.IsValidPeriod(this.ReplyPeriod.Text);
-            if (e.Cancel)
+            if (!rpPV.IsValidPeriod(this.ReplyPeriod.Text))
             {
+                e.Cancel = true;
                 return;
             }
 
@@ -949,9 +945,9 @@ namespace Hoehoe
                     Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
             }
 
-            e.Cancel = dmPV.IsValidPeriod(this.DMPeriod.Text);
-            if (e.Cancel)
+            if(!dmPV.IsValidPeriod(this.DMPeriod.Text))
             {
+                e.Cancel = true;
                 return;
             }
 
@@ -969,9 +965,9 @@ namespace Hoehoe
                     Hoehoe.Properties.Resources.PubSearchPeriod_ValidatingText2);
             }
             
-            e.Cancel = psPV.IsValidPeriod(this.PubSearchPeriod.Text);
-            if (e.Cancel)
+            if (!psPV.IsValidPeriod(this.PubSearchPeriod.Text))
             {
+                e.Cancel = true;
                 return;
             }
         }
@@ -986,9 +982,9 @@ namespace Hoehoe
                     Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
             }
 
-            e.Cancel = lsPV.IsValidPeriod(this.ListsPeriod.Text);
-            if (e.Cancel)
+            if (!lsPV.IsValidPeriod(this.ListsPeriod.Text))
             {
+                e.Cancel = true;
                 return;
             }
 
@@ -1005,9 +1001,9 @@ namespace Hoehoe
                     Hoehoe.Properties.Resources.DMPeriod_ValidatingText2);
             }
 
-            e.Cancel = utPV.IsValidPeriod(this.UserTimelinePeriod.Text);
-            if (e.Cancel)
+            if (!utPV.IsValidPeriod(this.UserTimelinePeriod.Text))
             {
+                e.Cancel = true;
                 return;
             }
 
@@ -1160,27 +1156,16 @@ namespace Hoehoe
             this.TextProxyPassword.Enabled = chk;
         }
 
+        private PeriodValidator ppV;
         private void TextProxyPort_Validating(object sender, CancelEventArgs e)
         {
-            int port = 0;
-            if (string.IsNullOrEmpty(this.TextProxyPort.Text.Trim()))
+            if (this.ppV == null)
             {
-                this.TextProxyPort.Text = "0";
+                ppV = new PeriodValidator(p => !(p < 0 && p > 65535),
+                    Hoehoe.Properties.Resources.TextProxyPort_ValidatingText1,
+                    Hoehoe.Properties.Resources.TextProxyPort_ValidatingText2);
             }
-
-            if (!int.TryParse(this.TextProxyPort.Text.Trim(), out port))
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextProxyPort_ValidatingText1);
-                e.Cancel = true;
-                return;
-            }
-
-            if (port < 0 | port > 65535)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextProxyPort_ValidatingText2);
-                e.Cancel = true;
-                return;
-            }
+            e.Cancel = !ppV.IsValidPeriod(this.TextProxyPort.Text);
         }
 
         private void CheckOutputz_CheckedChanged(object sender, EventArgs e)
@@ -1229,25 +1214,17 @@ namespace Hoehoe
             }
         }
 
+        private PeriodValidator tmPV;
         private void ConnectionTimeOut_Validating(object sender, CancelEventArgs e)
         {
-            int tm = 0;
-            try
+            if (tmPV == null)
             {
-                tm = Convert.ToInt32(this.ConnectionTimeOut.Text);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1);
-                e.Cancel = true;
-                return;
+                tmPV = new PeriodValidator(tm => !(tm < (int)HttpTimeOut.MinValue || tm > (int)HttpTimeOut.MaxValue),
+                    Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1,
+                    Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1);
             }
 
-            if (tm < (int)HttpTimeOut.MinValue || tm > (int)HttpTimeOut.MaxValue)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.ConnectionTimeOut_ValidatingText1);
-                e.Cancel = true;
-            }
+            e.Cancel = !tmPV.IsValidPeriod(this.ConnectionTimeOut.Text);
         }
 
         private void LabelDateTimeFormatApplied_VisibleChanged(object sender, EventArgs e)
@@ -1255,48 +1232,28 @@ namespace Hoehoe
             this.CreateDateTimeFormatSample();
         }
 
+        private PeriodValidator tcPV;
         private void TextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            int cnt = 0;
-            try
-            {
-                cnt = int.Parse(this.TextCountApi.Text);
+            if (tcPV == null ) {
+                tcPV = new PeriodValidator(cnt => !(cnt <20 || cnt >200),
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1,
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1);
             }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
+            e.Cancel = !tcPV.IsValidPeriod(this.TextCountApi.Text);
 
-            if (cnt < 20 || cnt > 200)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
         }
 
+        private PeriodValidator trPV;
         private void TextCountApiReply_Validating(object sender, CancelEventArgs e)
         {
-            int cnt = 0;
-            try
+            if (trPV == null)
             {
-                cnt = int.Parse(this.TextCountApiReply.Text);
+                trPV = new PeriodValidator(cnt => !(cnt < 20 || cnt > 200),
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1,
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1);
             }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
-
-            if (cnt < 20 || cnt > 200)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
+            e.Cancel = !trPV.IsValidPeriod(this.TextCountApiReply.Text);
         }
 
         private void ComboBoxAutoShortUrlFirst_SelectedIndexChanged(object sender, EventArgs e)
@@ -1354,14 +1311,7 @@ namespace Hoehoe
             if (this.AuthUserCombo.SelectedIndex > -1)
             {
                 this.AuthUserCombo.Items.RemoveAt(this.AuthUserCombo.SelectedIndex);
-                if (this.AuthUserCombo.Items.Count > 0)
-                {
-                    this.AuthUserCombo.SelectedIndex = 0;
-                }
-                else
-                {
-                    this.AuthUserCombo.SelectedIndex = -1;
-                }
+                this.AuthUserCombo.SelectedIndex = this.AuthUserCombo.Items.Count > 0 ? 0 : -1;
             }
 
             this.CalcApiUsing();
@@ -1409,7 +1359,11 @@ namespace Hoehoe
 
         private void HotkeyCheck_CheckedChanged(object sender, EventArgs e)
         {
-            bool chk = this.HotkeyCheck.Checked;
+            ChangeHotkeyControlsStatus(this.HotkeyCheck.Checked);
+        }
+
+        private void ChangeHotkeyControlsStatus(bool chk)
+        {
             this.HotkeyCtrl.Enabled = chk;
             this.HotkeyAlt.Enabled = chk;
             this.HotkeyShift.Enabled = chk;
@@ -1418,31 +1372,25 @@ namespace Hoehoe
             this.HotkeyCode.Enabled = chk;
         }
 
+        private PeriodValidator gmPV;
         private void GetMoreTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            int cnt = 0;
-            try
+            if (gmPV == null)
             {
-                cnt = int.Parse(this.GetMoreTextCountApi.Text);
+                gmPV = new PeriodValidator(cnt => !(cnt != 0 && (cnt < 20 || cnt > 200)),
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1,
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1);
             }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
-
-            if (!(cnt == 0) && (cnt < 20 || cnt > 200))
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
+            e.Cancel = !gmPV.IsValidPeriod(this.GetMoreTextCountApi.Text);
         }
 
         private void UseChangeGetCount_CheckedChanged(object sender, EventArgs e)
         {
-            bool check = this.UseChangeGetCount.Checked;
+            ChangeUseChangeGetCountControlStatus(this.UseChangeGetCount.Checked);
+        }
+
+        private void ChangeUseChangeGetCountControlStatus(bool check)
+        {
             this.GetMoreTextCountApi.Enabled = check;
             this.FirstTextCountApi.Enabled = check;
             this.Label28.Enabled = check;
@@ -1457,114 +1405,64 @@ namespace Hoehoe
             this.ListTextCountApi.Enabled = check;
         }
 
+        private PeriodValidator ftPV;
         private void FirstTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            int cnt = 0;
-            try
+            if (ftPV == null)
             {
-                cnt = int.Parse(this.FirstTextCountApi.Text);
+                ftPV = new PeriodValidator(cnt => !(cnt != 0 && (cnt < 20 || cnt > 200)),
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1,
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1);
             }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
-
-            if (cnt != 0 && (cnt < 20 || cnt > 200))
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
+            e.Cancel = !ftPV.IsValidPeriod(this.FirstTextCountApi.Text);
         }
 
+        private PeriodValidator stPV;
         private void SearchTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            int cnt = 0;
-            try
+            if (stPV == null)
             {
-                cnt = int.Parse(this.SearchTextCountApi.Text);
+                stPV = new PeriodValidator(cnt => !(cnt != 0 && (cnt < 20 || cnt > 100)),
+                    Hoehoe.Properties.Resources.TextSearchCountApi_Validating1,
+                    Hoehoe.Properties.Resources.TextSearchCountApi_Validating1);
             }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextSearchCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
-
-            if (cnt != 0 && (cnt < 20 || cnt > 100))
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextSearchCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
+            e.Cancel = !stPV.IsValidPeriod(this.SearchTextCountApi.Text);
         }
 
+        private PeriodValidator fvPV;
         private void FavoritesTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            int cnt = 0;
-            try
+            if (fvPV == null)
             {
-                cnt = int.Parse(this.FavoritesTextCountApi.Text);
+                fvPV = new PeriodValidator(cnt => !(cnt != 0 && (cnt < 20 || cnt > 200)),
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1,
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1);
             }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
-
-            if (cnt != 0 && (cnt < 20 || cnt > 200))
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
+            e.Cancel = !fvPV.IsValidPeriod(this.FavoritesTextCountApi.Text);
         }
 
+        private PeriodValidator utlPV;
         private void UserTimelineTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            int cnt = 0;
-            try
+            if (utlPV == null)
             {
-                cnt = int.Parse(this.UserTimelineTextCountApi.Text);
+                utlPV = new PeriodValidator(cnt => !(cnt != 0 && (cnt < 20 || cnt > 200)),
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1,
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1);
             }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
-
-            if (cnt != 0 && (cnt < 20 || cnt > 200))
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
+            e.Cancel = !utlPV.IsValidPeriod(this.UserTimelineTextCountApi.Text);
         }
 
+        private PeriodValidator lstPV;
         private void ListTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            int cnt = 0;
-            try
+            if (lstPV == null)
             {
-                cnt = int.Parse(this.ListTextCountApi.Text);
+                lstPV = new PeriodValidator(cnt => !(cnt != 0 && (cnt < 20 || cnt > 200)),
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1,
+                    Hoehoe.Properties.Resources.TextCountApi_Validating1);
             }
-            catch (Exception)
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
-
-            if (cnt != 0 && (cnt < 20 || cnt > 200))
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.TextCountApi_Validating1);
-                e.Cancel = true;
-                return;
-            }
+            e.Cancel = !lstPV.IsValidPeriod(this.ListTextCountApi.Text);
         }
 
         private void CheckEventNotify_CheckedChanged(object sender, EventArgs e)
@@ -1621,19 +1519,10 @@ namespace Hoehoe
         private bool StartAuth()
         {
             // 現在の設定内容で通信
-            HttpConnection.ProxyType ptype = default(HttpConnection.ProxyType);
-            if (this.RadioProxyNone.Checked)
-            {
-                ptype = HttpConnection.ProxyType.None;
-            }
-            else if (this.RadioProxyIE.Checked)
-            {
-                ptype = HttpConnection.ProxyType.IE;
-            }
-            else
-            {
-                ptype = HttpConnection.ProxyType.Specified;
-            }
+            HttpConnection.ProxyType ptype =
+                (this.RadioProxyNone.Checked) ? HttpConnection.ProxyType.None :
+                (this.RadioProxyIE.Checked) ? HttpConnection.ProxyType.IE :
+                HttpConnection.ProxyType.Specified;
 
             string padr = this.TextProxyAddress.Text.Trim();
             int pport = int.Parse(this.TextProxyPort.Text.Trim());
@@ -1647,26 +1536,21 @@ namespace Hoehoe
             this.tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
             string pinPageUrl = string.Empty;
             string rslt = this.tw.StartAuthentication(ref pinPageUrl);
-            if (string.IsNullOrEmpty(rslt))
-            {
-                using (var ab = new AuthBrowser())
-                {
-                    ab.IsAuthorized = true;
-                    ab.UrlString = pinPageUrl;
-                    if (ab.ShowDialog(this) == DialogResult.OK)
-                    {
-                        this.pin = ab.PinString;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-            else
+            if (!string.IsNullOrEmpty(rslt))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
+                return false;
+            }
+
+            using (var ab = new AuthBrowser())
+            {
+                ab.IsAuthorized = true;
+                ab.UrlString = pinPageUrl;
+                if (ab.ShowDialog(this) == DialogResult.OK)
+                {
+                    this.pin = ab.PinString;
+                    return true;
+                }
                 return false;
             }
         }
@@ -1675,45 +1559,43 @@ namespace Hoehoe
         {
             string pin = this.pin;
             string rslt = this.tw.Authenticate(pin);
-            if (string.IsNullOrEmpty(rslt))
-            {
-                MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
-                int idx = -1;
-                var user = new UserAccount
-                {
-                    Username = this.tw.Username,
-                    UserId = this.tw.UserId,
-                    Token = this.tw.AccessToken,
-                    TokenSecret = this.tw.AccessTokenSecret
-                };
-
-                foreach (var u in this.AuthUserCombo.Items)
-                {
-                    if (((UserAccount)u).Username.ToLower() == this.tw.Username.ToLower())
-                    {
-                        idx = this.AuthUserCombo.Items.IndexOf(u);
-                        break;
-                    }
-                }
-
-                if (idx > -1)
-                {
-                    this.AuthUserCombo.Items.RemoveAt(idx);
-                    this.AuthUserCombo.Items.Insert(idx, user);
-                    this.AuthUserCombo.SelectedIndex = idx;
-                }
-                else
-                {
-                    this.AuthUserCombo.SelectedIndex = this.AuthUserCombo.Items.Add(user);
-                }
-
-                return true;
-            }
-            else
+            if (!string.IsNullOrEmpty(rslt))
             {
                 MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
                 return false;
             }
+
+            MessageBox.Show(Hoehoe.Properties.Resources.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
+            int idx = -1;
+            var user = new UserAccount
+            {
+                Username = this.tw.Username,
+                UserId = this.tw.UserId,
+                Token = this.tw.AccessToken,
+                TokenSecret = this.tw.AccessTokenSecret
+            };
+            
+            foreach (var u in this.AuthUserCombo.Items)
+            {
+                if (((UserAccount)u).Username.ToLower() == this.tw.Username.ToLower())
+                {
+                    idx = this.AuthUserCombo.Items.IndexOf(u);
+                    break;
+                }
+            }
+            
+            if (idx > -1)
+            {
+                this.AuthUserCombo.Items.RemoveAt(idx);
+                this.AuthUserCombo.Items.Insert(idx, user);
+                this.AuthUserCombo.SelectedIndex = idx;
+            }
+            else
+            {
+                this.AuthUserCombo.SelectedIndex = this.AuthUserCombo.Items.Add(user);
+            }
+            
+            return true;
         }
 
         private void DisplayApiMaxCount()
@@ -1842,34 +1724,35 @@ namespace Hoehoe
             /// TODO: BitlyApi
             string req = "http://api.bit.ly/v3/validate";
             string content = string.Empty;
-            Dictionary<string, string> param = new Dictionary<string, string>();
-
-            param.Add("login", "tweenapi");
-            param.Add("apiKey", "R_c5ee0e30bdfff88723c4457cc331886b");
-            param.Add("x_login", id);
-            param.Add("x_apiKey", apikey);
-            param.Add("format", "txt");
+            var param = new Dictionary<string, string>()
+            {
+                {"login", "tweenapi"},
+                {"apiKey", "R_c5ee0e30bdfff88723c4457cc331886b"},
+                {"x_login", id},
+                {"x_apiKey", apikey},
+                {"format", "txt"},
+            };
 
             if (!(new HttpVarious()).PostData(req, param, ref content))
             {
                 // 通信エラーの場合はとりあえずチェックを通ったことにする
                 return true;
             }
-            else if (content.Trim() == "1")
+
+            if (content.Trim() == "1")
             {
                 // 検証成功
                 return true;
             }
-            else if (content.Trim() == "0")
+
+            if (content.Trim() == "0")
             {
                 // 検証失敗 APIキーとIDの組み合わせが違う
                 return false;
             }
-            else
-            {
-                // 規定外応答：通信エラーの可能性があるためとりあえずチェックを通ったことにする
-                return true;
-            }
+            
+            // 規定外応答：通信エラーの可能性があるためとりあえずチェックを通ったことにする
+            return true;
         }
 
         private EventCheckboxTblElement[] GetEventCheckboxTable()
@@ -1947,63 +1830,22 @@ namespace Hoehoe
         }
 
         private void SoundFileListup()
-        {
+        {            
             if (string.IsNullOrEmpty(this.configurations.EventSoundFile))
             {
                 this.configurations.EventSoundFile = string.Empty;
             }
 
-            this.ComboBoxEventNotifySound.Items.Clear();
-            this.ComboBoxEventNotifySound.Items.Add(string.Empty);
-            var names = MyCommon.GetSoundFileNames();
-            if (names.Length > 0)
-            {
-                this.ComboBoxEventNotifySound.Items.AddRange(names);
-            }
-
-            int idx = this.ComboBoxEventNotifySound.Items.IndexOf(this.configurations.EventSoundFile);
-            if (idx == -1)
-            {
-                idx = 0;
-            }
-
-            this.ComboBoxEventNotifySound.SelectedIndex = idx;
+            MyCommon.ReloadSoundSelector(this.ComboBoxEventNotifySound, this.configurations.EventSoundFile);
         }
 
         private void OpenUrl(string url)
         {
             string myPath = url;
-            string path = this.BrowserPathText.Text;
-            try
-            {
-                if (string.IsNullOrEmpty(this.configurations.BrowserPath))
-                {
-                    Process.Start(myPath);
-                }
-                else
-                {
-                    if (path.StartsWith("\"") && path.Length > 2 && path.IndexOf("\"", 2) > -1)
-                    {
-                        int sep = path.IndexOf("\"", 2);
-                        string browserPath = path.Substring(1, sep - 1);
-                        string arg = string.Empty;
-                        if (sep < path.Length - 1)
-                        {
-                            arg = path.Substring(sep + 1);
-                        }
-
-                        myPath = arg + " " + myPath;
-                        Process.Start(browserPath, myPath);
-                    }
-                    else
-                    {
-                        Process.Start(path, myPath);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-            }
+            string browserPath = !string.IsNullOrEmpty(this.configurations.BrowserPath) ? 
+                this.configurations.BrowserPath :
+                this.BrowserPathText.Text;
+            MyCommon.TryOpenUrl(myPath, browserPath);
         }
 
         #endregion private methods

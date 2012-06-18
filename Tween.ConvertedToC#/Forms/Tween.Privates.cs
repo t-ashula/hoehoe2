@@ -98,25 +98,6 @@ namespace Hoehoe
             }
         }
 
-        private static void ReloadSoundSelector(ComboBox soundFileComboBox, string currentSoundFile)
-        {
-            soundFileComboBox.Items.Clear();
-            soundFileComboBox.Items.Add(string.Empty);
-            var names = MyCommon.GetSoundFileNames();
-            if (names.Length > 0)
-            {
-                soundFileComboBox.Items.AddRange(names);
-            }
-
-            int idx = soundFileComboBox.Items.IndexOf(currentSoundFile);
-            if (idx == -1)
-            {
-                idx = 0;
-            }
-
-            soundFileComboBox.SelectedIndex = idx;
-        }
-
         private static bool IsTwitterSearchUrl(string url)
         {
             return url.StartsWith("http://twitter.com/search?q=") || url.StartsWith("https://twitter.com/search?q=");
@@ -5286,8 +5267,8 @@ namespace Hoehoe
             this.NotifyTbMenuItem.Checked = tb.Notify;
 
             this.soundfileListup = true;
-            ReloadSoundSelector(this.SoundFileComboBox.ComboBox, tb.SoundFile);
-            ReloadSoundSelector(this.SoundFileTbComboBox.ComboBox, tb.SoundFile);
+            MyCommon.ReloadSoundSelector(this.SoundFileComboBox.ComboBox, tb.SoundFile);
+            MyCommon.ReloadSoundSelector(this.SoundFileTbComboBox.ComboBox, tb.SoundFile);
             this.soundfileListup = false;
 
             this.UreadManageMenuItem.Checked = tb.UnreadManage;
