@@ -1517,7 +1517,7 @@ namespace Hoehoe
                 read = true;
             }
 
-            var subitem = new string[] { string.Empty, post.Nickname, post.IsDeleted ? "(DELETED)" : post.TextFromApi, post.CreatedAt.ToString(this.configs.DateTimeFormat), postedByDetail, string.Empty, mk.ToString(), post.Source };
+            var subitem = new string[] { string.Empty, post.Nickname, (post.IsDeleted ? "(DELETED)" : string.Empty) + post.TextFromApi, post.CreatedAt.ToString(this.configs.DateTimeFormat), postedByDetail, string.Empty, mk.ToString(), post.Source };
             var itm = new ImageListViewItem(subitem, this.iconDict, post.ImageUrl)
             {
                 StateImageIndex = post.StateIndex
