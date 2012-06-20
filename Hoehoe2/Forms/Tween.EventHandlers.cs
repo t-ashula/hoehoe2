@@ -1442,7 +1442,7 @@ namespace Hoehoe
 
             this.InitializeTraceFrag();
 
-            this.statuses = TabInformations.GetInstance(); // 発言保持クラス
+            this.statuses = TabInformations.Instance; // 発言保持クラス
 
             // アイコン設定
             this.LoadIcons();                        // アイコン読み込み
@@ -2497,7 +2497,7 @@ namespace Hoehoe
                 case WorkerType.BlockIds:
                     bw.ReportProgress(50, R.UpdateBlockUserText1);
                     ret = this.tw.GetBlockUserIds();
-                    if (TabInformations.GetInstance().BlockIds.Count == 0)
+                    if (TabInformations.Instance.BlockIds.Count == 0)
                     {
                         this.tw.GetBlockUserIds();
                     }

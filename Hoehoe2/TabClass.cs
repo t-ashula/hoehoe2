@@ -82,7 +82,7 @@ namespace Hoehoe
             }
             else
             {
-                this.sorter.Posts = TabInformations.GetInstance().Posts;
+                this.sorter.Posts = TabInformations.Instance.Posts;
             }
         }
 
@@ -245,7 +245,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    this.sorter.Posts = TabInformations.GetInstance().Posts;
+                    this.sorter.Posts = TabInformations.Instance.Posts;
                 }
             }
         }
@@ -475,7 +475,7 @@ namespace Hoehoe
             this.tmpIds.Sort((TemporaryId x, TemporaryId y) => x.Id.CompareTo(y.Id));
             foreach (TemporaryId tId in this.tmpIds)
             {
-                if (this.TabType == TabUsageType.Mentions && TabInformations.GetInstance().Item(tId.Id).IsReply)
+                if (this.TabType == TabUsageType.Mentions && TabInformations.Instance.Item(tId.Id).IsReply)
                 {
                     isMentionIncluded = true;
                 }

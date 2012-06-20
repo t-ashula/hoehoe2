@@ -496,7 +496,7 @@ namespace Hoehoe
 
         private void FilterDialog_Shown(object sender, EventArgs e)
         {
-            this.sts = TabInformations.GetInstance();
+            this.sts = TabInformations.Instance;
             this.ListTabs.Items.Clear();
             foreach (string key in this.sts.Tabs.Keys)
             {
@@ -939,7 +939,7 @@ namespace Hoehoe
             }
 
             this.EditFilterGroup.Enabled = false;
-            switch (TabInformations.GetInstance().Tabs[tabName].TabType)
+            switch (TabInformations.Instance.Tabs[tabName].TabType)
             {
                 case TabUsageType.Home:
                 case TabUsageType.DirectMessage:
@@ -980,7 +980,7 @@ namespace Hoehoe
                     break;
             }
 
-            switch (TabInformations.GetInstance().Tabs[tabName].TabType)
+            switch (TabInformations.Instance.Tabs[tabName].TabType)
             {
                 case TabUsageType.Home:
                     this.LabelTabType.Text = R.TabUsageTypeName_Home;
@@ -1015,7 +1015,7 @@ namespace Hoehoe
             }
 
             this.ButtonRenameTab.Enabled = true;
-            if (TabInformations.GetInstance().IsDefaultTab(tabName))
+            if (TabInformations.Instance.IsDefaultTab(tabName))
             {
                 this.ButtonDeleteTab.Enabled = false;
             }
@@ -1377,7 +1377,7 @@ namespace Hoehoe
             this.tabDialog.ClearTab();
             foreach (string key in this.sts.Tabs.Keys)
             {
-                if (TabInformations.GetInstance().IsDistributableTab(key))
+                if (TabInformations.Instance.IsDistributableTab(key))
                 {
                     this.tabDialog.AddTab(key);
                 }

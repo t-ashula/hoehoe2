@@ -851,7 +851,7 @@ namespace Hoehoe
 
             // データ部分の生成
             long target = id;
-            PostClass post = TabInformations.GetInstance().Item(id);
+            PostClass post = TabInformations.Instance.Item(id);
             if (post == null)
             {
                 return "Err:Target isn't found.";
@@ -910,7 +910,7 @@ namespace Hoehoe
             // 二重取得回避
             lock (this.lockObj)
             {
-                if (TabInformations.GetInstance().ContainsKey(post.StatusId))
+                if (TabInformations.Instance.ContainsKey(post.StatusId))
                 {
                     return string.Empty;
                 }
@@ -933,7 +933,7 @@ namespace Hoehoe
 
             post.IsDm = false;
 
-            TabInformations.GetInstance().AddPost(post);
+            TabInformations.Instance.AddPost(post);
 
             return string.Empty;
         }
@@ -1889,7 +1889,7 @@ namespace Hoehoe
                 }
 
                 // 非同期アイコン取得＆StatusDictionaryに追加
-                TabInformations.GetInstance().AddPost(item);
+                TabInformations.Instance.AddPost(item);
             }
 
             return string.Empty;
@@ -1978,7 +1978,7 @@ namespace Hoehoe
                 }
 
                 // 非同期アイコン取得＆StatusDictionaryに追加
-                TabInformations.GetInstance().AddPost(post);
+                TabInformations.Instance.AddPost(post);
             }
 
             return r;
@@ -2061,7 +2061,7 @@ namespace Hoehoe
             if (tab.RelationTargetPost.TextFromApi.Contains("@") && tab.RelationTargetPost.InReplyToStatusId == 0)
             {
                 // 検索結果対応
-                PostClass p = TabInformations.GetInstance().Item(tab.RelationTargetPost.StatusId);
+                PostClass p = TabInformations.Instance.Item(tab.RelationTargetPost.StatusId);
                 if (p != null && p.InReplyToStatusId > 0)
                 {
                     tab.RelationTargetPost = p;
@@ -2091,7 +2091,7 @@ namespace Hoehoe
                 tmpPost = this.CheckReplyToPost(relPosts);
             }
             while (tmpPost != null);
-            relPosts.ForEach(p => TabInformations.GetInstance().AddPost(p));
+            relPosts.ForEach(p => TabInformations.Instance.AddPost(p));
             return rslt;
         }
 
@@ -2149,7 +2149,7 @@ namespace Hoehoe
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            if (!TabInformations.GetInstance().ContainsTab(tab))
+            if (!TabInformations.Instance.ContainsTab(tab))
             {
                 return string.Empty;
             }
@@ -2177,7 +2177,7 @@ namespace Hoehoe
                 try
                 {
                     post.StatusId = long.Parse(xentry["id"].InnerText.Split(':')[2]);
-                    if (TabInformations.GetInstance().ContainsKey(post.StatusId, tab.TabName))
+                    if (TabInformations.Instance.ContainsKey(post.StatusId, tab.TabName))
                     {
                         continue;
                     }
@@ -2249,7 +2249,7 @@ namespace Hoehoe
                     continue;
                 }
 
-                TabInformations.GetInstance().AddPost(post);
+                TabInformations.Instance.AddPost(post);
             }
 
             return string.Empty;
@@ -2317,7 +2317,7 @@ namespace Hoehoe
                     return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
 
-            if (!TabInformations.GetInstance().ContainsTab(tab))
+            if (!TabInformations.Instance.ContainsTab(tab))
             {
                 return string.Empty;
             }
@@ -2481,7 +2481,7 @@ namespace Hoehoe
                     // 二重取得回避
                     lock (this.lockObj)
                     {
-                        if (TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Contains(post.StatusId))
+                        if (TabInformations.Instance.GetTabByType(TabUsageType.Favorites).Contains(post.StatusId))
                         {
                             continue;
                         }
@@ -2601,7 +2601,7 @@ namespace Hoehoe
                     continue;
                 }
 
-                TabInformations.GetInstance().AddPost(post);
+                TabInformations.Instance.AddPost(post);
             }
 
             return string.Empty;
@@ -2630,7 +2630,7 @@ namespace Hoehoe
             }
             while (cursor > 0);
 
-            TabInformations.GetInstance().RefreshOwl(this.followerIds);
+            TabInformations.Instance.RefreshOwl(this.followerIds);
 
             this.getFollowerResult = true;
             return string.Empty;
@@ -2809,7 +2809,7 @@ namespace Hoehoe
             }
             while (cursor != 0);
 
-            TabInformations.GetInstance().SubscribableLists = lists;
+            TabInformations.Instance.SubscribableLists = lists;
             return string.Empty;
         }
 
@@ -2986,7 +2986,7 @@ namespace Hoehoe
             try
             {
                 var le = D.CreateDataFromJson<ListElementData>(content);
-                TabInformations.GetInstance().SubscribableLists.Add(new ListElement(le, this));
+                TabInformations.Instance.SubscribableLists.Add(new ListElement(le, this));
                 return string.Empty;
             }
             catch (SerializationException ex)
@@ -3438,7 +3438,7 @@ namespace Hoehoe
                     ids.Remove(this.UserId);
                 }
 
-                TabInformations.GetInstance().BlockIds.AddRange(ids);
+                TabInformations.Instance.BlockIds.AddRange(ids);
                 return string.Empty;
             }
             catch (SerializationException ex)
@@ -3674,7 +3674,7 @@ namespace Hoehoe
                 }
 
                 // 幻覚fav対策
-                TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
+                TabClass tc = TabInformations.Instance.GetTabByType(TabUsageType.Favorites);
                 post.IsFav = tc.Contains(post.RetweetedId);
 
                 if (retweeted.Geo != null)
@@ -3751,8 +3751,8 @@ namespace Hoehoe
                 post.IsMe = post.ScreenName.ToLower().Equals(this.uname);
 
                 // 幻覚fav対策
-                TabClass tc = TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites);
-                post.IsFav = tc.Contains(post.StatusId) && TabInformations.GetInstance().Item(post.StatusId).IsFav;
+                TabClass tc = TabInformations.Instance.GetTabByType(TabUsageType.Favorites);
+                post.IsFav = tc.Contains(post.StatusId) && TabInformations.Instance.Item(post.StatusId).IsFav;
             }
 
             // HTMLに整形
@@ -3821,14 +3821,14 @@ namespace Hoehoe
                 {
                     if (tab == null)
                     {
-                        if (TabInformations.GetInstance().ContainsKey(post.StatusId))
+                        if (TabInformations.Instance.ContainsKey(post.StatusId))
                         {
                             continue;
                         }
                     }
                     else
                     {
-                        if (TabInformations.GetInstance().ContainsKey(post.StatusId, tab.TabName))
+                        if (TabInformations.Instance.ContainsKey(post.StatusId, tab.TabName))
                         {
                             continue;
                         }
@@ -3853,7 +3853,7 @@ namespace Hoehoe
                 }
 
                 // 非同期アイコン取得＆StatusDictionaryに追加
-                TabInformations.GetInstance().AddPost(post);
+                TabInformations.Instance.AddPost(post);
             }
 
             return string.Empty;
@@ -3897,14 +3897,14 @@ namespace Hoehoe
                 {
                     if (tab == null)
                     {
-                        if (TabInformations.GetInstance().ContainsKey(post.StatusId))
+                        if (TabInformations.Instance.ContainsKey(post.StatusId))
                         {
                             continue;
                         }
                     }
                     else
                     {
-                        if (TabInformations.GetInstance().ContainsKey(post.StatusId, tab.TabName))
+                        if (TabInformations.Instance.ContainsKey(post.StatusId, tab.TabName))
                         {
                             continue;
                         }
@@ -3923,7 +3923,7 @@ namespace Hoehoe
                 }
 
                 // 非同期アイコン取得＆StatusDictionaryに追加
-                TabInformations.GetInstance().AddPost(post);
+                TabInformations.Instance.AddPost(post);
             }
 
             return string.IsNullOrEmpty(items.ErrMsg) ? string.Empty : "Err:" + items.ErrMsg;
@@ -4011,12 +4011,12 @@ namespace Hoehoe
 
             targetItem = targetItem.Copy();
             targetItem.RelTabName = tab.TabName;
-            TabInformations.GetInstance().AddPost(targetItem);
+            TabInformations.Instance.AddPost(targetItem);
             PostClass replyToItem = null;
             string replyToUserName = targetItem.InReplyToUser;
-            if (targetItem.InReplyToStatusId > 0 && TabInformations.GetInstance().Item(targetItem.InReplyToStatusId) != null)
+            if (targetItem.InReplyToStatusId > 0 && TabInformations.Instance.Item(targetItem.InReplyToStatusId) != null)
             {
-                replyToItem = TabInformations.GetInstance().Item(targetItem.InReplyToStatusId).Copy();
+                replyToItem = TabInformations.Instance.Item(targetItem.InReplyToStatusId).Copy();
                 replyToItem.IsRead = read;
                 if (replyToItem.IsMe && !read && this.readOwnPost)
                 {
@@ -4085,7 +4085,7 @@ namespace Hoehoe
                 if (long.TryParse(m.Groups["StatusId"].Value, out statusId))
                 {
                     PostClass p = null;
-                    PostClass p2 = TabInformations.GetInstance().Item(statusId);
+                    PostClass p2 = TabInformations.Instance.Item(statusId);
                     if (p2 == null)
                     {
                         this.GetStatusApi(read, statusId, ref p);
@@ -4164,7 +4164,7 @@ namespace Hoehoe
                     // 二重取得回避
                     lock (this.lockObj)
                     {
-                        if (TabInformations.GetInstance().GetTabByType(TabUsageType.DirectMessage).Contains(post.StatusId))
+                        if (TabInformations.Instance.GetTabByType(TabUsageType.DirectMessage).Contains(post.StatusId))
                         {
                             continue;
                         }
@@ -4237,7 +4237,7 @@ namespace Hoehoe
                 post.IsExcludeReply = false;
                 post.IsDm = true;
 
-                TabInformations.GetInstance().AddPost(post);
+                TabInformations.Instance.AddPost(post);
             }
 
             return string.Empty;
@@ -4503,7 +4503,7 @@ namespace Hoehoe
                     {
                         try
                         {
-                            TabInformations.GetInstance().ScrubGeoReserve(long.Parse(elm.Element("scrub_geo").Element("user_id").Value), long.Parse(elm.Element("scrub_geo").Element("up_to_status_id").Value));
+                            TabInformations.Instance.ScrubGeoReserve(long.Parse(elm.Element("scrub_geo").Element("user_id").Value), long.Parse(elm.Element("scrub_geo").Element("up_to_status_id").Value));
                         }
                         catch (Exception)
                         {
@@ -4597,33 +4597,34 @@ namespace Hoehoe
                         }
                     }
 
-                    if (TabInformations.GetInstance().ContainsKey(eventData.TargetObject.Id))
+                    if (TabInformations.Instance.ContainsKey(eventData.TargetObject.Id))
                     {
-                        PostClass post = TabInformations.GetInstance().Item(eventData.TargetObject.Id);
+                        PostClass post = TabInformations.Instance.Item(eventData.TargetObject.Id);
                         if (eventData.Event == "favorite")
                         {
+                            TabClass favTab = TabInformations.Instance.GetTabByType(TabUsageType.Favorites);
                             if (evt.Username.ToLower().Equals(this.uname))
                             {
                                 post.IsFav = true;
-                                TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                favTab.Add(post.StatusId, post.IsRead, false);
                             }
                             else
                             {
                                 post.FavoritedCount += 1;
-                                if (!TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Contains(post.StatusId))
+                                if (!favTab.Contains(post.StatusId))
                                 {
                                     if (Configs.Instance.FavEventUnread && post.IsRead)
                                     {
                                         post.IsRead = false;
                                     }
 
-                                    TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, false);
+                                    favTab.Add(post.StatusId, post.IsRead, false);
                                 }
                                 else
                                 {
                                     if (Configs.Instance.FavEventUnread)
                                     {
-                                        TabInformations.GetInstance().SetRead(false, TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).TabName, TabInformations.GetInstance().GetTabByType(TabUsageType.Favorites).IndexOf(post.StatusId));
+                                        TabInformations.Instance.SetRead(false, favTab.TabName, favTab.IndexOf(post.StatusId));
                                     }
                                 }
                             }
@@ -4652,17 +4653,17 @@ namespace Hoehoe
                     evt.Target = eventData.TargetObject.FullName;
                     break;
                 case "block":
-                    if (!TabInformations.GetInstance().BlockIds.Contains(eventData.Target.Id))
+                    if (!TabInformations.Instance.BlockIds.Contains(eventData.Target.Id))
                     {
-                        TabInformations.GetInstance().BlockIds.Add(eventData.Target.Id);
+                        TabInformations.Instance.BlockIds.Add(eventData.Target.Id);
                     }
 
                     evt.Target = string.Empty;
                     break;
                 case "unblock":
-                    if (TabInformations.GetInstance().BlockIds.Contains(eventData.Target.Id))
+                    if (TabInformations.Instance.BlockIds.Contains(eventData.Target.Id))
                     {
-                        TabInformations.GetInstance().BlockIds.Remove(eventData.Target.Id);
+                        TabInformations.Instance.BlockIds.Remove(eventData.Target.Id);
                     }
 
                     evt.Target = string.Empty;

@@ -65,7 +65,15 @@ namespace Hoehoe
             this.removedTab = new Stack<TabClass>();
             this.lists = new List<ListElement>();
         }
-
+        
+        public static TabInformations Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+        
         public List<long> BlockIds { get; private set; }
 
         public List<ListElement> SubscribableLists
@@ -146,12 +154,7 @@ namespace Hoehoe
         {
             get { return this.statuses; }
         }
-
-        public static TabInformations GetInstance()
-        {
-            return instance;
-        }
-
+        
         public bool AddTab(string tabName, TabUsageType tabType, ListElement list)
         {
             if (this.Tabs.ContainsKey(tabName))

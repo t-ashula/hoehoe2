@@ -69,12 +69,12 @@ namespace Hoehoe
 
         private void ListAvailable_Shown(object sender, EventArgs e)
         {
-            if (TabInformations.GetInstance().SubscribableLists.Count == 0)
+            if (TabInformations.Instance.SubscribableLists.Count == 0)
             {
                 this.RefreshLists();
             }
 
-            this.ListsList.Items.AddRange(TabInformations.GetInstance().SubscribableLists.ToArray());
+            this.ListsList.Items.AddRange(TabInformations.Instance.SubscribableLists.ToArray());
             if (this.ListsList.Items.Count > 0)
             {
                 this.ListsList.SelectedIndex = 0;
@@ -101,7 +101,7 @@ namespace Hoehoe
         {
             this.RefreshLists();
             this.ListsList.Items.Clear();
-            this.ListsList.Items.AddRange(TabInformations.GetInstance().SubscribableLists.ToArray());
+            this.ListsList.Items.AddRange(TabInformations.Instance.SubscribableLists.ToArray());
             if (this.ListsList.Items.Count > 0)
             {
                 this.ListsList.SelectedIndex = 0;

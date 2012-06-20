@@ -1491,7 +1491,7 @@ namespace Hoehoe
             try
             {
                 // 初回起動時などにNothingの場合あり
-                listsTabNum = TabInformations.GetInstance().GetTabsByType(TabUsageType.Lists).Count;
+                listsTabNum = TabInformations.Instance.GetTabsByType(TabUsageType.Lists).Count;
             }
             catch (Exception)
             {
@@ -1502,7 +1502,7 @@ namespace Hoehoe
             try
             {
                 // 初回起動時などにNothingの場合あり
-                userTimelineTabNum = TabInformations.GetInstance().GetTabsByType(TabUsageType.UserTimeline).Count;
+                userTimelineTabNum = TabInformations.Instance.GetTabsByType(TabUsageType.UserTimeline).Count;
             }
             catch (Exception)
             {

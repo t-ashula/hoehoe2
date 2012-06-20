@@ -204,7 +204,7 @@ namespace Hoehoe
         {
             this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
 
-            this.ListsCheckedListBox.Items.AddRange(TabInformations.GetInstance().SubscribableLists.FindAll(item => item.Username == this.twitter.Username).ToArray());
+            this.ListsCheckedListBox.Items.AddRange(TabInformations.Instance.SubscribableLists.FindAll(item => item.Username == this.twitter.Username).ToArray());
 
             for (int i = 0; i < this.ListsCheckedListBox.Items.Count; i++)
             {
@@ -213,7 +213,7 @@ namespace Hoehoe
                 List<PostClass> listPost = new List<PostClass>();
                 List<PostClass> otherPost = new List<PostClass>();
 
-                foreach (TabClass tab in TabInformations.GetInstance().Tabs.Values)
+                foreach (TabClass tab in TabInformations.Instance.Tabs.Values)
                 {
                     if (tab.TabType == TabUsageType.Lists)
                     {
@@ -277,7 +277,7 @@ namespace Hoehoe
                     continue;
                 }
 
-                otherPost.AddRange(TabInformations.GetInstance().Posts.Values);
+                otherPost.AddRange(TabInformations.Instance.Posts.Values);
 
                 // リストに該当ユーザーのポストが含まれていないのにリスト以外で取得したポストの中にリストに含まれるべきポストがある場合は、リストにユーザーは含まれていないとする。
                 if (otherPost.Exists(item => (item.ScreenName == this.contextUserName) && (item.CreatedAt > listOlderPostCreatedAt) && (item.CreatedAt < listNewistPostCreatedAt) && ((!item.IsReply) || listPostUserNames.Contains(item.InReplyToUser))))

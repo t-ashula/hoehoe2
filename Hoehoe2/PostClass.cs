@@ -144,7 +144,7 @@ namespace Hoehoe
                     return this.isFav;
                 }
 
-                var post = TabInformations.GetInstance().RetweetSource(this.RetweetedId);
+                var post = TabInformations.Instance.RetweetSource(this.RetweetedId);
                 return post != null ? post.IsFav : this.isFav;
             }
 
@@ -153,7 +153,7 @@ namespace Hoehoe
                 this.isFav = value;
                 if (this.IsRetweeted)
                 {
-                    var post = TabInformations.GetInstance().RetweetSource(this.RetweetedId);
+                    var post = TabInformations.Instance.RetweetSource(this.RetweetedId);
                     if (post != null)
                     {
                         post.IsFav = value;

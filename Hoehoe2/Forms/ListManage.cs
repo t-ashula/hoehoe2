@@ -63,12 +63,12 @@ namespace Hoehoe
         private void ListManage_Load(object sender, EventArgs e)
         {
             this.UserList_SelectedIndexChanged(null, EventArgs.Empty);
-            if (TabInformations.GetInstance().SubscribableLists.Count == 0)
+            if (TabInformations.Instance.SubscribableLists.Count == 0)
             {
                 this.RefreshLists();
             }
 
-            foreach (ListElement listItem in TabInformations.GetInstance().SubscribableLists.FindAll(i => i.Username == this.twitter.Username))
+            foreach (ListElement listItem in TabInformations.Instance.SubscribableLists.FindAll(i => i.Username == this.twitter.Username))
             {
                 this.ListsList.Items.Add(listItem);
             }
