@@ -607,7 +607,6 @@ namespace Hoehoe
         public void SetReadAllTab(bool read, string tabName, int index)
         {
             TabClass tb = this.Tabs[tabName];
-
             if (!tb.UnreadManage)
             {
                 // 未読管理していなければ終了
@@ -621,7 +620,6 @@ namespace Hoehoe
             }
 
             PostClass post = tb.IsInnerStorageTabType ? tb.Posts[id] : this.statuses[id];
-
             if (post.IsRead == read)
             {
                 // 状態変更なければ終了
@@ -633,7 +631,7 @@ namespace Hoehoe
             {
                 if (read)
                 {
-                    tb.UnreadCount -= 1;
+                    tb.UnreadCount--;
                     this.SetNextUnreadId(id, tb); // 次の未読セット
 
                     // 他タブの最古未読ＩＤはタブ切り替え時に。
@@ -646,7 +644,7 @@ namespace Hoehoe
                             {
                                 if (this.Tabs[key].UnreadManage && this.Tabs[key].Contains(id) && !this.Tabs[key].IsInnerStorageTabType)
                                 {
-                                    this.Tabs[key].UnreadCount -= 1;
+                                    this.Tabs[key].UnreadCount--;
                                     if (this.Tabs[key].OldestUnreadId == id)
                                     {
                                         this.Tabs[key].OldestUnreadId = -1;
@@ -662,12 +660,15 @@ namespace Hoehoe
                         // 一般タブ
                         foreach (string key in this.Tabs.Keys)
                         {
-                            if (key != tabName && this.Tabs[key].UnreadManage && this.Tabs[key].Contains(id) && !this.Tabs[key].IsInnerStorageTabType)
+                            if (key != tabName)
                             {
-                                this.Tabs[key].UnreadCount -= 1;
-                                if (this.Tabs[key].OldestUnreadId == id)
+                                if (this.Tabs[key].UnreadManage && this.Tabs[key].Contains(id) && !this.Tabs[key].IsInnerStorageTabType)
                                 {
-                                    this.Tabs[key].OldestUnreadId = -1;
+                                    this.Tabs[key].UnreadCount--;
+                                    if (this.Tabs[key].OldestUnreadId == id)
+                                    {
+                                        this.Tabs[key].OldestUnreadId = -1;
+                                    }
                                 }
                             }
                         }
@@ -676,18 +677,21 @@ namespace Hoehoe
                     // 内部保存タブ
                     foreach (string key in this.Tabs.Keys)
                     {
-                        if (key != tabName && this.Tabs[key].Contains(id) && this.Tabs[key].IsInnerStorageTabType && !this.Tabs[key].Posts[id].IsRead)
+                        if (key != tabName)
                         {
-                            if (this.Tabs[key].UnreadManage)
+                            if (this.Tabs[key].Contains(id) && this.Tabs[key].IsInnerStorageTabType && !this.Tabs[key].Posts[id].IsRead)
                             {
-                                this.Tabs[key].UnreadCount -= 1;
-                                if (this.Tabs[key].OldestUnreadId == id)
+                                if (this.Tabs[key].UnreadManage)
                                 {
-                                    this.Tabs[key].OldestUnreadId = -1;
+                                    this.Tabs[key].UnreadCount--;
+                                    if (this.Tabs[key].OldestUnreadId == id)
+                                    {
+                                        this.Tabs[key].OldestUnreadId = -1;
+                                    }
                                 }
-                            }
 
-                            this.Tabs[key].Posts[id].IsRead = true;
+                                this.Tabs[key].Posts[id].IsRead = true;
+                            }
                         }
                     }
                 }
@@ -761,7 +765,6 @@ namespace Hoehoe
         {
             // Read_:True=既読へ　False=未読へ
             TabClass tb = this.Tabs[tabName];
-
             if (!tb.UnreadManage)
             {
                 // 未読管理していなければ終了
@@ -775,7 +778,6 @@ namespace Hoehoe
             }
 
             PostClass post = tb.IsInnerStorageTabType ? tb.Posts[id] : this.statuses[id];
-
             if (post.IsRead == read)
             {
                 // 状態変更なければ終了
@@ -785,6 +787,7 @@ namespace Hoehoe
             post.IsRead = read;            // 指定の状態に変更
             lock (this.lockUnread)
             {
+                var noinnerUnreadManageTabKeys = this.Tabs.Keys.Where(k => k != tabName && this.Tabs[k].UnreadManage && !this.Tabs[k].IsInnerStorageTabType);
                 if (read)
                 {
                     tb.UnreadCount -= 1;
@@ -796,11 +799,11 @@ namespace Hoehoe
                         return;
                     }
 
-                    foreach (string key in this.Tabs.Keys)
+                    foreach (string key in noinnerUnreadManageTabKeys)
                     {
-                        if (key != tabName && this.Tabs[key].UnreadManage && this.Tabs[key].Contains(id) && !this.Tabs[key].IsInnerStorageTabType)
+                        if (this.Tabs[key].Contains(id))
                         {
-                            this.Tabs[key].UnreadCount -= 1;
+                            this.Tabs[key].UnreadCount--;
                             if (this.Tabs[key].OldestUnreadId == id)
                             {
                                 this.Tabs[key].OldestUnreadId = -1;
@@ -821,11 +824,11 @@ namespace Hoehoe
                         return;
                     }
 
-                    foreach (string key in this.Tabs.Keys)
+                    foreach (string key in noinnerUnreadManageTabKeys)
                     {
-                        if (!(key == tabName) && this.Tabs[key].UnreadManage && this.Tabs[key].Contains(id) && !this.Tabs[key].IsInnerStorageTabType)
+                        if (this.Tabs[key].Contains(id))
                         {
-                            this.Tabs[key].UnreadCount += 1;
+                            this.Tabs[key].UnreadCount++;
                             if (this.Tabs[key].OldestUnreadId > id)
                             {
                                 this.Tabs[key].OldestUnreadId = id;
@@ -896,12 +899,13 @@ namespace Hoehoe
 
         public PostClass Item(string tabName, int index)
         {
-            if (!this.Tabs.ContainsKey(tabName))
+            TabClass tab;
+            if (!this.Tabs.TryGetValue(tabName, out tab))
             {
-                throw new ArgumentException("TabName=" + tabName + " is not contained.");
+                throw new ArgumentException(string.Format("TabName={0} is not contained.", tabName));
             }
 
-            long id = this.Tabs[tabName].GetId(index);
+            long id = tab.GetId(index);
             if (id < 0)
             {
                 throw new ArgumentException(string.Format("Index can't find. Index={0}/TabName={1}", index, tabName));
@@ -909,14 +913,7 @@ namespace Hoehoe
 
             try
             {
-                if (this.Tabs[tabName].IsInnerStorageTabType)
-                {
-                    return this.Tabs[tabName].Posts[this.Tabs[tabName].GetId(index)];
-                }
-                else
-                {
-                    return this.statuses[this.Tabs[tabName].GetId(index)];
-                }
+                return tab.IsInnerStorageTabType ? tab.Posts[id] : this.statuses[id];
             }
             catch (Exception ex)
             {
@@ -1240,14 +1237,7 @@ namespace Hoehoe
                 {
                     foreach (PostClass post in this.statuses.Values)
                     {
-                        if (post.IsMe)
-                        {
-                            post.IsOwl = false;
-                        }
-                        else
-                        {
-                            post.IsOwl = !follower.Contains(post.UserId);
-                        }
+                        post.IsOwl = post.IsMe ? false : !follower.Contains(post.UserId);
                     }
                 }
                 else
@@ -1285,35 +1275,15 @@ namespace Hoehoe
             // 合致しなければ空のListを返す
             lock (this.lockObj)
             {
-                List<TabClass> tbs = new List<TabClass>();
-                foreach (TabClass tb in this.Tabs.Values)
-                {
-                    if ((tabType & tb.TabType) == tb.TabType)
-                    {
-                        tbs.Add(tb);
-                    }
-                }
-
-                return tbs;
+                return this.Tabs.Values.Where(tb => (tabType & tb.TabType) == tb.TabType).ToList();
             }
         }
 
         public List<TabClass> GetTabsInnerStorageType()
         {
-            // 合致したタブをListで返す
-            // 合致しなければ空のListを返す
             lock (this.lockObj)
             {
-                List<TabClass> tbs = new List<TabClass>();
-                foreach (TabClass tb in this.Tabs.Values)
-                {
-                    if (tb.IsInnerStorageTabType)
-                    {
-                        tbs.Add(tb);
-                    }
-                }
-
-                return tbs;
+                return this.Tabs.Values.Where(tb => tb.IsInnerStorageTabType).ToList();
             }
         }
 
