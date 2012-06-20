@@ -499,95 +499,15 @@ namespace Hoehoe
         {
             lock (this.lockObj)
             {
-                if (string.IsNullOrEmpty(item.RelTabName))
+                // 公式検索、リスト、関連発言の場合
+                if (!string.IsNullOrEmpty(item.RelTabName))
                 {
-                    if (!item.IsDm)
-                    {
-                        if (this.statuses.ContainsKey(item.StatusId))
-                        {
-                            if (item.IsFav)
-                            {
-                                if (item.IsRetweeted)
-                                {
-                                    item.IsFav = false;
-                                }
-                                else
-                                {
-                                    this.statuses[item.StatusId].IsFav = true;
-                                }
-                            }
-                            else
-                            {
-                                return; // 追加済みなら何もしない
-                            }
-                        }
-                        else
-                        {
-                            if (item.IsFav && item.IsRetweeted)
-                            {
-                                item.IsFav = false;
-                            }
-
-                            // 既に持っている公式RTは捨てる
-                            if (Configs.Instance.HideDuplicatedRetweets
-                                && !item.IsMe
-                                && this.retweets.ContainsKey(item.RetweetedId)
-                                && this.retweets[item.RetweetedId].RetweetedCount > 0)
-                            {
-                                return;
-                            }
-
-                            if (this.BlockIds.Contains(item.UserId))
-                            {
-                                return;
-                            }
-
-                            this.statuses.Add(item.StatusId, item);
-                        }
-
-                        if (item.IsRetweeted)
-                        {
-                            this.AddRetweet(item);
-                        }
-
-                        if (item.IsFav && this.retweets.ContainsKey(item.StatusId))
-                        {
-                            return;                            // Fav済みのRetweet元発言は追加しない
-                        }
-
-                        if (this.addedIds == null)
-                        {
-                            this.addedIds = new List<long>();
-                        }
-
-                        // タブ追加用IDコレクション準備
-                        this.addedIds.Add(item.StatusId);
-                    }
-                    else
-                    {
-                        // DM
-                        TabClass tb = this.GetTabByType(TabUsageType.DirectMessage);
-                        if (tb.Contains(item.StatusId))
-                        {
-                            return;
-                        }
-
-                        tb.AddPostToInnerStorage(item);
-                    }
-                }
-                else
-                {
-                    // 公式検索、リスト、関連発言の場合
-                    TabClass tb = null;
-                    if (this.Tabs.ContainsKey(item.RelTabName))
-                    {
-                        tb = this.Tabs[item.RelTabName];
-                    }
-                    else
+                    if (!this.Tabs.ContainsKey(item.RelTabName))
                     {
                         return;
                     }
 
+                    TabClass tb = this.Tabs[item.RelTabName];
                     if (tb == null)
                     {
                         return;
@@ -599,7 +519,82 @@ namespace Hoehoe
                     }
 
                     tb.AddPostToInnerStorage(item);
+                    return;
                 }
+
+                if (item.IsDm)
+                {
+                    // DM
+                    TabClass tb = this.GetTabByType(TabUsageType.DirectMessage);
+                    if (tb.Contains(item.StatusId))
+                    {
+                        return;
+                    }
+
+                    tb.AddPostToInnerStorage(item);
+                    return;
+                }
+                
+                if (this.statuses.ContainsKey(item.StatusId))
+                {
+                    if (item.IsFav)
+                    {
+                        if (item.IsRetweeted)
+                        {
+                            item.IsFav = false;
+                        }
+                        else
+                        {
+                            this.statuses[item.StatusId].IsFav = true;
+                        }
+                    }
+                    else
+                    {
+                        return; // 追加済みなら何もしない
+                    }
+                }
+                else
+                {
+                    if (item.IsFav && item.IsRetweeted)
+                    {
+                        item.IsFav = false;
+                    }
+                    
+                    // 既に持っている公式RTは捨てる
+                    if (Configs.Instance.HideDuplicatedRetweets
+                        && !item.IsMe
+                        && this.retweets.ContainsKey(item.RetweetedId)
+                        && this.retweets[item.RetweetedId].RetweetedCount > 0)
+                    {
+                        return;
+                    }
+                    
+                    if (this.BlockIds.Contains(item.UserId))
+                    {
+                        return;
+                    }
+                    
+                    this.statuses.Add(item.StatusId, item);
+                }
+
+                if (item.IsRetweeted)
+                {
+                    this.AddRetweet(item);
+                }
+                
+                if (item.IsFav && this.retweets.ContainsKey(item.StatusId))
+                {
+                    // Fav済みのRetweet元発言は追加しない
+                    return;
+                }
+                
+                if (this.addedIds == null)
+                {
+                    this.addedIds = new List<long>();
+                }
+                
+                // タブ追加用IDコレクション準備
+                this.addedIds.Add(item.StatusId);
             }
         }
 
