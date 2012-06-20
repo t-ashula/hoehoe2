@@ -1017,90 +1017,92 @@ namespace Hoehoe
         {
             lock (this.lockObj)
             {
-                TabClass tbr = this.GetTabByType(TabUsageType.Home);
-                TabClass replyTab = this.GetTabByType(TabUsageType.Mentions);
-                foreach (TabClass tb in this.Tabs.Values.ToArray())
+                var homeTab = this.GetTabByType(TabUsageType.Home);
+                var replyTab = this.GetTabByType(TabUsageType.Mentions);
+                foreach (var tb in this.Tabs.Values.ToArray())
                 {
-                    if (tb.FilterModified)
+                    if (!tb.FilterModified)
                     {
-                        tb.FilterModified = false;
-                        long[] orgIds = tb.BackupIds();
-                        tb.ClearIDs();
+                        continue;
+                    }
 
-                        // フィルター前のIDsを退避。どのタブにも含まれないidはrecentへ追加
-                        // moveフィルターにヒットした際、recentに該当あればrecentから削除
-                        foreach (long id in this.statuses.Keys)
+                    tb.FilterModified = false;
+                    var orgIds = tb.BackupIds();
+                    tb.ClearIDs();
+
+                    // フィルター前のIDsを退避。どのタブにも含まれないidはrecentへ追加
+                    // moveフィルターにヒットした際、recentに該当あればrecentから削除
+                    foreach (long id in this.statuses.Keys)
+                    {
+                        PostClass post = this.statuses[id];
+                        if (post.IsDm)
                         {
-                            PostClass post = this.statuses[id];
-                            if (post.IsDm)
+                            continue;
+                        }
+
+                        HITRESULT rslt = tb.AddFiltered(post);
+                        switch (rslt)
+                        {
+                            case HITRESULT.CopyAndMark:
+                                post.IsMark = true;             // マークあり
+                                post.FilterHit = true;
+                                break;
+                            case HITRESULT.Move:
+                                homeTab.Remove(post.StatusId, post.IsRead);
+                                post.IsMark = false;
+                                post.FilterHit = true;
+                                break;
+                            case HITRESULT.Copy:
+                                post.IsMark = false;
+                                post.FilterHit = true;
+                                break;
+                            case HITRESULT.Exclude:
+                                if (tb.TabName == replyTab.TabName && post.IsReply)
+                                {
+                                    post.IsExcludeReply = true;
+                                }
+
+                                if (post.IsFav)
+                                {
+                                    this.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
+                                }
+
+                                post.FilterHit = false;
+                                break;
+                            case HITRESULT.None:
+                                if (tb.TabName == replyTab.TabName && post.IsReply)
+                                {
+                                    replyTab.Add(post.StatusId, post.IsRead, true);
+                                }
+
+                                if (post.IsFav)
+                                {
+                                    this.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
+                                }
+
+                                post.FilterHit = false;
+                                break;
+                        }
+                    }
+
+                    tb.AddSubmit();
+
+                    // 振分確定
+                    foreach (long id in orgIds)
+                    {
+                        bool hit = false;
+                        foreach (var tmp in this.Tabs.Values.ToArray())
+                        {
+                            if (tmp.Contains(id))
                             {
-                                continue;
-                            }
-
-                            HITRESULT rslt = tb.AddFiltered(post);
-                            switch (rslt)
-                            {
-                                case HITRESULT.CopyAndMark:
-                                    post.IsMark = true;             // マークあり
-                                    post.FilterHit = true;
-                                    break;
-                                case HITRESULT.Move:
-                                    tbr.Remove(post.StatusId, post.IsRead);
-                                    post.IsMark = false;
-                                    post.FilterHit = true;
-                                    break;
-                                case HITRESULT.Copy:
-                                    post.IsMark = false;
-                                    post.FilterHit = true;
-                                    break;
-                                case HITRESULT.Exclude:
-                                    if (tb.TabName == replyTab.TabName && post.IsReply)
-                                    {
-                                        post.IsExcludeReply = true;
-                                    }
-
-                                    if (post.IsFav)
-                                    {
-                                        this.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
-                                    }
-
-                                    post.FilterHit = false;
-                                    break;
-                                case HITRESULT.None:
-                                    if (tb.TabName == replyTab.TabName && post.IsReply)
-                                    {
-                                        replyTab.Add(post.StatusId, post.IsRead, true);
-                                    }
-
-                                    if (post.IsFav)
-                                    {
-                                        this.GetTabByType(TabUsageType.Favorites).Add(post.StatusId, post.IsRead, true);
-                                    }
-
-                                    post.FilterHit = false;
-                                    break;
+                                hit = true;
+                                break;
                             }
                         }
 
-                        tb.AddSubmit();
-
-                        // 振分確定
-                        foreach (long id in orgIds)
+                        if (!hit)
                         {
-                            bool hit = false;
-                            foreach (var tmp in this.Tabs.Values.ToArray())
-                            {
-                                if (tmp.Contains(id))
-                                {
-                                    hit = true;
-                                    break;
-                                }
-                            }
-
-                            if (!hit)
-                            {
-                                tbr.Add(id, this.statuses[id].IsRead, false);
-                            }
+                            homeTab.Add(id, this.statuses[id].IsRead, false);
                         }
                     }
                 }
