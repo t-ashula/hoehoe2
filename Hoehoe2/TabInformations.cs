@@ -949,54 +949,51 @@ namespace Hoehoe
             // DM,公式検索は対応版
             lock (this.lockObj)
             {
-                return this.Tabs.ContainsKey(tabName) ? this.Tabs[tabName].Contains(id) : false;
+                return this.Tabs.ContainsKey(tabName) && this.Tabs[tabName].Contains(id);
             }
         }
 
         public void SetUnreadManage(bool manage)
         {
+            var tabs = this.Tabs.Where(t => t.Value.UnreadManage);
             if (manage)
             {
-                foreach (string key in this.Tabs.Keys)
+                foreach (var tab in tabs)
                 {
-                    TabClass tb = this.Tabs[key];
-                    if (tb.UnreadManage)
+                    var tb = tab.Value;
+                    lock (this.lockUnread)
                     {
-                        lock (this.lockUnread)
+                        int cnt = 0;
+                        long oldest = long.MaxValue;
+                        var posts = tb.IsInnerStorageTabType ? tb.Posts : this.statuses;
+                        foreach (long id in tb.BackupIds())
                         {
-                            int cnt = 0;
-                            long oldest = long.MaxValue;
-                            Dictionary<long, PostClass> posts = tb.IsInnerStorageTabType ? tb.Posts : this.statuses;
-
-                            foreach (long id in tb.BackupIds())
+                            if (!posts[id].IsRead)
                             {
-                                if (!posts[id].IsRead)
+                                cnt++;
+                                if (oldest > id)
                                 {
-                                    cnt += 1;
-                                    if (oldest > id)
-                                    {
-                                        oldest = id;
-                                    }
+                                    oldest = id;
                                 }
                             }
-
-                            if (oldest == long.MaxValue)
-                            {
-                                oldest = -1;
-                            }
-
-                            tb.OldestUnreadId = oldest;
-                            tb.UnreadCount = cnt;
                         }
+
+                        if (oldest == long.MaxValue)
+                        {
+                            oldest = -1;
+                        }
+
+                        tb.OldestUnreadId = oldest;
+                        tb.UnreadCount = cnt;
                     }
                 }
             }
             else
             {
-                foreach (string key in this.Tabs.Keys)
+                foreach (var tab in tabs)
                 {
-                    TabClass tb = this.Tabs[key];
-                    if (tb.UnreadManage && tb.UnreadCount > 0)
+                    var tb = tab.Value;
+                    if (tb.UnreadCount > 0)
                     {
                         lock (this.lockUnread)
                         {
