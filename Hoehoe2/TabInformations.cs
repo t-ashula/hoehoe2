@@ -177,40 +177,28 @@ namespace Hoehoe
                     return; // 念のため
                 }
 
-                if (!this.Tabs[tabName].IsInnerStorageTabType)
+                var removeTab = this.Tabs[tabName];
+                if (!removeTab.IsInnerStorageTabType)
                 {
-                    TabClass homeTab = this.GetTabByType(TabUsageType.Home);
-                    string dmessageTabName = this.GetTabByType(TabUsageType.DirectMessage).TabName;
-
-                    for (int idx = 0; idx < this.Tabs[tabName].AllCount; idx++)
+                    // 削除されるタブに有った tweet が他のタブになければ hometab に書き戻し
+                    var homeTab = this.GetTabByType(TabUsageType.Home);
+                    var dmessageTabName = this.GetTabByType(TabUsageType.DirectMessage).TabName;
+                    for (var idx = 0; idx < removeTab.AllCount; ++idx)
                     {
-                        bool exist = false;
-                        long id = this.Tabs[tabName].GetId(idx);
+                        var id = removeTab.GetId(idx);
                         if (id < 0)
                         {
                             continue;
                         }
 
-                        foreach (string key in this.Tabs.Keys)
-                        {
-                            if (key != tabName && key != dmessageTabName)
-                            {
-                                if (this.Tabs[key].Contains(id))
-                                {
-                                    exist = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (!exist)
+                        if (!this.Tabs.Keys.Where(t => t != tabName && t != dmessageTabName).Any(t => this.Tabs[t].Contains(id)))
                         {
                             homeTab.Add(id, this.statuses[id].IsRead, false);
                         }
                     }
                 }
 
-                this.removedTab.Push(this.Tabs[tabName]);
+                this.removedTab.Push(removeTab);
                 this.Tabs.Remove(tabName);
             }
         }
