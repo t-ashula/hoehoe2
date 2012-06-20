@@ -73,11 +73,13 @@ namespace Hoehoe
         ///
         /// </summary>
         public static bool TraceFlag { get; set; }
-        
+
 #if DEBUG
         public static bool DebugBuild = true;
 #else
+
         public static bool DebugBuild { get; set; }
+
 #endif
 
         public static string FileVersion
@@ -617,6 +619,5 @@ namespace Hoehoe
             public const string DM = "Direct";
             public const string FAV = "Favorites";
         }
-
     }
 }

@@ -33,102 +33,162 @@ namespace Hoehoe
         private Configs()
         {
         }
-        
+
         public static Configs Instance
         {
             get { return instance; }
         }
 
         public bool HideDuplicatedRetweets { get; set; }
+
         public bool IsPreviewFoursquare { get; set; }
+
         public int FoursquarePreviewHeight { get; set; }
+
         public int FoursquarePreviewWidth { get; set; }
+
         public int FoursquarePreviewZoom { get; set; }
+
         public bool IsListStatusesIncludeRts { get; set; }
+
         public List<UserAccount> UserAccounts { get; set; }
+
         public bool TabMouseLock { get; set; }
+
         public bool IsRemoveSameEvent { get; set; }
+
         public bool IsNotifyUseGrowl { get; set; }
+
         public Configuration TwitterConfiguration { get; set; }
 
         public bool UserstreamStartup { get; set; }
+
         public int UserstreamPeriodInt { get; set; }
+
         public int TimelinePeriodInt { get; set; }
+
         public int DMPeriodInt { get; set; }
+
         public int PubSearchPeriodInt { get; set; }
+
         public int ListsPeriodInt { get; set; }
+
         public int ReplyPeriodInt { get; set; }
+
         public int UserTimelinePeriodInt { get; set; }
 
         public bool Readed { get; set; }
+
         public IconSizes IconSz { get; set; }
+
         public string Status { get; set; }
+
         public bool UnreadManage { get; set; }
+
         public bool PlaySound { get; set; }
+
         public bool OneWayLove { get; set; }
 
         public Font FontUnread { get; set; }
+
         public Color ColorUnread { get; set; }
+
         public Font FontReaded { get; set; } // リストフォントとして使用
+
         public Color ColorReaded { get; set; }
+
         public Color ColorFav { get; set; }
+
         public Color ColorOWL { get; set; }
+
         public Color ColorRetweet { get; set; }
+
         public Font FontDetail { get; set; }
+
         public Color ColorDetail { get; set; }
+
         public Color ColorDetailLink { get; set; }
+
         public Color ColorSelf { get; set; }
+
         public Color ColorAtSelf { get; set; }
+
         public Color ColorTarget { get; set; }
+
         public Color ColorAtTarget { get; set; }
+
         public Color ColorAtFromTarget { get; set; }
+
         public Color ColorAtTo { get; set; }
+
         public Color ColorInputBackcolor { get; set; }
+
         public Color ColorInputFont { get; set; }
+
         public Font FontInputFont { get; set; }
+
         public Color ColorListBackcolor { get; set; }
+
         public Color ColorDetailBackcolor { get; set; }
 
         public NameBalloonEnum NameBalloon { get; set; }
 
         public bool PostCtrlEnter { get; set; }
+
         public bool PostShiftEnter { get; set; }
 
         public int CountApi { get; set; }
+
         public int CountApiReply { get; set; }
+
         public int MoreCountApi { get; set; }
+
         public int FirstCountApi { get; set; }
+
         public int SearchCountApi { get; set; }
+
         public int FavoritesCountApi { get; set; }
+
         public int UserTimelineCountApi { get; set; }
+
         public int ListCountApi { get; set; }
 
         public bool PostAndGet { get; set; }
 
         public bool UseRecommendStatus { get; set; }
+
         public string RecommendStatusText { get; set; }
 
         public bool DispUsername { get; set; }
+
         public bool CloseToExit { get; set; }
+
         public bool MinimizeToTray { get; set; }
+
         public DispTitleEnum DispLatestPost { get; set; }
 
         public string BrowserPath { get; set; }
 
         public bool TinyUrlResolve { get; set; }
+
         public bool ShortUrlForceResolve { get; set; }
 
         public bool SortOrderLock { get; set; }
 
         public HttpConnection.ProxyType SelectedProxyType { get; set; }
+
         public string ProxyAddress { get; set; }
+
         public int ProxyPort { get; set; }
+
         public string ProxyUser { get; set; }
+
         public string ProxyPassword { get; set; }
 
         public bool PeriodAdjust { get; set; }
 
         public bool StartupVersion { get; set; }
+
         public bool StartupFollowers { get; set; }
 
         public bool RestrictFavCheck { get; set; }
@@ -206,7 +266,7 @@ namespace Hoehoe
         public bool FavEventUnread { get; set; }
 
         public string TranslateLanguage { get; set; }
-        
+
         public string EventSoundFile { get; set; }
 
         public int ListDoubleClickAction { get; set; }
