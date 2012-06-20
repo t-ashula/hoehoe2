@@ -225,15 +225,7 @@ namespace Hoehoe
         {
             if (this.sorter.Mode == sortMode)
             {
-                if (this.sorter.Order == System.Windows.Forms.SortOrder.Ascending)
-                {
-                    this.sorter.Order = System.Windows.Forms.SortOrder.Descending;
-                }
-                else
-                {
-                    this.sorter.Order = System.Windows.Forms.SortOrder.Ascending;
-                }
-
+                this.sorter.Order = this.sorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
                 foreach (string key in this.Tabs.Keys)
                 {
                     this.Tabs[key].Sorter.Order = this.sorter.Order;
@@ -242,11 +234,11 @@ namespace Hoehoe
             else
             {
                 this.sorter.Mode = sortMode;
-                this.sorter.Order = System.Windows.Forms.SortOrder.Ascending;
+                this.sorter.Order = SortOrder.Ascending;
                 foreach (string key in this.Tabs.Keys)
                 {
                     this.Tabs[key].Sorter.Mode = sortMode;
-                    this.Tabs[key].Sorter.Order = System.Windows.Forms.SortOrder.Ascending;
+                    this.Tabs[key].Sorter.Order = SortOrder.Ascending;
                 }
             }
 
@@ -267,57 +259,58 @@ namespace Hoehoe
         {
             lock (this.lockObj)
             {
-                PostClass post = null;
+                if (!this.statuses.ContainsKey(id))
+                {
+                    return;
+                }
+
+                PostClass post = this.statuses[id];
                 TabClass tab = this.GetTabByType(TabUsageType.Favorites);
                 string tn = tab.TabName;
-                if (this.statuses.ContainsKey(id))
+                TabUsageType tabUsage = tab.TabType;
+                if (tab.Contains(id))
                 {
-                    post = this.statuses[id];
-                    TabUsageType tabUsage = tab.TabType;
-                    if (tab.Contains(id))
+                    // 未読管理
+                    if (tab.UnreadManage && !post.IsRead)
                     {
-                        // 未読管理
-                        if (tab.UnreadManage && !post.IsRead)
+                        lock (this.lockUnread)
                         {
-                            lock (this.lockUnread)
-                            {
-                                tab.UnreadCount -= 1;
-                                this.SetNextUnreadId(id, tab);
-                            }
+                            tab.UnreadCount--;
+                            this.SetNextUnreadId(id, tab);
                         }
-
-                        tab.Remove(id);
                     }
 
-                    // FavタブからRetweet発言を削除する場合は、他の同一参照Retweetも削除
-                    if (tabUsage == TabUsageType.Favorites && post.IsRetweeted)
+                    tab.Remove(id);
+                }
+
+                // FavタブからRetweet発言を削除する場合は、他の同一参照Retweetも削除
+                if (tabUsage == TabUsageType.Favorites && post.IsRetweeted)
+                {
+                    for (var i = 0; i < tab.AllCount; ++i)
                     {
-                        for (int i = 0; i < tab.AllCount; i++)
+                        PostClass toRemovePost = null;
+                        try
                         {
-                            PostClass toRemovePost = null;
-                            try
-                            {
-                                toRemovePost = this.Item(tn, i);
-                            }
-                            catch (ArgumentOutOfRangeException)
-                            {
-                                break;
-                            }
+                            toRemovePost = this.Item(tn, i);
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            break;
+                        }
 
-                            if (toRemovePost.IsRetweeted && toRemovePost.RetweetedId == post.RetweetedId)
+                        if (toRemovePost.IsRetweeted && toRemovePost.RetweetedId == post.RetweetedId)
+                        {
+                            // 未読管理
+                            if (tab.UnreadManage && !toRemovePost.IsRead)
                             {
-                                // 未読管理
-                                if (tab.UnreadManage && !toRemovePost.IsRead)
+                                lock (this.lockUnread)
                                 {
-                                    lock (this.lockUnread)
-                                    {
-                                        tab.UnreadCount -= 1;
-                                        this.SetNextUnreadId(toRemovePost.StatusId, tab);
-                                    }
+                                    tab.UnreadCount--;
+                                    this.SetNextUnreadId(toRemovePost.StatusId, tab);
                                 }
-
-                                tab.Remove(toRemovePost.StatusId);
                             }
+
+                            tab.Remove(toRemovePost.StatusId);
                         }
                     }
                 }
