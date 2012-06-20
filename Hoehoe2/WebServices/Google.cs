@@ -272,7 +272,7 @@ namespace Hoehoe
 
         public string CreateGoogleStaticMapsUri(double lat, double lng)
         {
-            return string.Format("http://maps.google.com/maps/api/staticmap?center={0},{1}&size={2}x{3}&zoom={4}&markers={0},{1}&sensor=false", 
+            return string.Format("http://maps.google.com/maps/api/staticmap?center={0},{1}&size={2}x{3}&zoom={4}&markers={0},{1}&sensor=false",
                 lat, lng, Configs.Instance.FoursquarePreviewWidth, Configs.Instance.FoursquarePreviewHeight, Configs.Instance.FoursquarePreviewZoom);
         }
 

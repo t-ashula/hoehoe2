@@ -29,7 +29,6 @@ namespace Hoehoe
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Drawing;
     using System.Linq;
     using System.Threading;
@@ -39,6 +38,7 @@ namespace Hoehoe
     public partial class AppendSettingDialog
     {
         #region privates
+
         private Twitter tw;
         private bool validationError;
         private long initialUserId;
@@ -53,7 +53,7 @@ namespace Hoehoe
         private PeriodValidator publicSearchPeriodValidator;
         private PeriodValidator proxyPortNumberValidator;
         private PeriodValidator timeoutLimitsValidator;
-        
+
         #endregion privates
 
         #region constructor
@@ -1268,7 +1268,7 @@ namespace Hoehoe
 
             return arg.UserStream || arg.Timeline || arg.DirectMessage || arg.PublicSearch || arg.Lists || arg.Reply || arg.UserTimeline;
         }
-        
+
         private bool TrySelectFontAndColor(ref Font f, ref Color c)
         {
             this.FontDialog1.Color = c;
@@ -1455,7 +1455,7 @@ namespace Hoehoe
                 Token = this.tw.AccessToken,
                 TokenSecret = this.tw.AccessTokenSecret
             };
-            
+
             foreach (var u in this.AuthUserCombo.Items)
             {
                 if (((UserAccount)u).Username.ToLower() == this.tw.Username.ToLower())
@@ -1464,7 +1464,7 @@ namespace Hoehoe
                     break;
                 }
             }
-            
+
             if (idx > -1)
             {
                 this.AuthUserCombo.Items.RemoveAt(idx);
@@ -1475,7 +1475,7 @@ namespace Hoehoe
             {
                 this.AuthUserCombo.SelectedIndex = this.AuthUserCombo.Items.Add(user);
             }
-            
+
             return true;
         }
 
@@ -1631,11 +1631,11 @@ namespace Hoehoe
                 // 検証失敗 APIキーとIDの組み合わせが違う
                 return false;
             }
-            
+
             // 規定外応答：通信エラーの可能性があるためとりあえずチェックを通ったことにする
             return true;
         }
-        
+
         private void InitEventCheckboxTable()
         {
             if (this.eventCheckboxTableElements == null)
@@ -1709,7 +1709,7 @@ namespace Hoehoe
         }
 
         private void SoundFileListup()
-        {            
+        {
             if (string.IsNullOrEmpty(this.configurations.EventSoundFile))
             {
                 this.configurations.EventSoundFile = string.Empty;
@@ -1720,7 +1720,7 @@ namespace Hoehoe
 
         private void OpenUrl(string url)
         {
-            string browserPath = !string.IsNullOrEmpty(this.configurations.BrowserPath) ? 
+            string browserPath = !string.IsNullOrEmpty(this.configurations.BrowserPath) ?
                 this.configurations.BrowserPath :
                 this.BrowserPathText.Text;
             MyCommon.TryOpenUrl(url, browserPath);

@@ -300,7 +300,7 @@ namespace Hoehoe
         public delegate void SetStatusLabelApiDelegate();
 
         #endregion delegates
-        
+
         #region properties
 
         public Color InputBackColor { get; set; }
@@ -509,7 +509,7 @@ namespace Hoehoe
             btn.Click += this.SearchButton_Click;
             return pnl;
         }
-        
+
         public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
         {
             // 重複チェック
@@ -530,10 +530,10 @@ namespace Hoehoe
             // タブタイプ重複チェック
             if (!startup)
             {
-                if (tabType == TabUsageType.DirectMessage 
-                    || tabType == TabUsageType.Favorites 
-                    || tabType == TabUsageType.Home 
-                    || tabType == TabUsageType.Mentions 
+                if (tabType == TabUsageType.DirectMessage
+                    || tabType == TabUsageType.Favorites
+                    || tabType == TabUsageType.Home
+                    || tabType == TabUsageType.Mentions
                     || tabType == TabUsageType.Related)
                 {
                     if (this.statuses.GetTabByType(tabType) != null)

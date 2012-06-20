@@ -29,10 +29,8 @@ namespace Hoehoe
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
-    using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
@@ -2016,7 +2014,7 @@ namespace Hoehoe
 
             this.tw.SetTinyUrlResolve(this.configs.TinyUrlResolve);
             ShortUrl.IsForceResolve = this.configs.ShortUrlForceResolve;
-            
+
             this.tw.DetailIcon = this.iconDict;
             this.StatusLabel.Text = R.Form1_LoadText1;  // 画面右下の状態表示を変更
             this.StatusLabelUrl.Text = string.Empty;  // 画面左下のリンク先URL表示部を初期化
@@ -2144,7 +2142,7 @@ namespace Hoehoe
                 }
             }
         }
-                
+
         #region callback
 
         private void GetApiInfo_Dowork(object sender, DoWorkEventArgs e)
@@ -3408,7 +3406,7 @@ namespace Hoehoe
             }
             else
             {
-                // 選択されていない行 // 文字色                    
+                // 選択されていない行 // 文字色
                 var cl = e.Item.ForeColor;
                 foreColor =
                     cl == this.clrUnread ? this.brsForeColorUnread.Color :

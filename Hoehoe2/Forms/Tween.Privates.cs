@@ -1858,12 +1858,12 @@ namespace Hoehoe
             {
                 foreColor = this.clrOWL;
             }
-            
+
             if (this.curPost.IsRetweeted)
             {
                 foreColor = this.clrRetweet;
             }
-            
+
             if (this.curPost.IsFav)
             {
                 foreColor = this.clrFav;
@@ -2271,7 +2271,7 @@ namespace Hoehoe
                                 return true;
                             case Keys.C:
                             case Keys.Insert:
-                                string selText = WebBrowser_GetSelectionText( this.PostBrowser);
+                                string selText = WebBrowser_GetSelectionText(this.PostBrowser);
                                 if (!string.IsNullOrEmpty(selText))
                                 {
                                     CopyToClipboard(selText);
@@ -3468,7 +3468,7 @@ namespace Hoehoe
                 this.cfgCommon.UseImageService = this.ImageServiceCombo.SelectedIndex;
                 this.cfgCommon.ListDoubleClickAction = this.configs.ListDoubleClickAction;
                 this.cfgCommon.UserAppointUrl = this.configs.UserAppointUrl;
-                this.cfgCommon.HideDuplicatedRetweets = this.configs.HideDuplicatedRetweets; 
+                this.cfgCommon.HideDuplicatedRetweets = this.configs.HideDuplicatedRetweets;
                 this.cfgCommon.IsPreviewFoursquare = this.configs.IsPreviewFoursquare;
                 this.cfgCommon.FoursquarePreviewHeight = this.configs.FoursquarePreviewHeight;
                 this.cfgCommon.FoursquarePreviewWidth = this.configs.FoursquarePreviewWidth;
@@ -3724,7 +3724,7 @@ namespace Hoehoe
                 if (!this.StatusText.Text.StartsWith(". "))
                 {
                     this.StatusText.Text = ". " + this.StatusText.Text;
-                    sidx += 2; 
+                    sidx += 2;
                     this.ClearReplyToInfo();
                 }
 
@@ -4326,7 +4326,7 @@ namespace Hoehoe
         private void SearchWebBySelectedWord(string url)
         {
             // 発言詳細で「選択文字列で検索」（選択文字列取得）
-            string selText = this.WebBrowser_GetSelectionText( this.PostBrowser);
+            string selText = this.WebBrowser_GetSelectionText(this.PostBrowser);
             if (selText != null)
             {
                 if (url == R.SearchItem4Url)
@@ -5217,7 +5217,7 @@ namespace Hoehoe
             this.UseHashtagMenuItem.Enabled = isHttpUrl && Regex.IsMatch(this.postBrowserStatusText, "^https?://twitter.com/search\\?q=%23");
 
             // 文字列選択されてるときは選択文字列関係の項目を表示
-            bool hasSelection = !string.IsNullOrEmpty(this.WebBrowser_GetSelectionText( this.PostBrowser));
+            bool hasSelection = !string.IsNullOrEmpty(this.WebBrowser_GetSelectionText(this.PostBrowser));
             this.SelectionSearchContextMenuItem.Enabled = hasSelection;
             this.SelectionCopyContextMenuItem.Enabled = hasSelection;
             this.SelectionTranslationToolStripMenuItem.Enabled = hasSelection;
@@ -5884,7 +5884,7 @@ namespace Hoehoe
         private void SearchSelectedTextAtCurrentTab()
         {
             // 発言詳細の選択文字列で現在のタブを検索
-            string txt = this.WebBrowser_GetSelectionText( this.PostBrowser);
+            string txt = this.WebBrowser_GetSelectionText(this.PostBrowser);
             if (!string.IsNullOrEmpty(txt))
             {
                 this.searchDialog.SWord = txt;
@@ -7257,7 +7257,7 @@ namespace Hoehoe
 
         private void TryCopySelectionInPostBrowser()
         {
-            CopyToClipboard(this.WebBrowser_GetSelectionText( this.PostBrowser));
+            CopyToClipboard(this.WebBrowser_GetSelectionText(this.PostBrowser));
         }
 
         private void SetStatusLabelApiLuncher()
@@ -7740,7 +7740,7 @@ namespace Hoehoe
             this.urlDialog.Dispose();
             this.spaceKeyCanceler.Dispose();
             this.apiGauge.Dispose();
-            this.shield.Dispose();            
+            this.shield.Dispose();
         }
 
         private void DisposeBworkers()
@@ -7758,7 +7758,7 @@ namespace Hoehoe
                 this.followerFetchWorker.Dispose();
             }
         }
-        
+
         private void DisposeInnerBrushes()
         {
             this.brsHighLight.Dispose();
@@ -7783,7 +7783,7 @@ namespace Hoehoe
         }
 
         private void DisposeUserBrushes()
-        {            
+        {
             if (this.brsForeColorUnread != null)
             {
                 this.brsForeColorUnread.Dispose();
@@ -8195,13 +8195,13 @@ namespace Hoehoe
         private string GetDetailHtmlFormatHeader(bool useMonospace)
         {
             var ele = GetMonoEle(useMonospace);
-            var ss = new Dictionary<string, Dictionary<string, string>>(){ 
-                { "a:link, a:visited, a:active, a:hover", new Dictionary<string, string>(){ 
-                    { "color", this.clrDetailLink.AsCssRgb() } } 
+            var ss = new Dictionary<string, Dictionary<string, string>>(){
+                { "a:link, a:visited, a:active, a:hover", new Dictionary<string, string>(){
+                    { "color", this.clrDetailLink.AsCssRgb() } }
                 },
-                { "body", new Dictionary<string, string>(){ 
-                    { "margin", "0px" }, 
-                    { "background-color", this.clrDetailBackcolor.AsCssRgb() } } 
+                { "body", new Dictionary<string, string>(){
+                    { "margin", "0px" },
+                    { "background-color", this.clrDetailBackcolor.AsCssRgb() } }
                 },
                 { "body > p", new Dictionary<string, string>(){
                     { "vertical-align", "text-bottom" } }

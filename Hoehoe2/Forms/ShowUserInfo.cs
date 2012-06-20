@@ -360,7 +360,7 @@ namespace Hoehoe
             WebBrowser sc = this.ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
-                string selectedText = this.owner.WebBrowser_GetSelectionText( sc);
+                string selectedText = this.owner.WebBrowser_GetSelectionText(sc);
                 if (selectedText != null)
                 {
                     try
@@ -380,7 +380,7 @@ namespace Hoehoe
             WebBrowser sc = this.ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
-                string selectedText = this.owner.WebBrowser_GetSelectionText( sc);
+                string selectedText = this.owner.WebBrowser_GetSelectionText(sc);
                 if (selectedText == null)
                 {
                     this.SelectionCopyToolStripMenuItem.Enabled = false;
