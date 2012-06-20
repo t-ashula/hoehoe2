@@ -6588,10 +6588,7 @@ namespace Hoehoe
             {
                 if (this.PostBrowser.Document.Links.Count != 1)
                 {
-                    if (this.urlDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        openUrlStr = this.urlDialog.SelectedUrl;
-                    }
+                    openUrlStr = this.urlDialog.ShowDialog() == DialogResult.OK ? this.urlDialog.SelectedUrl : string.Empty;
                 }
             }
             catch (Exception)
