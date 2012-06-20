@@ -57,39 +57,6 @@ namespace Hoehoe
             this.Media = new Dictionary<string, string>();
         }
 
-        public PostClass(string nickname, string textFromApi, string text, string imageUrl, string screenName, DateTime createdAt, long statusId, bool isFav, bool isRead, bool isReply, bool isExcludeReply, bool isProtect, bool isOwl, bool isMark, string inReplyToUser, long inReplyToStatusId, string source, string sourceHtml, List<string> replyToList, bool isMe, bool isDm, long userId, bool filterHit, string retweetedBy, long retweetedId, StatusGeo geo)
-            : this()
-        {
-            this.Nickname = nickname;
-            this.TextFromApi = textFromApi;
-            this.ImageUrl = imageUrl;
-            this.ScreenName = screenName;
-            this.CreatedAt = createdAt;
-            this.StatusId = statusId;
-            this.isFav = isFav;
-            this.Text = text;
-            this.IsRead = isRead;
-            this.IsReply = isReply;
-            this.IsExcludeReply = isExcludeReply;
-            this.isProtect = isProtect;
-            this.IsOwl = isOwl;
-            this.isMark = isMark;
-            this.InReplyToUser = inReplyToUser;
-            this.inReplyToStatusId = inReplyToStatusId;
-            this.Source = source;
-            this.SourceHtml = sourceHtml;
-            this.ReplyToList = replyToList;
-            this.IsMe = isMe;
-            this.IsDm = isDm;
-            this.UserId = userId;
-            this.FilterHit = filterHit;
-            this.RetweetedBy = retweetedBy;
-            this.RetweetedId = retweetedId;
-            this.postGeo = geo;
-            this.RelTabName = string.Empty;
-            this.InReplyToUserId = 0;
-        }
-
         #endregion constructor
 
         #region enumes

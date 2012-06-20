@@ -65,7 +65,7 @@ namespace Hoehoe
             this.removedTab = new Stack<TabClass>();
             this.lists = new List<ListElement>();
         }
-        
+
         public static TabInformations Instance
         {
             get
@@ -73,7 +73,7 @@ namespace Hoehoe
                 return instance;
             }
         }
-        
+
         public List<long> BlockIds { get; private set; }
 
         public List<ListElement> SubscribableLists
@@ -154,7 +154,7 @@ namespace Hoehoe
         {
             get { return this.statuses; }
         }
-        
+
         public bool AddTab(string tabName, TabUsageType tabType, ListElement list)
         {
             if (this.Tabs.ContainsKey(tabName))
@@ -352,7 +352,7 @@ namespace Hoehoe
 
                     // 未読管理 未読数がずれる可能性があるためtab.Postsの未読も確認する
                     if (tab.UnreadManage)
-                    {                        
+                    {
                         bool changeUnread = tab.IsInnerStorageTabType ? !tab.Posts[id].IsRead : !this.statuses[id].IsRead;
                         if (changeUnread)
                         {
@@ -534,7 +534,7 @@ namespace Hoehoe
                     tb.AddPostToInnerStorage(item);
                     return;
                 }
-                
+
                 if (this.statuses.ContainsKey(item.StatusId))
                 {
                     if (item.IsFav)
@@ -559,7 +559,7 @@ namespace Hoehoe
                     {
                         item.IsFav = false;
                     }
-                    
+
                     // 既に持っている公式RTは捨てる
                     if (Configs.Instance.HideDuplicatedRetweets
                         && !item.IsMe
@@ -568,12 +568,12 @@ namespace Hoehoe
                     {
                         return;
                     }
-                    
+
                     if (this.BlockIds.Contains(item.UserId))
                     {
                         return;
                     }
-                    
+
                     this.statuses.Add(item.StatusId, item);
                 }
 
@@ -581,18 +581,18 @@ namespace Hoehoe
                 {
                     this.AddRetweet(item);
                 }
-                
+
                 if (item.IsFav && this.retweets.ContainsKey(item.StatusId))
                 {
                     // Fav済みのRetweet元発言は追加しない
                     return;
                 }
-                
+
                 if (this.addedIds == null)
                 {
                     this.addedIds = new List<long>();
                 }
-                
+
                 // タブ追加用IDコレクション準備
                 this.addedIds.Add(item.StatusId);
             }
@@ -1188,8 +1188,7 @@ namespace Hoehoe
                 {
                     int cnt = 0;
                     long oldest = long.MaxValue;
-                    Dictionary<long, PostClass> posts = tb.IsInnerStorageTabType ? tb.Posts : this.statuses;
-
+                    var posts = tb.IsInnerStorageTabType ? tb.Posts : this.statuses;
                     foreach (long id in tb.BackupIds())
                     {
                         if (!posts[id].IsRead)
@@ -1294,20 +1293,19 @@ namespace Hoehoe
         // デフォルトタブの判定処理
         public bool IsDefaultTab(string tabName)
         {
-            if (tabName != null && this.Tabs.ContainsKey(tabName) && (this.Tabs[tabName].TabType == TabUsageType.Home || this.Tabs[tabName].TabType == TabUsageType.Mentions || this.Tabs[tabName].TabType == TabUsageType.DirectMessage || this.Tabs[tabName].TabType == TabUsageType.Favorites))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return tabName != null && this.Tabs.ContainsKey(tabName)
+                && (this.Tabs[tabName].TabType == TabUsageType.Home
+                || this.Tabs[tabName].TabType == TabUsageType.Mentions
+                || this.Tabs[tabName].TabType == TabUsageType.DirectMessage
+                || this.Tabs[tabName].TabType == TabUsageType.Favorites);
         }
 
         // 振り分け可能タブの判定処理
         public bool IsDistributableTab(string tabName)
         {
-            return tabName != null && this.Tabs.ContainsKey(tabName) && (this.Tabs[tabName].TabType == TabUsageType.Mentions || this.Tabs[tabName].TabType == TabUsageType.UserDefined);
+            return tabName != null && this.Tabs.ContainsKey(tabName)
+                && (this.Tabs[tabName].TabType == TabUsageType.Mentions
+                || this.Tabs[tabName].TabType == TabUsageType.UserDefined);
         }
 
         public string GetUniqueTabName()
@@ -1367,19 +1365,16 @@ namespace Hoehoe
         {
             lock (this.lockObj)
             {
-                PostClass post = null;
                 if (this.statuses.ContainsKey(id))
                 {
-                    post = this.statuses[id];
-                    post.IsDeleted = true;
+                    this.statuses[id].IsDeleted = true;
                 }
 
                 foreach (TabClass tb in this.GetTabsInnerStorageType())
                 {
                     if (tb.Contains(id))
                     {
-                        post = tb.Posts[id];
-                        post.IsDeleted = true;
+                        tb.Posts[id].IsDeleted = true;
                     }
                 }
             }
@@ -1391,10 +1386,10 @@ namespace Hoehoe
             // 最古未読が設定されていて、既読の場合（1発言以上存在）
             try
             {
-                Dictionary<long, PostClass> posts = tab.IsInnerStorageTabType ? tab.Posts : this.statuses;
-
+                var posts = tab.IsInnerStorageTabType ? tab.Posts : this.statuses;
                 // 次の未読探索
-                if (tab.OldestUnreadId > -1 && posts.ContainsKey(tab.OldestUnreadId) && posts[tab.OldestUnreadId].IsRead && this.sorter.Mode == IdComparerClass.ComparerMode.Id)
+                if (tab.OldestUnreadId > -1 && posts.ContainsKey(tab.OldestUnreadId)
+                    && posts[tab.OldestUnreadId].IsRead && this.sorter.Mode == IdComparerClass.ComparerMode.Id)
                 {
                     if (tab.UnreadCount == 0)
                     {
@@ -1486,8 +1481,7 @@ namespace Hoehoe
                 stp = -1;
             }
 
-            Dictionary<long, PostClass> posts = tab.IsInnerStorageTabType ? tab.Posts : this.statuses;
-
+            var posts = tab.IsInnerStorageTabType ? tab.Posts : this.statuses;
             for (int i = startIdx; i <= toIdx; i += stp)
             {
                 long id = tab.GetId(i);
@@ -1511,7 +1505,7 @@ namespace Hoehoe
             foreach (long id in this.addedIds)
             {
                 PostClass post = this.statuses[id];
-                bool @add = false;              // 通知リスト追加フラグ
+                bool added = false;              // 通知リスト追加フラグ
                 bool mv = false;                // 移動フラグ（Recent追加有無）
                 HITRESULT rslt = HITRESULT.None;
                 post.IsExcludeReply = false;
@@ -1534,7 +1528,7 @@ namespace Hoehoe
 
                         if (this.Tabs[tn].Notify)
                         {
-                            @add = true;
+                            added = true;
                         }
 
                         // 通知あり
@@ -1567,7 +1561,7 @@ namespace Hoehoe
 
                     if (homeTab.Notify)
                     {
-                        @add = true;
+                        added = true;
                     }
                 }
 
@@ -1582,7 +1576,7 @@ namespace Hoehoe
 
                     if (replyTab.Notify)
                     {
-                        @add = true;
+                        added = true;
                     }
                 }
 
@@ -1593,7 +1587,7 @@ namespace Hoehoe
                     {
                         // 取得済みなら非通知
                         // _soundFile = ""
-                        @add = false;
+                        added = false;
                     }
                     else
                     {
@@ -1605,12 +1599,12 @@ namespace Hoehoe
 
                         if (favTab.Notify)
                         {
-                            @add = true;
+                            added = true;
                         }
                     }
                 }
 
-                if (@add)
+                if (added)
                 {
                     this.notifyPosts.Add(post);
                 }
@@ -1618,37 +1612,31 @@ namespace Hoehoe
 
             foreach (TabClass tb in this.Tabs.Values)
             {
-                if (tb.IsInnerStorageTabType)
+                if (tb.IsInnerStorageTabType && tb.Notify && tb.GetTemporaryCount() > 0)
                 {
-                    if (tb.Notify)
+                    foreach (var post in tb.GetTemporaryPosts())
                     {
-                        if (tb.GetTemporaryCount() > 0)
+                        bool exist = false;
+                        foreach (PostClass npost in this.notifyPosts)
                         {
-                            foreach (PostClass post in tb.GetTemporaryPosts())
+                            if (npost.StatusId == post.StatusId)
                             {
-                                bool exist = false;
-                                foreach (PostClass npost in this.notifyPosts)
-                                {
-                                    if (npost.StatusId == post.StatusId)
-                                    {
-                                        exist = true;
-                                        break; // TODO: might not be correct. Was : Exit For
-                                    }
-                                }
-
-                                if (!exist)
-                                {
-                                    this.notifyPosts.Add(post);
-                                }
+                                exist = true;
+                                break;
                             }
+                        }
 
-                            if (!string.IsNullOrEmpty(tb.SoundFile))
-                            {
-                                if (tb.TabType == TabUsageType.DirectMessage || string.IsNullOrEmpty(this.soundFile))
-                                {
-                                    this.soundFile = tb.SoundFile;
-                                }
-                            }
+                        if (!exist)
+                        {
+                            this.notifyPosts.Add(post);
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(tb.SoundFile))
+                    {
+                        if (tb.TabType == TabUsageType.DirectMessage || string.IsNullOrEmpty(this.soundFile))
+                        {
+                            this.soundFile = tb.SoundFile;
                         }
                     }
                 }
@@ -1658,19 +1646,49 @@ namespace Hoehoe
         private void AddRetweet(PostClass item)
         {
             // True:追加、False:保持済み
-            if (this.retweets.ContainsKey(item.RetweetedId))
+            long retweetedId = item.RetweetedId;
+            if (this.retweets.ContainsKey(retweetedId))
             {
-                this.retweets[item.RetweetedId].RetweetedCount += 1;
-                if (this.retweets[item.RetweetedId].RetweetedCount > 10)
+                this.retweets[retweetedId].RetweetedCount += 1;
+                if (this.retweets[retweetedId].RetweetedCount > 10)
                 {
-                    this.retweets[item.RetweetedId].RetweetedCount = 0;
+                    this.retweets[retweetedId].RetweetedCount = 0;
                 }
 
                 return;
             }
 
-            this.retweets.Add(item.RetweetedId, new PostClass(item.Nickname, item.TextFromApi, item.Text, item.ImageUrl, item.ScreenName, item.CreatedAt, item.RetweetedId, item.IsFav, item.IsRead, item.IsReply, item.IsExcludeReply, item.IsProtect, item.IsOwl, item.IsMark, item.InReplyToUser, item.InReplyToStatusId, item.Source, item.SourceHtml, item.ReplyToList, item.IsMe, item.IsDm, item.UserId, item.FilterHit, string.Empty, 0, item.PostGeo));
-            this.retweets[item.RetweetedId].RetweetedCount += 1;
+            var retweetPost = new PostClass()
+            {
+                Nickname = item.Nickname,
+                TextFromApi = item.TextFromApi,
+                Text = item.Text,
+                ImageUrl = item.ImageUrl,
+                ScreenName = item.ScreenName,
+                CreatedAt = item.CreatedAt,
+                StatusId = retweetedId,
+                IsFav = item.IsFav,
+                IsRead = item.IsRead,
+                IsReply = item.IsReply,
+                IsExcludeReply = item.IsExcludeReply,
+                IsProtect = item.IsProtect,
+                IsOwl = item.IsOwl,
+                IsMark = item.IsMark,
+                InReplyToUser = item.InReplyToUser,
+                InReplyToStatusId = item.InReplyToStatusId,
+                Source = item.Source,
+                SourceHtml = item.SourceHtml,
+                ReplyToList = item.ReplyToList,
+                IsMe = item.IsMe,
+                IsDm = item.IsDm,
+                UserId = item.UserId,
+                FilterHit = item.FilterHit,
+                RetweetedBy = string.Empty,
+                RetweetedId = 0,
+                PostGeo = item.PostGeo
+            };
+            this.retweets.Add(retweetedId, retweetPost);
+            this.retweets[retweetedId].RetweetedCount += 1;
         }
     }
 }
