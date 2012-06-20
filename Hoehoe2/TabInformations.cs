@@ -377,16 +377,14 @@ namespace Hoehoe
         public int GetOldestUnreadIndex(string tabName)
         {
             TabClass tb = this.Tabs[tabName];
-            if (tb.OldestUnreadId > -1 && tb.Contains(tb.OldestUnreadId) && tb.UnreadCount > 0)
+            var oldest = tb.OldestUnreadId;
+            if (oldest > -1 && tb.Contains(oldest) && tb.UnreadCount > 0)
             {
                 // 未読アイテムへ
-                bool isRead = tb.IsInnerStorageTabType ?
-                    tb.Posts[tb.OldestUnreadId].IsRead :
-                    this.statuses[tb.OldestUnreadId].IsRead;
-
+                bool isRead = tb.IsInnerStorageTabType ? tb.Posts[oldest].IsRead : this.statuses[oldest].IsRead;
                 if (!isRead)
                 {
-                    return tb.IndexOf(tb.OldestUnreadId); // 最短経路
+                    return tb.IndexOf(oldest); // 最短経路
                 }
 
                 // 状態不整合（最古未読ＩＤが実は既読）
@@ -395,7 +393,7 @@ namespace Hoehoe
                     this.SetNextUnreadId(-1, tb);   // 頭から探索
                 }
 
-                return tb.OldestUnreadId == -1 ? -1 : tb.IndexOf(tb.OldestUnreadId);
+                return oldest == -1 ? -1 : tb.IndexOf(oldest);
             }
 
             // 一見未読なさそうだが、未読カウントはあるので探索
@@ -409,7 +407,7 @@ namespace Hoehoe
                 this.SetNextUnreadId(-1, tb);
             }
 
-            return tb.OldestUnreadId == -1 ? -1 : tb.IndexOf(tb.OldestUnreadId);
+            return oldest == -1 ? -1 : tb.IndexOf(oldest);
         }
 
         /// <summary>
