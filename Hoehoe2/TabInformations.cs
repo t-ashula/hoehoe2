@@ -923,21 +923,13 @@ namespace Hoehoe
 
         public PostClass[] Item(string tabName, int startIndex, int endIndex)
         {
-            int length = endIndex - startIndex + 1;
-            PostClass[] posts = new PostClass[length];
-            if (this.Tabs[tabName].IsInnerStorageTabType)
+            var length = endIndex - startIndex + 1;
+            var posts = new PostClass[length];
+            var tab = this.Tabs[tabName];
+            var postss = (tab.IsInnerStorageTabType) ? tab.Posts : this.statuses;
+            for (var i = 0; i < length; ++i)
             {
-                for (int i = 0; i < length; i++)
-                {
-                    posts[i] = this.Tabs[tabName].Posts[this.Tabs[tabName].GetId(startIndex + i)];
-                }
-            }
-            else
-            {
-                for (int i = 0; i < length; i++)
-                {
-                    posts[i] = this.statuses[this.Tabs[tabName].GetId(startIndex + i)];
-                }
+                posts[i] = postss[tab.GetId(startIndex + i)];
             }
 
             return posts;
