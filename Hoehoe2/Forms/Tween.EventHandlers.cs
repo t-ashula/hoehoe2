@@ -1467,7 +1467,7 @@ namespace Hoehoe
 
             // 新着バルーン通知のチェック状態設定
             this.NewPostPopMenuItem.Checked = this.cfgCommon.NewAllPop;
-            this.NotifyFileMenuItem.Checked = this.NewPostPopMenuItem.Checked;
+            this.NotifyFileMenuItem.Checked = this.cfgCommon.NewAllPop;
 
             // フォント＆文字色＆背景色保持
             this.fntUnread = this.cfgLocal.FontUnread;

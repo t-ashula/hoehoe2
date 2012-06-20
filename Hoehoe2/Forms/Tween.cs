@@ -354,7 +354,7 @@ namespace Hoehoe
         public void AddNewTabForSearch(string searchWord)
         {
             // 同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
-            foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch))
+            foreach (var tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch))
             {
                 if (tb.SearchWords == searchWord && string.IsNullOrEmpty(tb.SearchLang))
                 {
@@ -408,7 +408,7 @@ namespace Hoehoe
             }
 
             // 同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
-            foreach (TabClass tb in this.statuses.GetTabsByType(TabUsageType.UserTimeline))
+            foreach (var tb in this.statuses.GetTabsByType(TabUsageType.UserTimeline))
             {
                 if (tb.User == user)
                 {
@@ -800,7 +800,8 @@ namespace Hoehoe
             if (confirm)
             {
                 string tmp = string.Format(R.RemoveSpecifiedTabText1, Environment.NewLine);
-                if (MessageBox.Show(tmp, tabName + " " + R.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Cancel)
+                var result = MessageBox.Show(tmp, tabName + " " + R.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Cancel)
                 {
                     return false;
                 }
@@ -820,7 +821,6 @@ namespace Hoehoe
             TabPage tabPage = this.ListTab.TabPages[idx];
             DetailsListView listCustom = (DetailsListView)tabPage.Tag;
             tabPage.Tag = null;
-
             tabPage.SuspendLayout();
 
             if (object.ReferenceEquals(this.ListTab.SelectedTab, this.ListTab.TabPages[idx]))
@@ -1142,6 +1142,7 @@ namespace Hoehoe
             {
                 return !Regex.Match(name, "^(about|jobs|tos|privacy|who_to_follow|download|messages)$", RegexOptions.IgnoreCase).Success;
             }
+
             return !nonUsernames.Contains(name.ToLower());
         }
 
@@ -1158,6 +1159,17 @@ namespace Hoehoe
         public void SetModifySettingAtId(bool value)
         {
             this.modifySettingAtId = value;
+        }
+
+        public bool AddAtIdSuplItem(string item)
+        {
+            if (this.AtIdSupl.AddItem(item))
+            {
+                this.SetModifySettingAtId(true);
+                return true;
+            }
+
+            return false;
         }
 
         #endregion public methods

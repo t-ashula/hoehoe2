@@ -98,7 +98,7 @@ namespace Hoehoe
 
         public string ScreenName { get; set; }
 
-        public System.DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public long StatusId { get; set; }
 
