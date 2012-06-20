@@ -342,41 +342,29 @@ namespace Hoehoe
         {
             lock (this.lockObj)
             {
-                PostClass post = null;
                 foreach (string key in this.Tabs.Keys)
                 {
                     TabClass tab = this.Tabs[key];
-                    if (tab.Contains(id))
+                    if (!tab.Contains(id))
                     {
-                        // 未読数がずれる可能性があるためtab.Postsの未読も確認する
-                        if (!tab.IsInnerStorageTabType)
-                        {
-                            post = this.statuses[id];
-                            if (tab.UnreadManage && !post.IsRead)
-                            {
-                                // 未読管理
-                                lock (this.lockUnread)
-                                {
-                                    tab.UnreadCount -= 1;
-                                    this.SetNextUnreadId(id, tab);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (tab.UnreadManage && !tab.Posts[id].IsRead)
-                            {
-                                // 未読管理
-                                lock (this.lockUnread)
-                                {
-                                    tab.UnreadCount -= 1;
-                                    this.SetNextUnreadId(id, tab);
-                                }
-                            }
-                        }
-
-                        tab.Remove(id);
+                        continue;
                     }
+
+                    // 未読管理 未読数がずれる可能性があるためtab.Postsの未読も確認する
+                    if (tab.UnreadManage)
+                    {                        
+                        bool changeUnread = tab.IsInnerStorageTabType ? !tab.Posts[id].IsRead : !this.statuses[id].IsRead;
+                        if (changeUnread)
+                        {
+                            lock (this.lockUnread)
+                            {
+                                tab.UnreadCount--;
+                                this.SetNextUnreadId(id, tab);
+                            }
+                        }
+                    }
+
+                    tab.Remove(id);
                 }
 
                 if (this.statuses.ContainsKey(id))
