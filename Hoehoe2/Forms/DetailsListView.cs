@@ -27,7 +27,6 @@
 namespace Hoehoe.TweenCustomControl
 {
     using System;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Drawing;
     using System.Runtime.InteropServices;
@@ -38,7 +37,6 @@ namespace Hoehoe.TweenCustomControl
         #region private fields
 
         private Rectangle changeBounds;
-        private EventHandlerList handlers = new EventHandlerList();
         private SCROLLINFO scrollInfo;
 
         #endregion private fields
