@@ -508,8 +508,9 @@ namespace Hoehoe
             return pnl;
         }
 
-        private void CreateDetailListView(string tabName, bool startup, DetailsListView listCustom)
+        private DetailsListView CreateDetailListView(string tabName, bool startup)
         {
+            DetailsListView listCustom = new DetailsListView();
             listCustom.AllowColumnReorder = true;
             var colHd1 = new ColumnHeader();            // アイコン
             var colHd2 = new ColumnHeader();            // ニックネーム
@@ -676,6 +677,7 @@ namespace Hoehoe
                     }
                 }
             }
+            return listCustom;
         }
 
         public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
@@ -741,7 +743,7 @@ namespace Hoehoe
             }
 
             this.ListTab.Controls.Add(tabPage);
-            var listCustom = new DetailsListView();
+            var listCustom = CreateDetailListView(tabName, startup);
             tabPage.Controls.Add(listCustom);
 
             /// 検索関連の準備
@@ -763,8 +765,6 @@ namespace Hoehoe
             tabPage.TabIndex = 2 + cnt;
             tabPage.Text = tabName;
             tabPage.UseVisualStyleBackColor = true;
-
-            CreateDetailListView(tabName, startup, listCustom);
 
             if (tabType == TabUsageType.PublicSearch)
             {
