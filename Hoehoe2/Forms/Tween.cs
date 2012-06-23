@@ -510,91 +510,31 @@ namespace Hoehoe
 
         private DetailsListView CreateDetailListView(string tabName, bool startup)
         {
+            this.InitColumnText();
+            // アイコン, ニックネーム, 本文, 日付, ユーザID, 未読, マーク＆プロテクト, ソース
+            var colhds = new ColumnHeader[8];
+            var widths = new int[] { 48, 80, 300, 50, 50, 16, 16, 50 };
+            for (var i = 0; i < colhds.Length; ++i)
+            {
+                colhds[i] = new ColumnHeader()
+                {
+                    Width = widths[i],
+                    Text = this.columnTexts[i]
+                };
+            }
+
             DetailsListView listCustom = new DetailsListView();
-            listCustom.AllowColumnReorder = true;
-            var colHd1 = new ColumnHeader();            // アイコン
-            var colHd2 = new ColumnHeader();            // ニックネーム
-            var colHd3 = new ColumnHeader();            // 本文
-            var colHd4 = new ColumnHeader();            // 日付
-            var colHd5 = new ColumnHeader();            // ユーザID
-            var colHd6 = new ColumnHeader();            // 未読
-            var colHd7 = new ColumnHeader();            // マーク＆プロテクト
-            var colHd8 = new ColumnHeader();            // ソース
-
-            if (!this.iconCol)
-            {
-                listCustom.Columns.AddRange(new ColumnHeader[] { colHd1, colHd2, colHd3, colHd4, colHd5, colHd6, colHd7, colHd8 });
-            }
-            else
-            {
-                listCustom.Columns.AddRange(new ColumnHeader[] { colHd1, colHd3 });
-            }
-
             listCustom.ContextMenuStrip = this.ContextMenuOperate;
-            listCustom.Dock = DockStyle.Fill;
-            listCustom.FullRowSelect = true;
-            listCustom.HideSelection = false;
-            listCustom.Location = new Point(0, 0);
-            listCustom.Margin = new Padding(0);
-            listCustom.Name = "CList" + Environment.TickCount.ToString();
-            listCustom.ShowItemToolTips = true;
-            listCustom.Size = new Size(380, 260);
-            listCustom.UseCompatibleStateImageBehavior = false;
-            listCustom.View = View.Details;
-            listCustom.OwnerDraw = true;
-            listCustom.VirtualMode = true;
             listCustom.Font = this.fntReaded;
             listCustom.BackColor = this.clrListBackcolor;
             listCustom.GridLines = this.configs.ShowGrid;
-            listCustom.AllowDrop = true;
-            listCustom.SelectedIndexChanged += this.MyList_SelectedIndexChanged;
-            listCustom.MouseDoubleClick += this.MyList_MouseDoubleClick;
-            listCustom.ColumnClick += this.MyList_ColumnClick;
-            listCustom.DrawColumnHeader += this.MyList_DrawColumnHeader;
-            listCustom.DragDrop += this.TweenMain_DragDrop;
-            listCustom.DragOver += this.TweenMain_DragOver;
-            listCustom.DrawItem += this.MyList_DrawItem;
-            listCustom.MouseClick += this.MyList_MouseClick;
-            listCustom.ColumnReordered += this.MyList_ColumnReordered;
-            listCustom.ColumnWidthChanged += this.MyList_ColumnWidthChanged;
-            listCustom.CacheVirtualItems += this.MyList_CacheVirtualItems;
-            listCustom.RetrieveVirtualItem += this.MyList_RetrieveVirtualItem;
-            listCustom.DrawSubItem += this.MyList_DrawSubItem;
-            listCustom.HScrolled += this.MyList_HScrolled;
 
-            this.InitColumnText();
-            colHd1.Text = this.columnTexts[0];
-            colHd1.Width = 48;
-            colHd2.Text = this.columnTexts[1];
-            colHd2.Width = 80;
-            colHd3.Text = this.columnTexts[2];
-            colHd3.Width = 300;
-            colHd4.Text = this.columnTexts[3];
-            colHd4.Width = 50;
-            colHd5.Text = this.columnTexts[4];
-            colHd5.Width = 50;
-            colHd6.Text = this.columnTexts[5];
-            colHd6.Width = 16;
-            colHd7.Text = this.columnTexts[6];
-            colHd7.Width = 16;
-            colHd8.Text = this.columnTexts[7];
-            colHd8.Width = 50;
-
-            if (this.statuses.IsDistributableTab(tabName))
-            {
-                this.tabDialog.AddTab(tabName);
-            }
-
-            listCustom.SmallImageList = new ImageList();
-            if (this.iconSz > 0)
-            {
-                listCustom.SmallImageList.ImageSize = new Size(this.iconSz, this.iconSz);
-            }
-            else
-            {
-                listCustom.SmallImageList.ImageSize = new Size(1, 1);
-            }
-
+            var sz = this.iconSz > 0 ? this.iconSz : 1;
+            listCustom.SmallImageList = new ImageList() { ImageSize = new Size(sz, sz) };
+            listCustom.Columns.AddRange(this.iconCol ? 
+                new ColumnHeader[] { colhds[0], colhds[2] } :
+                new ColumnHeader[] { colhds[0], colhds[1], colhds[2], colhds[3], colhds[4], colhds[5], colhds[6], colhds[7] });
+            
             int[] dispOrder = new int[8];
             if (!startup)
             {
@@ -744,7 +684,26 @@ namespace Hoehoe
 
             this.ListTab.Controls.Add(tabPage);
             var listCustom = CreateDetailListView(tabName, startup);
+            listCustom.SelectedIndexChanged += this.MyList_SelectedIndexChanged;
+            listCustom.MouseDoubleClick += this.MyList_MouseDoubleClick;
+            listCustom.ColumnClick += this.MyList_ColumnClick;
+            listCustom.DrawColumnHeader += this.MyList_DrawColumnHeader;
+            listCustom.DragDrop += this.TweenMain_DragDrop;
+            listCustom.DragOver += this.TweenMain_DragOver;
+            listCustom.DrawItem += this.MyList_DrawItem;
+            listCustom.MouseClick += this.MyList_MouseClick;
+            listCustom.ColumnReordered += this.MyList_ColumnReordered;
+            listCustom.ColumnWidthChanged += this.MyList_ColumnWidthChanged;
+            listCustom.CacheVirtualItems += this.MyList_CacheVirtualItems;
+            listCustom.RetrieveVirtualItem += this.MyList_RetrieveVirtualItem;
+            listCustom.DrawSubItem += this.MyList_DrawSubItem;
+            listCustom.HScrolled += this.MyList_HScrolled;
             tabPage.Controls.Add(listCustom);
+
+            if (this.statuses.IsDistributableTab(tabName))
+            {
+                this.tabDialog.AddTab(tabName);
+            }
 
             /// 検索関連の準備
             Panel pnl = null;

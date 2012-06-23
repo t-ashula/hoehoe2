@@ -45,6 +45,20 @@ namespace Hoehoe.TweenCustomControl
 
         public DetailsListView()
         {
+            this.AllowColumnReorder = true;
+            this.Dock = DockStyle.Fill;
+            this.FullRowSelect = true;
+            this.HideSelection = false;
+            this.Location = new Point(0, 0);
+            this.Margin = new Padding(0);
+            this.Name = "CList" + Environment.TickCount.ToString();
+            this.ShowItemToolTips = true;
+            this.Size = new Size(380, 260);
+            this.UseCompatibleStateImageBehavior = false;
+            this.View = View.Details;
+            this.OwnerDraw = true;
+            this.VirtualMode = true;
+            this.AllowDrop = true;
             this.View = View.Details;
             this.FullRowSelect = true;
             this.HideSelection = false;
