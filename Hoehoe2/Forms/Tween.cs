@@ -543,16 +543,16 @@ namespace Hoehoe
                 }
             }
 
-            TabPage tabPage = new TabPage();
-            DetailsListView listCustom = new DetailsListView();
-            ColumnHeader colHd1 = new ColumnHeader();            // アイコン
-            ColumnHeader colHd2 = new ColumnHeader();            // ニックネーム
-            ColumnHeader colHd3 = new ColumnHeader();            // 本文
-            ColumnHeader colHd4 = new ColumnHeader();            // 日付
-            ColumnHeader colHd5 = new ColumnHeader();            // ユーザID
-            ColumnHeader colHd6 = new ColumnHeader();            // 未読
-            ColumnHeader colHd7 = new ColumnHeader();            // マーク＆プロテクト
-            ColumnHeader colHd8 = new ColumnHeader();            // ソース
+            var tabPage = new TabPage();
+            var listCustom = new DetailsListView();
+            var colHd1 = new ColumnHeader();            // アイコン
+            var colHd2 = new ColumnHeader();            // ニックネーム
+            var colHd3 = new ColumnHeader();            // 本文
+            var colHd4 = new ColumnHeader();            // 日付
+            var colHd5 = new ColumnHeader();            // ユーザID
+            var colHd6 = new ColumnHeader();            // 未読
+            var colHd7 = new ColumnHeader();            // マーク＆プロテクト
+            var colHd8 = new ColumnHeader();            // ソース
 
             int cnt = this.ListTab.TabPages.Count;
 
@@ -575,12 +575,10 @@ namespace Hoehoe
                 label.Name = "labelUser";
                 label.Text = tabType == TabUsageType.Lists ? listInfo.ToString() : this.statuses.Tabs[tabName].User + "'s Timeline";
                 label.TextAlign = ContentAlignment.MiddleLeft;
-                using (ComboBox tmpComboBox = new ComboBox())
+                using (var tmpComboBox = new ComboBox())
                 {
                     label.Height = tmpComboBox.Height;
                 }
-
-                tabPage.Controls.Add(label);
             }
 
             this.ListTab.Controls.Add(tabPage);
