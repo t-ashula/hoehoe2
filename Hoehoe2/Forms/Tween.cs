@@ -446,14 +446,12 @@ namespace Hoehoe
         private Panel CreateSearchPanel(string tabName)
         {
             Panel pnl = new Panel();
-
             Label lbl = new Label();
             ComboBox cmb = new ComboBox();
             Button btn = new Button();
             ComboBox cmbLang = new ComboBox();
 
             pnl.SuspendLayout();
-
             pnl.Controls.Add(cmb);
             pnl.Controls.Add(cmbLang);
             pnl.Controls.Add(btn);
@@ -510,41 +508,9 @@ namespace Hoehoe
             return pnl;
         }
 
-        public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
+        private void CreateDetailListView(string tabName, bool startup, DetailsListView listCustom)
         {
-            // 重複チェック
-            foreach (TabPage tb in this.ListTab.TabPages)
-            {
-                if (tb.Text == tabName)
-                {
-                    return false;
-                }
-            }
-
-            // 新規タブ名チェック
-            if (tabName == R.AddNewTabText1)
-            {
-                return false;
-            }
-
-            // タブタイプ重複チェック
-            if (!startup)
-            {
-                if (tabType == TabUsageType.DirectMessage
-                    || tabType == TabUsageType.Favorites
-                    || tabType == TabUsageType.Home
-                    || tabType == TabUsageType.Mentions
-                    || tabType == TabUsageType.Related)
-                {
-                    if (this.statuses.GetTabByType(tabType) != null)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            var tabPage = new TabPage();
-            var listCustom = new DetailsListView();
+            listCustom.AllowColumnReorder = true;
             var colHd1 = new ColumnHeader();            // アイコン
             var colHd2 = new ColumnHeader();            // ニックネーム
             var colHd3 = new ColumnHeader();            // 本文
@@ -554,57 +520,6 @@ namespace Hoehoe
             var colHd7 = new ColumnHeader();            // マーク＆プロテクト
             var colHd8 = new ColumnHeader();            // ソース
 
-            int cnt = this.ListTab.TabPages.Count;
-
-            //// ToDo:Create and set controls follow tabtypes
-
-            this.SplitContainer1.Panel1.SuspendLayout();
-            this.SplitContainer1.Panel2.SuspendLayout();
-            this.SplitContainer1.SuspendLayout();
-            this.ListTab.SuspendLayout();
-            this.SuspendLayout();
-
-            tabPage.SuspendLayout();
-
-            /// UserTimeline関連
-            Label label = null;
-            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
-            {
-                label = new Label();
-                label.Dock = DockStyle.Top;
-                label.Name = "labelUser";
-                label.Text = tabType == TabUsageType.Lists ? listInfo.ToString() : this.statuses.Tabs[tabName].User + "'s Timeline";
-                label.TextAlign = ContentAlignment.MiddleLeft;
-                using (var tmpComboBox = new ComboBox())
-                {
-                    label.Height = tmpComboBox.Height;
-                }
-            }
-
-            this.ListTab.Controls.Add(tabPage);
-            tabPage.Controls.Add(listCustom);
-
-            /// 検索関連の準備
-            Panel pnl = null;
-            if (tabType == TabUsageType.PublicSearch)
-            {
-                pnl = CreateSearchPanel(tabName);
-                tabPage.Controls.Add(pnl);
-            }
-
-            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
-            {
-                tabPage.Controls.Add(label);
-            }
-
-            tabPage.Location = new Point(4, 4);
-            tabPage.Name = "CTab" + cnt.ToString();
-            tabPage.Size = new Size(380, 260);
-            tabPage.TabIndex = 2 + cnt;
-            tabPage.Text = tabName;
-            tabPage.UseVisualStyleBackColor = true;
-
-            listCustom.AllowColumnReorder = true;
             if (!this.iconCol)
             {
                 listCustom.Columns.AddRange(new ColumnHeader[] { colHd1, colHd2, colHd3, colHd4, colHd5, colHd6, colHd7, colHd8 });
@@ -761,6 +676,95 @@ namespace Hoehoe
                     }
                 }
             }
+        }
+
+        public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
+        {
+            // 重複チェック
+            foreach (TabPage tb in this.ListTab.TabPages)
+            {
+                if (tb.Text == tabName)
+                {
+                    return false;
+                }
+            }
+
+            // 新規タブ名チェック
+            if (tabName == R.AddNewTabText1)
+            {
+                return false;
+            }
+
+            // タブタイプ重複チェック
+            if (!startup)
+            {
+                if (tabType == TabUsageType.DirectMessage
+                    || tabType == TabUsageType.Favorites
+                    || tabType == TabUsageType.Home
+                    || tabType == TabUsageType.Mentions
+                    || tabType == TabUsageType.Related)
+                {
+                    if (this.statuses.GetTabByType(tabType) != null)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            var tabPage = new TabPage();
+
+            int cnt = this.ListTab.TabPages.Count;
+
+            //// ToDo:Create and set controls follow tabtypes
+
+            this.SplitContainer1.Panel1.SuspendLayout();
+            this.SplitContainer1.Panel2.SuspendLayout();
+            this.SplitContainer1.SuspendLayout();
+            this.ListTab.SuspendLayout();
+            this.SuspendLayout();
+
+            tabPage.SuspendLayout();
+
+            /// UserTimeline関連
+            Label label = null;
+            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
+            {
+                label = new Label();
+                label.Dock = DockStyle.Top;
+                label.Name = "labelUser";
+                label.Text = tabType == TabUsageType.Lists ? listInfo.ToString() : this.statuses.Tabs[tabName].User + "'s Timeline";
+                label.TextAlign = ContentAlignment.MiddleLeft;
+                using (var tmpComboBox = new ComboBox())
+                {
+                    label.Height = tmpComboBox.Height;
+                }
+            }
+
+            this.ListTab.Controls.Add(tabPage);
+            var listCustom = new DetailsListView();
+            tabPage.Controls.Add(listCustom);
+
+            /// 検索関連の準備
+            Panel pnl = null;
+            if (tabType == TabUsageType.PublicSearch)
+            {
+                pnl = CreateSearchPanel(tabName);
+                tabPage.Controls.Add(pnl);
+            }
+
+            if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
+            {
+                tabPage.Controls.Add(label);
+            }
+
+            tabPage.Location = new Point(4, 4);
+            tabPage.Name = "CTab" + cnt.ToString();
+            tabPage.Size = new Size(380, 260);
+            tabPage.TabIndex = 2 + cnt;
+            tabPage.Text = tabName;
+            tabPage.UseVisualStyleBackColor = true;
+
+            CreateDetailListView(tabName, startup, listCustom);
 
             if (tabType == TabUsageType.PublicSearch)
             {
@@ -778,7 +782,7 @@ namespace Hoehoe
             tabPage.Tag = listCustom;
             return true;
         }
-
+        
         public bool RemoveSpecifiedTab(string tabName, bool confirm)
         {
             int idx = 0;
