@@ -550,7 +550,7 @@ namespace Hoehoe
                     }
                 }
 
-                for (int i = 0; i <= this.curList.Columns.Count - 1; i++)
+                for (int i = 0; i < this.curList.Columns.Count; i++)
                 {
                     listCustom.Columns[i].Width = this.curList.Columns[i].Width;
                     listCustom.Columns[dispOrder[i]].DisplayIndex = i;
@@ -567,7 +567,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    for (int i = 0; i <= 7; i++)
+                    for (int i = 0; i < 8; ++i)
                     {
                         if (this.cfgLocal.DisplayIndex1 == i)
                         {
@@ -611,12 +611,13 @@ namespace Hoehoe
                     listCustom.Columns[5].Width = this.cfgLocal.Width6;
                     listCustom.Columns[6].Width = this.cfgLocal.Width7;
                     listCustom.Columns[7].Width = this.cfgLocal.Width8;
-                    for (int i = 0; i <= 7; i++)
+                    for (int i = 0; i < 8; i++)
                     {
                         listCustom.Columns[dispOrder[i]].DisplayIndex = i;
                     }
                 }
             }
+
             return listCustom;
         }
 
