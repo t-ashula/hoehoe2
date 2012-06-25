@@ -3066,7 +3066,10 @@ namespace Hoehoe
 
         private void MyList_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
         {
-            if (this.itemCache != null && e.StartIndex >= this.itemCacheIndex && e.EndIndex < this.itemCacheIndex + this.itemCache.Length && this.curList.Equals(sender))
+            if (this.itemCache != null 
+                && e.StartIndex >= this.itemCacheIndex 
+                && e.EndIndex < this.itemCacheIndex + this.itemCache.Length 
+                && this.curList.Equals(sender))
             {
                 // If the newly requested cache is a subset of the old cache,
                 // no need to rebuild everything, so do nothing.

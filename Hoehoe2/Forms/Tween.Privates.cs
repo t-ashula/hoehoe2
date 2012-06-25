@@ -4370,13 +4370,13 @@ namespace Hoehoe
 
             if (this.iconCol)
             {
-                ((DetailsListView)tab.Tag).Columns[1].Text = this.columnTexts[2];
+                this.curList.Columns[1].Text = this.columnTexts[2];
             }
             else
             {
                 for (int i = 0; i < this.curList.Columns.Count; i++)
                 {
-                    ((DetailsListView)tab.Tag).Columns[i].Text = this.columnTexts[i];
+                    this.curList.Columns[i].Text = this.columnTexts[i];
                 }
             }
         }
