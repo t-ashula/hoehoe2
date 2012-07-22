@@ -269,61 +269,6 @@ namespace Hoehoe
 #endif
 
         #endregion "テンプレ"
- 
-        #region "TwitPic"
-
-        /// <summary>
-        /// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
-        /// </summary>
-        /// <param name="args">Class GetUrlArgs
-        ///                                 args.url        URL文字列
-        ///                                 args.imglist    解析成功した際にこのリストに元URL、サムネイルURLの形で作成するKeyValuePair
-        /// </param>
-        /// <returns>成功した場合True,失敗の場合False</returns>
-        /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-        private static bool TwitPic_GetUrl(GetUrlArgs args)
-        {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(www\\.)?twitpic\\.com/(?<photoId>\\w+)(/full/?)?$", RegexOptions.IgnoreCase);
-            if (mc.Success)
-            {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://twitpic.com/show/thumb/${photoId}")));
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
-        /// </summary>
-        /// <param name="args">Class CreateImageArgs
-        ///                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
-        ///                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
-        ///                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
-        ///                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
-        /// </param>
-        /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
-        /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
-        /// <remarks></remarks>
-        private static bool TwitPic_CreateImage(CreateImageArgs args)
-        {
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
-            if (img == null)
-            {
-                return false;
-            }
-
-            // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
-            return true;
-        }
-
-        #endregion "TwitPic"
 
         #region "Yfrog"
 

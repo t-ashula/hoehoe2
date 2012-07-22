@@ -351,6 +351,7 @@
     <Compile Include="Forms\TabsDialog.Designer.cs">
       <DependentUpon>TabsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="WebServices\Thumbnails\DirectUrl.cs" />
     <Compile Include="WebServices\Thumbnails\ImgUr.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnail.cs" />
     <Compile Include="Forms\ToolStripAPIGauge.cs">
@@ -375,6 +376,7 @@
     <Compile Include="UserAccount.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="InternetSecurityManager.cs" />
+    <Compile Include="WebServices\Thumbnails\TwitPic.cs" />
     <Compile Include="Win32Api.cs" />
   </ItemGroup>
   <ItemGroup>
