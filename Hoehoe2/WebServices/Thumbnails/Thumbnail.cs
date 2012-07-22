@@ -216,11 +216,6 @@ namespace Hoehoe
             }
         }
 
-        private static bool IsDirectLink(string url)
-        {
-            return Regex.Match(url, "^http://.*(\\.jpg|\\.jpeg|\\.gif|\\.png|\\.bmp)$", RegexOptions.IgnoreCase).Success;
-        }
-
         #region "テンプレ"
 
 #if template
@@ -274,51 +269,7 @@ namespace Hoehoe
 #endif
 
         #endregion "テンプレ"
-
  
-        #region "画像直リンク"
-
-        private static bool DirectLink_GetUrl(GetUrlArgs args)
-        {
-            // 画像拡張子で終わるURL（直リンク）
-            if (IsDirectLink(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended))
-            {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
-        /// </summary>
-        /// <param name="args">Class CreateImageArgs
-        ///                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
-        ///                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
-        ///                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
-        ///                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
-        /// </param>
-        /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
-        /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
-        /// <remarks></remarks>
-        private static bool DirectLink_CreateImage(CreateImageArgs args)
-        {
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
-            if (img == null)
-            {
-                return false;
-            }
-
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
-            return true;
-        }
-
-        #endregion "画像直リンク"
-
         #region "TwitPic"
 
         /// <summary>
