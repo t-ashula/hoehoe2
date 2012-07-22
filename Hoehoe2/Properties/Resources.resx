@@ -944,7 +944,7 @@
     <value>編集されていないため、公式RTとして投稿します。　よろしいですか？{0}[はい：公式RTで投稿]{0}[いいえ：非公式RTで投稿]{0}[キャンセル：投稿しない]</value>
   </data>
   <data name="Description" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\description.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\Resources\Description.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="ListManageDeleteLists1" xml:space="preserve">
     <value>このリストを削除してもよろしいですか？</value>
