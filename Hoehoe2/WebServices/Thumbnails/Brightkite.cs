@@ -1,4 +1,4 @@
-﻿// Hoehoe - Client of Twitter
+// Hoehoe - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
 //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
@@ -32,7 +32,7 @@ namespace Hoehoe
 
     public partial class Thumbnail
     {
-        #region "ImgUr"
+        #region "brightkite"
 
         /// <summary>
         /// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
@@ -43,12 +43,14 @@ namespace Hoehoe
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-        private static bool ImgUr_GetUrl(GetUrlArgs args)
+        private static bool Brightkite_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
+            // TODO URL判定処理を記述
+            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://brightkite\\.com/objects/((\\w{2})(\\w{2})\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg")));
+                // TODO 成功時はサムネイルURLを作成しimglist.Addする
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://cdn.brightkite.com/${2}/${3}/${1}-feed.jpg")));
                 return true;
             }
 
@@ -67,7 +69,7 @@ namespace Hoehoe
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private static bool ImgUr_CreateImage(CreateImageArgs args)
+        private static bool Brightkite_CreateImage(CreateImageArgs args)
         {
             Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
@@ -75,11 +77,12 @@ namespace Hoehoe
                 return false;
             }
 
+            // 成功した場合はURLに対応する画像、ツールチップテキストを登録
             args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
             args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
             return true;
         }
 
-        #endregion "ImgUr"
+        #endregion "brightkite"
     }
 }

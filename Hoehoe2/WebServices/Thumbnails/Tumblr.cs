@@ -1,4 +1,4 @@
-﻿// Hoehoe - Client of Twitter
+// Hoehoe - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
 //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
@@ -26,13 +26,15 @@
 
 namespace Hoehoe
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
+    using System.Xml;
 
     public partial class Thumbnail
     {
-        #region "ImgUr"
+        #region "Tumblr"
 
         /// <summary>
         /// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
@@ -43,16 +45,20 @@ namespace Hoehoe
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-        private static bool ImgUr_GetUrl(GetUrlArgs args)
+        private static bool Tumblr_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
+            // TODO URL判定処理を記述
+            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(.+\\.)?tumblr\\.com/.+/?", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg")));
+                // TODO 成功時はサムネイルURLを作成しimglist.Addする
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
-
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -67,19 +73,61 @@ namespace Hoehoe
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private static bool ImgUr_CreateImage(CreateImageArgs args)
+        private static bool Tumblr_CreateImage(CreateImageArgs args)
         {
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
-            if (img == null)
+            // TODO: サムネイル画像読み込み処理を記述します
+            HttpVarious http = new HttpVarious();
+            string targetUrl = args.Url.Value;
+            string tmp = http.GetRedirectTo(targetUrl);
+            while (!targetUrl.Equals(tmp))
             {
-                return false;
+                targetUrl = tmp;
+                tmp = http.GetRedirectTo(targetUrl);
             }
 
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
-            return true;
+            Match mc = Regex.Match(targetUrl, "(?<base>http://.+?\\.tumblr\\.com/)post/(?<postID>[0-9]+)(/(?<subject>.+?)/)?", RegexOptions.IgnoreCase);
+            string apiurl = mc.Groups["base"].Value + "api/read?id=" + mc.Groups["postID"].Value;
+            string src = string.Empty;
+            string imgurl = null;
+            if (http.GetData(apiurl, null, ref src, 0, ref args.Errmsg, string.Empty))
+            {
+                XmlDocument xdoc = new XmlDocument();
+                try
+                {
+                    xdoc.LoadXml(src);
+                    string type = xdoc.SelectSingleNode("/tumblr/posts/post").Attributes["type"].Value;
+                    if (type == "photo")
+                    {
+                        imgurl = xdoc.SelectSingleNode("/tumblr/posts/post/photo-url").InnerText;
+                    }
+                    else
+                    {
+                        args.Errmsg = "PostType:" + type;
+                        imgurl = string.Empty;
+                    }
+                }
+                catch (Exception)
+                {
+                    imgurl = string.Empty;
+                }
+
+                if (!string.IsNullOrEmpty(imgurl))
+                {
+                    Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
+                    if (img == null)
+                    {
+                        return false;
+                    }
+
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        #endregion "ImgUr"
+        #endregion "Tumblr"
     }
 }

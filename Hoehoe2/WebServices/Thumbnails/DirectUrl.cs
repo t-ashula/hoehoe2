@@ -79,6 +79,5 @@ namespace Hoehoe
         }
 
         #endregion "画像直リンク"
-
     }
 }

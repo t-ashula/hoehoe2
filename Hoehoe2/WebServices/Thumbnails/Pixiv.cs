@@ -1,4 +1,4 @@
-﻿// Hoehoe - Client of Twitter
+// Hoehoe - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
 //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
@@ -32,7 +32,7 @@ namespace Hoehoe
 
     public partial class Thumbnail
     {
-        #region "ImgUr"
+        #region "Pixiv"
 
         /// <summary>
         /// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
@@ -43,12 +43,19 @@ namespace Hoehoe
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-        private static bool ImgUr_GetUrl(GetUrlArgs args)
+        private static bool Pixiv_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
+            // 参考: http://tail.s68.xrea.com/blog/2009/02/pixivflash.html Pixivの画像をFlashとかで取得する方法など:しっぽのブログ
+            // ユーザー向けの画像ページ http://www.pixiv.net/member_illust.php?mode=medium&illust_id=[ID番号]
+            // 非ログインユーザー向けの画像ページ http://www.pixiv.net/index.php?mode=medium&illust_id=[ID番号]
+            // サムネイルURL http://img[サーバー番号].pixiv.net/img/[ユーザー名]/[サムネイルID]_s.[拡張子]
+            // サムネイルURLは画像ページから抽出する
+            // TODO URL判定処理を記述
+            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg")));
+                // TODO 成功時はサムネイルURLを作成しimglist.Addする
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url.Replace("amp;", string.Empty), mc.Value));
                 return true;
             }
 
@@ -67,19 +74,47 @@ namespace Hoehoe
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private static bool ImgUr_CreateImage(CreateImageArgs args)
+        private static bool Pixiv_CreateImage(CreateImageArgs args)
         {
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
-            if (img == null)
+            // illustIDをキャプチャ
+            Match mc = Regex.Match(args.Url.Value, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
+            if (mc.Groups["tag"].Value == "R-18" || mc.Groups["tag"].Value == "R-18G")
             {
+                args.Errmsg = "NotSupported";
                 return false;
             }
 
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
-            return true;
+            HttpVarious http = new HttpVarious();
+            string src = string.Empty;
+            if (http.GetData(Regex.Replace(mc.Groups[0].Value, "amp;", string.Empty), null, ref src, 0, ref args.Errmsg, string.Empty))
+            {
+                Match mc2 = Regex.Match(src, mc.Result("http://img([0-9]+)\\.pixiv\\.net/img/.+/${illustId}_[ms]\\.([a-zA-Z]+)"));
+                if (mc2.Success)
+                {
+                    Image img = http.GetImage(mc2.Value, args.Url.Value, 0, ref args.Errmsg);
+                    if (img == null)
+                    {
+                        return false;
+                    }
+
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
+                    return true;
+                }
+
+                if (Regex.Match(src, "<span class='error'>ログインしてください</span>").Success)
+                {
+                    args.Errmsg = "NotSupported";
+                }
+                else
+                {
+                    args.Errmsg = "Pattern NotFound";
+                }
+            }
+
+            return false;
         }
 
-        #endregion "ImgUr"
+        #endregion "Pixiv"
     }
 }

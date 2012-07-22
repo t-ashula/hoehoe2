@@ -1,4 +1,4 @@
-﻿// Hoehoe - Client of Twitter
+// Hoehoe - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
 //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
@@ -26,13 +26,14 @@
 
 namespace Hoehoe
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
     {
-        #region "ImgUr"
+        #region "Twitter Geo"
 
         /// <summary>
         /// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
@@ -43,12 +44,13 @@ namespace Hoehoe
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-        private static bool ImgUr_GetUrl(GetUrlArgs args)
+        private static bool TwitterGeo_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            // TODO URL判定処理を記述
+            if (args.GeoInfo != null && (args.GeoInfo.Latitude != 0 || args.GeoInfo.Longitude != 0))
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg")));
+                string url = (new Google()).CreateGoogleStaticMapsUri(args.GeoInfo);
+                args.ImgList.Add(new KeyValuePair<string, string>(url, url));
                 return true;
             }
 
@@ -67,7 +69,7 @@ namespace Hoehoe
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private static bool ImgUr_CreateImage(CreateImageArgs args)
+        private static bool TwitterGeo_CreateImage(CreateImageArgs args)
         {
             Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
@@ -75,11 +77,31 @@ namespace Hoehoe
                 return false;
             }
 
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
+            // 成功した場合はURLに対応する画像、ツールチップテキストを登録
+            string url = args.Url.Value;
+            try
+            {
+                // URLをStaticMapAPIから通常のURLへ変換
+                // 仕様：ズーム率、サムネイルサイズの設定は無視する
+                // 参考：http://imakoko.didit.jp/imakoko_html/memo/parameters_google.html
+                // サンプル
+                // static版 http://maps.google.com/maps/api/staticmap?center=35.16959869,136.93813205&size=300x300&zoom=15&markers=35.16959869,136.93813205&sensor=false
+                // 通常URL  http://maps.google.com/maps?ll=35.16959869,136.93813205&size=300x300&zoom=15&markers=35.16959869,136.93813205&sensor=false
+                url = url.Replace("/maps/api/staticmap?center=", "?ll=");
+                url = url.Replace("&markers=", "&q=");
+                url = Regex.Replace(url, "&size=\\d+x\\d+&zoom=\\d+", string.Empty);
+                url = url.Replace("&sensor=false", string.Empty);
+            }
+            catch (Exception)
+            {
+                url = args.Url.Value;
+            }
+
+            args.Pics.Add(new KeyValuePair<string, Image>(url, img));
+            args.TooltipText.Add(new KeyValuePair<string, string>(url, string.Empty));
             return true;
         }
 
-        #endregion "ImgUr"
+        #endregion "Twitter Geo"
     }
 }

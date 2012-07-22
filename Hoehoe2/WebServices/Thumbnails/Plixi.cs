@@ -1,4 +1,4 @@
-﻿// Hoehoe - Client of Twitter
+// Hoehoe - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
 //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
@@ -32,7 +32,7 @@ namespace Hoehoe
 
     public partial class Thumbnail
     {
-        #region "ImgUr"
+        #region "Plixi(TweetPhoto)"
 
         /// <summary>
         /// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
@@ -43,12 +43,15 @@ namespace Hoehoe
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-        private static bool ImgUr_GetUrl(GetUrlArgs args)
+        private static bool Plixi_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
+            // TODO URL判定処理を記述
+            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^(http://tweetphoto\\.com/[0-9]+|http://pic\\.gd/[a-z0-9]+|http://(lockerz|plixi)\\.com/[ps]/[0-9]+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg")));
+                // TODO 成功時はサムネイルURLを作成しimglist.Addする
+                const string Api = "http://api.plixi.com/api/tpapi.svc/imagefromurl?size=thumbnail&url=";
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, Api + (string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended)));
                 return true;
             }
 
@@ -67,19 +70,42 @@ namespace Hoehoe
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private static bool ImgUr_CreateImage(CreateImageArgs args)
+        private static bool Plixi_CreateImage(CreateImageArgs args)
         {
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
+            // TODO: サムネイル画像読み込み処理を記述します
+            string referer = string.Empty;
+            if (args.Url.Key.Contains("t.co"))
+            {
+                if (args.Url.Value.Contains("tweetphoto.com"))
+                {
+                    referer = "http://tweetphoto.com";
+                }
+                else if (args.Url.Value.Contains("http://lockerz.com"))
+                {
+                    referer = "http://lockerz.com";
+                }
+                else
+                {
+                    referer = "http://plixi.com";
+                }
+            }
+            else
+            {
+                referer = args.Url.Key;
+            }
+
+            Image img = (new HttpVarious()).GetImage(args.Url.Value, referer, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
 
+            // 成功した場合はURLに対応する画像、ツールチップテキストを登録
             args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
             args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
             return true;
         }
 
-        #endregion "ImgUr"
+        #endregion "Plixi(TweetPhoto)"
     }
 }

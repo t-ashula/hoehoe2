@@ -1,4 +1,4 @@
-﻿// Hoehoe - Client of Twitter
+// Hoehoe - Client of Twitter
 // Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
 //           (c) 2008-2011 Moz (@syo68k)
 //           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
@@ -32,7 +32,7 @@ namespace Hoehoe
 
     public partial class Thumbnail
     {
-        #region "ImgUr"
+        #region "Piapro"
 
         /// <summary>
         /// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
@@ -43,16 +43,20 @@ namespace Hoehoe
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-        private static bool ImgUr_GetUrl(GetUrlArgs args)
+        private static bool Piapro_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
+            // TODO URL判定処理を記述
+            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg")));
+                // TODO 成功時はサムネイルURLを作成しimglist.Addする
+                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
-
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -67,19 +71,40 @@ namespace Hoehoe
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private static bool ImgUr_CreateImage(CreateImageArgs args)
+        private static bool Piapro_CreateImage(CreateImageArgs args)
         {
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
-            if (img == null)
+            // TODO: サムネイル画像読み込み処理を記述します
+            HttpVarious http = new HttpVarious();
+            Match mc = Regex.Match(args.Url.Value, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
+            if (mc.Success)
             {
-                return false;
+                string src = string.Empty;
+                if (http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, string.Empty))
+                {
+                    Match mc2 = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<big_img>http://c1\\.piapro\\.jp/timg/[0-9a-z]+_\\d{14}_0500_0500\\.(?:jpg|png|gif)?)\" />");
+                    if (mc2.Success)
+                    {
+                        // 各画像には120x120のサムネイルがある（多分）ので、URLを置き換える。元々ページに埋め込まれている画像は500x500
+                        Regex r = new Regex("_\\d{4}_\\d{4}");
+                        string minImgUrl = r.Replace(mc2.Groups["big_img"].Value, "_0120_0120");
+                        Image img = http.GetImage(minImgUrl, args.Url.Key, 0, ref args.Errmsg);
+                        if (img == null)
+                        {
+                            return false;
+                        }
+
+                        args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                        args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
+                        return true;
+                    }
+
+                    args.Errmsg = "Pattern NotFound";
+                }
             }
 
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
-            return true;
+            return false;
         }
 
-        #endregion "ImgUr"
+        #endregion "Piapro"
     }
 }
