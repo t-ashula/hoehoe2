@@ -45,6 +45,8 @@ namespace Hoehoe
     {
         #region private fields
 
+        private static int accountCheckErrorCount;
+
         /// <summary>
         /// TODO: hoehoe webpage
         /// </summary>
@@ -56,7 +58,6 @@ namespace Hoehoe
         private const string ApplicationShortcutKeyHelpWebPageUrl = "http://sourceforge.jp/projects/tween/wiki/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E3%82%AD%E3%83%BC";
 
         private readonly string[] TwitterSearchLangs = { "ja", "en", "ar", "da", "nl", "fa", "fi", "fr", "de", "hu", "is", "it", "no", "pl", "pt", "ru", "es", "sv", "th" };
-        private static int accountCheckErrorCount;
 
         // ロック用
         private readonly object syncObject = new object();
@@ -486,7 +487,7 @@ namespace Hoehoe
             cmbLang.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbLang.TabStop = false;
             cmbLang.Items.Add(string.Empty);
-            cmbLang.Items.AddRange(TwitterSearchLangs);
+            cmbLang.Items.AddRange(this.TwitterSearchLangs);
             if (this.statuses.ContainsTab(tabName))
             {
                 cmbLang.Text = this.statuses.Tabs[tabName].SearchLang;
@@ -511,8 +512,7 @@ namespace Hoehoe
         private DetailsListView CreateDetailListView(string tabName, bool startup)
         {
             this.InitColumnText();
-            // アイコン, ニックネーム, 本文, 日付, ユーザID, 未読, マーク＆プロテクト, ソース
-            var colhds = new ColumnHeader[8];
+            var colhds = new ColumnHeader[8]; // アイコン, ニックネーム, 本文, 日付, ユーザID, 未読, マーク＆プロテクト, ソース
             var widths = new int[] { 48, 80, 300, 50, 50, 16, 16, 50 };
             for (var i = 0; i < colhds.Length; ++i)
             {
@@ -684,7 +684,7 @@ namespace Hoehoe
             }
 
             this.ListTab.Controls.Add(tabPage);
-            var listCustom = CreateDetailListView(tabName, startup);
+            var listCustom = this.CreateDetailListView(tabName, startup);
             listCustom.SelectedIndexChanged += this.MyList_SelectedIndexChanged;
             listCustom.MouseDoubleClick += this.MyList_MouseDoubleClick;
             listCustom.ColumnClick += this.MyList_ColumnClick;
@@ -710,7 +710,7 @@ namespace Hoehoe
             Panel pnl = null;
             if (tabType == TabUsageType.PublicSearch)
             {
-                pnl = CreateSearchPanel(tabName);
+                pnl = this.CreateSearchPanel(tabName);
                 tabPage.Controls.Add(pnl);
             }
 
@@ -939,7 +939,7 @@ namespace Hoehoe
         {
             // タブ名変更
             string newTabText = tabName;
-            if (!TryUserInputText(ref newTabText))
+            if (!this.TryUserInputText(ref newTabText))
             {
                 return false;
             }

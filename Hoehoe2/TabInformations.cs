@@ -926,7 +926,7 @@ namespace Hoehoe
             var length = endIndex - startIndex + 1;
             var posts = new PostClass[length];
             var tab = this.Tabs[tabName];
-            var postss = (tab.IsInnerStorageTabType) ? tab.Posts : this.statuses;
+            var postss = tab.IsInnerStorageTabType ? tab.Posts : this.statuses;
             for (var i = 0; i < length; ++i)
             {
                 posts[i] = postss[tab.GetId(startIndex + i)];
@@ -1386,8 +1386,8 @@ namespace Hoehoe
             // 最古未読が設定されていて、既読の場合（1発言以上存在）
             try
             {
-                var posts = tab.IsInnerStorageTabType ? tab.Posts : this.statuses;
                 // 次の未読探索
+                var posts = tab.IsInnerStorageTabType ? tab.Posts : this.statuses; 
                 if (tab.OldestUnreadId > -1 && posts.ContainsKey(tab.OldestUnreadId)
                     && posts[tab.OldestUnreadId].IsRead && this.sorter.Mode == IdComparerClass.ComparerMode.Id)
                 {

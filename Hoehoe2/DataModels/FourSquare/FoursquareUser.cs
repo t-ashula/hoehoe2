@@ -32,18 +32,18 @@ namespace Hoehoe.DataModels.FourSquare
     public class FoursquareUser
     {
         [DataMember(Name = "id")]
-        public int Id;
+        public int Id { get; set; }
 
         [DataMember(Name = "firstName")]
-        public string FirstName;
+        public string FirstName { get; set; }
 
         [DataMember(Name = "photo")]
-        public string Photo;
+        public string Photo { get; set; }
 
         [DataMember(Name = "gender")]
-        public string Gender;
+        public string Gender { get; set; }
 
         [DataMember(Name = "homeCity")]
-        public string HomeCity;
+        public string HomeCity { get; set; }
     }
 }

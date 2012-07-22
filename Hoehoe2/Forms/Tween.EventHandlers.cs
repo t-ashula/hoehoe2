@@ -3405,7 +3405,7 @@ namespace Hoehoe
             Color foreColor;
             if (e.Item.Selected)
             {
-                foreColor = (((Control)sender).Focused) ? this.brsHighLightText.Color : this.brsForeColorUnread.Color;
+                foreColor = ((Control)sender).Focused ? this.brsHighLightText.Color : this.brsForeColorUnread.Color;
             }
             else
             {

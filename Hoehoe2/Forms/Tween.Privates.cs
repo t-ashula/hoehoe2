@@ -176,6 +176,7 @@ namespace Hoehoe
                     }
                 }
             }
+
             this.ClearReplyToInfo();
         }
 
@@ -273,7 +274,7 @@ namespace Hoehoe
         private void InitializeTraceFrag()
         {
 #if DEBUG
-            TraceOutToolStripMenuItem.Checked = true;
+            this.TraceOutToolStripMenuItem.Checked = true;
             MyCommon.TraceFlag = true;
 #endif
             if (!MyCommon.FileVersion.EndsWith("0"))
@@ -6985,6 +6986,7 @@ namespace Hoehoe
             {
                 this.OpenUriAsync(string.Format(R.SearchItem2Url, HttpUtility.UrlEncode(this.StatusText.Text.Substring(7))));
             }
+
             this.ClearReplyToInfo();
             this.StatusText.Text = string.Empty;
             this.postHistory.Add(new PostingStatus());
@@ -8029,7 +8031,6 @@ namespace Hoehoe
             this.waitLists = true;
             this.GetTimeline(WorkerType.List);
             int i = 0, j = 0;
-            /**/
             int stth = 12 * 1000;
             int sl = 100;
             while (this.IsInitialRead() && !MyCommon.IsEnding)
@@ -8054,7 +8055,7 @@ namespace Hoehoe
                     i = 0;
                 }
             }
-            /**/
+
             if (MyCommon.IsEnding)
             {
                 return;
@@ -8191,35 +8192,46 @@ namespace Hoehoe
 
         private string GetDetailHtmlFormatHeader(bool useMonospace)
         {
-            var ele = GetMonoEle(useMonospace);
-            var ss = new Dictionary<string, Dictionary<string, string>>(){
-                { "a:link, a:visited, a:active, a:hover", new Dictionary<string, string>(){
-                    { "color", this.clrDetailLink.AsCssRgb() } }
+            var ele = this.GetMonoEle(useMonospace);
+            var ss = new Dictionary<string, Dictionary<string, string>>()
+            {
+                { "a:link, a:visited, a:active, a:hover", new Dictionary<string, string>()
+                    {
+                        { "color", this.clrDetailLink.AsCssRgb() } 
+                    }
                 },
-                { "body", new Dictionary<string, string>(){
-                    { "margin", "0px" },
-                    { "background-color", this.clrDetailBackcolor.AsCssRgb() } }
+                { "body", new Dictionary<string, string>()
+                    {
+                        { "margin", "0px" },
+                        { "background-color", this.clrDetailBackcolor.AsCssRgb() } 
+                    }
                 },
-                { "body > p", new Dictionary<string, string>(){
-                    { "vertical-align", "text-bottom" } }
+                { "body > p", new Dictionary<string, string>()
+                    {
+                        { "vertical-align", "text-bottom" } 
+                    }
                 },
-                { ele, new Dictionary<string, string>(){
-                    { "margin", "0" },
-                    { "word-wrap", "break-word" },
-                    { "font-family", string.Format("\"{0}\", sans-serif;", this.fntDetail.Name) },
-                    { "font-size", string.Format("{0}pt", this.fntDetail.Size) },
-                    { "color", this.clrDetail.AsCssRgb() } }
+                { ele, new Dictionary<string, string>()
+                    {
+                        { "margin", "0" },
+                        { "word-wrap", "break-word" },
+                        { "font-family", string.Format("\"{0}\", sans-serif;", this.fntDetail.Name) },
+                        { "font-size", string.Format("{0}pt", this.fntDetail.Size) },
+                        { "color", this.clrDetail.AsCssRgb() } 
+                    }
                 }
             };
 
-            return "<html><head><meta http-equiv=\"X-UA-Compatible\" content=\"IE=10;IE=9;IE=8\"/><style type=\"text/css\">"
-                + string.Join("", ss.Select(sel => string.Format("{0}{{{1}}}", sel.Key, string.Join("", sel.Value.Select(ps => string.Format("{0}: {1};", ps.Key, ps.Value))))))
-                + "</style></head><body>" + "<" + ele + ">";
+            return "<html><head><meta http-equiv=\"X-UA-Compatible\" content=\"IE=10;IE=9;IE=8\"/>"
+                + "<style type=\"text/css\">"
+                + string.Join(string.Empty, ss.Select(sel => string.Format("{0}{{{1}}}", sel.Key, string.Join(string.Empty, sel.Value.Select(ps => string.Format("{0}: {1};", ps.Key, ps.Value))))))
+                + "</style>"
+                + "</head><body>" + "<" + ele + ">";
         }
 
         private string GetDetailHtmlFormatFooter(bool useMonospace)
         {
-            return string.Format("</{0}></body></html>", GetMonoEle(useMonospace));
+            return string.Format("</{0}></body></html>", this.GetMonoEle(useMonospace));
         }
 
         private string GetMonoEle(bool useMonospace)

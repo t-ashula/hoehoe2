@@ -148,32 +148,32 @@ namespace Hoehoe
 
         private void ButtonNew_Click(object sender, EventArgs e)
         {
-            ButtonNew_ClickExtracted();
+            this.ButtonNew_ClickExtracted();
         }
 
         private void ButtonEdit_Click(object sender, EventArgs e)
         {
-            ButtonEdit_ClickExtracted();
+            this.ButtonEdit_ClickExtracted();
         }
 
         private void ButtonDelete_Click(object sender, EventArgs e)
         {
-            ButtonDelete_ClickExtracted();
+            this.ButtonDelete_ClickExtracted();
         }
 
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
-            ButtonCancel_ClickExtracted();
+            this.ButtonCancel_ClickExtracted();
         }
 
         private void RadioAND_CheckedChanged(object sender, EventArgs e)
         {
-            RadioAND_CheckedChangedExtracted(this.RadioAND.Checked);
+            this.RadioAND_CheckedChangedExtracted(this.RadioAND.Checked);
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)
         {
-            ButtonOK_ClickExtracted();
+            this.ButtonOK_ClickExtracted();
         }
 
         private void ListFilters_SelectedIndexChanged(object sender, EventArgs e)
@@ -289,47 +289,47 @@ namespace Hoehoe
 
         private void ButtonAddTab_Click(object sender, EventArgs e)
         {
-            ButtonAddTab_ClickExtracted();
+            this.ButtonAddTab_ClickExtracted();
         }
 
         private void ButtonDeleteTab_Click(object sender, EventArgs e)
         {
-            ButtonDeleteTab_ClickExtracted();
+            this.ButtonDeleteTab_ClickExtracted();
         }
 
         private void ButtonRenameTab_Click(object sender, EventArgs e)
         {
-            ButtonRenameTab_ClickExtracted();
+            this.ButtonRenameTab_ClickExtracted();
         }
 
         private void CheckManageRead_CheckedChanged(object sender, EventArgs e)
         {
-            CheckManageRead_CheckedChangedExtracted();
+            this.CheckManageRead_CheckedChangedExtracted();
         }
 
         private void ButtonUp_Click(object sender, EventArgs e)
         {
-            ButtonUp_ClickExtracted();
+            this.ButtonUp_ClickExtracted();
         }
 
         private void ButtonDown_Click(object sender, EventArgs e)
         {
-            ButtonDown_ClickExtracted();
+            this.ButtonDown_ClickExtracted();
         }
 
         private void CheckNotifyNew_CheckedChanged(object sender, EventArgs e)
         {
-            CheckNotifyNew_CheckedChangedExtracted();
+            this.CheckNotifyNew_CheckedChangedExtracted();
         }
 
         private void ComboSound_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboSound_SelectedIndexChangedExtracted();
+            this.ComboSound_SelectedIndexChangedExtracted();
         }
 
         private void RadioExAnd_CheckedChanged(object sender, EventArgs e)
         {
-            RadioExAnd_CheckedChangedExtracted(this.RadioExAnd.Checked);
+            this.RadioExAnd_CheckedChangedExtracted(this.RadioExAnd.Checked);
         }
 
         private void OptMove_CheckedChanged(object sender, EventArgs e)
@@ -339,22 +339,22 @@ namespace Hoehoe
 
         private void ButtonRuleUp_Click(object sender, EventArgs e)
         {
-            ButtonRuleUp_ClickExtracted();
+            this.ButtonRuleUp_ClickExtracted();
         }
 
         private void ButtonRuleDown_Click(object sender, EventArgs e)
         {
-            ButtonRuleDown_ClickExtracted();
+            this.ButtonRuleDown_ClickExtracted();
         }
 
         private void ButtonRuleCopy_Click(object sender, EventArgs e)
         {
-            ButtonRuleCopy_ClickExtracted();
+            this.ButtonRuleCopy_ClickExtracted();
         }
 
         private void ButtonRuleMove_Click(object sender, EventArgs e)
         {
-            ButtonRuleMove_ClickExtracted();
+            this.ButtonRuleMove_ClickExtracted();
         }
 
         private void FilterTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -490,27 +490,35 @@ namespace Hoehoe
                 case TabUsageType.Home:
                     this.LabelTabType.Text = R.TabUsageTypeName_Home;
                     break;
+
                 case TabUsageType.Mentions:
                     this.LabelTabType.Text = R.TabUsageTypeName_Mentions;
                     break;
+
                 case TabUsageType.DirectMessage:
                     this.LabelTabType.Text = R.TabUsageTypeName_DirectMessage;
                     break;
+
                 case TabUsageType.Favorites:
                     this.LabelTabType.Text = R.TabUsageTypeName_Favorites;
                     break;
+
                 case TabUsageType.UserDefined:
                     this.LabelTabType.Text = R.TabUsageTypeName_UserDefined;
                     break;
+
                 case TabUsageType.PublicSearch:
                     this.LabelTabType.Text = R.TabUsageTypeName_PublicSearch;
                     break;
+
                 case TabUsageType.Lists:
                     this.LabelTabType.Text = R.TabUsageTypeName_Lists;
                     break;
+
                 case TabUsageType.Related:
                     this.LabelTabType.Text = R.TabUsageTypeName_Related;
                     break;
+
                 case TabUsageType.UserTimeline:
                     this.LabelTabType.Text = R.TabUsageTypeName_UserTimeline;
                     break;
@@ -961,7 +969,7 @@ namespace Hoehoe
 
             this.editMode = EDITMODE.Edit;
         }
-        
+
         private void ButtonDelete_ClickExtracted()
         {
             if (this.ListFilters.SelectedIndex == -1)
@@ -994,6 +1002,7 @@ namespace Hoehoe
                 }
             }
         }
+
         private void ButtonCancel_ClickExtracted()
         {
             this.ListTabs.Enabled = true;
@@ -1023,7 +1032,6 @@ namespace Hoehoe
             }
         }
 
- 
         private void RadioAND_CheckedChangedExtracted(bool flg)
         {
             this.UID.Enabled = flg;
@@ -1210,6 +1218,7 @@ namespace Hoehoe
                 }
             }
         }
+
         private void ButtonDeleteTab_ClickExtracted()
         {
             if (this.ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty((string)this.ListTabs.SelectedItem))
@@ -1230,6 +1239,7 @@ namespace Hoehoe
                 }
             }
         }
+
         private void ButtonRenameTab_ClickExtracted()
         {
             if (this.ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty((string)this.ListTabs.SelectedItem))
@@ -1245,6 +1255,7 @@ namespace Hoehoe
                 }
             }
         }
+
         private void CheckManageRead_CheckedChangedExtracted()
         {
             if (this.ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(this.ListTabs.SelectedItem.ToString()))
@@ -1252,6 +1263,7 @@ namespace Hoehoe
                 ((TweenMain)this.Owner).ChangeTabUnreadManage(this.ListTabs.SelectedItem.ToString(), this.CheckManageRead.Checked);
             }
         }
+
         private void ButtonUp_ClickExtracted()
         {
             if (this.ListTabs.SelectedIndex > 0 && !string.IsNullOrEmpty(this.ListTabs.SelectedItem.ToString()))
@@ -1264,6 +1276,7 @@ namespace Hoehoe
                 this.ListTabs.Items.Insert(idx, tgtName);
             }
         }
+
         private void ButtonDown_ClickExtracted()
         {
             if (this.ListTabs.SelectedIndex > -1 && this.ListTabs.SelectedIndex < this.ListTabs.Items.Count - 1 && !string.IsNullOrEmpty(this.ListTabs.SelectedItem.ToString()))
@@ -1276,7 +1289,7 @@ namespace Hoehoe
                 this.ListTabs.Items.Insert(idx, tgtName);
             }
         }
- 
+
         private void CheckNotifyNew_CheckedChangedExtracted()
         {
             if (this.ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(this.ListTabs.SelectedItem.ToString()))
@@ -1284,6 +1297,7 @@ namespace Hoehoe
                 this.sts.Tabs[this.ListTabs.SelectedItem.ToString()].Notify = this.CheckNotifyNew.Checked;
             }
         }
+
         private void ComboSound_SelectedIndexChangedExtracted()
         {
             if (this.ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(this.ListTabs.SelectedItem.ToString()))
@@ -1297,13 +1311,14 @@ namespace Hoehoe
                 this.sts.Tabs[this.ListTabs.SelectedItem.ToString()].SoundFile = filename;
             }
         }
- 
+
         private void RadioExAnd_CheckedChangedExtracted(bool flg)
         {
             this.ExUID.Enabled = flg;
             this.ExMSG1.Enabled = flg;
             this.ExMSG2.Enabled = !flg;
         }
+
         private void ButtonRuleUp_ClickExtracted()
         {
             if (this.ListTabs.SelectedIndex > -1 && this.ListFilters.SelectedItem != null && this.ListFilters.SelectedIndex > 0)
@@ -1333,6 +1348,7 @@ namespace Hoehoe
                 this.sts.Tabs[tabname].Filters.Insert(idx, target);
             }
         }
+
         private void ButtonRuleCopy_ClickExtracted()
         {
             if (this.ListTabs.SelectedIndex > -1 && this.ListFilters.SelectedItem != null)
@@ -1369,6 +1385,7 @@ namespace Hoehoe
                 this.SetFilters(tabname);
             }
         }
+
         private void ButtonRuleMove_ClickExtracted()
         {
             if (this.ListTabs.SelectedIndex > -1 && this.ListFilters.SelectedItem != null)
@@ -1420,6 +1437,7 @@ namespace Hoehoe
                 this.SetFilters(tabname);
             }
         }
+
         #endregion private methods
     }
 }

@@ -171,7 +171,7 @@ namespace Hoehoe
                 this.configurations.UserstreamStartup = this.StartupUserstreamCheck.Checked;
 
                 var arg = new IntervalChangedEventArgs();
-                bool isIntervalChanged = SaveIntarvals(arg);
+                bool isIntervalChanged = this.SaveIntarvals(arg);
                 if (isIntervalChanged)
                 {
                     if (this.IntervalChanged != null)
@@ -336,6 +336,7 @@ namespace Hoehoe
                     this.configurations.EventNotifyFlag = m;
                     this.configurations.IsMyEventNotifyFlag = i;
                 }
+
                 this.configurations.ForceEventNotify = this.CheckForceEventNotify.Checked;
                 this.configurations.FavEventUnread = this.CheckFavEventUnread.Checked;
                 this.configurations.TranslateLanguage = (new Bing()).GetLanguageEnumFromIndex(this.ComboBoxTranslateLanguage.SelectedIndex);
@@ -806,7 +807,7 @@ namespace Hoehoe
 
         private void UserstreamPeriod_Validating(object sender, CancelEventArgs e)
         {
-            if (!userStreamPeriodValidator.IsValidPeriod(this.UserstreamPeriod.Text))
+            if (!this.userStreamPeriodValidator.IsValidPeriod(this.UserstreamPeriod.Text))
             {
                 e.Cancel = true;
                 return;
@@ -817,7 +818,7 @@ namespace Hoehoe
 
         private void TimelinePeriod_Validating(object sender, CancelEventArgs e)
         {
-            if (!timelilePeriodValidator.IsValidPeriod(this.TimelinePeriod.Text))
+            if (!this.timelilePeriodValidator.IsValidPeriod(this.TimelinePeriod.Text))
             {
                 e.Cancel = true;
                 return;
@@ -828,7 +829,7 @@ namespace Hoehoe
 
         private void ReplyPeriod_Validating(object sender, CancelEventArgs e)
         {
-            if (!timelilePeriodValidator.IsValidPeriod(this.ReplyPeriod.Text))
+            if (!this.timelilePeriodValidator.IsValidPeriod(this.ReplyPeriod.Text))
             {
                 e.Cancel = true;
                 return;
@@ -839,7 +840,7 @@ namespace Hoehoe
 
         private void DMPeriod_Validating(object sender, CancelEventArgs e)
         {
-            if (!dmessagesPeriodValidator.IsValidPeriod(this.DMPeriod.Text))
+            if (!this.dmessagesPeriodValidator.IsValidPeriod(this.DMPeriod.Text))
             {
                 e.Cancel = true;
                 return;
@@ -850,7 +851,7 @@ namespace Hoehoe
 
         private void PubSearchPeriod_Validating(object sender, CancelEventArgs e)
         {
-            if (!publicSearchPeriodValidator.IsValidPeriod(this.PubSearchPeriod.Text))
+            if (!this.publicSearchPeriodValidator.IsValidPeriod(this.PubSearchPeriod.Text))
             {
                 e.Cancel = true;
                 return;
@@ -859,7 +860,7 @@ namespace Hoehoe
 
         private void ListsPeriod_Validating(object sender, CancelEventArgs e)
         {
-            if (!dmessagesPeriodValidator.IsValidPeriod(this.ListsPeriod.Text))
+            if (!this.dmessagesPeriodValidator.IsValidPeriod(this.ListsPeriod.Text))
             {
                 e.Cancel = true;
                 return;
@@ -870,7 +871,7 @@ namespace Hoehoe
 
         private void UserTimeline_Validating(object sender, CancelEventArgs e)
         {
-            if (!dmessagesPeriodValidator.IsValidPeriod(this.UserTimelinePeriod.Text))
+            if (!this.dmessagesPeriodValidator.IsValidPeriod(this.UserTimelinePeriod.Text))
             {
                 e.Cancel = true;
                 return;
@@ -890,16 +891,16 @@ namespace Hoehoe
             switch (btn.Name)
             {
                 case "btnUnread":
-                    ChangeLabelFontAndColor(this.lblUnread);
+                    this.ChangeLabelFontAndColor(this.lblUnread);
                     break;
                 case "btnDetail":
-                    ChangeLabelFontAndColor(this.lblDetail);
+                    this.ChangeLabelFontAndColor(this.lblDetail);
                     break;
                 case "btnListFont":
-                    ChangeLabelFontAndColor(this.lblListFont);
+                    this.ChangeLabelFontAndColor(this.lblListFont);
                     break;
                 case "btnInputFont":
-                    ChangeLabelFontAndColor(this.lblInputFont);
+                    this.ChangeLabelFontAndColor(this.lblInputFont);
                     break;
             }
         }
@@ -909,25 +910,51 @@ namespace Hoehoe
             Button btn = (Button)sender;
             switch (btn.Name)
             {
-                case "btnSelf": this.ChangeLabelColor(this.lblSelf); break;
-                case "btnAtSelf": this.ChangeLabelColor(this.lblAtSelf); break;
-                case "btnTarget": this.ChangeLabelColor(this.lblTarget); break;
-                case "btnAtTarget": this.ChangeLabelColor(this.lblAtTarget); break;
-                case "btnAtFromTarget": this.ChangeLabelColor(this.lblAtFromTarget); break;
-                case "btnFav": this.ChangeLabelColor(this.lblFav, false); break;
-                case "btnOWL": this.ChangeLabelColor(this.lblOWL, false); break;
-                case "btnRetweet": this.ChangeLabelColor(this.lblRetweet, false); break;
-                case "btnInputBackcolor": this.ChangeLabelColor(this.lblInputBackcolor); break;
-                case "btnAtTo": this.ChangeLabelColor(this.lblAtTo); break;
-                case "btnListBack": this.ChangeLabelColor(this.lblListBackcolor); break;
-                case "btnDetailBack": this.ChangeLabelColor(this.lblDetailBackcolor); break;
-                case "btnDetailLink": this.ChangeLabelColor(this.lblDetailLink, false); break;
+                case "btnSelf":
+                    this.ChangeLabelColor(this.lblSelf);
+                    break;
+                case "btnAtSelf":
+                    this.ChangeLabelColor(this.lblAtSelf);
+                    break;
+                case "btnTarget":
+                    this.ChangeLabelColor(this.lblTarget);
+                    break;
+                case "btnAtTarget":
+                    this.ChangeLabelColor(this.lblAtTarget);
+                    break;
+                case "btnAtFromTarget":
+                    this.ChangeLabelColor(this.lblAtFromTarget);
+                    break;
+                case "btnFav":
+                    this.ChangeLabelColor(this.lblFav, back: false);
+                    break;
+                case "btnOWL":
+                    this.ChangeLabelColor(this.lblOWL, back: false);
+                    break;
+                case "btnRetweet":
+                    this.ChangeLabelColor(this.lblRetweet, back: false);
+                    break;
+                case "btnInputBackcolor":
+                    this.ChangeLabelColor(this.lblInputBackcolor);
+                    break;
+                case "btnAtTo":
+                    this.ChangeLabelColor(this.lblAtTo);
+                    break;
+                case "btnListBack":
+                    this.ChangeLabelColor(this.lblListBackcolor);
+                    break;
+                case "btnDetailBack":
+                    this.ChangeLabelColor(this.lblDetailBackcolor);
+                    break;
+                case "btnDetailLink":
+                    this.ChangeLabelColor(this.lblDetailLink, back: false);
+                    break;
             }
         }
 
         private void Button3_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog filedlg = new OpenFileDialog())
+            using (var filedlg = new OpenFileDialog())
             {
                 filedlg.Filter = R.Button3_ClickText1;
                 filedlg.FilterIndex = 1;
@@ -943,17 +970,17 @@ namespace Hoehoe
 
         private void RadioProxySpecified_CheckedChanged(object sender, EventArgs e)
         {
-            ChangeProxySettingControlsStatus(this.RadioProxySpecified.Checked);
+            this.ChangeProxySettingControlsStatus(this.RadioProxySpecified.Checked);
         }
 
         private void TextProxyPort_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !proxyPortNumberValidator.IsValidPeriod(this.TextProxyPort.Text);
+            e.Cancel = !this.proxyPortNumberValidator.IsValidPeriod(this.TextProxyPort.Text);
         }
 
         private void CheckOutputz_CheckedChanged(object sender, EventArgs e)
         {
-            ChangeOutputzControlsStatus(this.CheckOutputz.Checked);
+            this.ChangeOutputzControlsStatus(this.CheckOutputz.Checked);
         }
 
         private void TextBoxOutputzKey_Validating(object sender, CancelEventArgs e)
@@ -991,7 +1018,7 @@ namespace Hoehoe
 
         private void ConnectionTimeOut_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !timeoutLimitsValidator.IsValidPeriod(this.ConnectionTimeOut.Text);
+            e.Cancel = !this.timeoutLimitsValidator.IsValidPeriod(this.ConnectionTimeOut.Text);
         }
 
         private void LabelDateTimeFormatApplied_VisibleChanged(object sender, EventArgs e)
@@ -1001,18 +1028,18 @@ namespace Hoehoe
 
         private void TextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !apiCountValidator.IsValidPeriod(this.TextCountApi.Text);
+            e.Cancel = !this.apiCountValidator.IsValidPeriod(this.TextCountApi.Text);
         }
 
         private void TextCountApiReply_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !apiCountValidator.IsValidPeriod(this.TextCountApiReply.Text);
+            e.Cancel = !this.apiCountValidator.IsValidPeriod(this.TextCountApiReply.Text);
         }
 
         private void ComboBoxAutoShortUrlFirst_SelectedIndexChanged(object sender, EventArgs e)
         {
-            bool newVariable = (this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Bitly
-                || this.ComboBoxAutoShortUrlFirst.SelectedIndex == (int)UrlConverter.Jmp);
+            var selected = this.ComboBoxAutoShortUrlFirst.SelectedIndex;
+            var newVariable = selected == (int)UrlConverter.Bitly || selected == (int)UrlConverter.Jmp;
             this.Label76.Enabled = newVariable;
             this.Label77.Enabled = newVariable;
             this.TextBitlyId.Enabled = newVariable;
@@ -1112,42 +1139,42 @@ namespace Hoehoe
 
         private void HotkeyCheck_CheckedChanged(object sender, EventArgs e)
         {
-            ChangeHotkeyControlsStatus(this.HotkeyCheck.Checked);
+            this.ChangeHotkeyControlsStatus(this.HotkeyCheck.Checked);
         }
 
         private void GetMoreTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !apiCountValidator.IsValidPeriod(this.GetMoreTextCountApi.Text);
+            e.Cancel = !this.apiCountValidator.IsValidPeriod(this.GetMoreTextCountApi.Text);
         }
 
         private void UseChangeGetCount_CheckedChanged(object sender, EventArgs e)
         {
-            ChangeUseChangeGetCountControlStatus(this.UseChangeGetCount.Checked);
+            this.ChangeUseChangeGetCountControlStatus(this.UseChangeGetCount.Checked);
         }
 
         private void FirstTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !apiCountValidator.IsValidPeriod(this.FirstTextCountApi.Text);
+            e.Cancel = !this.apiCountValidator.IsValidPeriod(this.FirstTextCountApi.Text);
         }
 
         private void SearchTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !searchApiCountValidator.IsValidPeriod(this.SearchTextCountApi.Text);
+            e.Cancel = !this.searchApiCountValidator.IsValidPeriod(this.SearchTextCountApi.Text);
         }
 
         private void FavoritesTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !apiCountValidator.IsValidPeriod(this.FavoritesTextCountApi.Text);
+            e.Cancel = !this.apiCountValidator.IsValidPeriod(this.FavoritesTextCountApi.Text);
         }
 
         private void UserTimelineTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !apiCountValidator.IsValidPeriod(this.UserTimelineTextCountApi.Text);
+            e.Cancel = !this.apiCountValidator.IsValidPeriod(this.UserTimelineTextCountApi.Text);
         }
 
         private void ListTextCountApi_Validating(object sender, CancelEventArgs e)
         {
-            e.Cancel = !apiCountValidator.IsValidPeriod(this.ListTextCountApi.Text);
+            e.Cancel = !this.apiCountValidator.IsValidPeriod(this.ListTextCountApi.Text);
         }
 
         private void CheckEventNotify_CheckedChanged(object sender, EventArgs e)
@@ -1217,7 +1244,7 @@ namespace Hoehoe
                 R.DMPeriod_ValidatingText1,
                 R.DMPeriod_ValidatingText2);
             this.publicSearchPeriodValidator = new PeriodValidator(
-                i => (i == 0 || i >= 30 && i <= 6000),
+                i => (i == 0 || (i >= 30 && i <= 6000)),
                 R.PubSearchPeriod_ValidatingText1,
                 R.PubSearchPeriod_ValidatingText2);
         }
@@ -1323,7 +1350,7 @@ namespace Hoehoe
         private void ChangeLabelColor(Label lb, bool back = true)
         {
             var c = back ? lb.BackColor : lb.ForeColor;
-            if (TrySelectColor(ref c))
+            if (this.TrySelectColor(ref c))
             {
                 if (back)
                 {
@@ -1401,8 +1428,8 @@ namespace Hoehoe
         {
             // 現在の設定内容で通信
             HttpConnection.ProxyType ptype =
-                (this.RadioProxyNone.Checked) ? HttpConnection.ProxyType.None :
-                (this.RadioProxyIE.Checked) ? HttpConnection.ProxyType.IE :
+                this.RadioProxyNone.Checked ? HttpConnection.ProxyType.None :
+                this.RadioProxyIE.Checked ? HttpConnection.ProxyType.IE :
                 HttpConnection.ProxyType.Specified;
 
             string padr = this.TextProxyAddress.Text.Trim();
@@ -1432,6 +1459,7 @@ namespace Hoehoe
                     this.pin = ab.PinString;
                     return true;
                 }
+
                 return false;
             }
         }
@@ -1605,13 +1633,13 @@ namespace Hoehoe
             /// TODO: BitlyApi
             string req = "http://api.bit.ly/v3/validate";
             string content = string.Empty;
-            var param = new Dictionary<string, string>()
+            var param = new Dictionary<string, string>() 
             {
-                {"login", "tweenapi"},
-                {"apiKey", "R_c5ee0e30bdfff88723c4457cc331886b"},
-                {"x_login", id},
-                {"x_apiKey", apikey},
-                {"format", "txt"},
+                { "login", "tweenapi" }, 
+                { "apiKey", "R_c5ee0e30bdfff88723c4457cc331886b" }, 
+                { "x_login", id }, 
+                { "x_apiKey", apikey }, 
+                { "format", "txt" }
             };
 
             if (!(new HttpVarious()).PostData(req, param, ref content))
@@ -1759,13 +1787,13 @@ namespace Hoehoe
             public bool IsValidPeriod(string input)
             {
                 int t = 0;
-                if (!Int32.TryParse(input, out t))
+                if (!int.TryParse(input, out t))
                 {
                     MessageBox.Show(this.msg1);
                     return false;
                 }
 
-                if (!validator(t))
+                if (!this.validator(t))
                 {
                     MessageBox.Show(this.msg2);
                     return false;
@@ -1773,7 +1801,7 @@ namespace Hoehoe
 
                 return true;
             }
-        };
+        }
 
         #endregion inner class
     }

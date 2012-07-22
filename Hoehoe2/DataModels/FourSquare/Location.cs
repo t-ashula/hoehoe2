@@ -32,18 +32,18 @@ namespace Hoehoe.DataModels.FourSquare
     public class Location
     {
         [DataMember(Name = "address")]
-        public string Address;
+        public string Address { get; set; }
 
         [DataMember(Name = "city")]
-        public string City;
+        public string City { get; set; }
 
         [DataMember(Name = "state")]
-        public string State;
+        public string State { get; set; }
 
         [DataMember(Name = "lat")]
-        public double Latitude;
+        public double Latitude { get; set; }
 
         [DataMember(Name = "lng")]
-        public double Longitude;
+        public double Longitude { get; set; }
     }
 }
