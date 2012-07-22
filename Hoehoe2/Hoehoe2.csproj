@@ -351,7 +351,8 @@
     <Compile Include="Forms\TabsDialog.Designer.cs">
       <DependentUpon>TabsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="WebServices\Thumbnail.cs" />
+    <Compile Include="WebServices\Thumbnails\ImgUr.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnail.cs" />
     <Compile Include="Forms\ToolStripAPIGauge.cs">
       <SubType>Component</SubType>
     </Compile>
