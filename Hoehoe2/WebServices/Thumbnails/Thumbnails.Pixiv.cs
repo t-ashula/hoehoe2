@@ -55,7 +55,7 @@ namespace Hoehoe
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url.Replace("amp;", string.Empty), mc.Value));
+                args.AddThumbnailUrl(args.Url.Replace("amp;", string.Empty), mc.Value);
                 return true;
             }
 

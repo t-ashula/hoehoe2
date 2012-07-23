@@ -50,13 +50,11 @@ namespace Hoehoe
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://static.ow.ly/photos/thumb/${1}.jpg")));
+                args.AddThumbnailUrl(args.Url, mc.Result("http://static.ow.ly/photos/thumb/${1}.jpg"));
                 return true;
             }
-            else
-            {
-                return false;
-            }
+         
+            return false;
         }
 
         /// <summary>

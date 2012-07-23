@@ -473,6 +473,11 @@ namespace Hoehoe
             public List<KeyValuePair<string, string>> ImgList { get; set; }
 
             public Google.GlobalLocation GeoInfo { get; set; }
+
+            public void AddThumbnailUrl(string baseUrl, string thumbnailUrl)
+            {
+                this.ImgList.Add(new KeyValuePair<string, string>(baseUrl, thumbnailUrl));
+            }
         }
 
         private class CreateImageArgs

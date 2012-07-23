@@ -53,14 +53,14 @@ namespace Hoehoe
             Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://picplz\\.com/user/\\w+/pic/(?<longurl_ids>\\w+)/?$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
+                args.AddThumbnailUrl(args.Url, mc.Value);
                 return true;
             }
 
             mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://picplz\\.com/(?<shorturl_ids>\\w+)?$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
+                args.AddThumbnailUrl(args.Url, mc.Value);
                 return true;
             }
 

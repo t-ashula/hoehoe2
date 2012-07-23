@@ -55,7 +55,7 @@ namespace Hoehoe
                     return false;
                 }
 
-                args.ImgList.Add(new KeyValuePair<string, string>(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, string.Empty));
+                args.AddThumbnailUrl(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, string.Empty);
                 return true;
             }
 

@@ -26,8 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
-    using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
@@ -50,7 +48,7 @@ namespace Hoehoe
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://img.ly/show/thumb/${1}")));
+                args.AddThumbnailUrl(args.Url, mc.Result("http://img.ly/show/thumb/${1}"));
                 return true;
             }
 

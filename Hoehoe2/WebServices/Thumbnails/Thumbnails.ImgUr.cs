@@ -48,7 +48,7 @@ namespace Hoehoe
             Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg")));
+                args.AddThumbnailUrl(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg"));
                 return true;
             }
 

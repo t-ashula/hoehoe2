@@ -50,7 +50,7 @@ namespace Hoehoe
             Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
+                args.AddThumbnailUrl(args.Url, mc.Value);
                 return true;
             }
 

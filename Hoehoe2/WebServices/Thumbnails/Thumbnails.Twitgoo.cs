@@ -50,7 +50,7 @@ namespace Hoehoe
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://twitgoo.com/${1}/mini")));
+                args.AddThumbnailUrl(args.Url, mc.Result("http://twitgoo.com/${1}/mini"));
                 return true;
             }
 

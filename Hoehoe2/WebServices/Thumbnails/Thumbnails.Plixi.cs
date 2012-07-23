@@ -51,7 +51,7 @@ namespace Hoehoe
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 const string Api = "http://api.plixi.com/api/tpapi.svc/imagefromurl?size=thumbnail&url=";
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, Api + (string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended)));
+                args.AddThumbnailUrl(args.Url, Api + (string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
                 return true;
             }
 

@@ -50,7 +50,7 @@ namespace Hoehoe
             if (args.GeoInfo != null && (args.GeoInfo.Latitude != 0 || args.GeoInfo.Longitude != 0))
             {
                 string url = (new Google()).CreateGoogleStaticMapsUri(args.GeoInfo);
-                args.ImgList.Add(new KeyValuePair<string, string>(url, url));
+                args.AddThumbnailUrl(url, url);
                 return true;
             }
 

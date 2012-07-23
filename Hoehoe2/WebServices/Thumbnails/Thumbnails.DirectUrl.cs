@@ -44,7 +44,8 @@ namespace Hoehoe
             // 画像拡張子で終わるURL（直リンク）
             if (IsDirectLink(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended))
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
+                //args.AddThumbnailUrl((args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
+                args.AddThumbnailUrl(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended);
                 return true;
             }
 

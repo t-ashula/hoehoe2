@@ -49,7 +49,7 @@ namespace Hoehoe
             Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://p\\.twipple\\.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
+                args.AddThumbnailUrl(args.Url, mc.Value);
                 return true;
             }
 

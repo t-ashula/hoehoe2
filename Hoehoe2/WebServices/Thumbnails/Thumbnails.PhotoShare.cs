@@ -50,7 +50,7 @@ namespace Hoehoe
             if (mc.Success)
             {
                 // 成功時はサムネイルURLを作成しimglist.Addする
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://images.bcphotoshare.com/storages/${1}/thumb180.jpg")));
+                args.AddThumbnailUrl(args.Url, mc.Result("http://images.bcphotoshare.com/storages/${1}/thumb180.jpg"));
                 return true;
             }
 
@@ -60,7 +60,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    args.ImgList.Add(new KeyValuePair<string, string>(args.Url, "http://images.bcphotoshare.com/storages/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString() + "/thumb180.jpg"));
+                    args.AddThumbnailUrl(args.Url, "http://images.bcphotoshare.com/storages/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString() + "/thumb180.jpg");
                     return true;
                 }
                 catch (ArgumentOutOfRangeException)

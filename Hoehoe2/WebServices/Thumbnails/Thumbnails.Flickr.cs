@@ -48,7 +48,7 @@ namespace Hoehoe
             Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
+                args.AddThumbnailUrl(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended);
                 return true;
             }
 

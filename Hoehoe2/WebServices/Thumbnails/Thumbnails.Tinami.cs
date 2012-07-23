@@ -52,7 +52,7 @@ namespace Hoehoe
             Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.tinami\\.com/view/\\d+$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
+                args.AddThumbnailUrl(args.Url, mc.Value);
                 return true;
             }
 
@@ -62,7 +62,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    args.ImgList.Add(new KeyValuePair<string, string>(args.Url, "http://www.tinami.com/view/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString()));
+                    args.AddThumbnailUrl(args.Url, "http://www.tinami.com/view/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString());
                     return true;
                 }
                 catch (ArgumentOutOfRangeException)
