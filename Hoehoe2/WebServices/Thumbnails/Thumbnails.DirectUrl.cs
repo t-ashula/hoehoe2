@@ -26,8 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
-    using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
@@ -42,14 +40,14 @@ namespace Hoehoe
         private static bool DirectLink_GetUrl(GetUrlArgs args)
         {
             // 画像拡張子で終わるURL（直リンク）
-            if (IsDirectLink(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended))
+            var url = string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended;
+            if (!IsDirectLink(url))
             {
-                //args.AddThumbnailUrl((args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
-                args.AddThumbnailUrl(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended);
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddThumbnailUrl(args.Url, url);
+            return true;
         }
 
         /// <summary>

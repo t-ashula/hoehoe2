@@ -26,7 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
 
@@ -45,17 +44,15 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Plixi_GetUrl(GetUrlArgs args)
         {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^(http://tweetphoto\\.com/[0-9]+|http://pic\\.gd/[a-z0-9]+|http://(lockerz|plixi)\\.com/[ps]/[0-9]+)$", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^(http://tweetphoto\\.com/[0-9]+|http://pic\\.gd/[a-z0-9]+|http://(lockerz|plixi)\\.com/[ps]/[0-9]+)$", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                const string Api = "http://api.plixi.com/api/tpapi.svc/imagefromurl?size=thumbnail&url=";
-                args.AddThumbnailUrl(args.Url, Api + (string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
-                return true;
+                return false;
             }
 
-            return false;
+            const string Api = "http://api.plixi.com/api/tpapi.svc/imagefromurl?size=thumbnail&url=";
+            args.AddThumbnailUrl(args.Url, Api + (string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
+            return true;
         }
 
         /// <summary>
@@ -72,9 +69,12 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Plixi_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
             string referer = string.Empty;
-            if (args.Url.Key.Contains("t.co"))
+            if (!args.Url.Key.Contains("t.co"))
+            {
+                referer = args.Url.Key;
+            }
+            else
             {
                 if (args.Url.Value.Contains("tweetphoto.com"))
                 {
@@ -88,10 +88,6 @@ namespace Hoehoe
                 {
                     referer = "http://plixi.com";
                 }
-            }
-            else
-            {
-                referer = args.Url.Key;
             }
 
             Image img = (new HttpVarious()).GetImage(args.Url.Value, referer, 10000, ref args.Errmsg);

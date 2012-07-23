@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -49,11 +48,9 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Youtube_GetUrl(GetUrlArgs args)
         {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.youtube\\.com/watch\\?v=([\\w\\-]+)", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.youtube\\.com/watch\\?v=([\\w\\-]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 args.AddThumbnailUrl(args.Url, mc.Result("${0}"));
                 return true;
             }
@@ -61,7 +58,6 @@ namespace Hoehoe
             mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://youtu\\.be/([\\w\\-]+)", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 args.AddThumbnailUrl(args.Url, mc.Result("${0}"));
                 return true;
             }
@@ -83,25 +79,25 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Youtube_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
             // 参考
             // http://code.google.com/intl/ja/apis/youtube/2.0/developers_guide_protocol_video_entries.html
             // デベロッパー ガイド: Data API プロトコル - 単独の動画情報の取得 - YouTube の API とツール - Google Code
             // http://code.google.com/intl/ja/apis/youtube/2.0/developers_guide_protocol_understanding_video_feeds.html#Understanding_Feeds_and_Entries
             // デベロッパー ガイド: Data API プロトコル - 動画のフィードとエントリについて - YouTube の API とツール - Google Code
-            string imgurl = string.Empty;
             Match mcimg = Regex.Match(args.Url.Value, "^http://(?:(www\\.youtube\\.com)|(youtu\\.be))/(watch\\?v=)?(?<videoid>([\\w\\-]+))", RegexOptions.IgnoreCase);
-            if (mcimg.Success)
+            if (!mcimg.Success)
             {
-                imgurl = mcimg.Result("http://i.ytimg.com/vi/${videoid}/default.jpg");
+                return false;
             }
-            else
+
+            string imgurl = mcimg.Result("http://i.ytimg.com/vi/${videoid}/default.jpg");
+            if (string.IsNullOrEmpty(imgurl))
             {
                 return false;
             }
 
             string videourl = (new HttpVarious()).GetRedirectTo(args.Url.Value);
-            Match mc = Regex.Match(videourl, "^http://(?:(www\\.youtube\\.com)|(youtu\\.be))/(watch\\?v=)?(?<videoid>([\\w\\-]+))", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(videourl, "^http://(?:(www\\.youtube\\.com)|(youtu\\.be))/(watch\\?v=)?(?<videoid>([\\w\\-]+))", RegexOptions.IgnoreCase);
             if (videourl.StartsWith("http://www.youtube.com/index?ytsession="))
             {
                 videourl = args.Url.Value;
@@ -138,9 +134,7 @@ namespace Hoehoe
                     tmp = xentry["media:title"].InnerText;
                     if (!string.IsNullOrEmpty(tmp))
                     {
-                        sb.Append(R.YouTubeInfoText1);
-                        sb.Append(tmp);
-                        sb.AppendLine();
+                        sb.AppendLine(R.YouTubeInfoText1 + tmp);
                     }
                 }
                 catch (Exception)
@@ -153,7 +147,7 @@ namespace Hoehoe
                     if (int.TryParse(xentry["yt:duration"].Attributes["seconds"].Value, out sec))
                     {
                         sb.Append(R.YouTubeInfoText2);
-                        sb.AppendFormat("{0:d}:{1:d2}", sec / 60, sec % 60);
+                        sb.Append(string.Format("{0:d}:{1:d2}", sec / 60, sec % 60));
                         sb.AppendLine();
                     }
                 }
@@ -163,7 +157,7 @@ namespace Hoehoe
 
                 try
                 {
-                    DateTime tmpdate = new DateTime();
+                    DateTime tmpdate;
                     xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry", nsmgr);
                     if (DateTime.TryParse(xentry["published"].InnerText, out tmpdate))
                     {
@@ -197,10 +191,7 @@ namespace Hoehoe
                     xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry/app:control", nsmgr);
                     if (xentry != null)
                     {
-                        sb.Append(xentry["yt:state"].Attributes["name"].Value);
-                        sb.Append(":");
-                        sb.Append(xentry["yt:state"].InnerText);
-                        sb.AppendLine();
+                        sb.AppendLine(string.Format("{0}:{1}", xentry["yt:state"].Attributes["name"].Value, xentry["yt:state"].InnerText));
                     }
                 }
                 catch (Exception)
@@ -211,20 +202,15 @@ namespace Hoehoe
             {
             }
 
-            if (!string.IsNullOrEmpty(imgurl))
+            HttpVarious http = new HttpVarious();
+            Image img = http.GetImage(imgurl, videourl, 10000, ref args.Errmsg);
+            if (img == null)
             {
-                HttpVarious http = new HttpVarious();
-                Image img = http.GetImage(imgurl, videourl, 10000, ref args.Errmsg);
-                if (img == null)
-                {
-                    return false;
-                }
-
-                args.AddTooltipInfo(args.Url.Key, sb.ToString().Trim(), img); 
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddTooltipInfo(args.Url.Key, sb.ToString().Trim(), img);
+            return true;
         }
 
         #endregion "youtube"

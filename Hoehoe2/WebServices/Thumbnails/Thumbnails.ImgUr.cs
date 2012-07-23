@@ -26,8 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
-    using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
@@ -45,14 +43,14 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool ImgUr_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                args.AddThumbnailUrl(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg"));
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddThumbnailUrl(args.Url, mc.Result("http://i.imgur.com/${1}l.jpg"));
+            return true;
         }
 
         /// <summary>

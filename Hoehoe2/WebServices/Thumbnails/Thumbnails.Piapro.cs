@@ -26,7 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
 
@@ -45,16 +44,15 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Piapro_GetUrl(GetUrlArgs args)
         {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
+            if (!mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.AddThumbnailUrl(args.Url, mc.Value);
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddThumbnailUrl(args.Url, mc.Value);
+            return true;
+
         }
 
         /// <summary>
@@ -71,8 +69,7 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Piapro_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
-            Match mc = Regex.Match(args.Url.Value, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
+            var mc = Regex.Match(args.Url.Value, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
             if (!mc.Success)
             {
                 return false;
@@ -80,28 +77,29 @@ namespace Hoehoe
 
             string src = string.Empty;
             HttpVarious http = new HttpVarious();
-            if (http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, string.Empty))
+            if (!http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
-                Match mc2 = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<big_img>http://c1\\.piapro\\.jp/timg/[0-9a-z]+_\\d{14}_0500_0500\\.(?:jpg|png|gif)?)\" />");
-                if (mc2.Success)
-                {
-                    // 各画像には120x120のサムネイルがある（多分）ので、URLを置き換える。元々ページに埋め込まれている画像は500x500
-                    Regex r = new Regex("_\\d{4}_\\d{4}");
-                    string minImgUrl = r.Replace(mc2.Groups["big_img"].Value, "_0120_0120");
-                    Image img = http.GetImage(minImgUrl, args.Url.Key, 0, ref args.Errmsg);
-                    if (img == null)
-                    {
-                        return false;
-                    }
-
-                    args.AddTooltipInfo(args.Url.Key, string.Empty, img); 
-                    return true;
-                }
-
-                args.Errmsg = "Pattern NotFound";
+                return false;
             }
 
-            return false;
+            Match mc2 = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<big_img>http://c1\\.piapro\\.jp/timg/[0-9a-z]+_\\d{14}_0500_0500\\.(?:jpg|png|gif)?)\" />");
+            if (!mc2.Success)
+            {
+                args.Errmsg = "Pattern NotFound";
+                return false;
+            }
+            
+            // 各画像には120x120のサムネイルがある（多分）ので、URLを置き換える。元々ページに埋め込まれている画像は500x500
+            Regex r = new Regex("_\\d{4}_\\d{4}");
+            string minImgUrl = r.Replace(mc2.Groups["big_img"].Value, "_0120_0120");
+            Image img = http.GetImage(minImgUrl, args.Url.Key, 0, ref args.Errmsg);
+            if (img == null)
+            {
+                return false;
+            }
+            
+            args.AddTooltipInfo(args.Url.Key, string.Empty, img);
+            return true;
         }
 
         #endregion "Piapro"

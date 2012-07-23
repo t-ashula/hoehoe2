@@ -26,7 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
 
@@ -45,16 +44,14 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Instagram_GetUrl(GetUrlArgs args)
         {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://instagr.am/p/.+/", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://instagr.am/p/.+/", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.AddThumbnailUrl(args.Url, mc.Value);
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddThumbnailUrl(args.Url, mc.Value);
+            return true;
         }
 
         /// <summary>
@@ -73,25 +70,26 @@ namespace Hoehoe
         {
             string src = string.Empty;
             HttpVarious http = new HttpVarious();
-            if (http.GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, string.Empty))
+            if (!http.GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
-                Match mc = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<url>.+)\" ?/>");
-                if (mc.Success)
-                {
-                    Image img = http.GetImage(mc.Groups["url"].Value, args.Url.Key, 0, ref args.Errmsg);
-                    if (img == null)
-                    {
-                        return false;
-                    }
-
-                    args.AddTooltipInfo(args.Url.Key, string.Empty, img);
-                    return true;
-                }
-
-                args.Errmsg = "Pattern NotFound";
+                return false;
             }
 
-            return false;
+            var mc = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<url>.+)\" ?/>");
+            if (!mc.Success)
+            {
+                args.Errmsg = "Pattern NotFound";
+                return false;
+            }
+
+            var img = http.GetImage(mc.Groups["url"].Value, args.Url.Key, 0, ref args.Errmsg);
+            if (img == null)
+            {
+                return false;
+            }
+            
+            args.AddTooltipInfo(args.Url.Key, string.Empty, img);
+            return true;
         }
 
         #endregion "Instagram"

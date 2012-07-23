@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
 
@@ -49,7 +48,7 @@ namespace Hoehoe
             // TODO URL判定処理を記述
             if (args.GeoInfo != null && (args.GeoInfo.Latitude != 0 || args.GeoInfo.Longitude != 0))
             {
-                string url = (new Google()).CreateGoogleStaticMapsUri(args.GeoInfo);
+                var url = (new Google()).CreateGoogleStaticMapsUri(args.GeoInfo);
                 args.AddThumbnailUrl(url, url);
                 return true;
             }
@@ -71,7 +70,7 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool TwitterGeo_CreateImage(CreateImageArgs args)
         {
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
+            var img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;

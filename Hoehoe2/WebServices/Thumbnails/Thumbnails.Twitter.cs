@@ -26,8 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
-    using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
@@ -45,16 +43,14 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Twimg_GetUrl(GetUrlArgs args)
         {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^https?://p\\.twimg\\.com/.*$", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^https?://p\\.twimg\\.com/.*$", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.AddThumbnailUrl(args.Url, mc.Value);
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddThumbnailUrl(args.Url, mc.Value);
+            return true;
         }
 
         /// <summary>
@@ -71,24 +67,21 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Twimg_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
-            HttpVarious http = new HttpVarious();
             Match mc = Regex.Match(args.Url.Value, "^https?://p\\.twimg\\.com/.*$", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            if (!mc.Success)
             {
-                string src = string.Empty;
-                string contentInfo = args.Url.Value + ":thumb";
-                var img = http.GetImage(contentInfo, src, 0, ref args.Errmsg);
-                if (img == null)
-                {
-                    return false;
-                }
-
-                args.AddTooltipInfo(args.Url.Key, string.Empty, img);
-                return true;
+                return false;
             }
 
-            return false;
+            var img = new HttpVarious().GetImage(args.Url.Value + ":thumb", string.Empty, 0, ref args.Errmsg);
+            if (img == null)
+            {
+                return false;
+            }
+
+            args.AddTooltipInfo(args.Url.Key, string.Empty, img);
+            return true;
+
         }
 
         #endregion "Twitter公式"

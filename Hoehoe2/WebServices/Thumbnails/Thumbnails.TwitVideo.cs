@@ -26,8 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
-    using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
@@ -46,7 +44,7 @@ namespace Hoehoe
         private static bool TwitVideo_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://twitvideo\\.jp/(\\w+)$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://twitvideo\\.jp/(\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする

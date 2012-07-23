@@ -26,7 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
 
@@ -45,14 +44,14 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Flickr_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                args.AddThumbnailUrl(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended);
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddThumbnailUrl(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended);
+            return true;
         }
 
         /// <summary>
@@ -75,30 +74,30 @@ namespace Hoehoe
             // photostreamなど複数の画像がある場合先頭の一つのみ認識と言うことにする
             // (二つ目のキャプチャ 一つ目の画像はユーザーアイコン）
             */
-
             string src = string.Empty;
-            Match mc = Regex.Match(args.Url.Value, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
             HttpVarious http = new HttpVarious();
-            if (http.GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, string.Empty))
+            if (!http.GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
-                var mc2 = Regex.Matches(src, mc.Result("http://farm[0-9]+\\.staticflickr\\.com/[0-9]+/.+?\\.([a-zA-Z]+)"));
-
-                // 二つ以上キャプチャした場合先頭の一つだけ 一つだけの場合はユーザーアイコンしか取れなかった
-                if (mc2.Count > 1)
-                {
-                    Image img = http.GetImage(mc2[1].Value, args.Url.Value, 0, ref args.Errmsg);
-                    if (img == null)
-                    {
-                        return false;
-                    }
-
-                    args.AddTooltipInfo(args.Url.Key, string.Empty, img); 
-                    return true;
-                }
-
-                args.Errmsg = "Pattern NotFound";
+                return false;
             }
 
+            var mc = Regex.Match(args.Url.Value, "^http://www.flickr.com/", RegexOptions.IgnoreCase);
+            var mc2 = Regex.Matches(src, mc.Result("http://farm[0-9]+\\.staticflickr\\.com/[0-9]+/.+?\\.([a-zA-Z]+)"));
+
+            // 二つ以上キャプチャした場合先頭の一つだけ 一つだけの場合はユーザーアイコンしか取れなかった
+            if (mc2.Count > 1)
+            {
+                var img = http.GetImage(mc2[1].Value, args.Url.Value, 0, ref args.Errmsg);
+                if (img == null)
+                {
+                    return false;
+                }
+
+                args.AddTooltipInfo(args.Url.Key, string.Empty, img);
+                return true;
+            }
+
+            args.Errmsg = "Pattern NotFound";
             return false;
         }
 

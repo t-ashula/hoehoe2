@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
     using System.Xml;
@@ -47,14 +46,14 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Photozou_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                args.AddThumbnailUrl(args.Url, mc.Value);
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddThumbnailUrl(args.Url, mc.Value);
+            return true;
         }
 
         /// <summary>
@@ -71,45 +70,47 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Photozou_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
-            HttpVarious http = new HttpVarious();
             Match mc = Regex.Match(args.Url.Value, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            if (!mc.Success)
             {
-                string src = string.Empty;
-                string show_info = mc.Result("http://api.photozou.jp/rest/photo_info?photo_id=${photoId}");
-                if (http.GetData(show_info, null, ref src, 0, ref args.Errmsg, string.Empty))
-                {
-                    XmlDocument xdoc = new XmlDocument();
-                    string thumbnailUrl = string.Empty;
-                    try
-                    {
-                        xdoc.LoadXml(src);
-                        thumbnailUrl = xdoc.SelectSingleNode("/rsp/info/photo/thumbnail_image_url").InnerText;
-                    }
-                    catch (Exception ex)
-                    {
-                        args.Errmsg = ex.Message;
-                        thumbnailUrl = string.Empty;
-                    }
-
-                    if (string.IsNullOrEmpty(thumbnailUrl))
-                    {
-                        return false;
-                    }
-
-                    Image img = http.GetImage(thumbnailUrl, args.Url.Key);
-                    if (img == null)
-                    {
-                        return false;
-                    }
-
-                    args.AddTooltipInfo(args.Url.Key, string.Empty, img); 
-                    return true;
-                }
+                return false;
             }
 
-            return false;
+            string src = string.Empty;
+            string apiUrl = mc.Result("http://api.photozou.jp/rest/photo_info?photo_id=${photoId}");
+            HttpVarious http = new HttpVarious();
+            if (!http.GetData(apiUrl, null, ref src, 0, ref args.Errmsg, string.Empty))
+            {
+                return false;
+            }
+
+            string thumbnailUrl = string.Empty;
+            try
+            {
+                var xdoc = new XmlDocument();
+                xdoc.LoadXml(src);
+                thumbnailUrl = xdoc.SelectSingleNode("/rsp/info/photo/thumbnail_image_url").InnerText;
+            }
+            catch (Exception ex)
+            {
+                args.Errmsg = ex.Message;
+                thumbnailUrl = string.Empty;
+            }
+
+            if (string.IsNullOrEmpty(thumbnailUrl))
+            {
+                return false;
+            }
+
+            Image img = http.GetImage(thumbnailUrl, args.Url.Key);
+            if (img == null)
+            {
+                return false;
+            }
+
+            args.AddTooltipInfo(args.Url.Key, string.Empty, img);
+            return true;
+
         }
 
         #endregion "フォト蔵"

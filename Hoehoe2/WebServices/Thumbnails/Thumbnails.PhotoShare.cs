@@ -27,8 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections.Generic;
-    using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
@@ -46,7 +44,7 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool PhotoShare_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(?:www\\.)?bcphotoshare\\.com/photos/\\d+/(\\d+)$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(?:www\\.)?bcphotoshare\\.com/photos/\\d+/(\\d+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // 成功時はサムネイルURLを作成しimglist.Addする
@@ -56,16 +54,18 @@ namespace Hoehoe
 
             // 短縮URL
             mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://bctiny\\.com/p(\\w+)$", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            if (!mc.Success)
             {
-                try
-                {
-                    args.AddThumbnailUrl(args.Url, "http://images.bcphotoshare.com/storages/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString() + "/thumb180.jpg");
-                    return true;
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                }
+                return false;
+            }
+
+            try
+            {
+                args.AddThumbnailUrl(args.Url, "http://images.bcphotoshare.com/storages/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString() + "/thumb180.jpg");
+                return true;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
             }
 
             return false;

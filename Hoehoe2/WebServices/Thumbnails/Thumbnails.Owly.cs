@@ -26,8 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
-    using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
@@ -45,16 +43,15 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Owly_GetUrl(GetUrlArgs args)
         {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://ow\\.ly/i/(\\w+)$", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://ow\\.ly/i/(\\w+)$", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.AddThumbnailUrl(args.Url, mc.Result("http://static.ow.ly/photos/thumb/${1}.jpg"));
-                return true;
+                return false;
             }
+
+            args.AddThumbnailUrl(args.Url, mc.Result("http://static.ow.ly/photos/thumb/${1}.jpg"));
+            return true;
          
-            return false;
         }
 
         /// <summary>

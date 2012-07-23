@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -49,14 +48,15 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Nicovideo_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?:sm|nm)?([0-9]+)(\\?.+)?$", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?:sm|nm)?([0-9]+)(\\?.+)?$", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                args.AddThumbnailUrl(args.Url, mc.Value);
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddThumbnailUrl(args.Url, mc.Value);
+            return true;
+
         }
 
         /// <summary>
@@ -73,139 +73,113 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Nicovideo_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
-            Match mc = Regex.Match(args.Url.Value, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?<id>(?:sm|nm)?([0-9]+))(\\?.+)?$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(args.Url.Value, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?<id>(?:sm|nm)?([0-9]+))(\\?.+)?$", RegexOptions.IgnoreCase);
             string apiurl = "http://www.nicovideo.jp/api/getthumbinfo/" + mc.Groups["id"].Value;
             string src = string.Empty;
             string imgurl = string.Empty;
-            if ((new HttpVarious()).GetData(apiurl, null, ref src, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
+            if (!(new HttpVarious()).GetData(apiurl, null, ref src, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
             {
-                StringBuilder sb = new StringBuilder();
-                XmlDocument xdoc = new XmlDocument();
-                try
-                {
-                    xdoc.LoadXml(src);
-                    string status = xdoc.SelectSingleNode("/nicovideo_thumb_response").Attributes["status"].Value;
-                    if (status == "ok")
-                    {
-                        imgurl = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/thumbnail_url").InnerText;
-                        string tmp = null;
-                        try
-                        {
-                            tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/title").InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
-                            {
-                                sb.Append(R.NiconicoInfoText1);
-                                sb.Append(tmp);
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        try
-                        {
-                            tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/length").InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
-                            {
-                                sb.Append(R.NiconicoInfoText2);
-                                sb.Append(tmp);
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        try
-                        {
-                            DateTime tm = new DateTime();
-                            tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/first_retrieve").InnerText;
-                            if (DateTime.TryParse(tmp, out tm))
-                            {
-                                sb.Append(R.NiconicoInfoText3);
-                                sb.Append(tm.ToString());
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        try
-                        {
-                            tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/view_counter").InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
-                            {
-                                sb.Append(R.NiconicoInfoText4);
-                                sb.Append(tmp);
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        try
-                        {
-                            tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/comment_num").InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
-                            {
-                                sb.Append(R.NiconicoInfoText5);
-                                sb.Append(tmp);
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        try
-                        {
-                            tmp = xdoc.SelectSingleNode("/nicovideo_thumb_response/thumb/mylist_counter").InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
-                            {
-                                sb.Append(R.NiconicoInfoText6);
-                                sb.Append(tmp);
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                    else if (status == "fail")
-                    {
-                        args.Errmsg = xdoc.SelectSingleNode("/nicovideo_thumb_response/error/code").InnerText;
-                        imgurl = string.Empty;
-                    }
-                    else
-                    {
-                        args.Errmsg = "UnknownResponse";
-                        imgurl = string.Empty;
-                    }
-                }
-                catch (Exception)
-                {
-                    imgurl = string.Empty;
-                    args.Errmsg = "Invalid XML";
-                }
-
-                if (!string.IsNullOrEmpty(imgurl))
-                {
-                    Image img = new HttpVarious().GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
-                    if (img == null)
-                    {
-                        return false;
-                    }
-
-                    args.AddTooltipInfo(args.Url.Key, sb.ToString().Trim(), img);                     
-                    return true;
-                }
+                return false;
             }
 
-            return false;
+            StringBuilder sb = new StringBuilder();
+            try
+            {
+                var xdoc = new XmlDocument();
+                xdoc.LoadXml(src);
+                string status = xdoc.SelectSingleNode("/nicovideo_thumb_response").Attributes["status"].Value;
+                if (status != "ok")
+                {
+                    imgurl = string.Empty;
+                    args.Errmsg = status == "fail" ? xdoc.SelectSingleNode("/nicovideo_thumb_response/error/code").InnerText : "UnknownResponse";
+                }
+                else
+                {
+                    TryGetSingleNodeText(xdoc, "/nicovideo_thumb_response/thumb/thumbnail_url", out imgurl);
+                    string tmp;
+                    if (TryGetSingleNodeText(xdoc, "/nicovideo_thumb_response/thumb/title", out tmp))
+                    {
+                        if (!string.IsNullOrEmpty(tmp))
+                        {
+                            sb.AppendLine(R.NiconicoInfoText1 + tmp);
+                        }
+                    }
+
+                    if (TryGetSingleNodeText(xdoc, "/nicovideo_thumb_response/thumb/length", out tmp))
+                    {
+                        if (!string.IsNullOrEmpty(tmp))
+                        {
+                            sb.AppendLine(R.NiconicoInfoText2 + tmp);
+                        }
+                    }
+
+                    if (TryGetSingleNodeText(xdoc, "/nicovideo_thumb_response/thumb/first_retrieve", out tmp))
+                    {
+                        DateTime tm;
+                        if (DateTime.TryParse(tmp, out tm))
+                        {
+                            sb.AppendLine(R.NiconicoInfoText3 + tm.ToString());
+                        }
+                    }
+
+                    if (TryGetSingleNodeText(xdoc, "/nicovideo_thumb_response/thumb/view_counter", out tmp))
+                    {
+                        if (!string.IsNullOrEmpty(tmp))
+                        {
+                            sb.AppendLine(R.NiconicoInfoText4 + tmp);
+                        }
+                    }
+
+                    if (TryGetSingleNodeText(xdoc, "/nicovideo_thumb_response/thumb/comment_num", out tmp))
+                    {
+                        if (!string.IsNullOrEmpty(tmp))
+                        {
+                            sb.AppendLine(R.NiconicoInfoText5 + tmp);
+                        }
+                    }
+
+                    if (TryGetSingleNodeText(xdoc, "/nicovideo_thumb_response/thumb/mylist_counter", out tmp))
+                    {
+                        if (!string.IsNullOrEmpty(tmp))
+                        {
+                            sb.AppendLine(R.NiconicoInfoText6 + tmp);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                imgurl = string.Empty;
+                args.Errmsg = "Invalid XML";
+            }
+
+            if (string.IsNullOrEmpty(imgurl))
+            {
+                return false;
+            }
+
+            Image img = new HttpVarious().GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
+            if (img == null)
+            {
+                return false;
+            }
+
+            args.AddTooltipInfo(args.Url.Key, sb.ToString().Trim(), img);
+            return true;
+        }
+
+        private static bool TryGetSingleNodeText(XmlDocument xdoc, string selector, out string text)
+        {
+            text = string.Empty;
+            try
+            {
+                text = xdoc.SelectSingleNode(selector).InnerText;
+                return true;
+            }
+            catch (Exception o_O)
+            {
+                return false;
+            }
         }
 
         #endregion "ニコニコ動画"

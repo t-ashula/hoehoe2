@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
     using System.Xml;
@@ -49,7 +48,7 @@ namespace Hoehoe
         {
             //// http://www.tinami.com/view/250818
             //// http://tinami.jp/5dj6 (短縮URL)
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.tinami\\.com/view/\\d+$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.tinami\\.com/view/\\d+$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 args.AddThumbnailUrl(args.Url, mc.Value);
@@ -87,16 +86,14 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Tinami_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
-            Match mc = Regex.Match(args.Url.Value, "^http://www\\.tinami\\.com/view/(?<ContentId>\\d+)$", RegexOptions.IgnoreCase);
-            // TODO: TINAMI API Key
+            var mc = Regex.Match(args.Url.Value, "^http://www\\.tinami\\.com/view/(?<ContentId>\\d+)$", RegexOptions.IgnoreCase);
             if (!mc.Success)
             {
                 return false;
             }
 
             string src = string.Empty;
-            const string ApiKey = "4e353d9113dce";
+            const string ApiKey = "4e353d9113dce";             // TODO: TINAMI API Key
             string contentInfo = mc.Result("http://api.tinami.com/content/info?api_key=" + ApiKey + "&cont_id=${ContentId}");
             HttpVarious http = new HttpVarious();
             if (!http.GetData(contentInfo, null, ref src, 0, ref args.Errmsg, string.Empty))
@@ -115,7 +112,6 @@ namespace Hoehoe
                     args.Errmsg = xdoc.SelectSingleNode("/rsp/err") != null ?
                         xdoc.SelectSingleNode("/rsp/err").Attributes.GetNamedItem("msg").InnerText :
                         "DeletedOrSuspended";
-
                     return false;
                 }
 

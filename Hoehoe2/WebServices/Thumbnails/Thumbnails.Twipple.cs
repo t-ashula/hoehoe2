@@ -26,7 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -46,14 +45,15 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool TwipplePhoto_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://p\\.twipple\\.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://p\\.twipple\\.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                args.AddThumbnailUrl(args.Url, mc.Value);
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddThumbnailUrl(args.Url, mc.Value);
+            return true;
+
         }
 
         /// <summary>
@@ -70,7 +70,6 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool TwipplePhoto_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
             Match mc = Regex.Match(args.Url.Value, "^http://p.twipple.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
             if (!mc.Success)
             {
@@ -79,39 +78,38 @@ namespace Hoehoe
 
             string src = string.Empty;
             HttpVarious http = new HttpVarious();
-            if (http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, string.Empty))
+            if (!http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
-                string thumbnailUrl = string.Empty;
-                string contentId = mc.Groups["contentId"].Value;
-                StringBuilder dataDir = new StringBuilder();
-
-                // DataDir作成
-                dataDir.Append("data");
-                for (int i = 0; i < contentId.Length; i++)
-                {
-                    dataDir.Append("/");
-                    dataDir.Append(contentId[i]);
-                }
-
-                // サムネイルURL抽出
-                thumbnailUrl = Regex.Match(src, "http://p\\.twipple\\.jp/" + dataDir.ToString() + "_s\\.([a-zA-Z]+)").Value;
-
-                if (string.IsNullOrEmpty(thumbnailUrl))
-                {
-                    return false;
-                }
-
-                Image img = http.GetImage(thumbnailUrl, args.Url.Key, 0, ref args.Errmsg);
-                if (img == null)
-                {
-                    return false;
-                }
-                
-                args.AddTooltipInfo(args.Url.Key, string.Empty, img);
-                return true;
+                return false;
             }
 
-            return false;
+            string contentId = mc.Groups["contentId"].Value;
+
+            // DataDir作成
+            StringBuilder dataDir = new StringBuilder();
+            dataDir.Append("data");
+            for (int i = 0; i < contentId.Length; i++)
+            {
+                dataDir.Append("/");
+                dataDir.Append(contentId[i]);
+            }
+
+            // サムネイルURL抽出
+            string thumbnailUrl = Regex.Match(src, "http://p\\.twipple\\.jp/" + dataDir.ToString() + "_s\\.([a-zA-Z]+)").Value;
+            if (string.IsNullOrEmpty(thumbnailUrl))
+            {
+                return false;
+            }
+
+            Image img = http.GetImage(thumbnailUrl, args.Url.Key, 0, ref args.Errmsg);
+            if (img == null)
+            {
+                return false;
+            }
+
+            args.AddTooltipInfo(args.Url.Key, string.Empty, img);
+            return true;
+
         }
 
         #endregion "ついっぷるフォト"

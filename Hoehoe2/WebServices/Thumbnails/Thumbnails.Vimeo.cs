@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -80,129 +79,131 @@ namespace Hoehoe
             Match mc = Regex.Match(args.Url.Value, "http://vimeo\\.com/(?<postID>[0-9]+)", RegexOptions.IgnoreCase);
             string apiurl = "http://vimeo.com/api/v2/video/" + mc.Groups["postID"].Value + ".xml";
             string src = string.Empty;
-            string imgurl = null;
-            if (http.GetData(apiurl, null, ref src, 0, ref args.Errmsg, string.Empty))
+            if (!http.GetData(apiurl, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
-                XmlDocument xdoc = new XmlDocument();
-                StringBuilder sb = new StringBuilder();
+                return false;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            string imgurl = null;
+            try
+            {
+                var xdoc = new XmlDocument();
+                xdoc.LoadXml(src);
                 try
                 {
-                    xdoc.LoadXml(src);
-                    try
+                    string tmp = xdoc.SelectSingleNode("videos/video/title").InnerText;
+                    if (!string.IsNullOrEmpty(tmp))
                     {
-                        string tmp = xdoc.SelectSingleNode("videos/video/title").InnerText;
-                        if (!string.IsNullOrEmpty(tmp))
-                        {
-                            sb.Append(R.VimeoInfoText1);
-                            sb.Append(tmp);
-                            sb.AppendLine();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    try
-                    {
-                        DateTime tmpdate = new DateTime();
-                        if (DateTime.TryParse(xdoc.SelectSingleNode("videos/video/upload_date").InnerText, out tmpdate))
-                        {
-                            sb.Append(R.VimeoInfoText2);
-                            sb.Append(tmpdate);
-                            sb.AppendLine();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    try
-                    {
-                        string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_likes").InnerText;
-                        if (!string.IsNullOrEmpty(tmp))
-                        {
-                            sb.Append(R.VimeoInfoText3);
-                            sb.Append(tmp);
-                            sb.AppendLine();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    try
-                    {
-                        string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_plays").InnerText;
-                        if (!string.IsNullOrEmpty(tmp))
-                        {
-                            sb.Append(R.VimeoInfoText4);
-                            sb.Append(tmp);
-                            sb.AppendLine();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    try
-                    {
-                        string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_comments").InnerText;
-                        if (!string.IsNullOrEmpty(tmp))
-                        {
-                            sb.Append(R.VimeoInfoText5);
-                            sb.Append(tmp);
-                            sb.AppendLine();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    try
-                    {
-                        int sec = 0;
-                        if (int.TryParse(xdoc.SelectSingleNode("videos/video/duration").InnerText, out sec))
-                        {
-                            sb.Append(R.VimeoInfoText6);
-                            sb.AppendFormat("{0:d}:{1:d2}", sec / 60, sec % 60);
-                            sb.AppendLine();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    try
-                    {
-                        string tmp = xdoc.SelectSingleNode("videos/video/thumbnail_medium").InnerText;
-                        if (!string.IsNullOrEmpty(tmp))
-                        {
-                            imgurl = tmp;
-                        }
-                    }
-                    catch (Exception)
-                    {
+                        sb.Append(R.VimeoInfoText1);
+                        sb.Append(tmp);
+                        sb.AppendLine();
                     }
                 }
                 catch (Exception)
                 {
-                    imgurl = string.Empty;
                 }
 
-                if (!string.IsNullOrEmpty(imgurl))
+                try
                 {
-                    Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
-                    if (img == null)
+                    DateTime tmpdate;
+                    if (DateTime.TryParse(xdoc.SelectSingleNode("videos/video/upload_date").InnerText, out tmpdate))
                     {
-                        return false;
+                        sb.Append(R.VimeoInfoText2);
+                        sb.Append(tmpdate);
+                        sb.AppendLine();
                     }
+                }
+                catch (Exception)
+                {
+                }
 
-                    args.AddTooltipInfo(args.Url.Key, sb.ToString().Trim(), img);                     
-                    return true;
+                try
+                {
+                    string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_likes").InnerText;
+                    if (!string.IsNullOrEmpty(tmp))
+                    {
+                        sb.Append(R.VimeoInfoText3);
+                        sb.Append(tmp);
+                        sb.AppendLine();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                try
+                {
+                    string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_plays").InnerText;
+                    if (!string.IsNullOrEmpty(tmp))
+                    {
+                        sb.Append(R.VimeoInfoText4);
+                        sb.Append(tmp);
+                        sb.AppendLine();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                try
+                {
+                    string tmp = xdoc.SelectSingleNode("videos/video/stats_number_of_comments").InnerText;
+                    if (!string.IsNullOrEmpty(tmp))
+                    {
+                        sb.Append(R.VimeoInfoText5);
+                        sb.Append(tmp);
+                        sb.AppendLine();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                try
+                {
+                    int sec;
+                    if (int.TryParse(xdoc.SelectSingleNode("videos/video/duration").InnerText, out sec))
+                    {
+                        sb.Append(R.VimeoInfoText6);
+                        sb.AppendFormat("{0:d}:{1:d2}", sec / 60, sec % 60);
+                        sb.AppendLine();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                try
+                {
+                    string tmp = xdoc.SelectSingleNode("videos/video/thumbnail_medium").InnerText;
+                    if (!string.IsNullOrEmpty(tmp))
+                    {
+                        imgurl = tmp;
+                    }
+                }
+                catch (Exception)
+                {
                 }
             }
+            catch (Exception)
+            {
+                imgurl = string.Empty;
+            }
 
-            return false;
+            if (string.IsNullOrEmpty(imgurl))
+            {
+                return false;
+            }
+
+            Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
+            if (img == null)
+            {
+                return false;
+            }
+
+            args.AddTooltipInfo(args.Url.Key, sb.ToString().Trim(), img);
+            return true;
         }
 
         #endregion "vimeo"

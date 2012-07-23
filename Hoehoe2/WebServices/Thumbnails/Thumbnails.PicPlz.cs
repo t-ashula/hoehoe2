@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Json;
@@ -50,7 +49,7 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool PicPlz_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://picplz\\.com/user/\\w+/pic/(?<longurl_ids>\\w+)/?$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://picplz\\.com/user/\\w+/pic/(?<longurl_ids>\\w+)/?$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 args.AddThumbnailUrl(args.Url, mc.Value);
@@ -81,7 +80,6 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool PicPlz_CreateImage(CreateImageArgs args)
         {
-            HttpVarious http = new HttpVarious();
             string apiurl = "http://api.picplz.com/api/v2/pic.json?";
             Match mc = Regex.Match(args.Url.Value, "^http://picplz\\.com/user/\\w+/pic/(?<longurl_ids>\\w+)/?$", RegexOptions.IgnoreCase);
             if (mc.Success)
@@ -103,58 +101,57 @@ namespace Hoehoe
 
             string src = string.Empty;
             string imgurl = string.Empty;
-            if ((new HttpVarious()).GetData(apiurl, null, ref src, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
+            if (!(new HttpVarious()).GetData(apiurl, null, ref src, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
             {
-                StringBuilder sb = new StringBuilder();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(PicPlzDataModel.ResultData));
-                PicPlzDataModel.ResultData res = default(PicPlzDataModel.ResultData);
-
-                try
-                {
-                    res = D.CreateDataFromJson<PicPlzDataModel.ResultData>(src);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-
-                if (res.Result == "ok")
-                {
-                    try
-                    {
-                        imgurl = res.Value.Pics[0].PicFiles.Pic320rh.ImgUrl;
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    try
-                    {
-                        sb.Append(res.Value.Pics[0].Caption);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-                if (!string.IsNullOrEmpty(imgurl))
-                {
-                    Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
-                    if (img == null)
-                    {
-                        return false;
-                    }
-
-                    args.AddTooltipInfo(args.Url.Key, sb.ToString().Trim(), img); 
-                    return true;
-                }
+                return false;
             }
 
-            return false;
+            StringBuilder sb = new StringBuilder();
+            PicPlzDataModel.ResultData res = default(PicPlzDataModel.ResultData);
+            try
+            {
+                res = D.CreateDataFromJson<PicPlzDataModel.ResultData>(src);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            if (res.Result != "ok")
+            {
+                return false;
+            }
+
+            try
+            {
+                imgurl = res.Value.Pics[0].PicFiles.Pic320rh.ImgUrl;
+            }
+            catch (Exception)
+            {
+            }
+
+            try
+            {
+                sb.Append(res.Value.Pics[0].Caption);
+            }
+            catch (Exception)
+            {
+            }
+
+            if (string.IsNullOrEmpty(imgurl))
+            {
+                return false;
+            }
+
+            Image img = new HttpVarious().GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
+            if (img == null)
+            {
+                return false;
+            }
+
+            args.AddTooltipInfo(args.Url.Key, sb.ToString().Trim(), img);
+            return true;
+
         }
 
         #endregion "PicPlz"

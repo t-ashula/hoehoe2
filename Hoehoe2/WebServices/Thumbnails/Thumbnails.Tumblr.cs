@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
     using System.Xml;
@@ -48,15 +47,16 @@ namespace Hoehoe
         private static bool Tumblr_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(.+\\.)?tumblr\\.com/.+/?", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(.+\\.)?tumblr\\.com/.+/?", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.AddThumbnailUrl(args.Url, mc.Value);
-                return true;
+                return false;
             }
+
+            // TODO 成功時はサムネイルURLを作成しimglist.Addする
+            args.AddThumbnailUrl(args.Url, mc.Value);
+            return true;
          
-            return false;
         }
 
         /// <summary>
@@ -73,7 +73,6 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Tumblr_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
             HttpVarious http = new HttpVarious();
             string targetUrl = args.Url.Value;
             string tmp = http.GetRedirectTo(targetUrl);
@@ -87,39 +86,41 @@ namespace Hoehoe
             string apiurl = mc.Groups["base"].Value + "api/read?id=" + mc.Groups["postID"].Value;
             string src = string.Empty;
             string imgurl = null;
-            if (http.GetData(apiurl, null, ref src, 0, ref args.Errmsg, string.Empty))
+            if (!http.GetData(apiurl, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
-                XmlDocument xdoc = new XmlDocument();
-                try
+                return false;
+            }
+
+            try
+            {
+                var xdoc = new XmlDocument();
+                xdoc.LoadXml(src);
+                string type = xdoc.SelectSingleNode("/tumblr/posts/post").Attributes["type"].Value;
+                if (type == "photo")
                 {
-                    xdoc.LoadXml(src);
-                    string type = xdoc.SelectSingleNode("/tumblr/posts/post").Attributes["type"].Value;
-                    if (type == "photo")
-                    {
-                        imgurl = xdoc.SelectSingleNode("/tumblr/posts/post/photo-url").InnerText;
-                    }
-                    else
-                    {
-                        args.Errmsg = "PostType:" + type;
-                        imgurl = string.Empty;
-                    }
+                    imgurl = xdoc.SelectSingleNode("/tumblr/posts/post/photo-url").InnerText;
                 }
-                catch (Exception)
+                else
                 {
+                    args.Errmsg = "PostType:" + type;
                     imgurl = string.Empty;
                 }
+            }
+            catch (Exception)
+            {
+                imgurl = string.Empty;
+            }
 
-                if (!string.IsNullOrEmpty(imgurl))
+            if (!string.IsNullOrEmpty(imgurl))
+            {
+                Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
+                if (img == null)
                 {
-                    Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
-                    if (img == null)
-                    {
-                        return false;
-                    }
-
-                    args.AddTooltipInfo(args.Url.Key, string.Empty, img); 
-                    return true;
+                    return false;
                 }
+
+                args.AddTooltipInfo(args.Url.Key, string.Empty, img);
+                return true;
             }
 
             return false;

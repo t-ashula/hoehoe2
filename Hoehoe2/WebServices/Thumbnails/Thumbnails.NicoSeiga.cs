@@ -23,10 +23,10 @@
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
+using System;
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
 
@@ -45,16 +45,14 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Nicoseiga_GetUrl(GetUrlArgs args)
         {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(?:seiga\\.nicovideo\\.jp/seiga/|nico\\.ms/)im\\d+");
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://(?:seiga\\.nicovideo\\.jp/seiga/|nico\\.ms/)im\\d+");
+            if (!mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.AddThumbnailUrl(args.Url, mc.Value);
-                return true;
+                return false;
             }
-            
-            return false;
+
+            args.AddThumbnailUrl(args.Url, mc.Value);
+            return true;            
         }
 
         /// <summary>
@@ -71,22 +69,20 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Nicoseiga_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
-            HttpVarious http = new HttpVarious();
-            Match mc = Regex.Match(args.Url.Value, "^http://(?:seiga\\.nicovideo\\.jp/seiga/|nico\\.ms/)im(?<id>\\d+)");
-            if (mc.Success)
+            var mc = Regex.Match(args.Url.Value, "^http://(?:seiga\\.nicovideo\\.jp/seiga/|nico\\.ms/)im(?<id>\\d+)");
+            if (!mc.Success)
             {
-                Image img = http.GetImage("http://lohas.nicoseiga.jp/thumb/" + mc.Groups["id"].Value + "q?", args.Url.Key, 0, ref args.Errmsg);
-                if (img == null)
-                {
-                    return false;
-                }
-
-                args.AddTooltipInfo(args.Url.Key, string.Empty, img);
-                return true;
+                return false;
             }
 
-            return false;
+            var img = new HttpVarious().GetImage(string.Format("http://lohas.nicoseiga.jp/thumb/{0}q?", mc.Groups["id"].Value), args.Url.Key, 0, ref args.Errmsg);
+            if (img == null)
+            {
+                return false;
+            }
+
+            args.AddTooltipInfo(args.Url.Key, string.Empty, img);
+            return true;
         }
 
         #endregion "ニコニコ静画"

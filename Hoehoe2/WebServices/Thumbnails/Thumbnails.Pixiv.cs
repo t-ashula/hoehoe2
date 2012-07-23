@@ -26,7 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
 
@@ -50,16 +49,15 @@ namespace Hoehoe
             // 非ログインユーザー向けの画像ページ http://www.pixiv.net/index.php?mode=medium&illust_id=[ID番号]
             // サムネイルURL http://img[サーバー番号].pixiv.net/img/[ユーザー名]/[サムネイルID]_s.[拡張子]
             // サムネイルURLは画像ページから抽出する
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
+            if (!mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                args.AddThumbnailUrl(args.Url.Replace("amp;", string.Empty), mc.Value);
-                return true;
+                return false;
             }
 
-            return false;
+            args.AddThumbnailUrl(args.Url.Replace("amp;", string.Empty), mc.Value);
+            return true;
+
         }
 
         /// <summary>
@@ -77,7 +75,7 @@ namespace Hoehoe
         private static bool Pixiv_CreateImage(CreateImageArgs args)
         {
             // illustIDをキャプチャ
-            Match mc = Regex.Match(args.Url.Value, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(args.Url.Value, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
             if (mc.Groups["tag"].Value == "R-18" || mc.Groups["tag"].Value == "R-18G")
             {
                 args.Errmsg = "NotSupported";
@@ -86,32 +84,26 @@ namespace Hoehoe
 
             HttpVarious http = new HttpVarious();
             string src = string.Empty;
-            if (http.GetData(Regex.Replace(mc.Groups[0].Value, "amp;", string.Empty), null, ref src, 0, ref args.Errmsg, string.Empty))
+            if (!http.GetData(Regex.Replace(mc.Groups[0].Value, "amp;", string.Empty), null, ref src, 0, ref args.Errmsg, string.Empty))
             {
-                Match mc2 = Regex.Match(src, mc.Result("http://img([0-9]+)\\.pixiv\\.net/img/.+/${illustId}_[ms]\\.([a-zA-Z]+)"));
-                if (mc2.Success)
-                {
-                    Image img = http.GetImage(mc2.Value, args.Url.Value, 0, ref args.Errmsg);
-                    if (img == null)
-                    {
-                        return false;
-                    }
-
-                    args.AddTooltipInfo(args.Url.Key, string.Empty, img);
-                    return true;
-                }
-
-                if (Regex.Match(src, "<span class='error'>ログインしてください</span>").Success)
-                {
-                    args.Errmsg = "NotSupported";
-                }
-                else
-                {
-                    args.Errmsg = "Pattern NotFound";
-                }
+                return false;
             }
 
-            return false;
+            var mc2 = Regex.Match(src, mc.Result("http://img([0-9]+)\\.pixiv\\.net/img/.+/${illustId}_[ms]\\.([a-zA-Z]+)"));
+            if (!mc2.Success)
+            {
+                args.Errmsg = Regex.Match(src, "<span class='error'>ログインしてください</span>").Success ? "NotSupported" : "Pattern NotFound";
+                return false;
+            }
+
+            var img = http.GetImage(mc2.Value, args.Url.Value, 0, ref args.Errmsg);
+            if (img == null)
+            {
+                return false;
+            }
+
+            args.AddTooltipInfo(args.Url.Key, string.Empty, img);
+            return true;
         }
 
         #endregion "Pixiv"

@@ -26,7 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Text.RegularExpressions;
 
@@ -45,21 +44,19 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Foursquare_GetUrl(GetUrlArgs args)
         {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^https?://(4sq|foursquare).com/", RegexOptions.IgnoreCase);
-            if (mc.Success)
+            if (!Configs.Instance.IsPreviewFoursquare)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
-                if (!Configs.Instance.IsPreviewFoursquare)
-                {
-                    return false;
-                }
-
-                args.AddThumbnailUrl(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, string.Empty);
-                return true;
+                return false;
             }
 
-            return false;
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^https?://(4sq|foursquare).com/", RegexOptions.IgnoreCase);
+            if (!mc.Success)
+            {
+                return false;
+            }
+
+            args.AddThumbnailUrl(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, string.Empty);
+            return true;
         }
 
         /// <summary>
@@ -76,21 +73,19 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Foursquare_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
             string tipsText = string.Empty;
             string mapsUrl = Foursquare.GetInstance.GetMapsUri(args.Url.Key, ref tipsText);
-            if (mapsUrl == null)
+            if (string.IsNullOrEmpty(mapsUrl))
             {
                 return false;
             }
 
-            Image img = (new HttpVarious()).GetImage(mapsUrl, args.Url.Key, 10000, ref args.Errmsg);
+            var img = new HttpVarious().GetImage(mapsUrl, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
 
-            // 成功した場合はURLに対応する画像、ツールチップテキストを登録
             args.AddTooltipInfo(args.Url.Key, tipsText, img);
             return true;
         }
