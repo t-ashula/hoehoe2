@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -366,6 +366,7 @@
     <Compile Include="WebServices\Thumbnails\Thumbnails.NicoSeiga.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.NivoVideo.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Owly.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Pckles.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.PhotoShare.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Photozo.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Piapro.cs" />
@@ -374,6 +375,7 @@
     <Compile Include="WebServices\Thumbnails\Thumbnails.Pixiv.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Plixi.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Tinami.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.TiwtrPix.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Tumblr.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Twipple.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Twitgoo.cs" />
@@ -381,6 +383,7 @@
     <Compile Include="WebServices\Thumbnails\Thumbnails.Twitter.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.TwitterGeo.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.TwitVideo.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.ViaMe.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Vimeo.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Yfrog.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.YouTube.cs" />

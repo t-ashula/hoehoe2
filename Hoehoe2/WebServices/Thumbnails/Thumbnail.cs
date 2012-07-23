@@ -30,7 +30,6 @@ namespace Hoehoe
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
-    using System.Runtime.Serialization;
     using System.Windows.Forms;
 
     public partial class Thumbnail
@@ -72,7 +71,10 @@ namespace Hoehoe
             new ThumbnailService("PicPlz", PicPlz_GetUrl, PicPlz_CreateImage),
             new ThumbnailService("FourSquare", Foursquare_GetUrl, Foursquare_CreateImage),
             new ThumbnailService("TINAMI", Tinami_GetUrl, Tinami_CreateImage),
-            new ThumbnailService("Twimg", Twimg_GetUrl, Twimg_CreateImage)
+            new ThumbnailService("Twimg", Twimg_GetUrl, Twimg_CreateImage),
+                new ThumbnailService("TwitrPix", TwitrPix_GetUrl, TwitrPix_CreateImage),
+                new ThumbnailService("Pckles", Pckles_GetUrl, Pckles_CreateImage),
+                new ThumbnailService("via.me", ViaMe_GetUrl, ViaMe_CreateImage)
         };
 
         public Thumbnail(TweenMain owner)
