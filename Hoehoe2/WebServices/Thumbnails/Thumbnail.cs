@@ -272,8 +272,7 @@ namespace Hoehoe
             }
 
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
+            args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
         }
 
@@ -308,9 +307,9 @@ namespace Hoehoe
             PreviewData arg = (PreviewData)e.Argument;
             arg.AdditionalErrorMessage = string.Empty;
 
-            foreach (KeyValuePair<string, string> url in arg.Urls)
+            foreach (var url in arg.Urls)
             {
-                CreateImageArgs args = new CreateImageArgs() { Url = url, Pics = arg.Pics, TooltipText = arg.TooltipText, Errmsg = string.Empty };
+                var args = new CreateImageArgs() { Url = url, Pics = arg.Pics, TooltipText = arg.TooltipText, Errmsg = string.Empty };
                 if (!arg.ImageCreators[arg.Urls.IndexOf(url)].Value(args))
                 {
                     arg.AdditionalErrorMessage = args.Errmsg;

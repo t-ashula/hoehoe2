@@ -84,8 +84,8 @@ namespace Hoehoe
                     return false;
                 }
 
-                args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-                args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
+                args.AddTooltipInfo(args.Url.Key, string.Empty, img);
+                return true;
             }
 
             return false;

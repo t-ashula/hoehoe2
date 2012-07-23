@@ -97,8 +97,7 @@ namespace Hoehoe
                 url = args.Url.Value;
             }
 
-            args.Pics.Add(new KeyValuePair<string, Image>(url, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(url, string.Empty));
+            args.AddTooltipInfo(url, string.Empty, img);
             return true;
         }
 
