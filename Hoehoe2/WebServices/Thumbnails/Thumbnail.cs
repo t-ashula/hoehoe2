@@ -76,6 +76,7 @@ namespace Hoehoe
             new ThumbnailService("Pckles", Pckles_GetUrl, Pckles_CreateImage),
             new ThumbnailService("via.me", ViaMe_GetUrl, ViaMe_CreateImage),
             new ThumbnailService("tiqav", Tiqav_GetUrl, Tiqav_CreateImage),
+            new ThumbnailService("miilme", MiilMe_GetUrl, MiilMe_CreateImage),
         };
 
         public Thumbnail(TweenMain owner)
