@@ -73,20 +73,6 @@ namespace Hoehoe
         {
             return Default_CreateImage(args);
         }
-
-        private static bool Default_CreateImage(CreateImageArgs args)
-        {
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
-            if (img == null)
-            {
-                return false;
-            }
-
-            // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
-            return true;
-        }
         #endregion "Yfrog"
     }
 }
