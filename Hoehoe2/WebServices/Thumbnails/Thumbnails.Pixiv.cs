@@ -23,6 +23,7 @@
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
+using System;
 
 namespace Hoehoe
 {
@@ -49,7 +50,8 @@ namespace Hoehoe
             // 非ログインユーザー向けの画像ページ http://www.pixiv.net/index.php?mode=medium&illust_id=[ID番号]
             // サムネイルURL http://img[サーバー番号].pixiv.net/img/[ユーザー名]/[サムネイルID]_s.[拡張子]
             // サムネイルURLは画像ページから抽出する
-            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended,
+                                 @"^http://www\.pixiv\.net/(member_illust|index)\.php\?(.*)illust_id=([0-9]+)(.*)$", RegexOptions.IgnoreCase);
             if (!mc.Success)
             {
                 return false;
@@ -74,22 +76,25 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Pixiv_CreateImage(CreateImageArgs args)
         {
-            // illustIDをキャプチャ
-            var mc = Regex.Match(args.Url.Value, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
-            if (mc.Groups["tag"].Value == "R-18" || mc.Groups["tag"].Value == "R-18G")
+            var url = new System.Uri(args.Url.Value);
+            var queries = System.Web.HttpUtility.ParseQueryString(url.Query);
+            if (!string.IsNullOrEmpty(queries["tag"]) && queries["tag"].StartsWith("R-18"))
             {
                 args.Errmsg = "NotSupported";
                 return false;
             }
+            //var mc = Regex.Match(args.Url.Value, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
 
             HttpVarious http = new HttpVarious();
             string src = string.Empty;
-            if (!http.GetData(Regex.Replace(mc.Groups[0].Value, "amp;", string.Empty), null, ref src, 0, ref args.Errmsg, string.Empty))
+            if (!http.GetData(Regex.Replace(args.Url.Value, "amp;", string.Empty), null, ref src, 0, ref args.Errmsg, string.Empty))
             {
                 return false;
             }
 
-            var mc2 = Regex.Match(src, mc.Result("http://img([0-9]+)\\.pixiv\\.net/img/.+/${illustId}_[ms]\\.([a-zA-Z]+)"));
+            // illustIDをキャプチャ
+            var illustId = queries["illust_id"];
+            var mc2 = Regex.Match(src, string.Format(@"http://i(mg)?([0-9]+)\.pixiv\.net/.+/img/.+/{0}_[ms]\.([a-zA-Z]+)", illustId));
             if (!mc2.Success)
             {
                 args.Errmsg = Regex.Match(src, "<span class='error'>ログインしてください</span>").Success ? "NotSupported" : "Pattern NotFound";
