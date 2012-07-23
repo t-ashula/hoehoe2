@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -351,28 +351,39 @@
     <Compile Include="Forms\TabsDialog.Designer.cs">
       <DependentUpon>TabsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="WebServices\Thumbnails\Brightkite.cs" />
-    <Compile Include="WebServices\Thumbnails\Cloudfiles.cs" />
-    <Compile Include="WebServices\Thumbnails\DirectUrl.cs" />
-    <Compile Include="WebServices\Thumbnails\Flickr.cs" />
-    <Compile Include="WebServices\Thumbnails\FourSquare.cs" />
-    <Compile Include="WebServices\Thumbnails\Hatena.cs" />
-    <Compile Include="WebServices\Thumbnails\Imgly.cs" />
-    <Compile Include="WebServices\Thumbnails\ImgUr.cs" />
-    <Compile Include="WebServices\Thumbnails\Instagram.cs" />
-    <Compile Include="WebServices\Thumbnails\MobyPictures.cs" />
-    <Compile Include="WebServices\Thumbnails\Movapic.cs" />
-    <Compile Include="WebServices\Thumbnails\Mypix.cs" />
-    <Compile Include="WebServices\Thumbnails\NicoSeiga.cs" />
-    <Compile Include="WebServices\Thumbnails\NivoVideo.cs" />
-    <Compile Include="WebServices\Thumbnails\Owly.cs" />
-    <Compile Include="WebServices\Thumbnails\PhotoShare.cs" />
-    <Compile Include="WebServices\Thumbnails\Photozo.cs" />
-    <Compile Include="WebServices\Thumbnails\Piapro.cs" />
-    <Compile Include="WebServices\Thumbnails\PicPlz.cs" />
-    <Compile Include="WebServices\Thumbnails\Pikubo.cs" />
-    <Compile Include="WebServices\Thumbnails\Pixiv.cs" />
-    <Compile Include="WebServices\Thumbnails\Plixi.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Brightkite.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Cloudfiles.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.DirectUrl.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Flickr.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.FourSquare.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Hatena.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Imgly.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.ImgUr.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Instagram.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.MobyPictures.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Movapic.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Mypix.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.NicoSeiga.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.NivoVideo.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Owly.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.PhotoShare.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Photozo.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Piapro.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.PicPlz.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Pikubo.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Pixiv.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Plixi.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Tinami.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Tumblr.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Twipple.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Twitgoo.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.TwitPic.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Twitter.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.TwitterGeo.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.TwitVideo.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Vimeo.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Yfrog.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.YouTube.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnail.cs" />
     <Compile Include="Forms\ToolStripAPIGauge.cs">
       <SubType>Component</SubType>
@@ -396,17 +407,6 @@
     <Compile Include="UserAccount.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="InternetSecurityManager.cs" />
-    <Compile Include="WebServices\Thumbnails\Tinami.cs" />
-    <Compile Include="WebServices\Thumbnails\Tumblr.cs" />
-    <Compile Include="WebServices\Thumbnails\Twipple.cs" />
-    <Compile Include="WebServices\Thumbnails\Twitgoo.cs" />
-    <Compile Include="WebServices\Thumbnails\TwitPic.cs" />
-    <Compile Include="WebServices\Thumbnails\Twitter.cs" />
-    <Compile Include="WebServices\Thumbnails\TwitterGeo.cs" />
-    <Compile Include="WebServices\Thumbnails\TwitVideo.cs" />
-    <Compile Include="WebServices\Thumbnails\Vimeo.cs" />
-    <Compile Include="WebServices\Thumbnails\Yfrog.cs" />
-    <Compile Include="WebServices\Thumbnails\YouTube.cs" />
     <Compile Include="Win32Api.cs" />
   </ItemGroup>
   <ItemGroup>
