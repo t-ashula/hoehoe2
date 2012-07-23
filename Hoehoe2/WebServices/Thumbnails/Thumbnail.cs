@@ -132,10 +132,9 @@ namespace Hoehoe
 
             foreach (string url in links)
             {
-                foreach (ThumbnailService svc in this.thumbnailServices)
+                foreach (var svc in this.thumbnailServices)
                 {
-                    GetUrlArgs args = new GetUrlArgs() { Url = url, ImgList = imglist };
-                    if (svc.UrlCreator(args))
+                    if (svc.UrlCreator(new GetUrlArgs() { Url = url, ImgList = imglist }))
                     {
                         // URLに対応したサムネイル作成処理デリゲートをリストに登録
                         dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(url, svc.ImageCreator));
@@ -148,7 +147,7 @@ namespace Hoehoe
             {
                 foreach (var m in media)
                 {
-                    foreach (ThumbnailService svc in this.thumbnailServices)
+                    foreach (var svc in this.thumbnailServices)
                     {
                         if (svc.UrlCreator(new GetUrlArgs() { Url = m.Key, Extended = m.Value, ImgList = imglist }))
                         {
@@ -162,7 +161,7 @@ namespace Hoehoe
 
             if (geo != null)
             {
-                GetUrlArgs args = new GetUrlArgs() { Url = string.Empty, ImgList = imglist, GeoInfo = new Google.GlobalLocation { Latitude = geo.Lat, Longitude = geo.Lng } };
+                var args = new GetUrlArgs() { Url = string.Empty, ImgList = imglist, GeoInfo = new Google.GlobalLocation { Latitude = geo.Lat, Longitude = geo.Lng } };
                 if (TwitterGeo_GetUrl(args))
                 {
                     // URLに対応したサムネイル作成処理デリゲートをリストに登録
@@ -179,7 +178,7 @@ namespace Hoehoe
             }
 
             this.ThumbnailProgressChanged(0);
-            BackgroundWorker bgw = new BackgroundWorker();
+            var bgw = new BackgroundWorker();
             bgw.DoWork += this.Bgw_DoWork;
             bgw.RunWorkerCompleted += this.Bgw_Completed;
             bgw.RunWorkerAsync(new PreviewData(id, imglist, dlg));
@@ -471,6 +470,12 @@ namespace Hoehoe
             public List<KeyValuePair<string, string>> TooltipText { get; set; }
 
             public string Errmsg;
+
+            public void AddTooltipInfo(string url, string tooltip, Image img)
+            {
+                this.TooltipText.Add(new KeyValuePair<string, string>(url, tooltip));
+                this.Pics.Add(new KeyValuePair<string, Image>(url, img));
+            }
         }
 
         private class ThumbnailService

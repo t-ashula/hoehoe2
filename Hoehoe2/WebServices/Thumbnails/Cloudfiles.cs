@@ -80,8 +80,7 @@ namespace Hoehoe
             }
 
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
+            args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
         }
 
