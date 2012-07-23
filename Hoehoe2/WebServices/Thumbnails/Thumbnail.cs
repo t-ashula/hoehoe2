@@ -72,9 +72,10 @@ namespace Hoehoe
             new ThumbnailService("FourSquare", Foursquare_GetUrl, Foursquare_CreateImage),
             new ThumbnailService("TINAMI", Tinami_GetUrl, Tinami_CreateImage),
             new ThumbnailService("Twimg", Twimg_GetUrl, Twimg_CreateImage),
-                new ThumbnailService("TwitrPix", TwitrPix_GetUrl, TwitrPix_CreateImage),
-                new ThumbnailService("Pckles", Pckles_GetUrl, Pckles_CreateImage),
-                new ThumbnailService("via.me", ViaMe_GetUrl, ViaMe_CreateImage)
+            new ThumbnailService("TwitrPix", TwitrPix_GetUrl, TwitrPix_CreateImage),
+            new ThumbnailService("Pckles", Pckles_GetUrl, Pckles_CreateImage),
+            new ThumbnailService("via.me", ViaMe_GetUrl, ViaMe_CreateImage),
+            new ThumbnailService("tiqav", Tiqav_GetUrl, Tiqav_CreateImage),
         };
 
         public Thumbnail(TweenMain owner)
