@@ -413,6 +413,7 @@
     <Compile Include="UserAccount.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="InternetSecurityManager.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.My365.cs" />
     <Compile Include="Win32Api.cs" />
   </ItemGroup>
   <ItemGroup>
