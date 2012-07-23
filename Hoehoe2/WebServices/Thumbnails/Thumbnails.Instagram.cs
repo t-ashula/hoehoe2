@@ -53,10 +53,8 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Value));
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>

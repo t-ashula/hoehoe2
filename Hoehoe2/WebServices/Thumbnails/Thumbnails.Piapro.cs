@@ -74,32 +74,34 @@ namespace Hoehoe
         private static bool Piapro_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            HttpVarious http = new HttpVarious();
             Match mc = Regex.Match(args.Url.Value, "^http://piapro\\.jp/(?:content/[0-9a-z]+|t/[0-9a-zA-Z_\\-]+)$");
-            if (mc.Success)
+            if (!mc.Success)
             {
-                string src = string.Empty;
-                if (http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, string.Empty))
-                {
-                    Match mc2 = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<big_img>http://c1\\.piapro\\.jp/timg/[0-9a-z]+_\\d{14}_0500_0500\\.(?:jpg|png|gif)?)\" />");
-                    if (mc2.Success)
-                    {
-                        // 各画像には120x120のサムネイルがある（多分）ので、URLを置き換える。元々ページに埋め込まれている画像は500x500
-                        Regex r = new Regex("_\\d{4}_\\d{4}");
-                        string minImgUrl = r.Replace(mc2.Groups["big_img"].Value, "_0120_0120");
-                        Image img = http.GetImage(minImgUrl, args.Url.Key, 0, ref args.Errmsg);
-                        if (img == null)
-                        {
-                            return false;
-                        }
+                return false;
+            }
 
-                        args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-                        args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
-                        return true;
+            string src = string.Empty;
+            HttpVarious http = new HttpVarious();
+            if (http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, string.Empty))
+            {
+                Match mc2 = Regex.Match(src, "<meta property=\"og:image\" content=\"(?<big_img>http://c1\\.piapro\\.jp/timg/[0-9a-z]+_\\d{14}_0500_0500\\.(?:jpg|png|gif)?)\" />");
+                if (mc2.Success)
+                {
+                    // 各画像には120x120のサムネイルがある（多分）ので、URLを置き換える。元々ページに埋め込まれている画像は500x500
+                    Regex r = new Regex("_\\d{4}_\\d{4}");
+                    string minImgUrl = r.Replace(mc2.Groups["big_img"].Value, "_0120_0120");
+                    Image img = http.GetImage(minImgUrl, args.Url.Key, 0, ref args.Errmsg);
+                    if (img == null)
+                    {
+                        return false;
                     }
 
-                    args.Errmsg = "Pattern NotFound";
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
+                    return true;
                 }
+
+                args.Errmsg = "Pattern NotFound";
             }
 
             return false;

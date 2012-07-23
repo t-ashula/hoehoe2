@@ -81,7 +81,7 @@ namespace Hoehoe
             HttpVarious http = new HttpVarious();
             if (http.GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
-                MatchCollection mc2 = Regex.Matches(src, mc.Result("http://farm[0-9]+\\.static\\.flickr\\.com/[0-9]+/.+?\\.([a-zA-Z]+)"));
+                var mc2 = Regex.Matches(src, mc.Result("http://farm[0-9]+\\.static\\.flickr\\.com/[0-9]+/.+?\\.([a-zA-Z]+)"));
 
                 // 二つ以上キャプチャした場合先頭の一つだけ 一つだけの場合はユーザーアイコンしか取れなかった
                 if (mc2.Count > 1)

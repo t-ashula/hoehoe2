@@ -47,10 +47,8 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>
@@ -67,15 +65,7 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool DirectLink_CreateImage(CreateImageArgs args)
         {
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 10000, ref args.Errmsg);
-            if (img == null)
-            {
-                return false;
-            }
-
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
-            return true;
+            return Default_CreateImage(args);
         }
 
         #endregion "画像直リンク"

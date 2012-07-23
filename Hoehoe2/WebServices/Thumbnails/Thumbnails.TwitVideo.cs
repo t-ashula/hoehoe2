@@ -53,10 +53,8 @@ namespace Hoehoe
                 args.ImgList.Add(new KeyValuePair<string, string>(args.Url, mc.Result("http://twitvideo.jp/img/thumb/${1}")));
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            
+            return false;
         }
 
         /// <summary>
@@ -73,16 +71,7 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool TwitVideo_CreateImage(CreateImageArgs args)
         {
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, args.Url.Key, 0, ref args.Errmsg);
-            if (img == null)
-            {
-                return false;
-            }
-
-            // 成功した場合はURLに対応する画像、ツールチップテキストを登録
-            args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-            args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
-            return true;
+            return Default_CreateImage(args);
         }
 
         #endregion "TwitVideo"

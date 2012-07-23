@@ -74,7 +74,6 @@ namespace Hoehoe
         private static bool Nicovideo_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            HttpVarious http = new HttpVarious();
             Match mc = Regex.Match(args.Url.Value, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?<id>(?:sm|nm)?([0-9]+))(\\?.+)?$", RegexOptions.IgnoreCase);
             string apiurl = "http://www.nicovideo.jp/api/getthumbinfo/" + mc.Groups["id"].Value;
             string src = string.Empty;
@@ -178,8 +177,7 @@ namespace Hoehoe
                     }
                     else if (status == "fail")
                     {
-                        string errcode = xdoc.SelectSingleNode("/nicovideo_thumb_response/error/code").InnerText;
-                        args.Errmsg = errcode;
+                        args.Errmsg = xdoc.SelectSingleNode("/nicovideo_thumb_response/error/code").InnerText;
                         imgurl = string.Empty;
                     }
                     else
@@ -196,7 +194,7 @@ namespace Hoehoe
 
                 if (!string.IsNullOrEmpty(imgurl))
                 {
-                    Image img = http.GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
+                    Image img = new HttpVarious().GetImage(imgurl, args.Url.Key, 0, ref args.Errmsg);
                     if (img == null)
                     {
                         return false;

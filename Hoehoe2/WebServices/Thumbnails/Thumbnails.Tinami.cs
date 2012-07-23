@@ -88,76 +88,70 @@ namespace Hoehoe
         private static bool Tinami_CreateImage(CreateImageArgs args)
         {
             // TODO: サムネイル画像読み込み処理を記述します
-            HttpVarious http = new HttpVarious();
             Match mc = Regex.Match(args.Url.Value, "^http://www\\.tinami\\.com/view/(?<ContentId>\\d+)$", RegexOptions.IgnoreCase);
-            const string ApiKey = "4e353d9113dce";
-            if (mc.Success)
+            // TODO: TINAMI API Key
+            if (!mc.Success)
             {
-                string src = string.Empty;
-                string contentInfo = mc.Result("http://api.tinami.com/content/info?api_key=" + ApiKey + "&cont_id=${ContentId}");
-                if (http.GetData(contentInfo, null, ref src, 0, ref args.Errmsg, string.Empty))
-                {
-                    XmlDocument xdoc = new XmlDocument();
-                    string thumbnailUrl = string.Empty;
-                    try
-                    {
-                        xdoc.LoadXml(src);
-                        var stat = xdoc.SelectSingleNode("/rsp").Attributes.GetNamedItem("stat").InnerText;
-                        if (stat == "ok")
-                        {
-                            if (xdoc.SelectSingleNode("/rsp/content/thumbnails/thumbnail_150x150") != null)
-                            {
-                                var nd = xdoc.SelectSingleNode("/rsp/content/thumbnails/thumbnail_150x150");
-                                thumbnailUrl = nd.Attributes.GetNamedItem("url").InnerText;
-                                if (string.IsNullOrEmpty(thumbnailUrl))
-                                {
-                                    return false;
-                                }
-
-                                Image img = http.GetImage(thumbnailUrl, args.Url.Key);
-                                if (img == null)
-                                {
-                                    return false;
-                                }
-
-                                args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-                                args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
-                                return true;
-                            }
-                            else
-                            {
-                                // エラー処理 エラーメッセージが返ってきた場合はここで処理
-                                if (xdoc.SelectSingleNode("/rsp/err") != null)
-                                {
-                                    args.Errmsg = xdoc.SelectSingleNode("/rsp/err").Attributes.GetNamedItem("msg").InnerText;
-                                }
-
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            if (xdoc.SelectSingleNode("/rsp/err") != null)
-                            {
-                                args.Errmsg = xdoc.SelectSingleNode("/rsp/err").Attributes.GetNamedItem("msg").InnerText;
-                            }
-                            else
-                            {
-                                args.Errmsg = "DeletedOrSuspended";
-                            }
-
-                            return false;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        args.Errmsg = ex.Message;
-                        return false;
-                    }
-                }
+                return false;
             }
 
-            return false;
+            string src = string.Empty;
+            const string ApiKey = "4e353d9113dce";
+            string contentInfo = mc.Result("http://api.tinami.com/content/info?api_key=" + ApiKey + "&cont_id=${ContentId}");
+            HttpVarious http = new HttpVarious();
+            if (!http.GetData(contentInfo, null, ref src, 0, ref args.Errmsg, string.Empty))
+            {
+                return false;
+            }
+
+            XmlDocument xdoc = new XmlDocument();
+            string thumbnailUrl = string.Empty;
+            try
+            {
+                xdoc.LoadXml(src);
+                var stat = xdoc.SelectSingleNode("/rsp").Attributes.GetNamedItem("stat").InnerText;
+                if (stat != "ok")
+                {
+                    args.Errmsg = xdoc.SelectSingleNode("/rsp/err") != null ?
+                        xdoc.SelectSingleNode("/rsp/err").Attributes.GetNamedItem("msg").InnerText :
+                        "DeletedOrSuspended";
+
+                    return false;
+                }
+
+                if (xdoc.SelectSingleNode("/rsp/content/thumbnails/thumbnail_150x150") != null)
+                {
+                    var nd = xdoc.SelectSingleNode("/rsp/content/thumbnails/thumbnail_150x150");
+                    thumbnailUrl = nd.Attributes.GetNamedItem("url").InnerText;
+                    if (string.IsNullOrEmpty(thumbnailUrl))
+                    {
+                        return false;
+                    }
+
+                    Image img = http.GetImage(thumbnailUrl, args.Url.Key);
+                    if (img == null)
+                    {
+                        return false;
+                    }
+
+                    args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                    args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, string.Empty));
+                    return true;
+                }
+
+                // エラー処理 エラーメッセージが返ってきた場合はここで処理
+                if (xdoc.SelectSingleNode("/rsp/err") != null)
+                {
+                    args.Errmsg = xdoc.SelectSingleNode("/rsp/err").Attributes.GetNamedItem("msg").InnerText;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                args.Errmsg = ex.Message;
+                return false;
+            }
         }
 
         #endregion "TINAMI"

@@ -108,117 +108,121 @@ namespace Hoehoe
                 mc = Regex.Match(videourl, "^http://(?:(www\\.youtube\\.com)|(youtu\\.be))/(watch\\?v=)?(?<videoid>([\\w\\-]+))", RegexOptions.IgnoreCase);
             }
 
-            if (mc.Success)
+            if (!mc.Success)
             {
-                string apiurl = "http://gdata.youtube.com/feeds/api/videos/" + mc.Groups["videoid"].Value;
-                string src = string.Empty;
-                if ((new HttpVarious()).GetData(apiurl, null, ref src, 5000))
+                return false;
+            }
+
+            string apiurl = "http://gdata.youtube.com/feeds/api/videos/" + mc.Groups["videoid"].Value;
+            string src = string.Empty;
+            if (!(new HttpVarious()).GetData(apiurl, null, ref src, 5000))
+            {
+                return false;
+            }
+
+            var sb = new StringBuilder();
+            try
+            {
+                var xdoc = new XmlDocument();
+                xdoc.LoadXml(src);
+                var nsmgr = new XmlNamespaceManager(xdoc.NameTable);
+                nsmgr.AddNamespace("root", "http://www.w3.org/2005/Atom");
+                nsmgr.AddNamespace("app", "http://purl.org/atom/app#");
+                nsmgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
+
+                var xentryNode = xdoc.DocumentElement.SelectSingleNode("/root:entry/media:group", nsmgr);
+                var xentry = (XmlElement)xentryNode;
+                string tmp = string.Empty;
+                try
                 {
-                    StringBuilder sb = new StringBuilder();
-                    XmlDocument xdoc = new XmlDocument();
-                    try
+                    tmp = xentry["media:title"].InnerText;
+                    if (!string.IsNullOrEmpty(tmp))
                     {
-                        xdoc.LoadXml(src);
-                        XmlNamespaceManager nsmgr = new XmlNamespaceManager(xdoc.NameTable);
-                        nsmgr.AddNamespace("root", "http://www.w3.org/2005/Atom");
-                        nsmgr.AddNamespace("app", "http://purl.org/atom/app#");
-                        nsmgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
-
-                        XmlNode xentryNode = xdoc.DocumentElement.SelectSingleNode("/root:entry/media:group", nsmgr);
-                        XmlElement xentry = (XmlElement)xentryNode;
-                        string tmp = string.Empty;
-                        try
-                        {
-                            tmp = xentry["media:title"].InnerText;
-                            if (!string.IsNullOrEmpty(tmp))
-                            {
-                                sb.Append(R.YouTubeInfoText1);
-                                sb.Append(tmp);
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        try
-                        {
-                            int sec = 0;
-                            if (int.TryParse(xentry["yt:duration"].Attributes["seconds"].Value, out sec))
-                            {
-                                sb.Append(R.YouTubeInfoText2);
-                                sb.AppendFormat("{0:d}:{1:d2}", sec / 60, sec % 60);
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        try
-                        {
-                            DateTime tmpdate = new DateTime();
-                            xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry", nsmgr);
-                            if (DateTime.TryParse(xentry["published"].InnerText, out tmpdate))
-                            {
-                                sb.Append(R.YouTubeInfoText3);
-                                sb.Append(tmpdate);
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        try
-                        {
-                            int count = 0;
-                            xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry", nsmgr);
-                            tmp = xentry["yt:statistics"].Attributes["viewCount"].Value;
-                            if (int.TryParse(tmp, out count))
-                            {
-                                sb.Append(R.YouTubeInfoText4);
-                                sb.Append(tmp);
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        try
-                        {
-                            xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry/app:control", nsmgr);
-                            if (xentry != null)
-                            {
-                                sb.Append(xentry["yt:state"].Attributes["name"].Value);
-                                sb.Append(":");
-                                sb.Append(xentry["yt:state"].InnerText);
-                                sb.AppendLine();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    if (!string.IsNullOrEmpty(imgurl))
-                    {
-                        HttpVarious http = new HttpVarious();
-                        Image img = http.GetImage(imgurl, videourl, 10000, ref args.Errmsg);
-                        if (img == null)
-                        {
-                            return false;
-                        }
-
-                        args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
-                        args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, sb.ToString().Trim()));
-                        return true;
+                        sb.Append(R.YouTubeInfoText1);
+                        sb.Append(tmp);
+                        sb.AppendLine();
                     }
                 }
+                catch (Exception)
+                {
+                }
+
+                try
+                {
+                    int sec = 0;
+                    if (int.TryParse(xentry["yt:duration"].Attributes["seconds"].Value, out sec))
+                    {
+                        sb.Append(R.YouTubeInfoText2);
+                        sb.AppendFormat("{0:d}:{1:d2}", sec / 60, sec % 60);
+                        sb.AppendLine();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                try
+                {
+                    DateTime tmpdate = new DateTime();
+                    xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry", nsmgr);
+                    if (DateTime.TryParse(xentry["published"].InnerText, out tmpdate))
+                    {
+                        sb.Append(R.YouTubeInfoText3);
+                        sb.Append(tmpdate);
+                        sb.AppendLine();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                try
+                {
+                    int count = 0;
+                    xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry", nsmgr);
+                    tmp = xentry["yt:statistics"].Attributes["viewCount"].Value;
+                    if (int.TryParse(tmp, out count))
+                    {
+                        sb.Append(R.YouTubeInfoText4);
+                        sb.Append(tmp);
+                        sb.AppendLine();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                try
+                {
+                    xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry/app:control", nsmgr);
+                    if (xentry != null)
+                    {
+                        sb.Append(xentry["yt:state"].Attributes["name"].Value);
+                        sb.Append(":");
+                        sb.Append(xentry["yt:state"].InnerText);
+                        sb.AppendLine();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            if (!string.IsNullOrEmpty(imgurl))
+            {
+                HttpVarious http = new HttpVarious();
+                Image img = http.GetImage(imgurl, videourl, 10000, ref args.Errmsg);
+                if (img == null)
+                {
+                    return false;
+                }
+
+                args.Pics.Add(new KeyValuePair<string, Image>(args.Url.Key, img));
+                args.TooltipText.Add(new KeyValuePair<string, string>(args.Url.Key, sb.ToString().Trim()));
+                return true;
             }
 
             return false;
