@@ -46,7 +46,7 @@ namespace Hoehoe
         private static bool Brightkite_GetUrl(GetUrlArgs args)
         {
             // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://brightkite\\.com/objects/((\\w{2})(\\w{2})\\w+)$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://brightkite\\.com/objects/((\\w{2})(\\w{2})\\w+)$", RegexOptions.IgnoreCase);
             if (mc.Success)
             {
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
@@ -60,12 +60,7 @@ namespace Hoehoe
         /// <summary>
         /// BackgroundWorkerから呼び出されるサムネイル画像作成デリゲート
         /// </summary>
-        /// <param name="args">Class CreateImageArgs
-        ///                                 url As KeyValuePair(Of String, String)                  元URLとサムネイルURLのKeyValuePair
-        ///                                 pics As List(Of KeyValuePair(Of String, Image))         元URLとサムネイル画像のKeyValuePair
-        ///                                 tooltiptext As List(Of KeyValuePair(Of String, String)) 元URLとツールチップテキストのKeyValuePair
-        ///                                 errmsg As String                                        取得に失敗した際のエラーメッセージ
-        /// </param>
+        /// <param name="args">CreateImageArgs</param>
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
