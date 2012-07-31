@@ -351,8 +351,9 @@
     <Compile Include="Forms\TabsDialog.Designer.cs">
       <DependentUpon>TabsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="WebServices\Thumbnails\Thumbnails.StreamZoo.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.MiilMe.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.StreamZoo.cs" />
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Path.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Tiqav.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Brightkite.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Cloudfiles.cs" />

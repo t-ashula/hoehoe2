@@ -1677,7 +1677,7 @@ namespace Hoehoe
                 this.StatusLabel.Text = R.CheckNewVersionText9;
                 if (!startup)
                 {
-                    MessageBox.Show(R.CheckNewVersionText10, R.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                    MessageBox.Show(R.CheckNewVersionText10, string.Format(R.CheckNewVersionText2,MyCommon.AppTitle), MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                 }
 
                 return;
@@ -1696,7 +1696,7 @@ namespace Hoehoe
                     string tmp = string.Format(R.CheckNewVersionText3, strVer);
                     using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                     {
-                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, R.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, string.Format(R.CheckNewVersionText1, MyCommon.AppTitle), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             retMsg = this.tw.GetTweenBinary(strVer);
                             if (retMsg.Length == 0)
@@ -1709,7 +1709,7 @@ namespace Hoehoe
 
                             if (!startup)
                             {
-                                MessageBox.Show(R.CheckNewVersionText5 + Environment.NewLine + retMsg, R.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show(R.CheckNewVersionText5 + Environment.NewLine + retMsg, string.Format(R.CheckNewVersionText2, MyCommon.AppTitle), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
                     }
@@ -1721,7 +1721,7 @@ namespace Hoehoe
                         string tmp = string.Format(R.CheckNewVersionText6, strVer);
                         using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                         {
-                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, R.CheckNewVersionText1, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, string.Format(R.CheckNewVersionText1, MyCommon.AppTitle), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 retMsg = this.tw.GetTweenBinary(strVer);
                                 if (retMsg.Length == 0)
@@ -1734,14 +1734,14 @@ namespace Hoehoe
 
                                 if (!startup)
                                 {
-                                    MessageBox.Show(R.CheckNewVersionText5 + Environment.NewLine + retMsg, R.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show(R.CheckNewVersionText5 + Environment.NewLine + retMsg, string.Format(R.CheckNewVersionText2, MyCommon.AppTitle), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 }
                             }
                         }
                     }
                     else if (!startup)
                     {
-                        MessageBox.Show(R.CheckNewVersionText7 + MyCommon.FileVersion.Replace(".", string.Empty) + R.CheckNewVersionText8 + strVer, R.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(R.CheckNewVersionText7 + MyCommon.FileVersion.Replace(".", string.Empty) + R.CheckNewVersionText8 + strVer, string.Format(R.CheckNewVersionText2, MyCommon.AppTitle), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
@@ -1750,7 +1750,7 @@ namespace Hoehoe
                 this.StatusLabel.Text = R.CheckNewVersionText9;
                 if (!startup)
                 {
-                    MessageBox.Show(R.CheckNewVersionText10, R.CheckNewVersionText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(R.CheckNewVersionText10, string.Format(R.CheckNewVersionText2, MyCommon.AppTitle), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
         }
