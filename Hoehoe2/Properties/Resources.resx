@@ -176,13 +176,13 @@
     <value>..\Resources\ChangeLog.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="CheckNewVersionText1" xml:space="preserve">
-    <value>Tween更新確認</value>
+    <value>{0}更新確認</value>
   </data>
   <data name="CheckNewVersionText10" xml:space="preserve">
     <value>更新版のバージョン取得に失敗しました。しばらく待ってから再度お試しください。</value>
   </data>
   <data name="CheckNewVersionText2" xml:space="preserve">
-    <value>Tween更新結果</value>
+    <value>{0}更新結果</value>
   </data>
   <data name="CheckNewVersionText3" xml:space="preserve">
     <value>新しいバージョン {0} が公開されています。更新しますか？</value>
@@ -341,7 +341,7 @@
     <value>マーク確認</value>
   </data>
   <data name="LoadConfigurationText1" xml:space="preserve">
-    <value>この設定ファイルは Tween により自動生成されました。手動で変更しないでください。</value>
+    <value>この設定ファイルはアプリケーションにより自動生成されました。手動で変更しないでください。</value>
   </data>
   <data name="MenuItemSearchNext_ClickText1" xml:space="preserve">
     <value>正規表現パターンが間違っています。</value>
