@@ -79,6 +79,7 @@ namespace Hoehoe
             new ThumbnailService("miilme", MiilMe_GetUrl, MiilMe_CreateImage),
             new ThumbnailService("StreamZoo", StreamZoo_GetUrl, StreamZoo_CreateImage),
             new ThumbnailService("My365", My365_GetUrl, My365_CreateImage),
+            new ThumbnailService("Path", Path_GetUrl, Path_CreateImage),
         };
 
         public Thumbnail(TweenMain owner)

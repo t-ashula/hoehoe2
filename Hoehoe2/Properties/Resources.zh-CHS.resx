@@ -160,13 +160,13 @@
     <value>非法正则表达式：</value>
   </data>
   <data name="CheckNewVersionText1" xml:space="preserve">
-    <value>Tween更新检查</value>
+    <value>{0}更新检查</value>
   </data>
   <data name="CheckNewVersionText10" xml:space="preserve">
     <value>新版本检查失败。请稍候再试。</value>
   </data>
   <data name="CheckNewVersionText2" xml:space="preserve">
-    <value>Tween更新检查结果</value>
+    <value>{0}更新检查结果</value>
   </data>
   <data name="CheckNewVersionText3" xml:space="preserve">
     <value>发现新版本  {0} 发布了。要更新吗？</value>
