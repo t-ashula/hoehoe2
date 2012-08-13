@@ -83,24 +83,8 @@ namespace Hoehoe
                 return false;
             }
 
-            string contentId = mc.Groups["contentId"].Value;
-
-            // DataDir作成
-            StringBuilder dataDir = new StringBuilder();
-            dataDir.Append("data");
-            for (int i = 0; i < contentId.Length; i++)
-            {
-                dataDir.Append("/");
-                dataDir.Append(contentId[i]);
-            }
-
-            // サムネイルURL抽出
-            string thumbnailUrl = Regex.Match(src, "http://p\\.twipple\\.jp/" + dataDir.ToString() + "_s\\.([a-zA-Z]+)").Value;
-            if (string.IsNullOrEmpty(thumbnailUrl))
-            {
-                return false;
-            }
-
+            var contentId = mc.Groups["contentId"].Value;
+            var thumbnailUrl = "http://p.twpl.jp/show/large/" + contentId;
             Image img = http.GetImage(thumbnailUrl, args.Url.Key, 0, ref args.Errmsg);
             if (img == null)
             {
