@@ -3789,6 +3789,7 @@ namespace Hoehoe
             List<Status> items = null;
             try
             {
+                content = content.Replace("\"truncated\":null","\"truncated\":false");
                 items = D.CreateDataFromJson<List<Status>>(content);
             }
             catch (SerializationException ex)
