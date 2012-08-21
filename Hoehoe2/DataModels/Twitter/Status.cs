@@ -70,8 +70,8 @@ namespace Hoehoe.DataModels.Twitter
         [DataMember(Name = "coordinates", IsRequired = false)]
         public Coordinates Coordinates;
 
-        [DataMember(Name = "truncated")]
-        public bool Truncated;
+        //[DataMember(Name = "truncated")]
+        //public bool Truncated;
 
         [DataMember(Name = "place", IsRequired = false)]
         public Place Place;

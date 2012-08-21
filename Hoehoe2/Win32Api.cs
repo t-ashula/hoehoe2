@@ -33,7 +33,7 @@ namespace Hoehoe
     using System.Threading;
     using System.Windows.Forms;
 
-    internal static class Win32Api
+    public static class Win32Api
     {
         #region "先行起動プロセスをアクティブにする"
 
