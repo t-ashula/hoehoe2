@@ -59,7 +59,7 @@ namespace Hoehoe.DataModels.Twitter
         public bool Favorited;
 
         [DataMember(Name = "truncated")]
-        public bool Truncated;
+        public string Truncated;
 
         [DataMember(Name = "id")]
         public long Id;
