@@ -71,7 +71,7 @@ namespace Hoehoe.DataModels.Twitter
         public Coordinates Coordinates;
 
         [DataMember(Name = "truncated")]
-        public bool Truncated;
+        public string Truncated;
 
         [DataMember(Name = "place", IsRequired = false)]
         public Place Place;
