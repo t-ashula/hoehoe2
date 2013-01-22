@@ -9,3 +9,4 @@ TweenUp/bin/*
 TweenUp/obj/*
 *.user
 *.Cache
+*.DotSettings
