@@ -47,6 +47,7 @@ namespace Hoehoe
         /// OAuthのアクセストークン取得先URI
         /// </summary>
         private const string AccessTokenUrlXAuth = "https://api.twitter.com/oauth/access_token";
+
         private const string RequestTokenUrl = "https://api.twitter.com/oauth/request_token";
         private const string AuthorizeUrl = "https://api.twitter.com/oauth/authorize";
         private const string AccessTokenUrl = "https://api.twitter.com/oauth/access_token";
@@ -149,11 +150,11 @@ namespace Hoehoe
             _requestToken = string.Empty;
         }
 
-        public bool AuthGetRequestToken(ref string content)
+        public bool AuthGetRequestToken(out string content)
         {
-            Uri authUri = null;
-            bool result = ((HttpOAuthApiProxy)_httpCon).AuthenticatePinFlowRequest(RequestTokenUrl, AuthorizeUrl, ref _requestToken, ref authUri);
-            content = authUri.ToString();
+            Uri authUri;
+            bool result = ((HttpOAuthApiProxy)_httpCon).AuthenticatePinFlowRequest(RequestTokenUrl, AuthorizeUrl, ref _requestToken, out authUri);
+            content = authUri == null ? string.Empty : authUri.ToString();
             return result;
         }
 

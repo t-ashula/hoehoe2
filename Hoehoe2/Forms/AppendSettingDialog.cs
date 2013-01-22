@@ -212,9 +212,11 @@ namespace Hoehoe
                     case 0:
                         _configurations.NameBalloon = NameBalloonEnum.None;
                         break;
+
                     case 1:
                         _configurations.NameBalloon = NameBalloonEnum.UserID;
                         break;
+
                     case 2:
                         _configurations.NameBalloon = NameBalloonEnum.NickName;
                         break;
@@ -226,10 +228,12 @@ namespace Hoehoe
                         _configurations.PostShiftEnter = true;
                         _configurations.PostCtrlEnter = false;
                         break;
+
                     case 1:
                         _configurations.PostCtrlEnter = true;
                         _configurations.PostShiftEnter = false;
                         break;
+
                     case 0:
                         _configurations.PostCtrlEnter = false;
                         _configurations.PostShiftEnter = false;
@@ -247,34 +251,49 @@ namespace Hoehoe
                 switch (ComboDispTitle.SelectedIndex)
                 {
                     case 0:
+
                         // None
                         _configurations.DispLatestPost = DispTitleEnum.None;
                         break;
+
                     case 1:
+
                         // Ver
                         _configurations.DispLatestPost = DispTitleEnum.Ver;
                         break;
+
                     case 2:
+
                         // Post
                         _configurations.DispLatestPost = DispTitleEnum.Post;
                         break;
+
                     case 3:
+
                         // RepCount
                         _configurations.DispLatestPost = DispTitleEnum.UnreadRepCount;
                         break;
+
                     case 4:
+
                         // AllCount
                         _configurations.DispLatestPost = DispTitleEnum.UnreadAllCount;
                         break;
+
                     case 5:
+
                         // Rep+All
                         _configurations.DispLatestPost = DispTitleEnum.UnreadAllRepCount;
                         break;
+
                     case 6:
+
                         // Unread/All
                         _configurations.DispLatestPost = DispTitleEnum.UnreadCountAllCount;
                         break;
+
                     case 7:
+
                         // Count of Status/Follow/Follower
                         _configurations.DispLatestPost = DispTitleEnum.OwnStatus;
                         break;
@@ -317,6 +336,7 @@ namespace Hoehoe
                     case 0:
                         _configurations.OutputzUrlmode = OutputzUrlmode.twittercom;
                         break;
+
                     case 1:
                         _configurations.OutputzUrlmode = OutputzUrlmode.twittercomWithUsername;
                         break;
@@ -361,9 +381,11 @@ namespace Hoehoe
                     case 0:
                         _configurations.ReplyIconState = ReplyIconState.None;
                         break;
+
                     case 1:
                         _configurations.ReplyIconState = ReplyIconState.StaticIcon;
                         break;
+
                     case 2:
                         _configurations.ReplyIconState = ReplyIconState.BlinkIcon;
                         break;
@@ -529,15 +551,19 @@ namespace Hoehoe
                 case IconSizes.IconNone:
                     IconSize.SelectedIndex = 0;
                     break;
+
                 case IconSizes.Icon16:
                     IconSize.SelectedIndex = 1;
                     break;
+
                 case IconSizes.Icon24:
                     IconSize.SelectedIndex = 2;
                     break;
+
                 case IconSizes.Icon48:
                     IconSize.SelectedIndex = 3;
                     break;
+
                 case IconSizes.Icon48_2:
                     IconSize.SelectedIndex = 4;
                     break;
@@ -575,9 +601,11 @@ namespace Hoehoe
                 case NameBalloonEnum.None:
                     cmbNameBalloon.SelectedIndex = 0;
                     break;
+
                 case NameBalloonEnum.UserID:
                     cmbNameBalloon.SelectedIndex = 1;
                     break;
+
                 case NameBalloonEnum.NickName:
                     cmbNameBalloon.SelectedIndex = 2;
                     break;
@@ -609,24 +637,31 @@ namespace Hoehoe
                 case DispTitleEnum.None:
                     ComboDispTitle.SelectedIndex = 0;
                     break;
+
                 case DispTitleEnum.Ver:
                     ComboDispTitle.SelectedIndex = 1;
                     break;
+
                 case DispTitleEnum.Post:
                     ComboDispTitle.SelectedIndex = 2;
                     break;
+
                 case DispTitleEnum.UnreadRepCount:
                     ComboDispTitle.SelectedIndex = 3;
                     break;
+
                 case DispTitleEnum.UnreadAllCount:
                     ComboDispTitle.SelectedIndex = 4;
                     break;
+
                 case DispTitleEnum.UnreadAllRepCount:
                     ComboDispTitle.SelectedIndex = 5;
                     break;
+
                 case DispTitleEnum.UnreadCountAllCount:
                     ComboDispTitle.SelectedIndex = 6;
                     break;
+
                 case DispTitleEnum.OwnStatus:
                     ComboDispTitle.SelectedIndex = 7;
                     break;
@@ -640,9 +675,11 @@ namespace Hoehoe
                 case HttpConnection.ProxyType.None:
                     RadioProxyNone.Checked = true;
                     break;
+
                 case HttpConnection.ProxyType.IE:
                     RadioProxyIE.Checked = true;
                     break;
+
                 default:
                     RadioProxySpecified.Checked = true;
                     break;
@@ -671,6 +708,7 @@ namespace Hoehoe
                 case OutputzUrlmode.twittercom:
                     ComboBoxOutputzUrlmode.SelectedIndex = 0;
                     break;
+
                 case OutputzUrlmode.twittercomWithUsername:
                     ComboBoxOutputzUrlmode.SelectedIndex = 1;
                     break;
@@ -709,9 +747,11 @@ namespace Hoehoe
                 case ReplyIconState.None:
                     ReplyIconStateCombo.SelectedIndex = 0;
                     break;
+
                 case ReplyIconState.StaticIcon:
                     ReplyIconStateCombo.SelectedIndex = 1;
                     break;
+
                 case ReplyIconState.BlinkIcon:
                     ReplyIconStateCombo.SelectedIndex = 2;
                     break;
@@ -722,15 +762,19 @@ namespace Hoehoe
                 case "OS":
                     LanguageCombo.SelectedIndex = 0;
                     break;
+
                 case "ja":
                     LanguageCombo.SelectedIndex = 1;
                     break;
+
                 case "en":
                     LanguageCombo.SelectedIndex = 2;
                     break;
+
                 case "zh-CN":
                     LanguageCombo.SelectedIndex = 3;
                     break;
+
                 default:
                     LanguageCombo.SelectedIndex = 0;
                     break;
@@ -892,12 +936,15 @@ namespace Hoehoe
                 case "btnUnread":
                     ChangeLabelFontAndColor(lblUnread);
                     break;
+
                 case "btnDetail":
                     ChangeLabelFontAndColor(lblDetail);
                     break;
+
                 case "btnListFont":
                     ChangeLabelFontAndColor(lblListFont);
                     break;
+
                 case "btnInputFont":
                     ChangeLabelFontAndColor(lblInputFont);
                     break;
@@ -912,39 +959,51 @@ namespace Hoehoe
                 case "btnSelf":
                     ChangeLabelColor(lblSelf);
                     break;
+
                 case "btnAtSelf":
                     ChangeLabelColor(lblAtSelf);
                     break;
+
                 case "btnTarget":
                     ChangeLabelColor(lblTarget);
                     break;
+
                 case "btnAtTarget":
                     ChangeLabelColor(lblAtTarget);
                     break;
+
                 case "btnAtFromTarget":
                     ChangeLabelColor(lblAtFromTarget);
                     break;
+
                 case "btnFav":
                     ChangeLabelColor(lblFav, false);
                     break;
+
                 case "btnOWL":
                     ChangeLabelColor(lblOWL, false);
                     break;
+
                 case "btnRetweet":
                     ChangeLabelColor(lblRetweet, false);
                     break;
+
                 case "btnInputBackcolor":
                     ChangeLabelColor(lblInputBackcolor);
                     break;
+
                 case "btnAtTo":
                     ChangeLabelColor(lblAtTo);
                     break;
+
                 case "btnListBack":
                     ChangeLabelColor(lblListBackcolor);
                     break;
+
                 case "btnDetailBack":
                     ChangeLabelColor(lblDetailBackcolor);
                     break;
+
                 case "btnDetailLink":
                     ChangeLabelColor(lblDetailLink, false);
                     break;
@@ -1593,14 +1652,14 @@ namespace Hoehoe
                     if (Twitter.AccountState == AccountState.Valid)
                     {
                         MyCommon.TwitterApiInfo.UsingCount = usingApi;
-                        var proc = new Thread(new ThreadStart(() =>
-                        {
-                            _tw.GetInfoApi(null); // 取得エラー時はinfoCountは初期状態（値：-1）
-                            if (IsHandleCreated && IsDisposed)
+                        var proc = new Thread(() =>
                             {
-                                Invoke(new MethodInvoker(DisplayApiMaxCount));
-                            }
-                        }));
+                                _tw.GetInfoApi(null); // 取得エラー時はinfoCountは初期状態（値：-1）
+                                if (IsHandleCreated && IsDisposed)
+                                {
+                                    Invoke(new MethodInvoker(DisplayApiMaxCount));
+                                }
+                            });
                         proc.Start();
                     }
                     else
@@ -1693,9 +1752,11 @@ namespace Hoehoe
                         evt = evt | tbl.EventType;
                         myevt = myevt | tbl.EventType;
                         break;
+
                     case CheckState.Indeterminate:
                         evt = evt | tbl.EventType;
                         break;
+
                     case CheckState.Unchecked:
                         break;
                 }

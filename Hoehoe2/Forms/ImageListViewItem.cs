@@ -93,7 +93,7 @@ namespace Hoehoe
 
         private Image GetImage(bool force)
         {
-            return _images[_imageUrl, force, new Action<Image>(img =>
+            return _images[_imageUrl, force, img =>
             {
                 if (img == null)
                 {
@@ -103,15 +103,15 @@ namespace Hoehoe
                 if (ListView != null && ListView.Created && !ListView.IsDisposed)
                 {
                     ListView.Invoke(new Action(() =>
-                    {
-                        if (Index < ListView.VirtualListSize)
                         {
-                            ListView.RedrawItems(Index, Index, true);
-                            OnImageDownloaded();
-                        }
-                    }));
+                            if (Index < ListView.VirtualListSize)
+                            {
+                                ListView.RedrawItems(Index, Index, true);
+                                OnImageDownloaded();
+                            }
+                        }));
                 }
-            })];
+            }];
         }
 
         private void OnImageDownloaded()

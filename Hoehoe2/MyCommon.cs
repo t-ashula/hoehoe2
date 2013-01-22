@@ -196,7 +196,8 @@ namespace Hoehoe
             var buf = new StringBuilder();
             buf.AppendFormat(R.UnhandledExceptionText8, ex.GetType().FullName, ex.Message);
             buf.AppendLine();
-            if (ex.Data != null)
+
+            // if (ex.Data != null)
             {
                 bool needHeader = true;
                 foreach (DictionaryEntry dt in ex.Data)
@@ -234,7 +235,8 @@ namespace Hoehoe
                 buf.AppendLine();
                 buf.AppendFormat(R.UnhandledExceptionText8, innerEx.GetType().FullName, innerEx.Message);
                 buf.AppendLine();
-                if (innerEx.Data != null)
+
+                // if (innerEx.Data != null)
                 {
                     bool needHeader = true;
 
@@ -430,11 +432,6 @@ namespace Hoehoe
             try
             {
                 img = Image.FromFile(filename);
-                if (img == null)
-                {
-                    return false;
-                }
-
                 if (img.RawFormat.Guid == ImageFormat.Gif.Guid)
                 {
                     var fd = new FrameDimension(img.FrameDimensionsList[0]);

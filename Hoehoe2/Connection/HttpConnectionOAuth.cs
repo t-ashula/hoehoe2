@@ -316,7 +316,7 @@ namespace Hoehoe
         /// <param name="requestToken">[OUT]認証要求で戻されるリクエストトークン。使い捨て</param>
         /// <param name="authUri">[OUT]requestUriを元に生成された認証用URL。通常はリクエストトークンをクエリとして付加したUri</param>
         /// <returns>取得結果真偽値</returns>
-        public bool AuthenticatePinFlowRequest(string requestTokenUrl, string authorizeUrl, ref string requestToken, ref Uri authUri)
+        public bool AuthenticatePinFlowRequest(string requestTokenUrl, string authorizeUrl, ref string requestToken, out Uri authUri)
         {
             // PIN-based flow
             authUri = GetAuthenticatePageUri(requestTokenUrl, authorizeUrl, ref requestToken);

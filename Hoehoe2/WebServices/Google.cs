@@ -28,7 +28,6 @@ namespace Hoehoe
 {
     using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization.Json;
     using System.Web;
     using DataModels;
     using DataModels.Google;
@@ -160,7 +159,7 @@ namespace Hoehoe
 
         #endregion "言語テーブル定義"
 
-        public bool Translate(string srclng, string dstlng, string source, ref string destination, ref string errorMessage)
+        public bool Translate(string srclng, string dstlng, string source, ref string destination, out string errorMessage)
         {
             errorMessage = string.Empty;
             if (string.IsNullOrEmpty(srclng) || string.IsNullOrEmpty(dstlng))

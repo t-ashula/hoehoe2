@@ -727,7 +727,7 @@ namespace Hoehoe
             return true;
         }
 
-        private bool CheckMatchRule(ref bool isBlank)
+        private bool CheckMatchRule(out bool isBlank)
         {
             isBlank = false;
             TextSource.Text = TextSource.Text.Trim();
@@ -804,7 +804,7 @@ namespace Hoehoe
             return true;
         }
 
-        private bool CheckExcludeRule(ref bool isBlank)
+        private bool CheckExcludeRule(out bool isBlank)
         {
             isBlank = false;
             TextExSource.Text = TextExSource.Text.Trim();
@@ -1046,11 +1046,11 @@ namespace Hoehoe
 
         private void ButtonOK_ClickExtracted()
         {
-            bool isBlankMatch = false;
-            bool isBlankExclude = false;
+            bool isBlankMatch;
+            bool isBlankExclude;
 
             // 入力チェック
-            if (!CheckMatchRule(ref isBlankMatch) || !CheckExcludeRule(ref isBlankExclude))
+            if (!CheckMatchRule(out isBlankMatch) || !CheckExcludeRule(out isBlankExclude))
             {
                 return;
             }

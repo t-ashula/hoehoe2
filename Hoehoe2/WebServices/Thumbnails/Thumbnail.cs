@@ -171,7 +171,7 @@ namespace Hoehoe
                 if (TwitterGeo_GetUrl(args))
                 {
                     // URLに対応したサムネイル作成処理デリゲートをリストに登録
-                    dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(args.Url, new ImageCreatorDelegate(TwitterGeo_CreateImage)));
+                    dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(args.Url, TwitterGeo_CreateImage));
                 }
             }
 
@@ -218,6 +218,7 @@ namespace Hoehoe
         #region "テンプレ"
 
 #if template
+
         /// <summary>
         /// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
         /// </summary>
@@ -233,6 +234,7 @@ namespace Hoehoe
             // TODO URL判定処理を記述
             Match mc = Regex.Match(args.url, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
             if (mc.Success) {
+
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://i.imgur.com/${1}l.jpg")));
                 return true;
@@ -260,6 +262,7 @@ namespace Hoehoe
             if (img == null) {
                 return false;
             }
+
             // 成功した場合はURLに対応する画像、ツールチップテキストを登録
             args.pics.Add(new KeyValuePair<string, Image>(args.url.Key, img));
             args.tooltipText.Add(new KeyValuePair<string, string>(args.url.Key, string.Empty));
@@ -349,7 +352,7 @@ namespace Hoehoe
 
             lock (_lckPrev)
             {
-                if (prv != null && _curPost != null && prv.StatusId == _curPost.StatusId)
+                if (_curPost != null && prv.StatusId == _curPost.StatusId)
                 {
                     _preview = prv;
                     _tweenMain.SplitContainer3.Panel2Collapsed = false;

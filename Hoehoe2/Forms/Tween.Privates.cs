@@ -156,7 +156,7 @@ namespace Hoehoe
             // 1. Twitterによりリンクと判定される @idが文中に1つ含まれる (2009/5/28 リンク化される@IDのみカウントするように修正)
             // 2. リプライ先ステータスIDが設定されている(リストをダブルクリックで返信している)
             // 3. 文中に含まれた@idがリプライ先のポスト者のIDと一致する
-            if (m != null)
+            // if (m != null)
             {
                 if (statusText.StartsWith("@"))
                 {
@@ -355,8 +355,8 @@ namespace Hoehoe
             }
 
             // スクロール制御準備
-            int smode = -1; // -1:制御しない,-2:最新へ,その他:topitem使用
-            long topId = GetScrollPos(ref smode);
+            int smode; // -1:制御しない,-2:最新へ,その他:topitem使用
+            long topId = GetScrollPos(out smode);
             int befCnt = _curList.VirtualListSize;
 
             // 現在の選択状態を退避
@@ -497,7 +497,7 @@ namespace Hoehoe
             HashSupl.AddRangeItem(_tw.GetHashList());
         }
 
-        private long GetScrollPos(ref int smode)
+        private long GetScrollPos(out int smode)
         {
             long topId = -1;
             if (_curList == null || _curTab == null || _curList.VirtualListSize <= 0)
@@ -2230,7 +2230,7 @@ namespace Hoehoe
                                 int tabNo = keyCode - Keys.D1;
                                 if (ListTab.TabPages.Count < tabNo)
                                 {
-                                    return functionReturnValue;
+                                    return false;
                                 }
 
                                 ListTabSelect(tabNo);
@@ -2585,13 +2585,13 @@ namespace Hoehoe
                                     var lst = (DetailsListView)ListTab.SelectedTab.Tag;
                                     if (lst.Columns.Count < colNo)
                                     {
-                                        return functionReturnValue;
+                                        return false;
                                     }
 
                                     var col = lst.Columns.Cast<ColumnHeader>().Where(x => x.DisplayIndex == colNo).FirstOrDefault();
                                     if (col == null)
                                     {
-                                        return functionReturnValue;
+                                        return false;
                                     }
 
                                     MyList_ColumnClick(lst, new ColumnClickEventArgs(col.Index));
@@ -2646,7 +2646,7 @@ namespace Hoehoe
                         case Keys.T:
                             if (!ExistCurrentPost)
                             {
-                                return functionReturnValue;
+                                return false;
                             }
 
                             DoTranslation(_curPost.TextFromApi);
@@ -2678,7 +2678,7 @@ namespace Hoehoe
                     break;
             }
 
-            return functionReturnValue;
+            return false;
         }
 
         private void ScrollPostBrowser(int delta)
@@ -3203,6 +3203,7 @@ namespace Hoehoe
                 return;
             }
 
+            // not parallel path
             if (_replyChains == null || _replyChains.Count < 1)
             {
                 var posts = from t in _statuses.Tabs
@@ -3254,7 +3255,7 @@ namespace Hoehoe
             else
             {
                 _replyChains = null;
-                GoBackInReplyToPostTree(parallel);
+                GoBackInReplyToPostTree();
             }
         }
 
@@ -3980,8 +3981,10 @@ namespace Hoehoe
             while (true);
         }
 
-        private void GetMoveOrCopy(ref bool move, ref bool mark)
+        private void GetMoveOrCopy(out bool move, out bool mark)
         {
+            mark = false;
+
             // 移動するか？
             string tmp = string.Format(R.IDRuleMenuItem_ClickText4, Environment.NewLine);
             var reslut = MessageBox.Show(tmp, R.IDRuleMenuItem_ClickText5, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -6313,9 +6316,8 @@ namespace Hoehoe
                 return;
             }
 
-            bool mv = false;
-            bool mk = false;
-            GetMoveOrCopy(ref mv, ref mk);
+            bool mv, mk;
+            GetMoveOrCopy(out mv, out mk);
 
             _statuses.Tabs[tabName].AddFilters(names.Select(name => new FiltersClass
             {
@@ -7589,7 +7591,7 @@ namespace Hoehoe
                 return false;
             }
 
-            return reset;
+            return false;
         }
 
         private void TimerTimeline_ElapsedExtracted()

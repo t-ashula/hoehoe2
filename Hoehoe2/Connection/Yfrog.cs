@@ -85,9 +85,9 @@ namespace Hoehoe
                 return string.Format("Err:{0}", ex.Message);
             }
 
-            if (mediaFile == null || !mediaFile.Exists)
+            if (!mediaFile.Exists)
             {
-                return "Err:File isn't exists.";
+                return "Err:" + "File isn't exists.";
             }
 
             string content = string.Empty;

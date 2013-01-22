@@ -338,7 +338,7 @@ namespace Hoehoe
             MyCommon.TwitterApiInfo.Initialize();
             try
             {
-                _twitterConnection.AuthGetRequestToken(ref pinPageUrl);
+                _twitterConnection.AuthGetRequestToken(out pinPageUrl);
             }
             catch (Exception)
             {

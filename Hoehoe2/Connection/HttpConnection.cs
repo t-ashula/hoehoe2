@@ -157,6 +157,7 @@ namespace Hoehoe
                 case ProxyType.None:
                     _proxy = null;
                     break;
+
                 case ProxyType.Specified:
                     _proxy = new WebProxy(string.Format("http://{0}:{1}", proxyAddress, proxyPort));
                     if (!string.IsNullOrEmpty(proxyUser) || !string.IsNullOrEmpty(proxyPassword))
@@ -165,7 +166,9 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case ProxyType.IE:
+
                     // IE設定（システム設定）はデフォルト値なので処理しない
                     break;
             }
@@ -308,50 +311,65 @@ namespace Hoehoe
                                 case ".jpe":
                                     mime = "image/jpeg";
                                     break;
+
                                 case ".gif":
                                     mime = "image/gif";
                                     break;
+
                                 case ".png":
                                     mime = "image/png";
                                     break;
+
                                 case ".tiff":
                                 case ".tif":
                                     mime = "image/tiff";
                                     break;
+
                                 case ".bmp":
                                     mime = "image/x-bmp";
                                     break;
+
                                 case ".avi":
                                     mime = "video/avi";
                                     break;
+
                                 case ".wmv":
                                     mime = "video/x-ms-wmv";
                                     break;
+
                                 case ".flv":
                                     mime = "video/x-flv";
                                     break;
+
                                 case ".m4v":
                                     mime = "video/x-m4v";
                                     break;
+
                                 case ".mov":
                                     mime = "video/quicktime";
                                     break;
+
                                 case ".mp4":
                                     mime = "video/3gpp";
                                     break;
+
                                 case ".rm":
                                     mime = "application/vnd.rn-realmedia";
                                     break;
+
                                 case ".mpeg":
                                 case ".mpg":
                                     mime = "video/mpeg";
                                     break;
+
                                 case ".3gp":
                                     mime = "movie/3gp";
                                     break;
+
                                 case ".3g2":
                                     mime = "video/3gpp2";
                                     break;
+
                                 default:
                                     mime = "application/octet-stream" + "\r\n" + "Content-Transfer-Encoding: binary";
                                     break;
@@ -448,8 +466,9 @@ namespace Hoehoe
                         }
                         else
                         {
-                            using (Stream stream = new GZipStream(webRes.GetResponseStream(), CompressionMode.Decompress))
+                            using (var stream = new GZipStream(webRes.GetResponseStream(), CompressionMode.Decompress))
                             {
+                                // TODO: need using ?
                                 if (stream != null)
                                 {
                                     CopyStream(stream, contentStream);
