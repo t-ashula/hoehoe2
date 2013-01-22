@@ -383,11 +383,12 @@ namespace Hoehoe
             using (FormInfo dlg = new FormInfo(this, R.ListsGetting, RefreshLists_Dowork))
             {
                 dlg.ShowDialog();
-                if (!string.IsNullOrEmpty((string)dlg.Result))
+                if (string.IsNullOrEmpty((string)dlg.Result))
                 {
-                    MessageBox.Show(string.Format(R.ListsDeleteFailed, (string)dlg.Result));
                     return;
                 }
+
+                MessageBox.Show(string.Format(R.ListsDeleteFailed, (string)dlg.Result));
             }
         }
 

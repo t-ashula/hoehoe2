@@ -3597,16 +3597,15 @@ namespace Hoehoe
                 if (InvokeRequired && !IsDisposed)
                 {
                     Invoke(new Action<bool>(RefreshTimeline), true);
-                    return;
                 }
             }
             catch (ObjectDisposedException)
             {
-                return;
+                // todo: do something?
             }
             catch (InvalidOperationException)
             {
-                return;
+                // todo: do something?
             }
         }
 
@@ -3631,16 +3630,15 @@ namespace Hoehoe
                             }
                         }
                     }));
-                    return;
                 }
             }
             catch (ObjectDisposedException)
             {
-                return;
+                // todo: do something?
             }
             catch (InvalidOperationException)
             {
-                return;
+                // todo: do something?
             }
         }
 

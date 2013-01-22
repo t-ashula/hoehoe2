@@ -1295,7 +1295,7 @@ namespace Hoehoe
                             retweetedCount += ids.Length;
                             if (ids.Length < 100)
                             {
-                                break;
+                                // todo : what?
                             }
                         }
                         catch (SerializationException ex)

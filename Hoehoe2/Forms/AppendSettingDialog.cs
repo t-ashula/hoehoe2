@@ -854,7 +854,6 @@ namespace Hoehoe
             if (!_publicSearchPeriodValidator.IsValidPeriod(PubSearchPeriod.Text))
             {
                 e.Cancel = true;
-                return;
             }
         }
 
@@ -992,7 +991,6 @@ namespace Hoehoe
                 {
                     MessageBox.Show(R.TextBoxOutputzKey_Validating);
                     e.Cancel = true;
-                    return;
                 }
             }
         }

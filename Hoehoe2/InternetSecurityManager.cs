@@ -89,7 +89,6 @@ namespace Hoehoe
             catch (ExternalException ex)
             {
                 MyCommon.TraceOut(ex, "IProfferSerive.ProfferService() HRESULT:" + ex.ErrorCode.ToString("X8") + Environment.NewLine);
-                return;
             }
         }
 

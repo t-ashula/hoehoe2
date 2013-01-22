@@ -298,7 +298,7 @@ namespace Hoehoe
             }
             catch (Exception)
             {
-                return;
+                // nothing
             }
         }
 

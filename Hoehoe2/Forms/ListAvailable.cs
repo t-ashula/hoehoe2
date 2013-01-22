@@ -116,7 +116,7 @@ namespace Hoehoe
             }
             catch (InvalidCastException)
             {
-                return;
+                // todo: do something?
             }
         }
 
@@ -149,11 +149,12 @@ namespace Hoehoe
             using (FormInfo dlg = new FormInfo(this, "Getting Lists...", RefreshLists_DoWork))
             {
                 dlg.ShowDialog();
-                if (!string.IsNullOrEmpty((string)dlg.Result))
+                if (string.IsNullOrEmpty((string)dlg.Result))
                 {
-                    MessageBox.Show("Failed to get lists. (" + (string)dlg.Result + ")");
                     return;
                 }
+
+                MessageBox.Show("Failed to get lists. (" + (string)dlg.Result + ")");
             }
         }
 

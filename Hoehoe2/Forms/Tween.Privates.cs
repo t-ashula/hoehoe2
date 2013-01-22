@@ -1636,7 +1636,7 @@ namespace Hoehoe
                 }
                 catch (Exception)
                 {
-                    continue;
+                    // todo: do something?
                 }
             }
 
@@ -3793,7 +3793,6 @@ namespace Hoehoe
             sidx += ids.Length;
             StatusText.SelectionStart = sidx;
             StatusText.Focus();
-            return;
         }
 
         private void RefreshTasktrayIcon(bool forceRefresh)
@@ -7268,11 +7267,11 @@ namespace Hoehoe
             }
             catch (ObjectDisposedException)
             {
-                return;
+                // todo: do something?
             }
             catch (InvalidOperationException)
             {
-                return;
+                // todo: do something?
             }
         }
 
