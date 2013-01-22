@@ -50,7 +50,6 @@ namespace Hoehoe
             new ThumbnailService("はてなフォトライフ", Hatena_GetUrl, Hatena_CreateImage),
             new ThumbnailService("PhotoShare/bctiny", PhotoShare_GetUrl, PhotoShare_CreateImage),
             new ThumbnailService("img.ly", Imgly_GetUrl, Imgly_CreateImage),
-            new ThumbnailService("brightkite", Brightkite_GetUrl, Brightkite_CreateImage),
             new ThumbnailService("Twitgoo", Twitgoo_GetUrl, Twitgoo_CreateImage),
             new ThumbnailService("youtube", Youtube_GetUrl, Youtube_CreateImage),
             new ThumbnailService("ニコニコ動画", Nicovideo_GetUrl, Nicovideo_CreateImage),

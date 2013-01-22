@@ -2155,6 +2155,7 @@ namespace Hoehoe
             }
 
             content = Regex.Replace(content, "[\\x00-\\x1f-[\\x0a\\x0d]]+", " ");
+            content = Regex.Replace(content, @"<twitter:geo>.*?</twitter:geo>", "<twitter:geo></twitter:geo>");
             XmlDocument xdoc = new XmlDocument();
             try
             {
