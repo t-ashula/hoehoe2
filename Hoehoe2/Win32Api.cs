@@ -689,7 +689,7 @@ namespace Hoehoe
         private static void RefreshProxySettings(string strProxy)
         {
             const int INTERNET_OPTION_PROXY = 38;
-            ///const int INTERNET_OPEN_TYPE_PRECONFIG = 0;  // IE setting
+            // const int INTERNET_OPEN_TYPE_PRECONFIG = 0;  // IE setting
             const int INTERNET_OPEN_TYPE_DIRECT = 1; // Direct
             const int INTERNET_OPEN_TYPE_PROXY = 3;  // Custom
 

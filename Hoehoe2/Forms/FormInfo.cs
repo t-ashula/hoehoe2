@@ -78,8 +78,6 @@ namespace Hoehoe
         /// <summary>
         /// ダイアログに表示されるユーザー向けメッセージを設定あるいは取得する
         /// </summary>
-        /// <param name="msg">表示するメッセージ</param>
-        /// <returns>現在設定されているメッセージ</returns>
         public string InfoMessage
         {
             get { return _formMessage; }
@@ -89,14 +87,11 @@ namespace Hoehoe
         /// <summary>
         /// Servicerへ渡すパラメータ
         /// </summary>
-        /// <param name="args">Servicerへ渡すパラメータ</param>
-        /// <returns>現在設定されているServicerへ渡すパラメータ</returns>
         public object Argument { get; set; }
 
         /// <summary>
-        /// Servicerのe.Result
+        /// Servicerのe.Result を取得します
         /// </summary>
-        /// <returns>Servicerのe.Result</returns>
         public object Result
         {
             get { return _backGroundWorkerServicer.Result; }

@@ -660,7 +660,7 @@ namespace Hoehoe
 
             tabPage.SuspendLayout();
 
-            /// UserTimeline関連
+            // UserTimeline関連
             Label label = null;
             if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
             {
@@ -698,7 +698,7 @@ namespace Hoehoe
                 _tabDialog.AddTab(tabName);
             }
 
-            /// 検索関連の準備
+            // 検索関連の準備
             Panel pnl = null;
             if (tabType == TabUsageType.PublicSearch)
             {
