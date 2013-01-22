@@ -35,7 +35,7 @@ namespace Hoehoe
 
         public SearchWord()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #endregion constructor
@@ -44,20 +44,20 @@ namespace Hoehoe
 
         public string SWord
         {
-            get { return this.SWordText.Text; }
-            set { this.SWordText.Text = value; }
+            get { return SWordText.Text; }
+            set { SWordText.Text = value; }
         }
 
         public bool CheckCaseSensitive
         {
-            get { return this.CheckSearchCaseSensitive.Checked; }
-            set { this.CheckSearchCaseSensitive.Checked = value; }
+            get { return CheckSearchCaseSensitive.Checked; }
+            set { CheckSearchCaseSensitive.Checked = value; }
         }
 
         public bool CheckRegex
         {
-            get { return this.CheckSearchRegex.Checked; }
-            set { this.CheckSearchRegex.Checked = value; }
+            get { return CheckSearchRegex.Checked; }
+            set { CheckSearchRegex.Checked = value; }
         }
 
         #endregion properties
@@ -66,20 +66,20 @@ namespace Hoehoe
 
         private void OK_Button_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void Cancel_Button_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void SearchWord_Shown(object sender, EventArgs e)
         {
-            this.SWordText.SelectAll();
-            this.SWordText.Focus();
+            SWordText.SelectAll();
+            SWordText.Focus();
         }
 
         #endregion event handler

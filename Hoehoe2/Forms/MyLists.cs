@@ -36,8 +36,8 @@ namespace Hoehoe
     {
         #region private
 
-        private string contextUserName;
-        private Twitter twitter;
+        private readonly string _contextUserName;
+        private readonly Twitter _twitter;
 
         #endregion private
 
@@ -45,10 +45,10 @@ namespace Hoehoe
 
         public MyLists(string userName, Twitter tw)
         {
-            this.InitializeComponent();
-            this.contextUserName = userName;
-            this.twitter = tw;
-            this.Text = this.contextUserName + R.MyLists1;
+            InitializeComponent();
+            _contextUserName = userName;
+            _twitter = tw;
+            Text = _contextUserName + R.MyLists1;
         }
 
         #endregion constructor
@@ -57,20 +57,20 @@ namespace Hoehoe
 
         private void MyLists_Load(object sender, EventArgs e)
         {
-            this.LoadList();
+            LoadList();
         }
 
         private void ListRefreshButton_Click(object sender, EventArgs e)
         {
-            string rslt = this.twitter.GetListsApi();
+            string rslt = _twitter.GetListsApi();
             if (!string.IsNullOrEmpty(rslt))
             {
                 MessageBox.Show(string.Format(R.ListsDeleteFailed, rslt));
             }
             else
             {
-                this.ListsCheckedListBox.Items.Clear();
-                this.LoadList();
+                ListsCheckedListBox.Items.Clear();
+                LoadList();
             }
         }
 
@@ -80,10 +80,10 @@ namespace Hoehoe
             {
                 case CheckState.Indeterminate:
                     {
-                        ListElement listItem = (ListElement)this.ListsCheckedListBox.Items[e.Index];
+                        ListElement listItem = (ListElement)ListsCheckedListBox.Items[e.Index];
 
                         bool ret = false;
-                        string rslt = this.twitter.ContainsUserAtList(listItem.Id.ToString(), this.contextUserName, ref ret);
+                        string rslt = _twitter.ContainsUserAtList(listItem.Id.ToString(), _contextUserName, ref ret);
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
@@ -105,8 +105,8 @@ namespace Hoehoe
                     break;
                 case CheckState.Unchecked:
                     {
-                        ListElement list = (ListElement)this.ListsCheckedListBox.Items[e.Index];
-                        string rslt = this.twitter.AddUserToList(list.Id.ToString(), this.contextUserName.ToString());
+                        ListElement list = (ListElement)ListsCheckedListBox.Items[e.Index];
+                        string rslt = _twitter.AddUserToList(list.Id.ToString(), _contextUserName.ToString());
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
@@ -117,8 +117,8 @@ namespace Hoehoe
                     break;
                 case CheckState.Checked:
                     {
-                        ListElement list = (ListElement)this.ListsCheckedListBox.Items[e.Index];
-                        string rslt = this.twitter.RemoveUserToList(list.Id.ToString(), this.contextUserName.ToString());
+                        ListElement list = (ListElement)ListsCheckedListBox.Items[e.Index];
+                        string rslt = _twitter.RemoveUserToList(list.Id.ToString(), _contextUserName.ToString());
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
@@ -132,31 +132,31 @@ namespace Hoehoe
 
         private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            e.Cancel = this.ListsCheckedListBox.SelectedItem == null;
+            e.Cancel = ListsCheckedListBox.SelectedItem == null;
         }
 
         private void AddListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
-            this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Unchecked);
-            this.ListsCheckedListBox.ItemCheck += this.ListsCheckedListBox_ItemCheck;
-            this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Checked);
+            ListsCheckedListBox.ItemCheck -= ListsCheckedListBox_ItemCheck;
+            ListsCheckedListBox.SetItemCheckState(ListsCheckedListBox.SelectedIndex, CheckState.Unchecked);
+            ListsCheckedListBox.ItemCheck += ListsCheckedListBox_ItemCheck;
+            ListsCheckedListBox.SetItemCheckState(ListsCheckedListBox.SelectedIndex, CheckState.Checked);
         }
 
         private void DeleteListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
-            this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Checked);
-            this.ListsCheckedListBox.ItemCheck += this.ListsCheckedListBox_ItemCheck;
-            this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Unchecked);
+            ListsCheckedListBox.ItemCheck -= ListsCheckedListBox_ItemCheck;
+            ListsCheckedListBox.SetItemCheckState(ListsCheckedListBox.SelectedIndex, CheckState.Checked);
+            ListsCheckedListBox.ItemCheck += ListsCheckedListBox_ItemCheck;
+            ListsCheckedListBox.SetItemCheckState(ListsCheckedListBox.SelectedIndex, CheckState.Unchecked);
         }
 
         private void ReloadListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
-            this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Indeterminate);
-            this.ListsCheckedListBox.ItemCheck += this.ListsCheckedListBox_ItemCheck;
-            this.ListsCheckedListBox.SetItemCheckState(this.ListsCheckedListBox.SelectedIndex, CheckState.Checked);
+            ListsCheckedListBox.ItemCheck -= ListsCheckedListBox_ItemCheck;
+            ListsCheckedListBox.SetItemCheckState(ListsCheckedListBox.SelectedIndex, CheckState.Indeterminate);
+            ListsCheckedListBox.ItemCheck += ListsCheckedListBox_ItemCheck;
+            ListsCheckedListBox.SetItemCheckState(ListsCheckedListBox.SelectedIndex, CheckState.Checked);
         }
 
         private void ListsCheckedListBox_MouseDown(object sender, MouseEventArgs e)
@@ -165,35 +165,35 @@ namespace Hoehoe
             {
                 case MouseButtons.Left:
                     // 項目が無い部分をクリックしても、選択されている項目のチェック状態が変更されてしまうので、その対策
-                    for (int index = 0; index < this.ListsCheckedListBox.Items.Count; index++)
+                    for (int index = 0; index < ListsCheckedListBox.Items.Count; index++)
                     {
-                        if (this.ListsCheckedListBox.GetItemRectangle(index).Contains(e.Location))
+                        if (ListsCheckedListBox.GetItemRectangle(index).Contains(e.Location))
                         {
                             return;
                         }
                     }
 
-                    this.ListsCheckedListBox.SelectedItem = null;
+                    ListsCheckedListBox.SelectedItem = null;
                     break;
                 case MouseButtons.Right:
                     // コンテキストメニューの項目実行時にSelectedItemプロパティを利用出来るように
-                    for (int index = 0; index < this.ListsCheckedListBox.Items.Count; index++)
+                    for (int index = 0; index < ListsCheckedListBox.Items.Count; index++)
                     {
-                        if (this.ListsCheckedListBox.GetItemRectangle(index).Contains(e.Location))
+                        if (ListsCheckedListBox.GetItemRectangle(index).Contains(e.Location))
                         {
-                            this.ListsCheckedListBox.SetSelected(index, true);
+                            ListsCheckedListBox.SetSelected(index, true);
                             return;
                         }
                     }
 
-                    this.ListsCheckedListBox.SelectedItem = null;
+                    ListsCheckedListBox.SelectedItem = null;
                     break;
             }
         }
 
         private void CloseButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         #endregion eventhandler
@@ -202,13 +202,13 @@ namespace Hoehoe
 
         private void LoadList()
         {
-            this.ListsCheckedListBox.ItemCheck -= this.ListsCheckedListBox_ItemCheck;
+            ListsCheckedListBox.ItemCheck -= ListsCheckedListBox_ItemCheck;
 
-            this.ListsCheckedListBox.Items.AddRange(TabInformations.Instance.SubscribableLists.FindAll(item => item.Username == this.twitter.Username).ToArray());
+            ListsCheckedListBox.Items.AddRange(TabInformations.Instance.SubscribableLists.FindAll(item => item.Username == _twitter.Username).ToArray());
 
-            for (int i = 0; i < this.ListsCheckedListBox.Items.Count; i++)
+            for (int i = 0; i < ListsCheckedListBox.Items.Count; i++)
             {
-                ListElement listItem = (ListElement)this.ListsCheckedListBox.Items[i];
+                ListElement listItem = (ListElement)ListsCheckedListBox.Items[i];
 
                 List<PostClass> listPost = new List<PostClass>();
                 List<PostClass> otherPost = new List<PostClass>();
@@ -231,14 +231,14 @@ namespace Hoehoe
                 // リストが空の場合は推定不能
                 if (listPost.Count == 0)
                 {
-                    this.ListsCheckedListBox.SetItemCheckState(i, CheckState.Indeterminate);
+                    ListsCheckedListBox.SetItemCheckState(i, CheckState.Indeterminate);
                     continue;
                 }
 
                 // リストに該当ユーザーのポストが含まれていれば、リストにユーザーが含まれているとする。
-                if (listPost.Exists(item => item.ScreenName == this.contextUserName))
+                if (listPost.Exists(item => item.ScreenName == _contextUserName))
                 {
-                    this.ListsCheckedListBox.SetItemChecked(i, true);
+                    ListsCheckedListBox.SetItemChecked(i, true);
                     continue;
                 }
 
@@ -271,25 +271,25 @@ namespace Hoehoe
                 }
 
                 // リスト中のユーザーの人数がlistItem.MemberCount以上で、かつ該当のユーザーが含まれていなければ、リストにユーザーは含まれていないとする。
-                if (listItem.MemberCount > 0 && listItem.MemberCount <= listPostUserIDs.Count && (!listPostUserNames.Contains(this.contextUserName)))
+                if (listItem.MemberCount > 0 && listItem.MemberCount <= listPostUserIDs.Count && (!listPostUserNames.Contains(_contextUserName)))
                 {
-                    this.ListsCheckedListBox.SetItemChecked(i, false);
+                    ListsCheckedListBox.SetItemChecked(i, false);
                     continue;
                 }
 
                 otherPost.AddRange(TabInformations.Instance.Posts.Values);
 
                 // リストに該当ユーザーのポストが含まれていないのにリスト以外で取得したポストの中にリストに含まれるべきポストがある場合は、リストにユーザーは含まれていないとする。
-                if (otherPost.Exists(item => (item.ScreenName == this.contextUserName) && (item.CreatedAt > listOlderPostCreatedAt) && (item.CreatedAt < listNewistPostCreatedAt) && ((!item.IsReply) || listPostUserNames.Contains(item.InReplyToUser))))
+                if (otherPost.Exists(item => (item.ScreenName == _contextUserName) && (item.CreatedAt > listOlderPostCreatedAt) && (item.CreatedAt < listNewistPostCreatedAt) && ((!item.IsReply) || listPostUserNames.Contains(item.InReplyToUser))))
                 {
-                    this.ListsCheckedListBox.SetItemChecked(i, false);
+                    ListsCheckedListBox.SetItemChecked(i, false);
                     continue;
                 }
 
-                this.ListsCheckedListBox.SetItemCheckState(i, CheckState.Indeterminate);
+                ListsCheckedListBox.SetItemCheckState(i, CheckState.Indeterminate);
             }
 
-            this.ListsCheckedListBox.ItemCheck += this.ListsCheckedListBox_ItemCheck;
+            ListsCheckedListBox.ItemCheck += ListsCheckedListBox_ItemCheck;
         }
 
         #endregion private method

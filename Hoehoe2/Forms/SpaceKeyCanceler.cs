@@ -33,14 +33,14 @@ namespace Hoehoe
     {
         public SpaceKeyCanceler(Control control)
         {
-            this.AssignHandle(control.Handle);
+            AssignHandle(control.Handle);
         }
 
         public event EventHandler SpaceCancel;
 
         public void Dispose()
         {
-            this.ReleaseHandle();
+            ReleaseHandle();
         }
 
         protected override void WndProc(ref Message m)
@@ -49,9 +49,9 @@ namespace Hoehoe
             const int VK_SPACE = 0x20;
             if ((m.Msg == WM_KEYDOWN) && (Convert.ToInt32(m.WParam) == VK_SPACE))
             {
-                if (this.SpaceCancel != null)
+                if (SpaceCancel != null)
                 {
-                    this.SpaceCancel(this, EventArgs.Empty);
+                    SpaceCancel(this, EventArgs.Empty);
                 }
 
                 return;

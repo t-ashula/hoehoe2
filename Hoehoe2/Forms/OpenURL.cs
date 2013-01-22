@@ -33,7 +33,7 @@ namespace Hoehoe
     {
         #region private
 
-        private string selectedUrl;
+        private string _selectedUrl;
 
         #endregion private
 
@@ -41,7 +41,7 @@ namespace Hoehoe
 
         public OpenURL()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #endregion constructor
@@ -50,7 +50,7 @@ namespace Hoehoe
 
         public string SelectedUrl
         {
-            get { return this.UrlList.SelectedItems.Count == 1 ? this.selectedUrl : string.Empty; }
+            get { return UrlList.SelectedItems.Count == 1 ? _selectedUrl : string.Empty; }
         }
 
         #endregion properties
@@ -59,12 +59,12 @@ namespace Hoehoe
 
         public void ClearUrl()
         {
-            this.UrlList.Items.Clear();
+            UrlList.Items.Clear();
         }
 
         public void AddUrl(OpenUrlItem openUrlItem)
         {
-            this.UrlList.Items.Add(openUrlItem);
+            UrlList.Items.Add(openUrlItem);
         }
 
         #endregion public methods
@@ -73,61 +73,61 @@ namespace Hoehoe
 
         private void OkButton_Click(object sender, EventArgs e)
         {
-            this.SelectUrlOrCancelDialog();
+            SelectUrlOrCancelDialog();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            this.CloseWithCancel();
+            CloseWithCancel();
         }
 
         private void OpenURL_Shown(object sender, EventArgs e)
         {
-            this.UrlList.Focus();
-            if (this.UrlList.Items.Count > 0)
+            UrlList.Focus();
+            if (UrlList.Items.Count > 0)
             {
-                this.UrlList.SelectedIndex = 0;
+                UrlList.SelectedIndex = 0;
             }
         }
 
         private void UrlList_DoubleClick(object sender, EventArgs e)
         {
-            if (this.UrlList.SelectedItem == null)
+            if (UrlList.SelectedItem == null)
             {
                 return;
             }
 
-            if (this.UrlList.IndexFromPoint(this.UrlList.PointToClient(Control.MousePosition)) == ListBox.NoMatches)
+            if (UrlList.IndexFromPoint(UrlList.PointToClient(Control.MousePosition)) == ListBox.NoMatches)
             {
                 return;
             }
 
-            if (this.UrlList.Items[this.UrlList.IndexFromPoint(this.UrlList.PointToClient(Control.MousePosition))] == null)
+            if (UrlList.Items[UrlList.IndexFromPoint(UrlList.PointToClient(Control.MousePosition))] == null)
             {
                 return;
             }
 
-            this.SelectUrlOrCancelDialog();
+            SelectUrlOrCancelDialog();
         }
 
         private void UrlList_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.J && this.UrlList.SelectedIndex < this.UrlList.Items.Count - 1)
+            if (e.KeyCode == Keys.J && UrlList.SelectedIndex < UrlList.Items.Count - 1)
             {
                 e.SuppressKeyPress = true;
-                this.UrlList.SelectedIndex += 1;
+                UrlList.SelectedIndex += 1;
             }
 
-            if (e.KeyCode == Keys.K && this.UrlList.SelectedIndex > 0)
+            if (e.KeyCode == Keys.K && UrlList.SelectedIndex > 0)
             {
                 e.SuppressKeyPress = true;
-                this.UrlList.SelectedIndex -= 1;
+                UrlList.SelectedIndex -= 1;
             }
 
             if (e.Control && e.KeyCode == Keys.Oem4)
             {
                 e.SuppressKeyPress = true;
-                this.CloseWithCancel();
+                CloseWithCancel();
             }
         }
 
@@ -137,22 +137,22 @@ namespace Hoehoe
 
         private void SelectUrlOrCancelDialog()
         {
-            if (this.UrlList.SelectedItems.Count == 0)
+            if (UrlList.SelectedItems.Count == 0)
             {
-                this.CloseWithCancel();
+                CloseWithCancel();
             }
             else
             {
-                this.selectedUrl = this.UrlList.SelectedItem.ToString();
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                _selectedUrl = UrlList.SelectedItem.ToString();
+                DialogResult = DialogResult.OK;
+                Close();
             }
         }
 
         private void CloseWithCancel()
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         #endregion private methods

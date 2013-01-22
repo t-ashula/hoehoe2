@@ -34,12 +34,12 @@ namespace Hoehoe.TweenCustomControl
     {
         public void ReplaceImage(Image img)
         {
-            this.ClearImage();
+            ClearImage();
             if (img != null)
             {
                 try
                 {
-                    this.Image = new Bitmap(img);
+                    Image = new Bitmap(img);
                 }
                 catch (Exception)
                 {
@@ -49,12 +49,12 @@ namespace Hoehoe.TweenCustomControl
 
         public void ClearImage()
         {
-            if (this.Image != null)
+            if (Image != null)
             {
-                this.Image.Dispose();
+                Image.Dispose();
             }
 
-            this.Image = null;
+            Image = null;
         }
 
         protected override void OnPaint(PaintEventArgs pe)
