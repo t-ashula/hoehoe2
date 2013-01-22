@@ -157,12 +157,17 @@ namespace Hoehoe
 
         private string CreateVenueInfoText(Venue info)
         {
-            return info.Name + Environment.NewLine
-                + info.Stats.UsersCount.ToString() + "/" + info.Stats.CheckinsCount.ToString() + Environment.NewLine
-                + info.Location.Address + Environment.NewLine
-                + info.Location.City + info.Location.State + Environment.NewLine
-                + info.Location.Latitude.ToString() + Environment.NewLine
-                + info.Location.Longitude.ToString();
+            return string.Format(
+                "{1}{0}{2}/{3}{0}{4}{0}{5}{6}{0}{7}{0}{8}",
+                Environment.NewLine,
+                info.Name,
+                info.Stats.UsersCount,
+                info.Stats.CheckinsCount,
+                info.Location.Address,
+                info.Location.City,
+                info.Location.State,
+                info.Location.Latitude,
+                info.Location.Longitude);
         }
     }
 }

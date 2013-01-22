@@ -204,7 +204,7 @@ namespace Hoehoe
         public HttpStatusCode DestroyStatus(long id)
         {
             string t = string.Empty;
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/destroy/" + id.ToString() + ".json"), null, ref t, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/statuses/destroy/{0}.json", id)), null, ref t, null, null);
         }
 
         public HttpStatusCode SendDirectMessage(string status, string sendto, ref string content)
@@ -218,7 +218,7 @@ namespace Hoehoe
         public HttpStatusCode DestroyDirectMessage(long id)
         {
             string t = string.Empty;
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/direct_messages/destroy/" + id.ToString() + ".json"), null, ref t, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/direct_messages/destroy/{0}.json", id)), null, ref t, null, null);
         }
 
         public HttpStatusCode RetweetStatus(long id, ref string content)
@@ -226,7 +226,7 @@ namespace Hoehoe
             var param = new Dictionary<string, string>();
             param.Add("include_entities", "true");
 
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/retweet/" + id.ToString() + ".json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/statuses/retweet/{0}.json", id)), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowUserInfo(string screenName, ref string content)
@@ -284,17 +284,17 @@ namespace Hoehoe
         {
             var param = new Dictionary<string, string>();
             param.Add("include_entities", "true");
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/show/" + id.ToString() + ".json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri(string.Format("/1/statuses/show/{0}.json", id)), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateFavorites(long id, ref string content)
         {
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/favorites/create/" + id.ToString() + ".json"), null, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/favorites/create/{0}.json", id)), null, ref content, null, null);
         }
 
         public HttpStatusCode DestroyFavorites(long id, ref string content)
         {
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/favorites/destroy/" + id.ToString() + ".json"), null, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/favorites/destroy/{0}.json", id)), null, ref content, null, null);
         }
 
         public HttpStatusCode HomeTimeline(int count, long max_id, long since_id, ref string content)
@@ -704,15 +704,15 @@ namespace Hoehoe
             var param = new Dictionary<string, string>();
             if (count > 0)
             {
-                param.Add("count", count.ToString());
+                param.Add("count", "" + count);
             }
 
             if (page > 0)
             {
-                param.Add("page", page.ToString());
+                param.Add("page", "" + page);
             }
 
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/" + statusid.ToString() + "/retweeted_by/ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri(string.Format("/1/statuses/{0}/retweeted_by/ids.json", statusid)), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode UpdateProfile(string name, string url, string location, string description, ref string content)
@@ -738,7 +738,7 @@ namespace Hoehoe
             // 認証なくても取得できるが、protectedユーザー分が抜ける
             var param = new Dictionary<string, string>();
             param.Add("include_entities", "true");
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/related_results/show/" + id.ToString() + ".json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri(string.Format("/1/related_results/show/{0}.json", id)), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode GetBlockUserIds(ref string content)

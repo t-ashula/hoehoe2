@@ -106,7 +106,7 @@ namespace Hoehoe
                 case CheckState.Unchecked:
                     {
                         ListElement list = (ListElement)ListsCheckedListBox.Items[e.Index];
-                        string rslt = _twitter.AddUserToList(list.Id.ToString(), _contextUserName.ToString());
+                        string rslt = _twitter.AddUserToList("" + list.Id, _contextUserName);
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
@@ -118,7 +118,7 @@ namespace Hoehoe
                 case CheckState.Checked:
                     {
                         ListElement list = (ListElement)ListsCheckedListBox.Items[e.Index];
-                        string rslt = _twitter.RemoveUserToList(list.Id.ToString(), _contextUserName.ToString());
+                        string rslt = _twitter.RemoveUserToList("" + list.Id, _contextUserName);
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));

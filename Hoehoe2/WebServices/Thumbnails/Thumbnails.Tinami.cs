@@ -61,7 +61,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    args.AddThumbnailUrl(args.Url, "http://www.tinami.com/view/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString());
+                    args.AddThumbnailUrl(args.Url, string.Format("http://www.tinami.com/view/{0}", RadixConvert.ToInt32(mc.Result("${1}"), 36)));
                     return true;
                 }
                 catch (ArgumentOutOfRangeException)
@@ -130,7 +130,7 @@ namespace Hoehoe
                         return false;
                     }
 
-                    args.AddTooltipInfo(args.Url.Key, string.Empty, img); 
+                    args.AddTooltipInfo(args.Url.Key, string.Empty, img);
                     return true;
                 }
 

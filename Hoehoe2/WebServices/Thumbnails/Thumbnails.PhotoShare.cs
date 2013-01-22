@@ -61,7 +61,7 @@ namespace Hoehoe
 
             try
             {
-                args.AddThumbnailUrl(args.Url, "http://images.bcphotoshare.com/storages/" + RadixConvert.ToInt32(mc.Result("${1}"), 36).ToString() + "/thumb180.jpg");
+                args.AddThumbnailUrl(args.Url, string.Format("http://images.bcphotoshare.com/storages/{0}/thumb180.jpg", RadixConvert.ToInt32(mc.Result("${1}"), 36)));
                 return true;
             }
             catch (ArgumentOutOfRangeException)

@@ -712,7 +712,7 @@ namespace Hoehoe
             }
 
             tabPage.Location = new Point(4, 4);
-            tabPage.Name = "CTab" + cnt.ToString();
+            tabPage.Name = string.Format("CTab{0}", cnt);
             tabPage.Size = new Size(380, 260);
             tabPage.TabIndex = 2 + cnt;
             tabPage.Text = tabName;

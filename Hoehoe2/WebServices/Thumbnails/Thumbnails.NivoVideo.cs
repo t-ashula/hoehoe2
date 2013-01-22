@@ -117,7 +117,7 @@ namespace Hoehoe
                         DateTime tm;
                         if (DateTime.TryParse(tmp, out tm))
                         {
-                            sb.AppendLine(R.NiconicoInfoText3 + tm.ToString());
+                            sb.AppendLine(R.NiconicoInfoText3 + tm);
                         }
                     }
 

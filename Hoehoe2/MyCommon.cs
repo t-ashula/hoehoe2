@@ -163,13 +163,13 @@ namespace Hoehoe
 
                 using (var writer = new StreamWriter(fileName))
                 {
-                    writer.WriteLine("**** TraceOut: {0} ****", now.ToString());
+                    writer.WriteLine("**** TraceOut: {0} ****", now);
                     writer.WriteLine(R.TraceOutText1);
                     writer.WriteLine(R.TraceOutText2);
                     writer.WriteLine();
                     writer.WriteLine(R.TraceOutText3);
                     writer.WriteLine(R.TraceOutText4, Environment.OSVersion.VersionString);
-                    writer.WriteLine(R.TraceOutText5, Environment.Version.ToString());
+                    writer.WriteLine(R.TraceOutText5, Environment.Version);
                     writer.WriteLine(R.TraceOutText6, FileVersion);
                     writer.WriteLine(message);
                     writer.WriteLine();
@@ -282,19 +282,19 @@ namespace Hoehoe
                     WindowsIdentity ident = WindowsIdentity.GetCurrent();
                     WindowsPrincipal princ = new WindowsPrincipal(ident);
 
-                    writer.WriteLine(R.UnhandledExceptionText1, DateTime.Now.ToString());
+                    writer.WriteLine(R.UnhandledExceptionText1, DateTime.Now);
                     writer.WriteLine(R.UnhandledExceptionText2);
                     writer.WriteLine(R.UnhandledExceptionText3);
 
                     // 権限書き出し
-                    writer.WriteLine(R.UnhandledExceptionText11 + princ.IsInRole(WindowsBuiltInRole.Administrator).ToString());
-                    writer.WriteLine(R.UnhandledExceptionText12 + princ.IsInRole(WindowsBuiltInRole.User).ToString());
+                    writer.WriteLine(R.UnhandledExceptionText11 + princ.IsInRole(WindowsBuiltInRole.Administrator));
+                    writer.WriteLine(R.UnhandledExceptionText12 + princ.IsInRole(WindowsBuiltInRole.User));
                     writer.WriteLine();
 
                     // OSVersion,AppVersion書き出し
                     writer.WriteLine(R.UnhandledExceptionText4);
                     writer.WriteLine(R.UnhandledExceptionText5, Environment.OSVersion.VersionString);
-                    writer.WriteLine(R.UnhandledExceptionText6, Environment.Version.ToString());
+                    writer.WriteLine(R.UnhandledExceptionText6, Environment.Version);
                     writer.WriteLine(R.UnhandledExceptionText7, FileVersion);
 
                     writer.Write(ExceptionOutMessage(ex, ref isTerminatePermission));
@@ -377,7 +377,7 @@ namespace Hoehoe
                 }
             }
 
-            return uri == null ? sb.ToString() : uri.GetLeftPart(UriPartial.Authority) + sb.ToString();
+            return uri == null ? sb.ToString() : uri.GetLeftPart(UriPartial.Authority) + sb;
         }
 
         /// <summary>

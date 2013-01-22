@@ -158,7 +158,7 @@ namespace Hoehoe
                     _proxy = null;
                     break;
                 case ProxyType.Specified:
-                    _proxy = new WebProxy("http://" + proxyAddress + ":" + proxyPort.ToString());
+                    _proxy = new WebProxy(string.Format("http://{0}:{1}", proxyAddress, proxyPort));
                     if (!string.IsNullOrEmpty(proxyUser) || !string.IsNullOrEmpty(proxyPassword))
                     {
                         _proxy.Credentials = new NetworkCredential(proxyUser, proxyPassword);

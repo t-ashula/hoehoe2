@@ -1310,12 +1310,12 @@ namespace Hoehoe
 
         public string GetUniqueTabName()
         {
-            string tabNameTemp = "MyTab" + (Tabs.Count + 1).ToString();
+            string tabNameTemp = string.Format("MyTab{0}", (Tabs.Count + 1));
             for (int i = 2; i <= 100; i++)
             {
                 if (Tabs.ContainsKey(tabNameTemp))
                 {
-                    tabNameTemp = "MyTab" + (Tabs.Count + i).ToString();
+                    tabNameTemp = string.Format("MyTab{0}", (Tabs.Count + i));
                 }
                 else
                 {

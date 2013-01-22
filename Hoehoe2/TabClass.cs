@@ -438,7 +438,7 @@ namespace Hoehoe
                     catch (NullReferenceException)
                     {
                         // IsHitでNullRef出る場合あり。暫定対応
-                        MyCommon.TraceOut("IsHitでNullRef: " + ft.ToString());
+                        MyCommon.TraceOut("IsHitでNullRef: " + ft);
                         rslt = HITRESULT.None;
                     }
                 }

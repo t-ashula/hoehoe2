@@ -102,7 +102,7 @@ namespace Hoehoe
                 UserList.Items.Add(user);
             }
 
-            GetMoreUsersButton.Text = (UserList.Items.Count > 0 ? R.ListManageGetMoreUsers2 : R.ListManageGetMoreUsers1).ToString();
+            GetMoreUsersButton.Text = (UserList.Items.Count > 0 ? R.ListManageGetMoreUsers2 : R.ListManageGetMoreUsers1);
         }
 
         private void EditCheckBox_CheckedChanged(object sender, EventArgs e)

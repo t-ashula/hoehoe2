@@ -4221,7 +4221,7 @@ namespace Hoehoe
                         result = ShortUrl.Make(urlCoonverterType, tmp);
                         if (result.Equals("Can't convert"))
                         {
-                            StatusLabel.Text = result.Insert(0, urlCoonverterType.ToString() + ":");
+                            StatusLabel.Text = result.Insert(0, string.Format("{0}:", urlCoonverterType));
                             return false;
                         }
                     }
@@ -4235,7 +4235,11 @@ namespace Hoehoe
             }
             else
             {
-                const string UrlPattern = "(?<before>(?:[^\\\"':!=]|^|\\:))" + "(?<url>(?<protocol>https?://)" + "(?<domain>(?:[\\.-]|[^\\p{P}\\s])+\\.[a-z]{2,}(?::[0-9]+)?)" + "(?<path>/[a-z0-9!*'();:&=+$/%#\\-_.,~@]*[a-z0-9)=#/]?)?" + "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\-_.,~@?]*[a-z0-9_&=#/])?)";
+                const string UrlPattern = "(?<before>(?:[^\\\"':!=]|^|\\:))"
+                    + "(?<url>(?<protocol>https?://)"
+                    + "(?<domain>(?:[\\.-]|[^\\p{P}\\s])+\\.[a-z]{2,}(?::[0-9]+)?)"
+                    + "(?<path>/[a-z0-9!*'();:&=+$/%#\\-_.,~@]*[a-z0-9)=#/]?)?"
+                    + "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\-_.,~@?]*[a-z0-9_&=#/])?)";
 
                 // 正規表現にマッチしたURL文字列をtinyurl化
                 foreach (Match mt in Regex.Matches(StatusText.Text, UrlPattern, RegexOptions.IgnoreCase))
@@ -4266,7 +4270,7 @@ namespace Hoehoe
                         result = ShortUrl.Make(urlCoonverterType, tmp);
                         if (result.Equals("Can't convert"))
                         {
-                            StatusLabel.Text = result.Insert(0, urlCoonverterType.ToString() + ":");
+                            StatusLabel.Text = result.Insert(0, string.Format("{0}:", urlCoonverterType));
                             continue;
                         }
                     }
@@ -7295,7 +7299,7 @@ namespace Hoehoe
                 {
                     for (int i = 2; i <= 100; i++)
                     {
-                        newTabName = TabName + i.ToString();
+                        newTabName = string.Format("{0}{1}", TabName, i);
                         if (AddNewTab(newTabName, false, TabUsageType.Related))
                         {
                             _statuses.AddTab(newTabName, TabUsageType.Related, null);

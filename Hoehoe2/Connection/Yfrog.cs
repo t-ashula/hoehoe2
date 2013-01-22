@@ -82,7 +82,7 @@ namespace Hoehoe
             }
             catch (NotSupportedException ex)
             {
-                return "Err:" + ex.Message;
+                return string.Format("Err:{0}", ex.Message);
             }
 
             if (mediaFile == null || !mediaFile.Exists)
@@ -99,7 +99,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message;
+                return string.Format("Err:{0}", ex.Message);
             }
 
             string url = string.Empty;
@@ -114,16 +114,16 @@ namespace Hoehoe
                 }
                 catch (XmlException ex)
                 {
-                    return "Err:" + ex.Message;
+                    return string.Format("Err:{0}", ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    return "Err:" + ex.Message;
+                    return string.Format("Err:{0}", ex.Message);
                 }
             }
             else
             {
-                return "Err:" + ret.ToString();
+                return string.Format("Err:{0}", ret);
             }
 
             if (string.IsNullOrEmpty(url))

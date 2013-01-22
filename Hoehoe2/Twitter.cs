@@ -325,7 +325,7 @@ namespace Hoehoe
                     }
 
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -386,7 +386,7 @@ namespace Hoehoe
                     }
 
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -558,7 +558,9 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     {
                         string errMsg = GetErrorMessageJson(content);
-                        return string.IsNullOrEmpty(errMsg) ? "Warn:" + res.ToString() : "Warn:" + errMsg;
+                        return string.IsNullOrEmpty(errMsg) ?
+                            string.Format("Warn:{0}", res) :
+                            string.Format("Warn:{0}", errMsg);
                     }
 
                 case HttpStatusCode.Conflict:
@@ -574,7 +576,7 @@ namespace Hoehoe
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
                     // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
-                    return "Warn:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Warn:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
                 case HttpStatusCode.Unauthorized:
                     {
                         AccountState = AccountState.Invalid;
@@ -583,7 +585,7 @@ namespace Hoehoe
                     }
 
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -650,7 +652,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     {
                         string errMsg = GetErrorMessageJson(content);
-                        return string.IsNullOrEmpty(errMsg) ? "Warn:" + res.ToString() : "Warn:" + errMsg;
+                        return string.Format("Warn:{0}", string.IsNullOrEmpty(errMsg) ? res.ToString() : errMsg);
                     }
 
                 case HttpStatusCode.Conflict:
@@ -666,7 +668,7 @@ namespace Hoehoe
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
                     // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
-                    return "Warn:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Warn:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
                 case HttpStatusCode.Unauthorized:
                     {
                         AccountState = AccountState.Invalid;
@@ -675,7 +677,7 @@ namespace Hoehoe
                     }
 
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -742,7 +744,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     {
                         string errMsg = GetErrorMessageJson(content);
-                        return string.IsNullOrEmpty(errMsg) ? "Warn:" + res.ToString() : "Warn:" + errMsg;
+                        return string.Format("Warn:{0}", string.IsNullOrEmpty(errMsg) ? res.ToString() : errMsg);
                     }
 
                 case HttpStatusCode.Conflict:
@@ -759,7 +761,7 @@ namespace Hoehoe
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
                     // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
-                    return "Warn:" + res.ToString();
+                    return string.Format("Warn:{0}", res);
                 case HttpStatusCode.Unauthorized:
                     {
                         AccountState = AccountState.Invalid;
@@ -768,7 +770,7 @@ namespace Hoehoe
                     }
 
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -805,7 +807,7 @@ namespace Hoehoe
                 case HttpStatusCode.NotFound:
                     return string.Empty;
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -853,7 +855,7 @@ namespace Hoehoe
 
             if (res != HttpStatusCode.OK)
             {
-                return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             AccountState = AccountState.Valid;
@@ -952,7 +954,7 @@ namespace Hoehoe
                 case HttpStatusCode.NotFound:
                     return string.Empty;
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -989,9 +991,11 @@ namespace Hoehoe
                     return R.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return string.IsNullOrEmpty(errMsg) ?
+                        string.Format("Err:Forbidden({0})", System.Reflection.MethodInfo.GetCurrentMethod().Name) :
+                        string.Format("Err:{0}", errMsg);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1015,7 +1019,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -1028,9 +1032,11 @@ namespace Hoehoe
                     return R.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return string.IsNullOrEmpty(errMsg) ?
+                        string.Format("Err:Forbidden({0})", System.Reflection.MethodInfo.GetCurrentMethod().Name) :
+                        string.Format("Err:{0}", errMsg);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1054,7 +1060,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -1067,9 +1073,11 @@ namespace Hoehoe
                     return R.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return string.IsNullOrEmpty(errMsg) ?
+                        string.Format("Err:Forbidden({0})", System.Reflection.MethodInfo.GetCurrentMethod().Name) :
+                        string.Format("Err:{0}", errMsg);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1106,9 +1114,11 @@ namespace Hoehoe
                     return R.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return string.IsNullOrEmpty(errMsg) ?
+                        string.Format("Err:Forbidden({0})", System.Reflection.MethodInfo.GetCurrentMethod().Name) :
+                        string.Format("Err:{0}", errMsg);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1132,7 +1142,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -1145,9 +1155,11 @@ namespace Hoehoe
                     return R.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return string.IsNullOrEmpty(errMsg) ?
+                        string.Format("Err:Forbidden({0})", System.Reflection.MethodInfo.GetCurrentMethod().Name) :
+                        string.Format("Err:{0}", errMsg);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1171,7 +1183,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -1201,7 +1213,7 @@ namespace Hoehoe
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1226,7 +1238,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -1256,7 +1268,7 @@ namespace Hoehoe
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ? R.Unauthorized : "Auth err:" + errMsg;
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1321,7 +1333,7 @@ namespace Hoehoe
                         return R.Unauthorized;
                     default:
                         retweetedCount = -1;
-                        return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                        return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
                 }
             }
 
@@ -1366,9 +1378,11 @@ namespace Hoehoe
                     return R.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return string.IsNullOrEmpty(errMsg) ?
+                        string.Format("Err:Forbidden({0})", System.Reflection.MethodInfo.GetCurrentMethod().Name) :
+                        string.Format("Err:{0}", errMsg);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             // http://twitter.com/statuses/show/id.xml APIを発行して本文を取得
@@ -1409,7 +1423,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1446,9 +1460,11 @@ namespace Hoehoe
                     return R.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return string.IsNullOrEmpty(errMsg) ?
+                        string.Format("Err:Forbidden({0})", System.Reflection.MethodInfo.GetCurrentMethod().Name) :
+                        string.Format("Err:{0}", errMsg);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1485,9 +1501,11 @@ namespace Hoehoe
                     return R.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return string.IsNullOrEmpty(errMsg) ?
+                        string.Format("Err:Forbidden({0})", System.Reflection.MethodInfo.GetCurrentMethod().Name) :
+                        string.Format("Err:{0}", errMsg);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1511,7 +1529,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -1524,9 +1542,11 @@ namespace Hoehoe
                     return R.Unauthorized;
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
-                    return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")" : "Err:" + errMsg;
+                    return string.IsNullOrEmpty(errMsg) ?
+                        string.Format("Err:Forbidden({0})", System.Reflection.MethodInfo.GetCurrentMethod().Name) :
+                        string.Format("Err:{0}", errMsg);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
         }
 
@@ -1555,7 +1575,8 @@ namespace Hoehoe
         public string GetVersionInfo()
         {
             string content = string.Empty;
-            if (!(new HttpVarious()).GetData("http://tween.sourceforge.jp/version.txt?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), null, ref content, MyCommon.GetUserAgentString()))
+            var url = string.Format("http://tween.sourceforge.jp/version.txt?{0:yyMMddHHmmss}{1}", DateTime.Now, Environment.TickCount);
+            if (!(new HttpVarious()).GetData(url, null, ref content, MyCommon.GetUserAgentString()))
             {
                 throw new Exception("GetVersionInfo Failed");
             }
@@ -1568,7 +1589,8 @@ namespace Hoehoe
             try
             {
                 // 本体
-                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/Tween" + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenNew.exe")))
+                var url = string.Format("http://tween.sourceforge.jp/Tween{0}.gz?{1:yyMMddHHmmss}{2}", strVer, DateTime.Now, Environment.TickCount);
+                if (!(new HttpVarious()).GetDataToFile(url, Path.Combine(MyCommon.SettingPath, "TweenNew.exe")))
                 {
                     return "Err:Download failed";
                 }
@@ -1579,7 +1601,8 @@ namespace Hoehoe
                     Directory.CreateDirectory(Path.Combine(MyCommon.SettingPath, "en"));
                 }
 
-                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenResEn" + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, "en"), "Tween.resourcesNew.dll")))
+                var engUrl = string.Format("http://tween.sourceforge.jp/TweenResEn{0}.gz?{1:yyMMddHHmmss}{2}", strVer, DateTime.Now, Environment.TickCount);
+                if (!(new HttpVarious()).GetDataToFile(engUrl, Path.Combine(Path.Combine(MyCommon.SettingPath, "en"), "Tween.resourcesNew.dll")))
                 {
                     return "Err:Download failed";
                 }
@@ -1611,7 +1634,7 @@ namespace Hoehoe
                         Directory.CreateDirectory(Path.Combine(MyCommon.SettingPath, curCul));
                     }
 
-                    if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenRes" + curCul + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, curCul), "Tween.resourcesNew.dll")))
+                    if (!(new HttpVarious()).GetDataToFile(string.Format("http://tween.sourceforge.jp/TweenRes{0}{1}.gz?{2}{3}", curCul, strVer, DateTime.Now.ToString("yyMMddHHmmss"), Environment.TickCount), Path.Combine(Path.Combine(MyCommon.SettingPath, curCul), "Tween.resourcesNew.dll")))
                     {
                         // Return "Err:Download failed"
                     }
@@ -1643,20 +1666,20 @@ namespace Hoehoe
                         Directory.CreateDirectory(Path.Combine(MyCommon.SettingPath, curCul2));
                     }
 
-                    if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenRes" + curCul2 + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(Path.Combine(MyCommon.SettingPath, curCul2), "Tween.resourcesNew.dll")))
+                    if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenRes" + curCul2 + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount, Path.Combine(Path.Combine(MyCommon.SettingPath, curCul2), "Tween.resourcesNew.dll")))
                     {
                         // Return "Err:Download failed"
                     }
                 }
 
                 // アップデータ
-                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenUp3.gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenUp3.exe")))
+                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenUp3.gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount, Path.Combine(MyCommon.SettingPath, "TweenUp3.exe")))
                 {
                     return "Err:Download failed";
                 }
 
                 // シリアライザDLL
-                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenDll" + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount.ToString(), Path.Combine(MyCommon.SettingPath, "TweenNew.XmlSerializers.dll")))
+                if (!(new HttpVarious()).GetDataToFile("http://tween.sourceforge.jp/TweenDll" + strVer + ".gz?" + DateTime.Now.ToString("yyMMddHHmmss") + Environment.TickCount, Path.Combine(MyCommon.SettingPath, "TweenNew.XmlSerializers.dll")))
                 {
                     return "Err:Download failed";
                 }
@@ -1750,7 +1773,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             return workerType == WorkerType.Timeline ?
@@ -1814,11 +1837,11 @@ namespace Hoehoe
                     break;
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Valid;
-                    return "Err:@" + userName + "'s Tweets are protected.";
+                    return string.Format("Err:@{0}'s Tweets are protected.", userName);
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             List<Status> items = null;
@@ -1904,7 +1927,7 @@ namespace Hoehoe
                 case HttpStatusCode.Forbidden:
                     return "Err:Protected user's tweet";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             Status status = null;
@@ -2018,7 +2041,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             var t = tab.OldestId;
@@ -2119,7 +2142,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             if (!TabInformations.Instance.ContainsTab(tab))
@@ -2288,7 +2311,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     break;
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             if (!TabInformations.Instance.ContainsTab(tab))
@@ -2367,7 +2390,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             return CreateDirectMessagesFromJson(content, workerType, read);
@@ -2409,7 +2432,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -2423,7 +2446,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<Status>));
@@ -2648,7 +2671,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -2662,7 +2685,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             try
@@ -2701,7 +2724,7 @@ namespace Hoehoe
                 }
                 catch (Exception ex)
                 {
-                    return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
                 }
 
                 switch (res)
@@ -2715,7 +2738,7 @@ namespace Hoehoe
                     case HttpStatusCode.BadRequest:
                         return "Err:API Limits?";
                     default:
-                        return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                        return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
                 }
 
                 try
@@ -2747,7 +2770,7 @@ namespace Hoehoe
                 }
                 catch (Exception ex)
                 {
-                    return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
                 }
 
                 switch (res)
@@ -2761,7 +2784,7 @@ namespace Hoehoe
                     case HttpStatusCode.BadRequest:
                         return "Err:API Limits?";
                     default:
-                        return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                        return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
                 }
 
                 try
@@ -2812,7 +2835,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             return string.Empty;
@@ -2829,7 +2852,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -2843,7 +2866,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             try
@@ -2903,7 +2926,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             try
@@ -2940,7 +2963,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -2954,7 +2977,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             try
@@ -2992,7 +3015,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -3009,7 +3032,7 @@ namespace Hoehoe
                     value = false;
                     return string.Empty;
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             try
@@ -3035,7 +3058,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -3049,7 +3072,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:" + GetErrorMessageJson(content);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             return string.Empty;
@@ -3065,7 +3088,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -3079,7 +3102,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:" + GetErrorMessageJson(content);
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             return string.Empty;
@@ -3387,7 +3410,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -3401,7 +3424,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             try
@@ -3956,7 +3979,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             List<RelatedResult> items = null;
@@ -4260,7 +4283,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -4274,7 +4297,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             try
@@ -4311,7 +4334,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -4325,7 +4348,7 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 default:
-                    return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                    return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             try

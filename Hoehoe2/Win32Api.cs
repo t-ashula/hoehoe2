@@ -642,17 +642,17 @@ namespace Hoehoe
             try
             {
                 _registeredGlobalHotKeyCount += 1;
-                string atomName = Thread.CurrentThread.ManagedThreadId.ToString("X8") + targetForm.Name + _registeredGlobalHotKeyCount.ToString();
+                string atomName = string.Format("{0}{1}{2}", Thread.CurrentThread.ManagedThreadId.ToString("X8"), targetForm.Name, _registeredGlobalHotKeyCount);
                 hotkeyID = GlobalAddAtom(atomName);
                 if (hotkeyID == 0)
                 {
-                    throw new Exception("Unable to generate unique hotkey ID. Error code: " + Marshal.GetLastWin32Error().ToString());
+                    throw new Exception(string.Format("Unable to generate unique hotkey ID. Error code: {0}", Marshal.GetLastWin32Error()));
                 }
 
                 // register the hotkey, throw if any error
                 if (RegisterHotKey(targetForm.Handle, hotkeyID, modifiers, hotkeyValue) == 0)
                 {
-                    throw new Exception("Unable to register hotkey. Error code: " + Marshal.GetLastWin32Error().ToString());
+                    throw new Exception(string.Format("Unable to register hotkey. Error code: {0}", Marshal.GetLastWin32Error()));
                 }
 
                 return hotkeyID;
@@ -805,7 +805,7 @@ namespace Hoehoe
                     proxy = string.Empty;
                     break;
                 case HttpConnection.ProxyType.Specified:
-                    proxy = host + (port > 0 ? ":" + port.ToString() : string.Empty);
+                    proxy = host + (port > 0 ? string.Format(":{0}", port) : string.Empty);
                     break;
             }
 

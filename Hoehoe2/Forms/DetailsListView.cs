@@ -51,7 +51,7 @@ namespace Hoehoe.TweenCustomControl
             HideSelection = false;
             Location = new Point(0, 0);
             Margin = new Padding(0);
-            Name = "CList" + Environment.TickCount.ToString();
+            Name = string.Format("CList{0}", Environment.TickCount);
             ShowItemToolTips = true;
             Size = new Size(380, 260);
             UseCompatibleStateImageBehavior = false;

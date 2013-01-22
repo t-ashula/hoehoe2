@@ -651,9 +651,9 @@ namespace Hoehoe
 
             if (!string.IsNullOrEmpty(header["Date"]))
             {
-                content += Environment.NewLine
-                    + "Check the Date & Time of this computer." + Environment.NewLine
-                    + "Server:" + Convert.ToDateTime(header["Date"]).ToString() + "  PC:" + DateTime.Now.ToString();
+                content += Environment.NewLine;
+                content += "Check the Date & Time of this computer." + Environment.NewLine;
+                content += string.Format("Server:{0}  PC:{1}", Convert.ToDateTime(header["Date"]), DateTime.Now);
             }
 
             return responseCode;
