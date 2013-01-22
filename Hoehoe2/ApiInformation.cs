@@ -31,7 +31,7 @@ namespace Hoehoe
 
     public class ApiInformation : ApiInfoBase
     {
-        private Dictionary<string, string> headers = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+        private Dictionary<string, string> _headers = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
 
         public delegate void ChangedEventHandler(object sender, ApiInformationChangedEventArgs e);
 
@@ -39,8 +39,8 @@ namespace Hoehoe
 
         public Dictionary<string, string> HttpHeaders
         {
-            get { return this.headers; }
-            set { this.headers = value; }
+            get { return _headers; }
+            set { _headers = value; }
         }
 
         public int MaxCount
@@ -55,7 +55,7 @@ namespace Hoehoe
                 if (ApiInformation.maxCount != value)
                 {
                     ApiInformation.maxCount = value;
-                    this.Raise_Changed();
+                    Raise_Changed();
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace Hoehoe
                 if (ApiInformation.remainCount != value)
                 {
                     ApiInformation.remainCount = value;
-                    this.Raise_Changed();
+                    Raise_Changed();
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace Hoehoe
                 if (ApiInformation.resetTime != value)
                 {
                     ApiInformation.resetTime = value;
-                    this.Raise_Changed();
+                    Raise_Changed();
                 }
             }
         }
@@ -106,7 +106,7 @@ namespace Hoehoe
                 if (ApiInformation.mediaMaxCount != value)
                 {
                     ApiInformation.mediaMaxCount = value;
-                    this.Raise_Changed();
+                    Raise_Changed();
                 }
             }
         }
@@ -123,7 +123,7 @@ namespace Hoehoe
                 if (ApiInformation.mediaRemainCount != value)
                 {
                     ApiInformation.mediaRemainCount = value;
-                    this.Raise_Changed();
+                    Raise_Changed();
                 }
             }
         }
@@ -140,7 +140,7 @@ namespace Hoehoe
                 if (ApiInformation.mediaResetTime != value)
                 {
                     ApiInformation.mediaResetTime = value;
-                    this.Raise_Changed();
+                    Raise_Changed();
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace Hoehoe
                 if (ApiInformation.resetTimeInSeconds != value)
                 {
                     ApiInformation.resetTimeInSeconds = value;
-                    this.Raise_Changed();
+                    Raise_Changed();
                 }
             }
         }
@@ -174,7 +174,7 @@ namespace Hoehoe
                 if (ApiInformation.usingCount != value)
                 {
                     ApiInformation.usingCount = value;
-                    this.Raise_Changed();
+                    Raise_Changed();
                 }
             }
         }
@@ -191,7 +191,7 @@ namespace Hoehoe
                 if (ApiInformation.accessLevel != value)
                 {
                     ApiInformation.accessLevel = value;
-                    this.Raise_Changed();
+                    Raise_Changed();
                 }
             }
         }
@@ -200,9 +200,9 @@ namespace Hoehoe
         {
             get
             {
-                return this.AccessLevel == ApiAccessLevel.Read
-                    || this.AccessLevel == ApiAccessLevel.ReadWrite
-                    || this.AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage;
+                return AccessLevel == ApiAccessLevel.Read
+                    || AccessLevel == ApiAccessLevel.ReadWrite
+                    || AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage;
             }
         }
 
@@ -210,79 +210,79 @@ namespace Hoehoe
         {
             get
             {
-                return this.AccessLevel == ApiAccessLevel.ReadWrite
-                    || this.AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage;
+                return AccessLevel == ApiAccessLevel.ReadWrite
+                    || AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage;
             }
         }
 
         public bool IsDirectMessagePermission
         {
-            get { return this.AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage; }
+            get { return AccessLevel == ApiAccessLevel.ReadWriteAndDirectMessage; }
         }
 
         public void Initialize()
         {
-            if (this.HttpHeaders.ContainsKey("X-RateLimit-Remaining"))
+            if (HttpHeaders.ContainsKey("X-RateLimit-Remaining"))
             {
-                this.HttpHeaders["X-RateLimit-Remaining"] = "-1";
+                HttpHeaders["X-RateLimit-Remaining"] = "-1";
             }
             else
             {
-                this.HttpHeaders.Add("X-RateLimit-Remaining", "-1");
+                HttpHeaders.Add("X-RateLimit-Remaining", "-1");
             }
 
-            if (this.HttpHeaders.ContainsKey("X-RateLimit-Limit"))
+            if (HttpHeaders.ContainsKey("X-RateLimit-Limit"))
             {
-                this.HttpHeaders["X-RateLimit-Limit"] = "-1";
+                HttpHeaders["X-RateLimit-Limit"] = "-1";
             }
             else
             {
-                this.HttpHeaders.Add("X-RateLimit-Limit", "-1");
+                HttpHeaders.Add("X-RateLimit-Limit", "-1");
             }
 
-            if (this.HttpHeaders.ContainsKey("X-RateLimit-Reset"))
+            if (HttpHeaders.ContainsKey("X-RateLimit-Reset"))
             {
-                this.HttpHeaders["X-RateLimit-Reset"] = "-1";
+                HttpHeaders["X-RateLimit-Reset"] = "-1";
             }
             else
             {
-                this.HttpHeaders.Add("X-RateLimit-Reset", "-1");
+                HttpHeaders.Add("X-RateLimit-Reset", "-1");
             }
 
-            if (this.HttpHeaders.ContainsKey("X-Access-Level"))
+            if (HttpHeaders.ContainsKey("X-Access-Level"))
             {
-                this.HttpHeaders["X-Access-Level"] = "read-write-directmessages";
+                HttpHeaders["X-Access-Level"] = "read-write-directmessages";
             }
             else
             {
-                this.HttpHeaders.Add("X-Access-Level", "read-write-directmessages");
+                HttpHeaders.Add("X-Access-Level", "read-write-directmessages");
             }
 
-            if (this.HttpHeaders.ContainsKey("X-MediaRateLimit-Remaining"))
+            if (HttpHeaders.ContainsKey("X-MediaRateLimit-Remaining"))
             {
-                this.HttpHeaders["X-MediaRateLimit-Remaining"] = "-1";
+                HttpHeaders["X-MediaRateLimit-Remaining"] = "-1";
             }
             else
             {
-                this.HttpHeaders.Add("X-MediaRateLimit-Remaining", "-1");
+                HttpHeaders.Add("X-MediaRateLimit-Remaining", "-1");
             }
 
-            if (this.HttpHeaders.ContainsKey("X-MediaRateLimit-Limit"))
+            if (HttpHeaders.ContainsKey("X-MediaRateLimit-Limit"))
             {
-                this.HttpHeaders["X-MediaRateLimit-Limit"] = "-1";
+                HttpHeaders["X-MediaRateLimit-Limit"] = "-1";
             }
             else
             {
-                this.HttpHeaders.Add("X-MediaRateLimit-Limit", "-1");
+                HttpHeaders.Add("X-MediaRateLimit-Limit", "-1");
             }
 
-            if (this.HttpHeaders.ContainsKey("X-MediaRateLimit-Reset"))
+            if (HttpHeaders.ContainsKey("X-MediaRateLimit-Reset"))
             {
-                this.HttpHeaders["X-MediaRateLimit-Reset"] = "-1";
+                HttpHeaders["X-MediaRateLimit-Reset"] = "-1";
             }
             else
             {
-                this.HttpHeaders.Add("X-MediaRateLimit-Reset", "-1");
+                HttpHeaders.Add("X-MediaRateLimit-Reset", "-1");
             }
 
             ApiInformation.maxCount = -1;
@@ -292,12 +292,12 @@ namespace Hoehoe
             ApiInformation.mediaMaxCount = -1;
             ApiInformation.mediaRemainCount = -1;
             ApiInformation.mediaResetTime = new DateTime();
-            this.AccessLevel = ApiAccessLevel.None;
+            AccessLevel = ApiAccessLevel.None;
 
             // _UsingCount = -1
-            if (this.Changed != null)
+            if (Changed != null)
             {
-                this.Changed(this, new ApiInformationChangedEventArgs());
+                Changed(this, new ApiInformationChangedEventArgs());
             }
         }
 
@@ -317,44 +317,44 @@ namespace Hoehoe
         {
             int tmp = 0;
             DateTime tmpd = default(DateTime);
-            tmp = this.GetMaxCountFromHttpHeader();
+            tmp = GetMaxCountFromHttpHeader();
             if (tmp != -1)
             {
                 ApiInformation.maxCount = tmp;
             }
 
-            tmp = this.GetRemainCountFromHttpHeader();
+            tmp = GetRemainCountFromHttpHeader();
             if (tmp != -1)
             {
                 ApiInformation.remainCount = tmp;
             }
 
-            tmpd = this.GetResetTimeFromHttpHeader();
+            tmpd = GetResetTimeFromHttpHeader();
             if (tmpd != new DateTime())
             {
                 ApiInformation.resetTime = tmpd;
             }
 
-            tmp = this.GetMediaMaxCountFromHttpHeader();
+            tmp = GetMediaMaxCountFromHttpHeader();
             if (tmp != -1)
             {
                 ApiInformation.mediaMaxCount = tmp;
             }
 
-            tmp = this.GetMediaRemainCountFromHttpHeader();
+            tmp = GetMediaRemainCountFromHttpHeader();
             if (tmp != -1)
             {
                 ApiInformation.mediaRemainCount = tmp;
             }
 
-            tmpd = this.GetMediaResetTimeFromHttpHeader();
+            tmpd = GetMediaResetTimeFromHttpHeader();
             if (tmpd != new DateTime())
             {
                 ApiInformation.mediaResetTime = tmpd;
             }
 
-            this.AccessLevel = this.GetApiAccessLevelFromHttpHeader();
-            this.Raise_Changed();
+            AccessLevel = GetApiAccessLevelFromHttpHeader();
+            Raise_Changed();
         }
 
         public void WriteBackEventArgs(ApiInformationChangedEventArgs arg)
@@ -364,15 +364,15 @@ namespace Hoehoe
             ApiInformation.resetTime = arg.ApiInfo.ResetTime;
             ApiInformation.resetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds;
             ApiInformation.usingCount = arg.ApiInfo.UsingCount;
-            this.Raise_Changed();
+            Raise_Changed();
         }
 
         private void Raise_Changed()
         {
             ApiInformationChangedEventArgs arg = new ApiInformationChangedEventArgs();
-            if (this.Changed != null)
+            if (Changed != null)
             {
-                this.Changed(this, arg);
+                Changed(this, arg);
             }
 
             ApiInformation.maxCount = arg.ApiInfo.MaxCount;
@@ -384,12 +384,12 @@ namespace Hoehoe
         private int GetRemainCountFromHttpHeader()
         {
             int result = 0;
-            if (string.IsNullOrEmpty(this.HttpHeaders["X-RateLimit-Remaining"]))
+            if (string.IsNullOrEmpty(HttpHeaders["X-RateLimit-Remaining"]))
             {
                 return -1;
             }
 
-            if (int.TryParse(this.HttpHeaders["X-RateLimit-Remaining"], out result))
+            if (int.TryParse(HttpHeaders["X-RateLimit-Remaining"], out result))
             {
                 return result;
             }
@@ -400,12 +400,12 @@ namespace Hoehoe
         private int GetMaxCountFromHttpHeader()
         {
             int result = 0;
-            if (string.IsNullOrEmpty(this.HttpHeaders["X-RateLimit-Limit"]))
+            if (string.IsNullOrEmpty(HttpHeaders["X-RateLimit-Limit"]))
             {
                 return -1;
             }
 
-            if (int.TryParse(this.HttpHeaders["X-RateLimit-Limit"], out result))
+            if (int.TryParse(HttpHeaders["X-RateLimit-Limit"], out result))
             {
                 return result;
             }
@@ -416,7 +416,7 @@ namespace Hoehoe
         private DateTime GetResetTimeFromHttpHeader()
         {
             int i = 0;
-            if (int.TryParse(this.HttpHeaders["X-RateLimit-Reset"], out i))
+            if (int.TryParse(HttpHeaders["X-RateLimit-Reset"], out i))
             {
                 if (i >= 0)
                 {
@@ -436,12 +436,12 @@ namespace Hoehoe
         private int GetMediaRemainCountFromHttpHeader()
         {
             int result = 0;
-            if (string.IsNullOrEmpty(this.HttpHeaders["X-MediaRateLimit-Remaining"]))
+            if (string.IsNullOrEmpty(HttpHeaders["X-MediaRateLimit-Remaining"]))
             {
                 return -1;
             }
 
-            if (int.TryParse(this.HttpHeaders["X-MediaRateLimit-Remaining"], out result))
+            if (int.TryParse(HttpHeaders["X-MediaRateLimit-Remaining"], out result))
             {
                 return result;
             }
@@ -452,12 +452,12 @@ namespace Hoehoe
         private int GetMediaMaxCountFromHttpHeader()
         {
             int result = 0;
-            if (string.IsNullOrEmpty(this.HttpHeaders["X-MediaRateLimit-Limit"]))
+            if (string.IsNullOrEmpty(HttpHeaders["X-MediaRateLimit-Limit"]))
             {
                 return -1;
             }
 
-            if (int.TryParse(this.HttpHeaders["X-MediaRateLimit-Limit"], out result))
+            if (int.TryParse(HttpHeaders["X-MediaRateLimit-Limit"], out result))
             {
                 return result;
             }
@@ -468,7 +468,7 @@ namespace Hoehoe
         private DateTime GetMediaResetTimeFromHttpHeader()
         {
             int i = 0;
-            if (int.TryParse(this.HttpHeaders["X-MediaRateLimit-Reset"], out i))
+            if (int.TryParse(HttpHeaders["X-MediaRateLimit-Reset"], out i))
             {
                 return i >= 0 ? TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i)) : new DateTime();
             }
@@ -478,7 +478,7 @@ namespace Hoehoe
 
         private ApiAccessLevel GetApiAccessLevelFromHttpHeader()
         {
-            switch (this.HttpHeaders["X-Access-Level"])
+            switch (HttpHeaders["X-Access-Level"])
             {
                 case "read":
                     return ApiAccessLevel.Read;
@@ -489,7 +489,7 @@ namespace Hoehoe
                     return ApiAccessLevel.ReadWriteAndDirectMessage;
                 default:
                     // 未知のアクセスレベルの場合Read/Write/Dmと仮定して処理継続
-                    MyCommon.TraceOut("Unknown ApiAccessLevel:" + this.HttpHeaders["X-Access-Level"]);
+                    MyCommon.TraceOut("Unknown ApiAccessLevel:" + HttpHeaders["X-Access-Level"]);
                     return ApiAccessLevel.ReadWriteAndDirectMessage;
             }
         }
