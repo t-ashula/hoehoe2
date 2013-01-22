@@ -71,7 +71,7 @@ namespace Hoehoe
             FontRead = SystemFonts.DefaultFont;
             ColorRead = SystemColors.ControlText;
             ColorFav = Color.FromKnownColor(KnownColor.Red);
-            ColorOWL = Color.FromKnownColor(KnownColor.Blue);
+            ColorOwl = Color.FromKnownColor(KnownColor.Blue);
             ColorRetweet = Color.FromKnownColor(KnownColor.Green);
             FontDetail = SystemFonts.DefaultFont;
             ColorSelf = Color.FromKnownColor(KnownColor.AliceBlue);
@@ -196,12 +196,12 @@ namespace Hoehoe
         }
 
         [XmlIgnore]
-        public Color ColorOWL { get; set; }
+        public Color ColorOwl { get; set; }
 
         public string ColorOWLStr
         {
-            get { return _colorConverter.ConvertToString(ColorOWL); }
-            set { ColorOWL = (Color)_colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorOwl); }
+            set { ColorOwl = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]

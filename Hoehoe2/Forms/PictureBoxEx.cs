@@ -35,15 +35,17 @@ namespace Hoehoe.TweenCustomControl
         public void ReplaceImage(Image img)
         {
             ClearImage();
-            if (img != null)
+            if (img == null)
             {
-                try
-                {
-                    Image = new Bitmap(img);
-                }
-                catch (Exception)
-                {
-                }
+                return;
+            }
+
+            try
+            {
+                Image = new Bitmap(img);
+            }
+            catch (Exception)
+            {
             }
         }
 

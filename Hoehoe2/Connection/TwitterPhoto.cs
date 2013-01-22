@@ -62,7 +62,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    long val = Convert.ToInt64(value);
+                    var val = Convert.ToInt64(value);
                     _maxFileSize = val > 0 ? val : MaxfilesizeDefault;
                 }
                 catch (Exception)

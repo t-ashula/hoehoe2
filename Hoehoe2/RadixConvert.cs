@@ -46,7 +46,7 @@ namespace Hoehoe
         /// <returns>数値</returns>
         public static short ToInt16(string s, int radix)
         {
-            ulong digit = ToUInt64(s, radix);
+            var digit = ToUInt64(s, radix);
             CheckDigitOverflow(digit, short.MaxValue);
             return Convert.ToInt16(digit);
         }
@@ -64,7 +64,7 @@ namespace Hoehoe
         /// <returns>数値</returns>
         public static ushort ToUInt16(string s, int radix)
         {
-            ulong digit = ToUInt64(s, radix);
+            var digit = ToUInt64(s, radix);
             CheckDigitOverflow(digit, ushort.MaxValue);
             return Convert.ToUInt16(digit);
         }

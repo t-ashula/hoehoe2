@@ -24,6 +24,8 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Linq;
+
 namespace Hoehoe
 {
     using System;
@@ -69,24 +71,10 @@ namespace Hoehoe
         // 実行中の同じアプリケーションのプロセスを取得する
         public static Process GetPreviousProcess()
         {
-            Process curProcess = Process.GetCurrentProcess();
-            Process[] allProcesses = Process.GetProcessesByName(curProcess.ProcessName);
-            foreach (Process process in allProcesses)
-            {
-                // 自分自身のプロセスIDは無視する
-                if (process.Id != curProcess.Id)
-                {
-                    // プロセスのフルパス名を比較して同じアプリケーションか検証
-                    if (string.Compare(process.MainModule.FileName, curProcess.MainModule.FileName, true) == 0)
-                    {
-                        // 同じフルパス名のプロセスを取得
-                        return process;
-                    }
-                }
-            }
-
-            // 同じアプリケーションのプロセスが見つからない！
-            return null;
+            var curProcess = Process.GetCurrentProcess();
+            return Process.GetProcessesByName(curProcess.ProcessName)
+                .Where(process => process.Id != curProcess.Id)
+                .FirstOrDefault(process => string.Compare(process.MainModule.FileName, curProcess.MainModule.FileName, true) == 0);
         }
 
         #endregion "先行起動プロセスをアクティブにする"
@@ -287,7 +275,7 @@ namespace Hoehoe
         private static extern bool PostMessage(IntPtr hWnd, uint msg, uint wParam, uint lParam);
 
         // PostMessageで送信するメッセージ
-        private enum PM_Message : uint
+        private enum PM_MESSAGE : uint
         {
             // 左マウスボタン押し下げ
             WM_LBUTTONDOWN = 0x201,
@@ -509,8 +497,8 @@ namespace Hoehoe
                                         SetForegroundWindow(tNotify2.hWnd);
 
                                         // 左クリック
-                                        PostMessage(tNotify2.hWnd, tNotify2.uCallbackMessage, tNotify2.uID, (uint)PM_Message.WM_LBUTTONDOWN);
-                                        PostMessage(tNotify2.hWnd, tNotify2.uCallbackMessage, tNotify2.uID, (uint)PM_Message.WM_LBUTTONUP);
+                                        PostMessage(tNotify2.hWnd, tNotify2.uCallbackMessage, tNotify2.uID, (uint)PM_MESSAGE.WM_LBUTTONDOWN);
+                                        PostMessage(tNotify2.hWnd, tNotify2.uCallbackMessage, tNotify2.uID, (uint)PM_MESSAGE.WM_LBUTTONUP);
                                         return true;
                                     }
                                 }
@@ -635,15 +623,15 @@ namespace Hoehoe
         private static extern int GlobalDeleteAtom(int nAtom);
 
         // register a global hot key use the GlobalAddAtom API to get a unique ID (as suggested by MSDN docs)
-        private static int _registeredGlobalHotKeyCount;
+        private static int registeredGlobalHotKeyCount;
 
         public static int RegisterGlobalHotKey(int hotkeyValue, int modifiers, Form targetForm)
         {
             int hotkeyID = 0;
             try
             {
-                _registeredGlobalHotKeyCount += 1;
-                string atomName = string.Format("{0}{1}{2}", Thread.CurrentThread.ManagedThreadId.ToString("X8"), targetForm.Name, _registeredGlobalHotKeyCount);
+                registeredGlobalHotKeyCount += 1;
+                string atomName = string.Format("{0}{1}{2}", Thread.CurrentThread.ManagedThreadId.ToString("X8"), targetForm.Name, registeredGlobalHotKeyCount);
                 hotkeyID = GlobalAddAtom(atomName);
                 if (hotkeyID == 0)
                 {
@@ -687,9 +675,9 @@ namespace Hoehoe
 
         private struct INTERNET_PROXY_INFO
         {
-            public int dwAccessType;
-            public IntPtr proxy;
-            public IntPtr proxyBypass;
+            public int DwAccessType;
+            public IntPtr Proxy;
+            public IntPtr ProxyBypass;
         }
 
         private static void RefreshProxySettings(string strProxy)
@@ -705,9 +693,9 @@ namespace Hoehoe
             // Filling in structure
             if (!string.IsNullOrEmpty(strProxy))
             {
-                ipi.dwAccessType = INTERNET_OPEN_TYPE_PROXY;
-                ipi.proxy = Marshal.StringToHGlobalAnsi(strProxy);
-                ipi.proxyBypass = Marshal.StringToHGlobalAnsi("local");
+                ipi.DwAccessType = INTERNET_OPEN_TYPE_PROXY;
+                ipi.Proxy = Marshal.StringToHGlobalAnsi(strProxy);
+                ipi.ProxyBypass = Marshal.StringToHGlobalAnsi("local");
             }
             else if (strProxy == null)
             {
@@ -715,22 +703,22 @@ namespace Hoehoe
                 IWebProxy p = WebRequest.GetSystemWebProxy();
                 if (p.IsBypassed(new Uri("http://www.google.com/")))
                 {
-                    ipi.dwAccessType = INTERNET_OPEN_TYPE_DIRECT;
-                    ipi.proxy = IntPtr.Zero;
-                    ipi.proxyBypass = IntPtr.Zero;
+                    ipi.DwAccessType = INTERNET_OPEN_TYPE_DIRECT;
+                    ipi.Proxy = IntPtr.Zero;
+                    ipi.ProxyBypass = IntPtr.Zero;
                 }
                 else
                 {
-                    ipi.dwAccessType = INTERNET_OPEN_TYPE_PROXY;
-                    ipi.proxy = Marshal.StringToHGlobalAnsi(p.GetProxy(new Uri("http://www.google.com/")).Authority);
-                    ipi.proxyBypass = Marshal.StringToHGlobalAnsi("local");
+                    ipi.DwAccessType = INTERNET_OPEN_TYPE_PROXY;
+                    ipi.Proxy = Marshal.StringToHGlobalAnsi(p.GetProxy(new Uri("http://www.google.com/")).Authority);
+                    ipi.ProxyBypass = Marshal.StringToHGlobalAnsi("local");
                 }
             }
             else
             {
-                ipi.dwAccessType = INTERNET_OPEN_TYPE_DIRECT;
-                ipi.proxy = IntPtr.Zero;
-                ipi.proxyBypass = IntPtr.Zero;
+                ipi.DwAccessType = INTERNET_OPEN_TYPE_DIRECT;
+                ipi.Proxy = IntPtr.Zero;
+                ipi.ProxyBypass = IntPtr.Zero;
             }
 
             try
@@ -759,14 +747,14 @@ namespace Hoehoe
             }
             finally
             {
-                if (ipi.proxy != IntPtr.Zero)
+                if (ipi.Proxy != IntPtr.Zero)
                 {
-                    Marshal.FreeHGlobal(ipi.proxy);
+                    Marshal.FreeHGlobal(ipi.Proxy);
                 }
 
-                if (ipi.proxyBypass != IntPtr.Zero)
+                if (ipi.ProxyBypass != IntPtr.Zero)
                 {
-                    Marshal.FreeHGlobal(ipi.proxyBypass);
+                    Marshal.FreeHGlobal(ipi.ProxyBypass);
                 }
             }
         }

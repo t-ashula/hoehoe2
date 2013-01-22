@@ -72,7 +72,7 @@ namespace Hoehoe
         private const string Pth2 = "(/(?:" + Pth + "+" + UrlValidPathEndingChars + "|" + Pth + "+" + UrlValidPathEndingChars + "?|" + UrlValidPathEndingChars + ")?)?";
         private const string Qry = "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\[\\]\\-_.,~]*[a-z0-9_&=#])?";
 
-        private static AccountState _accountState = AccountState.Valid;
+        private static AccountState accountState = AccountState.Valid;
 
         private readonly object _lockObj = new object();
         private readonly List<long> _followerIds = new List<long>();
@@ -89,10 +89,7 @@ namespace Hoehoe
         // プロパティからアクセスされる共通情報
         private string _uname;
 
-        private int iconSz;
-        private bool getIcon;
         private IDictionary<string, Image> _userIcons;
-        private bool tinyUrlResolve;
         private bool _restrictFavCheck;
         private bool _readOwnPost;
 
@@ -171,8 +168,8 @@ namespace Hoehoe
 
         public static AccountState AccountState
         {
-            get { return _accountState; }
-            set { _accountState = value; }
+            get { return accountState; }
+            set { accountState = value; }
         }
 
         public string Username
@@ -1286,11 +1283,11 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res;
-            string content = string.Empty;
+            var content = string.Empty;
             retweetedCount = 0;
             for (int i = 1; i <= 100; i++)
             {
+                HttpStatusCode res;
                 try
                 {
                     res = _twitterConnection.Statusid_retweeted_by_ids(statusId, 100, i, ref content);
@@ -1556,12 +1553,10 @@ namespace Hoehoe
 
         public void SetGetIcon(bool value)
         {
-            getIcon = value;
         }
 
         public void SetTinyUrlResolve(bool value)
         {
-            tinyUrlResolve = value;
         }
 
         public void SetRestrictFavCheck(bool value)
@@ -1571,7 +1566,6 @@ namespace Hoehoe
 
         public void SetIconSize(int value)
         {
-            iconSz = value;
         }
 
         #region "TODO:バージョンアップ"
@@ -1849,7 +1843,7 @@ namespace Hoehoe
                     item.IsRead = true;
                 }
 
-                if (tab != null)
+                // if (tab != null)
                 {
                     item.RelTabName = tab.TabName;
                 }
@@ -2418,7 +2412,6 @@ namespace Hoehoe
             foreach (var status in item)
             {
                 var post = new PostClass();
-                Entities entities;
 
                 try
                 {
@@ -2434,6 +2427,7 @@ namespace Hoehoe
                     }
 
                     // Retweet判定
+                    Entities entities;
                     if (status.RetweetedStatus != null)
                     {
                         var retweeted = status.RetweetedStatus;
@@ -2954,7 +2948,7 @@ namespace Hoehoe
             }
         }
 
-        public string ContainsUserAtList(string listId, string user, ref bool value)
+        public string ContainsUserAtList(string listId, string user, out bool value)
         {
             value = false;
 
@@ -3131,12 +3125,9 @@ namespace Hoehoe
 
             MatchEvaluator hashReplace = mh =>
             {
-                foreach (Range rng in anchorRange)
+                if (anchorRange.Any(rng => mh.Index >= rng.FromIndex && mh.Index <= rng.ToIndex))
                 {
-                    if (mh.Index >= rng.FromIndex && mh.Index <= rng.ToIndex)
-                    {
-                        return mh.Result("$0");
-                    }
+                    return mh.Result("$0");
                 }
 
                 lock (_lockObj)
@@ -3323,11 +3314,16 @@ namespace Hoehoe
             try
             {
                 var limit = D.CreateDataFromJson<RateLimitStatus>(content);
-                var arg = new ApiInformationChangedEventArgs();
-                arg.ApiInfo.MaxCount = limit.HourlyLimit;
-                arg.ApiInfo.RemainCount = limit.RemainingHits;
-                arg.ApiInfo.ResetTime = MyCommon.DateTimeParse(limit.RestTime);
-                arg.ApiInfo.ResetTimeInSeconds = limit.RestTimeInSeconds;
+                var arg = new ApiInformationChangedEventArgs
+                    {
+                        ApiInfo =
+                            {
+                                MaxCount = limit.HourlyLimit,
+                                RemainCount = limit.RemainingHits,
+                                ResetTime = MyCommon.DateTimeParse(limit.RestTime),
+                                ResetTimeInSeconds = limit.RestTimeInSeconds
+                            }
+                    };
                 if (info != null)
                 {
                     arg.ApiInfo.UsingCount = info.UsingCount;
@@ -3567,19 +3563,7 @@ namespace Hoehoe
 
         private bool IsPostRestricted(Status status)
         {
-            var currentPost = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
-            currentPost.CreatedAt = status.CreatedAt;
-            currentPost.Id = status.IdStr;
-            if (status.Text == null)
-            {
-                currentPost.Text = string.Empty;
-            }
-            else
-            {
-                currentPost.Text = status.Text;
-            }
-
-            currentPost.UserId = status.User.IdStr;
+            var currentPost = new PostInfo(status.CreatedAt, status.IdStr, status.Text ?? string.Empty, status.User.IdStr);
 
             if (currentPost.Equals(_prevPostInfo))
             {
@@ -3597,11 +3581,10 @@ namespace Hoehoe
         private PostClass CreatePostsFromStatusData(Status status)
         {
             Entities entities;
-            var post = new PostClass();
-            post.StatusId = status.Id;
+            var post = new PostClass { StatusId = status.Id };
             if (status.RetweetedStatus != null)
             {
-                RetweetedStatus retweeted = status.RetweetedStatus;
+                var retweeted = status.RetweetedStatus;
                 post.CreatedAt = MyCommon.DateTimeParse(retweeted.CreatedAt);
 
                 // Id
@@ -3629,7 +3612,7 @@ namespace Hoehoe
                 }
 
                 // 幻覚fav対策
-                TabClass tc = TabInformations.Instance.GetTabByType(TabUsageType.Favorites);
+                var tc = TabInformations.Instance.GetTabByType(TabUsageType.Favorites);
                 post.IsFav = tc.Contains(post.RetweetedId);
 
                 if (retweeted.Geo != null)
@@ -3706,7 +3689,7 @@ namespace Hoehoe
                 post.IsMe = post.ScreenName.ToLower().Equals(_uname);
 
                 // 幻覚fav対策
-                TabClass tc = TabInformations.Instance.GetTabByType(TabUsageType.Favorites);
+                var tc = TabInformations.Instance.GetTabByType(TabUsageType.Favorites);
                 post.IsFav = tc.Contains(post.StatusId) && TabInformations.Instance.Item(post.StatusId).IsFav;
             }
 
@@ -3961,10 +3944,8 @@ namespace Hoehoe
             }
 
             PostClass targetItem = post;
-            if (targetItem == null)
-            {
-                return string.Empty;
-            }
+
+            // if (targetItem == null){return string.Empty;}
 
             targetItem = targetItem.Copy();
             targetItem.RelTabName = tab.TabName;
@@ -3982,12 +3963,12 @@ namespace Hoehoe
                 replyToItem.RelTabName = tab.TabName;
             }
 
-            bool replyAdded = false;
+            var replyAdded = false;
             foreach (var relatedData in items)
             {
                 foreach (var result in relatedData.Results)
                 {
-                    PostClass item = CreatePostsFromStatusData(result.Status);
+                    var item = CreatePostsFromStatusData(result.Status);
                     if (item == null)
                     {
                         continue;
@@ -4005,7 +3986,7 @@ namespace Hoehoe
                         item.IsRead = true;
                     }
 
-                    if (tab != null)
+                    // if (tab != null)
                     {
                         item.RelTabName = tab.TabName;
                     }
@@ -4022,7 +4003,7 @@ namespace Hoehoe
             else if (targetItem.InReplyToStatusId > 0 && !replyAdded)
             {
                 PostClass p = null;
-                string rslt = GetStatusApi(read, targetItem.InReplyToStatusId, ref p);
+                var rslt = GetStatusApi(read, targetItem.InReplyToStatusId, ref p);
                 if (string.IsNullOrEmpty(rslt))
                 {
                     p.IsRead = read;
@@ -4034,29 +4015,28 @@ namespace Hoehoe
             }
 
             // MRTとかに対応のためツイート内にあるツイートを指すURLを取り込む
-            MatchCollection ma = Regex.Matches(tab.RelationTargetPost.Text, "title=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/(?<StatusId>[0-9]+))\"");
+            var ma = Regex.Matches(tab.RelationTargetPost.Text, "title=\"https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)(/status(es)?/(?<StatusId>[0-9]+))\"");
             foreach (Match m in ma)
             {
                 long statusId;
-                if (long.TryParse(m.Groups["StatusId"].Value, out statusId))
-                {
-                    PostClass p = null;
-                    PostClass p2 = TabInformations.Instance.Item(statusId);
-                    if (p2 == null)
-                    {
-                        GetStatusApi(read, statusId, ref p);
-                    }
-                    else
-                    {
-                        p = p2.Copy();
-                    }
+                if (!long.TryParse(m.Groups["StatusId"].Value, out statusId)) continue;
 
-                    if (p != null)
-                    {
-                        p.IsRead = read;
-                        p.RelTabName = tab.TabName;
-                        relatedPosts.Add(p);
-                    }
+                PostClass p = null;
+                var p2 = TabInformations.Instance.Item(statusId);
+                if (p2 == null)
+                {
+                    GetStatusApi(read, statusId, ref p);
+                }
+                else
+                {
+                    p = p2.Copy();
+                }
+
+                if (p != null)
+                {
+                    p.IsRead = read;
+                    p.RelTabName = tab.TabName;
+                    relatedPosts.Add(p);
                 }
             }
 
@@ -4068,19 +4048,9 @@ namespace Hoehoe
             List<Directmessage> item;
             try
             {
-                if (workerType == WorkerType.UserStream)
-                {
-                    var itm = D.CreateDataFromJson<List<DirectmessageEvent>>(content);
-                    item = new List<Directmessage>();
-                    foreach (var dat in itm)
-                    {
-                        item.Add(dat.Directmessage);
-                    }
-                }
-                else
-                {
-                    item = D.CreateDataFromJson<List<Directmessage>>(content);
-                }
+                item = workerType == WorkerType.UserStream ?
+                    D.CreateDataFromJson<List<DirectmessageEvent>>(content).Select(dat => dat.Directmessage).ToList() :
+                    D.CreateDataFromJson<List<Directmessage>>(content);
             }
             catch (SerializationException ex)
             {
@@ -4472,8 +4442,7 @@ namespace Hoehoe
                     }
                 }
 
-                var res = new StringBuilder();
-                res.Length = 0;
+                var res = new StringBuilder { Length = 0 };
                 res.Append("[");
                 res.Append(line);
                 res.Append("]");
@@ -4719,9 +4688,9 @@ namespace Hoehoe
                 ToIndex = toIndex;
             }
 
-            public int FromIndex { get; set; }
+            public int FromIndex { get; private set; }
 
-            public int ToIndex { get; set; }
+            public int ToIndex { get; private set; }
         }
 
         private class EntityInfo
@@ -4745,9 +4714,9 @@ namespace Hoehoe
                 Type = type;
             }
 
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
-            public EventType Type { get; set; }
+            public EventType Type { get; private set; }
         }
 
         private class TwitterUserstream : IDisposable
@@ -4755,14 +4724,13 @@ namespace Hoehoe
             private readonly HttpTwitter _twitterConnection;
             private Thread _streamThread;
             private bool _streamActive;
-            private bool _allAtreplies;
-            private string _trackwords = string.Empty;
 
             // 重複する呼び出しを検出するには
             private bool _disposedValue;
 
             public TwitterUserstream(HttpTwitter twitterConnection)
             {
+                _trackWords = string.Empty;
                 _twitterConnection = (HttpTwitter)twitterConnection.Clone();
             }
 
@@ -4783,31 +4751,21 @@ namespace Hoehoe
                 get { return _streamActive; }
             }
 
-            public bool AllAtReplies
-            {
-                get { return _allAtreplies; }
-                set { _allAtreplies = value; }
-            }
+            private bool _allAtReplies; // { get; set; }
 
-            public string TrackWords
-            {
-                get { return _trackwords; }
-                set { _trackwords = value; }
-            }
+            private string _trackWords; // { get; set; }
 
             public void Start(bool allAtReplies, string trackwords)
             {
-                AllAtReplies = allAtReplies;
-                TrackWords = trackwords;
+                _allAtReplies = allAtReplies;
+                _trackWords = trackwords;
                 _streamActive = true;
                 if (_streamThread != null && _streamThread.IsAlive)
                 {
                     return;
                 }
 
-                _streamThread = new Thread(UserStreamLoop);
-                _streamThread.Name = "UserStreamReceiver";
-                _streamThread.IsBackground = true;
+                _streamThread = new Thread(UserStreamLoop) { Name = "UserStreamReceiver", IsBackground = true };
                 _streamThread.Start();
             }
 
@@ -4862,7 +4820,7 @@ namespace Hoehoe
                             Started();
                         }
 
-                        HttpStatusCode res = _twitterConnection.UserStream(ref st, AllAtReplies, TrackWords, MyCommon.GetUserAgentString());
+                        HttpStatusCode res = _twitterConnection.UserStream(ref st, _allAtReplies, _trackWords, MyCommon.GetUserAgentString());
                         switch (res)
                         {
                             case HttpStatusCode.OK:

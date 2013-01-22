@@ -24,6 +24,8 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Linq;
+
 namespace Hoehoe
 {
     using System;
@@ -33,13 +35,13 @@ namespace Hoehoe
 
     public class ShortUrl
     {
-        private static readonly object lockObj = new object();
-        private static string[] shortUrlServices = { "http://t.co/", "http://tinyurl.com/", "http://is.gd/", "http://bit.ly/", "http://j.mp/", "http://goo.gl/", "http://htn.to/", "http://amzn.to/", "http://flic.kr/", "http://ux.nu/", "http://youtu.be/", "http://p.tl/", "http://nico.ms", "http://moi.st/", "http://snipurl.com/", "http://snurl.com/", "http://nsfw.in/", "http://icanhaz.com/", "http://tiny.cc/", "http://urlenco.de/", "http://linkbee.com/", "http://traceurl.com/", "http://twurl.nl/", "http://cli.gs/", "http://rubyurl.com/", "http://budurl.com/", "http://ff.im/", "http://twitthis.com/", "http://blip.fm/", "http://tumblr.com/", "http://www.qurl.com/", "http://digg.com/", "http://ustre.am/", "http://pic.gd/", "http://airme.us/", "http://qurl.com/", "http://bctiny.com/", "http://ow.ly/", "http://bkite.com/", "http://dlvr.it/", "http://ht.ly/", "http://tl.gd/" };
+        private static readonly object LockObj = new object();
+        private static readonly string[] ShortUrlServices = { "http://t.co/", "http://tinyurl.com/", "http://is.gd/", "http://bit.ly/", "http://j.mp/", "http://goo.gl/", "http://htn.to/", "http://amzn.to/", "http://flic.kr/", "http://ux.nu/", "http://youtu.be/", "http://p.tl/", "http://nico.ms", "http://moi.st/", "http://snipurl.com/", "http://snurl.com/", "http://nsfw.in/", "http://icanhaz.com/", "http://tiny.cc/", "http://urlenco.de/", "http://linkbee.com/", "http://traceurl.com/", "http://twurl.nl/", "http://cli.gs/", "http://rubyurl.com/", "http://budurl.com/", "http://ff.im/", "http://twitthis.com/", "http://blip.fm/", "http://tumblr.com/", "http://www.qurl.com/", "http://digg.com/", "http://ustre.am/", "http://pic.gd/", "http://airme.us/", "http://qurl.com/", "http://bctiny.com/", "http://ow.ly/", "http://bkite.com/", "http://dlvr.it/", "http://ht.ly/", "http://tl.gd/" };
         private static string bitlyId = string.Empty;
         private static string bitlyKey = string.Empty;
         private static bool isResolve = true;
         private static bool isForceResolve = true;
-        private static Dictionary<string, string> urlCache = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> UrlCache = new Dictionary<string, string>();
 
         public static bool IsResolve
         {
@@ -70,29 +72,30 @@ namespace Hoehoe
                 return orgData;
             }
 
-            lock (lockObj)
+            lock (LockObj)
             {
-                if (urlCache.Count > 500)
+                if (UrlCache.Count > 500)
                 {
                     // 定期的にリセット
-                    urlCache.Clear();
+                    UrlCache.Clear();
                 }
             }
 
             var urlList = new List<string>();
-            MatchCollection m = Regex.Matches(orgData, "<a href=\"(?<svc>http://.+?/)(?<path>[^\"]+)?\"", RegexOptions.IgnoreCase);
+            var m = Regex.Matches(orgData, "<a href=\"(?<svc>http://.+?/)(?<path>[^\"]+)?\"", RegexOptions.IgnoreCase);
             foreach (Match orgUrlMatch in m)
             {
-                string orgUrl = orgUrlMatch.Result("${svc}");
-                string orgUrlPath = orgUrlMatch.Result("${path}");
-                if ((isForceResolve || Array.IndexOf(shortUrlServices, orgUrl) > -1) && !urlList.Contains(orgUrl + orgUrlPath) && orgUrl != "http://twitter.com/")
+                var orgUrl = orgUrlMatch.Result("${svc}");
+                var orgUrlPath = orgUrlMatch.Result("${path}");
+                if ((isForceResolve || Array.IndexOf(ShortUrlServices, orgUrl) > -1)
+                    && !urlList.Contains(orgUrl + orgUrlPath) && orgUrl != "http://twitter.com/")
                 {
                     if (!tcoResolve && (orgUrl == "http://t.co/" || orgUrl == "https://t.co"))
                     {
                         continue;
                     }
 
-                    lock (lockObj)
+                    lock (LockObj)
                     {
                         urlList.Add(orgUrl + orgUrlPath);
                     }
@@ -101,11 +104,11 @@ namespace Hoehoe
 
             foreach (string orgUrl in urlList)
             {
-                if (urlCache.ContainsKey(orgUrl))
+                if (UrlCache.ContainsKey(orgUrl))
                 {
                     try
                     {
-                        orgData = orgData.Replace("<a href=\"" + orgUrl + "\"", "<a href=\"" + urlCache[orgUrl] + "\"");
+                        orgData = orgData.Replace("<a href=\"" + orgUrl + "\"", "<a href=\"" + UrlCache[orgUrl] + "\"");
                     }
                     catch (Exception)
                     {
@@ -117,19 +120,19 @@ namespace Hoehoe
                     try
                     {
                         // urlとして生成できない場合があるらしい
-                        string tmpurlStr = new Uri(MyCommon.GetUrlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
+                        var tmpurlStr = new Uri(MyCommon.GetUrlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
                         var httpVar = new HttpVarious();
-                        string retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
+                        var retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
                         if (retUrlStr.StartsWith("http"))
                         {
                             // ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
                             retUrlStr = retUrlStr.Replace("\"", "%22");
                             orgData = orgData.Replace("<a href=\"" + tmpurlStr, "<a href=\"" + retUrlStr);
-                            lock (lockObj)
+                            lock (LockObj)
                             {
-                                if (!urlCache.ContainsKey(orgUrl))
+                                if (!UrlCache.ContainsKey(orgUrl))
                                 {
-                                    urlCache.Add(orgUrl, retUrlStr);
+                                    UrlCache.Add(orgUrl, retUrlStr);
                                 }
                             }
                         }
@@ -151,58 +154,60 @@ namespace Hoehoe
                 return orgData;
             }
 
-            lock (lockObj)
+            lock (LockObj)
             {
-                if (urlCache.Count > 500)
+                if (UrlCache.Count > 500)
                 {
                     // 定期的にリセット
-                    urlCache.Clear();
+                    UrlCache.Clear();
                 }
             }
 
-            Match m = Regex.Match(orgData, "(?<svc>https?://.+?/)(?<path>[^\"]+)?", RegexOptions.IgnoreCase);
-            if (m.Success)
+            var m = Regex.Match(orgData, "(?<svc>https?://.+?/)(?<path>[^\"]+)?", RegexOptions.IgnoreCase);
+            if (!m.Success)
             {
-                string orgUrl = m.Result("${svc}");
-                string orgUrlPath = m.Result("${path}");
-                if ((isForceResolve || Array.IndexOf(shortUrlServices, orgUrl) > -1) && orgUrl != "http://twitter.com/")
+                return orgData;
+            }
+
+            var orgUrl = m.Result("${svc}");
+            var orgUrlPath = m.Result("${path}");
+            if ((isForceResolve || Array.IndexOf(ShortUrlServices, orgUrl) > -1) && orgUrl != "http://twitter.com/")
+            {
+                if (!tcoResolve && (orgUrl == "http://t.co/" || orgUrl == "https://t.co/"))
                 {
-                    if (!tcoResolve && (orgUrl == "http://t.co/" || orgUrl == "https://t.co/"))
-                    {
-                        return orgData;
-                    }
+                    return orgData;
+                }
 
-                    orgUrl += orgUrlPath;
-                    if (urlCache.ContainsKey(orgUrl))
-                    {
-                        return orgData.Replace(orgUrl, urlCache[orgUrl]);
-                    }
+                orgUrl += orgUrlPath;
+                if (UrlCache.ContainsKey(orgUrl))
+                {
+                    return orgData.Replace(orgUrl, UrlCache[orgUrl]);
+                }
 
-                    try
+                try
+                {
+                    // urlとして生成できない場合があるらしい
+                    var tmpurlStr = new Uri(MyCommon.GetUrlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
+                    var httpVar = new HttpVarious();
+                    var retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
+                    if (retUrlStr.StartsWith("http"))
                     {
-                        // urlとして生成できない場合があるらしい
-                        string tmpurlStr = new Uri(MyCommon.GetUrlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
-                        var httpVar = new HttpVarious();
-                        string retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
-                        if (retUrlStr.StartsWith("http"))
+                        // ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
+                        retUrlStr = retUrlStr.Replace("\"", "%22");
+                        lock (LockObj)
                         {
-                            // ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
-                            retUrlStr = retUrlStr.Replace("\"", "%22");
-                            lock (lockObj)
+                            if (!UrlCache.ContainsKey(orgUrl))
                             {
-                                if (!urlCache.ContainsKey(orgUrl))
-                                {
-                                    urlCache.Add(orgUrl, orgData.Replace(tmpurlStr, retUrlStr));
-                                }
+                                UrlCache.Add(orgUrl, orgData.Replace(tmpurlStr, retUrlStr));
                             }
-
-                            return orgData.Replace(tmpurlStr, retUrlStr);
                         }
+
+                        return orgData.Replace(tmpurlStr, retUrlStr);
                     }
-                    catch (Exception)
-                    {
-                        return orgData;
-                    }
+                }
+                catch (Exception)
+                {
+                    return orgData;
                 }
             }
 
@@ -221,15 +226,12 @@ namespace Hoehoe
                 return "Can't convert";
             }
 
-            string orgSrc = srcUrl;
+            var orgSrc = srcUrl;
             var param = new Dictionary<string, string>();
-            string content = string.Empty;
-            foreach (string svc in shortUrlServices)
+            var content = string.Empty;
+            if (ShortUrlServices.Any(svc => srcUrl.StartsWith(svc)))
             {
-                if (srcUrl.StartsWith(svc))
-                {
-                    return "Can't convert";
-                }
+                return "Can't convert";
             }
 
             // nico.msは短縮しない
@@ -243,6 +245,7 @@ namespace Hoehoe
             switch (converterType)
             {
                 case UrlConverter.TinyUrl:
+
                     // tinyurl
                     if (srcUrl.StartsWith("http"))
                     {
@@ -265,6 +268,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case UrlConverter.Isgd:
                     if (srcUrl.StartsWith("http"))
                     {
@@ -287,6 +291,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case UrlConverter.Twurl:
                     if (srcUrl.StartsWith("http"))
                     {
@@ -312,6 +317,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case UrlConverter.Bitly:
                 case UrlConverter.Jmp:
                     const string BitlyLogin = "tweenapi"; // TODO: Hoehoenize
@@ -345,6 +351,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case UrlConverter.Uxnu:
                     if (srcUrl.StartsWith("http"))
                     {

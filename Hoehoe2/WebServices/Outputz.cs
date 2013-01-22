@@ -30,6 +30,8 @@ namespace Hoehoe
 
     public class Outputz
     {
+        private const string OutputzApiUrl = "http://outputz.com/api/post";
+
         public static string OutUrl { get; set; }
 
         public static string Key { get; set; }
@@ -43,8 +45,12 @@ namespace Hoehoe
                 return true;
             }
 
-            string output = "http://outputz.com/api/post";
-            return (new HttpVarious()).PostData(output, new Dictionary<string, string> { { "key", Key }, { "uri", OutUrl }, { "size", length.ToString() } });
+            return new HttpVarious().PostData(
+                OutputzApiUrl,
+                new Dictionary<string, string>
+                    {
+                        { "key", Key }, { "uri", OutUrl }, { "size", string.Format("{0}", length) }
+                    });
         }
     }
 }

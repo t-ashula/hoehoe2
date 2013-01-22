@@ -135,7 +135,7 @@ namespace Hoehoe
 
         private class BackgroundWorkerServicer : BackgroundWorker
         {
-            public object Result { get; set; }
+            public object Result { get; private set; }
 
             protected override void OnRunWorkerCompleted(RunWorkerCompletedEventArgs e)
             {

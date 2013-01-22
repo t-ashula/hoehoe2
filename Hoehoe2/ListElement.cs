@@ -90,15 +90,7 @@ namespace Hoehoe
         [XmlIgnore]
         public List<UserInfo> Members
         {
-            get
-            {
-                if (_members == null)
-                {
-                    _members = new List<UserInfo>();
-                }
-
-                return _members;
-            }
+            get { return _members ?? (_members = new List<UserInfo>()); }
         }
 
         [XmlIgnore]

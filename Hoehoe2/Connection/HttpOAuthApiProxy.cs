@@ -48,10 +48,10 @@ namespace Hoehoe
             var sorted = new SortedDictionary<string, string>(parameter);
 
             // URLエンコード済みのクエリ形式文字列に変換
-            string paramString = CreateQueryString(sorted);
+            var paramString = CreateQueryString(sorted);
 
             // アクセス先URLの整形
-            string url = string.Format("{0}://{1}{2}", uri.Scheme, uri.Host, uri.AbsolutePath);
+            var url = string.Format("{0}://{1}{2}", uri.Scheme, uri.Host, uri.AbsolutePath);
 
             // 本来のアクセス先URLに再設定（api.twitter.com固定）
             if (!string.IsNullOrEmpty(_proxyHost) && url.StartsWith(uri.Scheme + "://" + _proxyHost))
@@ -60,10 +60,10 @@ namespace Hoehoe
             }
 
             // 署名のベース文字列生成（&区切り）。クエリ形式文字列は再エンコードする
-            string signatureBase = string.Format("{0}&{1}&{2}", method, UrlEncode(url), UrlEncode(paramString));
+            var signatureBase = string.Format("{0}&{1}&{2}", method, UrlEncode(url), UrlEncode(paramString));
 
             // 署名鍵の文字列をコンシューマー秘密鍵とアクセストークン秘密鍵から生成（&区切り。アクセストークン秘密鍵なくても&残すこと）
-            string key = UrlEncode(ConsumerSecret) + "&";
+            var key = UrlEncode(ConsumerSecret) + "&";
             if (!string.IsNullOrEmpty(tokenSecret))
             {
                 key += UrlEncode(tokenSecret);

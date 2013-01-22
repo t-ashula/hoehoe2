@@ -61,27 +61,28 @@ namespace Hoehoe
 
         private void AuthWebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (AuthWebBrowser.Url.OriginalString == "https://api.twitter.com/oauth/authorize")
+            if (AuthWebBrowser.Url.OriginalString != "https://api.twitter.com/oauth/authorize")
             {
-                var rg = new Regex("<code>(\\d+)</code>");
-                Match m = rg.Match(AuthWebBrowser.DocumentText);
-                if (m.Success)
-                {
-                    PinText.Text = PinString = m.Result("${1}");
-                    PinText.Focus();
-                }
+                return;
             }
+            var rg = new Regex("<code>(\\d+)</code>");
+            var m = rg.Match(AuthWebBrowser.DocumentText);
+            if (!m.Success) return;
+            PinText.Text = PinString = m.Result("${1}");
+            PinText.Focus();
         }
 
         private void AuthBrowser_Load(object sender, EventArgs e)
         {
             _securityManager = new InternetSecurityManager(AuthWebBrowser);
             AuthWebBrowser.Navigate(new Uri(UrlString));
-            if (!IsAuthorized)
+            if (IsAuthorized)
             {
-                Label1.Visible = false;
-                PinText.Visible = false;
+                return;
             }
+
+            Label1.Visible = false;
+            PinText.Visible = false;
         }
 
         private void AuthWebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)

@@ -215,11 +215,8 @@ namespace Hoehoe
                 throw new ArgumentException("File is too large.");
             }
 
-            var param = new Dictionary<string, string>();
-            param.Add("key", ApiKey);
-            param.Add("message", message);
-            var binary = new List<KeyValuePair<string, FileInfo>>();
-            binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
+            var param = new Dictionary<string, string> { { "key", ApiKey }, { "message", message } };
+            var binary = new List<KeyValuePair<string, FileInfo>> { new KeyValuePair<string, FileInfo>("media", mediaFile) };
             InstanceTimeout = GetFileType(mediaFile.Extension) == UploadFileType.Picture ? 60000 : 120000;  // 種類別にタイムアウトを指定
 
             return GetContent(PostMethod, new Uri("http://api.twitpic.com/2/upload.xml"), param, binary, ref content, null, null);

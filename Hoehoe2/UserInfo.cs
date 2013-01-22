@@ -78,12 +78,11 @@ namespace Hoehoe
             StatusesCount = user.StatusesCount;
             Verified = user.Verified;
             //// isFollowing = isFollowing;
-            if (user.Status != null)
-            {
-                RecentPost = user.Status.Text;
-                PostCreatedAt = MyCommon.DateTimeParse(user.Status.CreatedAt);
-                PostSource = user.Status.Source;
-            }
+            if (user.Status == null) return;
+
+            RecentPost = user.Status.Text;
+            PostCreatedAt = MyCommon.DateTimeParse(user.Status.CreatedAt);
+            PostSource = user.Status.Source;
         }
 
         public override string ToString()

@@ -87,9 +87,9 @@ namespace Hoehoe
             {
                 if (value != null && value.Count > 0)
                 {
-                    foreach (TabClass tb in GetTabsByType(TabUsageType.Lists))
+                    foreach (var tb in GetTabsByType(TabUsageType.Lists))
                     {
-                        foreach (ListElement list in value)
+                        foreach (var list in value)
                         {
                             if (tb.ListInfo.Id == list.Id)
                             {
@@ -881,20 +881,9 @@ namespace Hoehoe
 
         public PostClass Item(long id)
         {
-            if (_statuses.ContainsKey(id))
-            {
-                return _statuses[id];
-            }
-
-            foreach (TabClass tb in GetTabsInnerStorageType())
-            {
-                if (tb.Contains(id))
-                {
-                    return tb.Posts[id];
-                }
-            }
-
-            return null;
+            return _statuses.ContainsKey(id) ?
+                _statuses[id] :
+                GetTabsInnerStorageType().Where(tb => tb.Contains(id)).Select(tb => tb.Posts[id]).FirstOrDefault();
         }
 
         public PostClass Item(string tabName, int index)
@@ -905,7 +894,7 @@ namespace Hoehoe
                 throw new ArgumentException(string.Format("TabName={0} is not contained.", tabName));
             }
 
-            long id = tab.GetId(index);
+            var id = tab.GetId(index);
             if (id < 0)
             {
                 throw new ArgumentException(string.Format("Index can't find. Index={0}/TabName={1}", index, tabName));
@@ -1094,15 +1083,7 @@ namespace Hoehoe
                     // 振分確定
                     foreach (long id in orgIds)
                     {
-                        bool hit = false;
-                        foreach (var tmp in Tabs.Values.ToArray())
-                        {
-                            if (tmp.Contains(id))
-                            {
-                                hit = true;
-                                break;
-                            }
-                        }
+                        bool hit = Tabs.Values.ToArray().Any(tmp => tmp.Contains(id));
 
                         if (!hit)
                         {
@@ -1117,7 +1098,7 @@ namespace Hoehoe
 
         public long[] GetId(string tabName, IEnumerable<int> indecies)
         {
-            if (indecies.Count() == 0)
+            if (!indecies.Any())
             {
                 return null;
             }
@@ -1161,15 +1142,7 @@ namespace Hoehoe
                 {
                     foreach (long id in Tabs[tabName].BackupIds())
                     {
-                        bool hit = false;
-                        foreach (TabClass tb in Tabs.Values)
-                        {
-                            if (tb.Contains(id))
-                            {
-                                hit = true;
-                                break;
-                            }
-                        }
+                        bool hit = Tabs.Values.Any(tb => tb.Contains(id));
 
                         if (!hit)
                         {
@@ -1251,15 +1224,7 @@ namespace Hoehoe
             // 合致しなければNothingを返す
             lock (_lockObj)
             {
-                foreach (TabClass tb in Tabs.Values)
-                {
-                    if (tb != null && tb.TabType == tabType)
-                    {
-                        return tb;
-                    }
-                }
-
-                return null;
+                return Tabs.Values.FirstOrDefault(tb => tb != null && tb.TabType == tabType);
             }
         }
 
@@ -1613,15 +1578,7 @@ namespace Hoehoe
                 {
                     foreach (var post in tb.GetTemporaryPosts())
                     {
-                        bool exist = false;
-                        foreach (PostClass npost in _notifyPosts)
-                        {
-                            if (npost.StatusId == post.StatusId)
-                            {
-                                exist = true;
-                                break;
-                            }
-                        }
+                        bool exist = _notifyPosts.Any(npost => npost.StatusId == post.StatusId);
 
                         if (!exist)
                         {

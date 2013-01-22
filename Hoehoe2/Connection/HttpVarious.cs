@@ -40,10 +40,10 @@ namespace Hoehoe
         {
             try
             {
-                HttpWebRequest req = CreateRequest(HeadMethod, new Uri(url), null, false);
+                var req = CreateRequest(HeadMethod, new Uri(url), null, false);
                 req.Timeout = 5000;
                 req.AllowAutoRedirect = false;
-                string data = string.Empty;
+                var data = string.Empty;
                 var head = new Dictionary<string, string>();
                 GetResponse(req, ref data, head, false);
                 return head.ContainsKey("Location") ? head["Location"] : url;
@@ -56,25 +56,25 @@ namespace Hoehoe
 
         public Image GetImage(Uri url)
         {
-            string t = string.Empty;
+            var t = string.Empty;
             return GetImage(url.ToString(), string.Empty, 10000, ref t);
         }
 
         public Image GetImage(string url)
         {
-            string t = string.Empty;
+            var t = string.Empty;
             return GetImage(url, string.Empty, 10000, ref t);
         }
 
         public Image GetImage(string url, int timeout)
         {
-            string t = string.Empty;
+            var t = string.Empty;
             return GetImage(url, string.Empty, timeout, ref t);
         }
 
         public Image GetImage(string url, string referer)
         {
-            string t = string.Empty;
+            var t = string.Empty;
             return GetImage(url, referer, 10000, ref t);
         }
 
@@ -85,7 +85,7 @@ namespace Hoehoe
 
         public Image GetIconImage(string url, int timeout)
         {
-            string t = string.Empty;
+            var t = string.Empty;
             return GetImageInternal(CheckValidIconImage, url, string.Empty, timeout, ref t);
         }
 
@@ -93,8 +93,8 @@ namespace Hoehoe
         {
             try
             {
-                HttpWebRequest req = CreateRequest(PostMethod, new Uri(url), param, false);
-                HttpStatusCode res = GetResponse(req, null, false);
+                var req = CreateRequest(PostMethod, new Uri(url), param, false);
+                var res = GetResponse(req, null, false);
                 return res == HttpStatusCode.OK;
             }
             catch (Exception)
@@ -107,8 +107,8 @@ namespace Hoehoe
         {
             try
             {
-                HttpWebRequest req = CreateRequest(PostMethod, new Uri(url), param, false);
-                HttpStatusCode res = GetResponse(req, ref content, null, false);
+                var req = CreateRequest(PostMethod, new Uri(url), param, false);
+                var res = GetResponse(req, ref content, null, false);
                 return res == HttpStatusCode.OK;
             }
             catch (Exception)
@@ -119,19 +119,19 @@ namespace Hoehoe
 
         public bool GetData(string url, Dictionary<string, string> param, ref string content, string userAgent)
         {
-            string t = string.Empty;
+            var t = string.Empty;
             return GetData(url, param, ref content, 100000, ref t, userAgent);
         }
 
         public bool GetData(string url, Dictionary<string, string> param, ref string content)
         {
-            string t = string.Empty;
+            var t = string.Empty;
             return GetData(url, param, ref content, 100000, ref t, string.Empty);
         }
 
         public bool GetData(string url, Dictionary<string, string> param, ref string content, int timeout)
         {
-            string t = string.Empty;
+            var t = string.Empty;
             return GetData(url, param, ref content, timeout, ref t, string.Empty);
         }
 
@@ -139,7 +139,7 @@ namespace Hoehoe
         {
             try
             {
-                HttpWebRequest req = CreateRequest(GetMethod, new Uri(url), param, false);
+                var req = CreateRequest(GetMethod, new Uri(url), param, false);
                 if (timeout < 3000 || timeout > 100000)
                 {
                     req.Timeout = 10000;
@@ -154,7 +154,7 @@ namespace Hoehoe
                     req.UserAgent = userAgent;
                 }
 
-                HttpStatusCode res = GetResponse(req, ref content, null, false);
+                var res = GetResponse(req, ref content, null, false);
                 if (res == HttpStatusCode.OK)
                 {
                     return true;
@@ -181,7 +181,7 @@ namespace Hoehoe
         public HttpStatusCode GetContent(string method, Uri url, Dictionary<string, string> param, ref string content, Dictionary<string, string> headerInfo, string userAgent)
         {
             // Searchで使用。呼び出し元で例外キャッチしている。
-            HttpWebRequest req = CreateRequest(method, url, param, false);
+            var req = CreateRequest(method, url, param, false);
             req.UserAgent = userAgent;
             return GetResponse(req, ref content, headerInfo, false);
         }
@@ -190,14 +190,14 @@ namespace Hoehoe
         {
             try
             {
-                HttpWebRequest req = CreateRequest(GetMethod, new Uri(url), null, false);
+                var req = CreateRequest(GetMethod, new Uri(url), null, false);
                 req.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
                 req.UserAgent = MyCommon.GetUserAgentString();
                 using (var strm = new FileStream(savePath, FileMode.Create, FileAccess.Write))
                 {
                     try
                     {
-                        HttpStatusCode res = GetResponse(req, strm, null, false);
+                        var res = GetResponse(req, strm, null, false);
                         strm.Close();
                         return res == HttpStatusCode.OK;
                     }
@@ -218,7 +218,7 @@ namespace Hoehoe
         {
             try
             {
-                HttpWebRequest req = CreateRequest(GetMethod, new Uri(url), null, false);
+                var req = CreateRequest(GetMethod, new Uri(url), null, false);
                 if (!string.IsNullOrEmpty(referer))
                 {
                     req.Referer = referer;
@@ -234,7 +234,7 @@ namespace Hoehoe
                 }
 
                 Bitmap img = null;
-                HttpStatusCode ret = GetResponse(req, ref img, null, false);
+                var ret = GetResponse(req, ref img, null, false);
                 if (errmsg != null)
                 {
                     errmsg = ret == HttpStatusCode.OK ? string.Empty : ret.ToString();
@@ -242,12 +242,11 @@ namespace Hoehoe
 
                 if (img != null)
                 {
-                    img.Tag = url;
-                }
-
-                if (ret == HttpStatusCode.OK)
-                {
-                    return checkImage(img, img.Width, img.Height);
+                    if (ret == HttpStatusCode.OK)
+                    {
+                        img.Tag = url;
+                        return checkImage(img, img.Width, img.Height);
+                    }
                 }
 
                 return null;

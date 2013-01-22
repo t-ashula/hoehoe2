@@ -86,13 +86,11 @@ namespace Hoehoe
 
         private void EventList_DoubleClick(object sender, EventArgs e)
         {
-            if (EventList.SelectedIndices.Count != 0)
+            if (EventList.SelectedIndices.Count == 0) return;
+            var selectedEvent = _filterdEventSource[EventList.SelectedIndices[0]];
+            if (selectedEvent != null)
             {
-                var selectedEvent = _filterdEventSource[EventList.SelectedIndices[0]];
-                if (selectedEvent != null)
-                {
-                    ((TweenMain)Owner).OpenUriAsync("http://twitter.com/" + selectedEvent.Username);
-                }
+                ((TweenMain)Owner).OpenUriAsync("http://twitter.com/" + selectedEvent.Username);
             }
         }
 
@@ -157,8 +155,10 @@ namespace Hoehoe
                 case DialogResult.Yes:
                     tabName = (string)_curTab.Tag;
                     break;
+
                 case DialogResult.No:
                     break;
+
                 default:
                     return;
             }
@@ -184,6 +184,7 @@ namespace Hoehoe
                         case DialogResult.Yes:
                             SaveEventLog(_filterdEventSource.ToList(), sw);
                             break;
+
                         case DialogResult.No:
                             SaveEventLog(EventSource, sw);
                             break;

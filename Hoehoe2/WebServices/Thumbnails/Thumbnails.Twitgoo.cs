@@ -43,7 +43,10 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Twitgoo_GetUrl(GetUrlArgs args)
         {
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://twitgoo\\.com/(\\w+)$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(
+                string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended,
+                "^http://twitgoo\\.com/(\\w+)$",
+                RegexOptions.IgnoreCase);
             if (!mc.Success)
             {
                 return false;

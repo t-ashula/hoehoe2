@@ -24,6 +24,8 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Linq;
+
 namespace Hoehoe
 {
     using System;
@@ -175,8 +177,7 @@ namespace Hoehoe
 
         public HttpStatusCode UpdateStatus(string status, long replyToId, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("status", status);
+            var param = new Dictionary<string, string> { { "status", status } };
             if (replyToId > 0)
             {
                 param.Add("in_reply_to_status_id", replyToId.ToString());
@@ -189,16 +190,14 @@ namespace Hoehoe
         public HttpStatusCode UpdateStatusWithMedia(string status, long replyToId, FileInfo mediaFile, ref string content)
         {
             // 画像投稿用エンドポイント
-            var param = new Dictionary<string, string>();
-            param.Add("status", status);
+            var param = new Dictionary<string, string> { { "status", status } };
             if (replyToId > 0)
             {
                 param.Add("in_reply_to_status_id", replyToId.ToString());
             }
 
             param.Add("include_entities", "true");
-            var binary = new List<KeyValuePair<string, FileInfo>>();
-            binary.Add(new KeyValuePair<string, FileInfo>("media[]", mediaFile));
+            var binary = new List<KeyValuePair<string, FileInfo>> { new KeyValuePair<string, FileInfo>("media[]", mediaFile) };
             return _httpCon.GetContent(PostMethod, new Uri("https://upload.twitter.com/1/statuses/update_with_media.json"), param, binary, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -210,9 +209,7 @@ namespace Hoehoe
 
         public HttpStatusCode SendDirectMessage(string status, string sendto, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("text", status);
-            param.Add("screen_name", sendto);
+            var param = new Dictionary<string, string> { { "text", status }, { "screen_name", sendto } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/direct_messages/new.json"), param, ref content, null, null);
         }
 
@@ -224,67 +221,55 @@ namespace Hoehoe
 
         public HttpStatusCode RetweetStatus(long id, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("include_entities", "true");
-
+            var param = new Dictionary<string, string> { { "include_entities", "true" } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/statuses/retweet/{0}.json", id)), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowUserInfo(string screenName, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", screenName);
-            param.Add("include_entities", "true");
+            var param = new Dictionary<string, string> { { "screen_name", screenName }, { "include_entities", "true" } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/users/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateFriendships(string screenName, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", screenName);
+            var param = new Dictionary<string, string> { { "screen_name", screenName } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/friendships/create.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyFriendships(string screenName, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", screenName);
+            var param = new Dictionary<string, string> { { "screen_name", screenName } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/friendships/destroy.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode CreateBlock(string screenName, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", screenName);
+            var param = new Dictionary<string, string> { { "screen_name", screenName } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/blocks/create.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyBlock(string screenName, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", screenName);
+            var param = new Dictionary<string, string> { { "screen_name", screenName } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/blocks/destroy.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode ReportSpam(string screenName, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", screenName);
+            var param = new Dictionary<string, string> { { "screen_name", screenName } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/report_spam.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowFriendships(string souceScreenName, string targetScreenName, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("source_screen_name", souceScreenName);
-            param.Add("target_screen_name", targetScreenName);
+            var param = new Dictionary<string, string> { { "source_screen_name", souceScreenName }, { "target_screen_name", targetScreenName } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/friendships/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode ShowStatuses(long id, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("include_entities", "true");
+            var param = new Dictionary<string, string> { { "include_entities", "true" } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri(string.Format("/1/statuses/show/{0}.json", id)), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -298,7 +283,7 @@ namespace Hoehoe
             return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/favorites/destroy/{0}.json", id)), null, ref content, null, null);
         }
 
-        public HttpStatusCode HomeTimeline(int count, long max_id, long since_id, ref string content)
+        public HttpStatusCode HomeTimeline(int count, long maxID, long sinceID, ref string content)
         {
             var param = new Dictionary<string, string>();
             if (count > 0)
@@ -306,25 +291,25 @@ namespace Hoehoe
                 param.Add("count", count.ToString());
             }
 
-            if (max_id > 0)
+            if (maxID > 0)
             {
-                param.Add("max_id", max_id.ToString());
+                param.Add("max_id", maxID.ToString());
             }
 
-            if (since_id > 0)
+            if (sinceID > 0)
             {
-                param.Add("since_id", since_id.ToString());
+                param.Add("since_id", sinceID.ToString());
             }
 
             param.Add("include_entities", "true");
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/home_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode UserTimeline(long user_id, string screen_name, int count, long max_id, long since_id, ref string content)
+        public HttpStatusCode UserTimeline(long user_id, string screenName, int count, long maxID, long sinceID, ref string content)
         {
             var param = new Dictionary<string, string>();
 
-            if ((user_id == 0 && string.IsNullOrEmpty(screen_name)) || (user_id != 0 && !string.IsNullOrEmpty(screen_name)))
+            if ((user_id == 0 && string.IsNullOrEmpty(screenName)) || (user_id != 0 && !string.IsNullOrEmpty(screenName)))
             {
                 return HttpStatusCode.BadRequest;
             }
@@ -334,9 +319,9 @@ namespace Hoehoe
                 param.Add("user_id", user_id.ToString());
             }
 
-            if (!string.IsNullOrEmpty(screen_name))
+            if (!string.IsNullOrEmpty(screenName))
             {
-                param.Add("screen_name", screen_name);
+                param.Add("screen_name", screenName);
             }
 
             if (count > 0)
@@ -344,14 +329,14 @@ namespace Hoehoe
                 param.Add("count", count.ToString());
             }
 
-            if (max_id > 0)
+            if (maxID > 0)
             {
-                param.Add("max_id", max_id.ToString());
+                param.Add("max_id", maxID.ToString());
             }
 
-            if (since_id > 0)
+            if (sinceID > 0)
             {
-                param.Add("since_id", since_id.ToString());
+                param.Add("since_id", sinceID.ToString());
             }
 
             param.Add("include_rts", "true");
@@ -471,14 +456,9 @@ namespace Hoehoe
                 return HttpStatusCode.BadRequest;
             }
 
-            var param = new Dictionary<string, string>();
-            string[] tmp = querystr.Split(new[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string tmp2 in tmp)
-            {
-                string[] paramstr = tmp2.Split(new[] { '=' });
-                param.Add(paramstr[0], paramstr[1]);
-            }
-
+            var param = querystr.Split(new[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Split(new[] { '=' }))
+                .ToDictionary(p => p[0], p => p[1]);
             return _httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Hoehoe");
         }
 
@@ -555,15 +535,13 @@ namespace Hoehoe
 
         public HttpStatusCode FollowerIds(long cursor, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("cursor", cursor.ToString());
+            var param = new Dictionary<string, string> { { "cursor", cursor.ToString() } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/followers/ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode NoRetweetIds(long cursor, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("cursor", cursor.ToString());
+            var param = new Dictionary<string, string> { { "cursor", cursor.ToString() } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/friendships/no_retweet_ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -576,18 +554,18 @@ namespace Hoehoe
 
         public HttpStatusCode GetLists(string user, long cursor, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", user);
-            param.Add("cursor", cursor.ToString());
+            var param = new Dictionary<string, string> { { "screen_name", user }, { "cursor", cursor.ToString() } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode UpdateListID(string user, string listId, string name, bool isPrivate, string description, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", user);
-            param.Add("list_id", listId);
-            param.Add("mode", isPrivate ? "private" : "public");
+            var param = new Dictionary<string, string>
+                {
+                    { "screen_name", user },
+                    { "list_id", listId },
+                    { "mode", isPrivate ? "private" : "public" }
+                };
             if (name != null)
             {
                 param.Add("name", name);
@@ -603,26 +581,20 @@ namespace Hoehoe
 
         public HttpStatusCode DeleteListID(string user, string listId, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", user);
-            param.Add("list_id", listId);
+            var param = new Dictionary<string, string> { { "screen_name", user }, { "list_id", listId } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/destroy.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode GetListsSubscriptions(string user, long cursor, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", user);
-            param.Add("cursor", cursor.ToString());
+            var param = new Dictionary<string, string> { { "screen_name", user }, { "cursor", cursor.ToString() } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/subscriptions.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode GetListsStatuses(long userId, long listId, int perPage, long maxId, long sinceId, bool isRTinclude, ref string content)
         {
             // 認証なくても取得できるが、protectedユーザー分が抜ける
-            var param = new Dictionary<string, string>();
-            param.Add("user_id", userId.ToString());
-            param.Add("list_id", listId.ToString());
+            var param = new Dictionary<string, string> { { "user_id", userId.ToString() }, { "list_id", listId.ToString() } };
             if (isRTinclude)
             {
                 param.Add("include_rts", "true");
@@ -649,9 +621,7 @@ namespace Hoehoe
 
         public HttpStatusCode CreateLists(string listname, bool isPrivate, string description, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("name", listname);
-            param.Add("mode", isPrivate ? "private" : "public");
+            var param = new Dictionary<string, string> { { "name", listname }, { "mode", isPrivate ? "private" : "public" } };
             if (!string.IsNullOrEmpty(description))
             {
                 param.Add("description", description);
@@ -662,34 +632,25 @@ namespace Hoehoe
 
         public HttpStatusCode GetListMembers(string user, string listId, long cursor, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", user);
-            param.Add("list_id", listId);
-            param.Add("cursor", cursor.ToString());
+            var param = new Dictionary<string, string> { { "screen_name", user }, { "list_id", listId }, { "cursor", cursor.ToString() } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/members.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateListMembers(string listId, string memberName, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("list_id", listId);
-            param.Add("screen_name", memberName);
+            var param = new Dictionary<string, string> { { "list_id", listId }, { "screen_name", memberName } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/members/create.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DeleteListMembers(string listId, string memberName, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", memberName);
-            param.Add("list_id", listId);
+            var param = new Dictionary<string, string> { { "screen_name", memberName }, { "list_id", listId } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/members/destroy.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowListMember(string listId, string memberName, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("screen_name", memberName);
-            param.Add("list_id", listId);
+            var param = new Dictionary<string, string> { { "screen_name", memberName }, { "list_id", listId } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/members/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -713,27 +674,30 @@ namespace Hoehoe
 
         public HttpStatusCode UpdateProfile(string name, string url, string location, string description, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("name", name);
-            param.Add("url", url);
-            param.Add("location", location);
-            param.Add("description", description);
-            param.Add("include_entities", "true");
+            var param = new Dictionary<string, string>
+                {
+                    { "name", name },
+                    { "url", url },
+                    { "location", location },
+                    { "description", description },
+                    { "include_entities", "true" }
+                };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/account/update_profile.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode UpdateProfileImage(FileInfo imageFile, ref string content)
         {
-            var binary = new List<KeyValuePair<string, FileInfo>>();
-            binary.Add(new KeyValuePair<string, FileInfo>("image", imageFile));
+            var binary = new List<KeyValuePair<string, FileInfo>>
+                {
+                    new KeyValuePair<string, FileInfo>("image", imageFile)
+                };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/account/update_profile_image.json"), null, binary, ref content, null, null);
         }
 
         public HttpStatusCode GetRelatedResults(long id, ref string content)
         {
             // 認証なくても取得できるが、protectedユーザー分が抜ける
-            var param = new Dictionary<string, string>();
-            param.Add("include_entities", "true");
+            var param = new Dictionary<string, string> { { "include_entities", "true" } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri(string.Format("/1/related_results/show/{0}.json", id)), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 

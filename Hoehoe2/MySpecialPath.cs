@@ -71,7 +71,7 @@ namespace Hoehoe
         private static string GetFileSystemPath(Environment.SpecialFolder folder, string productName)
         {
             // パスを取得
-            string path = Path.Combine(Environment.GetFolderPath(folder), Application.CompanyName, productName);
+            var path = Path.Combine(Environment.GetFolderPath(folder), Application.CompanyName, productName);
 
             // パスのフォルダを作成
             lock (typeof(Application))
@@ -88,8 +88,8 @@ namespace Hoehoe
         private static RegistryKey GetRegistryPath(RegistryKey key)
         {
             // パスを取得
-            string basePath = key == Registry.LocalMachine ? "SOFTWARE" : "Software";
-            string path = string.Format("{0}\\{1}\\{2}", basePath, Application.CompanyName, Application.ProductName);
+            var basePath = key == Registry.LocalMachine ? "SOFTWARE" : "Software";
+            var path = string.Format("{0}\\{1}\\{2}", basePath, Application.CompanyName, Application.ProductName);
 
             // パスのレジストリ・キーの取得（および作成）
             return key.CreateSubKey(path);

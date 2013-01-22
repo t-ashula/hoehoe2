@@ -26,7 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
@@ -68,13 +67,13 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool TwipplePhoto_CreateImage(CreateImageArgs args)
         {
-            Match mc = Regex.Match(args.Url.Value, "^http://p.twipple.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(args.Url.Value, "^http://p.twipple.jp/(?<contentId>[0-9a-z]+)", RegexOptions.IgnoreCase);
             if (!mc.Success)
             {
                 return false;
             }
 
-            string src = string.Empty;
+            var src = string.Empty;
             var http = new HttpVarious();
             if (!http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
@@ -83,7 +82,7 @@ namespace Hoehoe
 
             var contentId = mc.Groups["contentId"].Value;
             var thumbnailUrl = "http://p.twpl.jp/show/large/" + contentId;
-            Image img = http.GetImage(thumbnailUrl, args.Url.Key, 0, ref args.Errmsg);
+            var img = http.GetImage(thumbnailUrl, args.Url.Key, 0, ref args.Errmsg);
             if (img == null)
             {
                 return false;

@@ -67,7 +67,7 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Twimg_CreateImage(CreateImageArgs args)
         {
-            Match mc = Regex.Match(args.Url.Value, "^https?://p\\.twimg\\.com/.*$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(args.Url.Value, "^https?://p\\.twimg\\.com/.*$", RegexOptions.IgnoreCase);
             if (!mc.Success)
             {
                 return false;
@@ -81,7 +81,6 @@ namespace Hoehoe
 
             args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
-
         }
 
         #endregion "Twitter公式"

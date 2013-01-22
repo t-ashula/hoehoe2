@@ -43,8 +43,7 @@ namespace Hoehoe
 
         public static SettingTabs Load()
         {
-            SettingTabs setting = LoadSettings(string.Empty);
-            return setting;
+            return LoadSettings(string.Empty);
         }
 
         public void Save()

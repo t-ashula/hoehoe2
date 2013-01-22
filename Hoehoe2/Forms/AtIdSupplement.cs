@@ -83,7 +83,7 @@ namespace Hoehoe
         {
             var cnt = ItemCount;
             var q = ids.Distinct();
-            foreach (string id in q)
+            foreach (var id in q)
             {
                 AddItem(id);
             }

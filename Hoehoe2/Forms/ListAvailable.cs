@@ -52,12 +52,14 @@ namespace Hoehoe
 
         private void OkButton_Click(object sender, EventArgs e)
         {
-            if (ListsList.SelectedIndex > -1)
+            if (ListsList.SelectedIndex < 0)
             {
-                SelectedList = (ListElement)ListsList.SelectedItem;
-                DialogResult = DialogResult.OK;
-                Close();
+                return;
             }
+
+            SelectedList = (ListElement)ListsList.SelectedItem;
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)

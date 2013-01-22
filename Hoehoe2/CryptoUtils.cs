@@ -41,14 +41,14 @@ namespace Hoehoe
             }
 
             // 文字列をバイト型配列にする
-            byte[] bytesIn = Encoding.UTF8.GetBytes(str);
+            var bytesIn = Encoding.UTF8.GetBytes(str);
 
             // DESCryptoServiceProviderオブジェクトの作成
             using (var des = new DESCryptoServiceProvider())
             {
                 // 共有キーと初期化ベクタを決定
                 // パスワードをバイト配列にする
-                byte[] bytesKey = Encoding.UTF8.GetBytes("_tween_encrypt_key_");
+                var bytesKey = Encoding.UTF8.GetBytes("_tween_encrypt_key_");
 
                 // 共有キーと初期化ベクタを設定
                 des.Key = ResizeBytesArray(bytesKey, des.Key.Length);
@@ -68,7 +68,7 @@ namespace Hoehoe
                             cryptStream.FlushFinalBlock();
 
                             // 暗号化されたデータを取得
-                            byte[] bytesOut = memStream.ToArray();
+                            var bytesOut = memStream.ToArray();
 
                             // 閉じる
                             cryptStream.Close();
@@ -94,39 +94,26 @@ namespace Hoehoe
             {
                 // 共有キーと初期化ベクタを決定
                 // パスワードをバイト配列にする
-                byte[] bytesKey = Encoding.UTF8.GetBytes("_tween_encrypt_key_");
+                var bytesKey = Encoding.UTF8.GetBytes("_tween_encrypt_key_");
 
                 // 共有キーと初期化ベクタを設定
                 des.Key = ResizeBytesArray(bytesKey, des.Key.Length);
                 des.IV = ResizeBytesArray(bytesKey, des.IV.Length);
 
                 // Base64で文字列をバイト配列に戻す
-                byte[] bytesIn = Convert.FromBase64String(str);
+                var bytesIn = Convert.FromBase64String(str);
 
                 // 暗号化されたデータを読み込むためのMemoryStream
+                // DES復号化オブジェクトの作成
+                // 読み込むためのCryptoStreamの作成
+                // 復号化されたデータを取得するためのStreamReader
                 using (var memStream = new MemoryStream(bytesIn))
+                using (var desdecrypt = des.CreateDecryptor())
+                using (var cryptStreem = new CryptoStream(memStream, desdecrypt, CryptoStreamMode.Read))
+                using (var reader = new StreamReader(cryptStreem, Encoding.UTF8))
                 {
-                    // DES復号化オブジェクトの作成
-                    using (var desdecrypt = des.CreateDecryptor())
-                    {
-                        // 読み込むためのCryptoStreamの作成
-                        using (var cryptStreem = new CryptoStream(memStream, desdecrypt, CryptoStreamMode.Read))
-                        {
-                            // 復号化されたデータを取得するためのStreamReader
-                            using (var reader = new StreamReader(cryptStreem, Encoding.UTF8))
-                            {
-                                // 復号化されたデータを取得する
-                                string result = reader.ReadToEnd();
-
-                                // 閉じる
-                                reader.Close();
-                                cryptStreem.Close();
-                                memStream.Close();
-
-                                return result;
-                            }
-                        }
-                    }
+                    // 復号化されたデータを取得する
+                    return reader.ReadToEnd();
                 }
             }
         }
@@ -187,11 +174,11 @@ namespace Hoehoe
             }
             else
             {
-                int pos = 0;
+                var pos = 0;
                 for (var i = 0; i < bytes.Length; i++)
                 {
                     newBytes[pos] = (byte)(newBytes[pos] ^ bytes[i]);
-                    pos += 1;
+                    pos++;
                     if (pos >= newBytes.Length)
                     {
                         pos = 0;

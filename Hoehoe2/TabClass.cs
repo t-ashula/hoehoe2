@@ -283,20 +283,8 @@ namespace Hoehoe
                 }
             }
 
-            if (qry.Count != _beforeQuery.Count)
-            {
-                return true;
-            }
-
-            foreach (KeyValuePair<string, string> kvp in qry)
-            {
-                if (!_beforeQuery.ContainsKey(kvp.Key) || _beforeQuery[kvp.Key] != kvp.Value)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return qry.Count != _beforeQuery.Count
+                || qry.Any(kvp => !_beforeQuery.ContainsKey(kvp.Key) || _beforeQuery[kvp.Key] != kvp.Value);
         }
 
         public PostClass[] GetTemporaryPosts()
@@ -307,11 +295,7 @@ namespace Hoehoe
                 return tempPosts.ToArray();
             }
 
-            foreach (TemporaryId tempId in _tmpIds)
-            {
-                tempPosts.Add(Posts[tempId.Id]);
-            }
-
+            tempPosts.AddRange(_tmpIds.Select(tempId => Posts[tempId.Id]));
             return tempPosts.ToArray();
         }
 
@@ -336,12 +320,15 @@ namespace Hoehoe
                     case IdComparerClass.ComparerMode.Data:
                         ar = _ids.OrderBy(n => _sorter.Posts[n].TextFromApi).ToArray();
                         break;
+
                     case IdComparerClass.ComparerMode.Name:
                         ar = _ids.OrderBy(n => _sorter.Posts[n].ScreenName).ToArray();
                         break;
+
                     case IdComparerClass.ComparerMode.Nickname:
                         ar = _ids.OrderBy(n => _sorter.Posts[n].Nickname).ToArray();
                         break;
+
                     case IdComparerClass.ComparerMode.Source:
                         ar = _ids.OrderBy(n => _sorter.Posts[n].Source).ToArray();
                         break;
@@ -354,12 +341,15 @@ namespace Hoehoe
                     case IdComparerClass.ComparerMode.Data:
                         ar = _ids.OrderByDescending(n => _sorter.Posts[n].TextFromApi).ToArray();
                         break;
+
                     case IdComparerClass.ComparerMode.Name:
                         ar = _ids.OrderByDescending(n => _sorter.Posts[n].ScreenName).ToArray();
                         break;
+
                     case IdComparerClass.ComparerMode.Nickname:
                         ar = _ids.OrderByDescending(n => _sorter.Posts[n].Nickname).ToArray();
                         break;
+
                     case IdComparerClass.ComparerMode.Source:
                         ar = _ids.OrderByDescending(n => _sorter.Posts[n].Source).ToArray();
                         break;
@@ -403,6 +393,7 @@ namespace Hoehoe
                             // フィルタクラスでヒット判定
                             case HITRESULT.None:
                                 break;
+
                             case HITRESULT.Copy:
                                 if (rslt != HITRESULT.CopyAndMark)
                                 {
@@ -410,12 +401,15 @@ namespace Hoehoe
                                 }
 
                                 break;
+
                             case HITRESULT.CopyAndMark:
                                 rslt = HITRESULT.CopyAndMark;
                                 break;
+
                             case HITRESULT.Move:
                                 rslt = HITRESULT.Move;
                                 break;
+
                             case HITRESULT.Exclude:
                                 rslt = HITRESULT.Exclude;
                                 break;

@@ -30,7 +30,7 @@ namespace Hoehoe
 
     public static class nicoms
     {
-        private static string[] nicovideoUrls =
+        private static readonly string[] NicovideoUrls =
         {
             "www.nicovideo.jp/watch/",
             "live.nicovideo.jp/watch/",
@@ -58,7 +58,7 @@ namespace Hoehoe
                 return url;
             }
 
-            foreach (string nv in nicovideoUrls)
+            foreach (var nv in NicovideoUrls)
             {
                 if (url.StartsWith(nv))
                 {
@@ -66,7 +66,7 @@ namespace Hoehoe
                 }
             }
 
-            int i = url.IndexOf("nicovideo.jp/user/", StringComparison.OrdinalIgnoreCase);
+            var i = url.IndexOf("nicovideo.jp/user/", StringComparison.OrdinalIgnoreCase);
             if (i == 0 || i == 4)
             {
                 return string.Format("{0}{1}", "http://nico.ms/", url.Substring(13 + i));

@@ -45,7 +45,7 @@ namespace Hoehoe
             {
                 if (MyCommon.CultureStr == null)
                 {
-                    SettingCommon cfgCommon = SettingCommon.Load();
+                    var cfgCommon = SettingCommon.Load();
                     MyCommon.CultureStr = cfgCommon.Language;
                     if (MyCommon.CultureStr == "OS")
                     {
@@ -86,12 +86,10 @@ namespace Hoehoe
         {
             try
             {
-                if (mt != null)
-                {
-                    mt.ReleaseMutex();
-                    mt.Close();
-                    mt = null;
-                }
+                if (mt == null) return;
+                mt.ReleaseMutex();
+                mt.Close();
+                mt = null;
             }
             catch (Exception)
             {
@@ -110,7 +108,7 @@ namespace Hoehoe
                 if (!mt.WaitOne(0, false))
                 {
                     // 実行中の同じアプリケーションのウィンドウ・ハンドルの取得
-                    Process prevProcess = Win32Api.GetPreviousProcess();
+                    var prevProcess = Win32Api.GetPreviousProcess();
                     if (prevProcess != null && prevProcess.MainWindowHandle == IntPtr.Zero)
                     {
                         // 起動中のアプリケーションを最前面に表示
@@ -123,7 +121,7 @@ namespace Hoehoe
                             // プロセス特定は出来たが、ウィンドウハンドルが取得できなかった（アイコン化されている）
                             // タスクトレイアイコンのクリックをエミュレート
                             // 注：アイコン特定はTooltipの文字列で行うため、多重起動時は先に見つけた物がアクティブになる
-                            bool rslt = Win32Api.ClickTasktrayIcon("Hoehoe");
+                            var rslt = Win32Api.ClickTasktrayIcon("Hoehoe");
                             if (!rslt)
                             {
                                 // 警告を表示（見つからない、またはその他の原因で失敗）
@@ -171,15 +169,10 @@ namespace Hoehoe
 
         private static void CheckSettingFilePath()
         {
+            // TODO: directoryName canbe null
             var directoryName = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            if (File.Exists(Path.Combine(directoryName, "roaming")))
-            {
-                MyCommon.SettingPath = MySpecialPath.UserAppDataPath();
-            }
-            else
-            {
-                MyCommon.SettingPath = directoryName;
-            }
+            MyCommon.SettingPath = File.Exists(Path.Combine(directoryName, "roaming")) ?
+                MySpecialPath.UserAppDataPath() : directoryName;
         }
 
 #if not

@@ -118,13 +118,11 @@ namespace Hoehoe
             set
             {
                 _isFav = value;
-                if (IsRetweeted)
+                if (!IsRetweeted) return;
+                var post = TabInformations.Instance.RetweetSource(RetweetedId);
+                if (post != null)
                 {
-                    var post = TabInformations.Instance.RetweetSource(RetweetedId);
-                    if (post != null)
-                    {
-                        post.IsFav = value;
-                    }
+                    post.IsFav = value;
                 }
             }
         }

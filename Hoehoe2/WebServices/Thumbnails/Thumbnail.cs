@@ -411,7 +411,7 @@ namespace Hoehoe
         private class PreviewData : IDisposable
         {
             // 重複する呼び出しを検出するには
-            private bool disposedValue;
+            private bool _disposedValue;
 
             public PreviewData(long id, List<KeyValuePair<string, string>> urlList, List<KeyValuePair<string, ImageCreatorDelegate>> imageCreatorList)
             {
@@ -449,7 +449,7 @@ namespace Hoehoe
             // IDisposable
             protected virtual void Dispose(bool disposing)
             {
-                if (!disposedValue)
+                if (!_disposedValue)
                 {
                     if (disposing)
                     {
@@ -466,7 +466,7 @@ namespace Hoehoe
                     }
                 }
 
-                disposedValue = true;
+                _disposedValue = true;
             }
 
             #endregion " IDisposable Support "

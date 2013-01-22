@@ -84,7 +84,7 @@ namespace Hoehoe
                 return "Err:" + "File isn't exists.";
             }
 
-            string content = string.Empty;
+            var content = string.Empty;
             HttpStatusCode ret;
             try
             {
@@ -194,10 +194,8 @@ namespace Hoehoe
                 throw new ArgumentException("File is too large.");
             }
 
-            var param = new Dictionary<string, string>();
-            param.Add("message", message);
-            var binary = new List<KeyValuePair<string, FileInfo>>();
-            binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
+            var param = new Dictionary<string, string> { { "message", message } };
+            var binary = new List<KeyValuePair<string, FileInfo>> { new KeyValuePair<string, FileInfo>("media", mediaFile) };
             InstanceTimeout = 60000; // タイムアウト60秒
             return GetContent(PostMethod, new Uri("http://img.ly/api/2/upload.xml"), param, binary, ref content, null, null);
         }

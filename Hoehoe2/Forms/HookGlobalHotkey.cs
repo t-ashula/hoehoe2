@@ -24,6 +24,8 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Linq;
+
 namespace Hoehoe
 {
     using System;
@@ -119,13 +121,9 @@ namespace Hoehoe
             }
 
             var key = new KeyEventArgs(hotkey | modKey);
-            foreach (KeyValuePair<int, KeyEventValue> kvp in _hotkeyIds)
+            if (_hotkeyIds.Any(kvp => kvp.Value.KeyEvent.KeyData == key.KeyData && kvp.Value.Value == hotkeyValue))
             {
-                // 登録済みなら正常終了
-                if (kvp.Value.KeyEvent.KeyData == key.KeyData && kvp.Value.Value == hotkeyValue)
-                {
-                    return true;
-                }
+                return true;
             }
 
             int hotkeyId = Win32Api.RegisterGlobalHotKey(hotkeyValue, (int)modifiers, _targetForm);

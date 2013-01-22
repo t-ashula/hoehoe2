@@ -24,6 +24,8 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Linq;
+
 namespace Hoehoe
 {
     using System;
@@ -62,7 +64,7 @@ namespace Hoehoe
 
         private void ListRefreshButton_Click(object sender, EventArgs e)
         {
-            string rslt = _twitter.GetListsApi();
+            var rslt = _twitter.GetListsApi();
             if (!string.IsNullOrEmpty(rslt))
             {
                 MessageBox.Show(string.Format(R.ListsDeleteFailed, rslt));
@@ -81,9 +83,8 @@ namespace Hoehoe
                 case CheckState.Indeterminate:
                     {
                         var listItem = (ListElement)ListsCheckedListBox.Items[e.Index];
-
-                        bool ret = false;
-                        string rslt = _twitter.ContainsUserAtList("" + listItem.Id, _contextUserName, ref ret);
+                        bool ret;
+                        var rslt = _twitter.ContainsUserAtList("" + listItem.Id, _contextUserName, out ret);
                         CheckState cs;
                         if (string.IsNullOrEmpty(rslt))
                         {
@@ -98,10 +99,11 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case CheckState.Unchecked:
                     {
                         var list = (ListElement)ListsCheckedListBox.Items[e.Index];
-                        string rslt = _twitter.AddUserToList("" + list.Id, _contextUserName);
+                        var rslt = _twitter.AddUserToList("" + list.Id, _contextUserName);
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
@@ -110,10 +112,11 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case CheckState.Checked:
                     {
                         var list = (ListElement)ListsCheckedListBox.Items[e.Index];
-                        string rslt = _twitter.RemoveUserToList("" + list.Id, _contextUserName);
+                        var rslt = _twitter.RemoveUserToList("" + list.Id, _contextUserName);
                         if (!string.IsNullOrEmpty(rslt))
                         {
                             MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
@@ -159,8 +162,9 @@ namespace Hoehoe
             switch (e.Button)
             {
                 case MouseButtons.Left:
+
                     // 項目が無い部分をクリックしても、選択されている項目のチェック状態が変更されてしまうので、その対策
-                    for (int index = 0; index < ListsCheckedListBox.Items.Count; index++)
+                    for (var index = 0; index < ListsCheckedListBox.Items.Count; index++)
                     {
                         if (ListsCheckedListBox.GetItemRectangle(index).Contains(e.Location))
                         {
@@ -170,9 +174,11 @@ namespace Hoehoe
 
                     ListsCheckedListBox.SelectedItem = null;
                     break;
+
                 case MouseButtons.Right:
+
                     // コンテキストメニューの項目実行時にSelectedItemプロパティを利用出来るように
-                    for (int index = 0; index < ListsCheckedListBox.Items.Count; index++)
+                    for (var index = 0; index < ListsCheckedListBox.Items.Count; index++)
                     {
                         if (ListsCheckedListBox.GetItemRectangle(index).Contains(e.Location))
                         {
@@ -199,27 +205,28 @@ namespace Hoehoe
         {
             ListsCheckedListBox.ItemCheck -= ListsCheckedListBox_ItemCheck;
 
-            ListsCheckedListBox.Items.AddRange(TabInformations.Instance.SubscribableLists.FindAll(item => item.Username == _twitter.Username).ToArray());
+            var listElements = TabInformations.Instance.SubscribableLists.FindAll(item => item.Username == _twitter.Username);
+            foreach (var t in listElements)
+            {
+                ListsCheckedListBox.Items.Add(t);
+            }
 
-            for (int i = 0; i < ListsCheckedListBox.Items.Count; i++)
+            for (var i = 0; i < ListsCheckedListBox.Items.Count; i++)
             {
                 var listItem = (ListElement)ListsCheckedListBox.Items[i];
 
                 var listPost = new List<PostClass>();
                 var otherPost = new List<PostClass>();
 
-                foreach (TabClass tab in TabInformations.Instance.Tabs.Values)
+                foreach (var tab in TabInformations.Instance.Tabs.Values.Where(tab => tab.TabType == TabUsageType.Lists))
                 {
-                    if (tab.TabType == TabUsageType.Lists)
+                    if (listItem.Id == tab.ListInfo.Id)
                     {
-                        if (listItem.Id == tab.ListInfo.Id)
-                        {
-                            listPost.AddRange(tab.Posts.Values);
-                        }
-                        else
-                        {
-                            otherPost.AddRange(tab.Posts.Values);
-                        }
+                        listPost.AddRange(tab.Posts.Values);
+                    }
+                    else
+                    {
+                        otherPost.AddRange(tab.Posts.Values);
                     }
                 }
 
@@ -239,10 +246,10 @@ namespace Hoehoe
 
                 var listPostUserIDs = new List<long>();
                 var listPostUserNames = new List<string>();
-                DateTime listOlderPostCreatedAt = DateTime.MaxValue;
-                DateTime listNewistPostCreatedAt = DateTime.MinValue;
+                var listOlderPostCreatedAt = DateTime.MaxValue;
+                var listNewistPostCreatedAt = DateTime.MinValue;
 
-                foreach (PostClass post in listPost)
+                foreach (var post in listPost)
                 {
                     if (post.UserId > 0 && !listPostUserIDs.Contains(post.UserId))
                     {
@@ -266,7 +273,9 @@ namespace Hoehoe
                 }
 
                 // リスト中のユーザーの人数がlistItem.MemberCount以上で、かつ該当のユーザーが含まれていなければ、リストにユーザーは含まれていないとする。
-                if (listItem.MemberCount > 0 && listItem.MemberCount <= listPostUserIDs.Count && (!listPostUserNames.Contains(_contextUserName)))
+                if (listItem.MemberCount > 0
+                    && listItem.MemberCount <= listPostUserIDs.Count
+                    && (!listPostUserNames.Contains(_contextUserName)))
                 {
                     ListsCheckedListBox.SetItemChecked(i, false);
                     continue;
@@ -275,7 +284,10 @@ namespace Hoehoe
                 otherPost.AddRange(TabInformations.Instance.Posts.Values);
 
                 // リストに該当ユーザーのポストが含まれていないのにリスト以外で取得したポストの中にリストに含まれるべきポストがある場合は、リストにユーザーは含まれていないとする。
-                if (otherPost.Exists(item => (item.ScreenName == _contextUserName) && (item.CreatedAt > listOlderPostCreatedAt) && (item.CreatedAt < listNewistPostCreatedAt) && ((!item.IsReply) || listPostUserNames.Contains(item.InReplyToUser))))
+                if (otherPost.Exists(item => (item.ScreenName == _contextUserName)
+                    && (item.CreatedAt > listOlderPostCreatedAt)
+                    && (item.CreatedAt < listNewistPostCreatedAt)
+                    && ((!item.IsReply) || listPostUserNames.Contains(item.InReplyToUser))))
                 {
                     ListsCheckedListBox.SetItemChecked(i, false);
                     continue;

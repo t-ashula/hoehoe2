@@ -26,9 +26,9 @@ namespace Hoehoe
 
     public static class DynamicExpression
     {
-        public static Expression<Func<T, S>> ParseLambda<T, S>(string expression, params object[] values)
+        public static Expression<Func<T, TS>> ParseLambda<T, TS>(string expression, params object[] values)
         {
-            return (Expression<Func<T, S>>)Dummy();
+            return (Expression<Func<T, TS>>)Dummy();
         }
 
         private static LambdaExpression Dummy()

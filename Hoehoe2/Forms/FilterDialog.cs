@@ -1400,8 +1400,8 @@ namespace Hoehoe
                     return;
                 }
 
-                string tabname = ListTabs.SelectedItem.ToString();
-                StringCollection tabs = _tabDialog.SelectedTabNames;
+                var tabname = ListTabs.SelectedItem.ToString();
+                var tabs = _tabDialog.SelectedTabNames;
                 var filters = new List<FiltersClass>();
 
                 foreach (int idx in ListFilters.SelectedIndices)

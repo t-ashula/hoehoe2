@@ -24,6 +24,8 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Linq;
+
 namespace Hoehoe
 {
     using System;
@@ -71,9 +73,9 @@ namespace Hoehoe
                 }
 
                 var ret = new StringCollection();
-                foreach (object selitem in TabList.SelectedItems)
+                foreach (var selitem in TabList.SelectedItems)
                 {
-                    ret.Add(Convert.ToString(selitem));
+                    ret.Add((string)selitem);
                 }
 
                 return ret;
@@ -115,12 +117,9 @@ namespace Hoehoe
 
         public void AddTab(string tabName)
         {
-            foreach (string obj in TabList.Items)
+            if (TabList.Items.Cast<string>().Any(obj => obj == tabName))
             {
-                if (obj == tabName)
-                {
-                    return;
-                }
+                return;
             }
 
             TabList.Items.Add(tabName);

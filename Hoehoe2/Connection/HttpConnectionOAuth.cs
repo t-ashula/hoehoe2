@@ -404,10 +404,12 @@ namespace Hoehoe
             }
 
             // xAuthの拡張パラメータ設定
-            var parameter = new Dictionary<string, string>();
-            parameter.Add("x_auth_mode", "client_auth");
-            parameter.Add("x_auth_username", username);
-            parameter.Add("x_auth_password", password);
+            var parameter = new Dictionary<string, string>
+                {
+                    { "x_auth_mode", "client_auth" },
+                    { "x_auth_username", username },
+                    { "x_auth_password", password }
+                };
 
             // アクセストークン取得
             HttpStatusCode httpCode = GetOAuthToken(accessTokenUrl, string.Empty, string.Empty, parameter, ref content);
@@ -512,12 +514,14 @@ namespace Hoehoe
         /// <returns>OAuth情報のディクショナリ</returns>
         protected Dictionary<string, string> GetOAuthParameter(string token)
         {
-            var parameter = new Dictionary<string, string>();
-            parameter.Add("oauth_consumer_key", _consumerKey);
-            parameter.Add("oauth_signature_method", "HMAC-SHA1");
-            parameter.Add("oauth_timestamp", Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds).ToString()); // epoch秒
-            parameter.Add("oauth_nonce", NonceRandom.Next(123400, 9999999).ToString());
-            parameter.Add("oauth_version", "1.0");
+            var parameter = new Dictionary<string, string>
+                {
+                    { "oauth_consumer_key", _consumerKey },
+                    { "oauth_signature_method", "HMAC-SHA1" },
+                    { "oauth_timestamp", Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds).ToString() },
+                    { "oauth_nonce", NonceRandom.Next(123400, 9999999).ToString() },
+                    { "oauth_version", "1.0" }
+                };
 
             // トークンがあれば追加
             if (!string.IsNullOrEmpty(token))
@@ -573,7 +577,7 @@ namespace Hoehoe
         /// <returns>取得結果真偽値</returns>
         private Uri GetAuthenticatePageUri(string requestTokenUrl, string authorizeUrl, ref string requestToken)
         {
-            const string TokenKey = "oauth_token";
+            const string tokenKey = "oauth_token";
 
             // リクエストトークン取得
             string content = string.Empty;
@@ -588,10 +592,10 @@ namespace Hoehoe
                 return null;
             }
 
-            requestToken = reqTokenData[TokenKey];
+            requestToken = reqTokenData[tokenKey];
 
             // Uri生成
-            return new UriBuilder(authorizeUrl) { Query = string.Format("{0}={1}", TokenKey, requestToken) }.Uri;
+            return new UriBuilder(authorizeUrl) { Query = string.Format("{0}={1}", tokenKey, requestToken) }.Uri;
         }
 
         /// <summary>

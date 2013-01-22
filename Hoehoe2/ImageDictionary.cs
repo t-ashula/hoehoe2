@@ -42,7 +42,6 @@ namespace Hoehoe
         private readonly Semaphore _netSemaphore;
         private bool _pauseGetImage; // 取得一時停止
         private bool _popping;
-        private long _removedCount;
         private readonly Stack<KeyValuePair<string, Action<Image>>> waitStack;
 
         public ImageDictionary(int cacheMemoryLimit)
@@ -77,10 +76,7 @@ namespace Hoehoe
             get { return _innerDictionary.CacheMemoryLimit; }
         }
 
-        public long CacheRemoveCount
-        {
-            get { return _removedCount; }
-        }
+        public long CacheRemoveCount { get; private set; }
 
         public int Count
         {
@@ -341,7 +337,7 @@ namespace Hoehoe
         private void CacheRemoved(CacheEntryRemovedArguments item)
         {
             ((Image)item.CacheItem.Value).Dispose();
-            _removedCount += 1;
+            CacheRemoveCount += 1;
         }
 
         private void GetImage(KeyValuePair<string, Action<Image>> downloadAsyncInfo)

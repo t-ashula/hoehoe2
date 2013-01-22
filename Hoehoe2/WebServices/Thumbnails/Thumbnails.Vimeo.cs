@@ -48,11 +48,12 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Vimeo_GetUrl(GetUrlArgs args)
         {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://vimeo\\.com/[0-9]+", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(
+                string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended,
+                "^http://vimeo\\.com/[0-9]+",
+                RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 args.AddThumbnailUrl(args.Url, mc.Value);
                 return true;
             }

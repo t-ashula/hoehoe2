@@ -167,66 +167,68 @@ namespace Hoehoe
                 return false;
             }
 
-            string apiurl = TranslateEndPoint;
-            var headers = new Dictionary<string, string>();
-            headers.Add("v", "1.0");
-            headers.Add("User-Agent", MyCommon.GetUserAgentString());
-            headers.Add("langpair", srclng + "|" + dstlng);
-            headers.Add("q", source);
+            var headers = new Dictionary<string, string>
+                {
+                    { "v", "1.0" },
+                    { "User-Agent", MyCommon.GetUserAgentString()},
+                    { "langpair", string.Format("{0}|{1}", srclng, dstlng) },
+                    { "q", source }
+                };
 
-            string content = string.Empty;
+            var content = string.Empty;
             var http = new HttpVarious();
-            if (http.GetData(apiurl, headers, ref content))
+            if (!http.GetData(TranslateEndPoint, headers, ref content))
             {
-                TranslateResponse res;
-                try
-                {
-                    res = D.CreateDataFromJson<TranslateResponse>(content);
-                }
-                catch (Exception)
-                {
-                    errorMessage = "Err:Invalid JSON";
-                    return false;
-                }
-
-                if (res.ResponseData == null)
-                {
-                    errorMessage = "Err:" + res.ResponseDetails;
-                    return false;
-                }
-
-                string body = res.ResponseData.TranslatedText;
-                string buf = HttpUtility.UrlDecode(body);
-                destination = string.Copy(buf);
-                return true;
+                return false;
             }
 
-            return false;
+            TranslateResponse res;
+            try
+            {
+                res = D.CreateDataFromJson<TranslateResponse>(content);
+            }
+            catch (Exception)
+            {
+                errorMessage = "Err:Invalid JSON";
+                return false;
+            }
+
+            if (res.ResponseData == null)
+            {
+                errorMessage = "Err:" + res.ResponseDetails;
+                return false;
+            }
+
+            var body = res.ResponseData.TranslatedText;
+            var buf = HttpUtility.UrlDecode(body);
+            destination = string.Copy(buf);
+            return true;
         }
 
         public string LanguageDetect(string source)
         {
             var http = new HttpVarious();
-            string apiurl = LanguageDetectEndPoint;
-            var headers = new Dictionary<string, string>();
-            headers.Add("User-Agent", MyCommon.GetUserAgentString());
-            headers.Add("v", "1.0");
-            headers.Add("q", source);
-            string content = string.Empty;
-            if (http.GetData(apiurl, headers, ref content))
+            var headers = new Dictionary<string, string>
+                {
+                    { "User-Agent", MyCommon.GetUserAgentString() },
+                    { "v", "1.0" },
+                    { "q", source }
+                };
+            var content = string.Empty;
+            if (!http.GetData(LanguageDetectEndPoint, headers, ref content))
             {
-                try
-                {
-                    var res = D.CreateDataFromJson<LanguageDetectResponse>(content);
-                    return res.ResponseData.Language;
-                }
-                catch (Exception)
-                {
-                    return string.Empty;
-                }
+                return string.Empty;
             }
 
-            return string.Empty;
+            try
+            {
+                var res = D.CreateDataFromJson<LanguageDetectResponse>(content);
+                return res.ResponseData.Language;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
 
         public string GetLanguageEnumFromIndex(int index)
@@ -247,13 +249,10 @@ namespace Hoehoe
         // http://code.google.com/intl/ja/apis/urlshortener/v1/getting_started.html
         public string Shorten(string source)
         {
-            var headers = new Dictionary<string, string>();
-            headers.Add("User-Agent", MyCommon.GetUserAgentString());
-            headers.Add("Content-Type", "application/json");
+            var headers = new Dictionary<string, string> { { "User-Agent", MyCommon.GetUserAgentString() }, { "Content-Type", "application/json" } };
 
             var http = new HttpVarious();
-            string apiurl = "https://www.googleapis.com/urlshortener/v1/url";
-            http.PostData(apiurl, headers);
+            http.PostData("https://www.googleapis.com/urlshortener/v1/url", headers);
             return string.Empty;
         }
 

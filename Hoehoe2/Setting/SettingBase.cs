@@ -58,7 +58,7 @@ namespace Hoehoe
             }
             catch (Exception)
             {
-                string backupFile = Path.Combine(Path.Combine(MyCommon.AppDir, "TweenBackup1st"), typeof(T).Name + fileId + ".xml");
+                var backupFile = Path.Combine(Path.Combine(MyCommon.AppDir, "TweenBackup1st"), typeof(T).Name + fileId + ".xml");
                 if (File.Exists(backupFile))
                 {
                     try
@@ -71,7 +71,8 @@ namespace Hoehoe
                                 var xs = new XmlSerializer(typeof(T));
                                 var instance = (T)xs.Deserialize(fs);
                                 fs.Close();
-                                MessageBox.Show("File: " + GetSettingFilePath(fileId) + Environment.NewLine + "Use old setting file, because application can't read this setting file.");
+                                MessageBox.Show("File: " + GetSettingFilePath(fileId) + Environment.NewLine
+                                    + "Use old setting file, because application can't read this setting file.");
                                 return instance;
                             }
                         }
@@ -81,7 +82,8 @@ namespace Hoehoe
                     }
                 }
 
-                MessageBox.Show("File: " + GetSettingFilePath(fileId) + Environment.NewLine + "Use default setting, because application can't read this setting file.");
+                MessageBox.Show("File: " + GetSettingFilePath(fileId) + Environment.NewLine
+                    + "Use default setting, because application can't read this setting file.");
                 return new T();
             }
         }

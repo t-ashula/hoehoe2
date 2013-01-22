@@ -157,7 +157,7 @@ namespace Hoehoe
             else
             {
                 string selectedUser = ((UserAccount)AuthUserCombo.SelectedItem).Username.ToLower();
-                var newuser = _configurations.UserAccounts.Where(u => u.Username.ToLower() == selectedUser).First();
+                var newuser = _configurations.UserAccounts.First(u => u.Username.ToLower() == selectedUser);
                 _tw.Initialize(newuser.Token, newuser.TokenSecret, newuser.Username, newuser.UserId);
                 if (newuser.UserId == 0)
                 {
@@ -1821,15 +1821,15 @@ namespace Hoehoe
 
         private class PeriodValidator
         {
-            private Func<int, bool> validator;
-            private string msg1;
-            private string msg2;
+            private readonly Func<int, bool> _validator;
+            private readonly string _msg1;
+            private readonly string _msg2;
 
             public PeriodValidator(Func<int, bool> f, string err1, string err2)
             {
-                validator = f;
-                msg1 = err1;
-                msg2 = err2;
+                _validator = f;
+                _msg1 = err1;
+                _msg2 = err2;
             }
 
             public bool IsValidPeriod(string input)
@@ -1837,13 +1837,13 @@ namespace Hoehoe
                 int t;
                 if (!int.TryParse(input, out t))
                 {
-                    MessageBox.Show(msg1);
+                    MessageBox.Show(_msg1);
                     return false;
                 }
 
-                if (!validator(t))
+                if (!_validator(t))
                 {
-                    MessageBox.Show(msg2);
+                    MessageBox.Show(_msg2);
                     return false;
                 }
 

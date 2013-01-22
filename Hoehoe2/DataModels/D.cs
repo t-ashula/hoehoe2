@@ -37,7 +37,7 @@ namespace Hoehoe.DataModels
             T data;
             using (var stream = new MemoryStream())
             {
-                byte[] buf = Encoding.Unicode.GetBytes(content);
+                var buf = Encoding.Unicode.GetBytes(content);
                 stream.Write(Encoding.Unicode.GetBytes(content), 0, buf.Length);
                 stream.Seek(0, SeekOrigin.Begin);
                 data = (T)(new DataContractJsonSerializer(typeof(T))).ReadObject(stream);

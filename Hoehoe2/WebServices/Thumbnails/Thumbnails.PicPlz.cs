@@ -123,7 +123,7 @@ namespace Hoehoe
 
             try
             {
-                imgurl = res.Value.Pics[0].PicFiles.Pic320rh.ImgUrl;
+                imgurl = res.Value.Pics[0].PicFiles.Pic320Rh.ImgUrl;
             }
             catch (Exception)
             {
@@ -208,13 +208,13 @@ namespace Hoehoe
             public class PicFiles
             {
                 [DataMember(Name = "640r")]
-                public PicFileInfo Pic640r;
+                public PicFileInfo Pic640R;
 
                 [DataMember(Name = "100sh")]
-                public PicFileInfo Pic100sh;
+                public PicFileInfo Pic100Sh;
 
                 [DataMember(Name = "320rh")]
-                public PicFileInfo Pic320rh;
+                public PicFileInfo Pic320Rh;
             }
 
             [DataContract]

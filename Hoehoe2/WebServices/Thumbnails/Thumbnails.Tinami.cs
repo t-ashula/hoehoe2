@@ -92,9 +92,9 @@ namespace Hoehoe
                 return false;
             }
 
-            string src = string.Empty;
-            const string ApiKey = "4e353d9113dce";             // TODO: TINAMI API Key
-            string contentInfo = mc.Result("http://api.tinami.com/content/info?api_key=" + ApiKey + "&cont_id=${ContentId}");
+            var src = string.Empty;
+            const string apiKey = "4e353d9113dce";             // TODO: TINAMI API Key
+            var contentInfo = mc.Result("http://api.tinami.com/content/info?api_key=" + apiKey + "&cont_id=${ContentId}");
             var http = new HttpVarious();
             if (!http.GetData(contentInfo, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
@@ -117,13 +117,13 @@ namespace Hoehoe
                 if (xdoc.SelectSingleNode("/rsp/content/thumbnails/thumbnail_150x150") != null)
                 {
                     var nd = xdoc.SelectSingleNode("/rsp/content/thumbnails/thumbnail_150x150");
-                    string thumbnailUrl = nd.Attributes.GetNamedItem("url").InnerText;
+                    var thumbnailUrl = nd.Attributes.GetNamedItem("url").InnerText;
                     if (string.IsNullOrEmpty(thumbnailUrl))
                     {
                         return false;
                     }
 
-                    Image img = http.GetImage(thumbnailUrl, args.Url.Key);
+                    var img = http.GetImage(thumbnailUrl, args.Url.Key);
                     if (img == null)
                     {
                         return false;

@@ -70,9 +70,9 @@ namespace Hoehoe
         {
             get
             {
-                string dir = Application.StartupPath;
-                string connectorPath = Path.Combine(dir, "Growl.Connector.dll");
-                string corePath = Path.Combine(dir, "Growl.CoreLibrary.dll");
+                var dir = Application.StartupPath;
+                var connectorPath = Path.Combine(dir, "Growl.Connector.dll");
+                var corePath = Path.Combine(dir, "Growl.CoreLibrary.dll");
                 return File.Exists(connectorPath) && File.Exists(corePath);
             }
         }
@@ -90,9 +90,9 @@ namespace Hoehoe
         public bool RegisterGrowl()
         {
             _initialized = false;
-            string dir = Application.StartupPath;
-            string connectorPath = Path.Combine(dir, "Growl.Connector.dll");
-            string corePath = Path.Combine(dir, "Growl.CoreLibrary.dll");
+            var dir = Application.StartupPath;
+            var connectorPath = Path.Combine(dir, "Growl.Connector.dll");
+            var corePath = Path.Combine(dir, "Growl.CoreLibrary.dll");
             try
             {
                 if (!IsDllExists)
@@ -154,11 +154,7 @@ namespace Hoehoe
                 MethodInfo mi = _targetConnector.GetType().GetMethod("Register", new[] { _growlApp.GetType(), _connector.GetType("Growl.Connector.NotificationType[]") });
 
                 t = _connector.GetType("Growl.Connector.NotificationType");
-                var arglist = new ArrayList();
-                arglist.Add(_growlNTreply);
-                arglist.Add(_growlNTdm);
-                arglist.Add(_growlNTnew);
-                arglist.Add(_growlNTusevent);
+                var arglist = new ArrayList { _growlNTreply, _growlNTdm, _growlNTnew, _growlNTusevent };
 
                 mi.Invoke(_targetConnector, new[] { _growlApp, arglist.ToArray(t) });
 

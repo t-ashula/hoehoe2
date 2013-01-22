@@ -64,12 +64,14 @@ namespace Hoehoe
 
         public void FavoriteCacheStart()
         {
-            if (_favoriteCache.Count != 0)
+            if (_favoriteCache.Count == 0)
             {
-                var cacheList = new List<long>(_favoriteCache);
-                Clear();
-                Parallel.ForEach(cacheList, stsId => _twitter.PostFavAdd(stsId));
+                return;
             }
+
+            var cacheList = new List<long>(_favoriteCache);
+            Clear();
+            Parallel.ForEach(cacheList, stsId => _twitter.PostFavAdd(stsId));
         }
 
         public void Add(long item)

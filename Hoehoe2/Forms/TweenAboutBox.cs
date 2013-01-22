@@ -65,7 +65,9 @@ namespace Hoehoe
         private void SetAboutInfoStrings()
         {
             // フォームのタイトルを設定します。
-            string applicationTitle = !string.IsNullOrEmpty(MyCommon.AppTitle) ? MyCommon.AppTitle : Path.GetFileNameWithoutExtension(MyCommon.AppAssemblyName);
+            var applicationTitle = !string.IsNullOrEmpty(MyCommon.AppTitle) ?
+                MyCommon.AppTitle :
+                Path.GetFileNameWithoutExtension(MyCommon.AppAssemblyName);
             Text = string.Format(R.TweenAboutBox_LoadText1, applicationTitle);
             LabelProductName.Text = MyCommon.AppAssemblyProductName;
             LabelVersion.Text = string.Format(R.TweenAboutBox_LoadText2, MyCommon.FileVersion + "(" + MyCommon.AppVersion + ")");

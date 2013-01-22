@@ -70,7 +70,7 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Photozou_CreateImage(CreateImageArgs args)
         {
-            Match mc = Regex.Match(args.Url.Value, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(args.Url.Value, "^http://photozou\\.jp/photo/show/(?<userId>[0-9]+)/(?<photoId>[0-9]+)", RegexOptions.IgnoreCase);
             if (!mc.Success)
             {
                 return false;

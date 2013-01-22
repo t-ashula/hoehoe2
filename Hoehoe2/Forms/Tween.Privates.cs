@@ -68,8 +68,8 @@ namespace Hoehoe
 
         private static void MoveArrayItem(int[] values, int fromIndex, int toIndex)
         {
-            int movedValue = values[fromIndex];
-            int numMoved = Math.Abs(fromIndex - toIndex);
+            var movedValue = values[fromIndex];
+            var numMoved = Math.Abs(fromIndex - toIndex);
             if (toIndex < fromIndex)
             {
                 Array.Copy(values, toIndex, values, toIndex + 1, numMoved);
@@ -529,21 +529,9 @@ namespace Hoehoe
                 else
                 {
                     // 最下行が表示されていたら、最下行へ強制スクロール。最下行が表示されていなかったら制御しない
-                    ListViewItem item = _curList.GetItemAt(0, _curList.ClientSize.Height - 1);
-                    if (item == null)
-                    {
-                        // 一番下
-                        item = _curList.Items[_curList.Items.Count - 1];
-                    }
-
-                    if (item.Index == _curList.Items.Count - 1)
-                    {
-                        smode = -2;
-                    }
-                    else
-                    {
-                        smode = -1;
-                    }
+                    var item = _curList.GetItemAt(0, _curList.ClientSize.Height - 1) ??
+                        _curList.Items[_curList.Items.Count - 1];
+                    smode = item.Index == _curList.Items.Count - 1 ? -2 : -1;
                 }
             }
             else
@@ -562,12 +550,7 @@ namespace Hoehoe
                 else
                 {
                     // 最上行が表示されていたら、制御しない。最上行が表示されていなかったら、現在表示位置へ強制スクロール
-                    ListViewItem item = _curList.GetItemAt(0, 10);
-                    if (item == null)
-                    {
-                        // 一番上
-                        item = _curList.Items[0];
-                    }
+                    var item = _curList.GetItemAt(0, 10) ?? _curList.Items[0];
 
                     if (item.Index == 0)
                     {
@@ -641,13 +624,13 @@ namespace Hoehoe
 
         private bool IsMyEventNotityAsEventType(Twitter.FormattedEvent ev)
         {
-            return Convert.ToBoolean(ev.Eventtype & _configs.IsMyEventNotifyFlag) ? true : !ev.IsMe;
+            return Convert.ToBoolean(ev.Eventtype & _configs.IsMyEventNotifyFlag) || !ev.IsMe;
         }
 
         private void NotifyNewPosts(PostClass[] notifyPosts, string soundFile, int addCount, bool newMentions)
         {
             if (notifyPosts != null
-                && notifyPosts.Count() > 0
+                && notifyPosts.Any()
                 && _configs.ReadOwnPost
                 && notifyPosts.All(post => post.UserId == _tw.UserId || post.ScreenName == _tw.Username))
             {
@@ -1056,7 +1039,7 @@ namespace Hoehoe
             return smsg;
         }
 
-        private void RemovePostFromFavTab(long[] ids)
+        private void RemovePostFromFavTab(IEnumerable<long> ids)
         {
             string favTabName = _statuses.GetTabByType(TabUsageType.Favorites).TabName;
             bool isCurFavTab = _curTab.Text.Equals(favTabName);
@@ -1179,8 +1162,8 @@ namespace Hoehoe
             }
 
             var selcteds = _curList.SelectedIndices.Cast<int>().Select(GetCurTabPost);
-            var ids = isFavAdd ? selcteds.Where(p => !p.IsFav) : selcteds.Where(p => p.IsFav);
-            if (ids.Count() == 0)
+            var ids = (isFavAdd ? selcteds.Where(p => !p.IsFav) : selcteds.Where(p => p.IsFav)).ToList();
+            if (!ids.Any())
             {
                 StatusLabel.Text = isFavAdd ?
                     R.FavAddToolStripMenuItem_ClickText4 :
@@ -2588,7 +2571,7 @@ namespace Hoehoe
                                         return false;
                                     }
 
-                                    var col = lst.Columns.Cast<ColumnHeader>().Where(x => x.DisplayIndex == colNo).FirstOrDefault();
+                                    var col = lst.Columns.Cast<ColumnHeader>().FirstOrDefault(x => x.DisplayIndex == colNo);
                                     if (col == null)
                                     {
                                         return false;
@@ -3180,7 +3163,8 @@ namespace Hoehoe
                         }
                     }
 
-                    var post = postList.FirstOrDefault(pst => ReferenceEquals(pst.Tab, curTabClass) && (isForward ? pst.Index > _curItemIndex : pst.Index < _curItemIndex));
+                    var post = postList.FirstOrDefault(pst => ReferenceEquals(pst.Tab, curTabClass)
+                        && (isForward ? pst.Index > _curItemIndex : pst.Index < _curItemIndex));
                     if (post == null)
                     {
                         post = postList.FirstOrDefault(pst => !ReferenceEquals(pst.Tab, curTabClass));
@@ -3560,7 +3544,7 @@ namespace Hoehoe
                 _cfgLocal.ColorDetailBackcolor = _clrDetailBackcolor;
                 _cfgLocal.ColorDetailLink = _clrDetailLink;
                 _cfgLocal.ColorFav = _clrFav;
-                _cfgLocal.ColorOWL = _clrOwl;
+                _cfgLocal.ColorOwl = _clrOwl;
                 _cfgLocal.ColorRetweet = _clrRetweet;
                 _cfgLocal.ColorSelf = _clrSelf;
                 _cfgLocal.ColorAtSelf = _clrAtSelf;
@@ -3869,15 +3853,7 @@ namespace Hoehoe
 
             _iconCnt += 1;
             _blinkCnt += 1;
-            bool busy = false;
-            foreach (BackgroundWorker bw in _bworkers)
-            {
-                if (bw != null && bw.IsBusy)
-                {
-                    busy = true;
-                    break;
-                }
-            }
+            bool busy = _bworkers.Any(bw => bw != null && bw.IsBusy);
 
             if (_iconCnt > 3)
             {
@@ -3933,7 +3909,7 @@ namespace Hoehoe
         private void ChangeTabMenuControl(string tabName)
         {
             FilterEditMenuItem.Enabled = EditRuleTbMenuItem.Enabled = true;
-            var deletetab = _statuses.Tabs[tabName].TabType != TabUsageType.Mentions ? !_statuses.IsDefaultTab(tabName) : false;
+            var deletetab = _statuses.Tabs[tabName].TabType != TabUsageType.Mentions && !_statuses.IsDefaultTab(tabName);
             DeleteTabMenuItem.Enabled = DeleteTbMenuItem.Enabled = deletetab;
         }
 
@@ -4265,8 +4241,6 @@ namespace Hoehoe
 
             if (StatusText.SelectionLength > 0)
             {
-                string result;
-
                 // 文字列が選択されている場合はその文字列について処理
                 string tmp = StatusText.SelectedText;
 
@@ -4274,6 +4248,7 @@ namespace Hoehoe
                 if (tmp.StartsWith("http"))
                 {
                     // nico.ms使用、nicovideoにマッチしたら変換
+                    string result;
                     if (_configs.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
                     {
                         result = nicoms.Shorten(tmp);
@@ -4298,7 +4273,6 @@ namespace Hoehoe
             }
             else
             {
-                string result;
                 const string UrlPattern = "(?<before>(?:[^\\\"':!=]|^|\\:))"
                     + "(?<url>(?<protocol>https?://)"
                     + "(?<domain>(?:[\\.-]|[^\\p{P}\\s])+\\.[a-z]{2,}(?::[0-9]+)?)"
@@ -4324,6 +4298,7 @@ namespace Hoehoe
                     StatusText.Select(StatusText.Text.IndexOf(url, StringComparison.Ordinal), url.Length);
 
                     // nico.ms使用、nicovideoにマッチしたら変換
+                    string result;
                     if (_configs.Nicoms && Regex.IsMatch(tmp, NicoUrlPattern))
                     {
                         result = nicoms.Shorten(tmp);
@@ -4537,11 +4512,11 @@ namespace Hoehoe
             }
             else
             {
-                for (int i = 0; i < _bworkers.Length; i++)
+                foreach (var t in _bworkers)
                 {
-                    if (_bworkers[i] != null && !_bworkers[i].IsBusy)
+                    if (t != null && !t.IsBusy)
                     {
-                        bw = _bworkers[i];
+                        bw = t;
                         break;
                     }
                 }
@@ -4570,9 +4545,7 @@ namespace Hoehoe
 
         private BackgroundWorker CreateTimelineWorker()
         {
-            var bw = new BackgroundWorker();
-            bw.WorkerReportsProgress = true;
-            bw.WorkerSupportsCancellation = true;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
             bw.DoWork += GetTimelineWorker_DoWork;
             bw.ProgressChanged += GetTimelineWorker_ProgressChanged;
             bw.RunWorkerCompleted += GetTimelineWorker_RunWorkerCompleted;
@@ -4687,8 +4660,8 @@ namespace Hoehoe
                 }
             }
 
-            var ids = _curList.SelectedIndices.Cast<int>().Select(GetCurTabPost).Where(p => !p.IsMe && !p.IsProtect && !p.IsDm);
-            if (ids.Count() > 0)
+            var ids = _curList.SelectedIndices.Cast<int>().Select(GetCurTabPost).Where(p => !p.IsMe && !p.IsProtect && !p.IsDm).ToList();
+            if (ids.Any())
             {
                 RunAsync(new GetWorkerArg
                 {
@@ -4834,9 +4807,9 @@ namespace Hoehoe
             ShowFriendshipCore(frid);
         }
 
-        private void ShowFriendship(string[] ids)
+        private void ShowFriendship(IEnumerable<string> ids)
         {
-            foreach (string id in ids)
+            foreach (var id in ids)
             {
                 ShowFriendshipCore(id);
             }
@@ -5509,8 +5482,7 @@ namespace Hoehoe
         {
             if (_evtDialog == null || _evtDialog.IsDisposed)
             {
-                _evtDialog = new EventViewerDialog();
-                _evtDialog.Owner = this;
+                _evtDialog = new EventViewerDialog { Owner = this };
 
                 // 親の中央に表示
                 Point pos = _evtDialog.Location;
@@ -6238,7 +6210,8 @@ namespace Hoehoe
 
             var names = _curList.SelectedIndices.Cast<int>()
                 .Select(idx => _statuses.Item(_curTab.Text, idx))
-                .Select(pc => pc.IsRetweeted ? pc.RetweetedBy : pc.ScreenName);
+                .Select(pc => pc.IsRetweeted ? pc.RetweetedBy : pc.ScreenName)
+                .ToArray();
             TryAddIdsFilter(names);
         }
 
@@ -6301,10 +6274,10 @@ namespace Hoehoe
             TryAddIdsFilter(new[] { name });
         }
 
-        private void TryAddIdsFilter(IEnumerable<string> names)
+        private void TryAddIdsFilter(string[] names)
         {
             var uniNames = names.Select(n => n.Trim()).Where(n => !string.IsNullOrEmpty(n)).Distinct();
-            if (uniNames.Count() < 1)
+            if (!uniNames.Any())
             {
                 return;
             }

@@ -84,11 +84,9 @@ namespace Hoehoe
             set
             {
                 _maxCount = value;
-                if (Control != null && !Control.IsDisposed)
-                {
-                    SetText(_remainCount, _maxCount);
-                    Control.Refresh();
-                }
+                if (Control == null || Control.IsDisposed) return;
+                SetText(_remainCount, _maxCount);
+                Control.Refresh();
             }
         }
 
@@ -102,11 +100,9 @@ namespace Hoehoe
             set
             {
                 _remainCount = value;
-                if (Control != null && !Control.IsDisposed)
-                {
-                    SetText(_remainCount, _maxCount);
-                    Control.Refresh();
-                }
+                if (Control == null || Control.IsDisposed) return;
+                SetText(_remainCount, _maxCount);
+                Control.Refresh();
             }
         }
 
@@ -165,27 +161,27 @@ namespace Hoehoe
         private void SetText(int remain, int max)
         {
             // TODO: clean
-            const string TextFormat = "API {0}/{1}";
+            const string textFormat = "API {0}/{1}";
             string toolTipTextFormat = "API rest {0}/{1}" + Environment.NewLine + "(reset after {2} minutes)";
             if (_remainCount > -1 && _maxCount > -1)
             {
                 // 正常
-                Control.Text = string.Format(TextFormat, _remainCount, _maxCount);
+                Control.Text = string.Format(textFormat, _remainCount, _maxCount);
             }
             else if (RemainCount > -1)
             {
                 // uppercount不正
-                Control.Text = string.Format(TextFormat, _remainCount, "???");
+                Control.Text = string.Format(textFormat, _remainCount, "???");
             }
             else if (_maxCount < -1)
             {
                 // remaincount不正
-                Control.Text = string.Format(TextFormat, "???", _maxCount);
+                Control.Text = string.Format(textFormat, "???", _maxCount);
             }
             else
             {
                 // 両方とも不正
-                Control.Text = string.Format(TextFormat, "???", "???");
+                Control.Text = string.Format(textFormat, "???", "???");
             }
 
             double minute = Math.Ceiling((ResetTime - DateTime.Now).TotalMinutes);

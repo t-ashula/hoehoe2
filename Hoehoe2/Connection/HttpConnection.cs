@@ -286,7 +286,7 @@ namespace Hoehoe
                     if (param != null)
                     {
                         string postData = string.Empty;
-                        foreach (KeyValuePair<string, string> kvp in param)
+                        foreach (var kvp in param)
                         {
                             postData += string.Format("--{0}\r\nContent-Disposition: form-data; name=\"{1}\"\r\n\r\n{2}\r\n", boundary, kvp.Key, kvp.Value);
                         }
@@ -466,10 +466,10 @@ namespace Hoehoe
                         }
                         else
                         {
+                            // TODO: need using ?
                             using (var stream = new GZipStream(webRes.GetResponseStream(), CompressionMode.Decompress))
                             {
-                                // TODO: need using ?
-                                if (stream != null)
+                                // if (stream != null)
                                 {
                                     CopyStream(stream, contentStream);
                                 }
@@ -697,12 +697,12 @@ namespace Hoehoe
         /// <returns>エンコード結果文字列</returns>
         protected string UrlEncode(string stringToEncode)
         {
-            const string UnreservedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
+            const string unreservedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
             var sb = new StringBuilder();
             byte[] bytes = Encoding.UTF8.GetBytes(stringToEncode);
             foreach (byte b in bytes)
             {
-                if (UnreservedChars.IndexOf((char)b) != -1)
+                if (unreservedChars.IndexOf((char)b) != -1)
                 {
                     sb.Append((char)b);
                 }

@@ -55,12 +55,12 @@ namespace Hoehoe
         protected override void AppendOAuthInfo(HttpWebRequest webRequest, Dictionary<string, string> query, string token, string tokenSecret)
         {
             // OAuth共通情報取得
-            Dictionary<string, string> parameter = GetOAuthParameter(token);
+            var parameter = GetOAuthParameter(token);
 
             // OAuth共通情報にquery情報を追加
             if (query != null)
             {
-                foreach (KeyValuePair<string, string> item in query)
+                foreach (var item in query)
                 {
                     parameter.Add(item.Key, item.Value);
                 }
@@ -72,7 +72,7 @@ namespace Hoehoe
             // HTTPリクエストのヘッダに追加
             var sb = new StringBuilder("OAuth ");
             sb.AppendFormat("realm=\"{0}://{1}{2}\",", _realm.Scheme, _realm.Host, _realm.AbsolutePath);
-            foreach (KeyValuePair<string, string> item in parameter)
+            foreach (var item in parameter)
             {
                 // 各種情報のうち、oauth_で始まる情報のみ、ヘッダに追加する。各情報はカンマ区切り、データはダブルクォーテーションで括る
                 if (item.Key.StartsWith("oauth_"))

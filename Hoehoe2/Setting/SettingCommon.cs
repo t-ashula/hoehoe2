@@ -144,8 +144,9 @@ namespace Hoehoe
             FoursquarePreviewWidth = 300;
             FoursquarePreviewZoom = 15;
             IsListsIncludeRts = false;
-            GAFirst = 0;
-            GALast = 0;
+
+            // GAFirst = 0;
+            // GALast = 0;
             TabMouseLock = false;
             IsRemoveSameEvent = false;
             IsUseNotifyGrowl = false;
@@ -386,9 +387,9 @@ namespace Hoehoe
 
         public bool IsListsIncludeRts { get; set; }
 
-        public long GAFirst { get; set; }
+        // public long GAFirst { get; set; }
 
-        public long GALast { get; set; }
+        // public long GALast { get; set; }
 
         public bool TabMouseLock { get; set; }
 

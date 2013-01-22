@@ -43,11 +43,12 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Hatena_GetUrl(GetUrlArgs args)
         {
-            // TODO URL判定処理を記述
-            Match mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^http://f\\.hatena\\.ne\\.jp/(([a-z])[a-z0-9_-]{1,30}[a-z0-9])/((\\d{8})\\d+)$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(
+                string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended,
+                "^http://f\\.hatena\\.ne\\.jp/(([a-z])[a-z0-9_-]{1,30}[a-z0-9])/((\\d{8})\\d+)$",
+                RegexOptions.IgnoreCase);
             if (mc.Success)
             {
-                // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 args.AddThumbnailUrl(args.Url, mc.Result("http://img.f.hatena.ne.jp/images/fotolife/${2}/${1}/${4}/${3}_120.jpg"));
                 return true;
             }

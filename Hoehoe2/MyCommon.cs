@@ -554,8 +554,7 @@ namespace Hoehoe
             catch (Exception)
             {
                 bmp.Dispose();
-                bmp = new Bitmap(width, height);
-                bmp.Tag = img.Tag;
+                bmp = new Bitmap(width, height) { Tag = img.Tag };
                 return bmp;
             }
             finally

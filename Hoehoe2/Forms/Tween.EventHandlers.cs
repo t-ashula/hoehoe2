@@ -1471,7 +1471,7 @@ namespace Hoehoe
             _fntReaded = _cfgLocal.FontRead;
             _clrRead = _cfgLocal.ColorRead;
             _clrFav = _cfgLocal.ColorFav;
-            _clrOwl = _cfgLocal.ColorOWL;
+            _clrOwl = _cfgLocal.ColorOwl;
             _clrRetweet = _cfgLocal.ColorRetweet;
             _fntDetail = _cfgLocal.FontDetail;
             _clrDetail = _cfgLocal.ColorDetail;
@@ -2393,9 +2393,9 @@ namespace Hoehoe
 
                 case WorkerType.Retweet:
                     bw.ReportProgress(200);
-                    for (int i = 0; i < args.Ids.Count; i++)
+                    foreach (long t in args.Ids)
                     {
-                        ret = _tw.PostRetweet(args.Ids[i], read);
+                        ret = _tw.PostRetweet(t, read);
                     }
 
                     bw.ReportProgress(300);
@@ -2711,35 +2711,24 @@ namespace Hoehoe
                         }
                         else
                         {
-                            for (int i = 0; i < rslt.SIds.Count; i++)
+                            foreach (long t in rslt.SIds)
                             {
-                                if (_curTab.Text.Equals(rslt.TabName))
+                                if (!_curTab.Text.Equals(rslt.TabName)) continue;
+                                var idx = _statuses.Tabs[rslt.TabName].IndexOf(t);
+                                if (idx <= -1) continue;
+                                var tb = _statuses.Tabs[rslt.TabName];
+                                if (tb != null)
                                 {
-                                    int idx = _statuses.Tabs[rslt.TabName].IndexOf(rslt.SIds[i]);
-                                    if (idx > -1)
-                                    {
-                                        TabClass tb = _statuses.Tabs[rslt.TabName];
-                                        if (tb != null)
-                                        {
-                                            PostClass post;
-                                            if (tb.TabType == TabUsageType.Lists || tb.TabType == TabUsageType.PublicSearch)
-                                            {
-                                                post = tb.Posts[rslt.SIds[i]];
-                                            }
-                                            else
-                                            {
-                                                post = _statuses.Item(rslt.SIds[i]);
-                                            }
+                                    var post = tb.TabType == TabUsageType.Lists || tb.TabType == TabUsageType.PublicSearch ?
+                                        tb.Posts[t] : _statuses.Item(t);
 
-                                            ChangeCacheStyleRead(post.IsRead, idx, _curTab);
-                                        }
+                                    ChangeCacheStyleRead(post.IsRead, idx, _curTab);
+                                }
 
-                                        if (idx == _curItemIndex)
-                                        {
-                                            // 選択アイテム再表示
-                                            DispSelectedPost(true);
-                                        }
-                                    }
+                                if (idx == _curItemIndex)
+                                {
+                                    // 選択アイテム再表示
+                                    DispSelectedPost(true);
                                 }
                             }
                         }

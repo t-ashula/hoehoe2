@@ -60,7 +60,7 @@ namespace Hoehoe
                 return null;
             }
 
-            string urlId = Regex.Replace(url, "https?://(4sq|foursquare)\\.com/", string.Empty);
+            var urlId = Regex.Replace(url, "https?://(4sq|foursquare)\\.com/", string.Empty);
 
             if (_checkInUrlsVenueCollection.ContainsKey(urlId))
             {
@@ -68,13 +68,13 @@ namespace Hoehoe
                 return (new Google()).CreateGoogleStaticMapsUri(_checkInUrlsVenueCollection[urlId]);
             }
 
-            string venueId = GetVenueId(url);
+            var venueId = GetVenueId(url);
             if (string.IsNullOrEmpty(venueId))
             {
                 return null;
             }
 
-            Venue curVenue = GetVenueInfo(venueId);
+            var curVenue = GetVenueInfo(venueId);
             if (curVenue == null)
             {
                 return null;
@@ -94,22 +94,22 @@ namespace Hoehoe
             }
 
             refText = curLocation.LocateInfo;
-            return (new Google()).CreateGoogleStaticMapsUri(curLocation);
+            return new Google().CreateGoogleStaticMapsUri(curLocation);
         }
 
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content)
         {
-            HttpWebRequest webReq = CreateRequest(method, requestUri, param, false);
-            HttpStatusCode code = GetResponse(webReq, ref content, null, false);
+            var webReq = CreateRequest(method, requestUri, param, false);
+            var code = GetResponse(webReq, ref content, null, false);
             return code;
         }
 
         private string GetVenueId(string url)
         {
-            string content = string.Empty;
+            var content = string.Empty;
             try
             {
-                HttpStatusCode res = GetContent("GET", new Uri(url), null, ref content);
+                var res = GetContent("GET", new Uri(url), null, ref content);
                 if (res != HttpStatusCode.OK)
                 {
                     return string.Empty;
@@ -120,16 +120,16 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            Match mc = Regex.Match(content, "/venue/(?<venueId>[0-9]+)", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(content, "/venue/(?<venueId>[0-9]+)", RegexOptions.IgnoreCase);
             return mc.Success ? mc.Result("${venueId}") : string.Empty;
         }
 
         private Venue GetVenueInfo(string venueId)
         {
-            string content = string.Empty;
+            var content = string.Empty;
             try
             {
-                HttpStatusCode res = GetContent("GET", new Uri("https://api.foursquare.com/v2/venues/" + venueId), _authKey, ref content);
+                var res = GetContent("GET", new Uri("https://api.foursquare.com/v2/venues/" + venueId), _authKey, ref content);
 
                 if (res == HttpStatusCode.OK)
                 {

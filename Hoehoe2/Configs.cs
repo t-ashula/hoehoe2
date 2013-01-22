@@ -28,7 +28,7 @@ namespace Hoehoe
 
     public class Configs
     {
-        private static Configs instance = new Configs();
+        private static readonly Configs instance = new Configs();
 
         private Configs()
         {

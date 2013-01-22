@@ -618,12 +618,9 @@ namespace Hoehoe
         public bool AddNewTab(string tabName, bool startup, TabUsageType tabType, ListElement listInfo = null)
         {
             // 重複チェック
-            foreach (TabPage tb in ListTab.TabPages)
+            if (ListTab.TabPages.Cast<TabPage>().Any(tb => tb.Text == tabName))
             {
-                if (tb.Text == tabName)
-                {
-                    return false;
-                }
+                return false;
             }
 
             // 新規タブ名チェック
@@ -666,11 +663,13 @@ namespace Hoehoe
             Label label = null;
             if (tabType == TabUsageType.UserTimeline || tabType == TabUsageType.Lists)
             {
-                label = new Label();
-                label.Dock = DockStyle.Top;
-                label.Name = "labelUser";
-                label.Text = tabType == TabUsageType.Lists ? listInfo.ToString() : _statuses.Tabs[tabName].User + "'s Timeline";
-                label.TextAlign = ContentAlignment.MiddleLeft;
+                label = new Label
+                    {
+                        Dock = DockStyle.Top,
+                        Name = "labelUser",
+                        Text = tabType == TabUsageType.Lists ? listInfo.ToString() : _statuses.Tabs[tabName].User + "'s Timeline",
+                        TextAlign = ContentAlignment.MiddleLeft
+                    };
                 using (var tmpComboBox = new ComboBox())
                 {
                     label.Height = tmpComboBox.Height;

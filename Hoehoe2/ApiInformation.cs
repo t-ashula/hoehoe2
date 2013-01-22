@@ -52,11 +52,13 @@ namespace Hoehoe
 
             set
             {
-                if (maxCount != value)
+                if (maxCount == value)
                 {
-                    maxCount = value;
-                    Raise_Changed();
+                    return;
                 }
+
+                maxCount = value;
+                Raise_Changed();
             }
         }
 
@@ -69,11 +71,12 @@ namespace Hoehoe
 
             set
             {
-                if (remainCount != value)
+                if (remainCount == value)
                 {
-                    remainCount = value;
-                    Raise_Changed();
+                    return;
                 }
+                remainCount = value;
+                Raise_Changed();
             }
         }
 
@@ -86,11 +89,9 @@ namespace Hoehoe
 
             set
             {
-                if (resetTime != value)
-                {
-                    resetTime = value;
-                    Raise_Changed();
-                }
+                if (resetTime == value) return;
+                resetTime = value;
+                Raise_Changed();
             }
         }
 
@@ -103,11 +104,9 @@ namespace Hoehoe
 
             set
             {
-                if (mediaMaxCount != value)
-                {
-                    mediaMaxCount = value;
-                    Raise_Changed();
-                }
+                if (mediaMaxCount == value) return;
+                mediaMaxCount = value;
+                Raise_Changed();
             }
         }
 
@@ -120,11 +119,9 @@ namespace Hoehoe
 
             set
             {
-                if (mediaRemainCount != value)
-                {
-                    mediaRemainCount = value;
-                    Raise_Changed();
-                }
+                if (mediaRemainCount == value) return;
+                mediaRemainCount = value;
+                Raise_Changed();
             }
         }
 
@@ -137,11 +134,9 @@ namespace Hoehoe
 
             set
             {
-                if (mediaResetTime != value)
-                {
-                    mediaResetTime = value;
-                    Raise_Changed();
-                }
+                if (mediaResetTime == value) return;
+                mediaResetTime = value;
+                Raise_Changed();
             }
         }
 
@@ -154,11 +149,9 @@ namespace Hoehoe
 
             set
             {
-                if (resetTimeInSeconds != value)
-                {
-                    resetTimeInSeconds = value;
-                    Raise_Changed();
-                }
+                if (resetTimeInSeconds == value) return;
+                resetTimeInSeconds = value;
+                Raise_Changed();
             }
         }
 
@@ -171,11 +164,9 @@ namespace Hoehoe
 
             set
             {
-                if (usingCount != value)
-                {
-                    usingCount = value;
-                    Raise_Changed();
-                }
+                if (usingCount == value) return;
+                usingCount = value;
+                Raise_Changed();
             }
         }
 
@@ -188,11 +179,9 @@ namespace Hoehoe
 
             private set
             {
-                if (accessLevel != value)
-                {
-                    accessLevel = value;
-                    Raise_Changed();
-                }
+                if (accessLevel == value) return;
+                accessLevel = value;
+                Raise_Changed();
             }
         }
 
@@ -474,6 +463,7 @@ namespace Hoehoe
                 case "read-write-privatemessages":
                     return ApiAccessLevel.ReadWriteAndDirectMessage;
                 default:
+
                     // 未知のアクセスレベルの場合Read/Write/Dmと仮定して処理継続
                     MyCommon.TraceOut("Unknown ApiAccessLevel:" + HttpHeaders["X-Access-Level"]);
                     return ApiAccessLevel.ReadWriteAndDirectMessage;

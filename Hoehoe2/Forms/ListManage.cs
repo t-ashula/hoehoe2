@@ -68,7 +68,7 @@ namespace Hoehoe
                 RefreshLists();
             }
 
-            foreach (ListElement listItem in TabInformations.Instance.SubscribableLists.FindAll(i => i.Username == _twitter.Username))
+            foreach (var listItem in TabInformations.Instance.SubscribableLists.FindAll(i => i.Username == _twitter.Username))
             {
                 ListsList.Items.Add(listItem);
             }
