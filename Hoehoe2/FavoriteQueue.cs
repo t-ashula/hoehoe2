@@ -32,18 +32,18 @@ namespace Hoehoe
 
     public class FavoriteQueue : IList<long>
     {
-        private Twitter twitter;
-        private List<long> favoriteCache;
+        private readonly Twitter _twitter;
+        private readonly List<long> _favoriteCache;
 
         public FavoriteQueue(Twitter twitter)
         {
-            this.favoriteCache = new List<long>();
-            this.twitter = twitter;
+            _favoriteCache = new List<long>();
+            _twitter = twitter;
         }
 
         public int Count
         {
-            get { return this.favoriteCache.Count; }
+            get { return _favoriteCache.Count; }
         }
 
         public bool IsReadOnly
@@ -53,82 +53,82 @@ namespace Hoehoe
 
         public long this[int index]
         {
-            get { return this.favoriteCache[index]; }
-            set { this.favoriteCache[index] = value; }
+            get { return _favoriteCache[index]; }
+            set { _favoriteCache[index] = value; }
         }
 
         public void AddRange(IEnumerable<long> stsIds)
         {
-            this.favoriteCache.AddRange(stsIds);
+            _favoriteCache.AddRange(stsIds);
         }
 
         public void FavoriteCacheStart()
         {
-            if (this.favoriteCache.Count != 0)
+            if (_favoriteCache.Count != 0)
             {
-                List<long> cacheList = new List<long>(this.favoriteCache);
-                this.Clear();
-                Parallel.ForEach<long>(cacheList, new Action<long>((long stsId) => { this.twitter.PostFavAdd(stsId); }));
+                List<long> cacheList = new List<long>(_favoriteCache);
+                Clear();
+                Parallel.ForEach<long>(cacheList, new Action<long>((long stsId) => { _twitter.PostFavAdd(stsId); }));
             }
         }
 
         public void Add(long item)
         {
-            if (!this.Contains(item))
+            if (!Contains(item))
             {
-                this.favoriteCache.Add(item);
+                _favoriteCache.Add(item);
             }
         }
 
         public void Clear()
         {
-            this.favoriteCache.Clear();
-            this.favoriteCache.TrimExcess();
+            _favoriteCache.Clear();
+            _favoriteCache.TrimExcess();
         }
 
         public bool Contains(long item)
         {
-            return this.favoriteCache.Contains(item);
+            return _favoriteCache.Contains(item);
         }
 
         public void CopyTo(long[] array, int arrayIndex)
         {
-            this.favoriteCache.CopyTo(array, arrayIndex);
+            _favoriteCache.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(long item)
         {
-            return this.favoriteCache.Remove(item);
+            return _favoriteCache.Remove(item);
         }
 
         public System.Collections.Generic.IEnumerator<long> GetEnumerator()
         {
-            return this.favoriteCache.GetEnumerator();
+            return _favoriteCache.GetEnumerator();
         }
 
         public System.Collections.IEnumerator GetEnumerator1()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator1();
+            return GetEnumerator1();
         }
 
         public int IndexOf(long item)
         {
-            return this.favoriteCache.IndexOf(item);
+            return _favoriteCache.IndexOf(item);
         }
 
         public void Insert(int index, long item)
         {
-            this.favoriteCache.Insert(index, item);
+            _favoriteCache.Insert(index, item);
         }
 
         public void RemoveAt(int index)
         {
-            this.favoriteCache.RemoveAt(index);
+            _favoriteCache.RemoveAt(index);
         }
     }
 }
