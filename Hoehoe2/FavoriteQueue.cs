@@ -68,7 +68,7 @@ namespace Hoehoe
             {
                 List<long> cacheList = new List<long>(_favoriteCache);
                 Clear();
-                Parallel.ForEach<long>(cacheList, new Action<long>((long stsId) => { _twitter.PostFavAdd(stsId); }));
+                Parallel.ForEach(cacheList, stsId => _twitter.PostFavAdd(stsId));
             }
         }
 

@@ -2909,7 +2909,7 @@ namespace Hoehoe
             try
             {
                 var users = D.CreateDataFromJson<Users>(content);
-                Array.ForEach<User>(users.Users_, new Action<User>(u => { lists.Add(new UserInfo(u)); }));
+                Array.ForEach(users.Users_, u => lists.Add(new UserInfo(u)));
                 cursor = users.NextCursor;
                 return string.Empty;
             }
