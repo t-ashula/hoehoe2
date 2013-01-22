@@ -34,7 +34,7 @@ namespace Hoehoe
     {
         public SettingTabs()
         {
-            this.Tabs = new List<TabClass>();
+            Tabs = new List<TabClass>();
         }
 
         public List<TabClass> Tabs { get; set; }

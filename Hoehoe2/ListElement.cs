@@ -32,37 +32,37 @@ namespace Hoehoe
 
     public class ListElement
     {
-        private List<UserInfo> members;
-        private long cursor = -1;
+        private List<UserInfo> _members;
+        private long _cursor = -1;
 
         public ListElement()
         {
-            this.Nickname = string.Empty;
-            this.Username = string.Empty;
-            this.UserId = 0;
-            this.MemberCount = 0;
-            this.SubscriberCount = 0;
-            this.IsPublic = true;
-            this.Slug = string.Empty;
-            this.Description = string.Empty;
-            this.Name = string.Empty;
-            this.Id = 0;
+            Nickname = string.Empty;
+            Username = string.Empty;
+            UserId = 0;
+            MemberCount = 0;
+            SubscriberCount = 0;
+            IsPublic = true;
+            Slug = string.Empty;
+            Description = string.Empty;
+            Name = string.Empty;
+            Id = 0;
         }
 
         public ListElement(ListElementData listElementData, Twitter tw)
             : this()
         {
-            this.Description = listElementData.Description;
-            this.Id = listElementData.Id;
-            this.IsPublic = listElementData.Mode == "public";
-            this.MemberCount = listElementData.MemberCount;
-            this.Name = listElementData.Name;
-            this.SubscriberCount = listElementData.SubscriberCount;
-            this.Slug = listElementData.Slug;
-            this.Nickname = listElementData.User.Name.Trim();
-            this.Username = listElementData.User.ScreenName;
-            this.UserId = listElementData.User.Id;
-            this.Tw = tw;
+            Description = listElementData.Description;
+            Id = listElementData.Id;
+            IsPublic = listElementData.Mode == "public";
+            MemberCount = listElementData.MemberCount;
+            Name = listElementData.Name;
+            SubscriberCount = listElementData.SubscriberCount;
+            Slug = listElementData.Slug;
+            Nickname = listElementData.User.Name.Trim();
+            Username = listElementData.User.ScreenName;
+            UserId = listElementData.User.Id;
+            Tw = tw;
         }
 
         public long Id { get; set; }
@@ -92,19 +92,19 @@ namespace Hoehoe
         {
             get
             {
-                if (this.members == null)
+                if (_members == null)
                 {
-                    this.members = new List<UserInfo>();
+                    _members = new List<UserInfo>();
                 }
 
-                return this.members;
+                return _members;
             }
         }
 
         [XmlIgnore]
         public long Cursor
         {
-            get { return this.cursor; }
+            get { return _cursor; }
         }
 
         protected Twitter Tw { get; set; }
@@ -112,27 +112,27 @@ namespace Hoehoe
         public virtual string Refresh()
         {
             var t = this;
-            return this.Tw.EditList(this.Id.ToString(), this.Name, !this.IsPublic, this.Description, ref t);
+            return Tw.EditList(Id.ToString(), Name, !IsPublic, Description, ref t);
         }
 
         public string RefreshMembers()
         {
             List<UserInfo> users = new List<UserInfo>();
-            this.cursor = -1;
-            string result = this.Tw.GetListMembers(this.Id.ToString(), users, ref this.cursor);
-            this.members = users;
-            return string.IsNullOrEmpty(result) ? this.ToString() : result;
+            _cursor = -1;
+            string result = Tw.GetListMembers(Id.ToString(), users, ref _cursor);
+            _members = users;
+            return string.IsNullOrEmpty(result) ? ToString() : result;
         }
 
         public string GetMoreMembers()
         {
-            string result = this.Tw.GetListMembers(this.Id.ToString(), this.members, ref this.cursor);
-            return string.IsNullOrEmpty(result) ? this.ToString() : result;
+            string result = Tw.GetListMembers(Id.ToString(), _members, ref _cursor);
+            return string.IsNullOrEmpty(result) ? ToString() : result;
         }
 
         public override string ToString()
         {
-            return string.Format("@{0}/{1} [{2}]", this.Username, this.Name, this.IsPublic ? "Public" : "Protected");
+            return string.Format("@{0}/{1} [{2}]", Username, Name, IsPublic ? "Public" : "Protected");
         }
     }
 }

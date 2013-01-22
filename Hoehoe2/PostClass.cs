@@ -34,13 +34,13 @@ namespace Hoehoe
     {
         #region private
 
-        private bool isFav;
-        private bool isProtect;
-        private bool isMark;
-        private long inReplyToStatusId;
-        private States states = States.None;
-        private bool isDeleted;
-        private StatusGeo postGeo;
+        private bool _isFav;
+        private bool _isProtect;
+        private bool _isMark;
+        private long _inReplyToStatusId;
+        private States _states = States.None;
+        private bool _isDeleted;
+        private StatusGeo _postGeo;
 
         #endregion private
 
@@ -48,13 +48,13 @@ namespace Hoehoe
 
         public PostClass()
         {
-            this.RelTabName = string.Empty;
-            this.InReplyToUserId = 0;
-            this.RetweetedId = 0;
-            this.RetweetedBy = string.Empty;
-            this.ReplyToList = new List<string>();
-            this.postGeo = new StatusGeo();
-            this.Media = new Dictionary<string, string>();
+            RelTabName = string.Empty;
+            InReplyToUserId = 0;
+            RetweetedId = 0;
+            RetweetedBy = string.Empty;
+            ReplyToList = new List<string>();
+            _postGeo = new StatusGeo();
+            Media = new Dictionary<string, string>();
         }
 
         #endregion constructor
@@ -91,7 +91,7 @@ namespace Hoehoe
         {
             get
             {
-                string name = this.ImageUrl;
+                string name = ImageUrl;
                 return name.Remove(name.LastIndexOf("_normal"), 7);
             }
         }
@@ -106,21 +106,21 @@ namespace Hoehoe
         {
             get
             {
-                if (!this.IsRetweeted)
+                if (!IsRetweeted)
                 {
-                    return this.isFav;
+                    return _isFav;
                 }
 
-                var post = TabInformations.Instance.RetweetSource(this.RetweetedId);
-                return post != null ? post.IsFav : this.isFav;
+                var post = TabInformations.Instance.RetweetSource(RetweetedId);
+                return post != null ? post.IsFav : _isFav;
             }
 
             set
             {
-                this.isFav = value;
-                if (this.IsRetweeted)
+                _isFav = value;
+                if (IsRetweeted)
                 {
-                    var post = TabInformations.Instance.RetweetSource(this.RetweetedId);
+                    var post = TabInformations.Instance.RetweetSource(RetweetedId);
                     if (post != null)
                     {
                         post.IsFav = value;
@@ -141,21 +141,21 @@ namespace Hoehoe
         {
             get
             {
-                return this.isProtect;
+                return _isProtect;
             }
 
             set
             {
                 if (value)
                 {
-                    this.states = this.states | States.Protect;
+                    _states = _states | States.Protect;
                 }
                 else
                 {
-                    this.states = this.states & ~States.Protect;
+                    _states = _states & ~States.Protect;
                 }
 
-                this.isProtect = value;
+                _isProtect = value;
             }
         }
 
@@ -165,21 +165,21 @@ namespace Hoehoe
         {
             get
             {
-                return this.isMark;
+                return _isMark;
             }
 
             set
             {
                 if (value)
                 {
-                    this.states = this.states | States.Mark;
+                    _states = _states | States.Mark;
                 }
                 else
                 {
-                    this.states = this.states & ~States.Mark;
+                    _states = _states & ~States.Mark;
                 }
 
-                this.isMark = value;
+                _isMark = value;
             }
         }
 
@@ -189,21 +189,21 @@ namespace Hoehoe
         {
             get
             {
-                return this.inReplyToStatusId;
+                return _inReplyToStatusId;
             }
 
             set
             {
                 if (value > 0)
                 {
-                    this.states = this.states | States.Reply;
+                    _states = _states | States.Reply;
                 }
                 else
                 {
-                    this.states = this.states & ~States.Reply;
+                    _states = _states & ~States.Reply;
                 }
 
-                this.inReplyToStatusId = value;
+                _inReplyToStatusId = value;
             }
         }
 
@@ -233,22 +233,22 @@ namespace Hoehoe
         {
             get
             {
-                return this.isDeleted;
+                return _isDeleted;
             }
 
             set
             {
                 if (value)
                 {
-                    this.InReplyToStatusId = 0;
-                    this.InReplyToUser = string.Empty;
-                    this.InReplyToUserId = 0;
-                    this.IsReply = false;
-                    this.ReplyToList = new List<string>();
-                    this.states = States.None;
+                    InReplyToStatusId = 0;
+                    InReplyToUser = string.Empty;
+                    InReplyToUserId = 0;
+                    IsReply = false;
+                    ReplyToList = new List<string>();
+                    _states = States.None;
                 }
 
-                this.isDeleted = value;
+                _isDeleted = value;
             }
         }
 
@@ -258,41 +258,41 @@ namespace Hoehoe
         {
             get
             {
-                return this.postGeo;
+                return _postGeo;
             }
 
             set
             {
                 if (value != null && (value.Lat != 0 || value.Lng != 0))
                 {
-                    this.states = this.states | States.Geo;
+                    _states = _states | States.Geo;
                 }
                 else
                 {
-                    this.states = this.states & ~States.Geo;
+                    _states = _states & ~States.Geo;
                 }
 
-                this.postGeo = value;
+                _postGeo = value;
             }
         }
 
         public int StateIndex
         {
-            get { return Convert.ToInt32(this.states) - 1; }
+            get { return Convert.ToInt32(_states) - 1; }
         }
 
         /// <summary>
-        /// return this.RetweetedId > 0 ? this.RetweetedId : this.StatusId;
+        /// return RetweetedId > 0 ? RetweetedId : StatusId;
         /// </summary>
         /// <returns></returns>
         public long OriginalStatusId
         {
-            get { return this.IsRetweeted ? this.RetweetedId : this.StatusId; }
+            get { return IsRetweeted ? RetweetedId : StatusId; }
         }
 
         public bool IsRetweeted
         {
-            get { return this.RetweetedId != 0; }
+            get { return RetweetedId != 0; }
         }
 
         #endregion properties
@@ -301,19 +301,19 @@ namespace Hoehoe
 
         public PostClass Copy()
         {
-            PostClass post = (PostClass)this.Clone();
-            post.ReplyToList = new List<string>(this.ReplyToList);
+            PostClass post = (PostClass)Clone();
+            post.ReplyToList = new List<string>(ReplyToList);
             return post;
         }
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || (!object.ReferenceEquals(this.GetType(), obj.GetType())))
+            if ((obj == null) || (!object.ReferenceEquals(GetType(), obj.GetType())))
             {
                 return false;
             }
 
-            return this.Equals((PostClass)obj);
+            return Equals((PostClass)obj);
         }
 
         public bool Equals(PostClass other)
@@ -323,25 +323,25 @@ namespace Hoehoe
                 return false;
             }
 
-            return this.Nickname == other.Nickname
-                && this.TextFromApi == other.TextFromApi && this.ImageUrl == other.ImageUrl
-                && this.ScreenName == other.ScreenName && this.CreatedAt == other.CreatedAt
-                && this.StatusId == other.StatusId && this.IsFav == other.IsFav
-                && this.Text == other.Text && this.IsRead == other.IsRead
-                && this.IsReply == other.IsReply && this.IsExcludeReply == other.IsExcludeReply
-                && this.IsProtect == other.IsProtect && this.IsOwl == other.IsOwl
-                && this.IsMark == other.IsMark && this.InReplyToUser == other.InReplyToUser
-                && this.InReplyToStatusId == other.InReplyToStatusId && this.Source == other.Source
-                && this.SourceHtml == other.SourceHtml && this.ReplyToList.Equals(other.ReplyToList)
-                && this.IsMe == other.IsMe && this.IsDm == other.IsDm
-                && this.UserId == other.UserId && this.FilterHit == other.FilterHit
-                && this.RetweetedBy == other.RetweetedBy && this.RetweetedId == other.RetweetedId
-                && this.RelTabName == other.RelTabName && this.IsDeleted == other.IsDeleted && this.InReplyToUserId == other.InReplyToUserId;
+            return Nickname == other.Nickname
+                && TextFromApi == other.TextFromApi && ImageUrl == other.ImageUrl
+                && ScreenName == other.ScreenName && CreatedAt == other.CreatedAt
+                && StatusId == other.StatusId && IsFav == other.IsFav
+                && Text == other.Text && IsRead == other.IsRead
+                && IsReply == other.IsReply && IsExcludeReply == other.IsExcludeReply
+                && IsProtect == other.IsProtect && IsOwl == other.IsOwl
+                && IsMark == other.IsMark && InReplyToUser == other.InReplyToUser
+                && InReplyToStatusId == other.InReplyToStatusId && Source == other.Source
+                && SourceHtml == other.SourceHtml && ReplyToList.Equals(other.ReplyToList)
+                && IsMe == other.IsMe && IsDm == other.IsDm
+                && UserId == other.UserId && FilterHit == other.FilterHit
+                && RetweetedBy == other.RetweetedBy && RetweetedId == other.RetweetedId
+                && RelTabName == other.RelTabName && IsDeleted == other.IsDeleted && InReplyToUserId == other.InReplyToUserId;
         }
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
 
         public string GetDump()
@@ -350,36 +350,36 @@ namespace Hoehoe
             var format1 = "{0,-20}:{1}<br/>";
             var format2 = "{0,-20}:<xmp>{1}</xmp><br/>";
             sb.Append("-----Start PostClass Dump<br>");
-            sb.AppendFormat(format1, "TextFromApi", this.TextFromApi);
-            sb.AppendFormat(format2, "(PlainText)", this.TextFromApi);
-            sb.AppendFormat(format1, "StatusId", this.StatusId);
-            sb.AppendFormat(format1, "ImageUrl", this.ImageUrl);
-            sb.AppendFormat(format1, "InReplyToStatusId", this.InReplyToStatusId);
-            sb.AppendFormat(format1, "InReplyToUser", this.InReplyToUser);
-            sb.AppendFormat(format1, "IsDM", this.IsDm);
-            sb.AppendFormat(format1, "IsFav", this.IsFav);
-            sb.AppendFormat(format1, "IsMark", this.IsMark);
-            sb.AppendFormat(format1, "IsMe", this.IsMe);
-            sb.AppendFormat(format1, "IsOwl", this.IsOwl);
-            sb.AppendFormat(format1, "IsProtect", this.IsProtect);
-            sb.AppendFormat(format1, "IsRead", this.IsRead);
-            sb.AppendFormat(format1, "IsReply", this.IsReply);
-            foreach (var nm in this.ReplyToList)
+            sb.AppendFormat(format1, "TextFromApi", TextFromApi);
+            sb.AppendFormat(format2, "(PlainText)", TextFromApi);
+            sb.AppendFormat(format1, "StatusId", StatusId);
+            sb.AppendFormat(format1, "ImageUrl", ImageUrl);
+            sb.AppendFormat(format1, "InReplyToStatusId", InReplyToStatusId);
+            sb.AppendFormat(format1, "InReplyToUser", InReplyToUser);
+            sb.AppendFormat(format1, "IsDM", IsDm);
+            sb.AppendFormat(format1, "IsFav", IsFav);
+            sb.AppendFormat(format1, "IsMark", IsMark);
+            sb.AppendFormat(format1, "IsMe", IsMe);
+            sb.AppendFormat(format1, "IsOwl", IsOwl);
+            sb.AppendFormat(format1, "IsProtect", IsProtect);
+            sb.AppendFormat(format1, "IsRead", IsRead);
+            sb.AppendFormat(format1, "IsReply", IsReply);
+            foreach (var nm in ReplyToList)
             {
                 sb.AppendFormat(format1, "ReplyToList", nm);
             }
 
-            sb.AppendFormat(format1, "ScreenName", this.ScreenName);
-            sb.AppendFormat(format1, "NickName", this.Nickname);
-            sb.AppendFormat(format1, "Text", this.Text);
-            sb.AppendFormat(format2, "(PlainText)", this.Text);
-            sb.AppendFormat(format1, "CreatedAt", this.CreatedAt);
-            sb.AppendFormat(format1, "Source", this.Source);
-            sb.AppendFormat(format1, "UserId", this.UserId);
-            sb.AppendFormat(format1, "FilterHit", this.FilterHit);
-            sb.AppendFormat(format1, "RetweetedBy", this.RetweetedBy);
-            sb.AppendFormat(format1, "RetweetedId", this.RetweetedId);
-            sb.AppendFormat(format1, "SearchTabName", this.RelTabName);
+            sb.AppendFormat(format1, "ScreenName", ScreenName);
+            sb.AppendFormat(format1, "NickName", Nickname);
+            sb.AppendFormat(format1, "Text", Text);
+            sb.AppendFormat(format2, "(PlainText)", Text);
+            sb.AppendFormat(format1, "CreatedAt", CreatedAt);
+            sb.AppendFormat(format1, "Source", Source);
+            sb.AppendFormat(format1, "UserId", UserId);
+            sb.AppendFormat(format1, "FilterHit", FilterHit);
+            sb.AppendFormat(format1, "RetweetedBy", RetweetedBy);
+            sb.AppendFormat(format1, "RetweetedId", RetweetedId);
+            sb.AppendFormat(format1, "SearchTabName", RelTabName);
             sb.Append("-----End PostClass Dump<br>");
             return sb.ToString();
         }
@@ -388,7 +388,7 @@ namespace Hoehoe
         {
             if (!string.IsNullOrEmpty(word))
             {
-                if (this.Nickname.IndexOf(word, opt) > -1 || this.TextFromApi.IndexOf(word, opt) > -1 || this.ScreenName.IndexOf(word, opt) > -1)
+                if (Nickname.IndexOf(word, opt) > -1 || TextFromApi.IndexOf(word, opt) > -1 || ScreenName.IndexOf(word, opt) > -1)
                 {
                     return true;
                 }
@@ -401,7 +401,7 @@ namespace Hoehoe
         {
             if (regex != null)
             {
-                if (regex.IsMatch(this.Nickname) || regex.IsMatch(this.TextFromApi) || regex.IsMatch(this.ScreenName))
+                if (regex.IsMatch(Nickname) || regex.IsMatch(TextFromApi) || regex.IsMatch(ScreenName))
                 {
                     return true;
                 }
@@ -412,31 +412,31 @@ namespace Hoehoe
 
         public string MakeStatusUrl()
         {
-            if (this.IsDm || this.IsDeleted)
+            if (IsDm || IsDeleted)
             {
                 return string.Empty;
             }
 
-            return string.Format("https://twitter.com/{0}/status/{1}", this.ScreenName, this.OriginalStatusId);
+            return string.Format("https://twitter.com/{0}/status/{1}", ScreenName, OriginalStatusId);
         }
 
         public string MakeTsvLine()
         {
             return string.Format(
                 "{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}\t\"{6}\"\t{7}",
-                this.Nickname,
-                this.TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""),
-                this.CreatedAt,
-                this.ScreenName,
-                this.StatusId,
-                this.ImageUrl,
-                this.Text.Replace("\n", string.Empty).Replace("\"", "\"\""),
-                this.IsProtect ? "Protect" : string.Empty);
+                Nickname,
+                TextFromApi.Replace("\n", string.Empty).Replace("\"", "\"\""),
+                CreatedAt,
+                ScreenName,
+                StatusId,
+                ImageUrl,
+                Text.Replace("\n", string.Empty).Replace("\"", "\"\""),
+                IsProtect ? "Protect" : string.Empty);
         }
 
         public string MakeReplyPostInfoLine()
         {
-            return string.Format("{0} / {1}   ({2}){3}{4}", this.ScreenName, this.Nickname, this.CreatedAt, Environment.NewLine, this.TextFromApi);
+            return string.Format("{0} / {1}   ({2}){3}{4}", ScreenName, Nickname, CreatedAt, Environment.NewLine, TextFromApi);
         }
 
         #endregion public methods

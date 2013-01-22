@@ -4798,7 +4798,7 @@ namespace Hoehoe
 
             public TwitterUserstream(HttpTwitter twitterConnection)
             {
-                this._twitterConnection = (HttpTwitter)twitterConnection.Clone();
+                _twitterConnection = (HttpTwitter)twitterConnection.Clone();
             }
 
             public delegate void StatusArrivedEventHandler(string status);

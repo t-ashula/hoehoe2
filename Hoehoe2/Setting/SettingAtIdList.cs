@@ -39,7 +39,7 @@ namespace Hoehoe
 
         public SettingAtIdList(List<string> ids)
         {
-            this.AtIdList = ids;
+            AtIdList = ids;
         }
 
         public List<string> AtIdList { get; set; }

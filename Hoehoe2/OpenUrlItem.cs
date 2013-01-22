@@ -28,30 +28,30 @@ namespace Hoehoe
 {
     public class OpenUrlItem
     {
-        private string linkText;
+        private readonly string _linkText;
 
         public OpenUrlItem(string linkText, string url, string href)
         {
-            this.linkText = linkText;
-            this.Url = url;
-            this.Href = href;
+            _linkText = linkText;
+            Url = url;
+            Href = href;
         }
 
         public string Text
         {
             get
             {
-                if (this.linkText.StartsWith("@") || this.linkText.StartsWith("＠") || this.linkText.StartsWith("#") || this.linkText.StartsWith("＃"))
+                if (_linkText.StartsWith("@") || _linkText.StartsWith("＠") || _linkText.StartsWith("#") || _linkText.StartsWith("＃"))
                 {
-                    return this.linkText;
+                    return _linkText;
                 }
 
-                if (this.linkText.TrimEnd('/') == this.Url.TrimEnd('/'))
+                if (_linkText.TrimEnd('/') == Url.TrimEnd('/'))
                 {
-                    return this.Url;
+                    return Url;
                 }
 
-                return this.linkText + "  >>>  " + this.Url;
+                return _linkText + "  >>>  " + Url;
             }
         }
 
@@ -61,7 +61,7 @@ namespace Hoehoe
 
         public override string ToString()
         {
-            return this.Href;
+            return Href;
         }
     }
 }
