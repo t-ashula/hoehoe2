@@ -36,32 +36,32 @@ namespace Hoehoe
 
     public class ImageDictionary : IDictionary<string, Image>, IDisposable
     {
-        private readonly object lockObject = new object();
-        private CacheItemPolicy cachePolicy = new CacheItemPolicy();
-        private MemoryCache innerDictionary;
-        private Semaphore netSemaphore;
-        private bool pauseGetImage; // 取得一時停止
-        private bool popping;
-        private long removedCount = 0;
-        private Stack<KeyValuePair<string, Action<Image>>> waitStack;
+        private readonly object _lockObject = new object();
+        private readonly CacheItemPolicy _cachePolicy = new CacheItemPolicy();
+        private readonly MemoryCache _innerDictionary;
+        private readonly Semaphore _netSemaphore;
+        private bool _pauseGetImage; // 取得一時停止
+        private bool _popping;
+        private long _removedCount = 0;
+        private readonly Stack<KeyValuePair<string, Action<Image>>> waitStack;
 
         public ImageDictionary(int cacheMemoryLimit)
         {
-            lock (this.lockObject)
+            lock (_lockObject)
             {
                 // 5Mb,80%
                 // キャッシュチェック間隔はデフォルト値（2分毎）
-                this.innerDictionary = new MemoryCache(
+                _innerDictionary = new MemoryCache(
                     "imageCache",
                     new NameValueCollection
                     {
                         { "CacheMemoryLimitMegabytes", cacheMemoryLimit.ToString() },
                         { "PhysicalMemoryLimitPercentage", "80" }
                     });
-                this.waitStack = new Stack<KeyValuePair<string, Action<Image>>>();
-                this.cachePolicy.RemovedCallback = this.CacheRemoved;
-                this.cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30); // 30分参照されなかったら削除
-                this.netSemaphore = new Semaphore(5, 5);
+                waitStack = new Stack<KeyValuePair<string, Action<Image>>>();
+                _cachePolicy.RemovedCallback = CacheRemoved;
+                _cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30); // 30分参照されなかったら削除
+                _netSemaphore = new Semaphore(5, 5);
             }
         }
 
@@ -69,26 +69,26 @@ namespace Hoehoe
 
         public long CacheCount
         {
-            get { return this.innerDictionary.GetCount(); }
+            get { return _innerDictionary.GetCount(); }
         }
 
         public long CacheMemoryLimit
         {
-            get { return this.innerDictionary.CacheMemoryLimit; }
+            get { return _innerDictionary.CacheMemoryLimit; }
         }
 
         public long CacheRemoveCount
         {
-            get { return this.removedCount; }
+            get { return _removedCount; }
         }
 
         public int Count
         {
             get
             {
-                lock (this.lockObject)
+                lock (_lockObject)
                 {
-                    return Convert.ToInt32(this.innerDictionary.GetCount());
+                    return Convert.ToInt32(_innerDictionary.GetCount());
                 }
             }
         }
@@ -110,25 +110,25 @@ namespace Hoehoe
         {
             get
             {
-                return this.pauseGetImage;
+                return _pauseGetImage;
             }
 
             set
             {
-                if (!this.pauseGetImage && !this.popping)
+                if (!_pauseGetImage && !_popping)
                 {
                     // 最新から処理し
-                    this.popping = true;
+                    _popping = true;
                     ThreadStart imgDlProc = () =>
                     {
-                        while (!this.pauseGetImage)
+                        while (!_pauseGetImage)
                         {
-                            if (this.waitStack.Count > 0)
+                            if (waitStack.Count > 0)
                             {
                                 KeyValuePair<string, Action<Image>> req = default(KeyValuePair<string, Action<Image>>);
-                                lock (this.lockObject)
+                                lock (_lockObject)
                                 {
-                                    req = this.waitStack.Pop();
+                                    req = waitStack.Pop();
                                 }
 
                                 if (Configs.Instance.IconSz == IconSizes.IconNone)
@@ -139,7 +139,7 @@ namespace Hoehoe
                                 GetImageDelegate proc = new GetImageDelegate(GetImage);
                                 try
                                 {
-                                    this.netSemaphore.WaitOne();
+                                    _netSemaphore.WaitOne();
                                 }
                                 catch (Exception)
                                 {
@@ -154,7 +154,7 @@ namespace Hoehoe
                             }
                         }
 
-                        popping = false;
+                        _popping = false;
                     };
 
                     imgDlProc.BeginInvoke(null, null);
@@ -164,12 +164,12 @@ namespace Hoehoe
 
         public long PhysicalMemoryLimit
         {
-            get { return this.innerDictionary.PhysicalMemoryLimit; }
+            get { return _innerDictionary.PhysicalMemoryLimit; }
         }
 
         public TimeSpan PollingInterval
         {
-            get { return this.innerDictionary.PollingInterval; }
+            get { return _innerDictionary.PollingInterval; }
         }
 
         public ICollection<Image> Values
@@ -181,22 +181,22 @@ namespace Hoehoe
         {
             get
             {
-                lock (this.lockObject)
+                lock (_lockObject)
                 {
                     if (force)
                     {
-                        this.innerDictionary.Remove(key);
+                        _innerDictionary.Remove(key);
                     }
                     else
                     {
-                        if (this.innerDictionary.Contains(key))
+                        if (_innerDictionary.Contains(key))
                         {
-                            return (Image)this.innerDictionary[key];
+                            return (Image)_innerDictionary[key];
                         }
                     }
 
                     // スタックに積む
-                    this.waitStack.Push(new KeyValuePair<string, Action<Image>>(key, callBack));
+                    waitStack.Push(new KeyValuePair<string, Action<Image>>(key, callBack));
                 }
 
                 return null;
@@ -207,20 +207,20 @@ namespace Hoehoe
         {
             get
             {
-                lock (this.lockObject)
+                lock (_lockObject)
                 {
-                    if (this.innerDictionary[key] == null)
+                    if (_innerDictionary[key] == null)
                     {
                         return null;
                     }
 
                     try
                     {
-                        return (Image)this.innerDictionary[key];
+                        return (Image)_innerDictionary[key];
                     }
                     catch (Exception)
                     {
-                        this.innerDictionary.Remove(key);
+                        _innerDictionary.Remove(key);
                         return null;
                     }
                 }
@@ -228,56 +228,56 @@ namespace Hoehoe
 
             set
             {
-                lock (this.lockObject)
+                lock (_lockObject)
                 {
-                    this.innerDictionary.Remove(key);
-                    this.innerDictionary.Add(key, value, this.cachePolicy);
+                    _innerDictionary.Remove(key);
+                    _innerDictionary.Add(key, value, _cachePolicy);
                 }
             }
         }
 
         public void Add(KeyValuePair<string, Image> item)
         {
-            this.Add(item.Key, item.Value);
+            Add(item.Key, item.Value);
         }
 
         public void Add(string key, Image value)
         {
-            lock (this.lockObject)
+            lock (_lockObject)
             {
-                if (this.innerDictionary.Contains(key))
+                if (_innerDictionary.Contains(key))
                 {
                     return;
                 }
 
-                this.innerDictionary.Add(key, value, this.cachePolicy);
+                _innerDictionary.Add(key, value, _cachePolicy);
             }
         }
 
         public void Clear()
         {
-            lock (this.lockObject)
+            lock (_lockObject)
             {
-                this.innerDictionary.Trim(100);
+                _innerDictionary.Trim(100);
             }
         }
 
         public bool Contains(KeyValuePair<string, Image> item)
         {
-            lock (this.lockObject)
+            lock (_lockObject)
             {
-                return this.innerDictionary.Contains(item.Key) && object.ReferenceEquals(this.innerDictionary[item.Key], item.Value);
+                return _innerDictionary.Contains(item.Key) && object.ReferenceEquals(_innerDictionary[item.Key], item.Value);
             }
         }
 
         public bool ContainsKey(string key)
         {
-            return this.innerDictionary.Contains(key);
+            return _innerDictionary.Contains(key);
         }
 
         public void CopyTo(KeyValuePair<string, Image>[] array, int arrayIndex)
         {
-            lock (this.lockObject)
+            lock (_lockObject)
             {
                 throw new NotImplementedException();
             }
@@ -285,10 +285,10 @@ namespace Hoehoe
 
         public void Dispose()
         {
-            lock (this.lockObject)
+            lock (_lockObject)
             {
-                this.netSemaphore.Dispose();
-                this.innerDictionary.Dispose();
+                _netSemaphore.Dispose();
+                _innerDictionary.Dispose();
                 GC.SuppressFinalize(this);
             }
         }
@@ -305,14 +305,14 @@ namespace Hoehoe
 
         public bool Remove(KeyValuePair<string, Image> item)
         {
-            return this.Remove(item.Key);
+            return Remove(item.Key);
         }
 
         public bool Remove(string key)
         {
-            lock (this.lockObject)
+            lock (_lockObject)
             {
-                this.innerDictionary.Remove(key);
+                _innerDictionary.Remove(key);
             }
 
             return true;
@@ -320,11 +320,11 @@ namespace Hoehoe
 
         public bool TryGetValue(string key, out Image value)
         {
-            lock (this.lockObject)
+            lock (_lockObject)
             {
-                if (this.innerDictionary.Contains(key))
+                if (_innerDictionary.Contains(key))
                 {
-                    value = (Image)this.innerDictionary[key];
+                    value = (Image)_innerDictionary[key];
                     return true;
                 }
 
@@ -335,23 +335,23 @@ namespace Hoehoe
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator1();
+            return GetEnumerator1();
         }
 
         private void CacheRemoved(CacheEntryRemovedArguments item)
         {
             ((Image)item.CacheItem.Value).Dispose();
-            this.removedCount += 1;
+            _removedCount += 1;
         }
 
         private void GetImage(KeyValuePair<string, Action<Image>> downloadAsyncInfo)
         {
             Image callbackImage = null;
-            lock (this.lockObject)
+            lock (_lockObject)
             {
-                if (this.innerDictionary[downloadAsyncInfo.Key] != null)
+                if (_innerDictionary[downloadAsyncInfo.Key] != null)
                 {
-                    callbackImage = (Image)this.innerDictionary[downloadAsyncInfo.Key];
+                    callbackImage = (Image)_innerDictionary[downloadAsyncInfo.Key];
                 }
             }
 
@@ -362,25 +362,25 @@ namespace Hoehoe
                     downloadAsyncInfo.Value.Invoke(callbackImage);
                 }
 
-                this.netSemaphore.Release();
+                _netSemaphore.Release();
                 return;
             }
 
             HttpVarious hv = new HttpVarious();
             Image image = hv.GetImage(downloadAsyncInfo.Key, 10000);
-            lock (this.lockObject)
+            lock (_lockObject)
             {
-                if (this.innerDictionary[downloadAsyncInfo.Key] == null)
+                if (_innerDictionary[downloadAsyncInfo.Key] == null)
                 {
                     if (image != null)
                     {
-                        this.innerDictionary.Add(downloadAsyncInfo.Key, image, this.cachePolicy);
+                        _innerDictionary.Add(downloadAsyncInfo.Key, image, _cachePolicy);
                         callbackImage = image;
                     }
                 }
                 else
                 {
-                    callbackImage = (Image)this.innerDictionary[downloadAsyncInfo.Key];
+                    callbackImage = (Image)_innerDictionary[downloadAsyncInfo.Key];
                 }
             }
 
@@ -389,7 +389,7 @@ namespace Hoehoe
                 downloadAsyncInfo.Value.Invoke(callbackImage);
             }
 
-            this.netSemaphore.Release();
+            _netSemaphore.Release();
         }
     }
 }

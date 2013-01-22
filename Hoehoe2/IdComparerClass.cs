@@ -33,18 +33,18 @@ namespace Hoehoe
     // ソート比較クラス：ID比較のみ
     public sealed class IdComparerClass : IComparer<long>
     {
-        private SortOrder sortOrder;
-        private ComparerMode comparerMode;
-        private Comparison<long> compareMethod;
+        private SortOrder _sortOrder;
+        private ComparerMode _comparerMode;
+        private Comparison<long> _compareMethod;
 
         /// <summary>
         /// ListViewItemComparerクラスのコンストラクタ（引数付は未使用）
         /// </summary>
         public IdComparerClass()
         {
-            this.sortOrder = SortOrder.Ascending;
-            this.comparerMode = ComparerMode.Id;
-            this.SetCompareMethod(this.comparerMode, this.sortOrder);
+            _sortOrder = SortOrder.Ascending;
+            _comparerMode = ComparerMode.Id;
+            SetCompareMethod(_comparerMode, _sortOrder);
         }
 
         /// <summary>
@@ -66,13 +66,13 @@ namespace Hoehoe
         {
             get
             {
-                return this.sortOrder;
+                return _sortOrder;
             }
 
             set
             {
-                this.sortOrder = value;
-                this.SetCompareMethod(this.comparerMode, this.sortOrder);
+                _sortOrder = value;
+                SetCompareMethod(_comparerMode, _sortOrder);
             }
         }
 
@@ -83,13 +83,13 @@ namespace Hoehoe
         {
             get
             {
-                return this.comparerMode;
+                return _comparerMode;
             }
 
             set
             {
-                this.comparerMode = value;
-                this.SetCompareMethod(this.comparerMode, this.sortOrder);
+                _comparerMode = value;
+                SetCompareMethod(_comparerMode, _sortOrder);
             }
         }
 
@@ -113,19 +113,19 @@ namespace Hoehoe
                 switch (sortMode)
                 {
                     case ComparerMode.Data:
-                        method = this.Compare_ModeData_Ascending;
+                        method = Compare_ModeData_Ascending;
                         break;
                     case ComparerMode.Id:
-                        method = this.Compare_ModeId_Ascending;
+                        method = Compare_ModeId_Ascending;
                         break;
                     case ComparerMode.Name:
-                        method = this.Compare_ModeName_Ascending;
+                        method = Compare_ModeName_Ascending;
                         break;
                     case ComparerMode.Nickname:
-                        method = this.Compare_ModeNickName_Ascending;
+                        method = Compare_ModeNickName_Ascending;
                         break;
                     case ComparerMode.Source:
-                        method = this.Compare_ModeSource_Ascending;
+                        method = Compare_ModeSource_Ascending;
                         break;
                 }
             }
@@ -135,19 +135,19 @@ namespace Hoehoe
                 switch (sortMode)
                 {
                     case ComparerMode.Data:
-                        method = this.Compare_ModeData_Descending;
+                        method = Compare_ModeData_Descending;
                         break;
                     case ComparerMode.Id:
-                        method = this.Compare_ModeId_Descending;
+                        method = Compare_ModeId_Descending;
                         break;
                     case ComparerMode.Name:
-                        method = this.Compare_ModeName_Descending;
+                        method = Compare_ModeName_Descending;
                         break;
                     case ComparerMode.Nickname:
-                        method = this.Compare_ModeNickName_Descending;
+                        method = Compare_ModeNickName_Descending;
                         break;
                     case ComparerMode.Source:
-                        method = this.Compare_ModeSource_Descending;
+                        method = Compare_ModeSource_Descending;
                         break;
                 }
             }
@@ -162,7 +162,7 @@ namespace Hoehoe
         /// <returns></returns>
         public Comparison<long> GetCompareMethod()
         {
-            return this.compareMethod;
+            return _compareMethod;
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Hoehoe
         /// <returns></returns>
         public int Compare(long x, long y)
         {
-            return this.compareMethod(x, y);
+            return _compareMethod(x, y);
         }
 
         #region "比較用関数群"
@@ -183,7 +183,7 @@ namespace Hoehoe
         // 本文比較　昇順
         public int Compare_ModeData_Ascending(long x, long y)
         {
-            int result = string.Compare(this.Posts[x].TextFromApi, this.Posts[y].TextFromApi);
+            int result = string.Compare(Posts[x].TextFromApi, Posts[y].TextFromApi);
             if (result == 0)
             {
                 result = x.CompareTo(y);
@@ -195,7 +195,7 @@ namespace Hoehoe
         // 本文比較　降順
         public int Compare_ModeData_Descending(long x, long y)
         {
-            int result = string.Compare(this.Posts[y].TextFromApi, this.Posts[x].TextFromApi);
+            int result = string.Compare(Posts[y].TextFromApi, Posts[x].TextFromApi);
             if (result == 0)
             {
                 result = y.CompareTo(x);
@@ -219,7 +219,7 @@ namespace Hoehoe
         // 表示名比較　昇順
         public int Compare_ModeName_Ascending(long x, long y)
         {
-            int result = string.Compare(this.Posts[x].ScreenName, this.Posts[y].ScreenName);
+            int result = string.Compare(Posts[x].ScreenName, Posts[y].ScreenName);
             if (result == 0)
             {
                 result = x.CompareTo(y);
@@ -231,7 +231,7 @@ namespace Hoehoe
         // 表示名比較　降順
         public int Compare_ModeName_Descending(long x, long y)
         {
-            int result = string.Compare(this.Posts[y].ScreenName, this.Posts[x].ScreenName);
+            int result = string.Compare(Posts[y].ScreenName, Posts[x].ScreenName);
             if (result == 0)
             {
                 result = y.CompareTo(x);
@@ -243,7 +243,7 @@ namespace Hoehoe
         // ユーザー名比較　昇順
         public int Compare_ModeNickName_Ascending(long x, long y)
         {
-            int result = string.Compare(this.Posts[x].Nickname, this.Posts[y].Nickname);
+            int result = string.Compare(Posts[x].Nickname, Posts[y].Nickname);
             if (result == 0)
             {
                 result = x.CompareTo(y);
@@ -255,7 +255,7 @@ namespace Hoehoe
         // ユーザー名比較　降順
         public int Compare_ModeNickName_Descending(long x, long y)
         {
-            int result = string.Compare(this.Posts[y].Nickname, this.Posts[x].Nickname);
+            int result = string.Compare(Posts[y].Nickname, Posts[x].Nickname);
             if (result == 0)
             {
                 result = y.CompareTo(x);
@@ -267,7 +267,7 @@ namespace Hoehoe
         // Source比較　昇順
         public int Compare_ModeSource_Ascending(long x, long y)
         {
-            int result = string.Compare(this.Posts[x].Source, this.Posts[y].Source);
+            int result = string.Compare(Posts[x].Source, Posts[y].Source);
             if (result == 0)
             {
                 result = x.CompareTo(y);
@@ -279,7 +279,7 @@ namespace Hoehoe
         // Source比較　降順
         public int Compare_ModeSource_Descending(long x, long y)
         {
-            int result = string.Compare(this.Posts[y].Source, this.Posts[x].Source);
+            int result = string.Compare(Posts[y].Source, Posts[x].Source);
             if (result == 0)
             {
                 result = y.CompareTo(x);
@@ -293,7 +293,7 @@ namespace Hoehoe
         // ソートモードとソートオーダーに従い比較関数のアドレスを切り替え
         private void SetCompareMethod(ComparerMode mode, SortOrder order)
         {
-            this.compareMethod = this.GetCompareMethod(mode, order);
+            _compareMethod = GetCompareMethod(mode, order);
         }
     }
 }
