@@ -267,7 +267,7 @@ namespace Hoehoe
 
         public string CreateGoogleStaticMapsUri(GlobalLocation locate)
         {
-            return this.CreateGoogleStaticMapsUri(locate.Latitude, locate.Longitude);
+            return CreateGoogleStaticMapsUri(locate.Latitude, locate.Longitude);
         }
 
         public string CreateGoogleStaticMapsUri(double lat, double lng)
@@ -283,7 +283,7 @@ namespace Hoehoe
 
         public string CreateGoogleMapsUri(GlobalLocation locate)
         {
-            return this.CreateGoogleMapsUri(locate.Latitude, locate.Longitude);
+            return CreateGoogleMapsUri(locate.Latitude, locate.Longitude);
         }
 
         public string CreateGoogleMapsUri(double lat, double lng)

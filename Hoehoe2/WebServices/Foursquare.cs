@@ -35,22 +35,22 @@ namespace Hoehoe
 
     public class Foursquare : HttpConnection
     {
-        private static Foursquare instance = new Foursquare();
+        private static readonly Foursquare Instance = new Foursquare();
 
         /// <summary>
         /// 4SQ Api Key : TODO
         /// </summary>
-        private Dictionary<string, string> authKey = new Dictionary<string, string>
+        private readonly Dictionary<string, string> _authKey = new Dictionary<string, string>
         {
             { "client_id", "VWVC5NMXB1T5HKOYAKARCXKZDOHDNYSRLEMDDQYJNSJL2SUU" },
             { "client_secret", CryptoUtils.DecryptString("eXXMGYXZyuDxz/lJ9nLApihoUeEGXNLEO0ZDCAczvwdKgGRExZl1Xyac/ezNTwHFOLUZqaA8tbA=") }
         };
 
-        private Dictionary<string, Google.GlobalLocation> checkInUrlsVenueCollection = new Dictionary<string, Google.GlobalLocation>();
+        private readonly Dictionary<string, Google.GlobalLocation> _checkInUrlsVenueCollection = new Dictionary<string, Google.GlobalLocation>();
 
         public static Foursquare GetInstance
         {
-            get { return instance; }
+            get { return Instance; }
         }
 
         public string GetMapsUri(string url, ref string refText)
@@ -62,19 +62,19 @@ namespace Hoehoe
 
             string urlId = Regex.Replace(url, "https?://(4sq|foursquare)\\.com/", string.Empty);
 
-            if (this.checkInUrlsVenueCollection.ContainsKey(urlId))
+            if (_checkInUrlsVenueCollection.ContainsKey(urlId))
             {
-                refText = this.checkInUrlsVenueCollection[urlId].LocateInfo;
-                return (new Google()).CreateGoogleStaticMapsUri(this.checkInUrlsVenueCollection[urlId]);
+                refText = _checkInUrlsVenueCollection[urlId].LocateInfo;
+                return (new Google()).CreateGoogleStaticMapsUri(_checkInUrlsVenueCollection[urlId]);
             }
 
-            string venueId = this.GetVenueId(url);
+            string venueId = GetVenueId(url);
             if (string.IsNullOrEmpty(venueId))
             {
                 return null;
             }
 
-            Venue curVenue = this.GetVenueInfo(venueId);
+            Venue curVenue = GetVenueInfo(venueId);
             if (curVenue == null)
             {
                 return null;
@@ -84,13 +84,13 @@ namespace Hoehoe
             {
                 Latitude = curVenue.Location.Latitude,
                 Longitude = curVenue.Location.Longitude,
-                LocateInfo = this.CreateVenueInfoText(curVenue)
+                LocateInfo = CreateVenueInfoText(curVenue)
             };
 
             // 例外発生の場合があるため
-            if (!this.checkInUrlsVenueCollection.ContainsKey(urlId))
+            if (!_checkInUrlsVenueCollection.ContainsKey(urlId))
             {
-                this.checkInUrlsVenueCollection.Add(urlId, curLocation);
+                _checkInUrlsVenueCollection.Add(urlId, curLocation);
             }
 
             refText = curLocation.LocateInfo;
@@ -101,7 +101,7 @@ namespace Hoehoe
         {
             HttpWebRequest webReq = CreateRequest(method, requestUri, param, false);
             HttpStatusCode code = default(HttpStatusCode);
-            code = this.GetResponse(webReq, ref content, null, false);
+            code = GetResponse(webReq, ref content, null, false);
             return code;
         }
 
@@ -110,7 +110,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                HttpStatusCode res = this.GetContent("GET", new Uri(url), null, ref content);
+                HttpStatusCode res = GetContent("GET", new Uri(url), null, ref content);
                 if (res != HttpStatusCode.OK)
                 {
                     return string.Empty;
@@ -130,7 +130,7 @@ namespace Hoehoe
             string content = string.Empty;
             try
             {
-                HttpStatusCode res = this.GetContent("GET", new Uri("https://api.foursquare.com/v2/venues/" + venueId), this.authKey, ref content);
+                HttpStatusCode res = GetContent("GET", new Uri("https://api.foursquare.com/v2/venues/" + venueId), _authKey, ref content);
 
                 if (res == HttpStatusCode.OK)
                 {

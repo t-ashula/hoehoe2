@@ -34,11 +34,11 @@ namespace Hoehoe
 
     public partial class Thumbnail
     {
-        private object lckPrev = new object();
-        private PreviewData preview;
-        private TweenMain tweenMain;
+        private readonly object _lckPrev = new object();
+        private PreviewData _preview;
+        private readonly TweenMain _tweenMain;
 
-        private ThumbnailService[] thumbnailServices =
+        private readonly ThumbnailService[] _thumbnailServices =
         {
             new ThumbnailService("ImgUr", ImgUr_GetUrl, ImgUr_CreateImage),
             new ThumbnailService("DirectLink", DirectLink_GetUrl, DirectLink_CreateImage),
@@ -83,11 +83,11 @@ namespace Hoehoe
 
         public Thumbnail(TweenMain owner)
         {
-            this.tweenMain = owner;
+            _tweenMain = owner;
 
-            owner.PreviewScrollBar.Scroll += this.PreviewScrollBar_Scroll;
-            owner.PreviewPicture.MouseLeave += this.PreviewPicture_MouseLeave;
-            owner.PreviewPicture.DoubleClick += this.PreviewPicture_DoubleClick;
+            owner.PreviewScrollBar.Scroll += PreviewScrollBar_Scroll;
+            owner.PreviewPicture.MouseLeave += PreviewPicture_MouseLeave;
+            owner.PreviewPicture.DoubleClick += PreviewPicture_DoubleClick;
         }
 
         private delegate bool UrlCreatorDelegate(GetUrlArgs args);
@@ -96,29 +96,29 @@ namespace Hoehoe
 
         private PostClass _curPost
         {
-            get { return this.tweenMain.CurPost; }
+            get { return _tweenMain.CurPost; }
         }
 
         public void GenThumbnail(long id, List<string> links, PostClass.StatusGeo geo, Dictionary<string, string> media)
         {
-            if (!this.tweenMain.IsPreviewEnable)
+            if (!_tweenMain.IsPreviewEnable)
             {
-                this.tweenMain.SplitContainer3.Panel2Collapsed = true;
+                _tweenMain.SplitContainer3.Panel2Collapsed = true;
                 return;
             }
 
-            if (this.tweenMain.PreviewPicture.Image != null)
+            if (_tweenMain.PreviewPicture.Image != null)
             {
-                this.tweenMain.PreviewPicture.Image.Dispose();
-                this.tweenMain.PreviewPicture.Image = null;
-                this.tweenMain.SplitContainer3.Panel2Collapsed = true;
+                _tweenMain.PreviewPicture.Image.Dispose();
+                _tweenMain.PreviewPicture.Image = null;
+                _tweenMain.SplitContainer3.Panel2Collapsed = true;
             }
 
             if (links.Count == 0 && geo == null && (media == null || media.Count == 0))
             {
-                this.tweenMain.PreviewScrollBar.Maximum = 0;
-                this.tweenMain.PreviewScrollBar.Enabled = false;
-                this.tweenMain.SplitContainer3.Panel2Collapsed = true;
+                _tweenMain.PreviewScrollBar.Maximum = 0;
+                _tweenMain.PreviewScrollBar.Enabled = false;
+                _tweenMain.SplitContainer3.Panel2Collapsed = true;
                 return;
             }
 
@@ -138,7 +138,7 @@ namespace Hoehoe
 
             foreach (string url in links)
             {
-                foreach (var svc in this.thumbnailServices)
+                foreach (var svc in _thumbnailServices)
                 {
                     if (svc.UrlCreator(new GetUrlArgs() { Url = url, ImgList = imglist }))
                     {
@@ -153,7 +153,7 @@ namespace Hoehoe
             {
                 foreach (var m in media)
                 {
-                    foreach (var svc in this.thumbnailServices)
+                    foreach (var svc in _thumbnailServices)
                     {
                         if (svc.UrlCreator(new GetUrlArgs() { Url = m.Key, Extended = m.Value, ImgList = imglist }))
                         {
@@ -177,16 +177,16 @@ namespace Hoehoe
 
             if (imglist.Count == 0)
             {
-                this.tweenMain.PreviewScrollBar.Maximum = 0;
-                this.tweenMain.PreviewScrollBar.Enabled = false;
-                this.tweenMain.SplitContainer3.Panel2Collapsed = true;
+                _tweenMain.PreviewScrollBar.Maximum = 0;
+                _tweenMain.PreviewScrollBar.Enabled = false;
+                _tweenMain.SplitContainer3.Panel2Collapsed = true;
                 return;
             }
 
-            this.ThumbnailProgressChanged(0);
+            ThumbnailProgressChanged(0);
             var bgw = new BackgroundWorker();
-            bgw.DoWork += this.Bgw_DoWork;
-            bgw.RunWorkerCompleted += this.Bgw_Completed;
+            bgw.DoWork += Bgw_DoWork;
+            bgw.RunWorkerCompleted += Bgw_Completed;
             bgw.RunWorkerAsync(new PreviewData(id, imglist, dlg));
         }
 
@@ -194,23 +194,23 @@ namespace Hoehoe
         {
             if (forward)
             {
-                this.tweenMain.PreviewScrollBar.Value = Math.Min(this.tweenMain.PreviewScrollBar.Value + 1, this.tweenMain.PreviewScrollBar.Maximum);
-                this.PreviewScrollBar_Scroll(this.tweenMain.PreviewScrollBar, new ScrollEventArgs(ScrollEventType.SmallIncrement, this.tweenMain.PreviewScrollBar.Value));
+                _tweenMain.PreviewScrollBar.Value = Math.Min(_tweenMain.PreviewScrollBar.Value + 1, _tweenMain.PreviewScrollBar.Maximum);
+                PreviewScrollBar_Scroll(_tweenMain.PreviewScrollBar, new ScrollEventArgs(ScrollEventType.SmallIncrement, _tweenMain.PreviewScrollBar.Value));
             }
             else
             {
-                this.tweenMain.PreviewScrollBar.Value = Math.Max(this.tweenMain.PreviewScrollBar.Value - 1, this.tweenMain.PreviewScrollBar.Minimum);
-                this.PreviewScrollBar_Scroll(this.tweenMain.PreviewScrollBar, new ScrollEventArgs(ScrollEventType.SmallDecrement, this.tweenMain.PreviewScrollBar.Value));
+                _tweenMain.PreviewScrollBar.Value = Math.Max(_tweenMain.PreviewScrollBar.Value - 1, _tweenMain.PreviewScrollBar.Minimum);
+                PreviewScrollBar_Scroll(_tweenMain.PreviewScrollBar, new ScrollEventArgs(ScrollEventType.SmallDecrement, _tweenMain.PreviewScrollBar.Value));
             }
         }
 
         public void OpenPicture()
         {
-            if (this.preview != null)
+            if (_preview != null)
             {
-                if (this.tweenMain.PreviewScrollBar.Value < this.preview.Pics.Count)
+                if (_tweenMain.PreviewScrollBar.Value < _preview.Pics.Count)
                 {
-                    this.tweenMain.OpenUriAsync(this.preview.Pics[this.tweenMain.PreviewScrollBar.Value].Key);
+                    _tweenMain.OpenUriAsync(_preview.Pics[_tweenMain.PreviewScrollBar.Value].Key);
                 }
             }
         }
@@ -299,11 +299,11 @@ namespace Hoehoe
             {
                 if (string.IsNullOrEmpty(addMsg))
                 {
-                    this.tweenMain.SetStatusLabel("can't get Thumbnail.");
+                    _tweenMain.SetStatusLabel("can't get Thumbnail.");
                 }
                 else
                 {
-                    this.tweenMain.SetStatusLabel("can't get Thumbnail.(" + addMsg + ")");
+                    _tweenMain.SetStatusLabel("can't get Thumbnail.(" + addMsg + ")");
                 }
             }
         }
@@ -332,63 +332,63 @@ namespace Hoehoe
             PreviewData prv = e.Result as PreviewData;
             if (prv == null || prv.IsError)
             {
-                this.tweenMain.PreviewScrollBar.Maximum = 0;
-                this.tweenMain.PreviewScrollBar.Enabled = false;
-                this.tweenMain.SplitContainer3.Panel2Collapsed = true;
+                _tweenMain.PreviewScrollBar.Maximum = 0;
+                _tweenMain.PreviewScrollBar.Enabled = false;
+                _tweenMain.SplitContainer3.Panel2Collapsed = true;
                 if (prv != null && !string.IsNullOrEmpty(prv.AdditionalErrorMessage))
                 {
-                    this.ThumbnailProgressChanged(-1, prv.AdditionalErrorMessage);
+                    ThumbnailProgressChanged(-1, prv.AdditionalErrorMessage);
                 }
                 else
                 {
-                    this.ThumbnailProgressChanged(-1);
+                    ThumbnailProgressChanged(-1);
                 }
 
                 return;
             }
 
-            lock (this.lckPrev)
+            lock (_lckPrev)
             {
-                if (prv != null && this._curPost != null && prv.StatusId == this._curPost.StatusId)
+                if (prv != null && _curPost != null && prv.StatusId == _curPost.StatusId)
                 {
-                    this.preview = prv;
-                    this.tweenMain.SplitContainer3.Panel2Collapsed = false;
-                    this.tweenMain.PreviewScrollBar.Maximum = this.preview.Pics.Count - 1;
-                    this.tweenMain.PreviewScrollBar.Enabled = this.tweenMain.PreviewScrollBar.Maximum > 0;
-                    this.tweenMain.PreviewScrollBar.Value = 0;
-                    this.tweenMain.PreviewPicture.Image = this.preview.Pics[0].Value;
-                    string prevtooltipTextValue = this.preview.TooltipText[0].Value;
-                    this.tweenMain.ToolTip1.SetToolTip(this.tweenMain.PreviewPicture, string.IsNullOrEmpty(prevtooltipTextValue) ? string.Empty : prevtooltipTextValue);
+                    _preview = prv;
+                    _tweenMain.SplitContainer3.Panel2Collapsed = false;
+                    _tweenMain.PreviewScrollBar.Maximum = _preview.Pics.Count - 1;
+                    _tweenMain.PreviewScrollBar.Enabled = _tweenMain.PreviewScrollBar.Maximum > 0;
+                    _tweenMain.PreviewScrollBar.Value = 0;
+                    _tweenMain.PreviewPicture.Image = _preview.Pics[0].Value;
+                    string prevtooltipTextValue = _preview.TooltipText[0].Value;
+                    _tweenMain.ToolTip1.SetToolTip(_tweenMain.PreviewPicture, string.IsNullOrEmpty(prevtooltipTextValue) ? string.Empty : prevtooltipTextValue);
                 }
-                else if (this._curPost == null || (this.preview != null && this._curPost.StatusId != this.preview.StatusId))
+                else if (_curPost == null || (_preview != null && _curPost.StatusId != _preview.StatusId))
                 {
-                    this.tweenMain.PreviewScrollBar.Maximum = 0;
-                    this.tweenMain.PreviewScrollBar.Enabled = false;
-                    this.tweenMain.SplitContainer3.Panel2Collapsed = true;
+                    _tweenMain.PreviewScrollBar.Maximum = 0;
+                    _tweenMain.PreviewScrollBar.Enabled = false;
+                    _tweenMain.SplitContainer3.Panel2Collapsed = true;
                 }
             }
 
-            this.ThumbnailProgressChanged(100);
+            ThumbnailProgressChanged(100);
         }
 
         private void PreviewScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
-            lock (this.lckPrev)
+            lock (_lckPrev)
             {
-                if (this.preview != null && this._curPost != null && this.preview.StatusId == this._curPost.StatusId)
+                if (_preview != null && _curPost != null && _preview.StatusId == _curPost.StatusId)
                 {
-                    if (this.preview.Pics.Count > e.NewValue)
+                    if (_preview.Pics.Count > e.NewValue)
                     {
-                        this.tweenMain.PreviewPicture.Image = this.preview.Pics[e.NewValue].Value;
-                        if (!string.IsNullOrEmpty(this.preview.TooltipText[e.NewValue].Value))
+                        _tweenMain.PreviewPicture.Image = _preview.Pics[e.NewValue].Value;
+                        if (!string.IsNullOrEmpty(_preview.TooltipText[e.NewValue].Value))
                         {
-                            this.tweenMain.ToolTip1.Hide(this.tweenMain.PreviewPicture);
-                            this.tweenMain.ToolTip1.SetToolTip(this.tweenMain.PreviewPicture, this.preview.TooltipText[e.NewValue].Value);
+                            _tweenMain.ToolTip1.Hide(_tweenMain.PreviewPicture);
+                            _tweenMain.ToolTip1.SetToolTip(_tweenMain.PreviewPicture, _preview.TooltipText[e.NewValue].Value);
                         }
                         else
                         {
-                            this.tweenMain.ToolTip1.SetToolTip(this.tweenMain.PreviewPicture, string.Empty);
-                            this.tweenMain.ToolTip1.Hide(this.tweenMain.PreviewPicture);
+                            _tweenMain.ToolTip1.SetToolTip(_tweenMain.PreviewPicture, string.Empty);
+                            _tweenMain.ToolTip1.Hide(_tweenMain.PreviewPicture);
                         }
                     }
                 }
@@ -397,12 +397,12 @@ namespace Hoehoe
 
         private void PreviewPicture_MouseLeave(object sender, EventArgs e)
         {
-            this.tweenMain.ToolTip1.Hide(this.tweenMain.PreviewPicture);
+            _tweenMain.ToolTip1.Hide(_tweenMain.PreviewPicture);
         }
 
         private void PreviewPicture_DoubleClick(object sender, EventArgs e)
         {
-            this.OpenPicture();
+            OpenPicture();
         }
 
         private class PreviewData : IDisposable
@@ -412,11 +412,11 @@ namespace Hoehoe
 
             public PreviewData(long id, List<KeyValuePair<string, string>> urlList, List<KeyValuePair<string, ImageCreatorDelegate>> imageCreatorList)
             {
-                this.StatusId = id;
-                this.Urls = urlList;
-                this.ImageCreators = imageCreatorList;
-                this.Pics = new List<KeyValuePair<string, Image>>();
-                this.TooltipText = new List<KeyValuePair<string, string>>();
+                StatusId = id;
+                Urls = urlList;
+                ImageCreators = imageCreatorList;
+                Pics = new List<KeyValuePair<string, Image>>();
+                TooltipText = new List<KeyValuePair<string, string>>();
             }
 
             public long StatusId { get; private set; }
@@ -439,14 +439,14 @@ namespace Hoehoe
             public void Dispose()
             {
                 // このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
-                this.Dispose(true);
+                Dispose(true);
                 GC.SuppressFinalize(this);
             }
 
             // IDisposable
             protected virtual void Dispose(bool disposing)
             {
-                if (!this.disposedValue)
+                if (!disposedValue)
                 {
                     if (disposing)
                     {
@@ -454,7 +454,7 @@ namespace Hoehoe
                     }
 
                     // TODO: 共有のアンマネージ リソースを解放します
-                    foreach (KeyValuePair<string, Image> pic in this.Pics)
+                    foreach (KeyValuePair<string, Image> pic in Pics)
                     {
                         if (pic.Value != null)
                         {
@@ -463,7 +463,7 @@ namespace Hoehoe
                     }
                 }
 
-                this.disposedValue = true;
+                disposedValue = true;
             }
 
             #endregion " IDisposable Support "
@@ -481,7 +481,7 @@ namespace Hoehoe
 
             public void AddThumbnailUrl(string baseUrl, string thumbnailUrl)
             {
-                this.ImgList.Add(new KeyValuePair<string, string>(baseUrl, thumbnailUrl));
+                ImgList.Add(new KeyValuePair<string, string>(baseUrl, thumbnailUrl));
             }
         }
 
@@ -497,8 +497,8 @@ namespace Hoehoe
 
             public void AddTooltipInfo(string url, string tooltip, Image img)
             {
-                this.TooltipText.Add(new KeyValuePair<string, string>(url, tooltip));
-                this.Pics.Add(new KeyValuePair<string, Image>(url, img));
+                TooltipText.Add(new KeyValuePair<string, string>(url, tooltip));
+                Pics.Add(new KeyValuePair<string, Image>(url, img));
             }
         }
 
@@ -512,9 +512,9 @@ namespace Hoehoe
 
             public ThumbnailService(string name, UrlCreatorDelegate urlcreator, ImageCreatorDelegate imagecreator)
             {
-                this.Name = name;
-                this.UrlCreator = urlcreator;
-                this.ImageCreator = imagecreator;
+                Name = name;
+                UrlCreator = urlcreator;
+                ImageCreator = imagecreator;
             }
         }
     }

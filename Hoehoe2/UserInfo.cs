@@ -56,39 +56,39 @@ namespace Hoehoe
 
         public UserInfo(DataModels.Twitter.User user)
         {
-            this.Id = user.Id;
-            this.Name = user.Name.Trim();
-            this.ScreenName = user.ScreenName;
-            this.Location = user.Location;
-            this.Description = user.Description;
+            Id = user.Id;
+            Name = user.Name.Trim();
+            ScreenName = user.ScreenName;
+            Location = user.Location;
+            Description = user.Description;
             try
             {
-                this.ImageUrl = new Uri(user.ProfileImageUrl);
+                ImageUrl = new Uri(user.ProfileImageUrl);
             }
             catch (Exception)
             {
-                this.ImageUrl = null;
+                ImageUrl = null;
             }
 
-            this.Url = user.Url;
-            this.Protect = user.Protected;
-            this.FriendsCount = user.FriendsCount;
-            this.FollowersCount = user.FollowersCount;
-            this.CreatedAt = MyCommon.DateTimeParse(user.CreatedAt);
-            this.StatusesCount = user.StatusesCount;
-            this.Verified = user.Verified;
-            //// this.isFollowing = this.isFollowing;
+            Url = user.Url;
+            Protect = user.Protected;
+            FriendsCount = user.FriendsCount;
+            FollowersCount = user.FollowersCount;
+            CreatedAt = MyCommon.DateTimeParse(user.CreatedAt);
+            StatusesCount = user.StatusesCount;
+            Verified = user.Verified;
+            //// isFollowing = isFollowing;
             if (user.Status != null)
             {
-                this.RecentPost = user.Status.Text;
-                this.PostCreatedAt = MyCommon.DateTimeParse(user.Status.CreatedAt);
-                this.PostSource = user.Status.Source;
+                RecentPost = user.Status.Text;
+                PostCreatedAt = MyCommon.DateTimeParse(user.Status.CreatedAt);
+                PostSource = user.Status.Source;
             }
         }
 
         public override string ToString()
         {
-            return this.ScreenName + " / " + this.Name;
+            return ScreenName + " / " + Name;
         }
     }
 }
