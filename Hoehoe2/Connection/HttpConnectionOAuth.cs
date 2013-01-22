@@ -56,54 +56,54 @@ namespace Hoehoe
         /// <summary>
         /// OAuthのアクセストークン。永続化可能（ユーザー取り消しの可能性はある）。
         /// </summary>
-        private string token = string.Empty;
+        private string _token = string.Empty;
 
         /// <summary>
         /// OAuthの署名作成用秘密アクセストークン。永続化可能（ユーザー取り消しの可能性はある）。
         /// </summary>
-        private string tokenSecret = string.Empty;
+        private string _tokenSecret = string.Empty;
 
         /// <summary>
         /// OAuthのコンシューマー鍵
         /// </summary>
-        private string consumerKey;
+        private string _consumerKey;
 
         /// <summary>
         /// OAuthの署名作成用秘密コンシューマーデータ
         /// </summary>
-        private string consumerSecret;
+        private string _consumerSecret;
 
         /// <summary>
         /// 認証成功時の応答でユーザー情報を取得する場合のキー。設定しない場合は、AuthUsernameもブランクのままとなる
         /// </summary>
-        private string userIdentKey = string.Empty;
+        private string _userIdentKey = string.Empty;
 
         /// <summary>
         /// 認証成功時の応答でユーザーID情報を取得する場合のキー。設定しない場合は、AuthUserIdもブランクのままとなる
         /// </summary>
-        private string userIdIdentKey = string.Empty;
+        private string _userIdIdentKey = string.Empty;
 
         /// <summary>
         /// 認証完了時の応答からuserIdentKey情報に基づいて取得するユーザー情報
         /// </summary>
-        private string authorizedUsername = string.Empty;
+        private string _authorizedUsername = string.Empty;
 
         /// <summary>
         /// 認証完了時の応答からuserIdentKey情報に基づいて取得するユーザー情報
         /// </summary>
-        private long authorizedUserId;
+        private long _authorizedUserId;
 
         /// <summary>
         /// Stream用のHttpWebRequest
         /// </summary>
-        private HttpWebRequest streamReq = null;
+        private HttpWebRequest _streamReq = null;
 
         /// <summary>
         /// アクセストークン
         /// </summary>
         public string AccessToken
         {
-            get { return this.token; }
+            get { return _token; }
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Hoehoe
         /// </summary>
         public string AccessTokenSecret
         {
-            get { return this.tokenSecret; }
+            get { return _tokenSecret; }
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Hoehoe
         /// </summary>
         public string AuthUsername
         {
-            get { return this.authorizedUsername; }
+            get { return _authorizedUsername; }
         }
 
         /// <summary>
@@ -127,8 +127,8 @@ namespace Hoehoe
         /// </summary>
         public long AuthUserId
         {
-            get { return this.authorizedUserId; }
-            set { this.authorizedUserId = value; }
+            get { return _authorizedUserId; }
+            set { _authorizedUserId = value; }
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Hoehoe
         /// </summary>
         protected string ConsumerSecret
         {
-            get { return this.consumerSecret; }
+            get { return _consumerSecret; }
         }
 
         /// <summary>
@@ -149,12 +149,12 @@ namespace Hoehoe
         /// <param name="userIdentifier">アクセストークン取得時に得られるユーザー識別情報。不要なら空文字列</param>
         public void Initialize(string consumerKey, string consumerSecret, string accessToken, string accessTokenSecret, string userIdentifier, string userIdIdentifier)
         {
-            this.consumerKey = consumerKey;
-            this.consumerSecret = consumerSecret;
-            this.token = accessToken;
-            this.tokenSecret = accessTokenSecret;
-            this.userIdentKey = userIdentifier;
-            this.userIdIdentKey = userIdIdentifier;
+            _consumerKey = consumerKey;
+            _consumerSecret = consumerSecret;
+            _token = accessToken;
+            _tokenSecret = accessTokenSecret;
+            _userIdentKey = userIdentifier;
+            _userIdIdentKey = userIdIdentifier;
         }
 
         /// <summary>
@@ -168,9 +168,9 @@ namespace Hoehoe
         /// <param name="userIdentifier">アクセストークン取得時に得られるユーザー識別情報。不要なら空文字列</param>
         public void Initialize(string consumerKey, string consumerSecret, string accessToken, string accessTokenSecret, string username, long userId, string userIdentifier, string userIdIdentifier)
         {
-            this.Initialize(consumerKey, consumerSecret, accessToken, accessTokenSecret, userIdentifier, userIdIdentifier);
-            this.authorizedUsername = username;
-            this.authorizedUserId = userId;
+            Initialize(consumerKey, consumerSecret, accessToken, accessTokenSecret, userIdentifier, userIdIdentifier);
+            _authorizedUsername = username;
+            _authorizedUserId = userId;
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Hoehoe
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content, Dictionary<string, string> headerInfo, CallbackDelegate callback)
         {
             // 認証済かチェック
-            if (string.IsNullOrEmpty(this.token))
+            if (string.IsNullOrEmpty(_token))
             {
                 return HttpStatusCode.Unauthorized;
             }
@@ -194,7 +194,7 @@ namespace Hoehoe
             HttpWebRequest webReq = CreateRequest(method, requestUri, param, false);
 
             // OAuth認証ヘッダを付加
-            this.AppendOAuthInfo(webReq, param, this.token, this.tokenSecret);
+            AppendOAuthInfo(webReq, param, _token, _tokenSecret);
 
             HttpStatusCode code = content == null ?
                 GetResponse(webReq, headerInfo, false) :
@@ -215,7 +215,7 @@ namespace Hoehoe
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, List<KeyValuePair<string, FileInfo>> binary, ref string content, Dictionary<string, string> headerInfo, CallbackDelegate callback)
         {
             // 認証済かチェック
-            if (string.IsNullOrEmpty(this.token))
+            if (string.IsNullOrEmpty(_token))
             {
                 return HttpStatusCode.Unauthorized;
             }
@@ -223,7 +223,7 @@ namespace Hoehoe
             HttpWebRequest webReq = CreateRequest(method, requestUri, param, binary, false);
 
             // OAuth認証ヘッダを付加
-            this.AppendOAuthInfo(webReq, null, this.token, this.tokenSecret);
+            AppendOAuthInfo(webReq, null, _token, _tokenSecret);
 
             HttpStatusCode code = content == null ?
                 GetResponse(webReq, headerInfo, false) :
@@ -249,25 +249,25 @@ namespace Hoehoe
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref Stream content, string userAgent)
         {
             // 認証済かチェック
-            if (string.IsNullOrEmpty(this.token))
+            if (string.IsNullOrEmpty(_token))
             {
                 return HttpStatusCode.Unauthorized;
             }
 
-            this.RequestAbort();
-            this.streamReq = this.CreateRequest(method, requestUri, param, false);
+            RequestAbort();
+            _streamReq = CreateRequest(method, requestUri, param, false);
 
             // User-Agent指定がある場合は付加
             if (!string.IsNullOrEmpty(userAgent))
             {
-                this.streamReq.UserAgent = userAgent;
+                _streamReq.UserAgent = userAgent;
             }
 
             // OAuth認証ヘッダを付加
-            this.AppendOAuthInfo(this.streamReq, param, this.token, this.tokenSecret);
+            AppendOAuthInfo(_streamReq, param, _token, _tokenSecret);
             try
             {
-                HttpWebResponse webRes = (HttpWebResponse)this.streamReq.GetResponse();
+                HttpWebResponse webRes = (HttpWebResponse)_streamReq.GetResponse();
                 content = webRes.GetResponseStream();
                 return webRes.StatusCode;
             }
@@ -290,10 +290,10 @@ namespace Hoehoe
         {
             try
             {
-                if (this.streamReq != null)
+                if (_streamReq != null)
                 {
-                    this.streamReq.Abort();
-                    this.streamReq = null;
+                    _streamReq.Abort();
+                    _streamReq = null;
                 }
             }
             catch (Exception)
@@ -315,7 +315,7 @@ namespace Hoehoe
         public bool AuthenticatePinFlowRequest(string requestTokenUrl, string authorizeUrl, ref string requestToken, ref Uri authUri)
         {
             // PIN-based flow
-            authUri = this.GetAuthenticatePageUri(requestTokenUrl, authorizeUrl, ref requestToken);
+            authUri = GetAuthenticatePageUri(requestTokenUrl, authorizeUrl, ref requestToken);
             return authUri != null;
         }
 
@@ -339,7 +339,7 @@ namespace Hoehoe
 
             // アクセストークン取得
             string content = string.Empty;
-            HttpStatusCode httpCode = this.GetOAuthToken(new Uri(accessTokenUrl), pinCode, requestToken, null, ref content);
+            HttpStatusCode httpCode = GetOAuthToken(new Uri(accessTokenUrl), pinCode, requestToken, null, ref content);
             if (httpCode != HttpStatusCode.OK)
             {
                 return httpCode;
@@ -351,36 +351,36 @@ namespace Hoehoe
                 throw new InvalidDataException("Return value is null.");
             }
 
-            this.token = accessTokenData["oauth_token"];
-            this.tokenSecret = accessTokenData["oauth_token_secret"];
+            _token = accessTokenData["oauth_token"];
+            _tokenSecret = accessTokenData["oauth_token_secret"];
 
             // サービスごとの独自拡張対応
-            if (!string.IsNullOrEmpty(this.userIdentKey))
+            if (!string.IsNullOrEmpty(_userIdentKey))
             {
-                this.authorizedUsername = accessTokenData[this.userIdentKey];
+                _authorizedUsername = accessTokenData[_userIdentKey];
             }
             else
             {
-                this.authorizedUsername = string.Empty;
+                _authorizedUsername = string.Empty;
             }
 
-            if (!string.IsNullOrEmpty(this.userIdIdentKey))
+            if (!string.IsNullOrEmpty(_userIdIdentKey))
             {
                 try
                 {
-                    this.authorizedUserId = Convert.ToInt64(accessTokenData[this.userIdIdentKey]);
+                    _authorizedUserId = Convert.ToInt64(accessTokenData[_userIdIdentKey]);
                 }
                 catch (Exception)
                 {
-                    this.authorizedUserId = 0;
+                    _authorizedUserId = 0;
                 }
             }
             else
             {
-                this.authorizedUserId = 0;
+                _authorizedUserId = 0;
             }
 
-            if (string.IsNullOrEmpty(this.token))
+            if (string.IsNullOrEmpty(_token))
             {
                 throw new InvalidDataException("Token is null.");
             }
@@ -410,7 +410,7 @@ namespace Hoehoe
             parameter.Add("x_auth_password", password);
 
             // アクセストークン取得
-            HttpStatusCode httpCode = this.GetOAuthToken(accessTokenUrl, string.Empty, string.Empty, parameter, ref content);
+            HttpStatusCode httpCode = GetOAuthToken(accessTokenUrl, string.Empty, string.Empty, parameter, ref content);
             if (httpCode != HttpStatusCode.OK)
             {
                 return httpCode;
@@ -422,36 +422,36 @@ namespace Hoehoe
                 throw new InvalidDataException("Return value is null.");
             }
 
-            this.token = accessTokenData["oauth_token"];
-            this.tokenSecret = accessTokenData["oauth_token_secret"];
+            _token = accessTokenData["oauth_token"];
+            _tokenSecret = accessTokenData["oauth_token_secret"];
 
             // サービスごとの独自拡張対応
-            if (!string.IsNullOrEmpty(this.userIdentKey))
+            if (!string.IsNullOrEmpty(_userIdentKey))
             {
-                this.authorizedUsername = accessTokenData[this.userIdentKey];
+                _authorizedUsername = accessTokenData[_userIdentKey];
             }
             else
             {
-                this.authorizedUsername = string.Empty;
+                _authorizedUsername = string.Empty;
             }
 
-            if (!string.IsNullOrEmpty(this.userIdIdentKey))
+            if (!string.IsNullOrEmpty(_userIdIdentKey))
             {
                 try
                 {
-                    this.authorizedUserId = Convert.ToInt64(accessTokenData[this.userIdIdentKey]);
+                    _authorizedUserId = Convert.ToInt64(accessTokenData[_userIdIdentKey]);
                 }
                 catch (Exception)
                 {
-                    this.authorizedUserId = 0;
+                    _authorizedUserId = 0;
                 }
             }
             else
             {
-                this.authorizedUserId = 0;
+                _authorizedUserId = 0;
             }
 
-            if (string.IsNullOrEmpty(this.token))
+            if (string.IsNullOrEmpty(_token))
             {
                 throw new InvalidDataException("Token is null.");
             }
@@ -469,7 +469,7 @@ namespace Hoehoe
         /// <returns></returns>
         HttpStatusCode IHttpConnection.Authenticate(Uri accessTokenUrl, string username, string password, ref string content)
         {
-            return this.AuthenticateXAuth(accessTokenUrl, username, password, ref content);
+            return AuthenticateXAuth(accessTokenUrl, username, password, ref content);
         }
 
         /// <summary>
@@ -482,7 +482,7 @@ namespace Hoehoe
         protected virtual void AppendOAuthInfo(HttpWebRequest webRequest, Dictionary<string, string> query, string token, string tokenSecret)
         {
             // OAuth共通情報取得
-            Dictionary<string, string> parameter = this.GetOAuthParameter(token);
+            Dictionary<string, string> parameter = GetOAuthParameter(token);
 
             // OAuth共通情報にquery情報を追加
             if (query != null)
@@ -494,7 +494,7 @@ namespace Hoehoe
             }
 
             // 署名の作成・追加
-            parameter.Add("oauth_signature", this.CreateSignature(tokenSecret, webRequest.Method, webRequest.RequestUri, parameter));
+            parameter.Add("oauth_signature", CreateSignature(tokenSecret, webRequest.Method, webRequest.RequestUri, parameter));
 
             // HTTPリクエストのヘッダに追加
             StringBuilder sb = new StringBuilder("OAuth ");
@@ -503,7 +503,7 @@ namespace Hoehoe
                 // 各種情報のうち、oauth_で始まる情報のみ、ヘッダに追加する。各情報はカンマ区切り、データはダブルクォーテーションで括る
                 if (item.Key.StartsWith("oauth_"))
                 {
-                    sb.AppendFormat("{0}=\"{1}\",", item.Key, this.UrlEncode(item.Value));
+                    sb.AppendFormat("{0}=\"{1}\",", item.Key, UrlEncode(item.Value));
                 }
             }
 
@@ -518,7 +518,7 @@ namespace Hoehoe
         protected Dictionary<string, string> GetOAuthParameter(string token)
         {
             Dictionary<string, string> parameter = new Dictionary<string, string>();
-            parameter.Add("oauth_consumer_key", this.consumerKey);
+            parameter.Add("oauth_consumer_key", _consumerKey);
             parameter.Add("oauth_signature_method", "HMAC-SHA1");
             parameter.Add("oauth_timestamp", Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds).ToString()); // epoch秒
             parameter.Add("oauth_nonce", NonceRandom.Next(123400, 9999999).ToString());
@@ -556,10 +556,10 @@ namespace Hoehoe
             string signatureBase = string.Format("{0}&{1}&{2}", method, UrlEncode(url), UrlEncode(paramString));
 
             // 署名鍵の文字列をコンシューマー秘密鍵とアクセストークン秘密鍵から生成（&区切り。アクセストークン秘密鍵なくても&残すこと）
-            string key = UrlEncode(this.consumerSecret) + "&";
-            if (!string.IsNullOrEmpty(this.tokenSecret))
+            string key = UrlEncode(_consumerSecret) + "&";
+            if (!string.IsNullOrEmpty(_tokenSecret))
             {
-                key += this.UrlEncode(this.tokenSecret);
+                key += UrlEncode(_tokenSecret);
             }
 
             // 鍵生成＆署名生成
@@ -582,7 +582,7 @@ namespace Hoehoe
 
             // リクエストトークン取得
             string content = string.Empty;
-            if (this.GetOAuthToken(new Uri(requestTokenUrl), string.Empty, string.Empty, null, ref content) != HttpStatusCode.OK)
+            if (GetOAuthToken(new Uri(requestTokenUrl), string.Empty, string.Empty, null, ref content) != HttpStatusCode.OK)
             {
                 return null;
             }
@@ -614,12 +614,12 @@ namespace Hoehoe
             // HTTPリクエスト生成。PINコードもパラメータも未指定の場合はGETメソッドで通信。それ以外はPOST
             if (string.IsNullOrEmpty(pinCode) && parameter == null)
             {
-                webReq = this.CreateRequest(HttpConnection.GetMethod, requestUri, null, false);
+                webReq = CreateRequest(HttpConnection.GetMethod, requestUri, null, false);
             }
             else
             {
                 // ボディに追加パラメータ書き込み
-                webReq = this.CreateRequest(HttpConnection.PostMethod, requestUri, parameter, false);
+                webReq = CreateRequest(HttpConnection.PostMethod, requestUri, parameter, false);
             }
 
             // OAuth関連パラメータ準備。追加パラメータがあれば追加
@@ -639,7 +639,7 @@ namespace Hoehoe
             }
 
             // OAuth関連情報をHTTPリクエストに追加
-            this.AppendOAuthInfo(webReq, query, requestToken, string.Empty);
+            AppendOAuthInfo(webReq, query, requestToken, string.Empty);
 
             // HTTP応答取得
             Dictionary<string, string> header = new Dictionary<string, string> { { "Date", string.Empty } };
