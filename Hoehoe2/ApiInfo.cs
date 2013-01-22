@@ -31,15 +31,15 @@ namespace Hoehoe
     {
         public ApiInfo()
         {
-            this.MaxCount = ApiInfo.maxCount;
-            this.RemainCount = ApiInfo.remainCount;
-            this.ResetTime = ApiInfo.resetTime;
-            this.ResetTimeInSeconds = ApiInfo.resetTimeInSeconds;
-            this.UsingCount = ApiInfo.usingCount;
-            this.AccessLevel = ApiInfo.accessLevel;
-            this.MediaMaxCount = ApiInfo.mediaMaxCount;
-            this.MediaRemainCount = ApiInfo.mediaRemainCount;
-            this.MediaResetTime = ApiInfo.mediaResetTime;
+            MaxCount = ApiInfo.maxCount;
+            RemainCount = ApiInfo.remainCount;
+            ResetTime = ApiInfo.resetTime;
+            ResetTimeInSeconds = ApiInfo.resetTimeInSeconds;
+            UsingCount = ApiInfo.usingCount;
+            AccessLevel = ApiInfo.accessLevel;
+            MediaMaxCount = ApiInfo.mediaMaxCount;
+            MediaRemainCount = ApiInfo.mediaRemainCount;
+            MediaResetTime = ApiInfo.mediaResetTime;
         }
 
         public int MaxCount { get; set; }
