@@ -1696,7 +1696,7 @@ namespace Hoehoe
                     string tmp = string.Format(R.CheckNewVersionText3, strVer);
                     using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                     {
-                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, string.Format(R.CheckNewVersionText1, MyCommon.AppTitle), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        if (dialogAsShieldicon.ShowDialog(tmp, strDetail, string.Format(R.CheckNewVersionText1, MyCommon.AppTitle), MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             retMsg = _tw.GetTweenBinary(strVer);
                             if (retMsg.Length == 0)
@@ -1721,7 +1721,7 @@ namespace Hoehoe
                         string tmp = string.Format(R.CheckNewVersionText6, strVer);
                         using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
                         {
-                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, string.Format(R.CheckNewVersionText1, MyCommon.AppTitle), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            if (dialogAsShieldicon.ShowDialog(tmp, strDetail, string.Format(R.CheckNewVersionText1, MyCommon.AppTitle), MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 retMsg = _tw.GetTweenBinary(strVer);
                                 if (retMsg.Length == 0)
@@ -2097,7 +2097,7 @@ namespace Hoehoe
                     switch (keyCode)
                     {
                         case Keys.R:
-                            MakeReplyOrDirectStatus(false, true);
+                            MakeReplyOrDirectStatus(false);
                             return true;
                         case Keys.D:
                             DeleteSelected();
@@ -2337,7 +2337,7 @@ namespace Hoehoe
                                 GoBackInReplyToPostTree(true, false);
                                 return true;
                             case Keys.Oem6:
-                                GoBackInReplyToPostTree(true, true);
+                                GoBackInReplyToPostTree(true);
                                 return true;
                             case Keys.N:
                             case Keys.Right:
@@ -3034,7 +3034,7 @@ namespace Hoehoe
             long inReplyToId = _curPost.InReplyToStatusId;
             var inReplyToPosts = from tab in _statuses.Tabs.Values
                                  orderby !ReferenceEquals(tab, curTabClass)
-                                 from post in ((Dictionary<long, PostClass>)(tab.IsInnerStorageTabType ? tab.Posts : _statuses.Posts)).Values
+                                 from post in (tab.IsInnerStorageTabType ? tab.Posts : _statuses.Posts).Values
                                  where post.StatusId == inReplyToId
                                  let index = tab.IndexOf(post.StatusId)
                                  where index != -1
@@ -3107,7 +3107,7 @@ namespace Hoehoe
                 }
 
                 var posts = from t in _statuses.Tabs
-                            from p in (Dictionary<long, PostClass>)(t.Value.IsInnerStorageTabType ? t.Value.Posts : _statuses.Posts)
+                            from p in t.Value.IsInnerStorageTabType ? t.Value.Posts : _statuses.Posts
                             where p.Value.StatusId != _curPost.StatusId && p.Value.InReplyToStatusId == _curPost.InReplyToStatusId
                             let indexOf = t.Value.IndexOf(p.Value.StatusId)
                             where indexOf > -1
@@ -3152,7 +3152,7 @@ namespace Hoehoe
             if (_replyChains == null || _replyChains.Count < 1)
             {
                 var posts = from t in _statuses.Tabs
-                            from p in (Dictionary<long, PostClass>)(t.Value.IsInnerStorageTabType ? t.Value.Posts : _statuses.Posts)
+                            from p in t.Value.IsInnerStorageTabType ? t.Value.Posts : _statuses.Posts
                             where p.Value.InReplyToStatusId == _curPost.StatusId
                             let indexOf = t.Value.IndexOf(p.Value.StatusId)
                             where indexOf > -1
@@ -7624,7 +7624,7 @@ namespace Hoehoe
         private bool TryUserInputText(ref string val, string title = "", string desc = "")
         {
             TabUsageType tmp = TabUsageType.UserDefined;
-            return TryGetTabInfo(ref val, ref tmp, title, desc, false);
+            return TryGetTabInfo(ref val, ref tmp, title, desc);
         }
 
         private void ChangeTrackWordStatus()
@@ -8174,7 +8174,8 @@ namespace Hoehoe
         {
             if (NameLabel.Tag != null)
             {
-                OpenUriAsync(string.Format("https://twitter.com/{0}", (string)NameLabel.Tag));
+                var screenName = (string)NameLabel.Tag;
+                OpenUriAsync(string.Format("https://twitter.com/{0}", screenName));
             }
         }
 

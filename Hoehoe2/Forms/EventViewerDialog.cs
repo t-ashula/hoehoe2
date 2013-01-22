@@ -276,7 +276,7 @@ namespace Hoehoe
         {
             foreach (var ev in source)
             {
-                sw.WriteLine(string.Format("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}", ev.Eventtype, ev.CreatedAt, ev.Event, ev.Username, ev.Target, ev.Id));
+                sw.WriteLine("{0}\t\"{1}\"\t{2}\t{3}\t{4}\t{5}", ev.Eventtype, ev.CreatedAt, ev.Event, ev.Username, ev.Target, ev.Id);
             }
         }
 

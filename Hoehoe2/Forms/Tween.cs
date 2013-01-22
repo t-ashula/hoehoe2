@@ -856,11 +856,8 @@ namespace Hoehoe
 
             foreach (TabPage tp in ListTab.TabPages)
             {
-                DetailsListView lst = (DetailsListView)tp.Tag;
-                if (lst.VirtualListSize != _statuses.Tabs[tp.Text].AllCount)
-                {
-                    lst.VirtualListSize = _statuses.Tabs[tp.Text].AllCount;
-                }
+                var lst = (DetailsListView)tp.Tag;
+                lst.VirtualListSize = _statuses.Tabs[tp.Text].AllCount;
             }
 
             return true;

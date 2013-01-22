@@ -982,7 +982,8 @@ namespace Hoehoe
             string tmp = string.Empty;
             if (ListFilters.SelectedIndices.Count == 1)
             {
-                tmp = string.Format(R.ButtonDelete_ClickText1, Environment.NewLine, (string)ListFilters.SelectedItem);
+                var deleteUser = (string)ListFilters.SelectedItem;
+                tmp = string.Format(R.ButtonDelete_ClickText1, Environment.NewLine, deleteUser);
             }
             else
             {

@@ -2171,7 +2171,7 @@ namespace Hoehoe
                     // Geoが勝手に付加されるバグがいっこうに修正されないので暫定的にGeo情報を無視する
                     if (xentry["twitter:geo"].HasChildNodes)
                     {
-                        string[] pnt = ((XmlElement)xentry.SelectSingleNode("twitter:geo/georss:point", nsmgr)).InnerText.Split(' ');
+                        string[] pnt = xentry.SelectSingleNode("twitter:geo/georss:point", nsmgr).InnerText.Split(' ');
                         post.PostGeo = new PostClass.StatusGeo
                         {
                             Lat = double.Parse(pnt[0]),

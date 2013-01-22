@@ -313,7 +313,7 @@ namespace Hoehoe
 
         private void ImageSelection_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((int)e.KeyChar == 0x1b)
+            if (e.KeyChar == 0x1b)
             {
                 ImagefilePathText.CausesValidation = false;
                 e.Handled = true;
@@ -629,7 +629,7 @@ namespace Hoehoe
 
         private void ReplyStripMenuItem_Click(object sender, EventArgs e)
         {
-            MakeReplyOrDirectStatus(false, true);
+            MakeReplyOrDirectStatus(false);
         }
 
         private void RtCountMenuItem_Click(object sender, EventArgs e)
@@ -934,7 +934,7 @@ namespace Hoehoe
                 if (e.KeyCode == Keys.Space || e.KeyCode == Keys.ProcessKey)
                 {
                     bool isSpace = false;
-                    foreach (char c in StatusText.Text.ToCharArray())
+                    foreach (char c in StatusText.Text)
                     {
                         if (c == ' ' || c == '　')
                         {

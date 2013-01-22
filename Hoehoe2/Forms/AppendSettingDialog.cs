@@ -545,7 +545,7 @@ namespace Hoehoe
 
             StatusText.Text = _configurations.Status;
             UReadMng.Checked = _configurations.UnreadManage;
-            StartupReaded.Enabled = _configurations.UnreadManage != false;
+            StartupReaded.Enabled = _configurations.UnreadManage;
             PlaySnd.Checked = _configurations.PlaySound;
             OneWayLv.Checked = _configurations.OneWayLove;
             lblListFont.Font = _configurations.FontReaded;
