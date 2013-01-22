@@ -396,7 +396,7 @@ namespace Hoehoe
                 }
 
                 {
-                    int tmp = _configurations.HotkeyValue;
+                    int tmp;
                     if (int.TryParse(HotkeyCode.Text, out tmp))
                     {
                         _configurations.HotkeyValue = tmp;
@@ -1513,7 +1513,7 @@ namespace Hoehoe
 
         private void CalcApiUsing()
         {
-            int listsTabNum = 0;
+            int listsTabNum;
             try
             {
                 // 初回起動時などにNothingの場合あり
@@ -1524,7 +1524,7 @@ namespace Hoehoe
                 return;
             }
 
-            int userTimelineTabNum = 0;
+            int userTimelineTabNum;
             try
             {
                 // 初回起動時などにNothingの場合あり
@@ -1536,7 +1536,7 @@ namespace Hoehoe
             }
 
             // Recent計算 0は手動更新
-            int tmp = 0;
+            int tmp;
             int usingApi = 0;
             if (int.TryParse(TimelinePeriod.Text, out tmp))
             {
@@ -1628,7 +1628,7 @@ namespace Hoehoe
                 return false;
             }
 
-            /// TODO: BitlyApi
+            // TODO: BitlyApi
             string req = "http://api.bit.ly/v3/validate";
             string content = string.Empty;
             var param = new Dictionary<string, string>
@@ -1784,7 +1784,7 @@ namespace Hoehoe
 
             public bool IsValidPeriod(string input)
             {
-                int t = 0;
+                int t;
                 if (!int.TryParse(input, out t))
                 {
                     MessageBox.Show(msg1);

@@ -84,7 +84,7 @@ namespace Hoehoe
                 return false;
             }
 
-            string thumbnailUrl = string.Empty;
+            string thumbnailUrl;
             try
             {
                 var xdoc = new XmlDocument();

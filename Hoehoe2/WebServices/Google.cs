@@ -180,7 +180,7 @@ namespace Hoehoe
             if (http.GetData(apiurl, headers, ref content))
             {
                 var serializer = new DataContractJsonSerializer(typeof(TranslateResponse));
-                TranslateResponse res = null;
+                TranslateResponse res;
 
                 try
                 {

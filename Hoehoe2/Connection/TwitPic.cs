@@ -78,7 +78,7 @@ namespace Hoehoe
                 message = string.Empty;
             }
 
-            FileInfo mediaFile = null;
+            FileInfo mediaFile;
             try
             {
                 mediaFile = new FileInfo(filePath);
@@ -94,7 +94,7 @@ namespace Hoehoe
             }
 
             string content = string.Empty;
-            HttpStatusCode ret = default(HttpStatusCode);
+            HttpStatusCode ret;
             try
             {
                 // TwitPicへの投稿
@@ -105,7 +105,7 @@ namespace Hoehoe
                 return "Err:" + ex.Message;
             }
 
-            string url = string.Empty;
+            string url;
             if (ret == HttpStatusCode.OK)
             {
                 var xd = new XmlDocument();

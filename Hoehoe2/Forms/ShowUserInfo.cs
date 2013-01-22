@@ -566,9 +566,6 @@ namespace Hoehoe
 
         private void UpdateProfileImage_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            string res = string.Empty;
-            DataModels.Twitter.User user = null;
-
             if (e.Result == null)
             {
                 return;
@@ -577,7 +574,8 @@ namespace Hoehoe
             // アイコンを取得してみるが、古いアイコンのユーザーデータが返ってくるため反映/判断できない
             try
             {
-                res = _owner.TwitterInstance.GetUserInfo(_info.ScreenName, ref user);
+                DataModels.Twitter.User user = null;
+                _owner.TwitterInstance.GetUserInfo(_info.ScreenName, ref user);
                 Image img = (new HttpVarious()).GetImage(user.ProfileImageUrl);
                 if (img != null)
                 {
@@ -773,7 +771,6 @@ namespace Hoehoe
 
         private void ChangeIcon(string filename)
         {
-            string res = string.Empty;
             var arg = new UpdateProfileImageArgs
             {
                 Tw = _owner.TwitterInstance,
@@ -783,7 +780,7 @@ namespace Hoehoe
             using (var dlg = new FormInfo(this, R.ChangeIconToolStripMenuItem_ClickText3, UpdateProfileImage_Dowork, UpdateProfileImage_RunWorkerCompleted, arg))
             {
                 dlg.ShowDialog();
-                res = dlg.Result as string;
+                var res = dlg.Result as string;
                 if (!string.IsNullOrEmpty(res))
                 {
                     // "Err:"が付いたエラーメッセージが返ってくる

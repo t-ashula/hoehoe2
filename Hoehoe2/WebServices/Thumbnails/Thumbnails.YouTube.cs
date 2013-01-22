@@ -128,7 +128,7 @@ namespace Hoehoe
 
                 var xentryNode = xdoc.DocumentElement.SelectSingleNode("/root:entry/media:group", nsmgr);
                 var xentry = (XmlElement)xentryNode;
-                string tmp = string.Empty;
+                string tmp;
                 try
                 {
                     tmp = xentry["media:title"].InnerText;
@@ -143,7 +143,7 @@ namespace Hoehoe
 
                 try
                 {
-                    int sec = 0;
+                    int sec;
                     if (int.TryParse(xentry["yt:duration"].Attributes["seconds"].Value, out sec))
                     {
                         sb.Append(R.YouTubeInfoText2);
@@ -172,7 +172,7 @@ namespace Hoehoe
 
                 try
                 {
-                    int count = 0;
+                    int count;
                     xentry = (XmlElement)xdoc.DocumentElement.SelectSingleNode("/root:entry", nsmgr);
                     tmp = xentry["yt:statistics"].Attributes["viewCount"].Value;
                     if (int.TryParse(tmp, out count))

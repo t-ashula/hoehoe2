@@ -69,7 +69,7 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Plixi_CreateImage(CreateImageArgs args)
         {
-            string referer = string.Empty;
+            string referer;
             if (!args.Url.Key.Contains("t.co"))
             {
                 referer = args.Url.Key;

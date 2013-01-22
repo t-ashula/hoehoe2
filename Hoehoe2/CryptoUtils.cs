@@ -180,8 +180,7 @@ namespace Hoehoe
             var newBytes = new byte[newSize];
             if (bytes.Length <= newSize)
             {
-                int i = 0;
-                for (i = 0; i < bytes.Length; i++)
+                for (var i = 0; i < bytes.Length; i++)
                 {
                     newBytes[i] = bytes[i];
                 }
@@ -189,8 +188,7 @@ namespace Hoehoe
             else
             {
                 int pos = 0;
-                int i = 0;
-                for (i = 0; i < bytes.Length; i++)
+                for (var i = 0; i < bytes.Length; i++)
                 {
                     newBytes[pos] = (byte)(newBytes[pos] ^ bytes[i]);
                     pos += 1;

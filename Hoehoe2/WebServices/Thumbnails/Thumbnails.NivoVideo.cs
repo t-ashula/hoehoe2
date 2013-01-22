@@ -75,13 +75,13 @@ namespace Hoehoe
             var mc = Regex.Match(args.Url.Value, "^http://(?:(www|ext)\\.nicovideo\\.jp/watch|nico\\.ms)/(?<id>(?:sm|nm)?([0-9]+))(\\?.+)?$", RegexOptions.IgnoreCase);
             string apiurl = "http://www.nicovideo.jp/api/getthumbinfo/" + mc.Groups["id"].Value;
             string src = string.Empty;
-            string imgurl = string.Empty;
             if (!(new HttpVarious()).GetData(apiurl, null, ref src, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
             {
                 return false;
             }
 
             var sb = new StringBuilder();
+            string imgurl;
             try
             {
                 var xdoc = new XmlDocument();

@@ -93,14 +93,14 @@ namespace Hoehoe
 
         protected static void SaveSettings(T instance, string fileId)
         {
-            int cnt = 0;
-            bool err = false;
             string fileName = GetSettingFilePath(fileId);
             if (instance == null)
             {
                 return;
             }
 
+            int cnt = 0;
+            bool err;
             do
             {
                 err = false;

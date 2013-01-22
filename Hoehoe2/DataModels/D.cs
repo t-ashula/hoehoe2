@@ -34,7 +34,7 @@ namespace Hoehoe.DataModels
     {
         public static T CreateDataFromJson<T>(string content)
         {
-            T data = default(T);
+            T data;
             using (var stream = new MemoryStream())
             {
                 byte[] buf = Encoding.Unicode.GetBytes(content);

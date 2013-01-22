@@ -2265,7 +2265,7 @@ namespace Hoehoe
                         TabClass tbc = _statuses.Tabs[args.TabName];
                         for (int i = 0; i < args.Ids.Count; i++)
                         {
-                            PostClass post = null;
+                            PostClass post;
                             if (tbc.IsInnerStorageTabType)
                             {
                                 post = tbc.Posts[args.Ids[i]];
@@ -2694,7 +2694,7 @@ namespace Hoehoe
                                         TabClass tb = _statuses.Tabs[rslt.TabName];
                                         if (tb != null)
                                         {
-                                            PostClass post = null;
+                                            PostClass post;
                                             if (tb.TabType == TabUsageType.Lists || tb.TabType == TabUsageType.PublicSearch)
                                             {
                                                 post = tb.Posts[rslt.SIds[i]];
@@ -2747,7 +2747,7 @@ namespace Hoehoe
                     }
                     else
                     {
-                        DialogResult retry = default(DialogResult);
+                        DialogResult retry;
                         try
                         {
                             retry = MessageBox.Show(
@@ -2907,7 +2907,7 @@ namespace Hoehoe
 
         private void ListTab_DrawItem(object sender, DrawItemEventArgs e)
         {
-            string txt = null;
+            string txt;
             try
             {
                 txt = ListTab.TabPages[e.Index].Text;
@@ -2923,7 +2923,7 @@ namespace Hoehoe
                 e.DrawFocusRectangle();
             }
 
-            Brush fore = null;
+            Brush fore;
             try
             {
                 if (_statuses.Tabs[txt].UnreadCount > 0)
@@ -3382,7 +3382,7 @@ namespace Hoehoe
                 rctB.Height = e.Item.Font.Height;
             }
 
-            int heightDiff = 0;
+            int heightDiff;
             int drawLineCount = Math.Max(1, Math.DivRem(Convert.ToInt32(rct.Height), e.Item.Font.Height, out heightDiff));
 
             // フォントの高さの半分を足してるのは保険。無くてもいいかも。

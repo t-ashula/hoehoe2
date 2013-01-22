@@ -141,7 +141,7 @@ namespace Hoehoe
         /// <remarks>
         /// 通信開始前に最低一度呼び出すこと
         /// </remarks>
-        /// <param name="defTimeout">タイムアウト値（秒）</param>
+        /// <param name="timeout">タイムアウト値（秒）</param>
         /// <param name="proxyType">なし・指定・IEデフォルト</param>
         /// <param name="proxyAddress">プロキシのホスト名orIPアドレス</param>
         /// <param name="proxyPort">プロキシのポート番号</param>
@@ -304,11 +304,10 @@ namespace Hoehoe
                     {
                         foreach (KeyValuePair<string, FileInfo> kvp in binaryFileInfo)
                         {
-                            string postData = string.Empty;
                             byte[] crlfByte = Encoding.UTF8.GetBytes("\r\n");
 
                             // コンテンツタイプの指定
-                            string mime = string.Empty;
+                            string mime;
                             switch (kvp.Value.Extension.ToLower())
                             {
                                 case ".jpg":
@@ -365,20 +364,19 @@ namespace Hoehoe
                                     break;
                             }
 
-                            postData = "--" + boundary + "\r\n"
-                                + "Content-Disposition: form-data; name=\"" + kvp.Key + "\"; filename=\"" + kvp.Value.Name + "\"" + "\r\n"
-                                + "Content-Type: " + mime + "\r\n" + "\r\n";
+                            string postData = "--" + boundary + "\r\n"
+                                              + "Content-Disposition: form-data; name=\"" + kvp.Key + "\"; filename=\"" + kvp.Value.Name + "\"" + "\r\n"
+                                              + "Content-Type: " + mime + "\r\n" + "\r\n";
                             byte[] postBytes = Encoding.UTF8.GetBytes(postData);
                             reqStream.Write(postBytes, 0, postBytes.Length);
 
                             // ファイルを読み出してHTTPのストリームに書き込み
                             using (var fs = new FileStream(kvp.Value.FullName, FileMode.Open, FileAccess.Read))
                             {
-                                int readSize = 0;
                                 var readBytes = new byte[4097];
                                 while (true)
                                 {
-                                    readSize = fs.Read(readBytes, 0, readBytes.Length);
+                                    int readSize = fs.Read(readBytes, 0, readBytes.Length);
                                     if (readSize == 0)
                                     {
                                         break;

@@ -84,12 +84,12 @@ namespace Hoehoe
             Match mc = Regex.Match(targetUrl, "(?<base>http://.+?\\.tumblr\\.com/)post/(?<postID>[0-9]+)(/(?<subject>.+?)/)?", RegexOptions.IgnoreCase);
             string apiurl = mc.Groups["base"].Value + "api/read?id=" + mc.Groups["postID"].Value;
             string src = string.Empty;
-            string imgurl = null;
             if (!http.GetData(apiurl, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
                 return false;
             }
 
+            string imgurl;
             try
             {
                 var xdoc = new XmlDocument();

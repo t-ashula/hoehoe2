@@ -335,10 +335,9 @@ namespace Hoehoe
             }
 
             UseHashText.Text = hashStr;
-            int idx = 0;
             if (!_isAdd && HistoryHashList.SelectedIndices.Count > 0)
             {
-                idx = HistoryHashList.SelectedIndices[0];
+                int idx = HistoryHashList.SelectedIndices[0];
                 HistoryHashList.Items.RemoveAt(idx);
                 do
                 {

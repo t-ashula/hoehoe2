@@ -104,7 +104,7 @@ namespace Hoehoe
                 message = string.Empty;
             }
 
-            FileInfo mediaFile = null;
+            FileInfo mediaFile;
             try
             {
                 mediaFile = new FileInfo(filePath);

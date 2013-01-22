@@ -106,7 +106,7 @@ namespace Hoehoe
             }
 
             var sb = new StringBuilder();
-            PicPlzDataModel.ResultData res = default(PicPlzDataModel.ResultData);
+            PicPlzDataModel.ResultData res;
             try
             {
                 res = D.CreateDataFromJson<PicPlzDataModel.ResultData>(src);

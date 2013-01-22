@@ -102,7 +102,6 @@ namespace Hoehoe
             }
 
             var xdoc = new XmlDocument();
-            string thumbnailUrl = string.Empty;
             try
             {
                 xdoc.LoadXml(src);
@@ -118,7 +117,7 @@ namespace Hoehoe
                 if (xdoc.SelectSingleNode("/rsp/content/thumbnails/thumbnail_150x150") != null)
                 {
                     var nd = xdoc.SelectSingleNode("/rsp/content/thumbnails/thumbnail_150x150");
-                    thumbnailUrl = nd.Attributes.GetNamedItem("url").InnerText;
+                    string thumbnailUrl = nd.Attributes.GetNamedItem("url").InnerText;
                     if (string.IsNullOrEmpty(thumbnailUrl))
                     {
                         return false;

@@ -364,12 +364,11 @@ namespace Hoehoe
             int dmessageCount = _statuses.GetTabByType(TabUsageType.DirectMessage).AllCount;
 
             // 更新確定
-            PostClass[] notifyPosts = null;
             string soundFile = string.Empty;
-            int addCount = 0;
+            PostClass[] notifyPosts = null;
             bool isMention = false;
             bool isDelete = false;
-            addCount = _statuses.SubmitUpdate(ref soundFile, ref notifyPosts, ref isMention, ref isDelete, isUserStream);
+            int addCount = _statuses.SubmitUpdate(ref soundFile, ref notifyPosts, ref isMention, ref isDelete, isUserStream);
 
             if (MyCommon.IsEnding)
             {
@@ -812,8 +811,8 @@ namespace Hoehoe
             }
 
             // 対象の特定
-            ListViewItem itm = null;
-            PostClass post = null;
+            ListViewItem itm;
+            PostClass post;
             if (tab.Equals(_curTab) && _itemCache != null && index >= _itemCacheIndex && index < _itemCacheIndex + _itemCache.Length)
             {
                 itm = _itemCache[index - _itemCacheIndex];
@@ -1225,7 +1224,7 @@ namespace Hoehoe
                 var statusIds = _curList.SelectedIndices.Cast<int>().Select(i => _statuses.GetId(_curTab.Text, i));
                 foreach (var statusId in statusIds)
                 {
-                    string ret = string.Empty;
+                    string ret;
                     var post = _statuses.Item(statusId);
                     if (isDmTab)
                     {
@@ -1664,9 +1663,7 @@ namespace Hoehoe
 
         private void CheckNewVersion(bool startup = false)
         {
-            string retMsg = string.Empty;
-            string strVer = string.Empty;
-            string strDetail = string.Empty;
+            string retMsg;
             bool forceUpdate = IsKeyDown(Keys.Shift);
             try
             {
@@ -1685,7 +1682,8 @@ namespace Hoehoe
 
             if (retMsg.Length > 0)
             {
-                strVer = retMsg.Substring(0, 4);
+                string strDetail = string.Empty;
+                string strVer = retMsg.Substring(0, 4);
                 if (retMsg.Length > 4)
                 {
                     strDetail = retMsg.Substring(5).Trim();
@@ -2447,10 +2445,9 @@ namespace Hoehoe
                         {
                             case Keys.Up:
                                 {
-                                    int idx = 0;
                                     if (_curList != null && _curList.Items.Count != 0 && _curList.SelectedIndices.Count > 0 && _curList.SelectedIndices[0] > 0)
                                     {
-                                        idx = _curList.SelectedIndices[0] - 1;
+                                        int idx = _curList.SelectedIndices[0] - 1;
                                         SelectListItem(_curList, idx);
                                         _curList.EnsureVisible(idx);
                                         return true;
@@ -2460,10 +2457,9 @@ namespace Hoehoe
                                 break;
                             case Keys.Down:
                                 {
-                                    int idx = 0;
                                     if (_curList != null && _curList.Items.Count != 0 && _curList.SelectedIndices.Count > 0 && _curList.SelectedIndices[0] < _curList.Items.Count - 1)
                                     {
-                                        idx = _curList.SelectedIndices[0] + 1;
+                                        int idx = _curList.SelectedIndices[0] + 1;
                                         SelectListItem(_curList, idx);
                                         _curList.EnsureVisible(idx);
                                         return true;
@@ -2475,7 +2471,6 @@ namespace Hoehoe
                                 if (StatusText.SelectionStart > 0)
                                 {
                                     int endidx = StatusText.SelectionStart - 1;
-                                    string startstr = string.Empty;
                                     bool pressed = false;
                                     for (int i = StatusText.SelectionStart - 1; i >= 0; i--)
                                     {
@@ -2485,6 +2480,7 @@ namespace Hoehoe
                                             continue;
                                         }
 
+                                        string startstr;
                                         if (c == '@')
                                         {
                                             pressed = true;
@@ -2940,16 +2936,15 @@ namespace Hoehoe
 
         private void GoTopEnd(bool top)
         {
-            ListViewItem item = null;
-            int idx = 0;
+            int idx;
             if (top)
             {
-                item = _curList.GetItemAt(0, 25);
+                var item = _curList.GetItemAt(0, 25);
                 idx = item != null ? item.Index : 0;
             }
             else
             {
-                item = _curList.GetItemAt(0, _curList.ClientSize.Height - 1);
+                var item = _curList.GetItemAt(0, _curList.ClientSize.Height - 1);
                 idx = item != null ? item.Index : _curList.VirtualListSize - 1;
             }
 
@@ -3040,8 +3035,8 @@ namespace Hoehoe
                                  where index != -1
                                  select new { Tab = tab, Index = index };
 
-            int inReplyToIndex = 0;
-            string inReplyToTabName = null;
+            int inReplyToIndex;
+            string inReplyToTabName;
             try
             {
                 var inReplyPost = inReplyToPosts.First();
@@ -4198,12 +4193,11 @@ namespace Hoehoe
         /// <returns></returns>
         private bool ConvertUrl(UrlConverter urlCoonverterType)
         {
-            string result = string.Empty;
-
             const string NicoUrlPattern = "^https?://[a-z]+\\.(nicovideo|niconicommons|nicolive)\\.jp/[a-z]+/[a-z0-9]+$";
 
             if (StatusText.SelectionLength > 0)
             {
+                string result;
                 // 文字列が選択されている場合はその文字列について処理
                 string tmp = StatusText.SelectedText;
 
@@ -4235,6 +4229,7 @@ namespace Hoehoe
             }
             else
             {
+                string result;
                 const string UrlPattern = "(?<before>(?:[^\\\"':!=]|^|\\:))"
                     + "(?<url>(?<protocol>https?://)"
                     + "(?<domain>(?:[\\.-]|[^\\p{P}\\s])+\\.[a-z]{2,}(?::[0-9]+)?)"
@@ -4793,7 +4788,7 @@ namespace Hoehoe
 
             var args = new ShowFriendshipArgs { Tw = _tw };
             args.Ids.Add(new ShowFriendshipArgs.FriendshipInfo(id));
-            string ret = string.Empty;
+            string ret;
             using (var formInfo = new FormInfo(this, R.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
             {
                 formInfo.ShowDialog();
@@ -4959,7 +4954,7 @@ namespace Hoehoe
                 switch (service.GetFileType(fl.Extension))
                 {
                     case UploadFileType.Picture:
-                        Image img = null;
+                        Image img;
                         using (var fs = new FileStream(ImagefilePathText.Text, FileMode.Open, FileAccess.Read))
                         {
                             img = Image.FromStream(fs);
@@ -5613,7 +5608,7 @@ namespace Hoehoe
         private void TryShowSettingsBox()
         {
             string uid = _tw.Username.ToLower();
-            DialogResult result = default(DialogResult);
+            DialogResult result;
             try
             {
                 result = _settingDialog.ShowDialog(this);
@@ -8131,7 +8126,7 @@ namespace Hoehoe
             if (!ConvertUrl(_configs.AutoShortUrlFirst))
             {
                 // 前回使用した短縮URLサービス以外を選択する
-                UrlConverter svc = _configs.AutoShortUrlFirst;
+                UrlConverter svc;
                 var rnd = new Random();
                 do
                 {

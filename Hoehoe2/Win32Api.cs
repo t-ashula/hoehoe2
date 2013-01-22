@@ -71,19 +71,16 @@ namespace Hoehoe
         {
             Process curProcess = Process.GetCurrentProcess();
             Process[] allProcesses = Process.GetProcessesByName(curProcess.ProcessName);
-            Process checkProcess = null;
-            foreach (Process checkProcess_loopVariable in allProcesses)
+            foreach (Process process in allProcesses)
             {
-                checkProcess = checkProcess_loopVariable;
-
                 // 自分自身のプロセスIDは無視する
-                if (checkProcess.Id != curProcess.Id)
+                if (process.Id != curProcess.Id)
                 {
                     // プロセスのフルパス名を比較して同じアプリケーションか検証
-                    if (string.Compare(checkProcess.MainModule.FileName, curProcess.MainModule.FileName, true) == 0)
+                    if (string.Compare(process.MainModule.FileName, curProcess.MainModule.FileName, true) == 0)
                     {
                         // 同じフルパス名のプロセスを取得
-                        return checkProcess;
+                        return process;
                     }
                 }
             }
@@ -375,11 +372,10 @@ namespace Hoehoe
 
                     try
                     {
-                        const int TitleSize = 256;    // Tooltip文字列長
-                        string title = string.Empty;  // Tooltip文字列
+                        const int titleSize = 256;    // Tooltip文字列長
 
                         // 共有メモリにTooltip読込メモリ確保
-                        IntPtr pszTitle = Marshal.AllocCoTaskMem(TitleSize);
+                        IntPtr pszTitle = Marshal.AllocCoTaskMem(titleSize);
                         if (pszTitle.Equals(IntPtr.Zero))
                         {
                             // メモリ確保失敗
@@ -389,7 +385,7 @@ namespace Hoehoe
                         try
                         {
                             // Explorer内にTooltip読込メモリ確保
-                            IntPtr pszSysTitle = VirtualAllocEx(hProc, IntPtr.Zero, TitleSize, AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
+                            IntPtr pszSysTitle = VirtualAllocEx(hProc, IntPtr.Zero, titleSize, AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
                             if (pszSysTitle.Equals(IntPtr.Zero))
                             {
                                 // メモリ確保失敗
@@ -405,8 +401,8 @@ namespace Hoehoe
                                 for (int i = 0; i < iCount; i++)
                                 {
                                     int dwBytes = 0;                                              // 読み書きバイト数
-                                    TBBUTTON tbButtonLocal2 = default(TBBUTTON);                  // ボタン情報
-                                    TBBUTTONINFO tbButtonInfoLocal2 = default(TBBUTTONINFO);      // ボタン詳細情報
+                                    TBBUTTON tbButtonLocal2;                  // ボタン情報
+                                    TBBUTTONINFO tbButtonInfoLocal2;      // ボタン詳細情報
 
                                     // 共有メモリにボタン情報読込メモリ確保
                                     IntPtr ptrLocal = Marshal.AllocCoTaskMem(Marshal.SizeOf(tbButtonLocal));
@@ -442,7 +438,7 @@ namespace Hoehoe
 
                                     // Tooltip書き込み先領域
                                     tbButtonInfoLocal.pszText = pszSysTitle;
-                                    tbButtonInfoLocal.cchText = TitleSize;
+                                    tbButtonInfoLocal.cchText = titleSize;
 
                                     // マスク設定等をExplorerのメモリへ書き込み
                                     WriteProcessMemory(hProc, ptbSysInfo, ref tbButtonInfoLocal, Marshal.SizeOf(tbButtonInfoLocal), out dwBytes);
@@ -474,17 +470,17 @@ namespace Hoehoe
                                     }
 
                                     // Tooltipの内容をExplorer内のメモリから共有メモリへ読込
-                                    ReadProcessMemory(hProc, pszSysTitle, pszTitle, TitleSize, ref dwBytes);
+                                    ReadProcessMemory(hProc, pszSysTitle, pszTitle, titleSize, ref dwBytes);
 
                                     // ローカル変数へ変換
-                                    title = Marshal.PtrToStringAnsi(pszTitle, TitleSize);
+                                    string title = Marshal.PtrToStringAnsi(pszTitle, titleSize);  // Tooltip文字列
 
                                     // Tooltipが指定文字列を含んでいればクリック
                                     if (title.Contains(tooltip))
                                     {
                                         // PostMessageでクリックを送るために、ボタン詳細情報のlParamでポイントされているTRAYNOTIFY情報が必要
                                         var tNotify = new TRAYNOTIFY();
-                                        var tNotify2 = default(TRAYNOTIFY);
+                                        TRAYNOTIFY tNotify2;
 
                                         // 共有メモリ確保
                                         IntPtr ptNotify = Marshal.AllocCoTaskMem(Marshal.SizeOf(tNotify));
@@ -523,7 +519,7 @@ namespace Hoehoe
                             }
                             finally
                             {
-                                VirtualFreeEx(hProc, pszSysTitle, TitleSize, (int)MemoryFreeTypes.Release);
+                                VirtualFreeEx(hProc, pszSysTitle, titleSize, (int)MemoryFreeTypes.Release);
                             }
                         }
                         finally
@@ -672,7 +668,7 @@ namespace Hoehoe
             {
                 UnregisterHotKey(targetForm.Handle, hotkeyID);
                 GlobalDeleteAtom(hotkeyID);
-                hotkeyID = 0;
+                // hotkeyID = 0;
             }
         }
 
@@ -771,9 +767,8 @@ namespace Hoehoe
 
             if (!string.IsNullOrEmpty(username) || !string.IsNullOrEmpty(password))
             {
-                bool ret = false;
-                ret = InternetSetOption(IntPtr.Zero, INTERNET_OPTION_PROXY_USERNAME, IntPtr.Zero, 0);
-                ret = InternetSetOption(IntPtr.Zero, INTERNET_OPTION_PROXY_PASSWORD, IntPtr.Zero, 0);
+                InternetSetOption(IntPtr.Zero, INTERNET_OPTION_PROXY_USERNAME, IntPtr.Zero, 0);
+                InternetSetOption(IntPtr.Zero, INTERNET_OPTION_PROXY_PASSWORD, IntPtr.Zero, 0);
             }
             else
             {
@@ -781,9 +776,8 @@ namespace Hoehoe
                 IntPtr pPass = Marshal.StringToBSTR(password);
                 try
                 {
-                    bool ret = false;
-                    ret = InternetSetOption(IntPtr.Zero, INTERNET_OPTION_PROXY_USERNAME, pUser, username.Length + 1);
-                    ret = InternetSetOption(IntPtr.Zero, INTERNET_OPTION_PROXY_PASSWORD, pPass, password.Length + 1);
+                    InternetSetOption(IntPtr.Zero, INTERNET_OPTION_PROXY_USERNAME, pUser, username.Length + 1);
+                    InternetSetOption(IntPtr.Zero, INTERNET_OPTION_PROXY_PASSWORD, pPass, password.Length + 1);
                 }
                 finally
                 {
@@ -799,7 +793,6 @@ namespace Hoehoe
             switch (pType)
             {
                 case HttpConnection.ProxyType.IE:
-                    proxy = null;
                     break;
                 case HttpConnection.ProxyType.None:
                     proxy = string.Empty;

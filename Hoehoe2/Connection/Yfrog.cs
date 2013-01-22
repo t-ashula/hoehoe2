@@ -75,7 +75,7 @@ namespace Hoehoe
             }
 
             // FileInfo作成
-            FileInfo mediaFile = null;
+            FileInfo mediaFile;
             try
             {
                 mediaFile = new FileInfo(filePath);
@@ -91,7 +91,7 @@ namespace Hoehoe
             }
 
             string content = string.Empty;
-            HttpStatusCode ret = default(HttpStatusCode);
+            HttpStatusCode ret;
             try
             {
                 // yfrogへの投稿
@@ -102,7 +102,7 @@ namespace Hoehoe
                 return string.Format("Err:{0}", ex.Message);
             }
 
-            string url = string.Empty;
+            string url;
             if (ret == HttpStatusCode.OK)
             {
                 var xd = new XmlDocument();

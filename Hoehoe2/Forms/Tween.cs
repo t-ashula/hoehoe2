@@ -737,7 +737,7 @@ namespace Hoehoe
 
         public bool RemoveSpecifiedTab(string tabName, bool confirm)
         {
-            int idx = 0;
+            int idx;
             for (idx = 0; idx < ListTab.TabPages.Count; idx++)
             {
                 if (ListTab.TabPages[idx].Text == tabName)
@@ -754,7 +754,7 @@ namespace Hoehoe
             if (confirm)
             {
                 string tmp = string.Format(R.RemoveSpecifiedTabText1, Environment.NewLine);
-                var result = MessageBox.Show(tmp, tabName + " " + R.RemoveSpecifiedTabText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                var result = MessageBox.Show(tmp, string.Format("{0} {1}", tabName, R.RemoveSpecifiedTabText2), MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (result == DialogResult.Cancel)
                 {
                     return false;
@@ -784,10 +784,9 @@ namespace Hoehoe
 
             ListTab.Controls.Remove(tabPage);
 
-            Control pnl = null;
             if (tabType == TabUsageType.PublicSearch)
             {
-                pnl = tabPage.Controls["panelSearch"];
+                Control pnl = tabPage.Controls["panelSearch"];
                 foreach (Control ctrl in pnl.Controls)
                 {
                     if (ctrl.Name == "buttonSearch")
@@ -987,7 +986,7 @@ namespace Hoehoe
 
         public void ReorderTab(string targetTabText, string baseTabText, bool isBeforeBaseTab)
         {
-            int baseIndex = 0;
+            int baseIndex;
             for (baseIndex = 0; baseIndex < ListTab.TabPages.Count; baseIndex++)
             {
                 if (ListTab.TabPages[baseIndex].Text == baseTabText)
@@ -1028,7 +1027,7 @@ namespace Hoehoe
 
         public void ChangeTabUnreadManage(string tabName, bool isManage)
         {
-            int idx = 0;
+            int idx;
             for (idx = 0; idx < ListTab.TabCount; idx++)
             {
                 if (ListTab.TabPages[idx].Text == tabName)

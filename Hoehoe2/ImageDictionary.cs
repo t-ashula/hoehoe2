@@ -125,7 +125,7 @@ namespace Hoehoe
                         {
                             if (waitStack.Count > 0)
                             {
-                                KeyValuePair<string, Action<Image>> req = default(KeyValuePair<string, Action<Image>>);
+                                KeyValuePair<string, Action<Image>> req;
                                 lock (_lockObject)
                                 {
                                     req = waitStack.Pop();

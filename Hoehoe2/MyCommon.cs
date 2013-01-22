@@ -399,9 +399,8 @@ namespace Hoehoe
             }
 
             // ドメイン名をPunycode展開
-            string domain = null;
-            string asciiDomain = null;
-
+            string domain;
+            string asciiDomain;
             try
             {
                 domain = input.Split('/')[2];
@@ -459,10 +458,10 @@ namespace Hoehoe
 
         public static DateTime DateTimeParse(string input)
         {
-            DateTime rslt = default(DateTime);
             string[] format = { "ddd MMM dd HH:mm:ss zzzz yyyy" };
             foreach (string fmt in format)
             {
+                DateTime rslt;
                 if (DateTime.TryParseExact(input, fmt, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out rslt))
                 {
                     return rslt;

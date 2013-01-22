@@ -366,7 +366,6 @@ namespace Hoehoe
                 if (tbox.SelectionStart > 0)
                 {
                     int endidx = tbox.SelectionStart - 1;
-                    string startstr = string.Empty;
                     for (int i = tbox.SelectionStart - 1; i >= 0; i += -1)
                     {
                         char c = tbox.Text[i];
@@ -375,6 +374,7 @@ namespace Hoehoe
                             continue;
                         }
 
+                        string startstr;
                         if (c == '@')
                         {
                             startstr = tbox.Text.Substring(i + 1, endidx - i);
@@ -979,7 +979,7 @@ namespace Hoehoe
                 return;
             }
 
-            string tmp = string.Empty;
+            string tmp;
             if (ListFilters.SelectedIndices.Count == 1)
             {
                 var deleteUser = (string)ListFilters.SelectedItem;
@@ -1062,7 +1062,7 @@ namespace Hoehoe
             int prevSelectedIndex = ListFilters.SelectedIndex;
             var ft = new FiltersClass { MoveFrom = OptMove.Checked, SetMark = CheckMark.Checked };
 
-            string bdy = string.Empty;
+            string bdy;
             if (RadioAND.Checked)
             {
                 ft.NameFilter = UID.Text;
@@ -1101,7 +1101,6 @@ namespace Hoehoe
             ft.IsRt = CheckRetweet.Checked;
             ft.UseLambda = CheckLambda.Checked;
 
-            bdy = string.Empty;
             if (RadioExAnd.Checked)
             {
                 ft.ExNameFilter = ExUID.Text;
@@ -1163,8 +1162,8 @@ namespace Hoehoe
 
         private void ButtonAddTab_ClickExtracted()
         {
-            string tabName = null;
-            TabUsageType tabType = default(TabUsageType);
+            string tabName;
+            TabUsageType tabType;
             using (var inputName = new InputTabName())
             {
                 inputName.TabName = _sts.GetUniqueTabName();

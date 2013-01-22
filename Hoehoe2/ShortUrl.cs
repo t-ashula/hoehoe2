@@ -117,10 +117,9 @@ namespace Hoehoe
                     try
                     {
                         // urlとして生成できない場合があるらしい
-                        string retUrlStr = string.Empty;
                         string tmpurlStr = new Uri(MyCommon.GetUrlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
                         var httpVar = new HttpVarious();
-                        retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
+                        string retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
                         if (retUrlStr.StartsWith("http"))
                         {
                             // ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
@@ -182,10 +181,9 @@ namespace Hoehoe
                     try
                     {
                         // urlとして生成できない場合があるらしい
-                        string retUrlStr = string.Empty;
                         string tmpurlStr = new Uri(MyCommon.GetUrlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
                         var httpVar = new HttpVarious();
-                        retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
+                        string retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
                         if (retUrlStr.StartsWith("http"))
                         {
                             // ダブルコーテーションがあるとURL終端と判断されるため、これだけ再エンコード
@@ -213,7 +211,7 @@ namespace Hoehoe
 
         public static string Make(UrlConverter converterType, string srcUrl)
         {
-            string src = string.Empty;
+            string src;
             try
             {
                 src = MyCommon.GetUrlEncodeMultibyteChar(srcUrl);

@@ -609,7 +609,7 @@ namespace Hoehoe
         /// <returns>取得結果のデータ。正しく取得出来なかった場合はNothing</returns>
         private HttpStatusCode GetOAuthToken(Uri requestUri, string pinCode, string requestToken, Dictionary<string, string> parameter, ref string content)
         {
-            HttpWebRequest webReq = null;
+            HttpWebRequest webReq;
 
             // HTTPリクエスト生成。PINコードもパラメータも未指定の場合はGETメソッドで通信。それ以外はPOST
             if (string.IsNullOrEmpty(pinCode) && parameter == null)

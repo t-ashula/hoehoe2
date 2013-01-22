@@ -60,17 +60,16 @@ namespace Hoehoe
 
             // IServiceProvider.QueryService() を使って IProfferService を取得
             _ocxServiceProvider = (WebBrowserAPI.IServiceProvider)_ocx;
-            int hresult = 0;
             try
             {
-                hresult = _ocxServiceProvider.QueryService(ref WebBrowserAPI.SID_SProfferService, ref WebBrowserAPI.IID_IProfferService, out _profferServicePtr);
+                _ocxServiceProvider.QueryService(ref WebBrowserAPI.SID_SProfferService, ref WebBrowserAPI.IID_IProfferService, out _profferServicePtr);
             }
             catch (SEHException)
             {
             }
             catch (ExternalException ex)
             {
-                MyCommon.TraceOut(ex, "ocxServiceProvider.QueryService() HRESULT:" + ex.ErrorCode.ToString("X8") + Environment.NewLine);
+                MyCommon.TraceOut(ex, string.Format("ocxServiceProvider.QueryService() HRESULT:{0:X8}{1}", ex.ErrorCode, Environment.NewLine));
                 return;
             }
 
@@ -81,14 +80,14 @@ namespace Hoehoe
             try
             {
                 int cookie;
-                hresult = _profferService.ProfferService(ref WebBrowserAPI.IID_IInternetSecurityManager, this, out cookie);
+                _profferService.ProfferService(ref WebBrowserAPI.IID_IInternetSecurityManager, this, out cookie);
             }
             catch (SEHException)
             {
             }
             catch (ExternalException ex)
             {
-                MyCommon.TraceOut(ex, "IProfferSerive.ProfferService() HRESULT:" + ex.ErrorCode.ToString("X8") + Environment.NewLine);
+                MyCommon.TraceOut(ex, string.Format("IProfferSerive.ProfferService() HRESULT:{0:X8}{1}", ex.ErrorCode, Environment.NewLine));
             }
         }
 

@@ -288,7 +288,7 @@ namespace Hoehoe
 
         public string Authenticate(string username, string password)
         {
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             MyCommon.TwitterApiInfo.Initialize();
             try
@@ -332,11 +332,10 @@ namespace Hoehoe
         public string StartAuthentication(ref string pinPageUrl)
         {
             // OAuth PIN Flow
-            bool res = false;
             MyCommon.TwitterApiInfo.Initialize();
             try
             {
-                res = _twitterConnection.AuthGetRequestToken(ref pinPageUrl);
+                _twitterConnection.AuthGetRequestToken(ref pinPageUrl);
             }
             catch (Exception)
             {
@@ -348,8 +347,7 @@ namespace Hoehoe
 
         public string Authenticate(string pinCode)
         {
-            HttpStatusCode res = default(HttpStatusCode);
-            string content = string.Empty;
+            HttpStatusCode res;
 
             MyCommon.TwitterApiInfo.Initialize();
             try
@@ -361,6 +359,7 @@ namespace Hoehoe
                 return "Err:" + "Failed to access auth acc server.";
             }
 
+            string content = string.Empty;
             switch (res)
             {
                 case HttpStatusCode.OK:
@@ -399,7 +398,7 @@ namespace Hoehoe
 
         public void VerifyCredentials()
         {
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -413,7 +412,7 @@ namespace Hoehoe
             if (res == HttpStatusCode.OK)
             {
                 AccountState = AccountState.Valid;
-                User user = null;
+                User user;
                 try
                 {
                     user = D.CreateDataFromJson<User>(content);
@@ -446,7 +445,6 @@ namespace Hoehoe
 
         public string PreProcessUrl(string orgData)
         {
-            int posl1 = 0;
             int posl2 = 0;
             string href = "<a href=\"";
 
@@ -454,13 +452,11 @@ namespace Hoehoe
             {
                 if (orgData.IndexOf(href, posl2, StringComparison.Ordinal) > -1)
                 {
-                    string urlStr = string.Empty;
-
                     // IDN展開
-                    posl1 = orgData.IndexOf(href, posl2, StringComparison.Ordinal);
+                    int posl1 = orgData.IndexOf(href, posl2, StringComparison.Ordinal);
                     posl1 += href.Length;
                     posl2 = orgData.IndexOf("\"", posl1, StringComparison.Ordinal);
-                    urlStr = orgData.Substring(posl1, posl2 - posl1);
+                    string urlStr = orgData.Substring(posl1, posl2 - posl1);
 
                     if (!urlStr.StartsWith("http://") && !urlStr.StartsWith("https://") && !urlStr.StartsWith("ftp://"))
                     {
@@ -509,7 +505,7 @@ namespace Hoehoe
                 return SendDirectMessage(postStr);
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -524,7 +520,7 @@ namespace Hoehoe
             {
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
-                    Status status = null;
+                    Status status;
                     try
                     {
                         status = D.CreateDataFromJson<Status>(content);
@@ -603,7 +599,7 @@ namespace Hoehoe
 
             postStr = postStr.Trim();
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -618,7 +614,7 @@ namespace Hoehoe
             {
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
-                    Status status = null;
+                    Status status;
                     try
                     {
                         status = D.CreateDataFromJson<Status>(content);
@@ -702,7 +698,7 @@ namespace Hoehoe
             }
 
             postStr = postStr.Trim();
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             Match mc = Regex.Match(postStr, "^DM? +(?<id>[a-zA-Z0-9_]+) +(?<body>.+)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
             try
@@ -718,7 +714,7 @@ namespace Hoehoe
             {
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
-                    Directmessage status = null;
+                    Directmessage status;
                     try
                     {
                         status = D.CreateDataFromJson<Directmessage>(content);
@@ -786,7 +782,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             try
             {
                 res = _twitterConnection.DestroyStatus(id);
@@ -837,7 +833,7 @@ namespace Hoehoe
                 target = post.RetweetedId;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -859,7 +855,7 @@ namespace Hoehoe
             }
 
             AccountState = AccountState.Valid;
-            Status status = null;
+            Status status;
             try
             {
                 status = D.CreateDataFromJson<Status>(content);
@@ -933,7 +929,7 @@ namespace Hoehoe
                 }
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             try
             {
                 res = _twitterConnection.DestroyDirectMessage(id);
@@ -970,7 +966,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1011,7 +1007,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1052,7 +1048,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1093,7 +1089,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1134,7 +1130,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1175,7 +1171,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1229,7 +1225,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             user = null;
             try
@@ -1284,7 +1280,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             retweetedCount = 0;
             for (int i = 1; i <= 100; i++)
@@ -1352,7 +1348,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1400,7 +1396,7 @@ namespace Hoehoe
             {
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
-                    Status status = null;
+                    Status status;
                     try
                     {
                         status = D.CreateDataFromJson<Status>(content);
@@ -1439,7 +1435,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1480,7 +1476,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1521,7 +1517,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1609,7 +1605,7 @@ namespace Hoehoe
 
                 // その他言語圏のリソース。取得失敗しても継続
                 // UIの言語圏のリソース
-                string curCul = string.Empty;
+                string curCul;
                 if (!Thread.CurrentThread.CurrentUICulture.IsNeutralCulture)
                 {
                     int idx = Thread.CurrentThread.CurrentUICulture.Name.LastIndexOf('-');
@@ -1641,7 +1637,7 @@ namespace Hoehoe
                 }
 
                 // スレッドの言語圏のリソース
-                string curCul2 = null;
+                string curCul2;
                 if (!Thread.CurrentThread.CurrentCulture.IsNeutralCulture)
                 {
                     int idx = Thread.CurrentThread.CurrentCulture.Name.LastIndexOf('-');
@@ -1712,7 +1708,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             int count = Configs.Instance.CountApi;
             if (workerType == WorkerType.Reply)
@@ -1793,7 +1789,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             if (count == 0)
             {
@@ -1844,7 +1840,7 @@ namespace Hoehoe
                     return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
-            List<Status> items = null;
+            List<Status> items;
             try
             {
                 items = D.CreateDataFromJson<List<Status>>(content);
@@ -1903,7 +1899,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -1930,7 +1926,7 @@ namespace Hoehoe
                     return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
-            Status status = null;
+            Status status;
             try
             {
                 status = D.CreateDataFromJson<Status>(content);
@@ -1987,9 +1983,9 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
-            int count = 0;
+            int count;
             if (Configs.Instance.UseAdditionalCount)
             {
                 count = Configs.Instance.ListCountApi;
@@ -2052,7 +2048,7 @@ namespace Hoehoe
 
         public string GetRelatedResult(bool read, TabClass tab)
         {
-            string rslt = string.Empty;
+            string rslt;
             var relPosts = new List<PostClass>();
             if (tab.RelationTargetPost.TextFromApi.Contains("@") && tab.RelationTargetPost.InReplyToStatusId == 0)
             {
@@ -2098,11 +2094,11 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             int page = 0;
             long sinceId = 0;
-            int count = 100;
+            int count;
             if (Configs.Instance.UseAdditionalCount && Configs.Instance.SearchCountApi != 0)
             {
                 count = Configs.Instance.SearchCountApi;
@@ -2259,7 +2255,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             int page = 0;
             long sinceId = 0;
@@ -2347,7 +2343,7 @@ namespace Hoehoe
                 }
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -2408,7 +2404,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             int count = Configs.Instance.CountApi;
             if (Configs.Instance.UseAdditionalCount && Configs.Instance.FavoritesCountApi != 0)
@@ -2450,7 +2446,7 @@ namespace Hoehoe
             }
 
             var serializer = new DataContractJsonSerializer(typeof(List<Status>));
-            List<Status> item = null;
+            List<Status> item;
             try
             {
                 item = D.CreateDataFromJson<List<Status>>(content);
@@ -2469,7 +2465,7 @@ namespace Hoehoe
             foreach (var status in item)
             {
                 var post = new PostClass();
-                Entities entities = null;
+                Entities entities;
 
                 try
                 {
@@ -2663,7 +2659,7 @@ namespace Hoehoe
 
         public string ConfigurationApi()
         {
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -2712,7 +2708,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             long cursor = -1;
             var lists = new List<ListElement>();
@@ -2812,7 +2808,7 @@ namespace Hoehoe
 
         public string DeleteList(string listId)
         {
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
 
             try
@@ -2843,7 +2839,7 @@ namespace Hoehoe
 
         public string EditList(string listId, string newName, bool isPrivate, string description, ref ListElement list)
         {
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
 
             try
@@ -2904,7 +2900,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -2955,7 +2951,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -3007,7 +3003,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -3051,7 +3047,7 @@ namespace Hoehoe
         public string AddUserToList(string listId, string user)
         {
             string content = string.Empty;
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             try
             {
                 res = _twitterConnection.CreateListMembers(listId, user, ref content);
@@ -3081,7 +3077,7 @@ namespace Hoehoe
         public string RemoveUserToList(string listId, string user)
         {
             string content = string.Empty;
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             try
             {
                 res = _twitterConnection.DeleteListMembers(listId, user, ref content);
@@ -3319,7 +3315,6 @@ namespace Hoehoe
                     {
                         // Twitterのバグで不正なエンティティ（Index指定範囲が重なっている）が返ってくる場合の対応
                         ret = text;
-                        entities = null;
                         if (media != null)
                         {
                             media.Clear();
@@ -3345,7 +3340,7 @@ namespace Hoehoe
                 return true;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -3402,7 +3397,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -3452,7 +3447,7 @@ namespace Hoehoe
 
         public string[] GetHashList()
         {
-            string[] hashArray = null;
+            string[] hashArray;
             lock (_lockObj)
             {
                 hashArray = _hashList.ToArray();
@@ -3568,7 +3563,7 @@ namespace Hoehoe
             retStr = retStr.Replace("\n", "<br/>");
 
             // 半角スペースを置換(Thanks @anis774)
-            bool ret = false;
+            bool ret;
             do
             {
                 ret = EscapeSpace(ref retStr);
@@ -3636,8 +3631,8 @@ namespace Hoehoe
 
         private PostClass CreatePostsFromStatusData(Status status)
         {
+            Entities entities;
             var post = new PostClass();
-            Entities entities = null;
             post.StatusId = status.Id;
             if (status.RetweetedStatus != null)
             {
@@ -3781,7 +3776,7 @@ namespace Hoehoe
 
         private string CreatePostsFromJson(string content, WorkerType workerType, TabClass tab, bool read, int count, ref long minimumId)
         {
-            List<Status> items = null;
+            List<Status> items;
             try
             {
                 items = D.CreateDataFromJson<List<Status>>(content);
@@ -3799,8 +3794,7 @@ namespace Hoehoe
 
             foreach (var status in items)
             {
-                PostClass post = null;
-                post = CreatePostsFromStatusData(status);
+                PostClass post = CreatePostsFromStatusData(status);
                 if (post == null)
                 {
                     continue;
@@ -3856,7 +3850,7 @@ namespace Hoehoe
 
         private string CreatePostsFromPhoenixSearch(string content, WorkerType workerType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
         {
-            SearchResult items = null;
+            SearchResult items;
             try
             {
                 items = D.CreateDataFromJson<SearchResult>(content);
@@ -3957,7 +3951,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -3982,7 +3976,7 @@ namespace Hoehoe
                     return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
-            List<RelatedResult> items = null;
+            List<RelatedResult> items;
             try
             {
                 items = D.CreateDataFromJson<List<RelatedResult>>(content);
@@ -4104,7 +4098,7 @@ namespace Hoehoe
 
         private string CreateDirectMessagesFromJson(string content, WorkerType workerType, bool read)
         {
-            List<Directmessage> item = null;
+            List<Directmessage> item;
             try
             {
                 if (workerType == WorkerType.UserStream)
@@ -4177,7 +4171,7 @@ namespace Hoehoe
                     post.IsFav = false;
 
                     // 以下、ユーザー情報
-                    User user = null;
+                    User user;
                     if (workerType == WorkerType.UserStream)
                     {
                         if (_twitterConnection.AuthenticatedUsername.Equals(message.Recipient.ScreenName, StringComparison.CurrentCultureIgnoreCase))
@@ -4275,7 +4269,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -4326,7 +4320,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            HttpStatusCode res = default(HttpStatusCode);
+            HttpStatusCode res;
             string content = string.Empty;
             try
             {
@@ -4441,7 +4435,7 @@ namespace Hoehoe
                     if (elm.Element("delete") != null)
                     {
                         Debug.Print("delete");
-                        long id = default(long);
+                        long id;
                         if (elm.Element("delete").Element("direct_message") != null && elm.Element("delete").Element("direct_message").Element("id") != null)
                         {
                             id = Convert.ToInt64(elm.Element("delete").Element("direct_message").Element("id").Value);

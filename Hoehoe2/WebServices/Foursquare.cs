@@ -100,8 +100,7 @@ namespace Hoehoe
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref string content)
         {
             HttpWebRequest webReq = CreateRequest(method, requestUri, param, false);
-            HttpStatusCode code = default(HttpStatusCode);
-            code = GetResponse(webReq, ref content, null, false);
+            HttpStatusCode code = GetResponse(webReq, ref content, null, false);
             return code;
         }
 
@@ -134,7 +133,7 @@ namespace Hoehoe
 
                 if (res == HttpStatusCode.OK)
                 {
-                    FourSquareData curData = null;
+                    FourSquareData curData;
                     try
                     {
                         curData = D.CreateDataFromJson<FourSquareData>(content);

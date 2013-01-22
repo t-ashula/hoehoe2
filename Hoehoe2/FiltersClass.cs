@@ -190,9 +190,8 @@ namespace Hoehoe
 
         public HITRESULT IsHit(PostClass post)
         {
-            bool isHit = true;
-            string bodyText = null;
-            string sourceText = null;
+            string bodyText;
+            string sourceText;
             if (SearchUrl)
             {
                 bodyText = post.Text;
@@ -205,8 +204,8 @@ namespace Hoehoe
             }
 
             // 検索オプション
-            StringComparison compOpt = default(StringComparison);
-            RegexOptions regexOption = default(RegexOptions);
+            StringComparison compOpt;
+            RegexOptions regexOption;
             if (CaseSensitive)
             {
                 compOpt = StringComparison.Ordinal;
@@ -218,9 +217,12 @@ namespace Hoehoe
                 regexOption = RegexOptions.IgnoreCase;
             }
 
+            bool isHit = true;
             if (SearchBoth)
             {
-                if (string.IsNullOrEmpty(NameFilter) || (!UseRegex && (post.ScreenName.Equals(NameFilter, compOpt) || post.RetweetedBy.Equals(NameFilter, compOpt))) || (UseRegex && (Regex.IsMatch(post.ScreenName, NameFilter, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, NameFilter, regexOption)))))
+                if (string.IsNullOrEmpty(NameFilter)
+                    || (!UseRegex && (post.ScreenName.Equals(NameFilter, compOpt) || post.RetweetedBy.Equals(NameFilter, compOpt)))
+                    || (UseRegex && (Regex.IsMatch(post.ScreenName, NameFilter, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, NameFilter, regexOption)))))
                 {
                     if (_useLambda)
                     {

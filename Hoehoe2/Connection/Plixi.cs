@@ -74,7 +74,7 @@ namespace Hoehoe
                 message = string.Empty;
             }
 
-            FileInfo mediaFile = null;
+            FileInfo mediaFile;
             try
             {
                 mediaFile = new FileInfo(filePath);
@@ -90,7 +90,7 @@ namespace Hoehoe
             }
 
             string content = string.Empty;
-            HttpStatusCode ret = default(HttpStatusCode);
+            HttpStatusCode ret;
             try
             {
                 // Plixiへの投稿
@@ -101,7 +101,7 @@ namespace Hoehoe
                 return "Err:" + ex.Message;
             }
 
-            string url = string.Empty;
+            string url;
             if (ret == HttpStatusCode.Created)
             {
                 var xd = new XmlDocument();

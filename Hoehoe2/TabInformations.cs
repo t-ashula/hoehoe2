@@ -288,7 +288,7 @@ namespace Hoehoe
                 {
                     for (var i = 0; i < tab.AllCount; ++i)
                     {
-                        PostClass toRemovePost = null;
+                        PostClass toRemovePost;
                         try
                         {
                             toRemovePost = Item(tn, i);
@@ -1439,8 +1439,8 @@ namespace Hoehoe
                 return;
             }
 
-            int toIdx = 0;
-            int stp = 1;
+            int toIdx;
+            int stp;
             tab.OldestUnreadId = -1;
             if (_sorter.Order == SortOrder.Ascending)
             {
@@ -1507,11 +1507,10 @@ namespace Hoehoe
                 PostClass post = _statuses[id];
                 bool added = false;              // 通知リスト追加フラグ
                 bool mv = false;                // 移動フラグ（Recent追加有無）
-                var rslt = HITRESULT.None;
                 post.IsExcludeReply = false;
                 foreach (string tn in Tabs.Keys)
                 {
-                    rslt = Tabs[tn].AddFiltered(post);
+                    HITRESULT rslt = Tabs[tn].AddFiltered(post);
                     if (rslt != HITRESULT.None && rslt != HITRESULT.Exclude)
                     {
                         if (rslt == HITRESULT.CopyAndMark)

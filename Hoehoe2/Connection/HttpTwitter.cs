@@ -465,18 +465,16 @@ namespace Hoehoe
 
         public HttpStatusCode PhoenixSearch(string querystr, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            string[] tmp = null;
-            string[] paramstr = null;
             if (string.IsNullOrEmpty(querystr))
             {
                 return HttpStatusCode.BadRequest;
             }
 
-            tmp = querystr.Split(new[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries);
+            var param = new Dictionary<string, string>();
+            string[] tmp = querystr.Split(new[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string tmp2 in tmp)
             {
-                paramstr = tmp2.Split(new[] { '=' });
+                string[] paramstr = tmp2.Split(new[] { '=' });
                 param.Add(paramstr[0], paramstr[1]);
             }
 

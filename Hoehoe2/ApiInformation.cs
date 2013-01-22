@@ -310,9 +310,7 @@ namespace Hoehoe
 
         public void ParseHttpHeaders(Dictionary<string, string> headers)
         {
-            int tmp = 0;
-            DateTime tmpd = default(DateTime);
-            tmp = GetMaxCountFromHttpHeader();
+            int tmp = GetMaxCountFromHttpHeader();
             if (tmp != -1)
             {
                 maxCount = tmp;
@@ -324,7 +322,7 @@ namespace Hoehoe
                 remainCount = tmp;
             }
 
-            tmpd = GetResetTimeFromHttpHeader();
+            DateTime tmpd = GetResetTimeFromHttpHeader();
             if (tmpd != new DateTime())
             {
                 resetTime = tmpd;
@@ -378,7 +376,7 @@ namespace Hoehoe
 
         private int GetRemainCountFromHttpHeader()
         {
-            int result = 0;
+            int result;
             if (string.IsNullOrEmpty(HttpHeaders["X-RateLimit-Remaining"]))
             {
                 return -1;
@@ -394,7 +392,7 @@ namespace Hoehoe
 
         private int GetMaxCountFromHttpHeader()
         {
-            int result = 0;
+            int result;
             if (string.IsNullOrEmpty(HttpHeaders["X-RateLimit-Limit"]))
             {
                 return -1;
@@ -410,7 +408,7 @@ namespace Hoehoe
 
         private DateTime GetResetTimeFromHttpHeader()
         {
-            int i = 0;
+            int i;
             if (int.TryParse(HttpHeaders["X-RateLimit-Reset"], out i))
             {
                 return i >= 0 ?
@@ -423,7 +421,7 @@ namespace Hoehoe
 
         private int GetMediaRemainCountFromHttpHeader()
         {
-            int result = 0;
+            int result;
             if (string.IsNullOrEmpty(HttpHeaders["X-MediaRateLimit-Remaining"]))
             {
                 return -1;
@@ -439,7 +437,7 @@ namespace Hoehoe
 
         private int GetMediaMaxCountFromHttpHeader()
         {
-            int result = 0;
+            int result;
             if (string.IsNullOrEmpty(HttpHeaders["X-MediaRateLimit-Limit"]))
             {
                 return -1;
@@ -455,7 +453,7 @@ namespace Hoehoe
 
         private DateTime GetMediaResetTimeFromHttpHeader()
         {
-            int i = 0;
+            int i;
             if (int.TryParse(HttpHeaders["X-MediaRateLimit-Reset"], out i))
             {
                 return i >= 0 ? TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i)) : new DateTime();

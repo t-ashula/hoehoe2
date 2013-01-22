@@ -216,13 +216,11 @@ namespace Hoehoe
             ulong maxValue = Convert.ToUInt64(ulong.MaxValue / Convert.ToUInt64(radix)); // 最大値の1けた前の数値
 
             // 数値文字列を解析して数値に変換する
-            char num = '\0';          // 処理中の1けたの数値文字列
-            int digit = 0;            // 処理中の1けたの数値
             int length = s.Length;
             for (int i = 0; i <= length - 1; i++)
             {
-                num = s[i];
-                digit = GetDigitFromNumber(num);
+                char num = s[i];          // 処理中の1けたの数値文字列
+                int digit = GetDigitFromNumber(num);            // 処理中の1けたの数値
                 CheckDigitOutOfRange(digit, radix);
 
                 // 次にradixを掛けるときに数値がオーバーフローしないかを事前にチェックする
@@ -277,11 +275,10 @@ namespace Hoehoe
             ulong curDigit = n;            // 未処理の数値
 
             // 数値を解析して数値文字列に変換する
-            ulong digit = 0; // 処理中の1けたの数値
             do
             {
                 // 一番下のけたの数値を取り出す
-                digit = curDigit % Convert.ToUInt64(radix);
+                ulong digit = curDigit % Convert.ToUInt64(radix); // 処理中の1けたの数値
 
                 // 取り出した1けたを切り捨てる
                 curDigit = Convert.ToUInt64(curDigit / Convert.ToUInt64(radix));
@@ -318,13 +315,11 @@ namespace Hoehoe
             decimal maxValue = decimal.MaxValue / Convert.ToDecimal(radix);            // 最大値の1けた前の数値
 
             // 数値文字列を解析して数値に変換する
-            char num = '\0';            // 処理中の1けたの数値文字列
-            int digit = 0;            // 処理中の1けたの数値
             int length = s.Length;
             for (int i = 0; i <= length - 1; i++)
             {
-                num = s[i];
-                digit = GetDigitFromNumber(num);
+                char num = s[i];            // 処理中の1けたの数値文字列
+                int digit = GetDigitFromNumber(num);            // 処理中の1けたの数値
                 CheckDigitOutOfRange(digit, radix);
 
                 // 次にradixを掛けるときに数値がオーバーフローしないかを事前にチェックする
@@ -362,11 +357,10 @@ namespace Hoehoe
             decimal curDigit = n;            // 未処理の数値
 
             // 数値を解析して数値文字列に変換する
-            decimal digit = default(decimal);            // 処理中の1けたの数値
             do
             {
                 // 一番下のけたの数値を取り出す
-                digit = curDigit % Convert.ToDecimal(radix);
+                decimal digit = curDigit % Convert.ToDecimal(radix);            // 処理中の1けたの数値
 
                 // 取り出した1けたを切り捨てる
                 curDigit = curDigit / Convert.ToDecimal(radix);
@@ -384,7 +378,7 @@ namespace Hoehoe
 
         private static void CheckNumberArgument(string s)
         {
-            if (s == null || s == string.Empty)
+            if (string.IsNullOrEmpty(s))
             {
                 throw new ArgumentException("数値文字列が指定されていません。");
             }

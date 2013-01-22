@@ -214,7 +214,7 @@ namespace Hoehoe
             if (icon != null || !string.IsNullOrEmpty(url))
             {
                 Type gcore = _core.GetType("Growl.CoreLibrary.Resource");
-                object res = null;
+                object res;
                 if (icon != null)
                 {
                     res = gcore.InvokeMember("op_Implicit", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { icon });
