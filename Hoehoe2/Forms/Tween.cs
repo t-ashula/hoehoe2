@@ -38,14 +38,14 @@ namespace Hoehoe
     using System.Reflection;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
-    using Hoehoe.TweenCustomControl;
-    using R = Hoehoe.Properties.Resources;
+    using TweenCustomControl;
+    using R = Properties.Resources;
 
     public partial class TweenMain
     {
         #region private fields
 
-        private static int accountCheckErrorCount;
+        private static int _accountCheckErrorCount;
 
         /// <summary>
         /// TODO: hoehoe webpage
@@ -57,213 +57,203 @@ namespace Hoehoe
         /// </summary>
         private const string ApplicationShortcutKeyHelpWebPageUrl = "http://sourceforge.jp/projects/tween/wiki/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E3%82%AD%E3%83%BC";
 
-        private readonly string[] TwitterSearchLangs = { "ja", "en", "ar", "da", "nl", "fa", "fi", "fr", "de", "hu", "is", "it", "no", "pl", "pt", "ru", "es", "sv", "th" };
+        private readonly string[] _twitterSearchLangs = { "ja", "en", "ar", "da", "nl", "fa", "fi", "fr", "de", "hu", "is", "it", "no", "pl", "pt", "ru", "es", "sv", "th" };
 
         // ロック用
-        private readonly object syncObject = new object();
+        private readonly object _syncObject = new object();
 
-        // 各種設定
-        private Size mySize; // 画面サイズ
+        /* 各種設定 */
+        private Size _mySize; // 画面サイズ
+        private Point _myLoc; // 画面位置
+        private int _mySpDis; // 区切り位置
+        private int _mySpDis2; // 発言欄区切り位置
+        private int _mySpDis3; // プレビュー区切り位置
+        private int _myAdSpDis; // Ad区切り位置
+        private int _iconSz; // アイコンサイズ（現在は16、24、48の3種類。将来直接数字指定可能とする 注：24x24の場合に26と指定しているのはMSゴシック系フォントのための仕様）
+        private bool _iconCol; // 1列表示の時True（48サイズのとき）
 
-        private Point myLoc; // 画面位置
-        private int mySpDis; // 区切り位置
-        private int mySpDis2; // 発言欄区切り位置
-        private int mySpDis3; // プレビュー区切り位置
-        private int myAdSpDis; // Ad区切り位置
-        private int iconSz; // アイコンサイズ（現在は16、24、48の3種類。将来直接数字指定可能とする 注：24x24の場合に26と指定しているのはMSゴシック系フォントのための仕様）
-        private bool iconCol; // 1列表示の時True（48サイズのとき）
+        /* 雑多なフラグ類 */
+        private bool _isInitializing; // True:起動時処理中
+        private bool _initialLayout = true; // True:起動時処理中
+        private bool _ignoreConfigSave;
+        private bool _tabDraging; // タブドラッグ中フラグ（DoDragDropを実行するかの判定用）
+        private TabPage _prevSelectedTab; // タブが削除されたときに前回選択されていたときのタブを選択する為に保持
+        private Point _tabMouseDownPoint;
+        private string _rclickTabName; // 右クリックしたタブの名前（Tabコントロール機能不足対応）
 
-        // 雑多なフラグ類
-        private bool isInitializing; // True:起動時処理中
+        private string _detailHtmlFormatHeader;
+        private string _detailHtmlFormatFooter;
+        private bool _myStatusError;
+        private bool _soundfileListup;
 
-        private bool initialLayout = true; // True:起動時処理中
-        private bool ignoreConfigSave;
+        private SpaceKeyCanceler _spaceKeyCanceler;
 
-        private bool tabDraging; // タブドラッグ中フラグ（DoDragDropを実行するかの判定用）
-        private TabPage prevSelectedTab; // タブが削除されたときに前回選択されていたときのタブを選択する為に保持
-        private Point tabMouseDownPoint;
-        private string rclickTabName; // 右クリックしたタブの名前（Tabコントロール機能不足対応）
-
-        private string detailHtmlFormatHeader;
-        private string detailHtmlFormatFooter;
-        private bool myStatusError;
-        private bool soundfileListup;
-
-        private SpaceKeyCanceler spaceKeyCanceler;
-
-        /// 設定関連
-        private Configs configs = Configs.Instance;
-
-        private SettingLocal cfgLocal;
-        private SettingCommon cfgCommon;
-        private bool modifySettingLocal;
-        private bool modifySettingCommon;
-        private bool modifySettingAtId;
+        /* 設定関連 */
+        private readonly Configs _configs = Configs.Instance;
+        private SettingLocal _cfgLocal;
+        private SettingCommon _cfgCommon;
+        private bool _modifySettingLocal;
+        private bool _modifySettingCommon;
+        private bool _modifySettingAtId;
 
         // twitter解析部
-        private Twitter tw = new Twitter();
+        private readonly Twitter _tw = new Twitter();
 
         // Growl呼び出し部
-        private GrowlHelper growlHelper;
+        private readonly GrowlHelper _growlHelper;
 
-        // サブ画面インスタンス
-        private AppendSettingDialog settingDialog = new AppendSettingDialog(); // 設定画面インスタンス
+        /* サブ画面インスタンス */
+        private readonly AppendSettingDialog _settingDialog = new AppendSettingDialog(); // 設定画面インスタンス
+        private readonly TabsDialog _tabDialog = new TabsDialog();      // タブ選択ダイアログインスタンス
+        private readonly SearchWord _searchDialog = new SearchWord();   // 検索画面インスタンス
+        private readonly FilterDialog _fltDialog = new FilterDialog();  // フィルター編集画面
+        private readonly OpenURL _urlDialog = new OpenURL();
+        private TweenAboutBox _aboutBox;
+        private EventViewerDialog _evtDialog;
 
-        private TabsDialog tabDialog = new TabsDialog();      // タブ選択ダイアログインスタンス
-        private SearchWord searchDialog = new SearchWord();   // 検索画面インスタンス
-        private FilterDialog fltDialog = new FilterDialog();  // フィルター編集画面
-        private OpenURL urlDialog = new OpenURL();
-        private TweenAboutBox aboutBox;
-        private EventViewerDialog evtDialog;
+        /* 表示フォント、色、アイコン */
+        private Font _fntUnread; // 未読用フォント
+        private Color _clrUnread; // 未読用文字色
+        private Font _fntReaded; // 既読用フォント
+        private Color _clrRead; // 既読用文字色
+        private Color _clrFav; // Fav用文字色
+        private Color _clrOwl; // 片思い用文字色
+        private Color _clrRetweet; // Retweet用文字色
+        private Font _fntDetail; // 発言詳細部用フォント
+        private Color _clrDetail; // 発言詳細部用色
+        private Color _clrDetailLink; // 発言詳細部用リンク文字色
+        private Color _clrDetailBackcolor; // 発言詳細部用背景色
+        private Color _clrSelf; // 自分の発言用背景色
+        private Color _clrAtSelf; // 自分宛返信用背景色
+        private Color _clrTarget; // 選択発言者の他の発言用背景色
+        private Color _clrAtTarget; // 選択発言中の返信先用背景色
+        private Color _clrAtFromTarget; // 選択発言者への返信発言用背景色
+        private Color _clrAtTo; // 選択発言の唯一＠先
+        private Color _clrListBackcolor; // リスト部通常発言背景色
+        private Color _clrInputBackcolor; // 入力欄背景色
+        private Color _clrInputForecolor; // 入力欄文字色
+        private Font _fntInputFont; // 入力欄フォント
 
-        // 表示フォント、色、アイコン
-        private Font fntUnread; // 未読用フォント
+        /* アイコン画像リスト */
+        private ImageDictionary _iconDict;
+        private Icon _iconAt;         // At.ico             タスクトレイアイコン：通常時
+        private Icon _iconAtRed;      // AtRed.ico          タスクトレイアイコン：通信エラー時
+        private Icon _iconAtSmoke;    // AtSmoke.ico        タスクトレイアイコン：オフライン時
+        private readonly Icon[] _iconRefresh = new Icon[4]; // Refresh.ico        タスクトレイアイコン：更新中（アニメーション用に4種類を保持するリスト）
+        private Icon _tabIcon;        // Tab.ico            未読のあるタブ用アイコン
+        private Icon _mainIcon;       // Main.ico           画面左上のアイコン
+        private Icon _replyIcon;      // 5g
+        private Icon _replyIconBlink; // 6g
 
-        private Color clrUnread; // 未読用文字色
-        private Font fntReaded; // 既読用フォント
-        private Color clrRead; // 既読用文字色
-        private Color clrFav; // Fav用文字色
-        private Color clrOWL; // 片思い用文字色
-        private Color clrRetweet; // Retweet用文字色
-        private Font fntDetail; // 発言詳細部用フォント
-        private Color clrDetail; // 発言詳細部用色
-        private Color clrDetailLink; // 発言詳細部用リンク文字色
-        private Color clrDetailBackcolor; // 発言詳細部用背景色
-        private Color clrSelf; // 自分の発言用背景色
-        private Color clrAtSelf; // 自分宛返信用背景色
-        private Color clrTarget; // 選択発言者の他の発言用背景色
-        private Color clrAtTarget; // 選択発言中の返信先用背景色
-        private Color clrAtFromTarget; // 選択発言者への返信発言用背景色
-        private Color clrAtTo; // 選択発言の唯一＠先
-        private Color clrListBackcolor; // リスト部通常発言背景色
-        private Color clrInputBackcolor; // 入力欄背景色
-        private Color clrInputForecolor; // 入力欄文字色
-        private Font fntInputFont; // 入力欄フォント
-
-        // アイコン画像リスト
-        private ImageDictionary iconDict;
-
-        private Icon iconAt;         // At.ico             タスクトレイアイコン：通常時
-        private Icon iconAtRed;      // AtRed.ico          タスクトレイアイコン：通信エラー時
-        private Icon iconAtSmoke;    // AtSmoke.ico        タスクトレイアイコン：オフライン時
-        private Icon[] iconRefresh = new Icon[4]; // Refresh.ico        タスクトレイアイコン：更新中（アニメーション用に4種類を保持するリスト）
-        private Icon tabIcon;        // Tab.ico            未読のあるタブ用アイコン
-        private Icon mainIcon;       // Main.ico           画面左上のアイコン
-        private Icon replyIcon;      // 5g
-        private Icon replyIconBlink; // 6g
-
-        private PostClass anchorPost;
+        private PostClass _anchorPost;
 
         // True:関連発言移動中（関連移動以外のオペレーションをするとFalseへ。Trueだとリスト背景色をアンカー発言選択中として描画）
-        private bool anchorFlag;
+        private bool _anchorFlag;
 
         // 発言履歴
-        private List<PostingStatus> postHistory = new List<PostingStatus>();
+        private readonly List<PostingStatus> _postHistory = new List<PostingStatus>();
 
         // 発言履歴カレントインデックス
-        private int postHistoryIndex;
+        private int _postHistoryIndex;
 
         // 発言投稿時のAPI引数（発言編集時に設定。手書きreplyでは設定されない）
         // リプライ先のステータスID 0の場合はリプライではない 注：複数あてのものはリプライではない
-        private long replyToId;
+        private long _replyToId;
 
         // リプライ先ステータスの書き込み者の名前
-        private string replyToName;
+        private string _replyToName;
 
-        // 時速表示用
-        private List<DateTime> postTimestamps = new List<DateTime>();
+        /* 時速表示用 */
+        private readonly List<DateTime> _postTimestamps = new List<DateTime>();
+        private readonly List<DateTime> _favTimestamps = new List<DateTime>();
+        private readonly Dictionary<DateTime, int> _timeLineTimestamps = new Dictionary<DateTime, int>();
+        private int _timeLineCount;
 
-        private List<DateTime> favTimestamps = new List<DateTime>();
-        private Dictionary<DateTime, int> timeLineTimestamps = new Dictionary<DateTime, int>();
-        private int timeLineCount;
-
-        // 以下DrawItem関連
-        private SolidBrush brsHighLight = new SolidBrush(Color.FromKnownColor(KnownColor.Highlight));
-
-        private SolidBrush brsHighLightText = new SolidBrush(Color.FromKnownColor(KnownColor.HighlightText));
-        private SolidBrush brsForeColorUnread;
-        private SolidBrush brsForeColorReaded;
-        private SolidBrush brsForeColorFav;
-        private SolidBrush brsForeColorOWL;
-        private SolidBrush brsForeColorRetweet;
-        private SolidBrush brsBackColorMine;
-        private SolidBrush brsBackColorAt;
-        private SolidBrush brsBackColorYou;
-        private SolidBrush brsBackColorAtYou;
-        private SolidBrush brsBackColorAtFromTarget;
-        private SolidBrush brsBackColorAtTo;
-        private SolidBrush brsBackColorNone;
+        /* 以下DrawItem関連 */
+        private readonly SolidBrush _brsHighLight = new SolidBrush(Color.FromKnownColor(KnownColor.Highlight));
+        private readonly SolidBrush _brsHighLightText = new SolidBrush(Color.FromKnownColor(KnownColor.HighlightText));
+        private SolidBrush _brsForeColorUnread;
+        private SolidBrush _brsForeColorReaded;
+        private SolidBrush _brsForeColorFav;
+        private SolidBrush _brsForeColorOwl;
+        private SolidBrush _brsForeColorRetweet;
+        private SolidBrush _brsBackColorMine;
+        private SolidBrush _brsBackColorAt;
+        private SolidBrush _brsBackColorYou;
+        private SolidBrush _brsBackColorAtYou;
+        private SolidBrush _brsBackColorAtFromTarget;
+        private SolidBrush _brsBackColorAtTo;
+        private SolidBrush _brsBackColorNone;
 
         // Listにフォーカスないときの選択行の背景色
-        private SolidBrush brsDeactiveSelection = new SolidBrush(Color.FromKnownColor(KnownColor.ButtonFace));
+        private readonly SolidBrush _brsDeactiveSelection = new SolidBrush(Color.FromKnownColor(KnownColor.ButtonFace));
 
-        private StringFormat tabStringFormat = new StringFormat();
+        private readonly StringFormat _tabStringFormat = new StringFormat();
 
-        private ToolStripAPIGauge apiGauge = new ToolStripAPIGauge();
+        private readonly ToolStripAPIGauge _apiGauge = new ToolStripAPIGauge();
 
-        private TabInformations statuses;
-        private ListViewItem[] itemCache;
-        private int itemCacheIndex;
-        private PostClass[] postCache;
-        private TabPage curTab;
-        private int curItemIndex;
-        private DetailsListView curList;
-        private PostClass curPost;
-        private bool isColumnChanged;
-        private bool waitTimeline;
-        private bool waitReply;
-        private bool waitDm;
-        private bool waitFav;
-        private bool waitPubSearch;
-        private bool waitUserTimeline;
-        private bool waitLists;
-        private BackgroundWorker[] bworkers = new BackgroundWorker[19];
-        private BackgroundWorker followerFetchWorker;
-        private ShieldIcon shield = new ShieldIcon();
-        private InternetSecurityManager securityManager;
-        private Thumbnail thumbnail;
-        private int unreadCounter = -1;
-        private int unreadAtCounter = -1;
-        private string[] columnOrgTexts = new string[9];
-        private string[] columnTexts = new string[9];
-        private bool doFavRetweetFlags;
-        private bool isOsResumed;
-        private Dictionary<string, IMultimediaShareService> pictureServices;
-        private string postBrowserStatusText = string.Empty;
-        private bool colorize;
-        private System.Timers.Timer timerTimeline;
-        private ImageListViewItem displayItem;
-        private List<UrlUndoInfo> urlUndoBuffer;
+        private TabInformations _statuses;
+        private ListViewItem[] _itemCache;
+        private int _itemCacheIndex;
+        private PostClass[] _postCache;
+        private TabPage _curTab;
+        private int _curItemIndex;
+        private DetailsListView _curList;
+        private PostClass _curPost;
+        private bool _isColumnChanged;
+        private bool _waitTimeline;
+        private bool _waitReply;
+        private bool _waitDm;
+        private bool _waitFav;
+        private bool _waitPubSearch;
+        private bool _waitUserTimeline;
+        private bool _waitLists;
+        private readonly BackgroundWorker[] _bworkers = new BackgroundWorker[19];
+        private BackgroundWorker _followerFetchWorker;
+        private readonly ShieldIcon _shield = new ShieldIcon();
+        private InternetSecurityManager _securityManager;
+        private readonly Thumbnail _thumbnail;
+        private int _unreadCounter = -1;
+        private int _unreadAtCounter = -1;
+        private readonly string[] _columnOrgTexts = new string[9];
+        private readonly string[] _columnTexts = new string[9];
+        private bool _doFavRetweetFlags;
+        private bool _isOsResumed;
+        private Dictionary<string, IMultimediaShareService> _pictureServices;
+        private string _postBrowserStatusText = string.Empty;
+        private bool _colorize;
+        private readonly System.Timers.Timer _timerTimeline;
+        private ImageListViewItem _displayItem;
+        private List<UrlUndoInfo> _urlUndoBuffer;
 
         // [, ]でのリプライ移動の履歴
-        private Stack<ReplyChain> replyChains;
+        private Stack<ReplyChain> _replyChains;
 
         // ポスト選択履歴
-        private Stack<Tuple<TabPage, PostClass>> selectPostChains = new Stack<Tuple<TabPage, PostClass>>();
+        private readonly Stack<Tuple<TabPage, PostClass>> _selectPostChains = new Stack<Tuple<TabPage, PostClass>>();
 
-        // タイマー系
-        private IntervalChangedEventArgs resetTimers = new IntervalChangedEventArgs();
+        /* タイマー系 */
+        private IntervalChangedEventArgs _resetTimers = new IntervalChangedEventArgs();
+        private int _timerHomeCounter;
+        private int _timerMentionCounter;
+        private int _timerDmCounter;
+        private int _timerPubSearchCounter;
+        private int _timerUserTimelineCounter;
+        private int _timerListsCounter;
+        private int _timerUsCounter;
+        private int _timerResumeWait;
+        private int _timerRefreshFollowers;
+        private Dictionary<WorkerType, DateTime> _lastTimeWork;
 
-        private int timerHomeCounter;
-        private int timerMentionCounter;
-        private int timerDmCounter;
-        private int timerPubSearchCounter;
-        private int timerUserTimelineCounter;
-        private int timerListsCounter;
-        private int timerUsCounter;
-        private int timerResumeWait;
-        private int timerRefreshFollowers;
-        private Dictionary<WorkerType, DateTime> lastTimeWork;
-
-        private PostClass displayPost;
-        private int iconCnt;
-        private int blinkCnt;
-        private bool doBlink;
-        private bool isIdle;
-        private long prevFollowerCount = 0;
-        private HookGlobalHotkey hookGlobalHotkey;
-        private bool isActiveUserstream = false;
-        private string prevTrackWord = string.Empty;
+        private PostClass _displayPost;
+        private int _iconCnt;
+        private int _blinkCnt;
+        private bool _doBlink;
+        private bool _isIdle;
+        private long _prevFollowerCount = 0;
+        private readonly HookGlobalHotkey _hookGlobalHotkey;
+        private bool _isActiveUserstream = false;
+        private string _prevTrackWord = string.Empty;
 
         #endregion private fields
 
@@ -275,21 +265,21 @@ namespace Hoehoe
             this.InitializeComponent();
 
             // InitializeComponent() 呼び出しの後で初期化を追加します。
-            this.hookGlobalHotkey = new HookGlobalHotkey(this);
-            this.hookGlobalHotkey.HotkeyPressed += this.HookGlobalHotkey_HotkeyPressed;
-            this.settingDialog.IntervalChanged += this.TimerInterval_Changed;
-            this.apiGauge.Control.Size = new Size(70, 22);
-            this.apiGauge.Control.Margin = new Padding(0, 3, 0, 2);
-            this.apiGauge.GaugeHeight = 8;
-            this.apiGauge.Control.DoubleClick += this.ApiInfoMenuItem_Click;
-            this.StatusStrip1.Items.Insert(2, this.apiGauge);
-            this.growlHelper = new GrowlHelper("Hoehoe");
-            this.growlHelper.NotifyClicked += this.GrowlHelper_Callback;
-            this.timerTimeline = new System.Timers.Timer();
-            this.timerTimeline.Elapsed += this.TimerTimeline_Elapsed;
+            this._hookGlobalHotkey = new HookGlobalHotkey(this);
+            this._hookGlobalHotkey.HotkeyPressed += this.HookGlobalHotkey_HotkeyPressed;
+            this._settingDialog.IntervalChanged += this.TimerInterval_Changed;
+            this._apiGauge.Control.Size = new Size(70, 22);
+            this._apiGauge.Control.Margin = new Padding(0, 3, 0, 2);
+            this._apiGauge.GaugeHeight = 8;
+            this._apiGauge.Control.DoubleClick += this.ApiInfoMenuItem_Click;
+            this.StatusStrip1.Items.Insert(2, this._apiGauge);
+            this._growlHelper = new GrowlHelper("Hoehoe");
+            this._growlHelper.NotifyClicked += this.GrowlHelper_Callback;
+            this._timerTimeline = new System.Timers.Timer();
+            this._timerTimeline.Elapsed += this.TimerTimeline_Elapsed;
 
-            this.securityManager = new InternetSecurityManager(this.PostBrowser);
-            this.thumbnail = new Thumbnail(this);
+            this._securityManager = new InternetSecurityManager(this.PostBrowser);
+            this._thumbnail = new Thumbnail(this);
             MyCommon.TwitterApiInfo.Changed += this.TwitterApiInfo_Changed;
             Microsoft.Win32.SystemEvents.PowerModeChanged += this.SystemEvents_PowerModeChanged;
         }
@@ -308,22 +298,22 @@ namespace Hoehoe
 
         public Twitter TwitterInstance
         {
-            get { return this.tw; }
+            get { return this._tw; }
         }
 
         public PostClass CurPost
         {
-            get { return this.curPost; }
+            get { return this._curPost; }
         }
 
         public bool IsPreviewEnable
         {
-            get { return this.configs.PreviewEnable; }
+            get { return this._configs.PreviewEnable; }
         }
 
         public bool FavEventChangeUnread
         {
-            get { return this.configs.FavEventUnread; }
+            get { return this._configs.FavEventUnread; }
         }
 
         /// <summary>
@@ -345,7 +335,7 @@ namespace Hoehoe
 
         private bool ExistCurrentPost
         {
-            get { return this.curPost != null && !this.curPost.IsDeleted; }
+            get { return this._curPost != null && !this._curPost.IsDeleted; }
         }
 
         #endregion properties
@@ -355,7 +345,7 @@ namespace Hoehoe
         public void AddNewTabForSearch(string searchWord)
         {
             // 同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
-            foreach (var tb in this.statuses.GetTabsByType(TabUsageType.PublicSearch))
+            foreach (var tb in this._statuses.GetTabsByType(TabUsageType.PublicSearch))
             {
                 if (tb.SearchWords == searchWord && string.IsNullOrEmpty(tb.SearchLang))
                 {
@@ -374,7 +364,7 @@ namespace Hoehoe
             string tabName = searchWord;
             for (int i = 0; i <= 100; i++)
             {
-                if (this.statuses.ContainsTab(tabName))
+                if (this._statuses.ContainsTab(tabName))
                 {
                     tabName += "_";
                 }
@@ -385,7 +375,7 @@ namespace Hoehoe
             }
 
             // タブ追加
-            this.statuses.AddTab(tabName, TabUsageType.PublicSearch, null);
+            this._statuses.AddTab(tabName, TabUsageType.PublicSearch, null);
             this.AddNewTab(tabName, false, TabUsageType.PublicSearch);
 
             // 追加したタブをアクティブに
@@ -409,7 +399,7 @@ namespace Hoehoe
             }
 
             // 同一検索条件のタブが既に存在すれば、そのタブアクティブにして終了
-            foreach (var tb in this.statuses.GetTabsByType(TabUsageType.UserTimeline))
+            foreach (var tb in this._statuses.GetTabsByType(TabUsageType.UserTimeline))
             {
                 if (tb.User == user)
                 {
@@ -426,14 +416,14 @@ namespace Hoehoe
 
             // ユニークなタブ名生成
             string tabName = "user:" + user;
-            while (this.statuses.ContainsTab(tabName))
+            while (this._statuses.ContainsTab(tabName))
             {
                 tabName += "_";
             }
 
             // タブ追加
-            this.statuses.AddTab(tabName, TabUsageType.UserTimeline, null);
-            this.statuses.Tabs[tabName].User = user;
+            this._statuses.AddTab(tabName, TabUsageType.UserTimeline, null);
+            this._statuses.Tabs[tabName].User = user;
             this.AddNewTab(tabName, false, TabUsageType.UserTimeline);
 
             // 追加したタブをアクティブに
@@ -473,10 +463,10 @@ namespace Hoehoe
             cmb.AutoCompleteMode = AutoCompleteMode.None;
             cmb.KeyDown += this.SearchComboBox_KeyDown;
 
-            if (this.statuses.ContainsTab(tabName))
+            if (this._statuses.ContainsTab(tabName))
             {
-                cmb.Items.Add(this.statuses.Tabs[tabName].SearchWords);
-                cmb.Text = this.statuses.Tabs[tabName].SearchWords;
+                cmb.Items.Add(this._statuses.Tabs[tabName].SearchWords);
+                cmb.Text = this._statuses.Tabs[tabName].SearchWords;
             }
 
             cmbLang.Text = string.Empty;
@@ -487,10 +477,10 @@ namespace Hoehoe
             cmbLang.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbLang.TabStop = false;
             cmbLang.Items.Add(string.Empty);
-            cmbLang.Items.AddRange(this.TwitterSearchLangs);
-            if (this.statuses.ContainsTab(tabName))
+            cmbLang.Items.AddRange(this._twitterSearchLangs);
+            if (this._statuses.ContainsTab(tabName))
             {
-                cmbLang.Text = this.statuses.Tabs[tabName].SearchLang;
+                cmbLang.Text = this._statuses.Tabs[tabName].SearchLang;
             }
 
             lbl.Text = "Search(C-S-f)";
@@ -519,30 +509,30 @@ namespace Hoehoe
                 colhds[i] = new ColumnHeader()
                 {
                     Width = widths[i],
-                    Text = this.columnTexts[i]
+                    Text = this._columnTexts[i]
                 };
             }
 
             DetailsListView listCustom = new DetailsListView();
             listCustom.ContextMenuStrip = this.ContextMenuOperate;
-            listCustom.Font = this.fntReaded;
-            listCustom.BackColor = this.clrListBackcolor;
-            listCustom.GridLines = this.configs.ShowGrid;
+            listCustom.Font = this._fntReaded;
+            listCustom.BackColor = this._clrListBackcolor;
+            listCustom.GridLines = this._configs.ShowGrid;
 
-            var sz = this.iconSz > 0 ? this.iconSz : 1;
+            var sz = this._iconSz > 0 ? this._iconSz : 1;
             listCustom.SmallImageList = new ImageList() { ImageSize = new Size(sz, sz) };
-            listCustom.Columns.AddRange(this.iconCol ? 
+            listCustom.Columns.AddRange(this._iconCol ?
                 new ColumnHeader[] { colhds[0], colhds[2] } :
                 new ColumnHeader[] { colhds[0], colhds[1], colhds[2], colhds[3], colhds[4], colhds[5], colhds[6], colhds[7] });
-            
+
             int[] dispOrder = new int[8];
             if (!startup)
             {
-                for (int i = 0; i < this.curList.Columns.Count; i++)
+                for (int i = 0; i < this._curList.Columns.Count; i++)
                 {
-                    for (int j = 0; j < this.curList.Columns.Count; j++)
+                    for (int j = 0; j < this._curList.Columns.Count; j++)
                     {
-                        if (this.curList.Columns[j].DisplayIndex == i)
+                        if (this._curList.Columns[j].DisplayIndex == i)
                         {
                             dispOrder[i] = j;
                             break;
@@ -550,18 +540,18 @@ namespace Hoehoe
                     }
                 }
 
-                for (int i = 0; i < this.curList.Columns.Count; i++)
+                for (int i = 0; i < this._curList.Columns.Count; i++)
                 {
-                    listCustom.Columns[i].Width = this.curList.Columns[i].Width;
+                    listCustom.Columns[i].Width = this._curList.Columns[i].Width;
                     listCustom.Columns[dispOrder[i]].DisplayIndex = i;
                 }
             }
             else
             {
-                if (this.iconCol)
+                if (this._iconCol)
                 {
-                    listCustom.Columns[0].Width = this.cfgLocal.Width1;
-                    listCustom.Columns[1].Width = this.cfgLocal.Width3;
+                    listCustom.Columns[0].Width = this._cfgLocal.Width1;
+                    listCustom.Columns[1].Width = this._cfgLocal.Width3;
                     listCustom.Columns[0].DisplayIndex = 0;
                     listCustom.Columns[1].DisplayIndex = 1;
                 }
@@ -569,48 +559,48 @@ namespace Hoehoe
                 {
                     for (int i = 0; i < 8; ++i)
                     {
-                        if (this.cfgLocal.DisplayIndex1 == i)
+                        if (this._cfgLocal.DisplayIndex1 == i)
                         {
                             dispOrder[i] = 0;
                         }
-                        else if (this.cfgLocal.DisplayIndex2 == i)
+                        else if (this._cfgLocal.DisplayIndex2 == i)
                         {
                             dispOrder[i] = 1;
                         }
-                        else if (this.cfgLocal.DisplayIndex3 == i)
+                        else if (this._cfgLocal.DisplayIndex3 == i)
                         {
                             dispOrder[i] = 2;
                         }
-                        else if (this.cfgLocal.DisplayIndex4 == i)
+                        else if (this._cfgLocal.DisplayIndex4 == i)
                         {
                             dispOrder[i] = 3;
                         }
-                        else if (this.cfgLocal.DisplayIndex5 == i)
+                        else if (this._cfgLocal.DisplayIndex5 == i)
                         {
                             dispOrder[i] = 4;
                         }
-                        else if (this.cfgLocal.DisplayIndex6 == i)
+                        else if (this._cfgLocal.DisplayIndex6 == i)
                         {
                             dispOrder[i] = 5;
                         }
-                        else if (this.cfgLocal.DisplayIndex7 == i)
+                        else if (this._cfgLocal.DisplayIndex7 == i)
                         {
                             dispOrder[i] = 6;
                         }
-                        else if (this.cfgLocal.DisplayIndex8 == i)
+                        else if (this._cfgLocal.DisplayIndex8 == i)
                         {
                             dispOrder[i] = 7;
                         }
                     }
 
-                    listCustom.Columns[0].Width = this.cfgLocal.Width1;
-                    listCustom.Columns[1].Width = this.cfgLocal.Width2;
-                    listCustom.Columns[2].Width = this.cfgLocal.Width3;
-                    listCustom.Columns[3].Width = this.cfgLocal.Width4;
-                    listCustom.Columns[4].Width = this.cfgLocal.Width5;
-                    listCustom.Columns[5].Width = this.cfgLocal.Width6;
-                    listCustom.Columns[6].Width = this.cfgLocal.Width7;
-                    listCustom.Columns[7].Width = this.cfgLocal.Width8;
+                    listCustom.Columns[0].Width = this._cfgLocal.Width1;
+                    listCustom.Columns[1].Width = this._cfgLocal.Width2;
+                    listCustom.Columns[2].Width = this._cfgLocal.Width3;
+                    listCustom.Columns[3].Width = this._cfgLocal.Width4;
+                    listCustom.Columns[4].Width = this._cfgLocal.Width5;
+                    listCustom.Columns[5].Width = this._cfgLocal.Width6;
+                    listCustom.Columns[6].Width = this._cfgLocal.Width7;
+                    listCustom.Columns[7].Width = this._cfgLocal.Width8;
                     for (int i = 0; i < 8; i++)
                     {
                         listCustom.Columns[dispOrder[i]].DisplayIndex = i;
@@ -647,7 +637,7 @@ namespace Hoehoe
                     || tabType == TabUsageType.Mentions
                     || tabType == TabUsageType.Related)
                 {
-                    if (this.statuses.GetTabByType(tabType) != null)
+                    if (this._statuses.GetTabByType(tabType) != null)
                     {
                         return false;
                     }
@@ -675,7 +665,7 @@ namespace Hoehoe
                 label = new Label();
                 label.Dock = DockStyle.Top;
                 label.Name = "labelUser";
-                label.Text = tabType == TabUsageType.Lists ? listInfo.ToString() : this.statuses.Tabs[tabName].User + "'s Timeline";
+                label.Text = tabType == TabUsageType.Lists ? listInfo.ToString() : this._statuses.Tabs[tabName].User + "'s Timeline";
                 label.TextAlign = ContentAlignment.MiddleLeft;
                 using (var tmpComboBox = new ComboBox())
                 {
@@ -701,9 +691,9 @@ namespace Hoehoe
             listCustom.HScrolled += this.MyList_HScrolled;
             tabPage.Controls.Add(listCustom);
 
-            if (this.statuses.IsDistributableTab(tabName))
+            if (this._statuses.IsDistributableTab(tabName))
             {
-                this.tabDialog.AddTab(tabName);
+                this._tabDialog.AddTab(tabName);
             }
 
             /// 検索関連の準備
@@ -742,7 +732,7 @@ namespace Hoehoe
             tabPage.Tag = listCustom;
             return true;
         }
-        
+
         public bool RemoveSpecifiedTab(string tabName, bool confirm)
         {
             int idx = 0;
@@ -754,7 +744,7 @@ namespace Hoehoe
                 }
             }
 
-            if (this.statuses.IsDefaultTab(tabName))
+            if (this._statuses.IsDefaultTab(tabName))
             {
                 return false;
             }
@@ -771,7 +761,7 @@ namespace Hoehoe
 
             this.SetListProperty(); // 他のタブに列幅等を反映
 
-            TabUsageType tabType = this.statuses.Tabs[tabName].TabType;
+            TabUsageType tabType = this._statuses.Tabs[tabName].TabType;
 
             // オブジェクトインスタンスの削除
             this.SplitContainer1.Panel1.SuspendLayout();
@@ -787,7 +777,7 @@ namespace Hoehoe
 
             if (object.ReferenceEquals(this.ListTab.SelectedTab, this.ListTab.TabPages[idx]))
             {
-                this.ListTab.SelectTab(this.prevSelectedTab != null && this.ListTab.TabPages.Contains(this.prevSelectedTab) ? this.prevSelectedTab : this.ListTab.TabPages[0]);
+                this.ListTab.SelectTab(this._prevSelectedTab != null && this.ListTab.TabPages.Contains(this._prevSelectedTab) ? this._prevSelectedTab : this.ListTab.TabPages[0]);
             }
 
             this.ListTab.Controls.Remove(tabPage);
@@ -831,23 +821,23 @@ namespace Hoehoe
             listCustom.DrawSubItem -= this.MyList_DrawSubItem;
             listCustom.HScrolled -= this.MyList_HScrolled;
 
-            this.tabDialog.RemoveTab(tabName);
+            this._tabDialog.RemoveTab(tabName);
 
             listCustom.SmallImageList = null;
             listCustom.ListViewItemSorter = null;
 
             // キャッシュのクリア
-            if (this.curTab.Equals(tabPage))
+            if (this._curTab.Equals(tabPage))
             {
-                this.curTab = null;
-                this.curItemIndex = -1;
-                this.curList = null;
-                this.curPost = null;
+                this._curTab = null;
+                this._curItemIndex = -1;
+                this._curList = null;
+                this._curPost = null;
             }
 
-            this.itemCache = null;
-            this.itemCacheIndex = -1;
-            this.postCache = null;
+            this._itemCache = null;
+            this._itemCacheIndex = -1;
+            this._postCache = null;
 
             tabPage.ResumeLayout(false);
 
@@ -860,14 +850,14 @@ namespace Hoehoe
 
             tabPage.Dispose();
             listCustom.Dispose();
-            this.statuses.RemoveTab(tabName);
+            this._statuses.RemoveTab(tabName);
 
             foreach (TabPage tp in this.ListTab.TabPages)
             {
                 DetailsListView lst = (DetailsListView)tp.Tag;
-                if (lst.VirtualListSize != this.statuses.Tabs[tp.Text].AllCount)
+                if (lst.VirtualListSize != this._statuses.Tabs[tp.Text].AllCount)
                 {
-                    lst.VirtualListSize = this.statuses.Tabs[tp.Text].AllCount;
+                    lst.VirtualListSize = this._statuses.Tabs[tp.Text].AllCount;
                 }
             }
 
@@ -886,7 +876,7 @@ namespace Hoehoe
                 dialog.ShowDialog();
             }
 
-            this.TopMost = this.configs.AlwaysTop;
+            this.TopMost = this._configs.AlwaysTop;
             int selStart = owner.SelectionStart;
             string frontHalf = string.Empty;
             string lastHalf = string.Empty;
@@ -932,7 +922,7 @@ namespace Hoehoe
 
         public string CreateDetailHtml(string orgdata)
         {
-            return this.detailHtmlFormatHeader + orgdata + this.detailHtmlFormatFooter;
+            return this._detailHtmlFormatHeader + orgdata + this._detailHtmlFormatFooter;
         }
 
         public bool RenameTab(ref string tabName)
@@ -944,7 +934,7 @@ namespace Hoehoe
                 return false;
             }
 
-            this.TopMost = this.configs.AlwaysTop;
+            this.TopMost = this._configs.AlwaysTop;
             if (string.IsNullOrEmpty(newTabText))
             {
                 return false;
@@ -964,9 +954,9 @@ namespace Hoehoe
             // タブ名のリスト作り直し（デフォルトタブ以外は再作成）
             for (int i = 0; i < this.ListTab.TabCount; i++)
             {
-                if (this.statuses.IsDistributableTab(this.ListTab.TabPages[i].Text))
+                if (this._statuses.IsDistributableTab(this.ListTab.TabPages[i].Text))
                 {
-                    this.tabDialog.RemoveTab(this.ListTab.TabPages[i].Text);
+                    this._tabDialog.RemoveTab(this.ListTab.TabPages[i].Text);
                 }
 
                 if (this.ListTab.TabPages[i].Text == tabName)
@@ -975,23 +965,23 @@ namespace Hoehoe
                 }
             }
 
-            this.statuses.RenameTab(tabName, newTabText);
+            this._statuses.RenameTab(tabName, newTabText);
             for (int i = 0; i < this.ListTab.TabCount; i++)
             {
-                if (this.statuses.IsDistributableTab(this.ListTab.TabPages[i].Text))
+                if (this._statuses.IsDistributableTab(this.ListTab.TabPages[i].Text))
                 {
                     if (this.ListTab.TabPages[i].Text == tabName)
                     {
                         this.ListTab.TabPages[i].Text = newTabText;
                     }
 
-                    this.tabDialog.AddTab(this.ListTab.TabPages[i].Text);
+                    this._tabDialog.AddTab(this.ListTab.TabPages[i].Text);
                 }
             }
 
             this.SaveConfigsCommon();
             this.SaveConfigsTabs();
-            this.rclickTabName = newTabText;
+            this._rclickTabName = newTabText;
             tabName = newTabText;
             return true;
         }
@@ -1048,22 +1038,22 @@ namespace Hoehoe
                 }
             }
 
-            this.statuses.SetTabUnreadManage(tabName, isManage);
-            if (this.configs.TabIconDisp)
+            this._statuses.SetTabUnreadManage(tabName, isManage);
+            if (this._configs.TabIconDisp)
             {
-                this.ListTab.TabPages[idx].ImageIndex = this.statuses.Tabs[tabName].UnreadCount > 0 ? 0 : -1;
+                this.ListTab.TabPages[idx].ImageIndex = this._statuses.Tabs[tabName].UnreadCount > 0 ? 0 : -1;
             }
 
-            if (this.curTab.Text == tabName)
+            if (this._curTab.Text == tabName)
             {
-                this.itemCache = null;
-                this.postCache = null;
-                this.curList.Refresh();
+                this._itemCache = null;
+                this._postCache = null;
+                this._curList.Refresh();
             }
 
             this.SetMainWindowTitle();
             this.SetStatusLabelUrl();
-            if (!this.configs.TabIconDisp)
+            if (!this._configs.TabIconDisp)
             {
                 this.ListTab.Refresh();
             }
@@ -1099,7 +1089,7 @@ namespace Hoehoe
         /// <returns></returns>
         public bool IsTwitterId(string name)
         {
-            string[] nonUsernames = this.configs.TwitterConfiguration.NonUsernamePaths;
+            string[] nonUsernames = this._configs.TwitterConfiguration.NonUsernamePaths;
             if (nonUsernames == null || nonUsernames.Length == 0)
             {
                 return !Regex.Match(name, "^(about|jobs|tos|privacy|who_to_follow|download|messages)$", RegexOptions.IgnoreCase).Success;
@@ -1110,17 +1100,17 @@ namespace Hoehoe
 
         public void SetModifySettingCommon(bool value)
         {
-            this.modifySettingCommon = value;
+            this._modifySettingCommon = value;
         }
 
         public void SetModifySettingLocal(bool value)
         {
-            this.modifySettingLocal = value;
+            this._modifySettingLocal = value;
         }
 
         public void SetModifySettingAtId(bool value)
         {
-            this.modifySettingAtId = value;
+            this._modifySettingAtId = value;
         }
 
         public bool AddAtIdSuplItem(string item)
@@ -1149,7 +1139,7 @@ namespace Hoehoe
                     bool doPost = false;
 
                     // Ctrl+Enter投稿時
-                    if (this.configs.PostCtrlEnter)
+                    if (this._configs.PostCtrlEnter)
                     {
                         if (this.StatusText.Multiline)
                         {
@@ -1173,7 +1163,7 @@ namespace Hoehoe
 
                         // SHift+Enter投稿時
                     }
-                    else if (this.configs.PostShiftEnter)
+                    else if (this._configs.PostShiftEnter)
                     {
                         if (this.StatusText.Multiline)
                         {
@@ -1239,7 +1229,7 @@ namespace Hoehoe
                         return true;
                     }
                 }
-                else if (this.statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch && (this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focused || this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboLang"].Focused))
+                else if (this._statuses.Tabs[this.ListTab.SelectedTab.Text].TabType == TabUsageType.PublicSearch && (this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"].Focused || this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboLang"].Focused))
                 {
                     this.SearchButton_Click(this.ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"], null);
                     return true;
