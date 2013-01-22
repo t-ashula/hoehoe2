@@ -238,7 +238,7 @@ namespace Hoehoe
         {
             if (EventSource != null && EventSource.Count > 0)
             {
-                _filterdEventSource = EventSource.FindAll(x => CheckExcludeMyEvent.Checked ? !x.IsMe : true
+                _filterdEventSource = EventSource.FindAll(x => (!CheckExcludeMyEvent.Checked || !x.IsMe)
                     && Convert.ToBoolean(x.Eventtype & ParseEventTypeFromTag())
                     && IsFilterMatch(x)).ToArray();
                 _itemCache = null;
