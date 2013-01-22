@@ -34,7 +34,7 @@ namespace Hoehoe
     {
         #region privates
 
-        private bool isShowUsage;
+        private bool _isShowUsage;
 
         #endregion privates
 
@@ -42,7 +42,7 @@ namespace Hoehoe
 
         public InputTabName()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #endregion constructor
@@ -51,8 +51,8 @@ namespace Hoehoe
 
         public string TabName
         {
-            get { return this.TextTabName.Text.Trim(); }
-            set { this.TextTabName.Text = value.Trim(); }
+            get { return TextTabName.Text.Trim(); }
+            set { TextTabName.Text = value.Trim(); }
         }
 
         public TabUsageType Usage { get; private set; }
@@ -63,17 +63,17 @@ namespace Hoehoe
 
         public void SetFormTitle(string value)
         {
-            this.Text = value;
+            Text = value;
         }
 
         public void SetFormDescription(string value)
         {
-            this.LabelDescription.Text = value;
+            LabelDescription.Text = value;
         }
 
         public void SetIsShowUsage(bool value)
         {
-            this.isShowUsage = value;
+            _isShowUsage = value;
         }
 
         #endregion public methods
@@ -82,52 +82,52 @@ namespace Hoehoe
 
         private void OkButton_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            this.TextTabName.Text = string.Empty;
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            TextTabName.Text = string.Empty;
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void InputTabName_Load(object sender, EventArgs e)
         {
-            this.LabelUsage.Visible = false;
-            this.ComboUsage.Visible = false;
-            this.ComboUsage.Items.Add(R.InputTabName_Load1);
-            this.ComboUsage.Items.Add("Lists");
-            this.ComboUsage.Items.Add("PublicSearch");
-            this.ComboUsage.SelectedIndex = 0;
+            LabelUsage.Visible = false;
+            ComboUsage.Visible = false;
+            ComboUsage.Items.Add(R.InputTabName_Load1);
+            ComboUsage.Items.Add("Lists");
+            ComboUsage.Items.Add("PublicSearch");
+            ComboUsage.SelectedIndex = 0;
         }
 
         private void InputTabName_Shown(object sender, EventArgs e)
         {
-            ActiveControl = this.TextTabName;
-            if (this.isShowUsage)
+            ActiveControl = TextTabName;
+            if (_isShowUsage)
             {
-                this.LabelUsage.Visible = true;
-                this.ComboUsage.Visible = true;
+                LabelUsage.Visible = true;
+                ComboUsage.Visible = true;
             }
         }
 
         private void ComboUsage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (this.ComboUsage.SelectedIndex)
+            switch (ComboUsage.SelectedIndex)
             {
                 case 0:
-                    this.Usage = TabUsageType.UserDefined;
+                    Usage = TabUsageType.UserDefined;
                     break;
                 case 1:
-                    this.Usage = TabUsageType.Lists;
+                    Usage = TabUsageType.Lists;
                     break;
                 case 2:
-                    this.Usage = TabUsageType.PublicSearch;
+                    Usage = TabUsageType.PublicSearch;
                     break;
                 default:
-                    this.Usage = TabUsageType.Undefined;
+                    Usage = TabUsageType.Undefined;
                     break;
             }
         }

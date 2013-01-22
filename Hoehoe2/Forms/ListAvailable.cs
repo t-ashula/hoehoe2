@@ -36,8 +36,8 @@ namespace Hoehoe
 
         public ListAvailable()
         {
-            this.SelectedList = null;
-            this.InitializeComponent();
+            SelectedList = null;
+            InitializeComponent();
         }
 
         #endregion constructor
@@ -52,59 +52,59 @@ namespace Hoehoe
 
         private void OkButton_Click(object sender, EventArgs e)
         {
-            if (this.ListsList.SelectedIndex > -1)
+            if (ListsList.SelectedIndex > -1)
             {
-                this.SelectedList = (ListElement)this.ListsList.SelectedItem;
-                this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                this.Close();
+                SelectedList = (ListElement)ListsList.SelectedItem;
+                DialogResult = System.Windows.Forms.DialogResult.OK;
+                Close();
             }
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            this.SelectedList = null;
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Close();
+            SelectedList = null;
+            DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            Close();
         }
 
         private void ListAvailable_Shown(object sender, EventArgs e)
         {
             if (TabInformations.Instance.SubscribableLists.Count == 0)
             {
-                this.RefreshLists();
+                RefreshLists();
             }
 
-            this.ListsList.Items.AddRange(TabInformations.Instance.SubscribableLists.ToArray());
-            if (this.ListsList.Items.Count > 0)
+            ListsList.Items.AddRange(TabInformations.Instance.SubscribableLists.ToArray());
+            if (ListsList.Items.Count > 0)
             {
-                this.ListsList.SelectedIndex = 0;
+                ListsList.SelectedIndex = 0;
             }
             else
             {
-                this.ClearListInfo();
+                ClearListInfo();
             }
         }
 
         private void ListsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.ListsList.SelectedIndex > -1)
+            if (ListsList.SelectedIndex > -1)
             {
-                this.SetListInfo((ListElement)this.ListsList.SelectedItem);
+                SetListInfo((ListElement)ListsList.SelectedItem);
             }
             else
             {
-                this.ClearListInfo();
+                ClearListInfo();
             }
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
         {
-            this.RefreshLists();
-            this.ListsList.Items.Clear();
-            this.ListsList.Items.AddRange(TabInformations.Instance.SubscribableLists.ToArray());
-            if (this.ListsList.Items.Count > 0)
+            RefreshLists();
+            ListsList.Items.Clear();
+            ListsList.Items.AddRange(TabInformations.Instance.SubscribableLists.ToArray());
+            if (ListsList.Items.Count > 0)
             {
-                this.ListsList.SelectedIndex = 0;
+                ListsList.SelectedIndex = 0;
             }
         }
 
@@ -112,7 +112,7 @@ namespace Hoehoe
         {
             try
             {
-                e.Result = ((TweenMain)this.Owner).TwitterInstance.GetListsApi();
+                e.Result = ((TweenMain)Owner).TwitterInstance.GetListsApi();
             }
             catch (InvalidCastException)
             {
@@ -126,27 +126,27 @@ namespace Hoehoe
 
         private void ClearListInfo()
         {
-            this.UsernameLabel.Text = string.Empty;
-            this.NameLabel.Text = string.Empty;
-            this.StatusLabel.Text = string.Empty;
-            this.MemberCountLabel.Text = "0";
-            this.SubscriberCountLabel.Text = "0";
-            this.DescriptionText.Text = string.Empty;
+            UsernameLabel.Text = string.Empty;
+            NameLabel.Text = string.Empty;
+            StatusLabel.Text = string.Empty;
+            MemberCountLabel.Text = "0";
+            SubscriberCountLabel.Text = "0";
+            DescriptionText.Text = string.Empty;
         }
 
         private void SetListInfo(ListElement lst)
         {
-            this.UsernameLabel.Text = string.Format("{0} / {1}", lst.Username, lst.Nickname);
-            this.NameLabel.Text = lst.Name;
-            this.StatusLabel.Text = lst.IsPublic ? "Public" : "Private";
-            this.MemberCountLabel.Text = lst.MemberCount.ToString("#,##0");
-            this.SubscriberCountLabel.Text = lst.SubscriberCount.ToString("#,##0");
-            this.DescriptionText.Text = lst.Description;
+            UsernameLabel.Text = string.Format("{0} / {1}", lst.Username, lst.Nickname);
+            NameLabel.Text = lst.Name;
+            StatusLabel.Text = lst.IsPublic ? "Public" : "Private";
+            MemberCountLabel.Text = lst.MemberCount.ToString("#,##0");
+            SubscriberCountLabel.Text = lst.SubscriberCount.ToString("#,##0");
+            DescriptionText.Text = lst.Description;
         }
 
         private void RefreshLists()
         {
-            using (FormInfo dlg = new FormInfo(this, "Getting Lists...", this.RefreshLists_DoWork))
+            using (FormInfo dlg = new FormInfo(this, "Getting Lists...", RefreshLists_DoWork))
             {
                 dlg.ShowDialog();
                 if (!string.IsNullOrEmpty((string)dlg.Result))

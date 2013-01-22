@@ -34,7 +34,7 @@ namespace Hoehoe
 
         public MessageForm()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #endregion constructor
@@ -43,11 +43,11 @@ namespace Hoehoe
 
         public DialogResult ShowDialog(string message)
         {
-            this.Label1.Text = message;
-            this.Label1.Left = (this.ClientSize.Width - this.Label1.Size.Width) / 2; // ラベルコントロールをセンタリング
-            this.Label1.Refresh();
-            this.Label1.Visible = true;
-            return this.ShowDialog();
+            Label1.Text = message;
+            Label1.Left = (ClientSize.Width - Label1.Size.Width) / 2; // ラベルコントロールをセンタリング
+            Label1.Refresh();
+            Label1.Visible = true;
+            return ShowDialog();
         }
 
         #endregion public methods

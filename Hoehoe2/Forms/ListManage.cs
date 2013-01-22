@@ -36,7 +36,7 @@ namespace Hoehoe
     {
         #region private
 
-        private Twitter twitter;
+        private readonly Twitter _twitter;
 
         #endregion private
 
@@ -44,8 +44,8 @@ namespace Hoehoe
 
         public ListManage(Twitter tw)
         {
-            this.InitializeComponent();
-            this.twitter = tw;
+            InitializeComponent();
+            _twitter = tw;
         }
 
         #endregion constructor
@@ -54,101 +54,101 @@ namespace Hoehoe
 
         private void ListManage_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && this.EditCheckBox.Checked)
+            if (e.KeyCode == Keys.Enter && EditCheckBox.Checked)
             {
-                this.OKEditButton.PerformClick();
+                OKEditButton.PerformClick();
             }
         }
 
         private void ListManage_Load(object sender, EventArgs e)
         {
-            this.UserList_SelectedIndexChanged(null, EventArgs.Empty);
+            UserList_SelectedIndexChanged(null, EventArgs.Empty);
             if (TabInformations.Instance.SubscribableLists.Count == 0)
             {
-                this.RefreshLists();
+                RefreshLists();
             }
 
-            foreach (ListElement listItem in TabInformations.Instance.SubscribableLists.FindAll(i => i.Username == this.twitter.Username))
+            foreach (ListElement listItem in TabInformations.Instance.SubscribableLists.FindAll(i => i.Username == _twitter.Username))
             {
-                this.ListsList.Items.Add(listItem);
+                ListsList.Items.Add(listItem);
             }
 
-            if (this.ListsList.Items.Count > 0)
+            if (ListsList.Items.Count > 0)
             {
-                this.ListsList.SelectedIndex = 0;
+                ListsList.SelectedIndex = 0;
             }
 
-            this.ListsList.Focus();
+            ListsList.Focus();
         }
 
         private void ListsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.ListsList.SelectedItem == null)
+            if (ListsList.SelectedItem == null)
             {
                 return;
             }
 
-            ListElement list = (ListElement)this.ListsList.SelectedItem;
-            this.UsernameTextBox.Text = list.Username;
-            this.NameTextBox.Text = list.Name;
-            this.PublicRadioButton.Checked = list.IsPublic;
-            this.PrivateRadioButton.Checked = !list.IsPublic;
-            this.MemberCountTextBox.Text = list.MemberCount.ToString();
-            this.SubscriberCountTextBox.Text = list.SubscriberCount.ToString();
-            this.DescriptionText.Text = list.Description;
-            this.UserList.Items.Clear();
+            ListElement list = (ListElement)ListsList.SelectedItem;
+            UsernameTextBox.Text = list.Username;
+            NameTextBox.Text = list.Name;
+            PublicRadioButton.Checked = list.IsPublic;
+            PrivateRadioButton.Checked = !list.IsPublic;
+            MemberCountTextBox.Text = list.MemberCount.ToString();
+            SubscriberCountTextBox.Text = list.SubscriberCount.ToString();
+            DescriptionText.Text = list.Description;
+            UserList.Items.Clear();
             foreach (UserInfo user in list.Members)
             {
-                this.UserList.Items.Add(user);
+                UserList.Items.Add(user);
             }
 
-            this.GetMoreUsersButton.Text = (this.UserList.Items.Count > 0 ? R.ListManageGetMoreUsers2 : R.ListManageGetMoreUsers1).ToString();
+            GetMoreUsersButton.Text = (UserList.Items.Count > 0 ? R.ListManageGetMoreUsers2 : R.ListManageGetMoreUsers1).ToString();
         }
 
         private void EditCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            var state = this.EditCheckBox.Checked;
-            this.AddListButton.Enabled = !state;
-            this.EditCheckBox.Enabled = !state;
-            this.DeleteListButton.Enabled = !state;
-            this.NameTextBox.ReadOnly = !state;
-            this.PublicRadioButton.Enabled = state;
-            this.PrivateRadioButton.Enabled = state;
-            this.DescriptionText.ReadOnly = !state;
-            this.ListsList.Enabled = !state;
-            this.OKEditButton.Enabled = state;
-            this.CancelEditButton.Enabled = state;
-            this.EditCheckBox.AutoCheck = !state;
-            this.MemberGroup.Enabled = !state;
-            this.UserGroup.Enabled = !state;
-            this.CloseButton.Enabled = !state;
-            this.UsernameTextBox.TabStop = !state;
-            this.MemberCountTextBox.TabStop = !state;
-            this.SubscriberCountTextBox.TabStop = !state;
+            var state = EditCheckBox.Checked;
+            AddListButton.Enabled = !state;
+            EditCheckBox.Enabled = !state;
+            DeleteListButton.Enabled = !state;
+            NameTextBox.ReadOnly = !state;
+            PublicRadioButton.Enabled = state;
+            PrivateRadioButton.Enabled = state;
+            DescriptionText.ReadOnly = !state;
+            ListsList.Enabled = !state;
+            OKEditButton.Enabled = state;
+            CancelEditButton.Enabled = state;
+            EditCheckBox.AutoCheck = !state;
+            MemberGroup.Enabled = !state;
+            UserGroup.Enabled = !state;
+            CloseButton.Enabled = !state;
+            UsernameTextBox.TabStop = !state;
+            MemberCountTextBox.TabStop = !state;
+            SubscriberCountTextBox.TabStop = !state;
             if (state)
             {
-                this.NameTextBox.Focus();
+                NameTextBox.Focus();
             }
         }
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            if (this.ListsList.SelectedItem == null)
+            if (ListsList.SelectedItem == null)
             {
                 return;
             }
 
-            ListElement listItem = (ListElement)this.ListsList.SelectedItem;
+            ListElement listItem = (ListElement)ListsList.SelectedItem;
 
-            if (string.IsNullOrEmpty(this.NameTextBox.Text))
+            if (string.IsNullOrEmpty(NameTextBox.Text))
             {
                 MessageBox.Show(R.ListManageOKButton1);
                 return;
             }
 
-            listItem.Name = this.NameTextBox.Text;
-            listItem.IsPublic = this.PublicRadioButton.Checked;
-            listItem.Description = this.DescriptionText.Text;
+            listItem.Name = NameTextBox.Text;
+            listItem.IsPublic = PublicRadioButton.Checked;
+            listItem.Description = DescriptionText.Text;
 
             string rslt = listItem.Refresh();
 
@@ -158,64 +158,64 @@ namespace Hoehoe
                 return;
             }
 
-            this.ListsList.Items.Clear();
-            this.ListManage_Load(null, EventArgs.Empty);
+            ListsList.Items.Clear();
+            ListManage_Load(null, EventArgs.Empty);
 
-            this.EditCheckBox.AutoCheck = true;
-            this.EditCheckBox.Checked = false;
+            EditCheckBox.AutoCheck = true;
+            EditCheckBox.Checked = false;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            this.EditCheckBox.AutoCheck = true;
-            this.EditCheckBox.Checked = false;
+            EditCheckBox.AutoCheck = true;
+            EditCheckBox.Checked = false;
 
-            for (int i = this.ListsList.Items.Count - 1; i >= 0; i--)
+            for (int i = ListsList.Items.Count - 1; i >= 0; i--)
             {
-                if (this.ListsList.Items[i] is NewListElement)
+                if (ListsList.Items[i] is NewListElement)
                 {
-                    this.ListsList.Items.RemoveAt(i);
+                    ListsList.Items.RemoveAt(i);
                 }
             }
 
-            this.ListsList_SelectedIndexChanged(this.ListsList, EventArgs.Empty);
+            ListsList_SelectedIndexChanged(ListsList, EventArgs.Empty);
         }
 
         private void RefreshUsersButton_Click(object sender, EventArgs e)
         {
-            if (this.ListsList.SelectedItem == null)
+            if (ListsList.SelectedItem == null)
             {
                 return;
             }
 
-            this.UserList.Items.Clear();
-            Action<ListElement> dlgt = new Action<ListElement>(lElement => { this.Invoke(new Action<string>(GetListMembersCallback), lElement.RefreshMembers()); });
-            dlgt.BeginInvoke((ListElement)this.ListsList.SelectedItem, null, null);
+            UserList.Items.Clear();
+            Action<ListElement> dlgt = new Action<ListElement>(lElement => { Invoke(new Action<string>(GetListMembersCallback), lElement.RefreshMembers()); });
+            dlgt.BeginInvoke((ListElement)ListsList.SelectedItem, null, null);
         }
 
         private void GetMoreUsersButton_Click(object sender, EventArgs e)
         {
-            if (this.ListsList.SelectedItem == null)
+            if (ListsList.SelectedItem == null)
             {
                 return;
             }
 
-            Action<ListElement> dlgt = new Action<ListElement>(lElement => { this.Invoke(new Action<string>(GetListMembersCallback), lElement.GetMoreMembers()); });
-            dlgt.BeginInvoke((ListElement)this.ListsList.SelectedItem, null, null);
+            Action<ListElement> dlgt = new Action<ListElement>(lElement => { Invoke(new Action<string>(GetListMembersCallback), lElement.GetMoreMembers()); });
+            dlgt.BeginInvoke((ListElement)ListsList.SelectedItem, null, null);
         }
 
         private void DeleteUserButton_Click(object sender, EventArgs e)
         {
-            if (this.ListsList.SelectedItem == null || this.UserList.SelectedItem == null)
+            if (ListsList.SelectedItem == null || UserList.SelectedItem == null)
             {
                 return;
             }
 
-            ListElement list = (ListElement)this.ListsList.SelectedItem;
-            UserInfo user = (UserInfo)this.UserList.SelectedItem;
+            ListElement list = (ListElement)ListsList.SelectedItem;
+            UserInfo user = (UserInfo)UserList.SelectedItem;
             if (MessageBox.Show(R.ListManageDeleteUser1, "Hoehoe", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
-                string rslt = this.twitter.RemoveUserToList(list.Id.ToString(), user.Id.ToString());
+                string rslt = _twitter.RemoveUserToList(list.Id.ToString(), user.Id.ToString());
 
                 if (!string.IsNullOrEmpty(rslt))
                 {
@@ -223,27 +223,27 @@ namespace Hoehoe
                     return;
                 }
 
-                int idx = this.ListsList.SelectedIndex;
+                int idx = ListsList.SelectedIndex;
                 list.Members.Remove(user);
-                this.ListsList_SelectedIndexChanged(this.ListsList, EventArgs.Empty);
-                if (idx < this.ListsList.Items.Count)
+                ListsList_SelectedIndexChanged(ListsList, EventArgs.Empty);
+                if (idx < ListsList.Items.Count)
                 {
-                    this.ListsList.SelectedIndex = idx;
+                    ListsList.SelectedIndex = idx;
                 }
             }
         }
 
         private void DeleteListButton_Click(object sender, EventArgs e)
         {
-            if (this.ListsList.SelectedItem == null)
+            if (ListsList.SelectedItem == null)
             {
                 return;
             }
 
-            ListElement list = (ListElement)this.ListsList.SelectedItem;
+            ListElement list = (ListElement)ListsList.SelectedItem;
             if (MessageBox.Show(R.ListManageDeleteLists1, "Hoehoe", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
-                string rslt = this.twitter.DeleteList(list.Id.ToString());
+                string rslt = _twitter.DeleteList(list.Id.ToString());
 
                 if (!string.IsNullOrEmpty(rslt))
                 {
@@ -251,7 +251,7 @@ namespace Hoehoe
                     return;
                 }
 
-                rslt = this.twitter.GetListsApi();
+                rslt = _twitter.GetListsApi();
 
                 if (!string.IsNullOrEmpty(rslt))
                 {
@@ -259,92 +259,92 @@ namespace Hoehoe
                     return;
                 }
 
-                this.ListsList.Items.Clear();
-                this.ListManage_Load(this, EventArgs.Empty);
+                ListsList.Items.Clear();
+                ListManage_Load(this, EventArgs.Empty);
             }
         }
 
         private void AddListButton_Click(object sender, EventArgs e)
         {
-            NewListElement newList = new NewListElement(this.twitter);
-            this.ListsList.Items.Add(newList);
-            this.ListsList.SelectedItem = newList;
-            this.EditCheckBox.Checked = true;
-            this.EditCheckBox_CheckedChanged(this.EditCheckBox, EventArgs.Empty);
+            NewListElement newList = new NewListElement(_twitter);
+            ListsList.Items.Add(newList);
+            ListsList.SelectedItem = newList;
+            EditCheckBox.Checked = true;
+            EditCheckBox_CheckedChanged(EditCheckBox, EventArgs.Empty);
         }
 
         private void UserList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.UserList.SelectedItem == null)
+            if (UserList.SelectedItem == null)
             {
-                if (this.UserIcon.Image != null)
+                if (UserIcon.Image != null)
                 {
-                    this.UserIcon.Image.Dispose();
-                    this.UserIcon.Image = null;
+                    UserIcon.Image.Dispose();
+                    UserIcon.Image = null;
                 }
 
-                this.UserLocation.Text = string.Empty;
-                this.UserWeb.Text = string.Empty;
-                this.UserFollowNum.Text = "0";
-                this.UserFollowerNum.Text = "0";
-                this.UserPostsNum.Text = "0";
-                this.UserProfile.Text = string.Empty;
-                this.UserTweetDateTime.Text = string.Empty;
-                this.UserTweet.Text = string.Empty;
-                this.DeleteUserButton.Enabled = false;
+                UserLocation.Text = string.Empty;
+                UserWeb.Text = string.Empty;
+                UserFollowNum.Text = "0";
+                UserFollowerNum.Text = "0";
+                UserPostsNum.Text = "0";
+                UserProfile.Text = string.Empty;
+                UserTweetDateTime.Text = string.Empty;
+                UserTweet.Text = string.Empty;
+                DeleteUserButton.Enabled = false;
             }
             else
             {
-                UserInfo user = (UserInfo)this.UserList.SelectedItem;
-                this.UserLocation.Text = user.Location;
-                this.UserWeb.Text = user.Url;
-                this.UserFollowNum.Text = user.FriendsCount.ToString("#,###,##0");
-                this.UserFollowerNum.Text = user.FollowersCount.ToString("#,###,##0");
-                this.UserPostsNum.Text = user.StatusesCount.ToString("#,###,##0");
-                this.UserProfile.Text = user.Description;
+                UserInfo user = (UserInfo)UserList.SelectedItem;
+                UserLocation.Text = user.Location;
+                UserWeb.Text = user.Url;
+                UserFollowNum.Text = user.FriendsCount.ToString("#,###,##0");
+                UserFollowerNum.Text = user.FollowersCount.ToString("#,###,##0");
+                UserPostsNum.Text = user.StatusesCount.ToString("#,###,##0");
+                UserProfile.Text = user.Description;
                 if (!string.IsNullOrEmpty(user.RecentPost))
                 {
-                    this.UserTweetDateTime.Text = user.PostCreatedAt.ToString("yy/MM/dd HH:mm");
-                    this.UserTweet.Text = user.RecentPost;
+                    UserTweetDateTime.Text = user.PostCreatedAt.ToString("yy/MM/dd HH:mm");
+                    UserTweet.Text = user.RecentPost;
                 }
                 else
                 {
-                    this.UserTweetDateTime.Text = string.Empty;
-                    this.UserTweet.Text = string.Empty;
+                    UserTweetDateTime.Text = string.Empty;
+                    UserTweet.Text = string.Empty;
                 }
 
-                this.DeleteUserButton.Enabled = true;
-                Action<Uri> a = new Action<Uri>(url => { this.Invoke(new Action<Image>(DisplayIcon), (new HttpVarious()).GetImage(url)); });
+                DeleteUserButton.Enabled = true;
+                Action<Uri> a = new Action<Uri>(url => { Invoke(new Action<Image>(DisplayIcon), (new HttpVarious()).GetImage(url)); });
                 a.BeginInvoke(user.ImageUrl, null, null);
             }
         }
 
         private void RefreshListsButton_Click(object sender, EventArgs e)
         {
-            this.RefreshLists();
-            this.ListsList.Items.Clear();
-            this.ListManage_Load(null, EventArgs.Empty);
+            RefreshLists();
+            ListsList.Items.Clear();
+            ListManage_Load(null, EventArgs.Empty);
         }
 
         private void RefreshLists_Dowork(object sender, DoWorkEventArgs e)
         {
-            e.Result = this.twitter.GetListsApi();
+            e.Result = _twitter.GetListsApi();
         }
 
         private void UserWeb_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (this.Owner != null)
+            if (Owner != null)
             {
-                ((TweenMain)this.Owner).OpenUriAsync(this.UserWeb.Text);
+                ((TweenMain)Owner).OpenUriAsync(UserWeb.Text);
             }
         }
 
         private void ListManage_Validating(object sender, CancelEventArgs e)
         {
-            if (this.EditCheckBox.Checked)
+            if (EditCheckBox.Checked)
             {
                 e.Cancel = true;
-                this.CancelButton.PerformClick();
+                CancelButton.PerformClick();
             }
         }
 
@@ -354,10 +354,10 @@ namespace Hoehoe
 
         private void GetListMembersCallback(string result)
         {
-            if (result == this.ListsList.SelectedItem.ToString())
+            if (result == ListsList.SelectedItem.ToString())
             {
-                this.ListsList_SelectedIndexChanged(this.ListsList, EventArgs.Empty);
-                this.GetMoreUsersButton.Text = R.ListManageGetMoreUsers1;
+                ListsList_SelectedIndexChanged(ListsList, EventArgs.Empty);
+                GetMoreUsersButton.Text = R.ListManageGetMoreUsers1;
             }
             else
             {
@@ -367,20 +367,20 @@ namespace Hoehoe
 
         private void DisplayIcon(Image img)
         {
-            if (img == null || this.UserList.SelectedItem == null)
+            if (img == null || UserList.SelectedItem == null)
             {
                 return;
             }
 
-            if (((UserInfo)this.UserList.SelectedItem).ImageUrl.ToString() == (string)img.Tag)
+            if (((UserInfo)UserList.SelectedItem).ImageUrl.ToString() == (string)img.Tag)
             {
-                this.UserIcon.Image = img;
+                UserIcon.Image = img;
             }
         }
 
         private void RefreshLists()
         {
-            using (FormInfo dlg = new FormInfo(this, R.ListsGetting, this.RefreshLists_Dowork))
+            using (FormInfo dlg = new FormInfo(this, R.ListsGetting, RefreshLists_Dowork))
             {
                 dlg.ShowDialog();
                 if (!string.IsNullOrEmpty((string)dlg.Result))
@@ -399,27 +399,27 @@ namespace Hoehoe
         {
             public NewListElement(Twitter tw)
             {
-                this.Tw = tw;
-                this.IsCreated = false;
+                Tw = tw;
+                IsCreated = false;
             }
 
             public bool IsCreated { get; private set; }
 
             public override string Refresh()
             {
-                if (this.IsCreated)
+                if (IsCreated)
                 {
                     return base.Refresh();
                 }
 
-                string rslt = this.Tw.CreateListApi(this.Name, !this.IsPublic, this.Description);
-                this.IsCreated = string.IsNullOrEmpty(rslt);
+                string rslt = Tw.CreateListApi(Name, !IsPublic, Description);
+                IsCreated = string.IsNullOrEmpty(rslt);
                 return rslt;
             }
 
             public override string ToString()
             {
-                return this.IsCreated ? base.ToString() : "NewList";
+                return IsCreated ? base.ToString() : "NewList";
             }
         }
 
