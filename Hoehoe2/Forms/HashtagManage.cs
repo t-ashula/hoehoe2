@@ -35,8 +35,8 @@ namespace Hoehoe
     {
         private readonly AtIdSupplement _hashSupl;       // 入力補助画面
         private string _useHash = string.Empty; // I/F用
-        private bool _isPermanent = false;
-        private bool _isHead = false;
+        private bool _isPermanent;
+        private bool _isHead;
         private bool _isNotAddToAtReply = true;
         private bool _isAdd; // 編集モード
 

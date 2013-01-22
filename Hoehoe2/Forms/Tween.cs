@@ -250,9 +250,9 @@ namespace Hoehoe
         private int _blinkCnt;
         private bool _doBlink;
         private bool _isIdle;
-        private long _prevFollowerCount = 0;
+        private long _prevFollowerCount;
         private readonly HookGlobalHotkey _hookGlobalHotkey;
-        private bool _isActiveUserstream = false;
+        private bool _isActiveUserstream;
         private string _prevTrackWord = string.Empty;
 
         #endregion private fields

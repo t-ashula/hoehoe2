@@ -42,7 +42,7 @@ namespace Hoehoe
 
         private readonly Form _targetForm;
         private readonly Dictionary<int, KeyEventValue> _hotkeyIds;
-        private bool _disposedValue = false; // 重複する呼び出しを検出するには
+        private bool _disposedValue; // 重複する呼び出しを検出するには
 
         #endregion privates
 

@@ -35,7 +35,7 @@ namespace Hoehoe
     {
         #region private
 
-        private bool _multiSelect = false;
+        private bool _multiSelect;
         private string _newtabItem = R.AddNewTabText1;
 
         #endregion private

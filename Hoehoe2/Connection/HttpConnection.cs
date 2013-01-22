@@ -51,7 +51,7 @@ namespace Hoehoe
         /// <summary>
         /// プロキシ
         /// </summary>
-        private static WebProxy _proxy = null;
+        private static WebProxy _proxy;
 
         /// <summary>
         /// ユーザーが選択したプロキシの方式
@@ -76,7 +76,7 @@ namespace Hoehoe
         /// <summary>
         /// 通信タイムアウト時間（ms）
         /// </summary>
-        private int _curTimeout = 0;
+        private int _curTimeout;
 
         public enum ProxyType
         {

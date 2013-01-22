@@ -96,7 +96,7 @@ namespace Hoehoe
         /// <summary>
         /// Stream用のHttpWebRequest
         /// </summary>
-        private HttpWebRequest _streamReq = null;
+        private HttpWebRequest _streamReq;
 
         /// <summary>
         /// アクセストークン

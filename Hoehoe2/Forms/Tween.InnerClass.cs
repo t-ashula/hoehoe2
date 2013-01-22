@@ -201,9 +201,9 @@ namespace Hoehoe
             public class FriendshipInfo
             {
                 public string Id = string.Empty;
-                public bool IsFollowing = false;
-                public bool IsFollowed = false;
-                public bool IsError = false;
+                public bool IsFollowing;
+                public bool IsFollowed;
+                public bool IsError;
 
                 public FriendshipInfo(string id)
                 {

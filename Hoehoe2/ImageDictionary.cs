@@ -42,7 +42,7 @@ namespace Hoehoe
         private readonly Semaphore _netSemaphore;
         private bool _pauseGetImage; // 取得一時停止
         private bool _popping;
-        private long _removedCount = 0;
+        private long _removedCount;
         private readonly Stack<KeyValuePair<string, Action<Image>>> waitStack;
 
         public ImageDictionary(int cacheMemoryLimit)

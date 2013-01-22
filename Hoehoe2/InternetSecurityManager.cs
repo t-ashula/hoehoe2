@@ -37,7 +37,7 @@ namespace Hoehoe
     {
         private readonly object _ocx = new object();
         private readonly WebBrowserAPI.IServiceProvider _ocxServiceProvider;
-        private readonly IntPtr _profferServicePtr = new IntPtr();
+        private readonly IntPtr _profferServicePtr;
         private readonly WebBrowserAPI.IProfferService _profferService;
 
         // DefaultですべてDisAllow
