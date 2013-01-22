@@ -149,10 +149,8 @@ namespace Hoehoe
                     return string.Empty;
                 }
             }
-            else
-            {
-                return string.Empty;
-            }
+
+            return string.Empty;
         }
 
         public static string TryDecrypt(string password)

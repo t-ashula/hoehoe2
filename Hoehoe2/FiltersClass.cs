@@ -516,22 +516,16 @@ namespace Hoehoe
                 {
                     return HITRESULT.Exclude;
                 }
-                else
+
+                if (MoveFrom)
                 {
-                    if (MoveFrom)
-                    {
-                        return HITRESULT.Move;
-                    }
-                    else
-                    {
-                        return SetMark ? HITRESULT.CopyAndMark : HITRESULT.Copy;
-                    }
+                    return HITRESULT.Move;
                 }
+
+                return SetMark ? HITRESULT.CopyAndMark : HITRESULT.Copy;
             }
-            else
-            {
-                return isExclude ? HITRESULT.Exclude : HITRESULT.None;
-            }
+
+            return isExclude ? HITRESULT.Exclude : HITRESULT.None;
         }
 
         public bool Equals(FiltersClass other)

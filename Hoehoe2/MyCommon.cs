@@ -368,10 +368,8 @@ namespace Hoehoe
                         sb.Length = 0;
                         goto retry;
                     }
-                    else
-                    {
-                        sb.Append("%" + Convert.ToInt16(c).ToString("X2").ToUpper());
-                    }
+
+                    sb.Append("%" + Convert.ToInt16(c).ToString("X2").ToUpper());
                 }
                 else
                 {
@@ -468,10 +466,6 @@ namespace Hoehoe
                 if (DateTime.TryParseExact(input, fmt, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out rslt))
                 {
                     return rslt;
-                }
-                else
-                {
-                    continue;
                 }
             }
 

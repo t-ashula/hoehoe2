@@ -318,17 +318,15 @@ namespace Hoehoe
                     _owner.AddNewTabForSearch(hash);
                     return;
                 }
+
+                Match m = Regex.Match(e.Url.AbsoluteUri, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
+                if (Configs.Instance.OpenUserTimeline && m.Success && _owner.IsTwitterId(m.Result("${ScreenName}")))
+                {
+                    _owner.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
+                }
                 else
                 {
-                    Match m = Regex.Match(e.Url.AbsoluteUri, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
-                    if (Configs.Instance.OpenUserTimeline && m.Success && _owner.IsTwitterId(m.Result("${ScreenName}")))
-                    {
-                        _owner.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
-                    }
-                    else
-                    {
-                        _owner.OpenUriAsync(e.Url.OriginalString);
-                    }
+                    _owner.OpenUriAsync(e.Url.OriginalString);
                 }
             }
         }

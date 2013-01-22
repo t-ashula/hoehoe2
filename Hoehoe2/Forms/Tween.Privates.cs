@@ -1940,29 +1940,27 @@ namespace Hoehoe
                     || modifierState == ModifierState.None
                     || modifierState == ModifierState.Shift)
                 {
-                    if (keyCode == Keys.J)
+                    switch (keyCode)
                     {
-                        SendKeys.Send("{DOWN}");
-                        return true;
-                    }
-                    else if (keyCode == Keys.K)
-                    {
-                        SendKeys.Send("{UP}");
-                        return true;
+                        case Keys.J:
+                            SendKeys.Send("{DOWN}");
+                            return true;
+                        case Keys.K:
+                            SendKeys.Send("{UP}");
+                            return true;
                     }
                 }
 
                 if (modifierState == ModifierState.Shift || modifierState == ModifierState.None)
                 {
-                    if (keyCode == Keys.F)
+                    switch (keyCode)
                     {
-                        SendKeys.Send("{PGDN}");
-                        return true;
-                    }
-                    else if (keyCode == Keys.B)
-                    {
-                        SendKeys.Send("{PGUP}");
-                        return true;
+                        case Keys.F:
+                            SendKeys.Send("{PGDN}");
+                            return true;
+                        case Keys.B:
+                            SendKeys.Send("{PGUP}");
+                            return true;
                     }
                 }
             }
@@ -2559,20 +2557,17 @@ namespace Hoehoe
 
                     break;
                 case ModifierState.Ctrl | ModifierState.Alt:
-                    if (keyCode == Keys.S)
+                    switch (keyCode)
                     {
-                        FavoritesRetweetOriginal();
-                        return true;
-                    }
-                    else if (keyCode == Keys.R)
-                    {
-                        FavoritesRetweetUnofficial();
-                        return true;
-                    }
-                    else if (keyCode == Keys.H)
-                    {
-                        OpenUserAppointUrl();
-                        return true;
+                        case Keys.S:
+                            FavoritesRetweetOriginal();
+                            return true;
+                        case Keys.R:
+                            FavoritesRetweetUnofficial();
+                            return true;
+                        case Keys.H:
+                            OpenUserAppointUrl();
+                            return true;
                     }
 
                     break;
@@ -4974,7 +4969,6 @@ namespace Hoehoe
                         ImageSelectedPicture.Image = R.MultiMediaImage;
                         ImageSelectedPicture.Tag = UploadFileType.MultiMedia;
                         break;
-                    case UploadFileType.Invalid:
                     default:
                         ClearImageSelectionForms();
                         break;

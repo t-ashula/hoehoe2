@@ -315,27 +315,13 @@ namespace Hoehoe
                     {
                         Twitter.AccountState = AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
-                        if (string.IsNullOrEmpty(errMsg))
-                        {
-                            return R.Unauthorized + Environment.NewLine + content;
-                        }
-                        else
-                        {
-                            return "Auth error:" + errMsg;
-                        }
+                        return string.IsNullOrEmpty(errMsg) ? R.Unauthorized + Environment.NewLine + content : "Auth error:" + errMsg;
                     }
 
                 case HttpStatusCode.Forbidden:
                     {
                         string errMsg = GetErrorMessageJson(content);
-                        if (string.IsNullOrEmpty(errMsg))
-                        {
-                            return "Err:Forbidden";
-                        }
-                        else
-                        {
-                            return "Err:" + errMsg;
-                        }
+                        return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden" : "Err:" + errMsg;
                     }
 
                 default:
@@ -390,27 +376,13 @@ namespace Hoehoe
                     {
                         Twitter.AccountState = AccountState.Invalid;
                         string errMsg = GetErrorMessageJson(content);
-                        if (string.IsNullOrEmpty(errMsg))
-                        {
-                            return "Check the PIN or retry." + Environment.NewLine + content;
-                        }
-                        else
-                        {
-                            return "Auth error:" + errMsg;
-                        }
+                        return string.IsNullOrEmpty(errMsg) ? "Check the PIN or retry." + Environment.NewLine + content : "Auth error:" + errMsg;
                     }
 
                 case HttpStatusCode.Forbidden:
                     {
                         string errMsg = GetErrorMessageJson(content);
-                        if (string.IsNullOrEmpty(errMsg))
-                        {
-                            return "Err:Forbidden";
-                        }
-                        else
-                        {
-                            return "Err:" + errMsg;
-                        }
+                        return string.IsNullOrEmpty(errMsg) ? "Err:Forbidden" : "Err:" + errMsg;
                     }
 
                 default:
@@ -878,7 +850,8 @@ namespace Hoehoe
             {
                 return R.Unauthorized + " or blocked user.";
             }
-            else if (res != HttpStatusCode.OK)
+
+            if (res != HttpStatusCode.OK)
             {
                 return "Err:" + res.ToString() + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
             }
@@ -3533,17 +3506,15 @@ namespace Hoehoe
         {
             try
             {
-                if (!string.IsNullOrEmpty(content))
-                {
-                    using (var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(content), XmlDictionaryReaderQuotas.Max))
-                    {
-                        XElement elm = XElement.Load(jsonReader);
-                        return elm.Element("error") != null ? elm.Element("error").Value : string.Empty;
-                    }
-                }
-                else
+                if (string.IsNullOrEmpty(content))
                 {
                     return string.Empty;
+                }
+
+                using (var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(content), XmlDictionaryReaderQuotas.Max))
+                {
+                    XElement elm = XElement.Load(jsonReader);
+                    return elm.Element("error") != null ? elm.Element("error").Value : string.Empty;
                 }
             }
             catch (Exception)

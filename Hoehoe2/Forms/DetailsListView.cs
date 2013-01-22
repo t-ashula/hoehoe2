@@ -342,10 +342,8 @@ namespace Hoehoe.TweenCustomControl
                 Rectangle col0 = item.Bounds;
                 return new Rectangle(col0.Left, col0.Top, item.SubItems[1].Bounds.X + 1, col0.Height);
             }
-            else
-            {
-                return item.SubItems[subitemIndex].Bounds;
-            }
+
+            return item.SubItems[subitemIndex].Bounds;
         }
 
         #endregion private methods

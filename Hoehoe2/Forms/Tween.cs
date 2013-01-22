@@ -1223,7 +1223,8 @@ namespace Hoehoe
                         StatusText.SelectionStart = pos1 + Environment.NewLine.Length;       // カーソルを改行の次の文字へ移動
                         return true;
                     }
-                    else if (doPost)
+
+                    if (doPost)
                     {
                         TryPostTweet();
                         return true;

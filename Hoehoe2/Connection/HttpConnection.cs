@@ -130,10 +130,8 @@ namespace Hoehoe
                 {
                     throw new ArgumentOutOfRangeException(string.Format("Set {0}-{1}: Value={2}", TimeoutMinValue, TimeoutMaxValue, value));
                 }
-                else
-                {
-                    _curTimeout = value;
-                }
+
+                _curTimeout = value;
             }
         }
 

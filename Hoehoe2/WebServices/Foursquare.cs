@@ -146,10 +146,8 @@ namespace Hoehoe
 
                     return curData.Response.Venue;
                 }
-                else
-                {
-                    return null;
-                }
+
+                return null;
             }
             catch (Exception)
             {

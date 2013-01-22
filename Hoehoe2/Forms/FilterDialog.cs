@@ -787,7 +787,8 @@ namespace Hoehoe
                 {
                     return false;
                 }
-                else if (CheckRegex.Checked && !IsValidRegexp(MSG2.Text))
+
+                if (CheckRegex.Checked && !IsValidRegexp(MSG2.Text))
                 {
                     return false;
                 }
@@ -863,7 +864,8 @@ namespace Hoehoe
                 {
                     return false;
                 }
-                else if (CheckExRegex.Checked && !IsValidRegexp(ExMSG2.Text))
+
+                if (CheckExRegex.Checked && !IsValidRegexp(ExMSG2.Text))
                 {
                     return false;
                 }
@@ -1210,12 +1212,10 @@ namespace Hoehoe
                     MessageBox.Show(tmp, R.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
-                else
-                {
-                    // 成功
-                    ListTabs.Items.Add(tabName);
-                    SetTabnamesToDialog();
-                }
+
+                // 成功
+                ListTabs.Items.Add(tabName);
+                SetTabnamesToDialog();
             }
         }
 

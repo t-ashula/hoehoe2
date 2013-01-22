@@ -303,14 +303,9 @@ namespace Hoehoe
 
         public DateTime ConvertResetTimeInSecondsToResetTime(int seconds)
         {
-            if (seconds >= 0)
-            {
-                return TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(seconds));
-            }
-            else
-            {
-                return new DateTime();
-            }
+            return seconds >= 0 ?
+                TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(seconds)) :
+                new DateTime();
         }
 
         public void ParseHttpHeaders(Dictionary<string, string> headers)
@@ -418,19 +413,12 @@ namespace Hoehoe
             int i = 0;
             if (int.TryParse(HttpHeaders["X-RateLimit-Reset"], out i))
             {
-                if (i >= 0)
-                {
-                    return TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i));
-                }
-                else
-                {
-                    return new DateTime();
-                }
+                return i >= 0 ?
+                    TimeZone.CurrentTimeZone.ToLocalTime((new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(i)) :
+                    new DateTime();
             }
-            else
-            {
-                return new DateTime();
-            }
+
+            return new DateTime();
         }
 
         private int GetMediaRemainCountFromHttpHeader()
