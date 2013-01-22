@@ -36,7 +36,7 @@ namespace Hoehoe
 
         public TweenAboutBox()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #endregion constructor
@@ -45,17 +45,17 @@ namespace Hoehoe
 
         private void TweenAboutBox_Load(object sender, EventArgs e)
         {
-            this.SetAboutInfoStrings();
+            SetAboutInfoStrings();
         }
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void TweenAboutBox_Shown(object sender, EventArgs e)
         {
-            this.OKButton.Focus();
+            OKButton.Focus();
         }
 
         #endregion event handler
@@ -66,14 +66,14 @@ namespace Hoehoe
         {
             // フォームのタイトルを設定します。
             string applicationTitle = !string.IsNullOrEmpty(MyCommon.AppTitle) ? MyCommon.AppTitle : Path.GetFileNameWithoutExtension(MyCommon.AppAssemblyName);
-            this.Text = string.Format(R.TweenAboutBox_LoadText1, applicationTitle);
-            this.LabelProductName.Text = MyCommon.AppAssemblyProductName;
-            this.LabelVersion.Text = string.Format(R.TweenAboutBox_LoadText2, MyCommon.FileVersion + "(" + MyCommon.AppVersion.ToString() + ")");
-            this.LabelCopyright.Text = MyCommon.AppAssemblyCopyright;
-            this.LabelCompanyName.Text = MyCommon.AppAssemblyCompanyName;
-            this.TextBoxDescription.Text = MyCommon.AppAssemblyDescription;
-            this.ChangeLog.Text = R.ChangeLog;
-            this.TextBoxDescription.Text = R.Description;
+            Text = string.Format(R.TweenAboutBox_LoadText1, applicationTitle);
+            LabelProductName.Text = MyCommon.AppAssemblyProductName;
+            LabelVersion.Text = string.Format(R.TweenAboutBox_LoadText2, MyCommon.FileVersion + "(" + MyCommon.AppVersion + ")");
+            LabelCopyright.Text = MyCommon.AppAssemblyCopyright;
+            LabelCompanyName.Text = MyCommon.AppAssemblyCompanyName;
+            TextBoxDescription.Text = MyCommon.AppAssemblyDescription;
+            ChangeLog.Text = R.ChangeLog;
+            TextBoxDescription.Text = R.Description;
         }
 
         #endregion privates
