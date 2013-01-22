@@ -33,61 +33,61 @@ namespace Hoehoe
     [Serializable]
     public class SettingLocal : SettingBase<SettingLocal>
     {
-        private FontConverter fontConverter = new FontConverter();
-        private ColorConverter colorConverter = new ColorConverter();
+        private readonly FontConverter _fontConverter = new FontConverter();
+        private readonly ColorConverter _colorConverter = new ColorConverter();
 
         public SettingLocal()
         {
-            this.FormLocation = new Point(0, 0);
-            this.SplitterDistance = 200;
-            this.AdSplitterDistance = 350;
-            this.FormSize = new Size(600, 500);
-            this.StatusText = string.Empty;
-            this.PreviewDistance = -1;
-            this.StatusTextHeight = 38;
-            this.Width1 = 48;
-            this.Width2 = 80;
-            this.Width3 = 290;
-            this.Width4 = 120;
-            this.Width5 = 50;
-            this.Width6 = 16;
-            this.Width7 = 32;
-            this.Width8 = 50;
-            this.DisplayIndex1 = 2;
-            this.DisplayIndex2 = 3;
-            this.DisplayIndex3 = 4;
-            this.DisplayIndex4 = 5;
-            this.DisplayIndex5 = 6;
-            this.DisplayIndex6 = 1;
-            this.DisplayIndex7 = 0;
-            this.DisplayIndex8 = 7;
-            this.BrowserPath = string.Empty;
-            this.ProxyType = HttpConnection.ProxyType.IE;
-            this.ProxyAddress = "127.0.0.1";
-            this.ProxyPort = 80;
-            this.ProxyUser = string.Empty;
-            this.FontUnread = new Font(SystemFonts.DefaultFont, FontStyle.Bold | FontStyle.Underline);
-            this.ColorUnread = SystemColors.ControlText;
-            this.FontRead = SystemFonts.DefaultFont;
-            this.ColorRead = SystemColors.ControlText;
-            this.ColorFav = Color.FromKnownColor(KnownColor.Red);
-            this.ColorOWL = Color.FromKnownColor(KnownColor.Blue);
-            this.ColorRetweet = Color.FromKnownColor(KnownColor.Green);
-            this.FontDetail = SystemFonts.DefaultFont;
-            this.ColorSelf = Color.FromKnownColor(KnownColor.AliceBlue);
-            this.ColorAtSelf = Color.FromKnownColor(KnownColor.AntiqueWhite);
-            this.ColorTarget = Color.FromKnownColor(KnownColor.LemonChiffon);
-            this.ColorAtTarget = Color.FromKnownColor(KnownColor.LavenderBlush);
-            this.ColorAtFromTarget = Color.FromKnownColor(KnownColor.Honeydew);
-            this.ColorAtTo = Color.FromKnownColor(KnownColor.Pink);
-            this.ColorInputBackcolor = Color.FromKnownColor(KnownColor.LemonChiffon);
-            this.ColorInputFont = Color.FromKnownColor(KnownColor.ControlText);
-            this.FontInputFont = SystemFonts.DefaultFont;
-            this.ColorListBackcolor = Color.FromKnownColor(KnownColor.Window);
-            this.ColorDetailBackcolor = Color.FromKnownColor(KnownColor.Window);
-            this.ColorDetail = Color.FromKnownColor(KnownColor.ControlText);
-            this.ColorDetailLink = Color.FromKnownColor(KnownColor.Blue);
-            this.ProxyPassword = string.Empty;
+            FormLocation = new Point(0, 0);
+            SplitterDistance = 200;
+            AdSplitterDistance = 350;
+            FormSize = new Size(600, 500);
+            StatusText = string.Empty;
+            PreviewDistance = -1;
+            StatusTextHeight = 38;
+            Width1 = 48;
+            Width2 = 80;
+            Width3 = 290;
+            Width4 = 120;
+            Width5 = 50;
+            Width6 = 16;
+            Width7 = 32;
+            Width8 = 50;
+            DisplayIndex1 = 2;
+            DisplayIndex2 = 3;
+            DisplayIndex3 = 4;
+            DisplayIndex4 = 5;
+            DisplayIndex5 = 6;
+            DisplayIndex6 = 1;
+            DisplayIndex7 = 0;
+            DisplayIndex8 = 7;
+            BrowserPath = string.Empty;
+            ProxyType = HttpConnection.ProxyType.IE;
+            ProxyAddress = "127.0.0.1";
+            ProxyPort = 80;
+            ProxyUser = string.Empty;
+            FontUnread = new Font(SystemFonts.DefaultFont, FontStyle.Bold | FontStyle.Underline);
+            ColorUnread = SystemColors.ControlText;
+            FontRead = SystemFonts.DefaultFont;
+            ColorRead = SystemColors.ControlText;
+            ColorFav = Color.FromKnownColor(KnownColor.Red);
+            ColorOWL = Color.FromKnownColor(KnownColor.Blue);
+            ColorRetweet = Color.FromKnownColor(KnownColor.Green);
+            FontDetail = SystemFonts.DefaultFont;
+            ColorSelf = Color.FromKnownColor(KnownColor.AliceBlue);
+            ColorAtSelf = Color.FromKnownColor(KnownColor.AntiqueWhite);
+            ColorTarget = Color.FromKnownColor(KnownColor.LemonChiffon);
+            ColorAtTarget = Color.FromKnownColor(KnownColor.LavenderBlush);
+            ColorAtFromTarget = Color.FromKnownColor(KnownColor.Honeydew);
+            ColorAtTo = Color.FromKnownColor(KnownColor.Pink);
+            ColorInputBackcolor = Color.FromKnownColor(KnownColor.LemonChiffon);
+            ColorInputFont = Color.FromKnownColor(KnownColor.ControlText);
+            FontInputFont = SystemFonts.DefaultFont;
+            ColorListBackcolor = Color.FromKnownColor(KnownColor.Window);
+            ColorDetailBackcolor = Color.FromKnownColor(KnownColor.Window);
+            ColorDetail = Color.FromKnownColor(KnownColor.ControlText);
+            ColorDetailLink = Color.FromKnownColor(KnownColor.Blue);
+            ProxyPassword = string.Empty;
         }
 
         public Point FormLocation { get; set; }
@@ -155,8 +155,8 @@ namespace Hoehoe
 
         public string FontUnreadStr
         {
-            get { return this.fontConverter.ConvertToString(this.FontUnread); }
-            set { this.FontUnread = (Font)this.fontConverter.ConvertFromString(value); }
+            get { return _fontConverter.ConvertToString(FontUnread); }
+            set { FontUnread = (Font)_fontConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -164,8 +164,8 @@ namespace Hoehoe
 
         public string ColorUnreadStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorUnread); }
-            set { this.ColorUnread = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorUnread); }
+            set { ColorUnread = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -173,8 +173,8 @@ namespace Hoehoe
 
         public string FontReadStr
         {
-            get { return this.fontConverter.ConvertToString(this.FontRead); }
-            set { this.FontRead = (Font)this.fontConverter.ConvertFromString(value); }
+            get { return _fontConverter.ConvertToString(FontRead); }
+            set { FontRead = (Font)_fontConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -182,8 +182,8 @@ namespace Hoehoe
 
         public string ColorReadStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorRead); }
-            set { this.ColorRead = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorRead); }
+            set { ColorRead = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -191,8 +191,8 @@ namespace Hoehoe
 
         public string ColorFavStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorFav); }
-            set { this.ColorFav = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorFav); }
+            set { ColorFav = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -200,8 +200,8 @@ namespace Hoehoe
 
         public string ColorOWLStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorOWL); }
-            set { this.ColorOWL = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorOWL); }
+            set { ColorOWL = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -209,8 +209,8 @@ namespace Hoehoe
 
         public string ColorRetweetStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorRetweet); }
-            set { this.ColorRetweet = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorRetweet); }
+            set { ColorRetweet = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -218,8 +218,8 @@ namespace Hoehoe
 
         public string FontDetailStr
         {
-            get { return this.fontConverter.ConvertToString(this.FontDetail); }
-            set { this.FontDetail = (Font)this.fontConverter.ConvertFromString(value); }
+            get { return _fontConverter.ConvertToString(FontDetail); }
+            set { FontDetail = (Font)_fontConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -227,8 +227,8 @@ namespace Hoehoe
 
         public string ColorSelfStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorSelf); }
-            set { this.ColorSelf = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorSelf); }
+            set { ColorSelf = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -236,8 +236,8 @@ namespace Hoehoe
 
         public string ColorAtSelfStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorAtSelf); }
-            set { this.ColorAtSelf = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorAtSelf); }
+            set { ColorAtSelf = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -245,8 +245,8 @@ namespace Hoehoe
 
         public string ColorTargetStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorTarget); }
-            set { this.ColorTarget = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorTarget); }
+            set { ColorTarget = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -254,8 +254,8 @@ namespace Hoehoe
 
         public string ColorAtTargetStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorAtTarget); }
-            set { this.ColorAtTarget = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorAtTarget); }
+            set { ColorAtTarget = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -263,8 +263,8 @@ namespace Hoehoe
 
         public string ColorAtFromTargetStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorAtFromTarget); }
-            set { this.ColorAtFromTarget = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorAtFromTarget); }
+            set { ColorAtFromTarget = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -272,8 +272,8 @@ namespace Hoehoe
 
         public string ColorAtToStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorAtTo); }
-            set { this.ColorAtTo = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorAtTo); }
+            set { ColorAtTo = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -281,8 +281,8 @@ namespace Hoehoe
 
         public string ColorInputBackcolorStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorInputBackcolor); }
-            set { this.ColorInputBackcolor = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorInputBackcolor); }
+            set { ColorInputBackcolor = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -290,8 +290,8 @@ namespace Hoehoe
 
         public string ColorInputFontStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorInputFont); }
-            set { this.ColorInputFont = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorInputFont); }
+            set { ColorInputFont = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -299,8 +299,8 @@ namespace Hoehoe
 
         public string FontInputFontStr
         {
-            get { return this.fontConverter.ConvertToString(this.FontInputFont); }
-            set { this.FontInputFont = (Font)this.fontConverter.ConvertFromString(value); }
+            get { return _fontConverter.ConvertToString(FontInputFont); }
+            set { FontInputFont = (Font)_fontConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -308,8 +308,8 @@ namespace Hoehoe
 
         public string ColorListBackcolorStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorListBackcolor); }
-            set { this.ColorListBackcolor = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorListBackcolor); }
+            set { ColorListBackcolor = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -317,8 +317,8 @@ namespace Hoehoe
 
         public string ColorDetailBackcolorStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorDetailBackcolor); }
-            set { this.ColorDetailBackcolor = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorDetailBackcolor); }
+            set { ColorDetailBackcolor = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -326,8 +326,8 @@ namespace Hoehoe
 
         public string ColorDetailStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorDetail); }
-            set { this.ColorDetail = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorDetail); }
+            set { ColorDetail = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -335,8 +335,8 @@ namespace Hoehoe
 
         public string ColorDetailLinkStr
         {
-            get { return this.colorConverter.ConvertToString(this.ColorDetailLink); }
-            set { this.ColorDetailLink = (Color)this.colorConverter.ConvertFromString(value); }
+            get { return _colorConverter.ConvertToString(ColorDetailLink); }
+            set { ColorDetailLink = (Color)_colorConverter.ConvertFromString(value); }
         }
 
         [XmlIgnore]
@@ -344,8 +344,8 @@ namespace Hoehoe
 
         public string EncryptProxyPassword
         {
-            get { return CryptoUtils.TryEncrypt(this.ProxyPassword); }
-            set { this.ProxyPassword = CryptoUtils.TryDecrypt(value); }
+            get { return CryptoUtils.TryEncrypt(ProxyPassword); }
+            set { ProxyPassword = CryptoUtils.TryDecrypt(value); }
         }
 
         #region "Settingクラス基本"

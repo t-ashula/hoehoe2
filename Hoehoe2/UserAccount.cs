@@ -41,13 +41,13 @@ namespace Hoehoe
 
         public string EncryptTokenSecret
         {
-            get { return CryptoUtils.TryEncrypt(this.TokenSecret); }
-            set { this.TokenSecret = CryptoUtils.TryDecrypt(value); }
+            get { return CryptoUtils.TryEncrypt(TokenSecret); }
+            set { TokenSecret = CryptoUtils.TryDecrypt(value); }
         }
 
         public override string ToString()
         {
-            return this.Username;
+            return Username;
         }
     }
 }
