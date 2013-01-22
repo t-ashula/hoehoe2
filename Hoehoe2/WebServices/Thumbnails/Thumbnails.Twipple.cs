@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System.Drawing;
-    using System.Text;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
@@ -53,7 +52,6 @@ namespace Hoehoe
 
             args.AddThumbnailUrl(args.Url, mc.Value);
             return true;
-
         }
 
         /// <summary>
@@ -93,7 +91,6 @@ namespace Hoehoe
 
             args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
-
         }
 
         #endregion "ついっぷるフォト"

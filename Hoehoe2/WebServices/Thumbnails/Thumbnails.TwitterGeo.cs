@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail

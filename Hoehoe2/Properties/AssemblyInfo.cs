@@ -22,7 +22,6 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -37,7 +36,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Hoehoe")]
 [assembly: AssemblyCopyright("(C) kiri_feather 2007 - 2011/t.ashula 2011-")]
 [assembly: AssemblyTrademark("")]
-
 [assembly: ComVisible(false)]
 
 // このプロジェクトが COM に公開される場合、次の GUID がタイプ ライブラリの ID になります。

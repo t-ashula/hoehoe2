@@ -26,7 +26,6 @@
 
 namespace Hoehoe
 {
-    using System.Drawing;
     using System.Text.RegularExpressions;
 
     public partial class Thumbnail
@@ -87,7 +86,7 @@ namespace Hoehoe
             {
                 return false;
             }
-            
+
             args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
         }

@@ -29,10 +29,9 @@ namespace Hoehoe
     using System;
     using System.Drawing;
     using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Json;
     using System.Text;
     using System.Text.RegularExpressions;
-    using Hoehoe.DataModels;
+    using DataModels;
 
     public partial class Thumbnail
     {
@@ -151,7 +150,6 @@ namespace Hoehoe
 
             args.AddTooltipInfo(args.Url.Key, sb.ToString().Trim(), img);
             return true;
-
         }
 
         #endregion "PicPlz"
