@@ -35,11 +35,11 @@ namespace Hoehoe
     {
         private const string ApiHost = "api.twitter.com";
 
-        private static string proxyHost = string.Empty;
+        private static string _proxyHost = string.Empty;
 
         internal static void SetProxyHost(string value)
         {
-            proxyHost = (string.IsNullOrEmpty(value) || value == ApiHost) ? string.Empty : value;
+            _proxyHost = (string.IsNullOrEmpty(value) || value == ApiHost) ? string.Empty : value;
         }
 
         protected override string CreateSignature(string tokenSecret, string method, Uri uri, Dictionary<string, string> parameter)
@@ -54,9 +54,9 @@ namespace Hoehoe
             string url = string.Format("{0}://{1}{2}", uri.Scheme, uri.Host, uri.AbsolutePath);
 
             // 本来のアクセス先URLに再設定（api.twitter.com固定）
-            if (!string.IsNullOrEmpty(proxyHost) && url.StartsWith(uri.Scheme + "://" + proxyHost))
+            if (!string.IsNullOrEmpty(_proxyHost) && url.StartsWith(uri.Scheme + "://" + _proxyHost))
             {
-                url = url.Replace(uri.Scheme + "://" + proxyHost, uri.Scheme + "://" + ApiHost);
+                url = url.Replace(uri.Scheme + "://" + _proxyHost, uri.Scheme + "://" + ApiHost);
             }
 
             // 署名のベース文字列生成（&区切り）。クエリ形式文字列は再エンコードする
@@ -66,7 +66,7 @@ namespace Hoehoe
             string key = UrlEncode(ConsumerSecret) + "&";
             if (!string.IsNullOrEmpty(tokenSecret))
             {
-                key += this.UrlEncode(tokenSecret);
+                key += UrlEncode(tokenSecret);
             }
 
             // 鍵生成＆署名生成

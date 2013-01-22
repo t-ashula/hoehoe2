@@ -57,36 +57,36 @@ namespace Hoehoe
         public Image GetImage(Uri url)
         {
             string t = string.Empty;
-            return this.GetImage(url.ToString(), string.Empty, 10000, ref t);
+            return GetImage(url.ToString(), string.Empty, 10000, ref t);
         }
 
         public Image GetImage(string url)
         {
             string t = string.Empty;
-            return this.GetImage(url, string.Empty, 10000, ref t);
+            return GetImage(url, string.Empty, 10000, ref t);
         }
 
         public Image GetImage(string url, int timeout)
         {
             string t = string.Empty;
-            return this.GetImage(url, string.Empty, timeout, ref t);
+            return GetImage(url, string.Empty, timeout, ref t);
         }
 
         public Image GetImage(string url, string referer)
         {
             string t = string.Empty;
-            return this.GetImage(url, referer, 10000, ref t);
+            return GetImage(url, referer, 10000, ref t);
         }
 
         public Image GetImage(string url, string referer, int timeout, ref string errmsg)
         {
-            return this.GetImageInternal(MyCommon.CheckValidImage, url, referer, timeout, ref errmsg);
+            return GetImageInternal(MyCommon.CheckValidImage, url, referer, timeout, ref errmsg);
         }
 
         public Image GetIconImage(string url, int timeout)
         {
             string t = string.Empty;
-            return this.GetImageInternal(this.CheckValidIconImage, url, string.Empty, timeout, ref t);
+            return GetImageInternal(CheckValidIconImage, url, string.Empty, timeout, ref t);
         }
 
         public bool PostData(string url, Dictionary<string, string> param)
@@ -108,7 +108,7 @@ namespace Hoehoe
             try
             {
                 HttpWebRequest req = CreateRequest(PostMethod, new Uri(url), param, false);
-                HttpStatusCode res = this.GetResponse(req, ref content, null, false);
+                HttpStatusCode res = GetResponse(req, ref content, null, false);
                 return res == HttpStatusCode.OK;
             }
             catch (Exception)
@@ -120,19 +120,19 @@ namespace Hoehoe
         public bool GetData(string url, Dictionary<string, string> param, ref string content, string userAgent)
         {
             string t = string.Empty;
-            return this.GetData(url, param, ref content, 100000, ref t, userAgent);
+            return GetData(url, param, ref content, 100000, ref t, userAgent);
         }
 
         public bool GetData(string url, Dictionary<string, string> param, ref string content)
         {
             string t = string.Empty;
-            return this.GetData(url, param, ref content, 100000, ref t, string.Empty);
+            return GetData(url, param, ref content, 100000, ref t, string.Empty);
         }
 
         public bool GetData(string url, Dictionary<string, string> param, ref string content, int timeout)
         {
             string t = string.Empty;
-            return this.GetData(url, param, ref content, timeout, ref t, string.Empty);
+            return GetData(url, param, ref content, timeout, ref t, string.Empty);
         }
 
         public bool GetData(string url, Dictionary<string, string> param, ref string content, int timeout, ref string errmsg, string userAgent)
@@ -154,7 +154,7 @@ namespace Hoehoe
                     req.UserAgent = userAgent;
                 }
 
-                HttpStatusCode res = this.GetResponse(req, ref content, null, false);
+                HttpStatusCode res = GetResponse(req, ref content, null, false);
                 if (res == HttpStatusCode.OK)
                 {
                     return true;
@@ -183,7 +183,7 @@ namespace Hoehoe
             // Searchで使用。呼び出し元で例外キャッチしている。
             HttpWebRequest req = CreateRequest(method, url, param, false);
             req.UserAgent = userAgent;
-            return this.GetResponse(req, ref content, headerInfo, false);
+            return GetResponse(req, ref content, headerInfo, false);
         }
 
         public bool GetDataToFile(string url, string savePath)
