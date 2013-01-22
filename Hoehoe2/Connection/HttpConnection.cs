@@ -282,7 +282,7 @@ namespace Hoehoe
             webReq.Method = method;
             if (method == "POST" || method == "PUT")
             {
-                string boundary = System.Environment.TickCount.ToString();
+                string boundary = Environment.TickCount.ToString();
                 webReq.ContentType = "multipart/form-data; boundary=" + boundary;
                 using (Stream reqStream = webReq.GetRequestStream())
                 {

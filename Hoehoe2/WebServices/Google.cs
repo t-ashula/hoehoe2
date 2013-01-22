@@ -30,8 +30,8 @@ namespace Hoehoe
     using System.Collections.Generic;
     using System.Runtime.Serialization.Json;
     using System.Web;
-    using Hoehoe.DataModels;
-    using Hoehoe.DataModels.Google;
+    using DataModels;
+    using DataModels.Google;
 
     public class Google
     {
@@ -47,7 +47,7 @@ namespace Hoehoe
 
         #region "言語テーブル定義"
 
-        private static List<string> languages = new List<string>
+        private static readonly List<string> Languages = new List<string>
         {
             "af",
             "sq",
@@ -235,12 +235,12 @@ namespace Hoehoe
 
         public string GetLanguageEnumFromIndex(int index)
         {
-            return languages[index];
+            return Languages[index];
         }
 
         public int GetIndexFromLanguageEnum(string lang)
         {
-            return languages.IndexOf(lang);
+            return Languages.IndexOf(lang);
         }
 
         #endregion "Translation"

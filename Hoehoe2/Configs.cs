@@ -24,7 +24,7 @@ namespace Hoehoe
     using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
-    using Hoehoe.DataModels.Twitter;
+    using DataModels.Twitter;
 
     public class Configs
     {

@@ -34,9 +34,9 @@ namespace Hoehoe
 
         string GetFileOpenDialogFilter();
 
-        Hoehoe.UploadFileType GetFileType(string ext);
+        UploadFileType GetFileType(string ext);
 
-        bool IsSupportedFileType(Hoehoe.UploadFileType type);
+        bool IsSupportedFileType(UploadFileType type);
 
         bool CheckValidFilesize(string ext, long fileSize);
 

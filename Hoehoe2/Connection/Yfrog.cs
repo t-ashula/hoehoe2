@@ -208,7 +208,7 @@ namespace Hoehoe
             var binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
             InstanceTimeout = 60000; // タイムアウト60秒
-            return GetContent(HttpConnection.PostMethod, new Uri("http://yfrog.com/api/xauth_upload"), param, binary, ref content, null, null);
+            return GetContent(PostMethod, new Uri("http://yfrog.com/api/xauth_upload"), param, binary, ref content, null, null);
         }
     }
 }

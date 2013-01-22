@@ -266,7 +266,7 @@ namespace Hoehoe
         {
             lock (_lockObject)
             {
-                return _innerDictionary.Contains(item.Key) && object.ReferenceEquals(_innerDictionary[item.Key], item.Value);
+                return _innerDictionary.Contains(item.Key) && ReferenceEquals(_innerDictionary[item.Key], item.Value);
             }
         }
 

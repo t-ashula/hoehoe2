@@ -33,7 +33,7 @@ namespace Hoehoe
     using System.Reflection;
     using System.Threading;
     using System.Windows.Forms;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     internal static class Program
     {
@@ -66,7 +66,7 @@ namespace Hoehoe
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += MyApplication_UnhandledException;
-            Application.ApplicationExit += (_, __) => { RelaseMutex(); Hoehoe.Properties.Settings.Default.Save(); };
+            Application.ApplicationExit += (_, __) => { RelaseMutex(); Properties.Settings.Default.Save(); };
             if (!MyApplication_Startup())
             {
                 return;
@@ -144,7 +144,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Write("application startup:" + ex);
+                Debug.Write("application startup:" + ex);
                 return false;
             }
 
@@ -153,7 +153,7 @@ namespace Hoehoe
 
         private static void MyApplication_UnhandledException(object sender, ThreadExceptionEventArgs e)
         {
-            System.Diagnostics.Debug.Write("UnhandledException:" + e);
+            Debug.Write("UnhandledException:" + e);
             if (e.Exception.Message != "A generic error occurred in GDI+." && e.Exception.Message != "GDI+ で汎用エラーが発生しました。")
             {
                 // GDI+のエラー原因を特定したい

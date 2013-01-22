@@ -308,7 +308,7 @@ namespace Hoehoe
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || (!object.ReferenceEquals(GetType(), obj.GetType())))
+            if ((obj == null) || (!ReferenceEquals(GetType(), obj.GetType())))
             {
                 return false;
             }

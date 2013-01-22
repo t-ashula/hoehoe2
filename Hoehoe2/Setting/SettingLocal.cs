@@ -352,12 +352,12 @@ namespace Hoehoe
 
         public static SettingLocal Load()
         {
-            return SettingLocal.LoadSettings();
+            return LoadSettings();
         }
 
         public void Save()
         {
-            SettingLocal.SaveSettings(this);
+            SaveSettings(this);
         }
 
         #endregion "Settingクラス基本"

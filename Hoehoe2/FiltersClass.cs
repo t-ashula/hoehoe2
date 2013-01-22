@@ -32,7 +32,7 @@ namespace Hoehoe
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml.Serialization;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     [Serializable]
     public sealed class FiltersClass : IEquatable<FiltersClass>
@@ -613,7 +613,7 @@ namespace Hoehoe
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || (!object.ReferenceEquals(GetType(), obj.GetType())))
+            if ((obj == null) || (!ReferenceEquals(GetType(), obj.GetType())))
             {
                 return false;
             }

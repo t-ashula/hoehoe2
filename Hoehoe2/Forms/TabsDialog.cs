@@ -29,7 +29,7 @@ namespace Hoehoe
     using System;
     using System.Collections.Specialized;
     using System.Windows.Forms;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     public partial class TabsDialog
     {
@@ -198,7 +198,7 @@ namespace Hoehoe
                 return;
             }
 
-            if (TabList.IndexFromPoint(TabList.PointToClient(Control.MousePosition)) == ListBox.NoMatches)
+            if (TabList.IndexFromPoint(TabList.PointToClient(MousePosition)) == ListBox.NoMatches)
             {
                 return;
             }

@@ -775,7 +775,7 @@ namespace Hoehoe
             tabPage.Tag = null;
             tabPage.SuspendLayout();
 
-            if (object.ReferenceEquals(ListTab.SelectedTab, ListTab.TabPages[idx]))
+            if (ReferenceEquals(ListTab.SelectedTab, ListTab.TabPages[idx]))
             {
                 ListTab.SelectTab(_prevSelectedTab != null && ListTab.TabPages.Contains(_prevSelectedTab) ? _prevSelectedTab : ListTab.TabPages[0]);
             }

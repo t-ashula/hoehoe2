@@ -35,8 +35,8 @@ namespace Hoehoe
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Windows.Forms;
-    using Hoehoe.TweenCustomControl;
-    using R = Hoehoe.Properties.Resources;
+    using TweenCustomControl;
+    using R = Properties.Resources;
 
     public partial class TweenMain
     {
@@ -2026,49 +2026,49 @@ namespace Hoehoe
             // デフォルトタブの存在チェック、ない場合には追加
             if (_statuses.GetTabByType(TabUsageType.Home) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.RECENT))
+                if (!_statuses.Tabs.ContainsKey(MyCommon.DEFAULTTAB.RECENT))
                 {
-                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.RECENT, TabUsageType.Home, null);
+                    _statuses.AddTab(MyCommon.DEFAULTTAB.RECENT, TabUsageType.Home, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.RECENT].TabType = TabUsageType.Home;
+                    _statuses.Tabs[MyCommon.DEFAULTTAB.RECENT].TabType = TabUsageType.Home;
                 }
             }
 
             if (_statuses.GetTabByType(TabUsageType.Mentions) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.REPLY))
+                if (!_statuses.Tabs.ContainsKey(MyCommon.DEFAULTTAB.REPLY))
                 {
-                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
+                    _statuses.AddTab(MyCommon.DEFAULTTAB.REPLY, TabUsageType.Mentions, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.REPLY].TabType = TabUsageType.Mentions;
+                    _statuses.Tabs[MyCommon.DEFAULTTAB.REPLY].TabType = TabUsageType.Mentions;
                 }
             }
 
             if (_statuses.GetTabByType(TabUsageType.DirectMessage) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.DM))
+                if (!_statuses.Tabs.ContainsKey(MyCommon.DEFAULTTAB.DM))
                 {
-                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
+                    _statuses.AddTab(MyCommon.DEFAULTTAB.DM, TabUsageType.DirectMessage, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.DM].TabType = TabUsageType.DirectMessage;
+                    _statuses.Tabs[MyCommon.DEFAULTTAB.DM].TabType = TabUsageType.DirectMessage;
                 }
             }
 
             if (_statuses.GetTabByType(TabUsageType.Favorites) == null)
             {
-                if (!_statuses.Tabs.ContainsKey(Hoehoe.MyCommon.DEFAULTTAB.FAV))
+                if (!_statuses.Tabs.ContainsKey(MyCommon.DEFAULTTAB.FAV))
                 {
-                    _statuses.AddTab(Hoehoe.MyCommon.DEFAULTTAB.FAV, TabUsageType.Favorites, null);
+                    _statuses.AddTab(MyCommon.DEFAULTTAB.FAV, TabUsageType.Favorites, null);
                 }
                 else
                 {
-                    _statuses.Tabs[Hoehoe.MyCommon.DEFAULTTAB.FAV].TabType = TabUsageType.Favorites;
+                    _statuses.Tabs[MyCommon.DEFAULTTAB.FAV].TabType = TabUsageType.Favorites;
                 }
             }
 
@@ -2515,7 +2515,7 @@ namespace Hoehoe
             // 時速表示用
             if (args.WorkerType == WorkerType.FavAdd)
             {
-                System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                 for (int i = _favTimestamps.Count - 1; i >= 0; i += -1)
                 {
                     if (_favTimestamps[i].CompareTo(oneHour) < 0)
@@ -2725,7 +2725,7 @@ namespace Hoehoe
                     if (string.IsNullOrEmpty(rslt.RetMsg) || rslt.RetMsg.StartsWith("Outputz") || rslt.RetMsg.StartsWith("OK:") || rslt.RetMsg == "Warn:Status is a duplicate.")
                     {
                         _postTimestamps.Add(DateTime.Now);
-                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                        DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                         for (int i = _postTimestamps.Count - 1; i >= 0; i += -1)
                         {
                             if (_postTimestamps[i].CompareTo(oneHour) < 0)
@@ -2790,7 +2790,7 @@ namespace Hoehoe
                     if (rslt.RetMsg.Length == 0)
                     {
                         _postTimestamps.Add(DateTime.Now);
-                        System.DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
+                        DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
                         for (int i = _postTimestamps.Count - 1; i >= 0; i--)
                         {
                             if (_postTimestamps[i].CompareTo(oneHour) < 0)
@@ -2862,7 +2862,7 @@ namespace Hoehoe
 
         private void GrowlHelper_Callback(object sender, GrowlHelper.NotifyCallbackEventArgs e)
         {
-            if (Form.ActiveForm == null)
+            if (ActiveForm == null)
             {
                 BeginInvoke(
                     new Action(() =>
@@ -3489,7 +3489,7 @@ namespace Hoehoe
             else
             {
                 // A cache miss, so create a new ListViewItem and pass it back.
-                TabPage tb = (TabPage)((Hoehoe.TweenCustomControl.DetailsListView)sender).Parent;
+                TabPage tb = (TabPage)((DetailsListView)sender).Parent;
                 try
                 {
                     e.Item = CreateItem(tb, _statuses.Item(tb.Text, e.ItemIndex), e.ItemIndex);
@@ -3567,7 +3567,7 @@ namespace Hoehoe
                 DateTime oneHour = tm.Subtract(new TimeSpan(1, 0, 0));
                 List<DateTime> keys = new List<DateTime>();
                 _timeLineCount = 0;
-                foreach (System.DateTime key in _timeLineTimestamps.Keys)
+                foreach (var key in _timeLineTimestamps.Keys)
                 {
                     if (key.CompareTo(oneHour) < 0)
                     {

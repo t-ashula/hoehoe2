@@ -569,12 +569,12 @@ namespace Hoehoe
 
         public enum FlashSpecification : int
         {
-            FlashStop = Win32Api.FLASHW_STOP,
-            FlashCaption = Win32Api.FLASHW_CAPTION,
-            FlashTray = Win32Api.FLASHW_TRAY,
-            FlashAll = Win32Api.FLASHW_ALL,
-            FlashTimer = Win32Api.FLASHW_TIMER,
-            FlashTimerNoForeground = Win32Api.FLASHW_TIMERNOFG
+            FlashStop = FLASHW_STOP,
+            FlashCaption = FLASHW_CAPTION,
+            FlashTray = FLASHW_TRAY,
+            FlashAll = FLASHW_ALL,
+            FlashTimer = FLASHW_TIMER,
+            FlashTimerNoForeground = FLASHW_TIMERNOFG
         }
 
         /// http://www.atmarkit.co.jp/fdotnet/dotnettips/723flashwindow/flashwindow.html

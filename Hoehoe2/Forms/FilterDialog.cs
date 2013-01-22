@@ -32,7 +32,7 @@ namespace Hoehoe
     using System.Linq.Expressions;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     public partial class FilterDialog
     {
@@ -213,7 +213,7 @@ namespace Hoehoe
                 return;
             }
 
-            int clickedIndex = ListFilters.IndexFromPoint(ListFilters.PointToClient(Control.MousePosition));
+            int clickedIndex = ListFilters.IndexFromPoint(ListFilters.PointToClient(MousePosition));
             if (clickedIndex == ListBox.NoMatches)
             {
                 return;

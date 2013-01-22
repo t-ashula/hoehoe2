@@ -34,7 +34,7 @@ namespace Hoehoe
     using System.Text.RegularExpressions;
     using System.Web;
     using System.Windows.Forms;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     public partial class ShowUserInfo
     {
@@ -787,7 +787,7 @@ namespace Hoehoe
                 if (!string.IsNullOrEmpty(res))
                 {
                     // "Err:"が付いたエラーメッセージが返ってくる
-                    MessageBox.Show(res + System.Environment.NewLine + R.ChangeIconToolStripMenuItem_ClickText4);
+                    MessageBox.Show(res + Environment.NewLine + R.ChangeIconToolStripMenuItem_ClickText4);
                 }
                 else
                 {

@@ -41,7 +41,7 @@ namespace Hoehoe
     using System.Text;
     using System.Web;
     using System.Windows.Forms;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     public sealed class MyCommon
     {
@@ -511,7 +511,7 @@ namespace Hoehoe
 
         public static string GetSoundDir()
         {
-            var basedir = MyCommon.AppDir;
+            var basedir = AppDir;
             var dir = Path.Combine(basedir, "Sounds");
             return Directory.Exists(dir) ? dir : basedir;
         }
@@ -520,7 +520,7 @@ namespace Hoehoe
         {
             soundFileComboBox.Items.Clear();
             soundFileComboBox.Items.Add(string.Empty);
-            var names = MyCommon.GetSoundFileNames();
+            var names = GetSoundFileNames();
             if (names.Length > 0)
             {
                 soundFileComboBox.Items.AddRange(names);

@@ -30,8 +30,8 @@ namespace Hoehoe
     using System.Collections.Generic;
     using System.Net;
     using System.Text.RegularExpressions;
-    using Hoehoe.DataModels;
-    using Hoehoe.DataModels.FourSquare;
+    using DataModels;
+    using DataModels.FourSquare;
 
     public class Foursquare : HttpConnection
     {

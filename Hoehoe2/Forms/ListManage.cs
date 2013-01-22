@@ -30,7 +30,7 @@ namespace Hoehoe
     using System.ComponentModel;
     using System.Drawing;
     using System.Windows.Forms;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     public partial class ListManage
     {

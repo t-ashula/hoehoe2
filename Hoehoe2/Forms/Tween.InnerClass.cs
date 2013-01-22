@@ -214,7 +214,7 @@ namespace Hoehoe
 
         private class GetUserInfoArgs
         {
-            public Hoehoe.Twitter Tw;
+            public Twitter Tw;
             public string Id;
             public DataModels.Twitter.User User;
         }

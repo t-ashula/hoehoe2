@@ -28,7 +28,7 @@ namespace Hoehoe
 {
     using System;
     using System.IO;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     public partial class TweenAboutBox
     {

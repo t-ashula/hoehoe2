@@ -26,7 +26,9 @@
 
 namespace Hoehoe
 {
+    using System;
     using System.Text.RegularExpressions;
+    using System.Web;
 
     public partial class Thumbnail
     {
@@ -73,8 +75,8 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Pixiv_CreateImage(CreateImageArgs args)
         {
-            var url = new System.Uri(args.Url.Value);
-            var queries = System.Web.HttpUtility.ParseQueryString(url.Query);
+            var url = new Uri(args.Url.Value);
+            var queries = HttpUtility.ParseQueryString(url.Query);
             if (!string.IsNullOrEmpty(queries["tag"]) && queries["tag"].StartsWith("R-18"))
             {
                 args.Errmsg = "NotSupported";

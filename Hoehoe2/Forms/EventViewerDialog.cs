@@ -33,7 +33,7 @@ namespace Hoehoe
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     public partial class EventViewerDialog
     {
@@ -57,7 +57,7 @@ namespace Hoehoe
 
         #region properties
 
-        public List<Hoehoe.Twitter.FormattedEvent> EventSource { get; set; }
+        public List<Twitter.FormattedEvent> EventSource { get; set; }
 
         #endregion properties
 

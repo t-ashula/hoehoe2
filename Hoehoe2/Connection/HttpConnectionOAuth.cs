@@ -614,12 +614,12 @@ namespace Hoehoe
             // HTTPリクエスト生成。PINコードもパラメータも未指定の場合はGETメソッドで通信。それ以外はPOST
             if (string.IsNullOrEmpty(pinCode) && parameter == null)
             {
-                webReq = CreateRequest(HttpConnection.GetMethod, requestUri, null, false);
+                webReq = CreateRequest(GetMethod, requestUri, null, false);
             }
             else
             {
                 // ボディに追加パラメータ書き込み
-                webReq = CreateRequest(HttpConnection.PostMethod, requestUri, parameter, false);
+                webReq = CreateRequest(PostMethod, requestUri, parameter, false);
             }
 
             // OAuth関連パラメータ準備。追加パラメータがあれば追加

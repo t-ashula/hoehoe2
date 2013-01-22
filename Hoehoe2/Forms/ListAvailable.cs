@@ -55,7 +55,7 @@ namespace Hoehoe
             if (ListsList.SelectedIndex > -1)
             {
                 SelectedList = (ListElement)ListsList.SelectedItem;
-                DialogResult = System.Windows.Forms.DialogResult.OK;
+                DialogResult = DialogResult.OK;
                 Close();
             }
         }
@@ -63,7 +63,7 @@ namespace Hoehoe
         private void CancelButton_Click(object sender, EventArgs e)
         {
             SelectedList = null;
-            DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 

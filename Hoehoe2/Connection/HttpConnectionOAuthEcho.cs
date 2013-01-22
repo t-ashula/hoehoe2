@@ -67,7 +67,7 @@ namespace Hoehoe
             }
 
             // 署名の作成・追加(GETメソッド固定。ServiceProvider呼び出し用の署名作成)
-            parameter.Add("oauth_signature", CreateSignature(tokenSecret, HttpConnection.GetMethod, _serviceProvider, parameter));
+            parameter.Add("oauth_signature", CreateSignature(tokenSecret, GetMethod, _serviceProvider, parameter));
 
             // HTTPリクエストのヘッダに追加
             StringBuilder sb = new StringBuilder("OAuth ");

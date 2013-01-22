@@ -47,14 +47,14 @@ namespace Hoehoe
         {
             get
             {
-                return ApiInformation.maxCount;
+                return maxCount;
             }
 
             set
             {
-                if (ApiInformation.maxCount != value)
+                if (maxCount != value)
                 {
-                    ApiInformation.maxCount = value;
+                    maxCount = value;
                     Raise_Changed();
                 }
             }
@@ -64,14 +64,14 @@ namespace Hoehoe
         {
             get
             {
-                return ApiInformation.remainCount;
+                return remainCount;
             }
 
             set
             {
-                if (ApiInformation.remainCount != value)
+                if (remainCount != value)
                 {
-                    ApiInformation.remainCount = value;
+                    remainCount = value;
                     Raise_Changed();
                 }
             }
@@ -81,14 +81,14 @@ namespace Hoehoe
         {
             get
             {
-                return ApiInformation.resetTime;
+                return resetTime;
             }
 
             set
             {
-                if (ApiInformation.resetTime != value)
+                if (resetTime != value)
                 {
-                    ApiInformation.resetTime = value;
+                    resetTime = value;
                     Raise_Changed();
                 }
             }
@@ -98,14 +98,14 @@ namespace Hoehoe
         {
             get
             {
-                return ApiInformation.mediaMaxCount;
+                return mediaMaxCount;
             }
 
             set
             {
-                if (ApiInformation.mediaMaxCount != value)
+                if (mediaMaxCount != value)
                 {
-                    ApiInformation.mediaMaxCount = value;
+                    mediaMaxCount = value;
                     Raise_Changed();
                 }
             }
@@ -115,14 +115,14 @@ namespace Hoehoe
         {
             get
             {
-                return ApiInformation.mediaRemainCount;
+                return mediaRemainCount;
             }
 
             set
             {
-                if (ApiInformation.mediaRemainCount != value)
+                if (mediaRemainCount != value)
                 {
-                    ApiInformation.mediaRemainCount = value;
+                    mediaRemainCount = value;
                     Raise_Changed();
                 }
             }
@@ -132,14 +132,14 @@ namespace Hoehoe
         {
             get
             {
-                return ApiInformation.mediaResetTime;
+                return mediaResetTime;
             }
 
             set
             {
-                if (ApiInformation.mediaResetTime != value)
+                if (mediaResetTime != value)
                 {
-                    ApiInformation.mediaResetTime = value;
+                    mediaResetTime = value;
                     Raise_Changed();
                 }
             }
@@ -149,14 +149,14 @@ namespace Hoehoe
         {
             get
             {
-                return ApiInformation.resetTimeInSeconds;
+                return resetTimeInSeconds;
             }
 
             set
             {
-                if (ApiInformation.resetTimeInSeconds != value)
+                if (resetTimeInSeconds != value)
                 {
-                    ApiInformation.resetTimeInSeconds = value;
+                    resetTimeInSeconds = value;
                     Raise_Changed();
                 }
             }
@@ -166,14 +166,14 @@ namespace Hoehoe
         {
             get
             {
-                return ApiInformation.usingCount;
+                return usingCount;
             }
 
             set
             {
-                if (ApiInformation.usingCount != value)
+                if (usingCount != value)
                 {
-                    ApiInformation.usingCount = value;
+                    usingCount = value;
                     Raise_Changed();
                 }
             }
@@ -183,14 +183,14 @@ namespace Hoehoe
         {
             get
             {
-                return ApiInformation.accessLevel;
+                return accessLevel;
             }
 
             private set
             {
-                if (ApiInformation.accessLevel != value)
+                if (accessLevel != value)
                 {
-                    ApiInformation.accessLevel = value;
+                    accessLevel = value;
                     Raise_Changed();
                 }
             }
@@ -285,13 +285,13 @@ namespace Hoehoe
                 HttpHeaders.Add("X-MediaRateLimit-Reset", "-1");
             }
 
-            ApiInformation.maxCount = -1;
-            ApiInformation.remainCount = -1;
-            ApiInformation.resetTime = new DateTime();
-            ApiInformation.resetTimeInSeconds = -1;
-            ApiInformation.mediaMaxCount = -1;
-            ApiInformation.mediaRemainCount = -1;
-            ApiInformation.mediaResetTime = new DateTime();
+            maxCount = -1;
+            remainCount = -1;
+            resetTime = new DateTime();
+            resetTimeInSeconds = -1;
+            mediaMaxCount = -1;
+            mediaRemainCount = -1;
+            mediaResetTime = new DateTime();
             AccessLevel = ApiAccessLevel.None;
 
             // _UsingCount = -1
@@ -315,37 +315,37 @@ namespace Hoehoe
             tmp = GetMaxCountFromHttpHeader();
             if (tmp != -1)
             {
-                ApiInformation.maxCount = tmp;
+                maxCount = tmp;
             }
 
             tmp = GetRemainCountFromHttpHeader();
             if (tmp != -1)
             {
-                ApiInformation.remainCount = tmp;
+                remainCount = tmp;
             }
 
             tmpd = GetResetTimeFromHttpHeader();
             if (tmpd != new DateTime())
             {
-                ApiInformation.resetTime = tmpd;
+                resetTime = tmpd;
             }
 
             tmp = GetMediaMaxCountFromHttpHeader();
             if (tmp != -1)
             {
-                ApiInformation.mediaMaxCount = tmp;
+                mediaMaxCount = tmp;
             }
 
             tmp = GetMediaRemainCountFromHttpHeader();
             if (tmp != -1)
             {
-                ApiInformation.mediaRemainCount = tmp;
+                mediaRemainCount = tmp;
             }
 
             tmpd = GetMediaResetTimeFromHttpHeader();
             if (tmpd != new DateTime())
             {
-                ApiInformation.mediaResetTime = tmpd;
+                mediaResetTime = tmpd;
             }
 
             AccessLevel = GetApiAccessLevelFromHttpHeader();
@@ -354,11 +354,11 @@ namespace Hoehoe
 
         public void WriteBackEventArgs(ApiInformationChangedEventArgs arg)
         {
-            ApiInformation.maxCount = arg.ApiInfo.MaxCount;
-            ApiInformation.remainCount = arg.ApiInfo.RemainCount;
-            ApiInformation.resetTime = arg.ApiInfo.ResetTime;
-            ApiInformation.resetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds;
-            ApiInformation.usingCount = arg.ApiInfo.UsingCount;
+            maxCount = arg.ApiInfo.MaxCount;
+            remainCount = arg.ApiInfo.RemainCount;
+            resetTime = arg.ApiInfo.ResetTime;
+            resetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds;
+            usingCount = arg.ApiInfo.UsingCount;
             Raise_Changed();
         }
 
@@ -370,10 +370,10 @@ namespace Hoehoe
                 Changed(this, arg);
             }
 
-            ApiInformation.maxCount = arg.ApiInfo.MaxCount;
-            ApiInformation.remainCount = arg.ApiInfo.RemainCount;
-            ApiInformation.resetTime = arg.ApiInfo.ResetTime;
-            ApiInformation.resetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds;
+            maxCount = arg.ApiInfo.MaxCount;
+            remainCount = arg.ApiInfo.RemainCount;
+            resetTime = arg.ApiInfo.ResetTime;
+            resetTimeInSeconds = arg.ApiInfo.ResetTimeInSeconds;
         }
 
         private int GetRemainCountFromHttpHeader()

@@ -188,7 +188,7 @@ namespace Hoehoe
                 public int Id;
 
                 [DataMember(Name = "icon")]
-                public PicPlzDataModel.Icon Icon;
+                public Icon Icon;
             }
 
             [DataContract]

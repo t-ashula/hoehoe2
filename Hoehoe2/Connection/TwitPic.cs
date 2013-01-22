@@ -238,7 +238,7 @@ namespace Hoehoe
                 InstanceTimeout = 120000;
             }
 
-            return GetContent(HttpConnection.PostMethod, new Uri("http://api.twitpic.com/2/upload.xml"), param, binary, ref content, null, null);
+            return GetContent(PostMethod, new Uri("http://api.twitpic.com/2/upload.xml"), param, binary, ref content, null, null);
         }
     }
 }

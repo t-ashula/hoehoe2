@@ -1387,7 +1387,7 @@ namespace Hoehoe
             try
             {
                 // 次の未読探索
-                var posts = tab.IsInnerStorageTabType ? tab.Posts : _statuses; 
+                var posts = tab.IsInnerStorageTabType ? tab.Posts : _statuses;
                 if (tab.OldestUnreadId > -1 && posts.ContainsKey(tab.OldestUnreadId)
                     && posts[tab.OldestUnreadId].IsRead && _sorter.Mode == IdComparerClass.ComparerMode.Id)
                 {
@@ -1442,7 +1442,7 @@ namespace Hoehoe
             int toIdx = 0;
             int stp = 1;
             tab.OldestUnreadId = -1;
-            if (_sorter.Order == System.Windows.Forms.SortOrder.Ascending)
+            if (_sorter.Order == SortOrder.Ascending)
             {
                 if (startIdx == -1)
                 {

@@ -164,7 +164,7 @@ namespace Hoehoe
 
         #region protected methods
 
-        protected override void WndProc(ref System.Windows.Forms.Message m)
+        protected override void WndProc(ref Message m)
         {
             const int WM_HOTKEY = 0x312;
             if (m.Msg == WM_HOTKEY)

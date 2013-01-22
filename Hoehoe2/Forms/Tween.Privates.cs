@@ -40,8 +40,8 @@ namespace Hoehoe
     using System.Threading;
     using System.Web;
     using System.Windows.Forms;
-    using Hoehoe.TweenCustomControl;
-    using R = Hoehoe.Properties.Resources;
+    using TweenCustomControl;
+    using R = Properties.Resources;
 
     public partial class TweenMain
     {
@@ -620,7 +620,7 @@ namespace Hoehoe
                 && IsMyEventNotityAsEventType(ev)
                 && (NewPostPopMenuItem.Checked || (_configs.ForceEventNotify && ev.Eventtype != EventType.None))
                 && !_isInitializing
-                && ((_configs.LimitBalloon && (WindowState == FormWindowState.Minimized || !Visible || Form.ActiveForm == null)) || !_configs.LimitBalloon)
+                && ((_configs.LimitBalloon && (WindowState == FormWindowState.Minimized || !Visible || ActiveForm == null)) || !_configs.LimitBalloon)
                 && !Win32Api.IsScreenSaverRunning();
         }
 
@@ -690,7 +690,7 @@ namespace Hoehoe
                         sb.Append(post.TextFromApi);
                         if (notifyPosts.Count() > 3)
                         {
-                            if (!object.ReferenceEquals(notifyPosts.Last(), post))
+                            if (!ReferenceEquals(notifyPosts.Last(), post))
                             {
                                 continue;
                             }
@@ -768,9 +768,9 @@ namespace Hoehoe
             }
 
             // mentions新着時に画面ブリンク
-            if (!_isInitializing && _configs.BlinkNewMentions && newMentions && Form.ActiveForm == null)
+            if (!_isInitializing && _configs.BlinkNewMentions && newMentions && ActiveForm == null)
             {
-                Win32Api.FlashMyWindow(Handle, Hoehoe.Win32Api.FlashSpecification.FlashTray, 3);
+                Win32Api.FlashMyWindow(Handle, Win32Api.FlashSpecification.FlashTray, 3);
             }
         }
 
@@ -1895,7 +1895,7 @@ namespace Hoehoe
                 catch (COMException comex)
                 {
                     // 原因不明
-                    System.Diagnostics.Debug.Write(comex);
+                    Debug.Write(comex);
                 }
                 catch (UriFormatException)
                 {
@@ -3033,7 +3033,7 @@ namespace Hoehoe
             Dictionary<long, PostClass> curTabPosts = _statuses.Tabs[_curTab.Text].IsInnerStorageTabType ? curTabClass.Posts : _statuses.Posts;
             long inReplyToId = _curPost.InReplyToStatusId;
             var inReplyToPosts = from tab in _statuses.Tabs.Values
-                                 orderby !object.ReferenceEquals(tab, curTabClass)
+                                 orderby !ReferenceEquals(tab, curTabClass)
                                  from post in ((Dictionary<long, PostClass>)(tab.IsInnerStorageTabType ? tab.Posts : _statuses.Posts)).Values
                                  where post.StatusId == inReplyToId
                                  let index = tab.IndexOf(post.StatusId)
@@ -3081,7 +3081,7 @@ namespace Hoehoe
 
             var tabPage = ListTab.TabPages.Cast<TabPage>().First(tp => tp.Text == inReplyToTabName);
             var listView = (DetailsListView)tabPage.Tag;
-            if (!object.ReferenceEquals(_curTab, tabPage))
+            if (!ReferenceEquals(_curTab, tabPage))
             {
                 ListTab.SelectTab(tabPage);
             }
@@ -3112,7 +3112,7 @@ namespace Hoehoe
                             let indexOf = t.Value.IndexOf(p.Value.StatusId)
                             where indexOf > -1
                             orderby (isForward ? indexOf : indexOf * -1)
-                            orderby !object.ReferenceEquals(t.Value, curTabClass)
+                            orderby !ReferenceEquals(t.Value, curTabClass)
                             select new { Tab = t.Value, Post = p.Value, Index = indexOf };
                 try
                 {
@@ -3126,10 +3126,10 @@ namespace Hoehoe
                         }
                     }
 
-                    var post = postList.FirstOrDefault(pst => object.ReferenceEquals(pst.Tab, curTabClass) && (isForward ? pst.Index > _curItemIndex : pst.Index < _curItemIndex));
+                    var post = postList.FirstOrDefault(pst => ReferenceEquals(pst.Tab, curTabClass) && (isForward ? pst.Index > _curItemIndex : pst.Index < _curItemIndex));
                     if (post == null)
                     {
-                        post = postList.FirstOrDefault(pst => !object.ReferenceEquals(pst.Tab, curTabClass));
+                        post = postList.FirstOrDefault(pst => !ReferenceEquals(pst.Tab, curTabClass));
                     }
 
                     if (post == null)
@@ -3157,7 +3157,7 @@ namespace Hoehoe
                             let indexOf = t.Value.IndexOf(p.Value.StatusId)
                             where indexOf > -1
                             orderby indexOf
-                            orderby !object.ReferenceEquals(t.Value, curTabClass)
+                            orderby !ReferenceEquals(t.Value, curTabClass)
                             select new { Tab = t.Value, Index = indexOf };
                 try
                 {
@@ -3235,7 +3235,7 @@ namespace Hoehoe
         {
             if (_selectPostChains.Count == 0
                 || (_selectPostChains.Peek().Item1.Text != _curTab.Text
-                || !object.ReferenceEquals(_curPost, _selectPostChains.Peek().Item2)))
+                || !ReferenceEquals(_curPost, _selectPostChains.Peek().Item2)))
             {
                 _selectPostChains.Push(Tuple.Create(_curTab, _curPost));
             }
@@ -4075,7 +4075,7 @@ namespace Hoehoe
             catch (AccessViolationException ex)
             {
                 // 原因不明。ポスト内容に依存か？たまーに発生するが再現せず。
-                System.Diagnostics.Debug.Write(ex);
+                Debug.Write(ex);
             }
         }
 
@@ -4160,7 +4160,7 @@ namespace Hoehoe
         {
             if (ExistCurrentPost && _curPost.InReplyToUser != null && _curPost.InReplyToStatusId > 0)
             {
-                if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+                if ((ModifierKeys & Keys.Shift) == Keys.Shift)
                 {
                     OpenUriAsync(string.Format("https://twitter.com/{0}/status/{1}", _curPost.InReplyToUser, _curPost.InReplyToStatusId));
                     return;
@@ -4590,7 +4590,7 @@ namespace Hoehoe
                 }
 
                 var result = MessageBox.Show(confirmMessage, "Retweet", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (result != System.Windows.Forms.DialogResult.Yes)
+                if (result != DialogResult.Yes)
                 {
                     _doFavRetweetFlags = false;
                     return;
@@ -4689,7 +4689,7 @@ namespace Hoehoe
 
         private bool IsKeyDown(Keys key)
         {
-            return (Control.ModifierKeys & key) == key;
+            return (ModifierKeys & key) == key;
         }
 
         private void FollowCommand(string id)
@@ -4810,12 +4810,12 @@ namespace Hoehoe
             string fed = frsinfo.IsFollowed ?
                 R.GetFriendshipInfo3 :
                 R.GetFriendshipInfo4;
-            string result = frsinfo.Id + R.GetFriendshipInfo5 + System.Environment.NewLine;
-            result += "  " + fing + System.Environment.NewLine;
+            string result = frsinfo.Id + R.GetFriendshipInfo5 + Environment.NewLine;
+            result += "  " + fing + Environment.NewLine;
             result += "  " + fed;
             if (frsinfo.IsFollowing)
             {
-                var rslt = MessageBox.Show(R.GetFriendshipInfo7 + System.Environment.NewLine + result, R.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                var rslt = MessageBox.Show(R.GetFriendshipInfo7 + Environment.NewLine + result, R.GetFriendshipInfo8, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (rslt == DialogResult.Yes)
                 {
                     RemoveCommand(frsinfo.Id, true);
@@ -6144,12 +6144,12 @@ namespace Hoehoe
         private void ChangeWindowState()
         {
             if ((WindowState == FormWindowState.Normal || WindowState == FormWindowState.Maximized)
-                && Visible && object.ReferenceEquals(Form.ActiveForm, this))
+                && Visible && ReferenceEquals(ActiveForm, this))
             {
                 // アイコン化
                 Visible = false;
             }
-            else if (Form.ActiveForm == null)
+            else if (ActiveForm == null)
             {
                 Visible = true;
                 if (WindowState == FormWindowState.Minimized)
@@ -6449,7 +6449,7 @@ namespace Hoehoe
             if (Tag != null)
             {
                 // 設定された戻り先へ遷移
-                if (object.ReferenceEquals(Tag, ListTab.SelectedTab))
+                if (ReferenceEquals(Tag, ListTab.SelectedTab))
                 {
                     ((Control)ListTab.SelectedTab.Tag).Select();
                 }
@@ -6775,7 +6775,7 @@ namespace Hoehoe
             }
 
             // 画像投稿
-            if (object.ReferenceEquals(ImageSelectedPicture.Image, ImageSelectedPicture.InitialImage)
+            if (ReferenceEquals(ImageSelectedPicture.Image, ImageSelectedPicture.InitialImage)
                 || ImageServiceCombo.SelectedIndex < 0
                 || string.IsNullOrEmpty(ImagefilePathText.Text))
             {
@@ -7120,7 +7120,7 @@ namespace Hoehoe
                 {
                     using (Graphics g = Graphics.FromImage(bmp2))
                     {
-                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
+                        g.InterpolationMode = InterpolationMode.High;
                         g.DrawImage(orgBmp, 0, 0, orgBmp.Size.Width, orgBmp.Size.Height);
                     }
 
@@ -7130,7 +7130,7 @@ namespace Hoehoe
             catch (Exception ex)
             {
                 // 処理中にキャッシュアウトする可能性あり
-                System.Diagnostics.Debug.Write(ex);
+                Debug.Write(ex);
             }
         }
 
@@ -7607,7 +7607,7 @@ namespace Hoehoe
                 form.SetFormDescription(desc);
                 form.SetIsShowUsage(showusage);
                 var result = form.ShowDialog();
-                if (result != System.Windows.Forms.DialogResult.OK)
+                if (result != DialogResult.OK)
                 {
                     return false;
                 }
@@ -8132,7 +8132,7 @@ namespace Hoehoe
                 Random rnd = new Random();
                 do
                 {
-                    svc = (UrlConverter)rnd.Next(System.Enum.GetNames(typeof(UrlConverter)).Length);
+                    svc = (UrlConverter)rnd.Next(Enum.GetNames(typeof(UrlConverter)).Length);
                 }
                 while (!(svc != _configs.AutoShortUrlFirst && svc != UrlConverter.Nicoms && svc != UrlConverter.Unu));
                 ConvertUrl(svc);

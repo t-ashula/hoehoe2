@@ -49,7 +49,7 @@ namespace Hoehoe
 
         public void Save()
         {
-            SettingTabs.SaveSettings(this);
+            SaveSettings(this);
         }
 
         #endregion "Settingクラス基本"

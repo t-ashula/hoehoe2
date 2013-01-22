@@ -71,7 +71,7 @@ namespace Hoehoe
         private static string GetFileSystemPath(Environment.SpecialFolder folder, string productName)
         {
             // パスを取得
-            string path = System.IO.Path.Combine(Environment.GetFolderPath(folder), Application.CompanyName, productName);
+            string path = Path.Combine(Environment.GetFolderPath(folder), Application.CompanyName, productName);
 
             // パスのフォルダを作成
             lock (typeof(Application))

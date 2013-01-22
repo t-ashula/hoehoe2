@@ -142,7 +142,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    return CryptoUtils.EncryptString(password);
+                    return EncryptString(password);
                 }
                 catch (Exception)
                 {
@@ -164,7 +164,7 @@ namespace Hoehoe
             {
                 try
                 {
-                    password = CryptoUtils.DecryptString(password);
+                    password = DecryptString(password);
                 }
                 catch (Exception)
                 {

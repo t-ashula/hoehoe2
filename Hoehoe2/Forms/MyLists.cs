@@ -30,7 +30,7 @@ namespace Hoehoe
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows.Forms;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     public partial class MyLists
     {

@@ -56,7 +56,7 @@ namespace Hoehoe
 
         #region protected methods
 
-        protected override void WndProc(ref System.Windows.Forms.Message m)
+        protected override void WndProc(ref Message m)
         {
             const int WM_GETTEXTLENGTH = 0xe;
             const int WM_LBUTTONDBLCLK = 0x203;

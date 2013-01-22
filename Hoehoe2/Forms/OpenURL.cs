@@ -97,12 +97,12 @@ namespace Hoehoe
                 return;
             }
 
-            if (UrlList.IndexFromPoint(UrlList.PointToClient(Control.MousePosition)) == ListBox.NoMatches)
+            if (UrlList.IndexFromPoint(UrlList.PointToClient(MousePosition)) == ListBox.NoMatches)
             {
                 return;
             }
 
-            if (UrlList.Items[UrlList.IndexFromPoint(UrlList.PointToClient(Control.MousePosition))] == null)
+            if (UrlList.Items[UrlList.IndexFromPoint(UrlList.PointToClient(MousePosition))] == null)
             {
                 return;
             }

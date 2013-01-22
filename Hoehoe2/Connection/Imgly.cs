@@ -155,14 +155,14 @@ namespace Hoehoe
             return "Image Files(*.gif;*.jpg;*.jpeg;*.png)|*.gif;*.jpg;*.jpeg;*.png";
         }
 
-        public Hoehoe.UploadFileType GetFileType(string ext)
+        public UploadFileType GetFileType(string ext)
         {
-            return CheckValidExtension(ext) ? Hoehoe.UploadFileType.Picture : Hoehoe.UploadFileType.Invalid;
+            return CheckValidExtension(ext) ? UploadFileType.Picture : UploadFileType.Invalid;
         }
 
-        public bool IsSupportedFileType(Hoehoe.UploadFileType type)
+        public bool IsSupportedFileType(UploadFileType type)
         {
-            return type.Equals(Hoehoe.UploadFileType.Picture);
+            return type.Equals(UploadFileType.Picture);
         }
 
         public bool CheckValidFilesize(string ext, long fileSize)
@@ -199,7 +199,7 @@ namespace Hoehoe
             List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
             InstanceTimeout = 60000; // タイムアウト60秒
-            return GetContent(HttpConnection.PostMethod, new Uri("http://img.ly/api/2/upload.xml"), param, binary, ref content, null, null);
+            return GetContent(PostMethod, new Uri("http://img.ly/api/2/upload.xml"), param, binary, ref content, null, null);
         }
     }
 }

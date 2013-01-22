@@ -30,7 +30,7 @@ namespace Hoehoe
     using System.Collections.Generic;
     using System.Windows.Forms;
     using System.Xml.Serialization;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     [Serializable]
     public class SettingCommon : SettingBase<SettingCommon>
@@ -402,12 +402,12 @@ namespace Hoehoe
 
         public static SettingCommon Load()
         {
-            return SettingCommon.LoadSettings();
+            return LoadSettings();
         }
 
         public void Save()
         {
-            SettingCommon.SaveSettings(this);
+            SaveSettings(this);
         }
 
         #endregion "Settingクラス基本"

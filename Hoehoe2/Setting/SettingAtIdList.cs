@@ -48,12 +48,12 @@ namespace Hoehoe
 
         public static SettingAtIdList Load()
         {
-            return SettingAtIdList.LoadSettings();
+            return LoadSettings();
         }
 
         public void Save()
         {
-            SettingAtIdList.SaveSettings(this);
+            SaveSettings(this);
         }
 
         #endregion "Settingクラス基本"

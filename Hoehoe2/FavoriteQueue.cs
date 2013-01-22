@@ -26,7 +26,7 @@
 
 namespace Hoehoe
 {
-    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -101,17 +101,17 @@ namespace Hoehoe
             return _favoriteCache.Remove(item);
         }
 
-        public System.Collections.Generic.IEnumerator<long> GetEnumerator()
+        public IEnumerator<long> GetEnumerator()
         {
             return _favoriteCache.GetEnumerator();
         }
 
-        public System.Collections.IEnumerator GetEnumerator1()
+        public IEnumerator GetEnumerator1()
         {
             return GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator1();
         }

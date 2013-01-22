@@ -28,6 +28,7 @@ namespace Hoehoe
 {
     using System;
     using System.Runtime.InteropServices;
+    using System.Runtime.InteropServices.ComTypes;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Windows.Forms;
@@ -105,7 +106,7 @@ namespace Hoehoe
             set { _policy = value; }
         }
 
-        public int QueryService(ref System.Guid guidService, ref System.Guid riid, out System.IntPtr ppvObject)
+        public int QueryService(ref Guid guidService, ref Guid riid, out IntPtr ppvObject)
         {
             ppvObject = IntPtr.Zero;
             if (guidService.CompareTo(WebBrowserAPI.IID_IInternetSecurityManager) == 0)
@@ -128,7 +129,7 @@ namespace Hoehoe
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
-        public int GetZoneMappings(int dwZone, ref System.Runtime.InteropServices.ComTypes.IEnumString ppenumString, int dwFlags)
+        public int GetZoneMappings(int dwZone, ref IEnumString ppenumString, int dwFlags)
         {
             ppenumString = null;
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
@@ -207,7 +208,7 @@ namespace Hoehoe
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }
 
-        public int QueryCustomPolicy(string pwszUrl, ref System.Guid guidKey, byte ppPolicy, int pcbPolicy, byte pContext, int cbContext, int dwReserved)
+        public int QueryCustomPolicy(string pwszUrl, ref Guid guidKey, byte ppPolicy, int pcbPolicy, byte pContext, int cbContext, int dwReserved)
         {
             return WebBrowserAPI.INET_E_DEFAULT_ACTION;
         }

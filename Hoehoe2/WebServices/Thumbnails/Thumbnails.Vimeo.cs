@@ -31,7 +31,7 @@ namespace Hoehoe
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml;
-    using R = Hoehoe.Properties.Resources;
+    using R = Properties.Resources;
 
     public partial class Thumbnail
     {
@@ -56,7 +56,7 @@ namespace Hoehoe
                 args.AddThumbnailUrl(args.Url, mc.Value);
                 return true;
             }
-            
+
             return false;
         }
 
