@@ -401,7 +401,7 @@ namespace Hoehoe
         {
             if (digit < 0 || radix <= digit)
             {
-                throw new ArgumentOutOfRangeException("数値が範囲外です。");
+                throw new ArgumentException("数値が範囲外です。");
             }
         }
 
