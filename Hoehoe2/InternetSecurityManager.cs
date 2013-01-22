@@ -34,15 +34,15 @@ namespace Hoehoe
 
     public class InternetSecurityManager : WebBrowserAPI.IServiceProvider, WebBrowserAPI.IInternetSecurityManager
     {
-        private object ocx = new object();
-        private WebBrowserAPI.IServiceProvider ocxServiceProvider;
-        private IntPtr profferServicePtr = new IntPtr();
-        private WebBrowserAPI.IProfferService profferService;
+        private readonly object _ocx = new object();
+        private readonly WebBrowserAPI.IServiceProvider _ocxServiceProvider;
+        private readonly IntPtr _profferServicePtr = new IntPtr();
+        private readonly WebBrowserAPI.IProfferService _profferService;
 
         // DefaultですべてDisAllow
-        private POLICY policy = 0;
+        private POLICY _policy = 0;
 
-        public InternetSecurityManager(System.Windows.Forms.WebBrowser webBrowser)
+        public InternetSecurityManager(WebBrowser webBrowser)
         {
             // ActiveXコントロール取得
             webBrowser.DocumentText = "about:blank";
@@ -55,14 +55,14 @@ namespace Hoehoe
             }
             while (webBrowser.ReadyState != WebBrowserReadyState.Complete);
 
-            this.ocx = webBrowser.ActiveXInstance;
+            _ocx = webBrowser.ActiveXInstance;
 
             // IServiceProvider.QueryService() を使って IProfferService を取得
-            this.ocxServiceProvider = (WebBrowserAPI.IServiceProvider)this.ocx;
+            _ocxServiceProvider = (WebBrowserAPI.IServiceProvider)_ocx;
             int hresult = 0;
             try
             {
-                hresult = this.ocxServiceProvider.QueryService(ref WebBrowserAPI.SID_SProfferService, ref WebBrowserAPI.IID_IProfferService, out this.profferServicePtr);
+                hresult = _ocxServiceProvider.QueryService(ref WebBrowserAPI.SID_SProfferService, ref WebBrowserAPI.IID_IProfferService, out _profferServicePtr);
             }
             catch (SEHException)
             {
@@ -73,14 +73,14 @@ namespace Hoehoe
                 return;
             }
 
-            this.profferService = (WebBrowserAPI.IProfferService)Marshal.GetObjectForIUnknown(this.profferServicePtr);
+            _profferService = (WebBrowserAPI.IProfferService)Marshal.GetObjectForIUnknown(_profferServicePtr);
 
             // IProfferService.ProfferService() を使って
             // 自分を IInternetSecurityManager として提供
             try
             {
                 int cookie;
-                hresult = this.profferService.ProfferService(ref WebBrowserAPI.IID_IInternetSecurityManager, this, out cookie);
+                hresult = _profferService.ProfferService(ref WebBrowserAPI.IID_IInternetSecurityManager, this, out cookie);
             }
             catch (SEHException)
             {
@@ -101,8 +101,8 @@ namespace Hoehoe
 
         public POLICY SecurityPolicy
         {
-            get { return this.policy; }
-            set { this.policy = value; }
+            get { return _policy; }
+            set { _policy = value; }
         }
 
         public int QueryService(ref System.Guid guidService, ref System.Guid riid, out System.IntPtr ppvObject)
@@ -170,7 +170,7 @@ namespace Hoehoe
             if (WebBrowserAPI.URLACTION_SCRIPT_MIN <= dwAction && dwAction <= WebBrowserAPI.URLACTION_SCRIPT_MAX)
             {
                 // スクリプト実行状態
-                if ((this.policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT)
+                if ((_policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT)
                 {
                     pPolicy = WebBrowserAPI.URLPOLICY_ALLOW;
                 }
@@ -191,7 +191,7 @@ namespace Hoehoe
             if (WebBrowserAPI.URLACTION_ACTIVEX_MIN <= dwAction && dwAction <= WebBrowserAPI.URLACTION_ACTIVEX_MAX)
             {
                 // ActiveX実行状態
-                if ((this.policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX)
+                if ((_policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX)
                 {
                     pPolicy = WebBrowserAPI.URLPOLICY_ALLOW;
                 }
