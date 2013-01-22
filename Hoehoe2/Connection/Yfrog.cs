@@ -51,15 +51,15 @@ namespace Hoehoe
 
         private const long MaxFileSize = 5 * 1024 * 1024;
 
-        private string[] pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
+        private readonly string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
 
-        private Twitter tw;
+        private readonly Twitter _tw;
 
         public Yfrog(Twitter twitter)
             : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.xml"))
         {
-            this.tw = twitter;
-            this.Initialize(ConsumerKey, ConsumerSecretKey, this.tw.AccessToken, this.tw.AccessTokenSecret, string.Empty, string.Empty);
+            _tw = twitter;
+            Initialize(ConsumerKey, ConsumerSecretKey, _tw.AccessToken, _tw.AccessTokenSecret, string.Empty, string.Empty);
         }
 
         public string Upload(ref string filePath, ref string message, long replyTo)
@@ -95,7 +95,7 @@ namespace Hoehoe
             try
             {
                 // yfrogへの投稿
-                ret = this.UploadFile(mediaFile, message, ref content);
+                ret = UploadFile(mediaFile, message, ref content);
             }
             catch (Exception ex)
             {
@@ -149,12 +149,12 @@ namespace Hoehoe
                 message += " " + url;
             }
 
-            return this.tw.PostStatus(message, 0);
+            return _tw.PostStatus(message, 0);
         }
 
         public bool CheckValidExtension(string ext)
         {
-            return Array.IndexOf(this.pictureExts, ext.ToLower()) > -1;
+            return Array.IndexOf(_pictureExts, ext.ToLower()) > -1;
         }
 
         public string GetFileOpenDialogFilter()
@@ -164,7 +164,7 @@ namespace Hoehoe
 
         public UploadFileType GetFileType(string ext)
         {
-            return this.CheckValidExtension(ext) ? UploadFileType.Picture : UploadFileType.Invalid;
+            return CheckValidExtension(ext) ? UploadFileType.Picture : UploadFileType.Invalid;
         }
 
         public bool IsSupportedFileType(UploadFileType type)
@@ -174,7 +174,7 @@ namespace Hoehoe
 
         public bool CheckValidFilesize(string ext, long fileSize)
         {
-            return this.CheckValidExtension(ext) && fileSize <= MaxFileSize;
+            return CheckValidExtension(ext) && fileSize <= MaxFileSize;
         }
 
         public bool Configuration(string key, object value)
@@ -191,12 +191,12 @@ namespace Hoehoe
             }
 
             // Check filetype and size(Max 5MB)
-            if (!this.CheckValidExtension(mediaFile.Extension))
+            if (!CheckValidExtension(mediaFile.Extension))
             {
                 throw new ArgumentException("Service don't support this filetype.");
             }
 
-            if (!this.CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
+            if (!CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
             {
                 throw new ArgumentException("File is too large.");
             }
@@ -207,8 +207,8 @@ namespace Hoehoe
 
             var binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
-            this.InstanceTimeout = 60000; // タイムアウト60秒
-            return this.GetContent(HttpConnection.PostMethod, new Uri("http://yfrog.com/api/xauth_upload"), param, binary, ref content, null, null);
+            InstanceTimeout = 60000; // タイムアウト60秒
+            return GetContent(HttpConnection.PostMethod, new Uri("http://yfrog.com/api/xauth_upload"), param, binary, ref content, null, null);
         }
     }
 }
