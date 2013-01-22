@@ -34,8 +34,8 @@ namespace Hoehoe
     {
         #region privates
 
-        private ImageDictionary images;
-        private string imageUrl;
+        private readonly ImageDictionary _images;
+        private readonly string _imageUrl;
 
         #endregion privates
 
@@ -49,9 +49,9 @@ namespace Hoehoe
         public ImageListViewItem(string[] items, ImageDictionary imageDictionary, string imageKey)
             : base(items, imageKey)
         {
-            this.images = imageDictionary;
-            this.imageUrl = imageKey;
-            Image dummy = this.GetImage(false);
+            _images = imageDictionary;
+            _imageUrl = imageKey;
+            Image dummy = GetImage(false);
         }
 
         #endregion constructor
@@ -74,7 +74,7 @@ namespace Hoehoe
         {
             get
             {
-                return string.IsNullOrEmpty(this.imageUrl) ? null : this.images[this.imageUrl];
+                return string.IsNullOrEmpty(_imageUrl) ? null : _images[_imageUrl];
             }
         }
 
@@ -84,7 +84,7 @@ namespace Hoehoe
 
         public void RegetImage()
         {
-            Image dummy = this.GetImage(true);
+            Image dummy = GetImage(true);
         }
 
         #endregion public methods
@@ -93,20 +93,20 @@ namespace Hoehoe
 
         private Image GetImage(bool force)
         {
-            return this.images[this.imageUrl, force, new Action<Image>(img =>
+            return _images[_imageUrl, force, new Action<Image>(img =>
             {
                 if (img == null)
                 {
                     return;
                 }
 
-                if (this.ListView != null && this.ListView.Created && !this.ListView.IsDisposed)
+                if (ListView != null && ListView.Created && !ListView.IsDisposed)
                 {
-                    this.ListView.Invoke(new Action(() =>
+                    ListView.Invoke(new Action(() =>
                     {
-                        if (this.Index < this.ListView.VirtualListSize)
+                        if (Index < ListView.VirtualListSize)
                         {
-                            this.ListView.RedrawItems(this.Index, this.Index, true);
+                            ListView.RedrawItems(Index, Index, true);
                             OnImageDownloaded();
                         }
                     }));
@@ -116,9 +116,9 @@ namespace Hoehoe
 
         private void OnImageDownloaded()
         {
-            if (this.ImageDownloaded != null)
+            if (ImageDownloaded != null)
             {
-                this.ImageDownloaded(this, EventArgs.Empty);
+                ImageDownloaded(this, EventArgs.Empty);
             }
         }
 

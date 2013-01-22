@@ -40,9 +40,9 @@ namespace Hoehoe
     {
         #region privates
 
-        private Form targetForm;
-        private Dictionary<int, KeyEventValue> hotkeyIds;
-        private bool disposedValue = false; // 重複する呼び出しを検出するには
+        private readonly Form _targetForm;
+        private readonly Dictionary<int, KeyEventValue> _hotkeyIds;
+        private bool _disposedValue = false; // 重複する呼び出しを検出するには
 
         #endregion privates
 
@@ -50,15 +50,15 @@ namespace Hoehoe
 
         public HookGlobalHotkey(Form targetForm)
         {
-            this.hotkeyIds = new Dictionary<int, KeyEventValue>();
-            this.targetForm = targetForm;
-            this.targetForm.HandleCreated += this.OnHandleCreated;
-            this.targetForm.HandleDestroyed += this.OnHandleDestroyed;
+            _hotkeyIds = new Dictionary<int, KeyEventValue>();
+            _targetForm = targetForm;
+            _targetForm.HandleCreated += OnHandleCreated;
+            _targetForm.HandleDestroyed += OnHandleDestroyed;
         }
 
         ~HookGlobalHotkey()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
 
         #endregion constructor
@@ -87,12 +87,12 @@ namespace Hoehoe
 
         public void OnHandleCreated(object sender, EventArgs e)
         {
-            this.AssignHandle(this.targetForm.Handle);
+            AssignHandle(_targetForm.Handle);
         }
 
         public void OnHandleDestroyed(object sender, EventArgs e)
         {
-            this.ReleaseHandle();
+            ReleaseHandle();
         }
 
         public bool RegisterOriginalHotkey(Keys hotkey, int hotkeyValue, ModKeys modifiers)
@@ -119,7 +119,7 @@ namespace Hoehoe
             }
 
             KeyEventArgs key = new KeyEventArgs(hotkey | modKey);
-            foreach (KeyValuePair<int, KeyEventValue> kvp in this.hotkeyIds)
+            foreach (KeyValuePair<int, KeyEventValue> kvp in _hotkeyIds)
             {
                 // 登録済みなら正常終了
                 if (kvp.Value.KeyEvent.KeyData == key.KeyData && kvp.Value.Value == hotkeyValue)
@@ -128,10 +128,10 @@ namespace Hoehoe
                 }
             }
 
-            int hotkeyId = Win32Api.RegisterGlobalHotKey(hotkeyValue, (int)modifiers, this.targetForm);
+            int hotkeyId = Win32Api.RegisterGlobalHotKey(hotkeyValue, (int)modifiers, _targetForm);
             if (hotkeyId > 0)
             {
-                this.hotkeyIds.Add(hotkeyId, new KeyEventValue(key, hotkeyValue));
+                _hotkeyIds.Add(hotkeyId, new KeyEventValue(key, hotkeyValue));
                 return true;
             }
 
@@ -140,12 +140,12 @@ namespace Hoehoe
 
         public void UnregisterAllOriginalHotkey()
         {
-            foreach (int hotkeyId in this.hotkeyIds.Keys)
+            foreach (int hotkeyId in _hotkeyIds.Keys)
             {
-                Win32Api.UnregisterGlobalHotKey(hotkeyId, this.targetForm);
+                Win32Api.UnregisterGlobalHotKey(hotkeyId, _targetForm);
             }
 
-            this.hotkeyIds.Clear();
+            _hotkeyIds.Clear();
         }
 
         #region " IDisposable Support "
@@ -154,7 +154,7 @@ namespace Hoehoe
         public void Dispose()
         {
             // このコードを変更しないでください。クリーンアップ コードを上の Dispose(ByVal disposing As Boolean) に記述します。
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -170,11 +170,11 @@ namespace Hoehoe
             if (m.Msg == WM_HOTKEY)
             {
                 int wparam = m.WParam.ToInt32();
-                if (this.hotkeyIds.ContainsKey(wparam))
+                if (_hotkeyIds.ContainsKey(wparam))
                 {
-                    if (this.HotkeyPressed != null)
+                    if (HotkeyPressed != null)
                     {
-                        this.HotkeyPressed(this, this.hotkeyIds[wparam].KeyEvent);
+                        HotkeyPressed(this, _hotkeyIds[wparam].KeyEvent);
                     }
                 }
 
@@ -187,7 +187,7 @@ namespace Hoehoe
         // IDisposable
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
@@ -195,15 +195,15 @@ namespace Hoehoe
                 }
 
                 // TODO: 共有のアンマネージ リソースを解放します
-                if (this.targetForm != null && !this.targetForm.IsDisposed)
+                if (_targetForm != null && !_targetForm.IsDisposed)
                 {
-                    this.UnregisterAllOriginalHotkey();
-                    this.targetForm.HandleCreated -= this.OnHandleCreated;
-                    this.targetForm.HandleDestroyed -= this.OnHandleDestroyed;
+                    UnregisterAllOriginalHotkey();
+                    _targetForm.HandleCreated -= OnHandleCreated;
+                    _targetForm.HandleDestroyed -= OnHandleDestroyed;
                 }
             }
 
-            this.disposedValue = true;
+            _disposedValue = true;
         }
 
         #endregion protected methods
@@ -214,8 +214,8 @@ namespace Hoehoe
         {
             public KeyEventValue(KeyEventArgs keyEvent, int value)
             {
-                this.KeyEvent = keyEvent;
-                this.Value = value;
+                KeyEvent = keyEvent;
+                Value = value;
             }
 
             public KeyEventArgs KeyEvent { get; private set; }
