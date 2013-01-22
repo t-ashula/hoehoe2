@@ -164,27 +164,27 @@ namespace Hoehoe
 
         private void SetText(int remain, int max)
         {
-            string textFormat = "API {0}/{1}";
+            const string TextFormat = "API {0}/{1}";
             string toolTipTextFormat = "API rest {0}/{1}" + Environment.NewLine + "(reset after {2} minutes)";
             if (_remainCount > -1 && _maxCount > -1)
             {
                 // 正常
-                Control.Text = string.Format(textFormat, _remainCount, _maxCount);
+                Control.Text = string.Format(TextFormat, _remainCount, _maxCount);
             }
             else if (RemainCount > -1)
             {
                 // uppercount不正
-                Control.Text = string.Format(textFormat, _remainCount, "???");
+                Control.Text = string.Format(TextFormat, _remainCount, "???");
             }
             else if (_maxCount < -1)
             {
                 // remaincount不正
-                Control.Text = string.Format(textFormat, "???", _maxCount);
+                Control.Text = string.Format(TextFormat, "???", _maxCount);
             }
             else
             {
                 // 両方とも不正
-                Control.Text = string.Format(textFormat, "???", "???");
+                Control.Text = string.Format(TextFormat, "???", "???");
             }
 
             double minute = Math.Ceiling((ResetTime - DateTime.Now).TotalMinutes);
