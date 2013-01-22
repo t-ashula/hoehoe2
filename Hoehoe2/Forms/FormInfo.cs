@@ -49,8 +49,8 @@ namespace Hoehoe
     {
         #region privates
 
-        private string formMessage;
-        private BackgroundWorkerServicer backGroundWorkerServicer;
+        private string _formMessage;
+        private readonly BackgroundWorkerServicer _backGroundWorkerServicer;
 
         #endregion privates
 
@@ -58,17 +58,17 @@ namespace Hoehoe
 
         public FormInfo(Form owner, string message, DoWorkEventHandler doWork, RunWorkerCompletedEventHandler runWorkerCompleted = null, object argument = null)
         {
-            this.InitializeComponent();
-            this.Owner = owner;
-            this.InfoMessage = message;
-            this.backGroundWorkerServicer = new BackgroundWorkerServicer();
-            this.backGroundWorkerServicer.DoWork += doWork;
+            InitializeComponent();
+            Owner = owner;
+            InfoMessage = message;
+            _backGroundWorkerServicer = new BackgroundWorkerServicer();
+            _backGroundWorkerServicer.DoWork += doWork;
             if (runWorkerCompleted != null)
             {
-                this.backGroundWorkerServicer.RunWorkerCompleted += runWorkerCompleted;
+                _backGroundWorkerServicer.RunWorkerCompleted += runWorkerCompleted;
             }
 
-            this.Argument = argument;
+            Argument = argument;
         }
 
         #endregion constructor
@@ -82,8 +82,8 @@ namespace Hoehoe
         /// <returns>現在設定されているメッセージ</returns>
         public string InfoMessage
         {
-            get { return this.formMessage; }
-            set { this.LabelInformation.Text = this.formMessage = value; }
+            get { return _formMessage; }
+            set { LabelInformation.Text = _formMessage = value; }
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Hoehoe
         /// <returns>Servicerのe.Result</returns>
         public object Result
         {
-            get { return this.backGroundWorkerServicer.Result; }
+            get { return _backGroundWorkerServicer.Result; }
         }
 
         #endregion properties
@@ -108,20 +108,20 @@ namespace Hoehoe
 
         private void LabelInformation_TextChanged(object sender, EventArgs e)
         {
-            this.LabelInformation.Refresh();
+            LabelInformation.Refresh();
         }
 
         private void FormInfo_Shown(object sender, EventArgs e)
         {
-            this.backGroundWorkerServicer.RunWorkerAsync(this.Argument);
-            while (this.backGroundWorkerServicer.IsBusy)
+            _backGroundWorkerServicer.RunWorkerAsync(Argument);
+            while (_backGroundWorkerServicer.IsBusy)
             {
                 Thread.Sleep(100);
                 Application.DoEvents();
             }
 
-            this.TopMost = false; // MessageBoxが裏に隠れる問題に対応
-            this.Close();
+            TopMost = false; // MessageBoxが裏に隠れる問題に対応
+            Close();
         }
 
         private void FormInfo_FormClosed(object sender, FormClosedEventArgs e)
@@ -144,7 +144,7 @@ namespace Hoehoe
 
             protected override void OnRunWorkerCompleted(RunWorkerCompletedEventArgs e)
             {
-                this.Result = e.Result;
+                Result = e.Result;
                 base.OnRunWorkerCompleted(e);
             }
         }
