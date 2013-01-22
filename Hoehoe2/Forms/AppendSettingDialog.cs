@@ -926,13 +926,13 @@ namespace Hoehoe
                     ChangeLabelColor(lblAtFromTarget);
                     break;
                 case "btnFav":
-                    ChangeLabelColor(lblFav, back: false);
+                    ChangeLabelColor(lblFav, false);
                     break;
                 case "btnOWL":
-                    ChangeLabelColor(lblOWL, back: false);
+                    ChangeLabelColor(lblOWL, false);
                     break;
                 case "btnRetweet":
-                    ChangeLabelColor(lblRetweet, back: false);
+                    ChangeLabelColor(lblRetweet, false);
                     break;
                 case "btnInputBackcolor":
                     ChangeLabelColor(lblInputBackcolor);
@@ -947,7 +947,7 @@ namespace Hoehoe
                     ChangeLabelColor(lblDetailBackcolor);
                     break;
                 case "btnDetailLink":
-                    ChangeLabelColor(lblDetailLink, back: false);
+                    ChangeLabelColor(lblDetailLink, false);
                     break;
             }
         }

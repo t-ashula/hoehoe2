@@ -102,7 +102,7 @@ namespace Hoehoe
 
         private void ContextMenuTabProperty_Opening(object sender, CancelEventArgs e)
         {
-            SetupTabPropertyContextMenu(fromMenuBar: false);
+            SetupTabPropertyContextMenu(false);
         }
 
         private void ContextMenuUserPicture_Opening(object sender, CancelEventArgs e)
@@ -142,12 +142,12 @@ namespace Hoehoe
 
         private void DeleteTabMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteSelectedTab(fromMenuBar: false);
+            DeleteSelectedTab(false);
         }
 
         private void DeleteTbMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteSelectedTab(fromMenuBar: true);
+            DeleteSelectedTab(true);
         }
 
         private void DisplayItemImage_Downloaded(object sender, EventArgs e)
@@ -594,7 +594,7 @@ namespace Hoehoe
         private void RefreshMoreStripMenuItem_Click(object sender, EventArgs e)
         {
             // もっと前を取得
-            RefreshTab(more: true);
+            RefreshTab(true);
         }
 
         private void RefreshStripMenuItem_Click(object sender, EventArgs e)
@@ -3707,7 +3707,7 @@ namespace Hoehoe
                 return;
             }
 
-            ChangeUserStreamStatusDisplay(start: true);
+            ChangeUserStreamStatusDisplay(true);
         }
 
         private void Tw_UserStreamStopped()
@@ -3730,7 +3730,7 @@ namespace Hoehoe
                 return;
             }
 
-            ChangeUserStreamStatusDisplay(start: false);
+            ChangeUserStreamStatusDisplay(false);
         }
 
         #endregion userstream

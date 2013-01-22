@@ -595,7 +595,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    selId.Add(tab.Text, new long[1] { -2 });
+                    selId.Add(tab.Text, new long[] { -2 });
                 }
 
                 if (lst.FocusedItem != null)
@@ -2293,7 +2293,7 @@ namespace Hoehoe
                             TrySearchWordInTabToTop();
                             return true;
                         case Keys.F5:
-                            RefreshTab(more: true);
+                            RefreshTab(true);
                             return true;
                         case Keys.F6:
                             GetTimeline(WorkerType.Reply, -1);
@@ -2308,7 +2308,7 @@ namespace Hoehoe
                     {
                         if (keyCode == Keys.R)
                         {
-                            RefreshTab(more: true);
+                            RefreshTab(true);
                             return true;
                         }
                     }
@@ -4231,7 +4231,7 @@ namespace Hoehoe
                         return true;
                     }
 
-                    SetUrlUndoInfo(before: tmp, after: result);
+                    SetUrlUndoInfo(tmp, result);
                 }
             }
             else
@@ -4276,7 +4276,7 @@ namespace Hoehoe
                         continue;
                     }
 
-                    SetUrlUndoInfo(before: url, after: result);
+                    SetUrlUndoInfo(url, result);
                 }
             }
 
@@ -5604,7 +5604,7 @@ namespace Hoehoe
                 return;
             }
 
-            ChangeUseHashTagSetting(toggle: false);
+            ChangeUseHashTagSetting(false);
         }
 
         private void TryShowSettingsBox()
@@ -7057,7 +7057,7 @@ namespace Hoehoe
 
         private void ChangeSelectedTweetReadStateToRead()
         {
-            ChangeSelectetdTweetReadState(read: true);
+            ChangeSelectetdTweetReadState(true);
             if (_configs.TabIconDisp)
             {
                 ChangeTabsIconToRead();
@@ -7070,7 +7070,7 @@ namespace Hoehoe
 
         private void ChangeSelectedTweetReadSateToUnread()
         {
-            ChangeSelectetdTweetReadState(read: false);
+            ChangeSelectetdTweetReadState(false);
             if (_configs.TabIconDisp)
             {
                 ChangeTabsIconToUnread();
