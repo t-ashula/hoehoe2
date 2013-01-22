@@ -37,26 +37,26 @@ namespace Hoehoe
     [Serializable]
     public sealed class FiltersClass : IEquatable<FiltersClass>
     {
-        private List<string> body;
-        private List<string> exbody;
-        private bool useLambda;
-        private bool exuseLambda;
-        private LambdaExpression lambdaExp;
-        private Delegate lambdaExpDelegate;
-        private LambdaExpression exlambdaExp;
-        private Delegate exlambdaExpDelegate;
+        private List<string> _body;
+        private List<string> _exbody;
+        private bool _useLambda;
+        private bool _exuseLambda;
+        private LambdaExpression _lambdaExp;
+        private Delegate _lambdaExpDelegate;
+        private LambdaExpression _exlambdaExp;
+        private Delegate _exlambdaExpDelegate;
 
         public FiltersClass()
         {
-            this.NameFilter = string.Empty;
-            this.ExNameFilter = string.Empty;
-            this.body = new List<string>();
-            this.exbody = new List<string>();
-            this.SearchBoth = true;
-            this.ExSearchBoth = true;
-            this.SetMark = true;
-            this.Source = string.Empty;
-            this.ExSource = string.Empty;
+            NameFilter = string.Empty;
+            ExNameFilter = string.Empty;
+            _body = new List<string>();
+            _exbody = new List<string>();
+            SearchBoth = true;
+            ExSearchBoth = true;
+            SetMark = true;
+            Source = string.Empty;
+            ExSource = string.Empty;
         }
 
         public string NameFilter { get; set; }
@@ -68,20 +68,20 @@ namespace Hoehoe
         {
             get
             {
-                return this.body;
+                return _body;
             }
 
             set
             {
-                this.ClearLambdaExp();
-                this.body = value;
+                ClearLambdaExp();
+                _body = value;
             }
         }
 
         public string[] BodyFilterArray
         {
-            get { return this.body.ToArray(); }
-            set { this.body = new List<string>(value); }
+            get { return _body.ToArray(); }
+            set { _body = new List<string>(value); }
         }
 
         [XmlIgnore]
@@ -89,20 +89,20 @@ namespace Hoehoe
         {
             get
             {
-                return this.exbody;
+                return _exbody;
             }
 
             set
             {
-                this.ClearExLambdaExp();
-                this.exbody = value;
+                ClearExLambdaExp();
+                _exbody = value;
             }
         }
 
         public string[] ExBodyFilterArray
         {
-            get { return this.exbody.ToArray(); }
-            set { this.exbody = new List<string>(value); }
+            get { return _exbody.ToArray(); }
+            set { _exbody = new List<string>(value); }
         }
 
         public bool SearchBoth { get; set; }
@@ -125,13 +125,13 @@ namespace Hoehoe
         {
             get
             {
-                return this.useLambda;
+                return _useLambda;
             }
 
             set
             {
-                this.ClearLambdaExp();
-                this.useLambda = value;
+                ClearLambdaExp();
+                _useLambda = value;
             }
         }
 
@@ -139,13 +139,13 @@ namespace Hoehoe
         {
             get
             {
-                return this.exuseLambda;
+                return _exuseLambda;
             }
 
             set
             {
-                this.ClearExLambdaExp();
-                this.exuseLambda = value;
+                ClearExLambdaExp();
+                _exuseLambda = value;
             }
         }
 
@@ -163,29 +163,29 @@ namespace Hoehoe
 
         public override string ToString()
         {
-            return this.MakeSummary();
+            return MakeSummary();
         }
 
         public bool ExecuteLambdaExpression(string expr, PostClass post)
         {
-            if (this.lambdaExp == null || this.lambdaExpDelegate == null)
+            if (_lambdaExp == null || _lambdaExpDelegate == null)
             {
-                this.lambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
-                this.lambdaExpDelegate = this.lambdaExp.Compile();
+                _lambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
+                _lambdaExpDelegate = _lambdaExp.Compile();
             }
 
-            return (bool)this.lambdaExpDelegate.DynamicInvoke(post);
+            return (bool)_lambdaExpDelegate.DynamicInvoke(post);
         }
 
         public bool ExecuteExLambdaExpression(string expr, PostClass post)
         {
-            if (this.exlambdaExp == null || this.exlambdaExpDelegate == null)
+            if (_exlambdaExp == null || _exlambdaExpDelegate == null)
             {
-                this.exlambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
-                this.exlambdaExpDelegate = this.exlambdaExp.Compile();
+                _exlambdaExp = DynamicExpression.ParseLambda<PostClass, bool>(expr, post);
+                _exlambdaExpDelegate = _exlambdaExp.Compile();
             }
 
-            return (bool)this.exlambdaExpDelegate.DynamicInvoke(post);
+            return (bool)_exlambdaExpDelegate.DynamicInvoke(post);
         }
 
         public HITRESULT IsHit(PostClass post)
@@ -193,7 +193,7 @@ namespace Hoehoe
             bool isHit = true;
             string bodyText = null;
             string sourceText = null;
-            if (this.SearchUrl)
+            if (SearchUrl)
             {
                 bodyText = post.Text;
                 sourceText = post.SourceHtml;
@@ -207,7 +207,7 @@ namespace Hoehoe
             // 検索オプション
             StringComparison compOpt = default(StringComparison);
             RegexOptions regexOption = default(RegexOptions);
-            if (this.CaseSensitive)
+            if (CaseSensitive)
             {
                 compOpt = StringComparison.Ordinal;
                 regexOption = RegexOptions.None;
@@ -218,22 +218,22 @@ namespace Hoehoe
                 regexOption = RegexOptions.IgnoreCase;
             }
 
-            if (this.SearchBoth)
+            if (SearchBoth)
             {
-                if (string.IsNullOrEmpty(this.NameFilter) || (!this.UseRegex && (post.ScreenName.Equals(this.NameFilter, compOpt) || post.RetweetedBy.Equals(this.NameFilter, compOpt))) || (this.UseRegex && (Regex.IsMatch(post.ScreenName, this.NameFilter, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, this.NameFilter, regexOption)))))
+                if (string.IsNullOrEmpty(NameFilter) || (!UseRegex && (post.ScreenName.Equals(NameFilter, compOpt) || post.RetweetedBy.Equals(NameFilter, compOpt))) || (UseRegex && (Regex.IsMatch(post.ScreenName, NameFilter, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, NameFilter, regexOption)))))
                 {
-                    if (this.useLambda)
+                    if (_useLambda)
                     {
-                        if (!this.ExecuteLambdaExpression(this.body[0], post))
+                        if (!ExecuteLambdaExpression(_body[0], post))
                         {
                             isHit = false;
                         }
                     }
                     else
                     {
-                        foreach (string fs in this.body)
+                        foreach (string fs in _body)
                         {
-                            if (this.UseRegex)
+                            if (UseRegex)
                             {
                                 if (!Regex.IsMatch(bodyText, fs, regexOption))
                                 {
@@ -242,7 +242,7 @@ namespace Hoehoe
                             }
                             else
                             {
-                                if (this.CaseSensitive)
+                                if (CaseSensitive)
                                 {
                                     if (!bodyText.Contains(fs))
                                     {
@@ -272,18 +272,18 @@ namespace Hoehoe
             }
             else
             {
-                if (this.useLambda)
+                if (_useLambda)
                 {
-                    if (!this.ExecuteLambdaExpression(this.body[0], post))
+                    if (!ExecuteLambdaExpression(_body[0], post))
                     {
                         isHit = false;
                     }
                 }
                 else
                 {
-                    foreach (string fs in this.body)
+                    foreach (string fs in _body)
                     {
-                        if (this.UseRegex)
+                        if (UseRegex)
                         {
                             if (!(Regex.IsMatch(post.ScreenName, fs, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, fs, regexOption)) || Regex.IsMatch(bodyText, fs, regexOption)))
                             {
@@ -292,7 +292,7 @@ namespace Hoehoe
                         }
                         else
                         {
-                            if (this.CaseSensitive)
+                            if (CaseSensitive)
                             {
                                 if (!(post.ScreenName.Contains(fs) || post.RetweetedBy.Contains(fs) || bodyText.Contains(fs)))
                                 {
@@ -316,7 +316,7 @@ namespace Hoehoe
                 }
             }
 
-            if (this.IsRt)
+            if (IsRt)
             {
                 if (!post.IsRetweeted)
                 {
@@ -324,18 +324,18 @@ namespace Hoehoe
                 }
             }
 
-            if (!string.IsNullOrEmpty(this.Source))
+            if (!string.IsNullOrEmpty(Source))
             {
-                if (this.UseRegex)
+                if (UseRegex)
                 {
-                    if (!Regex.IsMatch(sourceText, this.Source, regexOption))
+                    if (!Regex.IsMatch(sourceText, Source, regexOption))
                     {
                         isHit = false;
                     }
                 }
                 else
                 {
-                    if (!sourceText.Equals(this.Source, compOpt))
+                    if (!sourceText.Equals(Source, compOpt))
                     {
                         isHit = false;
                     }
@@ -348,7 +348,7 @@ namespace Hoehoe
             }
 
             // 除外判定
-            if (this.ExSearchUrl)
+            if (ExSearchUrl)
             {
                 bodyText = post.Text;
                 sourceText = post.SourceHtml;
@@ -360,9 +360,9 @@ namespace Hoehoe
             }
 
             bool isExclude = false;
-            if (!string.IsNullOrEmpty(this.ExNameFilter) || this.exbody.Count > 0)
+            if (!string.IsNullOrEmpty(ExNameFilter) || _exbody.Count > 0)
             {
-                if (this.ExCaseSensitive)
+                if (ExCaseSensitive)
                 {
                     compOpt = StringComparison.Ordinal;
                     regexOption = RegexOptions.None;
@@ -373,28 +373,28 @@ namespace Hoehoe
                     regexOption = RegexOptions.IgnoreCase;
                 }
 
-                if (this.ExSearchBoth)
+                if (ExSearchBoth)
                 {
-                    if (string.IsNullOrEmpty(this.ExNameFilter)
-                        || (!this.ExUseRegex && (post.ScreenName.Equals(this.ExNameFilter, compOpt)
-                        || post.RetweetedBy.Equals(this.ExNameFilter, compOpt)))
-                        || (this.ExUseRegex && (Regex.IsMatch(post.ScreenName, this.ExNameFilter, regexOption)
-                        || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, this.ExNameFilter, regexOption)))))
+                    if (string.IsNullOrEmpty(ExNameFilter)
+                        || (!ExUseRegex && (post.ScreenName.Equals(ExNameFilter, compOpt)
+                        || post.RetweetedBy.Equals(ExNameFilter, compOpt)))
+                        || (ExUseRegex && (Regex.IsMatch(post.ScreenName, ExNameFilter, regexOption)
+                        || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, ExNameFilter, regexOption)))))
                     {
-                        if (this.exbody.Count > 0)
+                        if (_exbody.Count > 0)
                         {
-                            if (this.exuseLambda)
+                            if (_exuseLambda)
                             {
-                                if (this.ExecuteExLambdaExpression(this.exbody[0], post))
+                                if (ExecuteExLambdaExpression(_exbody[0], post))
                                 {
                                     isExclude = true;
                                 }
                             }
                             else
                             {
-                                foreach (string fs in this.exbody)
+                                foreach (string fs in _exbody)
                                 {
-                                    if (this.ExUseRegex)
+                                    if (ExUseRegex)
                                     {
                                         if (Regex.IsMatch(bodyText, fs, regexOption))
                                         {
@@ -403,7 +403,7 @@ namespace Hoehoe
                                     }
                                     else
                                     {
-                                        if (this.ExCaseSensitive)
+                                        if (ExCaseSensitive)
                                         {
                                             if (bodyText.Contains(fs))
                                             {
@@ -434,18 +434,18 @@ namespace Hoehoe
                 }
                 else
                 {
-                    if (this.exuseLambda)
+                    if (_exuseLambda)
                     {
-                        if (this.ExecuteExLambdaExpression(this.exbody[0], post))
+                        if (ExecuteExLambdaExpression(_exbody[0], post))
                         {
                             isExclude = true;
                         }
                     }
                     else
                     {
-                        foreach (string fs in this.exbody)
+                        foreach (string fs in _exbody)
                         {
-                            if (this.ExUseRegex)
+                            if (ExUseRegex)
                             {
                                 if (Regex.IsMatch(post.ScreenName, fs, regexOption) || (!string.IsNullOrEmpty(post.RetweetedBy) && Regex.IsMatch(post.RetweetedBy, fs, regexOption)) || Regex.IsMatch(bodyText, fs, regexOption))
                                 {
@@ -454,7 +454,7 @@ namespace Hoehoe
                             }
                             else
                             {
-                                if (this.ExCaseSensitive)
+                                if (ExCaseSensitive)
                                 {
                                     if (post.ScreenName.Contains(fs) || post.RetweetedBy.Contains(fs) || bodyText.Contains(fs))
                                     {
@@ -479,7 +479,7 @@ namespace Hoehoe
                 }
             }
 
-            if (this.IsExRt)
+            if (IsExRt)
             {
                 if (post.IsRetweeted)
                 {
@@ -487,25 +487,25 @@ namespace Hoehoe
                 }
             }
 
-            if (!string.IsNullOrEmpty(this.ExSource))
+            if (!string.IsNullOrEmpty(ExSource))
             {
-                if (this.ExUseRegex)
+                if (ExUseRegex)
                 {
-                    if (Regex.IsMatch(sourceText, this.ExSource, regexOption))
+                    if (Regex.IsMatch(sourceText, ExSource, regexOption))
                     {
                         isExclude = true;
                     }
                 }
                 else
                 {
-                    if (sourceText.Equals(this.ExSource, compOpt))
+                    if (sourceText.Equals(ExSource, compOpt))
                     {
                         isExclude = true;
                     }
                 }
             }
 
-            if (string.IsNullOrEmpty(this.NameFilter) && this.body.Count == 0 && !this.IsRt && string.IsNullOrEmpty(this.Source))
+            if (string.IsNullOrEmpty(NameFilter) && _body.Count == 0 && !IsRt && string.IsNullOrEmpty(Source))
             {
                 isHit = false;
             }
@@ -518,13 +518,13 @@ namespace Hoehoe
                 }
                 else
                 {
-                    if (this.MoveFrom)
+                    if (MoveFrom)
                     {
                         return HITRESULT.Move;
                     }
                     else
                     {
-                        return this.SetMark ? HITRESULT.CopyAndMark : HITRESULT.Copy;
+                        return SetMark ? HITRESULT.CopyAndMark : HITRESULT.Copy;
                     }
                 }
             }
@@ -536,108 +536,108 @@ namespace Hoehoe
 
         public bool Equals(FiltersClass other)
         {
-            if (this.BodyFilter.Count != other.BodyFilter.Count)
+            if (BodyFilter.Count != other.BodyFilter.Count)
             {
                 return false;
             }
 
-            if (this.ExBodyFilter.Count != other.ExBodyFilter.Count)
+            if (ExBodyFilter.Count != other.ExBodyFilter.Count)
             {
                 return false;
             }
 
-            for (int i = 0; i < this.BodyFilter.Count; i++)
+            for (int i = 0; i < BodyFilter.Count; i++)
             {
-                if (this.BodyFilter[i] != other.BodyFilter[i])
+                if (BodyFilter[i] != other.BodyFilter[i])
                 {
                     return false;
                 }
             }
 
-            for (int i = 0; i < this.ExBodyFilter.Count; i++)
+            for (int i = 0; i < ExBodyFilter.Count; i++)
             {
-                if (this.ExBodyFilter[i] != other.ExBodyFilter[i])
+                if (ExBodyFilter[i] != other.ExBodyFilter[i])
                 {
                     return false;
                 }
             }
 
-            return (this.MoveFrom == other.MoveFrom)
-                && (this.SetMark == other.SetMark)
-                && (this.NameFilter == other.NameFilter)
-                && (this.SearchBoth == other.SearchBoth)
-                && (this.SearchUrl == other.SearchUrl)
-                && (this.UseRegex == other.UseRegex)
-                && (this.ExNameFilter == other.ExNameFilter)
-                && (this.ExSearchBoth == other.ExSearchBoth)
-                && (this.ExSearchUrl == other.ExSearchUrl)
-                && (this.ExUseRegex == other.ExUseRegex)
-                && (this.IsRt == other.IsRt)
-                && (this.Source == other.Source)
-                && (this.IsExRt == other.IsExRt)
-                && (this.ExSource == other.ExSource)
-                && (this.UseLambda == other.UseLambda)
-                && (this.ExUseLambda == other.ExUseLambda);
+            return (MoveFrom == other.MoveFrom)
+                && (SetMark == other.SetMark)
+                && (NameFilter == other.NameFilter)
+                && (SearchBoth == other.SearchBoth)
+                && (SearchUrl == other.SearchUrl)
+                && (UseRegex == other.UseRegex)
+                && (ExNameFilter == other.ExNameFilter)
+                && (ExSearchBoth == other.ExSearchBoth)
+                && (ExSearchUrl == other.ExSearchUrl)
+                && (ExUseRegex == other.ExUseRegex)
+                && (IsRt == other.IsRt)
+                && (Source == other.Source)
+                && (IsExRt == other.IsExRt)
+                && (ExSource == other.ExSource)
+                && (UseLambda == other.UseLambda)
+                && (ExUseLambda == other.ExUseLambda);
         }
 
         public FiltersClass CopyTo(FiltersClass destination)
         {
-            if (this.BodyFilter.Count > 0)
+            if (BodyFilter.Count > 0)
             {
-                foreach (string flt in this.BodyFilter)
+                foreach (string flt in BodyFilter)
                 {
                     destination.BodyFilter.Add(string.Copy(flt));
                 }
             }
 
-            if (this.ExBodyFilter.Count > 0)
+            if (ExBodyFilter.Count > 0)
             {
-                foreach (string flt in this.ExBodyFilter)
+                foreach (string flt in ExBodyFilter)
                 {
                     destination.ExBodyFilter.Add(string.Copy(flt));
                 }
             }
 
-            destination.MoveFrom = this.MoveFrom;
-            destination.SetMark = this.SetMark;
-            destination.NameFilter = this.NameFilter;
-            destination.SearchBoth = this.SearchBoth;
-            destination.SearchUrl = this.SearchUrl;
-            destination.UseRegex = this.UseRegex;
-            destination.ExNameFilter = this.ExNameFilter;
-            destination.ExSearchBoth = this.ExSearchBoth;
-            destination.ExSearchUrl = this.ExSearchUrl;
-            destination.ExUseRegex = this.ExUseRegex;
-            destination.IsRt = this.IsRt;
-            destination.Source = this.Source;
-            destination.IsExRt = this.IsExRt;
-            destination.ExSource = this.ExSource;
-            destination.UseLambda = this.UseLambda;
-            destination.ExUseLambda = this.ExUseLambda;
+            destination.MoveFrom = MoveFrom;
+            destination.SetMark = SetMark;
+            destination.NameFilter = NameFilter;
+            destination.SearchBoth = SearchBoth;
+            destination.SearchUrl = SearchUrl;
+            destination.UseRegex = UseRegex;
+            destination.ExNameFilter = ExNameFilter;
+            destination.ExSearchBoth = ExSearchBoth;
+            destination.ExSearchUrl = ExSearchUrl;
+            destination.ExUseRegex = ExUseRegex;
+            destination.IsRt = IsRt;
+            destination.Source = Source;
+            destination.IsExRt = IsExRt;
+            destination.ExSource = ExSource;
+            destination.UseLambda = UseLambda;
+            destination.ExUseLambda = ExUseLambda;
             return destination;
         }
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || (!object.ReferenceEquals(this.GetType(), obj.GetType())))
+            if ((obj == null) || (!object.ReferenceEquals(GetType(), obj.GetType())))
             {
                 return false;
             }
 
-            return this.Equals((FiltersClass)obj);
+            return Equals((FiltersClass)obj);
         }
 
         public override int GetHashCode()
         {
-            return this.MoveFrom.GetHashCode() ^ this.SetMark.GetHashCode()
-                ^ this.BodyFilter.GetHashCode() ^ this.NameFilter.GetHashCode()
-                ^ this.SearchBoth.GetHashCode() ^ this.SearchUrl.GetHashCode()
-                ^ this.UseRegex.GetHashCode() ^ this.ExBodyFilter.GetHashCode()
-                ^ this.ExNameFilter.GetHashCode() ^ this.ExSearchBoth.GetHashCode()
-                ^ this.ExSearchUrl.GetHashCode() ^ this.ExUseRegex.GetHashCode()
-                ^ this.IsRt.GetHashCode() ^ this.Source.GetHashCode()
-                ^ this.IsExRt.GetHashCode() ^ this.ExSource.GetHashCode()
-                ^ this.UseLambda.GetHashCode() ^ this.ExUseLambda.GetHashCode();
+            return MoveFrom.GetHashCode() ^ SetMark.GetHashCode()
+                ^ BodyFilter.GetHashCode() ^ NameFilter.GetHashCode()
+                ^ SearchBoth.GetHashCode() ^ SearchUrl.GetHashCode()
+                ^ UseRegex.GetHashCode() ^ ExBodyFilter.GetHashCode()
+                ^ ExNameFilter.GetHashCode() ^ ExSearchBoth.GetHashCode()
+                ^ ExSearchUrl.GetHashCode() ^ ExUseRegex.GetHashCode()
+                ^ IsRt.GetHashCode() ^ Source.GetHashCode()
+                ^ IsExRt.GetHashCode() ^ ExSource.GetHashCode()
+                ^ UseLambda.GetHashCode() ^ ExUseLambda.GetHashCode();
         }
 
         /// <summary>
@@ -647,13 +647,13 @@ namespace Hoehoe
         private string MakeSummary()
         {
             StringBuilder fs = new StringBuilder();
-            if (!string.IsNullOrEmpty(this.NameFilter) || this.body.Count > 0 || this.IsRt || !string.IsNullOrEmpty(this.Source))
+            if (!string.IsNullOrEmpty(NameFilter) || _body.Count > 0 || IsRt || !string.IsNullOrEmpty(Source))
             {
-                if (this.SearchBoth)
+                if (SearchBoth)
                 {
-                    if (!string.IsNullOrEmpty(this.NameFilter))
+                    if (!string.IsNullOrEmpty(NameFilter))
                     {
-                        fs.AppendFormat(R.SetFiltersText1, this.NameFilter);
+                        fs.AppendFormat(R.SetFiltersText1, NameFilter);
                     }
                     else
                     {
@@ -661,10 +661,10 @@ namespace Hoehoe
                     }
                 }
 
-                if (this.body.Count > 0)
+                if (_body.Count > 0)
                 {
                     fs.Append(R.SetFiltersText3);
-                    foreach (string bf in this.body)
+                    foreach (string bf in _body)
                     {
                         fs.Append(bf);
                         fs.Append(" ");
@@ -675,7 +675,7 @@ namespace Hoehoe
                 }
 
                 fs.Append("(");
-                if (this.SearchBoth)
+                if (SearchBoth)
                 {
                     fs.Append(R.SetFiltersText5);
                 }
@@ -684,49 +684,49 @@ namespace Hoehoe
                     fs.Append(R.SetFiltersText6);
                 }
 
-                if (this.UseRegex)
+                if (UseRegex)
                 {
                     fs.Append(R.SetFiltersText7);
                 }
 
-                if (this.SearchUrl)
+                if (SearchUrl)
                 {
                     fs.Append(R.SetFiltersText8);
                 }
 
-                if (this.CaseSensitive)
+                if (CaseSensitive)
                 {
                     fs.Append(R.SetFiltersText13);
                 }
 
-                if (this.IsRt)
+                if (IsRt)
                 {
                     fs.Append("RT/");
                 }
 
-                if (this.useLambda)
+                if (_useLambda)
                 {
                     fs.Append("LambdaExp/");
                 }
 
-                if (!string.IsNullOrEmpty(this.Source))
+                if (!string.IsNullOrEmpty(Source))
                 {
-                    fs.AppendFormat("Src…{0}/", this.Source);
+                    fs.AppendFormat("Src…{0}/", Source);
                 }
 
                 fs.Length -= 1;
                 fs.Append(")");
             }
 
-            if (!string.IsNullOrEmpty(this.ExNameFilter) || this.exbody.Count > 0 || this.IsExRt || !string.IsNullOrEmpty(this.ExSource))
+            if (!string.IsNullOrEmpty(ExNameFilter) || _exbody.Count > 0 || IsExRt || !string.IsNullOrEmpty(ExSource))
             {
                 // 除外
                 fs.Append(R.SetFiltersText12);
-                if (this.ExSearchBoth)
+                if (ExSearchBoth)
                 {
-                    if (!string.IsNullOrEmpty(this.ExNameFilter))
+                    if (!string.IsNullOrEmpty(ExNameFilter))
                     {
-                        fs.AppendFormat(R.SetFiltersText1, this.ExNameFilter);
+                        fs.AppendFormat(R.SetFiltersText1, ExNameFilter);
                     }
                     else
                     {
@@ -734,10 +734,10 @@ namespace Hoehoe
                     }
                 }
 
-                if (this.exbody.Count > 0)
+                if (_exbody.Count > 0)
                 {
                     fs.Append(R.SetFiltersText3);
-                    foreach (string bf in this.exbody)
+                    foreach (string bf in _exbody)
                     {
                         fs.Append(bf);
                         fs.Append(" ");
@@ -748,7 +748,7 @@ namespace Hoehoe
                 }
 
                 fs.Append("(");
-                if (this.ExSearchBoth)
+                if (ExSearchBoth)
                 {
                     fs.Append(R.SetFiltersText5);
                 }
@@ -757,34 +757,34 @@ namespace Hoehoe
                     fs.Append(R.SetFiltersText6);
                 }
 
-                if (this.ExUseRegex)
+                if (ExUseRegex)
                 {
                     fs.Append(R.SetFiltersText7);
                 }
 
-                if (this.ExSearchUrl)
+                if (ExSearchUrl)
                 {
                     fs.Append(R.SetFiltersText8);
                 }
 
-                if (this.ExCaseSensitive)
+                if (ExCaseSensitive)
                 {
                     fs.Append(R.SetFiltersText13);
                 }
 
-                if (this.IsExRt)
+                if (IsExRt)
                 {
                     fs.Append("RT/");
                 }
 
-                if (this.exuseLambda)
+                if (_exuseLambda)
                 {
                     fs.Append("LambdaExp/");
                 }
 
-                if (!string.IsNullOrEmpty(this.ExSource))
+                if (!string.IsNullOrEmpty(ExSource))
                 {
-                    fs.AppendFormat("Src…{0}/", this.ExSource);
+                    fs.AppendFormat("Src…{0}/", ExSource);
                 }
 
                 fs.Length -= 1;
@@ -792,7 +792,7 @@ namespace Hoehoe
             }
 
             fs.Append("(");
-            if (this.MoveFrom)
+            if (MoveFrom)
             {
                 fs.Append(R.SetFiltersText9);
             }
@@ -801,11 +801,11 @@ namespace Hoehoe
                 fs.Append(R.SetFiltersText11);
             }
 
-            if (!this.MoveFrom && this.SetMark)
+            if (!MoveFrom && SetMark)
             {
                 fs.Append(R.SetFiltersText10);
             }
-            else if (!this.MoveFrom)
+            else if (!MoveFrom)
             {
                 fs.Length -= 1;
             }
@@ -816,14 +816,14 @@ namespace Hoehoe
 
         private void ClearLambdaExp()
         {
-            this.lambdaExp = null;
-            this.lambdaExpDelegate = null;
+            _lambdaExp = null;
+            _lambdaExpDelegate = null;
         }
 
         private void ClearExLambdaExp()
         {
-            this.exlambdaExp = null;
-            this.exlambdaExpDelegate = null;
+            _exlambdaExp = null;
+            _exlambdaExpDelegate = null;
         }
     }
 }
