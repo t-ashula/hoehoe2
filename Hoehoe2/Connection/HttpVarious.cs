@@ -44,7 +44,7 @@ namespace Hoehoe
                 req.Timeout = 5000;
                 req.AllowAutoRedirect = false;
                 string data = string.Empty;
-                Dictionary<string, string> head = new Dictionary<string, string>();
+                var head = new Dictionary<string, string>();
                 HttpStatusCode ret = GetResponse(req, ref data, head, false);
                 return head.ContainsKey("Location") ? head["Location"] : url;
             }
@@ -193,7 +193,7 @@ namespace Hoehoe
                 HttpWebRequest req = CreateRequest(GetMethod, new Uri(url), null, false);
                 req.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
                 req.UserAgent = MyCommon.GetUserAgentString();
-                using (FileStream strm = new FileStream(savePath, FileMode.Create, FileAccess.Write))
+                using (var strm = new FileStream(savePath, FileMode.Create, FileAccess.Write))
                 {
                     try
                     {

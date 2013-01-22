@@ -177,7 +177,7 @@ namespace Hoehoe
 
         private static byte[] ResizeBytesArray(byte[] bytes, int newSize)
         {
-            byte[] newBytes = new byte[newSize];
+            var newBytes = new byte[newSize];
             if (bytes.Length <= newSize)
             {
                 int i = 0;

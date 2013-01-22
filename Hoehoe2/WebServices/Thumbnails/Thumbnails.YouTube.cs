@@ -202,7 +202,7 @@ namespace Hoehoe
             {
             }
 
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             Image img = http.GetImage(imgurl, videourl, 10000, ref args.Errmsg);
             if (img == null)
             {

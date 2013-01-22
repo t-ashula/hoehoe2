@@ -74,8 +74,7 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Vimeo_CreateImage(CreateImageArgs args)
         {
-            // TODO: サムネイル画像読み込み処理を記述します
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             Match mc = Regex.Match(args.Url.Value, "http://vimeo\\.com/(?<postID>[0-9]+)", RegexOptions.IgnoreCase);
             string apiurl = "http://vimeo.com/api/v2/video/" + mc.Groups["postID"].Value + ".xml";
             string src = string.Empty;
@@ -84,7 +83,7 @@ namespace Hoehoe
                 return false;
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             string imgurl = null;
             try
             {

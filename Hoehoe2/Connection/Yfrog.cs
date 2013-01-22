@@ -105,7 +105,7 @@ namespace Hoehoe
             string url = string.Empty;
             if (ret == HttpStatusCode.OK)
             {
-                XmlDocument xd = new XmlDocument();
+                var xd = new XmlDocument();
                 try
                 {
                     // URLの取得
@@ -201,7 +201,7 @@ namespace Hoehoe
                 throw new ArgumentException("File is too large.");
             }
 
-            Dictionary<string, string> param = new Dictionary<string, string>();
+            var param = new Dictionary<string, string>();
             param.Add("key", ApiKey);
             param.Add("message", message);
 

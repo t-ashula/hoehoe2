@@ -84,7 +84,7 @@ namespace Hoehoe
             }
             //var mc = Regex.Match(args.Url.Value, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
 
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             string src = string.Empty;
             if (!http.GetData(Regex.Replace(args.Url.Value, "amp;", string.Empty), null, ref src, 0, ref args.Errmsg, string.Empty))
             {

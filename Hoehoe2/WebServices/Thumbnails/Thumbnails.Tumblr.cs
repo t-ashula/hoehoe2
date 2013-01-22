@@ -56,7 +56,6 @@ namespace Hoehoe
             // TODO 成功時はサムネイルURLを作成しimglist.Addする
             args.AddThumbnailUrl(args.Url, mc.Value);
             return true;
-         
         }
 
         /// <summary>
@@ -73,7 +72,7 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool Tumblr_CreateImage(CreateImageArgs args)
         {
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             string targetUrl = args.Url.Value;
             string tmp = http.GetRedirectTo(targetUrl);
             while (!targetUrl.Equals(tmp))

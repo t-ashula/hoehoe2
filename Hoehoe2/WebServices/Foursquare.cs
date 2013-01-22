@@ -80,7 +80,7 @@ namespace Hoehoe
                 return null;
             }
 
-            Google.GlobalLocation curLocation = new Google.GlobalLocation
+            var curLocation = new Google.GlobalLocation
             {
                 Latitude = curVenue.Location.Latitude,
                 Longitude = curVenue.Location.Longitude,

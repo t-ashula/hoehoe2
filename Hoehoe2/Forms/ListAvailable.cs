@@ -146,15 +146,16 @@ namespace Hoehoe
 
         private void RefreshLists()
         {
-            using (FormInfo dlg = new FormInfo(this, "Getting Lists...", RefreshLists_DoWork))
+            using (var dlg = new FormInfo(this, "Getting Lists...", RefreshLists_DoWork))
             {
                 dlg.ShowDialog();
-                if (string.IsNullOrEmpty((string)dlg.Result))
+                var ret = (string)dlg.Result;
+                if (string.IsNullOrEmpty(ret))
                 {
                     return;
                 }
 
-                MessageBox.Show("Failed to get lists. (" + (string)dlg.Result + ")");
+                MessageBox.Show(string.Format("Failed to get lists. ({0})", ret));
             }
         }
 

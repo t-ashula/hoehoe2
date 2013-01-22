@@ -88,7 +88,7 @@ namespace Hoehoe
                 return;
             }
 
-            ListElement list = (ListElement)ListsList.SelectedItem;
+            var list = (ListElement)ListsList.SelectedItem;
             UsernameTextBox.Text = list.Username;
             NameTextBox.Text = list.Name;
             PublicRadioButton.Checked = list.IsPublic;
@@ -138,7 +138,7 @@ namespace Hoehoe
                 return;
             }
 
-            ListElement listItem = (ListElement)ListsList.SelectedItem;
+            var listItem = (ListElement)ListsList.SelectedItem;
 
             if (string.IsNullOrEmpty(NameTextBox.Text))
             {
@@ -189,7 +189,7 @@ namespace Hoehoe
             }
 
             UserList.Items.Clear();
-            Action<ListElement> dlgt = new Action<ListElement>(lElement => { Invoke(new Action<string>(GetListMembersCallback), lElement.RefreshMembers()); });
+            Action<ListElement> dlgt = lElement => Invoke(new Action<string>(GetListMembersCallback), lElement.RefreshMembers());
             dlgt.BeginInvoke((ListElement)ListsList.SelectedItem, null, null);
         }
 
@@ -200,7 +200,7 @@ namespace Hoehoe
                 return;
             }
 
-            Action<ListElement> dlgt = new Action<ListElement>(lElement => { Invoke(new Action<string>(GetListMembersCallback), lElement.GetMoreMembers()); });
+            Action<ListElement> dlgt = lElement => Invoke(new Action<string>(GetListMembersCallback), lElement.GetMoreMembers());
             dlgt.BeginInvoke((ListElement)ListsList.SelectedItem, null, null);
         }
 
@@ -211,8 +211,8 @@ namespace Hoehoe
                 return;
             }
 
-            ListElement list = (ListElement)ListsList.SelectedItem;
-            UserInfo user = (UserInfo)UserList.SelectedItem;
+            var list = (ListElement)ListsList.SelectedItem;
+            var user = (UserInfo)UserList.SelectedItem;
             if (MessageBox.Show(R.ListManageDeleteUser1, "Hoehoe", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 string rslt = _twitter.RemoveUserToList(list.Id.ToString(), user.Id.ToString());
@@ -240,7 +240,7 @@ namespace Hoehoe
                 return;
             }
 
-            ListElement list = (ListElement)ListsList.SelectedItem;
+            var list = (ListElement)ListsList.SelectedItem;
             if (MessageBox.Show(R.ListManageDeleteLists1, "Hoehoe", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 string rslt = _twitter.DeleteList(list.Id.ToString());
@@ -266,7 +266,7 @@ namespace Hoehoe
 
         private void AddListButton_Click(object sender, EventArgs e)
         {
-            NewListElement newList = new NewListElement(_twitter);
+            var newList = new NewListElement(_twitter);
             ListsList.Items.Add(newList);
             ListsList.SelectedItem = newList;
             EditCheckBox.Checked = true;
@@ -295,7 +295,7 @@ namespace Hoehoe
             }
             else
             {
-                UserInfo user = (UserInfo)UserList.SelectedItem;
+                var user = (UserInfo)UserList.SelectedItem;
                 UserLocation.Text = user.Location;
                 UserWeb.Text = user.Url;
                 UserFollowNum.Text = user.FriendsCount.ToString("#,###,##0");
@@ -314,7 +314,7 @@ namespace Hoehoe
                 }
 
                 DeleteUserButton.Enabled = true;
-                Action<Uri> a = new Action<Uri>(url => { Invoke(new Action<Image>(DisplayIcon), (new HttpVarious()).GetImage(url)); });
+                Action<Uri> a = url => Invoke(new Action<Image>(DisplayIcon), (new HttpVarious()).GetImage(url));
                 a.BeginInvoke(user.ImageUrl, null, null);
             }
         }
@@ -380,7 +380,7 @@ namespace Hoehoe
 
         private void RefreshLists()
         {
-            using (FormInfo dlg = new FormInfo(this, R.ListsGetting, RefreshLists_Dowork))
+            using (var dlg = new FormInfo(this, R.ListsGetting, RefreshLists_Dowork))
             {
                 dlg.ShowDialog();
                 var result = (string)dlg.Result;

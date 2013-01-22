@@ -63,7 +63,7 @@ namespace Hoehoe
         {
             if (AuthWebBrowser.Url.OriginalString == "https://api.twitter.com/oauth/authorize")
             {
-                Regex rg = new Regex("<code>(\\d+)</code>");
+                var rg = new Regex("<code>(\\d+)</code>");
                 Match m = rg.Match(AuthWebBrowser.DocumentText);
                 if (m.Success)
                 {

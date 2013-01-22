@@ -728,7 +728,7 @@ namespace Hoehoe
 
         public HttpStatusCode UpdateProfileImage(FileInfo imageFile, ref string content)
         {
-            List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
+            var binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("image", imageFile));
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/account/update_profile_image.json"), null, binary, ref content, null, null);
         }

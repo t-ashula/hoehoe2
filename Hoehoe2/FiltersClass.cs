@@ -640,7 +640,7 @@ namespace Hoehoe
         /// <returns></returns>
         private string MakeSummary()
         {
-            StringBuilder fs = new StringBuilder();
+            var fs = new StringBuilder();
             if (!string.IsNullOrEmpty(NameFilter) || _body.Count > 0 || IsRt || !string.IsNullOrEmpty(Source))
             {
                 if (SearchBoth)

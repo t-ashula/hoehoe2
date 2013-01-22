@@ -487,7 +487,7 @@ namespace Hoehoe
 
             if (!e.Cancel && TreeViewSetting.SelectedNode != null)
             {
-                Panel curPanel = (Panel)TreeViewSetting.SelectedNode.Tag;
+                var curPanel = (Panel)TreeViewSetting.SelectedNode.Tag;
                 curPanel.Visible = false;
                 curPanel.Enabled = false;
             }
@@ -886,7 +886,7 @@ namespace Hoehoe
 
         private void ButtonFontAndColor_Click(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
+            var btn = (Button)sender;
             switch (btn.Name)
             {
                 case "btnUnread":
@@ -906,7 +906,7 @@ namespace Hoehoe
 
         private void ButtonColor_Click(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
+            var btn = (Button)sender;
             switch (btn.Name)
             {
                 case "btnSelf":
@@ -1682,8 +1682,8 @@ namespace Hoehoe
 
         private void GetEventNotifyFlag(ref EventType eventnotifyflag, ref EventType isMyeventnotifyflag)
         {
-            EventType evt = EventType.None;
-            EventType myevt = EventType.None;
+            var evt = EventType.None;
+            var myevt = EventType.None;
 
             foreach (EventCheckboxTblElement tbl in _eventCheckboxTableElements)
             {

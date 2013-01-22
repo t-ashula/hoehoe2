@@ -79,7 +79,7 @@ namespace Hoehoe
                 }
             }
 
-            List<string> urlList = new List<string>();
+            var urlList = new List<string>();
             MatchCollection m = Regex.Matches(orgData, "<a href=\"(?<svc>http://.+?/)(?<path>[^\"]+)?\"", RegexOptions.IgnoreCase);
             foreach (Match orgUrlMatch in m)
             {
@@ -119,7 +119,7 @@ namespace Hoehoe
                         // urlとして生成できない場合があるらしい
                         string retUrlStr = string.Empty;
                         string tmpurlStr = new Uri(MyCommon.GetUrlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
-                        HttpVarious httpVar = new HttpVarious();
+                        var httpVar = new HttpVarious();
                         retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
                         if (retUrlStr.StartsWith("http"))
                         {
@@ -184,7 +184,7 @@ namespace Hoehoe
                         // urlとして生成できない場合があるらしい
                         string retUrlStr = string.Empty;
                         string tmpurlStr = new Uri(MyCommon.GetUrlEncodeMultibyteChar(orgUrl)).GetLeftPart(UriPartial.Path);
-                        HttpVarious httpVar = new HttpVarious();
+                        var httpVar = new HttpVarious();
                         retUrlStr = MyCommon.GetUrlEncodeMultibyteChar(httpVar.GetRedirectTo(tmpurlStr));
                         if (retUrlStr.StartsWith("http"))
                         {
@@ -224,7 +224,7 @@ namespace Hoehoe
             }
 
             string orgSrc = srcUrl;
-            Dictionary<string, string> param = new Dictionary<string, string>();
+            var param = new Dictionary<string, string>();
             string content = string.Empty;
             foreach (string svc in shortUrlServices)
             {

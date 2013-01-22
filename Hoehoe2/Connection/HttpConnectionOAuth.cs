@@ -202,7 +202,7 @@ namespace Hoehoe
 
             if (callback != null)
             {
-                StackFrame frame = new StackFrame(1);
+                var frame = new StackFrame(1);
                 callback(frame.GetMethod().Name, ref code, ref content);
             }
 
@@ -231,7 +231,7 @@ namespace Hoehoe
 
             if (callback != null)
             {
-                StackFrame frame = new StackFrame(1);
+                var frame = new StackFrame(1);
                 callback(frame.GetMethod().Name, ref code, ref content);
             }
 
@@ -267,7 +267,7 @@ namespace Hoehoe
             AppendOAuthInfo(_streamReq, param, _token, _tokenSecret);
             try
             {
-                HttpWebResponse webRes = (HttpWebResponse)_streamReq.GetResponse();
+                var webRes = (HttpWebResponse)_streamReq.GetResponse();
                 content = webRes.GetResponseStream();
                 return webRes.StatusCode;
             }
@@ -275,7 +275,7 @@ namespace Hoehoe
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
-                    HttpWebResponse res = (HttpWebResponse)ex.Response;
+                    var res = (HttpWebResponse)ex.Response;
                     return res.StatusCode;
                 }
 
@@ -404,7 +404,7 @@ namespace Hoehoe
             }
 
             // xAuthの拡張パラメータ設定
-            Dictionary<string, string> parameter = new Dictionary<string, string>();
+            var parameter = new Dictionary<string, string>();
             parameter.Add("x_auth_mode", "client_auth");
             parameter.Add("x_auth_username", username);
             parameter.Add("x_auth_password", password);
@@ -497,7 +497,7 @@ namespace Hoehoe
             parameter.Add("oauth_signature", CreateSignature(tokenSecret, webRequest.Method, webRequest.RequestUri, parameter));
 
             // HTTPリクエストのヘッダに追加
-            StringBuilder sb = new StringBuilder("OAuth ");
+            var sb = new StringBuilder("OAuth ");
             foreach (KeyValuePair<string, string> item in parameter)
             {
                 // 各種情報のうち、oauth_で始まる情報のみ、ヘッダに追加する。各情報はカンマ区切り、データはダブルクォーテーションで括る
@@ -517,7 +517,7 @@ namespace Hoehoe
         /// <returns>OAuth情報のディクショナリ</returns>
         protected Dictionary<string, string> GetOAuthParameter(string token)
         {
-            Dictionary<string, string> parameter = new Dictionary<string, string>();
+            var parameter = new Dictionary<string, string>();
             parameter.Add("oauth_consumer_key", _consumerKey);
             parameter.Add("oauth_signature_method", "HMAC-SHA1");
             parameter.Add("oauth_timestamp", Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds).ToString()); // epoch秒
@@ -544,7 +544,7 @@ namespace Hoehoe
         protected virtual string CreateSignature(string tokenSecret, string method, Uri uri, Dictionary<string, string> parameter)
         {
             // パラメタをソート済みディクショナリに詰替（OAuthの仕様）
-            SortedDictionary<string, string> sorted = new SortedDictionary<string, string>(parameter);
+            var sorted = new SortedDictionary<string, string>(parameter);
 
             // URLエンコード済みのクエリ形式文字列に変換
             string paramString = CreateQueryString(sorted);
@@ -563,7 +563,7 @@ namespace Hoehoe
             }
 
             // 鍵生成＆署名生成
-            using (HMACSHA1 hmac = new HMACSHA1(Encoding.ASCII.GetBytes(key)))
+            using (var hmac = new HMACSHA1(Encoding.ASCII.GetBytes(key)))
             {
                 return Convert.ToBase64String(hmac.ComputeHash(Encoding.ASCII.GetBytes(signatureBase)));
             }
@@ -623,7 +623,7 @@ namespace Hoehoe
             }
 
             // OAuth関連パラメータ準備。追加パラメータがあれば追加
-            Dictionary<string, string> query = new Dictionary<string, string>();
+            var query = new Dictionary<string, string>();
             if (parameter != null)
             {
                 foreach (KeyValuePair<string, string> kvp in parameter)
@@ -642,7 +642,7 @@ namespace Hoehoe
             AppendOAuthInfo(webReq, query, requestToken, string.Empty);
 
             // HTTP応答取得
-            Dictionary<string, string> header = new Dictionary<string, string> { { "Date", string.Empty } };
+            var header = new Dictionary<string, string> { { "Date", string.Empty } };
             HttpStatusCode responseCode = GetResponse(webReq, ref content, header, false);
             if (responseCode == HttpStatusCode.OK)
             {

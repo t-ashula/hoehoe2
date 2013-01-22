@@ -169,17 +169,17 @@ namespace Hoehoe
             }
 
             string apiurl = TranslateEndPoint;
-            Dictionary<string, string> headers = new Dictionary<string, string>();
+            var headers = new Dictionary<string, string>();
             headers.Add("v", "1.0");
             headers.Add("User-Agent", MyCommon.GetUserAgentString());
             headers.Add("langpair", srclng + "|" + dstlng);
             headers.Add("q", source);
 
             string content = string.Empty;
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             if (http.GetData(apiurl, headers, ref content))
             {
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TranslateResponse));
+                var serializer = new DataContractJsonSerializer(typeof(TranslateResponse));
                 TranslateResponse res = null;
 
                 try
@@ -209,19 +209,19 @@ namespace Hoehoe
 
         public string LanguageDetect(string source)
         {
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             string apiurl = LanguageDetectEndPoint;
-            Dictionary<string, string> headers = new Dictionary<string, string>();
+            var headers = new Dictionary<string, string>();
             headers.Add("User-Agent", MyCommon.GetUserAgentString());
             headers.Add("v", "1.0");
             headers.Add("q", source);
             string content = string.Empty;
             if (http.GetData(apiurl, headers, ref content))
             {
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(LanguageDetectResponse));
+                var serializer = new DataContractJsonSerializer(typeof(LanguageDetectResponse));
                 try
                 {
-                    LanguageDetectResponse res = D.CreateDataFromJson<LanguageDetectResponse>(content);
+                    var res = D.CreateDataFromJson<LanguageDetectResponse>(content);
                     return res.ResponseData.Language;
                 }
                 catch (Exception)
@@ -251,11 +251,11 @@ namespace Hoehoe
         // http://code.google.com/intl/ja/apis/urlshortener/v1/getting_started.html
         public string Shorten(string source)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
+            var headers = new Dictionary<string, string>();
             headers.Add("User-Agent", MyCommon.GetUserAgentString());
             headers.Add("Content-Type", "application/json");
 
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             string apiurl = "https://www.googleapis.com/urlshortener/v1/url";
             http.PostData(apiurl, headers);
             return string.Empty;

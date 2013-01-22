@@ -70,7 +70,7 @@ namespace Hoehoe
             parameter.Add("oauth_signature", CreateSignature(tokenSecret, GetMethod, _serviceProvider, parameter));
 
             // HTTPリクエストのヘッダに追加
-            StringBuilder sb = new StringBuilder("OAuth ");
+            var sb = new StringBuilder("OAuth ");
             sb.AppendFormat("realm=\"{0}://{1}{2}\",", _realm.Scheme, _realm.Host, _realm.AbsolutePath);
             foreach (KeyValuePair<string, string> item in parameter)
             {

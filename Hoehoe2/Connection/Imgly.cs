@@ -99,7 +99,7 @@ namespace Hoehoe
             string url = string.Empty;
             if (ret == HttpStatusCode.OK)
             {
-                XmlDocument xd = new XmlDocument();
+                var xd = new XmlDocument();
                 try
                 {
                     // URLの取得
@@ -194,9 +194,9 @@ namespace Hoehoe
                 throw new ArgumentException("File is too large.");
             }
 
-            Dictionary<string, string> param = new Dictionary<string, string>();
+            var param = new Dictionary<string, string>();
             param.Add("message", message);
-            List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
+            var binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
             InstanceTimeout = 60000; // タイムアウト60秒
             return GetContent(PostMethod, new Uri("http://img.ly/api/2/upload.xml"), param, binary, ref content, null, null);

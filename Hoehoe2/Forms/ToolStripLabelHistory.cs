@@ -90,7 +90,7 @@ namespace Hoehoe.TweenCustomControl
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 foreach (LogEntry e in _logEntries)
                 {
                     sb.AppendLine(e.ToString());

@@ -381,7 +381,7 @@ namespace Hoehoe
             {
                 foreach (TabPage tab in ListTab.TabPages)
                 {
-                    DetailsListView lst = (DetailsListView)tab.Tag;
+                    var lst = (DetailsListView)tab.Tag;
                     TabClass tabInfo = _statuses.Tabs[tab.Text];
                     lst.BeginUpdate();
                     if (isDelete || lst.VirtualListSize != tabInfo.AllCount)
@@ -650,7 +650,7 @@ namespace Hoehoe
                 // Growlは一個ずつばらして通知。ただし、3ポスト以上あるときはまとめる
                 if (_configs.IsNotifyUseGrowl)
                 {
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
                     bool reply = false;
                     bool dm = false;
                     foreach (var post in notifyPosts)
@@ -711,7 +711,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
                     bool reply = false;
                     bool dm = false;
                     foreach (var post in notifyPosts)
@@ -1390,7 +1390,7 @@ namespace Hoehoe
                 return;
             }
 
-            int[] dispOrder = new int[_curList.Columns.Count];
+            var dispOrder = new int[_curList.Columns.Count];
             for (int i = 0; i < _curList.Columns.Count; i++)
             {
                 for (int j = 0; j < _curList.Columns.Count; j++)
@@ -1410,7 +1410,7 @@ namespace Hoehoe
                 {
                     if (tb.Tag != null && tb.Controls.Count > 0)
                     {
-                        DetailsListView lst = (DetailsListView)tb.Tag;
+                        var lst = (DetailsListView)tb.Tag;
                         for (int i = 0; i < lst.Columns.Count; ++i)
                         {
                             lst.Columns[dispOrder[i]].DisplayIndex = i;
@@ -1535,7 +1535,7 @@ namespace Hoehoe
 
         private void DrawListViewItemIcon(DrawListViewItemEventArgs e)
         {
-            ImageListViewItem item = (ImageListViewItem)e.Item;
+            var item = (ImageListViewItem)e.Item;
             //// e.Bounds.Leftが常に0を指すから自前で計算
             Rectangle itemRect = item.Bounds;
             itemRect.Width = item.ListView.Columns[0].Width;
@@ -1586,8 +1586,8 @@ namespace Hoehoe
                 MessageBox.Show(R.DoTabSearchText2, R.DoTabSearchText3, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            RegexOptions regOpt = RegexOptions.None;
-            StringComparison fndOpt = StringComparison.Ordinal;
+            var regOpt = RegexOptions.None;
+            var fndOpt = StringComparison.Ordinal;
             if (!isCaseSensitive)
             {
                 regOpt = RegexOptions.IgnoreCase;
@@ -1694,7 +1694,7 @@ namespace Hoehoe
                 if (!string.IsNullOrEmpty(MyCommon.FileVersion) && strVer.CompareTo(MyCommon.FileVersion.Replace(".", string.Empty)) > 0)
                 {
                     string tmp = string.Format(R.CheckNewVersionText3, strVer);
-                    using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
+                    using (var dialogAsShieldicon = new DialogAsShieldIcon())
                     {
                         if (dialogAsShieldicon.ShowDialog(tmp, strDetail, string.Format(R.CheckNewVersionText1, MyCommon.AppTitle), MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
@@ -1719,7 +1719,7 @@ namespace Hoehoe
                     if (forceUpdate)
                     {
                         string tmp = string.Format(R.CheckNewVersionText6, strVer);
-                        using (DialogAsShieldIcon dialogAsShieldicon = new DialogAsShieldIcon())
+                        using (var dialogAsShieldicon = new DialogAsShieldIcon())
                         {
                             if (dialogAsShieldicon.ShowDialog(tmp, strDetail, string.Format(R.CheckNewVersionText1, MyCommon.AppTitle), MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
@@ -1910,7 +1910,7 @@ namespace Hoehoe
 
         private ModifierState GetModifierState(bool isCtrl, bool isShift, bool isAlt)
         {
-            ModifierState state = ModifierState.None;
+            var state = ModifierState.None;
             if (isCtrl)
             {
                 state = state | ModifierState.Ctrl;
@@ -2529,7 +2529,7 @@ namespace Hoehoe
                                 {
                                     // ソートダイレクト選択(Ctrl+Shift+1～8,Ctrl+Shift+9)
                                     int colNo = keyCode - Keys.D1;
-                                    DetailsListView lst = (DetailsListView)ListTab.SelectedTab.Tag;
+                                    var lst = (DetailsListView)ListTab.SelectedTab.Tag;
                                     if (lst.Columns.Count < colNo)
                                     {
                                         return functionReturnValue;
@@ -2547,7 +2547,7 @@ namespace Hoehoe
 
                             case Keys.D9:
                                 {
-                                    DetailsListView lst = (DetailsListView)ListTab.SelectedTab.Tag;
+                                    var lst = (DetailsListView)ListTab.SelectedTab.Tag;
                                     var col = lst.Columns.Cast<ColumnHeader>().OrderByDescending(x => x.DisplayIndex).First();
                                     MyList_ColumnClick(lst, new ColumnClickEventArgs(col.Index));
                                     return true;
@@ -2680,7 +2680,7 @@ namespace Hoehoe
                 isDm = _statuses.GetTabByName(_curTab.Text).TabType == TabUsageType.DirectMessage;
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             bool isProtected = false;
             foreach (int idx in _curList.SelectedIndices)
             {
@@ -3344,7 +3344,7 @@ namespace Hoehoe
             }
 
             _modifySettingAtId = false;
-            SettingAtIdList cfgAtId = new SettingAtIdList(AtIdSupl.GetItemList());
+            var cfgAtId = new SettingAtIdList(AtIdSupl.GetItemList());
             cfgAtId.Save();
         }
 
@@ -3569,7 +3569,7 @@ namespace Hoehoe
                 if ((_statuses.Tabs[ListTab.SelectedTab.Text].TabType == TabUsageType.DirectMessage && isAuto) || (!isAuto && !isReply))
                 {
                     // ダイレクトメッセージ
-                    StatusText.Text = "D " + _curPost.ScreenName + " " + StatusText.Text;
+                    StatusText.Text = string.Format("D {0} {1}", _curPost.ScreenName, StatusText.Text);
                     StatusText.SelectionStart = StatusText.Text.Length;
                     StatusText.Focus();
                     ClearReplyToInfo();
@@ -3579,7 +3579,7 @@ namespace Hoehoe
                 if (string.IsNullOrEmpty(StatusText.Text))
                 {
                     // 空の場合 : ステータステキストが入力されていない場合先頭に@ユーザー名を追加する
-                    StatusText.Text = "@" + _curPost.ScreenName + " ";
+                    StatusText.Text = string.Format("@{0} ", _curPost.ScreenName);
                     _replyToId = _curPost.OriginalStatusId;
                     _replyToName = _curPost.ScreenName;
                 }
@@ -3613,7 +3613,7 @@ namespace Hoehoe
                             else
                             {
                                 // 単独リプライ
-                                StatusText.Text = "@" + _curPost.ScreenName + " " + StatusText.Text;
+                                StatusText.Text = string.Format("@{0} {1}", _curPost.ScreenName, StatusText.Text);
                                 _replyToId = _curPost.OriginalStatusId;
                                 _replyToName = _curPost.ScreenName;
                             }
@@ -3622,7 +3622,7 @@ namespace Hoehoe
                         {
                             // 文頭＠
                             // 複数リプライ
-                            StatusText.Text = ". @" + _curPost.ScreenName + " " + StatusText.Text;
+                            StatusText.Text = string.Format(". @{0} {1}", _curPost.ScreenName, StatusText.Text);
                             ClearReplyToInfo();
                         }
                     }
@@ -3630,7 +3630,7 @@ namespace Hoehoe
                     {
                         // 1件選んでCtrl-Rの場合（返信先操作せず）
                         int selectionStart = StatusText.SelectionStart;
-                        string id = "@" + _curPost.ScreenName + " ";
+                        string id = string.Format("@{0} ", _curPost.ScreenName);
                         if (selectionStart > 0)
                         {
                             if (StatusText.Text.Substring(selectionStart - 1, 1) != " ")
@@ -4102,7 +4102,7 @@ namespace Hoehoe
                 int tal = _statuses.Tabs[_curTab.Text].AllCount;
                 _unreadCounter = ur;
                 _unreadAtCounter = mentionTab.UnreadCount + dmessageTab.UnreadCount;
-                StringBuilder slbl = new StringBuilder(256);
+                var slbl = new StringBuilder(256);
                 slbl.AppendFormat(R.SetStatusLabelText1, tur, tal, ur, al, _unreadAtCounter, _postTimestamps.Count, _favTimestamps.Count, _timeLineCount);
                 if (_configs.TimelinePeriodInt == 0)
                 {
@@ -4137,7 +4137,7 @@ namespace Hoehoe
         // Tween [未読/@]
         private void SetNotifyIconText()
         {
-            StringBuilder ur = new StringBuilder(64);
+            var ur = new StringBuilder(64);
             if (_configs.DispUsername)
             {
                 ur.AppendFormat("{0} - ", _tw.Username);
@@ -4717,7 +4717,7 @@ namespace Hoehoe
             using (var info = new FormInfo(this, R.FollowCommandText1, FollowCommand_DoWork, null, new FollowRemoveCommandArgs { Tw = _tw, Id = id }))
             {
                 info.ShowDialog();
-                string ret = (string)info.Result;
+                var ret = (string)info.Result;
                 MessageBox.Show(!string.IsNullOrEmpty(ret) ? R.FRMessage2 + ret : R.FRMessage3);
             }
         }
@@ -4745,11 +4745,11 @@ namespace Hoehoe
                 return;
             }
 
-            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs { Tw = _tw, Id = id };
-            using (FormInfo info = new FormInfo(this, R.RemoveCommandText1, RemoveCommand_DoWork, null, arg))
+            var arg = new FollowRemoveCommandArgs { Tw = _tw, Id = id };
+            using (var info = new FormInfo(this, R.RemoveCommandText1, RemoveCommand_DoWork, null, arg))
             {
                 info.ShowDialog();
-                string ret = (string)info.Result;
+                var ret = (string)info.Result;
                 MessageBox.Show(!string.IsNullOrEmpty(ret) ? R.FRMessage2 + ret : R.FRMessage3);
             }
         }
@@ -4791,10 +4791,10 @@ namespace Hoehoe
                 return;
             }
 
-            ShowFriendshipArgs args = new ShowFriendshipArgs { Tw = _tw };
+            var args = new ShowFriendshipArgs { Tw = _tw };
             args.Ids.Add(new ShowFriendshipArgs.FriendshipInfo(id));
             string ret = string.Empty;
-            using (FormInfo formInfo = new FormInfo(this, R.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
+            using (var formInfo = new FormInfo(this, R.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
             {
                 formInfo.ShowDialog();
                 ret = (string)formInfo.Result;
@@ -4862,7 +4862,7 @@ namespace Hoehoe
                 }
 
                 string rtdata = CreateRetweetUnofficial(_curPost.Text);
-                StatusText.Text = " QT @" + _curPost.ScreenName + ": " + HttpUtility.HtmlDecode(rtdata);
+                StatusText.Text = string.Format(" QT @{0}: {1}", _curPost.ScreenName, HttpUtility.HtmlDecode(rtdata));
                 _replyToId = _curPost.OriginalStatusId;
                 _replyToName = _curPost.ScreenName;
                 StatusText.SelectionStart = 0;
@@ -4906,11 +4906,11 @@ namespace Hoehoe
             }
 
             var user = new DataModels.Twitter.User();
-            GetUserInfoArgs args = new GetUserInfoArgs { Tw = _tw, Id = id, User = user };
-            using (FormInfo info = new FormInfo(this, R.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
+            var args = new GetUserInfoArgs { Tw = _tw, Id = id, User = user };
+            using (var info = new FormInfo(this, R.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
             {
                 info.ShowDialog();
-                string ret = (string)info.Result;
+                var ret = (string)info.Result;
                 if (!string.IsNullOrEmpty(ret))
                 {
                     MessageBox.Show(ret);
@@ -4918,7 +4918,7 @@ namespace Hoehoe
                 }
             }
 
-            using (ShowUserInfo userinfo = new ShowUserInfo())
+            using (var userinfo = new ShowUserInfo())
             {
                 userinfo.Owner = this;
                 userinfo.SetUser(args.User);
@@ -4940,7 +4940,7 @@ namespace Hoehoe
                 }
 
                 IMultimediaShareService service = _pictureServices[ImageService];
-                FileInfo fl = new FileInfo(imagePath);
+                var fl = new FileInfo(imagePath);
                 if (!service.CheckValidExtension(fl.Extension))
                 {
                     // 画像以外の形式
@@ -4960,7 +4960,7 @@ namespace Hoehoe
                 {
                     case UploadFileType.Picture:
                         Image img = null;
-                        using (FileStream fs = new FileStream(ImagefilePathText.Text, FileMode.Open, FileAccess.Read))
+                        using (var fs = new FileStream(ImagefilePathText.Text, FileMode.Open, FileAccess.Read))
                         {
                             img = Image.FromStream(fs);
                         }
@@ -5038,7 +5038,7 @@ namespace Hoehoe
             if (IsBalloonRequired(ev))
             {
                 NotifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
-                StringBuilder title = new StringBuilder();
+                var title = new StringBuilder();
                 if (_configs.DispUsername)
                 {
                     title.AppendFormat("{0} - ", _tw.Username);
@@ -5076,7 +5076,7 @@ namespace Hoehoe
 
         private void DoTranslation(string str)
         {
-            Bing bing = new Bing();
+            var bing = new Bing();
             string buf = string.Empty;
             if (string.IsNullOrEmpty(str))
             {
@@ -5401,9 +5401,9 @@ namespace Hoehoe
 
         private void ShowApiInfoBox()
         {
-            GetApiInfoArgs args = new GetApiInfoArgs { Tw = _tw, Info = new ApiInfo() };
-            StringBuilder tmp = new StringBuilder();
-            using (FormInfo dlg = new FormInfo(this, R.ApiInfo6, GetApiInfo_Dowork, null, args))
+            var args = new GetApiInfoArgs { Tw = _tw, Info = new ApiInfo() };
+            var tmp = new StringBuilder();
+            using (var dlg = new FormInfo(this, R.ApiInfo6, GetApiInfo_Dowork, null, args))
             {
                 dlg.ShowDialog();
                 if ((bool)dlg.Result)
@@ -5431,7 +5431,7 @@ namespace Hoehoe
 
         private void ShowCacheInfoBox()
         {
-            StringBuilder buf = new StringBuilder();
+            var buf = new StringBuilder();
             buf.AppendLine(string.Format("{0, -15} : {1}bytes ({2}MB)", "キャッシュメモリ容量", _iconDict.CacheMemoryLimit, _iconDict.CacheMemoryLimit / (1024 * 1024)));
             buf.AppendLine(string.Format("{0, -15} : {1}%", "物理メモリ使用割合", _iconDict.PhysicalMemoryLimit));
             buf.AppendLine(string.Format("{0, -15} : {1}", "キャッシュエントリ保持数", _iconDict.CacheCount));
@@ -5537,7 +5537,7 @@ namespace Hoehoe
 
         private void ShowListManageBox()
         {
-            using (ListManage form = new ListManage(_tw))
+            using (var form = new ListManage(_tw))
             {
                 form.ShowDialog(this);
             }
@@ -5547,11 +5547,11 @@ namespace Hoehoe
         {
             if (ExistCurrentPost)
             {
-                using (FormInfo formInfo = new FormInfo(this, R.RtCountMenuItem_ClickText1, GetRetweet_DoWork))
+                using (var formInfo = new FormInfo(this, R.RtCountMenuItem_ClickText1, GetRetweet_DoWork))
                 {
                     // ダイアログ表示
                     formInfo.ShowDialog();
-                    int retweetCount = (int)formInfo.Result;
+                    var retweetCount = (int)formInfo.Result;
                     string msg = retweetCount < 0 ?
                         R.RtCountText2 :
                         string.Format("{0}{1}", retweetCount, R.RtCountText1);
@@ -5699,7 +5699,7 @@ namespace Hoehoe
                 {
                     foreach (TabPage mytab in ListTab.TabPages)
                     {
-                        DetailsListView lst = (DetailsListView)mytab.Tag;
+                        var lst = (DetailsListView)mytab.Tag;
                         lst.GridLines = _configs.ShowGrid;
                     }
                 }
@@ -5829,8 +5829,8 @@ namespace Hoehoe
                 _hookGlobalHotkey.UnregisterAllOriginalHotkey();
                 if (_configs.HotkeyEnabled)
                 {
-                    ///グローバルホットキーの登録。設定で変更可能にするかも
-                    HookGlobalHotkey.ModKeys modKey = HookGlobalHotkey.ModKeys.None;
+                    // グローバルホットキーの登録。設定で変更可能にするかも
+                    var modKey = HookGlobalHotkey.ModKeys.None;
                     if ((_configs.HotkeyMod & Keys.Alt) == Keys.Alt)
                     {
                         modKey = modKey | HookGlobalHotkey.ModKeys.Alt;
@@ -5995,7 +5995,7 @@ namespace Hoehoe
             ListElement list = null;
             if (tabUsage == TabUsageType.Lists)
             {
-                using (ListAvailable listAvail = new ListAvailable())
+                using (var listAvail = new ListAvailable())
                 {
                     if (listAvail.ShowDialog(this) == DialogResult.Cancel)
                     {
@@ -6321,7 +6321,7 @@ namespace Hoehoe
 
             try
             {
-                FileInfo fi = new FileInfo(ImagefilePathText.Text.Trim());
+                var fi = new FileInfo(ImagefilePathText.Text.Trim());
                 if (!_pictureServices[ImageService].CheckValidFilesize(fi.Extension, fi.Length))
                 {
                     ImagefilePathText.Text = string.Empty;
@@ -6434,7 +6434,7 @@ namespace Hoehoe
                 }
             }
 
-            using (MyLists listSelectForm = new MyLists(user, _tw))
+            using (var listSelectForm = new MyLists(user, _tw))
             {
                 listSelectForm.ShowDialog(this);
             }
@@ -7119,7 +7119,7 @@ namespace Hoehoe
             try
             {
                 using (Image orgBmp = new Bitmap(_iconDict[name]))
-                using (Bitmap bmp2 = new Bitmap(orgBmp.Size.Width, orgBmp.Size.Height))
+                using (var bmp2 = new Bitmap(orgBmp.Size.Width, orgBmp.Size.Height))
                 {
                     using (Graphics g = Graphics.FromImage(bmp2))
                     {
@@ -7165,7 +7165,7 @@ namespace Hoehoe
                 var lines = idxs
                     .Select(idx => _statuses.Item(_curTab.Text, idx))
                     .Select(post => post.MakeTsvLine());
-                using (StreamWriter sw = new StreamWriter(SaveFileDialog1.FileName, false, Encoding.UTF8))
+                using (var sw = new StreamWriter(SaveFileDialog1.FileName, false, Encoding.UTF8))
                 {
                     foreach (var line in lines)
                     {
@@ -7345,7 +7345,7 @@ namespace Hoehoe
 
         private void TryOpenSourceLink()
         {
-            string link = (string)SourceLinkLabel.Tag;
+            var link = (string)SourceLinkLabel.Tag;
             if (!string.IsNullOrEmpty(link))
             {
                 OpenUriAsync(link);
@@ -7383,7 +7383,7 @@ namespace Hoehoe
 
         private void StatusText_EnterExtracted()
         {
-            /// フォーカスの戻り先を StatusText に設定
+            // フォーカスの戻り先を StatusText に設定
             Tag = StatusText;
             StatusText.BackColor = InputBackColor;
         }
@@ -7627,7 +7627,7 @@ namespace Hoehoe
 
         private bool TryUserInputText(ref string val, string title = "", string desc = "")
         {
-            TabUsageType tmp = TabUsageType.UserDefined;
+            var tmp = TabUsageType.UserDefined;
             return TryGetTabInfo(ref val, ref tmp, title, desc);
         }
 
@@ -8132,7 +8132,7 @@ namespace Hoehoe
             {
                 // 前回使用した短縮URLサービス以外を選択する
                 UrlConverter svc = _configs.AutoShortUrlFirst;
-                Random rnd = new Random();
+                var rnd = new Random();
                 do
                 {
                     svc = (UrlConverter)rnd.Next(Enum.GetNames(typeof(UrlConverter)).Length);

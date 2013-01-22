@@ -95,13 +95,13 @@ namespace Hoehoe
             string src = string.Empty;
             const string ApiKey = "4e353d9113dce";             // TODO: TINAMI API Key
             string contentInfo = mc.Result("http://api.tinami.com/content/info?api_key=" + ApiKey + "&cont_id=${ContentId}");
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             if (!http.GetData(contentInfo, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
                 return false;
             }
 
-            XmlDocument xdoc = new XmlDocument();
+            var xdoc = new XmlDocument();
             string thumbnailUrl = string.Empty;
             try
             {

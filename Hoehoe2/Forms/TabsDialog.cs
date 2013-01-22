@@ -74,7 +74,7 @@ namespace Hoehoe
                     return null;
                 }
 
-                StringCollection ret = new StringCollection();
+                var ret = new StringCollection();
                 foreach (object selitem in TabList.SelectedItems)
                 {
                     ret.Add(Convert.ToString(selitem));

@@ -301,7 +301,7 @@ namespace Hoehoe
 
         public PostClass Copy()
         {
-            PostClass post = (PostClass)Clone();
+            var post = (PostClass)Clone();
             post.ReplyToList = new List<string>(ReplyToList);
             return post;
         }
@@ -346,9 +346,9 @@ namespace Hoehoe
 
         public string GetDump()
         {
-            StringBuilder sb = new StringBuilder(512);
-            var format1 = "{0,-20}:{1}<br/>";
-            var format2 = "{0,-20}:<xmp>{1}</xmp><br/>";
+            var sb = new StringBuilder(512);
+            const string format1 = "{0,-20}:{1}<br/>";
+            const string format2 = "{0,-20}:<xmp>{1}</xmp><br/>";
             sb.Append("-----Start PostClass Dump<br>");
             sb.AppendFormat(format1, "TextFromApi", TextFromApi);
             sb.AppendFormat(format2, "(PlainText)", TextFromApi);

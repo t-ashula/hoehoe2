@@ -75,7 +75,7 @@ namespace Hoehoe
             }
 
             string src = string.Empty;
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             if (!http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
                 return false;

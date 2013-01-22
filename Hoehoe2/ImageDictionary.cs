@@ -136,7 +136,7 @@ namespace Hoehoe
                                     continue;
                                 }
 
-                                GetImageDelegate proc = new GetImageDelegate(GetImage);
+                                var proc = new GetImageDelegate(GetImage);
                                 try
                                 {
                                     _netSemaphore.WaitOne();
@@ -366,7 +366,7 @@ namespace Hoehoe
                 return;
             }
 
-            HttpVarious hv = new HttpVarious();
+            var hv = new HttpVarious();
             Image image = hv.GetImage(downloadAsyncInfo.Key, 10000);
             lock (_lockObject)
             {

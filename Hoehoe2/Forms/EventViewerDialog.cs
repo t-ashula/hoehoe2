@@ -177,7 +177,7 @@ namespace Hoehoe
                     return;
                 }
 
-                using (StreamWriter sw = new StreamWriter(SaveFileDialog1.FileName, false, Encoding.UTF8))
+                using (var sw = new StreamWriter(SaveFileDialog1.FileName, false, Encoding.UTF8))
                 {
                     switch (rslt)
                     {
@@ -222,7 +222,7 @@ namespace Hoehoe
 
             try
             {
-                Regex rx = new Regex(TextBoxKeyword.Text);
+                var rx = new Regex(TextBoxKeyword.Text);
                 return rx.Match(x.Username).Success || rx.Match(x.Target).Success;
             }
             catch (Exception ex)

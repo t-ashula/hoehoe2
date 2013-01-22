@@ -257,7 +257,7 @@ namespace Hoehoe
 
         public bool UserStreamEnabled
         {
-            get { return UserStream == null ? false : UserStream.Enabled; }
+            get { return UserStream != null && UserStream.Enabled; }
         }
 
         private TwitterUserstream UserStream
@@ -1303,7 +1303,7 @@ namespace Hoehoe
                     case HttpStatusCode.OK:
                         try
                         {
-                            long[] ids = D.CreateDataFromJson<long[]>(content);
+                            var ids = D.CreateDataFromJson<long[]>(content);
                             retweetedCount += ids.Length;
                             if (ids.Length < 100)
                             {
@@ -1360,7 +1360,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -2053,7 +2053,7 @@ namespace Hoehoe
         public string GetRelatedResult(bool read, TabClass tab)
         {
             string rslt = string.Empty;
-            List<PostClass> relPosts = new List<PostClass>();
+            var relPosts = new List<PostClass>();
             if (tab.RelationTargetPost.TextFromApi.Contains("@") && tab.RelationTargetPost.InReplyToStatusId == 0)
             {
                 // 検索結果対応
@@ -2152,7 +2152,7 @@ namespace Hoehoe
 
             content = Regex.Replace(content, "[\\x00-\\x1f-[\\x0a\\x0d]]+", " ");
             content = Regex.Replace(content, @"<twitter:geo>.*?</twitter:geo>", "<twitter:geo></twitter:geo>");
-            XmlDocument xdoc = new XmlDocument();
+            var xdoc = new XmlDocument();
             try
             {
                 xdoc.LoadXml(content);
@@ -2163,14 +2163,14 @@ namespace Hoehoe
                 return "Invalid ATOM!";
             }
 
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xdoc.NameTable);
+            var nsmgr = new XmlNamespaceManager(xdoc.NameTable);
             nsmgr.AddNamespace("search", "http://www.w3.org/2005/Atom");
             nsmgr.AddNamespace("twitter", "http://api.twitter.com/");
             nsmgr.AddNamespace("georss", "http://www.georss.org/georss");
             foreach (XmlNode xentryNode in xdoc.DocumentElement.SelectNodes("/search:feed/search:entry", nsmgr))
             {
-                XmlElement xentry = (XmlElement)xentryNode;
-                PostClass post = new PostClass();
+                var xentry = (XmlElement)xentryNode;
+                var post = new PostClass();
                 try
                 {
                     post.StatusId = long.Parse(xentry["id"].InnerText.Split(':')[2]);
@@ -2203,7 +2203,7 @@ namespace Hoehoe
                     }
 
                     // 以下、ユーザー情報
-                    XmlElement author = (XmlElement)xentry.SelectSingleNode("./search:author", nsmgr);
+                    var author = (XmlElement)xentry.SelectSingleNode("./search:author", nsmgr);
                     post.UserId = 0;
                     post.ScreenName = author["name"].InnerText.Split(' ')[0].Trim();
                     post.Nickname = author["name"].InnerText.Substring(post.ScreenName.Length).Trim();
@@ -2449,7 +2449,7 @@ namespace Hoehoe
                     return string.Format("Err:{0}({1})", res, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<Status>));
+            var serializer = new DataContractJsonSerializer(typeof(List<Status>));
             List<Status> item = null;
             try
             {
@@ -2468,7 +2468,7 @@ namespace Hoehoe
 
             foreach (var status in item)
             {
-                PostClass post = new PostClass();
+                var post = new PostClass();
                 Entities entities = null;
 
                 try
@@ -2612,7 +2612,7 @@ namespace Hoehoe
             }
 
             long cursor = -1;
-            List<long> tmpFollower = new List<long>(_followerIds);
+            var tmpFollower = new List<long>(_followerIds);
             _followerIds.Clear();
             do
             {
@@ -2642,7 +2642,7 @@ namespace Hoehoe
             }
 
             long cursor = -1;
-            List<long> tmpIds = new List<long>(_noRetweetIds);
+            var tmpIds = new List<long>(_noRetweetIds);
             _noRetweetIds.Clear();
             do
             {
@@ -2715,7 +2715,7 @@ namespace Hoehoe
             HttpStatusCode res = default(HttpStatusCode);
             string content = string.Empty;
             long cursor = -1;
-            List<ListElement> lists = new List<ListElement>();
+            var lists = new List<ListElement>();
             do
             {
                 try
@@ -2821,7 +2821,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message + "(" + System.Reflection.MethodInfo.GetCurrentMethod().Name + ")";
+                return string.Format("Err:{0}({1})", ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name);
             }
 
             switch (res)
@@ -2872,7 +2872,7 @@ namespace Hoehoe
             try
             {
                 var le = D.CreateDataFromJson<ListElementData>(content);
-                ListElement newList = new ListElement(le, this);
+                var newList = new ListElement(le, this);
                 list.Description = newList.Description;
                 list.Id = newList.Id;
                 list.IsPublic = newList.IsPublic;
@@ -2912,7 +2912,7 @@ namespace Hoehoe
             }
             catch (Exception ex)
             {
-                return "Err:" + ex.Message;
+                return string.Format("Err:{0}", ex.Message);
             }
 
             switch (res)
@@ -3119,7 +3119,7 @@ namespace Hoehoe
             string retStr = text.Replace("&gt;", "<<<<<tweenだいなり>>>>>").Replace("&lt;", "<<<<<tweenしょうなり>>>>>");
             MatchEvaluator mev = mu =>
             {
-                StringBuilder sb = new StringBuilder(mu.Result("${before}<a href=\""));
+                var sb = new StringBuilder(mu.Result("${before}<a href=\""));
                 string url = mu.Result("${url}");
                 string title = ShortUrl.ResolveMedia(url, true);
                 if (url != title)
@@ -3154,7 +3154,7 @@ namespace Hoehoe
             retStr = Regex.Replace(retStr, "(^|[^a-zA-Z0-9_/])([@＠])([a-zA-Z0-9_]{1,20})", "$1$2<a href=\"/$3\">$3</a>");
 
             // ハッシュタグを抽出し、リンクに置換
-            List<Range> anchorRange = new List<Range>();
+            var anchorRange = new List<Range>();
             for (int i = 0; i < retStr.Length; i++)
             {
                 int index = retStr.IndexOf("<a ", i);
@@ -3365,7 +3365,7 @@ namespace Hoehoe
             try
             {
                 var limit = D.CreateDataFromJson<RateLimitStatus>(content);
-                ApiInformationChangedEventArgs arg = new ApiInformationChangedEventArgs();
+                var arg = new ApiInformationChangedEventArgs();
                 arg.ApiInfo.MaxCount = limit.HourlyLimit;
                 arg.ApiInfo.RemainCount = limit.RemainingHits;
                 arg.ApiInfo.ResetTime = MyCommon.DateTimeParse(limit.RestTime);
@@ -3607,7 +3607,7 @@ namespace Hoehoe
 
         private bool IsPostRestricted(Status status)
         {
-            PostInfo currentPost = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
+            var currentPost = new PostInfo(string.Empty, string.Empty, string.Empty, string.Empty);
             currentPost.CreatedAt = status.CreatedAt;
             currentPost.Id = status.IdStr;
             if (status.Text == null)
@@ -3636,7 +3636,7 @@ namespace Hoehoe
 
         private PostClass CreatePostsFromStatusData(Status status)
         {
-            PostClass post = new PostClass();
+            var post = new PostClass();
             Entities entities = null;
             post.StatusId = status.Id;
             if (status.RetweetedStatus != null)
@@ -4109,7 +4109,7 @@ namespace Hoehoe
             {
                 if (workerType == WorkerType.UserStream)
                 {
-                    List<DirectmessageEvent> itm = D.CreateDataFromJson<List<DirectmessageEvent>>(content);
+                    var itm = D.CreateDataFromJson<List<DirectmessageEvent>>(content);
                     item = new List<Directmessage>();
                     foreach (var dat in itm)
                     {
@@ -4134,7 +4134,7 @@ namespace Hoehoe
 
             foreach (var message in item)
             {
-                PostClass post = new PostClass();
+                var post = new PostClass();
                 try
                 {
                     post.StatusId = message.Id;
@@ -4509,7 +4509,7 @@ namespace Hoehoe
                     }
                 }
 
-                StringBuilder res = new StringBuilder();
+                var res = new StringBuilder();
                 res.Length = 0;
                 res.Append("[");
                 res.Append(line);

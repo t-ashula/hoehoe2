@@ -78,7 +78,7 @@ namespace Hoehoe
 
             string src = string.Empty;
             string apiUrl = mc.Result("http://api.photozou.jp/rest/photo_info?photo_id=${photoId}");
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             if (!http.GetData(apiUrl, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
                 return false;
@@ -110,7 +110,6 @@ namespace Hoehoe
 
             args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
-
         }
 
         #endregion "フォト蔵"

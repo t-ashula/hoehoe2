@@ -135,7 +135,7 @@ namespace Hoehoe
                 {
                     // アイコンセットにMIcon.icoが存在する場合それを使用
                     ConstructorInfo cibd = _core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(byte[]) }, null);
-                    TypeConverter tc = new TypeConverter();
+                    var tc = new TypeConverter();
                     object bdata = cibd.Invoke(new object[] { IconToByteArray(Path.Combine(Application.StartupPath, "Icons\\MIcon.ico")) });
                     ConstructorInfo cires = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { bdata.GetType() }, null);
                     object data = cires.Invoke(new[] { bdata });
@@ -146,7 +146,7 @@ namespace Hoehoe
                 {
                     // 内蔵アイコンリソースを使用
                     ConstructorInfo cibd = _core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(byte[]) }, null);
-                    TypeConverter tc = new TypeConverter();
+                    var tc = new TypeConverter();
                     object bdata = cibd.Invoke(new object[] { IconToByteArray(R.MIcon) });
                     ConstructorInfo cires = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { bdata.GetType() }, null);
                     object data = cires.Invoke(new[] { bdata });
@@ -157,7 +157,7 @@ namespace Hoehoe
                 MethodInfo mi = _targetConnector.GetType().GetMethod("Register", new[] { _growlApp.GetType(), _connector.GetType("Growl.Connector.NotificationType[]") });
 
                 t = _connector.GetType("Growl.Connector.NotificationType");
-                ArrayList arglist = new ArrayList();
+                var arglist = new ArrayList();
                 arglist.Add(_growlNTreply);
                 arglist.Add(_growlNTdm);
                 arglist.Add(_growlNTnew);
@@ -254,9 +254,9 @@ namespace Hoehoe
 
         private byte[] IconToByteArray(Icon icondata)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
-                Icon ic = new Icon(icondata, 48, 48);
+                var ic = new Icon(icondata, 48, 48);
                 ic.ToBitmap().Save(ms, ImageFormat.Png);
                 return ms.ToArray();
             }

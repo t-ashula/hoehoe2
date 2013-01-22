@@ -42,11 +42,11 @@ namespace Hoehoe
             {
                 lock (lockObj)
                 {
-                    using (FileStream fs = new FileStream(GetSettingFilePath(fileId), FileMode.Open))
+                    using (var fs = new FileStream(GetSettingFilePath(fileId), FileMode.Open))
                     {
                         fs.Position = 0;
-                        XmlSerializer xs = new XmlSerializer(typeof(T));
-                        T instance = (T)xs.Deserialize(fs);
+                        var xs = new XmlSerializer(typeof(T));
+                        var instance = (T)xs.Deserialize(fs);
                         fs.Close();
                         return instance;
                     }
@@ -65,11 +65,11 @@ namespace Hoehoe
                     {
                         lock (lockObj)
                         {
-                            using (FileStream fs = new FileStream(backupFile, FileMode.Open))
+                            using (var fs = new FileStream(backupFile, FileMode.Open))
                             {
                                 fs.Position = 0;
-                                XmlSerializer xs = new XmlSerializer(typeof(T));
-                                T instance = (T)xs.Deserialize(fs);
+                                var xs = new XmlSerializer(typeof(T));
+                                var instance = (T)xs.Deserialize(fs);
                                 fs.Close();
                                 MessageBox.Show("File: " + GetSettingFilePath(fileId) + Environment.NewLine + "Use old setting file, because application can't read this setting file.");
                                 return instance;
@@ -109,15 +109,15 @@ namespace Hoehoe
                 {
                     lock (lockObj)
                     {
-                        using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                        using (var fs = new FileStream(fileName, FileMode.Create))
                         {
                             fs.Position = 0;
-                            XmlSerializer xs = new XmlSerializer(typeof(T));
+                            var xs = new XmlSerializer(typeof(T));
                             xs.Serialize(fs, instance);
                             fs.Flush();
                         }
 
-                        FileInfo fi = new FileInfo(fileName);
+                        var fi = new FileInfo(fileName);
                         if (fi.Length == 0)
                         {
                             if (cnt > 3)
@@ -136,7 +136,7 @@ namespace Hoehoe
                     if (cnt > 3)
                     {
                         // リトライオーバー
-                        MessageBox.Show("Can't write setting XML.(" + fileName + ")", "Save Settings", MessageBoxButtons.OK);
+                        MessageBox.Show(string.Format("Can't write setting XML.({0})", fileName), "Save Settings", MessageBoxButtons.OK);
                         return;
                     }
 

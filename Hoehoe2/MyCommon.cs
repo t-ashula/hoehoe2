@@ -193,7 +193,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            StringBuilder buf = new StringBuilder();
+            var buf = new StringBuilder();
             buf.AppendFormat(R.UnhandledExceptionText8, ex.GetType().FullName, ex.Message);
             buf.AppendLine();
             if (ex.Data != null)
@@ -280,7 +280,7 @@ namespace Hoehoe
                 using (var writer = new StreamWriter(fileName))
                 {
                     WindowsIdentity ident = WindowsIdentity.GetCurrent();
-                    WindowsPrincipal princ = new WindowsPrincipal(ident);
+                    var princ = new WindowsPrincipal(ident);
 
                     writer.WriteLine(R.UnhandledExceptionText1, DateTime.Now);
                     writer.WriteLine(R.UnhandledExceptionText2);
@@ -327,7 +327,7 @@ namespace Hoehoe
         public static string GetUrlEncodeMultibyteChar(string input)
         {
             Uri uri = null;
-            StringBuilder sb = new StringBuilder(256);
+            var sb = new StringBuilder(256);
             char c = 'd';
             foreach (char cc in input)
             {
@@ -391,7 +391,7 @@ namespace Hoehoe
         /// <returns>IDNが含まれていた場合はPunycodeに展開したURLをを返します。Punycode展開時にエラーが発生した場合はNothingを返します。</returns>
         public static string IDNDecode(string input)
         {
-            IdnMapping idnConverter = new IdnMapping();
+            var idnConverter = new IdnMapping();
 
             if (!input.Contains("://"))
             {
@@ -542,7 +542,7 @@ namespace Hoehoe
                 return null;
             }
 
-            Bitmap bmp = new Bitmap(width, height);
+            var bmp = new Bitmap(width, height);
             try
             {
                 using (Graphics g = Graphics.FromImage(bmp))

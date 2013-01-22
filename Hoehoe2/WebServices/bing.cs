@@ -114,7 +114,7 @@ namespace Hoehoe
 
         public bool Translate(string from, string to, string text, ref string buf)
         {
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             string apiurl = TranslateUri + "&text=" + HttpUtility.UrlEncode(text) + "&to=" + to;
             string content = string.Empty;
             if (http.GetData(apiurl, null, ref content))

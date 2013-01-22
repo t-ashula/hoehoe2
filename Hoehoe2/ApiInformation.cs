@@ -364,7 +364,7 @@ namespace Hoehoe
 
         private void Raise_Changed()
         {
-            ApiInformationChangedEventArgs arg = new ApiInformationChangedEventArgs();
+            var arg = new ApiInformationChangedEventArgs();
             if (Changed != null)
             {
                 Changed(this, arg);

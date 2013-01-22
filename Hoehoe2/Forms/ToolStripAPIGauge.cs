@@ -135,8 +135,8 @@ namespace Hoehoe
         private void Draw(object sender, PaintEventArgs e)
         {
             double minute = (ResetTime - DateTime.Now).TotalMinutes;
-            Rectangle apiGaugeBounds = new Rectangle(0, Convert.ToInt32((Control.Height - (_gaugeHeight * 2)) / 2), Convert.ToInt32(Control.Width * (RemainCount / _maxCount)), _gaugeHeight);
-            Rectangle timeGaugeBounds = new Rectangle(0, apiGaugeBounds.Top + _gaugeHeight, Convert.ToInt32(Control.Width * (minute / 60)), _gaugeHeight);
+            var apiGaugeBounds = new Rectangle(0, Convert.ToInt32((Control.Height - (_gaugeHeight * 2)) / 2), Convert.ToInt32(Control.Width * (RemainCount / _maxCount)), _gaugeHeight);
+            var timeGaugeBounds = new Rectangle(0, apiGaugeBounds.Top + _gaugeHeight, Convert.ToInt32(Control.Width * (minute / 60)), _gaugeHeight);
             e.Graphics.FillRectangle(Brushes.LightBlue, apiGaugeBounds);
             e.Graphics.FillRectangle(Brushes.LightPink, timeGaugeBounds);
             e.Graphics.DrawString(Control.Text, Control.Font, SystemBrushes.ControlText, 0, Convert.ToSingle(timeGaugeBounds.Top - (Control.Font.Height / 2)));

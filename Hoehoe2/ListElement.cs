@@ -117,7 +117,7 @@ namespace Hoehoe
 
         public string RefreshMembers()
         {
-            List<UserInfo> users = new List<UserInfo>();
+            var users = new List<UserInfo>();
             _cursor = -1;
             string result = Tw.GetListMembers(Id.ToString(), users, ref _cursor);
             _members = users;

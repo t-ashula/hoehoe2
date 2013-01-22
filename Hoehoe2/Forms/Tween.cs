@@ -382,7 +382,7 @@ namespace Hoehoe
             ListTab.SelectedIndex = ListTab.TabPages.Count - 1;
 
             // 検索条件の設定
-            ComboBox cmb = (ComboBox)ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"];
+            var cmb = (ComboBox)ListTab.SelectedTab.Controls["panelSearch"].Controls["comboSearch"];
             cmb.Items.Add(searchWord);
             cmb.Text = searchWord;
             SaveConfigsTabs();
@@ -436,11 +436,11 @@ namespace Hoehoe
 
         private Panel CreateSearchPanel(string tabName)
         {
-            Panel pnl = new Panel();
-            Label lbl = new Label();
-            ComboBox cmb = new ComboBox();
-            Button btn = new Button();
-            ComboBox cmbLang = new ComboBox();
+            var pnl = new Panel();
+            var lbl = new Label();
+            var cmb = new ComboBox();
+            var btn = new Button();
+            var cmbLang = new ComboBox();
 
             pnl.SuspendLayout();
             pnl.Controls.Add(cmb);
@@ -513,7 +513,7 @@ namespace Hoehoe
                 };
             }
 
-            DetailsListView listCustom = new DetailsListView
+            var listCustom = new DetailsListView
             {
                 ContextMenuStrip = ContextMenuOperate,
                 Font = _fntReaded,
@@ -527,7 +527,7 @@ namespace Hoehoe
                 new[] { colhds[0], colhds[2] } :
                 new[] { colhds[0], colhds[1], colhds[2], colhds[3], colhds[4], colhds[5], colhds[6], colhds[7] });
 
-            int[] dispOrder = new int[8];
+            var dispOrder = new int[8];
             if (!startup)
             {
                 for (int i = 0; i < _curList.Columns.Count; i++)
@@ -773,7 +773,7 @@ namespace Hoehoe
             SuspendLayout();
 
             TabPage tabPage = ListTab.TabPages[idx];
-            DetailsListView listCustom = (DetailsListView)tabPage.Tag;
+            var listCustom = (DetailsListView)tabPage.Tag;
             tabPage.Tag = null;
             tabPage.SuspendLayout();
 

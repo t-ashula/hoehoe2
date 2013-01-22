@@ -52,7 +52,6 @@ namespace Hoehoe
 
             args.AddThumbnailUrl(args.Url, mc.Value);
             return true;
-
         }
 
         /// <summary>
@@ -76,7 +75,7 @@ namespace Hoehoe
             }
 
             string src = string.Empty;
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             if (!http.GetData(args.Url.Key, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
                 return false;
@@ -88,16 +87,16 @@ namespace Hoehoe
                 args.Errmsg = "Pattern NotFound";
                 return false;
             }
-            
+
             // 各画像には120x120のサムネイルがある（多分）ので、URLを置き換える。元々ページに埋め込まれている画像は500x500
-            Regex r = new Regex("_\\d{4}_\\d{4}");
+            var r = new Regex("_\\d{4}_\\d{4}");
             string minImgUrl = r.Replace(mc2.Groups["big_img"].Value, "_0120_0120");
             Image img = http.GetImage(minImgUrl, args.Url.Key, 0, ref args.Errmsg);
             if (img == null)
             {
                 return false;
             }
-            
+
             args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
         }

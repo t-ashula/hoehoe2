@@ -66,7 +66,7 @@ namespace Hoehoe
         {
             if (_favoriteCache.Count != 0)
             {
-                List<long> cacheList = new List<long>(_favoriteCache);
+                var cacheList = new List<long>(_favoriteCache);
                 Clear();
                 Parallel.ForEach(cacheList, stsId => _twitter.PostFavAdd(stsId));
             }

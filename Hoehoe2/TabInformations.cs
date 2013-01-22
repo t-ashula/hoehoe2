@@ -1133,7 +1133,7 @@ namespace Hoehoe
                 return null;
             }
 
-            int[] idx = new int[ids.Length];
+            var idx = new int[ids.Length];
             TabClass tb = Tabs[tabName];
             for (int i = 0; i < ids.Length; i++)
             {
@@ -1507,7 +1507,7 @@ namespace Hoehoe
                 PostClass post = _statuses[id];
                 bool added = false;              // 通知リスト追加フラグ
                 bool mv = false;                // 移動フラグ（Recent追加有無）
-                HITRESULT rslt = HITRESULT.None;
+                var rslt = HITRESULT.None;
                 post.IsExcludeReply = false;
                 foreach (string tn in Tabs.Keys)
                 {

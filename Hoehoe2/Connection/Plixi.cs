@@ -104,7 +104,7 @@ namespace Hoehoe
             string url = string.Empty;
             if (ret == HttpStatusCode.Created)
             {
-                XmlDocument xd = new XmlDocument();
+                var xd = new XmlDocument();
                 try
                 {
                     // MediaUrlの取得
@@ -199,11 +199,11 @@ namespace Hoehoe
                 throw new ArgumentException("File is too large.");
             }
 
-            Dictionary<string, string> param = new Dictionary<string, string>();
+            var param = new Dictionary<string, string>();
             param.Add("api_key", ApiKey);
             param.Add("message", message);
             param.Add("isoauth", "true");
-            List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
+            var binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
             InstanceTimeout = 60000; // タイムアウト60秒
             return GetContent(PostMethod, new Uri("http://api.plixi.com/api/upload.aspx"), param, binary, ref content, null, null);

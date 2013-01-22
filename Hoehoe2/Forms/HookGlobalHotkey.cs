@@ -97,7 +97,7 @@ namespace Hoehoe
 
         public bool RegisterOriginalHotkey(Keys hotkey, int hotkeyValue, ModKeys modifiers)
         {
-            Keys modKey = Keys.None;
+            var modKey = Keys.None;
             if ((modifiers & ModKeys.Alt) == ModKeys.Alt)
             {
                 modKey = modKey | Keys.Alt;
@@ -118,7 +118,7 @@ namespace Hoehoe
                 modKey = modKey | Keys.LWin;
             }
 
-            KeyEventArgs key = new KeyEventArgs(hotkey | modKey);
+            var key = new KeyEventArgs(hotkey | modKey);
             foreach (KeyValuePair<int, KeyEventValue> kvp in _hotkeyIds)
             {
                 // 登録済みなら正常終了

@@ -273,7 +273,7 @@ namespace Hoehoe
 
             // 変換中の数値文字列
             // ※UInt64.MaxValueの数値を3進数で表現すると41けたです。
-            StringBuilder curValue = new StringBuilder(41);
+            var curValue = new StringBuilder(41);
             ulong curDigit = n;            // 未処理の数値
 
             // 数値を解析して数値文字列に変換する
@@ -358,7 +358,7 @@ namespace Hoehoe
                 return "0";
             }
 
-            StringBuilder curValue = new StringBuilder(120);            // 変換中の数値文字列 ※Decimal.MaxValueの数値を3進数で表現すると120けたです。
+            var curValue = new StringBuilder(120);            // 変換中の数値文字列 ※Decimal.MaxValueの数値を3進数で表現すると120けたです。
             decimal curDigit = n;            // 未処理の数値
 
             // 数値を解析して数値文字列に変換する

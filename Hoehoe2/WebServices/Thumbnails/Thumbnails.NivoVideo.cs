@@ -81,7 +81,7 @@ namespace Hoehoe
                 return false;
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             try
             {
                 var xdoc = new XmlDocument();

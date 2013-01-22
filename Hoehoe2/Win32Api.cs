@@ -351,7 +351,7 @@ namespace Hoehoe
             // プロセスを閉じるためにTry-Finally
             try
             {
-                TBBUTTON tbButtonLocal = new TBBUTTON(); // 本プロセス内のタスクバーボタン情報作成（サイズ特定でのみ使用）
+                var tbButtonLocal = new TBBUTTON(); // 本プロセス内のタスクバーボタン情報作成（サイズ特定でのみ使用）
 
                 // Explorer内のタスクバーボタン格納メモリ確保
                 IntPtr ptbSysButton = VirtualAllocEx(hProc, IntPtr.Zero, Marshal.SizeOf(tbButtonLocal), AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
@@ -363,7 +363,7 @@ namespace Hoehoe
 
                 try
                 {
-                    TBBUTTONINFO tbButtonInfoLocal = new TBBUTTONINFO(); // 本プロセス内ツールバーボタン詳細情報作成
+                    var tbButtonInfoLocal = new TBBUTTONINFO(); // 本プロセス内ツールバーボタン詳細情報作成
 
                     // Explorer内のタスクバーボタン詳細情報格納メモリ確保
                     IntPtr ptbSysInfo = VirtualAllocEx(hProc, IntPtr.Zero, Marshal.SizeOf(tbButtonInfoLocal), AllocationTypes.Reserve | AllocationTypes.Commit, MemoryProtectionTypes.ReadWrite);
@@ -483,8 +483,8 @@ namespace Hoehoe
                                     if (title.Contains(tooltip))
                                     {
                                         // PostMessageでクリックを送るために、ボタン詳細情報のlParamでポイントされているTRAYNOTIFY情報が必要
-                                        TRAYNOTIFY tNotify = new TRAYNOTIFY();
-                                        TRAYNOTIFY tNotify2 = default(TRAYNOTIFY);
+                                        var tNotify = new TRAYNOTIFY();
+                                        var tNotify2 = default(TRAYNOTIFY);
 
                                         // 共有メモリ確保
                                         IntPtr ptNotify = Marshal.AllocCoTaskMem(Marshal.SizeOf(tNotify));
@@ -557,7 +557,7 @@ namespace Hoehoe
 
         public static bool FlashMyWindow(IntPtr hwnd, FlashSpecification flashType, int flashCount)
         {
-            FLASHWINFO fInfo = new FLASHWINFO();
+            var fInfo = new FLASHWINFO();
             fInfo.cbSize = Convert.ToInt32(Marshal.SizeOf(fInfo));
             fInfo.hwnd = hwnd;
             fInfo.dwFlags = (int)FlashSpecification.FlashAll;

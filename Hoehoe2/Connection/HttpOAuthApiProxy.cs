@@ -45,7 +45,7 @@ namespace Hoehoe
         protected override string CreateSignature(string tokenSecret, string method, Uri uri, Dictionary<string, string> parameter)
         {
             // パラメタをソート済みディクショナリに詰替（OAuthの仕様）
-            SortedDictionary<string, string> sorted = new SortedDictionary<string, string>(parameter);
+            var sorted = new SortedDictionary<string, string>(parameter);
 
             // URLエンコード済みのクエリ形式文字列に変換
             string paramString = CreateQueryString(sorted);
@@ -70,7 +70,7 @@ namespace Hoehoe
             }
 
             // 鍵生成＆署名生成
-            using (HMACSHA1 hmac = new HMACSHA1(Encoding.ASCII.GetBytes(key)))
+            using (var hmac = new HMACSHA1(Encoding.ASCII.GetBytes(key)))
             {
                 return Convert.ToBase64String(hmac.ComputeHash(Encoding.ASCII.GetBytes(signatureBase)));
             }

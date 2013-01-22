@@ -68,7 +68,7 @@ namespace Hoehoe
         private static bool Instagram_CreateImage(CreateImageArgs args)
         {
             string src = string.Empty;
-            HttpVarious http = new HttpVarious();
+            var http = new HttpVarious();
             if (!http.GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, string.Empty))
             {
                 return false;

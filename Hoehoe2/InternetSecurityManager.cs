@@ -150,7 +150,7 @@ namespace Hoehoe
                     return WebBrowserAPI.URLPOLICY_DISALLOW;
                 }
 
-                Uri url = new Uri(urlStr);
+                var url = new Uri(urlStr);
                 if (url.Scheme == "data")
                 {
                     return WebBrowserAPI.URLPOLICY_DISALLOW;

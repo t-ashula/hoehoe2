@@ -333,7 +333,7 @@ namespace Hoehoe
 
         private void WebBrowser_StatusTextChanged(object sender, EventArgs e)
         {
-            WebBrowser browser = (WebBrowser)sender;
+            var browser = (WebBrowser)sender;
             if (browser.StatusText.StartsWith("http"))
             {
                 ToolTip1.Show(browser.StatusText, this, PointToClient(MousePosition));
@@ -346,7 +346,7 @@ namespace Hoehoe
 
         private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
+            var sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
                 sc.Document.ExecCommand("SelectAll", false, null);
@@ -355,7 +355,7 @@ namespace Hoehoe
 
         private void SelectionCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
+            var sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
                 string selectedText = _owner.WebBrowser_GetSelectionText(sc);
@@ -375,7 +375,7 @@ namespace Hoehoe
 
         private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
+            var sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
                 string selectedText = _owner.WebBrowser_GetSelectionText(sc);
@@ -431,13 +431,13 @@ namespace Hoehoe
 
         private void UpdateProfile_Dowork(object sender, DoWorkEventArgs e)
         {
-            UpdateProfileArgs arg = (UpdateProfileArgs)e.Argument;
+            var arg = (UpdateProfileArgs)e.Argument;
             e.Result = arg.Tw.PostUpdateProfile(arg.Name, arg.Url, arg.Location, arg.Description);
         }
 
         private void UpddateProfile_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            string res = (string)e.Result;
+            var res = (string)e.Result;
             if (res.StartsWith("err:", StringComparison.CurrentCultureIgnoreCase))
             {
                 MessageBox.Show(res);
@@ -509,7 +509,7 @@ namespace Hoehoe
             {
                 if (TextBoxName.Modified || TextBoxLocation.Modified || TextBoxWeb.Modified || TextBoxDescription.Modified)
                 {
-                    UpdateProfileArgs arg = new UpdateProfileArgs
+                    var arg = new UpdateProfileArgs
                     {
                         Tw = _owner.TwitterInstance,
                         Name = TextBoxName.Text.Trim(),
@@ -518,7 +518,7 @@ namespace Hoehoe
                         Description = TextBoxDescription.Text.Trim()
                     };
 
-                    using (FormInfo dlg = new FormInfo(this, R.UserInfoButtonEdit_ClickText2, UpdateProfile_Dowork, UpddateProfile_RunWorkerCompleted, arg))
+                    using (var dlg = new FormInfo(this, R.UserInfoButtonEdit_ClickText2, UpdateProfile_Dowork, UpddateProfile_RunWorkerCompleted, arg))
                     {
                         dlg.ShowDialog();
                         if (!string.IsNullOrEmpty(dlg.Result.ToString()))
@@ -560,7 +560,7 @@ namespace Hoehoe
 
         private void UpdateProfileImage_Dowork(object sender, DoWorkEventArgs e)
         {
-            UpdateProfileImageArgs arg = (UpdateProfileImageArgs)e.Argument;
+            var arg = (UpdateProfileImageArgs)e.Argument;
             e.Result = arg.Tw.PostUpdateProfileImage(arg.FileName);
         }
 
@@ -665,7 +665,7 @@ namespace Hoehoe
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string filename = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-                FileInfo fl = new FileInfo(filename);
+                var fl = new FileInfo(filename);
 
                 e.Effect = DragDropEffects.None;
                 if (IsValidIconFile(fl))
@@ -774,13 +774,13 @@ namespace Hoehoe
         private void ChangeIcon(string filename)
         {
             string res = string.Empty;
-            UpdateProfileImageArgs arg = new UpdateProfileImageArgs
+            var arg = new UpdateProfileImageArgs
             {
                 Tw = _owner.TwitterInstance,
                 FileName = filename
             };
 
-            using (FormInfo dlg = new FormInfo(this, R.ChangeIconToolStripMenuItem_ClickText3, UpdateProfileImage_Dowork, UpdateProfileImage_RunWorkerCompleted, arg))
+            using (var dlg = new FormInfo(this, R.ChangeIconToolStripMenuItem_ClickText3, UpdateProfileImage_Dowork, UpdateProfileImage_RunWorkerCompleted, arg))
             {
                 dlg.ShowDialog();
                 res = dlg.Result as string;

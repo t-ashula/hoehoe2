@@ -1036,7 +1036,7 @@ namespace Hoehoe
                 bef = false;
             }
 
-            TabPage tp = (TabPage)e.Data.GetData(typeof(TabPage));
+            var tp = (TabPage)e.Data.GetData(typeof(TabPage));
             if (tp.Text == tn)
             {
                 return;
@@ -1176,7 +1176,7 @@ namespace Hoehoe
             }
             else if (e.Data.GetDataPresent(DataFormats.StringFormat))
             {
-                string data = e.Data.GetData(DataFormats.StringFormat, true) as string;
+                var data = e.Data.GetData(DataFormats.StringFormat, true) as string;
                 if (data != null)
                 {
                     StatusText.Text += data;
@@ -1189,7 +1189,7 @@ namespace Hoehoe
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string filename = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-                FileInfo fl = new FileInfo(filename);
+                var fl = new FileInfo(filename);
                 string ext = fl.Extension;
 
                 if (!string.IsNullOrEmpty(ImageService) && _pictureServices[ImageService].CheckValidFilesize(ext, fl.Length))
@@ -1341,14 +1341,14 @@ namespace Hoehoe
         {
             string tabName = pnl.Parent.Text;
             TabClass tb = _statuses.Tabs[tabName];
-            ComboBox cmb = (ComboBox)pnl.Controls["comboSearch"];
-            ComboBox cmbLang = (ComboBox)pnl.Controls["comboLang"];
-            ComboBox cmbusline = (ComboBox)pnl.Controls["comboUserline"];
+            var cmb = (ComboBox)pnl.Controls["comboSearch"];
+            var cmbLang = (ComboBox)pnl.Controls["comboLang"];
+            var cmbusline = (ComboBox)pnl.Controls["comboUserline"];
             cmb.Text = cmb.Text.Trim();
 
             // TODO: confirm this-> 検索式演算子 OR についてのみ大文字しか認識しないので強制的に大文字とする
             bool inQuote = false;
-            StringBuilder buf = new StringBuilder();
+            var buf = new StringBuilder();
             char[] c = cmb.Text.ToCharArray();
             for (int cnt = 0; cnt < cmb.Text.Length; cnt++)
             {
@@ -1396,7 +1396,7 @@ namespace Hoehoe
                 ((ComboBox)pnl.Controls["comboSearch"]).Items.Insert(0, tb.SearchWords);
                 cmb.Text = tb.SearchWords;
                 cmb.SelectAll();
-                DetailsListView lst = (DetailsListView)pnl.Parent.Tag;
+                var lst = (DetailsListView)pnl.Parent.Tag;
                 lst.VirtualListSize = 0;
                 lst.Items.Clear();
                 _statuses.ClearTabIds(tabName);
@@ -1804,7 +1804,7 @@ namespace Hoehoe
             if (_configs.HotkeyEnabled)
             {
                 // グローバルホットキーの登録
-                HookGlobalHotkey.ModKeys modKey = HookGlobalHotkey.ModKeys.None;
+                var modKey = HookGlobalHotkey.ModKeys.None;
                 if ((_configs.HotkeyMod & Keys.Alt) == Keys.Alt)
                 {
                     modKey = modKey | HookGlobalHotkey.ModKeys.Alt;
@@ -1870,7 +1870,7 @@ namespace Hoehoe
             if (WindowState != FormWindowState.Minimized)
             {
                 DesktopLocation = _cfgLocal.FormLocation;
-                Rectangle tbarRect = new Rectangle(Location, new Size(_mySize.Width, SystemInformation.CaptionHeight));
+                var tbarRect = new Rectangle(Location, new Size(_mySize.Width, SystemInformation.CaptionHeight));
                 bool outOfScreen = true;
                 if (Screen.AllScreens.Length == 1)
                 {
@@ -2147,25 +2147,25 @@ namespace Hoehoe
 
         private void GetApiInfo_Dowork(object sender, DoWorkEventArgs e)
         {
-            GetApiInfoArgs args = (GetApiInfoArgs)e.Argument;
+            var args = (GetApiInfoArgs)e.Argument;
             e.Result = _tw.GetInfoApi(args.Info);
         }
 
         private void FollowCommand_DoWork(object sender, DoWorkEventArgs e)
         {
-            FollowRemoveCommandArgs arg = (FollowRemoveCommandArgs)e.Argument;
+            var arg = (FollowRemoveCommandArgs)e.Argument;
             e.Result = arg.Tw.PostFollowCommand(arg.Id);
         }
 
         private void RemoveCommand_DoWork(object sender, DoWorkEventArgs e)
         {
-            FollowRemoveCommandArgs arg = (FollowRemoveCommandArgs)e.Argument;
+            var arg = (FollowRemoveCommandArgs)e.Argument;
             e.Result = arg.Tw.PostRemoveCommand(arg.Id);
         }
 
         private void ShowFriendship_DoWork(object sender, DoWorkEventArgs e)
         {
-            ShowFriendshipArgs arg = (ShowFriendshipArgs)e.Argument;
+            var arg = (ShowFriendshipArgs)e.Argument;
             string result = string.Empty;
             foreach (ShowFriendshipArgs.FriendshipInfo fInfo in arg.Ids)
             {
@@ -2186,7 +2186,7 @@ namespace Hoehoe
 
         private void GetUserInfo_DoWork(object sender, DoWorkEventArgs e)
         {
-            GetUserInfoArgs args = (GetUserInfoArgs)e.Argument;
+            var args = (GetUserInfoArgs)e.Argument;
             e.Result = args.Tw.GetUserInfo(args.Id, ref args.User);
         }
 
@@ -2199,7 +2199,7 @@ namespace Hoehoe
 
         private void GetTimelineWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            BackgroundWorker bw = (BackgroundWorker)sender;
+            var bw = (BackgroundWorker)sender;
             if (bw.CancellationPending || MyCommon.IsEnding)
             {
                 e.Cancel = true;
@@ -2209,14 +2209,14 @@ namespace Hoehoe
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             //// Tween.My.MyProject.Application.InitCulture(); // TODO: Need this here?
             string ret = string.Empty;
-            GetWorkerResult rslt = new GetWorkerResult();
+            var rslt = new GetWorkerResult();
             bool read = !_configs.UnreadManage;
             if (_isInitializing && _configs.UnreadManage)
             {
                 read = _configs.Readed;
             }
 
-            GetWorkerArg args = (GetWorkerArg)e.Argument;
+            var args = (GetWorkerArg)e.Argument;
             if (!CheckAccountValid())
             {
                 // エラー表示のみ行ない、後処理キャンセル
@@ -2540,7 +2540,7 @@ namespace Hoehoe
                     }
 
                     DateTime oneHour = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
-                    List<DateTime> keys = new List<DateTime>();
+                    var keys = new List<DateTime>();
                     _timeLineCount = 0;
                     foreach (DateTime key in _timeLineTimestamps.Keys)
                     {
@@ -2607,7 +2607,7 @@ namespace Hoehoe
                 throw new Exception("BackgroundWorker Exception", e.Error);
             }
 
-            GetWorkerResult rslt = (GetWorkerResult)e.Result;
+            var rslt = (GetWorkerResult)e.Result;
             if (rslt.WorkerType == WorkerType.OpenUri)
             {
                 return;
@@ -2997,7 +2997,11 @@ namespace Hoehoe
             if (!_configs.TabMouseLock && e.Button == MouseButtons.Left && _tabDraging)
             {
                 string tn = string.Empty;
-                Rectangle dragEnableRectangle = new Rectangle(Convert.ToInt32(_tabMouseDownPoint.X - (SystemInformation.DragSize.Width / 2)), Convert.ToInt32(_tabMouseDownPoint.Y - (SystemInformation.DragSize.Height / 2)), SystemInformation.DragSize.Width, SystemInformation.DragSize.Height);
+                var dragEnableRectangle = new Rectangle(
+                    Convert.ToInt32(_tabMouseDownPoint.X - (SystemInformation.DragSize.Width / 2)),
+                    Convert.ToInt32(_tabMouseDownPoint.Y - (SystemInformation.DragSize.Height / 2)),
+                    SystemInformation.DragSize.Width,
+                    SystemInformation.DragSize.Height);
                 if (!dragEnableRectangle.Contains(e.Location))
                 {
                     // タブが多段の場合にはMouseDownの前の段階で選択されたタブの段が変わっているので、このタイミングでカーソルの位置からタブを判定出来ない。
@@ -3023,7 +3027,7 @@ namespace Hoehoe
                 _tabDraging = false;
             }
 
-            Point cpos = new Point(e.X, e.Y);
+            var cpos = new Point(e.X, e.Y);
             for (int i = 0; i < ListTab.TabPages.Count; i++)
             {
                 Rectangle rect = ListTab.GetTabRect(i);
@@ -3170,7 +3174,7 @@ namespace Hoehoe
                 return;
             }
 
-            DetailsListView lst = (DetailsListView)sender;
+            var lst = (DetailsListView)sender;
             if (_iconCol)
             {
                 _cfgLocal.Width1 = lst.Columns[0].Width;
@@ -3178,7 +3182,7 @@ namespace Hoehoe
             }
             else
             {
-                int[] darr = new int[lst.Columns.Count];
+                var darr = new int[lst.Columns.Count];
                 for (int i = 0; i < lst.Columns.Count; i++)
                 {
                     darr[lst.Columns[i].DisplayIndex] = i;
@@ -3238,7 +3242,7 @@ namespace Hoehoe
                 return;
             }
 
-            DetailsListView lst = (DetailsListView)sender;
+            var lst = (DetailsListView)sender;
             if (_iconCol)
             {
                 if (_cfgLocal.Width1 != lst.Columns[0].Width)
@@ -3425,7 +3429,7 @@ namespace Hoehoe
             {
                 var subitems = e.Item.SubItems;
                 string iconcol2txt = string.Format("{0} / {1} ({2}) {3}{4} [{5}]", subitems[4].Text, subitems[1].Text, subitems[3].Text, subitems[5].Text, subitems[6].Text, subitems[7].Text);
-                using (Font fnt = new Font(e.Item.Font, FontStyle.Bold))
+                using (var fnt = new Font(e.Item.Font, FontStyle.Bold))
                 {
                     TextRenderer.DrawText(e.Graphics, subitems[2].Text, e.Item.Font, Rectangle.Round(rct), foreColor, multiLineFmt);
                     TextRenderer.DrawText(e.Graphics, iconcol2txt, fnt, Rectangle.Round(rctB), foreColor, singleLineFmt);
@@ -3489,7 +3493,7 @@ namespace Hoehoe
             else
             {
                 // A cache miss, so create a new ListViewItem and pass it back.
-                TabPage tb = (TabPage)((DetailsListView)sender).Parent;
+                var tb = (TabPage)((DetailsListView)sender).Parent;
                 try
                 {
                     e.Item = CreateItem(tb, _statuses.Item(tb.Text, e.ItemIndex), e.ItemIndex);
@@ -3565,7 +3569,7 @@ namespace Hoehoe
                 }
 
                 DateTime oneHour = tm.Subtract(new TimeSpan(1, 0, 0));
-                List<DateTime> keys = new List<DateTime>();
+                var keys = new List<DateTime>();
                 _timeLineCount = 0;
                 foreach (var key in _timeLineTimestamps.Keys)
                 {

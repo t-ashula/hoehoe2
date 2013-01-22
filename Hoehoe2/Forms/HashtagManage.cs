@@ -58,7 +58,7 @@ namespace Hoehoe
         {
             get
             {
-                List<string> hash = new List<string>();
+                var hash = new List<string>();
                 foreach (string item in HistoryHashList.Items)
                 {
                     hash.Add(item);
@@ -250,7 +250,7 @@ namespace Hoehoe
             int idx = 0;
             foreach (object l in list)
             {
-                string src = l as string;
+                var src = l as string;
                 if (string.IsNullOrEmpty(src))
                 {
                     idx++;

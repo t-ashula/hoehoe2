@@ -269,7 +269,7 @@ namespace Hoehoe
 
         public void SaveQuery(bool more)
         {
-            Dictionary<string, string> qry = new Dictionary<string, string>();
+            var qry = new Dictionary<string, string>();
             if (string.IsNullOrEmpty(_searchWords))
             {
                 _beforeQuery = qry;
@@ -287,7 +287,7 @@ namespace Hoehoe
 
         public bool IsQueryChanged()
         {
-            Dictionary<string, string> qry = new Dictionary<string, string>();
+            var qry = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(_searchWords))
             {
                 qry.Add("q", _searchWords);
@@ -315,7 +315,7 @@ namespace Hoehoe
 
         public PostClass[] GetTemporaryPosts()
         {
-            List<PostClass> tempPosts = new List<PostClass>();
+            var tempPosts = new List<PostClass>();
             if (_tmpIds.Count == 0)
             {
                 return tempPosts.ToArray();
@@ -403,7 +403,7 @@ namespace Hoehoe
                 return HITRESULT.None;
             }
 
-            HITRESULT rslt = HITRESULT.None;
+            var rslt = HITRESULT.None;
 
             // 全フィルタ評価（優先順位あり）
             lock (_lockObj)

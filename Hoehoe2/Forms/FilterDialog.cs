@@ -361,8 +361,8 @@ namespace Hoehoe
         {
             if (e.KeyCode == Keys.Space && e.Modifiers == (Keys.Shift | Keys.Control))
             {
-                TweenMain main = (TweenMain)Owner;
-                TextBox tbox = (TextBox)sender;
+                var main = (TweenMain)Owner;
+                var tbox = (TextBox)sender;
                 if (tbox.SelectionStart > 0)
                 {
                     int endidx = tbox.SelectionStart - 1;
@@ -398,8 +398,8 @@ namespace Hoehoe
 
         private void FilterTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            TweenMain main = (TweenMain)Owner;
-            TextBox tbox = (TextBox)sender;
+            var main = (TweenMain)Owner;
+            var tbox = (TextBox)sender;
             if (e.KeyChar == '@')
             {
                 // @マーク
@@ -541,7 +541,7 @@ namespace Hoehoe
 
             if (ListFilters.SelectedIndex > -1)
             {
-                FiltersClass fc = (FiltersClass)ListFilters.SelectedItem;
+                var fc = (FiltersClass)ListFilters.SelectedItem;
                 if (fc.SearchBoth)
                 {
                     RadioAND.Checked = true;
@@ -714,7 +714,7 @@ namespace Hoehoe
         {
             try
             {
-                Regex rgx = new Regex(text);
+                var rgx = new Regex(text);
             }
             catch (Exception ex)
             {
@@ -1165,7 +1165,7 @@ namespace Hoehoe
         {
             string tabName = null;
             TabUsageType tabType = default(TabUsageType);
-            using (InputTabName inputName = new InputTabName())
+            using (var inputName = new InputTabName())
             {
                 inputName.TabName = _sts.GetUniqueTabName();
                 inputName.SetIsShowUsage(true);
@@ -1362,7 +1362,7 @@ namespace Hoehoe
 
                 string tabname = ListTabs.SelectedItem.ToString();
                 StringCollection tabs = _tabDialog.SelectedTabNames;
-                List<FiltersClass> filters = new List<FiltersClass>();
+                var filters = new List<FiltersClass>();
 
                 foreach (int idx in ListFilters.SelectedIndices)
                 {
@@ -1399,7 +1399,7 @@ namespace Hoehoe
 
                 string tabname = ListTabs.SelectedItem.ToString();
                 StringCollection tabs = _tabDialog.SelectedTabNames;
-                List<FiltersClass> filters = new List<FiltersClass>();
+                var filters = new List<FiltersClass>();
 
                 foreach (int idx in ListFilters.SelectedIndices)
                 {

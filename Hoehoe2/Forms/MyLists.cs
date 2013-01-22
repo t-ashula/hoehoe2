@@ -80,7 +80,7 @@ namespace Hoehoe
             {
                 case CheckState.Indeterminate:
                     {
-                        ListElement listItem = (ListElement)ListsCheckedListBox.Items[e.Index];
+                        var listItem = (ListElement)ListsCheckedListBox.Items[e.Index];
 
                         bool ret = false;
                         string rslt = _twitter.ContainsUserAtList(listItem.Id.ToString(), _contextUserName, ref ret);
@@ -105,7 +105,7 @@ namespace Hoehoe
                     break;
                 case CheckState.Unchecked:
                     {
-                        ListElement list = (ListElement)ListsCheckedListBox.Items[e.Index];
+                        var list = (ListElement)ListsCheckedListBox.Items[e.Index];
                         string rslt = _twitter.AddUserToList("" + list.Id, _contextUserName);
                         if (!string.IsNullOrEmpty(rslt))
                         {
@@ -117,7 +117,7 @@ namespace Hoehoe
                     break;
                 case CheckState.Checked:
                     {
-                        ListElement list = (ListElement)ListsCheckedListBox.Items[e.Index];
+                        var list = (ListElement)ListsCheckedListBox.Items[e.Index];
                         string rslt = _twitter.RemoveUserToList("" + list.Id, _contextUserName);
                         if (!string.IsNullOrEmpty(rslt))
                         {
@@ -208,10 +208,10 @@ namespace Hoehoe
 
             for (int i = 0; i < ListsCheckedListBox.Items.Count; i++)
             {
-                ListElement listItem = (ListElement)ListsCheckedListBox.Items[i];
+                var listItem = (ListElement)ListsCheckedListBox.Items[i];
 
-                List<PostClass> listPost = new List<PostClass>();
-                List<PostClass> otherPost = new List<PostClass>();
+                var listPost = new List<PostClass>();
+                var otherPost = new List<PostClass>();
 
                 foreach (TabClass tab in TabInformations.Instance.Tabs.Values)
                 {
@@ -242,8 +242,8 @@ namespace Hoehoe
                     continue;
                 }
 
-                List<long> listPostUserIDs = new List<long>();
-                List<string> listPostUserNames = new List<string>();
+                var listPostUserIDs = new List<long>();
+                var listPostUserNames = new List<string>();
                 DateTime listOlderPostCreatedAt = DateTime.MaxValue;
                 DateTime listNewistPostCreatedAt = DateTime.MinValue;
 

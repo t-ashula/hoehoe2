@@ -310,7 +310,7 @@ namespace Hoehoe
 
         private void Bgw_DoWork(object sender, DoWorkEventArgs e)
         {
-            PreviewData arg = (PreviewData)e.Argument;
+            var arg = (PreviewData)e.Argument;
             arg.AdditionalErrorMessage = string.Empty;
 
             foreach (var url in arg.Urls)
@@ -329,7 +329,7 @@ namespace Hoehoe
 
         private void Bgw_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
-            PreviewData prv = e.Result as PreviewData;
+            var prv = e.Result as PreviewData;
             if (prv == null || prv.IsError)
             {
                 _tweenMain.PreviewScrollBar.Maximum = 0;

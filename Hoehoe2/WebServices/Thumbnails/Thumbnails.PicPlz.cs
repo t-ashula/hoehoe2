@@ -105,7 +105,7 @@ namespace Hoehoe
                 return false;
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             PicPlzDataModel.ResultData res = default(PicPlzDataModel.ResultData);
             try
             {

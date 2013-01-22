@@ -195,13 +195,13 @@ namespace Hoehoe
             }
 
             // GETメソッドの場合はクエリとurlを結合
-            UriBuilder ub = new UriBuilder(requestUri.AbsoluteUri);
+            var ub = new UriBuilder(requestUri.AbsoluteUri);
             if (param != null && (method == "GET" || method == "DELETE" || method == "HEAD"))
             {
                 ub.Query = CreateQueryString(param);
             }
 
-            HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(ub.Uri);
+            var webReq = (HttpWebRequest)WebRequest.Create(ub.Uri);
             webReq.ReadWriteTimeout = 90 * 1000;            // Streamの読み込みは90秒でタイムアウト（デフォルト5分）
 
             // プロキシ設定
@@ -215,7 +215,7 @@ namespace Hoehoe
             {
                 // POST/PUTメソッドの場合は、ボディデータとしてクエリ構成して書き込み
                 webReq.ContentType = "application/x-www-form-urlencoded";
-                using (StreamWriter writer = new StreamWriter(webReq.GetRequestStream()))
+                using (var writer = new StreamWriter(webReq.GetRequestStream()))
                 {
                     writer.Write(CreateQueryString(param));
                 }
@@ -260,7 +260,7 @@ namespace Hoehoe
             }
 
             // methodはPOST,PUTのみ許可
-            UriBuilder ub = new UriBuilder(requestUri.AbsoluteUri);
+            var ub = new UriBuilder(requestUri.AbsoluteUri);
             if (method == "GET" || method == "DELETE" || method == "HEAD")
             {
                 throw new ArgumentException("Method must be POST or PUT");
@@ -271,7 +271,7 @@ namespace Hoehoe
                 throw new ArgumentException("Data is empty");
             }
 
-            HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(ub.Uri);
+            var webReq = (HttpWebRequest)WebRequest.Create(ub.Uri);
 
             // プロキシ設定
             if (_proxyKind != ProxyType.IE)
@@ -372,10 +372,10 @@ namespace Hoehoe
                             reqStream.Write(postBytes, 0, postBytes.Length);
 
                             // ファイルを読み出してHTTPのストリームに書き込み
-                            using (FileStream fs = new FileStream(kvp.Value.FullName, FileMode.Open, FileAccess.Read))
+                            using (var fs = new FileStream(kvp.Value.FullName, FileMode.Open, FileAccess.Read))
                             {
                                 int readSize = 0;
-                                byte[] readBytes = new byte[4097];
+                                var readBytes = new byte[4097];
                                 while (true)
                                 {
                                     readSize = fs.Read(readBytes, 0, readBytes.Length);
@@ -435,7 +435,7 @@ namespace Hoehoe
         {
             try
             {
-                using (HttpWebResponse webRes = (HttpWebResponse)webRequest.GetResponse())
+                using (var webRes = (HttpWebResponse)webRequest.GetResponse())
                 {
                     HttpStatusCode statusCode = webRes.StatusCode;
 
@@ -481,7 +481,7 @@ namespace Hoehoe
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
-                    HttpWebResponse res = (HttpWebResponse)ex.Response;
+                    var res = (HttpWebResponse)ex.Response;
                     GetHeaderInfo(res, headerInfo);
                     return res.StatusCode;
                 }
@@ -507,7 +507,7 @@ namespace Hoehoe
         {
             try
             {
-                using (HttpWebResponse webRes = (HttpWebResponse)webRequest.GetResponse())
+                using (var webRes = (HttpWebResponse)webRequest.GetResponse())
                 {
                     HttpStatusCode statusCode = webRes.StatusCode;
 
@@ -526,7 +526,7 @@ namespace Hoehoe
                         throw new ArgumentNullException("contentText");
                     }
 
-                    using (StreamReader sr = new StreamReader(webRes.GetResponseStream()))
+                    using (var sr = new StreamReader(webRes.GetResponseStream()))
                     {
                         contentText = sr.ReadToEnd();
                     }
@@ -538,9 +538,9 @@ namespace Hoehoe
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
-                    HttpWebResponse res = (HttpWebResponse)ex.Response;
+                    var res = (HttpWebResponse)ex.Response;
                     GetHeaderInfo(res, headerInfo);
-                    using (StreamReader sr = new StreamReader(res.GetResponseStream()))
+                    using (var sr = new StreamReader(res.GetResponseStream()))
                     {
                         contentText = sr.ReadToEnd();
                     }
@@ -567,7 +567,7 @@ namespace Hoehoe
         {
             try
             {
-                using (HttpWebResponse webRes = (HttpWebResponse)webRequest.GetResponse())
+                using (var webRes = (HttpWebResponse)webRequest.GetResponse())
                 {
                     HttpStatusCode statusCode = webRes.StatusCode;
 
@@ -586,7 +586,7 @@ namespace Hoehoe
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
-                    HttpWebResponse res = (HttpWebResponse)ex.Response;
+                    var res = (HttpWebResponse)ex.Response;
                     GetHeaderInfo(res, headerInfo);
                     return res.StatusCode;
                 }
@@ -611,7 +611,7 @@ namespace Hoehoe
         {
             try
             {
-                using (HttpWebResponse webRes = (HttpWebResponse)webRequest.GetResponse())
+                using (var webRes = (HttpWebResponse)webRequest.GetResponse())
                 {
                     HttpStatusCode statusCode = webRes.StatusCode;
 
@@ -633,7 +633,7 @@ namespace Hoehoe
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
-                    HttpWebResponse res = (HttpWebResponse)ex.Response;
+                    var res = (HttpWebResponse)ex.Response;
                     GetHeaderInfo(res, headerInfo);
                     return res.StatusCode;
                 }
@@ -653,7 +653,7 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            StringBuilder query = new StringBuilder();
+            var query = new StringBuilder();
             foreach (string key in param.Keys)
             {
                 query.AppendFormat("{0}={1}&", UrlEncode(key), UrlEncode(param[key]));
@@ -663,13 +663,13 @@ namespace Hoehoe
         }
 
         /// <summary>
-        /// クエリ形式（key1=value1&key2=value2&...）の文字列をkey-valueコレクションに詰め直し
+        /// クエリ形式（key1=value1&amp;key2=value2&amp;...）の文字列をkey-valueコレクションに詰め直し
         /// </summary>
         /// <param name="queryString">クエリ文字列</param>
         /// <returns>key-valueのコレクション</returns>
         protected NameValueCollection ParseQueryString(string queryString)
         {
-            NameValueCollection query = new NameValueCollection();
+            var query = new NameValueCollection();
             string[] parts = queryString.Split('&');
             foreach (string part in parts)
             {
@@ -695,7 +695,7 @@ namespace Hoehoe
         protected string UrlEncode(string stringToEncode)
         {
             const string UnreservedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             byte[] bytes = Encoding.UTF8.GetBytes(stringToEncode);
             foreach (byte b in bytes)
             {
@@ -761,7 +761,7 @@ namespace Hoehoe
 
             do
             {
-                byte[] buffer = new byte[1025];
+                var buffer = new byte[1025];
                 int i = buffer.Length;
                 i = inStream.Read(buffer, 0, i);
                 if (i == 0)
@@ -788,7 +788,7 @@ namespace Hoehoe
 
             if (headerInfo.Count > 0)
             {
-                string[] keys = new string[headerInfo.Count];
+                var keys = new string[headerInfo.Count];
                 headerInfo.Keys.CopyTo(keys, 0);
                 foreach (string key in keys)
                 {
