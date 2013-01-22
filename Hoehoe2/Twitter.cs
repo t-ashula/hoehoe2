@@ -4787,18 +4787,18 @@ namespace Hoehoe
 
         private class TwitterUserstream : IDisposable
         {
-            private HttpTwitter twitterConnection;
-            private Thread streamThread;
-            private bool streamActive;
-            private bool allAtreplies;
-            private string trackwords = string.Empty;
+            private readonly HttpTwitter _twitterConnection;
+            private Thread _streamThread;
+            private bool _streamActive;
+            private bool _allAtreplies;
+            private string _trackwords = string.Empty;
 
             // 重複する呼び出しを検出するには
-            private bool disposedValue;
+            private bool _disposedValue;
 
             public TwitterUserstream(HttpTwitter twitterConnection)
             {
-                twitterConnection = (HttpTwitter)twitterConnection.Clone();
+                this._twitterConnection = (HttpTwitter)twitterConnection.Clone();
             }
 
             public delegate void StatusArrivedEventHandler(string status);
@@ -4815,35 +4815,35 @@ namespace Hoehoe
 
             public bool Enabled
             {
-                get { return streamActive; }
+                get { return _streamActive; }
             }
 
             public bool AllAtReplies
             {
-                get { return allAtreplies; }
-                set { allAtreplies = value; }
+                get { return _allAtreplies; }
+                set { _allAtreplies = value; }
             }
 
             public string TrackWords
             {
-                get { return trackwords; }
-                set { trackwords = value; }
+                get { return _trackwords; }
+                set { _trackwords = value; }
             }
 
             public void Start(bool allAtReplies, string trackwords)
             {
                 AllAtReplies = allAtReplies;
                 TrackWords = trackwords;
-                streamActive = true;
-                if (streamThread != null && streamThread.IsAlive)
+                _streamActive = true;
+                if (_streamThread != null && _streamThread.IsAlive)
                 {
                     return;
                 }
 
-                streamThread = new Thread(UserStreamLoop);
-                streamThread.Name = "UserStreamReceiver";
-                streamThread.IsBackground = true;
-                streamThread.Start();
+                _streamThread = new Thread(UserStreamLoop);
+                _streamThread.Name = "UserStreamReceiver";
+                _streamThread.IsBackground = true;
+                _streamThread.Start();
             }
 
             // TODO: 上の Dispose(ByVal disposing As Boolean) にアンマネージ リソースを解放するコードがある場合にのみ、Finalize() をオーバーライドします。
@@ -4858,15 +4858,15 @@ namespace Hoehoe
             // IDisposable
             protected virtual void Dispose(bool disposing)
             {
-                if (!disposedValue)
+                if (!_disposedValue)
                 {
                     if (disposing)
                     {
                         // TODO: マネージ状態を破棄します (マネージ オブジェクト)。
-                        streamActive = false;
-                        if (streamThread != null && streamThread.IsAlive)
+                        _streamActive = false;
+                        if (_streamThread != null && _streamThread.IsAlive)
                         {
-                            streamThread.Abort();
+                            _streamThread.Abort();
                         }
                     }
 
@@ -4874,7 +4874,7 @@ namespace Hoehoe
                     // TODO: 大きなフィールドを null に設定します。
                 }
 
-                disposedValue = true;
+                _disposedValue = true;
             }
 
             private void UserStreamLoop()
@@ -4897,7 +4897,7 @@ namespace Hoehoe
                             Started();
                         }
 
-                        HttpStatusCode res = twitterConnection.UserStream(ref st, allAtreplies, trackwords, MyCommon.GetUserAgentString());
+                        HttpStatusCode res = _twitterConnection.UserStream(ref st, _allAtreplies, _trackwords, MyCommon.GetUserAgentString());
                         switch (res)
                         {
                             case HttpStatusCode.OK:
@@ -4916,7 +4916,7 @@ namespace Hoehoe
                         }
 
                         sr = new StreamReader(st);
-                        while (streamActive && !sr.EndOfStream && Twitter.AccountState == AccountState.Valid)
+                        while (_streamActive && !sr.EndOfStream && Twitter.AccountState == AccountState.Valid)
                         {
                             if (StatusArrived != null)
                             {
@@ -4970,7 +4970,7 @@ namespace Hoehoe
                     }
                     finally
                     {
-                        if (streamActive)
+                        if (_streamActive)
                         {
                             if (Stopped != null)
                             {
@@ -4978,7 +4978,7 @@ namespace Hoehoe
                             }
                         }
 
-                        twitterConnection.RequestAbort();
+                        _twitterConnection.RequestAbort();
                         if (sr != null)
                         {
                             sr.Close();
@@ -4992,7 +4992,7 @@ namespace Hoehoe
                         if (sleepSec > 0)
                         {
                             int ms = 0;
-                            while (streamActive && ms < sleepSec * 1000)
+                            while (_streamActive && ms < sleepSec * 1000)
                             {
                                 Thread.Sleep(500);
                                 ms += 500;
@@ -5002,9 +5002,9 @@ namespace Hoehoe
                         sleepSec = 0;
                     }
                 }
-                while (streamActive);
+                while (_streamActive);
 
-                if (streamActive)
+                if (_streamActive)
                 {
                     if (Stopped != null)
                     {
