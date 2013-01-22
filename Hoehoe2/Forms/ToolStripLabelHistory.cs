@@ -35,8 +35,8 @@ namespace Hoehoe.TweenCustomControl
     {
         #region private
 
-        private const int MAXCNT = 20;
-        private LinkedList<LogEntry> logEntries;
+        private const int Maxcnt = 20;
+        private readonly LinkedList<LogEntry> _logEntries;
 
         #endregion private
 
@@ -44,7 +44,7 @@ namespace Hoehoe.TweenCustomControl
 
         public ToolStripLabelHistory()
         {
-            this.logEntries = new LinkedList<LogEntry>();
+            _logEntries = new LinkedList<LogEntry>();
         }
 
         #endregion constructor
@@ -76,10 +76,10 @@ namespace Hoehoe.TweenCustomControl
 
             set
             {
-                this.logEntries.AddLast(new LogEntry(DateTime.Now, value));
-                while (this.logEntries.Count > MAXCNT)
+                _logEntries.AddLast(new LogEntry(DateTime.Now, value));
+                while (_logEntries.Count > Maxcnt)
                 {
-                    this.logEntries.RemoveFirst();
+                    _logEntries.RemoveFirst();
                 }
 
                 base.Text = value;
@@ -91,7 +91,7 @@ namespace Hoehoe.TweenCustomControl
             get
             {
                 StringBuilder sb = new StringBuilder();
-                foreach (LogEntry e in this.logEntries)
+                foreach (LogEntry e in _logEntries)
                 {
                     sb.AppendLine(e.ToString());
                 }
@@ -108,10 +108,10 @@ namespace Hoehoe.TweenCustomControl
         {
             public LogEntry(LogLevel logLevel, DateTime timestamp, string summary, string detail)
             {
-                this.LogLevel = logLevel;
-                this.Timestamp = timestamp;
-                this.Summary = summary;
-                this.Detail = detail;
+                LogLevel = logLevel;
+                Timestamp = timestamp;
+                Summary = summary;
+                Detail = detail;
             }
 
             public LogEntry(DateTime timestamp, string summary)
@@ -129,7 +129,7 @@ namespace Hoehoe.TweenCustomControl
 
             public override string ToString()
             {
-                return string.Format("{0:T}: {1}", this.Timestamp, this.Summary);
+                return string.Format("{0:T}: {1}", Timestamp, Summary);
             }
         }
 

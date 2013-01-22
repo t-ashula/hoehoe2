@@ -34,11 +34,11 @@ namespace Hoehoe
     {
         #region private
 
-        private Size originalSize;
-        private int gaugeHeight;
-        private int maxCount = 350;
-        private int remainCount;
-        private DateTime resetTime;
+        private Size _originalSize;
+        private int _gaugeHeight;
+        private int _maxCount = 350;
+        private int _remainCount;
+        private DateTime _resetTime;
 
         #endregion private
 
@@ -47,10 +47,10 @@ namespace Hoehoe
         public ToolStripAPIGauge()
             : base(new Control())
         {
-            this.AutoToolTip = true;
-            this.Control.Paint += this.Draw;
-            this.Control.TextChanged += this.Control_TextChanged;
-            this.Control.SizeChanged += this.Control_SizeChanged;
+            AutoToolTip = true;
+            Control.Paint += Draw;
+            Control.TextChanged += Control_TextChanged;
+            Control.SizeChanged += Control_SizeChanged;
         }
 
         #endregion constructor
@@ -61,15 +61,15 @@ namespace Hoehoe
         {
             get
             {
-                return this.gaugeHeight;
+                return _gaugeHeight;
             }
 
             set
             {
-                this.gaugeHeight = value;
-                if (this.Control != null && !this.Control.IsDisposed)
+                _gaugeHeight = value;
+                if (Control != null && !Control.IsDisposed)
                 {
-                    this.Control.Refresh();
+                    Control.Refresh();
                 }
             }
         }
@@ -78,16 +78,16 @@ namespace Hoehoe
         {
             get
             {
-                return this.maxCount;
+                return _maxCount;
             }
 
             set
             {
-                this.maxCount = value;
-                if (this.Control != null && !this.Control.IsDisposed)
+                _maxCount = value;
+                if (Control != null && !Control.IsDisposed)
                 {
-                    this.SetText(this.remainCount, this.maxCount);
-                    this.Control.Refresh();
+                    SetText(_remainCount, _maxCount);
+                    Control.Refresh();
                 }
             }
         }
@@ -96,16 +96,16 @@ namespace Hoehoe
         {
             get
             {
-                return this.remainCount;
+                return _remainCount;
             }
 
             set
             {
-                this.remainCount = value;
-                if (this.Control != null && !this.Control.IsDisposed)
+                _remainCount = value;
+                if (Control != null && !Control.IsDisposed)
                 {
-                    this.SetText(this.remainCount, this.maxCount);
-                    this.Control.Refresh();
+                    SetText(_remainCount, _maxCount);
+                    Control.Refresh();
                 }
             }
         }
@@ -114,16 +114,16 @@ namespace Hoehoe
         {
             get
             {
-                return this.resetTime;
+                return _resetTime;
             }
 
             set
             {
-                this.resetTime = value;
-                if (this.Control != null && !this.Control.IsDisposed)
+                _resetTime = value;
+                if (Control != null && !Control.IsDisposed)
                 {
-                    this.SetText(this.remainCount, this.maxCount);
-                    this.Control.Refresh();
+                    SetText(_remainCount, _maxCount);
+                    Control.Refresh();
                 }
             }
         }
@@ -134,28 +134,28 @@ namespace Hoehoe
 
         private void Draw(object sender, PaintEventArgs e)
         {
-            double minute = (this.ResetTime - DateTime.Now).TotalMinutes;
-            Rectangle apiGaugeBounds = new Rectangle(0, Convert.ToInt32((this.Control.Height - (this.gaugeHeight * 2)) / 2), Convert.ToInt32(this.Control.Width * (this.RemainCount / this.maxCount)), this.gaugeHeight);
-            Rectangle timeGaugeBounds = new Rectangle(0, apiGaugeBounds.Top + this.gaugeHeight, Convert.ToInt32(this.Control.Width * (minute / 60)), this.gaugeHeight);
+            double minute = (ResetTime - DateTime.Now).TotalMinutes;
+            Rectangle apiGaugeBounds = new Rectangle(0, Convert.ToInt32((Control.Height - (_gaugeHeight * 2)) / 2), Convert.ToInt32(Control.Width * (RemainCount / _maxCount)), _gaugeHeight);
+            Rectangle timeGaugeBounds = new Rectangle(0, apiGaugeBounds.Top + _gaugeHeight, Convert.ToInt32(Control.Width * (minute / 60)), _gaugeHeight);
             e.Graphics.FillRectangle(Brushes.LightBlue, apiGaugeBounds);
             e.Graphics.FillRectangle(Brushes.LightPink, timeGaugeBounds);
-            e.Graphics.DrawString(this.Control.Text, this.Control.Font, SystemBrushes.ControlText, 0, Convert.ToSingle(timeGaugeBounds.Top - (this.Control.Font.Height / 2)));
+            e.Graphics.DrawString(Control.Text, Control.Font, SystemBrushes.ControlText, 0, Convert.ToSingle(timeGaugeBounds.Top - (Control.Font.Height / 2)));
         }
 
         private void Control_TextChanged(object sender, EventArgs e)
         {
-            this.Control.SizeChanged -= this.Control_SizeChanged;
-            using (Graphics g = this.Control.CreateGraphics())
+            Control.SizeChanged -= Control_SizeChanged;
+            using (Graphics g = Control.CreateGraphics())
             {
-                this.Control.Size = new Size(Convert.ToInt32(Math.Max(g.MeasureString(this.Control.Text, this.Control.Font).Width, this.originalSize.Width)), this.Control.Size.Height);
+                Control.Size = new Size(Convert.ToInt32(Math.Max(g.MeasureString(Control.Text, Control.Font).Width, _originalSize.Width)), Control.Size.Height);
             }
 
-            this.Control.SizeChanged += this.Control_SizeChanged;
+            Control.SizeChanged += Control_SizeChanged;
         }
 
         private void Control_SizeChanged(object sender, EventArgs e)
         {
-            this.originalSize = this.Control.Size;
+            _originalSize = Control.Size;
         }
 
         #endregion event handler
@@ -166,30 +166,30 @@ namespace Hoehoe
         {
             string textFormat = "API {0}/{1}";
             string toolTipTextFormat = "API rest {0}/{1}" + Environment.NewLine + "(reset after {2} minutes)";
-            if (this.remainCount > -1 && this.maxCount > -1)
+            if (_remainCount > -1 && _maxCount > -1)
             {
                 // 正常
-                this.Control.Text = string.Format(textFormat, this.remainCount, this.maxCount);
+                Control.Text = string.Format(textFormat, _remainCount, _maxCount);
             }
-            else if (this.RemainCount > -1)
+            else if (RemainCount > -1)
             {
                 // uppercount不正
-                this.Control.Text = string.Format(textFormat, this.remainCount, "???");
+                Control.Text = string.Format(textFormat, _remainCount, "???");
             }
-            else if (this.maxCount < -1)
+            else if (_maxCount < -1)
             {
                 // remaincount不正
-                this.Control.Text = string.Format(textFormat, "???", this.maxCount);
+                Control.Text = string.Format(textFormat, "???", _maxCount);
             }
             else
             {
                 // 両方とも不正
-                this.Control.Text = string.Format(textFormat, "???", "???");
+                Control.Text = string.Format(textFormat, "???", "???");
             }
 
-            double minute = Math.Ceiling((this.ResetTime - DateTime.Now).TotalMinutes);
+            double minute = Math.Ceiling((ResetTime - DateTime.Now).TotalMinutes);
             string minuteText = minute >= 0 ? minute.ToString() : "???";
-            this.ToolTipText = string.Format(toolTipTextFormat, this.remainCount, this.maxCount, minuteText);
+            ToolTipText = string.Format(toolTipTextFormat, _remainCount, _maxCount, minuteText);
         }
 
         #endregion private methods
