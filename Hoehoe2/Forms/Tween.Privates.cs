@@ -1150,7 +1150,7 @@ namespace Hoehoe
                 }
             }
 
-            var selcteds = _curList.SelectedIndices.Cast<int>().Select(i => GetCurTabPost(i));
+            var selcteds = _curList.SelectedIndices.Cast<int>().Select(GetCurTabPost);
             var ids = isFavAdd ? selcteds.Where(p => !p.IsFav) : selcteds.Where(p => p.IsFav);
             if (ids.Count() == 0)
             {
@@ -1194,7 +1194,7 @@ namespace Hoehoe
             bool isDmTab = _statuses.Tabs[_curTab.Text].TabType == TabUsageType.DirectMessage;
             if (!isDmTab)
             {
-                if (!_curList.SelectedIndices.Cast<int>().Select(i => GetCurTabPost(i)).Any(p => IsPostMine(p)))
+                if (!_curList.SelectedIndices.Cast<int>().Select(GetCurTabPost).Any(IsPostMine))
                 {
                     return;
                 }
@@ -4618,7 +4618,7 @@ namespace Hoehoe
                 }
             }
 
-            var ids = _curList.SelectedIndices.Cast<int>().Select(i => GetCurTabPost(i)).Where(p => !p.IsMe && !p.IsProtect && !p.IsDm);
+            var ids = _curList.SelectedIndices.Cast<int>().Select(GetCurTabPost).Where(p => !p.IsMe && !p.IsProtect && !p.IsDm);
             if (ids.Count() > 0)
             {
                 RunAsync(new GetWorkerArg
