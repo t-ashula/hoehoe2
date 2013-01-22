@@ -1677,7 +1677,7 @@ namespace Hoehoe
                 this.StatusLabel.Text = R.CheckNewVersionText9;
                 if (!startup)
                 {
-                    MessageBox.Show(R.CheckNewVersionText10, string.Format(R.CheckNewVersionText2,MyCommon.AppTitle), MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                    MessageBox.Show(R.CheckNewVersionText10, string.Format(R.CheckNewVersionText2, MyCommon.AppTitle), MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                 }
 
                 return;
@@ -4923,7 +4923,7 @@ namespace Hoehoe
             using (ShowUserInfo userinfo = new ShowUserInfo())
             {
                 userinfo.Owner = this;
-                userinfo.SetUser(user);
+                userinfo.SetUser(args.User);
                 userinfo.ShowDialog(this);
                 this.Activate();
                 this.BringToFront();
@@ -8197,18 +8197,18 @@ namespace Hoehoe
             {
                 { "a:link, a:visited, a:active, a:hover", new Dictionary<string, string>()
                     {
-                        { "color", this.clrDetailLink.AsCssRgb() } 
+                        { "color", this.clrDetailLink.AsCssRgb() }
                     }
                 },
                 { "body", new Dictionary<string, string>()
                     {
                         { "margin", "0px" },
-                        { "background-color", this.clrDetailBackcolor.AsCssRgb() } 
+                        { "background-color", this.clrDetailBackcolor.AsCssRgb() }
                     }
                 },
                 { "body > p", new Dictionary<string, string>()
                     {
-                        { "vertical-align", "text-bottom" } 
+                        { "vertical-align", "text-bottom" }
                     }
                 },
                 { ele, new Dictionary<string, string>()
@@ -8217,7 +8217,7 @@ namespace Hoehoe
                         { "word-wrap", "break-word" },
                         { "font-family", string.Format("\"{0}\", sans-serif;", this.fntDetail.Name) },
                         { "font-size", string.Format("{0}pt", this.fntDetail.Size) },
-                        { "color", this.clrDetail.AsCssRgb() } 
+                        { "color", this.clrDetail.AsCssRgb() }
                     }
                 }
             };

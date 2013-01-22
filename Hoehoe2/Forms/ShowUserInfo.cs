@@ -45,20 +45,20 @@ namespace Hoehoe
         private const string Followerspath = "/followers";
         private const string Favpath = "/favorites";
 
-        private DataModels.Twitter.User userInfo;
-        private UserInfo info = new UserInfo();
-        private Image icondata;
-        private List<string> atidList = new List<string>();
-        private string descriptionTxt;
-        private string recentPostTxt;
-        private string home;
-        private string following;
-        private string followers;
-        private string favorites;
-        private string friendshipResult = string.Empty;
-        private TweenMain owner;
-        private bool isEditing;
-        private string buttonEditText = string.Empty;
+        private DataModels.Twitter.User _userInfo;
+        private readonly UserInfo _info = new UserInfo();
+        private Image _icondata;
+        private readonly List<string> _atidList = new List<string>();
+        private string _descriptionTxt;
+        private string _recentPostTxt;
+        private string _home;
+        private string _following;
+        private string _followers;
+        private string _favorites;
+        private string _friendshipResult = string.Empty;
+        private TweenMain _owner;
+        private bool _isEditing;
+        private string _buttonEditText = string.Empty;
 
         #endregion private
 
@@ -66,7 +66,7 @@ namespace Hoehoe
 
         public ShowUserInfo()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #endregion constructor
@@ -75,7 +75,7 @@ namespace Hoehoe
 
         public void SetUser(DataModels.Twitter.User value)
         {
-            this.userInfo = value;
+            _userInfo = value;
         }
 
         #endregion public methods
@@ -88,97 +88,97 @@ namespace Hoehoe
 
         private void ShowUserInfo_Load(object sender, EventArgs e)
         {
-            this.owner = (TweenMain)this.Owner;
-            if (!this.AnalizeUserInfo(this.userInfo))
+            _owner = (TweenMain)Owner;
+            if (!AnalizeUserInfo(_userInfo))
             {
                 MessageBox.Show(R.ShowUserInfo1);
-                this.Close();
+                Close();
                 return;
             }
 
             // アイコンロード
-            this.BackgroundWorkerImageLoader.RunWorkerAsync();
+            BackgroundWorkerImageLoader.RunWorkerAsync();
 
-            this.InitPath();
-            this.InitTooltip();
-            this.Text = this.Text.Insert(0, this.info.ScreenName + " ");
-            this.LabelId.Text = this.info.Id.ToString();
-            this.LabelScreenName.Text = this.info.ScreenName;
-            this.LabelName.Text = this.info.Name;
-            this.LabelLocation.Text = this.info.Location;
-            this.SetLinklabelWeb(this.info.Url);
-            this.DescriptionBrowser.Visible = false;
-            this.MakeDescriptionBrowserText(this.info.Description);
-            this.RecentPostBrowser.Visible = false;
-            if (this.info.RecentPost != null)
+            InitPath();
+            InitTooltip();
+            Text = Text.Insert(0, _info.ScreenName + " ");
+            LabelId.Text = _info.Id.ToString();
+            LabelScreenName.Text = _info.ScreenName;
+            LabelName.Text = _info.Name;
+            LabelLocation.Text = _info.Location;
+            SetLinklabelWeb(_info.Url);
+            DescriptionBrowser.Visible = false;
+            MakeDescriptionBrowserText(_info.Description);
+            RecentPostBrowser.Visible = false;
+            if (_info.RecentPost != null)
             {
-                this.recentPostTxt = this.owner.CreateDetailHtml(
-                    this.owner.TwitterInstance.CreateHtmlAnchor(ref this.info.RecentPost, this.atidList, this.userInfo.Status.Entities, null)
-                    + string.Format(" Posted at {0} via {1}", this.info.PostCreatedAt, this.info.PostSource));
+                _recentPostTxt = _owner.CreateDetailHtml(
+                    _owner.TwitterInstance.CreateHtmlAnchor(ref _info.RecentPost, _atidList, _userInfo.Status.Entities, null)
+                    + string.Format(" Posted at {0} via {1}", _info.PostCreatedAt, _info.PostSource));
             }
 
-            this.LinkLabelFollowing.Text = this.info.FriendsCount.ToString();
-            this.LinkLabelFollowers.Text = this.info.FollowersCount.ToString();
-            this.LinkLabelFav.Text = this.info.FavoriteCount.ToString();
-            this.LinkLabelTweet.Text = this.info.StatusesCount.ToString();
-            this.LabelCreatedAt.Text = this.info.CreatedAt.ToString();
-            this.LabelIsProtected.Text = this.info.Protect ? R.Yes : R.No;
-            this.LabelIsVerified.Text = this.info.Verified ? R.Yes : R.No;
+            LinkLabelFollowing.Text = _info.FriendsCount.ToString();
+            LinkLabelFollowers.Text = _info.FollowersCount.ToString();
+            LinkLabelFav.Text = _info.FavoriteCount.ToString();
+            LinkLabelTweet.Text = _info.StatusesCount.ToString();
+            LabelCreatedAt.Text = _info.CreatedAt.ToString();
+            LabelIsProtected.Text = _info.Protect ? R.Yes : R.No;
+            LabelIsVerified.Text = _info.Verified ? R.Yes : R.No;
 
-            if (this.owner.TwitterInstance.Username == this.info.ScreenName)
+            if (_owner.TwitterInstance.Username == _info.ScreenName)
             {
-                this.ButtonEdit.Enabled = true;
-                this.ChangeIconToolStripMenuItem.Enabled = true;
-                this.ButtonBlock.Enabled = false;
-                this.ButtonReportSpam.Enabled = false;
-                this.ButtonBlockDestroy.Enabled = false;
+                ButtonEdit.Enabled = true;
+                ChangeIconToolStripMenuItem.Enabled = true;
+                ButtonBlock.Enabled = false;
+                ButtonReportSpam.Enabled = false;
+                ButtonBlockDestroy.Enabled = false;
             }
             else
             {
-                this.ButtonEdit.Enabled = false;
-                this.ChangeIconToolStripMenuItem.Enabled = false;
-                this.ButtonBlock.Enabled = true;
-                this.ButtonReportSpam.Enabled = true;
-                this.ButtonBlockDestroy.Enabled = true;
+                ButtonEdit.Enabled = false;
+                ChangeIconToolStripMenuItem.Enabled = false;
+                ButtonBlock.Enabled = true;
+                ButtonReportSpam.Enabled = true;
+                ButtonBlockDestroy.Enabled = true;
             }
         }
 
         private void ButtonClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void LinkLabelWeb_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (this.info.Url != null)
+            if (_info.Url != null)
             {
-                this.owner.OpenUriAsync(this.LinkLabelWeb.Text);
+                _owner.OpenUriAsync(LinkLabelWeb.Text);
             }
         }
 
         private void LinkLabelFollowing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            this.owner.OpenUriAsync(this.following);
+            _owner.OpenUriAsync(_following);
         }
 
         private void LinkLabelFollowers_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            this.owner.OpenUriAsync(this.followers);
+            _owner.OpenUriAsync(_followers);
         }
 
         private void LinkLabelTweet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            this.owner.OpenUriAsync(this.home);
+            _owner.OpenUriAsync(_home);
         }
 
         private void LinkLabelFav_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            this.owner.OpenUriAsync(this.favorites);
+            _owner.OpenUriAsync(_favorites);
         }
 
         private void ButtonFollow_Click(object sender, EventArgs e)
         {
-            string ret = this.owner.TwitterInstance.PostFollowCommand(this.info.ScreenName);
+            string ret = _owner.TwitterInstance.PostFollowCommand(_info.ScreenName);
             if (!string.IsNullOrEmpty(ret))
             {
                 MessageBox.Show(R.FRMessage2 + ret);
@@ -186,17 +186,17 @@ namespace Hoehoe
             else
             {
                 MessageBox.Show(R.FRMessage3);
-                this.LabelIsFollowing.Text = R.GetFriendshipInfo1;
-                this.ButtonFollow.Enabled = false;
-                this.ButtonUnFollow.Enabled = true;
+                LabelIsFollowing.Text = R.GetFriendshipInfo1;
+                ButtonFollow.Enabled = false;
+                ButtonUnFollow.Enabled = true;
             }
         }
 
         private void ButtonUnFollow_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this.info.ScreenName + R.ButtonUnFollow_ClickText1, R.ButtonUnFollow_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + R.ButtonUnFollow_ClickText1, R.ButtonUnFollow_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                string ret = this.owner.TwitterInstance.PostRemoveCommand(this.info.ScreenName);
+                string ret = _owner.TwitterInstance.PostRemoveCommand(_info.ScreenName);
                 if (!string.IsNullOrEmpty(ret))
                 {
                     MessageBox.Show(R.FRMessage2 + ret);
@@ -204,9 +204,9 @@ namespace Hoehoe
                 else
                 {
                     MessageBox.Show(R.FRMessage3);
-                    this.LabelIsFollowing.Text = R.GetFriendshipInfo2;
-                    this.ButtonFollow.Enabled = true;
-                    this.ButtonUnFollow.Enabled = false;
+                    LabelIsFollowing.Text = R.GetFriendshipInfo2;
+                    ButtonFollow.Enabled = true;
+                    ButtonUnFollow.Enabled = false;
                 }
             }
         }
@@ -214,92 +214,92 @@ namespace Hoehoe
         private void ShowUserInfo_Activated(object sender, EventArgs e)
         {
             // 画面が他画面の裏に隠れると、アイコン画像が再描画されない問題の対応
-            if (this.UserPicture.Image != null)
+            if (UserPicture.Image != null)
             {
-                this.UserPicture.Invalidate(false);
+                UserPicture.Invalidate(false);
             }
         }
 
         private void ShowUserInfo_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.UserPicture.Image = null;
-            if (this.icondata != null)
+            UserPicture.Image = null;
+            if (_icondata != null)
             {
-                this.icondata.Dispose();
+                _icondata.Dispose();
             }
         }
 
         private void BackgroundWorkerImageLoader_DoWork(object sender, DoWorkEventArgs e)
         {
-            string name = this.info.ImageUrl.ToString();
-            this.icondata = (new HttpVarious()).GetImage(name.Replace("_normal", "_bigger"));
-            if (this.owner.TwitterInstance.Username == this.info.ScreenName)
+            string name = _info.ImageUrl.ToString();
+            _icondata = (new HttpVarious()).GetImage(name.Replace("_normal", "_bigger"));
+            if (_owner.TwitterInstance.Username == _info.ScreenName)
             {
                 return;
             }
 
-            this.info.IsFollowing = false;
-            this.info.IsFollowed = false;
-            this.friendshipResult = this.owner.TwitterInstance.GetFriendshipInfo(this.info.ScreenName, ref this.info.IsFollowing, ref this.info.IsFollowed);
+            _info.IsFollowing = false;
+            _info.IsFollowed = false;
+            _friendshipResult = _owner.TwitterInstance.GetFriendshipInfo(_info.ScreenName, ref _info.IsFollowing, ref _info.IsFollowed);
         }
 
         private void BackgroundWorkerImageLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             try
             {
-                if (this.icondata != null)
+                if (_icondata != null)
                 {
-                    this.UserPicture.Image = this.icondata;
+                    UserPicture.Image = _icondata;
                 }
             }
             catch (Exception)
             {
-                this.UserPicture.Image = null;
+                UserPicture.Image = null;
             }
 
-            if (this.owner.TwitterInstance.Username == this.info.ScreenName)
+            if (_owner.TwitterInstance.Username == _info.ScreenName)
             {
                 // 自分の場合
-                this.LabelIsFollowing.Text = string.Empty;
-                this.LabelIsFollowed.Text = string.Empty;
-                this.ButtonFollow.Enabled = false;
-                this.ButtonUnFollow.Enabled = false;
+                LabelIsFollowing.Text = string.Empty;
+                LabelIsFollowed.Text = string.Empty;
+                ButtonFollow.Enabled = false;
+                ButtonUnFollow.Enabled = false;
             }
             else
             {
-                if (string.IsNullOrEmpty(this.friendshipResult))
+                if (string.IsNullOrEmpty(_friendshipResult))
                 {
-                    this.LabelIsFollowing.Text = this.info.IsFollowing ? R.GetFriendshipInfo1 : R.GetFriendshipInfo2;
-                    this.ButtonFollow.Enabled = !this.info.IsFollowing;
-                    this.LabelIsFollowed.Text = this.info.IsFollowed ? R.GetFriendshipInfo3 : R.GetFriendshipInfo4;
-                    this.ButtonUnFollow.Enabled = this.info.IsFollowing;
+                    LabelIsFollowing.Text = _info.IsFollowing ? R.GetFriendshipInfo1 : R.GetFriendshipInfo2;
+                    ButtonFollow.Enabled = !_info.IsFollowing;
+                    LabelIsFollowed.Text = _info.IsFollowed ? R.GetFriendshipInfo3 : R.GetFriendshipInfo4;
+                    ButtonUnFollow.Enabled = _info.IsFollowing;
                 }
                 else
                 {
-                    MessageBox.Show(this.friendshipResult);
-                    this.ButtonUnFollow.Enabled = false;
-                    this.ButtonFollow.Enabled = false;
-                    this.LabelIsFollowed.Text = R.GetFriendshipInfo6;
-                    this.LabelIsFollowing.Text = R.GetFriendshipInfo6;
+                    MessageBox.Show(_friendshipResult);
+                    ButtonUnFollow.Enabled = false;
+                    ButtonFollow.Enabled = false;
+                    LabelIsFollowed.Text = R.GetFriendshipInfo6;
+                    LabelIsFollowing.Text = R.GetFriendshipInfo6;
                 }
             }
         }
 
         private void ShowUserInfo_Shown(object sender, EventArgs e)
         {
-            this.DescriptionBrowser.DocumentText = this.descriptionTxt;
-            this.DescriptionBrowser.Visible = true;
-            if (this.info.RecentPost != null)
+            DescriptionBrowser.DocumentText = _descriptionTxt;
+            DescriptionBrowser.Visible = true;
+            if (_info.RecentPost != null)
             {
-                this.RecentPostBrowser.DocumentText = this.recentPostTxt;
-                this.RecentPostBrowser.Visible = true;
+                RecentPostBrowser.DocumentText = _recentPostTxt;
+                RecentPostBrowser.Visible = true;
             }
             else
             {
-                this.LabelRecentPost.Text = R.ShowUserInfo2;
+                LabelRecentPost.Text = R.ShowUserInfo2;
             }
 
-            this.ButtonClose.Focus();
+            ButtonClose.Focus();
         }
 
         private void WebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
@@ -313,21 +313,21 @@ namespace Hoehoe
                     // ハッシュタグの場合は、タブで開く
                     string urlStr = HttpUtility.UrlDecode(e.Url.AbsoluteUri);
                     string hash = urlStr.Substring(urlStr.IndexOf("#"));
-                    this.owner.HashSupl.AddItem(hash);
-                    this.owner.HashMgr.AddHashToHistory(hash.Trim(), false);
-                    this.owner.AddNewTabForSearch(hash);
+                    _owner.HashSupl.AddItem(hash);
+                    _owner.HashMgr.AddHashToHistory(hash.Trim(), false);
+                    _owner.AddNewTabForSearch(hash);
                     return;
                 }
                 else
                 {
                     Match m = Regex.Match(e.Url.AbsoluteUri, "^https?://twitter.com/(#!/)?(?<ScreenName>[a-zA-Z0-9_]+)$");
-                    if (Configs.Instance.OpenUserTimeline && m.Success && this.owner.IsTwitterId(m.Result("${ScreenName}")))
+                    if (Configs.Instance.OpenUserTimeline && m.Success && _owner.IsTwitterId(m.Result("${ScreenName}")))
                     {
-                        this.owner.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
+                        _owner.AddNewTabForUserTimeline(m.Result("${ScreenName}"));
                     }
                     else
                     {
-                        this.owner.OpenUriAsync(e.Url.OriginalString);
+                        _owner.OpenUriAsync(e.Url.OriginalString);
                     }
                 }
             }
@@ -338,17 +338,17 @@ namespace Hoehoe
             WebBrowser browser = (WebBrowser)sender;
             if (browser.StatusText.StartsWith("http"))
             {
-                this.ToolTip1.Show(browser.StatusText, this, PointToClient(MousePosition));
+                ToolTip1.Show(browser.StatusText, this, PointToClient(MousePosition));
             }
-            else if (string.IsNullOrEmpty(this.DescriptionBrowser.StatusText))
+            else if (string.IsNullOrEmpty(DescriptionBrowser.StatusText))
             {
-                this.ToolTip1.Hide(this);
+                ToolTip1.Hide(this);
             }
         }
 
         private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WebBrowser sc = this.ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
+            WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
                 sc.Document.ExecCommand("SelectAll", false, null);
@@ -357,10 +357,10 @@ namespace Hoehoe
 
         private void SelectionCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WebBrowser sc = this.ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
+            WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
-                string selectedText = this.owner.WebBrowser_GetSelectionText(sc);
+                string selectedText = _owner.WebBrowser_GetSelectionText(sc);
                 if (selectedText != null)
                 {
                     try
@@ -377,58 +377,58 @@ namespace Hoehoe
 
         private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            WebBrowser sc = this.ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
+            WebBrowser sc = ContextMenuRecentPostBrowser.SourceControl as WebBrowser;
             if (sc != null)
             {
-                string selectedText = this.owner.WebBrowser_GetSelectionText(sc);
+                string selectedText = _owner.WebBrowser_GetSelectionText(sc);
                 if (selectedText == null)
                 {
-                    this.SelectionCopyToolStripMenuItem.Enabled = false;
+                    SelectionCopyToolStripMenuItem.Enabled = false;
                 }
                 else
                 {
-                    this.SelectionCopyToolStripMenuItem.Enabled = true;
+                    SelectionCopyToolStripMenuItem.Enabled = true;
                 }
             }
         }
 
         private void ShowUserInfo_MouseEnter(object sender, EventArgs e)
         {
-            this.ToolTip1.Hide(this);
+            ToolTip1.Hide(this);
         }
 
         private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            this.owner.OpenUriAsync("http://support.twitter.com/groups/31-twitter-basics/topics/111-features/articles/268350-x8a8d-x8a3c-x6e08-x307f-x30a2-x30ab-x30a6-x30f3-x30c8-x306b-x3064-x3044-x3066");
+            _owner.OpenUriAsync("http://support.twitter.com/groups/31-twitter-basics/topics/111-features/articles/268350-x8a8d-x8a3c-x6e08-x307f-x30a2-x30ab-x30a6-x30f3-x30c8-x306b-x3064-x3044-x3066");
         }
 
         private void LinkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            this.owner.OpenUriAsync("http://support.twitter.com/groups/31-twitter-basics/topics/107-my-profile-account-settings/articles/243055-x516c-x958b-x3001-x975e-x516c-x958b-x30a2-x30ab-x30a6-x30f3-x30c8-x306b-x3064-x3044-x3066");
+            _owner.OpenUriAsync("http://support.twitter.com/groups/31-twitter-basics/topics/107-my-profile-account-settings/articles/243055-x516c-x958b-x3001-x975e-x516c-x958b-x30a2-x30ab-x30a6-x30f3-x30c8-x306b-x3064-x3044-x3066");
         }
 
         private void ButtonSearchPosts_Click(object sender, EventArgs e)
         {
-            this.owner.AddNewTabForUserTimeline(this.info.ScreenName);
+            _owner.AddNewTabForUserTimeline(_info.ScreenName);
         }
 
         private void UserPicture_DoubleClick(object sender, EventArgs e)
         {
-            if (this.UserPicture.Image != null)
+            if (UserPicture.Image != null)
             {
-                string name = this.info.ImageUrl.ToString();
-                this.owner.OpenUriAsync(name.Remove(name.LastIndexOf("_normal"), 7));
+                string name = _info.ImageUrl.ToString();
+                _owner.OpenUriAsync(name.Remove(name.LastIndexOf("_normal"), 7));
             }
         }
 
         private void UserPicture_MouseEnter(object sender, EventArgs e)
         {
-            this.UserPicture.Cursor = Cursors.Hand;
+            UserPicture.Cursor = Cursors.Hand;
         }
 
         private void UserPicture_MouseLeave(object sender, EventArgs e)
         {
-            this.UserPicture.Cursor = Cursors.Default;
+            UserPicture.Cursor = Cursors.Default;
         }
 
         private void UpdateProfile_Dowork(object sender, DoWorkEventArgs e)
@@ -449,78 +449,78 @@ namespace Hoehoe
         private void ButtonEdit_Click(object sender, EventArgs e)
         {
             // 自分以外のプロフィールは変更できない
-            if (this.owner.TwitterInstance.Username != this.info.ScreenName)
+            if (_owner.TwitterInstance.Username != _info.ScreenName)
             {
                 return;
             }
 
-            if (!this.isEditing)
+            if (!_isEditing)
             {
-                this.buttonEditText = this.ButtonEdit.Text;
-                this.ButtonEdit.Text = R.UserInfoButtonEdit_ClickText1;
+                _buttonEditText = ButtonEdit.Text;
+                ButtonEdit.Text = R.UserInfoButtonEdit_ClickText1;
 
                 // 座標初期化,プロパティ設定
-                this.TextBoxName.Location = this.LabelName.Location;
-                this.TextBoxName.Height = this.LabelName.Height;
-                this.TextBoxName.Width = this.LabelName.Width;
-                this.TextBoxName.BackColor = this.owner.InputBackColor;
-                this.TextBoxName.MaxLength = 20;
-                this.TextBoxName.Text = this.LabelName.Text;
-                this.TextBoxName.TabStop = true;
-                this.TextBoxName.Visible = true;
-                this.LabelName.Visible = false;
+                TextBoxName.Location = LabelName.Location;
+                TextBoxName.Height = LabelName.Height;
+                TextBoxName.Width = LabelName.Width;
+                TextBoxName.BackColor = _owner.InputBackColor;
+                TextBoxName.MaxLength = 20;
+                TextBoxName.Text = LabelName.Text;
+                TextBoxName.TabStop = true;
+                TextBoxName.Visible = true;
+                LabelName.Visible = false;
 
-                this.TextBoxLocation.Location = this.LabelLocation.Location;
-                this.TextBoxLocation.Height = this.LabelLocation.Height;
-                this.TextBoxLocation.Width = this.LabelLocation.Width;
-                this.TextBoxLocation.BackColor = this.owner.InputBackColor;
-                this.TextBoxLocation.MaxLength = 30;
-                this.TextBoxLocation.Text = this.LabelLocation.Text;
-                this.TextBoxLocation.TabStop = true;
-                this.TextBoxLocation.Visible = true;
-                this.LabelLocation.Visible = false;
+                TextBoxLocation.Location = LabelLocation.Location;
+                TextBoxLocation.Height = LabelLocation.Height;
+                TextBoxLocation.Width = LabelLocation.Width;
+                TextBoxLocation.BackColor = _owner.InputBackColor;
+                TextBoxLocation.MaxLength = 30;
+                TextBoxLocation.Text = LabelLocation.Text;
+                TextBoxLocation.TabStop = true;
+                TextBoxLocation.Visible = true;
+                LabelLocation.Visible = false;
 
-                this.TextBoxWeb.Location = this.LinkLabelWeb.Location;
-                this.TextBoxWeb.Height = this.LinkLabelWeb.Height;
-                this.TextBoxWeb.Width = this.LinkLabelWeb.Width;
-                this.TextBoxWeb.BackColor = this.owner.InputBackColor;
-                this.TextBoxWeb.MaxLength = 100;
-                this.TextBoxWeb.Text = this.info.Url;
-                this.TextBoxWeb.TabStop = true;
-                this.TextBoxWeb.Visible = true;
-                this.LinkLabelWeb.Visible = false;
+                TextBoxWeb.Location = LinkLabelWeb.Location;
+                TextBoxWeb.Height = LinkLabelWeb.Height;
+                TextBoxWeb.Width = LinkLabelWeb.Width;
+                TextBoxWeb.BackColor = _owner.InputBackColor;
+                TextBoxWeb.MaxLength = 100;
+                TextBoxWeb.Text = _info.Url;
+                TextBoxWeb.TabStop = true;
+                TextBoxWeb.Visible = true;
+                LinkLabelWeb.Visible = false;
 
-                this.TextBoxDescription.Location = this.DescriptionBrowser.Location;
-                this.TextBoxDescription.Height = this.DescriptionBrowser.Height;
-                this.TextBoxDescription.Width = this.DescriptionBrowser.Width;
-                this.TextBoxDescription.BackColor = this.owner.InputBackColor;
-                this.TextBoxDescription.MaxLength = 160;
-                this.TextBoxDescription.Text = this.info.Description;
-                this.TextBoxDescription.Multiline = true;
-                this.TextBoxDescription.ScrollBars = ScrollBars.Vertical;
-                this.TextBoxDescription.TabStop = true;
-                this.TextBoxDescription.Visible = true;
-                this.DescriptionBrowser.Visible = false;
+                TextBoxDescription.Location = DescriptionBrowser.Location;
+                TextBoxDescription.Height = DescriptionBrowser.Height;
+                TextBoxDescription.Width = DescriptionBrowser.Width;
+                TextBoxDescription.BackColor = _owner.InputBackColor;
+                TextBoxDescription.MaxLength = 160;
+                TextBoxDescription.Text = _info.Description;
+                TextBoxDescription.Multiline = true;
+                TextBoxDescription.ScrollBars = ScrollBars.Vertical;
+                TextBoxDescription.TabStop = true;
+                TextBoxDescription.Visible = true;
+                DescriptionBrowser.Visible = false;
 
-                this.TextBoxName.Focus();
-                this.TextBoxName.Select(this.TextBoxName.Text.Length, 0);
+                TextBoxName.Focus();
+                TextBoxName.Select(TextBoxName.Text.Length, 0);
 
-                this.isEditing = true;
+                _isEditing = true;
             }
             else
             {
-                if (this.TextBoxName.Modified || this.TextBoxLocation.Modified || this.TextBoxWeb.Modified || this.TextBoxDescription.Modified)
+                if (TextBoxName.Modified || TextBoxLocation.Modified || TextBoxWeb.Modified || TextBoxDescription.Modified)
                 {
                     UpdateProfileArgs arg = new UpdateProfileArgs()
                     {
-                        Tw = this.owner.TwitterInstance,
-                        Name = this.TextBoxName.Text.Trim(),
-                        Url = this.TextBoxWeb.Text.Trim(),
-                        Location = this.TextBoxLocation.Text.Trim(),
-                        Description = this.TextBoxDescription.Text.Trim()
+                        Tw = _owner.TwitterInstance,
+                        Name = TextBoxName.Text.Trim(),
+                        Url = TextBoxWeb.Text.Trim(),
+                        Location = TextBoxLocation.Text.Trim(),
+                        Description = TextBoxDescription.Text.Trim()
                     };
 
-                    using (FormInfo dlg = new FormInfo(this, R.UserInfoButtonEdit_ClickText2, this.UpdateProfile_Dowork, this.UpddateProfile_RunWorkerCompleted, arg))
+                    using (FormInfo dlg = new FormInfo(this, R.UserInfoButtonEdit_ClickText2, UpdateProfile_Dowork, UpddateProfile_RunWorkerCompleted, arg))
                     {
                         dlg.ShowDialog();
                         if (!string.IsNullOrEmpty(dlg.Result.ToString()))
@@ -530,33 +530,33 @@ namespace Hoehoe
                     }
                 }
 
-                this.LabelName.Text = this.TextBoxName.Text;
-                this.info.Name = this.LabelName.Text;
-                this.TextBoxName.TabStop = false;
-                this.TextBoxName.Visible = false;
-                this.LabelName.Visible = true;
+                LabelName.Text = TextBoxName.Text;
+                _info.Name = LabelName.Text;
+                TextBoxName.TabStop = false;
+                TextBoxName.Visible = false;
+                LabelName.Visible = true;
 
-                this.LabelLocation.Text = this.TextBoxLocation.Text;
-                this.info.Location = this.LabelLocation.Text;
-                this.TextBoxLocation.TabStop = false;
-                this.TextBoxLocation.Visible = false;
-                this.LabelLocation.Visible = true;
+                LabelLocation.Text = TextBoxLocation.Text;
+                _info.Location = LabelLocation.Text;
+                TextBoxLocation.TabStop = false;
+                TextBoxLocation.Visible = false;
+                LabelLocation.Visible = true;
 
-                this.SetLinklabelWeb(this.TextBoxWeb.Text);
-                this.info.Url = this.TextBoxWeb.Text;
-                this.TextBoxWeb.TabStop = false;
-                this.TextBoxWeb.Visible = false;
-                this.LinkLabelWeb.Visible = true;
+                SetLinklabelWeb(TextBoxWeb.Text);
+                _info.Url = TextBoxWeb.Text;
+                TextBoxWeb.TabStop = false;
+                TextBoxWeb.Visible = false;
+                LinkLabelWeb.Visible = true;
 
-                this.DescriptionBrowser.DocumentText = this.MakeDescriptionBrowserText(this.TextBoxDescription.Text);
-                this.info.Description = this.TextBoxDescription.Text;
-                this.TextBoxDescription.TabStop = false;
-                this.TextBoxDescription.Visible = false;
-                this.DescriptionBrowser.Visible = true;
+                DescriptionBrowser.DocumentText = MakeDescriptionBrowserText(TextBoxDescription.Text);
+                _info.Description = TextBoxDescription.Text;
+                TextBoxDescription.TabStop = false;
+                TextBoxDescription.Visible = false;
+                DescriptionBrowser.Visible = true;
 
-                this.ButtonEdit.Text = this.buttonEditText;
+                ButtonEdit.Text = _buttonEditText;
 
-                this.isEditing = false;
+                _isEditing = false;
             }
         }
 
@@ -579,11 +579,11 @@ namespace Hoehoe
             // アイコンを取得してみるが、古いアイコンのユーザーデータが返ってくるため反映/判断できない
             try
             {
-                res = this.owner.TwitterInstance.GetUserInfo(this.info.ScreenName, ref user);
+                res = _owner.TwitterInstance.GetUserInfo(_info.ScreenName, ref user);
                 Image img = (new HttpVarious()).GetImage(user.ProfileImageUrl);
                 if (img != null)
                 {
-                    this.UserPicture.Image = img;
+                    UserPicture.Image = img;
                 }
             }
             catch (Exception)
@@ -593,20 +593,20 @@ namespace Hoehoe
 
         private void ChangeIconToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.OpenFileDialogIcon.Filter = R.ChangeIconToolStripMenuItem_ClickText1;
-            this.OpenFileDialogIcon.Title = R.ChangeIconToolStripMenuItem_ClickText2;
-            this.OpenFileDialogIcon.FileName = string.Empty;
+            OpenFileDialogIcon.Filter = R.ChangeIconToolStripMenuItem_ClickText1;
+            OpenFileDialogIcon.Title = R.ChangeIconToolStripMenuItem_ClickText2;
+            OpenFileDialogIcon.FileName = string.Empty;
 
-            DialogResult rslt = this.OpenFileDialogIcon.ShowDialog();
+            DialogResult rslt = OpenFileDialogIcon.ShowDialog();
             if (rslt != DialogResult.OK)
             {
                 return;
             }
 
-            string fn = this.OpenFileDialogIcon.FileName;
-            if (this.IsValidIconFile(new FileInfo(fn)))
+            string fn = OpenFileDialogIcon.FileName;
+            if (IsValidIconFile(new FileInfo(fn)))
             {
-                this.ChangeIcon(fn);
+                ChangeIcon(fn);
             }
             else
             {
@@ -616,9 +616,9 @@ namespace Hoehoe
 
         private void ButtonBlock_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this.info.ScreenName + R.ButtonBlock_ClickText1, R.ButtonBlock_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + R.ButtonBlock_ClickText1, R.ButtonBlock_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                string res = this.owner.TwitterInstance.PostCreateBlock(this.info.ScreenName);
+                string res = _owner.TwitterInstance.PostCreateBlock(_info.ScreenName);
                 if (!string.IsNullOrEmpty(res))
                 {
                     MessageBox.Show(res + Environment.NewLine + R.ButtonBlock_ClickText3);
@@ -632,9 +632,9 @@ namespace Hoehoe
 
         private void ButtonReportSpam_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this.info.ScreenName + R.ButtonReportSpam_ClickText1, R.ButtonReportSpam_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + R.ButtonReportSpam_ClickText1, R.ButtonReportSpam_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                string res = this.owner.TwitterInstance.PostReportSpam(this.info.ScreenName);
+                string res = _owner.TwitterInstance.PostReportSpam(_info.ScreenName);
                 if (!string.IsNullOrEmpty(res))
                 {
                     MessageBox.Show(res + Environment.NewLine + R.ButtonReportSpam_ClickText3);
@@ -648,9 +648,9 @@ namespace Hoehoe
 
         private void ButtonBlockDestroy_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this.info.ScreenName + R.ButtonBlockDestroy_ClickText1, R.ButtonBlockDestroy_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show(_info.ScreenName + R.ButtonBlockDestroy_ClickText1, R.ButtonBlockDestroy_ClickText2, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                string res = this.owner.TwitterInstance.PostDestroyBlock(this.info.ScreenName);
+                string res = _owner.TwitterInstance.PostDestroyBlock(_info.ScreenName);
                 if (!string.IsNullOrEmpty(res))
                 {
                     MessageBox.Show(res + Environment.NewLine + R.ButtonBlockDestroy_ClickText3);
@@ -670,7 +670,7 @@ namespace Hoehoe
                 FileInfo fl = new FileInfo(filename);
 
                 e.Effect = DragDropEffects.None;
-                if (this.IsValidIconFile(fl))
+                if (IsValidIconFile(fl))
                 {
                     e.Effect = DragDropEffects.Copy;
                 }
@@ -686,7 +686,7 @@ namespace Hoehoe
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string filename = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-                this.ChangeIcon(filename);
+                ChangeIcon(filename);
             }
         }
 
@@ -696,18 +696,18 @@ namespace Hoehoe
 
         private void InitPath()
         {
-            this.home = Mainpath + this.info.ScreenName;
-            this.following = this.home + Followingpath;
-            this.followers = this.home + Followerspath;
-            this.favorites = this.home + Favpath;
+            _home = Mainpath + _info.ScreenName;
+            _following = _home + Followingpath;
+            _followers = _home + Followerspath;
+            _favorites = _home + Favpath;
         }
 
         private void InitTooltip()
         {
-            this.ToolTip1.SetToolTip(this.LinkLabelTweet, this.home);
-            this.ToolTip1.SetToolTip(this.LinkLabelFollowing, this.following);
-            this.ToolTip1.SetToolTip(this.LinkLabelFollowers, this.followers);
-            this.ToolTip1.SetToolTip(this.LinkLabelFav, this.favorites);
+            ToolTip1.SetToolTip(LinkLabelTweet, _home);
+            ToolTip1.SetToolTip(LinkLabelFollowing, _following);
+            ToolTip1.SetToolTip(LinkLabelFollowers, _followers);
+            ToolTip1.SetToolTip(LinkLabelFav, _favorites);
         }
 
         private bool AnalizeUserInfo(DataModels.Twitter.User user)
@@ -719,34 +719,34 @@ namespace Hoehoe
 
             try
             {
-                this.info.Id = user.Id;
-                this.info.Name = user.Name.Trim();
-                this.info.ScreenName = user.ScreenName;
-                this.info.Location = user.Location;
-                this.info.Description = user.Description;
-                this.info.ImageUrl = new Uri(user.ProfileImageUrl);
-                this.info.Url = user.Url;
-                this.info.Protect = user.Protected;
-                this.info.FriendsCount = user.FriendsCount;
-                this.info.FollowersCount = user.FollowersCount;
-                this.info.FavoriteCount = user.FavouritesCount;
-                this.info.CreatedAt = MyCommon.DateTimeParse(user.CreatedAt);
-                this.info.StatusesCount = user.StatusesCount;
-                this.info.Verified = user.Verified;
+                _info.Id = user.Id;
+                _info.Name = user.Name.Trim();
+                _info.ScreenName = user.ScreenName;
+                _info.Location = user.Location;
+                _info.Description = user.Description;
+                _info.ImageUrl = new Uri(user.ProfileImageUrl);
+                _info.Url = user.Url;
+                _info.Protect = user.Protected;
+                _info.FriendsCount = user.FriendsCount;
+                _info.FollowersCount = user.FollowersCount;
+                _info.FavoriteCount = user.FavouritesCount;
+                _info.CreatedAt = MyCommon.DateTimeParse(user.CreatedAt);
+                _info.StatusesCount = user.StatusesCount;
+                _info.Verified = user.Verified;
                 try
                 {
-                    this.info.RecentPost = user.Status.Text;
-                    this.info.PostCreatedAt = MyCommon.DateTimeParse(user.Status.CreatedAt);
-                    this.info.PostSource = user.Status.Source;
-                    if (!this.info.PostSource.Contains("</a>"))
+                    _info.RecentPost = user.Status.Text;
+                    _info.PostCreatedAt = MyCommon.DateTimeParse(user.Status.CreatedAt);
+                    _info.PostSource = user.Status.Source;
+                    if (!_info.PostSource.Contains("</a>"))
                     {
-                        this.info.PostSource += "</a>";
+                        _info.PostSource += "</a>";
                     }
                 }
                 catch (Exception)
                 {
-                    this.info.RecentPost = null;
-                    this.info.PostSource = null;
+                    _info.RecentPost = null;
+                    _info.PostSource = null;
                 }
             }
             catch (Exception)
@@ -759,18 +759,18 @@ namespace Hoehoe
 
         private void SetLinklabelWeb(string data)
         {
-            string webtext = this.owner.TwitterInstance.PreProcessUrl("<a href=\"" + data + "\">Dummy</a>");
+            string webtext = _owner.TwitterInstance.PreProcessUrl("<a href=\"" + data + "\">Dummy</a>");
             webtext = ShortUrl.Resolve(webtext, false);
             string jumpto = Regex.Match(webtext, "<a href=\"(?<url>.*?)\"").Groups["url"].Value;
-            this.ToolTip1.SetToolTip(this.LinkLabelWeb, jumpto);
-            this.LinkLabelWeb.Tag = jumpto;
-            this.LinkLabelWeb.Text = data;
+            ToolTip1.SetToolTip(LinkLabelWeb, jumpto);
+            LinkLabelWeb.Tag = jumpto;
+            LinkLabelWeb.Text = data;
         }
 
         private string MakeDescriptionBrowserText(string data)
         {
-            this.descriptionTxt = this.owner.CreateDetailHtml(this.owner.TwitterInstance.CreateHtmlAnchor(data, this.atidList, null));
-            return this.descriptionTxt;
+            _descriptionTxt = _owner.CreateDetailHtml(_owner.TwitterInstance.CreateHtmlAnchor(data, _atidList, null));
+            return _descriptionTxt;
         }
 
         private void ChangeIcon(string filename)
@@ -778,11 +778,11 @@ namespace Hoehoe
             string res = string.Empty;
             UpdateProfileImageArgs arg = new UpdateProfileImageArgs
             {
-                Tw = this.owner.TwitterInstance,
+                Tw = _owner.TwitterInstance,
                 FileName = filename
             };
 
-            using (FormInfo dlg = new FormInfo(this, R.ChangeIconToolStripMenuItem_ClickText3, this.UpdateProfileImage_Dowork, this.UpdateProfileImage_RunWorkerCompleted, arg))
+            using (FormInfo dlg = new FormInfo(this, R.ChangeIconToolStripMenuItem_ClickText3, UpdateProfileImage_Dowork, UpdateProfileImage_RunWorkerCompleted, arg))
             {
                 dlg.ShowDialog();
                 res = dlg.Result as string;
@@ -806,7 +806,7 @@ namespace Hoehoe
         private bool IsValidIconFile(FileInfo fileInfo)
         {
             string ext = fileInfo.Extension.ToLower();
-            return this.IsValidExtension(ext) && fileInfo.Length < 700 * 1024 && !MyCommon.IsAnimatedGif(fileInfo.FullName);
+            return IsValidExtension(ext) && fileInfo.Length < 700 * 1024 && !MyCommon.IsAnimatedGif(fileInfo.FullName);
         }
 
         #endregion private methods
