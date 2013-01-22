@@ -38,12 +38,12 @@ namespace Hoehoe
     {
         #region privates
 
-        private EDITMODE editMode;
-        private bool isDirectAdd;
-        private TabInformations sts;
-        private string cur;
-        private List<string> idList = new List<string>();
-        private TabsDialog tabDialog = new TabsDialog(true);
+        private EDITMODE _editMode;
+        private bool _isDirectAdd;
+        private TabInformations _sts;
+        private string _cur;
+        private readonly List<string> _idList = new List<string>();
+        private readonly TabsDialog _tabDialog = new TabsDialog(true);
 
         #endregion privates
 
@@ -51,7 +51,7 @@ namespace Hoehoe
 
         public FilterDialog()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #endregion constructor
@@ -71,7 +71,7 @@ namespace Hoehoe
 
         private TweenMain TwMain
         {
-            get { return (TweenMain)this.Owner; }
+            get { return (TweenMain)Owner; }
         }
 
         #endregion properties
@@ -80,66 +80,66 @@ namespace Hoehoe
 
         public void SetCurrent(string tabName)
         {
-            this.cur = tabName;
+            _cur = tabName;
         }
 
         public void AddNewFilter(string id, string msg)
         {
             // 元フォームから直接呼ばれる
-            this.ButtonNew.Enabled = false;
-            this.ButtonEdit.Enabled = false;
-            this.ButtonRuleUp.Enabled = false;
-            this.ButtonRuleDown.Enabled = false;
-            this.ButtonRuleCopy.Enabled = false;
-            this.ButtonRuleMove.Enabled = false;
-            this.ButtonDelete.Enabled = false;
-            this.closeButton.Enabled = false;
-            this.EditFilterGroup.Enabled = true;
-            this.ListTabs.Enabled = false;
-            this.GroupTab.Enabled = false;
-            this.ListFilters.Enabled = false;
+            ButtonNew.Enabled = false;
+            ButtonEdit.Enabled = false;
+            ButtonRuleUp.Enabled = false;
+            ButtonRuleDown.Enabled = false;
+            ButtonRuleCopy.Enabled = false;
+            ButtonRuleMove.Enabled = false;
+            ButtonDelete.Enabled = false;
+            closeButton.Enabled = false;
+            EditFilterGroup.Enabled = true;
+            ListTabs.Enabled = false;
+            GroupTab.Enabled = false;
+            ListFilters.Enabled = false;
 
-            this.RadioAND.Checked = true;
-            this.RadioPLUS.Checked = false;
-            this.UID.Text = id;
-            this.UID.SelectAll();
-            this.MSG1.Text = msg;
-            this.MSG1.SelectAll();
-            this.MSG2.Text = id + msg;
-            this.MSG2.SelectAll();
-            this.TextSource.Text = string.Empty;
-            this.UID.Enabled = true;
-            this.MSG1.Enabled = true;
-            this.MSG2.Enabled = false;
-            this.CheckRegex.Checked = false;
-            this.CheckURL.Checked = false;
-            this.CheckCaseSensitive.Checked = false;
-            this.CheckRetweet.Checked = false;
-            this.CheckLambda.Checked = false;
+            RadioAND.Checked = true;
+            RadioPLUS.Checked = false;
+            UID.Text = id;
+            UID.SelectAll();
+            MSG1.Text = msg;
+            MSG1.SelectAll();
+            MSG2.Text = id + msg;
+            MSG2.SelectAll();
+            TextSource.Text = string.Empty;
+            UID.Enabled = true;
+            MSG1.Enabled = true;
+            MSG2.Enabled = false;
+            CheckRegex.Checked = false;
+            CheckURL.Checked = false;
+            CheckCaseSensitive.Checked = false;
+            CheckRetweet.Checked = false;
+            CheckLambda.Checked = false;
 
-            this.RadioExAnd.Checked = true;
-            this.RadioExPLUS.Checked = false;
-            this.ExUID.Text = string.Empty;
-            this.ExUID.SelectAll();
-            this.ExMSG1.Text = string.Empty;
-            this.ExMSG1.SelectAll();
-            this.ExMSG2.Text = string.Empty;
-            this.ExMSG2.SelectAll();
-            this.TextExSource.Text = string.Empty;
-            this.ExUID.Enabled = true;
-            this.ExMSG1.Enabled = true;
-            this.ExMSG2.Enabled = false;
-            this.CheckExRegex.Checked = false;
-            this.CheckExURL.Checked = false;
-            this.CheckExCaseSensitive.Checked = false;
-            this.CheckExRetweet.Checked = false;
-            this.CheckExLambDa.Checked = false;
+            RadioExAnd.Checked = true;
+            RadioExPLUS.Checked = false;
+            ExUID.Text = string.Empty;
+            ExUID.SelectAll();
+            ExMSG1.Text = string.Empty;
+            ExMSG1.SelectAll();
+            ExMSG2.Text = string.Empty;
+            ExMSG2.SelectAll();
+            TextExSource.Text = string.Empty;
+            ExUID.Enabled = true;
+            ExMSG1.Enabled = true;
+            ExMSG2.Enabled = false;
+            CheckExRegex.Checked = false;
+            CheckExURL.Checked = false;
+            CheckExCaseSensitive.Checked = false;
+            CheckExRetweet.Checked = false;
+            CheckExLambDa.Checked = false;
 
-            this.OptCopy.Checked = true;
-            this.CheckMark.Checked = true;
-            this.UID.Focus();
-            this.editMode = EDITMODE.AddNew;
-            this.isDirectAdd = true;
+            OptCopy.Checked = true;
+            CheckMark.Checked = true;
+            UID.Focus();
+            _editMode = EDITMODE.AddNew;
+            _isDirectAdd = true;
         }
 
         #endregion public methods
@@ -148,126 +148,126 @@ namespace Hoehoe
 
         private void ButtonNew_Click(object sender, EventArgs e)
         {
-            this.ButtonNew_ClickExtracted();
+            ButtonNew_ClickExtracted();
         }
 
         private void ButtonEdit_Click(object sender, EventArgs e)
         {
-            this.ButtonEdit_ClickExtracted();
+            ButtonEdit_ClickExtracted();
         }
 
         private void ButtonDelete_Click(object sender, EventArgs e)
         {
-            this.ButtonDelete_ClickExtracted();
+            ButtonDelete_ClickExtracted();
         }
 
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
-            this.ButtonCancel_ClickExtracted();
+            ButtonCancel_ClickExtracted();
         }
 
         private void RadioAND_CheckedChanged(object sender, EventArgs e)
         {
-            this.RadioAND_CheckedChangedExtracted(this.RadioAND.Checked);
+            RadioAND_CheckedChangedExtracted(RadioAND.Checked);
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)
         {
-            this.ButtonOK_ClickExtracted();
+            ButtonOK_ClickExtracted();
         }
 
         private void ListFilters_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.ShowDetail();
+            ShowDetail();
         }
 
         private void ButtonClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void FilterDialog_FormClosed(object sender, FormClosedEventArgs e)
         {
-            this.isDirectAdd = false;
+            _isDirectAdd = false;
         }
 
         private void FilterDialog_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
-                if (this.EditFilterGroup.Enabled)
+                if (EditFilterGroup.Enabled)
                 {
-                    this.ButtonCancel_ClickExtracted();
+                    ButtonCancel_ClickExtracted();
                 }
                 else
                 {
-                    this.Close();
+                    Close();
                 }
             }
         }
 
         private void ListFilters_DoubleClick(object sender, EventArgs e)
         {
-            if (this.ListFilters.SelectedItem == null)
+            if (ListFilters.SelectedItem == null)
             {
                 return;
             }
 
-            int clickedIndex = this.ListFilters.IndexFromPoint(this.ListFilters.PointToClient(Control.MousePosition));
+            int clickedIndex = ListFilters.IndexFromPoint(ListFilters.PointToClient(Control.MousePosition));
             if (clickedIndex == ListBox.NoMatches)
             {
                 return;
             }
 
-            if (this.ListFilters.Items[clickedIndex] == null)
+            if (ListFilters.Items[clickedIndex] == null)
             {
                 return;
             }
 
-            this.ButtonEdit_ClickExtracted();
+            ButtonEdit_ClickExtracted();
         }
 
         private void FilterDialog_Shown(object sender, EventArgs e)
         {
-            this.sts = TabInformations.Instance;
-            this.ListTabs.Items.Clear();
-            foreach (string key in this.sts.Tabs.Keys)
+            _sts = TabInformations.Instance;
+            ListTabs.Items.Clear();
+            foreach (string key in _sts.Tabs.Keys)
             {
-                this.ListTabs.Items.Add(key);
+                ListTabs.Items.Add(key);
             }
 
-            this.SetTabnamesToDialog();
+            SetTabnamesToDialog();
 
-            this.ComboSound.Items.Clear();
-            this.ComboSound.Items.Add(string.Empty);
+            ComboSound.Items.Clear();
+            ComboSound.Items.Add(string.Empty);
             var names = MyCommon.GetSoundFileNames();
             if (names.Length > 0)
             {
-                this.ComboSound.Items.AddRange(names);
+                ComboSound.Items.AddRange(names);
             }
 
-            this.idList.Clear();
-            foreach (string tmp in this.TwMain.AtIdSupl.GetItemList())
+            _idList.Clear();
+            foreach (string tmp in TwMain.AtIdSupl.GetItemList())
             {
-                this.idList.Add(tmp.Remove(0, 1)); // @文字削除
+                _idList.Add(tmp.Remove(0, 1)); // @文字削除
             }
 
-            this.UID.AutoCompleteCustomSource.Clear();
-            this.UID.AutoCompleteCustomSource.AddRange(this.idList.ToArray());
+            UID.AutoCompleteCustomSource.Clear();
+            UID.AutoCompleteCustomSource.AddRange(_idList.ToArray());
 
-            this.ExUID.AutoCompleteCustomSource.Clear();
-            this.ExUID.AutoCompleteCustomSource.AddRange(this.idList.ToArray());
+            ExUID.AutoCompleteCustomSource.Clear();
+            ExUID.AutoCompleteCustomSource.AddRange(_idList.ToArray());
 
             // 選択タブ変更
-            if (this.ListTabs.Items.Count > 0)
+            if (ListTabs.Items.Count > 0)
             {
-                if (this.cur.Length > 0)
+                if (_cur.Length > 0)
                 {
-                    for (int i = 0; i < this.ListTabs.Items.Count; i++)
+                    for (int i = 0; i < ListTabs.Items.Count; i++)
                     {
-                        if (this.cur == this.ListTabs.Items[i].ToString())
+                        if (_cur == ListTabs.Items[i].ToString())
                         {
-                            this.ListTabs.SelectedIndex = i;
+                            ListTabs.SelectedIndex = i;
                             break;
                         }
                     }
@@ -277,91 +277,91 @@ namespace Hoehoe
 
         private void ListTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.ListTabs.SelectedIndex > -1)
+            if (ListTabs.SelectedIndex > -1)
             {
-                this.SetFilters((string)this.ListTabs.SelectedItem);
+                SetFilters((string)ListTabs.SelectedItem);
             }
             else
             {
-                this.ListFilters.Items.Clear();
+                ListFilters.Items.Clear();
             }
         }
 
         private void ButtonAddTab_Click(object sender, EventArgs e)
         {
-            this.ButtonAddTab_ClickExtracted();
+            ButtonAddTab_ClickExtracted();
         }
 
         private void ButtonDeleteTab_Click(object sender, EventArgs e)
         {
-            this.ButtonDeleteTab_ClickExtracted();
+            ButtonDeleteTab_ClickExtracted();
         }
 
         private void ButtonRenameTab_Click(object sender, EventArgs e)
         {
-            this.ButtonRenameTab_ClickExtracted();
+            ButtonRenameTab_ClickExtracted();
         }
 
         private void CheckManageRead_CheckedChanged(object sender, EventArgs e)
         {
-            this.CheckManageRead_CheckedChangedExtracted();
+            CheckManageRead_CheckedChangedExtracted();
         }
 
         private void ButtonUp_Click(object sender, EventArgs e)
         {
-            this.ButtonUp_ClickExtracted();
+            ButtonUp_ClickExtracted();
         }
 
         private void ButtonDown_Click(object sender, EventArgs e)
         {
-            this.ButtonDown_ClickExtracted();
+            ButtonDown_ClickExtracted();
         }
 
         private void CheckNotifyNew_CheckedChanged(object sender, EventArgs e)
         {
-            this.CheckNotifyNew_CheckedChangedExtracted();
+            CheckNotifyNew_CheckedChangedExtracted();
         }
 
         private void ComboSound_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.ComboSound_SelectedIndexChangedExtracted();
+            ComboSound_SelectedIndexChangedExtracted();
         }
 
         private void RadioExAnd_CheckedChanged(object sender, EventArgs e)
         {
-            this.RadioExAnd_CheckedChangedExtracted(this.RadioExAnd.Checked);
+            RadioExAnd_CheckedChangedExtracted(RadioExAnd.Checked);
         }
 
         private void OptMove_CheckedChanged(object sender, EventArgs e)
         {
-            this.CheckMark.Enabled = !this.OptMove.Checked;
+            CheckMark.Enabled = !OptMove.Checked;
         }
 
         private void ButtonRuleUp_Click(object sender, EventArgs e)
         {
-            this.ButtonRuleUp_ClickExtracted();
+            ButtonRuleUp_ClickExtracted();
         }
 
         private void ButtonRuleDown_Click(object sender, EventArgs e)
         {
-            this.ButtonRuleDown_ClickExtracted();
+            ButtonRuleDown_ClickExtracted();
         }
 
         private void ButtonRuleCopy_Click(object sender, EventArgs e)
         {
-            this.ButtonRuleCopy_ClickExtracted();
+            ButtonRuleCopy_ClickExtracted();
         }
 
         private void ButtonRuleMove_Click(object sender, EventArgs e)
         {
-            this.ButtonRuleMove_ClickExtracted();
+            ButtonRuleMove_ClickExtracted();
         }
 
         private void FilterTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Space && e.Modifiers == (Keys.Shift | Keys.Control))
             {
-                TweenMain main = (TweenMain)this.Owner;
+                TweenMain main = (TweenMain)Owner;
                 TextBox tbox = (TextBox)sender;
                 if (tbox.SelectionStart > 0)
                 {
@@ -398,7 +398,7 @@ namespace Hoehoe
 
         private void FilterTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            TweenMain main = (TweenMain)this.Owner;
+            TweenMain main = (TweenMain)Owner;
             TextBox tbox = (TextBox)sender;
             if (e.KeyChar == '@')
             {
@@ -419,43 +419,43 @@ namespace Hoehoe
 
         private void SetFilters(string tabName)
         {
-            if (this.ListTabs.Items.Count == 0)
+            if (ListTabs.Items.Count == 0)
             {
                 return;
             }
 
-            var tab = this.sts.Tabs[tabName];
-            this.ListFilters.Items.Clear();
-            this.ListFilters.Items.AddRange(tab.GetFilters());
-            if (this.ListFilters.Items.Count > 0)
+            var tab = _sts.Tabs[tabName];
+            ListFilters.Items.Clear();
+            ListFilters.Items.AddRange(tab.GetFilters());
+            if (ListFilters.Items.Count > 0)
             {
-                this.ListFilters.SelectedIndex = 0;
+                ListFilters.SelectedIndex = 0;
             }
 
-            this.CheckManageRead.Checked = tab.UnreadManage;
-            this.CheckNotifyNew.Checked = tab.Notify;
-            int idx = this.ComboSound.Items.IndexOf(tab.SoundFile);
+            CheckManageRead.Checked = tab.UnreadManage;
+            CheckNotifyNew.Checked = tab.Notify;
+            int idx = ComboSound.Items.IndexOf(tab.SoundFile);
             if (idx == -1)
             {
                 idx = 0;
             }
 
-            this.ComboSound.SelectedIndex = idx;
+            ComboSound.SelectedIndex = idx;
 
-            if (this.isDirectAdd)
+            if (_isDirectAdd)
             {
                 return;
             }
 
-            this.ListTabs.Enabled = true;
-            this.GroupTab.Enabled = true;
-            this.ListFilters.Enabled = true;
-            if (this.ListFilters.SelectedIndex != -1)
+            ListTabs.Enabled = true;
+            GroupTab.Enabled = true;
+            ListFilters.Enabled = true;
+            if (ListFilters.SelectedIndex != -1)
             {
-                this.ShowDetail();
+                ShowDetail();
             }
 
-            this.EditFilterGroup.Enabled = false;
+            EditFilterGroup.Enabled = false;
             switch (tab.TabType)
             {
                 case TabUsageType.Home:
@@ -465,228 +465,228 @@ namespace Hoehoe
                 case TabUsageType.Lists:
                 case TabUsageType.Related:
                 case TabUsageType.UserTimeline:
-                    this.ButtonNew.Enabled = false;
-                    this.ButtonEdit.Enabled = false;
-                    this.ButtonDelete.Enabled = false;
-                    this.ButtonRuleUp.Enabled = false;
-                    this.ButtonRuleDown.Enabled = false;
-                    this.ButtonRuleCopy.Enabled = false;
-                    this.ButtonRuleMove.Enabled = false;
+                    ButtonNew.Enabled = false;
+                    ButtonEdit.Enabled = false;
+                    ButtonDelete.Enabled = false;
+                    ButtonRuleUp.Enabled = false;
+                    ButtonRuleDown.Enabled = false;
+                    ButtonRuleCopy.Enabled = false;
+                    ButtonRuleMove.Enabled = false;
                     break;
                 default:
-                    this.ButtonNew.Enabled = true;
-                    bool selected = this.ListFilters.SelectedIndex > -1;
-                    this.ButtonEdit.Enabled = selected;
-                    this.ButtonDelete.Enabled = selected;
-                    this.ButtonRuleUp.Enabled = selected;
-                    this.ButtonRuleDown.Enabled = selected;
-                    this.ButtonRuleCopy.Enabled = selected;
-                    this.ButtonRuleMove.Enabled = selected;
+                    ButtonNew.Enabled = true;
+                    bool selected = ListFilters.SelectedIndex > -1;
+                    ButtonEdit.Enabled = selected;
+                    ButtonDelete.Enabled = selected;
+                    ButtonRuleUp.Enabled = selected;
+                    ButtonRuleDown.Enabled = selected;
+                    ButtonRuleCopy.Enabled = selected;
+                    ButtonRuleMove.Enabled = selected;
                     break;
             }
 
             switch (tab.TabType)
             {
                 case TabUsageType.Home:
-                    this.LabelTabType.Text = R.TabUsageTypeName_Home;
+                    LabelTabType.Text = R.TabUsageTypeName_Home;
                     break;
 
                 case TabUsageType.Mentions:
-                    this.LabelTabType.Text = R.TabUsageTypeName_Mentions;
+                    LabelTabType.Text = R.TabUsageTypeName_Mentions;
                     break;
 
                 case TabUsageType.DirectMessage:
-                    this.LabelTabType.Text = R.TabUsageTypeName_DirectMessage;
+                    LabelTabType.Text = R.TabUsageTypeName_DirectMessage;
                     break;
 
                 case TabUsageType.Favorites:
-                    this.LabelTabType.Text = R.TabUsageTypeName_Favorites;
+                    LabelTabType.Text = R.TabUsageTypeName_Favorites;
                     break;
 
                 case TabUsageType.UserDefined:
-                    this.LabelTabType.Text = R.TabUsageTypeName_UserDefined;
+                    LabelTabType.Text = R.TabUsageTypeName_UserDefined;
                     break;
 
                 case TabUsageType.PublicSearch:
-                    this.LabelTabType.Text = R.TabUsageTypeName_PublicSearch;
+                    LabelTabType.Text = R.TabUsageTypeName_PublicSearch;
                     break;
 
                 case TabUsageType.Lists:
-                    this.LabelTabType.Text = R.TabUsageTypeName_Lists;
+                    LabelTabType.Text = R.TabUsageTypeName_Lists;
                     break;
 
                 case TabUsageType.Related:
-                    this.LabelTabType.Text = R.TabUsageTypeName_Related;
+                    LabelTabType.Text = R.TabUsageTypeName_Related;
                     break;
 
                 case TabUsageType.UserTimeline:
-                    this.LabelTabType.Text = R.TabUsageTypeName_UserTimeline;
+                    LabelTabType.Text = R.TabUsageTypeName_UserTimeline;
                     break;
                 default:
-                    this.LabelTabType.Text = "UNKNOWN";
+                    LabelTabType.Text = "UNKNOWN";
                     break;
             }
 
-            this.ButtonRenameTab.Enabled = true;
-            this.ButtonDeleteTab.Enabled = !this.sts.IsDefaultTab(tabName);
-            this.closeButton.Enabled = true;
+            ButtonRenameTab.Enabled = true;
+            ButtonDeleteTab.Enabled = !_sts.IsDefaultTab(tabName);
+            closeButton.Enabled = true;
         }
 
         private void ShowDetail()
         {
-            if (this.isDirectAdd)
+            if (_isDirectAdd)
             {
                 return;
             }
 
-            if (this.ListFilters.SelectedIndex > -1)
+            if (ListFilters.SelectedIndex > -1)
             {
-                FiltersClass fc = (FiltersClass)this.ListFilters.SelectedItem;
+                FiltersClass fc = (FiltersClass)ListFilters.SelectedItem;
                 if (fc.SearchBoth)
                 {
-                    this.RadioAND.Checked = true;
-                    this.RadioPLUS.Checked = false;
-                    this.UID.Enabled = true;
-                    this.MSG1.Enabled = true;
-                    this.MSG2.Enabled = false;
-                    this.UID.Text = fc.NameFilter;
-                    this.UID.SelectAll();
-                    this.MSG1.Text = string.Empty;
-                    this.MSG2.Text = string.Empty;
+                    RadioAND.Checked = true;
+                    RadioPLUS.Checked = false;
+                    UID.Enabled = true;
+                    MSG1.Enabled = true;
+                    MSG2.Enabled = false;
+                    UID.Text = fc.NameFilter;
+                    UID.SelectAll();
+                    MSG1.Text = string.Empty;
+                    MSG2.Text = string.Empty;
                     foreach (string bf in fc.BodyFilter)
                     {
-                        this.MSG1.Text += bf + " ";
+                        MSG1.Text += bf + " ";
                     }
 
-                    this.MSG1.Text = this.MSG1.Text.Trim();
-                    this.MSG1.SelectAll();
+                    MSG1.Text = MSG1.Text.Trim();
+                    MSG1.SelectAll();
                 }
                 else
                 {
-                    this.RadioPLUS.Checked = true;
-                    this.RadioAND.Checked = false;
-                    this.UID.Enabled = false;
-                    this.MSG1.Enabled = false;
-                    this.MSG2.Enabled = true;
-                    this.UID.Text = string.Empty;
-                    this.MSG1.Text = string.Empty;
-                    this.MSG2.Text = string.Empty;
+                    RadioPLUS.Checked = true;
+                    RadioAND.Checked = false;
+                    UID.Enabled = false;
+                    MSG1.Enabled = false;
+                    MSG2.Enabled = true;
+                    UID.Text = string.Empty;
+                    MSG1.Text = string.Empty;
+                    MSG2.Text = string.Empty;
                     foreach (string bf in fc.BodyFilter)
                     {
-                        this.MSG2.Text += bf + " ";
+                        MSG2.Text += bf + " ";
                     }
 
-                    this.MSG2.Text = this.MSG2.Text.Trim();
-                    this.MSG2.SelectAll();
+                    MSG2.Text = MSG2.Text.Trim();
+                    MSG2.SelectAll();
                 }
 
-                this.TextSource.Text = fc.Source;
-                this.CheckRegex.Checked = fc.UseRegex;
-                this.CheckURL.Checked = fc.SearchUrl;
-                this.CheckCaseSensitive.Checked = fc.CaseSensitive;
-                this.CheckRetweet.Checked = fc.IsRt;
-                this.CheckLambda.Checked = fc.UseLambda;
+                TextSource.Text = fc.Source;
+                CheckRegex.Checked = fc.UseRegex;
+                CheckURL.Checked = fc.SearchUrl;
+                CheckCaseSensitive.Checked = fc.CaseSensitive;
+                CheckRetweet.Checked = fc.IsRt;
+                CheckLambda.Checked = fc.UseLambda;
 
                 if (fc.ExSearchBoth)
                 {
-                    this.RadioExAnd.Checked = true;
-                    this.RadioExPLUS.Checked = false;
-                    this.ExUID.Enabled = true;
-                    this.ExMSG1.Enabled = true;
-                    this.ExMSG2.Enabled = false;
-                    this.ExUID.Text = fc.ExNameFilter;
-                    this.ExUID.SelectAll();
-                    this.ExMSG1.Text = string.Empty;
-                    this.ExMSG2.Text = string.Empty;
+                    RadioExAnd.Checked = true;
+                    RadioExPLUS.Checked = false;
+                    ExUID.Enabled = true;
+                    ExMSG1.Enabled = true;
+                    ExMSG2.Enabled = false;
+                    ExUID.Text = fc.ExNameFilter;
+                    ExUID.SelectAll();
+                    ExMSG1.Text = string.Empty;
+                    ExMSG2.Text = string.Empty;
                     foreach (string bf in fc.ExBodyFilter)
                     {
-                        this.ExMSG1.Text += bf + " ";
+                        ExMSG1.Text += bf + " ";
                     }
 
-                    this.ExMSG1.Text = this.ExMSG1.Text.Trim();
-                    this.ExMSG1.SelectAll();
+                    ExMSG1.Text = ExMSG1.Text.Trim();
+                    ExMSG1.SelectAll();
                 }
                 else
                 {
-                    this.RadioExPLUS.Checked = true;
-                    this.RadioExAnd.Checked = false;
-                    this.ExUID.Enabled = false;
-                    this.ExMSG1.Enabled = false;
-                    this.ExMSG2.Enabled = true;
-                    this.ExUID.Text = string.Empty;
-                    this.ExMSG1.Text = string.Empty;
-                    this.ExMSG2.Text = string.Empty;
+                    RadioExPLUS.Checked = true;
+                    RadioExAnd.Checked = false;
+                    ExUID.Enabled = false;
+                    ExMSG1.Enabled = false;
+                    ExMSG2.Enabled = true;
+                    ExUID.Text = string.Empty;
+                    ExMSG1.Text = string.Empty;
+                    ExMSG2.Text = string.Empty;
                     foreach (string bf in fc.ExBodyFilter)
                     {
-                        this.ExMSG2.Text += bf + " ";
+                        ExMSG2.Text += bf + " ";
                     }
 
-                    this.ExMSG2.Text = this.ExMSG2.Text.Trim();
-                    this.ExMSG2.SelectAll();
+                    ExMSG2.Text = ExMSG2.Text.Trim();
+                    ExMSG2.SelectAll();
                 }
 
-                this.TextExSource.Text = fc.ExSource;
-                this.CheckExRegex.Checked = fc.ExUseRegex;
-                this.CheckExURL.Checked = fc.ExSearchUrl;
-                this.CheckExCaseSensitive.Checked = fc.ExCaseSensitive;
-                this.CheckExRetweet.Checked = fc.IsExRt;
-                this.CheckExLambDa.Checked = fc.ExUseLambda;
+                TextExSource.Text = fc.ExSource;
+                CheckExRegex.Checked = fc.ExUseRegex;
+                CheckExURL.Checked = fc.ExSearchUrl;
+                CheckExCaseSensitive.Checked = fc.ExCaseSensitive;
+                CheckExRetweet.Checked = fc.IsExRt;
+                CheckExLambDa.Checked = fc.ExUseLambda;
 
                 if (fc.MoveFrom)
                 {
-                    this.OptMove.Checked = true;
+                    OptMove.Checked = true;
                 }
                 else
                 {
-                    this.OptCopy.Checked = true;
+                    OptCopy.Checked = true;
                 }
 
-                this.CheckMark.Checked = fc.SetMark;
-                this.ButtonEdit.Enabled = true;
-                this.ButtonDelete.Enabled = true;
-                this.ButtonRuleUp.Enabled = true;
-                this.ButtonRuleDown.Enabled = true;
-                this.ButtonRuleCopy.Enabled = true;
-                this.ButtonRuleMove.Enabled = true;
+                CheckMark.Checked = fc.SetMark;
+                ButtonEdit.Enabled = true;
+                ButtonDelete.Enabled = true;
+                ButtonRuleUp.Enabled = true;
+                ButtonRuleDown.Enabled = true;
+                ButtonRuleCopy.Enabled = true;
+                ButtonRuleMove.Enabled = true;
             }
             else
             {
-                this.RadioAND.Checked = true;
-                this.RadioPLUS.Checked = false;
-                this.UID.Enabled = true;
-                this.MSG1.Enabled = true;
-                this.MSG2.Enabled = false;
-                this.UID.Text = string.Empty;
-                this.MSG1.Text = string.Empty;
-                this.MSG2.Text = string.Empty;
-                this.TextSource.Text = string.Empty;
-                this.CheckRegex.Checked = false;
-                this.CheckURL.Checked = false;
-                this.CheckCaseSensitive.Checked = false;
-                this.CheckRetweet.Checked = false;
-                this.CheckLambda.Checked = false;
-                this.RadioExAnd.Checked = true;
-                this.RadioExPLUS.Checked = false;
-                this.ExUID.Enabled = true;
-                this.ExMSG1.Enabled = true;
-                this.ExMSG2.Enabled = false;
-                this.ExUID.Text = string.Empty;
-                this.ExMSG1.Text = string.Empty;
-                this.ExMSG2.Text = string.Empty;
-                this.TextExSource.Text = string.Empty;
-                this.CheckExRegex.Checked = false;
-                this.CheckExURL.Checked = false;
-                this.CheckExCaseSensitive.Checked = false;
-                this.CheckExRetweet.Checked = false;
-                this.CheckExLambDa.Checked = false;
-                this.OptCopy.Checked = true;
-                this.CheckMark.Checked = true;
-                this.ButtonEdit.Enabled = false;
-                this.ButtonDelete.Enabled = false;
-                this.ButtonRuleUp.Enabled = false;
-                this.ButtonRuleDown.Enabled = false;
-                this.ButtonRuleCopy.Enabled = false;
-                this.ButtonRuleMove.Enabled = false;
+                RadioAND.Checked = true;
+                RadioPLUS.Checked = false;
+                UID.Enabled = true;
+                MSG1.Enabled = true;
+                MSG2.Enabled = false;
+                UID.Text = string.Empty;
+                MSG1.Text = string.Empty;
+                MSG2.Text = string.Empty;
+                TextSource.Text = string.Empty;
+                CheckRegex.Checked = false;
+                CheckURL.Checked = false;
+                CheckCaseSensitive.Checked = false;
+                CheckRetweet.Checked = false;
+                CheckLambda.Checked = false;
+                RadioExAnd.Checked = true;
+                RadioExPLUS.Checked = false;
+                ExUID.Enabled = true;
+                ExMSG1.Enabled = true;
+                ExMSG2.Enabled = false;
+                ExUID.Text = string.Empty;
+                ExMSG1.Text = string.Empty;
+                ExMSG2.Text = string.Empty;
+                TextExSource.Text = string.Empty;
+                CheckExRegex.Checked = false;
+                CheckExURL.Checked = false;
+                CheckExCaseSensitive.Checked = false;
+                CheckExRetweet.Checked = false;
+                CheckExLambDa.Checked = false;
+                OptCopy.Checked = true;
+                CheckMark.Checked = true;
+                ButtonEdit.Enabled = false;
+                ButtonDelete.Enabled = false;
+                ButtonRuleUp.Enabled = false;
+                ButtonRuleDown.Enabled = false;
+                ButtonRuleCopy.Enabled = false;
+                ButtonRuleMove.Enabled = false;
             }
         }
 
@@ -728,42 +728,42 @@ namespace Hoehoe
         private bool CheckMatchRule(ref bool isBlank)
         {
             isBlank = false;
-            this.TextSource.Text = this.TextSource.Text.Trim();
-            if (this.RadioAND.Checked)
+            TextSource.Text = TextSource.Text.Trim();
+            if (RadioAND.Checked)
             {
-                this.MSG1.Text = this.MSG1.Text.Trim();
-                this.UID.Text = this.UID.Text.Trim();
-                if (!this.CheckRegex.Checked && !this.CheckLambda.Checked)
+                MSG1.Text = MSG1.Text.Trim();
+                UID.Text = UID.Text.Trim();
+                if (!CheckRegex.Checked && !CheckLambda.Checked)
                 {
-                    this.MSG1.Text = this.MSG1.Text.Replace("　", " ");
+                    MSG1.Text = MSG1.Text.Replace("　", " ");
                 }
 
-                if (string.IsNullOrEmpty(this.UID.Text) && string.IsNullOrEmpty(this.MSG1.Text) && string.IsNullOrEmpty(this.TextSource.Text) && !this.CheckRetweet.Checked)
+                if (string.IsNullOrEmpty(UID.Text) && string.IsNullOrEmpty(MSG1.Text) && string.IsNullOrEmpty(TextSource.Text) && !CheckRetweet.Checked)
                 {
                     isBlank = true;
                     return true;
                 }
 
-                if (this.CheckLambda.Checked)
+                if (CheckLambda.Checked)
                 {
-                    if (!this.IsValidLambdaExp(this.UID.Text))
+                    if (!IsValidLambdaExp(UID.Text))
                     {
                         return false;
                     }
 
-                    if (!this.IsValidLambdaExp(this.MSG1.Text))
+                    if (!IsValidLambdaExp(MSG1.Text))
                     {
                         return false;
                     }
                 }
-                else if (this.CheckRegex.Checked)
+                else if (CheckRegex.Checked)
                 {
-                    if (!this.IsValidRegexp(this.UID.Text))
+                    if (!IsValidRegexp(UID.Text))
                     {
                         return false;
                     }
 
-                    if (!this.IsValidRegexp(this.MSG1.Text))
+                    if (!IsValidRegexp(MSG1.Text))
                     {
                         return false;
                     }
@@ -771,29 +771,29 @@ namespace Hoehoe
             }
             else
             {
-                this.MSG2.Text = this.MSG2.Text.Trim();
-                if (!this.CheckRegex.Checked && !this.CheckLambda.Checked)
+                MSG2.Text = MSG2.Text.Trim();
+                if (!CheckRegex.Checked && !CheckLambda.Checked)
                 {
-                    this.MSG2.Text = this.MSG2.Text.Replace("　", " ");
+                    MSG2.Text = MSG2.Text.Replace("　", " ");
                 }
 
-                if (string.IsNullOrEmpty(this.MSG2.Text) && string.IsNullOrEmpty(this.TextSource.Text) && !this.CheckRetweet.Checked)
+                if (string.IsNullOrEmpty(MSG2.Text) && string.IsNullOrEmpty(TextSource.Text) && !CheckRetweet.Checked)
                 {
                     isBlank = true;
                     return true;
                 }
 
-                if (this.CheckLambda.Checked && !this.IsValidLambdaExp(this.MSG2.Text))
+                if (CheckLambda.Checked && !IsValidLambdaExp(MSG2.Text))
                 {
                     return false;
                 }
-                else if (this.CheckRegex.Checked && !this.IsValidRegexp(this.MSG2.Text))
+                else if (CheckRegex.Checked && !IsValidRegexp(MSG2.Text))
                 {
                     return false;
                 }
             }
 
-            if (this.CheckRegex.Checked && !this.IsValidRegexp(this.TextSource.Text))
+            if (CheckRegex.Checked && !IsValidRegexp(TextSource.Text))
             {
                 return false;
             }
@@ -804,42 +804,42 @@ namespace Hoehoe
         private bool CheckExcludeRule(ref bool isBlank)
         {
             isBlank = false;
-            this.TextExSource.Text = this.TextExSource.Text.Trim();
-            if (this.RadioExAnd.Checked)
+            TextExSource.Text = TextExSource.Text.Trim();
+            if (RadioExAnd.Checked)
             {
-                this.ExMSG1.Text = this.ExMSG1.Text.Trim();
-                if (!this.CheckExRegex.Checked && !this.CheckExLambDa.Checked)
+                ExMSG1.Text = ExMSG1.Text.Trim();
+                if (!CheckExRegex.Checked && !CheckExLambDa.Checked)
                 {
-                    this.ExMSG1.Text = this.ExMSG1.Text.Replace("　", " ");
+                    ExMSG1.Text = ExMSG1.Text.Replace("　", " ");
                 }
 
-                this.ExUID.Text = this.ExUID.Text.Trim();
-                if (string.IsNullOrEmpty(this.ExUID.Text) && string.IsNullOrEmpty(this.ExMSG1.Text) && string.IsNullOrEmpty(this.TextExSource.Text) && !this.CheckExRetweet.Checked)
+                ExUID.Text = ExUID.Text.Trim();
+                if (string.IsNullOrEmpty(ExUID.Text) && string.IsNullOrEmpty(ExMSG1.Text) && string.IsNullOrEmpty(TextExSource.Text) && !CheckExRetweet.Checked)
                 {
                     isBlank = true;
                     return true;
                 }
 
-                if (this.CheckExLambDa.Checked)
+                if (CheckExLambDa.Checked)
                 {
-                    if (!this.IsValidLambdaExp(this.ExUID.Text))
+                    if (!IsValidLambdaExp(ExUID.Text))
                     {
                         return false;
                     }
 
-                    if (!this.IsValidLambdaExp(this.ExMSG1.Text))
+                    if (!IsValidLambdaExp(ExMSG1.Text))
                     {
                         return false;
                     }
                 }
-                else if (this.CheckExRegex.Checked)
+                else if (CheckExRegex.Checked)
                 {
-                    if (!this.IsValidRegexp(this.ExUID.Text))
+                    if (!IsValidRegexp(ExUID.Text))
                     {
                         return false;
                     }
 
-                    if (!this.IsValidRegexp(this.ExMSG1.Text))
+                    if (!IsValidRegexp(ExMSG1.Text))
                     {
                         return false;
                     }
@@ -847,29 +847,29 @@ namespace Hoehoe
             }
             else
             {
-                this.ExMSG2.Text = this.ExMSG2.Text.Trim();
-                if (!this.CheckExRegex.Checked && !this.CheckExLambDa.Checked)
+                ExMSG2.Text = ExMSG2.Text.Trim();
+                if (!CheckExRegex.Checked && !CheckExLambDa.Checked)
                 {
-                    this.ExMSG2.Text = this.ExMSG2.Text.Replace("　", " ");
+                    ExMSG2.Text = ExMSG2.Text.Replace("　", " ");
                 }
 
-                if (string.IsNullOrEmpty(this.ExMSG2.Text) && string.IsNullOrEmpty(this.TextExSource.Text) && !this.CheckExRetweet.Checked)
+                if (string.IsNullOrEmpty(ExMSG2.Text) && string.IsNullOrEmpty(TextExSource.Text) && !CheckExRetweet.Checked)
                 {
                     isBlank = true;
                     return true;
                 }
 
-                if (this.CheckExLambDa.Checked && !this.IsValidLambdaExp(this.ExMSG2.Text))
+                if (CheckExLambDa.Checked && !IsValidLambdaExp(ExMSG2.Text))
                 {
                     return false;
                 }
-                else if (this.CheckExRegex.Checked && !this.IsValidRegexp(this.ExMSG2.Text))
+                else if (CheckExRegex.Checked && !IsValidRegexp(ExMSG2.Text))
                 {
                     return false;
                 }
             }
 
-            if (this.CheckExRegex.Checked && !this.IsValidRegexp(this.TextExSource.Text))
+            if (CheckExRegex.Checked && !IsValidRegexp(TextExSource.Text))
             {
                 return false;
             }
@@ -879,112 +879,112 @@ namespace Hoehoe
 
         private void SetTabnamesToDialog()
         {
-            this.tabDialog.ClearTab();
-            foreach (string key in this.sts.Tabs.Keys)
+            _tabDialog.ClearTab();
+            foreach (string key in _sts.Tabs.Keys)
             {
                 if (TabInformations.Instance.IsDistributableTab(key))
                 {
-                    this.tabDialog.AddTab(key);
+                    _tabDialog.AddTab(key);
                 }
             }
         }
 
         private void ButtonNew_ClickExtracted()
         {
-            this.ButtonNew.Enabled = false;
-            this.ButtonEdit.Enabled = false;
-            this.closeButton.Enabled = false;
-            this.ButtonRuleUp.Enabled = false;
-            this.ButtonRuleDown.Enabled = false;
-            this.ButtonRuleCopy.Enabled = false;
-            this.ButtonRuleMove.Enabled = false;
-            this.ButtonDelete.Enabled = false;
-            this.closeButton.Enabled = false;
-            this.EditFilterGroup.Enabled = true;
-            this.ListTabs.Enabled = false;
-            this.GroupTab.Enabled = false;
-            this.ListFilters.Enabled = false;
+            ButtonNew.Enabled = false;
+            ButtonEdit.Enabled = false;
+            closeButton.Enabled = false;
+            ButtonRuleUp.Enabled = false;
+            ButtonRuleDown.Enabled = false;
+            ButtonRuleCopy.Enabled = false;
+            ButtonRuleMove.Enabled = false;
+            ButtonDelete.Enabled = false;
+            closeButton.Enabled = false;
+            EditFilterGroup.Enabled = true;
+            ListTabs.Enabled = false;
+            GroupTab.Enabled = false;
+            ListFilters.Enabled = false;
 
-            this.RadioAND.Checked = true;
-            this.RadioPLUS.Checked = false;
-            this.UID.Text = string.Empty;
-            this.MSG1.Text = string.Empty;
-            this.MSG2.Text = string.Empty;
-            this.TextSource.Text = string.Empty;
-            this.UID.Enabled = true;
-            this.MSG1.Enabled = true;
-            this.MSG2.Enabled = false;
-            this.CheckRegex.Checked = false;
-            this.CheckURL.Checked = false;
-            this.CheckCaseSensitive.Checked = false;
-            this.CheckRetweet.Checked = false;
-            this.CheckLambda.Checked = false;
+            RadioAND.Checked = true;
+            RadioPLUS.Checked = false;
+            UID.Text = string.Empty;
+            MSG1.Text = string.Empty;
+            MSG2.Text = string.Empty;
+            TextSource.Text = string.Empty;
+            UID.Enabled = true;
+            MSG1.Enabled = true;
+            MSG2.Enabled = false;
+            CheckRegex.Checked = false;
+            CheckURL.Checked = false;
+            CheckCaseSensitive.Checked = false;
+            CheckRetweet.Checked = false;
+            CheckLambda.Checked = false;
 
-            this.RadioExAnd.Checked = true;
-            this.RadioExPLUS.Checked = false;
-            this.ExUID.Text = string.Empty;
-            this.ExMSG1.Text = string.Empty;
-            this.ExMSG2.Text = string.Empty;
-            this.TextExSource.Text = string.Empty;
-            this.ExUID.Enabled = true;
-            this.ExMSG1.Enabled = true;
-            this.ExMSG2.Enabled = false;
-            this.CheckExRegex.Checked = false;
-            this.CheckExURL.Checked = false;
-            this.CheckExCaseSensitive.Checked = false;
-            this.CheckExRetweet.Checked = false;
-            this.CheckExLambDa.Checked = false;
+            RadioExAnd.Checked = true;
+            RadioExPLUS.Checked = false;
+            ExUID.Text = string.Empty;
+            ExMSG1.Text = string.Empty;
+            ExMSG2.Text = string.Empty;
+            TextExSource.Text = string.Empty;
+            ExUID.Enabled = true;
+            ExMSG1.Enabled = true;
+            ExMSG2.Enabled = false;
+            CheckExRegex.Checked = false;
+            CheckExURL.Checked = false;
+            CheckExCaseSensitive.Checked = false;
+            CheckExRetweet.Checked = false;
+            CheckExLambDa.Checked = false;
 
-            this.OptCopy.Checked = true;
-            this.CheckMark.Checked = true;
-            this.UID.Focus();
-            this.editMode = EDITMODE.AddNew;
+            OptCopy.Checked = true;
+            CheckMark.Checked = true;
+            UID.Focus();
+            _editMode = EDITMODE.AddNew;
         }
 
         private void ButtonEdit_ClickExtracted()
         {
-            if (this.ListFilters.SelectedIndex == -1)
+            if (ListFilters.SelectedIndex == -1)
             {
                 return;
             }
 
-            this.ShowDetail();
+            ShowDetail();
 
-            int idx = this.ListFilters.SelectedIndex;
-            this.ListFilters.SelectedIndex = -1;
-            this.ListFilters.SelectedIndex = idx;
-            this.ListFilters.Enabled = false;
+            int idx = ListFilters.SelectedIndex;
+            ListFilters.SelectedIndex = -1;
+            ListFilters.SelectedIndex = idx;
+            ListFilters.Enabled = false;
 
-            this.ButtonNew.Enabled = false;
-            this.ButtonEdit.Enabled = false;
-            this.ButtonDelete.Enabled = false;
-            this.closeButton.Enabled = false;
-            this.ButtonRuleUp.Enabled = false;
-            this.ButtonRuleDown.Enabled = false;
-            this.ButtonRuleCopy.Enabled = false;
-            this.ButtonRuleMove.Enabled = false;
-            this.EditFilterGroup.Enabled = true;
-            this.ListTabs.Enabled = false;
-            this.GroupTab.Enabled = false;
+            ButtonNew.Enabled = false;
+            ButtonEdit.Enabled = false;
+            ButtonDelete.Enabled = false;
+            closeButton.Enabled = false;
+            ButtonRuleUp.Enabled = false;
+            ButtonRuleDown.Enabled = false;
+            ButtonRuleCopy.Enabled = false;
+            ButtonRuleMove.Enabled = false;
+            EditFilterGroup.Enabled = true;
+            ListTabs.Enabled = false;
+            GroupTab.Enabled = false;
 
-            this.editMode = EDITMODE.Edit;
+            _editMode = EDITMODE.Edit;
         }
 
         private void ButtonDelete_ClickExtracted()
         {
-            if (this.ListFilters.SelectedIndex == -1)
+            if (ListFilters.SelectedIndex == -1)
             {
                 return;
             }
 
             string tmp = string.Empty;
-            if (this.ListFilters.SelectedIndices.Count == 1)
+            if (ListFilters.SelectedIndices.Count == 1)
             {
-                tmp = string.Format(R.ButtonDelete_ClickText1, Environment.NewLine, (string)this.ListFilters.SelectedItem);
+                tmp = string.Format(R.ButtonDelete_ClickText1, Environment.NewLine, (string)ListFilters.SelectedItem);
             }
             else
             {
-                tmp = string.Format(R.ButtonDelete_ClickText3, this.ListFilters.SelectedIndices.Count);
+                tmp = string.Format(R.ButtonDelete_ClickText3, ListFilters.SelectedIndices.Count);
             }
 
             var rslt = MessageBox.Show(tmp, R.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
@@ -993,50 +993,50 @@ namespace Hoehoe
                 return;
             }
 
-            for (int idx = this.ListFilters.Items.Count - 1; idx >= 0; idx--)
+            for (int idx = ListFilters.Items.Count - 1; idx >= 0; idx--)
             {
-                if (this.ListFilters.GetSelected(idx))
+                if (ListFilters.GetSelected(idx))
                 {
-                    this.sts.Tabs[this.ListTabs.SelectedItem.ToString()].RemoveFilter((FiltersClass)this.ListFilters.Items[idx]);
-                    this.ListFilters.Items.RemoveAt(idx);
+                    _sts.Tabs[ListTabs.SelectedItem.ToString()].RemoveFilter((FiltersClass)ListFilters.Items[idx]);
+                    ListFilters.Items.RemoveAt(idx);
                 }
             }
         }
 
         private void ButtonCancel_ClickExtracted()
         {
-            this.ListTabs.Enabled = true;
-            this.GroupTab.Enabled = true;
-            this.ListFilters.Enabled = true;
-            this.ListFilters.Focus();
-            if (this.ListFilters.SelectedIndex != -1)
+            ListTabs.Enabled = true;
+            GroupTab.Enabled = true;
+            ListFilters.Enabled = true;
+            ListFilters.Focus();
+            if (ListFilters.SelectedIndex != -1)
             {
-                this.ShowDetail();
+                ShowDetail();
             }
 
-            this.EditFilterGroup.Enabled = false;
-            this.ButtonNew.Enabled = true;
+            EditFilterGroup.Enabled = false;
+            ButtonNew.Enabled = true;
 
-            bool selected = this.ListFilters.SelectedIndex > -1;
-            this.ButtonEdit.Enabled = selected;
-            this.ButtonDelete.Enabled = selected;
-            this.ButtonRuleUp.Enabled = selected;
-            this.ButtonRuleDown.Enabled = selected;
-            this.ButtonRuleCopy.Enabled = selected;
-            this.ButtonRuleMove.Enabled = selected;
+            bool selected = ListFilters.SelectedIndex > -1;
+            ButtonEdit.Enabled = selected;
+            ButtonDelete.Enabled = selected;
+            ButtonRuleUp.Enabled = selected;
+            ButtonRuleDown.Enabled = selected;
+            ButtonRuleCopy.Enabled = selected;
+            ButtonRuleMove.Enabled = selected;
 
-            this.closeButton.Enabled = true;
-            if (this.isDirectAdd)
+            closeButton.Enabled = true;
+            if (_isDirectAdd)
             {
-                this.Close();
+                Close();
             }
         }
 
         private void RadioAND_CheckedChangedExtracted(bool flg)
         {
-            this.UID.Enabled = flg;
-            this.MSG1.Enabled = flg;
-            this.MSG2.Enabled = !flg;
+            UID.Enabled = flg;
+            MSG1.Enabled = flg;
+            MSG2.Enabled = !flg;
         }
 
         private void ButtonOK_ClickExtracted()
@@ -1045,7 +1045,7 @@ namespace Hoehoe
             bool isBlankExclude = false;
 
             // 入力チェック
-            if (!this.CheckMatchRule(ref isBlankMatch) || !this.CheckExcludeRule(ref isBlankExclude))
+            if (!CheckMatchRule(ref isBlankMatch) || !CheckExcludeRule(ref isBlankExclude))
             {
                 return;
             }
@@ -1056,27 +1056,27 @@ namespace Hoehoe
                 return;
             }
 
-            int prevSelectedIndex = this.ListFilters.SelectedIndex;
-            var ft = new FiltersClass() { MoveFrom = this.OptMove.Checked, SetMark = this.CheckMark.Checked };
+            int prevSelectedIndex = ListFilters.SelectedIndex;
+            var ft = new FiltersClass() { MoveFrom = OptMove.Checked, SetMark = CheckMark.Checked };
 
             string bdy = string.Empty;
-            if (this.RadioAND.Checked)
+            if (RadioAND.Checked)
             {
-                ft.NameFilter = this.UID.Text;
-                this.TwMain.AddAtIdSuplItem("@" + ft.NameFilter);
+                ft.NameFilter = UID.Text;
+                TwMain.AddAtIdSuplItem("@" + ft.NameFilter);
                 ft.SearchBoth = true;
-                bdy = this.MSG1.Text;
+                bdy = MSG1.Text;
             }
             else
             {
                 ft.NameFilter = string.Empty;
                 ft.SearchBoth = false;
-                bdy = this.MSG2.Text;
+                bdy = MSG2.Text;
             }
 
-            ft.Source = this.TextSource.Text.Trim();
+            ft.Source = TextSource.Text.Trim();
 
-            if (this.CheckRegex.Checked || this.CheckLambda.Checked)
+            if (CheckRegex.Checked || CheckLambda.Checked)
             {
                 ft.BodyFilter.Add(bdy);
             }
@@ -1092,29 +1092,29 @@ namespace Hoehoe
                 }
             }
 
-            ft.UseRegex = this.CheckRegex.Checked;
-            ft.SearchUrl = this.CheckURL.Checked;
-            ft.CaseSensitive = this.CheckCaseSensitive.Checked;
-            ft.IsRt = this.CheckRetweet.Checked;
-            ft.UseLambda = this.CheckLambda.Checked;
+            ft.UseRegex = CheckRegex.Checked;
+            ft.SearchUrl = CheckURL.Checked;
+            ft.CaseSensitive = CheckCaseSensitive.Checked;
+            ft.IsRt = CheckRetweet.Checked;
+            ft.UseLambda = CheckLambda.Checked;
 
             bdy = string.Empty;
-            if (this.RadioExAnd.Checked)
+            if (RadioExAnd.Checked)
             {
-                ft.ExNameFilter = this.ExUID.Text;
+                ft.ExNameFilter = ExUID.Text;
                 ft.ExSearchBoth = true;
-                bdy = this.ExMSG1.Text;
+                bdy = ExMSG1.Text;
             }
             else
             {
                 ft.ExNameFilter = string.Empty;
                 ft.ExSearchBoth = false;
-                bdy = this.ExMSG2.Text;
+                bdy = ExMSG2.Text;
             }
 
-            ft.ExSource = this.TextExSource.Text.Trim();
+            ft.ExSource = TextExSource.Text.Trim();
 
-            if (this.CheckExRegex.Checked || this.CheckExLambDa.Checked)
+            if (CheckExRegex.Checked || CheckExLambDa.Checked)
             {
                 ft.ExBodyFilter.Add(bdy);
             }
@@ -1130,31 +1130,31 @@ namespace Hoehoe
                 }
             }
 
-            ft.ExUseRegex = this.CheckExRegex.Checked;
-            ft.ExSearchUrl = this.CheckExURL.Checked;
-            ft.ExCaseSensitive = this.CheckExCaseSensitive.Checked;
-            ft.IsExRt = this.CheckExRetweet.Checked;
-            ft.ExUseLambda = this.CheckExLambDa.Checked;
+            ft.ExUseRegex = CheckExRegex.Checked;
+            ft.ExSearchUrl = CheckExURL.Checked;
+            ft.ExCaseSensitive = CheckExCaseSensitive.Checked;
+            ft.IsExRt = CheckExRetweet.Checked;
+            ft.ExUseLambda = CheckExLambDa.Checked;
 
-            if (this.editMode == EDITMODE.AddNew)
+            if (_editMode == EDITMODE.AddNew)
             {
-                if (!this.sts.Tabs[this.ListTabs.SelectedItem.ToString()].AddFilter(ft))
+                if (!_sts.Tabs[ListTabs.SelectedItem.ToString()].AddFilter(ft))
                 {
                     MessageBox.Show(R.ButtonOK_ClickText4, R.ButtonOK_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                this.sts.Tabs[this.ListTabs.SelectedItem.ToString()].EditFilter((FiltersClass)this.ListFilters.SelectedItem, ft);
+                _sts.Tabs[ListTabs.SelectedItem.ToString()].EditFilter((FiltersClass)ListFilters.SelectedItem, ft);
             }
 
-            this.SetFilters(this.ListTabs.SelectedItem.ToString());
-            this.ListFilters.SelectedIndex = -1;
-            this.ListFilters.SelectedIndex = this.editMode == EDITMODE.AddNew ? this.ListFilters.Items.Count - 1 : prevSelectedIndex;
-            this.editMode = EDITMODE.None;
-            if (this.isDirectAdd)
+            SetFilters(ListTabs.SelectedItem.ToString());
+            ListFilters.SelectedIndex = -1;
+            ListFilters.SelectedIndex = _editMode == EDITMODE.AddNew ? ListFilters.Items.Count - 1 : prevSelectedIndex;
+            _editMode = EDITMODE.None;
+            if (_isDirectAdd)
             {
-                this.Close();
+                Close();
             }
         }
 
@@ -1164,7 +1164,7 @@ namespace Hoehoe
             TabUsageType tabType = default(TabUsageType);
             using (InputTabName inputName = new InputTabName())
             {
-                inputName.TabName = this.sts.GetUniqueTabName();
+                inputName.TabName = _sts.GetUniqueTabName();
                 inputName.SetIsShowUsage(true);
                 inputName.ShowDialog();
                 if (inputName.DialogResult == DialogResult.Cancel)
@@ -1182,7 +1182,7 @@ namespace Hoehoe
                 ListElement list = null;
                 if (tabType == TabUsageType.Lists)
                 {
-                    string rslt = ((TweenMain)this.Owner).TwitterInstance.GetListsApi();
+                    string rslt = ((TweenMain)Owner).TwitterInstance.GetListsApi();
                     if (!string.IsNullOrEmpty(rslt))
                     {
                         MessageBox.Show("Failed to get lists. (" + rslt + ")");
@@ -1204,7 +1204,7 @@ namespace Hoehoe
                     }
                 }
 
-                if (!this.sts.AddTab(tabName, tabType, list) || !((TweenMain)this.Owner).AddNewTab(tabName, false, tabType, list))
+                if (!_sts.AddTab(tabName, tabType, list) || !((TweenMain)Owner).AddNewTab(tabName, false, tabType, list))
                 {
                     string tmp = string.Format(R.AddTabMenuItem_ClickText1, tabName);
                     MessageBox.Show(tmp, R.AddTabMenuItem_ClickText2, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -1213,159 +1213,159 @@ namespace Hoehoe
                 else
                 {
                     // 成功
-                    this.ListTabs.Items.Add(tabName);
-                    this.SetTabnamesToDialog();
+                    ListTabs.Items.Add(tabName);
+                    SetTabnamesToDialog();
                 }
             }
         }
 
         private void ButtonDeleteTab_ClickExtracted()
         {
-            if (this.ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty((string)this.ListTabs.SelectedItem))
+            if (ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty((string)ListTabs.SelectedItem))
             {
-                string tb = this.ListTabs.SelectedItem.ToString();
-                int idx = this.ListTabs.SelectedIndex;
-                if (((TweenMain)this.Owner).RemoveSpecifiedTab(tb, true))
+                string tb = ListTabs.SelectedItem.ToString();
+                int idx = ListTabs.SelectedIndex;
+                if (((TweenMain)Owner).RemoveSpecifiedTab(tb, true))
                 {
-                    this.ListTabs.Items.RemoveAt(idx);
+                    ListTabs.Items.RemoveAt(idx);
                     idx -= 1;
                     if (idx < 0)
                     {
                         idx = 0;
                     }
 
-                    this.ListTabs.SelectedIndex = idx;
-                    this.SetTabnamesToDialog();
+                    ListTabs.SelectedIndex = idx;
+                    SetTabnamesToDialog();
                 }
             }
         }
 
         private void ButtonRenameTab_ClickExtracted()
         {
-            if (this.ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty((string)this.ListTabs.SelectedItem))
+            if (ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty((string)ListTabs.SelectedItem))
             {
-                string tb = this.ListTabs.SelectedItem.ToString();
-                int idx = this.ListTabs.SelectedIndex;
-                if (((TweenMain)this.Owner).RenameTab(ref tb))
+                string tb = ListTabs.SelectedItem.ToString();
+                int idx = ListTabs.SelectedIndex;
+                if (((TweenMain)Owner).RenameTab(ref tb))
                 {
-                    this.ListTabs.Items.RemoveAt(idx);
-                    this.ListTabs.Items.Insert(idx, tb);
-                    this.ListTabs.SelectedIndex = idx;
-                    this.SetTabnamesToDialog();
+                    ListTabs.Items.RemoveAt(idx);
+                    ListTabs.Items.Insert(idx, tb);
+                    ListTabs.SelectedIndex = idx;
+                    SetTabnamesToDialog();
                 }
             }
         }
 
         private void CheckManageRead_CheckedChangedExtracted()
         {
-            if (this.ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(this.ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
-                ((TweenMain)this.Owner).ChangeTabUnreadManage(this.ListTabs.SelectedItem.ToString(), this.CheckManageRead.Checked);
+                ((TweenMain)Owner).ChangeTabUnreadManage(ListTabs.SelectedItem.ToString(), CheckManageRead.Checked);
             }
         }
 
         private void ButtonUp_ClickExtracted()
         {
-            if (this.ListTabs.SelectedIndex > 0 && !string.IsNullOrEmpty(this.ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > 0 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
-                string selName = this.ListTabs.SelectedItem.ToString();
-                string tgtName = this.ListTabs.Items[this.ListTabs.SelectedIndex - 1].ToString();
-                ((TweenMain)this.Owner).ReorderTab(selName, tgtName, true);
-                int idx = this.ListTabs.SelectedIndex;
-                this.ListTabs.Items.RemoveAt(idx - 1);
-                this.ListTabs.Items.Insert(idx, tgtName);
+                string selName = ListTabs.SelectedItem.ToString();
+                string tgtName = ListTabs.Items[ListTabs.SelectedIndex - 1].ToString();
+                ((TweenMain)Owner).ReorderTab(selName, tgtName, true);
+                int idx = ListTabs.SelectedIndex;
+                ListTabs.Items.RemoveAt(idx - 1);
+                ListTabs.Items.Insert(idx, tgtName);
             }
         }
 
         private void ButtonDown_ClickExtracted()
         {
-            if (this.ListTabs.SelectedIndex > -1 && this.ListTabs.SelectedIndex < this.ListTabs.Items.Count - 1 && !string.IsNullOrEmpty(this.ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > -1 && ListTabs.SelectedIndex < ListTabs.Items.Count - 1 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
-                string selName = this.ListTabs.SelectedItem.ToString();
-                string tgtName = this.ListTabs.Items[this.ListTabs.SelectedIndex + 1].ToString();
-                ((TweenMain)this.Owner).ReorderTab(selName, tgtName, false);
-                int idx = this.ListTabs.SelectedIndex;
-                this.ListTabs.Items.RemoveAt(idx + 1);
-                this.ListTabs.Items.Insert(idx, tgtName);
+                string selName = ListTabs.SelectedItem.ToString();
+                string tgtName = ListTabs.Items[ListTabs.SelectedIndex + 1].ToString();
+                ((TweenMain)Owner).ReorderTab(selName, tgtName, false);
+                int idx = ListTabs.SelectedIndex;
+                ListTabs.Items.RemoveAt(idx + 1);
+                ListTabs.Items.Insert(idx, tgtName);
             }
         }
 
         private void CheckNotifyNew_CheckedChangedExtracted()
         {
-            if (this.ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(this.ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
-                this.sts.Tabs[this.ListTabs.SelectedItem.ToString()].Notify = this.CheckNotifyNew.Checked;
+                _sts.Tabs[ListTabs.SelectedItem.ToString()].Notify = CheckNotifyNew.Checked;
             }
         }
 
         private void ComboSound_SelectedIndexChangedExtracted()
         {
-            if (this.ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(this.ListTabs.SelectedItem.ToString()))
+            if (ListTabs.SelectedIndex > -1 && !string.IsNullOrEmpty(ListTabs.SelectedItem.ToString()))
             {
                 string filename = string.Empty;
-                if (this.ComboSound.SelectedIndex > -1)
+                if (ComboSound.SelectedIndex > -1)
                 {
-                    filename = this.ComboSound.SelectedItem.ToString();
+                    filename = ComboSound.SelectedItem.ToString();
                 }
 
-                this.sts.Tabs[this.ListTabs.SelectedItem.ToString()].SoundFile = filename;
+                _sts.Tabs[ListTabs.SelectedItem.ToString()].SoundFile = filename;
             }
         }
 
         private void RadioExAnd_CheckedChangedExtracted(bool flg)
         {
-            this.ExUID.Enabled = flg;
-            this.ExMSG1.Enabled = flg;
-            this.ExMSG2.Enabled = !flg;
+            ExUID.Enabled = flg;
+            ExMSG1.Enabled = flg;
+            ExMSG2.Enabled = !flg;
         }
 
         private void ButtonRuleUp_ClickExtracted()
         {
-            if (this.ListTabs.SelectedIndex > -1 && this.ListFilters.SelectedItem != null && this.ListFilters.SelectedIndex > 0)
+            if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null && ListFilters.SelectedIndex > 0)
             {
-                string tabname = this.ListTabs.SelectedItem.ToString();
-                FiltersClass selected = this.sts.Tabs[tabname].Filters[this.ListFilters.SelectedIndex];
-                FiltersClass target = this.sts.Tabs[tabname].Filters[this.ListFilters.SelectedIndex - 1];
-                int idx = this.ListFilters.SelectedIndex;
-                this.ListFilters.Items.RemoveAt(idx - 1);
-                this.ListFilters.Items.Insert(idx, target);
-                this.sts.Tabs[tabname].Filters.RemoveAt(idx - 1);
-                this.sts.Tabs[tabname].Filters.Insert(idx, target);
+                string tabname = ListTabs.SelectedItem.ToString();
+                FiltersClass selected = _sts.Tabs[tabname].Filters[ListFilters.SelectedIndex];
+                FiltersClass target = _sts.Tabs[tabname].Filters[ListFilters.SelectedIndex - 1];
+                int idx = ListFilters.SelectedIndex;
+                ListFilters.Items.RemoveAt(idx - 1);
+                ListFilters.Items.Insert(idx, target);
+                _sts.Tabs[tabname].Filters.RemoveAt(idx - 1);
+                _sts.Tabs[tabname].Filters.Insert(idx, target);
             }
         }
 
         private void ButtonRuleDown_ClickExtracted()
         {
-            if (this.ListTabs.SelectedIndex > -1 && this.ListFilters.SelectedItem != null && this.ListFilters.SelectedIndex < this.ListFilters.Items.Count - 1)
+            if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null && ListFilters.SelectedIndex < ListFilters.Items.Count - 1)
             {
-                string tabname = this.ListTabs.SelectedItem.ToString();
-                FiltersClass selected = this.sts.Tabs[tabname].Filters[this.ListFilters.SelectedIndex];
-                FiltersClass target = this.sts.Tabs[tabname].Filters[this.ListFilters.SelectedIndex + 1];
-                int idx = this.ListFilters.SelectedIndex;
-                this.ListFilters.Items.RemoveAt(idx + 1);
-                this.ListFilters.Items.Insert(idx, target);
-                this.sts.Tabs[tabname].Filters.RemoveAt(idx + 1);
-                this.sts.Tabs[tabname].Filters.Insert(idx, target);
+                string tabname = ListTabs.SelectedItem.ToString();
+                FiltersClass selected = _sts.Tabs[tabname].Filters[ListFilters.SelectedIndex];
+                FiltersClass target = _sts.Tabs[tabname].Filters[ListFilters.SelectedIndex + 1];
+                int idx = ListFilters.SelectedIndex;
+                ListFilters.Items.RemoveAt(idx + 1);
+                ListFilters.Items.Insert(idx, target);
+                _sts.Tabs[tabname].Filters.RemoveAt(idx + 1);
+                _sts.Tabs[tabname].Filters.Insert(idx, target);
             }
         }
 
         private void ButtonRuleCopy_ClickExtracted()
         {
-            if (this.ListTabs.SelectedIndex > -1 && this.ListFilters.SelectedItem != null)
+            if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null)
             {
-                this.tabDialog.Text = R.ButtonRuleCopy_ClickText1;
-                if (this.tabDialog.ShowDialog() == DialogResult.Cancel)
+                _tabDialog.Text = R.ButtonRuleCopy_ClickText1;
+                if (_tabDialog.ShowDialog() == DialogResult.Cancel)
                 {
                     return;
                 }
 
-                string tabname = this.ListTabs.SelectedItem.ToString();
-                StringCollection tabs = this.tabDialog.SelectedTabNames;
+                string tabname = ListTabs.SelectedItem.ToString();
+                StringCollection tabs = _tabDialog.SelectedTabNames;
                 List<FiltersClass> filters = new List<FiltersClass>();
 
-                foreach (int idx in this.ListFilters.SelectedIndices)
+                foreach (int idx in ListFilters.SelectedIndices)
                 {
-                    filters.Add(this.sts.Tabs[tabname].Filters[idx].CopyTo(new FiltersClass()));
+                    filters.Add(_sts.Tabs[tabname].Filters[idx].CopyTo(new FiltersClass()));
                 }
 
                 foreach (string tb in tabs)
@@ -1374,35 +1374,35 @@ namespace Hoehoe
                     {
                         foreach (FiltersClass flt in filters)
                         {
-                            if (!this.sts.Tabs[tb].Filters.Contains(flt))
+                            if (!_sts.Tabs[tb].Filters.Contains(flt))
                             {
-                                this.sts.Tabs[tb].AddFilter(flt.CopyTo(new FiltersClass()));
+                                _sts.Tabs[tb].AddFilter(flt.CopyTo(new FiltersClass()));
                             }
                         }
                     }
                 }
 
-                this.SetFilters(tabname);
+                SetFilters(tabname);
             }
         }
 
         private void ButtonRuleMove_ClickExtracted()
         {
-            if (this.ListTabs.SelectedIndex > -1 && this.ListFilters.SelectedItem != null)
+            if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null)
             {
-                this.tabDialog.Text = R.ButtonRuleMove_ClickText1;
-                if (this.tabDialog.ShowDialog() == DialogResult.Cancel)
+                _tabDialog.Text = R.ButtonRuleMove_ClickText1;
+                if (_tabDialog.ShowDialog() == DialogResult.Cancel)
                 {
                     return;
                 }
 
-                string tabname = this.ListTabs.SelectedItem.ToString();
-                StringCollection tabs = this.tabDialog.SelectedTabNames;
+                string tabname = ListTabs.SelectedItem.ToString();
+                StringCollection tabs = _tabDialog.SelectedTabNames;
                 List<FiltersClass> filters = new List<FiltersClass>();
 
-                foreach (int idx in this.ListFilters.SelectedIndices)
+                foreach (int idx in ListFilters.SelectedIndices)
                 {
-                    filters.Add(this.sts.Tabs[tabname].Filters[idx].CopyTo(new FiltersClass()));
+                    filters.Add(_sts.Tabs[tabname].Filters[idx].CopyTo(new FiltersClass()));
                 }
 
                 if (tabs.Count == 1 && tabs[0] == tabname)
@@ -1416,25 +1416,25 @@ namespace Hoehoe
                     {
                         foreach (FiltersClass flt in filters)
                         {
-                            if (!this.sts.Tabs[tb].Filters.Contains(flt))
+                            if (!_sts.Tabs[tb].Filters.Contains(flt))
                             {
-                                this.sts.Tabs[tb].AddFilter(flt.CopyTo(new FiltersClass()));
+                                _sts.Tabs[tb].AddFilter(flt.CopyTo(new FiltersClass()));
                             }
                         }
                     }
                 }
 
                 // TODO: VB's for/next loop to C# for{}
-                for (int idx = this.ListFilters.Items.Count - 1; idx >= 0; idx += -1)
+                for (int idx = ListFilters.Items.Count - 1; idx >= 0; idx += -1)
                 {
-                    if (this.ListFilters.GetSelected(idx))
+                    if (ListFilters.GetSelected(idx))
                     {
-                        this.sts.Tabs[this.ListTabs.SelectedItem.ToString()].RemoveFilter((FiltersClass)this.ListFilters.Items[idx]);
-                        this.ListFilters.Items.RemoveAt(idx);
+                        _sts.Tabs[ListTabs.SelectedItem.ToString()].RemoveFilter((FiltersClass)ListFilters.Items[idx]);
+                        ListFilters.Items.RemoveAt(idx);
                     }
                 }
 
-                this.SetFilters(tabname);
+                SetFilters(tabname);
             }
         }
 
