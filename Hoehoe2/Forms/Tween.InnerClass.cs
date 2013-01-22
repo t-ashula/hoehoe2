@@ -79,9 +79,9 @@ namespace Hoehoe
         {
             public ReplyChain(long originalId, long inReplyToId, TabPage originalTab)
             {
-                this.OriginalId = originalId;
-                this.InReplyToId = inReplyToId;
-                this.OriginalTab = originalTab;
+                OriginalId = originalId;
+                InReplyToId = inReplyToId;
+                OriginalTab = originalTab;
             }
 
             public long OriginalId { get; private set; }
@@ -165,19 +165,19 @@ namespace Hoehoe
 
             public PostingStatus()
             {
-                this.ImagePath = string.Empty;
-                this.ImageService = string.Empty;
-                this.InReplyToName = string.Empty;
-                this.InReplyToId = 0;
-                this.Status = string.Empty;
+                ImagePath = string.Empty;
+                ImageService = string.Empty;
+                InReplyToName = string.Empty;
+                InReplyToId = 0;
+                Status = string.Empty;
             }
 
             public PostingStatus(string status, long replyToId, string replyToName)
                 : this()
             {
-                this.Status = status;
-                this.InReplyToId = replyToId;
-                this.InReplyToName = replyToName;
+                Status = status;
+                InReplyToId = replyToId;
+                InReplyToName = replyToName;
             }
         }
 
@@ -207,7 +207,7 @@ namespace Hoehoe
 
                 public FriendshipInfo(string id)
                 {
-                    this.Id = id;
+                    Id = id;
                 }
             }
         }
