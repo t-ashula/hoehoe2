@@ -51,32 +51,32 @@ namespace Hoehoe
         /// <summary>
         /// プロキシ
         /// </summary>
-        private static WebProxy proxy = null;
+        private static WebProxy _proxy = null;
 
         /// <summary>
         /// ユーザーが選択したプロキシの方式
         /// </summary>
-        private static ProxyType proxyKind = ProxyType.IE;
+        private static ProxyType _proxyKind = ProxyType.IE;
 
         /// <summary>
         /// クッキー保存用コンテナ
         /// </summary>
-        private static CookieContainer cookieContainer = new CookieContainer();
+        private static readonly CookieContainer CookieContainer = new CookieContainer();
 
         /// <summary>
         /// 初期化済みフラグ
         /// </summary>
-        private static bool isInitialize;
+        private static bool _isInitialize;
 
         /// <summary>
         /// 通信タイムアウト時間（ms）
         /// </summary>
-        private static int defTimeout = 20 * 1000;
+        private static int _defTimeout = 20 * 1000;
 
         /// <summary>
         /// 通信タイムアウト時間（ms）
         /// </summary>
-        private int curTimeout = 0;
+        private int _curTimeout = 0;
 
         public enum ProxyType
         {
@@ -92,7 +92,7 @@ namespace Hoehoe
         {
             get
             {
-                return defTimeout;
+                return _defTimeout;
             }
 
             set
@@ -103,11 +103,11 @@ namespace Hoehoe
                 if (value < TimeoutMinValue || value > TimeoutMaxValue)
                 {
                     // 範囲外ならデフォルト値設定
-                    defTimeout = TimeoutDefaultValue;
+                    _defTimeout = TimeoutDefaultValue;
                 }
                 else
                 {
-                    defTimeout = value;
+                    _defTimeout = value;
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace Hoehoe
         {
             get
             {
-                return this.curTimeout;
+                return _curTimeout;
             }
 
             set
@@ -132,7 +132,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    this.curTimeout = value;
+                    _curTimeout = value;
                 }
             }
         }
@@ -151,19 +151,19 @@ namespace Hoehoe
         /// <param name="proxyPassword">プロキシ認証が必要な場合のパスワード。不要なら空文字</param>
         public static void InitializeConnection(int timeout, ProxyType proxyType, string proxyAddress, int proxyPort, string proxyUser, string proxyPassword)
         {
-            isInitialize = true;
+            _isInitialize = true;
             ServicePointManager.Expect100Continue = false;
             DefaultTimeout = timeout * 1000; // s -> ms
             switch (proxyType)
             {
                 case ProxyType.None:
-                    proxy = null;
+                    _proxy = null;
                     break;
                 case ProxyType.Specified:
-                    proxy = new WebProxy("http://" + proxyAddress + ":" + proxyPort.ToString());
+                    _proxy = new WebProxy("http://" + proxyAddress + ":" + proxyPort.ToString());
                     if (!string.IsNullOrEmpty(proxyUser) || !string.IsNullOrEmpty(proxyPassword))
                     {
-                        proxy.Credentials = new NetworkCredential(proxyUser, proxyPassword);
+                        _proxy.Credentials = new NetworkCredential(proxyUser, proxyPassword);
                     }
 
                     break;
@@ -172,7 +172,7 @@ namespace Hoehoe
                     break;
             }
 
-            proxyKind = proxyType;
+            _proxyKind = proxyType;
             Win32Api.SetProxy(proxyType, proxyAddress, proxyPort, proxyUser, proxyPassword);
         }
 
@@ -191,7 +191,7 @@ namespace Hoehoe
         /// <returns>引数で指定された内容を反映したHttpWebRequestオブジェクト</returns>
         protected HttpWebRequest CreateRequest(string method, Uri requestUri, Dictionary<string, string> param, bool withCookie)
         {
-            if (!isInitialize)
+            if (!_isInitialize)
             {
                 throw new Exception("Sequence error.(not initialized)");
             }
@@ -200,16 +200,16 @@ namespace Hoehoe
             UriBuilder ub = new UriBuilder(requestUri.AbsoluteUri);
             if (param != null && (method == "GET" || method == "DELETE" || method == "HEAD"))
             {
-                ub.Query = this.CreateQueryString(param);
+                ub.Query = CreateQueryString(param);
             }
 
             HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(ub.Uri);
             webReq.ReadWriteTimeout = 90 * 1000;            // Streamの読み込みは90秒でタイムアウト（デフォルト5分）
 
             // プロキシ設定
-            if (proxyKind != ProxyType.IE)
+            if (_proxyKind != ProxyType.IE)
             {
-                webReq.Proxy = proxy;
+                webReq.Proxy = _proxy;
             }
 
             webReq.Method = method;
@@ -219,20 +219,20 @@ namespace Hoehoe
                 webReq.ContentType = "application/x-www-form-urlencoded";
                 using (StreamWriter writer = new StreamWriter(webReq.GetRequestStream()))
                 {
-                    writer.Write(this.CreateQueryString(param));
+                    writer.Write(CreateQueryString(param));
                 }
             }
 
             // cookie設定
             if (withCookie)
             {
-                webReq.CookieContainer = cookieContainer;
+                webReq.CookieContainer = CookieContainer;
             }
 
             // タイムアウト設定
-            if (this.InstanceTimeout > 0)
+            if (InstanceTimeout > 0)
             {
-                webReq.Timeout = this.InstanceTimeout;
+                webReq.Timeout = InstanceTimeout;
             }
             else
             {
@@ -256,7 +256,7 @@ namespace Hoehoe
         /// <returns>引数で指定された内容を反映したHttpWebRequestオブジェクト</returns>
         protected HttpWebRequest CreateRequest(string method, Uri requestUri, Dictionary<string, string> param, List<KeyValuePair<string, FileInfo>> binaryFileInfo, bool withCookie)
         {
-            if (!isInitialize)
+            if (!_isInitialize)
             {
                 throw new Exception("Sequence error.(not initialized)");
             }
@@ -276,9 +276,9 @@ namespace Hoehoe
             HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(ub.Uri);
 
             // プロキシ設定
-            if (proxyKind != ProxyType.IE)
+            if (_proxyKind != ProxyType.IE)
             {
-                webReq.Proxy = proxy;
+                webReq.Proxy = _proxy;
             }
 
             webReq.Method = method;
@@ -404,13 +404,13 @@ namespace Hoehoe
             // cookie設定
             if (withCookie)
             {
-                webReq.CookieContainer = cookieContainer;
+                webReq.CookieContainer = CookieContainer;
             }
 
             // タイムアウト設定
-            if (this.InstanceTimeout > 0)
+            if (InstanceTimeout > 0)
             {
-                webReq.Timeout = this.InstanceTimeout;
+                webReq.Timeout = InstanceTimeout;
             }
             else
             {
@@ -444,11 +444,11 @@ namespace Hoehoe
                     // cookie保持
                     if (withCookie)
                     {
-                        this.SaveCookie(webRes.Cookies);
+                        SaveCookie(webRes.Cookies);
                     }
 
                     // リダイレクト応答の場合は、リダイレクト先を設定
-                    this.GetHeaderInfo(webRes, headerInfo);
+                    GetHeaderInfo(webRes, headerInfo);
 
                     // 応答のストリームをコピーして戻す
                     if (webRes.ContentLength > 0)
@@ -460,7 +460,7 @@ namespace Hoehoe
                             {
                                 if (stream != null)
                                 {
-                                    this.CopyStream(stream, contentStream);
+                                    CopyStream(stream, contentStream);
                                 }
                             }
                         }
@@ -470,7 +470,7 @@ namespace Hoehoe
                             {
                                 if (stream != null)
                                 {
-                                    this.CopyStream(stream, contentStream);
+                                    CopyStream(stream, contentStream);
                                 }
                             }
                         }
@@ -484,7 +484,7 @@ namespace Hoehoe
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
                     HttpWebResponse res = (HttpWebResponse)ex.Response;
-                    this.GetHeaderInfo(res, headerInfo);
+                    GetHeaderInfo(res, headerInfo);
                     return res.StatusCode;
                 }
 
@@ -516,11 +516,11 @@ namespace Hoehoe
                     // cookie保持
                     if (withCookie)
                     {
-                        this.SaveCookie(webRes.Cookies);
+                        SaveCookie(webRes.Cookies);
                     }
 
                     // リダイレクト応答の場合は、リダイレクト先を設定
-                    this.GetHeaderInfo(webRes, headerInfo);
+                    GetHeaderInfo(webRes, headerInfo);
 
                     // 応答のストリームをテキストに書き出し
                     if (contentText == null)
@@ -541,7 +541,7 @@ namespace Hoehoe
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
                     HttpWebResponse res = (HttpWebResponse)ex.Response;
-                    this.GetHeaderInfo(res, headerInfo);
+                    GetHeaderInfo(res, headerInfo);
                     using (StreamReader sr = new StreamReader(res.GetResponseStream()))
                     {
                         contentText = sr.ReadToEnd();
@@ -576,11 +576,11 @@ namespace Hoehoe
                     // cookie保持
                     if (withCookie)
                     {
-                        this.SaveCookie(webRes.Cookies);
+                        SaveCookie(webRes.Cookies);
                     }
 
                     // リダイレクト応答の場合は、リダイレクト先を設定
-                    this.GetHeaderInfo(webRes, headerInfo);
+                    GetHeaderInfo(webRes, headerInfo);
                     return statusCode;
                 }
             }
@@ -589,7 +589,7 @@ namespace Hoehoe
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
                     HttpWebResponse res = (HttpWebResponse)ex.Response;
-                    this.GetHeaderInfo(res, headerInfo);
+                    GetHeaderInfo(res, headerInfo);
                     return res.StatusCode;
                 }
 
@@ -620,11 +620,11 @@ namespace Hoehoe
                     // Cookie保持
                     if (withCookie)
                     {
-                        this.SaveCookie(webRes.Cookies);
+                        SaveCookie(webRes.Cookies);
                     }
 
                     // リダイレクト応答の場合は、リダイレクト先を設定
-                    this.GetHeaderInfo(webRes, headerInfo);
+                    GetHeaderInfo(webRes, headerInfo);
 
                     // 応答のストリームをBitmapにして戻す
                     contentBitmap = new Bitmap(webRes.GetResponseStream());
@@ -636,7 +636,7 @@ namespace Hoehoe
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
                     HttpWebResponse res = (HttpWebResponse)ex.Response;
-                    this.GetHeaderInfo(res, headerInfo);
+                    GetHeaderInfo(res, headerInfo);
                     return res.StatusCode;
                 }
 
@@ -658,7 +658,7 @@ namespace Hoehoe
             StringBuilder query = new StringBuilder();
             foreach (string key in param.Keys)
             {
-                query.AppendFormat("{0}={1}&", this.UrlEncode(key), this.UrlEncode(param[key]));
+                query.AppendFormat("{0}={1}&", UrlEncode(key), UrlEncode(param[key]));
             }
 
             return query.ToString(0, query.Length - 1);
@@ -724,7 +724,7 @@ namespace Hoehoe
                 if (ck.Domain.StartsWith("."))
                 {
                     ck.Domain = ck.Domain.Substring(1, ck.Domain.Length - 1);
-                    cookieContainer.Add(ck);
+                    CookieContainer.Add(ck);
                 }
             }
         }
