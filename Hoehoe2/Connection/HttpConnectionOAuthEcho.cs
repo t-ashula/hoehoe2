@@ -33,23 +33,23 @@ namespace Hoehoe
 
     public class HttpConnectionOAuthEcho : HttpConnectionOAuth
     {
-        private Uri realm;
-        private Uri serviceProvider;
+        private Uri _realm;
+        private Uri _serviceProvider;
 
         public HttpConnectionOAuthEcho(Uri realm, Uri serviceProvider)
         {
-            this.realm = realm;
-            this.serviceProvider = serviceProvider;
+            _realm = realm;
+            _serviceProvider = serviceProvider;
         }
 
         public void SetRealm(Uri value)
         {
-            this.realm = value;
+            _realm = value;
         }
 
         public void SetServiceProvider(Uri value)
         {
-            this.serviceProvider = value;
+            _serviceProvider = value;
         }
 
         protected override void AppendOAuthInfo(HttpWebRequest webRequest, Dictionary<string, string> query, string token, string tokenSecret)
@@ -67,22 +67,22 @@ namespace Hoehoe
             }
 
             // 署名の作成・追加(GETメソッド固定。ServiceProvider呼び出し用の署名作成)
-            parameter.Add("oauth_signature", this.CreateSignature(tokenSecret, HttpConnection.GetMethod, this.serviceProvider, parameter));
+            parameter.Add("oauth_signature", CreateSignature(tokenSecret, HttpConnection.GetMethod, _serviceProvider, parameter));
 
             // HTTPリクエストのヘッダに追加
             StringBuilder sb = new StringBuilder("OAuth ");
-            sb.AppendFormat("realm=\"{0}://{1}{2}\",", this.realm.Scheme, this.realm.Host, this.realm.AbsolutePath);
+            sb.AppendFormat("realm=\"{0}://{1}{2}\",", _realm.Scheme, _realm.Host, _realm.AbsolutePath);
             foreach (KeyValuePair<string, string> item in parameter)
             {
                 // 各種情報のうち、oauth_で始まる情報のみ、ヘッダに追加する。各情報はカンマ区切り、データはダブルクォーテーションで括る
                 if (item.Key.StartsWith("oauth_"))
                 {
-                    sb.AppendFormat("{0}=\"{1}\",", item.Key, this.UrlEncode(item.Value));
+                    sb.AppendFormat("{0}=\"{1}\",", item.Key, UrlEncode(item.Value));
                 }
             }
 
             webRequest.Headers.Add("X-Verify-Credentials-Authorization", sb.ToString());
-            webRequest.Headers.Add("X-Auth-Service-Provider", string.Format("{0}://{1}{2}", this.serviceProvider.Scheme, this.serviceProvider.Host, this.serviceProvider.AbsolutePath));
+            webRequest.Headers.Add("X-Auth-Service-Provider", string.Format("{0}://{1}{2}", _serviceProvider.Scheme, _serviceProvider.Host, _serviceProvider.AbsolutePath));
         }
     }
 }
