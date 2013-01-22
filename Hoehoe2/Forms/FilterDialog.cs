@@ -473,6 +473,7 @@ namespace Hoehoe
                     ButtonRuleCopy.Enabled = false;
                     ButtonRuleMove.Enabled = false;
                     break;
+
                 default:
                     ButtonNew.Enabled = true;
                     bool selected = ListFilters.SelectedIndex > -1;
@@ -522,6 +523,7 @@ namespace Hoehoe
                 case TabUsageType.UserTimeline:
                     LabelTabType.Text = R.TabUsageTypeName_UserTimeline;
                     break;
+
                 default:
                     LabelTabType.Text = "UNKNOWN";
                     break;
@@ -1324,7 +1326,8 @@ namespace Hoehoe
             if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null && ListFilters.SelectedIndex > 0)
             {
                 string tabname = ListTabs.SelectedItem.ToString();
-                FiltersClass selected = _sts.Tabs[tabname].Filters[ListFilters.SelectedIndex];
+
+                // FiltersClass selected = _sts.Tabs[tabname].Filters[ListFilters.SelectedIndex];
                 FiltersClass target = _sts.Tabs[tabname].Filters[ListFilters.SelectedIndex - 1];
                 int idx = ListFilters.SelectedIndex;
                 ListFilters.Items.RemoveAt(idx - 1);
@@ -1339,7 +1342,8 @@ namespace Hoehoe
             if (ListTabs.SelectedIndex > -1 && ListFilters.SelectedItem != null && ListFilters.SelectedIndex < ListFilters.Items.Count - 1)
             {
                 string tabname = ListTabs.SelectedItem.ToString();
-                FiltersClass selected = _sts.Tabs[tabname].Filters[ListFilters.SelectedIndex];
+
+                // FiltersClass selected = _sts.Tabs[tabname].Filters[ListFilters.SelectedIndex];
                 FiltersClass target = _sts.Tabs[tabname].Filters[ListFilters.SelectedIndex + 1];
                 int idx = ListFilters.SelectedIndex;
                 ListFilters.Items.RemoveAt(idx + 1);

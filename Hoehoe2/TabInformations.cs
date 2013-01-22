@@ -1047,15 +1047,18 @@ namespace Hoehoe
                                 post.IsMark = true;             // マークあり
                                 post.FilterHit = true;
                                 break;
+
                             case HITRESULT.Move:
                                 homeTab.Remove(post.StatusId, post.IsRead);
                                 post.IsMark = false;
                                 post.FilterHit = true;
                                 break;
+
                             case HITRESULT.Copy:
                                 post.IsMark = false;
                                 post.FilterHit = true;
                                 break;
+
                             case HITRESULT.Exclude:
                                 if (tb.TabName == replyTab.TabName && post.IsReply)
                                 {
@@ -1069,6 +1072,7 @@ namespace Hoehoe
 
                                 post.FilterHit = false;
                                 break;
+
                             case HITRESULT.None:
                                 if (tb.TabName == replyTab.TabName && post.IsReply)
                                 {
@@ -1227,7 +1231,7 @@ namespace Hoehoe
                 {
                     foreach (PostClass post in _statuses.Values)
                     {
-                        post.IsOwl = post.IsMe ? false : !follower.Contains(post.UserId);
+                        post.IsOwl = !post.IsMe && !follower.Contains(post.UserId);
                     }
                 }
                 else
@@ -1495,7 +1499,6 @@ namespace Hoehoe
             // notifyPosts = New List(Of PostClass)
             TabClass homeTab = GetTabByType(TabUsageType.Home);
             TabClass replyTab = GetTabByType(TabUsageType.Mentions);
-            TabClass dmsgTab = GetTabByType(TabUsageType.DirectMessage);
             TabClass favTab = GetTabByType(TabUsageType.Favorites);
             foreach (long id in _addedIds)
             {

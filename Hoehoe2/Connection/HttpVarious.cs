@@ -45,7 +45,7 @@ namespace Hoehoe
                 req.AllowAutoRedirect = false;
                 string data = string.Empty;
                 var head = new Dictionary<string, string>();
-                HttpStatusCode ret = GetResponse(req, ref data, head, false);
+                GetResponse(req, ref data, head, false);
                 return head.ContainsKey("Location") ? head["Location"] : url;
             }
             catch (Exception)

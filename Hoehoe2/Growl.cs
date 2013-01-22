@@ -135,7 +135,6 @@ namespace Hoehoe
                 {
                     // アイコンセットにMIcon.icoが存在する場合それを使用
                     ConstructorInfo cibd = _core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(byte[]) }, null);
-                    var tc = new TypeConverter();
                     object bdata = cibd.Invoke(new object[] { IconToByteArray(Path.Combine(Application.StartupPath, "Icons\\MIcon.ico")) });
                     ConstructorInfo cires = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { bdata.GetType() }, null);
                     object data = cires.Invoke(new[] { bdata });
@@ -146,7 +145,6 @@ namespace Hoehoe
                 {
                     // 内蔵アイコンリソースを使用
                     ConstructorInfo cibd = _core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(byte[]) }, null);
-                    var tc = new TypeConverter();
                     object bdata = cibd.Invoke(new object[] { IconToByteArray(R.MIcon) });
                     ConstructorInfo cires = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { bdata.GetType() }, null);
                     object data = cires.Invoke(new[] { bdata });
@@ -199,12 +197,15 @@ namespace Hoehoe
                 case NotifyType.Reply:
                     notificationName = "REPLY";
                     break;
+
                 case NotifyType.DirectMessage:
                     notificationName = "DIRECT_MESSAGE";
                     break;
+
                 case NotifyType.Notify:
                     notificationName = "NOTIFY";
                     break;
+
                 case NotifyType.UserStreamEvent:
                     notificationName = "USERSTREAM_EVENT";
                     break;
@@ -253,6 +254,7 @@ namespace Hoehoe
             }
         }
 
+        // TODO: remove?
         private void GrowlCallbackHandler(object response, object callbackData, object state)
         {
             try
@@ -273,12 +275,15 @@ namespace Hoehoe
                         case "REPLY":
                             nt = NotifyType.Reply;
                             break;
+
                         case "DIRECT_MESSAGE":
                             nt = NotifyType.DirectMessage;
                             break;
+
                         case "NOTIFY":
                             nt = NotifyType.Notify;
                             break;
+
                         case "USERSTREAM_EVENT":
                             nt = NotifyType.UserStreamEvent;
                             break;

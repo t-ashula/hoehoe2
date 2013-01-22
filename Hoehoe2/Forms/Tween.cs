@@ -130,9 +130,10 @@ namespace Hoehoe
         private Color _clrAtFromTarget; // 選択発言者への返信発言用背景色
         private Color _clrAtTo; // 選択発言の唯一＠先
         private Color _clrListBackcolor; // リスト部通常発言背景色
-        private Color _clrInputBackcolor; // 入力欄背景色
         private Color _clrInputForecolor; // 入力欄文字色
         private Font _fntInputFont; // 入力欄フォント
+
+        // private Color _clrInputBackcolor; // 入力欄背景色
 
         /* アイコン画像リスト */
         private ImageDictionary _iconDict;
@@ -501,6 +502,7 @@ namespace Hoehoe
 
         private DetailsListView CreateDetailListView(string tabName, bool startup)
         {
+            // TODO: tabName
             InitColumnText();
             var colhds = new ColumnHeader[8]; // アイコン, ニックネーム, 本文, 日付, ユーザID, 未読, マーク＆プロテクト, ソース
             var widths = new[] { 48, 80, 300, 50, 50, 16, 16, 50 };

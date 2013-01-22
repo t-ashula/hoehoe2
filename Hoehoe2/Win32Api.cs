@@ -106,7 +106,7 @@ namespace Hoehoe
         private static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
 
         // SendMessageで送信するメッセージ
-        private enum Sm_Message : int
+        private enum SM_MESSAGE
         {
             /// <summary>
             /// ユーザー定義メッセージ
@@ -173,7 +173,7 @@ namespace Hoehoe
 
         // TBBUTTONINFOに指定するマスク情報
         [Flags]
-        private enum ToolbarButtonMask : int
+        private enum ToolbarButtonMask
         {
             TBIF_COMMAND = 0x20,
             TBIF_LPARAM = 0x10,
@@ -190,7 +190,7 @@ namespace Hoehoe
 
         // OpenProcessで指定するアクセス権
         [Flags]
-        private enum ProcessAccess : int
+        private enum ProcessAccess
         {
             /// <summary>Specifies all possible access flags for the process object.</summary>
             AllAccess = CreateThread | DuplicateHandle | QueryInformation | SetInformation | Terminate | VMOperation | VMRead | VMWrite | Synchronize,
@@ -395,7 +395,7 @@ namespace Hoehoe
                             try
                             {
                                 // 通知領域ボタン数取得
-                                int iCount = SendMessage(toolWin, (int)Sm_Message.TB_BUTTONCOUNT, new IntPtr(0), new IntPtr(0));
+                                int iCount = SendMessage(toolWin, (int)SM_MESSAGE.TB_BUTTONCOUNT, new IntPtr(0), new IntPtr(0));
 
                                 // 左から順に情報取得
                                 for (int i = 0; i < iCount; i++)
@@ -418,7 +418,7 @@ namespace Hoehoe
                                         Marshal.StructureToPtr(tbButtonLocal, ptrLocal, true);
 
                                         // ボタン情報取得（idCommandを取得するため）
-                                        SendMessage(toolWin, (int)Sm_Message.TB_GETBUTTON, new IntPtr(i), ptbSysButton);
+                                        SendMessage(toolWin, (int)SM_MESSAGE.TB_GETBUTTON, new IntPtr(i), ptbSysButton);
 
                                         // Explorer内のメモリを共有メモリに読み込み
                                         ReadProcessMemory(hProc, ptbSysButton, ptrLocal, Marshal.SizeOf(tbButtonLocal), ref dwBytes);
@@ -444,7 +444,7 @@ namespace Hoehoe
                                     WriteProcessMemory(hProc, ptbSysInfo, ref tbButtonInfoLocal, Marshal.SizeOf(tbButtonInfoLocal), out dwBytes);
 
                                     // ボタン詳細情報取得
-                                    SendMessage(toolWin, (int)Sm_Message.TB_GETBUTTONINFO, tbButtonLocal2.idCommand, ptbSysInfo);
+                                    SendMessage(toolWin, (int)SM_MESSAGE.TB_GETBUTTONINFO, tbButtonLocal2.idCommand, ptbSysInfo);
 
                                     // 共有メモリにボタン詳細情報を読み込む領域確保
                                     IntPtr ptrInfo = Marshal.AllocCoTaskMem(Marshal.SizeOf(tbButtonInfoLocal));
@@ -563,7 +563,7 @@ namespace Hoehoe
             return FlashWindowEx(ref fInfo);
         }
 
-        public enum FlashSpecification : int
+        public enum FlashSpecification
         {
             FlashStop = FLASHW_STOP,
             FlashCaption = FLASHW_CAPTION,
@@ -610,7 +610,12 @@ namespace Hoehoe
         {
             bool isRunning = false;
             int ret = SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, ref isRunning, 0);
-            return isRunning;
+            if (ret != 0)
+            {
+                return isRunning;
+            }
+
+            return false;
         }
 
         #endregion "スクリーンセーバー起動中か判定"
@@ -668,6 +673,7 @@ namespace Hoehoe
             {
                 UnregisterHotKey(targetForm.Handle, hotkeyID);
                 GlobalDeleteAtom(hotkeyID);
+
                 // hotkeyID = 0;
             }
         }
@@ -689,6 +695,7 @@ namespace Hoehoe
         private static void RefreshProxySettings(string strProxy)
         {
             const int INTERNET_OPTION_PROXY = 38;
+
             // const int INTERNET_OPEN_TYPE_PRECONFIG = 0;  // IE setting
             const int INTERNET_OPEN_TYPE_DIRECT = 1; // Direct
             const int INTERNET_OPEN_TYPE_PROXY = 3;  // Custom
@@ -740,6 +747,10 @@ namespace Hoehoe
                     // Converting structure to IntPtr
                     Marshal.StructureToPtr(ipi, pIpi, true);
                     bool ret = InternetSetOption(IntPtr.Zero, INTERNET_OPTION_PROXY, pIpi, Marshal.SizeOf(ipi));
+                    if (!ret)
+                    {
+                        Debug.WriteLine("Proxy set failed.");
+                    }
                 }
                 finally
                 {
@@ -794,9 +805,11 @@ namespace Hoehoe
             {
                 case HttpConnection.ProxyType.IE:
                     break;
+
                 case HttpConnection.ProxyType.None:
                     proxy = string.Empty;
                     break;
+
                 case HttpConnection.ProxyType.Specified:
                     proxy = host + (port > 0 ? string.Format(":{0}", port) : string.Empty);
                     break;

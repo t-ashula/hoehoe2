@@ -175,7 +175,7 @@ namespace Hoehoe
                 text = xdoc.SelectSingleNode(selector).InnerText;
                 return true;
             }
-            catch (Exception o_O)
+            catch (Exception)
             {
                 return false;
             }

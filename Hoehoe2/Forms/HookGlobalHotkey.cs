@@ -72,7 +72,7 @@ namespace Hoehoe
         #region enums
 
         [Flags]
-        public enum ModKeys : int
+        public enum ModKeys
         {
             None = 0,
             Alt = 0x1,

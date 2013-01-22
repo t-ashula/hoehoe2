@@ -164,6 +164,7 @@ namespace Hoehoe
 
         private void SetText(int remain, int max)
         {
+            // TODO: clean
             const string TextFormat = "API {0}/{1}";
             string toolTipTextFormat = "API rest {0}/{1}" + Environment.NewLine + "(reset after {2} minutes)";
             if (_remainCount > -1 && _maxCount > -1)

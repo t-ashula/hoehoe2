@@ -230,15 +230,19 @@ namespace Hoehoe
                 case IdComparerClass.ComparerMode.Nickname: // ニックネーム
                     c = 1;
                     break;
+
                 case IdComparerClass.ComparerMode.Data:     // 本文
                     c = 2;
                     break;
+
                 case IdComparerClass.ComparerMode.Id:       // 時刻=発言Id
                     c = 3;
                     break;
+
                 case IdComparerClass.ComparerMode.Name:     // 名前
                     c = 4;
                     break;
+
                 case IdComparerClass.ComparerMode.Source:   // Source
                     c = 7;
                     break;
@@ -437,6 +441,7 @@ namespace Hoehoe
                         switch (smode)
                         {
                             case -3:
+
                                 // 最上行
                                 if (_curList.VirtualListSize > 0)
                                 {
@@ -444,7 +449,9 @@ namespace Hoehoe
                                 }
 
                                 break;
+
                             case -2:
+
                                 // 最下行へ
                                 if (_curList.VirtualListSize > 0)
                                 {
@@ -452,10 +459,14 @@ namespace Hoehoe
                                 }
 
                                 break;
+
                             case -1:
+
                                 // 制御しない
                                 break;
+
                             default:
+
                                 // 表示位置キープ
                                 if (_curList.VirtualListSize > 0 && _statuses.IndexOf(_curTab.Text, topId) > -1)
                                 {
@@ -681,6 +692,7 @@ namespace Hoehoe
                             case NameBalloonEnum.UserID:
                                 sb.Append(post.ScreenName).Append(" : ");
                                 break;
+
                             case NameBalloonEnum.NickName:
                                 sb.Append(post.Nickname).Append(" : ");
                                 break;
@@ -735,6 +747,7 @@ namespace Hoehoe
                             case NameBalloonEnum.UserID:
                                 sb.Append(post.ScreenName).Append(" : ");
                                 break;
+
                             case NameBalloonEnum.NickName:
                                 sb.Append(post.Nickname).Append(" : ");
                                 break;
@@ -963,61 +976,76 @@ namespace Hoehoe
                         R.GetTimelineWorker_RunWorkerCompletedText1 :
                         string.Format("{0}{1}{2}", R.GetTimelineWorker_RunWorkerCompletedText5, asyncArg.Page, R.GetTimelineWorker_RunWorkerCompletedText6);
                     break;
+
                 case WorkerType.Reply:
                     smsg = isFinish ?
                         R.GetTimelineWorker_RunWorkerCompletedText9 :
                         string.Format("{0}{1}{2}", R.GetTimelineWorker_RunWorkerCompletedText4, asyncArg.Page, R.GetTimelineWorker_RunWorkerCompletedText6);
                     break;
+
                 case WorkerType.DirectMessegeRcv:
                     smsg = isFinish ?
                         R.GetTimelineWorker_RunWorkerCompletedText11 :
                         string.Format("{0}{1}{2}", R.GetTimelineWorker_RunWorkerCompletedText8, asyncArg.Page, R.GetTimelineWorker_RunWorkerCompletedText6);
                     break;
+
                 case WorkerType.FavAdd:
+
                     // 進捗メッセージ残す
                     smsg = isFinish ?
                         string.Empty :
                         string.Format("{0}{1}/{2}{3}{4}", R.GetTimelineWorker_RunWorkerCompletedText15, asyncArg.Page, asyncArg.Ids.Count, R.GetTimelineWorker_RunWorkerCompletedText16, asyncArg.Page - asyncArg.SIds.Count - 1);
                     break;
+
                 case WorkerType.FavRemove:
+
                     // 進捗メッセージ残す
                     smsg = isFinish ?
                         string.Empty :
                         string.Format("{0}{1}/{2}{3}{4}", R.GetTimelineWorker_RunWorkerCompletedText17, asyncArg.Page, asyncArg.Ids.Count, R.GetTimelineWorker_RunWorkerCompletedText18, asyncArg.Page - asyncArg.SIds.Count - 1);
                     break;
+
                 case WorkerType.Favorites:
                     smsg = isFinish ?
                         R.GetTimelineWorker_RunWorkerCompletedText20 :
                         R.GetTimelineWorker_RunWorkerCompletedText19;
                     break;
+
                 case WorkerType.PublicSearch:
                     smsg = isFinish ?
                         "Search refreshed" :
                         "Search refreshing...";
                     break;
+
                 case WorkerType.List:
                     smsg = isFinish ?
                         "List refreshed" :
                         "List refreshing...";
                     break;
+
                 case WorkerType.Related:
                     smsg = isFinish ?
                         "Related refreshed" :
                         "Related refreshing...";
                     break;
+
                 case WorkerType.UserTimeline:
                     smsg = isFinish ?
                         "UserTimeline refreshed" :
                         "UserTimeline refreshing...";
                     break;
+
                 case WorkerType.Follower:
                     smsg = isFinish ?
                         R.UpdateFollowersMenuItem1_ClickText3 :
                         string.Empty;
                     break;
+
                 case WorkerType.Configuration:
+
                     // 進捗メッセージ残す
                     break;
+
                 case WorkerType.BlockIds:
                     smsg = isFinish ?
                         R.UpdateBlockUserText3 :
@@ -1332,15 +1360,19 @@ namespace Hoehoe
                 case TabUsageType.Mentions:
                     GetTimeline(WorkerType.Reply, startPage);
                     break;
+
                 case TabUsageType.DirectMessage:
                     GetTimeline(WorkerType.DirectMessegeRcv, startPage);
                     break;
+
                 case TabUsageType.Favorites:
                     GetTimeline(WorkerType.Favorites, startPage);
                     break;
+
                 case TabUsageType.UserTimeline:
                     GetTimeline(WorkerType.UserTimeline, startPage, 0, _curTab.Text);
                     break;
+
                 case TabUsageType.PublicSearch:
                     if (string.IsNullOrEmpty(tb.SearchWords))
                     {
@@ -1349,6 +1381,7 @@ namespace Hoehoe
 
                     GetTimeline(WorkerType.PublicSearch, startPage, 0, _curTab.Text);
                     break;
+
                 case TabUsageType.Lists:
                     if (tb.ListInfo == null || tb.ListInfo.Id == 0)
                     {
@@ -1357,9 +1390,11 @@ namespace Hoehoe
 
                     GetTimeline(WorkerType.List, startPage, 0, _curTab.Text);
                     break;
+
                 case TabUsageType.Profile:
                     /* TODO: profile tab ? */
                     break;
+
                 default:
                     GetTimeline(WorkerType.Timeline, startPage);
                     break;
@@ -1967,6 +2002,7 @@ namespace Hoehoe
             {
                 // 修飾キーなし
                 case ModifierState.None:
+
                     // フォーカス関係なし
                     switch (keyCode)
                     {
@@ -2036,6 +2072,7 @@ namespace Hoehoe
 
                                 return true;
                             case Keys.Enter:
+
                                 // case Keys.Return:
                                 MakeReplyOrDirectStatus();
                                 return true;
@@ -2065,10 +2102,12 @@ namespace Hoehoe
                                 GoNextTab(false);
                                 return true;
                             case Keys.Oem4:
+
                                 // ] in_reply_to参照元へ戻る
                                 GoInReplyToPostTree();
                                 return true;
                             case Keys.Oem6:
+
                                 // [ in_reply_toへジャンプ
                                 GoBackInReplyToPostTree();
                                 return true;
@@ -2090,7 +2129,9 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case ModifierState.Ctrl:
+
                     // フォーカス関係なし
                     switch (keyCode)
                     {
@@ -2129,6 +2170,7 @@ namespace Hoehoe
                             }
 
                             break;
+
                         case Keys.F:
                             TrySearchWordInTab();
                             return true;
@@ -2136,18 +2178,22 @@ namespace Hoehoe
                             ShowUserTimeline();
                             return true;
                         case Keys.H:
+
                             // Webページを開く動作
                             TryOpenCurListSelectedUserHome();
                             return true;
                         case Keys.G:
+
                             // Webページを開く動作
                             TryOpenCurListSelectedUserFavorites();
                             return true;
                         case Keys.O:
+
                             // Webページを開く動作
                             TryOpenSelectedTweetWebPage();
                             return true;
                         case Keys.E:
+
                             // Webページを開く動作
                             TryOpenUrlInCurrentTweet();
                             return true;
@@ -2179,6 +2225,7 @@ namespace Hoehoe
                             case Keys.D6:
                             case Keys.D7:
                             case Keys.D8:
+
                                 // タブダイレクト選択(Ctrl+1～8,Ctrl+9)
                                 int tabNo = keyCode - Keys.D1;
                                 if (ListTab.TabPages.Count < tabNo)
@@ -2283,7 +2330,9 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case ModifierState.Shift:
+
                     // フォーカス関係なし
                     switch (keyCode)
                     {
@@ -2339,11 +2388,13 @@ namespace Hoehoe
                                 return true;
                             case Keys.N:
                             case Keys.Right:
+
                                 // お気に入り前後ジャンプ(SHIFT+N←/P→)
                                 GoFav(true);
                                 return true;
                             case Keys.P:
                             case Keys.Left:
+
                                 // お気に入り前後ジャンプ(SHIFT+N←/P→)
                                 GoFav(false);
                                 return true;
@@ -2354,6 +2405,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case ModifierState.Alt:
                     switch (keyCode)
                     {
@@ -2368,6 +2420,7 @@ namespace Hoehoe
                             }
 
                             break;
+
                         case Keys.Up:
                             ScrollDownPostBrowser(false);
                             return true;
@@ -2399,6 +2452,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case ModifierState.Ctrl | ModifierState.Shift:
                     switch (keyCode)
                     {
@@ -2419,6 +2473,7 @@ namespace Hoehoe
                             }
 
                             break;
+
                         case Keys.S:
                             ChangeSelectedFavStatus(false);
                             return true;
@@ -2455,6 +2510,7 @@ namespace Hoehoe
                                 }
 
                                 break;
+
                             case Keys.Down:
                                 {
                                     if (_curList != null && _curList.Items.Count != 0 && _curList.SelectedIndices.Count > 0 && _curList.SelectedIndices[0] < _curList.Items.Count - 1)
@@ -2467,6 +2523,7 @@ namespace Hoehoe
                                 }
 
                                 break;
+
                             case Keys.Space:
                                 if (StatusText.SelectionStart > 0)
                                 {
@@ -2552,6 +2609,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case ModifierState.Ctrl | ModifierState.Alt:
                     switch (keyCode)
                     {
@@ -2567,6 +2625,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case ModifierState.Alt | ModifierState.Shift:
                     if (focusedControl == FocusedControl.PostBrowser)
                     {
@@ -3025,7 +3084,7 @@ namespace Hoehoe
 
             _replyChains.Push(new ReplyChain(_curPost.StatusId, _curPost.InReplyToStatusId, _curTab));
 
-            Dictionary<long, PostClass> curTabPosts = _statuses.Tabs[_curTab.Text].IsInnerStorageTabType ? curTabClass.Posts : _statuses.Posts;
+            // Dictionary<long, PostClass> curTabPosts = _statuses.Tabs[_curTab.Text].IsInnerStorageTabType ? curTabClass.Posts : _statuses.Posts;
             long inReplyToId = _curPost.InReplyToStatusId;
             var inReplyToPosts = from tab in _statuses.Tabs.Values
                                  orderby !ReferenceEquals(tab, curTabClass)
@@ -3092,8 +3151,8 @@ namespace Hoehoe
                 return;
             }
 
+            // var curTabPosts = curTabClass.IsInnerStorageTabType ? curTabClass.Posts : _statuses.Posts;
             var curTabClass = _statuses.Tabs[_curTab.Text];
-            var curTabPosts = curTabClass.IsInnerStorageTabType ? curTabClass.Posts : _statuses.Posts;
             if (parallel)
             {
                 if (_curPost.InReplyToStatusId == 0)
@@ -4033,6 +4092,7 @@ namespace Hoehoe
                 case DispTitleEnum.Ver:
                     ttl.Append("Ver:").Append(MyCommon.FileVersion);
                     break;
+
                 case DispTitleEnum.Post:
                     if (_postHistory != null && _postHistory.Count > 1)
                     {
@@ -4040,18 +4100,23 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case DispTitleEnum.UnreadRepCount:
                     ttl.AppendFormat(R.SetMainWindowTitleText1, _statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
                     break;
+
                 case DispTitleEnum.UnreadAllCount:
                     ttl.AppendFormat(R.SetMainWindowTitleText2, ur);
                     break;
+
                 case DispTitleEnum.UnreadAllRepCount:
                     ttl.AppendFormat(R.SetMainWindowTitleText3, ur, _statuses.GetTabByType(TabUsageType.Mentions).UnreadCount + _statuses.GetTabByType(TabUsageType.DirectMessage).UnreadCount);
                     break;
+
                 case DispTitleEnum.UnreadCountAllCount:
                     ttl.AppendFormat(R.SetMainWindowTitleText4, ur, al);
                     break;
+
                 case DispTitleEnum.OwnStatus:
                     if (_prevFollowerCount == 0 && _tw.FollowersCount > 0)
                     {
@@ -4198,6 +4263,7 @@ namespace Hoehoe
             if (StatusText.SelectionLength > 0)
             {
                 string result;
+
                 // 文字列が選択されている場合はその文字列について処理
                 string tmp = StatusText.SelectedText;
 
@@ -4963,10 +5029,12 @@ namespace Hoehoe
                         ImageSelectedPicture.Image = MyCommon.CheckValidImage(img, img.Width, img.Height);
                         ImageSelectedPicture.Tag = UploadFileType.Picture;
                         break;
+
                     case UploadFileType.MultiMedia:
                         ImageSelectedPicture.Image = R.MultiMediaImage;
                         ImageSelectedPicture.Tag = UploadFileType.MultiMedia;
                         break;
+
                     default:
                         ClearImageSelectionForms();
                         break;
@@ -5816,6 +5884,7 @@ namespace Hoehoe
                     case OutputzUrlmode.twittercom:
                         Outputz.OutUrl = "http://twitter.com/";
                         break;
+
                     case OutputzUrlmode.twittercomWithUsername:
                         Outputz.OutUrl = "http://twitter.com/" + _tw.Username;
                         break;
@@ -6829,6 +6898,7 @@ namespace Hoehoe
                         DoReTweetOfficial(false);
                         StatusText.Text = string.Empty;
                         return;
+
                     case DialogResult.Cancel:
                         return;
                 }
@@ -7990,7 +8060,6 @@ namespace Hoehoe
                 return;
             }
 
-            string tabNameAny = string.Empty;
             GetTimeline(WorkerType.BlockIds);
             if (_configs.StartupFollowers)
             {

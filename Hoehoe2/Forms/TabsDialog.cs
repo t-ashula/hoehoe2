@@ -36,21 +36,17 @@ namespace Hoehoe
         #region private
 
         private bool _multiSelect;
-        private string _newtabItem = R.AddNewTabText1;
+
+        // private string _newtabItem = R.AddNewTabText1;
 
         #endregion private
 
         #region constructor
 
-        public TabsDialog()
+        public TabsDialog(bool multiselect = false)
         {
             InitializeComponent();
-        }
-
-        public TabsDialog(bool multiselect)
-        {
-            InitializeComponent();
-            MultiSelect = true;
+            MultiSelect = multiselect;
         }
 
         #endregion constructor

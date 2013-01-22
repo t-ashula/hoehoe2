@@ -92,7 +92,7 @@ namespace Hoehoe
         }
 
         [Flags]
-        public enum POLICY : int
+        public enum POLICY
         {
             ALLOW_ACTIVEX = 0x1,
             ALLOW_SCRIPT = 0x2

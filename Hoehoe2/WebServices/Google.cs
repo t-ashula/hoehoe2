@@ -179,9 +179,7 @@ namespace Hoehoe
             var http = new HttpVarious();
             if (http.GetData(apiurl, headers, ref content))
             {
-                var serializer = new DataContractJsonSerializer(typeof(TranslateResponse));
                 TranslateResponse res;
-
                 try
                 {
                     res = D.CreateDataFromJson<TranslateResponse>(content);
@@ -218,7 +216,6 @@ namespace Hoehoe
             string content = string.Empty;
             if (http.GetData(apiurl, headers, ref content))
             {
-                var serializer = new DataContractJsonSerializer(typeof(LanguageDetectResponse));
                 try
                 {
                     var res = D.CreateDataFromJson<LanguageDetectResponse>(content);

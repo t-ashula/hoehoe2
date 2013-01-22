@@ -51,7 +51,7 @@ namespace Hoehoe
         {
             _images = imageDictionary;
             _imageUrl = imageKey;
-            Image dummy = GetImage(false);
+            GetImage(false);
         }
 
         #endregion constructor
@@ -84,7 +84,7 @@ namespace Hoehoe
 
         public void RegetImage()
         {
-            Image dummy = GetImage(true);
+            GetImage(true);
         }
 
         #endregion public methods

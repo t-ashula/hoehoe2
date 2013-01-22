@@ -54,6 +54,7 @@ namespace Hoehoe
 
         // Hashtag用正規表現
         private const string LatinAccents = "\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\xff";
+
         private const string NonLatinHashtagChars = "\\u0400-\\u04ff\\u0500-\\u0527\\u1100-\\u11ff\\u3130-\\u3185\\uA960-\\uA97F\\uAC00-\\uD7AF\\uD7B0-\\uD7FF";
         private const string CjHashtagChars = "\\u30A1-\\u30FA\\u30FC\\u3005\\uFF66-\\uFF9F\\uFF10-\\uFF19\\uFF21-\\uFF3A\\uFF41-\\uFF5A\\u3041-\\u309A\\u3400-\\u4DBF\\p{IsCJKUnifiedIdeographs}";
         private const string HashTagBoundary = "^|$|\\s|「|」|。|\\.|!";
@@ -63,6 +64,7 @@ namespace Hoehoe
 
         // URL正規表現
         private const string UrlValidDomain = "(?<domain>(?:[^\\p{P}\\s][\\.\\-_](?=[^\\p{P}\\s])|[^\\p{P}\\s]){1,}\\.[a-z]{2,}(?::[0-9]+)?)";
+
         private const string UrlValidGeneralPathChars = "[a-z0-9!*';:=+$/%#\\[\\]\\-_&,~]";
         private const string UrlBalanceParens = "(?:\\(" + UrlValidGeneralPathChars + "+\\))";
         private const string UrlValidPathEndingChars = "(?:[a-z0-9=_#/\\-\\+]+|" + UrlBalanceParens + ")";
@@ -572,6 +574,7 @@ namespace Hoehoe
                 case HttpStatusCode.RequestEntityTooLarge:
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
+
                     // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
                     return string.Format("Warn:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
                 case HttpStatusCode.Unauthorized:
@@ -664,6 +667,7 @@ namespace Hoehoe
                 case HttpStatusCode.RequestEntityTooLarge:
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
+
                     // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
                     return string.Format("Warn:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
                 case HttpStatusCode.Unauthorized:
@@ -757,6 +761,7 @@ namespace Hoehoe
                 case HttpStatusCode.RequestEntityTooLarge:
                 case HttpStatusCode.RequestTimeout:
                 case HttpStatusCode.RequestUriTooLong:
+
                     // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
                     return string.Format("Warn:{0}", res);
                 case HttpStatusCode.Unauthorized:
@@ -1321,6 +1326,7 @@ namespace Hoehoe
                         }
 
                         break;
+
                     case HttpStatusCode.BadRequest:
                         retweetedCount = -1;
                         return "Err:API Limits?";
@@ -1370,6 +1376,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -1735,6 +1742,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -1796,6 +1804,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Valid;
                     return string.Format("Err:@{0}'s Tweets are protected.", userName);
@@ -1880,6 +1889,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -1990,6 +2000,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -2092,10 +2103,12 @@ namespace Hoehoe
                 case HttpStatusCode.NotFound:
                     return "Invalid query";
                 case HttpStatusCode.PaymentRequired:
+
                     // API Documentには420と書いてあるが、該当コードがないので402にしてある
                     return "Search API Limit?";
                 case HttpStatusCode.OK:
                     break;
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2199,6 +2212,7 @@ namespace Hoehoe
             return string.Empty;
         }
 
+        // TODO: remove ?
         public string GetPhoenixSearch(bool read, TabClass tab, bool more)
         {
             if (MyCommon.IsEnding)
@@ -2248,10 +2262,12 @@ namespace Hoehoe
                 case HttpStatusCode.NotFound:
                     return "Invalid query";
                 case HttpStatusCode.PaymentRequired:
+
                     // API Documentには420と書いてあるが、該当コードがないので402にしてある
                     return "Search API Limit?";
                 case HttpStatusCode.OK:
                     break;
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2316,6 +2332,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -2372,6 +2389,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -2381,7 +2399,6 @@ namespace Hoehoe
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
 
-            var serializer = new DataContractJsonSerializer(typeof(List<Status>));
             List<Status> item;
             try
             {
@@ -2611,6 +2628,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -2664,6 +2682,7 @@ namespace Hoehoe
                     case HttpStatusCode.OK:
                         AccountState = AccountState.Valid;
                         break;
+
                     case HttpStatusCode.Unauthorized:
                         AccountState = AccountState.Invalid;
                         return R.Unauthorized;
@@ -2710,6 +2729,7 @@ namespace Hoehoe
                     case HttpStatusCode.OK:
                         AccountState = AccountState.Valid;
                         break;
+
                     case HttpStatusCode.Unauthorized:
                         AccountState = AccountState.Invalid;
                         return R.Unauthorized;
@@ -2761,6 +2781,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -2792,6 +2813,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -2852,6 +2874,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -2903,6 +2926,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -2955,6 +2979,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -2998,6 +3023,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -3028,6 +3054,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -3349,6 +3376,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -3477,6 +3505,7 @@ namespace Hoehoe
             }
         }
 
+        // TODO: remove ?
         private string GetPlainText(string orgData)
         {
             return HttpUtility.HtmlDecode(Regex.Replace(orgData, "(?<tagStart><a [^>]+>)(?<text>[^<]+)(?<tagEnd></a>)", "${text}"));
@@ -3710,6 +3739,7 @@ namespace Hoehoe
             return post;
         }
 
+        // TODO: clean arguments
         private string CreatePostsFromJson(string content, WorkerType workerType, TabClass tab, bool read, int count, ref long minimumId)
         {
             List<Status> items;
@@ -3784,6 +3814,7 @@ namespace Hoehoe
             return string.Empty;
         }
 
+        // TODO: remove?
         private string CreatePostsFromPhoenixSearch(string content, WorkerType workerType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
         {
             SearchResult items;
@@ -3903,6 +3934,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -3938,7 +3970,6 @@ namespace Hoehoe
             targetItem.RelTabName = tab.TabName;
             TabInformations.Instance.AddPost(targetItem);
             PostClass replyToItem = null;
-            string replyToUserName = targetItem.InReplyToUser;
             if (targetItem.InReplyToStatusId > 0 && TabInformations.Instance.Item(targetItem.InReplyToStatusId) != null)
             {
                 replyToItem = TabInformations.Instance.Item(targetItem.InReplyToStatusId).Copy();
@@ -4221,6 +4252,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -4272,6 +4304,7 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     break;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
@@ -4494,6 +4527,7 @@ namespace Hoehoe
             {
                 case "access_revoked":
                     return;
+
                 case "follow":
                     if (eventData.Target.ScreenName.ToLower().Equals(_uname))
                     {
@@ -4510,6 +4544,7 @@ namespace Hoehoe
 
                     evt.Target = string.Empty;
                     break;
+
                 case "favorite":
                 case "unfavorite":
                     evt.Target = "@" + eventData.TargetObject.User.ScreenName + ":" + HttpUtility.HtmlDecode(eventData.TargetObject.Text);
@@ -4572,11 +4607,13 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case "list_member_added":
                 case "list_member_removed":
                 case "list_updated":
                     evt.Target = eventData.TargetObject.FullName;
                     break;
+
                 case "block":
                     if (!TabInformations.Instance.BlockIds.Contains(eventData.Target.Id))
                     {
@@ -4585,6 +4622,7 @@ namespace Hoehoe
 
                     evt.Target = string.Empty;
                     break;
+
                 case "unblock":
                     if (TabInformations.Instance.BlockIds.Contains(eventData.Target.Id))
                     {
@@ -4593,12 +4631,15 @@ namespace Hoehoe
 
                     evt.Target = string.Empty;
                     break;
+
                 case "user_update":
                     evt.Target = string.Empty;
                     break;
+
                 case "list_created":
                     evt.Target = string.Empty;
                     break;
+
                 default:
                     MyCommon.TraceOut("Unknown Event:" + evt.Event + Environment.NewLine + content);
                     break;
@@ -4821,12 +4862,13 @@ namespace Hoehoe
                             Started();
                         }
 
-                        HttpStatusCode res = _twitterConnection.UserStream(ref st, _allAtreplies, _trackwords, MyCommon.GetUserAgentString());
+                        HttpStatusCode res = _twitterConnection.UserStream(ref st, AllAtReplies, TrackWords, MyCommon.GetUserAgentString());
                         switch (res)
                         {
                             case HttpStatusCode.OK:
                                 AccountState = AccountState.Valid;
                                 break;
+
                             case HttpStatusCode.Unauthorized:
                                 AccountState = AccountState.Invalid;
                                 sleepSec = 120;

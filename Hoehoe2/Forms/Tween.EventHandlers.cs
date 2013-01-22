@@ -647,10 +647,12 @@ namespace Hoehoe
             TrySaveLog();
         }
 
+        /*
         private void SaveOriginalSizeIconPictureToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveCurrentTweetUserOriginalSizeIcon();
         }
+        */
 
         private void SearchAtPostsDetailNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1338,7 +1340,6 @@ namespace Hoehoe
             TabClass tb = _statuses.Tabs[tabName];
             var cmb = (ComboBox)pnl.Controls["comboSearch"];
             var cmbLang = (ComboBox)pnl.Controls["comboLang"];
-            var cmbusline = (ComboBox)pnl.Controls["comboUserline"];
             cmb.Text = cmb.Text.Trim();
 
             // TODO: confirm this-> 検索式演算子 OR についてのみ大文字しか認識しないので強制的に大文字とする
@@ -1847,6 +1848,7 @@ namespace Hoehoe
                 case OutputzUrlmode.twittercom:
                     Outputz.OutUrl = "http://twitter.com/";
                     break;
+
                 case OutputzUrlmode.twittercomWithUsername:
                     Outputz.OutUrl = "http://twitter.com/" + _tw.Username;
                     break;
@@ -1949,27 +1951,38 @@ namespace Hoehoe
                 case 0:
                 case 5:
                 case 6:
+
                     // 0:アイコン,5:未読マーク,6:プロテクト・フィルターマーク
                     // ソートしない Idソートに読み替え
                     mode = IdComparerClass.ComparerMode.Id;
                     break;
+
                 case 1:
+
                     // ニックネーム
                     mode = IdComparerClass.ComparerMode.Nickname;
                     break;
+
                 case 2:
+
                     // 本文
                     mode = IdComparerClass.ComparerMode.Data;
                     break;
+
                 case 3:
+
                     // 時刻=発言Id
                     mode = IdComparerClass.ComparerMode.Id;
                     break;
+
                 case 4:
+
                     // 名前
                     mode = IdComparerClass.ComparerMode.Name;
                     break;
+
                 case 7:
+
                     // Source
                     mode = IdComparerClass.ComparerMode.Source;
                     break;
@@ -1982,15 +1995,19 @@ namespace Hoehoe
                 case IconSizes.IconNone:
                     _iconSz = 0;
                     break;
+
                 case IconSizes.Icon16:
                     _iconSz = 16;
                     break;
+
                 case IconSizes.Icon24:
                     _iconSz = 26;
                     break;
+
                 case IconSizes.Icon48:
                     _iconSz = 48;
                     break;
+
                 case IconSizes.Icon48_2:
                     _iconSz = 48;
                     _iconCol = true;
@@ -2242,7 +2259,9 @@ namespace Hoehoe
 
                     rslt.AddCount = _statuses.DistributePosts();                    // 振り分け
                     break;
+
                 case WorkerType.DirectMessegeRcv:
+
                     // 送信分もまとめて取得
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = _tw.GetDirectMessageApi(read, WorkerType.DirectMessegeRcv, args.Page == -1);
@@ -2253,7 +2272,9 @@ namespace Hoehoe
 
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
+
                 case WorkerType.FavAdd:
+
                     // スレッド処理はしない
                     if (_statuses.Tabs.ContainsKey(args.TabName))
                     {
@@ -2306,7 +2327,9 @@ namespace Hoehoe
 
                     rslt.SIds = args.SIds;
                     break;
+
                 case WorkerType.FavRemove:
+
                     // スレッド処理はしない
                     if (_statuses.Tabs.ContainsKey(args.TabName))
                     {
@@ -2345,6 +2368,7 @@ namespace Hoehoe
 
                     rslt.SIds = args.SIds;
                     break;
+
                 case WorkerType.PostMessage:
                     bw.ReportProgress(200);
                     if (string.IsNullOrEmpty(args.PStatus.ImagePath))
@@ -2366,6 +2390,7 @@ namespace Hoehoe
                     bw.ReportProgress(300);
                     rslt.PStatus = args.PStatus;
                     break;
+
                 case WorkerType.Retweet:
                     bw.ReportProgress(200);
                     for (int i = 0; i < args.Ids.Count; i++)
@@ -2375,6 +2400,7 @@ namespace Hoehoe
 
                     bw.ReportProgress(300);
                     break;
+
                 case WorkerType.Follower:
                     bw.ReportProgress(50, R.UpdateFollowersMenuItem1_ClickText1);
                     ret = _tw.GetFollowersApi();
@@ -2384,19 +2410,23 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case WorkerType.Configuration:
                     ret = _tw.ConfigurationApi();
                     break;
+
                 case WorkerType.OpenUri:
                     string myPath = args.Url;
                     string browserPath = _configs.BrowserPath;
                     MyCommon.TryOpenUrl(myPath, browserPath);
                     break;
+
                 case WorkerType.Favorites:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = _tw.GetFavoritesApi(read, args.WorkerType, args.Page == -1);
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
+
                 case WorkerType.PublicSearch:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (string.IsNullOrEmpty(args.TabName))
@@ -2424,6 +2454,7 @@ namespace Hoehoe
 
                     rslt.AddCount = _statuses.DistributePosts();                    // 振り分け
                     break;
+
                 case WorkerType.UserTimeline:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     int count = 20;
@@ -2453,6 +2484,7 @@ namespace Hoehoe
 
                     rslt.AddCount = _statuses.DistributePosts();                     // 振り分け
                     break;
+
                 case WorkerType.List:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     if (string.IsNullOrEmpty(args.TabName))
@@ -2478,11 +2510,13 @@ namespace Hoehoe
 
                     rslt.AddCount = _statuses.DistributePosts(); // 振り分け
                     break;
+
                 case WorkerType.Related:
                     bw.ReportProgress(50, MakeStatusMessage(args, false));
                     ret = _tw.GetRelatedResult(read, _statuses.GetTabByName(args.TabName));
                     rslt.AddCount = _statuses.DistributePosts();
                     break;
+
                 case WorkerType.BlockIds:
                     bw.ReportProgress(50, R.UpdateBlockUserText1);
                     ret = _tw.GetBlockUserIds();
@@ -2648,6 +2682,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case WorkerType.Reply:
                     _waitReply = false;
                     if (rslt.NewDM && !_isInitializing)
@@ -2656,12 +2691,15 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case WorkerType.Favorites:
                     _waitFav = false;
                     break;
+
                 case WorkerType.DirectMessegeRcv:
                     _waitDm = false;
                     break;
+
                 case WorkerType.FavAdd:
                 case WorkerType.FavRemove:
                     if (_curList != null && _curTab != null)
@@ -2710,6 +2748,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case WorkerType.PostMessage:
                     if (string.IsNullOrEmpty(rslt.RetMsg) || rslt.RetMsg.StartsWith("Outputz") || rslt.RetMsg.StartsWith("OK:") || rslt.RetMsg == "Warn:Status is a duplicate.")
                     {
@@ -2775,6 +2814,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case WorkerType.Retweet:
                     if (rslt.RetMsg.Length == 0)
                     {
@@ -2795,6 +2835,7 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case WorkerType.Follower:
                     _itemCache = null;
                     _postCache = null;
@@ -2804,7 +2845,9 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case WorkerType.Configuration:
+
                     // _waitFollower = False
                     if (_configs.TwitterConfiguration.PhotoSizeLimit != 0)
                     {
@@ -2819,15 +2862,19 @@ namespace Hoehoe
                     }
 
                     break;
+
                 case WorkerType.PublicSearch:
                     _waitPubSearch = false;
                     break;
+
                 case WorkerType.UserTimeline:
                     _waitUserTimeline = false;
                     break;
+
                 case WorkerType.List:
                     _waitLists = false;
                     break;
+
                 case WorkerType.Related:
                     {
                         TabClass tb = _statuses.GetTabByType(TabUsageType.Related);
@@ -3090,26 +3137,37 @@ namespace Hoehoe
                     case 0:
                     case 5:
                     case 6:
+
                         // 0:アイコン,5:未読マーク,6:プロテクト・フィルターマーク
                         // ソートしない
                         return;
+
                     case 1:
+
                         // ニックネーム
                         mode = IdComparerClass.ComparerMode.Nickname;
                         break;
+
                     case 2:
+
                         // 本文
                         mode = IdComparerClass.ComparerMode.Data;
                         break;
+
                     case 3:
+
                         // 時刻=発言Id
                         mode = IdComparerClass.ComparerMode.Id;
                         break;
+
                     case 4:
+
                         // 名前
                         mode = IdComparerClass.ComparerMode.Name;
                         break;
+
                     case 7:
+
                         // Source
                         mode = IdComparerClass.ComparerMode.Source;
                         break;
@@ -3181,24 +3239,31 @@ namespace Hoehoe
                         case 0:
                             _cfgLocal.DisplayIndex1 = i;
                             break;
+
                         case 1:
                             _cfgLocal.DisplayIndex2 = i;
                             break;
+
                         case 2:
                             _cfgLocal.DisplayIndex3 = i;
                             break;
+
                         case 3:
                             _cfgLocal.DisplayIndex4 = i;
                             break;
+
                         case 4:
                             _cfgLocal.DisplayIndex5 = i;
                             break;
+
                         case 5:
                             _cfgLocal.DisplayIndex6 = i;
                             break;
+
                         case 6:
                             _cfgLocal.DisplayIndex7 = i;
                             break;
+
                         case 7:
                             _cfgLocal.DisplayIndex8 = i;
                             break;
@@ -3443,25 +3508,33 @@ namespace Hoehoe
                 case 0:
                     MakeReplyOrDirectStatus();
                     break;
+
                 case 1:
                     ChangeSelectedFavStatus(true);
                     break;
+
                 case 2:
                     ShowStatusOfCurrentTweetUser();
                     break;
+
                 case 3:
                     ShowUserTimeline();
                     break;
+
                 case 4:
                     AddRelatedStatusesTab();
                     break;
+
                 case 5:
                     TryOpenCurListSelectedUserHome();
                     break;
+
                 case 6:
                     TryOpenSelectedTweetWebPage();
                     break;
+
                 case 7:
+
                     // 動作なし
                     break;
             }

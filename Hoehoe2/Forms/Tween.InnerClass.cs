@@ -44,7 +44,7 @@ namespace Hoehoe
         }
 
         [Flags]
-        private enum ModifierState : int
+        private enum ModifierState
         {
             None = 0,
             Alt = 1,
@@ -53,7 +53,7 @@ namespace Hoehoe
             NotFlags = 8
         }
 
-        private enum FocusedControl : int
+        private enum FocusedControl
         {
             None,
             ListTab,
