@@ -473,10 +473,10 @@ namespace Hoehoe
                 return HttpStatusCode.BadRequest;
             }
 
-            tmp = querystr.Split(new char[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries);
+            tmp = querystr.Split(new[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string tmp2 in tmp)
             {
-                paramstr = tmp2.Split(new char[] { '=' });
+                paramstr = tmp2.Split(new[] { '=' });
                 param.Add(paramstr[0], paramstr[1]);
             }
 

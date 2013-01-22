@@ -3497,7 +3497,7 @@ namespace Hoehoe
                 catch (Exception)
                 {
                     // 不正な要求に対する間に合わせの応答
-                    e.Item = new ImageListViewItem(new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty }, string.Empty);
+                    e.Item = new ImageListViewItem(new[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty }, string.Empty);
                 }
             }
         }
@@ -3682,7 +3682,7 @@ namespace Hoehoe
 
                 if (ev.Event == "unfavorite" && ev.Username.ToLower().Equals(_tw.Username.ToLower()))
                 {
-                    RemovePostFromFavTab(new long[] { ev.Id });
+                    RemovePostFromFavTab(new[] { ev.Id });
                 }
             }
         }

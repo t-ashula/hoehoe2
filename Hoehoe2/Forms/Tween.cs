@@ -503,7 +503,7 @@ namespace Hoehoe
         {
             InitColumnText();
             var colhds = new ColumnHeader[8]; // アイコン, ニックネーム, 本文, 日付, ユーザID, 未読, マーク＆プロテクト, ソース
-            var widths = new int[] { 48, 80, 300, 50, 50, 16, 16, 50 };
+            var widths = new[] { 48, 80, 300, 50, 50, 16, 16, 50 };
             for (var i = 0; i < colhds.Length; ++i)
             {
                 colhds[i] = new ColumnHeader()
@@ -522,8 +522,8 @@ namespace Hoehoe
             var sz = _iconSz > 0 ? _iconSz : 1;
             listCustom.SmallImageList = new ImageList() { ImageSize = new Size(sz, sz) };
             listCustom.Columns.AddRange(_iconCol ?
-                new ColumnHeader[] { colhds[0], colhds[2] } :
-                new ColumnHeader[] { colhds[0], colhds[1], colhds[2], colhds[3], colhds[4], colhds[5], colhds[6], colhds[7] });
+                new[] { colhds[0], colhds[2] } :
+                new[] { colhds[0], colhds[1], colhds[2], colhds[3], colhds[4], colhds[5], colhds[6], colhds[7] });
 
             int[] dispOrder = new int[8];
             if (!startup)

@@ -120,13 +120,13 @@ namespace Hoehoe
                 _growlNTusevent = t.InvokeMember(null, BindingFlags.CreateInstance, null, null, new object[] { "USERSTREAM_EVENT", "UserStream Event" });
 
                 object encryptType = _connector.GetType("Growl.Connector.Cryptography+SymmetricAlgorithmType").InvokeMember("PlainText", BindingFlags.GetField, null, null, null);
-                _targetConnector.GetType().InvokeMember("EncryptionAlgorithm", BindingFlags.SetProperty, null, _targetConnector, new object[] { encryptType });
+                _targetConnector.GetType().InvokeMember("EncryptionAlgorithm", BindingFlags.SetProperty, null, _targetConnector, new[] { encryptType });
                 _growlApp = _connector.CreateInstance("Growl.Connector.Application", false, BindingFlags.Default, null, new object[] { _appName }, null, null);
 
                 if (File.Exists(Path.Combine(Application.StartupPath, "Icons\\Tween.png")))
                 {
                     // Icons\Tween.pngを使用
-                    ConstructorInfo ci = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(string) }, null);
+                    ConstructorInfo ci = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(string) }, null);
                     object data = ci.Invoke(new object[] { Path.Combine(Application.StartupPath, "Icons\\Tween.png") });
                     PropertyInfo pi = _growlApp.GetType().GetProperty("Icon");
                     pi.SetValue(_growlApp, data, null);
@@ -134,27 +134,27 @@ namespace Hoehoe
                 else if (File.Exists(Path.Combine(Application.StartupPath, "Icons\\MIcon.ico")))
                 {
                     // アイコンセットにMIcon.icoが存在する場合それを使用
-                    ConstructorInfo cibd = _core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(byte[]) }, null);
+                    ConstructorInfo cibd = _core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(byte[]) }, null);
                     TypeConverter tc = new TypeConverter();
                     object bdata = cibd.Invoke(new object[] { IconToByteArray(Path.Combine(Application.StartupPath, "Icons\\MIcon.ico")) });
-                    ConstructorInfo cires = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { bdata.GetType() }, null);
-                    object data = cires.Invoke(new object[] { bdata });
+                    ConstructorInfo cires = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { bdata.GetType() }, null);
+                    object data = cires.Invoke(new[] { bdata });
                     PropertyInfo pi = _growlApp.GetType().GetProperty("Icon");
                     pi.SetValue(_growlApp, data, null);
                 }
                 else
                 {
                     // 内蔵アイコンリソースを使用
-                    ConstructorInfo cibd = _core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(byte[]) }, null);
+                    ConstructorInfo cibd = _core.GetType("Growl.CoreLibrary.BinaryData").GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(byte[]) }, null);
                     TypeConverter tc = new TypeConverter();
                     object bdata = cibd.Invoke(new object[] { IconToByteArray(R.MIcon) });
-                    ConstructorInfo cires = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { bdata.GetType() }, null);
-                    object data = cires.Invoke(new object[] { bdata });
+                    ConstructorInfo cires = _core.GetType("Growl.CoreLibrary.Resource").GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { bdata.GetType() }, null);
+                    object data = cires.Invoke(new[] { bdata });
                     PropertyInfo pi = _growlApp.GetType().GetProperty("Icon");
                     pi.SetValue(_growlApp, data, null);
                 }
 
-                MethodInfo mi = _targetConnector.GetType().GetMethod("Register", new Type[] { _growlApp.GetType(), _connector.GetType("Growl.Connector.NotificationType[]") });
+                MethodInfo mi = _targetConnector.GetType().GetMethod("Register", new[] { _growlApp.GetType(), _connector.GetType("Growl.Connector.NotificationType[]") });
 
                 t = _connector.GetType("Growl.Connector.NotificationType");
                 ArrayList arglist = new ArrayList();
@@ -163,7 +163,7 @@ namespace Hoehoe
                 arglist.Add(_growlNTnew);
                 arglist.Add(_growlNTusevent);
 
-                mi.Invoke(_targetConnector, new object[] { _growlApp, arglist.ToArray(t) });
+                mi.Invoke(_targetConnector, new[] { _growlApp, arglist.ToArray(t) });
 
                 // コールバックメソッドの登録
                 Type growlConnectorType = _connector.GetType("Growl.Connector.GrowlConnector");
@@ -226,7 +226,7 @@ namespace Hoehoe
 
                 object priority = _connector.GetType("Growl.Connector.Priority").InvokeMember("Normal", BindingFlags.GetField, null, null, null);
                 n = _connector.GetType("Growl.Connector.Notification")
-                    .InvokeMember("Notification", BindingFlags.CreateInstance, null, _connector, new object[] { _appName, notificationName, id, title, text, res, false, priority, "aaa" });
+                    .InvokeMember("Notification", BindingFlags.CreateInstance, null, _connector, new[] { _appName, notificationName, id, title, text, res, false, priority, "aaa" });
             }
             else
             {
@@ -236,7 +236,7 @@ namespace Hoehoe
             ////_targetConnector.GetType.InvokeMember("Notify", BindingFlags.InvokeMethod, Nothing, _targetConnector, New Object() {n})
             object cc = _connector.GetType("Growl.Connector.CallbackContext")
                 .InvokeMember(null, BindingFlags.CreateInstance, null, _connector, new object[] { "some fake information", notificationName });
-            _targetConnector.GetType().InvokeMember("Notify", BindingFlags.InvokeMethod, null, _targetConnector, new object[] { n, cc });
+            _targetConnector.GetType().InvokeMember("Notify", BindingFlags.InvokeMethod, null, _targetConnector, new[] { n, cc });
         }
 
         private void OnNotifyClicked(NotifyCallbackEventArgs e)

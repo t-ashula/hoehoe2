@@ -1668,7 +1668,7 @@ namespace Hoehoe
         {
             if (_eventCheckboxTableElements == null)
             {
-                _eventCheckboxTableElements = new EventCheckboxTblElement[]
+                _eventCheckboxTableElements = new[]
                 {
                     new EventCheckboxTblElement(CheckFavoritesEvent, EventType.Favorite),
                     new EventCheckboxTblElement(CheckUnfavoritesEvent, EventType.Unfavorite),

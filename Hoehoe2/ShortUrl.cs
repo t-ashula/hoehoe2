@@ -372,7 +372,7 @@ namespace Hoehoe
             }
 
             // 変換結果から改行を除去
-            content = content.TrimEnd(new char[] { '\r', '\n' });
+            content = content.TrimEnd(new[] { '\r', '\n' });
 
             // 圧縮の結果逆に長くなった場合は圧縮前のURLを返す
             if (src.Length < content.Length)
