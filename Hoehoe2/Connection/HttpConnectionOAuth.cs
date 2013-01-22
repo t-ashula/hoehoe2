@@ -147,6 +147,7 @@ namespace Hoehoe
         /// <param name="accessToken">アクセストークン</param>
         /// <param name="accessTokenSecret">アクセストークン秘密鍵</param>
         /// <param name="userIdentifier">アクセストークン取得時に得られるユーザー識別情報。不要なら空文字列</param>
+        /// <param name="userIdIdentifier"></param>
         public void Initialize(string consumerKey, string consumerSecret, string accessToken, string accessTokenSecret, string userIdentifier, string userIdIdentifier)
         {
             _consumerKey = consumerKey;
@@ -165,7 +166,9 @@ namespace Hoehoe
         /// <param name="accessToken">アクセストークン</param>
         /// <param name="accessTokenSecret">アクセストークン秘密鍵</param>
         /// <param name="username">認証済みユーザー名</param>
+        /// <param name="userId"></param>
         /// <param name="userIdentifier">アクセストークン取得時に得られるユーザー識別情報。不要なら空文字列</param>
+        /// <param name="userIdIdentifier"></param>
         public void Initialize(string consumerKey, string consumerSecret, string accessToken, string accessTokenSecret, string username, long userId, string userIdentifier, string userIdIdentifier)
         {
             Initialize(consumerKey, consumerSecret, accessToken, accessTokenSecret, userIdentifier, userIdIdentifier);
@@ -245,6 +248,7 @@ namespace Hoehoe
         /// <param name="requestUri">通信先URI</param>
         /// <param name="param">GET時のクエリ、またはPOST時のエンティティボディ</param>
         /// <param name="content">[OUT]HTTP応答のボディストリーム</param>
+        /// <param name="userAgent"></param>
         /// <returns>HTTP応答のステータスコード</returns>
         public HttpStatusCode GetContent(string method, Uri requestUri, Dictionary<string, string> param, ref Stream content, string userAgent)
         {
@@ -308,7 +312,7 @@ namespace Hoehoe
         /// 呼び出し元では戻されたurlをブラウザで開き、認証完了後PIN入力を受け付けて、リクエストトークンと共にAuthenticatePinFlowを呼び出す
         /// </remarks>
         /// <param name="requestTokenUrl">リクエストトークンの取得先URL</param>
-        /// <param name="requestUri">ブラウザで開く認証用URLのベース</param>
+        /// <param name="authorizeUrl">ブラウザで開く認証用URLのベース</param>
         /// <param name="requestToken">[OUT]認証要求で戻されるリクエストトークン。使い捨て</param>
         /// <param name="authUri">[OUT]requestUriを元に生成された認証用URL。通常はリクエストトークンをクエリとして付加したUri</param>
         /// <returns>取得結果真偽値</returns>
@@ -326,7 +330,7 @@ namespace Hoehoe
         /// 事前にAuthenticatePinFlowRequestを呼んで、ブラウザで認証後に表示されるPINを入力してもらい、その値とともに呼び出すこと
         /// </remarks>
         /// <param name="accessTokenUrl">アクセストークンの取得先URL</param>
-        /// <param name="requestUri">AuthenticatePinFlowRequestで取得したリクエストトークン</param>
+        /// <param name="requestToken">AuthenticatePinFlowRequestで取得したリクエストトークン</param>
         /// <param name="pinCode">Webで認証後に表示されるPINコード</param>
         /// <returns>取得結果真偽値</returns>
         public HttpStatusCode AuthenticatePinFlow(string accessTokenUrl, string requestToken, string pinCode)
@@ -389,6 +393,7 @@ namespace Hoehoe
         /// <param name="accessTokenUrl">アクセストークンの取得先URL</param>
         /// <param name="username">認証用ユーザー名</param>
         /// <param name="password">認証用パスワード</param>
+        /// <param name="content"></param>
         /// <returns>取得結果真偽値</returns>
         public HttpStatusCode AuthenticateXAuth(Uri accessTokenUrl, string username, string password, ref string content)
         {
@@ -562,7 +567,7 @@ namespace Hoehoe
         /// <summary>
         /// OAuth認証のリクエストトークン取得。リクエストトークンと組み合わせた認証用のUriも生成する
         /// </summary>
-        /// <param name="accessTokenUrl">リクエストトークンの取得先URL</param>
+        /// <param name="requestTokenUrl">リクエストトークンの取得先URL</param>
         /// <param name="authorizeUrl">ブラウザで開く認証用URLのベース</param>
         /// <param name="requestToken">[OUT]取得したリクエストトークン</param>
         /// <returns>取得結果真偽値</returns>
@@ -596,6 +601,7 @@ namespace Hoehoe
         /// <param name="pinCode">PINフロー時のアクセストークン取得時に設定。それ以外は空文字列</param>
         /// <param name="requestToken">PINフロー時のリクエストトークン取得時に設定。それ以外は空文字列</param>
         /// <param name="parameter">追加パラメータ。xAuthで使用</param>
+        /// <param name="content"></param>
         /// <returns>取得結果のデータ。正しく取得出来なかった場合はNothing</returns>
         private HttpStatusCode GetOAuthToken(Uri requestUri, string pinCode, string requestToken, Dictionary<string, string> parameter, ref string content)
         {

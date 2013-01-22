@@ -542,12 +542,9 @@ namespace Hoehoe
                 param.Add("since_id", sinceId.ToString());
             }
 
-            if (param.Count == 0)
-            {
-                return HttpStatusCode.BadRequest;
-            }
-
-            return _httpConVar.GetContent(GetMethod, CreateTwitterSearchUri("/search.atom"), param, ref content, null, "Hoehoe");
+            return param.Count == 0 ?
+                HttpStatusCode.BadRequest :
+                _httpConVar.GetContent(GetMethod, CreateTwitterSearchUri("/search.atom"), param, ref content, null, "Hoehoe");
         }
 
         public HttpStatusCode SavedSearches(ref string content)

@@ -322,7 +322,7 @@ namespace Hoehoe
         /// マルチバイト文字のコードはUTF-8またはUnicodeで自動的に判断します。
         /// </newpara>
         /// </summary>
-        /// <param name = input>エンコード対象のURL</param>
+        /// <param name="input">エンコード対象のURL</param>
         /// <returns>マルチバイト文字の部分をUTF-8/%xx形式でエンコードした文字列を返します。</returns>
         public static string GetUrlEncodeMultibyteChar(string input)
         {

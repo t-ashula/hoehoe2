@@ -1281,12 +1281,7 @@ namespace Hoehoe
         {
             lock (_lockObj)
             {
-                if (Tabs.ContainsKey(tabName))
-                {
-                    return Tabs[tabName];
-                }
-
-                return null;
+                return Tabs.ContainsKey(tabName) ? Tabs[tabName] : null;
             }
         }
 

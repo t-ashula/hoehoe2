@@ -5923,12 +5923,7 @@ namespace Hoehoe
             }
 
             TopMost = _configs.AlwaysTop;
-            if (string.IsNullOrEmpty(_searchDialog.SWord))
-            {
-                return false;
-            }
-
-            return true;
+            return !string.IsNullOrEmpty(_searchDialog.SWord);
         }
 
         private void TrySearchWordInTab()

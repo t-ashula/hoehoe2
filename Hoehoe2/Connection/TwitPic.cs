@@ -166,17 +166,9 @@ namespace Hoehoe
 
         public UploadFileType GetFileType(string ext)
         {
-            if (Array.IndexOf(_pictureExts, ext.ToLower()) > -1)
-            {
-                return UploadFileType.Picture;
-            }
-
-            if (Array.IndexOf(_multimediaExts, ext.ToLower()) > -1)
-            {
-                return UploadFileType.MultiMedia;
-            }
-
-            return UploadFileType.Invalid;
+            return Array.IndexOf(_pictureExts, ext.ToLower()) > -1 ? UploadFileType.Picture :
+                (Array.IndexOf(_multimediaExts, ext.ToLower()) > -1 ? UploadFileType.MultiMedia :
+                UploadFileType.Invalid);
         }
 
         public bool IsSupportedFileType(UploadFileType type)
@@ -193,7 +185,6 @@ namespace Hoehoe
 
             if (Array.IndexOf(_multimediaExts, ext.ToLower()) > -1)
             {
-                // Multimedia : no check
                 return true;
             }
 
