@@ -53,17 +53,17 @@ namespace Hoehoe
         // Image only // Multimedia filesize limit unknown. But length limit is 1:30.
         private const long MaxFileSize = 10 * 1024 * 1024;
 
-        private string[] pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
+        private readonly string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
 
-        private string[] multimediaExts = { ".avi", ".wmv", ".flv", ".m4v", ".mov", ".mp4", ".rm", ".mpeg", ".mpg", ".3gp", ".3g2" };
+        private readonly string[] _multimediaExts = { ".avi", ".wmv", ".flv", ".m4v", ".mov", ".mp4", ".rm", ".mpeg", ".mpg", ".3gp", ".3g2" };
 
-        private Twitter tw;
+        private readonly Twitter _tw;
 
         public TwitPic(Twitter twitter)
             : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.json"))
         {
-            this.tw = twitter;
-            this.Initialize(ConsumerKey, ConsumerSecretKey, this.tw.AccessToken, this.tw.AccessTokenSecret, string.Empty, string.Empty);
+            _tw = twitter;
+            Initialize(ConsumerKey, ConsumerSecretKey, _tw.AccessToken, _tw.AccessTokenSecret, string.Empty, string.Empty);
         }
 
         public string Upload(ref string filePath, ref string message, long replyTo)
@@ -98,7 +98,7 @@ namespace Hoehoe
             try
             {
                 // TwitPicへの投稿
-                ret = this.UploadFile(mediaFile, message, ref content);
+                ret = UploadFile(mediaFile, message, ref content);
             }
             catch (Exception ex)
             {
@@ -151,27 +151,27 @@ namespace Hoehoe
                 message += " " + url;
             }
 
-            return this.tw.PostStatus(message, 0);
+            return _tw.PostStatus(message, 0);
         }
 
         public bool CheckValidExtension(string ext)
         {
-            return this.pictureExts.Contains(ext.ToLower()) || this.multimediaExts.Contains(ext.ToLower());
+            return _pictureExts.Contains(ext.ToLower()) || _multimediaExts.Contains(ext.ToLower());
         }
 
         public string GetFileOpenDialogFilter()
         {
-            return string.Format("Image Files(*{0})|*{0}|Videos(*{1})|*{1}", string.Join(";*", this.pictureExts), string.Join(";*", this.multimediaExts));
+            return string.Format("Image Files(*{0})|*{0}|Videos(*{1})|*{1}", string.Join(";*", _pictureExts), string.Join(";*", _multimediaExts));
         }
 
         public UploadFileType GetFileType(string ext)
         {
-            if (Array.IndexOf(this.pictureExts, ext.ToLower()) > -1)
+            if (Array.IndexOf(_pictureExts, ext.ToLower()) > -1)
             {
                 return UploadFileType.Picture;
             }
 
-            if (Array.IndexOf(this.multimediaExts, ext.ToLower()) > -1)
+            if (Array.IndexOf(_multimediaExts, ext.ToLower()) > -1)
             {
                 return UploadFileType.MultiMedia;
             }
@@ -186,12 +186,12 @@ namespace Hoehoe
 
         public bool CheckValidFilesize(string ext, long fileSize)
         {
-            if (Array.IndexOf(this.pictureExts, ext.ToLower()) > -1)
+            if (Array.IndexOf(_pictureExts, ext.ToLower()) > -1)
             {
                 return fileSize <= MaxFileSize;
             }
 
-            if (Array.IndexOf(this.multimediaExts, ext.ToLower()) > -1)
+            if (Array.IndexOf(_multimediaExts, ext.ToLower()) > -1)
             {
                 // Multimedia : no check
                 return true;
@@ -214,12 +214,12 @@ namespace Hoehoe
             }
 
             // Check filetype and size(Max 5MB)
-            if (!this.CheckValidExtension(mediaFile.Extension))
+            if (!CheckValidExtension(mediaFile.Extension))
             {
                 throw new ArgumentException("Service don't support this filetype.");
             }
 
-            if (!this.CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
+            if (!CheckValidFilesize(mediaFile.Extension, mediaFile.Length))
             {
                 throw new ArgumentException("File is too large.");
             }
@@ -229,16 +229,16 @@ namespace Hoehoe
             param.Add("message", message);
             List<KeyValuePair<string, FileInfo>> binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
-            if (this.GetFileType(mediaFile.Extension) == UploadFileType.Picture)
+            if (GetFileType(mediaFile.Extension) == UploadFileType.Picture)
             {
-                this.InstanceTimeout = 60000; // タイムアウト60秒
+                InstanceTimeout = 60000; // タイムアウト60秒
             }
             else
             {
-                this.InstanceTimeout = 120000;
+                InstanceTimeout = 120000;
             }
 
-            return this.GetContent(HttpConnection.PostMethod, new Uri("http://api.twitpic.com/2/upload.xml"), param, binary, ref content, null, null);
+            return GetContent(HttpConnection.PostMethod, new Uri("http://api.twitpic.com/2/upload.xml"), param, binary, ref content, null, null);
         }
     }
 }

@@ -32,25 +32,25 @@ namespace Hoehoe
     public class TwitterPhoto : IMultimediaShareService
     {
         private const long MaxfilesizeDefault = 3145728;        // help/configurationにより取得されコンストラクタへ渡される
-        private string[] pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
-        private long maxFileSize = 3145728;
-        private Twitter tw;
+        private readonly string[] _pictureExts = { ".jpg", ".jpeg", ".gif", ".png" };
+        private long _maxFileSize = 3145728;
+        private readonly Twitter _tw;
 
         public TwitterPhoto(Twitter twitter)
         {
-            this.tw = twitter;
+            _tw = twitter;
         }
 
         public bool CheckValidExtension(string ext)
         {
-            return Array.IndexOf(this.pictureExts, ext.ToLower()) > -1;
+            return Array.IndexOf(_pictureExts, ext.ToLower()) > -1;
         }
 
         public bool CheckValidFilesize(string ext, long fileSize)
         {
-            if (this.CheckValidExtension(ext))
+            if (CheckValidExtension(ext))
             {
-                return fileSize <= this.maxFileSize;
+                return fileSize <= _maxFileSize;
             }
 
             return false;
@@ -63,11 +63,11 @@ namespace Hoehoe
                 try
                 {
                     long val = Convert.ToInt64(value);
-                    this.maxFileSize = val > 0 ? val : MaxfilesizeDefault;
+                    _maxFileSize = val > 0 ? val : MaxfilesizeDefault;
                 }
                 catch (Exception)
                 {
-                    this.maxFileSize = MaxfilesizeDefault;
+                    _maxFileSize = MaxfilesizeDefault;
                     return false; // error
                 }
 
@@ -84,7 +84,7 @@ namespace Hoehoe
 
         public UploadFileType GetFileType(string ext)
         {
-            return this.CheckValidExtension(ext) ? UploadFileType.Picture : UploadFileType.Invalid;
+            return CheckValidExtension(ext) ? UploadFileType.Picture : UploadFileType.Invalid;
         }
 
         public bool IsSupportedFileType(UploadFileType type)
@@ -124,7 +124,7 @@ namespace Hoehoe
                 return "Err:Don't support animatedGIF.";
             }
 
-            return this.tw.PostStatusWithMedia(message, replyTo, mediaFile);
+            return _tw.PostStatusWithMedia(message, replyTo, mediaFile);
         }
     }
 }
