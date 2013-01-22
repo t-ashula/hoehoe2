@@ -671,14 +671,7 @@ namespace Hoehoe
                 }
 
                 fs.Append("(");
-                if (SearchBoth)
-                {
-                    fs.Append(R.SetFiltersText5);
-                }
-                else
-                {
-                    fs.Append(R.SetFiltersText6);
-                }
+                fs.Append(SearchBoth ? R.SetFiltersText5 : R.SetFiltersText6);
 
                 if (UseRegex)
                 {
@@ -744,14 +737,7 @@ namespace Hoehoe
                 }
 
                 fs.Append("(");
-                if (ExSearchBoth)
-                {
-                    fs.Append(R.SetFiltersText5);
-                }
-                else
-                {
-                    fs.Append(R.SetFiltersText6);
-                }
+                fs.Append(ExSearchBoth ? R.SetFiltersText5 : R.SetFiltersText6);
 
                 if (ExUseRegex)
                 {
@@ -788,14 +774,7 @@ namespace Hoehoe
             }
 
             fs.Append("(");
-            if (MoveFrom)
-            {
-                fs.Append(R.SetFiltersText9);
-            }
-            else
-            {
-                fs.Append(R.SetFiltersText11);
-            }
+            fs.Append(MoveFrom ? R.SetFiltersText9 : R.SetFiltersText11);
 
             if (!MoveFrom && SetMark)
             {

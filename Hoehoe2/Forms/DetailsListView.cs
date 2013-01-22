@@ -318,14 +318,9 @@ namespace Hoehoe.TweenCustomControl
                 }
 
                 ListViewItem item = Items[itemIndex];
-                if (item.UseItemStyleForSubItems)
-                {
-                    _changeBounds = item.Bounds;
-                }
-                else
-                {
-                    _changeBounds = GetSubItemBounds(itemIndex, subItemIndex);
-                }
+                _changeBounds = item.UseItemStyleForSubItems ?
+                    item.Bounds :
+                    GetSubItemBounds(itemIndex, subItemIndex);
             }
             catch (ArgumentException)
             {

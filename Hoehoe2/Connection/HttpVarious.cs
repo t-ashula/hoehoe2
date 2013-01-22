@@ -237,14 +237,7 @@ namespace Hoehoe
                 HttpStatusCode ret = GetResponse(req, ref img, null, false);
                 if (errmsg != null)
                 {
-                    if (ret == HttpStatusCode.OK)
-                    {
-                        errmsg = string.Empty;
-                    }
-                    else
-                    {
-                        errmsg = ret.ToString();
-                    }
+                    errmsg = ret == HttpStatusCode.OK ? string.Empty : ret.ToString();
                 }
 
                 if (img != null)

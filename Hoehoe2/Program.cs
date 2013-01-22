@@ -171,13 +171,14 @@ namespace Hoehoe
 
         private static void CheckSettingFilePath()
         {
-            if (File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "roaming")))
+            var directoryName = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            if (File.Exists(Path.Combine(directoryName, "roaming")))
             {
                 MyCommon.SettingPath = MySpecialPath.UserAppDataPath();
             }
             else
             {
-                MyCommon.SettingPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                MyCommon.SettingPath = directoryName;
             }
         }
 

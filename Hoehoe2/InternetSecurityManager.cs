@@ -169,14 +169,9 @@ namespace Hoehoe
             if (WebBrowserAPI.URLACTION_SCRIPT_MIN <= dwAction && dwAction <= WebBrowserAPI.URLACTION_SCRIPT_MAX)
             {
                 // スクリプト実行状態
-                if ((_policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT)
-                {
-                    pPolicy = WebBrowserAPI.URLPOLICY_ALLOW;
-                }
-                else
-                {
-                    pPolicy = WebBrowserAPI.URLPOLICY_DISALLOW;
-                }
+                pPolicy = (_policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT ?
+                    WebBrowserAPI.URLPOLICY_ALLOW :
+                    WebBrowserAPI.URLPOLICY_DISALLOW;
 
                 if (Regex.IsMatch(pwszUrl, "^https?://((api\\.)?twitter\\.com/|([a-zA-Z0-9]+\\.)?twimg\\.com/|ssl\\.google-analytics\\.com/)"))
                 {
@@ -190,14 +185,9 @@ namespace Hoehoe
             if (WebBrowserAPI.URLACTION_ACTIVEX_MIN <= dwAction && dwAction <= WebBrowserAPI.URLACTION_ACTIVEX_MAX)
             {
                 // ActiveX実行状態
-                if ((_policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX)
-                {
-                    pPolicy = WebBrowserAPI.URLPOLICY_ALLOW;
-                }
-                else
-                {
-                    pPolicy = WebBrowserAPI.URLPOLICY_DISALLOW;
-                }
+                pPolicy = (_policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX ?
+                    WebBrowserAPI.URLPOLICY_ALLOW :
+                    WebBrowserAPI.URLPOLICY_DISALLOW;
 
                 return HRESULT.S_OK;
             }

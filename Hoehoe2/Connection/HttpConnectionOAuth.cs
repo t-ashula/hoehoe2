@@ -355,14 +355,9 @@ namespace Hoehoe
             _tokenSecret = accessTokenData["oauth_token_secret"];
 
             // サービスごとの独自拡張対応
-            if (!string.IsNullOrEmpty(_userIdentKey))
-            {
-                _authorizedUsername = accessTokenData[_userIdentKey];
-            }
-            else
-            {
-                _authorizedUsername = string.Empty;
-            }
+            _authorizedUsername = string.IsNullOrEmpty(_userIdentKey) ?
+                string.Empty :
+                accessTokenData[_userIdentKey];
 
             if (!string.IsNullOrEmpty(_userIdIdentKey))
             {
@@ -426,14 +421,9 @@ namespace Hoehoe
             _tokenSecret = accessTokenData["oauth_token_secret"];
 
             // サービスごとの独自拡張対応
-            if (!string.IsNullOrEmpty(_userIdentKey))
-            {
-                _authorizedUsername = accessTokenData[_userIdentKey];
-            }
-            else
-            {
-                _authorizedUsername = string.Empty;
-            }
+            _authorizedUsername = string.IsNullOrEmpty(_userIdentKey) ?
+                string.Empty :
+                accessTokenData[_userIdentKey];
 
             if (!string.IsNullOrEmpty(_userIdIdentKey))
             {

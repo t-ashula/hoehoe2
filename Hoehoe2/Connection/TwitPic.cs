@@ -229,14 +229,7 @@ namespace Hoehoe
             param.Add("message", message);
             var binary = new List<KeyValuePair<string, FileInfo>>();
             binary.Add(new KeyValuePair<string, FileInfo>("media", mediaFile));
-            if (GetFileType(mediaFile.Extension) == UploadFileType.Picture)
-            {
-                InstanceTimeout = 60000; // タイムアウト60秒
-            }
-            else
-            {
-                InstanceTimeout = 120000;
-            }
+            InstanceTimeout = GetFileType(mediaFile.Extension) == UploadFileType.Picture ? 60000 : 120000;  // 種類別にタイムアウトを指定
 
             return GetContent(PostMethod, new Uri("http://api.twitpic.com/2/upload.xml"), param, binary, ref content, null, null);
         }

@@ -379,14 +379,7 @@ namespace Hoehoe
             if (sc != null)
             {
                 string selectedText = _owner.WebBrowser_GetSelectionText(sc);
-                if (selectedText == null)
-                {
-                    SelectionCopyToolStripMenuItem.Enabled = false;
-                }
-                else
-                {
-                    SelectionCopyToolStripMenuItem.Enabled = true;
-                }
+                SelectionCopyToolStripMenuItem.Enabled = selectedText != null;
             }
         }
 

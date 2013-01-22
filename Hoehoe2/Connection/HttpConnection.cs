@@ -228,14 +228,7 @@ namespace Hoehoe
             }
 
             // タイムアウト設定
-            if (InstanceTimeout > 0)
-            {
-                webReq.Timeout = InstanceTimeout;
-            }
-            else
-            {
-                webReq.Timeout = DefaultTimeout;
-            }
+            webReq.Timeout = InstanceTimeout > 0 ? InstanceTimeout : DefaultTimeout;
 
             return webReq;
         }
@@ -404,14 +397,7 @@ namespace Hoehoe
             }
 
             // タイムアウト設定
-            if (InstanceTimeout > 0)
-            {
-                webReq.Timeout = InstanceTimeout;
-            }
-            else
-            {
-                webReq.Timeout = DefaultTimeout;
-            }
+            webReq.Timeout = InstanceTimeout > 0 ? InstanceTimeout : DefaultTimeout;
 
             return webReq;
         }

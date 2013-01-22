@@ -1714,22 +1714,11 @@ namespace Hoehoe
 
             foreach (var tbl in _eventCheckboxTableElements)
             {
-                if (Convert.ToBoolean(evt & tbl.EventType))
-                {
-                    if (Convert.ToBoolean(myevt & tbl.EventType))
-                    {
-                        tbl.CheckBox.CheckState = CheckState.Checked;
-                    }
-                    else
-                    {
-                        tbl.CheckBox.CheckState = CheckState.Indeterminate;
-                    }
-                }
-                else
-                {
-                    tbl.CheckBox.CheckState = CheckState.Unchecked;
-                }
-
+                tbl.CheckBox.CheckState = Convert.ToBoolean(evt & tbl.EventType) ?
+                                              (Convert.ToBoolean(myevt & tbl.EventType) ?
+                                                   CheckState.Checked :
+                                                   CheckState.Indeterminate) :
+                                              CheckState.Unchecked;
                 tbl.CheckBox.Enabled = rootEnabled;
             }
         }

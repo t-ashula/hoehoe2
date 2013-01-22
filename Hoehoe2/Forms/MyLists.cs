@@ -83,23 +83,18 @@ namespace Hoehoe
                         var listItem = (ListElement)ListsCheckedListBox.Items[e.Index];
 
                         bool ret = false;
-                        string rslt = _twitter.ContainsUserAtList(listItem.Id.ToString(), _contextUserName, ref ret);
-                        if (!string.IsNullOrEmpty(rslt))
+                        string rslt = _twitter.ContainsUserAtList("" + listItem.Id, _contextUserName, ref ret);
+                        CheckState cs;
+                        if (string.IsNullOrEmpty(rslt))
                         {
-                            MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
-                            e.NewValue = CheckState.Indeterminate;
+                            cs = ret ? CheckState.Checked : CheckState.Unchecked;
                         }
                         else
                         {
-                            if (ret)
-                            {
-                                e.NewValue = CheckState.Checked;
-                            }
-                            else
-                            {
-                                e.NewValue = CheckState.Unchecked;
-                            }
+                            cs = CheckState.Indeterminate;
+                            MessageBox.Show(string.Format(R.ListManageOKButton2, rslt));
                         }
+                        e.NewValue = cs;
                     }
 
                     break;

@@ -1047,14 +1047,9 @@ namespace Hoehoe
 
         private void Tabs_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(TabPage)))
-            {
-                e.Effect = DragDropEffects.Move;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
+            e.Effect = e.Data.GetDataPresent(typeof(TabPage)) ?
+                DragDropEffects.Move :
+                DragDropEffects.None;
         }
 
         private void Tabs_MouseDownExtracted(MouseEventArgs e)
@@ -2265,15 +2260,9 @@ namespace Hoehoe
                         TabClass tbc = _statuses.Tabs[args.TabName];
                         for (int i = 0; i < args.Ids.Count; i++)
                         {
-                            PostClass post;
-                            if (tbc.IsInnerStorageTabType)
-                            {
-                                post = tbc.Posts[args.Ids[i]];
-                            }
-                            else
-                            {
-                                post = _statuses.Item(args.Ids[i]);
-                            }
+                            PostClass post = tbc.IsInnerStorageTabType ?
+                                                 tbc.Posts[args.Ids[i]] :
+                                                 _statuses.Item(args.Ids[i]);
 
                             args.Page = i + 1;
                             bw.ReportProgress(50, MakeStatusMessage(args, false));
@@ -2926,14 +2915,9 @@ namespace Hoehoe
             Brush fore;
             try
             {
-                if (_statuses.Tabs[txt].UnreadCount > 0)
-                {
-                    fore = Brushes.Red;
-                }
-                else
-                {
-                    fore = SystemBrushes.ControlText;
-                }
+                fore = _statuses.Tabs[txt].UnreadCount > 0 ?
+                    Brushes.Red :
+                    SystemBrushes.ControlText;
             }
             catch (Exception)
             {

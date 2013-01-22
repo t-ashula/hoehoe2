@@ -1610,14 +1610,9 @@ namespace Hoehoe
                 if (!Thread.CurrentThread.CurrentUICulture.IsNeutralCulture)
                 {
                     int idx = Thread.CurrentThread.CurrentUICulture.Name.LastIndexOf('-');
-                    if (idx > -1)
-                    {
-                        curCul = Thread.CurrentThread.CurrentUICulture.Name.Substring(0, idx);
-                    }
-                    else
-                    {
-                        curCul = Thread.CurrentThread.CurrentUICulture.Name;
-                    }
+                    curCul = idx > -1 ?
+                        Thread.CurrentThread.CurrentUICulture.Name.Substring(0, idx) :
+                        Thread.CurrentThread.CurrentUICulture.Name;
                 }
                 else
                 {
@@ -1642,14 +1637,9 @@ namespace Hoehoe
                 if (!Thread.CurrentThread.CurrentCulture.IsNeutralCulture)
                 {
                     int idx = Thread.CurrentThread.CurrentCulture.Name.LastIndexOf('-');
-                    if (idx > -1)
-                    {
-                        curCul2 = Thread.CurrentThread.CurrentCulture.Name.Substring(0, idx);
-                    }
-                    else
-                    {
-                        curCul2 = Thread.CurrentThread.CurrentCulture.Name;
-                    }
+                    curCul2 = idx > -1 ?
+                        Thread.CurrentThread.CurrentCulture.Name.Substring(0, idx) :
+                        Thread.CurrentThread.CurrentCulture.Name;
                 }
                 else
                 {
@@ -1731,28 +1721,9 @@ namespace Hoehoe
 
             try
             {
-                if (workerType == WorkerType.Timeline)
-                {
-                    if (more)
-                    {
-                        res = _twitterConnection.HomeTimeline(count, _minHomeTimeline, 0, ref content);
-                    }
-                    else
-                    {
-                        res = _twitterConnection.HomeTimeline(count, 0, 0, ref content);
-                    }
-                }
-                else
-                {
-                    if (more)
-                    {
-                        res = _twitterConnection.Mentions(count, _minMentions, 0, ref content);
-                    }
-                    else
-                    {
-                        res = _twitterConnection.Mentions(count, 0, 0, ref content);
-                    }
-                }
+                res = workerType == WorkerType.Timeline ?
+                    _twitterConnection.HomeTimeline(count, more ? _minHomeTimeline : 0, 0, ref content) :
+                    _twitterConnection.Mentions(count, more ? _minMentions : 0, 0, ref content);
             }
             catch (Exception ex)
             {
@@ -1812,14 +1783,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    if (more)
-                    {
-                        res = _twitterConnection.UserTimeline(0, userName, count, tab.OldestId, 0, ref content);
-                    }
-                    else
-                    {
-                        res = _twitterConnection.UserTimeline(0, userName, count, 0, 0, ref content);
-                    }
+                    res = _twitterConnection.UserTimeline(0, userName, count, more ? tab.OldestId : 0, 0, ref content);
                 }
             }
             catch (Exception ex)
@@ -2013,14 +1977,8 @@ namespace Hoehoe
 
             try
             {
-                if (more)
-                {
-                    res = _twitterConnection.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, tab.OldestId, 0, Configs.Instance.IsListStatusesIncludeRts, ref content);
-                }
-                else
-                {
-                    res = _twitterConnection.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, 0, 0, Configs.Instance.IsListStatusesIncludeRts, ref content);
-                }
+                long oldest = more ? tab.OldestId : 0L;
+                res = _twitterConnection.GetListsStatuses(tab.ListInfo.UserId, tab.ListInfo.Id, count, oldest, 0, Configs.Instance.IsListStatusesIncludeRts, ref content);
             }
             catch (Exception ex)
             {
@@ -2204,15 +2162,7 @@ namespace Hoehoe
                     post.UserId = 0;
                     post.ScreenName = author["name"].InnerText.Split(' ')[0].Trim();
                     post.Nickname = author["name"].InnerText.Substring(post.ScreenName.Length).Trim();
-                    if (post.Nickname.Length > 2)
-                    {
-                        post.Nickname = post.Nickname.Substring(1, post.Nickname.Length - 2);
-                    }
-                    else
-                    {
-                        post.Nickname = post.ScreenName;
-                    }
-
+                    post.Nickname = post.Nickname.Length > 2 ? post.Nickname.Substring(1, post.Nickname.Length - 2) : post.ScreenName;
                     post.ImageUrl = ((XmlElement)xentry.SelectSingleNode("./search:link[@type='image/png']", nsmgr)).GetAttribute("href");
                     post.IsProtect = false;
                     post.IsMe = post.ScreenName.ToLower().Equals(_uname);
@@ -2282,14 +2232,9 @@ namespace Hoehoe
 
             try
             {
-                if (string.IsNullOrEmpty(querystr))
-                {
-                    res = _twitterConnection.PhoenixSearch(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content);
-                }
-                else
-                {
-                    res = _twitterConnection.PhoenixSearch(querystr, ref content);
-                }
+                res = string.IsNullOrEmpty(querystr) ?
+                    _twitterConnection.PhoenixSearch(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content) :
+                    _twitterConnection.PhoenixSearch(querystr, ref content);
             }
             catch (Exception ex)
             {
@@ -2350,25 +2295,15 @@ namespace Hoehoe
             {
                 if (workerType == WorkerType.DirectMessegeRcv)
                 {
-                    if (more)
-                    {
-                        res = _twitterConnection.DirectMessages(20, _minDirectmessage, 0, ref content);
-                    }
-                    else
-                    {
-                        res = _twitterConnection.DirectMessages(20, 0, 0, ref content);
-                    }
+                    res = more ?
+                        _twitterConnection.DirectMessages(20, _minDirectmessage, 0, ref content) :
+                        _twitterConnection.DirectMessages(20, 0, 0, ref content);
                 }
                 else
                 {
-                    if (more)
-                    {
-                        res = _twitterConnection.DirectMessagesSent(20, _minDirectmessageSent, 0, ref content);
-                    }
-                    else
-                    {
-                        res = _twitterConnection.DirectMessagesSent(20, 0, 0, ref content);
-                    }
+                    res = more ?
+                        _twitterConnection.DirectMessagesSent(20, _minDirectmessageSent, 0, ref content) :
+                        _twitterConnection.DirectMessagesSent(20, 0, 0, ref content);
                 }
             }
             catch (Exception ex)

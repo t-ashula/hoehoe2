@@ -76,14 +76,7 @@ namespace Hoehoe
             OldestUnreadId = -1;
             _tabType = tabType;
             ListInfo = list;
-            if (IsInnerStorageTabType)
-            {
-                _sorter.Posts = Posts;
-            }
-            else
-            {
-                _sorter.Posts = TabInformations.Instance.Posts;
-            }
+            _sorter.Posts = IsInnerStorageTabType ? Posts : TabInformations.Instance.Posts;
         }
 
         public string User { get; set; }
@@ -239,14 +232,7 @@ namespace Hoehoe
             set
             {
                 _tabType = value;
-                if (IsInnerStorageTabType)
-                {
-                    _sorter.Posts = Posts;
-                }
-                else
-                {
-                    _sorter.Posts = TabInformations.Instance.Posts;
-                }
+                _sorter.Posts = IsInnerStorageTabType ? Posts : TabInformations.Instance.Posts;
             }
         }
 

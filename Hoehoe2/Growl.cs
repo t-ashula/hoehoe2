@@ -214,16 +214,7 @@ namespace Hoehoe
             if (icon != null || !string.IsNullOrEmpty(url))
             {
                 Type gcore = _core.GetType("Growl.CoreLibrary.Resource");
-                object res;
-                if (icon != null)
-                {
-                    res = gcore.InvokeMember("op_Implicit", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { icon });
-                }
-                else
-                {
-                    res = gcore.InvokeMember("op_Implicit", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { url });
-                }
-
+                object res = gcore.InvokeMember("op_Implicit", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, icon != null ? new object[] { icon } : new object[] { url });
                 object priority = _connector.GetType("Growl.Connector.Priority").InvokeMember("Normal", BindingFlags.GetField, null, null, null);
                 n = _connector.GetType("Growl.Connector.Notification")
                     .InvokeMember("Notification", BindingFlags.CreateInstance, null, _connector, new[] { _appName, notificationName, id, title, text, res, false, priority, "aaa" });

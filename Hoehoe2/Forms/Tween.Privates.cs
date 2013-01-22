@@ -4105,7 +4105,7 @@ namespace Hoehoe
                 }
                 else
                 {
-                    slbl.Append(string.Format("{0}{1}", _configs.TimelinePeriodInt, R.SetStatusLabelText3));
+                    slbl.AppendFormat("{0}{1}", _configs.TimelinePeriodInt, R.SetStatusLabelText3);
                 }
 
                 return slbl.ToString();
