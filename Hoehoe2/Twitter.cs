@@ -4563,7 +4563,7 @@ namespace Hoehoe
                     evt.Id = eventData.TargetObject.Id;
                     if (Configs.Instance.IsRemoveSameEvent)
                     {
-                        if (StoredEvent.Any((FormattedEvent ev) => { return ev.Username == evt.Username && ev.Eventtype == evt.Eventtype && ev.Target == evt.Target; }))
+                        if (StoredEvent.Any(ev => ev.Username == evt.Username && ev.Eventtype == evt.Eventtype && ev.Target == evt.Target))
                         {
                             return;
                         }

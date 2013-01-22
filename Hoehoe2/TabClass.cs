@@ -472,7 +472,7 @@ namespace Hoehoe
                 return;
             }
 
-            _tmpIds.Sort((TemporaryId x, TemporaryId y) => x.Id.CompareTo(y.Id));
+            _tmpIds.Sort((x, y) => x.Id.CompareTo(y.Id));
             foreach (TemporaryId tId in _tmpIds)
             {
                 if (TabType == TabUsageType.Mentions && TabInformations.Instance.Item(tId.Id).IsReply)
