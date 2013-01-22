@@ -1059,7 +1059,7 @@ namespace Hoehoe
             }
 
             int prevSelectedIndex = ListFilters.SelectedIndex;
-            var ft = new FiltersClass() { MoveFrom = OptMove.Checked, SetMark = CheckMark.Checked };
+            var ft = new FiltersClass { MoveFrom = OptMove.Checked, SetMark = CheckMark.Checked };
 
             string bdy = string.Empty;
             if (RadioAND.Checked)

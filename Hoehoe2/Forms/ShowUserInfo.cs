@@ -509,7 +509,7 @@ namespace Hoehoe
             {
                 if (TextBoxName.Modified || TextBoxLocation.Modified || TextBoxWeb.Modified || TextBoxDescription.Modified)
                 {
-                    UpdateProfileArgs arg = new UpdateProfileArgs()
+                    UpdateProfileArgs arg = new UpdateProfileArgs
                     {
                         Tw = _owner.TwitterInstance,
                         Name = TextBoxName.Text.Trim(),

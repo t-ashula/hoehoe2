@@ -187,8 +187,6 @@ namespace Hoehoe
                         case DialogResult.No:
                             SaveEventLog(EventSource, sw);
                             break;
-                        default:
-                            break;
                     }
                 }
             }

@@ -2761,7 +2761,7 @@ namespace Hoehoe
 
                         if (retry == DialogResult.Retry)
                         {
-                            RunAsync(new GetWorkerArg() { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage, PStatus = rslt.PStatus });
+                            RunAsync(new GetWorkerArg { Page = 0, EndPage = 0, WorkerType = WorkerType.PostMessage, PStatus = rslt.PStatus });
                         }
                         else
                         {

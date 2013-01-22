@@ -140,7 +140,7 @@ namespace Hoehoe
             {
                 foreach (var svc in _thumbnailServices)
                 {
-                    if (svc.UrlCreator(new GetUrlArgs() { Url = url, ImgList = imglist }))
+                    if (svc.UrlCreator(new GetUrlArgs { Url = url, ImgList = imglist }))
                     {
                         // URLに対応したサムネイル作成処理デリゲートをリストに登録
                         dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(url, svc.ImageCreator));
@@ -155,7 +155,7 @@ namespace Hoehoe
                 {
                     foreach (var svc in _thumbnailServices)
                     {
-                        if (svc.UrlCreator(new GetUrlArgs() { Url = m.Key, Extended = m.Value, ImgList = imglist }))
+                        if (svc.UrlCreator(new GetUrlArgs { Url = m.Key, Extended = m.Value, ImgList = imglist }))
                         {
                             // URLに対応したサムネイル作成処理デリゲートをリストに登録
                             dlg.Add(new KeyValuePair<string, ImageCreatorDelegate>(m.Key, svc.ImageCreator));
@@ -167,7 +167,7 @@ namespace Hoehoe
 
             if (geo != null)
             {
-                var args = new GetUrlArgs() { Url = string.Empty, ImgList = imglist, GeoInfo = new Google.GlobalLocation { Latitude = geo.Lat, Longitude = geo.Lng } };
+                var args = new GetUrlArgs { Url = string.Empty, ImgList = imglist, GeoInfo = new Google.GlobalLocation { Latitude = geo.Lat, Longitude = geo.Lng } };
                 if (TwitterGeo_GetUrl(args))
                 {
                     // URLに対応したサムネイル作成処理デリゲートをリストに登録
@@ -315,7 +315,7 @@ namespace Hoehoe
 
             foreach (var url in arg.Urls)
             {
-                var args = new CreateImageArgs() { Url = url, Pics = arg.Pics, TooltipText = arg.TooltipText, Errmsg = string.Empty };
+                var args = new CreateImageArgs { Url = url, Pics = arg.Pics, TooltipText = arg.TooltipText, Errmsg = string.Empty };
                 if (!arg.ImageCreators[arg.Urls.IndexOf(url)].Value(args))
                 {
                     arg.AdditionalErrorMessage = args.Errmsg;

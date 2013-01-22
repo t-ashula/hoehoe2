@@ -1658,7 +1658,7 @@ namespace Hoehoe
                 return;
             }
 
-            var retweetPost = new PostClass()
+            var retweetPost = new PostClass
             {
                 Nickname = item.Nickname,
                 TextFromApi = item.TextFromApi,

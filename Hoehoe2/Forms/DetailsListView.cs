@@ -63,11 +63,11 @@ namespace Hoehoe.TweenCustomControl
             FullRowSelect = true;
             HideSelection = false;
             DoubleBuffered = true;
-            _scrollInfo = new SCROLLINFO()
-            {
-                cbSize = (uint)Marshal.SizeOf(_scrollInfo),
-                fMask = (uint)ScrollInfoMask.SIF_POS
-            };
+            _scrollInfo = new SCROLLINFO
+                {
+                    cbSize = (uint)Marshal.SizeOf(_scrollInfo),
+                    fMask = (uint)ScrollInfoMask.SIF_POS
+                };
         }
 
         #endregion constructor

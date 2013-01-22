@@ -1633,8 +1633,8 @@ namespace Hoehoe
             /// TODO: BitlyApi
             string req = "http://api.bit.ly/v3/validate";
             string content = string.Empty;
-            var param = new Dictionary<string, string>()
-            {
+            var param = new Dictionary<string, string>
+                {
                 { "login", "tweenapi" },
                 { "apiKey", "R_c5ee0e30bdfff88723c4457cc331886b" },
                 { "x_login", id },

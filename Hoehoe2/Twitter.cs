@@ -3186,7 +3186,7 @@ namespace Hoehoe
                     {
                         if (string.IsNullOrEmpty(ent.DisplayUrl))
                         {
-                            var tmpEntity = new EntityInfo()
+                            var tmpEntity = new EntityInfo
                             {
                                 StartIndex = ent.Indices[0],
                                 EndIndex = ent.Indices[1],
@@ -3198,7 +3198,7 @@ namespace Hoehoe
                         else
                         {
                             string expanded = ShortUrl.ResolveMedia(ent.ExpandedUrl, false);
-                            var tmp = new EntityInfo()
+                            var tmp = new EntityInfo
                             {
                                 StartIndex = ent.Indices[0],
                                 EndIndex = ent.Indices[1],
@@ -3220,7 +3220,7 @@ namespace Hoehoe
                     foreach (var ent in entities.Hashtags)
                     {
                         string hash = text.Substring(ent.Indices[0], ent.Indices[1] - ent.Indices[0]);
-                        var tmp = new EntityInfo()
+                        var tmp = new EntityInfo
                         {
                             StartIndex = ent.Indices[0],
                             EndIndex = ent.Indices[1],
@@ -3240,7 +3240,7 @@ namespace Hoehoe
                     foreach (var ent in entities.UserMentions)
                     {
                         string screenName = text.Substring(ent.Indices[0] + 1, ent.Indices[1] - ent.Indices[0] - 1);
-                        var tmp = new EntityInfo()
+                        var tmp = new EntityInfo
                         {
                             StartIndex = ent.Indices[0] + 1,
                             EndIndex = ent.Indices[1],
@@ -3261,7 +3261,7 @@ namespace Hoehoe
                     {
                         if (ent.Type == "photo")
                         {
-                            var tmp = new EntityInfo()
+                            var tmp = new EntityInfo
                             {
                                 StartIndex = ent.Indices[0],
                                 EndIndex = ent.Indices[1],
@@ -4529,7 +4529,7 @@ namespace Hoehoe
                 MyCommon.TraceOut(ex, "Event Exception!" + Environment.NewLine + content);
             }
 
-            var evt = new FormattedEvent()
+            var evt = new FormattedEvent
             {
                 CreatedAt = MyCommon.DateTimeParse(eventData.CreatedAt),
                 Event = eventData.Event,

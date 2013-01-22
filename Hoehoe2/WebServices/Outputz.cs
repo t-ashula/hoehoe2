@@ -44,7 +44,7 @@ namespace Hoehoe
             }
 
             string output = "http://outputz.com/api/post";
-            return (new HttpVarious()).PostData(output, new Dictionary<string, string>() { { "key", Key }, { "uri", OutUrl }, { "size", length.ToString() } });
+            return (new HttpVarious()).PostData(output, new Dictionary<string, string> { { "key", Key }, { "uri", OutUrl }, { "size", length.ToString() } });
         }
     }
 }

@@ -506,21 +506,23 @@ namespace Hoehoe
             var widths = new[] { 48, 80, 300, 50, 50, 16, 16, 50 };
             for (var i = 0; i < colhds.Length; ++i)
             {
-                colhds[i] = new ColumnHeader()
+                colhds[i] = new ColumnHeader
                 {
                     Width = widths[i],
                     Text = _columnTexts[i]
                 };
             }
 
-            DetailsListView listCustom = new DetailsListView();
-            listCustom.ContextMenuStrip = ContextMenuOperate;
-            listCustom.Font = _fntReaded;
-            listCustom.BackColor = _clrListBackcolor;
-            listCustom.GridLines = _configs.ShowGrid;
+            DetailsListView listCustom = new DetailsListView
+            {
+                ContextMenuStrip = ContextMenuOperate,
+                Font = _fntReaded,
+                BackColor = _clrListBackcolor,
+                GridLines = _configs.ShowGrid
+            };
 
             var sz = _iconSz > 0 ? _iconSz : 1;
-            listCustom.SmallImageList = new ImageList() { ImageSize = new Size(sz, sz) };
+            listCustom.SmallImageList = new ImageList { ImageSize = new Size(sz, sz) };
             listCustom.Columns.AddRange(_iconCol ?
                 new[] { colhds[0], colhds[2] } :
                 new[] { colhds[0], colhds[1], colhds[2], colhds[3], colhds[4], colhds[5], colhds[6], colhds[7] });
@@ -1078,7 +1080,7 @@ namespace Hoehoe
         {
             if (!string.IsNullOrEmpty(uri))
             {
-                RunAsync(new GetWorkerArg() { WorkerType = WorkerType.OpenUri, Url = uri });
+                RunAsync(new GetWorkerArg { WorkerType = WorkerType.OpenUri, Url = uri });
             }
         }
 

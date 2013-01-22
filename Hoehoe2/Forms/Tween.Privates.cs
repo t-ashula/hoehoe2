@@ -1103,7 +1103,7 @@ namespace Hoehoe
             if (period > 1 || period < -1)
             {
                 _lastTimeWork[workerType] = DateTime.Now;
-                RunAsync(new GetWorkerArg() { Page = fromPage, EndPage = toPage, WorkerType = workerType, TabName = tabName });
+                RunAsync(new GetWorkerArg { Page = fromPage, EndPage = toPage, WorkerType = workerType, TabName = tabName });
             }
         }
 
@@ -1161,7 +1161,7 @@ namespace Hoehoe
                 return;
             }
 
-            RunAsync(new GetWorkerArg()
+            RunAsync(new GetWorkerArg
             {
                 Ids = ids.Select(p => p.StatusId).ToList(),
                 SIds = new List<long>(),
@@ -1648,7 +1648,7 @@ namespace Hoehoe
         {
             try
             {
-                Process.Start(new ProcessStartInfo()
+                Process.Start(new ProcessStartInfo
                 {
                     UseShellExecute = true,
                     WorkingDirectory = MyCommon.SettingPath,
@@ -4297,7 +4297,7 @@ namespace Hoehoe
                     UrlUndoToolStripMenuItem.Enabled = true;
                 }
 
-                _urlUndoBuffer.Add(new UrlUndoInfo() { Before = before, After = after });
+                _urlUndoBuffer.Add(new UrlUndoInfo { Before = before, After = after });
             }
         }
 
@@ -4623,7 +4623,7 @@ namespace Hoehoe
             var ids = _curList.SelectedIndices.Cast<int>().Select(i => GetCurTabPost(i)).Where(p => !p.IsMe && !p.IsProtect && !p.IsDm);
             if (ids.Count() > 0)
             {
-                RunAsync(new GetWorkerArg()
+                RunAsync(new GetWorkerArg
                 {
                     Ids = ids.Select(p => p.StatusId).ToList(),
                     SIds = new List<long>(),
@@ -4711,7 +4711,7 @@ namespace Hoehoe
                 return;
             }
 
-            using (var info = new FormInfo(this, R.FollowCommandText1, FollowCommand_DoWork, null, new FollowRemoveCommandArgs() { Tw = _tw, Id = id }))
+            using (var info = new FormInfo(this, R.FollowCommandText1, FollowCommand_DoWork, null, new FollowRemoveCommandArgs { Tw = _tw, Id = id }))
             {
                 info.ShowDialog();
                 string ret = (string)info.Result;
@@ -4742,7 +4742,7 @@ namespace Hoehoe
                 return;
             }
 
-            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs() { Tw = _tw, Id = id };
+            FollowRemoveCommandArgs arg = new FollowRemoveCommandArgs { Tw = _tw, Id = id };
             using (FormInfo info = new FormInfo(this, R.RemoveCommandText1, RemoveCommand_DoWork, null, arg))
             {
                 info.ShowDialog();
@@ -4788,7 +4788,7 @@ namespace Hoehoe
                 return;
             }
 
-            ShowFriendshipArgs args = new ShowFriendshipArgs() { Tw = _tw };
+            ShowFriendshipArgs args = new ShowFriendshipArgs { Tw = _tw };
             args.Ids.Add(new ShowFriendshipArgs.FriendshipInfo(id));
             string ret = string.Empty;
             using (FormInfo formInfo = new FormInfo(this, R.ShowFriendshipText1, ShowFriendship_DoWork, null, args))
@@ -4903,7 +4903,7 @@ namespace Hoehoe
             }
 
             var user = new DataModels.Twitter.User();
-            GetUserInfoArgs args = new GetUserInfoArgs() { Tw = _tw, Id = id, User = user };
+            GetUserInfoArgs args = new GetUserInfoArgs { Tw = _tw, Id = id, User = user };
             using (FormInfo info = new FormInfo(this, R.doShowUserStatusText1, GetUserInfo_DoWork, null, args))
             {
                 info.ShowDialog();
@@ -6255,7 +6255,7 @@ namespace Hoehoe
             bool mk = false;
             GetMoveOrCopy(ref mv, ref mk);
 
-            _statuses.Tabs[tabName].AddFilters(names.Select(name => new FiltersClass()
+            _statuses.Tabs[tabName].AddFilters(names.Select(name => new FiltersClass
             {
                 NameFilter = name,
                 SearchBoth = true,
@@ -6962,10 +6962,10 @@ namespace Hoehoe
                 return;
             }
 
-            RunAsync(new GetWorkerArg()
+            RunAsync(new GetWorkerArg
             {
                 WorkerType = WorkerType.PostMessage,
-                PStatus = new PostingStatus()
+                PStatus = new PostingStatus
                 {
                     ImagePath = imgPath,
                     ImageService = imgService,
@@ -7601,7 +7601,7 @@ namespace Hoehoe
 
         private bool TryGetTabInfo(ref string name, ref TabUsageType usageType, string title = "", string desc = "", bool showusage = false)
         {
-            using (var form = new InputTabName() { TabName = name })
+            using (var form = new InputTabName { TabName = name })
             {
                 form.SetFormTitle(title);
                 form.SetFormDescription(desc);
@@ -7677,7 +7677,7 @@ namespace Hoehoe
 
         private void ActivateMainFormControls()
         {
-            /// 画面がアクティブになったら、発言欄の背景色戻す
+            // 画面がアクティブになったら、発言欄の背景色戻す
             if (StatusText.Focused)
             {
                 StatusText_EnterExtracted();
@@ -8187,25 +8187,25 @@ namespace Hoehoe
         private string GetDetailHtmlFormatHeader(bool useMonospace)
         {
             var ele = GetMonoEle(useMonospace);
-            var ss = new Dictionary<string, Dictionary<string, string>>()
+            var ss = new Dictionary<string, Dictionary<string, string>>
             {
-                { "a:link, a:visited, a:active, a:hover", new Dictionary<string, string>()
+                { "a:link, a:visited, a:active, a:hover", new Dictionary<string, string>
                     {
                         { "color", _clrDetailLink.AsCssRgb() }
                     }
                 },
-                { "body", new Dictionary<string, string>()
+                { "body", new Dictionary<string, string>
                     {
                         { "margin", "0px" },
                         { "background-color", _clrDetailBackcolor.AsCssRgb() }
                     }
                 },
-                { "body > p", new Dictionary<string, string>()
+                { "body > p", new Dictionary<string, string>
                     {
                         { "vertical-align", "text-bottom" }
                     }
                 },
-                { ele, new Dictionary<string, string>()
+                { ele, new Dictionary<string, string>
                     {
                         { "margin", "0" },
                         { "word-wrap", "break-word" },
