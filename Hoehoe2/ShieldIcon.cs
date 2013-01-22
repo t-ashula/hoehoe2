@@ -32,8 +32,8 @@ namespace Hoehoe
 
     public class ShieldIcon
     {
-        private Image icondata;
-        private SHSTOCKICONINFO sii;
+        private readonly Image _icondata;
+        private readonly SHSTOCKICONINFO _sii;
 
         public ShieldIcon()
         {
@@ -44,21 +44,21 @@ namespace Hoehoe
             // NT6 kernelかどうか検査
             if (!IsNT6())
             {
-                this.icondata = null;
+                _icondata = null;
                 return;
             }
 
             try
             {
-                this.sii = new SHSTOCKICONINFO();
-                this.sii.cbSize = Marshal.SizeOf(this.sii);
-                this.sii.hIcon = IntPtr.Zero;
-                SHGetStockIconInfo(SIID_SHIELD, SHGFI_ICON | SHGFI_SMALLICON, ref this.sii);
-                this.icondata = Bitmap.FromHicon(this.sii.hIcon);
+                _sii = new SHSTOCKICONINFO();
+                _sii.cbSize = Marshal.SizeOf(_sii);
+                _sii.hIcon = IntPtr.Zero;
+                SHGetStockIconInfo(SIID_SHIELD, SHGFI_ICON | SHGFI_SMALLICON, ref _sii);
+                _icondata = Bitmap.FromHicon(_sii.hIcon);
             }
             catch (Exception)
             {
-                this.icondata = null;
+                _icondata = null;
             }
         }
 
@@ -71,9 +71,9 @@ namespace Hoehoe
 
         public void Dispose()
         {
-            if (this.icondata != null)
+            if (_icondata != null)
             {
-                this.icondata.Dispose();
+                _icondata.Dispose();
             }
         }
 

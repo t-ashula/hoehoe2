@@ -37,118 +37,118 @@ namespace Hoehoe
     {
         public SettingCommon()
         {
-            this.UserName = string.Empty;
-            this.Password = string.Empty;
-            this.Token = string.Empty;
-            this.TokenSecret = string.Empty;
-            this.UserId = 0;
-            this.TabList = new List<string>();
-            this.TimelinePeriod = 90;
-            this.ReplyPeriod = 180;
-            this.DMPeriod = 600;
-            this.PubSearchPeriod = 180;
-            this.ListsPeriod = 180;
-            this.Read = true;
-            this.ListLock = false;
-            this.IconSize = IconSizes.Icon16;
-            this.NewAllPop = true;
-            this.EventNotifyEnabled = true;
-            this.EventNotifyFlag = EventType.All;
-            this.IsMyEventNotifyFlag = EventType.All;
-            this.ForceEventNotify = false;
-            this.FavEventUnread = true;
-            this.TranslateLanguage = R.TranslateDefaultLanguage;
-            this.EventSoundFile = string.Empty;
-            this.PlaySound = false;
-            this.UnreadManage = true;
-            this.OneWayLove = true;
-            this.NameBalloon = NameBalloonEnum.NickName;
-            this.PostCtrlEnter = false;
-            this.PostShiftEnter = false;
-            this.CountApi = 60;
-            this.CountApiReply = 40;
-            this.PostAndGet = true;
-            this.DispUsername = false;
-            this.MinimizeToTray = false;
-            this.CloseToExit = false;
-            this.DispLatestPost = DispTitleEnum.Post;
-            this.SortOrderLock = false;
-            this.TinyUrlResolve = true;
-            this.ShortUrlForceResolve = false;
-            this.PeriodAdjust = true;
-            this.StartupVersion = true;
-            this.StartupFollowers = true;
-            this.RestrictFavCheck = false;
-            this.AlwaysTop = false;
-            this.CultureCode = string.Empty;
-            this.UrlConvertAuto = false;
-            this.Outputz = false;
-            this.SortColumn = 3;
-            this.SortOrder = 1;
-            this.IsMonospace = false;
-            this.ReadOldPosts = false;
-            this.UseSsl = true;
-            this.Language = "OS";
-            this.Nicoms = false;
-            this.HashTags = new List<string>();
-            this.HashSelected = string.Empty;
-            this.HashIsPermanent = false;
-            this.HashIsHead = false;
-            this.HashIsNotAddToAtReply = true;
-            this.PreviewEnable = true;
-            this.OutputzKey = string.Empty;
-            this.OutputzUrlMode = OutputzUrlmode.twittercom;
-            this.AutoShortUrlFirst = UrlConverter.Bitly;
-            this.UseUnreadStyle = true;
-            this.DateTimeFormat = "yyyy/MM/dd H:mm:ss";
-            this.DefaultTimeOut = 20;
-            this.RetweetNoConfirm = false;
-            this.LimitBalloon = false;
-            this.TabIconDisp = true;
-            this.ReplyIconState = ReplyIconState.StaticIcon;
-            this.WideSpaceConvert = true;
-            this.ReadOwnPost = false;
-            this.GetFav = true;
-            this.BilyUser = string.Empty;
-            this.BitlyPwd = string.Empty;
-            this.ShowGrid = false;
-            this.UseAtIdSupplement = true;
-            this.UseHashSupplement = true;
-            this.TwitterUrl = "api.twitter.com";
-            this.TwitterSearchUrl = "search.twitter.com";
-            this.HotkeyEnabled = false;
-            this.HotkeyModifier = Keys.None;
-            this.HotkeyKey = Keys.None;
-            this.HotkeyValue = 0;
-            this.BlinkNewMentions = false;
-            this.FocusLockToStatusText = false;
-            this.UseAdditionalCount = false;
-            this.MoreCountApi = 200;
-            this.FirstCountApi = 100;
-            this.SearchCountApi = 100;
-            this.FavoritesCountApi = 40;
-            this.TrackWord = string.Empty;
-            this.AllAtReply = false;
-            this.UserstreamStartup = true;
-            this.UserstreamPeriod = 0;
-            this.UserTimelineCountApi = 20;
-            this.UserTimelinePeriod = 600;
-            this.OpenUserTimeline = true;
-            this.ListCountApi = 100;
-            this.UseImageService = 0;
-            this.ListDoubleClickAction = 0;
-            this.UserAppointUrl = string.Empty;
-            this.HideDuplicatedRetweets = false;
-            this.IsPreviewFoursquare = false;
-            this.FoursquarePreviewHeight = 300;
-            this.FoursquarePreviewWidth = 300;
-            this.FoursquarePreviewZoom = 15;
-            this.IsListsIncludeRts = false;
-            this.GAFirst = 0;
-            this.GALast = 0;
-            this.TabMouseLock = false;
-            this.IsRemoveSameEvent = false;
-            this.IsUseNotifyGrowl = false;
+            UserName = string.Empty;
+            Password = string.Empty;
+            Token = string.Empty;
+            TokenSecret = string.Empty;
+            UserId = 0;
+            TabList = new List<string>();
+            TimelinePeriod = 90;
+            ReplyPeriod = 180;
+            DMPeriod = 600;
+            PubSearchPeriod = 180;
+            ListsPeriod = 180;
+            Read = true;
+            ListLock = false;
+            IconSize = IconSizes.Icon16;
+            NewAllPop = true;
+            EventNotifyEnabled = true;
+            EventNotifyFlag = EventType.All;
+            IsMyEventNotifyFlag = EventType.All;
+            ForceEventNotify = false;
+            FavEventUnread = true;
+            TranslateLanguage = R.TranslateDefaultLanguage;
+            EventSoundFile = string.Empty;
+            PlaySound = false;
+            UnreadManage = true;
+            OneWayLove = true;
+            NameBalloon = NameBalloonEnum.NickName;
+            PostCtrlEnter = false;
+            PostShiftEnter = false;
+            CountApi = 60;
+            CountApiReply = 40;
+            PostAndGet = true;
+            DispUsername = false;
+            MinimizeToTray = false;
+            CloseToExit = false;
+            DispLatestPost = DispTitleEnum.Post;
+            SortOrderLock = false;
+            TinyUrlResolve = true;
+            ShortUrlForceResolve = false;
+            PeriodAdjust = true;
+            StartupVersion = true;
+            StartupFollowers = true;
+            RestrictFavCheck = false;
+            AlwaysTop = false;
+            CultureCode = string.Empty;
+            UrlConvertAuto = false;
+            Outputz = false;
+            SortColumn = 3;
+            SortOrder = 1;
+            IsMonospace = false;
+            ReadOldPosts = false;
+            UseSsl = true;
+            Language = "OS";
+            Nicoms = false;
+            HashTags = new List<string>();
+            HashSelected = string.Empty;
+            HashIsPermanent = false;
+            HashIsHead = false;
+            HashIsNotAddToAtReply = true;
+            PreviewEnable = true;
+            OutputzKey = string.Empty;
+            OutputzUrlMode = OutputzUrlmode.twittercom;
+            AutoShortUrlFirst = UrlConverter.Bitly;
+            UseUnreadStyle = true;
+            DateTimeFormat = "yyyy/MM/dd H:mm:ss";
+            DefaultTimeOut = 20;
+            RetweetNoConfirm = false;
+            LimitBalloon = false;
+            TabIconDisp = true;
+            ReplyIconState = ReplyIconState.StaticIcon;
+            WideSpaceConvert = true;
+            ReadOwnPost = false;
+            GetFav = true;
+            BilyUser = string.Empty;
+            BitlyPwd = string.Empty;
+            ShowGrid = false;
+            UseAtIdSupplement = true;
+            UseHashSupplement = true;
+            TwitterUrl = "api.twitter.com";
+            TwitterSearchUrl = "search.twitter.com";
+            HotkeyEnabled = false;
+            HotkeyModifier = Keys.None;
+            HotkeyKey = Keys.None;
+            HotkeyValue = 0;
+            BlinkNewMentions = false;
+            FocusLockToStatusText = false;
+            UseAdditionalCount = false;
+            MoreCountApi = 200;
+            FirstCountApi = 100;
+            SearchCountApi = 100;
+            FavoritesCountApi = 40;
+            TrackWord = string.Empty;
+            AllAtReply = false;
+            UserstreamStartup = true;
+            UserstreamPeriod = 0;
+            UserTimelineCountApi = 20;
+            UserTimelinePeriod = 600;
+            OpenUserTimeline = true;
+            ListCountApi = 100;
+            UseImageService = 0;
+            ListDoubleClickAction = 0;
+            UserAppointUrl = string.Empty;
+            HideDuplicatedRetweets = false;
+            IsPreviewFoursquare = false;
+            FoursquarePreviewHeight = 300;
+            FoursquarePreviewWidth = 300;
+            FoursquarePreviewZoom = 15;
+            IsListsIncludeRts = false;
+            GAFirst = 0;
+            GALast = 0;
+            TabMouseLock = false;
+            IsRemoveSameEvent = false;
+            IsUseNotifyGrowl = false;
         }
 
         public string UserName { get; set; }
@@ -158,8 +158,8 @@ namespace Hoehoe
 
         public string EncryptPassword
         {
-            get { return CryptoUtils.TryEncrypt(this.Password); }
-            set { this.Password = CryptoUtils.TryDecrypt(value); }
+            get { return CryptoUtils.TryEncrypt(Password); }
+            set { Password = CryptoUtils.TryDecrypt(value); }
         }
 
         public string Token { get; set; }
@@ -169,8 +169,8 @@ namespace Hoehoe
 
         public string EncryptTokenSecret
         {
-            get { return CryptoUtils.TryEncrypt(this.TokenSecret); }
-            set { this.TokenSecret = CryptoUtils.TryDecrypt(value); }
+            get { return CryptoUtils.TryEncrypt(TokenSecret); }
+            set { TokenSecret = CryptoUtils.TryDecrypt(value); }
         }
 
         public long UserId { get; set; }
@@ -288,8 +288,8 @@ namespace Hoehoe
 
         public string EncryptOutputzKey
         {
-            get { return CryptoUtils.TryEncrypt(this.OutputzKey); }
-            set { this.OutputzKey = CryptoUtils.TryDecrypt(value); }
+            get { return CryptoUtils.TryEncrypt(OutputzKey); }
+            set { OutputzKey = CryptoUtils.TryDecrypt(value); }
         }
 
         public OutputzUrlmode OutputzUrlMode { get; set; }
