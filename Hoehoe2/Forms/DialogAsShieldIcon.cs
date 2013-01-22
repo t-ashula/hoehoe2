@@ -35,7 +35,7 @@ namespace Hoehoe
     {
         #region privates
 
-        private DialogResult result;
+        private DialogResult _result;
 
         #endregion privates
 
@@ -43,8 +43,8 @@ namespace Hoehoe
 
         public DialogAsShieldIcon()
         {
-            this.InitializeComponent();
-            this.result = DialogResult.None;
+            InitializeComponent();
+            _result = DialogResult.None;
         }
 
         #endregion constructor
@@ -53,28 +53,28 @@ namespace Hoehoe
 
         public DialogResult ShowDialog(string text, string detail = "", string caption = "DialogAsShieldIcon", MessageBoxButtons buttons = MessageBoxButtons.OKCancel, MessageBoxIcon icon = MessageBoxIcon.Question)
         {
-            this.Label1.Text = text;
-            this.Text = caption;
-            this.TextDetail.Text = detail;
+            Label1.Text = text;
+            Text = caption;
+            TextDetail.Text = detail;
             switch (buttons)
             {
                 case MessageBoxButtons.OKCancel:
-                    this.okButton.Text = "OK";
-                    this.cancelButton.Text = "Cancel";
+                    okButton.Text = "OK";
+                    cancelButton.Text = "Cancel";
                     break;
                 case MessageBoxButtons.YesNo:
-                    this.okButton.Text = "Yes";
-                    this.cancelButton.Text = "No";
+                    okButton.Text = "Yes";
+                    cancelButton.Text = "No";
                     break;
                 default:
-                    this.okButton.Text = "OK";
-                    this.cancelButton.Text = "Cancel";
+                    okButton.Text = "OK";
+                    cancelButton.Text = "Cancel";
                     break;
             }
 
             // とりあえずアイコンは処理しない（互換性のためパラメータだけ指定できる）
-            this.ShowDialog(this.Owner);
-            while (this.result == DialogResult.None)
+            ShowDialog(Owner);
+            while (_result == DialogResult.None)
             {
                 Thread.Sleep(200);
                 Application.DoEvents();
@@ -82,7 +82,7 @@ namespace Hoehoe
 
             if (buttons == MessageBoxButtons.YesNo)
             {
-                switch (this.result)
+                switch (_result)
                 {
                     case DialogResult.OK:
                         return DialogResult.Yes;
@@ -91,7 +91,7 @@ namespace Hoehoe
                 }
             }
 
-            return this.result;
+            return _result;
         }
 
         #endregion public methods
@@ -100,29 +100,29 @@ namespace Hoehoe
 
         private void OkButton_Click(object sender, EventArgs e)
         {
-            this.result = DialogResult.OK;
-            this.Hide();
+            _result = DialogResult.OK;
+            Hide();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            this.result = DialogResult.Cancel;
-            this.Hide();
+            _result = DialogResult.Cancel;
+            Hide();
         }
 
         private void DialogAsShieldIcon_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.result == DialogResult.None)
+            if (_result == DialogResult.None)
             {
                 e.Cancel = true;
-                this.result = DialogResult.Cancel;
-                this.Hide();
+                _result = DialogResult.Cancel;
+                Hide();
             }
         }
 
         private void DialogAsShieldIcon_Load(object sender, EventArgs e)
         {
-            this.PictureBox1.Image = SystemIcons.Question.ToBitmap();
+            PictureBox1.Image = SystemIcons.Question.ToBitmap();
         }
 
         #endregion event handler

@@ -34,7 +34,7 @@ namespace Hoehoe
     {
         #region private fields
 
-        private InternetSecurityManager securityManager;
+        private InternetSecurityManager _securityManager;
 
         #endregion private fields
 
@@ -42,7 +42,7 @@ namespace Hoehoe
 
         public AuthBrowser()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #endregion constructor
@@ -61,44 +61,44 @@ namespace Hoehoe
 
         private void AuthWebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (this.AuthWebBrowser.Url.OriginalString == "https://api.twitter.com/oauth/authorize")
+            if (AuthWebBrowser.Url.OriginalString == "https://api.twitter.com/oauth/authorize")
             {
                 Regex rg = new Regex("<code>(\\d+)</code>");
-                Match m = rg.Match(this.AuthWebBrowser.DocumentText);
+                Match m = rg.Match(AuthWebBrowser.DocumentText);
                 if (m.Success)
                 {
-                    this.PinText.Text = this.PinString = m.Result("${1}");
-                    this.PinText.Focus();
+                    PinText.Text = PinString = m.Result("${1}");
+                    PinText.Focus();
                 }
             }
         }
 
         private void AuthBrowser_Load(object sender, EventArgs e)
         {
-            this.securityManager = new InternetSecurityManager(this.AuthWebBrowser);
-            this.AuthWebBrowser.Navigate(new Uri(this.UrlString));
-            if (!this.IsAuthorized)
+            _securityManager = new InternetSecurityManager(AuthWebBrowser);
+            AuthWebBrowser.Navigate(new Uri(UrlString));
+            if (!IsAuthorized)
             {
-                this.Label1.Visible = false;
-                this.PinText.Visible = false;
+                Label1.Visible = false;
+                PinText.Visible = false;
             }
         }
 
         private void AuthWebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
-            this.AddressLabel.Text = e.Url.OriginalString;
+            AddressLabel.Text = e.Url.OriginalString;
         }
 
         private void NextButton_Click(object sender, EventArgs e)
         {
-            this.PinString = this.PinText.Text.Trim();
-            this.DialogResult = DialogResult.OK;
+            PinString = PinText.Text.Trim();
+            DialogResult = DialogResult.OK;
         }
 
         private void Cancel_Click(object sender, EventArgs e)
         {
-            this.PinString = string.Empty;
-            this.DialogResult = DialogResult.Cancel;
+            PinString = string.Empty;
+            DialogResult = DialogResult.Cancel;
         }
 
         #endregion event handler

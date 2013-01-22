@@ -36,7 +36,7 @@ namespace Hoehoe
     {
         #region private fields
 
-        private string startChar = string.Empty;
+        private readonly string _startChar = string.Empty;
 
         #endregion private fields
 
@@ -44,9 +44,9 @@ namespace Hoehoe
 
         public AtIdSupplement(List<string> itemList, string startCharacter)
         {
-            this.InitializeComponent();
-            this.startChar = startCharacter;
-            this.TextId.AutoCompleteCustomSource.AddRange(itemList.ToArray());
+            InitializeComponent();
+            _startChar = startCharacter;
+            TextId.AutoCompleteCustomSource.AddRange(itemList.ToArray());
         }
 
         #endregion constructor
@@ -57,7 +57,7 @@ namespace Hoehoe
 
         public int ItemCount
         {
-            get { return this.TextId.AutoCompleteCustomSource.Count; }
+            get { return TextId.AutoCompleteCustomSource.Count; }
         }
 
         public string InputText { get; private set; }
@@ -70,9 +70,9 @@ namespace Hoehoe
 
         public bool AddItem(string id)
         {
-            if (!this.TextId.AutoCompleteCustomSource.Contains(id))
+            if (!TextId.AutoCompleteCustomSource.Contains(id))
             {
-                this.TextId.AutoCompleteCustomSource.Add(id);
+                TextId.AutoCompleteCustomSource.Add(id);
                 return true;
             }
 
@@ -81,19 +81,19 @@ namespace Hoehoe
 
         public bool AddRangeItem(IEnumerable<string> ids)
         {
-            var cnt = this.ItemCount;
+            var cnt = ItemCount;
             var q = ids.Distinct();
             foreach (string id in q)
             {
-                this.AddItem(id);
+                AddItem(id);
             }
 
-            return cnt != this.ItemCount;
+            return cnt != ItemCount;
         }
 
         public List<string> GetItemList()
         {
-            return this.TextId.AutoCompleteCustomSource.Cast<string>().ToList();
+            return TextId.AutoCompleteCustomSource.Cast<string>().ToList();
         }
 
         #endregion public
@@ -102,41 +102,41 @@ namespace Hoehoe
 
         private void ButtonOK_Click(object sender, EventArgs e)
         {
-            this.InputText = this.TextId.Text;
-            this.IsBack = false;
+            InputText = TextId.Text;
+            IsBack = false;
         }
 
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
-            this.InputText = string.Empty;
-            this.IsBack = false;
+            InputText = string.Empty;
+            IsBack = false;
         }
 
         private void TextId_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Back && string.IsNullOrEmpty(this.TextId.Text))
+            if (e.KeyCode == Keys.Back && string.IsNullOrEmpty(TextId.Text))
             {
-                this.InputText = string.Empty;
-                this.IsBack = true;
-                this.Close();
+                InputText = string.Empty;
+                IsBack = true;
+                Close();
             }
 
             if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Tab)
             {
-                this.InputText = this.TextId.Text + " ";
-                this.IsBack = false;
-                this.Close();
+                InputText = TextId.Text + " ";
+                IsBack = false;
+                Close();
             }
 
             if (e.Control && e.KeyCode == Keys.Delete)
             {
-                if (!string.IsNullOrEmpty(this.TextId.Text))
+                if (!string.IsNullOrEmpty(TextId.Text))
                 {
-                    int idx = this.TextId.AutoCompleteCustomSource.IndexOf(this.TextId.Text);
+                    int idx = TextId.AutoCompleteCustomSource.IndexOf(TextId.Text);
                     if (idx > -1)
                     {
-                        this.TextId.Text = string.Empty;
-                        this.TextId.AutoCompleteCustomSource.RemoveAt(idx);
+                        TextId.Text = string.Empty;
+                        TextId.AutoCompleteCustomSource.RemoveAt(idx);
                     }
                 }
             }
@@ -144,39 +144,39 @@ namespace Hoehoe
 
         private void AtIdSupplement_Load(object sender, EventArgs e)
         {
-            if (this.startChar == "#")
+            if (_startChar == "#")
             {
-                this.ClientSize = new Size(this.TextId.Width, this.TextId.Height);
-                this.TextId.ImeMode = ImeMode.Inherit;
+                ClientSize = new Size(TextId.Width, TextId.Height);
+                TextId.ImeMode = ImeMode.Inherit;
             }
         }
 
         private void AtIdSupplement_Shown(object sender, EventArgs e)
         {
-            this.TextId.Text = this.startChar;
-            if (!string.IsNullOrEmpty(this.StartsWith))
+            TextId.Text = _startChar;
+            if (!string.IsNullOrEmpty(StartsWith))
             {
-                this.TextId.Text += this.StartsWith.Substring(0, this.StartsWith.Length);
+                TextId.Text += StartsWith.Substring(0, StartsWith.Length);
             }
 
-            this.TextId.SelectionStart = this.TextId.Text.Length;
-            this.TextId.Focus();
+            TextId.SelectionStart = TextId.Text.Length;
+            TextId.Focus();
         }
 
         private void TextId_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Tab)
             {
-                this.InputText = this.TextId.Text + " ";
-                this.IsBack = false;
-                this.Close();
+                InputText = TextId.Text + " ";
+                IsBack = false;
+                Close();
             }
         }
 
         private void AtIdSupplement_FormClosed(object sender, FormClosedEventArgs e)
         {
-            this.StartsWith = string.Empty;
-            this.DialogResult = this.IsBack ? DialogResult.Cancel : DialogResult.OK;
+            StartsWith = string.Empty;
+            DialogResult = IsBack ? DialogResult.Cancel : DialogResult.OK;
         }
 
         #endregion event handler

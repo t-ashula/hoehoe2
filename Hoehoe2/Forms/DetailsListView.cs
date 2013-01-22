@@ -36,8 +36,8 @@ namespace Hoehoe.TweenCustomControl
     {
         #region private fields
 
-        private Rectangle changeBounds;
-        private SCROLLINFO scrollInfo;
+        private Rectangle _changeBounds;
+        private SCROLLINFO _scrollInfo;
 
         #endregion private fields
 
@@ -45,27 +45,27 @@ namespace Hoehoe.TweenCustomControl
 
         public DetailsListView()
         {
-            this.AllowColumnReorder = true;
-            this.Dock = DockStyle.Fill;
-            this.FullRowSelect = true;
-            this.HideSelection = false;
-            this.Location = new Point(0, 0);
-            this.Margin = new Padding(0);
-            this.Name = "CList" + Environment.TickCount.ToString();
-            this.ShowItemToolTips = true;
-            this.Size = new Size(380, 260);
-            this.UseCompatibleStateImageBehavior = false;
-            this.View = View.Details;
-            this.OwnerDraw = true;
-            this.VirtualMode = true;
-            this.AllowDrop = true;
-            this.View = View.Details;
-            this.FullRowSelect = true;
-            this.HideSelection = false;
-            this.DoubleBuffered = true;
-            this.scrollInfo = new SCROLLINFO()
+            AllowColumnReorder = true;
+            Dock = DockStyle.Fill;
+            FullRowSelect = true;
+            HideSelection = false;
+            Location = new Point(0, 0);
+            Margin = new Padding(0);
+            Name = "CList" + Environment.TickCount.ToString();
+            ShowItemToolTips = true;
+            Size = new Size(380, 260);
+            UseCompatibleStateImageBehavior = false;
+            View = View.Details;
+            OwnerDraw = true;
+            VirtualMode = true;
+            AllowDrop = true;
+            View = View.Details;
+            FullRowSelect = true;
+            HideSelection = false;
+            DoubleBuffered = true;
+            _scrollInfo = new SCROLLINFO()
             {
-                cbSize = (uint)Marshal.SizeOf(this.scrollInfo),
+                cbSize = (uint)Marshal.SizeOf(_scrollInfo),
                 fMask = (uint)ScrollInfoMask.SIF_POS
             };
         }
@@ -106,76 +106,76 @@ namespace Hoehoe.TweenCustomControl
 
         public void ChangeItemBackColor(int index, Color backColor)
         {
-            this.ChangeSubItemBackColor(index, 0, backColor);
+            ChangeSubItemBackColor(index, 0, backColor);
         }
 
         public void ChangeItemForeColor(int index, Color foreColor)
         {
-            this.ChangeSubItemForeColor(index, 0, foreColor);
+            ChangeSubItemForeColor(index, 0, foreColor);
         }
 
         public void ChangeItemFont(int index, Font fnt)
         {
-            this.ChangeSubItemFont(index, 0, fnt);
+            ChangeSubItemFont(index, 0, fnt);
         }
 
         public void ChangeItemFontAndColor(int index, Color foreColor, Font fnt)
         {
-            this.ChangeSubItemStyles(index, 0, this.BackColor, foreColor, fnt);
+            ChangeSubItemStyles(index, 0, BackColor, foreColor, fnt);
         }
 
         public void ChangeItemStyles(int index, Color backColor, Color foreColor, Font fnt)
         {
-            this.ChangeSubItemStyles(index, 0, backColor, foreColor, fnt);
+            ChangeSubItemStyles(index, 0, backColor, foreColor, fnt);
         }
 
         public void ChangeSubItemBackColor(int itemIndex, int subitemIndex, Color backColor)
         {
-            this.Items[itemIndex].SubItems[subitemIndex].BackColor = backColor;
-            this.SetUpdateBounds(itemIndex, subitemIndex);
-            this.Update();
-            this.changeBounds = Rectangle.Empty;
+            Items[itemIndex].SubItems[subitemIndex].BackColor = backColor;
+            SetUpdateBounds(itemIndex, subitemIndex);
+            Update();
+            _changeBounds = Rectangle.Empty;
         }
 
         public void ChangeSubItemForeColor(int itemIndex, int subitemIndex, Color foreColor)
         {
-            this.Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
-            this.SetUpdateBounds(itemIndex, subitemIndex);
-            this.Update();
-            this.changeBounds = Rectangle.Empty;
+            Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
+            SetUpdateBounds(itemIndex, subitemIndex);
+            Update();
+            _changeBounds = Rectangle.Empty;
         }
 
         public void ChangeSubItemFont(int itemIndex, int subitemIndex, Font fnt)
         {
-            this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
-            this.SetUpdateBounds(itemIndex, subitemIndex);
-            this.Update();
-            this.changeBounds = Rectangle.Empty;
+            Items[itemIndex].SubItems[subitemIndex].Font = fnt;
+            SetUpdateBounds(itemIndex, subitemIndex);
+            Update();
+            _changeBounds = Rectangle.Empty;
         }
 
         public void ChangeSubItemFontAndColor(int itemIndex, int subitemIndex, Color foreColor, Font fnt)
         {
-            this.Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
-            this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
-            this.SetUpdateBounds(itemIndex, subitemIndex);
-            this.Update();
-            this.changeBounds = Rectangle.Empty;
+            Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
+            Items[itemIndex].SubItems[subitemIndex].Font = fnt;
+            SetUpdateBounds(itemIndex, subitemIndex);
+            Update();
+            _changeBounds = Rectangle.Empty;
         }
 
         public void ChangeSubItemStyles(int itemIndex, int subitemIndex, Color backColor, Color foreColor, Font fnt)
         {
-            this.Items[itemIndex].SubItems[subitemIndex].BackColor = backColor;
-            this.Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
-            this.Items[itemIndex].SubItems[subitemIndex].Font = fnt;
-            this.SetUpdateBounds(itemIndex, subitemIndex);
-            this.Update();
-            this.changeBounds = Rectangle.Empty;
+            Items[itemIndex].SubItems[subitemIndex].BackColor = backColor;
+            Items[itemIndex].SubItems[subitemIndex].ForeColor = foreColor;
+            Items[itemIndex].SubItems[subitemIndex].Font = fnt;
+            SetUpdateBounds(itemIndex, subitemIndex);
+            Update();
+            _changeBounds = Rectangle.Empty;
         }
 
         public void SelectAllItem()
         {
-            //// foreach (ListViewItem lvi in this.Items) { lvi.Selected = true; }
-            for (int i = 0; i < this.VirtualListSize; i++)
+            //// foreach (ListViewItem lvi in Items) { lvi.Selected = true; }
+            for (int i = 0; i < VirtualListSize; i++)
             {
                 SelectedIndices.Add(i);
             }
@@ -205,38 +205,38 @@ namespace Hoehoe.TweenCustomControl
             switch (m.Msg)
             {
                 case WM_ERASEBKGND:
-                    if (this.changeBounds != Rectangle.Empty)
+                    if (_changeBounds != Rectangle.Empty)
                     {
                         m.Msg = 0;
                     }
 
                     break;
                 case WM_PAINT:
-                    if (this.changeBounds != Rectangle.Empty)
+                    if (_changeBounds != Rectangle.Empty)
                     {
-                        Win32Api.ValidateRect(this.Handle, IntPtr.Zero);
-                        this.Invalidate(this.changeBounds);
-                        this.changeBounds = Rectangle.Empty;
+                        Win32Api.ValidateRect(Handle, IntPtr.Zero);
+                        Invalidate(_changeBounds);
+                        _changeBounds = Rectangle.Empty;
                     }
 
                     break;
                 case WM_HSCROLL:
-                    this.OnHScrolled(this, EventArgs.Empty);
+                    OnHScrolled(this, EventArgs.Empty);
                     break;
                 case WM_VSCROLL:
-                    this.OnVScrolled(this, EventArgs.Empty);
+                    OnVScrolled(this, EventArgs.Empty);
                     break;
                 case WM_MOUSEWHEEL:
                 case WM_MOUSEHWHEEL:
                 case WM_KEYDOWN:
-                    if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_VERT, ref this.scrollInfo) != 0)
+                    if (GetScrollInfo(Handle, ScrollBarDirection.SB_VERT, ref _scrollInfo) != 0)
                     {
-                        verticalPos = this.scrollInfo.nPos;
+                        verticalPos = _scrollInfo.nPos;
                     }
 
-                    if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_HORZ, ref this.scrollInfo) != 0)
+                    if (GetScrollInfo(Handle, ScrollBarDirection.SB_HORZ, ref _scrollInfo) != 0)
                     {
-                        horizontalPos = this.scrollInfo.nPos;
+                        horizontalPos = _scrollInfo.nPos;
                     }
 
                     break;
@@ -258,24 +258,24 @@ namespace Hoehoe.TweenCustomControl
                 // WndProcのさらに先で発生する。
             }
 
-            if (this.IsDisposed)
+            if (IsDisposed)
             {
                 return;
             }
 
             if (verticalPos != -1)
             {
-                if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_VERT, ref this.scrollInfo) != 0 && verticalPos != this.scrollInfo.nPos)
+                if (GetScrollInfo(Handle, ScrollBarDirection.SB_VERT, ref _scrollInfo) != 0 && verticalPos != _scrollInfo.nPos)
                 {
-                    this.OnVScrolled(this, EventArgs.Empty);
+                    OnVScrolled(this, EventArgs.Empty);
                 }
             }
 
             if (horizontalPos != -1)
             {
-                if (GetScrollInfo(this.Handle, ScrollBarDirection.SB_HORZ, ref this.scrollInfo) != 0 && horizontalPos != this.scrollInfo.nPos)
+                if (GetScrollInfo(Handle, ScrollBarDirection.SB_HORZ, ref _scrollInfo) != 0 && horizontalPos != _scrollInfo.nPos)
                 {
-                    this.OnHScrolled(this, EventArgs.Empty);
+                    OnHScrolled(this, EventArgs.Empty);
                 }
             }
         }
@@ -289,17 +289,17 @@ namespace Hoehoe.TweenCustomControl
 
         private void OnHScrolled(object sender, EventArgs e)
         {
-            if (this.HScrolled != null)
+            if (HScrolled != null)
             {
-                this.HScrolled(this, e);
+                HScrolled(this, e);
             }
         }
 
         private void OnVScrolled(object sender, EventArgs e)
         {
-            if (this.VScrolled != null)
+            if (VScrolled != null)
             {
-                this.VScrolled(this, e);
+                VScrolled(this, e);
             }
         }
 
@@ -307,37 +307,37 @@ namespace Hoehoe.TweenCustomControl
         {
             try
             {
-                if (itemIndex > this.Items.Count)
+                if (itemIndex > Items.Count)
                 {
                     throw new ArgumentOutOfRangeException("itemIndex");
                 }
 
-                if (subItemIndex > this.Columns.Count)
+                if (subItemIndex > Columns.Count)
                 {
                     throw new ArgumentOutOfRangeException("subItemIndex");
                 }
 
-                ListViewItem item = this.Items[itemIndex];
+                ListViewItem item = Items[itemIndex];
                 if (item.UseItemStyleForSubItems)
                 {
-                    this.changeBounds = item.Bounds;
+                    _changeBounds = item.Bounds;
                 }
                 else
                 {
-                    this.changeBounds = this.GetSubItemBounds(itemIndex, subItemIndex);
+                    _changeBounds = GetSubItemBounds(itemIndex, subItemIndex);
                 }
             }
             catch (ArgumentException)
             {
                 // タイミングによりBoundsプロパティが取れない？
-                this.changeBounds = Rectangle.Empty;
+                _changeBounds = Rectangle.Empty;
             }
         }
 
         private Rectangle GetSubItemBounds(int itemIndex, int subitemIndex)
         {
-            ListViewItem item = this.Items[itemIndex];
-            if (subitemIndex == 0 && this.Columns.Count > 0)
+            ListViewItem item = Items[itemIndex];
+            if (subitemIndex == 0 && Columns.Count > 0)
             {
                 Rectangle col0 = item.Bounds;
                 return new Rectangle(col0.Left, col0.Top, item.SubItems[1].Bounds.X + 1, col0.Height);

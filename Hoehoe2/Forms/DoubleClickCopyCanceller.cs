@@ -31,7 +31,7 @@ namespace Hoehoe
     {
         #region privates
 
-        private bool doubleClick;
+        private bool _doubleClick;
 
         #endregion privates
 
@@ -39,7 +39,7 @@ namespace Hoehoe
 
         public DoubleClickCopyCanceller(Control control)
         {
-            this.AssignHandle(control.Handle);
+            AssignHandle(control.Handle);
         }
 
         #endregion constructor
@@ -48,7 +48,7 @@ namespace Hoehoe
 
         public void Dispose()
         {
-            this.ReleaseHandle();
+            ReleaseHandle();
             GC.SuppressFinalize(this);
         }
 
@@ -63,14 +63,14 @@ namespace Hoehoe
 
             if (m.Msg == WM_LBUTTONDBLCLK)
             {
-                this.doubleClick = true;
+                _doubleClick = true;
             }
 
-            if (this.doubleClick)
+            if (_doubleClick)
             {
                 if (m.Msg == WM_GETTEXTLENGTH)
                 {
-                    this.doubleClick = false;
+                    _doubleClick = false;
                     m.Result = IntPtr.Zero; // (IntPtr)0;
                     return;
                 }

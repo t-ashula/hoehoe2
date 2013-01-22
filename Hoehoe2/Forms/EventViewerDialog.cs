@@ -39,10 +39,10 @@ namespace Hoehoe
     {
         #region privates
 
-        private Twitter.FormattedEvent[] filterdEventSource;
-        private ListViewItem[] itemCache;
-        private int itemCacheIndex;
-        private TabPage curTab;
+        private Twitter.FormattedEvent[] _filterdEventSource;
+        private ListViewItem[] _itemCache;
+        private int _itemCacheIndex;
+        private TabPage _curTab;
 
         #endregion privates
 
@@ -50,7 +50,7 @@ namespace Hoehoe
 
         public EventViewerDialog()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #endregion constructor
@@ -65,58 +65,58 @@ namespace Hoehoe
 
         private void OK_Button_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void Cancel_Button_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void EventViewerDialog_Shown(object sender, EventArgs e)
         {
-            this.EventList.BeginUpdate();
-            this.curTab = this.TabEventType.SelectedTab;
-            this.CreateFilterdEventSource();
-            this.EventList.EndUpdate();
-            this.TopMost = Configs.Instance.AlwaysTop;
+            EventList.BeginUpdate();
+            _curTab = TabEventType.SelectedTab;
+            CreateFilterdEventSource();
+            EventList.EndUpdate();
+            TopMost = Configs.Instance.AlwaysTop;
         }
 
         private void EventList_DoubleClick(object sender, EventArgs e)
         {
-            if (this.EventList.SelectedIndices.Count != 0)
+            if (EventList.SelectedIndices.Count != 0)
             {
-                var selectedEvent = this.filterdEventSource[this.EventList.SelectedIndices[0]];
+                var selectedEvent = _filterdEventSource[EventList.SelectedIndices[0]];
                 if (selectedEvent != null)
                 {
-                    ((TweenMain)this.Owner).OpenUriAsync("http://twitter.com/" + selectedEvent.Username);
+                    ((TweenMain)Owner).OpenUriAsync("http://twitter.com/" + selectedEvent.Username);
                 }
             }
         }
 
         private void CheckExcludeMyEvent_CheckedChanged(object sender, EventArgs e)
         {
-            this.CreateFilterdEventSource();
+            CreateFilterdEventSource();
         }
 
         private void ButtonRefresh_Click(object sender, EventArgs e)
         {
-            this.CreateFilterdEventSource();
+            CreateFilterdEventSource();
         }
 
         private void TabEventType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.CreateFilterdEventSource();
+            CreateFilterdEventSource();
         }
 
         private void TabEventType_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            this.curTab = e.TabPage;
-            if (!e.TabPage.Controls.Contains(this.EventList))
+            _curTab = e.TabPage;
+            if (!e.TabPage.Controls.Contains(EventList))
             {
-                e.TabPage.Controls.Add(this.EventList);
+                e.TabPage.Controls.Add(EventList);
             }
         }
 
@@ -124,28 +124,28 @@ namespace Hoehoe
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                this.CreateFilterdEventSource();
+                CreateFilterdEventSource();
                 e.Handled = true;
             }
         }
 
         private void EventList_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            if (this.itemCache != null && e.ItemIndex >= this.itemCacheIndex && e.ItemIndex < this.itemCacheIndex + this.itemCache.Length)
+            if (_itemCache != null && e.ItemIndex >= _itemCacheIndex && e.ItemIndex < _itemCacheIndex + _itemCache.Length)
             {
                 // キャッシュヒット
-                e.Item = this.itemCache[e.ItemIndex - this.itemCacheIndex];
+                e.Item = _itemCache[e.ItemIndex - _itemCacheIndex];
             }
             else
             {
                 // キャッシュミス
-                e.Item = this.CreateListViewItem(this.filterdEventSource[e.ItemIndex]);
+                e.Item = CreateListViewItem(_filterdEventSource[e.ItemIndex]);
             }
         }
 
         private void EventList_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
         {
-            this.CreateCache(e.StartIndex, e.EndIndex);
+            CreateCache(e.StartIndex, e.EndIndex);
         }
 
         private void SaveLogButton_Click(object sender, EventArgs e)
@@ -155,7 +155,7 @@ namespace Hoehoe
             switch (rslt)
             {
                 case DialogResult.Yes:
-                    tabName = (string)this.curTab.Tag;
+                    tabName = (string)_curTab.Tag;
                     break;
                 case DialogResult.No:
                     break;
@@ -163,29 +163,29 @@ namespace Hoehoe
                     return;
             }
 
-            this.SaveFileDialog1.FileName = string.Format("HoehoeEvents{0}{1:yyMMdd-HHmmss}.tsv", tabName, DateTime.Now);
-            this.SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
-            this.SaveFileDialog1.Filter = R.SaveLogMenuItem_ClickText3;
-            this.SaveFileDialog1.FilterIndex = 0;
-            this.SaveFileDialog1.Title = R.SaveLogMenuItem_ClickText4;
-            this.SaveFileDialog1.RestoreDirectory = true;
+            SaveFileDialog1.FileName = string.Format("HoehoeEvents{0}{1:yyMMdd-HHmmss}.tsv", tabName, DateTime.Now);
+            SaveFileDialog1.InitialDirectory = MyCommon.AppDir;
+            SaveFileDialog1.Filter = R.SaveLogMenuItem_ClickText3;
+            SaveFileDialog1.FilterIndex = 0;
+            SaveFileDialog1.Title = R.SaveLogMenuItem_ClickText4;
+            SaveFileDialog1.RestoreDirectory = true;
 
-            if (this.SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (!this.SaveFileDialog1.ValidateNames)
+                if (!SaveFileDialog1.ValidateNames)
                 {
                     return;
                 }
 
-                using (StreamWriter sw = new StreamWriter(this.SaveFileDialog1.FileName, false, Encoding.UTF8))
+                using (StreamWriter sw = new StreamWriter(SaveFileDialog1.FileName, false, Encoding.UTF8))
                 {
                     switch (rslt)
                     {
                         case DialogResult.Yes:
-                            this.SaveEventLog(this.filterdEventSource.ToList(), sw);
+                            SaveEventLog(_filterdEventSource.ToList(), sw);
                             break;
                         case DialogResult.No:
-                            this.SaveEventLog(this.EventSource, sw);
+                            SaveEventLog(EventSource, sw);
                             break;
                         default:
                             break;
@@ -193,7 +193,7 @@ namespace Hoehoe
                 }
             }
 
-            this.TopMost = Configs.Instance.AlwaysTop;
+            TopMost = Configs.Instance.AlwaysTop;
         }
 
         #endregion event handler
@@ -207,24 +207,24 @@ namespace Hoehoe
 
         private EventType ParseEventTypeFromTag()
         {
-            return (EventType)Enum.Parse(typeof(EventType), (string)this.curTab.Tag);
+            return (EventType)Enum.Parse(typeof(EventType), (string)_curTab.Tag);
         }
 
         private bool IsFilterMatch(Twitter.FormattedEvent x)
         {
-            if (!this.CheckBoxFilter.Checked || string.IsNullOrEmpty(this.TextBoxKeyword.Text))
+            if (!CheckBoxFilter.Checked || string.IsNullOrEmpty(TextBoxKeyword.Text))
             {
                 return true;
             }
 
-            if (!this.CheckRegex.Checked)
+            if (!CheckRegex.Checked)
             {
-                return x.Username.Contains(this.TextBoxKeyword.Text) || x.Target.Contains(this.TextBoxKeyword.Text);
+                return x.Username.Contains(TextBoxKeyword.Text) || x.Target.Contains(TextBoxKeyword.Text);
             }
 
             try
             {
-                Regex rx = new Regex(this.TextBoxKeyword.Text);
+                Regex rx = new Regex(TextBoxKeyword.Text);
                 return rx.Match(x.Username).Success || rx.Match(x.Target).Success;
             }
             catch (Exception ex)
@@ -236,18 +236,18 @@ namespace Hoehoe
 
         private void CreateFilterdEventSource()
         {
-            if (this.EventSource != null && this.EventSource.Count > 0)
+            if (EventSource != null && EventSource.Count > 0)
             {
-                this.filterdEventSource = this.EventSource.FindAll(x => this.CheckExcludeMyEvent.Checked ? !x.IsMe : true
-                    && Convert.ToBoolean(x.Eventtype & this.ParseEventTypeFromTag())
-                    && this.IsFilterMatch(x)).ToArray();
-                this.itemCache = null;
-                this.EventList.VirtualListSize = this.filterdEventSource.Count();
-                this.StatusLabelCount.Text = string.Format("{0} / {1}", this.filterdEventSource.Count(), this.EventSource.Count);
+                _filterdEventSource = EventSource.FindAll(x => CheckExcludeMyEvent.Checked ? !x.IsMe : true
+                    && Convert.ToBoolean(x.Eventtype & ParseEventTypeFromTag())
+                    && IsFilterMatch(x)).ToArray();
+                _itemCache = null;
+                EventList.VirtualListSize = _filterdEventSource.Count();
+                StatusLabelCount.Text = string.Format("{0} / {1}", _filterdEventSource.Count(), EventSource.Count);
             }
             else
             {
-                this.StatusLabelCount.Text = "0 / 0";
+                StatusLabelCount.Text = "0 / 0";
             }
         }
 
@@ -261,16 +261,16 @@ namespace Hoehoe
             }
 
             endIndex += 30;
-            if (endIndex > this.filterdEventSource.Count() - 1)
+            if (endIndex > _filterdEventSource.Count() - 1)
             {
-                endIndex = this.filterdEventSource.Count() - 1;
+                endIndex = _filterdEventSource.Count() - 1;
             }
 
-            this.itemCache = new ListViewItem[endIndex - startIndex + 1];
-            this.itemCacheIndex = startIndex;
+            _itemCache = new ListViewItem[endIndex - startIndex + 1];
+            _itemCacheIndex = startIndex;
             for (int i = 0; i <= endIndex - startIndex; i++)
             {
-                this.itemCache[i] = this.CreateListViewItem(this.filterdEventSource[startIndex + i]);
+                _itemCache[i] = CreateListViewItem(_filterdEventSource[startIndex + i]);
             }
         }
 
