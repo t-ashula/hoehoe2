@@ -545,9 +545,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.zh-CHS.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MyLists.en.resx">
       <DependentUpon>MyLists.cs</DependentUpon>
       <SubType>Designer</SubType>
