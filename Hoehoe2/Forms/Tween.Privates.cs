@@ -1528,14 +1528,19 @@ namespace Hoehoe
                 postedByDetail += string.Format("{0}(RT:{1})", Environment.NewLine, post.RetweetedBy);
             }
 
-            bool read = post.IsRead;
-            if (!_statuses.Tabs[tabPage.Text].UnreadManage || !_configs.UnreadManage)
-            {
-                // 未読管理していなかったら既読として扱う
-                read = true;
-            }
+            bool read = post.IsRead || (!_statuses.Tabs[tabPage.Text].UnreadManage || !_configs.UnreadManage);
 
-            var subitem = new[] { string.Empty, post.Nickname, (post.IsDeleted ? "(DELETED)" : string.Empty) + post.TextFromApi, post.CreatedAt.ToString(_configs.DateTimeFormat), postedByDetail, string.Empty, mk.ToString(), post.Source };
+            var subitem = new[]
+                {
+                    string.Empty,
+                    post.Nickname,
+                    (post.IsDeleted ? "(DELETED)" : string.Empty) + post.TextFromApi,
+                    post.CreatedAt.ToString(_configs.DateTimeFormat),
+                    postedByDetail,
+                    string.Empty,
+                    mk.ToString(),
+                    post.Source
+                };
             var itm = new ImageListViewItem(subitem, _iconDict, post.ImageUrl)
             {
                 StateImageIndex = post.StateIndex

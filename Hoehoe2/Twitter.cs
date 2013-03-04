@@ -1837,11 +1837,7 @@ namespace Hoehoe
                     tab.OldestId = item.StatusId;
                 }
 
-                item.IsRead = read;
-                if (item.IsMe && !read && _readOwnPost)
-                {
-                    item.IsRead = true;
-                }
+                item.IsRead = read || item.IsMe && _readOwnPost;
 
                 // if (tab != null)
                 {
@@ -1917,11 +1913,7 @@ namespace Hoehoe
                 return "Err:Can't create post";
             }
 
-            item.IsRead = read;
-            if (item.IsMe && !read && _readOwnPost)
-            {
-                item.IsRead = true;
-            }
+            item.IsRead = read || item.IsMe && _readOwnPost;
 
             post = item;
             return string.Empty;
@@ -3779,11 +3771,7 @@ namespace Hoehoe
                     continue;
                 }
 
-                post.IsRead = read;
-                if (post.IsMe && !read && _readOwnPost)
-                {
-                    post.IsRead = true;
-                }
+                post.IsRead = read || post.IsMe && _readOwnPost;
 
                 if (tab != null)
                 {
@@ -3850,11 +3838,7 @@ namespace Hoehoe
                     }
                 }
 
-                post.IsRead = read;
-                if (post.IsMe && !read && _readOwnPost)
-                {
-                    post.IsRead = true;
-                }
+                post.IsRead = read || post.IsMe && _readOwnPost;
 
                 if (tab != null)
                 {
@@ -3954,11 +3938,7 @@ namespace Hoehoe
             if (targetItem.InReplyToStatusId > 0 && TabInformations.Instance.Item(targetItem.InReplyToStatusId) != null)
             {
                 replyToItem = TabInformations.Instance.Item(targetItem.InReplyToStatusId).Copy();
-                replyToItem.IsRead = read;
-                if (replyToItem.IsMe && !read && _readOwnPost)
-                {
-                    replyToItem.IsRead = true;
-                }
+                replyToItem.IsRead = read || replyToItem.IsMe && _readOwnPost;
 
                 replyToItem.RelTabName = tab.TabName;
             }
@@ -3980,11 +3960,7 @@ namespace Hoehoe
                         replyAdded = true;
                     }
 
-                    item.IsRead = read;
-                    if (item.IsMe && !read && _readOwnPost)
-                    {
-                        item.IsRead = true;
-                    }
+                    item.IsRead = read || item.IsMe && _readOwnPost;
 
                     // if (tab != null)
                     {
@@ -4153,11 +4129,7 @@ namespace Hoehoe
                     continue;
                 }
 
-                post.IsRead = read;
-                if (post.IsMe && !read && _readOwnPost)
-                {
-                    post.IsRead = true;
-                }
+                post.IsRead = read || post.IsMe && !read && _readOwnPost;
 
                 post.IsReply = false;
                 post.IsExcludeReply = false;
