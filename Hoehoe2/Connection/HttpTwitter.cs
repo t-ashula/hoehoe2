@@ -38,12 +38,14 @@ namespace Hoehoe
         /// <summary>
         /// OAuthのコンシューマー鍵 :
         /// </summary>
-        private const string ConsumerKey = "IQKbtAYlXLripLGPWd0HUA"; //"BIazYuf0scya8pyhLjkdg";
+        // private const string ConsumerKey = "IQKbtAYlXLripLGPWd0HUA"; //
+        private const string ConsumerKey = "BIazYuf0scya8pyhLjkdg";
 
         /// <summary>
         /// OAuthの署名作成用秘密コンシューマーデータ
         /// </summary>
-        private const string ConsumerSecret = "GgDYlkSvaPxGxC4X8liwpUoqKwwr3lCADbz8A7ADU"; //"hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
+        //private const string ConsumerSecret = "GgDYlkSvaPxGxC4X8liwpUoqKwwr3lCADbz8A7ADU";
+        private const string ConsumerSecret = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
 
         /// <summary>
         /// OAuthのアクセストークン取得先URI
@@ -703,17 +705,17 @@ namespace Hoehoe
 
         public HttpStatusCode GetBlockUserIds(ref string content)
         {
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/blocks/blocking/ids.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1.1/blocks/blocking/ids.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode GetConfiguration(ref string content)
         {
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/help/configuration.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1.1/help/configuration.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode VerifyCredentials(ref string content)
         {
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/account/verify_credentials.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1.1/account/verify_credentials.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode UserStream(ref Stream content, bool allAtReplies, string trackwords, string userAgent)
@@ -730,7 +732,7 @@ namespace Hoehoe
                 param.Add("track", trackwords);
             }
 
-            return _httpCon.GetContent(GetMethod, CreateTwitterUserStreamUri("/2/user.json"), param, ref content, userAgent);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUserStreamUri("/1.1/user.json"), param, ref content, userAgent);
         }
 
         public HttpStatusCode FilterStream(ref Stream content, string trackwords, string userAgent)
