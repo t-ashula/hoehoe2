@@ -72,8 +72,6 @@ namespace Hoehoe
         private const string Pth2 = "(/(?:" + Pth + "+" + UrlValidPathEndingChars + "|" + Pth + "+" + UrlValidPathEndingChars + "?|" + UrlValidPathEndingChars + ")?)?";
         private const string Qry = "(?<query>\\?[a-z0-9!*'();:&=+$/%#\\[\\]\\-_.,~]*[a-z0-9_&=#])?";
 
-        private static AccountState accountState = AccountState.Valid;
-
         private readonly object _lockObj = new object();
         private readonly List<long> _followerIds = new List<long>();
         private bool _getFollowerResult;
@@ -89,9 +87,7 @@ namespace Hoehoe
         // プロパティからアクセスされる共通情報
         private string _uname;
 
-        private IDictionary<string, Image> _userIcons;
         private bool _restrictFavCheck;
-        private bool _readOwnPost;
 
         private readonly List<string> _hashList = new List<string>();
 
@@ -134,6 +130,11 @@ namespace Hoehoe
             StoredEvent = new List<FormattedEvent>();
         }
 
+        static Twitter()
+        {
+            AccountState = AccountState.Valid;
+        }
+
         public delegate void GetIconImageDelegate(PostClass post);
 
         public delegate void UserIdChangedEventHandler();
@@ -166,11 +167,7 @@ namespace Hoehoe
 
         public event UserStreamEventReceivedEventHandler UserStreamEventReceived;
 
-        public static AccountState AccountState
-        {
-            get { return accountState; }
-            set { accountState = value; }
-        }
+        public static AccountState AccountState { get; set; }
 
         public string Username
         {
@@ -187,17 +184,9 @@ namespace Hoehoe
             get { return _twitterConnection.Password; }
         }
 
-        public IDictionary<string, Image> DetailIcon
-        {
-            get { return _userIcons; }
-            set { _userIcons = value; }
-        }
+        public IDictionary<string, Image> DetailIcon { get; set; }
 
-        public bool ReadOwnPost
-        {
-            get { return _readOwnPost; }
-            set { _readOwnPost = value; }
-        }
+        public bool ReadOwnPost { get; set; }
 
         public int FollowersCount
         {
@@ -900,7 +889,7 @@ namespace Hoehoe
             post.IsMe = true;
             post.IsRead = read;
             post.IsOwl = false;
-            if (_readOwnPost)
+            if (ReadOwnPost)
             {
                 post.IsRead = true;
             }
@@ -1837,7 +1826,7 @@ namespace Hoehoe
                     tab.OldestId = item.StatusId;
                 }
 
-                item.IsRead = read || item.IsMe && _readOwnPost;
+                item.IsRead = read || item.IsMe && ReadOwnPost;
 
                 // if (tab != null)
                 {
@@ -1913,7 +1902,7 @@ namespace Hoehoe
                 return "Err:Can't create post";
             }
 
-            item.IsRead = read || item.IsMe && _readOwnPost;
+            item.IsRead = read || item.IsMe && ReadOwnPost;
 
             post = item;
             return string.Empty;
@@ -2174,7 +2163,7 @@ namespace Hoehoe
                     post.IsReply = post.ReplyToList.Contains(_uname);
                     post.IsExcludeReply = false;
                     post.IsOwl = false;
-                    if (post.IsMe && !read && _readOwnPost)
+                    if (post.IsMe && !read && ReadOwnPost)
                     {
                         post.IsRead = true;
                     }
@@ -2972,7 +2961,6 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
                 case HttpStatusCode.NotFound:
-                    value = false;
                     return string.Empty;
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
@@ -2980,7 +2968,7 @@ namespace Hoehoe
 
             try
             {
-                var u = D.CreateDataFromJson<User>(content);
+                D.CreateDataFromJson<User>(content);
                 value = true;
                 return string.Empty;
             }
@@ -3483,7 +3471,7 @@ namespace Hoehoe
 
                 using (var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(content), XmlDictionaryReaderQuotas.Max))
                 {
-                    XElement elm = XElement.Load(jsonReader);
+                    var elm = XElement.Load(jsonReader);
                     return elm.Element("error") != null ? elm.Element("error").Value : string.Empty;
                 }
             }
@@ -3771,7 +3759,7 @@ namespace Hoehoe
                     continue;
                 }
 
-                post.IsRead = read || post.IsMe && _readOwnPost;
+                post.IsRead = read || post.IsMe && ReadOwnPost;
 
                 if (tab != null)
                 {
@@ -3838,7 +3826,7 @@ namespace Hoehoe
                     }
                 }
 
-                post.IsRead = read || post.IsMe && _readOwnPost;
+                post.IsRead = read || post.IsMe && ReadOwnPost;
 
                 if (tab != null)
                 {
@@ -3938,7 +3926,7 @@ namespace Hoehoe
             if (targetItem.InReplyToStatusId > 0 && TabInformations.Instance.Item(targetItem.InReplyToStatusId) != null)
             {
                 replyToItem = TabInformations.Instance.Item(targetItem.InReplyToStatusId).Copy();
-                replyToItem.IsRead = read || replyToItem.IsMe && _readOwnPost;
+                replyToItem.IsRead = read || replyToItem.IsMe && ReadOwnPost;
 
                 replyToItem.RelTabName = tab.TabName;
             }
@@ -3960,7 +3948,7 @@ namespace Hoehoe
                         replyAdded = true;
                     }
 
-                    item.IsRead = read || item.IsMe && _readOwnPost;
+                    item.IsRead = read || item.IsMe && ReadOwnPost;
 
                     // if (tab != null)
                     {
@@ -4129,7 +4117,7 @@ namespace Hoehoe
                     continue;
                 }
 
-                post.IsRead = read || post.IsMe && !read && _readOwnPost;
+                post.IsRead = read || post.IsMe && !read && ReadOwnPost;
 
                 post.IsReply = false;
                 post.IsExcludeReply = false;
