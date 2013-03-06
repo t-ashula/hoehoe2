@@ -1952,7 +1952,6 @@ namespace Hoehoe
 
         private bool CommonKeyDown(Keys keyCode, FocusedControl focusedControl, ModifierState modifierState)
         {
-            bool functionReturnValue = false;
             if (focusedControl == FocusedControl.ListTab)
             {
                 // リストのカーソル移動関係（上下キー、PageUp/Downに該当）
