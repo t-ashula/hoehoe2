@@ -57,9 +57,9 @@ namespace Hoehoe
         private const string PostMethod = "POST";
         private const string GetMethod = "GET";
 
-        private static string _protocol = "http://";
-        private static string _twitterUrl = "api.twitter.com";
-        private static string _twitterSearchUrl = "search.twitter.com";
+        private static string protocol = "http://";
+        private static string twitterUrl = "api.twitter.com";
+        private static string twitterSearchUrl = "search.twitter.com";
         private const string TwitterUserStreamUrl = "userstream.twitter.com";
         private const string TwitterStreamUrl = "stream.twitter.com";
 
@@ -101,11 +101,7 @@ namespace Hoehoe
 
         public long AuthenticatedUserId
         {
-            get
-            {
-                return _httpCon != null ? _httpCon.AuthUserId : 0;
-            }
-
+            get { return _httpCon != null ? _httpCon.AuthUserId : 0; }
             set
             {
                 if (_httpCon != null)
@@ -122,18 +118,18 @@ namespace Hoehoe
 
         public static void SetUseSsl(bool useSsl)
         {
-            _protocol = useSsl ? "https://" : "http://";
+            protocol = useSsl ? "https://" : "http://";
         }
 
         public static void SetTwitterUrl(string value)
         {
-            _twitterUrl = value;
+            twitterUrl = value;
             HttpOAuthApiProxy.SetProxyHost(value);
         }
 
         public static void SetTwitterSearchUrl(string value)
         {
-            _twitterSearchUrl = value;
+            twitterSearchUrl = value;
         }
 
         public void Initialize(string accessToken, string accessTokenSecret, string username, long userId)
@@ -178,14 +174,17 @@ namespace Hoehoe
 
         public HttpStatusCode UpdateStatus(string status, long replyToId, ref string content)
         {
-            var param = new Dictionary<string, string> { { "status", status } };
+            var param = new Dictionary<string, string>
+                {
+                    { "status", status },
+                    { "include_entities", "true" }
+                };
             if (replyToId > 0)
             {
-                param.Add("in_reply_to_status_id", replyToId.ToString());
+                param.Add("in_reply_to_status_id", string.Format("{0}", replyToId));
             }
 
-            param.Add("include_entities", "true");
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/statuses/update.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("statuses", "update"), param, ref content, null, null);
         }
 
         public HttpStatusCode UpdateStatusWithMedia(string status, long replyToId, FileInfo mediaFile, ref string content)
@@ -199,73 +198,73 @@ namespace Hoehoe
 
             param.Add("include_entities", "true");
             var binary = new List<KeyValuePair<string, FileInfo>> { new KeyValuePair<string, FileInfo>("media[]", mediaFile) };
-            return _httpCon.GetContent(PostMethod, new Uri("https://upload.twitter.com/1/statuses/update_with_media.json"), param, binary, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(PostMethod, new Uri("https://upload.twitter.com/1.1/statuses/update_with_media.json"), param, binary, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode DestroyStatus(long id)
         {
             string t = string.Empty;
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/statuses/destroy/{0}.json", id)), null, ref t, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1.1/statuses/destroy/{0}.json", id)), null, ref t, null, null);
         }
 
         public HttpStatusCode SendDirectMessage(string status, string sendto, ref string content)
         {
             var param = new Dictionary<string, string> { { "text", status }, { "screen_name", sendto } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/direct_messages/new.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/direct_messages/new.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyDirectMessage(long id)
         {
             string t = string.Empty;
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/direct_messages/destroy/{0}.json", id)), null, ref t, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1.1/direct_messages/destroy/{0}.json", id)), null, ref t, null, null);
         }
 
         public HttpStatusCode RetweetStatus(long id, ref string content)
         {
             var param = new Dictionary<string, string> { { "include_entities", "true" } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/statuses/retweet/{0}.json", id)), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1.1/statuses/retweet/{0}.json", id)), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowUserInfo(string screenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", screenName }, { "include_entities", "true" } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/users/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1.1/users/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateFriendships(string screenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", screenName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/friendships/create.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/friendships/create.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyFriendships(string screenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", screenName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/friendships/destroy.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/friendships/destroy.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode CreateBlock(string screenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", screenName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/blocks/create.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/blocks/create.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyBlock(string screenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", screenName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/blocks/destroy.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/blocks/destroy.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode ReportSpam(string screenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", screenName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/report_spam.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/report_spam.json"), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowFriendships(string souceScreenName, string targetScreenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "source_screen_name", souceScreenName }, { "target_screen_name", targetScreenName } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/friendships/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1.1/friendships/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode ShowStatuses(long id, ref string content)
@@ -276,12 +275,12 @@ namespace Hoehoe
 
         public HttpStatusCode CreateFavorites(long id, ref string content)
         {
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/favorites/create/{0}.json", id)), null, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1.1/favorites/create/{0}.json", id)), null, ref content, null, null);
         }
 
         public HttpStatusCode DestroyFavorites(long id, ref string content)
         {
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1/favorites/destroy/{0}.json", id)), null, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1.1/favorites/destroy/{0}.json", id)), null, ref content, null, null);
         }
 
         public HttpStatusCode HomeTimeline(int count, long maxID, long sinceID, ref string content)
@@ -761,14 +760,23 @@ namespace Hoehoe
 
         #region "Proxy API"
 
+        private static Uri CreateTwitterUri(string subject, string verb, bool ssl = true, string host = "api.twitter.com", string version = "1.1")
+        {
+            var schema = ssl ? "https:" : "http:";
+            host = string.IsNullOrEmpty(host) ? "api.twitter.com" : host;
+            version = string.IsNullOrEmpty(version) ? "1.1" : version;
+            var path = string.IsNullOrEmpty(verb) ? subject + ".json" : subject + "/" + verb + ".json";
+            return new Uri(schema + "//" + host + "/" + version + "/" + path);
+        }
+
         private Uri CreateTwitterUri(string path)
         {
-            return new Uri(string.Format("{0}{1}{2}", _protocol, _twitterUrl, path));
+            return new Uri(string.Format("{0}{1}{2}", protocol, twitterUrl, path));
         }
 
         private Uri CreateTwitterSearchUri(string path)
         {
-            return new Uri(string.Format("{0}{1}{2}", _protocol, _twitterSearchUrl, path));
+            return new Uri(string.Format("{0}{1}{2}", protocol, twitterSearchUrl, path));
         }
 
         private Uri CreateTwitterUserStreamUri(string path)
