@@ -190,15 +190,14 @@ namespace Hoehoe
         public HttpStatusCode UpdateStatusWithMedia(string status, long replyToId, FileInfo mediaFile, ref string content)
         {
             // 画像投稿用エンドポイント
-            var param = new Dictionary<string, string> { { "status", status } };
+            var param = new Dictionary<string, string> { { "status", status }, { "include_entities", "true" } };
             if (replyToId > 0)
             {
                 param.Add("in_reply_to_status_id", replyToId.ToString());
             }
 
-            param.Add("include_entities", "true");
             var binary = new List<KeyValuePair<string, FileInfo>> { new KeyValuePair<string, FileInfo>("media[]", mediaFile) };
-            return _httpCon.GetContent(PostMethod, new Uri("https://upload.twitter.com/1.1/statuses/update_with_media.json"), param, binary, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("statuses", "update_with_media"), param, binary, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode DestroyStatus(long id)
