@@ -462,52 +462,6 @@ namespace Hoehoe
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("favorites", "list"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode PhoenixSearch(string querystr, ref string content)
-        {
-            if (string.IsNullOrEmpty(querystr))
-            {
-                return HttpStatusCode.BadRequest;
-            }
-
-            var param = querystr.Split(new[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.Split(new[] { '=' }))
-                .ToDictionary(p => p[0], p => p[1]);
-            return _httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Hoehoe");
-        }
-
-        public HttpStatusCode PhoenixSearch(string words, string lang, int rpp, int page, long sinceId, ref string content)
-        {
-            var param = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(words))
-            {
-                param.Add("q", words);
-            }
-
-            param.Add("include_entities", "1");
-            param.Add("contributor_details", "true");
-            if (!string.IsNullOrEmpty(lang))
-            {
-                param.Add("lang", lang);
-            }
-
-            if (rpp > 0)
-            {
-                param.Add("rpp", rpp.ToString());
-            }
-
-            if (page > 0)
-            {
-                param.Add("page", page.ToString());
-            }
-
-            if (sinceId > 0)
-            {
-                param.Add("since_id", sinceId.ToString());
-            }
-
-            return _httpConVar.GetContent(GetMethod, CreateTwitterUri("/phoenix_search.phoenix"), param, ref content, null, "Hoehoe");
-        }
-
         public HttpStatusCode Search(string words, string lang, int rpp, int page, long sinceId, ref string content)
         {
             var param = new Dictionary<string, string>();
