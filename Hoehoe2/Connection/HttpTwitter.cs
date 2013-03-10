@@ -242,13 +242,13 @@ namespace Hoehoe
         public HttpStatusCode CreateFriendships(string screenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", screenName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/friendships/create.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("friendships", "create"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyFriendships(string screenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", screenName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/friendships/destroy.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("friendships", "destroy"), param, ref content, null, null);
         }
 
         public HttpStatusCode CreateBlock(string screenName, ref string content)
