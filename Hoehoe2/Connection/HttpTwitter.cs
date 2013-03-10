@@ -406,46 +406,44 @@ namespace Hoehoe
 
         public HttpStatusCode DirectMessages(int count, long maxId, long sinceId, ref string content)
         {
-            var param = new Dictionary<string, string>();
+            var param = new Dictionary<string, string> { { "include_entities", "true" } };
             if (count > 0)
             {
-                param.Add("count", count.ToString());
+                param.Add("count", "" + count);
             }
 
             if (maxId > 0)
             {
-                param.Add("max_id", maxId.ToString());
+                param.Add("max_id", "" + maxId);
             }
 
             if (sinceId > 0)
             {
-                param.Add("since_id", sinceId.ToString());
+                param.Add("since_id", "" + sinceId);
             }
 
-            param.Add("include_entities", "true");
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/direct_messages.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("direct_messages", string.Empty), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode DirectMessagesSent(int count, long maxId, long sinceId, ref string content)
         {
-            var param = new Dictionary<string, string>();
+            var param = new Dictionary<string, string> { { "include_entities", "" + true } };
             if (count > 0)
             {
-                param.Add("count", count.ToString());
+                param.Add("count", "" + count);
             }
 
             if (maxId > 0)
             {
-                param.Add("max_id", maxId.ToString());
+                param.Add("max_id", "" + maxId);
             }
 
             if (sinceId > 0)
             {
-                param.Add("since_id", sinceId.ToString());
+                param.Add("since_id", "" + sinceId);
             }
 
-            param.Add("include_entities", "true");
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/direct_messages/sent.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("direct_messages", "sent"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode Favorites(int count, int page, ref string content)
