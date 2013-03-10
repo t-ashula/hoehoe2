@@ -291,8 +291,12 @@ namespace Hoehoe
 
         public HttpStatusCode ShowStatuses(long id, ref string content)
         {
-            var param = new Dictionary<string, string> { { "include_entities", "true" } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri(string.Format("/1/statuses/show/{0}.json", id)), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            var param = new Dictionary<string, string>
+                {
+                    { "include_entities", "" + true },
+                    { "id", "" + id }
+                };
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("statuses", "show"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateFavorites(long id, ref string content)
