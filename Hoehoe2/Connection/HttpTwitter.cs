@@ -229,8 +229,8 @@ namespace Hoehoe
 
         public HttpStatusCode RetweetStatus(long id, ref string content)
         {
-            var param = new Dictionary<string, string> { { "include_entities", "true" } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1.1/statuses/retweet/{0}.json", id)), param, ref content, null, null);
+            var param = new Dictionary<string, string> { { "trim_user", "true" } };
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("statuses", "retweet", "" + id), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowUserInfo(string screenName, ref string content)
