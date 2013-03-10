@@ -253,14 +253,24 @@ namespace Hoehoe
 
         public HttpStatusCode CreateBlock(string screenName, ref string content)
         {
-            var param = new Dictionary<string, string> { { "screen_name", screenName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/blocks/create.json"), param, ref content, null, null);
+            var param = new Dictionary<string, string>
+                {
+                    { "screen_name", screenName },
+                    { "include_entities", "" + false },
+                    { "skip_status", "" + true }
+                };
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("blocks", "create"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyBlock(string screenName, ref string content)
         {
-            var param = new Dictionary<string, string> { { "screen_name", screenName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/blocks/destroy.json"), param, ref content, null, null);
+            var param = new Dictionary<string, string>
+                {
+                    { "screen_name", screenName },
+                    { "include_entities", "" + false },
+                    { "skip_status", "" + true }
+                };
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("blocks", "destroy"), param, ref content, null, null);
         }
 
         public HttpStatusCode ReportSpam(string screenName, ref string content)
