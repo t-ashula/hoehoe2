@@ -236,7 +236,7 @@ namespace Hoehoe
         public HttpStatusCode ShowUserInfo(string screenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", screenName }, { "include_entities", "true" } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1.1/users/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("users", "show"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateFriendships(string screenName, ref string content)
