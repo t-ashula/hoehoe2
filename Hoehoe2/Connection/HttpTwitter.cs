@@ -477,17 +477,17 @@ namespace Hoehoe
 
             if (rpp > 0)
             {
-                param.Add("rpp", rpp.ToString());
+                param.Add("rpp", "" + rpp);
             }
 
             if (page > 0)
             {
-                param.Add("page", page.ToString());
+                param.Add("page", "" + page);
             }
 
             if (sinceId > 0)
             {
-                param.Add("since_id", sinceId.ToString());
+                param.Add("since_id", "" + sinceId);
             }
 
             return param.Count == 0 ?
@@ -497,7 +497,7 @@ namespace Hoehoe
 
         public HttpStatusCode SavedSearches(ref string content)
         {
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/saved_searches.json"), null, ref content, null, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("saved_searches", "list"), null, ref content, null, GetApiCallback);
         }
 
         public HttpStatusCode FollowerIds(long cursor, ref string content)
