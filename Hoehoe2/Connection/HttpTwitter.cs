@@ -336,18 +336,23 @@ namespace Hoehoe
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("statuses", "home_timeline"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode UserTimeline(long user_id, string screenName, int count, long maxID, long sinceID, ref string content)
+        public HttpStatusCode UserTimeline(long userID, string screenName, int count, long maxID, long sinceID, ref string content)
         {
-            var param = new Dictionary<string, string>();
-
-            if ((user_id == 0 && string.IsNullOrEmpty(screenName)) || (user_id != 0 && !string.IsNullOrEmpty(screenName)))
+            if ((userID == 0 && string.IsNullOrEmpty(screenName)) || (userID != 0 && !string.IsNullOrEmpty(screenName)))
             {
                 return HttpStatusCode.BadRequest;
             }
 
-            if (user_id > 0)
+            var param = new Dictionary<string, string>
+                {
+                    { "include_rts", "" + true },
+                    { "include_entities", "" + true },
+                    { "contributor_details", "" + true }
+                };
+
+            if (userID > 0)
             {
-                param.Add("user_id", user_id.ToString());
+                param.Add("user_id", "" + userID);
             }
 
             if (!string.IsNullOrEmpty(screenName))
@@ -357,22 +362,20 @@ namespace Hoehoe
 
             if (count > 0)
             {
-                param.Add("count", count.ToString());
+                param.Add("count", "" + count);
             }
 
             if (maxID > 0)
             {
-                param.Add("max_id", maxID.ToString());
+                param.Add("max_id", "" + maxID);
             }
 
             if (sinceID > 0)
             {
-                param.Add("since_id", sinceID.ToString());
+                param.Add("since_id", "" + sinceID);
             }
 
-            param.Add("include_rts", "true");
-            param.Add("include_entities", "true");
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/user_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("statuses", "user_timeline"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode PublicTimeline(int count, long maxId, long sinceId, ref string content)
