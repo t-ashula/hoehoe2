@@ -281,8 +281,12 @@ namespace Hoehoe
 
         public HttpStatusCode ShowFriendships(string souceScreenName, string targetScreenName, ref string content)
         {
-            var param = new Dictionary<string, string> { { "source_screen_name", souceScreenName }, { "target_screen_name", targetScreenName } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1.1/friendships/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            var param = new Dictionary<string, string>
+                {
+                    { "source_screen_name", souceScreenName },
+                    { "target_screen_name", targetScreenName }
+                };
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("friendships", "show"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode ShowStatuses(long id, ref string content)
