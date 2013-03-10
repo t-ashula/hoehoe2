@@ -378,28 +378,6 @@ namespace Hoehoe
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("statuses", "user_timeline"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode PublicTimeline(int count, long maxId, long sinceId, ref string content)
-        {
-            var param = new Dictionary<string, string>();
-            if (count > 0)
-            {
-                param.Add("count", count.ToString());
-            }
-
-            if (maxId > 0)
-            {
-                param.Add("max_id", maxId.ToString());
-            }
-
-            if (sinceId > 0)
-            {
-                param.Add("since_id", sinceId.ToString());
-            }
-
-            param.Add("include_entities", "true");
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/public_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
-        }
-
         public HttpStatusCode Mentions(int count, long maxId, long sinceId, ref string content)
         {
             var param = new Dictionary<string, string>();
