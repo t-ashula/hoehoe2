@@ -313,24 +313,27 @@ namespace Hoehoe
 
         public HttpStatusCode HomeTimeline(int count, long maxID, long sinceID, ref string content)
         {
-            var param = new Dictionary<string, string>();
+            var param = new Dictionary<string, string>
+                {
+                    { "include_entities", "" + true },
+                    { "contributor_details", "" + true }
+                };
             if (count > 0)
             {
-                param.Add("count", count.ToString());
+                param.Add("count", "" + count);
             }
 
             if (maxID > 0)
             {
-                param.Add("max_id", maxID.ToString());
+                param.Add("max_id", "" + maxID);
             }
 
             if (sinceID > 0)
             {
-                param.Add("since_id", sinceID.ToString());
+                param.Add("since_id", "" + sinceID);
             }
 
-            param.Add("include_entities", "true");
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/statuses/home_timeline.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("statuses", "home_timeline"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode UserTimeline(long user_id, string screenName, int count, long maxID, long sinceID, ref string content)
