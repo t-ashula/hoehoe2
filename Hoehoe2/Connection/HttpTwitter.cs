@@ -276,7 +276,7 @@ namespace Hoehoe
         public HttpStatusCode ReportSpam(string screenName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", screenName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1.1/report_spam.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("users", "report_spam"), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowFriendships(string souceScreenName, string targetScreenName, ref string content)
