@@ -448,19 +448,18 @@ namespace Hoehoe
 
         public HttpStatusCode Favorites(int count, int page, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            if (count != 20)
+            var param = new Dictionary<string, string> { { "include_entities", "true" } };
+            if (count > 0)
             {
-                param.Add("count", count.ToString());
+                param.Add("count", "" + count);
             }
 
             if (page > 0)
             {
-                param.Add("page", page.ToString());
+                param.Add("page", "" + page);
             }
 
-            param.Add("include_entities", "true");
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/favorites.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("favorites", "list"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode PhoenixSearch(string querystr, ref string content)
