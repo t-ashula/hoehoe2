@@ -301,12 +301,14 @@ namespace Hoehoe
 
         public HttpStatusCode CreateFavorites(long id, ref string content)
         {
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1.1/favorites/create/{0}.json", id)), null, ref content, null, null);
+            var param = new Dictionary<string, string> { { "id", "" + id } };
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("favorites", "create"), param, ref content, null, null);
         }
 
         public HttpStatusCode DestroyFavorites(long id, ref string content)
         {
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri(string.Format("/1.1/favorites/destroy/{0}.json", id)), null, ref content, null, null);
+            var param = new Dictionary<string, string> { { "id", "" + id } };
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("favorites", "destroy"), param, ref content, null, null);
         }
 
         public HttpStatusCode HomeTimeline(int count, long maxID, long sinceID, ref string content)
