@@ -502,8 +502,9 @@ namespace Hoehoe
 
         public HttpStatusCode FollowerIds(long cursor, ref string content)
         {
-            var param = new Dictionary<string, string> { { "cursor", cursor.ToString() } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/followers/ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            // TODO: add screen_name or user_id
+            var param = new Dictionary<string, string> { { "cursor", "" + cursor } };
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("followers", "ids"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode NoRetweetIds(long cursor, ref string content)
