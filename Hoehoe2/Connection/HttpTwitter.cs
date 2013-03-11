@@ -509,8 +509,7 @@ namespace Hoehoe
 
         public HttpStatusCode NoRetweetIds(long cursor, ref string content)
         {
-            var param = new Dictionary<string, string> { { "cursor", cursor.ToString() } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/friendships/no_retweet_ids.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("friendships", "no_retweets", "ids"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode RateLimitStatus(ref string content)
