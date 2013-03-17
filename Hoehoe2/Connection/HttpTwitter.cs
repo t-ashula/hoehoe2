@@ -645,11 +645,9 @@ namespace Hoehoe
 
         public HttpStatusCode UpdateProfileImage(FileInfo imageFile, ref string content)
         {
-            var binary = new List<KeyValuePair<string, FileInfo>>
-                {
-                    new KeyValuePair<string, FileInfo>("image", imageFile)
-                };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/account/update_profile_image.json"), null, binary, ref content, null, null);
+            var binary = new List<KeyValuePair<string, FileInfo>> { new KeyValuePair<string, FileInfo>("image", imageFile) };
+            var param = new Dictionary<string, string> { { "include_entities", "" + false }, { "skip_status", "" + true } };
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("account", "update_profile_image"), param, binary, ref content, null, null);
         }
 
         public HttpStatusCode GetRelatedResults(long id, ref string content)
