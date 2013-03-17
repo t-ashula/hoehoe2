@@ -638,9 +638,9 @@ namespace Hoehoe
                     { "url", url },
                     { "location", location },
                     { "description", description },
-                    { "include_entities", "true" }
+                    { "include_entities", "" + true }
                 };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/account/update_profile.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("account", "update_profile"), param, ref content, null, null);
         }
 
         public HttpStatusCode UpdateProfileImage(FileInfo imageFile, ref string content)
