@@ -24,14 +24,15 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Runtime.Serialization;
+using System.Xml;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Net;
-    using System.Xml;
-
     public class Yfrog : HttpConnectionOAuthEcho, IMultimediaShareService
     {
         /// <summary>
@@ -56,7 +57,7 @@ namespace Hoehoe
         private readonly Twitter _tw;
 
         public Yfrog(Twitter twitter)
-            : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.xml"))
+            : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1.1/account/verify_credentials.json"))
         {
             _tw = twitter;
             Initialize(ConsumerKey, ConsumerSecretKey, _tw.AccessToken, _tw.AccessTokenSecret, string.Empty, string.Empty);
@@ -103,27 +104,24 @@ namespace Hoehoe
             }
 
             string url;
-            if (ret == HttpStatusCode.OK)
-            {
-                var xd = new XmlDocument();
-                try
-                {
-                    // URLの取得
-                    xd.LoadXml(content);
-                    url = xd.SelectSingleNode("/rsp/mediaurl").InnerText;
-                }
-                catch (XmlException ex)
-                {
-                    return string.Format("Err:{0}", ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    return string.Format("Err:{0}", ex.Message);
-                }
-            }
-            else
+            if (ret != HttpStatusCode.OK)
             {
                 return string.Format("Err:{0}", ret);
+            }
+
+            try
+            {
+                // URLの取得
+                var responce = DataModels.D.CreateDataFromJson<ResponceObject>(content);
+                url = responce.RSP.MediaUrl;
+            }
+            catch (XmlException ex)
+            {
+                return string.Format("Err:{0}", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return string.Format("Err:{0}", ex.Message);
             }
 
             if (string.IsNullOrEmpty(url))
@@ -204,7 +202,29 @@ namespace Hoehoe
             var param = new Dictionary<string, string> { { "key", ApiKey }, { "message", message } };
             var binary = new List<KeyValuePair<string, FileInfo>> { new KeyValuePair<string, FileInfo>("media", mediaFile) };
             InstanceTimeout = 60000; // タイムアウト60秒
-            return GetContent(PostMethod, new Uri("http://yfrog.com/api/xauth_upload"), param, binary, ref content, null, null);
+            return GetContent(PostMethod, new Uri("https://yfrog.com/api/xauth_upload"), param, binary, ref content, null, null);
+        }
+
+        [DataContract]
+        private class ResponceObject
+        {
+            /*{"rsp":{"stat":"ok","mediaid":"h32nxmp","mediaurl":"http://yfrog.com/h32nxmp"}}*/
+
+            [DataMember(Name = "rsp")]
+            public Rsp RSP;
+
+            [DataContract]
+            public class Rsp
+            {
+                [DataMember(Name = "stat")]
+                public string Stat;
+
+                [DataMember(Name = "mediaid")]
+                public string MediaId;
+
+                [DataMember(Name = "mediaurl")]
+                public string MediaUrl;
+            }
         }
     }
 }
