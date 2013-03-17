@@ -24,116 +24,131 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Runtime.Serialization;
+
 namespace Hoehoe.DataModels.Twitter
 {
-    using System.Runtime.Serialization;
-
     [DataContract]
     public class User
     {
-        [DataMember(Name = "statuses_count")]
-        public int StatusesCount;
-
-        [DataMember(Name = "profile_sidebar_fill_color")]
-        public string ProfileSidebarFillColor;
-
-        [DataMember(Name = "show_all_inline_media")]
-        public bool ShowAllInlineMedia;
-
-        [DataMember(Name = "profile_use_background_image")]
-        public bool ProfileUseBackgroundImage;
-
         [DataMember(Name = "contributors_enabled")]
         public bool ContributorsEnabled;
-
-        [DataMember(Name = "profile_sidebar_border_color")]
-        public string ProfileSidebarBorderColor;
-
-        [DataMember(Name = "location")]
-        public string Location;
-
-        [DataMember(Name = "geo_enabled")]
-        public bool GeoEnabled;
-
-        [DataMember(Name = "description")]
-        public string Description;
-
-        [DataMember(Name = "friends_count")]
-        public int FriendsCount;
-
-        [DataMember(Name = "verified")]
-        public bool Verified;
-
-        [DataMember(Name = "favourites_count")]
-        public int FavouritesCount;
 
         [DataMember(Name = "created_at")]
         public string CreatedAt;
 
-        [DataMember(Name = "profile_background_color")]
-        public string ProfileBackgroundColor;
+        [DataMember(Name = "default_profile")]
+        public bool DefaultProfile;
+
+        [DataMember(Name = "default_profile_image")]
+        public bool DefaultProfileImage;
+
+        [DataMember(Name = "description")]
+        public string Description;
+
+        [DataMember(Name = "favourites_count")]
+        public int FavouritesCount;
 
         [DataMember(Name = "follow_request_sent")]
         public string FollowRequestSent;
 
-        [DataMember(Name = "time_zone")]
-        public string TimeZone;
-
         [DataMember(Name = "followers_count")]
         public int FollowersCount;
-
-        [DataMember(Name = "url")]
-        public string Url;
-
-        [DataMember(Name = "profile_image_url")]
-        public string ProfileImageUrl;
-
-        [DataMember(Name = "notifications")]
-        public string Notifications;
-
-        [DataMember(Name = "profile_text_color")]
-        public string ProfileTextColor;
-
-        [DataMember(Name = "protected")]
-        public bool Protected;
-
-        [DataMember(Name = "id_str")]
-        public string IdStr;
-
-        [DataMember(Name = "lang")]
-        public string Lang;
-
-        [DataMember(Name = "profile_background_image_url")]
-        public string ProfileBackgroundImageUrl;
-
-        [DataMember(Name = "screen_name")]
-        public string ScreenName;
-
-        [DataMember(Name = "name")]
-        public string Name;
 
         [DataMember(Name = "following")]
         public string Following;
 
-        [DataMember(Name = "profile_link_color")]
-        public string ProfileLinkColor;
+        [DataMember(Name = "friends_count")]
+        public int FriendsCount;
+
+        [DataMember(Name = "geo_enabled")]
+        public bool GeoEnabled;
 
         [DataMember(Name = "id")]
         public long Id;
 
+        [DataMember(Name = "id_str")]
+        public string IdStr;
+
+        [DataMember(Name = "is_translator")]
+        public bool IsTranslator;
+
+        [DataMember(Name = "lang")]
+        public string Lang;
+
         [DataMember(Name = "listed_count")]
         public int ListedCount;
+
+        [DataMember(Name = "location")]
+        public string Location;
+
+        [DataMember(Name = "name")]
+        public string Name;
+
+        [DataMember(Name = "notifications")]
+        public string Notifications;
+
+        [DataMember(Name = "profile_background_color")]
+        public string ProfileBackgroundColor;
+
+        [DataMember(Name = "profile_background_image_url")]
+        public string ProfileBackgroundImageUrl;
+
+        [DataMember(Name = "profile_background_image_url_https")]
+        public string ProfileBackgroundImageUrlHttps;
 
         [DataMember(Name = "profile_background_tile")]
         public bool ProfileBackgroundTile;
 
-        [DataMember(Name = "utc_offset")]
-        public string UtcOffset;
+        [DataMember(Name = "profile_image_url")]
+        public string ProfileImageUrl;
 
-        [DataMember(Name = "place", IsRequired = false)]
-        public Place Place;
+        [DataMember(Name = "profile_image_url_https")]
+        public string ProfileImageUrlHttps;
+
+        [DataMember(Name = "profile_link_color")]
+        public string ProfileLinkColor;
+
+        [DataMember(Name = "profile_sidebar_border_color")]
+        public string ProfileSidebarBorderColor;
+
+        [DataMember(Name = "profile_sidebar_fill_color")]
+        public string ProfileSidebarFillColor;
+
+        [DataMember(Name = "profile_text_color")]
+        public string ProfileTextColor;
+
+        [DataMember(Name = "profile_use_background_image")]
+        public bool ProfileUseBackgroundImage;
+
+        [DataMember(Name = "protected")]
+        public bool Protected;
+
+        [DataMember(Name = "screen_name")]
+        public string ScreenName;
+
+        [DataMember(Name = "show_all_inline_media")]
+        public bool ShowAllInlineMedia;
 
         [DataMember(Name = "status", IsRequired = false)]
         public Status Status;
+
+        [DataMember(Name = "statuses_count")]
+        public int StatusesCount;
+
+        [DataMember(Name = "time_zone")]
+        public string TimeZone;
+
+        [DataMember(Name = "url")]
+        public string Url;
+
+        [DataMember(Name = "utc_offset")]
+        public string UtcOffset;
+
+        [DataMember(Name = "verified")]
+        public bool Verified;
+
+        [DataMember(Name = "place", IsRequired = false)]
+        public Place Place;
     }
 }

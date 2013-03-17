@@ -671,7 +671,7 @@ namespace Hoehoe
 
         public HttpStatusCode VerifyCredentials(ref string content)
         {
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1.1/account/verify_credentials.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("account", "verify_credentials"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode UserStream(ref Stream content, bool allAtReplies, string trackwords, string userAgent)
