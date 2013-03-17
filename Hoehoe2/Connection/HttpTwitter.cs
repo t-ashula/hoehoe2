@@ -701,7 +701,7 @@ namespace Hoehoe
                 param.Add("track", string.Join(",", trackwords.Split(" ".ToCharArray())));
             }
 
-            return _httpCon.GetContent(PostMethod, CreateTwitterStreamUri("/1/statuses/filter.json"), param, ref content, userAgent);
+            return _httpCon.GetContent(PostMethod, CreateTwitterStreamUri("statuses", "filter"), param, ref content, userAgent);
         }
 
         public void RequestAbort()
@@ -751,9 +751,9 @@ namespace Hoehoe
             return CreateTwitterUri(path, string.Empty, string.Empty, true, TwitterUserStreamUrl);
         }
 
-        private Uri CreateTwitterStreamUri(string path)
+        private Uri CreateTwitterStreamUri(string subject, string verb)
         {
-            return new Uri(string.Format("{0}{1}{2}", "http://", TwitterStreamUrl, path));
+            return CreateTwitterUri(subject, verb, null, true, TwitterStreamUrl);
         }
 
         #endregion "Proxy API"
