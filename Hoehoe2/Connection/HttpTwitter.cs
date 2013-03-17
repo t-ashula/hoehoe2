@@ -688,7 +688,7 @@ namespace Hoehoe
                 param.Add("track", trackwords);
             }
 
-            return _httpCon.GetContent(GetMethod, CreateTwitterUserStreamUri("/1.1/user.json"), param, ref content, userAgent);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUserStreamUri("user"), param, ref content, userAgent);
         }
 
         public HttpStatusCode FilterStream(ref Stream content, string trackwords, string userAgent)
@@ -748,7 +748,7 @@ namespace Hoehoe
 
         private Uri CreateTwitterUserStreamUri(string path)
         {
-            return new Uri(string.Format("{0}{1}{2}", "https://", TwitterUserStreamUrl, path));
+            return CreateTwitterUri(path, string.Empty, string.Empty, true, TwitterUserStreamUrl);
         }
 
         private Uri CreateTwitterStreamUri(string path)
