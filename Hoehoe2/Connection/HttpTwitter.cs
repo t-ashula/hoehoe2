@@ -465,27 +465,17 @@ namespace Hoehoe
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("favorites", "list"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode Search(string words, string lang, int rpp, int page, long sinceId, ref string content)
+        public HttpStatusCode Search(string words, string lang, int count, long sinceId, ref string content)
         {
-            var param = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(words))
-            {
-                param.Add("q", words);
-            }
-
+            var param = new Dictionary<string, string> { { "q", words } };
             if (!string.IsNullOrEmpty(lang))
             {
                 param.Add("lang", lang);
             }
 
-            if (rpp > 0)
+            if (count > 0)
             {
-                param.Add("rpp", "" + rpp);
-            }
-
-            if (page > 0)
-            {
-                param.Add("page", "" + page);
+                param.Add("count", "" + count);
             }
 
             if (sinceId > 0)
@@ -495,7 +485,7 @@ namespace Hoehoe
 
             return param.Count == 0 ?
                 HttpStatusCode.BadRequest :
-                _httpConVar.GetContent(GetMethod, CreateTwitterSearchUri("/search.atom"), param, ref content, null, "Hoehoe");
+                _httpCon.GetContent(GetMethod, CreateTwitterUri("search", "tweets"), param, ref content, null, GetApiCallback);
         }
 
         public HttpStatusCode SavedSearches(ref string content)
@@ -741,11 +731,6 @@ namespace Hoehoe
             return new Uri(string.Format("{0}{1}{2}", protocol, twitterUrl, path));
         }
 
-        private Uri CreateTwitterSearchUri(string path)
-        {
-            return new Uri(string.Format("{0}{1}{2}", protocol, twitterSearchUrl, path));
-        }
-
         private Uri CreateTwitterUserStreamUri(string path)
         {
             return CreateTwitterUri(path, string.Empty, string.Empty, true, TwitterUserStreamUrl);
@@ -756,7 +741,7 @@ namespace Hoehoe
             return CreateTwitterUri(subject, verb, null, true, TwitterStreamUrl);
         }
 
-        #endregion "Proxy API"
+        #endregion
 
         private void GetApiCallback(object sender, ref HttpStatusCode code, ref string content)
         {

@@ -1,10 +1,5 @@
 // Hoehoe - Client of Twitter
-// Copyright (c) 2007-2011 kiri_feather (@kiri_feather) <kiri.feather@gmail.com>
-//           (c) 2008-2011 Moz (@syo68k)
-//           (c) 2008-2011 takeshik (@takeshik) <http://www.takeshik.org/>
-//           (c) 2010-2011 anis774 (@anis774) <http://d.hatena.ne.jp/anis774/>
-//           (c) 2010-2011 fantasticswallow (@f_swallow) <http://twitter.com/f_swallow>
-//           (c) 2011- t.ashula (@t_ashula) <office@ashula.info>
+// Copyright (c)  2011- t.ashula (@t_ashula) <office@ashula.info>
 //
 // All rights reserved.
 // This file is part of Hoehoe.
@@ -24,21 +19,49 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Hoehoe.DataModels.Twitter
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     [DataContract]
     public class SearchResult
     {
         [DataMember(Name = "statuses")]
         public List<Status> Statuses;
 
-        [DataMember(Name = "next_page")]
-        public string NextPage;
+        [DataMember(Name = "search_metadata")]
+        public SearchMetadata SearchMetadata;
+    }
 
-        [DataMember(Name = "error")]
-        public string ErrMsg;
+    [DataContract]
+    public class SearchMetadata
+    {
+        [DataMember(Name = "max_id")]
+        public long MaxId;
+
+        [DataMember(Name = "max_id_str")]
+        public string MaxIDStr;
+
+        [DataMember(Name = "since_id")]
+        public long SinceId;
+
+        [DataMember(Name = "since_id_str")]
+        public string SinceIDStr;
+
+        [DataMember(Name = "refresh_url")]
+        public string RefreshUrl;
+
+        [DataMember(Name = "next_results")]
+        public string NextResults;
+
+        [DataMember(Name = "count")]
+        public int Count;
+
+        [DataMember(Name = "completed_in")]
+        public double CompletedIn;
+
+        [DataMember(Name = "query")]
+        public string Query;
     }
 }

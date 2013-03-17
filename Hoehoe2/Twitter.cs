@@ -1996,7 +1996,7 @@ namespace Hoehoe
             if (tab.RelationTargetPost.TextFromApi.Contains("@") && tab.RelationTargetPost.InReplyToStatusId == 0)
             {
                 // 検索結果対応
-                PostClass p = TabInformations.Instance.Item(tab.RelationTargetPost.StatusId);
+                var p = TabInformations.Instance.Item(tab.RelationTargetPost.StatusId);
                 if (p != null && p.InReplyToStatusId > 0)
                 {
                     tab.RelationTargetPost = p;
@@ -2014,7 +2014,7 @@ namespace Hoehoe
             }
 
             relPosts.Add(tab.RelationTargetPost.Copy());
-            PostClass tmpPost = relPosts[0];
+            var tmpPost = relPosts[0];
             do
             {
                 rslt = GetRelatedResultsApi(read, tmpPost, tab, relPosts);
@@ -2037,32 +2037,15 @@ namespace Hoehoe
                 return string.Empty;
             }
 
+            var count = Configs.Instance.UseAdditionalCount && Configs.Instance.SearchCountApi != 0
+                ? Configs.Instance.SearchCountApi
+                : Configs.Instance.CountApi;
+
             HttpStatusCode res;
-            string content = string.Empty;
-            int page = 0;
-            long sinceId = 0;
-            int count;
-            if (Configs.Instance.UseAdditionalCount && Configs.Instance.SearchCountApi != 0)
-            {
-                count = Configs.Instance.SearchCountApi;
-            }
-            else
-            {
-                count = Configs.Instance.CountApi;
-            }
-
-            if (more)
-            {
-                page = tab.GetSearchPage(count);
-            }
-            else
-            {
-                sinceId = tab.SinceId;
-            }
-
+            var content = string.Empty;
             try
             {
-                res = _twitterConnection.Search(tab.SearchWords, tab.SearchLang, count, page, sinceId, ref content);
+                res = _twitterConnection.Search(tab.SearchWords, tab.SearchLang, count, tab.SinceId, ref content);
             }
             catch (Exception ex)
             {
@@ -2091,96 +2074,37 @@ namespace Hoehoe
                 return string.Empty;
             }
 
-            content = Regex.Replace(content, "[\\x00-\\x1f-[\\x0a\\x0d]]+", " ");
-            content = Regex.Replace(content, @"<twitter:geo>.*?</twitter:geo>", "<twitter:geo></twitter:geo>");
-            var xdoc = new XmlDocument();
+            SearchResult sres;
             try
             {
-                xdoc.LoadXml(content);
+                sres = D.CreateDataFromJson<SearchResult>(content);
             }
             catch (Exception ex)
             {
                 MyCommon.TraceOut(ex, MethodBase.GetCurrentMethod().Name + " " + content);
-                return "Invalid ATOM!";
+                return "Invalid JSON!";
             }
 
-            var nsmgr = new XmlNamespaceManager(xdoc.NameTable);
-            nsmgr.AddNamespace("search", "http://www.w3.org/2005/Atom");
-            nsmgr.AddNamespace("twitter", "http://api.twitter.com/");
-            nsmgr.AddNamespace("georss", "http://www.georss.org/georss");
-            foreach (XmlNode xentryNode in xdoc.DocumentElement.SelectNodes("/search:feed/search:entry", nsmgr))
+            foreach (var item in sres.Statuses.Select(CreatePostsFromStatusData).Where(item => item != null))
             {
-                var xentry = (XmlElement)xentryNode;
-                var post = new PostClass();
-                try
+                if (item.StatusId < tab.OldestId)
                 {
-                    post.StatusId = long.Parse(xentry["id"].InnerText.Split(':')[2]);
-                    if (TabInformations.Instance.ContainsKey(post.StatusId, tab.TabName))
-                    {
-                        continue;
-                    }
-
-                    post.CreatedAt = DateTime.Parse(xentry["published"].InnerText);
-
-                    // 本文
-                    post.TextFromApi = xentry["title"].InnerText;
-
-                    // Source取得（htmlの場合は、中身を取り出し）
-                    post.Source = xentry["twitter:source"].InnerText;
-                    post.InReplyToStatusId = 0;
-                    post.InReplyToUser = string.Empty;
-                    post.InReplyToUserId = 0;
-                    post.IsFav = false;
-
-                    // Geoが勝手に付加されるバグがいっこうに修正されないので暫定的にGeo情報を無視する
-                    if (xentry["twitter:geo"].HasChildNodes)
-                    {
-                        string[] pnt = xentry.SelectSingleNode("twitter:geo/georss:point", nsmgr).InnerText.Split(' ');
-                        post.PostGeo = new PostClass.StatusGeo
-                        {
-                            Lat = double.Parse(pnt[0]),
-                            Lng = double.Parse(pnt[1])
-                        };
-                    }
-
-                    // 以下、ユーザー情報
-                    var author = (XmlElement)xentry.SelectSingleNode("./search:author", nsmgr);
-                    post.UserId = 0;
-                    post.ScreenName = author["name"].InnerText.Split(' ')[0].Trim();
-                    post.Nickname = author["name"].InnerText.Substring(post.ScreenName.Length).Trim();
-                    post.Nickname = post.Nickname.Length > 2 ? post.Nickname.Substring(1, post.Nickname.Length - 2) : post.ScreenName;
-                    post.ImageUrl = ((XmlElement)xentry.SelectSingleNode("./search:link[@type='image/png']", nsmgr)).GetAttribute("href");
-                    post.IsProtect = false;
-                    post.IsMe = post.ScreenName.ToLower().Equals(_uname);
-
-                    // HTMLに整形
-                    post.Text = CreateHtmlAnchor(HttpUtility.HtmlEncode(post.TextFromApi), post.ReplyToList, post.Media);
-                    post.TextFromApi = HttpUtility.HtmlDecode(post.TextFromApi);
-                    CreateSource(ref post); // Source整形
-                    post.IsRead = read;
-                    post.IsReply = post.ReplyToList.Contains(_uname);
-                    post.IsExcludeReply = false;
-                    post.IsOwl = false;
-                    if (post.IsMe && !read && ReadOwnPost)
-                    {
-                        post.IsRead = true;
-                    }
-
-                    post.IsDm = false;
-                    post.RelTabName = tab.TabName;
-                    if (!more && post.StatusId > tab.SinceId)
-                    {
-                        tab.SinceId = post.StatusId;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MyCommon.TraceOut(ex, MethodBase.GetCurrentMethod().Name + " " + content);
-                    continue;
+                    tab.OldestId = item.StatusId;
                 }
 
-                TabInformations.Instance.AddPost(post);
+                item.IsRead = read || item.IsMe && ReadOwnPost;
+
+                // if (tab != null)
+                {
+                    item.RelTabName = tab.TabName;
+                }
+
+                // 非同期アイコン取得＆StatusDictionaryに追加
+                TabInformations.Instance.AddPost(item);
             }
+
+            // TODO: use more sres.SearchMetadata
+            tab.SinceId = sres.SearchMetadata.MaxId;
 
             return string.Empty;
         }
@@ -3701,73 +3625,6 @@ namespace Hoehoe
             }
 
             return string.Empty;
-        }
-
-        // TODO: remove?
-        private string CreatePostsFromPhoenixSearch(string content, WorkerType workerType, TabClass tab, bool read, int count, ref long minimumId, ref string nextPageQuery)
-        {
-            SearchResult items;
-            try
-            {
-                items = D.CreateDataFromJson<SearchResult>(content);
-            }
-            catch (SerializationException ex)
-            {
-                MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
-                return "Json Parse Error(DataContractJsonSerializer)";
-            }
-            catch (Exception ex)
-            {
-                MyCommon.TraceOut(ex, MethodBase.GetCurrentMethod().Name + " " + content);
-                return "Invalid Json!";
-            }
-
-            nextPageQuery = items.NextPage;
-
-            foreach (var status in items.Statuses)
-            {
-                PostClass post = CreatePostsFromStatusData(status);
-                if (post == null)
-                {
-                    continue;
-                }
-
-                if (minimumId > post.StatusId)
-                {
-                    minimumId = post.StatusId;
-                }
-
-                // 二重取得回避
-                lock (_lockObj)
-                {
-                    if (tab == null)
-                    {
-                        if (TabInformations.Instance.ContainsKey(post.StatusId))
-                        {
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        if (TabInformations.Instance.ContainsKey(post.StatusId, tab.TabName))
-                        {
-                            continue;
-                        }
-                    }
-                }
-
-                post.IsRead = read || post.IsMe && ReadOwnPost;
-
-                if (tab != null)
-                {
-                    post.RelTabName = tab.TabName;
-                }
-
-                // 非同期アイコン取得＆StatusDictionaryに追加
-                TabInformations.Instance.AddPost(post);
-            }
-
-            return string.IsNullOrEmpty(items.ErrMsg) ? string.Empty : "Err:" + items.ErrMsg;
         }
 
         private PostClass CheckReplyToPost(List<PostClass> relPosts)
