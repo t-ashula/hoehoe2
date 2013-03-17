@@ -24,15 +24,15 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Runtime.Serialization;
+
 namespace Hoehoe.DataModels.Twitter
 {
-    using System.Runtime.Serialization;
-
     [DataContract]
     public class Configuration
     {
         [DataMember(Name = "characters_reserved_per_media")]
-        public int CharactersReservedPerMedia = 20;
+        public int CharactersReservedPerMedia = 23;
 
         [DataMember(Name = "photo_size_limit")]
         public int PhotoSizeLimit;
@@ -44,10 +44,10 @@ namespace Hoehoe.DataModels.Twitter
         public string[] NonUsernamePaths;
 
         [DataMember(Name = "short_url_length")]
-        public int ShortUrlLength = 19;
+        public int ShortUrlLength = 22;
 
         [DataMember(Name = "short_url_length_https")]
-        public int ShortUrlLengthHttps = 20;
+        public int ShortUrlLengthHttps = 23;
 
         [DataMember(Name = "max_media_per_upload")]
         public int MaxMediaPerUpload;

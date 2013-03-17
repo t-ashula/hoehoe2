@@ -666,7 +666,7 @@ namespace Hoehoe
 
         public HttpStatusCode GetConfiguration(ref string content)
         {
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1.1/help/configuration.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("help", "configuration"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode VerifyCredentials(ref string content)
