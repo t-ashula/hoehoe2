@@ -24,29 +24,29 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Web;
+using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
+using Hoehoe.DataModels;
+using Hoehoe.DataModels.Twitter;
+using R = Hoehoe.Properties.Resources;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Json;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Web;
-    using System.Windows.Forms;
-    using System.Xml;
-    using System.Xml.Linq;
-    using DataModels;
-    using DataModels.Twitter;
-    using R = Properties.Resources;
-
     public class Twitter : IDisposable
     {
         public const string HashtagRegexPattern = "(" + HashTagBoundary + ")(#|＃)(" + HashtagAlphaNumeric + "*" + HashtagAlpha + HashtagAlphaNumeric + "*)(?=" + HashtagTerminator + "|" + HashTagBoundary + ")";
@@ -2573,6 +2573,7 @@ namespace Hoehoe
                 try
                 {
                     res = _twitterConnection.GetLists(Username, cursor, ref content);
+                    cursor = 0;
                 }
                 catch (Exception ex)
                 {
@@ -2596,9 +2597,8 @@ namespace Hoehoe
 
                 try
                 {
-                    var lst = D.CreateDataFromJson<Lists>(content);
-                    lists.AddRange(from le in lst.ListElements select new ListElement(le, this));
-                    cursor = lst.NextCursor;
+                    var lst = D.CreateDataFromJson<ListElementData[]>(content);
+                    lists.AddRange(lst.Select(l => new ListElement(l, this)));
                 }
                 catch (SerializationException ex)
                 {
@@ -2644,7 +2644,8 @@ namespace Hoehoe
                 try
                 {
                     var lst = D.CreateDataFromJson<Lists>(content);
-                    lists.AddRange(from le in lst.ListElements select new ListElement(le, this));
+                    lists.AddRange(lst.ListElements.Select(l => new ListElement(l, this)));
+
                     cursor = lst.NextCursor;
                 }
                 catch (SerializationException ex)

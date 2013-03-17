@@ -63,5 +63,8 @@ namespace Hoehoe.DataModels.Twitter
 
         [DataMember(Name = "id")]
         public long Id;
+
+        [DataMember(Name = "created_at")]
+        public string CreatedAt;
     }
 }

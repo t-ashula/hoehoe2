@@ -524,8 +524,8 @@ namespace Hoehoe
 
         public HttpStatusCode GetLists(string user, long cursor, ref string content)
         {
-            var param = new Dictionary<string, string> { { "screen_name", user }, { "cursor", cursor.ToString() } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            var param = new Dictionary<string, string> { { "screen_name", user } };
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("lists", "list"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode UpdateListID(string user, string listId, string name, bool isPrivate, string description, ref string content)
@@ -546,47 +546,51 @@ namespace Hoehoe
                 param.Add("description", description);
             }
 
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/update.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("lists", "update"), param, ref content, null, null);
         }
 
         public HttpStatusCode DeleteListID(string user, string listId, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", user }, { "list_id", listId } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/destroy.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("lists", "destroy"), param, ref content, null, null);
         }
 
         public HttpStatusCode GetListsSubscriptions(string user, long cursor, ref string content)
         {
-            var param = new Dictionary<string, string> { { "screen_name", user }, { "cursor", cursor.ToString() } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/subscriptions.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            var param = new Dictionary<string, string> { { "screen_name", user }, { "cursor", "" + cursor } };
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("lists", "subscriptions"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode GetListsStatuses(long userId, long listId, int perPage, long maxId, long sinceId, bool isRTinclude, ref string content)
         {
             // 認証なくても取得できるが、protectedユーザー分が抜ける
-            var param = new Dictionary<string, string> { { "user_id", userId.ToString() }, { "list_id", listId.ToString() } };
+            var param = new Dictionary<string, string>
+                {
+                    { "user_id", "" + userId },
+                    { "list_id", "" + listId },
+                    { "include_entities", "" + true }
+                };
             if (isRTinclude)
             {
-                param.Add("include_rts", "true");
+                param.Add("include_rts", "" + true);
             }
 
             if (perPage > 0)
             {
-                param.Add("per_page", perPage.ToString());
+                param.Add("per_page", "" + perPage);
             }
 
             if (maxId > 0)
             {
-                param.Add("max_id", maxId.ToString());
+                param.Add("max_id", "" + maxId);
             }
 
             if (sinceId > 0)
             {
-                param.Add("since_id", sinceId.ToString());
+                param.Add("since_id", "" + sinceId);
             }
 
-            param.Add("include_entities", "true");
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/statuses.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("lists", "statuses"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateLists(string listname, bool isPrivate, string description, ref string content)
@@ -597,34 +601,34 @@ namespace Hoehoe
                 param.Add("description", description);
             }
 
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/create.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("lists", "create"), param, ref content, null, null);
         }
 
         public HttpStatusCode GetListMembers(string user, string listId, long cursor, ref string content)
         {
-            var param = new Dictionary<string, string> { { "screen_name", user }, { "list_id", listId }, { "cursor", cursor.ToString() } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/members.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            var param = new Dictionary<string, string> { { "screen_name", user }, { "list_id", listId }, { "cursor", "" + cursor } };
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("lists", "members"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode CreateListMembers(string listId, string memberName, ref string content)
         {
             var param = new Dictionary<string, string> { { "list_id", listId }, { "screen_name", memberName } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/members/create.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("lists", "members", "create"), param, ref content, null, null);
         }
 
         public HttpStatusCode DeleteListMembers(string listId, string memberName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", memberName }, { "list_id", listId } };
-            return _httpCon.GetContent(PostMethod, CreateTwitterUri("/1/lists/members/destroy.json"), param, ref content, null, null);
+            return _httpCon.GetContent(PostMethod, CreateTwitterUri("lists", "members", "destroy"), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowListMember(string listId, string memberName, ref string content)
         {
             var param = new Dictionary<string, string> { { "screen_name", memberName }, { "list_id", listId } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/lists/members/show.json"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("lists", "members", "show"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        #endregion "Lists"
+        #endregion
 
         public HttpStatusCode Statusid_retweeted_by_ids(long statusid, int count, int page, ref string content)
         {
