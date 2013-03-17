@@ -51,7 +51,7 @@ namespace Hoehoe
         private readonly Twitter _tw;
 
         public Imgly(Twitter twitter)
-            : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1/account/verify_credentials.json"))
+            : base(new Uri("http://api.twitter.com/"), new Uri("https://api.twitter.com/1.1/account/verify_credentials.json"))
         {
             _tw = twitter;
             Initialize(ConsumerKey, ConsumerSecretKey, _tw.AccessToken, _tw.AccessTokenSecret, string.Empty, string.Empty);
