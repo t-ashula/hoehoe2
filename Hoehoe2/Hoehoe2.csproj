@@ -131,6 +131,7 @@
     <Compile Include="DataModels\Google\UrlShortenerParameter.cs" />
     <Compile Include="DataModels\Twitter\Annotations.cs" />
     <Compile Include="DataModels\Twitter\Attributes.cs" />
+    <Compile Include="DataModels\Twitter\Blocks.cs" />
     <Compile Include="DataModels\Twitter\BoundingBox.cs" />
     <Compile Include="DataModels\Twitter\Configuration.cs" />
     <Compile Include="DataModels\Twitter\Coordinates.cs" />

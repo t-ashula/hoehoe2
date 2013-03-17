@@ -3257,6 +3257,7 @@ namespace Hoehoe
 
         public string GetBlockUserIds()
         {
+            // TODO: use cursor,
             if (AccountState != AccountState.Valid)
             {
                 return string.Empty;
@@ -3264,9 +3265,10 @@ namespace Hoehoe
 
             HttpStatusCode res;
             string content = string.Empty;
+            long cursor = -1;
             try
             {
-                res = _twitterConnection.GetBlockUserIds(ref content);
+                res = _twitterConnection.GetBlockUserIds(cursor, ref content);
             }
             catch (Exception ex)
             {
@@ -3290,7 +3292,9 @@ namespace Hoehoe
 
             try
             {
-                var ids = D.CreateDataFromJson<List<long>>(content);
+                var blockIds = D.CreateDataFromJson<BlocksIds>(content);
+                cursor = blockIds.NextCursor; // TODO: curosr-nize
+                var ids = blockIds.Ids.ToList();
                 if (ids.Contains(UserId))
                 {
                     ids.Remove(UserId);

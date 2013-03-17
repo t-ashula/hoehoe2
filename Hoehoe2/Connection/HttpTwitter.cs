@@ -650,6 +650,7 @@ namespace Hoehoe
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("account", "update_profile_image"), param, binary, ref content, null, null);
         }
 
+        [Obsolete("no public api offered yet.")]
         public HttpStatusCode GetRelatedResults(long id, ref string content)
         {
             // 認証なくても取得できるが、protectedユーザー分が抜ける
@@ -657,9 +658,10 @@ namespace Hoehoe
             return _httpCon.GetContent(GetMethod, CreateTwitterUri(string.Format("/1/related_results/show/{0}.json", id)), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode GetBlockUserIds(ref string content)
+        public HttpStatusCode GetBlockUserIds(long cursor, ref string content)
         {
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1.1/blocks/blocking/ids.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            var param = new Dictionary<string, string> { { "cursor", "" + cursor } };
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("blocks", "ids"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode GetConfiguration(ref string content)
