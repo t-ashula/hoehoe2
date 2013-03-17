@@ -2178,19 +2178,21 @@ namespace Hoehoe
         private void ShowFriendship_DoWork(object sender, DoWorkEventArgs e)
         {
             var arg = (ShowFriendshipArgs)e.Argument;
-            string result = string.Empty;
-            foreach (ShowFriendshipArgs.FriendshipInfo fInfo in arg.Ids)
+            var result = string.Empty;
+            foreach (var fInfo in arg.Ids)
             {
-                string rt = arg.Tw.GetFriendshipInfo(fInfo.Id, ref fInfo.IsFollowing, ref fInfo.IsFollowed);
-                if (!string.IsNullOrEmpty(rt))
+                var rt = arg.Tw.GetFriendshipInfo(fInfo.Id, ref fInfo.IsFollowing, ref fInfo.IsFollowed);
+                if (string.IsNullOrEmpty(rt))
                 {
-                    if (string.IsNullOrEmpty(result))
-                    {
-                        result = rt;
-                    }
-
-                    fInfo.IsError = true;
+                    continue;
                 }
+
+                if (string.IsNullOrEmpty(result))
+                {
+                    result = rt;
+                }
+
+                fInfo.IsError = true;
             }
 
             e.Result = result;
@@ -3716,7 +3718,7 @@ namespace Hoehoe
                 return;
             }
 
-            StatusLabel.Text = "Event: " + ev.Event;
+            StatusLabel.Text = string.Format("Event: {0}", ev.Event);
             NotifyEvent(ev);
             if (ev.Event == "favorite" || ev.Event == "unfavorite")
             {

@@ -101,7 +101,10 @@ namespace Hoehoe
 
         public long AuthenticatedUserId
         {
-            get { return _httpCon != null ? _httpCon.AuthUserId : 0; }
+            get
+            {
+                return _httpCon != null ? _httpCon.AuthUserId : 0;
+            }
             set
             {
                 if (_httpCon != null)
@@ -514,7 +517,7 @@ namespace Hoehoe
 
         public HttpStatusCode RateLimitStatus(ref string content)
         {
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri("/1/account/rate_limit_status.json"), null, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, CreateTwitterUri("application", "rate_limit_status"), null, ref content, null, GetApiCallback);
         }
 
         #region "Lists"

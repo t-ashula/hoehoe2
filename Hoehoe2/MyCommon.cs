@@ -453,6 +453,12 @@ namespace Hoehoe
             }
         }
 
+        public static DateTime FromUnixTime(long unixTime)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return epoch.AddSeconds(unixTime);
+        }
+
         public static DateTime DateTimeParse(string input)
         {
             string[] format = { "ddd MMM dd HH:mm:ss zzzz yyyy" };

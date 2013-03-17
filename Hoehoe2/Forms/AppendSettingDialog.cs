@@ -1566,7 +1566,7 @@ namespace Hoehoe
 
         private void DisplayApiMaxCount()
         {
-            string v = (MyCommon.TwitterApiInfo.MaxCount > -1) ? MyCommon.TwitterApiInfo.MaxCount.ToString() : "???";
+            var v = (MyCommon.TwitterApiInfo.MaxCount > -1) ? MyCommon.TwitterApiInfo.MaxCount.ToString() : "???";
             LabelApiUsing.Text = string.Format(R.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, v);
         }
 

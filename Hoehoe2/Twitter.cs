@@ -3221,14 +3221,14 @@ namespace Hoehoe
             try
             {
                 var limit = D.CreateDataFromJson<RateLimitStatus>(content);
+                var homeLimit = limit.ResourcesLimit.Statuses.HomeTimelime;
                 var arg = new ApiInformationChangedEventArgs
                     {
                         ApiInfo =
                             {
-                                MaxCount = limit.HourlyLimit,
-                                RemainCount = limit.RemainingHits,
-                                ResetTime = MyCommon.DateTimeParse(limit.RestTime),
-                                ResetTimeInSeconds = limit.RestTimeInSeconds
+                                MaxCount = homeLimit.Limit,
+                                RemainCount = homeLimit.Remaining,
+                                ResetTime = MyCommon.FromUnixTime(homeLimit.Reset),
                             }
                     };
                 if (info != null)
