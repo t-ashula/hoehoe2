@@ -47,7 +47,7 @@ namespace Hoehoe.DataModels.Twitter
         public string InReplyToUserIdStr;
 
         [DataMember(Name = "retweet_count")]
-        public string RetweetCount;
+        public int RetweetCount;
 
         [DataMember(Name = "created_at")]
         public string CreatedAt;

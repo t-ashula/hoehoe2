@@ -1274,12 +1274,13 @@ namespace Hoehoe
 
             var content = string.Empty;
             retweetedCount = 0;
-            for (int i = 1; i <= 100; i++)
+            //for (int i = 1; i <= 100; i++)
             {
                 HttpStatusCode res;
                 try
                 {
-                    res = _twitterConnection.Statusid_retweeted_by_ids(statusId, 100, i, ref content);
+                    // res = _twitterConnection.Statusid_retweeted_by_ids(statusId, 100, i, ref content);
+                    res = _twitterConnection.ShowStatuses(statusId, ref content);
                 }
                 catch (Exception ex)
                 {
@@ -1291,12 +1292,9 @@ namespace Hoehoe
                     case HttpStatusCode.OK:
                         try
                         {
-                            var ids = D.CreateDataFromJson<long[]>(content);
-                            retweetedCount += ids.Length;
-                            if (ids.Length < 100)
-                            {
-                                // todo : what?
-                            }
+                            // var ids = D.CreateDataFromJson<long[]>(content);
+                            var status = D.CreateDataFromJson<Status>(content);
+                            retweetedCount = status.RetweetCount;
                         }
                         catch (SerializationException ex)
                         {

@@ -630,22 +630,6 @@ namespace Hoehoe
 
         #endregion
 
-        public HttpStatusCode Statusid_retweeted_by_ids(long statusid, int count, int page, ref string content)
-        {
-            var param = new Dictionary<string, string>();
-            if (count > 0)
-            {
-                param.Add("count", "" + count);
-            }
-
-            if (page > 0)
-            {
-                param.Add("page", "" + page);
-            }
-
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri(string.Format("/1/statuses/{0}/retweeted_by/ids.json", statusid)), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
-        }
-
         public HttpStatusCode UpdateProfile(string name, string url, string location, string description, ref string content)
         {
             var param = new Dictionary<string, string>
