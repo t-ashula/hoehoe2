@@ -643,9 +643,11 @@ namespace Hoehoe
         [Obsolete("no public api offered yet.")]
         public HttpStatusCode GetRelatedResults(long id, ref string content)
         {
-            // 認証なくても取得できるが、protectedユーザー分が抜ける
+            // official client only api '/1.1/conversation/show.json?id=:id'
+            // var apiuri = CreateTwitterUri("conversation", "show", "" + id);
+            var apiuri = CreateTwitterUri("related_results", "show", "" + id, true, twitterUrl, "1");
             var param = new Dictionary<string, string> { { "include_entities", "true" } };
-            return _httpCon.GetContent(GetMethod, CreateTwitterUri(string.Format("/1/related_results/show/{0}.json", id)), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
+            return _httpCon.GetContent(GetMethod, apiuri, param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
         public HttpStatusCode GetBlockUserIds(long cursor, ref string content)
