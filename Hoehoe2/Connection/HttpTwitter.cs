@@ -57,9 +57,7 @@ namespace Hoehoe
         private const string PostMethod = "POST";
         private const string GetMethod = "GET";
 
-        private static string protocol = "http://";
-        private static string twitterUrl = "api.twitter.com";
-        private static string twitterSearchUrl = "search.twitter.com";
+        private static string _twitterUrl = "api.twitter.com";
         private const string TwitterUserStreamUrl = "userstream.twitter.com";
         private const string TwitterStreamUrl = "stream.twitter.com";
 
@@ -68,21 +66,11 @@ namespace Hoehoe
         /// </summary>
         private IHttpConnection _httpCon;
 
-        private readonly HttpVarious _httpConVar = new HttpVarious();
-        private AuthMethod _connectionType = AuthMethod.Basic;
-
         // for OAuth
         private string _requestToken;
-
         private string _tk = string.Empty;
         private string _tks = string.Empty;
         private string _un = string.Empty;
-
-        private enum AuthMethod
-        {
-            OAuth,
-            Basic
-        }
 
         public string AccessToken
         {
@@ -105,6 +93,7 @@ namespace Hoehoe
             {
                 return _httpCon != null ? _httpCon.AuthUserId : 0;
             }
+
             set
             {
                 if (_httpCon != null)
@@ -119,26 +108,16 @@ namespace Hoehoe
             get { return string.Empty; }
         }
 
-        public static void SetUseSsl(bool useSsl)
-        {
-            protocol = useSsl ? "https://" : "http://";
-        }
-
         public static void SetTwitterUrl(string value)
         {
-            twitterUrl = value;
+            _twitterUrl = value;
             HttpOAuthApiProxy.SetProxyHost(value);
-        }
-
-        public static void SetTwitterSearchUrl(string value)
-        {
-            twitterSearchUrl = value;
         }
 
         public void Initialize(string accessToken, string accessTokenSecret, string username, long userId)
         {
             var con = new HttpOAuthApiProxy();
-            if (_tk != accessToken || _tks != accessTokenSecret || _un != username || _connectionType != AuthMethod.OAuth)
+            if (_tk != accessToken || _tks != accessTokenSecret || _un != username)
             {
                 // 以前の認証状態よりひとつでも変化があったらhttpヘッダより読み取ったカウントは初期化
                 _tk = accessToken;
@@ -148,7 +127,6 @@ namespace Hoehoe
 
             con.Initialize(ConsumerKey, ConsumerSecret, accessToken, accessTokenSecret, username, userId, "screen_name", "user_id");
             _httpCon = con;
-            _connectionType = AuthMethod.OAuth;
             _requestToken = string.Empty;
         }
 
@@ -180,7 +158,7 @@ namespace Hoehoe
             var param = new Dictionary<string, string>
                 {
                     { "status", status },
-                    { "include_entities", "true" }
+                    { "include_entities", "" + true }
                 };
             if (replyToId > 0)
             {
@@ -196,7 +174,7 @@ namespace Hoehoe
             var param = new Dictionary<string, string>
                 {
                     { "status", status },
-                    { "include_entities", "true" }
+                    { "include_entities", "" + true }
                 };
             if (replyToId > 0)
             {
@@ -232,13 +210,13 @@ namespace Hoehoe
 
         public HttpStatusCode RetweetStatus(long id, ref string content)
         {
-            var param = new Dictionary<string, string> { { "trim_user", "true" } };
+            var param = new Dictionary<string, string> { { "trim_user", "" + true } };
             return _httpCon.GetContent(PostMethod, CreateTwitterUri("statuses", "retweet", "" + id), param, ref content, null, null);
         }
 
         public HttpStatusCode ShowUserInfo(string screenName, ref string content)
         {
-            var param = new Dictionary<string, string> { { "screen_name", screenName }, { "include_entities", "true" } };
+            var param = new Dictionary<string, string> { { "screen_name", screenName }, { "include_entities", "" + true } };
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("users", "show"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -339,7 +317,7 @@ namespace Hoehoe
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("statuses", "home_timeline"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
-        public HttpStatusCode UserTimeline(long userID, string screenName, int count, long maxID, long sinceID, ref string content)
+        public HttpStatusCode UserTimeline(long userID, string screenName, int count, long maxId, long sinceId, ref string content)
         {
             if ((userID == 0 && string.IsNullOrEmpty(screenName)) || (userID != 0 && !string.IsNullOrEmpty(screenName)))
             {
@@ -368,14 +346,14 @@ namespace Hoehoe
                 param.Add("count", "" + count);
             }
 
-            if (maxID > 0)
+            if (maxId > 0)
             {
-                param.Add("max_id", "" + maxID);
+                param.Add("max_id", "" + maxId);
             }
 
-            if (sinceID > 0)
+            if (sinceId > 0)
             {
-                param.Add("since_id", "" + sinceID);
+                param.Add("since_id", "" + sinceId);
             }
 
             return _httpCon.GetContent(GetMethod, CreateTwitterUri("statuses", "user_timeline"), param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
@@ -409,7 +387,7 @@ namespace Hoehoe
 
         public HttpStatusCode DirectMessages(int count, long maxId, long sinceId, ref string content)
         {
-            var param = new Dictionary<string, string> { { "include_entities", "true" } };
+            var param = new Dictionary<string, string> { { "include_entities", "" + true } };
             if (count > 0)
             {
                 param.Add("count", "" + count);
@@ -451,7 +429,7 @@ namespace Hoehoe
 
         public HttpStatusCode Favorites(int count, int page, ref string content)
         {
-            var param = new Dictionary<string, string> { { "include_entities", "true" } };
+            var param = new Dictionary<string, string> { { "include_entities", "" + true } };
             if (count > 0)
             {
                 param.Add("count", "" + count);
@@ -645,8 +623,8 @@ namespace Hoehoe
         {
             // official client only api '/1.1/conversation/show.json?id=:id'
             // var apiuri = CreateTwitterUri("conversation", "show", "" + id);
-            var apiuri = CreateTwitterUri("related_results", "show", "" + id, true, twitterUrl, "1");
-            var param = new Dictionary<string, string> { { "include_entities", "true" } };
+            var apiuri = CreateTwitterUri("related_results", "show", "" + id, true, _twitterUrl, "1");
+            var param = new Dictionary<string, string> { { "include_entities", "" + true } };
             return _httpCon.GetContent(GetMethod, apiuri, param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -726,11 +704,6 @@ namespace Hoehoe
             }
             path = subject + path + ".json";
             return new Uri(schema + "//" + host + "/" + version + "/" + path);
-        }
-
-        private Uri CreateTwitterUri(string path)
-        {
-            return new Uri(string.Format("{0}{1}{2}", protocol, twitterUrl, path));
         }
 
         private Uri CreateTwitterUserStreamUri(string path)

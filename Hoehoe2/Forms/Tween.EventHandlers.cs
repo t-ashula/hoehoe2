@@ -1496,7 +1496,6 @@ namespace Hoehoe
 
             // 設定画面への反映
             HttpTwitter.SetTwitterUrl(_cfgCommon.TwitterUrl);
-            HttpTwitter.SetTwitterSearchUrl(_cfgCommon.TwitterSearchUrl);
             _configs.TwitterApiUrl = _cfgCommon.TwitterUrl;
             _configs.TwitterSearchApiUrl = _cfgCommon.TwitterSearchUrl;
 
@@ -1829,13 +1828,11 @@ namespace Hoehoe
 
             _tw.SetRestrictFavCheck(_configs.RestrictFavCheck);
             _tw.ReadOwnPost = _configs.ReadOwnPost;
-            _tw.SetUseSsl(_configs.UseSsl);
             ShortUrl.IsResolve = _configs.TinyUrlResolve;
             ShortUrl.IsForceResolve = _configs.ShortUrlForceResolve;
             ShortUrl.SetBitlyId(_configs.BitlyUser);
             ShortUrl.SetBitlyKey(_configs.BitlyPwd);
             HttpTwitter.SetTwitterUrl(_cfgCommon.TwitterUrl);
-            HttpTwitter.SetTwitterSearchUrl(_cfgCommon.TwitterSearchUrl);
             _tw.TrackWord = _cfgCommon.TrackWord;
             TrackToolStripMenuItem.Checked = !string.IsNullOrEmpty(_tw.TrackWord);
             _tw.AllAtReply = _cfgCommon.AllAtReply;

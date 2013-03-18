@@ -1669,12 +1669,6 @@ namespace Hoehoe
 
         #endregion "TODO:バージョンアップ"
 
-        public void SetUseSsl(bool value)
-        {
-            HttpTwitter.SetUseSsl(value);
-            _protocol = value ? "https://" : "http://";
-        }
-
         public string GetTimelineApi(bool read, WorkerType workerType, bool more, bool startup)
         {
             if (AccountState != AccountState.Valid)

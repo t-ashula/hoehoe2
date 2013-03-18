@@ -1497,7 +1497,6 @@ namespace Hoehoe
             // 通信基底クラス初期化
             HttpConnection.InitializeConnection(20, ptype, padr, pport, pusr, ppw);
             HttpTwitter.SetTwitterUrl(TwitterAPIText.Text.Trim());
-            HttpTwitter.SetTwitterSearchUrl(TwitterSearchAPIText.Text.Trim());
             _tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
             string pinPageUrl = string.Empty;
             string rslt = _tw.StartAuthentication(ref pinPageUrl);
