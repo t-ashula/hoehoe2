@@ -24,13 +24,13 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+
 namespace Hoehoe
 {
-    using System;
-    using System.IO;
-    using System.Security.Cryptography;
-    using System.Text;
-
     public static class CryptoUtils
     {
         public static string EncryptString(string str)
@@ -55,29 +55,25 @@ namespace Hoehoe
                 des.IV = ResizeBytesArray(bytesKey, des.IV.Length);
 
                 // 暗号化されたデータを書き出すためのMemoryStream
+                // DES暗号化オブジェクトの作成
+                // 書き込むためのCryptoStreamの作成
                 using (var memStream = new MemoryStream())
+                using (var desdecrypt = des.CreateEncryptor())
+                using (var cryptStream = new CryptoStream(memStream, desdecrypt, CryptoStreamMode.Write))
                 {
-                    // DES暗号化オブジェクトの作成
-                    using (var desdecrypt = des.CreateEncryptor())
-                    {
-                        // 書き込むためのCryptoStreamの作成
-                        using (var cryptStream = new CryptoStream(memStream, desdecrypt, CryptoStreamMode.Write))
-                        {
-                            // 書き込む
-                            cryptStream.Write(bytesIn, 0, bytesIn.Length);
-                            cryptStream.FlushFinalBlock();
+                    // 書き込む
+                    cryptStream.Write(bytesIn, 0, bytesIn.Length);
+                    cryptStream.FlushFinalBlock();
 
-                            // 暗号化されたデータを取得
-                            var bytesOut = memStream.ToArray();
+                    // 暗号化されたデータを取得
+                    var bytesOut = memStream.ToArray();
 
-                            // 閉じる
-                            cryptStream.Close();
-                            memStream.Close();
+                    // 閉じる
+                    cryptStream.Close();
+                    memStream.Close();
 
-                            // Base64で文字列に変更して結果を返す
-                            return Convert.ToBase64String(bytesOut);
-                        }
-                    }
+                    // Base64で文字列に変更して結果を返す
+                    return Convert.ToBase64String(bytesOut);
                 }
             }
         }
@@ -175,9 +171,9 @@ namespace Hoehoe
             else
             {
                 var pos = 0;
-                for (var i = 0; i < bytes.Length; i++)
+                foreach (var t in bytes)
                 {
-                    newBytes[pos] = (byte)(newBytes[pos] ^ bytes[i]);
+                    newBytes[pos] = (byte)(newBytes[pos] ^ t);
                     pos++;
                     if (pos >= newBytes.Length)
                     {
