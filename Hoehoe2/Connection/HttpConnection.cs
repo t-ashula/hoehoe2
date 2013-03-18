@@ -24,17 +24,18 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Drawing;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Net;
+using System.Text;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.Drawing;
-    using System.IO;
-    using System.IO.Compression;
-    using System.Net;
-    using System.Text;
-
     /// <summary>
     /// HttpWebRequest,HttpWebResponseを使用した基本的な通信機能を提供する
     /// </summary>
@@ -256,8 +257,7 @@ namespace Hoehoe
             }
 
             // methodはPOST,PUTのみ許可
-            var ub = new UriBuilder(requestUri.AbsoluteUri);
-            if (method == "GET" || method == "DELETE" || method == "HEAD")
+            if (!(method == "POST" || method == "PUT"))
             {
                 throw new ArgumentException("Method must be POST or PUT");
             }
@@ -267,6 +267,7 @@ namespace Hoehoe
                 throw new ArgumentException("Data is empty");
             }
 
+            var ub = new UriBuilder(requestUri.AbsoluteUri);
             var webReq = (HttpWebRequest)WebRequest.Create(ub.Uri);
 
             // プロキシ設定
@@ -276,136 +277,65 @@ namespace Hoehoe
             }
 
             webReq.Method = method;
-            if (method == "POST" || method == "PUT")
+            var boundary = string.Format("{0}", Environment.TickCount);
+            webReq.ContentType = "multipart/form-data; boundary=" + boundary;
+            using (var reqStream = webReq.GetRequestStream())
             {
-                string boundary = Environment.TickCount.ToString();
-                webReq.ContentType = "multipart/form-data; boundary=" + boundary;
-                using (Stream reqStream = webReq.GetRequestStream())
+                // POST送信する文字データを作成
+                if (param != null)
                 {
-                    // POST送信する文字データを作成
-                    if (param != null)
-                    {
-                        string postData = string.Empty;
-                        foreach (var kvp in param)
-                        {
-                            postData += string.Format("--{0}\r\nContent-Disposition: form-data; name=\"{1}\"\r\n\r\n{2}\r\n", boundary, kvp.Key, kvp.Value);
-                        }
-
-                        byte[] postBytes = Encoding.UTF8.GetBytes(postData);
-                        reqStream.Write(postBytes, 0, postBytes.Length);
-                    }
-
-                    // POST送信するバイナリデータを作成
-                    if (binaryFileInfo != null)
-                    {
-                        foreach (KeyValuePair<string, FileInfo> kvp in binaryFileInfo)
-                        {
-                            byte[] crlfByte = Encoding.UTF8.GetBytes("\r\n");
-
-                            // コンテンツタイプの指定
-                            string mime;
-                            switch (kvp.Value.Extension.ToLower())
-                            {
-                                case ".jpg":
-                                case ".jpeg":
-                                case ".jpe":
-                                    mime = "image/jpeg";
-                                    break;
-
-                                case ".gif":
-                                    mime = "image/gif";
-                                    break;
-
-                                case ".png":
-                                    mime = "image/png";
-                                    break;
-
-                                case ".tiff":
-                                case ".tif":
-                                    mime = "image/tiff";
-                                    break;
-
-                                case ".bmp":
-                                    mime = "image/x-bmp";
-                                    break;
-
-                                case ".avi":
-                                    mime = "video/avi";
-                                    break;
-
-                                case ".wmv":
-                                    mime = "video/x-ms-wmv";
-                                    break;
-
-                                case ".flv":
-                                    mime = "video/x-flv";
-                                    break;
-
-                                case ".m4v":
-                                    mime = "video/x-m4v";
-                                    break;
-
-                                case ".mov":
-                                    mime = "video/quicktime";
-                                    break;
-
-                                case ".mp4":
-                                    mime = "video/3gpp";
-                                    break;
-
-                                case ".rm":
-                                    mime = "application/vnd.rn-realmedia";
-                                    break;
-
-                                case ".mpeg":
-                                case ".mpg":
-                                    mime = "video/mpeg";
-                                    break;
-
-                                case ".3gp":
-                                    mime = "movie/3gp";
-                                    break;
-
-                                case ".3g2":
-                                    mime = "video/3gpp2";
-                                    break;
-
-                                default:
-                                    mime = "application/octet-stream" + "\r\n" + "Content-Transfer-Encoding: binary";
-                                    break;
-                            }
-
-                            string postData = "--" + boundary + "\r\n"
-                                              + "Content-Disposition: form-data; name=\"" + kvp.Key + "\"; filename=\"" + kvp.Value.Name + "\"" + "\r\n"
-                                              + "Content-Type: " + mime + "\r\n" + "\r\n";
-                            byte[] postBytes = Encoding.UTF8.GetBytes(postData);
-                            reqStream.Write(postBytes, 0, postBytes.Length);
-
-                            // ファイルを読み出してHTTPのストリームに書き込み
-                            using (var fs = new FileStream(kvp.Value.FullName, FileMode.Open, FileAccess.Read))
-                            {
-                                var readBytes = new byte[4097];
-                                while (true)
-                                {
-                                    int readSize = fs.Read(readBytes, 0, readBytes.Length);
-                                    if (readSize == 0)
-                                    {
-                                        break;
-                                    }
-
-                                    reqStream.Write(readBytes, 0, readSize);
-                                }
-                            }
-
-                            reqStream.Write(crlfByte, 0, crlfByte.Length);
-                        }
-                    }
-
-                    // 終端
-                    byte[] endBytes = Encoding.UTF8.GetBytes("--" + boundary + "--" + "\r\n");
-                    reqStream.Write(endBytes, 0, endBytes.Length);
-                    reqStream.Close();
+                    var postData = string.Join(
+                        string.Empty,
+                        param.Select(kvp => string.Format("--{0}\r\nContent-Disposition: form-data; name=\"{1}\"\r\n\r\n{2}\r\n", boundary, kvp.Key, kvp.Value)));
+                    var postBytes = Encoding.UTF8.GetBytes(postData);
+                    reqStream.Write(postBytes, 0, postBytes.Length);
                 }
+
+                // POST送信するバイナリデータを作成
+                if (binaryFileInfo != null)
+                {
+                    var crlfByte = Encoding.UTF8.GetBytes("\r\n");
+                    foreach (var kvp in binaryFileInfo)
+                    {
+                        // コンテンツタイプの指定
+                        var mime = GetMimeType(kvp.Value.Extension.ToLower());
+
+                        var postData = "--" + boundary + "\r\n"
+                                       + "Content-Disposition: form-data; name=\"" + kvp.Key + "\"; filename=\"" + kvp.Value.Name + "\"" + "\r\n"
+                                       + "Content-Type: " + mime + "\r\n";
+                        if (mime == "application/octet-stream")
+                        {
+                            postData += "Content-Transfer-Encoding: binary" + "\r\n";
+                        }
+
+                        postData += "\r\n";
+                        var postBytes = Encoding.UTF8.GetBytes(postData);
+                        reqStream.Write(postBytes, 0, postBytes.Length);
+
+                        // ファイルを読み出してHTTPのストリームに書き込み
+                        using (var fs = new FileStream(kvp.Value.FullName, FileMode.Open, FileAccess.Read))
+                        {
+                            var readBytes = new byte[4097];
+                            while (true)
+                            {
+                                int readSize = fs.Read(readBytes, 0, readBytes.Length);
+                                if (readSize == 0)
+                                {
+                                    break;
+                                }
+
+                                reqStream.Write(readBytes, 0, readSize);
+                            }
+                        }
+
+                        reqStream.Write(crlfByte, 0, crlfByte.Length);
+                    }
+                }
+
+                // 終端
+                var endBytes = Encoding.UTF8.GetBytes("--" + boundary + "--" + "\r\n");
+                reqStream.Write(endBytes, 0, endBytes.Length);
+                reqStream.Close();
             }
 
             // cookie設定
@@ -418,6 +348,83 @@ namespace Hoehoe
             webReq.Timeout = InstanceTimeout > 0 ? InstanceTimeout : DefaultTimeout;
 
             return webReq;
+        }
+
+        private static string GetMimeType(string extension)
+        {
+            string mime;
+            switch (extension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                case ".jpe":
+                    mime = "image/jpeg";
+                    break;
+
+                case ".gif":
+                    mime = "image/gif";
+                    break;
+
+                case ".png":
+                    mime = "image/png";
+                    break;
+
+                case ".tiff":
+                case ".tif":
+                    mime = "image/tiff";
+                    break;
+
+                case ".bmp":
+                    mime = "image/x-bmp";
+                    break;
+
+                case ".avi":
+                    mime = "video/avi";
+                    break;
+
+                case ".wmv":
+                    mime = "video/x-ms-wmv";
+                    break;
+
+                case ".flv":
+                    mime = "video/x-flv";
+                    break;
+
+                case ".m4v":
+                    mime = "video/x-m4v";
+                    break;
+
+                case ".mov":
+                    mime = "video/quicktime";
+                    break;
+
+                case ".mp4":
+                    mime = "video/3gpp";
+                    break;
+
+                case ".rm":
+                    mime = "application/vnd.rn-realmedia";
+                    break;
+
+                case ".mpeg":
+                case ".mpg":
+                    mime = "video/mpeg";
+                    break;
+
+                case ".3gp":
+                    mime = "movie/3gp";
+                    break;
+
+                case ".3g2":
+                    mime = "video/3gpp2";
+                    break;
+
+                default:
+                    mime = "application/octet-stream";
+                    break;
+            }
+
+            return mime;
         }
 
         /// <summary>
@@ -439,7 +446,7 @@ namespace Hoehoe
             {
                 using (var webRes = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    HttpStatusCode statusCode = webRes.StatusCode;
+                    var statusCode = webRes.StatusCode;
 
                     // cookie保持
                     if (withCookie)
@@ -456,7 +463,7 @@ namespace Hoehoe
                         // gzipなら応答ストリームの内容は伸張済み。それ以外なら伸張する。
                         if (webRes.ContentEncoding == "gzip" || webRes.ContentEncoding == "deflate")
                         {
-                            using (Stream stream = webRes.GetResponseStream())
+                            using (var stream = webRes.GetResponseStream())
                             {
                                 if (stream != null)
                                 {
@@ -512,7 +519,7 @@ namespace Hoehoe
             {
                 using (var webRes = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    HttpStatusCode statusCode = webRes.StatusCode;
+                    var statusCode = webRes.StatusCode;
 
                     // cookie保持
                     if (withCookie)
@@ -697,12 +704,12 @@ namespace Hoehoe
         /// <returns>エンコード結果文字列</returns>
         protected string UrlEncode(string stringToEncode)
         {
-            const string unreservedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
+            const string UnreservedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
             var sb = new StringBuilder();
             byte[] bytes = Encoding.UTF8.GetBytes(stringToEncode);
             foreach (byte b in bytes)
             {
-                if (unreservedChars.IndexOf((char)b) != -1)
+                if (UnreservedChars.IndexOf((char)b) != -1)
                 {
                     sb.Append((char)b);
                 }
