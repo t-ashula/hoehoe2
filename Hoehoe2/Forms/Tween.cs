@@ -285,13 +285,13 @@ namespace Hoehoe
             Microsoft.Win32.SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
         }
 
-        #endregion constructor
+        #endregion
 
         #region delegates
 
         public delegate void SetStatusLabelApiDelegate();
 
-        #endregion delegates
+        #endregion
 
         #region properties
 
@@ -339,7 +339,7 @@ namespace Hoehoe
             get { return _curPost != null && !_curPost.IsDeleted; }
         }
 
-        #endregion properties
+        #endregion
 
         #region public methods
 

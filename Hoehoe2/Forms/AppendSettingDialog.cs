@@ -24,17 +24,18 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
+using R = Hoehoe.Properties.Resources;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Drawing;
-    using System.Linq;
-    using System.Threading;
-    using System.Windows.Forms;
-    using R = Properties.Resources;
-
     public partial class AppendSettingDialog
     {
         #region privates
@@ -1484,23 +1485,25 @@ namespace Hoehoe
         private bool StartAuth()
         {
             // 現在の設定内容で通信
-            HttpConnection.ProxyType ptype =
-                RadioProxyNone.Checked ? HttpConnection.ProxyType.None :
-                RadioProxyIE.Checked ? HttpConnection.ProxyType.IE :
-                HttpConnection.ProxyType.Specified;
+            var ptype =
+                RadioProxyNone.Checked
+                ? HttpConnection.ProxyType.None
+                : RadioProxyIE.Checked
+                    ? HttpConnection.ProxyType.IE
+                    : HttpConnection.ProxyType.Specified;
 
-            string padr = TextProxyAddress.Text.Trim();
-            int pport = int.Parse(TextProxyPort.Text.Trim());
-            string pusr = TextProxyUser.Text.Trim();
-            string ppw = TextProxyPassword.Text.Trim();
+            var padr = TextProxyAddress.Text.Trim();
+            var pport = int.Parse(TextProxyPort.Text.Trim());
+            var pusr = TextProxyUser.Text.Trim();
+            var ppw = TextProxyPassword.Text.Trim();
 
             // 通信基底クラス初期化
             HttpConnection.InitializeConnection(20, ptype, padr, pport, pusr, ppw);
             HttpTwitter.SetTwitterUrl(TwitterAPIText.Text.Trim());
             HttpTwitter.SetTwitterSearchUrl(TwitterSearchAPIText.Text.Trim());
             _tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
-            string pinPageUrl = string.Empty;
-            string rslt = _tw.StartAuthentication(ref pinPageUrl);
+            var pinPageUrl = string.Empty;
+            var rslt = _tw.StartAuthentication(ref pinPageUrl);
             if (!string.IsNullOrEmpty(rslt))
             {
                 MessageBox.Show(R.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
@@ -1509,8 +1512,7 @@ namespace Hoehoe
 
             using (var ab = new AuthBrowser())
             {
-                ab.IsAuthorized = true;
-                ab.UrlString = pinPageUrl;
+                Process.Start(pinPageUrl);
                 if (ab.ShowDialog(this) == DialogResult.OK)
                 {
                     _pin = ab.PinString;

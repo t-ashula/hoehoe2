@@ -155,7 +155,7 @@ namespace Hoehoe
         public bool AuthGetRequestToken(out string content)
         {
             Uri authUri;
-            bool result = ((HttpOAuthApiProxy)_httpCon).AuthenticatePinFlowRequest(RequestTokenUrl, AuthorizeUrl, ref _requestToken, out authUri);
+            var result = ((HttpOAuthApiProxy)_httpCon).AuthenticatePinFlowRequest(RequestTokenUrl, AuthorizeUrl, ref _requestToken, out authUri);
             content = authUri == null ? string.Empty : authUri.ToString();
             return result;
         }

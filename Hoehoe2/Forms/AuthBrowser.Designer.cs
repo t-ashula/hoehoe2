@@ -1,11 +1,11 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Windows.Forms;
-
     partial class AuthBrowser : System.Windows.Forms.Form
     {
         //フォームがコンポーネントの一覧をクリーンアップするために dispose をオーバーライドします。
@@ -33,131 +33,103 @@ namespace Hoehoe
         //コード エディターを使って変更しないでください。
         private void InitializeComponent()
         {
-            this.Panel1 = new System.Windows.Forms.Panel();
-            this.AddressLabel = new System.Windows.Forms.Label();
-            this.AuthWebBrowser = new System.Windows.Forms.WebBrowser();
-            this.Panel2 = new System.Windows.Forms.Panel();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.Label1 = new System.Windows.Forms.Label();
-            this.PinText = new System.Windows.Forms.TextBox();
             this.NextButton = new System.Windows.Forms.Button();
-            this.Panel2.SuspendLayout();
+            this.PinText = new System.Windows.Forms.TextBox();
+            this.Label1 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // Panel1
-            // 
-            this.Panel1.AutoSize = true;
-            this.Panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Panel1.Location = new System.Drawing.Point(0, 22);
-            this.Panel1.Name = "Panel1";
-            this.Panel1.Size = new System.Drawing.Size(773, 0);
-            this.Panel1.TabIndex = 0;
-            // 
-            // AddressLabel
-            // 
-            this.AddressLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.AddressLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AddressLabel.Location = new System.Drawing.Point(0, 0);
-            this.AddressLabel.Name = "AddressLabel";
-            this.AddressLabel.Size = new System.Drawing.Size(531, 22);
-            this.AddressLabel.TabIndex = 0;
-            this.AddressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // AuthWebBrowser
-            // 
-            this.AuthWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AuthWebBrowser.Location = new System.Drawing.Point(0, 22);
-            this.AuthWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.AuthWebBrowser.Name = "AuthWebBrowser";
-            this.AuthWebBrowser.Size = new System.Drawing.Size(773, 540);
-            this.AuthWebBrowser.TabIndex = 1;
-            this.AuthWebBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.AuthWebBrowser_DocumentCompleted);
-            this.AuthWebBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.AuthWebBrowser_Navigating);
-            // 
-            // Panel2
-            // 
-            this.Panel2.Controls.Add(this.cancelButton);
-            this.Panel2.Controls.Add(this.AddressLabel);
-            this.Panel2.Controls.Add(this.Label1);
-            this.Panel2.Controls.Add(this.PinText);
-            this.Panel2.Controls.Add(this.NextButton);
-            this.Panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Panel2.Location = new System.Drawing.Point(0, 0);
-            this.Panel2.Name = "Panel2";
-            this.Panel2.Size = new System.Drawing.Size(773, 22);
-            this.Panel2.TabIndex = 2;
             // 
             // cancelButton
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(536, 32);
+            this.cancelButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cancelButton.Location = new System.Drawing.Point(256, 83);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 15);
+            this.cancelButton.Size = new System.Drawing.Size(120, 27);
             this.cancelButton.TabIndex = 3;
             this.cancelButton.TabStop = false;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.Cancel_Click);
             // 
-            // Label1
-            // 
-            this.Label1.AutoSize = true;
-            this.Label1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.Label1.Location = new System.Drawing.Point(531, 0);
-            this.Label1.Name = "Label1";
-            this.Label1.Padding = new System.Windows.Forms.Padding(3);
-            this.Label1.Size = new System.Drawing.Size(29, 18);
-            this.Label1.TabIndex = 0;
-            this.Label1.Text = "PIN";
-            // 
-            // PinText
-            // 
-            this.PinText.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PinText.Location = new System.Drawing.Point(560, 0);
-            this.PinText.Name = "PinText";
-            this.PinText.Size = new System.Drawing.Size(138, 19);
-            this.PinText.TabIndex = 1;
-            // 
             // NextButton
             // 
-            this.NextButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.NextButton.Location = new System.Drawing.Point(698, 0);
+            this.NextButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NextButton.Location = new System.Drawing.Point(130, 83);
             this.NextButton.Name = "NextButton";
-            this.NextButton.Size = new System.Drawing.Size(75, 22);
-            this.NextButton.TabIndex = 2;
-            this.NextButton.Text = "Finish";
+            this.NextButton.Size = new System.Drawing.Size(120, 27);
+            this.NextButton.TabIndex = 4;
+            this.NextButton.Text = "OK";
             this.NextButton.UseVisualStyleBackColor = true;
             this.NextButton.Click += new System.EventHandler(this.NextButton_Click);
             // 
+            // PinText
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.PinText, 4);
+            this.PinText.Font = new System.Drawing.Font("MS UI Gothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.PinText.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.PinText.Location = new System.Drawing.Point(30, 45);
+            this.PinText.Margin = new System.Windows.Forms.Padding(30, 5, 30, 5);
+            this.PinText.Name = "PinText";
+            this.PinText.Size = new System.Drawing.Size(300, 26);
+            this.PinText.TabIndex = 5;
+            // 
+            // Label1
+            // 
+            this.Label1.AutoSize = true;
+            this.Label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label1.Location = new System.Drawing.Point(3, 0);
+            this.Label1.Name = "Label1";
+            this.Label1.Padding = new System.Windows.Forms.Padding(3);
+            this.Label1.Size = new System.Drawing.Size(81, 40);
+            this.Label1.TabIndex = 6;
+            this.Label1.Text = "PIN";
+            this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 4;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 87F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 126F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 107F));
+            this.tableLayoutPanel1.Controls.Add(this.NextButton, 2, 2);
+            this.tableLayoutPanel1.Controls.Add(this.Label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.cancelButton, 3, 2);
+            this.tableLayoutPanel1.Controls.Add(this.PinText, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(379, 113);
+            this.tableLayoutPanel1.TabIndex = 7;
+            // 
             // AuthBrowser
             // 
-            this.AcceptButton = this.NextButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(773, 562);
-            this.Controls.Add(this.AuthWebBrowser);
-            this.Controls.Add(this.Panel1);
-            this.Controls.Add(this.Panel2);
+            this.ClientSize = new System.Drawing.Size(379, 113);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AuthBrowser";
             this.ShowIcon = false;
-            this.Text = "Browser";
-            this.Load += new System.EventHandler(this.AuthBrowser_Load);
-            this.Panel2.ResumeLayout(false);
-            this.Panel2.PerformLayout();
+            this.Text = "OAuth PIN Dialog";
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
-
         }
-        internal System.Windows.Forms.Panel Panel1;
-        internal System.Windows.Forms.WebBrowser AuthWebBrowser;
-        internal System.Windows.Forms.Label AddressLabel;
-        internal System.Windows.Forms.Panel Panel2;
-        internal System.Windows.Forms.Button NextButton;
-        internal System.Windows.Forms.Label Label1;
-        internal System.Windows.Forms.TextBox PinText;
-        internal System.Windows.Forms.Button cancelButton;
+
+        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Button NextButton;
+        private System.Windows.Forms.TextBox PinText;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Label Label1;
     }
 }

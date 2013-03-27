@@ -24,20 +24,13 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Windows.Forms;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Text.RegularExpressions;
-    using System.Windows.Forms;
-
     public partial class AuthBrowser
     {
-        #region private fields
-
-        private InternetSecurityManager _securityManager;
-
-        #endregion private fields
-
         #region constructor
 
         public AuthBrowser()
@@ -45,50 +38,17 @@ namespace Hoehoe
             InitializeComponent();
         }
 
-        #endregion constructor
+        #endregion
 
         #region properties
 
-        public string UrlString { get; set; }
+        public string PinRequestUrl { get; set; }
 
         public string PinString { get; set; }
 
-        public bool IsAuthorized { get; set; }
-
-        #endregion properties
+        #endregion
 
         #region event handler
-
-        private void AuthWebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-            if (AuthWebBrowser.Url.OriginalString != "https://api.twitter.com/oauth/authorize")
-            {
-                return;
-            }
-            var rg = new Regex("<code>(\\d+)</code>");
-            var m = rg.Match(AuthWebBrowser.DocumentText);
-            if (!m.Success) return;
-            PinText.Text = PinString = m.Result("${1}");
-            PinText.Focus();
-        }
-
-        private void AuthBrowser_Load(object sender, EventArgs e)
-        {
-            _securityManager = new InternetSecurityManager(AuthWebBrowser);
-            AuthWebBrowser.Navigate(new Uri(UrlString));
-            if (IsAuthorized)
-            {
-                return;
-            }
-
-            Label1.Visible = false;
-            PinText.Visible = false;
-        }
-
-        private void AuthWebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
-        {
-            AddressLabel.Text = e.Url.OriginalString;
-        }
 
         private void NextButton_Click(object sender, EventArgs e)
         {
@@ -102,6 +62,6 @@ namespace Hoehoe
             DialogResult = DialogResult.Cancel;
         }
 
-        #endregion event handler
+        #endregion
     }
 }
