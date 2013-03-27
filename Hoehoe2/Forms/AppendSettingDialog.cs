@@ -1135,12 +1135,9 @@ namespace Hoehoe
 
         private void StartAuthButton_Click(object sender, EventArgs e)
         {
-            if (StartAuth())
+            if (StartAuth() && PinAuth())
             {
-                if (PinAuth())
-                {
-                    CalcApiUsing();
-                }
+                CalcApiUsing();
             }
         }
 
@@ -1188,8 +1185,8 @@ namespace Hoehoe
         private void HotkeyText_KeyDown(object sender, KeyEventArgs e)
         {
             // KeyValueで判定する。表示文字とのテーブルを用意すること
-            HotkeyText.Text = e.KeyCode.ToString();
-            HotkeyCode.Text = e.KeyValue.ToString();
+            HotkeyText.Text = "" + e.KeyCode;
+            HotkeyCode.Text = "" + e.KeyValue;
             HotkeyText.Tag = e.KeyCode;
             e.Handled = true;
             e.SuppressKeyPress = true;
@@ -1408,16 +1405,15 @@ namespace Hoehoe
         private void ChangeLabelColor(Label lb, bool back = true)
         {
             var c = back ? lb.BackColor : lb.ForeColor;
-            if (TrySelectColor(ref c))
+            if (!TrySelectColor(ref c)) return;
+
+            if (back)
             {
-                if (back)
-                {
-                    lb.BackColor = c;
-                }
-                else
-                {
-                    lb.ForeColor = c;
-                }
+                lb.BackColor = c;
+            }
+            else
+            {
+                lb.ForeColor = c;
             }
         }
 
@@ -1485,8 +1481,7 @@ namespace Hoehoe
         private bool StartAuth()
         {
             // 現在の設定内容で通信
-            var ptype =
-                RadioProxyNone.Checked
+            var ptype = RadioProxyNone.Checked
                 ? HttpConnection.ProxyType.None
                 : RadioProxyIE.Checked
                     ? HttpConnection.ProxyType.IE
@@ -1500,7 +1495,6 @@ namespace Hoehoe
             // 通信基底クラス初期化
             HttpConnection.InitializeConnection(20, ptype, padr, pport, pusr, ppw);
             HttpTwitter.SetTwitterUrl(TwitterAPIText.Text.Trim());
-            HttpTwitter.SetTwitterSearchUrl(TwitterSearchAPIText.Text.Trim());
             _tw.Initialize(string.Empty, string.Empty, string.Empty, 0);
             var pinPageUrl = string.Empty;
             var rslt = _tw.StartAuthentication(ref pinPageUrl);
@@ -1525,15 +1519,16 @@ namespace Hoehoe
 
         private bool PinAuth()
         {
-            string pin = _pin;
-            string rslt = _tw.Authenticate(pin);
+            var pin = _pin;
+            var rslt = _tw.Authenticate(pin);
+            const string Caption = "Authenticate";
             if (!string.IsNullOrEmpty(rslt))
             {
-                MessageBox.Show(R.AuthorizeButton_Click2 + Environment.NewLine + rslt, "Authenticate", MessageBoxButtons.OK);
+                MessageBox.Show(R.AuthorizeButton_Click2 + Environment.NewLine + rslt, Caption, MessageBoxButtons.OK);
                 return false;
             }
 
-            MessageBox.Show(R.AuthorizeButton_Click1, "Authenticate", MessageBoxButtons.OK);
+            MessageBox.Show(R.AuthorizeButton_Click1, Caption, MessageBoxButtons.OK);
             int idx = -1;
             var user = new UserAccount
             {
@@ -1568,7 +1563,7 @@ namespace Hoehoe
 
         private void DisplayApiMaxCount()
         {
-            var v = (MyCommon.TwitterApiInfo.MaxCount > -1) ? MyCommon.TwitterApiInfo.MaxCount.ToString() : "???";
+            var v = (MyCommon.TwitterApiInfo.MaxCount > -1) ? "" + MyCommon.TwitterApiInfo.MaxCount : "???";
             LabelApiUsing.Text = string.Format(R.SettingAPIUse1, MyCommon.TwitterApiInfo.UsingCount, v);
         }
 
@@ -1690,10 +1685,9 @@ namespace Hoehoe
             }
 
             // TODO: BitlyApi
-            string req = "http://api.bit.ly/v3/validate";
-            string content = string.Empty;
+            const string BitLyV3URL = "http://api.bit.ly/v3/validate";
             var param = new Dictionary<string, string>
-                {
+            {
                 { "login", "tweenapi" },
                 { "apiKey", "R_c5ee0e30bdfff88723c4457cc331886b" },
                 { "x_login", id },
@@ -1701,7 +1695,8 @@ namespace Hoehoe
                 { "format", "txt" }
             };
 
-            if (!(new HttpVarious()).PostData(req, param, ref content))
+            var content = string.Empty;
+            if (!(new HttpVarious()).PostData(BitLyV3URL, param, ref content))
             {
                 // 通信エラーの場合はとりあえずチェックを通ったことにする
                 return true;

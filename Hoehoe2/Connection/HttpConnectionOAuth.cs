@@ -24,17 +24,17 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Net;
-    using System.Security.Cryptography;
-    using System.Text;
-
     /// <summary>
     /// OAuth認証を使用するHTTP通信。HMAC-SHA1固定
     /// </summary>
@@ -194,12 +194,12 @@ namespace Hoehoe
                 return HttpStatusCode.Unauthorized;
             }
 
-            HttpWebRequest webReq = CreateRequest(method, requestUri, param, false);
+            var webReq = CreateRequest(method, requestUri, param, false);
 
             // OAuth認証ヘッダを付加
             AppendOAuthInfo(webReq, param, _token, _tokenSecret);
 
-            HttpStatusCode code = content == null ?
+            var code = content == null ?
                 GetResponse(webReq, headerInfo, false) :
                 GetResponse(webReq, ref content, headerInfo, false);
 
@@ -223,12 +223,12 @@ namespace Hoehoe
                 return HttpStatusCode.Unauthorized;
             }
 
-            HttpWebRequest webReq = CreateRequest(method, requestUri, param, binary, false);
+            var webReq = CreateRequest(method, requestUri, param, binary, false);
 
             // OAuth認証ヘッダを付加
             AppendOAuthInfo(webReq, null, _token, _tokenSecret);
 
-            HttpStatusCode code = content == null ?
+            var code = content == null ?
                 GetResponse(webReq, headerInfo, false) :
                 GetResponse(webReq, ref content, headerInfo, false);
 
@@ -342,14 +342,14 @@ namespace Hoehoe
             }
 
             // アクセストークン取得
-            string content = string.Empty;
-            HttpStatusCode httpCode = GetOAuthToken(new Uri(accessTokenUrl), pinCode, requestToken, null, ref content);
+            var content = string.Empty;
+            var httpCode = GetOAuthToken(new Uri(accessTokenUrl), pinCode, requestToken, null, ref content);
             if (httpCode != HttpStatusCode.OK)
             {
                 return httpCode;
             }
 
-            NameValueCollection accessTokenData = ParseQueryString(content);
+            var accessTokenData = ParseQueryString(content);
             if (accessTokenData == null)
             {
                 throw new InvalidDataException("Return value is null.");
@@ -363,7 +363,11 @@ namespace Hoehoe
                 string.Empty :
                 accessTokenData[_userIdentKey];
 
-            if (!string.IsNullOrEmpty(_userIdIdentKey))
+            if (string.IsNullOrEmpty(_userIdIdentKey))
+            {
+                _authorizedUserId = 0;
+            }
+            else
             {
                 try
                 {
@@ -373,10 +377,6 @@ namespace Hoehoe
                 {
                     _authorizedUserId = 0;
                 }
-            }
-            else
-            {
-                _authorizedUserId = 0;
             }
 
             if (string.IsNullOrEmpty(_token))
@@ -412,13 +412,13 @@ namespace Hoehoe
                 };
 
             // アクセストークン取得
-            HttpStatusCode httpCode = GetOAuthToken(accessTokenUrl, string.Empty, string.Empty, parameter, ref content);
+            var httpCode = GetOAuthToken(accessTokenUrl, string.Empty, string.Empty, parameter, ref content);
             if (httpCode != HttpStatusCode.OK)
             {
                 return httpCode;
             }
 
-            NameValueCollection accessTokenData = ParseQueryString(content);
+            var accessTokenData = ParseQueryString(content);
             if (accessTokenData == null)
             {
                 throw new InvalidDataException("Return value is null.");
@@ -432,7 +432,11 @@ namespace Hoehoe
                 string.Empty :
                 accessTokenData[_userIdentKey];
 
-            if (!string.IsNullOrEmpty(_userIdIdentKey))
+            if (string.IsNullOrEmpty(_userIdIdentKey))
+            {
+                _authorizedUserId = 0;
+            }
+            else
             {
                 try
                 {
@@ -442,10 +446,6 @@ namespace Hoehoe
                 {
                     _authorizedUserId = 0;
                 }
-            }
-            else
-            {
-                _authorizedUserId = 0;
             }
 
             if (string.IsNullOrEmpty(_token))
@@ -479,12 +479,12 @@ namespace Hoehoe
         protected virtual void AppendOAuthInfo(HttpWebRequest webRequest, Dictionary<string, string> query, string token, string tokenSecret)
         {
             // OAuth共通情報取得
-            Dictionary<string, string> parameter = GetOAuthParameter(token);
+            var parameter = GetOAuthParameter(token);
 
             // OAuth共通情報にquery情報を追加
             if (query != null)
             {
-                foreach (KeyValuePair<string, string> item in query)
+                foreach (var item in query)
                 {
                     parameter.Add(item.Key, item.Value);
                 }
@@ -494,14 +494,11 @@ namespace Hoehoe
             parameter.Add("oauth_signature", CreateSignature(tokenSecret, webRequest.Method, webRequest.RequestUri, parameter));
 
             // HTTPリクエストのヘッダに追加
+            // 各種情報のうち、oauth_で始まる情報のみ、ヘッダに追加する。各情報はカンマ区切り、データはダブルクォーテーションで括る
             var sb = new StringBuilder("OAuth ");
-            foreach (KeyValuePair<string, string> item in parameter)
+            foreach (var item in parameter.Where(item => item.Key.StartsWith("oauth_")))
             {
-                // 各種情報のうち、oauth_で始まる情報のみ、ヘッダに追加する。各情報はカンマ区切り、データはダブルクォーテーションで括る
-                if (item.Key.StartsWith("oauth_"))
-                {
-                    sb.AppendFormat("{0}=\"{1}\",", item.Key, UrlEncode(item.Value));
-                }
+                sb.AppendFormat("{0}=\"{1}\",", item.Key, UrlEncode(item.Value));
             }
 
             webRequest.Headers.Add(HttpRequestHeader.Authorization, sb.ToString());
@@ -518,8 +515,8 @@ namespace Hoehoe
                 {
                     { "oauth_consumer_key", _consumerKey },
                     { "oauth_signature_method", "HMAC-SHA1" },
-                    { "oauth_timestamp", Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds).ToString() },
-                    { "oauth_nonce", NonceRandom.Next(123400, 9999999).ToString() },
+                    { "oauth_timestamp", "" + Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds) },
+                    { "oauth_nonce", "" + NonceRandom.Next(123400, 9999999) },
                     { "oauth_version", "1.0" }
                 };
 
@@ -546,16 +543,16 @@ namespace Hoehoe
             var sorted = new SortedDictionary<string, string>(parameter);
 
             // URLエンコード済みのクエリ形式文字列に変換
-            string paramString = CreateQueryString(sorted);
+            var paramString = CreateQueryString(sorted);
 
             // アクセス先URLの整形
-            string url = string.Format("{0}://{1}{2}", uri.Scheme, uri.Host, uri.AbsolutePath);
+            var url = string.Format("{0}://{1}{2}", uri.Scheme, uri.Host, uri.AbsolutePath);
 
             // 署名のベース文字列生成（&区切り）。クエリ形式文字列は再エンコードする
-            string signatureBase = string.Format("{0}&{1}&{2}", method, UrlEncode(url), UrlEncode(paramString));
+            var signatureBase = string.Format("{0}&{1}&{2}", method, UrlEncode(url), UrlEncode(paramString));
 
             // 署名鍵の文字列をコンシューマー秘密鍵とアクセストークン秘密鍵から生成（&区切り。アクセストークン秘密鍵なくても&残すこと）
-            string key = UrlEncode(_consumerSecret) + "&";
+            var key = UrlEncode(_consumerSecret) + "&";
             if (!string.IsNullOrEmpty(_tokenSecret))
             {
                 key += UrlEncode(_tokenSecret);
@@ -577,25 +574,25 @@ namespace Hoehoe
         /// <returns>取得結果真偽値</returns>
         private Uri GetAuthenticatePageUri(string requestTokenUrl, string authorizeUrl, ref string requestToken)
         {
-            const string tokenKey = "oauth_token";
+            const string TokenKey = "oauth_token";
 
             // リクエストトークン取得
-            string content = string.Empty;
+            var content = string.Empty;
             if (GetOAuthToken(new Uri(requestTokenUrl), string.Empty, string.Empty, null, ref content) != HttpStatusCode.OK)
             {
                 return null;
             }
 
-            NameValueCollection reqTokenData = ParseQueryString(content);
+            var reqTokenData = ParseQueryString(content);
             if (reqTokenData == null)
             {
                 return null;
             }
 
-            requestToken = reqTokenData[tokenKey];
+            requestToken = reqTokenData[TokenKey];
 
             // Uri生成
-            return new UriBuilder(authorizeUrl) { Query = string.Format("{0}={1}", tokenKey, requestToken) }.Uri;
+            return new UriBuilder(authorizeUrl) { Query = string.Format("{0}={1}", TokenKey, requestToken) }.Uri;
         }
 
         /// <summary>
@@ -626,7 +623,7 @@ namespace Hoehoe
             var query = new Dictionary<string, string>();
             if (parameter != null)
             {
-                foreach (KeyValuePair<string, string> kvp in parameter)
+                foreach (var kvp in parameter)
                 {
                     query.Add(kvp.Key, kvp.Value);
                 }
@@ -643,7 +640,7 @@ namespace Hoehoe
 
             // HTTP応答取得
             var header = new Dictionary<string, string> { { "Date", string.Empty } };
-            HttpStatusCode responseCode = GetResponse(webReq, ref content, header, false);
+            var responseCode = GetResponse(webReq, ref content, header, false);
             if (responseCode == HttpStatusCode.OK)
             {
                 return responseCode;

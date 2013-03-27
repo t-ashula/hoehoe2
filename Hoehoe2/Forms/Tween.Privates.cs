@@ -5678,13 +5678,11 @@ namespace Hoehoe
                 _tw.SetTinyUrlResolve(_configs.TinyUrlResolve);
                 _tw.SetRestrictFavCheck(_configs.RestrictFavCheck);
                 _tw.ReadOwnPost = _configs.ReadOwnPost;
-                _tw.SetUseSsl(_configs.UseSsl);
                 ShortUrl.IsResolve = _configs.TinyUrlResolve;
                 ShortUrl.IsForceResolve = _configs.ShortUrlForceResolve;
                 ShortUrl.SetBitlyId(_configs.BitlyUser);
                 ShortUrl.SetBitlyKey(_configs.BitlyPwd);
                 HttpTwitter.SetTwitterUrl(_cfgCommon.TwitterUrl);
-                HttpTwitter.SetTwitterSearchUrl(_cfgCommon.TwitterSearchUrl);
                 HttpConnection.InitializeConnection(_configs.DefaultTimeOut, _configs.SelectedProxyType, _configs.ProxyAddress, _configs.ProxyPort, _configs.ProxyUser, _configs.ProxyPassword);
                 CreatePictureServices();
                 try

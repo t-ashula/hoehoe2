@@ -64,8 +64,8 @@ namespace Hoehoe
                 return false;
             }
 
-            // property="og:image" content="http://images.miil.me/i/6578fe8a-d4b8-11e1-aa7d-123143016634.jpg=s480"
-            var thummc = Regex.Match(src, "property=\"og:image\" content=\"([^\"]+)\"", RegexOptions.IgnoreCase);
+            // name="twitter:image" content="http://images.miil.me/i/ab9f8cd6-9500-11e2-97f8-123143016634.jpg"
+            var thummc = Regex.Match(src, "name=\"twitter:image\" content=\"([^\"]+)\"", RegexOptions.IgnoreCase);
             if (!thummc.Success)
             {
                 return false;
@@ -81,6 +81,7 @@ namespace Hoehoe
             args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
         }
-        #endregion "MiilMe"
+
+        #endregion
     }
 }
