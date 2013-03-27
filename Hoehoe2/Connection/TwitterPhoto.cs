@@ -24,11 +24,11 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.IO;
+
 namespace Hoehoe
 {
-    using System;
-    using System.IO;
-
     public class TwitterPhoto : IMultimediaShareService
     {
         private const long MaxfilesizeDefault = 3145728;        // help/configurationにより取得されコンストラクタへ渡される

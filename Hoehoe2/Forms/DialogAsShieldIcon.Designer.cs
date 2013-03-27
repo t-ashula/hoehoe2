@@ -1,10 +1,12 @@
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Windows.Forms;
 
     partial class DialogAsShieldIcon : System.Windows.Forms.Form
     {
@@ -105,11 +107,11 @@ namespace Hoehoe
             this.PerformLayout();
 
         }
-        internal System.Windows.Forms.TableLayoutPanel TableLayoutPanel1;
-        internal System.Windows.Forms.Button okButton;
-        internal System.Windows.Forms.Button cancelButton;
-        internal System.Windows.Forms.PictureBox PictureBox1;
-        internal System.Windows.Forms.Label Label1;
-        internal System.Windows.Forms.TextBox TextDetail;
+        private System.Windows.Forms.TableLayoutPanel TableLayoutPanel1;
+        private System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.PictureBox PictureBox1;
+        private System.Windows.Forms.Label Label1;
+        private System.Windows.Forms.TextBox TextDetail;
     }
 }

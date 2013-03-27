@@ -39,7 +39,7 @@ namespace Hoehoe
             InitializeComponent();
         }
 
-        #endregion constructor
+        #endregion
 
         #region event handler
 
@@ -58,7 +58,7 @@ namespace Hoehoe
             OKButton.Focus();
         }
 
-        #endregion event handler
+        #endregion
 
         #region privates
 
@@ -78,6 +78,6 @@ namespace Hoehoe
             TextBoxDescription.Text = R.Description;
         }
 
-        #endregion privates
+        #endregion
     }
 }

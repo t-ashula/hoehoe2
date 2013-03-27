@@ -64,7 +64,7 @@ namespace Hoehoe
                 return false;
             }
 
-            // 	<meta property="og:image"  content="http://cdn.streamzoo.com/si_5790766_p194egkoms_lr.jpg" /> 
+            // 	<meta property="og:image"  content="http://cdn.streamzoo.com/si_5790766_p194egkoms_lr.jpg" />
             var thummc = Regex.Match(src, "property=\"og:image\"(?: *)content=\"([^\"]+)\"", RegexOptions.IgnoreCase);
             if (!thummc.Success)
             {
@@ -81,6 +81,7 @@ namespace Hoehoe
             args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
         }
-        #endregion "StreamZoo"
+
+        #endregion
     }
 }

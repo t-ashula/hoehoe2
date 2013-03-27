@@ -45,7 +45,7 @@ namespace Hoehoe
         private readonly List<string> _idList = new List<string>();
         private readonly TabsDialog _tabDialog = new TabsDialog(true);
 
-        #endregion privates
+        #endregion
 
         #region constructor
 
@@ -54,7 +54,7 @@ namespace Hoehoe
             InitializeComponent();
         }
 
-        #endregion constructor
+        #endregion
 
         #region enums
 
@@ -65,7 +65,7 @@ namespace Hoehoe
             None
         }
 
-        #endregion enums
+        #endregion
 
         #region properties
 
@@ -74,7 +74,7 @@ namespace Hoehoe
             get { return (TweenMain)Owner; }
         }
 
-        #endregion properties
+        #endregion
 
         #region public methods
 
@@ -142,7 +142,7 @@ namespace Hoehoe
             _isDirectAdd = true;
         }
 
-        #endregion public methods
+        #endregion
 
         #region event handler
 
@@ -413,7 +413,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion event handler
+        #endregion
 
         #region private methods
 
@@ -1442,6 +1442,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion private methods
+        #endregion
     }
 }

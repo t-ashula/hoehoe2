@@ -270,7 +270,7 @@ namespace Hoehoe
         }
 #endif
 
-        #endregion "テンプレ"
+        #endregion
 
         private static bool Default_CreateImage(CreateImageArgs args)
         {
@@ -469,7 +469,7 @@ namespace Hoehoe
                 _disposedValue = true;
             }
 
-            #endregion " IDisposable Support "
+            #endregion
         }
 
         private class GetUrlArgs

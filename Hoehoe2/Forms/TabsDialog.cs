@@ -41,7 +41,7 @@ namespace Hoehoe
 
         // private string _newtabItem = R.AddNewTabText1;
 
-        #endregion private
+        #endregion
 
         #region constructor
 
@@ -51,7 +51,7 @@ namespace Hoehoe
             MultiSelect = multiselect;
         }
 
-        #endregion constructor
+        #endregion
 
         #region properties
 
@@ -111,7 +111,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion properties
+        #endregion
 
         #region public methods
 
@@ -151,7 +151,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion public methods
+        #endregion
 
         #region event handler
 
@@ -207,6 +207,6 @@ namespace Hoehoe
             TabList.Focus();
         }
 
-        #endregion event handler
+        #endregion
     }
 }

@@ -92,6 +92,6 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "ついっぷるフォト"
+        #endregion
     }
 }

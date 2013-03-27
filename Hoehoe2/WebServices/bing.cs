@@ -35,6 +35,7 @@ namespace Hoehoe
         /// TODO:BingAppID
         /// </summary>
         private const string AppId = "8DFACAC0C4891D0F75F5728391C9D30664B797A1";
+
         private const string TranslateUri = "http://api.microsofttranslator.com/v2/Http.svc/Translate?appId=" + AppId;
 
         #region "言語テーブル定義"
@@ -108,7 +109,7 @@ namespace Hoehoe
           "zu"
         };
 
-        #endregion "言語テーブル定義"
+        #endregion
 
         #region "Translation"
 
@@ -136,6 +137,6 @@ namespace Hoehoe
             return languages.IndexOf(lang);
         }
 
-        #endregion "Translation"
+        #endregion
     }
 }

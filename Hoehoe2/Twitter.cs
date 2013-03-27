@@ -82,7 +82,7 @@ namespace Hoehoe
         private int _statusesCount;
         private string _location = string.Empty;
         private string _bio = string.Empty;
-        private string _protocol = "https://";
+        private const string Protocol = "https://";
 
         // プロパティからアクセスされる共通情報
         private string _uname;
@@ -434,42 +434,40 @@ namespace Hoehoe
 
         public string PreProcessUrl(string orgData)
         {
-            int posl2 = 0;
-            string href = "<a href=\"";
+            var posl2 = 0;
+            const string href = "<a href=\"";
 
             while (true)
             {
-                if (orgData.IndexOf(href, posl2, StringComparison.Ordinal) > -1)
-                {
-                    // IDN展開
-                    int posl1 = orgData.IndexOf(href, posl2, StringComparison.Ordinal);
-                    posl1 += href.Length;
-                    posl2 = orgData.IndexOf("\"", posl1, StringComparison.Ordinal);
-                    string urlStr = orgData.Substring(posl1, posl2 - posl1);
-
-                    if (!urlStr.StartsWith("http://") && !urlStr.StartsWith("https://") && !urlStr.StartsWith("ftp://"))
-                    {
-                        continue;
-                    }
-
-                    string replacedUrl = MyCommon.IDNDecode(urlStr);
-                    if (replacedUrl == null)
-                    {
-                        continue;
-                    }
-
-                    if (replacedUrl == urlStr)
-                    {
-                        continue;
-                    }
-
-                    orgData = orgData.Replace("<a href=\"" + urlStr, "<a href=\"" + replacedUrl);
-                    posl2 = 0;
-                }
-                else
+                if (orgData.IndexOf(href, posl2, StringComparison.Ordinal) == -1)
                 {
                     break;
                 }
+
+                // IDN展開
+                var posl1 = orgData.IndexOf(href, posl2, StringComparison.Ordinal);
+                posl1 += href.Length;
+                posl2 = orgData.IndexOf("\"", posl1, StringComparison.Ordinal);
+                var urlStr = orgData.Substring(posl1, posl2 - posl1);
+
+                if (!urlStr.StartsWith("http://") && !urlStr.StartsWith("https://") && !urlStr.StartsWith("ftp://"))
+                {
+                    continue;
+                }
+
+                var replacedUrl = MyCommon.IDNDecode(urlStr);
+                if (replacedUrl == null)
+                {
+                    continue;
+                }
+
+                if (replacedUrl == urlStr)
+                {
+                    continue;
+                }
+
+                orgData = orgData.Replace(href + urlStr, href + replacedUrl);
+                posl2 = 0;
             }
 
             return orgData;
@@ -1667,7 +1665,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion "TODO:バージョンアップ"
+        #endregion
 
         public string GetTimelineApi(bool read, WorkerType workerType, bool more, bool startup)
         {
@@ -2959,7 +2957,7 @@ namespace Hoehoe
                     _hashList.Add("#" + mh.Result("$3"));
                 }
 
-                return mh.Result("$1") + "<a href=\"" + _protocol + "twitter.com/search?q=%23" + mh.Result("$3") + "\">" + mh.Result("$2$3") + "</a>";
+                return mh.Result("$1") + "<a href=\"" + Protocol + "twitter.com/search?q=%23" + mh.Result("$3") + "\">" + mh.Result("$2$3") + "</a>";
             };
             retStr = Regex.Replace(retStr, HashtagRegexPattern, hashReplace, RegexOptions.IgnoreCase);
             retStr = Regex.Replace(retStr, "(^|[^a-zA-Z0-9_/&#＃@＠>=.~])(sm|nm)([0-9]{1,10})", "$1<a href=\"http://www.nicovideo.jp/watch/$2$3\">$2$3</a>");
@@ -3022,7 +3020,7 @@ namespace Hoehoe
                             StartIndex = ent.Indices[0],
                             EndIndex = ent.Indices[1],
                             Text = hash,
-                            Html = string.Format("<a href=\"{0}twitter.com/search?q=%23{1}\">{2}</a>", _protocol, ent.Text, hash)
+                            Html = string.Format("<a href=\"{0}twitter.com/search?q=%23{1}\">{2}</a>", Protocol, ent.Text, hash)
                         };
                         entityInfos.Add(ent.Indices[0], tmp);
                         lock (_lockObj)
@@ -3347,7 +3345,7 @@ namespace Hoehoe
         private string AdjustHtml(string orgData)
         {
             string retStr = orgData;
-            retStr = Regex.Replace(retStr, "<a [^>]*href=\"/", "<a href=\"" + _protocol + "twitter.com/");
+            retStr = Regex.Replace(retStr, "<a [^>]*href=\"/", "<a href=\"" + Protocol + "twitter.com/");
             retStr = retStr.Replace("<a href=", "<a target=\"_self\" href=");
             retStr = retStr.Replace("\n", "<br/>");
 
@@ -4378,7 +4376,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion "UserStream"
+        #endregion
 
         public class FormattedEvent
         {

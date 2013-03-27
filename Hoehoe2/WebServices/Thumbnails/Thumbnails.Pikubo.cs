@@ -51,7 +51,6 @@ namespace Hoehoe
 
             args.AddThumbnailUrl(args.Url, mc.Result("http://pikubo.me/q/${1}"));
             return true;
-            
         }
 
         /// <summary>
@@ -71,6 +70,6 @@ namespace Hoehoe
             return Default_CreateImage(args);
         }
 
-        #endregion "pikubo"
+        #endregion
     }
 }

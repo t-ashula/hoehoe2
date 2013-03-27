@@ -24,17 +24,17 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using R = Hoehoe.Properties.Resources;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Windows.Forms;
-    using R = Properties.Resources;
-
     public partial class EventViewerDialog
     {
         #region privates
@@ -44,7 +44,7 @@ namespace Hoehoe
         private int _itemCacheIndex;
         private TabPage _curTab;
 
-        #endregion privates
+        #endregion
 
         #region constructor
 
@@ -53,13 +53,13 @@ namespace Hoehoe
             InitializeComponent();
         }
 
-        #endregion constructor
+        #endregion
 
         #region properties
 
         public List<Twitter.FormattedEvent> EventSource { get; set; }
 
-        #endregion properties
+        #endregion
 
         #region event handler
 
@@ -195,7 +195,7 @@ namespace Hoehoe
             TopMost = Configs.Instance.AlwaysTop;
         }
 
-        #endregion event handler
+        #endregion
 
         #region private methods
 
@@ -246,7 +246,7 @@ namespace Hoehoe
             }
             else
             {
-                StatusLabelCount.Text = "0 / 0";
+                StatusLabelCount.Text = @"0 / 0";
             }
         }
 
@@ -267,13 +267,13 @@ namespace Hoehoe
 
             _itemCache = new ListViewItem[endIndex - startIndex + 1];
             _itemCacheIndex = startIndex;
-            for (int i = 0; i <= endIndex - startIndex; i++)
+            for (var i = 0; i <= endIndex - startIndex; i++)
             {
                 _itemCache[i] = CreateListViewItem(_filterdEventSource[startIndex + i]);
             }
         }
 
-        private void SaveEventLog(List<Twitter.FormattedEvent> source, StreamWriter sw)
+        private static void SaveEventLog(IEnumerable<Twitter.FormattedEvent> source, StreamWriter sw)
         {
             foreach (var ev in source)
             {
@@ -281,6 +281,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion private methods
+        #endregion
     }
 }

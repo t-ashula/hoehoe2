@@ -51,7 +51,7 @@ namespace Hoehoe
                 args.AddThumbnailUrl(args.Url, mc.Result("http://twitvideo.jp/img/thumb/${1}"));
                 return true;
             }
-            
+
             return false;
         }
 
@@ -72,6 +72,6 @@ namespace Hoehoe
             return Default_CreateImage(args);
         }
 
-        #endregion "TwitVideo"
+        #endregion
     }
 }

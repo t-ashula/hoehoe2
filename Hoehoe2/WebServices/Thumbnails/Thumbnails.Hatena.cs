@@ -73,6 +73,6 @@ namespace Hoehoe
             return Default_CreateImage(args);
         }
 
-        #endregion "はてなフォトライフ"
+        #endregion
     }
 }

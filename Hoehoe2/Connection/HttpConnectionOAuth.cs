@@ -574,7 +574,7 @@ namespace Hoehoe
         /// <returns>取得結果真偽値</returns>
         private Uri GetAuthenticatePageUri(string requestTokenUrl, string authorizeUrl, ref string requestToken)
         {
-            const string TokenKey = "oauth_token";
+            const string tokenKey = "oauth_token";
 
             // リクエストトークン取得
             var content = string.Empty;
@@ -589,10 +589,10 @@ namespace Hoehoe
                 return null;
             }
 
-            requestToken = reqTokenData[TokenKey];
+            requestToken = reqTokenData[tokenKey];
 
             // Uri生成
-            return new UriBuilder(authorizeUrl) { Query = string.Format("{0}={1}", TokenKey, requestToken) }.Uri;
+            return new UriBuilder(authorizeUrl) { Query = string.Format("{0}={1}", tokenKey, requestToken) }.Uri;
         }
 
         /// <summary>

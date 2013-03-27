@@ -152,7 +152,7 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "PicPlz"
+        #endregion
 
         private class PicPlzDataModel
         {

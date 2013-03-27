@@ -221,6 +221,6 @@ namespace Hoehoe
             public const int E_NOINTERFACE = unchecked((int)0x80004002);
         }
 
-        #endregion "HRESULT"
+        #endregion
     }
 }

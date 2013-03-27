@@ -1,11 +1,12 @@
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Windows.Forms;
-
     partial class AtIdSupplement : System.Windows.Forms.Form
     {
         //フォームがコンポーネントの一覧をクリーンアップするために dispose をオーバーライドします。
@@ -93,11 +94,11 @@ namespace Hoehoe
             this.Shown += new System.EventHandler(this.AtIdSupplement_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }        
-        internal System.Windows.Forms.Button ButtonOK;
-        internal System.Windows.Forms.Button ButtonCancel;
-        internal System.Windows.Forms.TextBox TextId;
-        internal System.Windows.Forms.Label Label1;
+
+        private System.Windows.Forms.Button ButtonOK;
+        private System.Windows.Forms.Button ButtonCancel;
+        private System.Windows.Forms.TextBox TextId;
+        private System.Windows.Forms.Label Label1;
     }
 }

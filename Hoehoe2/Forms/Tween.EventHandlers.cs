@@ -1332,7 +1332,7 @@ namespace Hoehoe
             CheckNewVersion();
         }
 
-        #endregion cleanuped
+        #endregion
 
         private void SearchButton_ClickExtracted(Control pnl)
         {
@@ -2917,7 +2917,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion callback
+        #endregion
 
         #region ListTab events
 
@@ -3083,7 +3083,7 @@ namespace Hoehoe
             ListTabSelect(e.TabPage);
         }
 
-        #endregion ListTab events
+        #endregion
 
         #region MyList events
 
@@ -3372,18 +3372,19 @@ namespace Hoehoe
             if (e.Item.Selected)
             {
                 // 選択中の行
-                SolidBrush brs1 = ((Control)sender).Focused ? _brsHighLight : _brsDeactiveSelection;
+                var brs1 = ((Control)sender).Focused ? _brsHighLight : _brsDeactiveSelection;
                 e.Graphics.FillRectangle(brs1, e.Bounds);
             }
             else
             {
                 var cl = e.Item.BackColor;
-                SolidBrush brs2 = (cl == _clrSelf) ? _brsBackColorMine :
-                    (cl == _clrAtSelf) ? _brsBackColorAt :
-                    (cl == _clrTarget) ? _brsBackColorYou :
-                    (cl == _clrAtTarget) ? _brsBackColorAtYou :
-                    (cl == _clrAtFromTarget) ? _brsBackColorAtFromTarget :
-                    (cl == _clrAtTo) ? _brsBackColorAtTo : _brsBackColorNone;
+                var brs2 =
+                    cl == _clrSelf ? _brsBackColorMine :
+                    cl == _clrAtSelf ? _brsBackColorAt :
+                    cl == _clrTarget ? _brsBackColorYou :
+                    cl == _clrAtTarget ? _brsBackColorAtYou :
+                    cl == _clrAtFromTarget ? _brsBackColorAtFromTarget :
+                    cl == _clrAtTo ? _brsBackColorAtTo : _brsBackColorNone;
                 e.Graphics.FillRectangle(brs2, e.Bounds);
             }
 
@@ -3460,16 +3461,16 @@ namespace Hoehoe
                     cl == _clrRetweet ? _brsForeColorRetweet.Color : cl;
             }
 
-            var multiLineFmt = TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix;
-            var singleLineFmt = TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix;
+            const TextFormatFlags multiLineFmt = TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix;
+            const TextFormatFlags singleLineFmt = TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.NoPrefix;
             if (_iconCol)
             {
                 var subitems = e.Item.SubItems;
-                string iconcol2txt = string.Format("{0} / {1} ({2}) {3}{4} [{5}]", subitems[4].Text, subitems[1].Text, subitems[3].Text, subitems[5].Text, subitems[6].Text, subitems[7].Text);
+                var columnText = string.Format("{0} / {1} ({2}) {3}{4} [{5}]", subitems[4].Text, subitems[1].Text, subitems[3].Text, subitems[5].Text, subitems[6].Text, subitems[7].Text);
                 using (var fnt = new Font(e.Item.Font, FontStyle.Bold))
                 {
                     TextRenderer.DrawText(e.Graphics, subitems[2].Text, e.Item.Font, Rectangle.Round(rct), foreColor, multiLineFmt);
-                    TextRenderer.DrawText(e.Graphics, iconcol2txt, fnt, Rectangle.Round(rctB), foreColor, singleLineFmt);
+                    TextRenderer.DrawText(e.Graphics, columnText, fnt, Rectangle.Round(rctB), foreColor, singleLineFmt);
                 }
             }
             else
@@ -3588,7 +3589,7 @@ namespace Hoehoe
             _colorize = true;
         }
 
-        #endregion MyList events
+        #endregion
 
         #region userstream
 
@@ -3780,8 +3781,8 @@ namespace Hoehoe
             ChangeUserStreamStatusDisplay(false);
         }
 
-        #endregion userstream
+        #endregion
 
-        #endregion event handler
+        #endregion
     }
 }

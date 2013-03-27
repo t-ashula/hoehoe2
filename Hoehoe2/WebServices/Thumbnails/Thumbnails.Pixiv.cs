@@ -82,6 +82,7 @@ namespace Hoehoe
                 args.Errmsg = "NotSupported";
                 return false;
             }
+
             //var mc = Regex.Match(args.Url.Value, "^http://www\\.pixiv\\.net/(member_illust|index)\\.php\\?mode=(medium|big)&(amp;)?illust_id=(?<illustId>[0-9]+)(&(amp;)?tag=(?<tag>.+)?)*$", RegexOptions.IgnoreCase);
 
             var http = new HttpVarious();
@@ -110,6 +111,6 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "Pixiv"
+        #endregion
     }
 }

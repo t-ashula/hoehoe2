@@ -35,7 +35,7 @@ namespace Hoehoe
 
         private string _selectedUrl;
 
-        #endregion private
+        #endregion
 
         #region constructor
 
@@ -44,7 +44,7 @@ namespace Hoehoe
             InitializeComponent();
         }
 
-        #endregion constructor
+        #endregion
 
         #region properties
 
@@ -53,7 +53,7 @@ namespace Hoehoe
             get { return UrlList.SelectedItems.Count == 1 ? _selectedUrl : string.Empty; }
         }
 
-        #endregion properties
+        #endregion
 
         #region public methods
 
@@ -67,7 +67,7 @@ namespace Hoehoe
             UrlList.Items.Add(openUrlItem);
         }
 
-        #endregion public methods
+        #endregion
 
         #region event handler
 
@@ -131,7 +131,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion event handler
+        #endregion
 
         #region private methods
 
@@ -155,6 +155,6 @@ namespace Hoehoe
             Close();
         }
 
-        #endregion private methods
+        #endregion
     }
 }

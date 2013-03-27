@@ -67,6 +67,6 @@ namespace Hoehoe
             return Default_CreateImage(args);
         }
 
-        #endregion "画像直リンク"
+        #endregion
     }
 }

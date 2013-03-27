@@ -38,7 +38,7 @@ namespace Hoehoe.TweenCustomControl
         private const int Maxcnt = 20;
         private readonly LinkedList<LogEntry> _logEntries;
 
-        #endregion private
+        #endregion
 
         #region constructor
 
@@ -47,7 +47,7 @@ namespace Hoehoe.TweenCustomControl
             _logEntries = new LinkedList<LogEntry>();
         }
 
-        #endregion constructor
+        #endregion
 
         #region enums
 
@@ -63,7 +63,7 @@ namespace Hoehoe.TweenCustomControl
             Highest = 256
         }
 
-        #endregion enums
+        #endregion
 
         #region properties
 
@@ -100,7 +100,7 @@ namespace Hoehoe.TweenCustomControl
             }
         }
 
-        #endregion properties
+        #endregion
 
         #region inner class
 
@@ -133,6 +133,6 @@ namespace Hoehoe.TweenCustomControl
             }
         }
 
-        #endregion inner class
+        #endregion
     }
 }

@@ -89,6 +89,6 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "Foursquare"
+        #endregion
     }
 }

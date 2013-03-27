@@ -27,7 +27,6 @@
 namespace Hoehoe
 {
     using System;
-    using System.Drawing;
     using System.Text.RegularExpressions;
     using System.Xml;
 
@@ -148,6 +147,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion "TINAMI"
+        #endregion
     }
 }

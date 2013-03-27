@@ -22,18 +22,18 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Windows.Forms;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Windows.Forms;
-
     public class DoubleClickCopyCanceller : NativeWindow, IDisposable
     {
         #region privates
 
         private bool _doubleClick;
 
-        #endregion privates
+        #endregion
 
         #region constructor
 
@@ -42,7 +42,7 @@ namespace Hoehoe
             AssignHandle(control.Handle);
         }
 
-        #endregion constructor
+        #endregion
 
         #region public methods
 
@@ -52,7 +52,7 @@ namespace Hoehoe
             GC.SuppressFinalize(this);
         }
 
-        #endregion public methods
+        #endregion
 
         #region protected methods
 
@@ -79,6 +79,6 @@ namespace Hoehoe
             base.WndProc(ref m);
         }
 
-        #endregion protected methods
+        #endregion
     }
 }

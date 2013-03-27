@@ -101,6 +101,6 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "Plixi(TweetPhoto)"
+        #endregion
     }
 }

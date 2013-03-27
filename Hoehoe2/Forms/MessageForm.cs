@@ -37,7 +37,7 @@ namespace Hoehoe
             InitializeComponent();
         }
 
-        #endregion constructor
+        #endregion
 
         #region public methods
 
@@ -50,6 +50,6 @@ namespace Hoehoe
             return ShowDialog();
         }
 
-        #endregion public methods
+        #endregion
     }
 }

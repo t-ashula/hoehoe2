@@ -206,6 +206,6 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "vimeo"
+        #endregion
     }
 }

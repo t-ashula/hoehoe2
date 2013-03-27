@@ -3286,7 +3286,7 @@ namespace Hoehoe
 
         private void TrimPostChain()
         {
-            int chainLimit = 2000;
+            const int chainLimit = 2000;
             if (_selectPostChains.Count < chainLimit)
             {
                 return;
@@ -8064,8 +8064,8 @@ namespace Hoehoe
             _waitLists = true;
             GetTimeline(WorkerType.List);
             int i = 0, j = 0;
-            int stth = 12 * 1000;
-            int sl = 100;
+            const int stth = 12 * 1000;
+            const int sl = 100;
             while (IsInitialRead() && !MyCommon.IsEnding)
             {
                 Thread.Sleep(sl);
@@ -8279,6 +8279,6 @@ namespace Hoehoe
             _replyToName = string.Empty;
         }
 
-        #endregion private methods
+        #endregion
     }
 }

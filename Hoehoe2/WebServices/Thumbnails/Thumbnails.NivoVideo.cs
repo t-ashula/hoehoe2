@@ -181,6 +181,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion "ニコニコ動画"
+        #endregion
     }
 }

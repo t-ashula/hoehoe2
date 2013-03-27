@@ -157,7 +157,7 @@ namespace Hoehoe
    "yo"
         };
 
-        #endregion "言語テーブル定義"
+        #endregion
 
         public bool Translate(string srclng, string dstlng, string source, ref string destination, out string errorMessage)
         {
@@ -241,7 +241,7 @@ namespace Hoehoe
             return Languages.IndexOf(lang);
         }
 
-        #endregion "Translation"
+        #endregion
 
         #region "UrlShortener"
 
@@ -256,7 +256,7 @@ namespace Hoehoe
             return string.Empty;
         }
 
-        #endregion "UrlShortener"
+        #endregion
 
         #region "GoogleMaps"
 
@@ -295,6 +295,6 @@ namespace Hoehoe
             public string LocateInfo { get; set; }
         }
 
-        #endregion "GoogleMaps"
+        #endregion
     }
 }

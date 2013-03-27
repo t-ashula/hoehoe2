@@ -40,7 +40,7 @@ namespace Hoehoe
         private int _remainCount;
         private DateTime _resetTime;
 
-        #endregion private
+        #endregion
 
         #region constructor
 
@@ -53,7 +53,7 @@ namespace Hoehoe
             Control.SizeChanged += Control_SizeChanged;
         }
 
-        #endregion constructor
+        #endregion
 
         #region properties
 
@@ -124,7 +124,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion properties
+        #endregion
 
         #region event handler
 
@@ -154,7 +154,7 @@ namespace Hoehoe
             _originalSize = Control.Size;
         }
 
-        #endregion event handler
+        #endregion
 
         #region private methods
 
@@ -189,6 +189,6 @@ namespace Hoehoe
             ToolTipText = string.Format(toolTipTextFormat, _remainCount, _maxCount, minuteText);
         }
 
-        #endregion private methods
+        #endregion
     }
 }

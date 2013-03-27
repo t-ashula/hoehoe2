@@ -24,13 +24,13 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Net;
-
     /// <summary>
     /// APIメソッドの処理が終了し呼び出し元へ戻る直前に呼ばれるデリゲート
     /// </summary>

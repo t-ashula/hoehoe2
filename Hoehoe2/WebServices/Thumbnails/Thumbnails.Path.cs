@@ -80,6 +80,7 @@ namespace Hoehoe
             args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
         }
-        #endregion "Path"
+
+        #endregion
     }
 }

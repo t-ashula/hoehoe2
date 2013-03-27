@@ -99,6 +99,6 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "Twitter Geo"
+        #endregion
     }
 }

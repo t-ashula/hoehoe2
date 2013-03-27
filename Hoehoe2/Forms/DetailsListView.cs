@@ -24,14 +24,14 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
 namespace Hoehoe.TweenCustomControl
 {
-    using System;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.Runtime.InteropServices;
-    using System.Windows.Forms;
-
     public sealed class DetailsListView : ListView
     {
         #region private fields
@@ -39,7 +39,7 @@ namespace Hoehoe.TweenCustomControl
         private Rectangle _changeBounds;
         private SCROLLINFO _scrollInfo;
 
-        #endregion private fields
+        #endregion
 
         #region constructor
 
@@ -70,7 +70,7 @@ namespace Hoehoe.TweenCustomControl
                 };
         }
 
-        #endregion constructor
+        #endregion
 
         #region events
 
@@ -78,7 +78,7 @@ namespace Hoehoe.TweenCustomControl
 
         public event EventHandler HScrolled;
 
-        #endregion events
+        #endregion
 
         #region enums
 
@@ -100,7 +100,7 @@ namespace Hoehoe.TweenCustomControl
             SIF_ALL = (SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS)
         }
 
-        #endregion enums
+        #endregion
 
         #region public methods
 
@@ -181,7 +181,7 @@ namespace Hoehoe.TweenCustomControl
             }
         }
 
-        #endregion public methods
+        #endregion
 
         #region protected method
 
@@ -211,6 +211,7 @@ namespace Hoehoe.TweenCustomControl
                     }
 
                     break;
+
                 case WM_PAINT:
                     if (_changeBounds != Rectangle.Empty)
                     {
@@ -220,12 +221,15 @@ namespace Hoehoe.TweenCustomControl
                     }
 
                     break;
+
                 case WM_HSCROLL:
                     OnHScrolled(this, EventArgs.Empty);
                     break;
+
                 case WM_VSCROLL:
                     OnVScrolled(this, EventArgs.Empty);
                     break;
+
                 case WM_MOUSEWHEEL:
                 case WM_MOUSEHWHEEL:
                 case WM_KEYDOWN:
@@ -240,6 +244,7 @@ namespace Hoehoe.TweenCustomControl
                     }
 
                     break;
+
                 case LVM_SETITEMCOUNT:
                     m.LParam = new IntPtr(LVSICF_NOSCROLL | LVSICF_NOINVALIDATEALL);
                     break;
@@ -280,7 +285,7 @@ namespace Hoehoe.TweenCustomControl
             }
         }
 
-        #endregion protected method
+        #endregion
 
         #region private methods
 
@@ -341,7 +346,7 @@ namespace Hoehoe.TweenCustomControl
             return item.SubItems[subitemIndex].Bounds;
         }
 
-        #endregion private methods
+        #endregion
 
         #region inner types
 
@@ -357,6 +362,6 @@ namespace Hoehoe.TweenCustomControl
             public int nTrackPos;
         }
 
-        #endregion inner types
+        #endregion
     }
 }

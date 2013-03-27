@@ -60,7 +60,7 @@ namespace Hoehoe
         private bool _isEditing;
         private string _buttonEditText = string.Empty;
 
-        #endregion private
+        #endregion
 
         #region constructor
 
@@ -69,7 +69,7 @@ namespace Hoehoe
             InitializeComponent();
         }
 
-        #endregion constructor
+        #endregion
 
         #region public methods
 
@@ -78,7 +78,7 @@ namespace Hoehoe
             _userInfo = value;
         }
 
-        #endregion public methods
+        #endregion
 
         #region event handler
 
@@ -679,7 +679,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion event handler
+        #endregion
 
         #region private methods
 
@@ -797,7 +797,7 @@ namespace Hoehoe
             return IsValidExtension(ext) && fileInfo.Length < 700 * 1024 && !MyCommon.IsAnimatedGif(fileInfo.FullName);
         }
 
-        #endregion private methods
+        #endregion
 
         #region inner class
 
@@ -821,6 +821,6 @@ namespace Hoehoe
             public string Description { get; set; }
         }
 
-        #endregion inner class
+        #endregion
     }
 }

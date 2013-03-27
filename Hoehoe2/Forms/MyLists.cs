@@ -41,7 +41,7 @@ namespace Hoehoe
         private readonly string _contextUserName;
         private readonly Twitter _twitter;
 
-        #endregion private
+        #endregion
 
         #region constructor
 
@@ -53,7 +53,7 @@ namespace Hoehoe
             Text = _contextUserName + R.MyLists1;
         }
 
-        #endregion constructor
+        #endregion
 
         #region eventhandler
 
@@ -197,7 +197,7 @@ namespace Hoehoe
             Close();
         }
 
-        #endregion eventhandler
+        #endregion
 
         #region private method
 
@@ -299,6 +299,6 @@ namespace Hoehoe
             ListsCheckedListBox.ItemCheck += ListsCheckedListBox_ItemCheck;
         }
 
-        #endregion private method
+        #endregion
     }
 }

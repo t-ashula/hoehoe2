@@ -24,13 +24,13 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Windows.Forms;
-
     public partial class TweenMain
     {
         #region enums
@@ -61,7 +61,7 @@ namespace Hoehoe
             PostBrowser
         }
 
-        #endregion enums
+        #endregion
 
         #region inner types
 
@@ -219,6 +219,6 @@ namespace Hoehoe
             public DataModels.Twitter.User User;
         }
 
-        #endregion inner types
+        #endregion
     }
 }

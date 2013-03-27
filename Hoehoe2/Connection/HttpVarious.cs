@@ -24,14 +24,14 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Net;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.IO;
-    using System.Net;
-
     public class HttpVarious : HttpConnection
     {
         private delegate Image CheckValidImageDelegate(Image img, int width, int height);

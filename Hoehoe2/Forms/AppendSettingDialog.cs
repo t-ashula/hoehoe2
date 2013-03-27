@@ -55,7 +55,7 @@ namespace Hoehoe
         private PeriodValidator _proxyPortNumberValidator;
         private PeriodValidator _timeoutLimitsValidator;
 
-        #endregion privates
+        #endregion
 
         #region constructor
 
@@ -70,19 +70,19 @@ namespace Hoehoe
             InitPeriodValidators();
         }
 
-        #endregion constructor
+        #endregion
 
         #region delegates
 
         public delegate void IntervalChangedEventHandler(object sender, IntervalChangedEventArgs e);
 
-        #endregion delegates
+        #endregion
 
         #region events
 
         public event IntervalChangedEventHandler IntervalChanged;
 
-        #endregion events
+        #endregion
 
         #region event handler
 
@@ -526,7 +526,7 @@ namespace Hoehoe
             if (_configurations.UserAccounts.Count > 0)
             {
                 AuthUserCombo.Items.AddRange(_configurations.UserAccounts.ToArray());
-                foreach (UserAccount u in _configurations.UserAccounts)
+                foreach (var u in _configurations.UserAccounts)
                 {
                     if (u.UserId == _tw.UserId)
                     {
@@ -1264,7 +1264,7 @@ namespace Hoehoe
             ShortenTcoCheck.Enabled = CheckAutoConvertUrl.Checked;
         }
 
-        #endregion event handler
+        #endregion
 
         #region private methods
 
@@ -1799,7 +1799,7 @@ namespace Hoehoe
             MyCommon.TryOpenUrl(url, browserPath);
         }
 
-        #endregion private methods
+        #endregion
 
         #region inner class
 
@@ -1848,6 +1848,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion inner class
+        #endregion
     }
 }

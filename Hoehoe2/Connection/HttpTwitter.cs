@@ -27,7 +27,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 
 namespace Hoehoe
@@ -57,7 +56,7 @@ namespace Hoehoe
         private const string PostMethod = "POST";
         private const string GetMethod = "GET";
 
-        private static string _twitterUrl = "api.twitter.com";
+        private static string twitterUrl = "api.twitter.com";
         private const string TwitterUserStreamUrl = "userstream.twitter.com";
         private const string TwitterStreamUrl = "stream.twitter.com";
 
@@ -68,6 +67,7 @@ namespace Hoehoe
 
         // for OAuth
         private string _requestToken;
+
         private string _tk = string.Empty;
         private string _tks = string.Empty;
         private string _un = string.Empty;
@@ -110,7 +110,7 @@ namespace Hoehoe
 
         public static void SetTwitterUrl(string value)
         {
-            _twitterUrl = value;
+            twitterUrl = value;
             HttpOAuthApiProxy.SetProxyHost(value);
         }
 
@@ -623,7 +623,7 @@ namespace Hoehoe
         {
             // official client only api '/1.1/conversation/show.json?id=:id'
             // var apiuri = CreateTwitterUri("conversation", "show", "" + id);
-            var apiuri = CreateTwitterUri("related_results", "show", "" + id, true, _twitterUrl, "1");
+            var apiuri = CreateTwitterUri("related_results", "show", "" + id, true, twitterUrl, "1");
             var param = new Dictionary<string, string> { { "include_entities", "" + true } };
             return _httpCon.GetContent(GetMethod, apiuri, param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }

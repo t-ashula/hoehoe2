@@ -360,6 +360,6 @@ namespace Hoehoe
             SaveSettings(this);
         }
 
-        #endregion "Settingクラス基本"
+        #endregion
     }
 }

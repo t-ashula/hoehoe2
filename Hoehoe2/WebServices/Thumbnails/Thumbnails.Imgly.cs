@@ -70,6 +70,6 @@ namespace Hoehoe
             return Default_CreateImage(args);
         }
 
-        #endregion "img.ly"
+        #endregion
     }
 }

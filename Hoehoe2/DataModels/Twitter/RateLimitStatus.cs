@@ -23,7 +23,7 @@ using System.Runtime.Serialization;
 
 namespace Hoehoe.DataModels.Twitter
 {
-    // XXX: have to use TT?
+    // XXX: should i use T4?
 
     [DataContract]
     public class RateLimitStatus

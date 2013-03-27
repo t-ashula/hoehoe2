@@ -40,13 +40,13 @@ namespace Hoehoe
             InitializeComponent();
         }
 
-        #endregion constructor
+        #endregion
 
         #region properties
 
         public ListElement SelectedList { get; private set; }
 
-        #endregion properties
+        #endregion
 
         #region event handler
 
@@ -122,7 +122,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion event handler
+        #endregion
 
         #region private methods
 
@@ -161,6 +161,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion private methods
+        #endregion
     }
 }

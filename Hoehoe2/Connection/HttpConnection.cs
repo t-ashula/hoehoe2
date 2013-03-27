@@ -52,12 +52,12 @@ namespace Hoehoe
         /// <summary>
         /// プロキシ
         /// </summary>
-        private static WebProxy _proxy;
+        private static WebProxy proxy;
 
         /// <summary>
         /// ユーザーが選択したプロキシの方式
         /// </summary>
-        private static ProxyType _proxyKind = ProxyType.IE;
+        private static ProxyType proxyKind = ProxyType.IE;
 
         /// <summary>
         /// クッキー保存用コンテナ
@@ -67,12 +67,12 @@ namespace Hoehoe
         /// <summary>
         /// 初期化済みフラグ
         /// </summary>
-        private static bool _isInitialize;
+        private static bool isInitialize;
 
         /// <summary>
         /// 通信タイムアウト時間（ms）
         /// </summary>
-        private static int _defTimeout = 20 * 1000;
+        private static int defTimeout = 20 * 1000;
 
         /// <summary>
         /// 通信タイムアウト時間（ms）
@@ -93,22 +93,22 @@ namespace Hoehoe
         {
             get
             {
-                return _defTimeout;
+                return defTimeout;
             }
 
             set
             {
-                const int TimeoutMinValue = 10 * 1000;
-                const int TimeoutMaxValue = 120 * 1000;
-                const int TimeoutDefaultValue = 20 * 1000;
-                if (value < TimeoutMinValue || value > TimeoutMaxValue)
+                const int timeoutMinValue = 10 * 1000;
+                const int timeoutMaxValue = 120 * 1000;
+                const int timeoutDefaultValue = 20 * 1000;
+                if (value < timeoutMinValue || value > timeoutMaxValue)
                 {
                     // 範囲外ならデフォルト値設定
-                    _defTimeout = TimeoutDefaultValue;
+                    defTimeout = timeoutDefaultValue;
                 }
                 else
                 {
-                    _defTimeout = value;
+                    defTimeout = value;
                 }
             }
         }
@@ -125,11 +125,11 @@ namespace Hoehoe
 
             set
             {
-                const int TimeoutMinValue = 10 * 1000;
-                const int TimeoutMaxValue = 120 * 1000;
-                if (value < TimeoutMinValue || value > TimeoutMaxValue)
+                const int timeoutMinValue = 10 * 1000;
+                const int timeoutMaxValue = 120 * 1000;
+                if (value < timeoutMinValue || value > timeoutMaxValue)
                 {
-                    throw new ArgumentOutOfRangeException(string.Format("Set {0}-{1}: Value={2}", TimeoutMinValue, TimeoutMaxValue, value));
+                    throw new ArgumentOutOfRangeException(string.Format("Set {0}-{1}: Value={2}", timeoutMinValue, timeoutMaxValue, value));
                 }
 
                 _curTimeout = value;
@@ -150,20 +150,20 @@ namespace Hoehoe
         /// <param name="proxyPassword">プロキシ認証が必要な場合のパスワード。不要なら空文字</param>
         public static void InitializeConnection(int timeout, ProxyType proxyType, string proxyAddress, int proxyPort, string proxyUser, string proxyPassword)
         {
-            _isInitialize = true;
+            isInitialize = true;
             ServicePointManager.Expect100Continue = false;
             DefaultTimeout = timeout * 1000; // s -> ms
             switch (proxyType)
             {
                 case ProxyType.None:
-                    _proxy = null;
+                    proxy = null;
                     break;
 
                 case ProxyType.Specified:
-                    _proxy = new WebProxy(string.Format("http://{0}:{1}", proxyAddress, proxyPort));
+                    proxy = new WebProxy(string.Format("http://{0}:{1}", proxyAddress, proxyPort));
                     if (!string.IsNullOrEmpty(proxyUser) || !string.IsNullOrEmpty(proxyPassword))
                     {
-                        _proxy.Credentials = new NetworkCredential(proxyUser, proxyPassword);
+                        proxy.Credentials = new NetworkCredential(proxyUser, proxyPassword);
                     }
 
                     break;
@@ -174,7 +174,7 @@ namespace Hoehoe
                     break;
             }
 
-            _proxyKind = proxyType;
+            proxyKind = proxyType;
             Win32Api.SetProxy(proxyType, proxyAddress, proxyPort, proxyUser, proxyPassword);
         }
 
@@ -193,7 +193,7 @@ namespace Hoehoe
         /// <returns>引数で指定された内容を反映したHttpWebRequestオブジェクト</returns>
         protected HttpWebRequest CreateRequest(string method, Uri requestUri, Dictionary<string, string> param, bool withCookie)
         {
-            if (!_isInitialize)
+            if (!isInitialize)
             {
                 throw new Exception("Sequence error.(not initialized)");
             }
@@ -209,9 +209,9 @@ namespace Hoehoe
             webReq.ReadWriteTimeout = 90 * 1000;            // Streamの読み込みは90秒でタイムアウト（デフォルト5分）
 
             // プロキシ設定
-            if (_proxyKind != ProxyType.IE)
+            if (proxyKind != ProxyType.IE)
             {
-                webReq.Proxy = _proxy;
+                webReq.Proxy = proxy;
             }
 
             webReq.Method = method;
@@ -251,7 +251,7 @@ namespace Hoehoe
         /// <returns>引数で指定された内容を反映したHttpWebRequestオブジェクト</returns>
         protected HttpWebRequest CreateRequest(string method, Uri requestUri, Dictionary<string, string> param, List<KeyValuePair<string, FileInfo>> binaryFileInfo, bool withCookie)
         {
-            if (!_isInitialize)
+            if (!isInitialize)
             {
                 throw new Exception("Sequence error.(not initialized)");
             }
@@ -271,9 +271,9 @@ namespace Hoehoe
             var webReq = (HttpWebRequest)WebRequest.Create(ub.Uri);
 
             // プロキシ設定
-            if (_proxyKind != ProxyType.IE)
+            if (proxyKind != ProxyType.IE)
             {
-                webReq.Proxy = _proxy;
+                webReq.Proxy = proxy;
             }
 
             webReq.Method = method;
@@ -704,12 +704,12 @@ namespace Hoehoe
         /// <returns>エンコード結果文字列</returns>
         protected string UrlEncode(string stringToEncode)
         {
-            const string UnreservedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
+            const string unreservedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
             var sb = new StringBuilder();
             byte[] bytes = Encoding.UTF8.GetBytes(stringToEncode);
             foreach (byte b in bytes)
             {
-                if (UnreservedChars.IndexOf((char)b) != -1)
+                if (unreservedChars.IndexOf((char)b) != -1)
                 {
                     sb.Append((char)b);
                 }
@@ -800,7 +800,7 @@ namespace Hoehoe
             {
                 var keys = new string[headerInfo.Count];
                 headerInfo.Keys.CopyTo(keys, 0);
-                foreach (string key in keys)
+                foreach (var key in keys)
                 {
                     if (Array.IndexOf(webResponse.Headers.AllKeys, key) > -1)
                     {
@@ -813,8 +813,11 @@ namespace Hoehoe
                 }
             }
 
-            HttpStatusCode statusCode = webResponse.StatusCode;
-            if (statusCode == HttpStatusCode.MovedPermanently || statusCode == HttpStatusCode.Found || statusCode == HttpStatusCode.SeeOther || statusCode == HttpStatusCode.TemporaryRedirect)
+            var statusCode = webResponse.StatusCode;
+            if (statusCode == HttpStatusCode.MovedPermanently
+                || statusCode == HttpStatusCode.Found
+                || statusCode == HttpStatusCode.SeeOther
+                || statusCode == HttpStatusCode.TemporaryRedirect)
             {
                 if (headerInfo.ContainsKey("Location"))
                 {

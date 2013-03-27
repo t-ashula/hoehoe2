@@ -83,6 +83,6 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "ニコニコ静画"
+        #endregion
     }
 }

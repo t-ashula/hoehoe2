@@ -77,7 +77,7 @@ namespace Hoehoe
                 .FirstOrDefault(process => string.Compare(process.MainModule.FileName, curProcess.MainModule.FileName, true) == 0);
         }
 
-        #endregion "先行起動プロセスをアクティブにする"
+        #endregion
 
         #region "タスクトレイアイコンのクリック"
 
@@ -531,7 +531,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion "タスクトレイアイコンのクリック"
+        #endregion
 
         // 画面をブリンクするためのWin32API。起動時に10ページ読み取りごとに継続確認メッセージを表示する際の通知強調用
         [DllImport("user32.dll")]
@@ -581,7 +581,7 @@ namespace Hoehoe
         private const int FLASHW_TIMER = 0x4;     // FLASHW_STOPが指定されるまでずっと点滅させる
         private const int FLASHW_TIMERNOFG = 0xc; // ウィンドウが最前面に来るまでずっと点滅させる
 
-        #endregion "画面ブリンク用"
+        #endregion
 
         [DllImport("user32.dll")]
         public static extern bool ValidateRect(IntPtr hwnd, IntPtr rect);
@@ -606,7 +606,7 @@ namespace Hoehoe
             return false;
         }
 
-        #endregion "スクリーンセーバー起動中か判定"
+        #endregion
 
         #region "グローバルフック"
 
@@ -666,7 +666,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion "グローバルフック"
+        #endregion
 
         #region "プロセスのProxy設定"
 
@@ -807,6 +807,6 @@ namespace Hoehoe
             RefreshProxyAccount(username, password);
         }
 
-        #endregion "プロセスのProxy設定"
+        #endregion
     }
 }

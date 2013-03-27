@@ -38,7 +38,7 @@ namespace Hoehoe
 
         private readonly Twitter _twitter;
 
-        #endregion private
+        #endregion
 
         #region constructor
 
@@ -48,7 +48,7 @@ namespace Hoehoe
             _twitter = tw;
         }
 
-        #endregion constructor
+        #endregion
 
         #region eventhandler
 
@@ -348,7 +348,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion eventhandler
+        #endregion
 
         #region private methods
 
@@ -393,7 +393,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion private methods
+        #endregion
 
         #region inner class
 
@@ -425,6 +425,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion inner class
+        #endregion
     }
 }

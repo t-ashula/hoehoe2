@@ -68,6 +68,7 @@ namespace Hoehoe
         private static bool Flickr_CreateImage(CreateImageArgs args)
         {
             /*
+
             // 参考: http://tanarky.blogspot.com/2010/03/flickr-urlunavailable.html アグレッシブエンジニア: flickr の画像URL仕様についてまとめ(Unavailable画像)
             // 画像URL仕様　http://farm{farm}.static.flickr.com/{server}/{id}_{secret}_{size}.{extension}
             // photostreamなど複数の画像がある場合先頭の一つのみ認識と言うことにする
@@ -100,6 +101,6 @@ namespace Hoehoe
             return false;
         }
 
-        #endregion "flickr"
+        #endregion
     }
 }

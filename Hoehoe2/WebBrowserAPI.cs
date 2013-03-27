@@ -109,6 +109,7 @@ namespace Hoehoe
         public static int URLACTION_JAVA_MAX = 0x1cff;
 
         /*
+
         // The following Infodelivery actions should have no default policies
         // in the registry.  They assume that no default policy means fall
         // back to the global restriction.  If an admin sets a policy per
@@ -230,5 +231,5 @@ namespace Hoehoe
         }
     }
 
-    #endregion "WebBrowserAPI"
+    #endregion
 }

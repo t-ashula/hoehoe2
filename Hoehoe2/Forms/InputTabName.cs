@@ -36,7 +36,7 @@ namespace Hoehoe
 
         private bool _isShowUsage;
 
-        #endregion privates
+        #endregion
 
         #region constructor
 
@@ -45,7 +45,7 @@ namespace Hoehoe
             InitializeComponent();
         }
 
-        #endregion constructor
+        #endregion
 
         #region properties
 
@@ -57,7 +57,7 @@ namespace Hoehoe
 
         public TabUsageType Usage { get; private set; }
 
-        #endregion properties
+        #endregion
 
         #region public methods
 
@@ -76,7 +76,7 @@ namespace Hoehoe
             _isShowUsage = value;
         }
 
-        #endregion public methods
+        #endregion
 
         #region event handler
 
@@ -120,18 +120,21 @@ namespace Hoehoe
                 case 0:
                     Usage = TabUsageType.UserDefined;
                     break;
+
                 case 1:
                     Usage = TabUsageType.Lists;
                     break;
+
                 case 2:
                     Usage = TabUsageType.PublicSearch;
                     break;
+
                 default:
                     Usage = TabUsageType.Undefined;
                     break;
             }
         }
 
-        #endregion event handler
+        #endregion
     }
 }

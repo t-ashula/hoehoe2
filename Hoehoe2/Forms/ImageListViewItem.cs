@@ -37,7 +37,7 @@ namespace Hoehoe
         private readonly ImageDictionary _images;
         private readonly string _imageUrl;
 
-        #endregion privates
+        #endregion
 
         #region constructor
 
@@ -54,19 +54,19 @@ namespace Hoehoe
             GetImage(false);
         }
 
-        #endregion constructor
+        #endregion
 
         #region delegates
 
         public delegate void ImageDownloadedEventHandler(object sender, EventArgs e);
 
-        #endregion delegates
+        #endregion
 
         #region events
 
         public event ImageDownloadedEventHandler ImageDownloaded;
 
-        #endregion events
+        #endregion
 
         #region properties
 
@@ -78,7 +78,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion properties
+        #endregion
 
         #region public methods
 
@@ -87,7 +87,7 @@ namespace Hoehoe
             GetImage(true);
         }
 
-        #endregion public methods
+        #endregion
 
         #region private methods
 
@@ -122,6 +122,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion private methods
+        #endregion
     }
 }

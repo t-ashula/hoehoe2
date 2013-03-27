@@ -70,6 +70,6 @@ namespace Hoehoe
             return Default_CreateImage(args);
         }
 
-        #endregion "携帯百景"
+        #endregion
     }
 }

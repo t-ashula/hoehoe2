@@ -38,7 +38,7 @@ namespace Hoehoe
 
         private readonly string _startChar = string.Empty;
 
-        #endregion private fields
+        #endregion
 
         #region constructor
 
@@ -49,7 +49,7 @@ namespace Hoehoe
             TextId.AutoCompleteCustomSource.AddRange(itemList.ToArray());
         }
 
-        #endregion constructor
+        #endregion
 
         #region properties
 
@@ -64,7 +64,7 @@ namespace Hoehoe
 
         public bool IsBack { get; private set; }
 
-        #endregion properties
+        #endregion
 
         #region public
 
@@ -96,7 +96,7 @@ namespace Hoehoe
             return TextId.AutoCompleteCustomSource.Cast<string>().ToList();
         }
 
-        #endregion public
+        #endregion
 
         #region event handler
 
@@ -179,6 +179,6 @@ namespace Hoehoe
             DialogResult = IsBack ? DialogResult.Cancel : DialogResult.OK;
         }
 
-        #endregion event handler
+        #endregion
     }
 }

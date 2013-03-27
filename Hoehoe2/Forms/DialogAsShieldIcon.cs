@@ -24,20 +24,20 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Drawing;
+using System.Threading;
+using System.Windows.Forms;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Drawing;
-    using System.Threading;
-    using System.Windows.Forms;
-
     public partial class DialogAsShieldIcon
     {
         #region privates
 
         private DialogResult _result;
 
-        #endregion privates
+        #endregion
 
         #region constructor
 
@@ -47,7 +47,7 @@ namespace Hoehoe
             _result = DialogResult.None;
         }
 
-        #endregion constructor
+        #endregion
 
         #region public methods
 
@@ -62,10 +62,12 @@ namespace Hoehoe
                     okButton.Text = "OK";
                     cancelButton.Text = "Cancel";
                     break;
+
                 case MessageBoxButtons.YesNo:
                     okButton.Text = "Yes";
                     cancelButton.Text = "No";
                     break;
+
                 default:
                     okButton.Text = "OK";
                     cancelButton.Text = "Cancel";
@@ -94,7 +96,7 @@ namespace Hoehoe
             return _result;
         }
 
-        #endregion public methods
+        #endregion
 
         #region event handler
 
@@ -125,6 +127,6 @@ namespace Hoehoe
             PictureBox1.Image = SystemIcons.Question.ToBitmap();
         }
 
-        #endregion event handler
+        #endregion
     }
 }

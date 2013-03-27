@@ -112,6 +112,6 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "フォト蔵"
+        #endregion
     }
 }

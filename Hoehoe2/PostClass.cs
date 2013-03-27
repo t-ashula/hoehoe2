@@ -42,7 +42,7 @@ namespace Hoehoe
         private bool _isDeleted;
         private StatusGeo _postGeo;
 
-        #endregion private
+        #endregion
 
         #region constructor
 
@@ -57,7 +57,7 @@ namespace Hoehoe
             Media = new Dictionary<string, string>();
         }
 
-        #endregion constructor
+        #endregion
 
         #region enumes
 
@@ -71,7 +71,7 @@ namespace Hoehoe
             Geo = 8
         }
 
-        #endregion enumes
+        #endregion
 
         #region properties
 
@@ -293,7 +293,7 @@ namespace Hoehoe
             get { return RetweetedId != 0; }
         }
 
-        #endregion properties
+        #endregion
 
         #region public methods
 
@@ -437,7 +437,7 @@ namespace Hoehoe
             return string.Format("{0} / {1}   ({2}){3}{4}", ScreenName, Nickname, CreatedAt, Environment.NewLine, TextFromApi);
         }
 
-        #endregion public methods
+        #endregion
 
         #region inner types
 
@@ -448,6 +448,6 @@ namespace Hoehoe
             public double Lat { get; set; }
         }
 
-        #endregion inner types
+        #endregion
     }
 }

@@ -256,7 +256,7 @@ namespace Hoehoe
         private bool _isActiveUserstream;
         private string _prevTrackWord = string.Empty;
 
-        #endregion private fields
+        #endregion
 
         #region constructor
 
@@ -1123,7 +1123,7 @@ namespace Hoehoe
             return false;
         }
 
-        #endregion public methods
+        #endregion
 
         #region protected methods
 
@@ -1239,6 +1239,6 @@ namespace Hoehoe
             return base.ProcessDialogKey(keyData);
         }
 
-        #endregion protected methods
+        #endregion
     }
 }

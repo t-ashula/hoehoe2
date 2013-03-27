@@ -101,7 +101,7 @@ namespace Hoehoe
             return ToString(Convert.ToUInt64(n), radix, uppercase);
         }
 
-        #endregion "Int16型およびUInt16型用のメソッド群"
+        #endregion
 
         #region "Int32型およびUInt32型用のメソッド群"
 
@@ -173,7 +173,7 @@ namespace Hoehoe
             return ToString(Convert.ToUInt64(n), radix, uppercase);
         }
 
-        #endregion "Int32型およびUInt32型用のメソッド群"
+        #endregion
 
         #region "Int64型およびUInt64型用のメソッド群"
 
@@ -290,7 +290,7 @@ namespace Hoehoe
             return curValue.ToString();
         }
 
-        #endregion "Int64型およびUInt64型用のメソッド群"
+        #endregion
 
         #region "Decimal型用のメソッド群"
 
@@ -372,7 +372,7 @@ namespace Hoehoe
             return curValue.ToString();
         }
 
-        #endregion "Decimal型用のメソッド群"
+        #endregion
 
         #region "内部で使用しているメソッド群"
 
@@ -457,6 +457,6 @@ namespace Hoehoe
             return (char)('a' + digit - 10);
         }
 
-        #endregion "内部で使用しているメソッド群"
+        #endregion
     }
 }

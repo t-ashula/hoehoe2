@@ -115,15 +115,19 @@ namespace Hoehoe
                     case ComparerMode.Data:
                         method = Compare_ModeData_Ascending;
                         break;
+
                     case ComparerMode.Id:
                         method = Compare_ModeId_Ascending;
                         break;
+
                     case ComparerMode.Name:
                         method = Compare_ModeName_Ascending;
                         break;
+
                     case ComparerMode.Nickname:
                         method = Compare_ModeNickName_Ascending;
                         break;
+
                     case ComparerMode.Source:
                         method = Compare_ModeSource_Ascending;
                         break;
@@ -137,15 +141,19 @@ namespace Hoehoe
                     case ComparerMode.Data:
                         method = Compare_ModeData_Descending;
                         break;
+
                     case ComparerMode.Id:
                         method = Compare_ModeId_Descending;
                         break;
+
                     case ComparerMode.Name:
                         method = Compare_ModeName_Descending;
                         break;
+
                     case ComparerMode.Nickname:
                         method = Compare_ModeNickName_Descending;
                         break;
+
                     case ComparerMode.Source:
                         method = Compare_ModeSource_Descending;
                         break;
@@ -288,7 +296,7 @@ namespace Hoehoe
             return result;
         }
 
-        #endregion "比較用関数群"
+        #endregion
 
         // ソートモードとソートオーダーに従い比較関数のアドレスを切り替え
         private void SetCompareMethod(ComparerMode mode, SortOrder order)

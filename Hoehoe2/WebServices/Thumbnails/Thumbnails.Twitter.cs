@@ -83,6 +83,6 @@ namespace Hoehoe
             return true;
         }
 
-        #endregion "Twitter公式"
+        #endregion
     }
 }

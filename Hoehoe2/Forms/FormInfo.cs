@@ -52,7 +52,7 @@ namespace Hoehoe
         private string _formMessage;
         private readonly BackgroundWorkerServicer _backGroundWorkerServicer;
 
-        #endregion privates
+        #endregion
 
         #region constructor
 
@@ -71,7 +71,7 @@ namespace Hoehoe
             Argument = argument;
         }
 
-        #endregion constructor
+        #endregion
 
         #region properties
 
@@ -97,7 +97,7 @@ namespace Hoehoe
             get { return _backGroundWorkerServicer.Result; }
         }
 
-        #endregion properties
+        #endregion
 
         #region event handler
 
@@ -129,7 +129,7 @@ namespace Hoehoe
             }
         }
 
-        #endregion event handler
+        #endregion
 
         #region inner class
 
@@ -144,6 +144,6 @@ namespace Hoehoe
             }
         }
 
-        #endregion inner class
+        #endregion
     }
 }

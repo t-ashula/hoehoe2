@@ -24,13 +24,13 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Text;
-
     public class HttpConnectionOAuthEcho : HttpConnectionOAuth
     {
         private Uri _realm;

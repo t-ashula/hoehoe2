@@ -46,7 +46,7 @@ namespace Hoehoe
         private readonly Dictionary<int, KeyEventValue> _hotkeyIds;
         private bool _disposedValue; // 重複する呼び出しを検出するには
 
-        #endregion privates
+        #endregion
 
         #region constructor
 
@@ -63,13 +63,13 @@ namespace Hoehoe
             Dispose(false);
         }
 
-        #endregion constructor
+        #endregion
 
         #region event
 
         public event KeyEventHandler HotkeyPressed;
 
-        #endregion event
+        #endregion
 
         #region enums
 
@@ -83,7 +83,7 @@ namespace Hoehoe
             Win = 0x8
         }
 
-        #endregion enums
+        #endregion
 
         #region public methods
 
@@ -156,9 +156,9 @@ namespace Hoehoe
             GC.SuppressFinalize(this);
         }
 
-        #endregion " IDisposable Support "
+        #endregion
 
-        #endregion public methods
+        #endregion
 
         #region protected methods
 
@@ -204,7 +204,7 @@ namespace Hoehoe
             _disposedValue = true;
         }
 
-        #endregion protected methods
+        #endregion
 
         #region inner classes
 
@@ -221,6 +221,6 @@ namespace Hoehoe
             public int Value { get; private set; }
         }
 
-        #endregion inner classes
+        #endregion
     }
 }

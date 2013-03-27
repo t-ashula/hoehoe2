@@ -38,7 +38,7 @@ namespace Hoehoe
             InitializeComponent();
         }
 
-        #endregion constructor
+        #endregion
 
         #region properties
 
@@ -60,7 +60,7 @@ namespace Hoehoe
             set { CheckSearchRegex.Checked = value; }
         }
 
-        #endregion properties
+        #endregion
 
         #region event handler
 
@@ -82,6 +82,6 @@ namespace Hoehoe
             SWordText.Focus();
         }
 
-        #endregion event handler
+        #endregion
     }
 }
