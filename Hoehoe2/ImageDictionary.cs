@@ -24,16 +24,16 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Drawing;
+using System.Runtime.Caching;
+using System.Threading;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.Drawing;
-    using System.Runtime.Caching;
-    using System.Threading;
-
     public class ImageDictionary : IDictionary<string, Image>, IDisposable
     {
         private readonly object _lockObject = new object();
@@ -42,7 +42,7 @@ namespace Hoehoe
         private readonly Semaphore _netSemaphore;
         private bool _pauseGetImage; // 取得一時停止
         private bool _popping;
-        private readonly Stack<KeyValuePair<string, Action<Image>>> waitStack;
+        private readonly Stack<KeyValuePair<string, Action<Image>>> _waitStack;
 
         public ImageDictionary(int cacheMemoryLimit)
         {
@@ -57,7 +57,7 @@ namespace Hoehoe
                         { "CacheMemoryLimitMegabytes", cacheMemoryLimit.ToString() },
                         { "PhysicalMemoryLimitPercentage", "80" }
                     });
-                waitStack = new Stack<KeyValuePair<string, Action<Image>>>();
+                _waitStack = new Stack<KeyValuePair<string, Action<Image>>>();
                 _cachePolicy.RemovedCallback = CacheRemoved;
                 _cachePolicy.SlidingExpiration = TimeSpan.FromMinutes(30); // 30分参照されなかったら削除
                 _netSemaphore = new Semaphore(5, 5);
@@ -119,12 +119,12 @@ namespace Hoehoe
                     {
                         while (!_pauseGetImage)
                         {
-                            if (waitStack.Count > 0)
+                            if (_waitStack.Count > 0)
                             {
                                 KeyValuePair<string, Action<Image>> req;
                                 lock (_lockObject)
                                 {
-                                    req = waitStack.Pop();
+                                    req = _waitStack.Pop();
                                 }
 
                                 if (Configs.Instance.IconSz == IconSizes.IconNone)
@@ -192,7 +192,7 @@ namespace Hoehoe
                     }
 
                     // スタックに積む
-                    waitStack.Push(new KeyValuePair<string, Action<Image>>(key, callBack));
+                    _waitStack.Push(new KeyValuePair<string, Action<Image>>(key, callBack));
                 }
 
                 return null;

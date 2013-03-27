@@ -24,11 +24,11 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Runtime.InteropServices;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Runtime.InteropServices;
-
     #region "WebBrowserAPI"
 
     public class WebBrowserAPI

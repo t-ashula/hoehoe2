@@ -24,10 +24,10 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+
 namespace Hoehoe
 {
-    using System;
-
     public enum IconSizes
     {
         IconNone = 0,
@@ -84,8 +84,8 @@ namespace Hoehoe
 
     public enum OutputzUrlmode
     {
-        twittercom,
-        twittercomWithUsername
+        Twittercom,
+        TwittercomWithUsername
     }
 
     public enum HITRESULT

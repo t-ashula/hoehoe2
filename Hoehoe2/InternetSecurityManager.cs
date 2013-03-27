@@ -24,15 +24,15 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Runtime.InteropServices;
-    using System.Runtime.InteropServices.ComTypes;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Windows.Forms;
-
     public class InternetSecurityManager : WebBrowserAPI.IServiceProvider, WebBrowserAPI.IInternetSecurityManager
     {
         private readonly object _ocx = new object();
@@ -110,7 +110,7 @@ namespace Hoehoe
             if (guidService.CompareTo(WebBrowserAPI.IID_IInternetSecurityManager) == 0)
             {
                 // 自分から IID_IInternetSecurityManager を QueryInterface して返す
-                IntPtr punk = Marshal.GetIUnknownForObject(this);
+                var punk = Marshal.GetIUnknownForObject(this);
                 return Marshal.QueryInterface(punk, ref riid, out ppvObject);
             }
 
@@ -169,9 +169,9 @@ namespace Hoehoe
             if (WebBrowserAPI.URLACTION_SCRIPT_MIN <= dwAction && dwAction <= WebBrowserAPI.URLACTION_SCRIPT_MAX)
             {
                 // スクリプト実行状態
-                pPolicy = (_policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT ?
-                    WebBrowserAPI.URLPOLICY_ALLOW :
-                    WebBrowserAPI.URLPOLICY_DISALLOW;
+                pPolicy = (_policy & POLICY.ALLOW_SCRIPT) == POLICY.ALLOW_SCRIPT
+                    ? WebBrowserAPI.URLPOLICY_ALLOW
+                    : WebBrowserAPI.URLPOLICY_DISALLOW;
 
                 if (Regex.IsMatch(pwszUrl, "^https?://((api\\.)?twitter\\.com/|([a-zA-Z0-9]+\\.)?twimg\\.com/|ssl\\.google-analytics\\.com/)"))
                 {
@@ -185,9 +185,9 @@ namespace Hoehoe
             if (WebBrowserAPI.URLACTION_ACTIVEX_MIN <= dwAction && dwAction <= WebBrowserAPI.URLACTION_ACTIVEX_MAX)
             {
                 // ActiveX実行状態
-                pPolicy = (_policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX ?
-                    WebBrowserAPI.URLPOLICY_ALLOW :
-                    WebBrowserAPI.URLPOLICY_DISALLOW;
+                pPolicy = (_policy & POLICY.ALLOW_ACTIVEX) == POLICY.ALLOW_ACTIVEX
+                    ? WebBrowserAPI.URLPOLICY_ALLOW
+                    : WebBrowserAPI.URLPOLICY_DISALLOW;
 
                 return HRESULT.S_OK;
             }

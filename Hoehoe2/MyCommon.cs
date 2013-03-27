@@ -24,25 +24,25 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Media;
+using System.Net.NetworkInformation;
+using System.Reflection;
+using System.Security.Principal;
+using System.Text;
+using System.Web;
+using System.Windows.Forms;
+using R = Hoehoe.Properties.Resources;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.Drawing.Imaging;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Media;
-    using System.Net.NetworkInformation;
-    using System.Reflection;
-    using System.Security.Principal;
-    using System.Text;
-    using System.Web;
-    using System.Windows.Forms;
-    using R = Properties.Resources;
-
     public sealed class MyCommon
     {
         /// <summary>
@@ -50,7 +50,7 @@ namespace Hoehoe
         /// </summary>
         public static ApiInformation TwitterApiInfo = new ApiInformation();
 
-        private static readonly object lockObj = new object();
+        private static readonly object LockObj = new object();
 
         /// <summary>
         /// 終了フラグ
@@ -151,7 +151,7 @@ namespace Hoehoe
 
         public static void TraceOut(bool outputFlag, string message)
         {
-            lock (lockObj)
+            lock (LockObj)
             {
                 if (!outputFlag)
                 {
@@ -273,15 +273,15 @@ namespace Hoehoe
 
         public static bool ExceptionOut(Exception ex)
         {
-            lock (lockObj)
+            lock (LockObj)
             {
-                bool isTerminatePermission = true;
-                DateTime now = DateTime.Now;
-                string fileName = string.Format("Hoehoe-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+                var isTerminatePermission = true;
+                var now = DateTime.Now;
+                var fileName = string.Format("Hoehoe-{0:0000}{1:00}{2:00}-{3:00}{4:00}{5:00}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 
                 using (var writer = new StreamWriter(fileName))
                 {
-                    WindowsIdentity ident = WindowsIdentity.GetCurrent();
+                    var ident = WindowsIdentity.GetCurrent();
                     var princ = new WindowsPrincipal(ident);
 
                     writer.WriteLine(R.UnhandledExceptionText1, DateTime.Now);
@@ -345,9 +345,9 @@ namespace Hoehoe
                 return input;
             }
 
-            string decodedInput = HttpUtility.UrlDecode(input);
+            var decodedInput = HttpUtility.UrlDecode(input);
         retry:
-            foreach (char cc in decodedInput)
+            foreach (var cc in decodedInput)
             {
                 c = cc;
                 if (Convert.ToInt32(c) > 255)
@@ -462,7 +462,7 @@ namespace Hoehoe
         public static DateTime DateTimeParse(string input)
         {
             string[] format = { "ddd MMM dd HH:mm:ss zzzz yyyy" };
-            foreach (string fmt in format)
+            foreach (var fmt in format)
             {
                 DateTime rslt;
                 if (DateTime.TryParseExact(input, fmt, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out rslt))
@@ -547,7 +547,7 @@ namespace Hoehoe
             var bmp = new Bitmap(width, height);
             try
             {
-                using (Graphics g = Graphics.FromImage(bmp))
+                using (var g = Graphics.FromImage(bmp))
                 {
                     g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                     g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;

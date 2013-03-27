@@ -24,15 +24,15 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Drawing;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Text.RegularExpressions;
+using Hoehoe.DataModels;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Drawing;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using DataModels;
-
     public partial class Thumbnail
     {
         #region "PicPlz"

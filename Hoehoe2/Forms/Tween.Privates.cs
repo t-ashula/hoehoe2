@@ -24,25 +24,25 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Web;
+using System.Windows.Forms;
+using Hoehoe.TweenCustomControl;
+using R = Hoehoe.Properties.Resources;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.Drawing.Drawing2D;
-    using System.IO;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Web;
-    using System.Windows.Forms;
-    using TweenCustomControl;
-    using R = Properties.Resources;
-
     public partial class TweenMain
     {
         #region private methods
@@ -5858,11 +5858,11 @@ namespace Hoehoe
                 Outputz.Enabled = _configs.OutputzEnabled;
                 switch (_configs.OutputzUrlmode)
                 {
-                    case OutputzUrlmode.twittercom:
+                    case OutputzUrlmode.Twittercom:
                         Outputz.OutUrl = "http://twitter.com/";
                         break;
 
-                    case OutputzUrlmode.twittercomWithUsername:
+                    case OutputzUrlmode.TwittercomWithUsername:
                         Outputz.OutUrl = "http://twitter.com/" + _tw.Username;
                         break;
                 }

@@ -23,12 +23,11 @@
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
+using System;
+using System.Text;
 
 namespace Hoehoe
 {
-    using System;
-    using System.Text;
-
     public static class RadixConvert
     {
         #region "Int16型およびUInt16型用のメソッド群"

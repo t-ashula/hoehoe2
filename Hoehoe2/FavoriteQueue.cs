@@ -24,12 +24,12 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace Hoehoe
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
     public class FavoriteQueue : IList<long>
     {
         private readonly Twitter _twitter;

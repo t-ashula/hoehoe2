@@ -24,14 +24,14 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.Web;
+using Hoehoe.DataModels;
+using Hoehoe.DataModels.Google;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Web;
-    using DataModels;
-    using DataModels.Google;
-
     public class Google
     {
         #region "Translation"

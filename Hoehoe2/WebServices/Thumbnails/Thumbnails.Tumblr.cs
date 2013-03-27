@@ -24,13 +24,13 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Drawing;
+using System.Text.RegularExpressions;
+using System.Xml;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Drawing;
-    using System.Text.RegularExpressions;
-    using System.Xml;
-
     public partial class Thumbnail
     {
         #region "Tumblr"

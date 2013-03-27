@@ -19,11 +19,11 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Linq.Expressions;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Linq.Expressions;
-
     public static class DynamicExpression
     {
         public static Expression<Func<T, TS>> ParseLambda<T, TS>(string expression, params object[] values)

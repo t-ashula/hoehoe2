@@ -24,12 +24,12 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Windows.Forms;
-
     // ソート比較クラス：ID比較のみ
     public sealed class IdComparerClass : IComparer<long>
     {

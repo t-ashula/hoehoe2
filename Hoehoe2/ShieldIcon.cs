@@ -24,12 +24,12 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Drawing;
-    using System.Runtime.InteropServices;
-
     public class ShieldIcon
     {
         private readonly Image _icondata;

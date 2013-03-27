@@ -24,17 +24,17 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Reflection;
+using System.Windows.Forms;
+using R = Hoehoe.Properties.Resources;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections;
-    using System.Drawing;
-    using System.Drawing.Imaging;
-    using System.IO;
-    using System.Reflection;
-    using System.Windows.Forms;
-    using R = Properties.Resources;
-
     public class GrowlHelper
     {
         private Assembly _connector;

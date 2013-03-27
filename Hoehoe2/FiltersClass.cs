@@ -24,16 +24,16 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.Serialization;
+using R = Hoehoe.Properties.Resources;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Xml.Serialization;
-    using R = Properties.Resources;
-
     [Serializable]
     public sealed class FiltersClass : IEquatable<FiltersClass>
     {

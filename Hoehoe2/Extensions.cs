@@ -18,11 +18,10 @@
 // with this program. If not, see <http://www.gnu.org/licenses/>, or write to
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
+using System.Drawing;
 
 namespace Hoehoe
 {
-    using System.Drawing;
-
     public static class Extensions
     {
         public static string AsCssRgb(this Color c)

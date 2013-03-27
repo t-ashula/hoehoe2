@@ -24,12 +24,12 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Collections.Generic;
+using System.Xml.Serialization;
+using Hoehoe.DataModels.Twitter;
+
 namespace Hoehoe
 {
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
-    using DataModels.Twitter;
-
     public class ListElement
     {
         private List<UserInfo> _members;

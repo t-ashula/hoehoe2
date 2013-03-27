@@ -24,14 +24,14 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Drawing;
-    using System.Windows.Forms;
-
     public partial class Thumbnail
     {
         private readonly object _lckPrev = new object();
@@ -93,11 +93,6 @@ namespace Hoehoe
         private delegate bool UrlCreatorDelegate(GetUrlArgs args);
 
         private delegate bool ImageCreatorDelegate(CreateImageArgs args);
-
-        private PostClass _curPost
-        {
-            get { return _tweenMain.CurPost; }
-        }
 
         public void GenThumbnail(long id, List<string> links, PostClass.StatusGeo geo, Dictionary<string, string> media)
         {
@@ -352,7 +347,7 @@ namespace Hoehoe
 
             lock (_lckPrev)
             {
-                if (_curPost != null && prv.StatusId == _curPost.StatusId)
+                if (_tweenMain.CurPost != null && prv.StatusId == _tweenMain.CurPost.StatusId)
                 {
                     _preview = prv;
                     _tweenMain.SplitContainer3.Panel2Collapsed = false;
@@ -363,7 +358,7 @@ namespace Hoehoe
                     string prevtooltipTextValue = _preview.TooltipText[0].Value;
                     _tweenMain.ToolTip1.SetToolTip(_tweenMain.PreviewPicture, string.IsNullOrEmpty(prevtooltipTextValue) ? string.Empty : prevtooltipTextValue);
                 }
-                else if (_curPost == null || (_preview != null && _curPost.StatusId != _preview.StatusId))
+                else if (_tweenMain.CurPost == null || (_preview != null && _tweenMain.CurPost.StatusId != _preview.StatusId))
                 {
                     _tweenMain.PreviewScrollBar.Maximum = 0;
                     _tweenMain.PreviewScrollBar.Enabled = false;
@@ -378,7 +373,7 @@ namespace Hoehoe
         {
             lock (_lckPrev)
             {
-                if (_preview != null && _curPost != null && _preview.StatusId == _curPost.StatusId)
+                if (_preview != null && _tweenMain.CurPost != null && _preview.StatusId == _tweenMain.CurPost.StatusId)
                 {
                     if (_preview.Pics.Count > e.NewValue)
                     {

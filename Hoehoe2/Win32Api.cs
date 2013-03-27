@@ -24,17 +24,16 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace Hoehoe
 {
-    using System;
-    using System.Diagnostics;
-    using System.Net;
-    using System.Runtime.InteropServices;
-    using System.Threading;
-    using System.Windows.Forms;
-
     public static class Win32Api
     {
         #region "先行起動プロセスをアクティブにする"
@@ -74,7 +73,7 @@ namespace Hoehoe
             var curProcess = Process.GetCurrentProcess();
             return Process.GetProcessesByName(curProcess.ProcessName)
                 .Where(process => process.Id != curProcess.Id)
-                .FirstOrDefault(process => string.Compare(process.MainModule.FileName, curProcess.MainModule.FileName, true) == 0);
+                .FirstOrDefault(process => process.MainModule.FileName.ToUpper() == curProcess.MainModule.FileName.ToUpper());
         }
 
         #endregion

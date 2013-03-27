@@ -24,10 +24,10 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Text.RegularExpressions;
+
 namespace Hoehoe
 {
-    using System.Text.RegularExpressions;
-
     public partial class Thumbnail
     {
         #region "ViaMe"

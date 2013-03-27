@@ -24,11 +24,11 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Collections.Generic;
+
 namespace Hoehoe
 {
-    using System;
-    using System.Collections.Generic;
-
     public class ApiInformation : ApiInfoBase
     {
         private Dictionary<string, string> _headers = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);

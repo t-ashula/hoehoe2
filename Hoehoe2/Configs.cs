@@ -19,13 +19,13 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+using Hoehoe.DataModels.Twitter;
+
 namespace Hoehoe
 {
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Windows.Forms;
-    using DataModels.Twitter;
-
     public class Configs
     {
         private static readonly Configs instance = new Configs();
