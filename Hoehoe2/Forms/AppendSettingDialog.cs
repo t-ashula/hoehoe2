@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -1505,8 +1506,7 @@ namespace Hoehoe
 
             using (var ab = new AuthBrowser())
             {
-                ab.IsAuthorized = true;
-                ab.UrlString = pinPageUrl;
+                Process.Start(pinPageUrl);
                 if (ab.ShowDialog(this) == DialogResult.OK)
                 {
                     _pin = ab.PinString;
