@@ -78,7 +78,8 @@ namespace Hoehoe
             new ThumbnailService("miilme", MiilMe_GetUrl, MiilMe_CreateImage),
             new ThumbnailService("StreamZoo", StreamZoo_GetUrl, StreamZoo_CreateImage),
             new ThumbnailService("My365", My365_GetUrl, My365_CreateImage),
-            new ThumbnailService("Path", Path_GetUrl, Path_CreateImage)
+            new ThumbnailService("Path", Path_GetUrl, Path_CreateImage),
+            new ThumbnailService("ボケて", Bokete_GetUrl, Bokete_CreateImage)
         };
 
         public Thumbnail(TweenMain owner)
@@ -229,6 +230,7 @@ namespace Hoehoe
             // TODO URL判定処理を記述
             Match mc = Regex.Match(args.url, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
             if (mc.Success) {
+
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://i.imgur.com/${1}l.jpg")));
                 return true;
