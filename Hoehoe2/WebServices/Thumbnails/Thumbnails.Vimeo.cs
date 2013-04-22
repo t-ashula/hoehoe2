@@ -29,7 +29,7 @@ using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using R = Properties.Resources;
+using R = Hoehoe.Properties.Resources;
 
 namespace Hoehoe
 {
