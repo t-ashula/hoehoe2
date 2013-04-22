@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TweenUp3</name>
+    </assembly>
+    <members>
+        <member name="T:TweenUp.My.Resources">
+            <summary>
+              ローカライズされた文字列などを検索するための、厳密に型指定されたリソース クラスです。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.ResourceManager">
+            <summary>
+              このクラスで使用されているキャッシュされた ResourceManager インスタンスを返します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.Culture">
+            <summary>
+              厳密に型指定されたこのリソース クラスを使用して、すべての検索リソースに対し、
+              現在のスレッドの CurrentUICulture プロパティをオーバーライドします。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.ExceptionMessage">
+            <summary>
+              Exception was occured in updateing proccess. Error log is TweenUp.log に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.ExceptionTitle">
+            <summary>
+              Update Error に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.FilenameDll">
+            <summary>
+              Tween.XmlSerializers.dll に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.FilenameDllNew">
+            <summary>
+              TweenNew.XmlSerializers.dll に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.FilenameNew">
+            <summary>
+              TweenNew.exe に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.FilenameResourceDll">
+            <summary>
+              Tween.resources.dll に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.FilenameResourceNew">
+            <summary>
+              Tween.resourcesNew.dll に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.FilenameTweenExe">
+            <summary>
+              Tween.exe に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.FormTitle">
+            <summary>
+              Tween Update に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.PleaseWait">
+            <summary>
+              Please wait for a while... に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.ProgressBackup">
+            <summary>
+              Backup setting files... に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.ProgressCopying">
+            <summary>
+              Copying new files... に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.ProgressDetectMultipleInstance">
+            <summary>
+              Attempting force termination Tween instances... に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.ProgressDetectTweenExit">
+            <summary>
+              Detected Tween termination... に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.ProgressExecuteTween">
+            <summary>
+              Executing new Tween... に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.ProgressProcessKill">
+            <summary>
+              Attempting force termination Tween instance... に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.ProgressWaitForTweenExit">
+            <summary>
+              Waiting Tween termination... に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.TimeOutException">
+            <summary>
+              Failed to terminate Tween. Please try kill Tween process in TaskManager, or Reboot this computer. に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.TweenUpdating">
+            <summary>
+              Updating Tween... に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+        <member name="P:TweenUp.My.Resources.WaitProcessName">
+            <summary>
+              Tween に類似しているローカライズされた文字列を検索します。
+            </summary>
+        </member>
+    </members>
+</doc>
