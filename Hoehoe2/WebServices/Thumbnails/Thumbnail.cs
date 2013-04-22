@@ -229,7 +229,6 @@ namespace Hoehoe
             // TODO URL判定処理を記述
             Match mc = Regex.Match(args.url, "^http://imgur\\.com/(\\w+)\\.jpg$", RegexOptions.IgnoreCase);
             if (mc.Success) {
-
                 // TODO 成功時はサムネイルURLを作成しimglist.Addする
                 args.imglist.Add(new KeyValuePair<string, string>(args.url, mc.Result("http://i.imgur.com/${1}l.jpg")));
                 return true;
