@@ -24,14 +24,13 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-using System.Drawing;
 using System.Text.RegularExpressions;
 
 namespace Hoehoe
 {
     public partial class Thumbnail
     {
-        #region "Plixi(TweetPhoto)"
+        #region "Lockerz"
 
         /// <summary>
         /// URL解析部で呼び出されるサムネイル画像URL作成デリゲート
@@ -42,16 +41,15 @@ namespace Hoehoe
         /// </param>
         /// <returns>成功した場合True,失敗の場合False</returns>
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
-        private static bool Plixi_GetUrl(GetUrlArgs args)
+        private static bool Lockerz_GetUrl(GetUrlArgs args)
         {
-            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^(http://tweetphoto\\.com/[0-9]+|http://pic\\.gd/[a-z0-9]+|http://(lockerz|plixi)\\.com/[ps]/[0-9]+)$", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^(http://lockerz\\.com/u/.+)$", RegexOptions.IgnoreCase);
             if (!mc.Success)
             {
                 return false;
             }
 
-            const string Api = "http://api.plixi.com/api/tpapi.svc/imagefromurl?size=thumbnail&url=";
-            args.AddThumbnailUrl(args.Url, Api + (string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended));
+            args.AddThumbnailUrl(args.Url, string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended);
             return true;
         }
 
@@ -67,30 +65,23 @@ namespace Hoehoe
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
         /// <remarks></remarks>
-        private static bool Plixi_CreateImage(CreateImageArgs args)
+        private static bool Lockerz_CreateImage(CreateImageArgs args)
         {
-            string referer;
-            if (!args.Url.Key.Contains("t.co"))
+            var src = string.Empty;
+            if (!new HttpVarious().GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
             {
-                referer = args.Url.Key;
-            }
-            else
-            {
-                if (args.Url.Value.Contains("tweetphoto.com"))
-                {
-                    referer = "http://tweetphoto.com";
-                }
-                else if (args.Url.Value.Contains("http://lockerz.com"))
-                {
-                    referer = "http://lockerz.com";
-                }
-                else
-                {
-                    referer = "http://plixi.com";
-                }
+                return false;
             }
 
-            Image img = (new HttpVarious()).GetImage(args.Url.Value, referer, 10000, ref args.Errmsg);
+            // <meta name="twitter:image" value="http://static.lockerz.com/decalz/original/image001366662197907nmgm7x.jpeg" />
+            var thummc = Regex.Match(src, "name=\"twitter:image\" (?:value|content)=\"([^\"]+)\"", RegexOptions.IgnoreCase);
+            if (!thummc.Success)
+            {
+                return false;
+            }
+
+            var thumburl = thummc.Result("$1");
+            var img = new HttpVarious().GetImage(thumburl, args.Url.Key, 10000, ref args.Errmsg);
             if (img == null)
             {
                 return false;

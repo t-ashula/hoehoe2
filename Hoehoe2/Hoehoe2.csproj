@@ -352,6 +352,7 @@
     <Compile Include="Forms\TabsDialog.Designer.cs">
       <DependentUpon>TabsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="WebServices\Thumbnails\Thumbnails.Lockerz.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.MiilMe.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.StreamZoo.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Path.cs" />
@@ -377,7 +378,6 @@
     <Compile Include="WebServices\Thumbnails\Thumbnails.PicPlz.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Pikubo.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Pixiv.cs" />
-    <Compile Include="WebServices\Thumbnails\Thumbnails.Plixi.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Tinami.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.TiwtrPix.cs" />
     <Compile Include="WebServices\Thumbnails\Thumbnails.Tumblr.cs" />
