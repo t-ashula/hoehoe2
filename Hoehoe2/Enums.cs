@@ -84,8 +84,8 @@ namespace Hoehoe
 
     public enum OutputzUrlmode
     {
-        Twittercom,
-        TwittercomWithUsername
+        twittercom,
+        twittercomWithUsername
     }
 
     public enum HITRESULT
