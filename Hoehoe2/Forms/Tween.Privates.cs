@@ -300,7 +300,6 @@ namespace Hoehoe
                 { "TwitPic", new TwitPic(_tw) },
                 { "img.ly", new Imgly(_tw) },
                 { "yfrog", new Yfrog(_tw) },
-                { "lockerz", new Plixi(_tw) },
                 { "Twitter", new TwitterPhoto(_tw) }
             };
         }
