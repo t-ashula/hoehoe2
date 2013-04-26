@@ -18,7 +18,9 @@
           </RuleSettings>
         </Rule>
       </Rules>
-      <AnalyzerSettings />
+      <AnalyzerSettings>
+        <BooleanProperty Name="IgnorePrivates">True</BooleanProperty>
+      </AnalyzerSettings>
     </Analyzer>
     <Analyzer AnalyzerId="StyleCop.CSharp.NamingRules">
       <AnalyzerSettings>

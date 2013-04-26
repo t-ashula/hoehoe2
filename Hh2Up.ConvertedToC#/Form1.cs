@@ -1,66 +1,79 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
-
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace TweenUp
 {
+    /// <summary>
+    /// The form 1.
+    /// </summary>
     public partial class Form1
     {
-        private string TWEENEXEPATH = Application.StartupPath;
+        private string _tweenexepath = Application.StartupPath;
 
-        private string SOURCEPATH = Application.StartupPath;
+        private readonly string _sourcepath = Application.StartupPath;
 
-        private void Form1_Load(System.Object sender, System.EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
             // 文字列リソースから設定
-            this.Text = TweenUp.My.Resources.FormTitle;
-            Label1.Text = TweenUp.My.Resources.TweenUpdating;
-            Label2.Text = TweenUp.My.Resources.PleaseWait;
+            Text = My.Resources.FormTitle;
+            Label1.Text = My.Resources.TweenUpdating;
+            Label2.Text = My.Resources.PleaseWait;
 
-            if (TweenUp.My.MyProject.Application.CommandLineArgs.Count > 0)
-                TWEENEXEPATH = TweenUp.My.MyProject.Application.CommandLineArgs[0];
-
-            if (TweenUp.My.MyProject.Application.CommandLineArgs.Count == 1 && IsRequiredUAC())
+            var args = GetCommandLineArgs();
+            if (args.Count > 0)
             {
-                this.Visible = false;
-                Process p = new Process();
-                p.StartInfo.FileName = Path.Combine(Application.StartupPath, TweenUp.My.MyProject.Application.Info.AssemblyName + ".exe");
-                p.StartInfo.UseShellExecute = true;
-                p.StartInfo.WorkingDirectory = Application.StartupPath;
-                p.StartInfo.Arguments = "\"" + TWEENEXEPATH + "\" up";
-                p.StartInfo.Verb = "RunAs";
+                _tweenexepath = args[0];
+            }
+
+            if (args.Count == 1 && IsUACRequired())
+            {
+                Visible = false;
+                var p = new Process
+                {
+                    StartInfo =
+                    {
+                        FileName = Path.Combine(Application.StartupPath, My.MyProject.Application.Info.AssemblyName + ".exe"),
+                        UseShellExecute = true,
+                        WorkingDirectory = Application.StartupPath,
+                        Arguments = "\"" + _tweenexepath + "\" up",
+                        Verb = "RunAs"
+                    }
+                };
                 try
                 {
                     p.Start();
                     p.WaitForExit();
                 }
-                catch (System.ComponentModel.Win32Exception ex)
+                catch (Win32Exception ex)
                 {
+                    Debug.Write(ex);
                     Application.Exit();
                 }
                 catch (Exception ex)
                 {
+                    Debug.Write(ex);
                 }
                 finally
                 {
                     p.Close();
                 }
 
-                Process.Start(Path.Combine(TWEENEXEPATH, TweenUp.My.Resources.FilenameTweenExe));
+                Process.Start(Path.Combine(_tweenexepath, My.Resources.FilenameTweenExe));
                 Application.Exit();
                 return;
             }
 
             // exe自身からフォームのアイコンを取得
-            this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+            Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 
 #if NONDEFINED
 			if (Environment.GetCommandLineArgs().Length != 1 && Directory.Exists(Environment.GetCommandLineArgs()[1])) {
@@ -70,73 +83,55 @@ namespace TweenUp
 #endif
         }
 
-        private bool IsRequiredUAC()
+        private static bool IsUACRequired()
         {
-            OperatingSystem os = System.Environment.OSVersion;
-            if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 6)
-                return true;
-            return false;
+            var os = Environment.OSVersion;
+            return os.Platform == PlatformID.Win32NT && os.Version.Major >= 6;
         }
 
-        private void Form1_Shown(System.Object sender, System.EventArgs e)
+        private void Form1_Shown(object sender, EventArgs e)
         {
-            this.BackgroundWorker1.WorkerReportsProgress = true;
-            this.BackgroundWorker1.RunWorkerAsync();
+            BackgroundWorker1.WorkerReportsProgress = true;
+            BackgroundWorker1.RunWorkerAsync();
         }
 
         private void BackupConfigurationFile()
         {
-            //Dim SrcFile As String
-            //Dim DstFile As String
-
-            //Try
-            //    SrcFile = Path.Combine(TWEENEXEPATH, "Tween.exe.Config")
-            //    DstFile = Path.Combine(TWEENEXEPATH, "Tween.exe.Config.Backup" + DateTime.Now.ToString("yyyyMMddHHmmss"))
-
-            //    File.Copy(SrcFile, DstFile, True)
-            //Catch ex As Exception
-
-            //End Try
-
-            //Try
-            //    SrcFile = Path.Combine(TWEENEXEPATH, "TweenConf.xml")
-            //    DstFile = Path.Combine(TWEENEXEPATH, "TweenConf.xml.Backup" + DateTime.Now.ToString("yyyyMMddHHmmss"))
-
-            //    File.Copy(SrcFile, DstFile, True)
-            //Catch ex As Exception
-
-            //End Try
-
             try
             {
-                string bkDir2 = Path.Combine(SOURCEPATH, "TweenBackup2nd");
-                if (Directory.Exists(bkDir2))
+                var dir2 = Path.Combine(_sourcepath, "TweenBackup2nd");
+                if (Directory.Exists(dir2))
                 {
-                    Directory.Delete(bkDir2, true);
+                    Directory.Delete(dir2, true);
                 }
-                string bkDir = Path.Combine(SOURCEPATH, "TweenBackup1st");
-                if (Directory.Exists(bkDir))
+
+                var dir1 = Path.Combine(_sourcepath, "TweenBackup1st");
+                if (Directory.Exists(dir1))
                 {
-                    Directory.Move(bkDir, bkDir2);
+                    Directory.Move(dir1, dir2);
                 }
             }
             catch (Exception ex)
             {
+                Debug.Write(ex);
             }
+
             try
             {
-                string bkDir = Path.Combine(SOURCEPATH, "TweenBackup1st");
-                if (!Directory.Exists(bkDir))
+                var dir = Path.Combine(_sourcepath, "TweenBackup1st");
+                if (!Directory.Exists(dir))
                 {
-                    Directory.CreateDirectory(bkDir);
+                    Directory.CreateDirectory(dir);
                 }
-                foreach (FileInfo file in (new DirectoryInfo(SOURCEPATH + Path.DirectorySeparatorChar)).GetFiles("*.xml"))
+
+                foreach (var file in (new DirectoryInfo(_sourcepath + Path.DirectorySeparatorChar)).GetFiles("*.xml"))
                 {
-                    file.CopyTo(Path.Combine(bkDir, file.Name), true);
+                    file.CopyTo(Path.Combine(dir, file.Name), true);
                 }
             }
             catch (Exception ex)
             {
+                Debug.Write(ex);
             }
         }
 
@@ -144,177 +139,171 @@ namespace TweenUp
         {
             try
             {
-                string bkDir = Path.Combine(SOURCEPATH, "TweenOldFiles");
-                if (!Directory.Exists(bkDir))
+                var backupDir = Path.Combine(_sourcepath, "TweenOldFiles");
+                if (!Directory.Exists(backupDir))
                 {
-                    Directory.CreateDirectory(bkDir);
+                    Directory.CreateDirectory(backupDir);
                 }
 
-                //ログファイルの削除
-                DirectoryInfo cDir = new DirectoryInfo(SOURCEPATH + Path.DirectorySeparatorChar);
-                foreach (FileInfo file in cDir.GetFiles("Tween*.log"))
+                // ログファイルの削除
+                var currentDir = new DirectoryInfo(_sourcepath + Path.DirectorySeparatorChar);
+                foreach (var file in currentDir.GetFiles("Tween*.log"))
                 {
-                    file.MoveTo(Path.Combine(bkDir, file.Name));
+                    file.MoveTo(Path.Combine(backupDir, file.Name));
                 }
 
-                //旧設定ファイルの削除
-                foreach (FileInfo file in cDir.GetFiles("Tween.exe.config.Backup*"))
+                // 旧設定ファイルの削除
+                foreach (var file in currentDir.GetFiles("Tween.exe.config.Backup*"))
                 {
-                    file.MoveTo(Path.Combine(bkDir, file.Name));
+                    file.MoveTo(Path.Combine(backupDir, file.Name));
                 }
 
-                //旧設定XMLファイルの削除
-                foreach (FileInfo file in cDir.GetFiles("TweenConf.xml.Backup*"))
+                // 旧設定XMLファイルの削除
+                foreach (var file in currentDir.GetFiles("TweenConf.xml.Backup*"))
                 {
-                    file.MoveTo(Path.Combine(bkDir, file.Name));
+                    file.MoveTo(Path.Combine(backupDir, file.Name));
                 }
 
-                //旧設定XMLファイルの削除
-                foreach (FileInfo file in cDir.GetFiles("Setting*.xml.Backup*"))
+                // 旧設定XMLファイルの削除
+                foreach (var file in currentDir.GetFiles("Setting*.xml.Backup*"))
                 {
-                    file.MoveTo(Path.Combine(bkDir, file.Name));
+                    file.MoveTo(Path.Combine(backupDir, file.Name));
                 }
             }
             catch (Exception ex)
             {
+                Debug.Write(ex);
             }
         }
 
-        private void BackgroundWorker1_DoWork(System.Object sender, System.ComponentModel.DoWorkEventArgs e)
+        private void BackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             const int WaitTime = 5000;
 
             // スリープ時間
-            List<string> cultures = new List<string>();
+            var cultures = new List<string>();
 
-            //リソースを配置するフォルダ名（カルチャ名）
-
-            cultures.AddRange(new string[] { "en" });
-            string curCul = "";
+            // リソースを配置するフォルダ名（カルチャ名）
+            cultures.AddRange(new[] { "en" });
+            string curCul;
             if (!Thread.CurrentThread.CurrentUICulture.IsNeutralCulture)
             {
-                int idx = Thread.CurrentThread.CurrentUICulture.Name.LastIndexOf('-');
-                if (idx > -1)
-                {
-                    curCul = Thread.CurrentThread.CurrentUICulture.Name.Substring(0, idx);
-                }
-                else
-                {
-                    curCul = Thread.CurrentThread.CurrentUICulture.Name;
-                }
+                var idx = Thread.CurrentThread.CurrentUICulture.Name.LastIndexOf('-');
+                curCul = idx > -1
+                    ? Thread.CurrentThread.CurrentUICulture.Name.Substring(0, idx)
+                    : Thread.CurrentThread.CurrentUICulture.Name;
             }
             else
             {
                 curCul = Thread.CurrentThread.CurrentUICulture.Name;
             }
+
             if (string.IsNullOrEmpty(curCul) && curCul != "en")
+            {
                 cultures.Add(curCul);
+            }
 
-            BackgroundWorker1.ReportProgress(0, userState: TweenUp.My.Resources.ProgressWaitForTweenExit);
-            System.Threading.Thread.Sleep(WaitTime);
+            BackgroundWorker1.ReportProgress(0, My.Resources.ProgressWaitForTweenExit);
+            Thread.Sleep(WaitTime); // スリープ
 
-            // スリープ
+            var imagePath = new ArrayList { Path.Combine(_tweenexepath, My.Resources.FilenameTweenExe) };
 
-            ArrayList ImagePath = new ArrayList();
-
-            //TweenUp.exeと同じフォルダのTween.exeは無条件に対象
-            ImagePath.Add(Path.Combine(TWEENEXEPATH, TweenUp.My.Resources.FilenameTweenExe));
+            // TweenUp.exeと同じフォルダのTween.exeは無条件に対象
 
             // Tween という名前のプロセスを取得
-            Process[] ps = Process.GetProcessesByName(TweenUp.My.Resources.WaitProcessName);
-            Process p = null;
+            var ps = Process.GetProcessesByName(My.Resources.WaitProcessName);
 
-            //       Console.WriteLine("取得開始")
+            // Console.WriteLine("取得開始")
 
             // コレクションをスキャン
-            foreach (Process p_loopVariable in ps)
+            foreach (var p in ps)
             {
-                p = p_loopVariable;
-                if (ImagePath.Contains(p.MainModule.FileName) == true)
+                if (imagePath.Contains(p.MainModule.FileName))
                 {
-                    //' 終了指示
-                    //If Not p.CloseMainWindow() Then
-                    //    'アイコン化、ダイアログ表示など、終了を受け付けられる状態ではない。
-                    //    Throw New ApplicationException(My.Resources.TimeOutException)
-                    //End If
+                    // ' 終了指示
+                    // If Not p.CloseMainWindow() Then
+                    // 'アイコン化、ダイアログ表示など、終了を受け付けられる状態ではない。
+                    // Throw New ApplicationException(My.Resources.TimeOutException)
+                    // End If
                     if (!p.WaitForExit(60000))
                     {
                         // 強制終了
-                        //p.Kill()
-                        //If Not p.WaitForExit(10000) Then
+                        // p.Kill()
+                        // If Not p.WaitForExit(10000) Then
                         // だいたい30秒ぐらい（適当）たってもだめなら例外を発生させる
-                        throw new ApplicationException(TweenUp.My.Resources.TimeOutException);
+                        throw new ApplicationException(My.Resources.TimeOutException);
 
-                        //End If
+                        // End If
                     }
-                    break; // TODO: might not be correct. Was : Exit For
+
+                    break;
                 }
             }
 
-            //BackgroundWorker1.ReportProgress(0, userState:=My.Resources.ProgressProcessKill)
-            //Thread.Sleep(WaitTime) ' スリープ
+            // BackgroundWorker1.ReportProgress(0, userState:=My.Resources.ProgressProcessKill)
+            // Thread.Sleep(WaitTime) ' スリープ
 
             // 「Tweenの終了を検出しました」
-            BackgroundWorker1.ReportProgress(0, userState: TweenUp.My.Resources.ProgressDetectTweenExit);
+            BackgroundWorker1.ReportProgress(0, My.Resources.ProgressDetectTweenExit);
 
             Thread.Sleep(WaitTime);
 
             // スリープ
 
             // 設定ファイルのバックアップ
-            BackgroundWorker1.ReportProgress(0, userState: TweenUp.My.Resources.ProgressBackup);
+            BackgroundWorker1.ReportProgress(0, My.Resources.ProgressBackup);
             BackupConfigurationFile();
             DeleteOldFiles();
             Thread.Sleep(WaitTime);
 
-            BackgroundWorker1.ReportProgress(0, userState: TweenUp.My.Resources.ProgressCopying);
-            foreach (object DstFile_loopVariable in ImagePath)
+            BackgroundWorker1.ReportProgress(0, My.Resources.ProgressCopying);
+            foreach (object dstFileLoopVariable in imagePath)
             {
-                var DstFile = DstFile_loopVariable;
+                var dstFile = dstFileLoopVariable;
 
-                //本体
-                string SrcFile = Path.Combine(SOURCEPATH, TweenUp.My.Resources.FilenameNew);
-                if (System.IO.File.Exists(SrcFile))
+                // 本体
+                var srcFile = Path.Combine(_sourcepath, My.Resources.FilenameNew);
+                if (File.Exists(srcFile))
                 {
                     // ImagePathに格納されているファイルにTweenNew.exeを上書き
-                    File.Copy(SrcFile, DstFile.ToString(), true);
+                    File.Copy(srcFile, dstFile.ToString(), true);
 
                     // TweenNew.exeを削除
-                    File.Delete(Path.Combine(SOURCEPATH, TweenUp.My.Resources.FilenameNew));
+                    File.Delete(Path.Combine(_sourcepath, My.Resources.FilenameNew));
                 }
 
-                //リソース
-                //Dim resDirs As String() = Directory.GetDirectories(SOURCEPATH, "*", SearchOption.TopDirectoryOnly)
-                //ディレクトリ探索
-                foreach (string spath in Directory.GetDirectories(SOURCEPATH, "*", SearchOption.TopDirectoryOnly))
+                // リソース
+                // Dim resDirs As String() = Directory.GetDirectories(SOURCEPATH, "*", SearchOption.TopDirectoryOnly)
+                // ディレクトリ探索
+                foreach (var spath in Directory.GetDirectories(_sourcepath, "*", SearchOption.TopDirectoryOnly))
                 {
-                    string cul = spath.Substring(spath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                    string SrcFileRes = Path.Combine(spath, TweenUp.My.Resources.FilenameResourceNew);
-                    string DstFileRes = Path.Combine(Path.Combine(TWEENEXEPATH, cul), TweenUp.My.Resources.FilenameResourceDll);
+                    var cul = spath.Substring(spath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                    var srcFileRes = Path.Combine(spath, My.Resources.FilenameResourceNew);
+                    var dstFileRes = Path.Combine(_tweenexepath, cul, My.Resources.FilenameResourceDll);
 
-                    if (System.IO.File.Exists(SrcFileRes))
+                    if (File.Exists(srcFileRes))
                     {
                         // リソースフォルダが更新先に存在しない場合は作成する
-                        if (!Directory.Exists(Path.Combine(TWEENEXEPATH, cul)))
+                        if (!Directory.Exists(Path.Combine(_tweenexepath, cul)))
                         {
-                            Directory.CreateDirectory(Path.Combine(TWEENEXEPATH, cul));
+                            Directory.CreateDirectory(Path.Combine(_tweenexepath, cul));
                         }
 
                         // リソースファイルの上書き
-                        File.Copy(SrcFileRes, DstFileRes, true);
+                        File.Copy(srcFileRes, dstFileRes, true);
 
                         // リソースファイル削除
-                        File.Delete(SrcFileRes);
+                        File.Delete(srcFileRes);
                     }
                 }
 
-                //シリアライザDLL
-                string SrcFileDll = Path.Combine(SOURCEPATH, TweenUp.My.Resources.FilenameDllNew);
-                string DstFileDll = Path.Combine(TWEENEXEPATH, TweenUp.My.Resources.FilenameDll);
-                if (System.IO.File.Exists(SrcFileDll))
+                // シリアライザDLL
+                var srcFileDll = Path.Combine(_sourcepath, My.Resources.FilenameDllNew);
+                var dstFileDll = Path.Combine(_tweenexepath, My.Resources.FilenameDll);
+                if (File.Exists(srcFileDll))
                 {
-                    File.Copy(SrcFileDll, DstFileDll, true);
-                    File.Delete(SrcFileDll);
+                    File.Copy(srcFileDll, dstFileDll, true);
+                    File.Delete(srcFileDll);
                 }
             }
 
@@ -323,37 +312,47 @@ namespace TweenUp
             // スリープ
 
             // ネイティブイメージにコンパイル
-            //Call GenerateNativeImage()
+            // Call GenerateNativeImage()
 
             // 「新しいTweenを起動しています」
-            BackgroundWorker1.ReportProgress(0, userState: TweenUp.My.Resources.ProgressExecuteTween);
+            BackgroundWorker1.ReportProgress(0, My.Resources.ProgressExecuteTween);
 
-            if (TweenUp.My.MyProject.Application.CommandLineArgs.Count == 1)
+            if (GetCommandLineArgsCount() == 1)
             {
-                Process.Start(Path.Combine(TWEENEXEPATH, TweenUp.My.Resources.FilenameTweenExe));
+                Process.Start(Path.Combine(_tweenexepath, My.Resources.FilenameTweenExe));
             }
 
-            //Process.Start(Path.Combine(TWEENEXEPATH, My.Resources.FilenameTweenExe))
+            // Process.Start(Path.Combine(TWEENEXEPATH, My.Resources.FilenameTweenExe))
         }
 
-        private void BackgroundWorker1_RunWorkerCompleted(System.Object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private static int GetCommandLineArgsCount()
         {
-            if ((e.Error != null))
+            return GetCommandLineArgs().Count;
+        }
+
+        private static ReadOnlyCollection<string> GetCommandLineArgs()
+        {
+            return new ReadOnlyCollection<string>(Environment.GetCommandLineArgs().Skip(1).ToArray());
+        }
+
+        private void BackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
             {
                 // 例外が発生していた場合はthrowする
                 throw e.Error;
             }
 
-            this.Close();
+            Close();
         }
 
-        private void BackgroundWorker1_ProgressChanged(System.Object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        private void BackgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // 進行状況を書き直す　同時にVisibleにする
             LabelProgress.Text = e.UserState.ToString();
 
             // ラベルコントロールをセンタリング
-            LabelProgress.Left = (this.ClientSize.Width - LabelProgress.Size.Width) / 2;
+            LabelProgress.Left = (ClientSize.Width - LabelProgress.Size.Width) / 2;
 
             LabelProgress.Refresh();
             LabelProgress.Visible = true;
@@ -374,14 +373,16 @@ namespace TweenUp
 			} catch {
 			}
 		}
-
-		public Form1()
-		{
-			Shown += Form1_Shown;
-			Load += Form1_Load;
-			InitializeComponent();
-		}
-
 #endif
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form1"/> class.
+        /// </summary>
+        public Form1()
+        {
+            Shown += Form1_Shown;
+            Load += Form1_Load;
+            InitializeComponent();
+        }
     }
 }

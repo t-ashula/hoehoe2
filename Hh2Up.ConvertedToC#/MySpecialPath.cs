@@ -1,52 +1,76 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 using Microsoft.Win32;
 
 namespace TweenUp
 {
+    /// <summary>
+    /// The my special path.
+    /// </summary>
     public class MySpecialPath
     {
+        /// <summary>
+        /// The user app data path.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string UserAppDataPath()
         {
-            { return GetFileSystemPath(Environment.SpecialFolder.ApplicationData); }
+            return GetFileSystemPath(Environment.SpecialFolder.ApplicationData);
         }
 
+        /// <summary>
+        /// The user app data path.
+        /// </summary>
+        /// <param name="productName">
+        /// The product name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string UserAppDataPath(string productName)
         {
-            { return GetFileSystemPath(Environment.SpecialFolder.ApplicationData, productName); }
+            return GetFileSystemPath(Environment.SpecialFolder.ApplicationData, productName);
         }
 
+        /// <summary>
+        /// Gets the common app data path.
+        /// </summary>
         public static string CommonAppDataPath
         {
             get { return GetFileSystemPath(Environment.SpecialFolder.CommonApplicationData); }
         }
 
+        /// <summary>
+        /// Gets the local user app data path.
+        /// </summary>
         public static string LocalUserAppDataPath
         {
             get { return GetFileSystemPath(Environment.SpecialFolder.LocalApplicationData); }
         }
 
+        /// <summary>
+        /// Gets the common app data registry.
+        /// </summary>
         public static RegistryKey CommonAppDataRegistry
         {
             get { return GetRegistryPath(Registry.LocalMachine); }
         }
 
+        /// <summary>
+        /// Gets the user app data registry.
+        /// </summary>
         public static RegistryKey UserAppDataRegistry
         {
             get { return GetRegistryPath(Registry.CurrentUser); }
         }
 
-        private static string GetFileSystemPath(System.Environment.SpecialFolder folder)
+        private static string GetFileSystemPath(Environment.SpecialFolder folder)
         {
             // パスを取得
-            string path = string.Format("{0}{3]{1}{3}{2}", Environment.GetFolderPath(folder), Application.CompanyName, Application.ProductName, System.IO.Path.DirectorySeparatorChar.ToString());
+            string path = string.Format("{0}{3}{1}{3}{2}", Environment.GetFolderPath(folder), Application.CompanyName, Application.ProductName, Path.DirectorySeparatorChar);
 
             // パスのフォルダを作成
             lock (typeof(Application))
@@ -56,15 +80,14 @@ namespace TweenUp
                     Directory.CreateDirectory(path);
                 }
             }
+
             return path;
         }
 
-        //GetFileSystemPath
-
-        private static string GetFileSystemPath(System.Environment.SpecialFolder folder, string productName)
+        private static string GetFileSystemPath(Environment.SpecialFolder folder, string productName)
         {
             // パスを取得
-            string path = string.Format("{0}{3]{1}{3}{2}", Environment.GetFolderPath(folder), Application.CompanyName, productName, System.IO.Path.DirectorySeparatorChar);
+            var path = string.Format("{0}{3}{1}{3}{2}", Environment.GetFolderPath(folder), Application.CompanyName, productName, Path.DirectorySeparatorChar);
 
             // パスのフォルダを作成
             lock (typeof(Application))
@@ -74,29 +97,18 @@ namespace TweenUp
                     Directory.CreateDirectory(path);
                 }
             }
+
             return path;
         }
-
-        //GetFileSystemPath
 
         private static RegistryKey GetRegistryPath(RegistryKey key)
         {
             // パスを取得
-            string basePath = null;
-            if (object.ReferenceEquals(key, Registry.LocalMachine))
-            {
-                basePath = "SOFTWARE";
-            }
-            else
-            {
-                basePath = "Software";
-            }
-            string path = string.Format("{0}\\{1}\\{2}", basePath, Application.CompanyName, Application.ProductName);
+            var basePath = ReferenceEquals(key, Registry.LocalMachine) ? "SOFTWARE" : "Software";
+            var path = string.Format("{0}\\{1}\\{2}", basePath, Application.CompanyName, Application.ProductName);
 
             // パスのレジストリ・キーの取得（および作成）
             return key.CreateSubKey(path);
         }
-
-        //GetRegistryPath
     }
 }
