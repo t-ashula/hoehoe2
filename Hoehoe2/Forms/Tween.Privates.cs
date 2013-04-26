@@ -5857,11 +5857,11 @@ namespace Hoehoe
                 Outputz.Enabled = _configs.OutputzEnabled;
                 switch (_configs.OutputzUrlmode)
                 {
-                    case OutputzUrlmode.Twittercom:
+                    case OutputzUrlmode.twittercom:
                         Outputz.OutUrl = "http://twitter.com/";
                         break;
 
-                    case OutputzUrlmode.TwittercomWithUsername:
+                    case OutputzUrlmode.twittercomWithUsername:
                         Outputz.OutUrl = "http://twitter.com/" + _tw.Username;
                         break;
                 }

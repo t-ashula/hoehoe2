@@ -335,11 +335,11 @@ namespace Hoehoe
                 switch (ComboBoxOutputzUrlmode.SelectedIndex)
                 {
                     case 0:
-                        _configurations.OutputzUrlmode = OutputzUrlmode.Twittercom;
+                        _configurations.OutputzUrlmode = OutputzUrlmode.twittercom;
                         break;
 
                     case 1:
-                        _configurations.OutputzUrlmode = OutputzUrlmode.TwittercomWithUsername;
+                        _configurations.OutputzUrlmode = OutputzUrlmode.twittercomWithUsername;
                         break;
                 }
 
@@ -706,11 +706,11 @@ namespace Hoehoe
             TextBoxOutputzKey.Text = _configurations.OutputzKey;
             switch (_configurations.OutputzUrlmode)
             {
-                case OutputzUrlmode.Twittercom:
+                case OutputzUrlmode.twittercom:
                     ComboBoxOutputzUrlmode.SelectedIndex = 0;
                     break;
 
-                case OutputzUrlmode.TwittercomWithUsername:
+                case OutputzUrlmode.twittercomWithUsername:
                     ComboBoxOutputzUrlmode.SelectedIndex = 1;
                     break;
             }
