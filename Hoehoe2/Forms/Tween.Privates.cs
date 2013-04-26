@@ -300,7 +300,6 @@ namespace Hoehoe
                 { "TwitPic", new TwitPic(_tw) },
                 { "img.ly", new Imgly(_tw) },
                 { "yfrog", new Yfrog(_tw) },
-                { "lockerz", new Plixi(_tw) },
                 { "Twitter", new TwitterPhoto(_tw) }
             };
         }
@@ -5858,11 +5857,11 @@ namespace Hoehoe
                 Outputz.Enabled = _configs.OutputzEnabled;
                 switch (_configs.OutputzUrlmode)
                 {
-                    case OutputzUrlmode.Twittercom:
+                    case OutputzUrlmode.twittercom:
                         Outputz.OutUrl = "http://twitter.com/";
                         break;
 
-                    case OutputzUrlmode.TwittercomWithUsername:
+                    case OutputzUrlmode.twittercomWithUsername:
                         Outputz.OutUrl = "http://twitter.com/" + _tw.Username;
                         break;
                 }

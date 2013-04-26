@@ -97,7 +97,7 @@ namespace Hoehoe
             HashIsNotAddToAtReply = true;
             PreviewEnable = true;
             OutputzKey = string.Empty;
-            OutputzUrlMode = OutputzUrlmode.Twittercom;
+            OutputzUrlMode = OutputzUrlmode.twittercom;
             AutoShortUrlFirst = UrlConverter.Bitly;
             UseUnreadStyle = true;
             DateTimeFormat = "yyyy/MM/dd H:mm:ss";
