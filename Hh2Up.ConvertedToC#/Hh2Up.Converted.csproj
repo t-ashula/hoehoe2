@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{AB67C406-A659-4D58-ACFB-106B8C6CF8F0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>TweenUp.My.MyApplication</StartupObject>
+    <StartupObject>TweenUp.My.Program</StartupObject>
     <RootNamespace>TweenUp</RootNamespace>
     <AssemblyName>TweenUp3</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -124,17 +124,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationEvents.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="My Project\Application.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Application.myapp</DependentUpon>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.cs" />
     <Compile Include="My Project\Resources.Designer.cs">
@@ -176,10 +171,6 @@
   <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="My Project\Application.myapp">
-      <Generator>MyApplicationCodeGenerator</Generator>
-      <LastGenOutput>Application.Designer.cs</LastGenOutput>
     </None>
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
