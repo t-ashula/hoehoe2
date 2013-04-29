@@ -25,9 +25,9 @@ namespace TweenUp
         private void Form1_Load(object sender, EventArgs e)
         {
             // 文字列リソースから設定
-            Text = My.Resources.FormTitle;
-            Label1.Text = My.Resources.TweenUpdating;
-            Label2.Text = My.Resources.PleaseWait;
+            Text = Resources.FormTitle;
+            Label1.Text = Resources.TweenUpdating;
+            Label2.Text = Resources.PleaseWait;
 
             var args = GetCommandLineArgs();
             if (args.Count > 0)
@@ -68,7 +68,7 @@ namespace TweenUp
                     p.Close();
                 }
 
-                Process.Start(Path.Combine(_tweenexepath, My.Resources.FilenameTweenExe));
+                Process.Start(Path.Combine(_tweenexepath, Resources.FilenameTweenExe));
                 Application.Exit();
                 return;
             }
@@ -204,15 +204,15 @@ namespace TweenUp
                 cultures.Add(curCul);
             }
 
-            BackgroundWorker1.ReportProgress(0, My.Resources.ProgressWaitForTweenExit);
+            BackgroundWorker1.ReportProgress(0, Resources.ProgressWaitForTweenExit);
             Thread.Sleep(WaitTime); // スリープ
 
-            var imagePath = new ArrayList { Path.Combine(_tweenexepath, My.Resources.FilenameTweenExe) };
+            var imagePath = new ArrayList { Path.Combine(_tweenexepath, Resources.FilenameTweenExe) };
 
             // TweenUp.exeと同じフォルダのTween.exeは無条件に対象
 
             // Tween という名前のプロセスを取得
-            var ps = Process.GetProcessesByName(My.Resources.WaitProcessName);
+            var ps = Process.GetProcessesByName(Resources.WaitProcessName);
 
             // Console.WriteLine("取得開始")
 
@@ -224,7 +224,7 @@ namespace TweenUp
                     // ' 終了指示
                     // If Not p.CloseMainWindow() Then
                     // 'アイコン化、ダイアログ表示など、終了を受け付けられる状態ではない。
-                    // Throw New ApplicationException(My.Resources.TimeOutException)
+                    // Throw New ApplicationException(Resources.TimeOutException)
                     // End If
                     if (!p.WaitForExit(60000))
                     {
@@ -232,7 +232,7 @@ namespace TweenUp
                         // p.Kill()
                         // If Not p.WaitForExit(10000) Then
                         // だいたい30秒ぐらい（適当）たってもだめなら例外を発生させる
-                        throw new ApplicationException(My.Resources.TimeOutException);
+                        throw new ApplicationException(Resources.TimeOutException);
 
                         // End If
                     }
@@ -241,36 +241,36 @@ namespace TweenUp
                 }
             }
 
-            // BackgroundWorker1.ReportProgress(0, userState:=My.Resources.ProgressProcessKill)
+            // BackgroundWorker1.ReportProgress(0, userState:=Resources.ProgressProcessKill)
             // Thread.Sleep(WaitTime) ' スリープ
 
             // 「Tweenの終了を検出しました」
-            BackgroundWorker1.ReportProgress(0, My.Resources.ProgressDetectTweenExit);
+            BackgroundWorker1.ReportProgress(0, Resources.ProgressDetectTweenExit);
 
             Thread.Sleep(WaitTime);
 
             // スリープ
 
             // 設定ファイルのバックアップ
-            BackgroundWorker1.ReportProgress(0, My.Resources.ProgressBackup);
+            BackgroundWorker1.ReportProgress(0, Resources.ProgressBackup);
             BackupConfigurationFile();
             DeleteOldFiles();
             Thread.Sleep(WaitTime);
 
-            BackgroundWorker1.ReportProgress(0, My.Resources.ProgressCopying);
+            BackgroundWorker1.ReportProgress(0, Resources.ProgressCopying);
             foreach (object dstFileLoopVariable in imagePath)
             {
                 var dstFile = dstFileLoopVariable;
 
                 // 本体
-                var srcFile = Path.Combine(_sourcepath, My.Resources.FilenameNew);
+                var srcFile = Path.Combine(_sourcepath, Resources.FilenameNew);
                 if (File.Exists(srcFile))
                 {
                     // ImagePathに格納されているファイルにTweenNew.exeを上書き
                     File.Copy(srcFile, dstFile.ToString(), true);
 
                     // TweenNew.exeを削除
-                    File.Delete(Path.Combine(_sourcepath, My.Resources.FilenameNew));
+                    File.Delete(Path.Combine(_sourcepath, Resources.FilenameNew));
                 }
 
                 // リソース
@@ -279,8 +279,8 @@ namespace TweenUp
                 foreach (var spath in Directory.GetDirectories(_sourcepath, "*", SearchOption.TopDirectoryOnly))
                 {
                     var cul = spath.Substring(spath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                    var srcFileRes = Path.Combine(spath, My.Resources.FilenameResourceNew);
-                    var dstFileRes = Path.Combine(_tweenexepath, cul, My.Resources.FilenameResourceDll);
+                    var srcFileRes = Path.Combine(spath, Resources.FilenameResourceNew);
+                    var dstFileRes = Path.Combine(_tweenexepath, cul, Resources.FilenameResourceDll);
 
                     if (File.Exists(srcFileRes))
                     {
@@ -299,8 +299,8 @@ namespace TweenUp
                 }
 
                 // シリアライザDLL
-                var srcFileDll = Path.Combine(_sourcepath, My.Resources.FilenameDllNew);
-                var dstFileDll = Path.Combine(_tweenexepath, My.Resources.FilenameDll);
+                var srcFileDll = Path.Combine(_sourcepath, Resources.FilenameDllNew);
+                var dstFileDll = Path.Combine(_tweenexepath, Resources.FilenameDll);
                 if (File.Exists(srcFileDll))
                 {
                     File.Copy(srcFileDll, dstFileDll, true);
@@ -316,14 +316,14 @@ namespace TweenUp
             // Call GenerateNativeImage()
 
             // 「新しいTweenを起動しています」
-            BackgroundWorker1.ReportProgress(0, My.Resources.ProgressExecuteTween);
+            BackgroundWorker1.ReportProgress(0, Resources.ProgressExecuteTween);
 
             if (GetCommandLineArgsCount() == 1)
             {
-                Process.Start(Path.Combine(_tweenexepath, My.Resources.FilenameTweenExe));
+                Process.Start(Path.Combine(_tweenexepath, Resources.FilenameTweenExe));
             }
 
-            // Process.Start(Path.Combine(TWEENEXEPATH, My.Resources.FilenameTweenExe))
+            // Process.Start(Path.Combine(TWEENEXEPATH, Resources.FilenameTweenExe))
         }
 
         private static int GetCommandLineArgsCount()
@@ -367,7 +367,7 @@ namespace TweenUp
 			try {
 				var psi = new ProcessStartInfo();
 
-				psi.Arguments = "/nologo /silent " + Strings.Chr(34) + Path.Combine(TWEENEXEPATH, TweenUp.My.Resources.FilenameTweenExe) + Strings.Chr(34);
+				psi.Arguments = "/nologo /silent " + Strings.Chr(34) + Path.Combine(TWEENEXEPATH, TweenUp.Resources.FilenameTweenExe) + Strings.Chr(34);
 				psi.FileName = Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(), "ngen.exe");
 				psi.WindowStyle = ProcessWindowStyle.Hidden;
 				Process.Start(psi).WaitForExit();

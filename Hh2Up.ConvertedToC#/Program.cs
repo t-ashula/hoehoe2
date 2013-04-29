@@ -11,8 +11,8 @@ namespace TweenUp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
             Application.ThreadException += (sender, e) => MessageBox.Show(
-                My.Resources.ExceptionMessage + Environment.NewLine + e.Exception.Message,
-                My.Resources.ExceptionTitle);
+                Resources.ExceptionMessage + Environment.NewLine + e.Exception.Message,
+                Resources.ExceptionTitle);
             Application.Run(new Form1());
         }
     }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TweenUp.My_Project {
+namespace TweenUp {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
