@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace TweenUp.My
@@ -97,16 +96,6 @@ namespace TweenUp.My
                     }
                 }
             }
-        }
-    }
-
-    partial class MyApplication : WindowsFormsApplicationBase
-    {
-        [STAThread]
-        public static void Main(string[] args)
-        {
-            Application.SetCompatibleTextRenderingDefault(UseCompatibleTextRendering);
-            MyProject.Application.Run(args);
         }
     }
 }
