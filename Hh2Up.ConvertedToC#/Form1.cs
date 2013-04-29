@@ -381,8 +381,6 @@ namespace TweenUp
         /// </summary>
         public Form1()
         {
-            Shown += Form1_Shown;
-            Load += Form1_Load;
             InitializeComponent();
         }
     }
