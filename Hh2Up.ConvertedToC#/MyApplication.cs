@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace TweenUp.My
+namespace TweenUp
 {
     public class Program
     {
@@ -19,8 +19,8 @@ namespace TweenUp.My
         private static void MyApplication_UnhandledException(object sender, ThreadExceptionEventArgs e)
         {
             MessageBox.Show(
-                Resources.ExceptionMessage + Environment.NewLine + e.Exception.Message,
-                Resources.ExceptionTitle);
+                My.Resources.ExceptionMessage + Environment.NewLine + e.Exception.Message,
+                My.Resources.ExceptionTitle);
         }
     }
 }
