@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -41,7 +42,7 @@ namespace TweenUp
                 {
                     StartInfo =
                     {
-                        FileName = Path.Combine(Application.StartupPath, My.MyProject.Application.Info.AssemblyName + ".exe"),
+                        FileName = Path.Combine(Application.StartupPath, Assembly.GetExecutingAssembly().GetName().Name + ".exe"),
                         UseShellExecute = true,
                         WorkingDirectory = Application.StartupPath,
                         Arguments = "\"" + _tweenexepath + "\" up",

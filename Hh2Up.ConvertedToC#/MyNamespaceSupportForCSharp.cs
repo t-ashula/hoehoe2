@@ -11,18 +11,6 @@ namespace TweenUp.My
     internal sealed class MyProject
     {
         [ThreadStatic]
-        private static MyApplication _application;
-
-        /// <summary>
-        /// Gets the application.
-        /// </summary>
-        public static MyApplication Application
-        {
-            [DebuggerStepThrough]
-            get { return _application ?? (_application = new MyApplication()); }
-        }
-
-        [ThreadStatic]
         private static MyForms _forms;
 
         /// <summary>
