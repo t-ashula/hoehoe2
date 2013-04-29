@@ -59,7 +59,6 @@ namespace Hoehoe
         /// <param name="args">CreateImageArgs</param>
         /// <returns>サムネイル画像作成に成功した場合はTrue,失敗した場合はFalse
         /// なお失敗した場合はargs.errmsgにエラーを表す文字列がセットされる</returns>
-        /// <remarks></remarks>
         private static bool ViaMe_CreateImage(CreateImageArgs args)
         {
             var mc = Regex.Match(args.Url.Value, @"^https?://via\.me/-(\w+)$", RegexOptions.IgnoreCase);
