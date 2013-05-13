@@ -34,15 +34,13 @@ namespace Hoehoe
     public class HttpTwitter : ICloneable
     {
         /// <summary>
-        /// OAuthのコンシューマー鍵 :
+        /// OAuthのコンシューマー鍵 : // private const string ConsumerKey = "IQKbtAYlXLripLGPWd0HUA";
         /// </summary>
-        // private const string ConsumerKey = "IQKbtAYlXLripLGPWd0HUA"; //
         private const string ConsumerKey = "BIazYuf0scya8pyhLjkdg";
 
         /// <summary>
-        /// OAuthの署名作成用秘密コンシューマーデータ
+        /// OAuthの署名作成用秘密コンシューマーデータ //private const string ConsumerSecret = "GgDYlkSvaPxGxC4X8liwpUoqKwwr3lCADbz8A7ADU";
         /// </summary>
-        //private const string ConsumerSecret = "GgDYlkSvaPxGxC4X8liwpUoqKwwr3lCADbz8A7ADU";
         private const string ConsumerSecret = "hVih4pcFCfcpHWXyICLQINmZ1LHXdMzHA4QXMWwBhMQ";
 
         /// <summary>

@@ -574,11 +574,12 @@ namespace Hoehoe
         /// <returns>取得結果真偽値</returns>
         private Uri GetAuthenticatePageUri(string requestTokenUrl, string authorizeUrl, ref string requestToken)
         {
-            const string tokenKey = "oauth_token";
+            const string TokenKey = "oauth_token";
 
             // リクエストトークン取得
             var content = string.Empty;
-            if (GetOAuthToken(new Uri(requestTokenUrl), string.Empty, string.Empty, null, ref content) != HttpStatusCode.OK)
+            var code = GetOAuthToken(new Uri(requestTokenUrl), string.Empty, string.Empty, null, ref content);
+            if (code != HttpStatusCode.OK)
             {
                 return null;
             }
@@ -589,10 +590,10 @@ namespace Hoehoe
                 return null;
             }
 
-            requestToken = reqTokenData[tokenKey];
+            requestToken = reqTokenData[TokenKey];
 
             // Uri生成
-            return new UriBuilder(authorizeUrl) { Query = string.Format("{0}={1}", tokenKey, requestToken) }.Uri;
+            return new UriBuilder(authorizeUrl) { Query = string.Format("{0}={1}", TokenKey, requestToken) }.Uri;
         }
 
         /// <summary>
@@ -628,6 +629,8 @@ namespace Hoehoe
                     query.Add(kvp.Key, kvp.Value);
                 }
             }
+
+            query.Add("oauth_callback", "oob");
 
             // PINコードが指定されていればパラメータに追加
             if (!string.IsNullOrEmpty(pinCode))
