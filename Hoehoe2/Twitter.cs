@@ -1272,54 +1272,49 @@ namespace Hoehoe
 
             var content = string.Empty;
             retweetedCount = 0;
-            //for (int i = 1; i <= 100; i++)
+            HttpStatusCode res;
+            try
             {
-                HttpStatusCode res;
-                try
-                {
-                    // res = _twitterConnection.Statusid_retweeted_by_ids(statusId, 100, i, ref content);
-                    res = _twitterConnection.ShowStatuses(statusId, ref content);
-                }
-                catch (Exception ex)
-                {
-                    return "Err:" + ex.Message;
-                }
+                res = _twitterConnection.ShowStatuses(statusId, ref content);
+            }
+            catch (Exception ex)
+            {
+                return "Err:" + ex.Message;
+            }
 
-                switch (res)
-                {
-                    case HttpStatusCode.OK:
-                        try
-                        {
-                            // var ids = D.CreateDataFromJson<long[]>(content);
-                            var status = D.CreateDataFromJson<Status>(content);
-                            retweetedCount = status.RetweetCount;
-                        }
-                        catch (SerializationException ex)
-                        {
-                            retweetedCount = -1;
-                            MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
-                            return "Err:Json Parse Error(DataContractJsonSerializer)";
-                        }
-                        catch (Exception ex)
-                        {
-                            retweetedCount = -1;
-                            MyCommon.TraceOut(ex, MethodBase.GetCurrentMethod().Name + " " + content);
-                            return "Err:Invalid Json!";
-                        }
+            switch (res)
+            {
+                case HttpStatusCode.OK:
+                    try
+                    {
+                        var status = D.CreateDataFromJson<Status>(content);
+                        retweetedCount = status.RetweetCount;
+                    }
+                    catch (SerializationException ex)
+                    {
+                        retweetedCount = -1;
+                        MyCommon.TraceOut(ex.Message + Environment.NewLine + content);
+                        return "Err:Json Parse Error(DataContractJsonSerializer)";
+                    }
+                    catch (Exception ex)
+                    {
+                        retweetedCount = -1;
+                        MyCommon.TraceOut(ex, MethodBase.GetCurrentMethod().Name + " " + content);
+                        return "Err:Invalid Json!";
+                    }
 
-                        break;
+                    break;
 
-                    case HttpStatusCode.BadRequest:
-                        retweetedCount = -1;
-                        return "Err:API Limits?";
-                    case HttpStatusCode.Unauthorized:
-                        retweetedCount = -1;
-                        AccountState = AccountState.Invalid;
-                        return R.Unauthorized;
-                    default:
-                        retweetedCount = -1;
-                        return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
-                }
+                case HttpStatusCode.BadRequest:
+                    retweetedCount = -1;
+                    return "Err:API Limits?";
+                case HttpStatusCode.Unauthorized:
+                    retweetedCount = -1;
+                    AccountState = AccountState.Invalid;
+                    return R.Unauthorized;
+                default:
+                    retweetedCount = -1;
+                    return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
 
             return string.Empty;
@@ -1816,7 +1811,7 @@ namespace Hoehoe
                     tab.OldestId = item.StatusId;
                 }
 
-                item.IsRead = read || item.IsMe && ReadOwnPost;
+                item.IsRead = read || (item.IsMe && ReadOwnPost);
 
                 // if (tab != null)
                 {
@@ -1892,7 +1887,7 @@ namespace Hoehoe
                 return "Err:Can't create post";
             }
 
-            item.IsRead = read || item.IsMe && ReadOwnPost;
+            item.IsRead = read || (item.IsMe && ReadOwnPost);
 
             post = item;
             return string.Empty;
@@ -2084,7 +2079,7 @@ namespace Hoehoe
                     tab.OldestId = item.StatusId;
                 }
 
-                item.IsRead = read || item.IsMe && ReadOwnPost;
+                item.IsRead = read || (item.IsMe && ReadOwnPost);
 
                 // if (tab != null)
                 {
