@@ -515,8 +515,8 @@ namespace Hoehoe
                 {
                     { "oauth_consumer_key", _consumerKey },
                     { "oauth_signature_method", "HMAC-SHA1" },
-                    { "oauth_timestamp", "" + Convert.ToInt64((DateTime.UtcNow - UnixEpoch).TotalSeconds) },
-                    { "oauth_nonce", "" + NonceRandom.Next(123400, 9999999) },
+                    { "oauth_timestamp", string.Format("{0}", (long)(DateTime.UtcNow - UnixEpoch).TotalSeconds) },
+                    { "oauth_nonce", string.Format("{0}", NonceRandom.Next(123400, 9999999)) },
                     { "oauth_version", "1.0" }
                 };
 
