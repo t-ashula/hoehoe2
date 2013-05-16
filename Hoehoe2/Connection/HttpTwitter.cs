@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 
 namespace Hoehoe
@@ -658,8 +659,12 @@ namespace Hoehoe
         {
             // official client only api '/1.1/conversation/show.json?id=:id'
             // var apiuri = CreateTwitterUri("conversation", "show", string.Format("{0}",id));
-            var apiuri = CreateTwitterUri("related_results", "show", string.Format("{0}", id), true, _twitterUrl, "1");
-            var param = new Dictionary<string, string> { { "include_entities", string.Format("{0}", true) } };
+            var apiuri = CreateTwitterUri("related_results", "show", string.Empty, true, string.Empty, "1");
+            var param = new Dictionary<string, string>
+                {
+                    { "include_entities", string.Format("{0}", true) },
+                    { "id", string.Format("{0}", id) }
+                };
             return _httpCon.GetContent(GetMethod, apiuri, param, ref content, MyCommon.TwitterApiInfo.HttpHeaders, GetApiCallback);
         }
 
@@ -740,6 +745,7 @@ namespace Hoehoe
             }
 
             path = subject + path + ".json";
+
             return new Uri(schema + "//" + host + "/" + version + "/" + path);
         }
 
@@ -750,7 +756,7 @@ namespace Hoehoe
 
         private Uri CreateTwitterStreamUri(string subject, string verb)
         {
-            return CreateTwitterUri(subject, verb, null, true, TwitterStreamUrl);
+            return CreateTwitterUri(subject, verb, string.Empty, true, TwitterStreamUrl);
         }
 
         #endregion
