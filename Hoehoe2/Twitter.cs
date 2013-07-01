@@ -3497,7 +3497,7 @@ namespace Hoehoe
 
                 // 以下、ユーザー情報
                 var user = status.User;
-                if (user.ScreenName == null)
+                if (user == null || user.ScreenName == null)
                 {
                     return null;
                 }
