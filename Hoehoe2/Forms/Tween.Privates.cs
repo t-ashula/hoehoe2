@@ -1467,10 +1467,7 @@ namespace Hoehoe
                 len -= HashMgr.UseHash.Length + 1;
             }
 
-            foreach (Match m in Regex.Matches(StatusText.Text, Twitter.UrlRegexPattern, RegexOptions.IgnoreCase))
-            {
-                len += m.Result("${url}").Length - _configs.TwitterConfiguration.ShortUrlLength;
-            }
+            len += Regex.Matches(StatusText.Text, Twitter.UrlRegexPattern, RegexOptions.IgnoreCase).Cast<Match>().Sum(m => m.Result("${url}").Length - _configs.TwitterConfiguration.ShortUrlLength);
 
             if (ImageSelectionPanel.Visible && ImageSelectedPicture.Tag != null && !string.IsNullOrEmpty(ImageService))
             {
@@ -1572,7 +1569,7 @@ namespace Hoehoe
             var iconRect = Rectangle.Intersect(new Rectangle(item.GetBounds(ItemBoundsPortion.Icon).Location, new Size(iconSize, iconSize)), itemRect);
             if (item.Image != null)
             {
-                iconRect.Offset(0, (int)Math.Max(0.0, (itemRect.Height - _iconSz) / 2));
+                iconRect.Offset(0, Math.Max(0, (itemRect.Height - _iconSz) / 2));
             }
 
             var stateRect = Rectangle.Intersect(new Rectangle(iconRect.Location.X + _iconSz + 2, iconRect.Location.Y, 18, 16), itemRect);
@@ -1872,7 +1869,7 @@ namespace Hoehoe
                 UserPicture.ClearImage();
             }
 
-            DateTimeLabel.Text = _curPost.CreatedAt.ToString();
+            DateTimeLabel.Text = string.Format("{0}", _curPost.CreatedAt);
 
             var foreColor = SystemColors.ControlText;
             if (_curPost.IsOwl && (_configs.OneWayLove || isCurTabDm))
@@ -2873,20 +2870,20 @@ namespace Hoehoe
 
             int selected = _curList.SelectedIndices[0];
             int toIdx = forward ? _curList.VirtualListSize - 1 : 0;
-            int fIdx = forward ? selected + 1 : selected - 1;
-            if (forward && fIdx > toIdx)
+            int fromIdx = forward ? selected + 1 : selected - 1;
+            if (forward && fromIdx > toIdx)
             {
                 return;
             }
 
-            if (!forward && toIdx > fIdx)
+            if (!forward && toIdx > fromIdx)
             {
                 return;
             }
 
             var idxs = forward ?
-                Enumerable.Range(fIdx, toIdx - fIdx + 1) :
-                Enumerable.Range(toIdx + 1, fIdx - toIdx).Reverse();
+                Enumerable.Range(fromIdx, toIdx - fromIdx + 1) :
+                Enumerable.Range(toIdx + 1, fromIdx - toIdx).Reverse();
             string name = _curPost.IsRetweeted ? _curPost.RetweetedBy : _curPost.ScreenName;
             foreach (int idx in idxs)
             {
@@ -2928,20 +2925,20 @@ namespace Hoehoe
 
             int selected = _curList.SelectedIndices[0];
             int toIdx = forward ? _curList.VirtualListSize - 1 : 0;
-            int fIdx = forward ? selected + 1 : selected - 1;
-            if (forward && fIdx > toIdx)
+            int fromIdx = forward ? selected + 1 : selected - 1;
+            if (forward && fromIdx > toIdx)
             {
                 return;
             }
 
-            if (!forward && toIdx > fIdx)
+            if (!forward && toIdx > fromIdx)
             {
                 return;
             }
 
             var idxs = forward ?
-                Enumerable.Range(fIdx, toIdx - fIdx + 1) :
-                Enumerable.Range(toIdx + 1, fIdx - toIdx).Reverse();
+                Enumerable.Range(fromIdx, toIdx - fromIdx + 1) :
+                Enumerable.Range(toIdx + 1, fromIdx - toIdx).Reverse();
 
             foreach (int idx in idxs)
             {
@@ -3151,7 +3148,7 @@ namespace Hoehoe
                             where p.Value.StatusId != _curPost.StatusId && p.Value.InReplyToStatusId == _curPost.InReplyToStatusId
                             let indexOf = t.Value.IndexOf(p.Value.StatusId)
                             where indexOf > -1
-                            orderby (isForward ? indexOf : indexOf * -1)
+                            orderby isForward ? indexOf : -indexOf
                             orderby !ReferenceEquals(t.Value, curTabClass)
                             select new { Tab = t.Value, Post = p.Value, Index = indexOf };
                 try

@@ -300,6 +300,7 @@ namespace Hoehoe
                     }
 
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     {
                         AccountState = AccountState.Invalid;
@@ -360,6 +361,7 @@ namespace Hoehoe
                     }
 
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     {
                         AccountState = AccountState.Invalid;
@@ -535,8 +537,10 @@ namespace Hoehoe
                     }
 
                     return _outputz.Post(postStr.Length) ? string.Empty : "Outputz:Failed";
+
                 case HttpStatusCode.NotFound:
                     return string.Empty;
+
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.BadRequest:
                     {
@@ -561,6 +565,7 @@ namespace Hoehoe
 
                     // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
                     return string.Format("Warn:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
+
                 case HttpStatusCode.Unauthorized:
                     {
                         AccountState = AccountState.Invalid;
@@ -630,8 +635,10 @@ namespace Hoehoe
                     }
 
                     return _outputz.Post(postStr.Length) ? string.Empty : "Outputz:Failed";
+
                 case HttpStatusCode.NotFound:
                     return string.Empty;
+
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.BadRequest:
                     {
@@ -654,6 +661,7 @@ namespace Hoehoe
 
                     // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
                     return string.Format("Warn:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
+
                 case HttpStatusCode.Unauthorized:
                     {
                         AccountState = AccountState.Invalid;
@@ -725,6 +733,7 @@ namespace Hoehoe
                     _location = status.Sender.Location;
                     _bio = status.Sender.Description;
                     return _outputz.Post(postStr.Length) ? string.Empty : "Outputz:Failed";
+
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.BadRequest:
                     {
@@ -748,6 +757,7 @@ namespace Hoehoe
 
                     // 仕様書にない400系エラー。サーバまでは到達しているのでリトライしない
                     return string.Format("Warn:{0}", res);
+
                 case HttpStatusCode.Unauthorized:
                     {
                         AccountState = AccountState.Invalid;
@@ -787,11 +797,14 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.NotFound:
                     return string.Empty;
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -934,11 +947,14 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.NotFound:
                     return string.Empty;
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -972,14 +988,17 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ?
                         string.Format("Err:Forbidden({0})", MethodBase.GetCurrentMethod().Name) :
                         string.Format("Err:{0}", errMsg);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1013,14 +1032,17 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ?
                         string.Format("Err:Forbidden({0})", MethodBase.GetCurrentMethod().Name) :
                         string.Format("Err:{0}", errMsg);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1054,14 +1076,17 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ?
                         string.Format("Err:Forbidden({0})", MethodBase.GetCurrentMethod().Name) :
                         string.Format("Err:{0}", errMsg);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1095,14 +1120,17 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ?
                         string.Format("Err:Forbidden({0})", MethodBase.GetCurrentMethod().Name) :
                         string.Format("Err:{0}", errMsg);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1136,14 +1164,17 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ?
                         string.Format("Err:Forbidden({0})", MethodBase.GetCurrentMethod().Name) :
                         string.Format("Err:{0}", errMsg);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1195,9 +1226,11 @@ namespace Hoehoe
 
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1247,12 +1280,15 @@ namespace Hoehoe
                     }
 
                     return string.Empty;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ? R.Unauthorized : "Auth err:" + errMsg;
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1308,10 +1344,12 @@ namespace Hoehoe
                 case HttpStatusCode.BadRequest:
                     retweetedCount = -1;
                     return "Err:API Limits?";
+
                 case HttpStatusCode.Unauthorized:
                     retweetedCount = -1;
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 default:
                     retweetedCount = -1;
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
@@ -1357,11 +1395,13 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ?
                         string.Format("Err:Forbidden({0})", MethodBase.GetCurrentMethod().Name) :
                         string.Format("Err:{0}", errMsg);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1398,11 +1438,14 @@ namespace Hoehoe
                     }
 
                     return status.Favorited ? string.Empty : "NG(Restricted?)";
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1436,14 +1479,17 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ?
                         string.Format("Err:Forbidden({0})", MethodBase.GetCurrentMethod().Name) :
                         string.Format("Err:{0}", errMsg);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1477,14 +1523,17 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ?
                         string.Format("Err:Forbidden({0})", MethodBase.GetCurrentMethod().Name) :
                         string.Format("Err:{0}", errMsg);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1518,14 +1567,17 @@ namespace Hoehoe
                 case HttpStatusCode.OK:
                     AccountState = AccountState.Valid;
                     return string.Empty;
+
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.Forbidden:
                     string errMsg = GetErrorMessageJson(content);
                     return string.IsNullOrEmpty(errMsg) ?
                         string.Format("Err:Forbidden({0})", MethodBase.GetCurrentMethod().Name) :
                         string.Format("Err:{0}", errMsg);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1714,8 +1766,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1776,8 +1830,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Valid;
                     return string.Format("Err:@{0}'s Tweets are protected.", userName);
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1857,10 +1913,13 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 case HttpStatusCode.Forbidden:
                     return "Err:Protected user's tweet";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -1964,8 +2023,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2043,12 +2104,15 @@ namespace Hoehoe
             {
                 case HttpStatusCode.BadRequest:
                     return "Invalid query";
+
                 case HttpStatusCode.NotFound:
                     return "Invalid query";
+
                 case HttpStatusCode.PaymentRequired:
 
                     // API Documentには420と書いてあるが、該当コードがないので402にしてある
                     return "Search API Limit?";
+
                 case HttpStatusCode.OK:
                     break;
 
@@ -2147,8 +2211,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2204,8 +2270,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2443,8 +2511,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2498,8 +2568,10 @@ namespace Hoehoe
                     case HttpStatusCode.Unauthorized:
                         AccountState = AccountState.Invalid;
                         return R.Unauthorized;
+
                     case HttpStatusCode.BadRequest:
                         return "Err:API Limits?";
+
                     default:
                         return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
                 }
@@ -2544,8 +2616,10 @@ namespace Hoehoe
                     case HttpStatusCode.Unauthorized:
                         AccountState = AccountState.Invalid;
                         return R.Unauthorized;
+
                     case HttpStatusCode.BadRequest:
                         return "Err:API Limits?";
+
                     default:
                         return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
                 }
@@ -2597,8 +2671,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2629,8 +2705,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2690,8 +2768,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2742,8 +2822,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2795,10 +2877,13 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 case HttpStatusCode.NotFound:
                     return string.Empty;
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2838,8 +2923,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:" + GetErrorMessageJson(content);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -2869,8 +2956,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:" + GetErrorMessageJson(content);
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -3195,8 +3284,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -3667,8 +3758,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -3960,8 +4053,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
@@ -4012,8 +4107,10 @@ namespace Hoehoe
                 case HttpStatusCode.Unauthorized:
                     AccountState = AccountState.Invalid;
                     return R.Unauthorized;
+
                 case HttpStatusCode.BadRequest:
                     return "Err:API Limits?";
+
                 default:
                     return string.Format("Err:{0}({1})", res, MethodBase.GetCurrentMethod().Name);
             }
