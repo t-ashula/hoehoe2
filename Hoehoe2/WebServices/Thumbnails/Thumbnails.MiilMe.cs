@@ -20,6 +20,8 @@
 // the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
+using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Hoehoe
@@ -39,6 +41,7 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool MiilMe_GetUrl(GetUrlArgs args)
         {
+            // http://miil.me/p/82lz1 を parseInt('82lz1', 36) して GET http://miil.me/api/photos/13558717.js? すると callback 付きで json が取れるので /url を取ればいい
             var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, @"^https?://miil\.me/p/(\w+)$", RegexOptions.IgnoreCase);
             if (!mc.Success)
             {
@@ -58,14 +61,17 @@ namespace Hoehoe
         /// <remarks></remarks>
         private static bool MiilMe_CreateImage(CreateImageArgs args)
         {
-            var src = string.Empty;
-            if (!new HttpVarious().GetData(args.Url.Value, null, ref src, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
+            var photoId = new Uri(args.Url.Value).AbsolutePath.Split('/')[2];
+            var apiUrl = $"http://miil.me/api/photos/{ToInt32(photoId, 36)}.js";
+
+            var json = string.Empty;
+            if (!new HttpVarious().GetData(apiUrl, null, ref json, 0, ref args.Errmsg, MyCommon.GetUserAgentString()))
             {
                 return false;
             }
 
             // name="twitter:image" content="http://images.miil.me/i/ab9f8cd6-9500-11e2-97f8-123143016634.jpg"
-            var thummc = Regex.Match(src, "name=\"twitter:image\" content=\"([^\"]+)\"", RegexOptions.IgnoreCase);
+            var thummc = Regex.Match(json, "\"url\"\\s*:\\s*\"([^\"]+)\"", RegexOptions.IgnoreCase);
             if (!thummc.Success)
             {
                 return false;
@@ -80,6 +86,11 @@ namespace Hoehoe
 
             args.AddTooltipInfo(args.Url.Key, string.Empty, img);
             return true;
+        }
+
+        private static int ToInt32(string s, int rad)
+        {
+            return s.Select(n => ('0' <= n && n <= '9') ? (n - '0') : ('a' <= n && n <= 'z') ? (n - 'a' + 10) : ('A' <= n && n <= 'Z') ? (n - 'A' + 10) : 0).Aggregate(0, (current, d) => current * rad + d);
         }
 
         #endregion
