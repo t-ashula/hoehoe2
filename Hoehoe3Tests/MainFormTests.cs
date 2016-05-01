@@ -21,11 +21,11 @@ namespace Hoehoe3.Tests
             Assert.IsNotNull(m, "MainForm has Menu");
         }
 
-        [Test]
-        public void IsSamePathTest()
-        {
-            var result = Program.IsSameFilePath(@"C:/", @"c:/");
-            Assert.IsTrue(result);
-        }
+        //[Test]
+        //public void IsSamePathTest()
+        //{
+        //    var result = Program.IsSameFilePath(@"C:/", @"c:/");
+        //    Assert.IsTrue(result);
+        //}
     }
 }
