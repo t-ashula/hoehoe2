@@ -43,7 +43,7 @@ namespace Hoehoe
         /// <remarks>args.imglistには呼び出しもとで使用しているimglistをそのまま渡すこと</remarks>
         private static bool Instagram_GetUrl(GetUrlArgs args)
         {
-            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^https?://instagr(.am|am.com)/p/.+/", RegexOptions.IgnoreCase);
+            var mc = Regex.Match(string.IsNullOrEmpty(args.Extended) ? args.Url : args.Extended, "^https?://(?:www.)instagr(.am|am.com)/p/.+/", RegexOptions.IgnoreCase);
             if (!mc.Success)
             {
                 return false;
