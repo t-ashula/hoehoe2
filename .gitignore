@@ -11,3 +11,6 @@ TweenUp/obj/*
 *.Cache
 *.DotSettings
 packages
+$Recycle.Bin/
+.vs/
+
