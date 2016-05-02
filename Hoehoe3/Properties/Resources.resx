@@ -117,4 +117,7 @@
   <data name="Program_ApplicationOnThreadException_Not_Implemented_" xml:space="preserve">
     <value>Not Implemented.</value>
   </data>
+  <data name="Program_TryBringUpPreviousApp_Another_instance_already_executed_" xml:space="preserve">
+    <value>Another instance already executed.</value>
+  </data>
 </root>

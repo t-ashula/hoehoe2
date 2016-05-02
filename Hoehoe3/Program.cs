@@ -24,7 +24,7 @@ namespace Hoehoe3
             string appGuid = ((GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0)).Value;
 
             // unique id for global mutex - Global prefix means it is global to the machine
-            string mutexId = string.Format("Global\\{{{0}}}", appGuid);
+            string mutexId = $"Global\\{{{appGuid}}}";
 
             // Need a place to store a return value in Mutex() constructor call
             bool createdNew;
@@ -95,7 +95,7 @@ namespace Hoehoe3
 
         private static void TryBringUpPreviousApp()
         {
-            MessageBox.Show("Another instance already executed.");
+            MessageBox.Show(Resources.Program_TryBringUpPreviousApp_Another_instance_already_executed_);
             var p = Process.GetCurrentProcess();
             var candidate = Process.GetProcessesByName(p.ProcessName)
                 .Where(process => process.Id != p.Id)
@@ -106,11 +106,8 @@ namespace Hoehoe3
             }
 
             var form = Control.FromHandle(candidate.MainWindowHandle) as Form;
-            if (form != null)
-            {
-                // TODO: Maximize
-                form.Activate();
-            }
+            // TODO: Maximize
+            form?.Activate();
         }
     }
 }
