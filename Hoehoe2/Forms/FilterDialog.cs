@@ -981,16 +981,9 @@ namespace Hoehoe
                 return;
             }
 
-            string tmp;
-            if (ListFilters.SelectedIndices.Count == 1)
-            {
-                var deleteUser = (string)ListFilters.SelectedItem;
-                tmp = string.Format(R.ButtonDelete_ClickText1, Environment.NewLine, deleteUser);
-            }
-            else
-            {
-                tmp = string.Format(R.ButtonDelete_ClickText3, ListFilters.SelectedIndices.Count);
-            }
+            var tmp = ListFilters.SelectedIndices.Count == 1
+                ? string.Format(R.ButtonDelete_ClickText1, Environment.NewLine, ListFilters.SelectedItem)
+                : string.Format(R.ButtonDelete_ClickText3, ListFilters.SelectedIndices.Count);
 
             var rslt = MessageBox.Show(tmp, R.ButtonDelete_ClickText2, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (rslt == DialogResult.Cancel)
