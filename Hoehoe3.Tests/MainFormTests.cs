@@ -1,7 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CollectionExtensionsTests.cs">
-//   bl4n - Backlog.jp API Client library
-//   this file is part of bl4n, license under MIT license. http://t-ashula.mit-license.org/2015
+// <copyright file="MainFromTests.cs">
+// Hoehoe - Client of Twitter
+// Copyright (c) 2016- t.ashula (@t_ashula) <office@ashula.info>
+// All rights reserved. This file is part of Hoehoe.
+// This program is license under GPL v3 or any later version.
+// See LICENSE.txt
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
