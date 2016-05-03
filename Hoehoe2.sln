@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8DE2A3
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hoehoe3Tests", "Hoehoe3Tests\Hoehoe3Tests.csproj", "{FADA90E2-9FF4-44B6-9F4A-4E9D0CA22D5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hoehoe3.Tests", "Hoehoe3.Tests\Hoehoe3.Tests.csproj", "{FADA90E2-9FF4-44B6-9F4A-4E9D0CA22D5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,7 +6,7 @@
     <ProjectGuid>{FADA90E2-9FF4-44B6-9F4A-4E9D0CA22D5F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Hoehoe3</RootNamespace>
+    <RootNamespace>Hoehoe3.Tests</RootNamespace>
     <AssemblyName>Hoehoe3.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -53,8 +53,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="MainFormTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MainFormTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
