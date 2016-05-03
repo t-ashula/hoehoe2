@@ -1,29 +1,24 @@
-﻿using NUnit.Framework;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CollectionExtensionsTests.cs">
+//   bl4n - Backlog.jp API Client library
+//   this file is part of bl4n, license under MIT license. http://t-ashula.mit-license.org/2015
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System;
+using System.Linq;
+using Xunit;
 
 namespace Hoehoe3.Tests
 {
-    [TestFixture]
     public class MainFormTests
     {
-        [Test]
-        public void MainFormTest()
-        {
-            Assert.Inconclusive();
-        }
-
-        [Test]
+        [Fact]
         public void MainFormHasMenuTest()
         {
             var f = new MainForm();
             var m = f.Menu;
-            Assert.IsNotNull(m, "MainForm has Menu");
+            Assert.NotNull(m);
         }
-
-        //[Test]
-        //public void IsSamePathTest()
-        //{
-        //    var result = Program.IsSameFilePath(@"C:/", @"c:/");
-        //    Assert.IsTrue(result);
-        //}
     }
 }
