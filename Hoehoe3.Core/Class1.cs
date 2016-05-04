@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainFromTests.cs">
+// <copyright file="Class1.cs">
 // Hoehoe2 - Client of Twitter
 // Copyright (c) 2016- t.ashula (@t_ashula) <office@ashula.info>
 // All rights reserved. This file is part of Hoehoe2.
@@ -10,11 +10,13 @@
 
 using System;
 using System.Linq;
-using Xunit;
 
-namespace Hoehoe3.Tests
+namespace Hoehoe3.Core
 {
-    public class MainFormTests
+    public class Class1
     {
+        public Class1()
+        {
+        }
     }
 }
