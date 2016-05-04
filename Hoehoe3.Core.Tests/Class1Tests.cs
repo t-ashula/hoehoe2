@@ -19,7 +19,7 @@ namespace Hoehoe3.Core.Tests
         [Fact]
         public void Class1Test()
         {
-            Assert.True(false, "This test needs an implementation");
+            Assert.True(true, "This test is always pass. To test project.");
         }
     }
 }

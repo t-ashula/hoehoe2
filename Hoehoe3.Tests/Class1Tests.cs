@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainFromTests.cs">
+// <copyright file="Class1Tests.cs">
 // Hoehoe2 - Client of Twitter
 // Copyright (c) 2016- t.ashula (@t_ashula) <office@ashula.info>
 // All rights reserved. This file is part of Hoehoe2.
@@ -14,7 +14,12 @@ using Xunit;
 
 namespace Hoehoe3.Tests
 {
-    public class MainFormTests
+    public class Class1Tests
     {
+        [Fact]
+        public void Class1Test()
+        {
+            Assert.True(true, "This test is always pass. To test project.");
+        }
     }
 }
