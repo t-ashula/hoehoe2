@@ -97,7 +97,7 @@ namespace Hoehoe3.Core.Settings
 
             // todo: logging
             _unknownSettings.Add($"key:{key}");
-            return string.Empty;
+            return null;
         }
 
         private void StoreValue(string key, string value)

@@ -23,6 +23,11 @@ namespace Hoehoe3.Core.Tests
             return r.Next(maxValue);
         }
 
+        public static void CreateEmptyFile(string path)
+        {
+            using (File.Create(path)) { }
+        }
+
         public static void TryDeleteTestFile(string path)
         {
             try

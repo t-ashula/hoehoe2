@@ -11,6 +11,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Hoehoe3.Core.Tests
@@ -25,6 +26,27 @@ namespace Hoehoe3.Core.Tests
             ss.Serialize(storage);
             Assert.True(File.Exists(storage));
             TestUtils.TryDeleteTestFile(storage);
+        }
+
+        [Fact]
+        public void SerializeTest_WithValue()
+        {
+            var ss = new Settings.Settings
+            {
+                UserName = $"User.{TestUtils.GetNextRandom()}"
+            };
+            var storage = $"settings.{TestUtils.GetNextRandom()}.conf";
+            ss.Serialize(storage);
+            Assert.True(File.Exists(storage));
+            TestUtils.TryDeleteTestFile(storage);
+        }
+
+        [Fact]
+        public void SerializeTest_ToEmptyLocation()
+        {
+            var ss = new Settings.Settings();
+            ss.Serialize(string.Empty);
+            // no exception; now
         }
 
         [Fact]
@@ -44,11 +66,41 @@ namespace Hoehoe3.Core.Tests
         }
 
         [Fact]
+        public void DeserializeTest_WithValue()
+        {
+            var userName = $"User.{TestUtils.GetNextRandom()}";
+            var storage = $"settings.{TestUtils.GetNextRandom()}.conf";
+            {
+                var ss = new Settings.Settings
+                {
+                    UserName = userName
+                };
+
+                ss.Serialize(storage);
+                Assert.True(File.Exists(storage));
+            }
+
+            var nss = new Settings.Settings();
+            nss.Deserialize(storage);
+            Assert.Equal(userName, nss.UserName);
+
+            TestUtils.TryDeleteTestFile(storage);
+        }
+
+        [Fact]
+        public void DeserializeTest_FromEmptyLocation()
+        {
+            var s = new Settings.Settings();
+            s.Deserialize(string.Empty);
+            // no exception; now
+        }
+
+        [Fact]
         public void LoadTest()
         {
             var s = new Settings.Settings();
             var actual = s.Load("no such key");
-            Assert.Equal(string.Empty, actual);
+            Assert.Null(actual);
         }
 
         [Fact]
@@ -62,13 +114,29 @@ namespace Hoehoe3.Core.Tests
         }
 
         [Fact]
+        public async void LoadTest_EmptyKey()
+        {
+            var s = new Settings.Settings();
+            await Assert.ThrowsAsync<ArgumentException>(() => Task.Run(() => s.Load(string.Empty)));
+        }
+
+        [Fact]
         public void StoreTest()
         {
-            var settings = new Settings.Settings();
+            var s = new Settings.Settings();
             var ua = $"Hoehoe2.{TestUtils.GetNextRandom()}";
             var key = $"no such key.{TestUtils.GetNextRandom()}";
-            settings.Store(key, ua);
-            Assert.Equal(string.Empty, settings.Load(key));
+            s.Store(key, ua);
+            Assert.Null(s.Load(key));
+        }
+
+        [Fact]
+        public void StoreTest_KnownKey()
+        {
+            var s = new Settings.Settings();
+            var username = $"User.{TestUtils.GetNextRandom()}";
+            s.Store(Settings.Settings.KeyUserName, username);
+            Assert.Equal(username, s.Load(Settings.Settings.KeyUserName));
         }
     }
 }
