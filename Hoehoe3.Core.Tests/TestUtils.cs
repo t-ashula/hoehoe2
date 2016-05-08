@@ -25,7 +25,9 @@ namespace Hoehoe3.Core.Tests
 
         public static void CreateEmptyFile(string path)
         {
-            using (File.Create(path)) { }
+            using (File.Create(path))
+            {
+            }
         }
 
         public static void TryDeleteTestFile(string path)
@@ -36,7 +38,7 @@ namespace Hoehoe3.Core.Tests
             }
             catch
             {
-                // don't care
+                // ignore
             }
         }
     }

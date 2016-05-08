@@ -46,7 +46,7 @@ namespace Hoehoe3.Core.Tests
         {
             var ss = new Settings.Settings();
             ss.Serialize(string.Empty);
-            // no exception; now
+            //// no exception; now
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace Hoehoe3.Core.Tests
         {
             var s = new Settings.Settings();
             s.Deserialize(string.Empty);
-            // no exception; now
+            //// no exception; now
         }
 
         [Fact]

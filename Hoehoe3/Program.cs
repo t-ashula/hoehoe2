@@ -1,4 +1,10 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Program.cs">
+// Hoehoe2 - Client of Twitter
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -11,9 +17,7 @@ using Hoehoe3.Properties;
 
 namespace Hoehoe3
 {
-    /// <summary>
-    ///
-    /// </summary>
+    /// <summary> main </summary>
     internal static class Program
     {
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SettingsTests.cs">
+// <copyright file="JsonStoredSettingsTests.cs">
 // Hoehoe2 - Client of Twitter
 // Copyright (c) 2016- t.ashula (@t_ashula) office@ashula.info
 // All rights reserved. This file is part of Hoehoe2.
@@ -67,7 +67,7 @@ namespace Hoehoe3.Core.Tests
         {
             var jss = new JsonStoredSettings(string.Empty);
             jss.Store();
-            // no exception;
+            //// no exception;
         }
 
         [Fact]
