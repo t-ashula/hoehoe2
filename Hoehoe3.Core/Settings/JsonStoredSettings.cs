@@ -1,7 +1,7 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="JsonStoredSettings.cs">
 // Hoehoe2 - Client of Twitter
-// Copyright (c) 2016- t.ashula (@t_ashula) <office@ashula.info>
+// Copyright (c) 2016- t.ashula (@t_ashula) office@ashula.info
 // All rights reserved. This file is part of Hoehoe2.
 // This program is license under GPL v3 or any later version.
 // See LICENSE.txt
@@ -22,6 +22,10 @@ namespace Hoehoe3.Core.Settings
     /// <summary> SettingsStorage using JSON </summary>
     internal class JsonStoredSettings : IStoredSettings
     {
+        private Storage _storage;
+
+        private readonly Dictionary<string, SettingsValueGateKeeper<Storage>> _gateKeepers = new Dictionary<string, SettingsValueGateKeeper<Storage>>();
+
         public JsonStoredSettings(string locaiton)
         {
             Location = locaiton;
@@ -72,11 +76,6 @@ namespace Hoehoe3.Core.Settings
 
         public string Location { get; set; }
 
-        private Storage _storage;
-
-        private readonly List<string> _unknownSettings = new List<string>();
-        private readonly Dictionary<string, SettingsValueGateKeeper<Storage>> _gateKeepers = new Dictionary<string, SettingsValueGateKeeper<Storage>>();
-
         private static JsonSerializer CreateSerializer()
         {
             return new JsonSerializer();
@@ -95,8 +94,8 @@ namespace Hoehoe3.Core.Settings
                 return keeper.GetValue(_storage);
             }
 
-            // todo: logging
-            _unknownSettings.Add($"key:{key}");
+            // todo: logging :
+            // _unknownSettings.Add($"key:{key}");
             return null;
         }
 
@@ -114,15 +113,15 @@ namespace Hoehoe3.Core.Settings
             }
             else
             {
-                // todo: logging
-                _unknownSettings.Add($"key:{key}\tvalue:{value}");
+                // todo: logging;
+                // _unknownSettings.Add($"key:{key}\tvalue:{value}");
             }
         }
 
         private void HireGateKeepers()
         {
-            const string keyUserName = Settings.KeyUserName;
-            _gateKeepers.Add(keyUserName, new SettingsValueGateKeeper<Storage>(keyUserName, (s, k) => s.Accounts[0].UserName, (s, k, v) => s.Accounts[0].UserName = v));
+            const string KeyUserName = Settings.KeyUserName;
+            _gateKeepers.Add(KeyUserName, new SettingsValueGateKeeper<Storage>(KeyUserName, (s, k) => s.Accounts[0].UserName, (s, k, v) => s.Accounts[0].UserName = v));
         }
     }
 }

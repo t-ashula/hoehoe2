@@ -1,7 +1,7 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="AssemblyInfo.cs">
 // Hoehoe - Client of Twitter
-// Copyright (c) 2016- t.ashula (@t_ashula) <office@ashula.info>
+// Copyright (c) 2016- t.ashula (@t_ashula) office@ashula.info
 // All rights reserved. This file is part of Hoehoe.
 // This program is license under GPL v3 or any later version.
 // See LICENSE.txt

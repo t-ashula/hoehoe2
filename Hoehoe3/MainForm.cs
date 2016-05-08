@@ -285,7 +285,7 @@ namespace Hoehoe3
             throw new NotImplementedException();
         }
 
-        private void changeUnreadStateHToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ChangeUnreadStateHToolStripMenuItem_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }

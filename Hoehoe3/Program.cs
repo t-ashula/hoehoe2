@@ -11,6 +11,9 @@ using Hoehoe3.Properties;
 
 namespace Hoehoe3
 {
+    /// <summary>
+    ///
+    /// </summary>
     internal static class Program
     {
         /// <summary>
@@ -106,6 +109,7 @@ namespace Hoehoe3
             }
 
             var form = Control.FromHandle(candidate.MainWindowHandle) as Form;
+
             // TODO: Maximize
             form?.Activate();
         }

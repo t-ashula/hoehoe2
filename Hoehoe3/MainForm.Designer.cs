@@ -612,7 +612,7 @@
             this.changeUnreadStateHToolStripMenuItem.Name = "changeUnreadStateHToolStripMenuItem";
             this.changeUnreadStateHToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
             this.changeUnreadStateHToolStripMenuItem.Text = "未読状態変更(&H)";
-            this.changeUnreadStateHToolStripMenuItem.Click += new System.EventHandler(this.changeUnreadStateHToolStripMenuItem_Click);
+            this.changeUnreadStateHToolStripMenuItem.Click += new System.EventHandler(this.ChangeUnreadStateHToolStripMenuItem_Click);
             // 
             // ChangeToReadToolStripMenuItem
             // 

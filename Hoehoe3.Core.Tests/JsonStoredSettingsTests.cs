@@ -1,7 +1,7 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="SettingsTests.cs">
 // Hoehoe2 - Client of Twitter
-// Copyright (c) 2016- t.ashula (@t_ashula) <office@ashula.info>
+// Copyright (c) 2016- t.ashula (@t_ashula) office@ashula.info
 // All rights reserved. This file is part of Hoehoe2.
 // This program is license under GPL v3 or any later version.
 // See LICENSE.txt
@@ -11,7 +11,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting;
 using System.Threading.Tasks;
 using Hoehoe3.Core.Settings;
 using Xunit;
