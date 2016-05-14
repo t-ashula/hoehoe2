@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -935,19 +936,7 @@ namespace Hoehoe
             {
                 if (e.KeyCode == Keys.Space || e.KeyCode == Keys.ProcessKey)
                 {
-                    bool isSpace = false;
-                    foreach (char c in StatusText.Text)
-                    {
-                        if (c == ' ' || c == '　')
-                        {
-                            isSpace = true;
-                        }
-                        else
-                        {
-                            isSpace = false;
-                            break;
-                        }
-                    }
+                    var isSpace = StatusText.Text.All(c => c == ' ' || c == '　');
 
                     if (isSpace)
                     {
